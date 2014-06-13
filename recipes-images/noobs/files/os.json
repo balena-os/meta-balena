@@ -1,0 +1,8 @@
+{
+    "name":         "Resin.io",
+    "url": "http://alpha.resin.io",
+    "version":      "--",
+    "release_date": "2014-06-13",
+    "kernel":       "--",
+    "description":  "Resin.io build for Raspberry Pi",
+}
