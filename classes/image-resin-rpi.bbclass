@@ -10,6 +10,7 @@ SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${SDIMG_ROOTFS_TYPE}"
 IMAGE_DEPENDS_resin-noobs = " \
 			virtual/kernel \
 			bcm2835-bootfiles \
+			rpi-init \
 			noobs \
 			"
 
@@ -38,7 +39,7 @@ IMAGE_CMD_resin-noobs () {
 
 	cp ${DEPLOY_DIR_IMAGE}/boot.tar.xz ${DEPLOY_DIR_IMAGE}/noobs/os/Resin
 	tar --delete -f ${DEPLOY_DIR_IMAGE}/resin-rpi-raspberrypi.tar --wildcards ./boot/*
-	rm ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar.xz
+	rm -rf ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar.xz
 	cp  ${DEPLOY_DIR_IMAGE}/resin-rpi-raspberrypi.tar ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
 	xz -9 -e ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
 

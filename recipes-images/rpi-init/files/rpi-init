@@ -1,0 +1,59 @@
+#!/bin/sh
+set -e
+
+mkdir -p /mnt/mmcblk0p1 
+mount /dev/mmcblk0p1 /mnt/mmcblk0p1
+
+if [ ! -e /mnt/mmcblk0p1/remove_to_data_reset ]; then
+
+	# Format the volume to hold our images.
+	mkfs.btrfs -f /dev/mmcblk0p8
+	mkdir -p /mnt/mmcblk0p8
+	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
+	mkdir -p /mnt/mmcblk0p8/docker
+	
+	# Make swap
+	mkswap /dev/mmcblk0p7
+	swapon /dev/mmcblk0p7
+
+	# Start docker to init data.
+	docker --restart=false -s btrfs -d -g /mnt/mmcblk0p8/docker &
+
+	# Wait for docker to become ready  
+	echo "Waiting for docker to become ready.."  
+	while [ ! -S /var/run/docker.sock ]  
+	do  
+	        sleep 1  
+	done
+	
+	# Load the supervisor
+	xz -d -k /mnt/mmcblk0p1/rpi-supervisor.tar.xz -c | docker load	
+
+	touch /mnt/mmcblk0p1/remove_to_data_reset
+	sync
+
+else
+	# Initialize swap
+	swapon /dev/mmcblk0p7
+	# Mount docker images directory
+	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
+	docker --restart=false -s btrfs -d -g /mnt/mmcblk0p8/docker &
+
+	# Wait for docker to become ready  
+	echo "Waiting for docker to become ready.."  
+	while [ ! -S /var/run/docker.sock ]  
+	do  
+        	sleep 1  
+	done
+
+fi
+
+# Delete all containers  
+echo "Deleting all previous containers.."  
+docker ps -qa | xargs docker rm || true  
+
+# Run supervisor  
+echo "Starting resin/rpi-supervisor.."  
+docker run --rm --privileged -v /mnt/mmcblk0p1/config.json:/boot/config.json -v /var/run/docker.sock:/run/docker.sock -v /mnt/mmcblk0p8/data:/data -e API_ENDPOINT=https://api.resin.io -e REGISTRY_ENDPOINT=registry.resin.io resin/rpi-supervisor /start  
+
+exit 0

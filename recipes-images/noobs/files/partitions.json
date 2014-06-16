@@ -6,7 +6,7 @@
             "filesystem_type":              "FAT",
             "partition_size_nominal":       100,
             "want_maximised":               false,
-            "uncompressed_tarball_size":    20,
+            "uncompressed_tarball_size":    15,
             "mkfs_options": "-F 32"
         },
         {
@@ -16,6 +16,14 @@
             "want_maximised":               false,
             "mkfs_options":                 "-c",
             "uncompressed_tarball_size":    110
+        },
+        {
+            "label":                        "empty",
+            "filesystem_type":              "ext4",
+            "partition_size_nominal":       512,
+            "want_maximised":               false,
+            "mkfs_options":                 "-E lazy_itable_init",
+            "uncompressed_tarball_size":    1
         },
         {
             "label":                        "empty",
