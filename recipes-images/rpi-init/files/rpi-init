@@ -55,8 +55,15 @@ fi
 echo "Deleting all previous containers.."  
 docker ps -qa | xargs docker rm || true  
 
+# Load the following modules:
+modprobe leds-gpio  # Leds
+modprobe snd-bcm2835 # Sound
+#modprobe spi-bcm2708 # SPI
+#modprobe i2c-bcm2708 # I2c
+#modprobe i2c-dev #I2C
+
 # Run supervisor  
 echo "Starting resin/rpi-supervisor.."  
-docker run --privileged -d -v /mnt/mmcblk0p1/config.json:/boot/config.json -v /var/run/docker.sock:/run/docker.sock -v /mnt/mmcblk0p8/data:/data -e API_ENDPOINT=https://api.resin.io -e REGISTRY_ENDPOINT=registry.resin.io resin/rpi-supervisor /start  
+docker run --privileged -d -v /mnt/mmcblk0p1/config.json:/boot/config.json -v /var/run/docker.sock:/run/docker.sock -v /mnt/mmcblk0p8/data:/data -e API_ENDPOINT=https://api.resin.io -e REGISTRY_ENDPOINT=registry.resin.io -e PUBNUB_SUBSCRIBE_KEY=sub-c-bbc12eba-ce4a-11e3-9782-02ee2ddab7fe -e PUBNUB_PUBLISH_KEY=pub-c-6cbce8db-bfd1-4fdf-a8c8-53671ae2b226 resin/rpi-supervisor /start
 
 exit 0
