@@ -13,43 +13,46 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 	mkfs.btrfs -f /dev/mmcblk0p8
 	mkdir -p /mnt/mmcblk0p8
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
-	mkdir -p /mnt/mmcblk0p8/docker
 	
 	# Make swap
 	mkswap /dev/mmcblk0p7
-	swapon /dev/mmcblk0p7
-
-	# Start docker to init data.
-	docker --restart=false -s btrfs -d -g /mnt/mmcblk0p8/docker &
-
-	# Wait for docker to become ready  
-	echo "Waiting for docker to become ready.."  
-	while [ ! -S /var/run/docker.sock ]  
-	do  
-	        sleep 1  
-	done
 	
 	# Load the supervisor
-	xz -d -k /mnt/mmcblk0p1/rpi-supervisor.tar.xz -c | docker load	
+	tar -xf /mnt/mmcblk0p1/resin/docker_root.tar -C /mnt/mmcblk0p8
+	cd /mnt/mmcblk0p8/docker/btrfs/subvolumes
+	filename='/mnt/mmcblk0p1/resin/history.list'
+	parent="0"
+	while read p; do
+	    if [ $parent == "0" ]
+	    then
+		echo "Creating Subvolume"
+		btrfs subvolume create $p
+	    else
+		echo "Creating Snapshot from parent"
+		btrfs subvolume snapshot $parent $p
+	    fi
+	    tar -xf /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/layer.tar -C $p
+            parent=$p
+	done < $filename
 
 	touch /mnt/mmcblk0p5/remove_to_reset_data
 	sync
 
 else
-	# Initialize swap
-	swapon /dev/mmcblk0p7
 	# Mount docker images directory
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
-	docker --restart=false -s btrfs -d -g /mnt/mmcblk0p8/docker &
-
-	# Wait for docker to become ready  
-	echo "Waiting for docker to become ready.."  
-	while [ ! -S /var/run/docker.sock ]  
-	do  
-        	sleep 1  
-	done
-
 fi
+
+# Initialize swap
+swapon /dev/mmcblk0p7
+docker --restart=false -s btrfs -d -g /mnt/mmcblk0p8/docker &
+
+# Wait for docker to become ready
+echo "Waiting for docker to become ready.."
+while [ ! -S /var/run/docker.sock ]
+do
+	sleep 1
+done
 
 # Delete all containers  
 echo "Deleting all previous containers.."  
