@@ -54,26 +54,4 @@ else
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
 fi
 
-# Initialize swap
-swapon /dev/mmcblk0p7
-docker --restart=false -s btrfs -d -g /mnt/mmcblk0p8/docker &
-
-# Wait for docker to become ready
-echo "Waiting for docker to become ready.."
-while [ ! -S /var/run/docker.sock ]
-do
-	sleep 1
-done
-
-# Delete all containers  
-echo "Deleting all previous containers.."  
-docker ps -qa | xargs docker rm || true  
-
-# Load the following modules:
-modprobe leds-gpio  # Leds
-modprobe snd-bcm2835 # Sound
-#modprobe spi-bcm2708 # SPI
-#modprobe i2c-bcm2708 # I2c
-#modprobe i2c-dev #I2C
-
 exit 0

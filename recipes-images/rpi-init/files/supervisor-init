@@ -1,5 +1,26 @@
 #!/bin/sh
 
+# Initialize swap
+swapon /dev/mmcblk0p7
+docker --restart=false -s btrfs --dns=8.8.8.8 --dns=8.8.4.4 -d -g /mnt/mmcblk0p8/docker &
+
+# Wait for docker to become ready
+echo "Waiting for docker to become ready.."
+while [ ! -S /var/run/docker.sock ]
+do
+	sleep 1
+done
+
+# Delete all containers
+echo "Deleting all previous containers.."
+docker ps -qa | xargs docker rm || true
+
+# Load the following modules:
+modprobe leds-gpio  # Leds
+modprobe snd-bcm2835 # Sound
+#modprobe spi-bcm2708 # SPI
+#modprobe i2c-bcm2708 # I2c
+#modprobe i2c-dev #I2C
 
 # Wait for internet connection TODO: Remove this by enabling watchdog inside supervisor.
 while true; do
