@@ -54,9 +54,6 @@ else
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
 fi
 
-umount /mnt/mmcblk0p1
-umount /mnt/mmcblk0p5
-
 # Initialize swap
 swapon /dev/mmcblk0p7
 docker --restart=false -s btrfs -d -g /mnt/mmcblk0p8/docker &
