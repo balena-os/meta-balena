@@ -4,12 +4,15 @@ set -e
 mkdir -p /mnt/mmcblk0p1 
 mount /dev/mmcblk0p1 /mnt/mmcblk0p1
 
-if [ -e /mnt/mmcblk0p1/resin/connman.conf ]; then
-	# Copy Connman settings
-	mkdir -p /etc/connman/
-	cp -r /mnt/mmcblk0p1/resin/connman.conf /etc/connman/main.conf
-	/etc/init.d/connman restart
 
+if [ -e /mnt/mmcblk0p1/resin/network/network.config ]; then
+	# Remove old Connman Settings
+	rm -rf /var/lib/connman/*
+        # Copy Connman settings
+        cp -r /mnt/mmcblk0p1/resin/network/network.config /var/lib/connman/network.config
+	if [ -e /mnt/mmcblk0p1/resin/network/settings ]; then
+		cp -r /mnt/mmcblk0p1/resin/network/settings /var/lib/connman/settings
+	fi
 fi
 
 mkdir -p /mnt/mmcblk0p5
@@ -50,6 +53,9 @@ else
 	# Mount docker images directory
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
 fi
+
+umount /mnt/mmcblk0p1
+umount /mnt/mmcblk0p5
 
 # Initialize swap
 swapon /dev/mmcblk0p7
