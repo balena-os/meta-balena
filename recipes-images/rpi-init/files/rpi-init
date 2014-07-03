@@ -44,7 +44,7 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 		echo "Creating Snapshot from parent"
 		btrfs subvolume snapshot $parent $p
 	    fi
-	    tar -xf /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/layer.tar.xz -C $p
+	    tar -xf /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/layer.tpxz -C $p
             parent=$p
 	done < $filename
 
