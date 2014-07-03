@@ -1,7 +1,8 @@
 inherit image_types
 
-IMAGE_TYPEDEP_resin-noobs = "${SDIMG_ROOTFS_TYPE}"
 
+IMAGE_TYPEDEP_resin-noobs = "${SDIMG_ROOTFS_TYPE}"
+IMAGE_TYPEDEP_resin-noobs-dev = "${SDIMG_ROOTFS_TYPE}"
 
 # Use an tar.xz by default as rootfs
 SDIMG_ROOTFS_TYPE ?= "tar"
@@ -14,6 +15,12 @@ IMAGE_DEPENDS_resin-noobs = " \
 			noobs \
 			"
 
+IMAGE_DEPENDS_resin-noobs-dev = " \
+			virtual/kernel \
+			bcm2835-bootfiles \
+			rpi-init \
+			noobs \
+			"
 # BOOT TAR name
 BOOT_TAR_forcevariable  = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.tar"
 
@@ -28,8 +35,8 @@ IMAGE_CMD_resin-noobs () {
 
 	cp -r ${DEPLOY_DIR_IMAGE}/bcm2835-bootfiles/* ${BOOT_WORK}/
 	cp ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${BOOT_WORK}/kernel.img
-	
-	sed -i 's/\/dev\/mmcblk0p2/@ROOT@/g' ${BOOT_WORK}/cmdline.txt	
+
+	sed -i 's/\/dev\/mmcblk0p2/@ROOT@/g' ${BOOT_WORK}/cmdline.txt
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${BOOT_WORK}/image-version-info
 
@@ -43,10 +50,36 @@ IMAGE_CMD_resin-noobs () {
 	cp  ${DEPLOY_DIR_IMAGE}/resin-rpi-raspberrypi.tar ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
 	xz -9 -e ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
 
-	
+
 
 }
 
+IMAGE_CMD_resin-noobs-dev () {
+
+	export BOOT_WORK=${WORKDIR}/${IMAGE_NAME}.boot
+	rm -rf ${BOOT_WORK}
+	mkdir -p ${BOOT_WORK}
+
+	cp -r ${DEPLOY_DIR_IMAGE}/bcm2835-bootfiles/* ${BOOT_WORK}/
+	cp ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${BOOT_WORK}/kernel.img
+
+	sed -i 's/\/dev\/mmcblk0p2/@ROOT@/g' ${BOOT_WORK}/cmdline.txt
+	# Add stamp file
+	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${BOOT_WORK}/image-version-info
+
+	tar -cf ${BOOT_TAR} -C ${BOOT_WORK} .
+	xz -9 -e ${BOOT_TAR}
+	ln -sf ${BOOT_TAR}.xz ${DEPLOY_DIR_IMAGE}/boot.tar.xz
+
+	cp ${DEPLOY_DIR_IMAGE}/boot.tar.xz ${DEPLOY_DIR_IMAGE}/noobs/os/Resin
+	tar --delete -f ${DEPLOY_DIR_IMAGE}/resin-rpi-dev-raspberrypi.tar --wildcards ./boot/*
+	rm -rf ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar.xz
+	cp  ${DEPLOY_DIR_IMAGE}/resin-rpi-dev-raspberrypi.tar ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
+	xz -9 -e ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
+
+
+
+}
 ROOTFS_POSTPROCESS_COMMAND += " resin_rpi_generate_sysctl_config ; "
 
 resin_rpi_generate_sysctl_config() {

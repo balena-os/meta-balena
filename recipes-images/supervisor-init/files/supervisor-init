@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# Initialize swap
+swapon /dev/mmcblk0p7
+docker --restart=false -s btrfs --dns=8.8.8.8 --dns=8.8.4.4 -d -g /mnt/mmcblk0p8/docker &
+
+# Wait for docker to become ready
+echo "Waiting for docker to become ready.."
+while [ ! -S /var/run/docker.sock ]
+do
+	sleep 1
+done
+
+# Delete all containers
+echo "Deleting all previous containers.."
+docker ps -qa | xargs docker rm || true
+
+# Load the following modules:
+modprobe leds-gpio  # Leds
+modprobe snd-bcm2835 # Sound
+#modprobe spi-bcm2708 # SPI
+#modprobe i2c-bcm2708 # I2c
+#modprobe i2c-dev #I2C
+
+# Wait for internet connection TODO: Remove this by enabling watchdog inside supervisor.
+while true; do
+                ret=0
+                ping -c 1 -w 1 www.google.com || ret=$?
+                [ $ret -eq 0 ] && break
+                sleep 1
+done
+
+
+
+# Run supervisor  
+echo "Starting resin/rpi-supervisor.."  
+docker run --privileged -d -v /mnt/mmcblk0p1/config.json:/boot/config.json -v /var/run/docker.sock:/run/docker.sock -v /mnt/mmcblk0p8/data:/data -e API_ENDPOINT=https://api.resin.io -e REGISTRY_ENDPOINT=registry.resin.io -e PUBNUB_SUBSCRIBE_KEY=sub-c-bbc12eba-ce4a-11e3-9782-02ee2ddab7fe -e PUBNUB_PUBLISH_KEY=pub-c-6cbce8db-bfd1-4fdf-a8c8-53671ae2b226 -e MIXPANEL_TOKEN=99eec53325d4f45dd0633abd719e3ff1 resin/rpi-supervisor /start
