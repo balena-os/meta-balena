@@ -31,7 +31,9 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 	# Load the supervisor
 	# tar -xf /mnt/mmcblk0p1/resin/docker_root.tar -C /mnt/mmcblk0p8
 	mkdir -p /mnt/mmcblk0p8/docker/btrfs/subvolumes
-	cp /mnt/mmcblk0p1/resin/resin-rpi-supervisor/repositories /mnt/mmcblk0p8/docker/repositories-btrfs
+	echo '{"Repositories":' > /mnt/mmcblk0p8/docker/repositories-btrfs
+	cat /mnt/mmcblk0p1/resin/resin-rpi-supervisor/repositories >> /mnt/mmcblk0p8/docker/repositories-btrfs
+	echo '}' >> /mnt/mmcblk0p8/docker/repositories-btrfs
 	cd /mnt/mmcblk0p8/docker/btrfs/subvolumes
 	filename='/mnt/mmcblk0p1/resin/resin-rpi-supervisor/history.list'
 	parent="0"
