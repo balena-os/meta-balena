@@ -45,6 +45,8 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 		btrfs subvolume snapshot $parent $p
 	    fi
 	    tar -xf /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/layer.tpxz -C $p
+	    mkdir -p /mnt/mmcblk0p8/docker/graph/$p
+	    cp -r /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/json /mnt/mmcblk0p8/docker/graph/$p
             parent=$p
 	done < $filename
 
