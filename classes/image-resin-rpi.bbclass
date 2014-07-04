@@ -63,6 +63,10 @@ IMAGE_CMD_resin-noobs-dev () {
 	cp -r ${DEPLOY_DIR_IMAGE}/bcm2835-bootfiles/* ${BOOT_WORK}/
 	cp ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${BOOT_WORK}/kernel.img
 
+	# Add camera module support
+	echo start_file=start_x.elf >> ${BOOT_WORK}/config.txt
+	echo fixup_file=fixup_x.dat >> ${BOOT_WORK}/config.txt
+
 	sed -i 's/\/dev\/mmcblk0p2/@ROOT@/g' ${BOOT_WORK}/cmdline.txt
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${BOOT_WORK}/image-version-info
