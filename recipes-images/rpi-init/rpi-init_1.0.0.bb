@@ -27,5 +27,8 @@ do_install() {
 pkg_postinst_${PN} () {
 #!/bin/sh -e
 # Commands to carry out
+# Remove networking
+rm ${D}${sysconfdir}/rc5.d/S01networking
+
 }
 
