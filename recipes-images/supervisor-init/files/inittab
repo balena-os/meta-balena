@@ -28,7 +28,7 @@ l5:5:wait:/etc/init.d/rc 5
 l6:6:wait:/etc/init.d/rc 6
 # Normally not reached, but fallthrough in case of emergency.
 z6:6:respawn:/sbin/sulogin
-AMA0:12345:respawn:/sbin/getty 115200 ttyAMA0
+# AMA0:12345:respawn:/sbin/getty 115200 ttyAMA0
 # /sbin/getty invocations for the runlevels.
 #
 # The "id" field MUST be the same as the last
@@ -38,4 +38,4 @@ AMA0:12345:respawn:/sbin/getty 115200 ttyAMA0
 #  <id>:<runlevels>:<action>:<process>
 #
 
-# 1:2345:respawn:/sbin/getty 38400 tty1
+1:2345:respawn:/sbin/getty -n -l /bin/tty-replacement 38400 tty1

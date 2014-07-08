@@ -35,16 +35,3 @@ done
 # Run supervisor  
 echo "Starting resin/rpi-supervisor.."  
 docker run --privileged -d -v /mnt/mmcblk0p1/config.json:/boot/config.json -v /var/run/docker.sock:/run/docker.sock -v /mnt/mmcblk0p8/data:/data -e API_ENDPOINT=https://api.resin.io -e REGISTRY_ENDPOINT=registry.resin.io -e PUBNUB_SUBSCRIBE_KEY=sub-c-bbc12eba-ce4a-11e3-9782-02ee2ddab7fe -e PUBNUB_PUBLISH_KEY=pub-c-6cbce8db-bfd1-4fdf-a8c8-53671ae2b226 -e MIXPANEL_TOKEN=99eec53325d4f45dd0633abd719e3ff1 resin/rpi-supervisor /start
-
-# Clear screen
-clear > /dev/tty1
-echo "
-  _____           _         _       
- |  __ \         (_)       (_)      
- | |__) |___  ___ _ _ __    _  ___  
- |  _  // _ \/ __| | '_ \  | |/ _ \ 
- | | \ \  __/\__ \ | | | |_| | (_) |
- |_|  \_\___||___/_|_| |_(_)_|\___/ 
-                                    
- ---------------------------------- " > /dev/tty1
-echo "Booted - Check your resin.io dashboard." > /dev/tty1
