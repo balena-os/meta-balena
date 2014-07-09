@@ -2,7 +2,7 @@
 
 # Initialize swap
 swapon /dev/mmcblk0p7
-docker --restart=false -s btrfs --dns=8.8.8.8 --dns=8.8.4.4 -d -g /mnt/mmcblk0p8/docker &
+docker --restart=false -s btrfs --dns=8.8.8.8 --dns=8.8.4.4 -d -g /mnt/mmcblk0p8/docker  > /dev/null 2>&1 &
 
 # Wait for docker to become ready
 echo "Waiting for docker to become ready.."
