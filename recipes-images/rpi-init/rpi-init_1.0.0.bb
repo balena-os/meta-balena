@@ -22,13 +22,12 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/connman
 	install -m 0755 ${WORKDIR}/connman.conf ${D}${sysconfdir}/connman/main.conf
+
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh -e
 # Commands to carry out
 # Remove networking
-rm ${D}${sysconfdir}/rc5.d/S01networking
-
 }
 
