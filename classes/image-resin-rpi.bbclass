@@ -37,7 +37,7 @@ IMAGE_CMD_resin-noobs () {
 	cp ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${BOOT_WORK}/kernel.img
 
 	## Overwrite the cmdline.txt
-	echo "dwc_otg.lpm_enable=0 console=tty1 root=@ROOT@ rootfstype=ext4 rootwait quiet" > ${BOOT_WORK}/cmdline.txt
+	echo "dwc_otg.lpm_enable=0 console=tty1 root=@ROOT@ rootfstype=ext4 rootwait quiet elevator=deadline" > ${BOOT_WORK}/cmdline.txt
 
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${BOOT_WORK}/image-version-info
@@ -74,7 +74,7 @@ IMAGE_CMD_resin-noobs-dev () {
 	echo fixup_file=fixup_x.dat >> ${BOOT_WORK}/config.txt
 
 	## Overwrite the cmdline.txt
-	echo "dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=@ROOT@ rootfstype=ext4 rootwait debug" > ${BOOT_WORK}/cmdline.txt
+	echo "dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=@ROOT@ rootfstype=ext4 elevator=deadline rootwait debug" > ${BOOT_WORK}/cmdline.txt
 
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${BOOT_WORK}/image-version-info
