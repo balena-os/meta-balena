@@ -46,6 +46,10 @@ IMAGE_CMD_resin-noobs () {
 	echo start_file=start_x.elf >> ${BOOT_WORK}/config.txt
 	echo fixup_file=fixup_x.dat >> ${BOOT_WORK}/config.txt
 
+	# Add GPU_MEM Customization
+	echo gpu_mem_256=64  >> ${BOOT_WORK}/config.txt
+	echo gpu_mem_512=128 >> ${BOOT_WORK}/config.txt
+
 	tar -cf ${BOOT_TAR} -C ${BOOT_WORK} .
 	xz -9 -e ${BOOT_TAR}
 	ln -sf ${BOOT_TAR}.xz ${DEPLOY_DIR_IMAGE}/boot.tar.xz
@@ -72,6 +76,10 @@ IMAGE_CMD_resin-noobs-dev () {
 	# Add camera module support
 	echo start_file=start_x.elf >> ${BOOT_WORK}/config.txt
 	echo fixup_file=fixup_x.dat >> ${BOOT_WORK}/config.txt
+
+	# Add GPU_MEM Customization
+	echo gpu_mem_256=64  >> ${BOOT_WORK}/config.txt
+	echo gpu_mem_512=128 >> ${BOOT_WORK}/config.txt
 
 	## Overwrite the cmdline.txt
 	echo "dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=@ROOT@ rootfstype=ext4 rootwait debug" > ${BOOT_WORK}/cmdline.txt
