@@ -2,8 +2,7 @@
 set -e
 
 mkdir -p /mnt/mmcblk0p1 
-fsck.vfat -A /dev/mmcblk0p1
-mount /dev/mmcblk0p1 /mnt/mmcblk0p1
+mount -o ro /dev/mmcblk0p1 /mnt/mmcblk0p1
 
 
 if [ -e /mnt/mmcblk0p1/resin/network/network.config ]; then
@@ -17,8 +16,7 @@ if [ -e /mnt/mmcblk0p1/resin/network/network.config ]; then
 fi
 
 mkdir -p /mnt/mmcblk0p5
-fsck.vfat -A /dev/mmcblk0p5
-mount /dev/mmcblk0p5 /mnt/mmcblk0p5
+mount -o ro /dev/mmcblk0p5 /mnt/mmcblk0p5
 
 if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 
@@ -57,8 +55,10 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 	# We have conmann to do the networking for us.
 	rm -rf /etc/rc5.d/S01networking
 
+	mount -o remount,rw /dev/mmcblk0p5 /mnt/mmcblk0p5
 	touch /mnt/mmcblk0p5/remove_to_reset_data
 	sync
+	mount -o remount,ro /dev/mmcblk0p5 /mnt/mmcblk0p5
 
 else
 	# Mount docker images directory
