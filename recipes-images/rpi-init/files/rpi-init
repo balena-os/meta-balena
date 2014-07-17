@@ -2,6 +2,7 @@
 set -e
 
 mkdir -p /mnt/mmcblk0p1 
+fsck.vfat -A /dev/mmcblk0p1
 mount /dev/mmcblk0p1 /mnt/mmcblk0p1
 
 
@@ -16,6 +17,7 @@ if [ -e /mnt/mmcblk0p1/resin/network/network.config ]; then
 fi
 
 mkdir -p /mnt/mmcblk0p5
+fsck.vfat -A /dev/mmcblk0p5
 mount /dev/mmcblk0p5 /mnt/mmcblk0p5
 
 if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
@@ -60,6 +62,7 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 
 else
 	# Mount docker images directory
+	btrfsck /dev/mmcblk0p8
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
 fi
 
