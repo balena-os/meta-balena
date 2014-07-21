@@ -37,10 +37,13 @@ IMAGE_CMD_resin-noobs () {
 	cp ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${BOOT_WORK}/kernel.img
 
 	## Overwrite the cmdline.txt
-	echo "dwc_otg.lpm_enable=0 console=tty1 root=@ROOT@ rootfstype=ext4 rootwait quiet" > ${BOOT_WORK}/cmdline.txt
+	echo "dwc_otg.lpm_enable=0 console=tty1 root=@ROOT@ rootfstype=ext4 elevator=noop rootwait quiet" > ${BOOT_WORK}/cmdline.txt
 
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${BOOT_WORK}/image-version-info
+
+	# Remove Instruction_README.txt
+	rm -f ${DEPLOY_DIR_IMAGE}/noobs/INSTRUCTIONS-README.txt
 
 	# Add camera module support
 	echo start_file=start_x.elf >> ${BOOT_WORK}/config.txt
@@ -82,10 +85,13 @@ IMAGE_CMD_resin-noobs-dev () {
 	echo gpu_mem_512=128 >> ${BOOT_WORK}/config.txt
 
 	## Overwrite the cmdline.txt
-	echo "dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=@ROOT@ rootfstype=ext4 rootwait debug" > ${BOOT_WORK}/cmdline.txt
+	echo "dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=@ROOT@ rootfstype=ext4 elevator=noop rootwait debug" > ${BOOT_WORK}/cmdline.txt
 
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${BOOT_WORK}/image-version-info
+
+	# Remove Instruction_README.txt
+	rm -f ${DEPLOY_DIR_IMAGE}/noobs/INSTRUCTIONS-README.txt
 
 	tar -cf ${BOOT_TAR} -C ${BOOT_WORK} .
 	xz -9 -e ${BOOT_TAR}
