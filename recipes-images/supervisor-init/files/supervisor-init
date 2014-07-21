@@ -32,6 +32,6 @@ done
 
 
 
-# Run supervisor  
-echo "Starting resin/rpi-supervisor.."  
-docker run --privileged -d -v /mnt/mmcblk0p1/config.json:/boot/config.json -v /var/run/docker.sock:/run/docker.sock -v /proc/net/fib_trie:/mnt/fib_trie -v /mnt/mmcblk0p8/data:/data resin/rpi-supervisor /start
+# Run supervisor
+echo "Starting resin/rpi-supervisor.."
+docker run --privileged -d -v /var/run/docker.sock:/run/docker.sock resin/rpi-supervisor /start
