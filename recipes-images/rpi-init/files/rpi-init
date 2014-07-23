@@ -62,10 +62,15 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 	sync
 	mount -o remount,ro /dev/mmcblk0p5 /mnt/mmcblk0p5
 
+
 else
 	# Mount docker images directory
 	btrfsck /dev/mmcblk0p8
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
 fi
+
+# Mount docker and data directories to standard locations.
+mount -o bind /mnt/mmcblk0p8/data /resin-data
+mount -o bind /mnt/mmcblk0p8/docker /var/lib/docker
 
 exit 0
