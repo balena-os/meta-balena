@@ -71,8 +71,10 @@ fi
 
 # Mount docker and data directories to standard locations.
 mkdir -p /resin-data
-mount -o bind /mnt/mmcblk0p8/data /resin-data
 mkdir -p /var/lib/docker
+mkdir -p /mnt/mmcblk0p8/data
+sync
+mount -o bind /mnt/mmcblk0p8/data /resin-data
 mount -o bind /mnt/mmcblk0p8/docker /var/lib/docker
 
 exit 0
