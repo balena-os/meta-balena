@@ -76,5 +76,7 @@ mkdir -p /mnt/mmcblk0p8/data
 sync
 mount -o bind /mnt/mmcblk0p8/data /resin-data
 mount -o bind /mnt/mmcblk0p8/docker /var/lib/docker
+# Initialize swap
+swapon /dev/mmcblk0p7
 
 exit 0
