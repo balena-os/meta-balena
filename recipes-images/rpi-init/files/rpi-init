@@ -65,7 +65,6 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 
 else
 	# Mount docker images directory
-	btrfsck /dev/mmcblk0p8
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
 fi
 
