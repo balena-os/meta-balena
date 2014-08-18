@@ -28,7 +28,8 @@ while true; do
                 sleep 1
 done
 
-
+# Open socket for supervisor to connect to the host
+bash -c 'while true; do rm -f /resin-data/resin-supervisor/host; socat UNIX-LISTEN:/resin-data/resin-supervisor/host EXEC:/bin/bash,pty,setsid,setpgid,stderr,ctty; done' &
 
 # Run supervisor
 echo "Starting resin/rpi-supervisor.."
