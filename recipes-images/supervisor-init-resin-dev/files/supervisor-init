@@ -9,10 +9,6 @@ do
 	sleep 1
 done
 
-# Delete all containers
-echo "Deleting all previous containers.."
-docker ps -qa | xargs docker rm || true
-
 # Load the following modules:
 modprobe leds-gpio  # Leds
 modprobe snd-bcm2835 # Sound
