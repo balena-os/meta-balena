@@ -16,9 +16,15 @@ modprobe snd-bcm2835 # Sound
 #modprobe i2c-bcm2708 # I2c
 #modprobe i2c-dev #I2C
 
-# Open socket for supervisor to connect to the host
-bash -c 'while true; do rm -f /resin-data/resin-supervisor/host; socat UNIX-LISTEN:/resin-data/resin-supervisor/host EXEC:/bin/bash,pty,setsid,setpgid,stderr,ctty; done' &
 
 # Run supervisor
 echo "Starting resin/rpi-supervisor.."
 docker run --privileged -d -v /var/run/docker.sock:/run/docker.sock resin/rpi-supervisor /start
+
+while [ ! -d /resin-data/resin-supervisor ]
+do
+	sleep 1
+done
+
+# Open socket for supervisor to connect to the host
+bash -c 'while true; do rm -f /resin-data/resin-supervisor/host; socat UNIX-LISTEN:/resin-data/resin-supervisor/host EXEC:/bin/bash,pty,setsid,setpgid,stderr,ctty; done' &
