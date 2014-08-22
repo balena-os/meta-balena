@@ -16,14 +16,6 @@ modprobe snd-bcm2835 # Sound
 #modprobe i2c-bcm2708 # I2c
 #modprobe i2c-dev #I2C
 
-# Wait for internet connection TODO: Remove this by enabling watchdog inside supervisor.
-while true; do
-                ret=0
-                ping -c 1 -w 1 www.google.com || ret=$?
-                [ $ret -eq 0 ] && break
-                sleep 1
-done
-
 # Open socket for supervisor to connect to the host
 bash -c 'while true; do rm -f /resin-data/resin-supervisor/host; socat UNIX-LISTEN:/resin-data/resin-supervisor/host EXEC:/bin/bash,pty,setsid,setpgid,stderr,ctty; done' &
 
