@@ -4,6 +4,12 @@ set -e
 mkdir -p /mnt/mmcblk0p1 
 mount -o ro /dev/mmcblk0p1 /mnt/mmcblk0p1
 
+API_ENDPOINT="http://staging.resin.io"
+DEVICE_TYPE="Raspberry Pi"
+CONFIG_PATH="/mnt/mmcblk0p1/config.json"
+
+resin-register-device "$API_ENDPOINT" "$DEVICE_TYPE" "$CONFIG_PATH"
+
 
 if [ -e /mnt/mmcblk0p1/resin/network/network.config ]; then
 	# Remove old Connman Settings
