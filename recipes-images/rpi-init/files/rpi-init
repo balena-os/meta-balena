@@ -20,11 +20,23 @@ mkdir -p /mnt/mmcblk0p5
 mount -o ro /dev/mmcblk0p5 /mnt/mmcblk0p5
 
 if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
-	API_ENDPOINT="http://staging.resin.io"
-	DEVICE_TYPE="Raspberry Pi"
-	CONFIG_PATH="/mnt/mmcblk0p1/config.json"
+	# try up to 30 times (roughly half a minute) to get internet connectivity
+	for i in {0..30}; do
+		if curl --silent --head http://www.google.com/  |egrep "20[0-9] Found|30[0-9] Found" >/dev/null
+		then
+			echo "Connected" >> /var/log/rpi-init.log
+			API_ENDPOINT="http://staging.resin.io"
+			DEVICE_TYPE="Raspberry Pi"
+			CONFIG_PATH="/mnt/mmcblk0p1/config.json"
 
-	resin-register-device "$API_ENDPOINT" "$DEVICE_TYPE" "$CONFIG_PATH"
+			resin-register-device "$API_ENDPOINT" "$DEVICE_TYPE" "$CONFIG_PATH" >>/var/log/rpi-init.log 2>&1
+			break
+		else
+			echo  "Not connected. Trying again..." >> /var/log/rpi-init.log
+			sleep 1
+		fi
+	done
+
 	mount -o ro,remount /dev/mmcblk0p1
 
 	# Format the volume to hold our images.
