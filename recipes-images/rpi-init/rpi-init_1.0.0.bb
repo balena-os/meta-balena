@@ -21,7 +21,7 @@ do_install() {
 	install -d ${D}${sysconfdir}/init.d
     	install -d ${D}${sysconfdir}/rc5.d
 	install -m 0755 ${WORKDIR}/rpi-init  ${D}${sysconfdir}/init.d/
-	ln -sf ../init.d/rpi-init  ${D}${sysconfdir}/rc5.d/S03rpi-init
+	ln -sf ../init.d/rpi-init  ${D}${sysconfdir}/rc5.d/S06rpi-init
 
 	install -d ${D}${sysconfdir}/connman
 	install -m 0755 ${WORKDIR}/connman.conf ${D}${sysconfdir}/connman/main.conf
