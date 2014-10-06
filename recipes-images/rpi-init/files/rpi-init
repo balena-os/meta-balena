@@ -24,15 +24,13 @@ if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
 	for i in {0..30}; do
 		if curl --silent --head http://www.google.com/  |egrep "20[0-9] Found|30[0-9] Found" >/dev/null
 		then
-			echo "Connected" >> /var/log/rpi-init.log
 			API_ENDPOINT="http://staging.resin.io"
-			DEVICE_TYPE="Raspberry Pi"
 			CONFIG_PATH="/mnt/mmcblk0p1/config.json"
 
-			resin-register-device "$API_ENDPOINT" "$DEVICE_TYPE" "$CONFIG_PATH" >>/var/log/rpi-init.log 2>&1
+			resin-register-device "$API_ENDPOINT" "$CONFIG_PATH"
 			break
 		else
-			echo  "Not connected. Trying again..." >> /var/log/rpi-init.log
+			echo  "Not connected. Trying again..."
 			sleep 1
 		fi
 	done

@@ -1,14 +1,12 @@
-if [ "$#" -ne 3 ]; then
-	echo "Usage: $0 API_ENDPOINT DEVICE_TYPE CONFIG_PATH"
+if [ "$#" -ne 2 ]; then
+	echo "Usage: $0 API_ENDPOINT CONFIG_PATH"
 	echo -e "\tAPI_ENDPOINT\tExample: http://staging.resin.io"
-	echo -e "\tDEVICE_TYPE\tExample: \"Raspberry Pi\""
 	echo -e "\tCONFIG_PATH\tExample: /boot/config.json"
 	exit 1
 fi
 
 API_ENDPOINT=$1
-DEVICE_TYPE=$2
-CONFIG_PATH=$3
+CONFIG_PATH=$2
 
 if [ `jq ".uuid | length" $CONFIG_PATH` -ne 0 ]; then
 	echo "Device already registered. Exiting."
@@ -17,13 +15,13 @@ fi
 
 uuid=$(openssl rand -hex 32)
 
-read api_key user_id application_id <<<$(jq -r '.apiKey,.userId,.applicationId' $CONFIG_PATH)
+read api_key user_id application_id device_type <<<$(jq -r '.apiKey,.userId,.applicationId,.deviceType // "Raspberry Pi"' $CONFIG_PATH)
 
 status_code=$(curl -s -X POST -w "%{http_code}" \
                    -d "user=$user_id" \
 				   -d "application=$application_id" \
 				   -d "uuid=$uuid"  \
-				   --data-urlencode "device_type=$DEVICE_TYPE" \
+				   --data-urlencode "device_type=$device_type" \
 				   "$API_ENDPOINT/ewa/device?apiKey=$api_key")
 
 if [ "$status_code" -eq 201 ]; then
