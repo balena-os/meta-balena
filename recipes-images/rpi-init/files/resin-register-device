@@ -1,0 +1,31 @@
+if [ "$#" -ne 2 ]; then
+	echo "Usage: $0 API_ENDPOINT CONFIG_PATH"
+	echo -e "\tAPI_ENDPOINT\tExample: http://staging.resin.io"
+	echo -e "\tCONFIG_PATH\tExample: /boot/config.json"
+	exit 1
+fi
+
+API_ENDPOINT=$1
+CONFIG_PATH=$2
+
+if [ `jq ".uuid | length" $CONFIG_PATH` -ne 0 ]; then
+	echo "Device already registered. Exiting."
+	exit 0
+fi
+
+uuid=$(openssl rand -hex 32)
+
+read api_key user_id application_id device_type <<<$(jq -r '.apiKey,.userId,.applicationId,.deviceType // "Raspberry Pi"' $CONFIG_PATH)
+
+status_code=$(curl -s -X POST -w "%{http_code}" \
+                   -d "user=$user_id" \
+				   -d "application=$application_id" \
+				   -d "uuid=$uuid"  \
+				   --data-urlencode "device_type=$device_type" \
+				   "$API_ENDPOINT/ewa/device?apiKey=$api_key")
+
+if [ "$status_code" -eq 201 ]; then
+	config_json=`cat $CONFIG_PATH`
+	echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
+	echo "Registered device with UUID: $uuid."
+fi
