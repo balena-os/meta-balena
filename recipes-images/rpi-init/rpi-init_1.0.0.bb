@@ -6,14 +6,17 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=435b266b3899aa8a959f17d41c56de
 SRC_URI = "file://LICENSE \
 	   file://rpi-init \
 	   file://connman.conf \
+	   file://resin-register-device \
 	  "
 
-FILES_${PN} = "${sysconfdir}/*"
+FILES_${PN} = "${sysconfdir}/* ${bindir}/*"
 
 do_compile() {
 }
 
 do_install() {
+	install -d ${D}${bindir}
+	install -m 0775 ${WORKDIR}/resin-register-device ${D}${bindir}/resin-register-device
     
 	install -d ${D}${sysconfdir}/init.d
     	install -d ${D}${sysconfdir}/rc5.d
