@@ -18,24 +18,15 @@ fi
 
 mkdir -p /mnt/mmcblk0p5
 mount -o ro /dev/mmcblk0p5 /mnt/mmcblk0p5
-
 if [ ! -e /mnt/mmcblk0p5/remove_to_reset_data ]; then
-	# try up to 30 times (roughly half a minute) to get internet connectivity
-	for i in {0..30}; do
-		if curl --silent --head http://www.google.com/  |egrep "20[0-9] Found|30[0-9] Found" >/dev/null
-		then
-			API_ENDPOINT="http://staging.resin.io"
-			CONFIG_PATH="/mnt/mmcblk0p1/config.json"
+	API_ENDPOINT="https://staging.resin.io"
+	CONFIG_PATH="/mnt/mmcblk0p1/config.json"
 
-			resin-register-device "$API_ENDPOINT" "$CONFIG_PATH"
-			break
-		else
-			echo  "Not connected. Trying again..."
-			sleep 1
-		fi
-	done
-
-	mount -o ro,remount /dev/mmcblk0p1
+	uuid=$(openssl rand -hex 32)
+	config_json=`cat $CONFIG_PATH`
+	echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
+	
+	resin-register-device "$API_ENDPOINT" "$CONFIG_PATH" &
 
 	# Format the volume to hold our images.
 	mkfs.btrfs -f /dev/mmcblk0p8
