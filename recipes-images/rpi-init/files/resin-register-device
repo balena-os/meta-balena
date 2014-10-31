@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ "$#" -ne 2 ]; then
 	echo "Usage: $0 API_ENDPOINT CONFIG_PATH"
 	echo -e "\tAPI_ENDPOINT\tExample: https://staging.resin.io"
@@ -8,7 +9,7 @@ fi
 API_ENDPOINT=$1
 CONFIG_PATH=$2
 
-if [ `jq ".uuid | length" $CONFIG_PATH` -e 0 ]; then
+if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
 	echo "UUID missing from config file, device register cannot continue."
 	exit 1
 fi
@@ -29,11 +30,10 @@ while true; do
 			config_json=`cat $CONFIG_PATH`
 			echo $config_json | jq ".registered_at=\"`date +%s`\"" > $CONFIG_PATH
 			echo "Registered device with UUID: $uuid."
-			break
 		else
 			echo "Failed to register device. Status code: $status_code"
-			sleep 60 # try again in a minute
 		fi
+		break
 	else
 		echo  "Not connected. Trying again..."
 		sleep 2

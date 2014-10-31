@@ -23,6 +23,8 @@ do_install() {
 	install -d ${D}${base_bindir}
 
 	install -m 0755 ${WORKDIR}/supervisor-init  ${D}${sysconfdir}/init.d/
+	install -m 0755 %{WORKDIR}/resin.conf %{D}${sysconfdir}/
+
 	ln -sf ../init.d/supervisor-init  ${D}${sysconfdir}/rc5.d/S99supervisor-init
 	install -m 0755 ${WORKDIR}/inittab ${D}${sysconfdir}/
 	install -m 0755 ${WORKDIR}/tty-replacement ${D}${base_bindir}
