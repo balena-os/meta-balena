@@ -14,7 +14,6 @@ do_compile() {
 }
 
 do_install() {
-
 	install -d ${D}${sysconfdir}/init.d
     	install -d ${D}${sysconfdir}/rc5.d
 
@@ -22,7 +21,6 @@ do_install() {
 	install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/
 
 	ln -sf ../init.d/supervisor-init  ${D}${sysconfdir}/rc5.d/S99supervisor-init
-
 }
 
 pkg_postinst_${PN} () {
