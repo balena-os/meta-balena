@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source /etc/resin.conf
+export API_ENDPOINT CONFIG_PATH
+
+while true; do
+	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
+		echo "UUID missing from config file, VPN cannot connect"
+		sleep 2
+	else
+		read uuid api_key <<<$(jq -r '.uuid,.apiKey' $CONFIG_PATH)
+		echo $uuid > /var/volatile/vpnfile
+		echo $api_key >> /var/volatile/vpnfile
+		break
+	fi
+done
+
+/etc/init.d/openvpn start
