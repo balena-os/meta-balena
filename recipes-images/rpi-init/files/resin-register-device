@@ -24,7 +24,7 @@ while true; do
 				   -d "application=$application_id" \
 				   -d "uuid=$uuid"  \
 				   --data-urlencode "device_type=$device_type" \
-				   "$API_ENDPOINT/ewa/device?apiKey=$api_key")
+				   "$API_ENDPOINT/ewa/device?apikey=$api_key")
 
 		if [ "$status_code" -eq 201 ]; then
 			config_json=`cat $CONFIG_PATH`
