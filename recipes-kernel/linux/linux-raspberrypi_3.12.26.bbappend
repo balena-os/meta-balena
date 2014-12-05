@@ -16,9 +16,23 @@ do_configure_prepend() {
 }
 
 do_configure_append(){
+        kernel_configure_variable NAMESPACES y
+        kernel_configure_variable UTS_NS y
+        kernel_configure_variable IPC_NS y
+        kernel_configure_variable PID_NS y
         kernel_configure_variable USER_NS y
-        kernel_configure_variable UIDGID_STRICT_TYPE_CHECKS y
+        kernel_configure_variable NET_NS y
         kernel_configure_variable DEVPTS_MULTIPLE_INSTANCES y
+        kernel_configure_variable CGROUP_NS y
+        kernel_configure_variable CGROUP_DEVICE y
+        kernel_configure_variable CGROUP_SCHED y
+        kernel_configure_variable CGROUP_CPUACCT y
+        kernel_configure_variable MEMCG y
+        kernel_configure_variable VETH y
+        kernel_configure_variable MACVLAN y
+        kernel_configure_variable VLAN_8021Q y
+        kernel_configure_variable POSIX_MQUEUE y
+        kernel_configure_variable UIDGID_STRICT_TYPE_CHECKS y
         kernel_configure_variable FB_TFT m
         kernel_configure_variable FB_TFT_BD663474 m
         kernel_configure_variable FB_TFT_HX8340BN m
