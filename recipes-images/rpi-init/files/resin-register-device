@@ -20,6 +20,7 @@ while true; do
 		read api_key user_id application_id uuid device_type <<<$(jq -r '.apiKey,.userId,.applicationId,.uuid,.deviceType // "Raspberry Pi"' $CONFIG_PATH)
 
 		status_code=$(curl -s -X POST -w "%{http_code}" \
+				   -o /dev/null
 				   -d "user=$user_id" \
 				   -d "application=$application_id" \
 				   -d "uuid=$uuid"  \
