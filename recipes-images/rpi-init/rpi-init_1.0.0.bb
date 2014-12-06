@@ -1,7 +1,7 @@
 DESCRIPTION = "RPI custom INIT file"
 SECTION = "console/utils"
 LICENSE = "Apache-2.0" 
-PR = "r1.17"
+PR = "r1.18"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=435b266b3899aa8a959f17d41c56def8" 
 SRC_URI = "file://LICENSE \
 	   file://rpi-init \
