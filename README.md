@@ -1,6 +1,12 @@
 # Resin.io layer for Yocto.
 
-The following gives a rough overview of the directories.
+This repository enables building of resin.io support for various devices.
+
+* meta-resin-common directory has the recipies common to all our builds.
+* meta-resin-<board> directory has the recipies specific to a board.
+
+
+The following gives a rough overview of the directories inside individual layers.
 
 * **classes** : Has the reusable components used by various recipes. 
     * classes/image-resin-rpi.bbclass - Has the functions used for putting together the image. Yocto generates the rootfs and boot partition tars which are put together with the noobs installer. This function currently enables two new FS types - resin-noobs and resin-noobs-dev that are used in resin-rpi and resin-rpi-dev
@@ -15,4 +21,3 @@ The following gives a rough overview of the directories.
 
 * **recipes-kernel** : This has the recipe for adding additional build configs to the BSP kernel to enable docker support.
 
-This layer is designed to be used by yocto-resin-rpi or other device specific build repos we have.
