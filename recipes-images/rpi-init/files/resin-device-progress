@@ -1,4 +1,4 @@
-echo "-- $0 $1 $2 $API_ENDPOINT $CONFIG_PATH" >> /var/log/prov-progress.log
+echo "-- $0 $1 $2 $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
 if [ "$#" -ne 2 -o -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
 	echo "Usage: $0 PERCENTAGE STATE"
 	echo -e "\tPERCENTAGE\tExample: 50"
