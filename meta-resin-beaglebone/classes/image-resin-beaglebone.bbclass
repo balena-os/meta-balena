@@ -7,7 +7,7 @@ IMAGE_TYPEDEP_beaglebone-sdimg = "${SDIMG_ROOTFS_TYPE}"
 BOOTDD_VOLUME_ID ?= "${MACHINE}"
 
 # Boot partition size [in KiB]
-BOOT_SPACE ?= "20480"
+BOOT_SPACE ?= "12288"
 
 # First partition begin at sector 2
 IMAGE_ROOTFS_ALIGNMENT = "1"
@@ -22,10 +22,11 @@ IMAGE_DEPENDS_beaglebone-sdimg += " \
 			dosfstools-native \
 			virtual/kernel \
 			virtual/bootloader \
+			u-boot-ti-staging-mmc \
 			"
 
 # SD card image name
-SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.sdimg"
+SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.img"
 
 IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 
@@ -52,12 +53,12 @@ IMAGE_CMD_beaglebone-sdimg () {
 	BOOT_BLOCKS=$(LC_ALL=C parted -s ${SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
 	mkfs.vfat -n "${BOOTDD_VOLUME_ID}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
 	mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/MLO ::MLO
-	mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/u-boot.img ::u-boot.img
-	mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/zImage ::zImage
+	mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/u-boot-mmc-beaglebone.img ::u-boot.img
+	mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/u-boot.img ::u-boot-emmc.img
 
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
-	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
+	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/image-version-info ::
 	
 	# Burn Partitions
 	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
