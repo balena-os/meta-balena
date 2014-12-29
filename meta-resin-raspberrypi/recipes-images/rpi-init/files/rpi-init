@@ -81,6 +81,15 @@ else
 	mount /dev/mmcblk0p8 /mnt/mmcblk0p8
 fi
 
+# Start logging to disk when DEBUG flag is present in the recovery [Initial installation] partition.
+
+if [ -e /mnt/mmcblk0p5/debug.txt ]; then
+	mount -o remount,rw /dev/mmcblk0p5 /mnt/mmcblk0p5
+	mkdir -p /mnt/mmcblk0p5/log
+	cp -r /var/log/* /mnt/mmcblk0p5/log
+	ln -sf /mnt/mmcblk0p5/log /var
+fi
+
 # Mount docker and data directories to standard locations.
 mkdir -p /resin-data
 mkdir -p /var/lib/docker
