@@ -3,5 +3,5 @@ include recipes-core/images/rpi-hwup-image.bb
 
 IMAGE_FEATURES += "splash package-management"
 VIDEO_CAMERA = "1"
-IMAGE_INSTALL_append = "linux-firmware-ath9k linux-firmware-ralink linux-firmware-rtl8192cu wireless-tools parted lvm2 openssl dosfstools e2fsprogs connman connman-client btrfs-tools apt docker-arm rpi-init tar util-linux socat supervisor-init jq curl"
+IMAGE_INSTALL_append = "linux-firmware-ath9k linux-firmware-ralink linux-firmware-rtl8192cu wireless-tools parted lvm2 openssl dosfstools e2fsprogs connman connman-client btrfs-tools apt docker-arm rpi-init tar util-linux socat supervisor-init jq curl resin-device-register resin-device-progress"
 IMAGE_FSTYPES_forcevariable = "resin-noobs"

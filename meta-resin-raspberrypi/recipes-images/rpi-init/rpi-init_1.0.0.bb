@@ -1,23 +1,20 @@
 DESCRIPTION = "RPI custom INIT file"
 SECTION = "console/utils"
+RDEPENDS_${PN} = "resin-device-register resin-device-progress"
 LICENSE = "Apache-2.0" 
-PR = "r1.18"
+PR = "r1.19"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=435b266b3899aa8a959f17d41c56def8" 
 SRC_URI = "file://LICENSE \
 	   file://rpi-init \
 	   file://connman.conf \
-	   file://resin-register-device \
 	  "
 
-FILES_${PN} = "${sysconfdir}/* ${bindir}/*"
+FILES_${PN} = "${sysconfdir}/*"
 
 do_compile() {
 }
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0775 ${WORKDIR}/resin-register-device ${D}${bindir}/resin-register-device
-    
 	install -d ${D}${sysconfdir}/init.d
     	install -d ${D}${sysconfdir}/rc5.d
 	install -m 0755 ${WORKDIR}/rpi-init  ${D}${sysconfdir}/init.d/

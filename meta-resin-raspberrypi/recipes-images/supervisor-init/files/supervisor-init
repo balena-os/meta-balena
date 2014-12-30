@@ -21,6 +21,10 @@ modprobe snd-bcm2835 # Sound
 echo "Starting resin/rpi-supervisor.."
 docker run --privileged -d -v /var/run/docker.sock:/run/docker.sock resin/rpi-supervisor /start
 
+source /etc/resin.conf
+export API_ENDPOINT CONFIG_PATH
+resin-device-progress "" "Finished" || true
+
 while [ ! -d /resin-data/resin-supervisor ]
 do
 	sleep 1
