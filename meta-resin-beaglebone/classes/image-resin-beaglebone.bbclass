@@ -9,6 +9,9 @@ BOOTDD_VOLUME_ID ?= "${MACHINE}"
 # Boot partition size [in KiB]
 BOOT_SPACE ?= "12288"
 
+# Config partition size [in KiB]
+CONFIGFS_SIZE = "4096"
+
 # First partition begin at sector 2
 IMAGE_ROOTFS_ALIGNMENT = "1"
 
@@ -35,7 +38,7 @@ IMAGE_CMD_beaglebone-sdimg () {
 	# Align partitions
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} + ${IMAGE_ROOTFS_ALIGNMENT} - 1)
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} - ${BOOT_SPACE_ALIGNED} % ${IMAGE_ROOTFS_ALIGNMENT})
-	SDIMG_SIZE=$(expr ${IMAGE_ROOTFS_ALIGNMENT} + ${BOOT_SPACE_ALIGNED} + $ROOTFS_SIZE + ${IMAGE_ROOTFS_ALIGNMENT})
+	SDIMG_SIZE=$(expr ${IMAGE_ROOTFS_ALIGNMENT} + ${BOOT_SPACE_ALIGNED} + $ROOTFS_SIZE + ${IMAGE_ROOTFS_ALIGNMENT} + ${CONFIGFS_SIZE})
 
 	# Initialize sdcard image file
 	dd if=/dev/zero of=${SDIMG} bs=1 count=0 seek=$(expr 1024 \* ${SDIMG_SIZE})
@@ -47,6 +50,8 @@ IMAGE_CMD_beaglebone-sdimg () {
 	parted -s ${SDIMG} set 1 boot on
 	# Create rootfs partition
 	parted -s ${SDIMG} unit KiB mkpart primary ext4 $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT}) $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE})
+	# Create a config partition
+	parted -s ${SDIMG} unit KiB mkpart primary ext4 $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE}) $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${CONFIGFS_SIZE})
 	parted ${SDIMG} print
 
 	# Create a vfat image with boot files
