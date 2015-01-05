@@ -12,6 +12,9 @@ BOOT_SPACE ?= "12288"
 # Config partition size [in KiB]
 CONFIGFS_SIZE = "4096"
 
+# Rootfs partition size [in KiB]
+ROOTFS_SIZE_forcevariable = "307200"
+
 # First partition begin at sector 2
 IMAGE_ROOTFS_ALIGNMENT = "1"
 
@@ -38,7 +41,7 @@ IMAGE_CMD_beaglebone-sdimg () {
 	# Align partitions
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} + ${IMAGE_ROOTFS_ALIGNMENT} - 1)
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} - ${BOOT_SPACE_ALIGNED} % ${IMAGE_ROOTFS_ALIGNMENT})
-	SDIMG_SIZE=$(expr ${IMAGE_ROOTFS_ALIGNMENT} + ${BOOT_SPACE_ALIGNED} + $ROOTFS_SIZE + ${IMAGE_ROOTFS_ALIGNMENT} + ${CONFIGFS_SIZE})
+	SDIMG_SIZE=$(expr ${IMAGE_ROOTFS_ALIGNMENT} + ${BOOT_SPACE_ALIGNED} + ${ROOTFS_SIZE} + ${IMAGE_ROOTFS_ALIGNMENT} + ${CONFIGFS_SIZE})
 
 	# Initialize sdcard image file
 	dd if=/dev/zero of=${SDIMG} bs=1 count=0 seek=$(expr 1024 \* ${SDIMG_SIZE})
