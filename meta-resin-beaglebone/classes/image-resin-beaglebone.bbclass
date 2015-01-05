@@ -13,7 +13,7 @@ BOOT_SPACE ?= "12288"
 CONFIGFS_SIZE = "4096"
 
 # Rootfs partition size [in KiB]
-ROOTFS_SIZE_forcevariable = "307200"
+#ROOTFS_SIZE_forcevariable = "307200"
 
 # First partition begin at sector 2
 IMAGE_ROOTFS_ALIGNMENT = "1"
