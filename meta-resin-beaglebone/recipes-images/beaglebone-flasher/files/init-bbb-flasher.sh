@@ -56,7 +56,7 @@ mount /dev/mmcblk1p1 /tmp/new_boot
 cp /tmp/boot/MLO /tmp/new_boot/ # This needs to go first into the partition.
 cp /tmp/boot/u-boot-emmc.img /tmp/new_boot/u-boot.img # Copy the emmc specific u-boot to emmc
 cp /tmp/boot/image-version-info /tmp/new_boot/image-version-info # Copy the uboot build info
-rsync -a -W --no-compress --numeric-ids --exclude='/tmp/*' --exclude='/dev/*' --exclude='/resin-data/*' --exclude='/proc/*' --exclude='/sys/*' --exclude='/var/volatile/*' --exclude='/run/*' / /tmp/new_root/ # rsync the rest of the files.
+rsync -a -W --no-compress --numeric-ids --exclude='/tmp/*' --exclude='/dev/*' --exclude='/resin-data/*' --exclude='/srv/*' --exclude='/proc/*' --exclude='/sys/*' --exclude='/var/volatile/*' --exclude='/run/*' / /tmp/new_root/ # rsync the rest of the files.
 
 export BOOTUUID=`blkid -s UUID -o value /dev/mmcblk1p1`
 export ROOTPARTUUID=`blkid -s PARTUUID -o value /dev/mmcblk1p2`
