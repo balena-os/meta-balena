@@ -15,8 +15,8 @@ CONFIGFS_SIZE = "4096"
 # Rootfs partition size [in KiB]
 #ROOTFS_SIZE_forcevariable = "307200"
 
-# First partition begin at sector 2
-IMAGE_ROOTFS_ALIGNMENT = "1"
+# First partition leaving 4MiB of space
+IMAGE_ROOTFS_ALIGNMENT = "4096"
 
 # Use an uncompressed ext4 by default as rootfs
 SDIMG_ROOTFS_TYPE_forcevariable = "ext4"
@@ -65,8 +65,8 @@ IMAGE_CMD_beaglebone-sdimg () {
 	mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/u-boot.img ::u-boot-emmc.img
 
 	# Add stamp file
-	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
-	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/image-version-info ::
+	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/VERSION
+	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/VERSION ::
 	
 	# Burn Partitions
 	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync

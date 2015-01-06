@@ -18,8 +18,7 @@ do_install() {
         docker pull resin/${SRC_REPOSITORY}:${VERSION}
 	docker tag resin/${SRC_REPOSITORY}:${VERSION} resin/${TARGET_REPOSITORY}:latest
 	docker save resin/${TARGET_REPOSITORY}:latest > ${WORKDIR}/${TARGET_REPOSITORY}.tar
-	pixz ${WORKDIR}/${TARGET_REPOSITORY}.tar ${WORKDIR}/${TARGET_REPOSITORY}.tar.xz  
-	install -m 0444 ${WORKDIR}/${TARGET_REPOSITORY}.tar.xz ${D}/resin-data/${TARGET_REPOSITORY}.tar.xz
+	install -m 0444 ${WORKDIR}/${TARGET_REPOSITORY}.tar ${D}/resin-data/${TARGET_REPOSITORY}.tar
 	touch ${WORKDIR}/BTRFS_MOUNT_POINT
 	install -m 0444 ${WORKDIR}/BTRFS_MOUNT_POINT ${D}/mnt/data-disk/BTRFS_MOUNT_POINT
 
