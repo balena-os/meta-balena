@@ -15,13 +15,14 @@ SRC_URI[docker.sha256sum] = "6ca6a1f922cbfbb6593c236fe8b4bc8e6f6675bae18cca00f21
 SRC_URI[cgroupfs-mount.md5sum] = "1f7abb7d2c3b1218aaf3d2747b2fd507"
 SRC_URI[cgroupfs-mount.sha256sum] = "817f7171fe5d01bfc3b27d9d823a7c0cf3e43dc1191f11dd1be3c7a2abc5804d"
 
-FILES_${PN} = "${bindir}/* ${sysconfdir}/* ${localstatedir}/lib/docker*"
+FILES_${PN} = "${bindir}/* /.docker* ${sysconfdir}/* ${localstatedir}/lib/docker*"
 
 do_compile() {
 }
 
 do_install() {
 	install -d ${D}${bindir}
+	install -d ${D}/.docker
 	install -d ${D}${localstatedir}
 	install -d ${D}${localstatedir}/lib
 	install -d ${D}${localstatedir}/lib/docker

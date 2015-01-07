@@ -83,7 +83,9 @@ swapon /dev/mmcblk1p3
 mount /dev/mmcblk1p4 /mnt/data-disk
 mkdir -p /mnt/data-disk/docker /mnt/data-disk/resin-data
 mount -o bind /mnt/data-disk/docker /var/lib/docker
-mount -o remount,rw / # Root needs to be remounted to facilitate docker to create a .docker directory
+# docker 1.4.1 Needs a .docker directory in / :|
+mkdir -p /tmp/.docker
+mount -o bind /tmp/.docker /.docker
 docker -d -s btrfs &
 # Wait for docker to become ready
 echo "Waiting for docker to become ready.."
@@ -91,8 +93,7 @@ while [ ! -S /var/run/docker.sock ]
 do
 	sleep 1
 done
-docker load < /resin-data/armhfv7-supervisor.tar && sync && killall docker && cp -r /home/root/.docker /tmp/new_root/home/root && rm -rf /home/root/.docker && sync
-
+docker load < /resin-data/armhfv7-supervisor.tar && sync && killall docker && sync
 sync && sync && umount /dev/mmcblk1p1 && umount /dev/mmcblk1p2 && umount /var/lib/docker && umount /dev/mmcblk1p4 && swapoff /dev/mmcblk1p3 && umount /dev/mmcblk0p1
 
 echo 1 > /sys/class/leds/beaglebone:green:usr3/brightness
