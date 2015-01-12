@@ -1,0 +1,56 @@
+#!/bin/bash
+set -o pipefail
+
+source /etc/resin.conf
+
+if [ -z "$API_ENDPOINT" -o -z "$SUPERVISOR_IMAGE" -o -z "$CONFIG_PATH" ]; then
+	echo "Environment variables API_ENDPOINT, SUPERVISOR_IMAGE, and CONFIG_PATH must be set."
+	exit 1
+fi
+
+read API_KEY DEVICE_ID <<<$(jq -r '.apiKey,.deviceId' $CONFIG_PATH)
+if [ -z "$API_KEY" -o -z "$DEVICE_ID" ]; then
+	echo "JSON in config file $CONFIG_PATH must have apiKey and deviceId attributes."
+	exit 1
+fi
+
+function error_handler {
+	exit 1
+}
+
+trap 'error_handler $LINENO' ERR
+
+# Get target supervisor tag from API.
+# The script will exit if curl does not get a valid response.
+tag=$(curl -s "$API_ENDPOINT/ewa/device($DEVICE_ID)?\$expand=supervisor_release&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_release[0].supervisor_version')
+
+# Check that we didn't somehow get an empty tag version.
+if [ -z "$tag" ]; then
+	error_handler $LINENO "no tag"
+fi
+
+# Pull target version. 
+docker pull "$SUPERVISOR_IMAGE:$tag"
+
+# If we are running the target version, nothing to do.
+if docker ps resin_supervisor | grep "$SUPERVISOR_IMAGE:$tag"; then
+	echo "Latest supervisor version already running."
+	exit 0
+fi
+
+# Try stopping and removing old supervisor. Do not exit if these fail.
+docker stop resin_supervisor || true
+docker rm resin_supervisor || true
+
+# Clean supervisor images that do not have the current tag.
+docker images | grep "$SUPERVISOR_IMAGE" | grep -v "$SUPERVISOR_IMAGE[[:space:]]\+$tag[[:space:]]" | awk '{print $3}' | xargs docker rmi || true
+
+# Run supervisor with the device-type-specific options.
+# We give a specific name to the container to guarantee only one running.
+docker-run-supervisor "$SUPERVISOR_IMAGE:$tag"
+
+# Mark supervisor as working. This version will run when the device reboots.
+docker tag "$SUPERVISOR_IMAGE:$tag" "$SUPERVISOR_IMAGE:latest"
+
+# Update supervisor_version to mark update as successful.
+curl -s -X PATCH -d "supervisor_version=$tag" "$API_ENDPOINT/ewa/device($DEVICE_ID)?apikey=$API_KEY"

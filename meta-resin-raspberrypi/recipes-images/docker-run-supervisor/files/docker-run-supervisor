@@ -1,0 +1,23 @@
+#!/bin/bash
+
+source /etc/resin.conf
+
+image=$1
+if [ -z "$image" ]; then
+	echo "Usage: $0 IMAGE_NAME [CONTAINER_NAME]"
+	exit 1
+fi
+
+docker run -d --privileged --name resin_supervisor \
+	-v /var/run/docker.sock:/run/docker.sock \
+	-v "$CONFIG_PATH":/boot/config.json  \
+	-v /resin-data/resin-supervisor:/data \
+	-v /proc/net/fib_trie:/mnt/fib_trie \
+	-v /var/log/supervisor-log:/var/log \
+	-v /:/mnt/root \
+	-e API_ENDPOINT="$API_ENDPOINT" \
+	-e REGISTRY_ENDPOINT="$REGISTRY_ENDPOINT" \
+	-e PUBNUB_SUBSCRIBE_KEY="$PUBNUB_SUBSCRIBE_KEY" \
+	-e PUBNUB_PUBLISH_KEY="$PUBNUB_PUBLISH_KEY" \
+	-e MIXPANEL_TOKEN="$MIXPANEL_TOKEN" \
+	$image /start
