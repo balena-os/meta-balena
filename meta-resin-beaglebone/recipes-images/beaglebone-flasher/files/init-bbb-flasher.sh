@@ -14,14 +14,14 @@ config_json=`cat $CONFIG_PATH`
 echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
 resin-device-register &
 
-resin-device-progress 0 "Partioning eMMC" || true
+resin-device-progress 0 "Partitioning eMMC" || true
 
 # Card config
 export SDCARD=/dev/mmcblk1
 # Boot partition size [in KiB]
 export BOOT_SIZE=20480 # 20 MB
 # Rootfs Size [in KiB]
-export ROOTFS_SIZE=102400 # 100 MB
+export ROOTFS_SIZE=122880 # 120 MB
 # Swap Size [ in KiB]
 export SWAP_SIZE=262144 # 256 MB
 
@@ -39,14 +39,20 @@ parted -s ${SDCARD} mklabel msdos
 parted -s ${SDCARD} unit KiB mkpart primary fat16 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
 parted -s ${SDCARD} set 1 boot on
         
-# Create rootfs partition
+# Create A rootfs partition
 parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT}) $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE})
 
-# Create swap partition
-parted -s ${SDCARD} unit KiB mkpart primary linux-swap $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE}) $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE})
+# Create B rootfs partition
+parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE}) $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${ROOTFS_SIZE})
+
+# Create extended partition
+parted -s ${SDCARD} unit KiB mkpart extended $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${ROOTFS_SIZE}) 100%
+
+# Create a swap partition
+parted -s ${SDCARD} unit KiB mkpart logical linux-swap $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${ROOTFS_SIZE}) $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE})
 
 # Create docker data partition with the rest of the space.
-parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE}) 100%
+parted -s ${SDCARD} unit KiB mkpart logical ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE}) 100%
 
 parted ${SDCARD} print
 
@@ -54,8 +60,8 @@ partprobe
 
 mkfs.vfat -F 16 /dev/mmcblk1p1  #BOOT
 mkfs.ext4 /dev/mmcblk1p2  #ROOT
-mkswap /dev/mmcblk1p3 #SWAP
-mkfs.btrfs -f /dev/mmcblk1p4 #DATA
+mkswap /dev/mmcblk1p5 #SWAP
+mkfs.btrfs -f /dev/mmcblk1p6 #DATA
 
 resin-device-progress 20 "Copying System files to eMMC" || true
 
@@ -79,8 +85,8 @@ resin-device-progress 30 "Writing System configuration." || true
 
 export BOOTUUID=`blkid -s UUID -o value /dev/mmcblk1p1`
 export ROOTPARTUUID=`blkid -s PARTUUID -o value /dev/mmcblk1p2`
-export SWAPUUID=`blkid -s UUID -o value /dev/mmcblk1p3`
-export BTRFSUUID=`blkid -s UUID -o value /dev/mmcblk1p4`
+export SWAPUUID=`blkid -s UUID -o value /dev/mmcblk1p5`
+export BTRFSUUID=`blkid -s UUID -o value /dev/mmcblk1p6`
 
 echo "uenvcmd=setenv mmcroot PARTUUID=${ROOTPARTUUID} ro;" > /tmp/new_boot/uEnv.txt
 echo 1 > /tmp/new_boot/REMOVE_TO_REPROVISION_${BOOTUUID}
@@ -95,8 +101,8 @@ echo "UUID=${BTRFSUUID}         /mnt/data-disk  btrfs   defaults        0       
 echo 1 > /sys/class/leds/beaglebone:green:usr2/brightness
 resin-device-progress 50 "Loading Resin Supervisor." || true
 # Load the supervisor container
-swapon /dev/mmcblk1p3
-mount /dev/mmcblk1p4 /mnt/data-disk
+swapon /dev/mmcblk1p5
+mount /dev/mmcblk1p6 /mnt/data-disk
 mkdir -p /mnt/data-disk/docker /mnt/data-disk/resin-data
 mount -o bind /mnt/data-disk/docker /var/lib/docker
 # docker 1.4.1 Needs a .docker directory in / :|
@@ -110,7 +116,7 @@ do
 	sleep 1
 done
 docker load < /resin-data/armhfv7-supervisor.tar && sync && killall docker && sync
-sync && sync && umount /dev/mmcblk1p1 && umount /dev/mmcblk1p2 && umount /var/lib/docker && umount /dev/mmcblk1p4 && swapoff /dev/mmcblk1p3 && umount /dev/mmcblk0p1
+sync && sync && umount /dev/mmcblk1p1 && umount /dev/mmcblk1p2 && umount /var/lib/docker && umount /dev/mmcblk1p6 && swapoff /dev/mmcblk1p5 && umount /dev/mmcblk0p1
 
 echo 1 > /sys/class/leds/beaglebone:green:usr3/brightness
 resin-device-progress 90 "Rebooting to the newly installed eMMC" || true
