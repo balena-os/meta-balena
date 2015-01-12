@@ -42,9 +42,6 @@ fi
 docker stop resin_supervisor || true
 docker rm resin_supervisor || true
 
-# Clean supervisor images that do not have the current tag.
-docker images | grep "$SUPERVISOR_IMAGE" | grep -v "$SUPERVISOR_IMAGE[[:space:]]\+$tag[[:space:]]" | awk '{print $3}' | xargs docker rmi || true
-
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
 docker-run-supervisor "$SUPERVISOR_IMAGE:$tag"
