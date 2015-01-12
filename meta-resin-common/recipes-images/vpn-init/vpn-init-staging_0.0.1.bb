@@ -24,7 +24,6 @@ do_install() {
     	install -d ${D}${sysconfdir}/rc5.d
         install -m 0755 ${WORKDIR}/vpn-init  ${D}${sysconfdir}/init.d/vpn-init
         ln -sf ../init.d/vpn-init  ${D}${sysconfdir}/rc5.d/S99vpn-init
-        ln -sf ../init.d/openvpn ${D}${sysconfdir}/rc0.d/K21openvpn #Add this only to kill openvpn when exiting.
 }
 
 pkg_postinst_${PN} () {
