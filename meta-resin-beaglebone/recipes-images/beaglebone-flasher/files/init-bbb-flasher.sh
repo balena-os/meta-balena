@@ -19,7 +19,7 @@ resin-device-progress 0 "Partioning eMMC" || true
 # Card config
 export SDCARD=/dev/mmcblk1
 # Boot partition size [in KiB]
-export BOOT_SPACE=20480 # 20 MB
+export BOOT_SIZE=20480 # 20 MB
 # Rootfs Size [in KiB]
 export ROOTFS_SIZE=102400 # 100 MB
 # Swap Size [ in KiB]
@@ -29,24 +29,24 @@ export SWAP_SIZE=262144 # 256 MB
 export IMAGE_ROOTFS_ALIGNMENT=4096
 
 # Align partitions
-export BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} + ${IMAGE_ROOTFS_ALIGNMENT} - 1)
-export BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} - ${BOOT_SPACE_ALIGNED} % ${IMAGE_ROOTFS_ALIGNMENT})
+export BOOT_SIZE_ALIGNED=$(expr ${BOOT_SIZE} + ${IMAGE_ROOTFS_ALIGNMENT} - 1)
+export BOOT_SIZE_ALIGNED=$(expr ${BOOT_SIZE_ALIGNED} - ${BOOT_SIZE_ALIGNED} % ${IMAGE_ROOTFS_ALIGNMENT})
 
 # Create Partition table
 parted -s ${SDCARD} mklabel msdos
 
 # Create boot partition and mark it as bootable
-parted -s ${SDCARD} unit KiB mkpart primary fat16 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
+parted -s ${SDCARD} unit KiB mkpart primary fat16 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
 parted -s ${SDCARD} set 1 boot on
         
 # Create rootfs partition
-parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT}) $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE})
+parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT}) $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE})
 
 # Create swap partition
-parted -s ${SDCARD} unit KiB mkpart primary linux-swap $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE}) $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE})
+parted -s ${SDCARD} unit KiB mkpart primary linux-swap $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE}) $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE})
 
 # Create docker data partition with the rest of the space.
-parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE}) 100%
+parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${SWAP_SIZE}) 100%
 
 parted ${SDCARD} print
 
