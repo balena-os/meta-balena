@@ -22,21 +22,26 @@ trap 'error_handler $LINENO' ERR
 
 # Get target supervisor tag from API.
 # The script will exit if curl does not get a valid response.
-tag=$(curl -s "$API_ENDPOINT/ewa/device($DEVICE_ID)?\$expand=supervisor_release&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_release[0].supervisor_version')
+tag=$(curl -s "$API_ENDPOINT/ewa/device($DEVICE_ID)/supervisor_release?apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version')
 
 # Check that we didn't somehow get an empty tag version.
 if [ -z "$tag" ]; then
 	error_handler $LINENO "no tag"
 fi
 
-# Pull target version. 
-docker pull "$SUPERVISOR_IMAGE:$tag"
+# Get image id of tag. This will be non-empty only in case it's already downloaded.
+# `head -n 1` is probably not needed but is there to make sure the input to next functions is sane.
+imageid=$(docker images --no-trunc | grep "$SUPERVISOR_IMAGE[[:space:]]\+$tag[[:space:]]" | awk '{print $3}' | head -n 1) || imageid=""
 
-# If we are running the target version, nothing to do.
-if docker ps resin_supervisor | grep "$SUPERVISOR_IMAGE:$tag"; then
+# Check if image is downloaded and there is a running container.
+# The second condition is needed to make sure the image has not stopped since we first run it.
+if [[ -n "$imageid" && $(docker ps -q --no-trunc | xargs docker inspect | jq -r '.[]|.Image' | grep "$imageid") ]]; then
 	echo "Latest supervisor version already running."
 	exit 0
 fi
+
+# Pull target version.
+docker pull "$SUPERVISOR_IMAGE:$tag"
 
 # Try stopping and removing old supervisor. Do not exit if these fail.
 docker stop resin_supervisor || true
@@ -48,6 +53,3 @@ docker-run-supervisor "$SUPERVISOR_IMAGE:$tag"
 
 # Mark supervisor as working. This version will run when the device reboots.
 docker tag "$SUPERVISOR_IMAGE:$tag" "$SUPERVISOR_IMAGE:latest"
-
-# Update supervisor_version to mark update as successful.
-curl -s -X PATCH -d "supervisor_version=$tag" "$API_ENDPOINT/ewa/device($DEVICE_ID)?apikey=$API_KEY"
