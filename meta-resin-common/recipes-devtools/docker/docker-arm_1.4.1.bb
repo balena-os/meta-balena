@@ -1,9 +1,9 @@
 DESCRIPTION = "Docker build for ARM v6"
 SECTION = "console/utils"
 LICENSE = "Apache-2.0" 
-PR = "r2"
+PR = "r3"
 # Fill this up with relevent things for docker to run.
-DEPENDS = "ca-certificates" 
+RDEPENDS_${PN} = "ca-certificates"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=435b266b3899aa8a959f17d41c56def8" 
 SRC_URI = "https://s3.amazonaws.com/resin-share/build_requirements/docker-arm-1.4.1.tar.xz;name=docker \
 	   file://LICENSE \
