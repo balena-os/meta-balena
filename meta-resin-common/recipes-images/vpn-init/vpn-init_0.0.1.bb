@@ -22,14 +22,14 @@ do_install() {
 	install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
     
 	install -d ${D}${sysconfdir}/init.d
-    	install -d ${D}${sysconfdir}/rc5.d
-        install -m 0755 ${WORKDIR}/vpn-init  ${D}${sysconfdir}/init.d/vpn-init
-        ln -sf ../init.d/vpn-init  ${D}${sysconfdir}/rc5.d/S99vpn-init
-
-        mkdir -p ${D}/home/root/.ssh
-        mkdir -p ${D}${localstatedir}/lib/dropbear/ # This will enable the authorized_keys to be updated even when the device has read_only root.
-        install -m 0400 ${WORKDIR}/failsafe-sshkey.pub ${D}/${localstatedir}/lib/dropbear/authorized_keys
-        ln -sf ../../../var/lib/dropbear/authorized_keys ${D}/home/root/.ssh/authorized_keys
+	install -d ${D}${sysconfdir}/rc5.d
+	install -m 0755 ${WORKDIR}/vpn-init  ${D}${sysconfdir}/init.d/vpn-init
+	ln -sf ../init.d/vpn-init  ${D}${sysconfdir}/rc5.d/S99vpn-init
+	
+	mkdir -p ${D}/home/root/.ssh
+	mkdir -p ${D}${localstatedir}/lib/dropbear/ # This will enable the authorized_keys to be updated even when the device has read_only root.
+	install -m 0400 ${WORKDIR}/failsafe-sshkey.pub ${D}/${localstatedir}/lib/dropbear/authorized_keys
+	ln -sf ../../../var/lib/dropbear/authorized_keys ${D}/home/root/.ssh/authorized_keys
 }
 
 pkg_postinst_${PN} () {
