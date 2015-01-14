@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE.noobs;md5=da9003fdc21a7bab51d486d8
 
 inherit deploy
 
-PR="r0"
+PR="r1"
 SRC_URI = "https://s3.amazonaws.com/resin-share/build_requirements/noobs-1.3.6.tar.xz;name=noobs;subdir=noobs \
 	   file://LICENSE.noobs \
 	   file://os.json \

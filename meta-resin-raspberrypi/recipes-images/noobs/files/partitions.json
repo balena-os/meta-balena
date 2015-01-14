@@ -12,7 +12,15 @@
         {
             "label":                        "root",
             "filesystem_type":              "ext4",
-            "partition_size_nominal":       500,
+            "partition_size_nominal":       200,
+            "want_maximised":               false,
+            "mkfs_options":                 "-c",
+            "uncompressed_tarball_size":    110
+        },
+        {
+            "label":                        "empty",
+            "filesystem_type":              "ext4",
+            "partition_size_nominal":       200,
             "want_maximised":               false,
             "mkfs_options":                 "-c",
             "uncompressed_tarball_size":    110
