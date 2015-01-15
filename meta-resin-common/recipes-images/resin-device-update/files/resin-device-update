@@ -30,12 +30,11 @@ if [ -z "$tag" ]; then
 fi
 
 # Get image id of tag. This will be non-empty only in case it's already downloaded.
-# `head -n 1` is probably not needed but is there to make sure the input to next functions is sane.
-imageid=$(docker images --no-trunc | grep "$SUPERVISOR_IMAGE[[:space:]]\+$tag[[:space:]]" | awk '{print $3}' | head -n 1) || imageid=""
+imageid=$(docker inspect -f '{{.Id}}' "$SUPERVISOR_IMAGE:$tag") || imageid=""
 
 # Check if image is downloaded and there is a running container.
 # The second condition is needed to make sure the image has not stopped since we first run it.
-if [[ -n "$imageid" && $(docker ps -q --no-trunc | xargs docker inspect | jq -r '.[]|.Image' | grep "$imageid") ]]; then
+if [[ -n "$imageid" && $(docker ps -q --no-trunc | xargs docker inspect -f '{{.Image}}' | grep "$imageid") ]]; then
 	echo "Latest supervisor version already running."
 	exit 0
 fi
