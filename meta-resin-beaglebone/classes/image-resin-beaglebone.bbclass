@@ -26,6 +26,7 @@ IMAGE_DEPENDS_beaglebone-sdimg += " \
 			parted-native \
 			mtools-native \
 			dosfstools-native \
+			e2fsprogs-native \
 			virtual/kernel \
 			virtual/bootloader \
 			u-boot-ti-staging-mmc \
