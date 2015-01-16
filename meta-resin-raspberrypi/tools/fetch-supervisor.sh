@@ -20,7 +20,7 @@ echo Embedding resin/rpi-supervisor:$1 in the image.
 
 docker pull resin/rpi-supervisor:$1
 
-docker tag resin/rpi-supervisor:$1 resin/rpi-supervisor:latest
+docker tag -f resin/rpi-supervisor:$1 resin/rpi-supervisor:latest
 
 docker history -q --no-trunc=true resin/rpi-supervisor:latest | sed '1!G;h;$!d' > history.list
 docker save resin/rpi-supervisor:latest | tar x
