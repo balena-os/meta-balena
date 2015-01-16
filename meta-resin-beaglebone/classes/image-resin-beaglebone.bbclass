@@ -71,6 +71,9 @@ IMAGE_CMD_beaglebone-sdimg () {
 	# Burn Partitions
 	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
 	dd if=${SDIMG_ROOTFS} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${BOOT_SIZE_ALIGNED} + ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
+
+	# Add symlink
+	ln -sf ${SDIMG} ${DEPLOY_DIR_IMAGE}/beaglebone.img
 	
 
 }
