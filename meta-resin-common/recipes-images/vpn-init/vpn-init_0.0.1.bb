@@ -1,7 +1,7 @@
 DESCRIPTION = "Resin VPN"
 SECTION = "console/utils"
 LICENSE = "Apache-2.0" 
-PR = "r0.8"
+PR = "r0.9"
 RDEPENDS_${PN} = "openvpn"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=ddcd1a84ad22582096e187ad31540c03" 
 SRC_URI = "file://LICENSE \
@@ -11,7 +11,7 @@ SRC_URI = "file://LICENSE \
            file://failsafe-sshkey.pub \
 	  "
 
-FILES_${PN} = "${sysconfdir}/* ${bindir}/* /home/root/.ssh/* ${localstatedir}/lib/dropbear/*"
+FILES_${PN} = "${sysconfdir}/* ${bindir}/* /home/root/.ssh/* ${localstatedir}/lib/dropbear/* /etc/default/dropbear"
 
 do_compile() {
 }
@@ -30,9 +30,11 @@ do_install() {
 	mkdir -p ${D}${localstatedir}/lib/dropbear/ # This will enable the authorized_keys to be updated even when the device has read_only root.
 	install -m 0400 ${WORKDIR}/failsafe-sshkey.pub ${D}/${localstatedir}/lib/dropbear/authorized_keys
 	ln -sf ../../../var/lib/dropbear/authorized_keys ${D}/home/root/.ssh/authorized_keys
+
+	install -d ${D}${sysconfdir}/default
+	echo 'DROPBEAR_PORT="22222"' >> ${D}/etc/default/dropbear # Change default dropbear port to 22222
+	echo 'DROPBEAR_EXTRA_ARGS="-g"' >> ${D}/etc/default/dropbear # Change dropbear to disable root password logins
 }
 
 pkg_postinst_${PN} () {
-        echo 'DROPBEAR_PORT="22222"' >> /etc/default/dropbear # Change default dropbear port to 22222
-        echo 'DROPBEAR_EXTRA_ARGS="-g"' >> /etc/default/dropbear # Change dropbear to disable root password logins
 }

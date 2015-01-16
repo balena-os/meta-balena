@@ -1,0 +1,42 @@
+diff --git a/include/configs/am335x_evm.h b/include/configs/am335x_evm.h
+index 16514b1..ba8231c 100644
+--- a/include/configs/am335x_evm.h
++++ b/include/configs/am335x_evm.h
+@@ -78,7 +78,7 @@
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	DEFAULT_LINUX_BOOT_ENV \
+ 	"boot_fdt=try\0" \
+-	"bootpart=0:2\0" \
++	"bootpart=1:2\0" \
+ 	"bootdir=/boot\0" \
+ 	"bootfile=zImage\0" \
+ 	"fdtfile=undefined\0" \
+@@ -87,7 +87,7 @@
+ 		"uuid_disk=${uuid_gpt_disk};" \
+ 		"name=rootfs,start=2MiB,size=-,uuid=${uuid_gpt_rootfs}\0" \
+ 	"optargs=\0" \
+-	"mmcdev=0\0" \
++	"mmcdev=1\0" \
+ 	"mmcroot=/dev/mmcblk0p2 ro\0" \
+ 	"mmcrootfstype=ext4 rootwait\0" \
+ 	"rootpath=/export/rootfs\0" \
+@@ -187,8 +187,8 @@
+ #define CONFIG_BOOTCOMMAND \
+ 	"run findfdt; " \
+ 	"run mmcboot;" \
+-	"setenv mmcdev 1; " \
+-	"setenv bootpart 1:2; " \
++	"setenv mmcdev 0; " \
++	"setenv bootpart 0:2; " \
+ 	"run mmcboot;" \
+ 	"run nandboot;"
+ 
+@@ -448,7 +448,7 @@
+ /* Not NAND, SPI, NOR or eMMC env, so put ENV in a file on FAT */
+ #define CONFIG_ENV_IS_IN_FAT
+ #define FAT_ENV_INTERFACE		"mmc"
+-#define FAT_ENV_DEVICE_AND_PART		"0:1"
++#define FAT_ENV_DEVICE_AND_PART		"1:1"
+ #define FAT_ENV_FILE			"uboot.env"
+ #endif
+ 
