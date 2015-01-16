@@ -30,8 +30,10 @@ do_configure_append(){
         kernel_configure_variable CGROUP_FREEZER y
         kernel_configure_variable CGROUP_PERF y
         kernel_configure_variable CPUSETS y
+        kernel_configure_variable PROC_PID_CPUSET y
         kernel_configure_variable MEMCG y
         kernel_configure_variable MEMCG_SWAP y
+        kernel_configure_variable MEMCG_SWAP_ENABLED y
         kernel_configure_variable RESOURCE_COUNTERS y
         kernel_configure_variable VETH y
         kernel_configure_variable MACVLAN y
