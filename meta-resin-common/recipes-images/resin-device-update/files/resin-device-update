@@ -3,8 +3,8 @@ set -o pipefail
 
 source /etc/resin.conf
 
-if [ -z "$API_ENDPOINT" -o -z "$SUPERVISOR_IMAGE" -o -z "$CONFIG_PATH" ]; then
-	echo "Environment variables API_ENDPOINT, SUPERVISOR_IMAGE, and CONFIG_PATH must be set."
+if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
+	echo "Environment variables API_ENDPOINT and CONFIG_PATH must be set."
 	exit 1
 fi
 
@@ -22,7 +22,7 @@ trap 'error_handler $LINENO' ERR
 
 # Get target supervisor tag from API.
 # The script will exit if curl does not get a valid response.
-tag=$(curl -s "$API_ENDPOINT/ewa/device($DEVICE_ID)/supervisor_release?apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version')
+curl -s --compressed "$API_ENDPOINT/ewa/supervisor_release?\$filter=device/id%20eq%20$DEVICE_ID&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name' | { read tag; read image_name }
 
 # Check that we didn't somehow get an empty tag version.
 if [ -z "$tag" ]; then
@@ -30,7 +30,7 @@ if [ -z "$tag" ]; then
 fi
 
 # Get image id of tag. This will be non-empty only in case it's already downloaded.
-imageid=$(docker inspect -f '{{.Id}}' "$SUPERVISOR_IMAGE:$tag") || imageid=""
+imageid=$(docker inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 # Check if image is downloaded and there is a running container.
 # The second condition is needed to make sure the image has not stopped since we first run it.
@@ -40,7 +40,7 @@ if [[ -n "$imageid" && $(docker ps -q --no-trunc | xargs docker inspect -f '{{.I
 fi
 
 # Pull target version.
-docker pull "$SUPERVISOR_IMAGE:$tag"
+docker pull "$image_name:$tag"
 
 # Try stopping and removing old supervisor. Do not exit if these fail.
 docker stop resin_supervisor || true
@@ -48,7 +48,7 @@ docker rm resin_supervisor || true
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
-docker-run-supervisor "$SUPERVISOR_IMAGE:$tag"
+docker-run-supervisor "$image_name:$tag"
 
 # Mark supervisor as working. This version will run when the device reboots.
-docker tag "$SUPERVISOR_IMAGE:$tag" "$SUPERVISOR_IMAGE:latest"
+docker tag "$image_name:$tag" "$image_name:latest"
