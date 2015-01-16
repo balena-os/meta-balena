@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker --restart=false -s btrfs --dns=8.8.8.8 --dns=8.8.4.4 -d -g /mnt/mmcblk0p8/docker &
+docker --restart=false -s btrfs --dns=8.8.8.8 --dns=8.8.4.4 -d -g /mnt/mmcblk0p9/docker &
 
 # Wait for docker to become ready
 echo "Waiting for docker to become ready.."
