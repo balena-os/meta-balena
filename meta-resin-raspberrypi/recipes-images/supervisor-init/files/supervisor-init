@@ -19,7 +19,7 @@ modprobe snd-bcm2835 # Sound
 
 # Run supervisor
 echo "Starting resin/rpi-supervisor.."
-docker run --privileged -d -v /var/run/docker.sock:/run/docker.sock resin/rpi-supervisor /start
+docker-run-supervisor resin/rpi-supervisor
 
 source /etc/resin.conf
 export API_ENDPOINT CONFIG_PATH
