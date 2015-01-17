@@ -9,6 +9,7 @@ if [ -z "$image" ]; then
 fi
 
 docker run -d --privileged --name resin_supervisor \
+	--net=host \
 	-v /var/run/docker.sock:/run/docker.sock \
 	-v "$CONFIG_PATH":/boot/config.json  \
 	-v /resin-data/resin-supervisor:/data \
