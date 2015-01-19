@@ -90,9 +90,9 @@ fi
 # Mount docker and data directories to standard locations.
 mkdir -p /resin-data
 mkdir -p /var/lib/docker
-mkdir -p /mnt/data-disk/data
+mkdir -p /mnt/data-disk/resin-data
 sync
-mount -o bind /mnt/data-disk/data /resin-data
+mount -o bind /mnt/data-disk/resin-data /resin-data
 mount -o bind /mnt/data-disk/docker /var/lib/docker
 
 # Load the following modules:
