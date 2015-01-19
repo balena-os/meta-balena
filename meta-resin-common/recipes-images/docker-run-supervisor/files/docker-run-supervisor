@@ -1,8 +1,5 @@
 #!/bin/bash
 
-set -o pipefail
-set -e
-
 source /etc/resin.conf
 source /etc/supervisor.conf
 
@@ -11,14 +8,6 @@ if [ -z "$image" ]; then
 	echo "Usage: $0 IMAGE_NAME [CONTAINER_NAME]"
 	echo "Using default IMAGE_NAME - $SUPERVISOR in supervisor.conf"
 	image=$SUPERVISOR_IMAGE
-fi
-
-# Restart container in case it is already created.
-# Avoids re-creating containers in case of reboots.
-# This assumes that resin-device-update has removed the container already.
-if docker ps -aq --no-trunc | xargs docker inspect -f '{{.Name}}' | grep resin_supervisor; then
-	docker start resin_supervisor
-	exit 0
 fi
 
 docker run -d --privileged --name resin_supervisor \
