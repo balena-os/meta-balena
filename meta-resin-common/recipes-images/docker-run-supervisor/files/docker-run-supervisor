@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -o pipefail
+set -e
+
 source /etc/resin.conf
 source /etc/supervisor.conf
 
