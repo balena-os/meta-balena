@@ -9,6 +9,11 @@ do
 	sleep 1
 done
 
+# Remove supervisor from previous boot.
+# We have to make sure nobody started it before removing.
+docker stop resin_supervisor || true
+docker rm resin_supervisor || true
+
 # Run supervisor
 echo "Starting Supervisor.."
 docker-run-supervisor

@@ -13,14 +13,6 @@ if [ -z "$image" ]; then
 	image=$SUPERVISOR_IMAGE
 fi
 
-# Restart container in case it is already created.
-# Avoids re-creating containers in case of reboots.
-# This assumes that resin-device-update has removed the container already.
-if docker ps -aq --no-trunc | xargs docker inspect -f '{{.Name}}' | grep resin_supervisor; then
-	docker start resin_supervisor
-	exit 0
-fi
-
 docker run -d --privileged --name resin_supervisor \
 	--net=host \
 	-v /var/run/docker.sock:/run/docker.sock \
