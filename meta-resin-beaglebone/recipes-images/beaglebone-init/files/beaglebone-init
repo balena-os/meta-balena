@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ ! -e /boot/config.json ]; then
+        /usr/bin/init-bbb-flasher.sh
+fi
+
+mount -o bind,rw /mnt/data-disk/docker /var/lib/docker
+mount -o bind,rw /mnt/data-disk/resin-data /resin-data
+mkdir -p /tmp/.docker
+mount -o bind /tmp/.docker /.docker

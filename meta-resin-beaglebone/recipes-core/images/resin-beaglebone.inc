@@ -12,6 +12,6 @@ PACKAGECONFIG_append_pn-connman = "wifi 3g"
 
 IMAGE_INSTALL_append = "linux-firmware-ath9k linux-firmware-ralink linux-firmware-rtl8192cu wireless-tools parted lvm2 openssl \
 			dosfstools e2fsprogs connman connman-client btrfs-tools apt docker-arm \
-			tar util-linux socat jq curl beaglebone-flasher rsync util-linux-blkid kernel-modules \
-			resin-device-progress  resin-device-register \
+			tar util-linux socat jq curl beaglebone-init rsync util-linux-blkid kernel-modules \
+			resin-device-progress  resin-device-register resin-device-update \
 			"
