@@ -1,11 +1,13 @@
 #!/bin/bash
 
 source /etc/resin.conf
+source /etc/supervisor.conf
 
 image=$1
 if [ -z "$image" ]; then
 	echo "Usage: $0 IMAGE_NAME [CONTAINER_NAME]"
-	exit 1
+	echo "Using default IMAGE_NAME - $SUPERVISOR in supervisor.conf"
+	image=$SUPERVISOR_IMAGE
 fi
 
 docker run -d --privileged --name resin_supervisor \
@@ -21,4 +23,5 @@ docker run -d --privileged --name resin_supervisor \
 	-e PUBNUB_SUBSCRIBE_KEY="$PUBNUB_SUBSCRIBE_KEY" \
 	-e PUBNUB_PUBLISH_KEY="$PUBNUB_PUBLISH_KEY" \
 	-e MIXPANEL_TOKEN="$MIXPANEL_TOKEN" \
+	-e LED_FILE="$LED_FILE" \
 	$image /start

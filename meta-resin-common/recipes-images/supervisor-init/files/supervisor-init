@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker --restart=false -s btrfs --dns=8.8.8.8 --dns=8.8.4.4 -d -g /mnt/mmcblk0p9/docker &
+docker --restart=false -s btrfs -d -g /var/lib/docker  > /dev/null 2>&1 &
 
 # Wait for docker to become ready
 echo "Waiting for docker to become ready.."
@@ -9,16 +9,9 @@ do
 	sleep 1
 done
 
-# Load the following modules:
-modprobe leds-gpio  # Leds
-modprobe snd-bcm2835 # Sound
-#modprobe spi-bcm2708 # SPI
-#modprobe i2c-bcm2708 # I2c
-#modprobe i2c-dev #I2C
-
-# Run supervisor  
-echo "Starting resin/rpi-supervisor.."  
-docker-run-supervisor resin/rpi-supervisor
+# Run supervisor
+echo "Starting Supervisor.."
+docker-run-supervisor
 
 source /etc/resin.conf
 export API_ENDPOINT CONFIG_PATH
@@ -26,7 +19,7 @@ resin-device-progress "" "Finished" || true
 
 while [ ! -d /resin-data/resin-supervisor ]
 do
-        sleep 1
+	sleep 1
 done
 
 # Disable power management.
