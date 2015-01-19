@@ -64,9 +64,6 @@ if [ ! -e /boot/remove_to_reset_data ]; then
             parent=$p
 	done < $filename
 
-	# We have conmann to do the networking for us.
-	rm -rf /etc/rc5.d/S01networking
-
 	touch /boot/remove_to_reset_data
 	sync
 	mount -o remount,ro /boot
