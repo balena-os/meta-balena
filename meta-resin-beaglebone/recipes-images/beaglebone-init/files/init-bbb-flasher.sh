@@ -91,7 +91,6 @@ resin-device-progress 50 "Loading Resin Supervisor." || true
 # Load the supervisor container
 mount /dev/mmcblk1p4 /mnt/data-disk
 cp /tmp/config.json /mnt/data-disk/config.json # Copy the provisioned json to the new_root
-ln -sf /mnt/data-disk/config.json /tmp/new_root/boot/config.json
 
 mkdir -p /mnt/data-disk/docker /mnt/data-disk/resin-data
 mount -o bind /mnt/data-disk/docker /var/lib/docker

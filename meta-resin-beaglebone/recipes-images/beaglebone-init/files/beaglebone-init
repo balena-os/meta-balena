@@ -1,6 +1,8 @@
 #!/bin/sh
 
-if [ ! -e /boot/config.json ]; then
+source /etc/resin.conf
+
+if [ ! -e $CONFIG_PATH ]; then
         /usr/bin/init-bbb-flasher.sh
 fi
 
