@@ -51,4 +51,4 @@ docker rm resin_supervisor || true
 docker-run-supervisor "$image_name:$tag"
 
 # Mark supervisor as working. This version will run when the device reboots.
-docker tag "$image_name:$tag" "$image_name:latest"
+docker tag -f "$image_name:$tag" "$image_name:latest"
