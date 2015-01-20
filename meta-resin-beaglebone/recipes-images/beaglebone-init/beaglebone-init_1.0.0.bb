@@ -2,7 +2,7 @@ DESCRIPTION = "Resin Beaglebone custom INIT file"
 SECTION = "console/utils"
 RDEPENDS_${PN} = "resin-device-register resin-device-progress"
 LICENSE = "Apache-2.0" 
-PR = "r1.6"
+PR = "r1.7"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=435b266b3899aa8a959f17d41c56def8" 
 SRC_URI = "file://LICENSE \
 	   file://beaglebone-init \
