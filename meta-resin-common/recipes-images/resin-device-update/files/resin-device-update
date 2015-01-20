@@ -22,7 +22,7 @@ trap 'error_handler $LINENO' ERR
 
 # Get target supervisor tag from API.
 # The script will exit if curl does not get a valid response.
-curl -s --compressed "$API_ENDPOINT/ewa/supervisor_release?\$filter=device/id%20eq%20$DEVICE_ID&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name' | { read tag; read image_name; }
+read tag image_name <<<$(curl -s --compressed "$API_ENDPOINT/ewa/supervisor_release?\$filter=device/id%20eq%20$DEVICE_ID&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
 
 # Check that we didn't somehow get an empty tag version.
 if [ -z "$tag" ]; then
