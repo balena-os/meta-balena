@@ -10,8 +10,8 @@ SRC_URI = "https://s3.amazonaws.com/resin-share/build_requirements/rce-arm-1.4.1
 	   file://cgroupfs-mount \
 	  "
 
-SRC_URI[rce.md5sum] = "4ac5ebc898f5afd0a7ceec5dbc771493"
-SRC_URI[rce.sha256sum] = "6ca6a1f922cbfbb6593c236fe8b4bc8e6f6675bae18cca00f218466d713ba435"
+SRC_URI[rce.md5sum] = "8951d0e170a70db3d22033aa3bdb98f1"
+SRC_URI[rce.sha256sum] = "c9e93a359ec003f83585940f71e38ae9b5a0479486ca85d84d707e23ccbd9b61"
 SRC_URI[cgroupfs-mount.md5sum] = "1f7abb7d2c3b1218aaf3d2747b2fd507"
 SRC_URI[cgroupfs-mount.sha256sum] = "817f7171fe5d01bfc3b27d9d823a7c0cf3e43dc1191f11dd1be3c7a2abc5804d"
 
