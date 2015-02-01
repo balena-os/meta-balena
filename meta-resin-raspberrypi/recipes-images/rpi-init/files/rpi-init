@@ -39,11 +39,11 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 	resin-device-register &
 	
 	# Load the supervisor
-	mkdir -p /mnt/data-disk/docker/btrfs/subvolumes
-	echo '{"Repositories":' > /mnt/data-disk/docker/repositories-btrfs
-	cat /mnt/mmcblk0p1/resin/resin-rpi-supervisor/repositories >> /mnt/data-disk/docker/repositories-btrfs
-	echo '}' >> /mnt/data-disk/docker/repositories-btrfs
-	cd /mnt/data-disk/docker/btrfs/subvolumes
+	mkdir -p /mnt/data-disk/rce/btrfs/subvolumes
+	echo '{"Repositories":' > /mnt/data-disk/rce/repositories-btrfs
+	cat /mnt/mmcblk0p1/resin/resin-rpi-supervisor/repositories >> /mnt/data-disk/rce/repositories-btrfs
+	echo '}' >> /mnt/data-disk/rce/repositories-btrfs
+	cd /mnt/data-disk/rce/btrfs/subvolumes
 	filename='/mnt/mmcblk0p1/resin/resin-rpi-supervisor/history.list'
 	historySize=`cat $filename | wc -l`
 	parent="0"
@@ -60,8 +60,8 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 		btrfs subvolume snapshot $parent $p
 	    fi
 	    tar -xf /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/layer.tpxz -C $p
-	    mkdir -p /mnt/data-disk/docker/graph/$p
-	    cp -r /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/json /mnt/data-disk/docker/graph/$p
+	    mkdir -p /mnt/data-disk/rce/graph/$p
+	    cp -r /mnt/mmcblk0p1/resin/resin-rpi-supervisor/$p/json /mnt/data-disk/rce/graph/$p
             parent=$p
 	done < $filename
 
@@ -69,10 +69,10 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 	sync
 	mount -o remount,ro /boot
 
-	resin-device-progress 60 "Preparing docker" || true
+	resin-device-progress 60 "Preparing rce" || true
 
 else
-	# Mount docker images directory
+	# Mount rce images directory
 	mount /dev/mmcblk0p8 /mnt/data-disk
 fi
 
@@ -85,13 +85,13 @@ if [ -e /boot/debug.txt ]; then
 	ln -sf /boot/log /var
 fi
 
-# Mount docker and data directories to standard locations.
+# Mount rce and data directories to standard locations.
 mkdir -p /resin-data
-mkdir -p /var/lib/docker
+mkdir -p /var/lib/rce
 mkdir -p /mnt/data-disk/resin-data
 sync
 mount -o bind /mnt/data-disk/resin-data /resin-data
-mount -o bind /mnt/data-disk/docker /var/lib/docker
+mount -o bind /mnt/data-disk/rce /var/lib/rce
 
 # Load the following modules:
 modprobe leds-gpio  # Leds

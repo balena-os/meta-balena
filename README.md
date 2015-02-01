@@ -15,9 +15,9 @@ The following gives a rough overview of the directories inside individual layers
 
 * **recipes-core** : The structure of this directory is mimicked from the yocto layers to override the psplash and the image recipes [resin-rpi and resin-rpi-dev] that are actually to be called to put together the build.
 
-* **recipes-devtools** : This has the docker recipe that uses docker-arm.
+* **recipes-devtools** : This has the rce recipe that uses rce-arm.
 
 * **recipes-images** : This has all the other files used in deployment - We currently use the rpi-init to initialise the btrfs partition along with adding in the initial supervisor build. supervisot-init is used to launch the supervisor.
 
-* **recipes-kernel** : This has the recipe for adding additional build configs to the BSP kernel to enable docker support.
+* **recipes-kernel** : This has the recipe for adding additional build configs to the BSP kernel to enable rce support.
 

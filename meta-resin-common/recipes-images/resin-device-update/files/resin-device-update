@@ -30,25 +30,25 @@ if [ -z "$tag" ]; then
 fi
 
 # Get image id of tag. This will be non-empty only in case it's already downloaded.
-imageid=$(docker inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+imageid=$(rce inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 # Check if image is downloaded and there is a running container.
 # The second condition is needed to make sure the image has not stopped since we first run it.
-if [[ -n "$imageid" && $(docker ps -q --no-trunc | xargs docker inspect -f '{{.Image}}' | grep "$imageid") ]]; then
+if [[ -n "$imageid" && $(rce ps -q --no-trunc | xargs rce inspect -f '{{.Image}}' | grep "$imageid") ]]; then
 	echo "Latest supervisor version already running."
 	exit 0
 fi
 
 # Pull target version.
-docker pull "$image_name:$tag"
+rce pull "$image_name:$tag"
 
 # Try stopping and removing old supervisor. Do not exit if these fail.
-docker stop resin_supervisor || true
-docker rm resin_supervisor || true
+rce stop resin_supervisor || true
+rce rm resin_supervisor || true
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
-docker-run-supervisor "$image_name:$tag"
+rce-run-supervisor "$image_name:$tag"
 
 # Mark supervisor as working. This version will run when the device reboots.
-docker tag -f "$image_name:$tag" "$image_name:latest"
+rce tag -f "$image_name:$tag" "$image_name:latest"

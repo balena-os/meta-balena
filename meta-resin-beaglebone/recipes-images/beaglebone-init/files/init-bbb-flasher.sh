@@ -43,7 +43,7 @@ parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ 
 # Create B rootfs partition
 parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE}) $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${ROOTFS_SIZE})
 
-# Create docker data partition with the rest of the space.
+# Create rce data partition with the rest of the space.
 parted -s ${SDCARD} unit KiB mkpart primary ext4 $(expr ${BOOT_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE} \+ ${ROOTFS_SIZE}) 100%
 
 parted ${SDCARD} print
@@ -92,20 +92,20 @@ resin-device-progress 50 "Loading Resin Supervisor." || true
 mount /dev/mmcblk1p4 /mnt/data-disk
 cp /tmp/config.json /mnt/data-disk/config.json # Copy the provisioned json to the new_root
 
-mkdir -p /mnt/data-disk/docker /mnt/data-disk/resin-data
-mount -o bind /mnt/data-disk/docker /var/lib/docker
-# docker 1.4.1 Needs a .docker directory in / :|
-mkdir -p /tmp/.docker
-mount -o bind /tmp/.docker /.docker
-docker -d -s btrfs &
-# Wait for docker to become ready
-echo "Waiting for docker to become ready.."
-while [ ! -S /var/run/docker.sock ]
+mkdir -p /mnt/data-disk/rce /mnt/data-disk/resin-data
+mount -o bind /mnt/data-disk/rce /var/lib/rce
+# rce 1.4.1 Needs a .rce directory in / :|
+mkdir -p /tmp/.rce
+mount -o bind /tmp/.rce /.rce
+rce -d -s btrfs &
+# Wait for rce to become ready
+echo "Waiting for rce to become ready.."
+while [ ! -S /var/run/rce.sock ]
 do
 	sleep 1
 done
-docker load < /resin-data/armhfv7-supervisor.tar && sync && killall docker && sync
-sync && sync && umount /dev/mmcblk1p1 && umount /dev/mmcblk1p2 && umount /var/lib/docker && umount /dev/mmcblk1p4 && umount /dev/mmcblk0p1
+rce load < /resin-data/armhfv7-supervisor.tar && sync && killall rce && sync
+sync && sync && umount /dev/mmcblk1p1 && umount /dev/mmcblk1p2 && umount /var/lib/rce && umount /dev/mmcblk1p4 && umount /dev/mmcblk0p1
 
 echo 1 > /sys/class/leds/beaglebone:green:usr3/brightness
 resin-device-progress 90 "Rebooting to the newly installed eMMC" || true

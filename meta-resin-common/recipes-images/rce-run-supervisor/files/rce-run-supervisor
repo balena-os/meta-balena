@@ -13,9 +13,9 @@ if [ -z "$image" ]; then
 	image=$SUPERVISOR_IMAGE
 fi
 
-docker run -d --privileged --name resin_supervisor \
+rce run -d --privileged --name resin_supervisor \
 	--net=host \
-	-v /var/run/docker.sock:/run/docker.sock \
+	-v /var/run/rce.sock:/run/docker.sock \
 	-v "$CONFIG_PATH":/boot/config.json  \
 	-v /resin-data/resin-supervisor:/data \
 	-v /proc/net/fib_trie:/mnt/fib_trie \

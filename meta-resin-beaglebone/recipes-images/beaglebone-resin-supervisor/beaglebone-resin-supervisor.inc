@@ -15,9 +15,9 @@ do_install() {
 	install -d ${D}/resin-data
 	install -d ${D}/mnt/data-disk
 	install -d ${D}${servicedir}
-        docker pull resin/${SRC_REPOSITORY}:${VERSION}
-	docker tag -f resin/${SRC_REPOSITORY}:${VERSION} resin/${TARGET_REPOSITORY}:latest
-	docker save resin/${TARGET_REPOSITORY}:latest > ${WORKDIR}/${TARGET_REPOSITORY}.tar
+	rce pull resin/${SRC_REPOSITORY}:${VERSION}
+	rce tag -f resin/${SRC_REPOSITORY}:${VERSION} resin/${TARGET_REPOSITORY}:latest
+	rce save resin/${TARGET_REPOSITORY}:latest > ${WORKDIR}/${TARGET_REPOSITORY}.tar
 	install -m 0444 ${WORKDIR}/${TARGET_REPOSITORY}.tar ${D}/resin-data/${TARGET_REPOSITORY}.tar
 	touch ${WORKDIR}/BTRFS_MOUNT_POINT
 	install -m 0444 ${WORKDIR}/BTRFS_MOUNT_POINT ${D}/mnt/data-disk/BTRFS_MOUNT_POINT

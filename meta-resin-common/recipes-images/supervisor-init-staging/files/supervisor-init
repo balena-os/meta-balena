@@ -1,22 +1,22 @@
 #!/bin/sh
 
-docker --restart=false -s btrfs -d -g /var/lib/docker &
+rce --restart=false -s btrfs -d -g /var/lib/rce &
 
-# Wait for docker to become ready
-echo "Waiting for docker to become ready.."
-while [ ! -S /var/run/docker.sock ]
+# Wait for rce to become ready
+echo "Waiting for rce to become ready.."
+while [ ! -S /var/run/rce.sock ]
 do
 	sleep 1
 done
 
 # Remove supervisor from previous boot.
 # We have to make sure nobody started it before removing.
-docker stop resin_supervisor || true
-docker rm resin_supervisor || true
+rce stop resin_supervisor || true
+rce rm resin_supervisor || true
 
 # Run supervisor
 echo "Starting Supervisor.."
-docker-run-supervisor
+rce-run-supervisor
 
 source /etc/resin.conf
 export API_ENDPOINT CONFIG_PATH

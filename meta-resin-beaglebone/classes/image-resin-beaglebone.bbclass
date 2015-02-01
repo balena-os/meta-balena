@@ -77,6 +77,6 @@ IMAGE_CMD_beaglebone-sdimg () {
 	ln -sf ${SDIMG} ${DEPLOY_DIR_IMAGE}/beaglebone.img
 
 	# Add a VERSION file
-	echo -n `docker inspect resin/rpi-supervisor:latest  | grep VERSION | head -n 1 | tr -d " " | tr -d "\"" | tr -d "VERSION="` > ${DEPLOY_DIR_IMAGE}/VERSION
+	echo -n `rce inspect resin/rpi-supervisor:latest  | grep VERSION | head -n 1 | tr -d " " | tr -d "\"" | tr -d "VERSION="` > ${DEPLOY_DIR_IMAGE}/VERSION
 
 }
