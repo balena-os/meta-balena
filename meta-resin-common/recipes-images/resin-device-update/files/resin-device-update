@@ -15,6 +15,7 @@ if [ -z "$API_KEY" -o -z "$DEVICE_ID" ]; then
 fi
 
 function error_handler {
+	# If rce pull fails, start the old supervisor again and exit
 	rce start resin_supervisor
 	exit 1
 }
