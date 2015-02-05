@@ -40,8 +40,8 @@ if [[ -n "$imageid" && $(rce ps -q --no-trunc | xargs rce inspect -f '{{.Image}}
 	exit 0
 fi
 
-# Stop old supervisor to prevent from deleting the intermediate images while downloading the new one
-rce stop resin_supervisor
+# Try to stop old supervisor to prevent from deleting the intermediate images while downloading the new one
+rce stop resin_supervisor || true
 
 # Pull target version.
 rce pull "$image_name:$tag"
