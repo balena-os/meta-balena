@@ -2,7 +2,7 @@ DESCRIPTION = "resin device update"
 SECTION = "console/utils"
 RDEPENDS_${PN} = "cronie rce-run-supervisor"
 LICENSE = "Apache-2.0" 
-PR = "r1.2"
+PR = "r1.3"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=435b266b3899aa8a959f17d41c56def8" 
 SRC_URI = "file://LICENSE \
 	   file://resin-device-update \

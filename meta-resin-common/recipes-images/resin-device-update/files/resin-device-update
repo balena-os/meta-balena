@@ -15,6 +15,8 @@ if [ -z "$API_KEY" -o -z "$DEVICE_ID" ]; then
 fi
 
 function error_handler {
+	# If rce pull fails, start the old supervisor again and exit
+	rce start resin_supervisor
 	exit 1
 }
 
@@ -39,11 +41,13 @@ if [[ -n "$imageid" && $(rce ps -q --no-trunc | xargs rce inspect -f '{{.Image}}
 	exit 0
 fi
 
+# Try to stop old supervisor to prevent from deleting the intermediate images while downloading the new one
+rce stop resin_supervisor || true
+
 # Pull target version.
 rce pull "$image_name:$tag"
 
-# Try stopping and removing old supervisor. Do not exit if these fail.
-rce stop resin_supervisor || true
+# Try removing old supervisor. Do not exit if these fail.
 rce rm resin_supervisor || true
 
 # Run supervisor with the device-type-specific options.
