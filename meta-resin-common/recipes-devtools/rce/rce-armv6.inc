@@ -26,9 +26,7 @@ RDEPENDS_${PN} = "ca-certificates"
 do_install() {
 	install -d ${D}${bindir}
 	install -d ${D}/.rce
-	install -d ${D}${localstatedir}
-	install -d ${D}${localstatedir}/lib
-	install -d ${D}${localstatedir}/lib/rce
+	mkdir -p ${D}${localstatedir}/lib/rce
 	install  -m 0755 ${S}/rce ${D}${bindir}
 
 	install -d ${D}${sysconfdir}/init.d
