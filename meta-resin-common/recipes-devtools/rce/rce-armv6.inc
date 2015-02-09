@@ -9,8 +9,15 @@ SRC_URI = " \
 	file://cgroupfs-mount \
 	"
 
+S = "${WORKDIR}/rce-arm-${PV}"
+
 SRC_URI[cgroupfs-mount.md5sum] = "1f7abb7d2c3b1218aaf3d2747b2fd507"
 SRC_URI[cgroupfs-mount.sha256sum] = "817f7171fe5d01bfc3b27d9d823a7c0cf3e43dc1191f11dd1be3c7a2abc5804d"
+
+# ARMv6 binaries (ARMv7 compatible)
+COMPATIBLE_MACHINE = "(-)"
+COMPATIBLE_MACHINE_armv6 = "(.*)"
+COMPATIBLE_MACHINE_armv7a = "(.*)"
 
 FILES_${PN} = "${bindir}/* /.rce* ${sysconfdir}/* ${localstatedir}/lib/rce*"
 # Fill this up with relevent things for rce to run.
