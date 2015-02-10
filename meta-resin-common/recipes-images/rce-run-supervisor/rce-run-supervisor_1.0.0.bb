@@ -1,14 +1,14 @@
 DESCRIPTION = "rce run supervisor"
 SECTION = "console/utils"
-LICENSE = "Apache-2.0" 
-PR = "r1.2"
+LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+
+PR = "r1.3"
+
 SRC_URI = "file://rce-run-supervisor"
 
 FILES_${PN} = "${bindir}/*"
-
-do_compile() {
-}
+RDEPENDS_${PN} = "bash rce"
 
 do_install() {
 	install -d ${D}${bindir}
@@ -20,4 +20,3 @@ pkg_postinst_${PN} () {
 # Commands to carry out
 # Remove networking
 }
-

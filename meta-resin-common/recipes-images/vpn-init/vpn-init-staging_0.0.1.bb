@@ -1,20 +1,19 @@
 DESCRIPTION = "Resin VPN"
 SECTION = "console/utils"
-LICENSE = "Apache-2.0" 
-PR = "r0.9"
-RDEPENDS_${PN} = "openvpn"
+LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+
+PR = "r0.10"
+
 SRC_URI = " \
-           file://ca-staging.crt \
-           file://client-staging.conf \
-           file://vpn-init \
-           file://failsafe-sshkey.pub \
-	  "
+	file://ca-staging.crt \
+	file://client-staging.conf \
+	file://vpn-init \
+	file://failsafe-sshkey.pub \
+	"
 
 FILES_${PN} = "${sysconfdir}/* ${bindir}/* /home/root/.ssh/* ${localstatedir}/lib/dropbear/* /etc/default/dropbear"
-
-do_compile() {
-}
+RDEPENDS_${PN} = "bash openvpn"
 
 do_install() {
 	install -d ${D}${sysconfdir}/openvpn
