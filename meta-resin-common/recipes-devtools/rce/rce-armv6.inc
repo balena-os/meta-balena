@@ -3,6 +3,9 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
+PROVIDES = "rce"
+RPROVIDES_${PN} = "rce"
+
 SRC_URI = " \
 	https://s3.amazonaws.com/resin-share/build_requirements/rce-arm-${PV}.tar.xz;name=rce \
 	file://cgroupfs-mount \
