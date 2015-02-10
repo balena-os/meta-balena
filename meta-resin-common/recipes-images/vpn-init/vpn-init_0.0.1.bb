@@ -3,8 +3,8 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0" 
 PR = "r0.9"
 RDEPENDS_${PN} = "openvpn"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=ddcd1a84ad22582096e187ad31540c03" 
-SRC_URI = "file://LICENSE \
+LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+SRC_URI = " \
            file://ca.crt \
            file://client.conf \
            file://vpn-init \

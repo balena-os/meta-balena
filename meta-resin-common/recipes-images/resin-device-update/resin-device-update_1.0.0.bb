@@ -3,10 +3,8 @@ SECTION = "console/utils"
 RDEPENDS_${PN} = "cronie rce-run-supervisor"
 LICENSE = "Apache-2.0" 
 PR = "r1.4"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE;md5=435b266b3899aa8a959f17d41c56def8" 
-SRC_URI = "file://LICENSE \
-	   file://resin-device-update \
-	  "
+LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+SRC_URI = "file://resin-device-update"
 
 FILES_${PN} = "${bindir}/* ${sysconfdir}/* /var/spool/cron/root"
 
