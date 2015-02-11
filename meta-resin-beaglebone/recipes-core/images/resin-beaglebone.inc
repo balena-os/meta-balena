@@ -38,5 +38,5 @@ IMAGE_INSTALL_append = " \
 	resin-device-update \
 	vpn-init \
 	supervisor-init \
-	beaglebone-resin-supervisor \
+	resin-supervisor \
 	"
