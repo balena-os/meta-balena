@@ -17,7 +17,7 @@ The following gives a rough overview of the directories inside individual layers
 
 * **recipes-devtools** : This has the rce recipe that uses rce-arm.
 
-* **recipes-images** : This has all the other files used in deployment - We currently use the rpi-init to initialise the btrfs partition along with adding in the initial supervisor build. supervisot-init is used to launch the supervisor.
+* **recipes-support** : This has all the other files used in deployment - We currently use the rpi-init to initialise the btrfs partition along with adding in the initial supervisor build. supervisot-init is used to launch the supervisor.
 
 * **recipes-kernel** : This has the recipe for adding additional build configs to the BSP kernel to enable rce support.
 
