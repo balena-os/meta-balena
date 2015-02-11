@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-mkdir -p /mnt/mmcblk0p1 
+mkdir -p /mnt/mmcblk0p1
 mount -o ro /dev/mmcblk0p1 /mnt/mmcblk0p1
 
 if [ -e /mnt/mmcblk0p1/resin/network/network.config ]; then
