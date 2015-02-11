@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.23"
+PR = "r1.24"
 
 SRC_URI = " \
 	   file://supervisor-init \
@@ -15,7 +15,20 @@ SRC_URI = " \
 FILES_${PN} = "${sysconfdir}/* ${base_bindir}/*"
 RDEPENDS_${PN} = "bash rce rce-run-supervisor resin-device-progress wireless-tools"
 
+do_patch[noexec] = "1"
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
+do_build[noexec] = "1"
+
 do_install() {
+	# Staging Resin build
+	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
+		# Use staging Resin URL
+		sed -i -e 's:api.resin.io:staging.resin.io:g' ${WORKDIR}/resin.conf
+		sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${WORKDIR}/resin.conf
+		sed -i -e 's:> /dev/null 2>&1::g' ${WORKDIR}/supervisor-init
+	fi
+
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${sysconfdir}/rc5.d
 	install -d ${D}${sysconfdir}/default
@@ -29,6 +42,7 @@ do_install() {
 	install -m 0755 ${WORKDIR}/inittab ${D}${sysconfdir}/
 	install -m 0755 ${WORKDIR}/tty-replacement ${D}${base_bindir}
 }
+do_install[vardeps] += "DISTRO_FEATURES"
 
 pkg_postinst_${PN} () {
 #!/bin/sh -e
