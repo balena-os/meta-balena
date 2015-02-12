@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/LICENSE.noobs;md5=da9003fdc21a7bab51d486d8
 
 inherit deploy
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = " \
 	https://s3.amazonaws.com/resin-share/build_requirements/noobs-1.3.6.tar.xz;name=noobs;subdir=noobs \
@@ -14,7 +14,9 @@ SRC_URI = " \
 	file://partitions.json \
 	file://empty.tar.xz;unpack=false \
 	"
+
 SRC_URI[noobs.md5sum] = "e92f71915864c266ebf9fb5d80d359eb"
+SRC_URI[noobs.sha256sum] = "d5d8998a395405812d3c0196e6fa1e8d4e98842c889196dc947d4243a386495b"
 
 S = "${WORKDIR}/noobs"
 
