@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r0.11"
+PR = "r0.12"
 
 SRC_URI = " \
 	file://ca.crt \
@@ -13,7 +13,7 @@ SRC_URI = " \
 	"
 
 FILES_${PN} = "${sysconfdir}/* ${bindir}/* /home/root/.ssh/* ${localstatedir}/lib/dropbear/* /etc/default/dropbear"
-RDEPENDS_${PN} = "bash openvpn"
+RDEPENDS_${PN} = "bash openvpn jq"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
