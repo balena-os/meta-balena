@@ -8,7 +8,7 @@ PR = "r1.5"
 SRC_URI = "file://resin-device-update"
 
 FILES_${PN} = "${bindir}/* ${sysconfdir}/* /var/spool/cron/root"
-RDEPENDS_${PN} = "bash cronie rce rce-run-supervisor util-linux"
+RDEPENDS_${PN} = "bash cronie rce rce-run-supervisor util-linux jq"
 
 do_install() {
 	install -d ${D}${sysconfdir}/init.d
