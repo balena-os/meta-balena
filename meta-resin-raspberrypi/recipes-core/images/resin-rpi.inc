@@ -19,7 +19,7 @@ IMAGE_INSTALL_append = " \
 	connman-client \
 	btrfs-tools \
 	apt \
-	rce-armv6 \
+	rce \
 	rpi-init \
 	tar \
 	util-linux \

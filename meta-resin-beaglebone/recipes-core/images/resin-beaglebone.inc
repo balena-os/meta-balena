@@ -24,7 +24,7 @@ IMAGE_INSTALL_append = " \
 	btrfs-tools \
 	apt \
 	dropbear \
-	rce-armv6 \
+	rce \
 	tar \
 	util-linux \
 	socat \
