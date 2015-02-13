@@ -1,5 +1,8 @@
 # Resin.io layer for Yocto.
 
+## Layers Structure ##
+
+
 This repository enables building of resin.io support for various devices.
 
 * meta-resin-common directory has the recipies common to all our builds.
@@ -21,3 +24,12 @@ The following gives a rough overview of the directories inside individual layers
 
 * **recipes-kernel** : This has the recipe for adding additional build configs to the BSP kernel to enable rce support.
 
+
+## Production/Staging Builds ##
+
+###To make it short:###
+* If RESIN_STAGING_BUILD is not present in your local.conf or it doesn't include "yes" : Production build selected (default bahavior)
+* If RESIN_STAGING_BUILD is defined local.conf and includes "yes" : Staging build selected
+
+###Long description:###
+RESIN_STAGING_BUILD variable gets injected into DISTRO_FEATURES. If RESIN_STAGING_BUILD contains 'yes' then 'resin-staging' distro feature is added. Based on this, recipes can decide what staging specific changes are needed. By default RESIN_STAGING_BUILD is empty which corresponds to a normal build (resis-staging won't be appended to DISTRO_FEATURE). If user wants a staging build, RESIN_STAGING_BUILD = "yes" needs to be added to local.conf.
