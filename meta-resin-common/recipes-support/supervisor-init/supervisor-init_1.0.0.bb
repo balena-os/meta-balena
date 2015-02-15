@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.24"
+PR = "r1.25"
 
 SRC_URI = " \
 	   file://supervisor-init \
@@ -20,13 +20,20 @@ do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
+# MIXPANEL TOKEN
+MIXPANEL_TOKEN_PRODUCTION = "99eec53325d4f45dd0633abd719e3ff1"
+MIXPANEL_TOKEN_STAGING = "cb974f32bab01ecc1171937026774b18"
+
 do_install() {
 	# Staging Resin build
 	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
 		# Use staging Resin URL
 		sed -i -e 's:api.resin.io:staging.resin.io:g' ${WORKDIR}/resin.conf
 		sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${WORKDIR}/resin.conf
+		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_STAGING}:g' ${WORKDIR}/resin.conf
 		sed -i -e 's:> /dev/null 2>&1::g' ${WORKDIR}/supervisor-init
+	else
+		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_PRODUCTION}:g' ${WORKDIR}/resin.conf
 	fi
 
 	install -d ${D}${sysconfdir}/init.d
