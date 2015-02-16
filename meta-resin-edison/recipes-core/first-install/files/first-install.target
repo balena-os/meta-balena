@@ -1,0 +1,7 @@
+[Unit]
+Description=First Install target
+Requires=sysinit.target
+Conflicts=shutdown.target systemd-readahead-collect.service systemd-readahead-replay.service home.automount factory.automount
+After=sysinit.target
+Before=shutdown.target
+AllowIsolate=yes

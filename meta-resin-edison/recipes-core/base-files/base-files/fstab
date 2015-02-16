@@ -1,0 +1,8 @@
+rootfs               /                    auto       nodev,noatime,discard,barrier=1,data=ordered,noauto_da_alloc    1  1
+proc                 /proc                proc       defaults              0  0
+devpts               /dev/pts             devpts     mode=0620,gid=5       0  0
+tmpfs                /run                 tmpfs      mode=0755,nodev,nosuid,strictatime 0  0
+tmpfs                /var/volatile        tmpfs      defaults              0  0
+
+/dev/disk/by-partlabel/boot     /boot       auto    noauto,x-systemd.automount,nosuid,nodev,noatime,discard     1   1
+/dev/disk/by-partlabel/data_disk     /mnt/data-disk       auto    noauto,x-systemd.automount,relatime,discard 1   1
