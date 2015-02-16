@@ -27,5 +27,6 @@ rce run -d --privileged --name resin_supervisor \
 	-e PUBNUB_PUBLISH_KEY="$PUBNUB_PUBLISH_KEY" \
 	-e MIXPANEL_TOKEN="$MIXPANEL_TOKEN" \
 	-e LED_FILE="$LED_FILE" \
+	-e LISTEN_PORT="$LISTEN_PORT" \
 	-e SUPERVISOR_IMAGE="$image" \
 	$image /start
