@@ -98,9 +98,9 @@ IMAGE_CMD_resin-noobs-dev () {
 	ln -sf ${BOOT_TAR}.xz ${DEPLOY_DIR_IMAGE}/boot.tar.xz
 
 	cp ${DEPLOY_DIR_IMAGE}/boot.tar.xz ${DEPLOY_DIR_IMAGE}/noobs/os/Resin
-	tar --delete -f ${DEPLOY_DIR_IMAGE}/resin-rpi-dev-raspberrypi.tar --wildcards ./boot/*
+	tar --delete -f ${DEPLOY_DIR_IMAGE}/resin-rpi-raspberrypi.tar --wildcards ./boot/*
 	rm -rf ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar.xz
-	cp  ${DEPLOY_DIR_IMAGE}/resin-rpi-dev-raspberrypi.tar ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
+	cp  ${DEPLOY_DIR_IMAGE}/resin-rpi-raspberrypi.tar ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
 	xz -9 -e ${DEPLOY_DIR_IMAGE}/noobs/os/Resin/root.tar
 
 
