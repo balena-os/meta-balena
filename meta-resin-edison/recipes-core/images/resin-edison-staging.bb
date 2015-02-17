@@ -3,7 +3,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 LICENSE = "MIT"
 IMAGE_INSTALL = "packagegroup-core-boot ${ROOTFS_PKGMANAGE_BOOTSTRAP} ${CORE_IMAGE_EXTRA_INSTALL}"
-IMAGE_INSTALL += "openssh-sftp-server"
+#IMAGE_INSTALL += "openssh-sftp-server"
 
 IMAGE_LINGUAS = " "
 
@@ -40,7 +40,7 @@ do_bootimg[depends] += "${PN}:do_rootfs"
 # 180MB
 IMAGE_ROOTFS_SIZE = "184320"
 
-IMAGE_FEATURES += "package-management ssh-server-openssh"
+IMAGE_FEATURES += "package-management"
 # Allow passwordless root login and postinst logging
 IMAGE_FEATURES += "debug-tweaks"
 
@@ -88,3 +88,6 @@ IMAGE_INSTALL += "e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-tune2fs e2fsprogs-
 
 # Time related
 IMAGE_INSTALL += "tzdata"
+
+# Resin related
+IMAGE_INSTALL += "rce dropbear"

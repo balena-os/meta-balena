@@ -82,8 +82,8 @@ factory_partition () {
 
 # generate sshd keys
 sshd_init () {
-    rm -rf /etc/ssh/*key*
-    systemctl start sshdgenkeys
+    rm -rf  /etc/dropbear/dropbear_rsa_host_key
+    systemctl start dropbearkey
 }
 
 
