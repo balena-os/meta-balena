@@ -14,4 +14,8 @@ while true; do
 	fi
 done
 
-/etc/init.d/openvpn start
+if [ -e /etc/init.d/openvpn ]; then
+	/etc/init.d/openvpn start
+else
+	systemctl start openvpn
+fi

@@ -1,4 +1,4 @@
-require rce-386.inc
+require rce-i386.inc
 
 PR = "r1"
 

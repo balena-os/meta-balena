@@ -3,17 +3,25 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r0.12"
+PR = "r0.13"
 
 SRC_URI = " \
 	file://ca.crt \
 	file://client.conf \
 	file://vpn-init \
 	file://failsafe-sshkey.pub \
+	file://vpn-init.service \
 	"
 
-FILES_${PN} = "${sysconfdir}/* ${bindir}/* /home/root/.ssh/* ${localstatedir}/lib/dropbear/* /etc/default/dropbear"
+
+FILES_${PN} = "${sysconfdir}/* ${base_bindir}/* ${bindir}/* /home/root/.ssh/* ${localstatedir}/lib/dropbear/* /etc/default/dropbear"
 RDEPENDS_${PN} = "bash openvpn jq"
+
+inherit update-rc.d systemd
+INITSCRIPT_NAME = "vpn-init"
+INITSCRIPT_PARAMS = "defaults 99"
+
+SYSTEMD_SERVICE_${PN} = "vpn-init.service"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
@@ -36,11 +44,6 @@ do_install() {
 
 	install -m 0755 ${WORKDIR}/client.conf ${D}${sysconfdir}/openvpn/client.conf
 	install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
-    
-	install -d ${D}${sysconfdir}/init.d
-	install -d ${D}${sysconfdir}/rc5.d
-	install -m 0755 ${WORKDIR}/vpn-init  ${D}${sysconfdir}/init.d/vpn-init
-	ln -sf ../init.d/vpn-init  ${D}${sysconfdir}/rc5.d/S99vpn-init
 	
 	mkdir -p ${D}/home/root/.ssh
 	mkdir -p ${D}${localstatedir}/lib/dropbear/ # This will enable the authorized_keys to be updated even when the device has read_only root.
@@ -49,6 +52,25 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/default
 	echo 'DROPBEAR_PORT="22222"' >> ${D}/etc/default/dropbear # Change default dropbear port to 22222
+
+
+	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+		install -d ${D}${base_bindir}
+		install -m 0755 ${WORKDIR}/vpn-init ${D}${base_bindir}
+		install -d ${D}${systemd_unitdir}/system
+		install -d ${D}${sysconfdir}/systemd/system/basic.target.wants
+		install -c -m 0644 ${WORKDIR}/vpn-init.service ${D}${systemd_unitdir}/system
+		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+			-e 's,@SBINDIR@,${sbindir},g' \
+			-e 's,@BINDIR@,${bindir},g' \
+			${D}${systemd_unitdir}/system/*.service
+
+		# enable the service
+		ln -sf ${systemd_unitdir}/system/vpn-init.service \
+			${D}${sysconfdir}/systemd/system/basic.target.wants/vpn-init.service
+	fi
+
+
 }
 do_install[vardeps] += "DISTRO_FEATURES"
 

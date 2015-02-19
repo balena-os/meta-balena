@@ -1,0 +1,11 @@
+[Unit]
+Description=Resin supervisor service
+
+[Service]
+Type=oneshot
+ExecStart=-@BASE_BINDIR@/supervisor-init
+StandardError=syslog
+RemainAfterExit=no
+
+[Install]
+WantedBy=basic.target

@@ -141,7 +141,7 @@ sshd_init
 fi_assert $? "Generating sshd keys"
 
 # update entry in /etc/fstab to enable auto mount
-sed -i 's/#\/dev\/disk\/by-partlabel/\/dev\/disk\/by-partlabel/g' /etc/fstab
+sed -i 's/#//g' /etc/fstab
 fi_assert $? "Update file system table /etc/fstab"
 
 # Setup Access Point SSID and passphrase

@@ -3,7 +3,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 LICENSE = "MIT"
 IMAGE_INSTALL = "packagegroup-core-boot ${ROOTFS_PKGMANAGE_BOOTSTRAP} ${CORE_IMAGE_EXTRA_INSTALL}"
-#IMAGE_INSTALL += "openssh-sftp-server"
 
 IMAGE_LINGUAS = " "
 
@@ -40,9 +39,9 @@ do_bootimg[depends] += "${PN}:do_rootfs"
 # 180MB
 IMAGE_ROOTFS_SIZE = "184320"
 
+
+
 IMAGE_FEATURES += "package-management"
-# Allow passwordless root login and postinst logging
-IMAGE_FEATURES += "debug-tweaks"
 
 IMAGE_INSTALL += "connman"
 IMAGE_INSTALL += "connman-client"
@@ -57,7 +56,6 @@ IMAGE_INSTALL += "iptables"
 IMAGE_INSTALL += "u-boot"
 IMAGE_INSTALL += "u-boot-fw-utils"
 IMAGE_INSTALL += "file"
-IMAGE_INSTALL += "otg"
 IMAGE_INSTALL += "pciutils"
 IMAGE_INSTALL += "usbutils"
 IMAGE_INSTALL += "ldd"
@@ -65,7 +63,6 @@ IMAGE_INSTALL += "i2c-tools"
 IMAGE_INSTALL += "first-install"
 IMAGE_INSTALL += "systemd-analyze"
 IMAGE_INSTALL += "wget"
-IMAGE_INSTALL += "htop"
 
 # Wifi firmware
 IMAGE_INSTALL += "bcm43340-fw"
@@ -89,5 +86,15 @@ IMAGE_INSTALL += "e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-tune2fs e2fsprogs-
 # Time related
 IMAGE_INSTALL += "tzdata"
 
+# Allow passwordless root login and postinst logging
+IMAGE_FEATURES += "debug-tweaks"
+IMAGE_INSTALL += "htop otg"
+
 # Resin related
-IMAGE_INSTALL += "rce dropbear"
+IMAGE_INSTALL += "rce \
+	dropbear \
+	resin-device-progress \
+	resin-device-register \
+	resin-device-update \
+	vpn-init \
+	supervisor-init "
