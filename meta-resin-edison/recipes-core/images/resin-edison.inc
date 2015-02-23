@@ -86,10 +86,6 @@ IMAGE_INSTALL += "e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-tune2fs e2fsprogs-
 # Time related
 IMAGE_INSTALL += "tzdata"
 
-# Allow passwordless root login and postinst logging
-IMAGE_FEATURES += "debug-tweaks"
-IMAGE_INSTALL += "htop otg"
-
 # Resin related
 IMAGE_DEPENDS += "resin-supervisor-disk"
 IMAGE_INSTALL += "rce \
