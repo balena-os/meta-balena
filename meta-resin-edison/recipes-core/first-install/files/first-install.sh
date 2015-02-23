@@ -86,35 +86,6 @@ sshd_init () {
     systemctl start dropbearkey
 }
 
-
-# Substitute the SSID and passphrase in the file /etc/hostapd/hostapd.conf
-# The SSID is built from the hostname and a serial number to have a
-# unique SSID in case of multiple Edison boards having their WLAN AP active.
-setup_ap_ssid_and_passphrase () {
-    # factory_serial is 16 bytes long
-    if [ -f /sys/class/net/wlan0/address ];
-    then
-        ifconfig wlan0 up
-        wlan0_addr=$(cat /sys/class/net/wlan0/address | tr '[:lower:]' '[:upper:]')
-        ssid="EDISON-${wlan0_addr:12:2}-${wlan0_addr:15:2}"
-
-        # Substitute the SSID
-        sed -i -e 's/^ssid=.*/ssid='${ssid}'/g' /etc/hostapd/hostapd.conf
-    fi
-
-    if [ -f /factory/serial_number ] ;
-    then
-        factory_serial=$(head -n1 /factory/serial_number | tr '[:lower:]' '[:upper:]')
-        passphrase="${factory_serial}"
-
-        # Substitute the passphrase
-        sed -i -e 's/^wpa_passphrase=.*/wpa_passphrase='${passphrase}'/g' /etc/hostapd/hostapd.conf
-    fi
-
-    sync
-}
-
-
 # script main part
 
 # print to journal the current retry count
@@ -123,11 +94,9 @@ retry_count=$?
 set_retry_count $((${retry_count} + 1))
 fi_echo "Starting First Install (try: ${retry_count})"
 
-mkfs.btrfs -f /dev/disk/by-partlabel/data_disk
-fi_assert $? "Formatting data-disk for first boot."
-
 mount /dev/disk/by-partlabel/data_disk /mnt/data-disk
-mkdir -p /mnt/data-disk/rce /mnt/data-disk/resin-data
+fi_echo "Expanding data_disk to use the entire disk"
+btrfs filesystem resize max /mnt/data-disk
 
 mkfs.ext4 -m0 /dev/disk/by-partlabel/update
 fi_assert $? "Formatting update-disk for first boot."
@@ -143,10 +112,6 @@ fi_assert $? "Generating sshd keys"
 # update entry in /etc/fstab to enable auto mount
 sed -i 's/#//g' /etc/fstab
 fi_assert $? "Update file system table /etc/fstab"
-
-# Setup Access Point SSID and passphrase
-setup_ap_ssid_and_passphrase
-fi_assert $? "Generating Wifi Access Point SSID and passphrase"
 
 fi_echo "First install success"
 
