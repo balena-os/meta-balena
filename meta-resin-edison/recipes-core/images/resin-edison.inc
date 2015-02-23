@@ -91,6 +91,7 @@ IMAGE_FEATURES += "debug-tweaks"
 IMAGE_INSTALL += "htop otg"
 
 # Resin related
+IMAGE_DEPENDS += "resin-supervisor-disk"
 IMAGE_INSTALL += "rce \
 	dropbear \
 	resin-device-progress \
