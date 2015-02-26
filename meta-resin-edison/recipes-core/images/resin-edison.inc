@@ -49,7 +49,8 @@ IMAGE_INSTALL += "connman-tools"
 IMAGE_INSTALL += "wireless-tools"
 IMAGE_INSTALL += "wpa-supplicant"
 IMAGE_INSTALL += "hostapd-daemon"
-IMAGE_INSTALL += "bluez5"
+IMAGE_INSTALL += "bluez5-dev"
+IMAGE_INSTALL += "bluez5-obex"
 IMAGE_INSTALL += "kernel-modules"
 IMAGE_INSTALL += "ethtool"
 IMAGE_INSTALL += "iptables"
@@ -72,6 +73,17 @@ IMAGE_INSTALL += "bcm43340-bt"
 IMAGE_INSTALL += "bluetooth-rfkill-event"
 # Wifi driver built as a kernel module
 IMAGE_INSTALL += "bcm43340-mod"
+
+# Add audio firmware
+IMAGE_INSTALL += "sst-fw-bin"
+
+# INTEL MCU FW
+IMAGE_INSTALL += "mcu-fw-load"
+IMAGE_INSTALL += "mcu-fw-bin"
+
+
+# Clean corrupted journald entries
+IMAGE_INSTALL += "cleanjournal"
 
 # Adds various other tools
 IMAGE_INSTALL += "tcpdump"
