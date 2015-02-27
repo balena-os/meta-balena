@@ -16,6 +16,14 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 	# Copy the config.json to a standard location in all our images.
 	strings -n 1 /dev/mmcblk0p5 > /tmp/config.json
 
+	if cat /tmp/config.json | jq -e -r '.files["network/network.config"]'; then
+		rm -rf /var/lib/connman/*
+		mkdir -p /var/lib/connman
+
+		cat /tmp/config.json | jq -r '.files["network/network.config"] // ""' > /var/lib/connman/network.config
+		cat /tmp/config.json | jq -r '.files["network/settings"] // ""' > /var/lib/connman/settings
+	fi
+
 	# Expand Docker Container to the end of the SD card
 	parted -s /dev/mmcblk0 -- resizepart 4 -1s
 	parted -s /dev/mmcblk0 -- resizepart 6 -1s
