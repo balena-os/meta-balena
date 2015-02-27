@@ -30,6 +30,5 @@ IMAGE_INSTALL_append = " \
 	resin-device-progress \
 	resin-device-update \
 	supervisor-init \
-	resin-supervisor \
 	vpn-init \
 	"

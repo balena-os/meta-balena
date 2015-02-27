@@ -34,8 +34,10 @@ inherit sdcard_image-rpi
 #                                                                                                                                               4MiB           4MiB +        
 #                                                                                                                                                              4MiB
 
-# BTRFS size
-BTRFS_SPACE = "4096"
+IMAGE_DEPENDS_rpi-sdimg_append = " resin-supervisor-disk"
+
+# BTRFS image
+BTRFS_IMAGE = "${DEPLOY_DIR}/images/${MACHINE}/data_disk.img"
 
 # Config size
 CONFIG_SIZE = "4096"
@@ -48,6 +50,7 @@ IMAGE_CMD_rpi-sdimg () {
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} \+ ${IMAGE_ROOTFS_ALIGNMENT} - 1)
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} \- ${BOOT_SPACE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
 	ROOTFS_SIZE=`du -bks ${SDIMG_ROOTFS} | awk '{print $1}'`
+	BTRFS_SPACE=`du -bks ${BTRFS_IMAGE} | awk '{print $1}'`
 	# Round up RootFS size to the alignment size as well
 	ROOTFS_SIZE_ALIGNED=$(expr ${ROOTFS_SIZE} \+ ${IMAGE_ROOTFS_ALIGNMENT} \- 1)
 	ROOTFS_SIZE_ALIGNED=$(expr ${ROOTFS_SIZE_ALIGNED} \- ${ROOTFS_SIZE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
@@ -138,5 +141,8 @@ IMAGE_CMD_rpi-sdimg () {
 	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
 	
 	# Burn Rootfs
-	dd if=${SDIMG_ROOTFS} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${BOOT_SPACE_ALIGNED} + ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
+	dd if=${SDIMG_ROOTFS} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+
+	# Burn BTRFS partition
+	dd if=${BTRFS_IMAGE} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 }

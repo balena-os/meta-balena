@@ -22,12 +22,11 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 	
 	partprobe
 
-	# Format the volume to hold our images.
-	mkfs.btrfs -f /dev/mmcblk0p6
+	# Create a directory for our images.
+	mkdir /mnt/data-disk
 	mount /dev/mmcblk0p6 /mnt/data-disk
 
-	mkdir -p /mnt/data-disk/rce 
-	mkdir -p /mnt/data-disk/resin-data
+	btrfs filesystem resize max /mnt/data-disk
 
 	cp /tmp/config.json /mnt/data-disk/config.json
 
@@ -40,21 +39,6 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 	# Load containers
 	
 	resin-device-progress 60 "Preparing rce" || true
-
-	rce -d -s btrfs -g /mnt/data-disk/rce &
-	
-	echo "Waiting for rce to become ready.."
-	while [ ! -S /var/run/rce.sock ]
-	do
-		sleep 1
-	done
-
-	rce load < /resin-data/rpi-supervisor.tar && sync && killall rce && sync
-
-	while [ -e /var/run/rce.pid ]
-	do 
-		sleep 1
-	done
 
 	touch /boot/remove_to_reset_data && sync
 else
