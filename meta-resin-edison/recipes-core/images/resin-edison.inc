@@ -36,8 +36,8 @@ NOHDD = "0"
 inherit bootimg
 do_bootimg[depends] += "${PN}:do_rootfs"
 
-# 180MB
-IMAGE_ROOTFS_SIZE = "184320"
+# 256MB
+IMAGE_ROOTFS_SIZE = "256000"
 
 
 

@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 # first install script to do post flash install
 
 # global variable set to 1 if output is systemd journal
 fi_journal_out=0
+
+export PATH="$PATH:/usr/sbin/"
 
 # handle argument, if first-install is called from systemd service
 # arg1 is "systemd-service"
@@ -49,6 +51,8 @@ exit_first_install () {
         fw_setenv bootargs_target multi-user
     fi
 
+    # Disable busybox service
+    systemctl disable busybox-syslog.service
     fi_echo "Rebooting...."
     # dump journal to log file
     journalctl -u first-install -o short-iso >> /first-install.log
