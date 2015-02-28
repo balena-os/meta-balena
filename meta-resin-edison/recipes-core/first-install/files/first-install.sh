@@ -105,7 +105,6 @@ btrfs filesystem resize max /mnt/data-disk
 mkfs.ext4 -m0 /dev/disk/by-partlabel/update
 fi_assert $? "Formatting update-disk for first boot."
 
-
 # handle factory partition
 factory_partition
 
@@ -116,6 +115,11 @@ fi_assert $? "Generating sshd keys"
 # update entry in /etc/fstab to enable auto mount
 sed -i 's/#//g' /etc/fstab
 fi_assert $? "Update file system table /etc/fstab"
+
+# Remove the g_multi and kvm-amd modules
+rm -rf /etc/modules-load.d/g_multi.conf
+rm -rf /etc/modules-load.d/kvm-amd.conf
+rm -rf /etc/modprobe.d/g_multi.conf
 
 fi_echo "First install success"
 
