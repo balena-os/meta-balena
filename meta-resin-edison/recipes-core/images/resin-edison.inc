@@ -99,7 +99,9 @@ IMAGE_INSTALL += "e2fsprogs-e2fsck e2fsprogs-mke2fs e2fsprogs-tune2fs e2fsprogs-
 IMAGE_INSTALL += "tzdata"
 
 # Resin related
-IMAGE_DEPENDS += "resin-supervisor-disk"
+DEPENDS_append = " \
+		resin-supervisor-disk \
+		"
 IMAGE_INSTALL += "rce \
 	dropbear \
 	resin-device-progress \
