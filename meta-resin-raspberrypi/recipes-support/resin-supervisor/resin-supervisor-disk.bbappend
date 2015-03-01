@@ -1,2 +1,2 @@
-TARGET_REPOSITORY_raspberrypi = "resin/rpi-supervisor"
-PARTITION_SIZE_raspberrypi = "1024"
+TARGET_REPOSITORY_rpi = "resin/rpi-supervisor"
+PARTITION_SIZE_rpi = "1024"
