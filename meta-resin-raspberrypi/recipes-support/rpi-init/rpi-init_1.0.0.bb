@@ -20,6 +20,7 @@ RDEPENDS_${PN} = " \
 	btrfs-tools \
 	resin-device-register \
 	resin-device-progress \
+	resin-net-config \
 	tar \
 	kmod"
 
