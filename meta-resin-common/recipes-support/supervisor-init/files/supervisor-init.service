@@ -2,7 +2,7 @@
 Description=Resin supervisor service
 
 [Service]
-Type=oneshot
+Type=forking
 ExecStart=-@BASE_BINDIR@/supervisor-init
 StandardError=syslog
 RemainAfterExit=no

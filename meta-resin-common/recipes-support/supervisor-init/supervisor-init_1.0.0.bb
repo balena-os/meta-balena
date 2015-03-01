@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.27"
+PR = "r1.28"
 
 SRC_URI = " \
 	   file://supervisor-init \
@@ -14,7 +14,7 @@ SRC_URI = " \
 	  "
 
 FILES_${PN} = "/resin-data /mnt/data-disk ${sysconfdir}/* ${base_bindir}/*"
-RDEPENDS_${PN} = "bash rce rce-run-supervisor resin-device-progress wireless-tools resin-supervisor-disk"
+RDEPENDS_${PN} = "bash rce rce-run-supervisor resin-device-progress wireless-tools resin-supervisor-disk socat"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
