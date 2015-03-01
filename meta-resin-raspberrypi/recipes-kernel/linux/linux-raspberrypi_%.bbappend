@@ -1,17 +1,17 @@
 # Check http://www.openembedded.org/wiki/Styleguide for why the following line has abominated quotes.
 # The append function just appens to the text of the SRC_URI and if any other reciped appends to this we need to have
 # a trailing slash to prevent errors.
-SRC_URI_append = " \
-	https://github.com/notro/fbtft/archive/32995715c7fb161bf539fefc7e250fef3599cd61.zip;name=fbtft \
-	"
-SRC_URI[fbtft.md5sum] = "357230a3a96cd0cfacad4adf05277a22"
-SRC_URI[fbtft.sha256sum] = "a8e77512bdb7c02eafff6863f459feacd731275747ba4e94f2c0f6d7a0a1b6d4"
+
+FBTFT_SRCREV = "bcb4de90206842831bd40b20c93aa3e5c9553ea1"
+SRC_URI_append = " https://github.com/notro/fbtft/archive/${FBTFT_SRCREV}.zip;name=fbtft"
+SRC_URI[fbtft.md5sum] = "d5572f33fb9c901ea78f76ade8a234c6"
+SRC_URI[fbtft.sha256sum] = "66c96130c7f4af2edac603fa30ec34371562bd1d6f8864b3f3fff004074c8985"
 
 do_configure_prepend() {
 	if [ ! -e ${S}/.fbtft_configured ]; then
-		cp -r ${WORKDIR}/fbtft-32995715c7fb161bf539fefc7e250fef3599cd61 ${S}/drivers/video/fbtft
-		echo 'source "drivers/video/fbtft/Kconfig"' >> ${S}/drivers/video/Kconfig
-		echo 'obj-y += fbtft/' >> ${S}/drivers/video/Makefile
+		cp -r ${WORKDIR}/fbtft-${FBTFT_SRCREV} ${S}/drivers/video/fbdev/fbtft
+		echo 'source "drivers/video/fbdev/fbtft/Kconfig"' >> ${S}/drivers/video/fbdev/Kconfig
+		echo 'obj-y += fbtft/' >> ${S}/drivers/video/fbdev/Makefile
 		touch ${S}/.fbtft_configured
 	fi
 }
@@ -47,6 +47,7 @@ do_configure_append(){
 	kernel_configure_variable IPV6 y
 	kernel_configure_variable UIDGID_STRICT_TYPE_CHECKS y
 	kernel_configure_variable FB_TFT m
+	kernel_configure_variable FB_TFT_AGM1264K_FL m m
 	kernel_configure_variable FB_TFT_BD663474 m
 	kernel_configure_variable FB_TFT_HX8340BN m
 	kernel_configure_variable FB_TFT_HX8347D m
@@ -68,6 +69,7 @@ do_configure_append(){
 	kernel_configure_variable FB_TFT_ST7735R m
 	kernel_configure_variable FB_TFT_TINYLCD m
 	kernel_configure_variable FB_TFT_TLS8204 m
+	kernel_configure_variable FB_TFT_UC1701 m
 	kernel_configure_variable FB_TFT_UPD161704 m
 	kernel_configure_variable FB_TFT_WATTEROTT m
 	kernel_configure_variable FB_FLEX m
