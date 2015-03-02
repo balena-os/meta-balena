@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<flashfile version="1">
+  <id>system</id>
+  <platform>edison</platform>
+  <gpflag>
+    <value>0x80000007</value>
+  </gpflag>
+  <code_group name="FIRMWARE">
+    <file TYPE="IFWI">
+      <name>edison_ifwi-dbg-00.bin</name>
+      <version>00ED.1D01</version>
+    </file>
+    <file TYPE="FW_DNX">
+      <name>edison_dnx_fwr.bin</name>
+      <version>00ED.1D01</version>
+    </file>
+    <file TYPE="OS_DNX">
+      <name>edison_dnx_osr.bin</name>
+      <version>00ED.1D01</version>
+    </file>
+  </code_group>
+    <code_group name="BOOTLOADER">
+    <file TYPE="KBOOT">
+      <name>u-boot-edison.img</name>
+      <version>edison</version>
+    </file>
+  </code_group>
+</flashfile>

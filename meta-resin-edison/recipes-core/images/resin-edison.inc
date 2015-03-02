@@ -101,6 +101,7 @@ IMAGE_INSTALL += "tzdata"
 # Resin related
 DEPENDS_append = " \
 		resin-supervisor-disk \
+		edison-dfu \
 		"
 IMAGE_INSTALL += "rce \
 	dropbear \
@@ -109,3 +110,15 @@ IMAGE_INSTALL += "rce \
 	resin-device-update \
 	vpn-init \
 	supervisor-init "
+
+build_hddimg_append() {
+
+	mkdir -p ${DEPLOY_DIR_IMAGE}/resin-edison
+	cp -rL ${DEPLOY_DIR_IMAGE}/u-boot-edison.bin ${DEPLOY_DIR_IMAGE}/resin-edison/
+	cp -rL ${DEPLOY_DIR_IMAGE}/u-boot-edison.img ${DEPLOY_DIR_IMAGE}/resin-edison/
+	cp -rL ${DEPLOY_DIR_IMAGE}/u-boot-envs ${DEPLOY_DIR_IMAGE}/resin-edison/
+	cp -rL ${DEPLOY_DIR_IMAGE}/resin-edison-edison.hddimg ${DEPLOY_DIR_IMAGE}/resin-edison/
+	cp -rL ${DEPLOY_DIR_IMAGE}/resin-edison-edison.ext4 ${DEPLOY_DIR_IMAGE}/resin-edison/
+	cp -rL ${DEPLOY_DIR_IMAGE}/data_disk.img ${DEPLOY_DIR_IMAGE}/resin-edison/
+
+}
