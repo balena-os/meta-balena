@@ -12,7 +12,8 @@ FILES_${PN} += "${sysconfdir}/*"
 RDEPENDS_${PN} += " \
         bash \
         resin-device-register \
-        resin-device-progress"
+        resin-device-progress \
+        resin-net-config"
 
 do_install_append () {
 

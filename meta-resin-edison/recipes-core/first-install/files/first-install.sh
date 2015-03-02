@@ -135,6 +135,7 @@ config_json=`cat $CONFIG_PATH`
 echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
 
 #Handle config.json - network config
+resin-net-config
 
 fi_echo "First install success"
 
