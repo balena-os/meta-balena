@@ -129,13 +129,15 @@ systemctl enable connman.service
 source /etc/resin.conf
 export API_ENDPOINT CONFIG_PATH
 
-strings -n 1 /boot/config > $CONFIG_PATH
+mount /dev/disk/by-partlabel/boot /boot
+cp /boot/config.json $CONFIG_PATH
 uuid=$(openssl rand -hex 31)
 config_json=`cat $CONFIG_PATH`
 echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
 
 #Handle config.json - network config
 resin-net-config
+sync && sync
 
 fi_echo "First install success"
 
