@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.5"
+PR = "r1.6"
 
 SRC_URI = "file://resin-device-update"
 
@@ -17,5 +17,5 @@ do_install() {
 	install -m 0775 ${WORKDIR}/resin-device-update ${D}${bindir}/resin-device-update
 
 	install -d ${D}/var/spool/cron/
-	echo "*/5 * * * * /usr/bin/flock -n /tmp/rdu.lcokfile ${bindir}/resin-device-update" > ${D}/var/spool/cron/root
+	echo "*/5 * * * * /usr/bin/flock -n /tmp/rdu.lockfile ${bindir}/resin-device-update" > ${D}/var/spool/cron/root
 }
