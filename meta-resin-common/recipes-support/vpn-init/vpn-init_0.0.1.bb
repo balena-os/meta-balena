@@ -29,10 +29,15 @@ do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
 do_install() {
+	install -d ${D}${sysconfdir}/openvpn
+
+	install -m 0755 ${WORKDIR}/client.conf ${D}${sysconfdir}/openvpn/client.conf
+	install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
+
 	# Staging Resin build
 	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
 		# Use staging Resin URL
-		sed -i -e 's:vpn.resin.io:vpn.staging.resin.io:g' ${WORKDIR}/client.conf
+		sed -i -e 's:vpn.resin.io:vpn.staging.resin.io:g' ${D}${sysconfdir}/openvpn/client.conf
 	# Production Resin Build
 	else
 		# Change dropbear to disable root password logins
@@ -40,11 +45,6 @@ do_install() {
 		echo 'DROPBEAR_EXTRA_ARGS="-g"' >> ${D}/etc/default/dropbear
 	fi
 
-	install -d ${D}${sysconfdir}/openvpn
-
-	install -m 0755 ${WORKDIR}/client.conf ${D}${sysconfdir}/openvpn/client.conf
-	install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
-	
 	mkdir -p ${D}/home/root/.ssh
 	mkdir -p ${D}${localstatedir}/lib/dropbear/ # This will enable the authorized_keys to be updated even when the device has read_only root.
 	install -m 0400 ${WORKDIR}/failsafe-sshkey.pub ${D}/${localstatedir}/lib/dropbear/authorized_keys

@@ -33,16 +33,6 @@ INITSCRIPT_PARAMS = "defaults 99"
 SYSTEMD_SERVICE_${PN} = "supervisor-init.service"
 
 do_install() {
-	# Staging Resin build
-	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
-		# Use staging Resin URL
-		sed -i -e 's:api.resin.io:staging.resin.io:g' ${WORKDIR}/resin.conf
-		sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${WORKDIR}/resin.conf
-		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_STAGING}:g' ${WORKDIR}/resin.conf
-		sed -i -e 's:> /dev/null 2>&1::g' ${WORKDIR}/supervisor-init
-	else
-		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_PRODUCTION}:g' ${WORKDIR}/resin.conf
-	fi
 
 	install -d ${D}/resin-data
 	install -d ${D}/mnt/data-disk
@@ -68,6 +58,17 @@ do_install() {
 		# enable the service
 		ln -sf ${systemd_unitdir}/system/supervisor-init.service \
 			${D}${sysconfdir}/systemd/system/basic.target.wants/supervisor-init.service
+	fi
+
+	# Staging Resin build
+	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
+		# Use staging Resin URL
+		sed -i -e 's:api.resin.io:staging.resin.io:g' ${D}${sysconfdir}/resin.conf
+		sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${D}${sysconfdir}/resin.conf
+		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_STAGING}:g' ${D}${sysconfdir}/resin.conf
+		sed -i -e 's:> /dev/null 2>&1::g' ${D}${base_bindir}/supervisor-init
+	else
+		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_PRODUCTION}:g' ${D}${sysconfdir}/resin.conf
 	fi
 
 }
