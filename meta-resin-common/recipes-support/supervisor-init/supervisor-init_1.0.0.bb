@@ -42,8 +42,6 @@ do_install() {
 
 	install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/
 
-	install -m 0755 ${WORKDIR}/inittab ${D}${sysconfdir}/
-	install -m 0755 ${WORKDIR}/tty-replacement ${D}${base_bindir}
 
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		install -m 0755 ${WORKDIR}/supervisor-init ${D}${base_bindir}
@@ -62,13 +60,17 @@ do_install() {
 
 	# Staging Resin build
 	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
+		# Staging Resin build
 		# Use staging Resin URL
 		sed -i -e 's:api.resin.io:staging.resin.io:g' ${D}${sysconfdir}/resin.conf
 		sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${D}${sysconfdir}/resin.conf
 		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_STAGING}:g' ${D}${sysconfdir}/resin.conf
 		sed -i -e 's:> /dev/null 2>&1::g' ${D}${base_bindir}/supervisor-init
 	else
+		# Production Resin build
 		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_PRODUCTION}:g' ${D}${sysconfdir}/resin.conf
+		install -m 0755 ${WORKDIR}/inittab ${D}${sysconfdir}/
+		install -m 0755 ${WORKDIR}/tty-replacement ${D}${base_bindir}
 	fi
 
 }
