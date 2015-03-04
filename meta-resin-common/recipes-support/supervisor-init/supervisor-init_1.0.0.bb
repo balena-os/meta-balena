@@ -74,7 +74,7 @@ do_install() {
 	fi
 
 }
-
+do_install[vardeps] += "DISTRO_FEATURES"
 
 pkg_postinst_${PN} () {
 #!/bin/sh -e
