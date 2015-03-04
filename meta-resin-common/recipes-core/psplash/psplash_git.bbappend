@@ -1,2 +1,4 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-SPLASH_IMAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'resin', 'file://resin_logo.png;outsuffix=resin', '', d)}"
+
+# Make psplash-resin available
+SPLASH_IMAGES_append = " file://resin_logo.png;outsuffix=resin"
