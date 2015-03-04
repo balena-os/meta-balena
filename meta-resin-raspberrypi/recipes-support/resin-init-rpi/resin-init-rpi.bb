@@ -3,7 +3,9 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.27"
+PR = "r0"
+
+RPROVIDES_${PN} = "resin-init"
 
 SRC_URI = " \
 	file://rpi-init \
@@ -37,8 +39,4 @@ do_install() {
 	install -m 0755 ${WORKDIR}/interfaces ${D}${sysconfdir}/network/
 }
 
-pkg_postinst_${PN} () {
-#!/bin/sh -e
-# Commands to carry out
-# Remove networking
-}
+COMPATIBLE_MACHINE = "raspberrypi"
