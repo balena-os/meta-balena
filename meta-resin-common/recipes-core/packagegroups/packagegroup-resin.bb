@@ -34,4 +34,5 @@ RDEPENDS_${PN} = "\
 	resin-device-update \
 	supervisor-init \
 	vpn-init \
+	bridge-utils \
 	"
