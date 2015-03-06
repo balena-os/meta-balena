@@ -15,7 +15,7 @@ SRC_URI = " \
 inherit update-rc.d allarch
 
 INITSCRIPT_NAME = "resin-init"
-INITSCRIPT_PARAMS = "start 06 5"
+INITSCRIPT_PARAMS = "start 06 5 ."
 
 FILES_${PN} = "${sysconfdir}/*"
 RDEPENDS_${PN} = " \
