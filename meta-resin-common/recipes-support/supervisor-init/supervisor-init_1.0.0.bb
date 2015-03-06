@@ -13,7 +13,7 @@ SRC_URI = " \
 	  "
 
 FILES_${PN} = "${sysconfdir}/* ${base_bindir}/*"
-RDEPENDS_${PN} = "bash rce rce-run-supervisor resin-device-progress wireless-tools"
+RDEPENDS_${PN} = "bash rce rce-run-supervisor resin-device-progress wireless-tools resin-supervisor-disk"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
