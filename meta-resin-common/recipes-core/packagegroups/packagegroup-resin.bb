@@ -5,11 +5,11 @@ PR = "r1"
 
 inherit packagegroup
 
-RESIN_MACHINE_INIT_PACKAGE ?= "resin-init"
+RESIN_INIT_PACKAGE ?= "resin-init"
 
 RDEPENDS_${PN} = "\
 	${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'nano', '', d)} \
-	${RESIN_MACHINE_INIT_PACKAGE} \
+	${RESIN_INIT_PACKAGE} \
 	linux-firmware-ath9k \
 	linux-firmware-ralink \
 	linux-firmware-rtl8192cu \
