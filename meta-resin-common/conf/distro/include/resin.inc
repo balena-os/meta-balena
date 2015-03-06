@@ -16,3 +16,5 @@ PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
 
 # Use ths resin splash image package
 SPLASH = "psplash-resin"
+
+IMAGE_CLASSES += "image_types_resin"
