@@ -9,7 +9,6 @@ inherit image_types
 # Optional:
 # RESIN_SDIMG_ROOTFS_TYPE 	- rootfs image to be used [default: ext3]
 # BOOT_SPACE			- size of boot partition in KiB [default: 20480]
-# RESIN_SDIMG_COMPRESSION	- final sdcard image can be compressed [default: empty]
 # RESIN_SDIMG_COMPRESSION	- define this to compress the final SD image with gzip, xz or bzip2 [default: empty]
 
 #
