@@ -3,11 +3,10 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI = " \
 	file://resin-init \
-	file://supervisor.conf \
 	file://connman.conf \
 	file://interfaces \
 	"
@@ -32,7 +31,6 @@ RDEPENDS_${PN} = " \
 do_install() {
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/resin-init  ${D}${sysconfdir}/init.d/
-	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
 
 	install -d ${D}${sysconfdir}/connman
 	install -m 0755 ${WORKDIR}/connman.conf ${D}${sysconfdir}/connman/main.conf
