@@ -63,9 +63,8 @@ sync
 mount -o bind /mnt/data-disk/resin-data /resin-data
 mount -o bind /mnt/data-disk/rce /var/lib/rce
 
-# Load the following modules:
-modprobe leds-gpio  # Leds
-modprobe snd-bcm2835 # Sound
+# Run the board specific init script
+/etc/init.d/resin-init-board
 
 resin-device-progress 80 "Starting supervisor" || true
 
