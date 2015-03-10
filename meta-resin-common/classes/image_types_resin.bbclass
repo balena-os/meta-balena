@@ -62,6 +62,7 @@ RESIN_SDIMG_ROOTFS_TYPE ?= "ext3"
 SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
 
 IMAGE_DEPENDS_resin-sdcard = " \
+			e2fsprogs-native \
 			parted-native \
 			mtools-native \
 			dosfstools-native \
