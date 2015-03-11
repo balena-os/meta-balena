@@ -2,6 +2,9 @@
 # The append function just appens to the text of the SRC_URI and if any other reciped appends to this we need to have
 # a trailing slash to prevent errors.
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/linux-raspberrypi:"
+SRC_URI += "file://0001-Disable-rtl8192cu-and-Enable-rtlwifi.patch \
+          "
 FBTFT_SRCREV = "bcb4de90206842831bd40b20c93aa3e5c9553ea1"
 SRC_URI_append = " https://github.com/notro/fbtft/archive/${FBTFT_SRCREV}.zip;name=fbtft"
 SRC_URI[fbtft.md5sum] = "d5572f33fb9c901ea78f76ade8a234c6"
