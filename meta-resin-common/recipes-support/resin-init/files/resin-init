@@ -15,7 +15,11 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 
 	# Copy the config.json to a standard location in all our images.
 	strings -n 1 /dev/mmcblk0p5 > /tmp/config.json
+
+	# Setup the network from the config.json
+	/etc/init.d/connman stop
 	CONFIG_PATH=/tmp/config.json resin-net-config
+	/etc/init.d/connman start
 
 	# Expand Docker Container to the end of the SD card
 	parted -s /dev/mmcblk0 -- resizepart 4 -1s
