@@ -1,0 +1,11 @@
+[Unit]
+Description=Resin VPN service
+
+[Service]
+Type=oneshot
+ExecStart=-@BASE_BINDIR@/vpn-init
+StandardError=syslog
+RemainAfterExit=no
+
+[Install]
+WantedBy=basic.target
