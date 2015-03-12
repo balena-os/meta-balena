@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r0.13"
+PR = "r0.14"
 
 SRC_URI = " \
 	file://ca.crt \
@@ -68,11 +68,11 @@ do_install() {
 		# enable the service
 		ln -sf ${systemd_unitdir}/system/vpn-init.service \
 			${D}${sysconfdir}/systemd/system/basic.target.wants/vpn-init.service
+	else
+		install -d ${D}${sysconfdir}/init.d/
+		install -m 0755 ${WORKDIR}/vpn-init  ${D}${sysconfdir}/init.d/vpn-init
 	fi
 
 
 }
 do_install[vardeps] += "DISTRO_FEATURES"
-
-pkg_postinst_${PN} () {
-}

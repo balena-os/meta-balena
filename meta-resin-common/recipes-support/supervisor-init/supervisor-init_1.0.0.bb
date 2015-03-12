@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.28"
+PR = "r1.29"
 
 SRC_URI = " \
 	   file://supervisor-init \
@@ -56,6 +56,9 @@ do_install() {
 		# enable the service
 		ln -sf ${systemd_unitdir}/system/supervisor-init.service \
 			${D}${sysconfdir}/systemd/system/basic.target.wants/supervisor-init.service
+	else
+		install -d ${D}${sysconfdir}/init.d/
+		install -m 0755 ${WORKDIR}/supervisor-init  ${D}${sysconfdir}/init.d/supervisor-init
 	fi
 
 	# Staging Resin build
@@ -65,7 +68,12 @@ do_install() {
 		sed -i -e 's:api.resin.io:staging.resin.io:g' ${D}${sysconfdir}/resin.conf
 		sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${D}${sysconfdir}/resin.conf
 		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_STAGING}:g' ${D}${sysconfdir}/resin.conf
-		sed -i -e 's:> /dev/null 2>&1::g' ${D}${base_bindir}/supervisor-init
+
+		if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+			sed -i -e 's:> /dev/null 2>&1::g' ${D}${base_bindir}/supervisor-init
+		else
+			sed -i -e 's:> /dev/null 2>&1::g' ${D}${sysconfdir}/init.d/supervisor-init
+		fi
 	else
 		# Production Resin build
 		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_PRODUCTION}:g' ${D}${sysconfdir}/resin.conf
@@ -75,8 +83,3 @@ do_install() {
 
 }
 do_install[vardeps] += "DISTRO_FEATURES"
-
-pkg_postinst_${PN} () {
-#!/bin/sh -e
-# Commands to carry out
-}

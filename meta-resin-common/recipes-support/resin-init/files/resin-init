@@ -28,7 +28,7 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 	partprobe
 
 	# Create a directory for our images.
-	mkdir /mnt/data-disk
+	mkdir -p /mnt/data-disk
 	mount /dev/mmcblk0p6 /mnt/data-disk
 
 	btrfs filesystem resize max /mnt/data-disk
