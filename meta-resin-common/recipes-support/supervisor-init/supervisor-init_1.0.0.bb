@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.30"
+PR = "r1.31"
 
 SRC_URI = " \
 	   file://supervisor-init \
@@ -78,6 +78,7 @@ do_install() {
 		# Production Resin build
 		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_PRODUCTION}:g' ${D}${sysconfdir}/resin.conf
 		install -m 0755 ${WORKDIR}/inittab ${D}${sysconfdir}/
+		install -d ${D}${base_bindir}
 		install -m 0755 ${WORKDIR}/tty-replacement ${D}${base_bindir}
 	fi
 
