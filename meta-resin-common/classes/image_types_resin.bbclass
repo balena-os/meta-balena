@@ -61,6 +61,9 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 RESIN_SDIMG_ROOTFS_TYPE ?= "ext3"
 RESIN_SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
 
+# Default bootloader to virtual/bootloader
+RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
+
 IMAGE_DEPENDS_resin-sdcard = " \
 			e2fsprogs-native \
 			parted-native \
