@@ -48,8 +48,8 @@ inherit image_types
 # This image depends on the rootfs image
 IMAGE_TYPEDEP_resin-sdcard = "${RESIN_SDIMG_ROOTFS_TYPE}"
 
-# Boot partition volume id
-BOOTDD_VOLUME_ID ?= "boot-${MACHINE}"
+# Boot partition volume label
+RESIN_BOOT_PART_LABEL ?= "boot-${MACHINE}"
 
 # Boot partition size [in KiB] (will be rounded up to IMAGE_ROOTFS_ALIGNMENT)
 BOOT_SPACE ?= "20480"
@@ -59,7 +59,7 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 
 # Use an uncompressed ext3 by default as rootfs
 RESIN_SDIMG_ROOTFS_TYPE ?= "ext3"
-SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
+RESIN_SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
 
 IMAGE_DEPENDS_resin-sdcard = " \
 			e2fsprogs-native \
@@ -72,9 +72,9 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			"
 
 # SD card image name
-SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
+RESIN_SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
 
-# Compression method to apply to SDIMG after it has been created. Supported
+# Compression method to apply to RESIN_SDIMG after it has been created. Supported
 # compression formats are "gzip", "bzip2" or "xz". The original .resin-sdcard file
 # is kept and a new compressed file is created if one of these compression
 # formats is chosen. If RESIN_SDIMG_COMPRESSION is set to any other value it is
@@ -93,7 +93,7 @@ IMAGE_CMD_resin-sdcard () {
 	# Align partitions
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} \+ ${IMAGE_ROOTFS_ALIGNMENT} - 1)
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} \- ${BOOT_SPACE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
-	ROOTFS_SIZE=`du -bks ${SDIMG_ROOTFS} | awk '{print $1}'`
+	ROOTFS_SIZE=`du -bks ${RESIN_SDIMG_ROOTFS} | awk '{print $1}'`
 	BTRFS_SPACE=`du -bks ${BTRFS_IMAGE} | awk '{print $1}'`
 	# Round up RootFS size to the alignment size as well
 	ROOTFS_SIZE_ALIGNED=$(expr ${ROOTFS_SIZE} \+ ${IMAGE_ROOTFS_ALIGNMENT} \- 1)
@@ -113,44 +113,44 @@ IMAGE_CMD_resin-sdcard () {
 	echo "Total SD card size ${SDIMG_SIZE} KiB"
 
 	# Initialize sdcard image file
-	dd if=/dev/zero of=${SDIMG} bs=1024 count=0 seek=${SDIMG_SIZE}
+	dd if=/dev/zero of=${RESIN_SDIMG} bs=1024 count=0 seek=${SDIMG_SIZE}
 
 	# Create partition table
-	parted -s ${SDIMG} mklabel msdos
+	parted -s ${RESIN_SDIMG} mklabel msdos
 
 	# Define START and END; so the parted commands don't get too crowded
 	START=${IMAGE_ROOTFS_ALIGNMENT}
 	END=$(expr ${START} \+ ${BOOT_SPACE_ALIGNED})
 	# Create boot partition and mark it as bootable
-	parted -s ${SDIMG} unit KiB mkpart primary fat32 ${START} ${END}
-	parted -s ${SDIMG} set 1 boot on
+	parted -s ${RESIN_SDIMG} unit KiB mkpart primary fat32 ${START} ${END}
+	parted -s ${RESIN_SDIMG} set 1 boot on
 
 	# Create rootfs partition
 	START=${END}
 	END=$(expr ${START} \+ ${ROOTFS_SIZE_ALIGNED})
-	parted -s ${SDIMG} unit KiB mkpart primary ext4 ${START} ${END}
+	parted -s ${RESIN_SDIMG} unit KiB mkpart primary ext4 ${START} ${END}
 
 	# Create update partition
 	START=${END}
 	END=$(expr ${START} \+ ${UPDATE_SIZE_ALIGNED})
-	parted -s ${SDIMG} unit KiB mkpart primary ext4 ${START} ${END}
+	parted -s ${RESIN_SDIMG} unit KiB mkpart primary ext4 ${START} ${END}
 
 	# Create extended partition 
 	START=${END}
-	parted -s ${SDIMG} -- unit KiB mkpart extended ${START} -1s
+	parted -s ${RESIN_SDIMG} -- unit KiB mkpart extended ${START} -1s
 
 	# After creating the extended partition the next logical parition needs a IMAGE_ROOTFS_ALIGNMENT in front of it
 	START=$(expr ${START} \+ ${IMAGE_ROOTFS_ALIGNMENT})
 	END=$(expr ${START} \+ ${CONFIG_SIZE_ALIGNED})
-	parted -s ${SDIMG} unit KiB mkpart logical ext2 ${START} ${END}
+	parted -s ${RESIN_SDIMG} unit KiB mkpart logical ext2 ${START} ${END}
 
 	# Create BTRFS partition
 	START=$(expr ${END} \+ ${IMAGE_ROOTFS_ALIGNMENT})
-	parted -s ${SDIMG} -- unit KiB mkpart logical ext2 ${START} -1s
+	parted -s ${RESIN_SDIMG} -- unit KiB mkpart logical ext2 ${START} -1s
 
 	# Create a vfat filesystem with boot files
-	BOOT_BLOCKS=$(LC_ALL=C parted -s ${SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
-	mkfs.vfat -n "${BOOTDD_VOLUME_ID}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
+	BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
+	mkfs.vfat -n "${RESIN_BOOT_PART_LABEL}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
 	for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
 		src=`echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}'`
 		dst=`echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}'`
@@ -165,24 +165,24 @@ IMAGE_CMD_resin-sdcard () {
 	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
 
 	# Burn Boot Partition
-	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
+	dd if=${WORKDIR}/boot.img of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
 	# Burn Rootfs Partition
-	dd if=${SDIMG_ROOTFS} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+	dd if=${RESIN_SDIMG_ROOTFS} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 	# Burn BTRFS Partition
-	dd if=${BTRFS_IMAGE} of=${SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+	dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 }
 
 resin_sdcard_compress () {
 	# Optionally apply compression
 	case "${RESIN_SDIMG_COMPRESSION}" in
 	"gzip")
-		gzip -k9 "${SDIMG}"
+		gzip -k9 "${RESIN_SDIMG}"
 		;;
 	"bzip2")
-		bzip2 -k9 "${SDIMG}"
+		bzip2 -k9 "${RESIN_SDIMG}"
 		;;
 	"xz")
-		xz -k "${SDIMG}"
+		xz -k "${RESIN_SDIMG}"
 		;;
 	esac
 }
