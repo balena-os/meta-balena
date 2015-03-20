@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 # set API_ENDPOINT and CONFIG_PATH
