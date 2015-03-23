@@ -75,7 +75,7 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			"
 
 # SD card image name
-RESIN_SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
+RESIN_SDIMG ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
 
 # Compression method to apply to RESIN_SDIMG after it has been created. Supported
 # compression formats are "gzip", "bzip2" or "xz". The original .resin-sdcard file
@@ -97,7 +97,11 @@ IMAGE_CMD_resin-sdcard () {
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} \+ ${IMAGE_ROOTFS_ALIGNMENT} - 1)
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} \- ${BOOT_SPACE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
 	ROOTFS_SIZE=`du -bks ${RESIN_SDIMG_ROOTFS} | awk '{print $1}'`
-	BTRFS_SPACE=`du -bks ${BTRFS_IMAGE} | awk '{print $1}'`
+	if [ -n "${BTRFS_IMAGE}" ]; then
+		BTRFS_SPACE=`du -bks ${BTRFS_IMAGE} | awk '{print $1}'`
+	else
+		BTRFS_SPACE=${IMAGE_ROOTFS_ALIGNMENT}
+	fi
 	# Round up RootFS size to the alignment size as well
 	ROOTFS_SIZE_ALIGNED=$(expr ${ROOTFS_SIZE} \+ ${IMAGE_ROOTFS_ALIGNMENT} \- 1)
 	ROOTFS_SIZE_ALIGNED=$(expr ${ROOTFS_SIZE_ALIGNED} \- ${ROOTFS_SIZE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
@@ -180,7 +184,9 @@ IMAGE_CMD_resin-sdcard () {
 	# Burn Rootfs Partition
 	dd if=${RESIN_SDIMG_ROOTFS} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 	# Burn BTRFS Partition
-	dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+	if [ -n "${BTRFS_IMAGE}" ]; then
+		dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+	fi
 }
 
 resin_sdcard_compress () {
