@@ -1,0 +1,142 @@
+#!/bin/bash
+##########################################################################################
+#                                                                                        #
+# Script which burns an image from an external device to an internal device              #
+# Assumptions:                                                                           #
+#   * image is in boot partition of external device                                      #
+#   * all needed variables are configured in resin-init-flasher.conf                     #
+#   * filesystems labeling scheme is persistent (flasher-*/resin-*)                      #
+# Variables in resin-init-flasher.conf                                                   #
+#   INTERNAL_DEVICE_KERNEL      - internal device (enumerated by kernel) to be flashed   #
+#                                   * it's impossible to known on what to flash because  #
+#                                     we don't have any labels before flashing something #
+#                                     so we need this info                               #
+#   INTERNAL_DEVICE_UBOOT       - internal device as enumerated by uboot                 #
+#                                   * we need to know how uboot enumerates the mmc       #
+#                                     device so we can instruct uboot to load kernel     #
+#                                     from there                                         #
+#   RESIN_IMAGE                 - image to be flashed on internal device                 #
+#                                   * this is defaulted to                               #
+#                                     resin-image-${MACHINE}.resin-sdcard and should be  #
+#                                     just fine                                          #
+#                                                                                        #
+##########################################################################################
+
+# Very long variables :)
+EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/external_boot
+INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
+EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/external_conf
+INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
+FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
+
+function clean {
+    rm $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt 2>&1 > /dev/null
+    rm $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt 2>&1 > /dev/null
+    umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT 2>&1 > /dev/null
+    umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT 2>&1 > /dev/null
+    umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT 2>&1 > /dev/null
+    umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT 2>&1 > /dev/null
+}
+
+function fail {
+    echo "[resin-init-flasher] ERROR: $1"
+    clean
+    exit 1
+}
+
+function inform {
+    echo "[resin-init-flasher] INFO: $1"
+}
+
+########
+# MAIN #
+########
+
+# Only root
+if [ "$EUID" -ne 0 ]; then
+    fail "Please run as root."
+fi
+
+# Configuration file
+if [ -f $FLASHER_CONF_FILE ]; then
+    source $FLASHER_CONF_FILE
+else
+    fail "No configurarion for resin-init-flasher."
+fi
+inform "resin-init-flasher configuration found."
+
+# Boot from eMMC
+# FIX ME
+# Linux indexes mmc devices in the order they are detected:
+#   * If uSD card is plugged in, uSD device will pe enumerated as mmcblk0 while eMMC as
+#       mmcblk1.
+#   * If uSD card is not plugged in, eMMC will be enumerated as mmcblk0
+# So if SD card is plugged we need to boot from mmbblk1p2, otherwise from mmcblk0p2
+# UBOOT_FROM_EMMC="mmcroot=LABEL=resin-root rw\n"
+UBOOT_FROM_EMMC="setemmcroot=if mmc dev 0 ; then setenv mmcroot /dev/mmcblk1p2 rw ; else setenv mmcroot /dev/mmcblk0p2 rw ; fi;\n"
+UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"mmcdev=$INTERNAL_DEVICE_UBOOT\n"
+UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"bootpart=$INTERNAL_DEVICE_UBOOT:2\n"
+# Second partition hardcoded!!!
+UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"uenvcmd= run setemmcroot"
+
+# Mount external device boot partition and write uEnv.txt
+mkdir -p $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+inform "Mounting external device boot partition."
+if ! mount /dev/disk/by-label/flash-boot $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
+    fail "Failed to mount disk labeled as 'flasher-boot'."
+fi
+if ! echo -e ${UBOOT_FROM_EMMC} > $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
+    fail "Failed to write uEnv on disk labeled as 'flasher-boot'"
+fi
+inform "Wrote uEnv on disk labeled as 'flasher-boot'"
+
+# Flash Resin image on internal device
+inform "Flash internal device... will take around 5 minutes... "
+if ! dd if=$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL; then
+    fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
+fi
+
+# Many syncs
+sync && sync && sync
+
+# Trigger udev
+udevadm trigger
+sleep 2 # udev is a little slow
+
+# Mount internal device boot partition and write uEnv.txt
+mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+inform "Mounting internal device boot partition."
+if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
+    fail "Failed to mount disk labeled as 'resin-boot'."
+fi
+if ! echo -e ${UBOOT_FROM_EMMC} > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
+    fail "Failed to write uEnv on disk labeled as 'resin-boot'"
+fi
+inform "Wrote uEnv on disk labeled as 'resin-boot'"
+
+# Conf partition
+mkdir -p $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
+inform "Mounting external device conf partition."
+if ! mount /dev/disk/by-label/flash-conf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
+    fail "Failed to mount disk labeled as 'flash-conf'."
+fi
+mkdir -p $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
+inform "Mounting internal device conf partition."
+if ! mount /dev/disk/by-label/resin-conf $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
+    fail "Failed to mount disk labeled as 'resin-conf'."
+fi
+cp -rvf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/* $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
+
+# More syncs
+sync && sync && sync
+
+# umounts
+umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
+umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
+
+inform "Rebooting..."
+reboot
+
+exit 0
