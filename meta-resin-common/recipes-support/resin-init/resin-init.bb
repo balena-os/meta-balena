@@ -18,15 +18,16 @@ INITSCRIPT_PARAMS = "start 06 5 ."
 
 FILES_${PN} = "${sysconfdir}/*"
 RDEPENDS_${PN} = " \
-	resin-init-board \
-	bash \
-	coreutils \
-	util-linux \
-	btrfs-tools \
-	resin-device-register \
-	resin-device-progress \
-	resin-net-config \
-	"
+    resin-init-board \
+    bash \
+    coreutils \
+    util-linux \
+    btrfs-tools \
+    resin-device-register \
+    resin-device-progress \
+    resin-net-config \
+    mtools \
+    "
 
 do_install() {
 	install -d ${D}${sysconfdir}/init.d

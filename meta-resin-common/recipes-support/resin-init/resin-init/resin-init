@@ -9,26 +9,29 @@ export API_ENDPOINT CONFIG_PATH
 mkdir -p /tmp/.rce
 mount -o bind /tmp/.rce /.rce
 
-mount -o ro /dev/mmcblk0p1 /boot
+mount -o ro /dev/disk/by-label/resin-boot /boot
 if [ ! -e /boot/remove_to_reset_data ]; then
 	mount -o remount,rw /boot
 
-	# Copy the config.json to a standard location in all our images.
-	strings -n 1 /dev/mmcblk0p5 > /tmp/config.json
+    # Copy the config.json to a standard location in all our images.
+    mcopy -i /dev/disk/by-label/resin-conf ::config.json /tmp/config.json
 
 	# Setup the network from the config.json
 	CONFIG_PATH=/tmp/config.json resin-net-config
 	/etc/init.d/connman start
 
 	# Expand Docker Container to the end of the SD card
-	parted -s /dev/mmcblk0 -- resizepart 4 -1s
-	parted -s /dev/mmcblk0 -- resizepart 6 -1s
+    # Some might argue that this is a hack :)
+    datapart=`readlink -f /dev/disk/by-label/resin-data`
+    datadev=`lsblk $datapart -n -o PKNAME`
+    parted -s /dev/$datadev -- resizepart 4 -1s
+    parted -s /dev/$datadev -- resizepart 6 -1s
 	
 	partprobe
 
 	# Create a directory for our images.
 	mkdir -p /mnt/data-disk
-	mount /dev/mmcblk0p6 /mnt/data-disk
+	mount /dev/disk/by-label/resin-data /mnt/data-disk
 
 	btrfs filesystem resize max /mnt/data-disk
 
@@ -48,7 +51,7 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 else
 	/etc/init.d/connman start
 	# Mount rce images directory
-	mount /dev/mmcblk0p6 /mnt/data-disk
+	mount /dev/disk/by-label/resin-data /mnt/data-disk
 fi
 
 # Start logging to disk when DEBUG flag is present in the recovery [Initial installation] partition.
