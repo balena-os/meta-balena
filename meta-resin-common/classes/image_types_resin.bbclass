@@ -68,7 +68,7 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			dosfstools-native \
 			virtual/kernel \
 			${RESIN_IMAGE_BOOTLOADER} \
-			resin-supervisor-disk \
+			resin-supervisor \
 			"
 
 # SD card image name

@@ -13,6 +13,7 @@ DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains
 PREFERRED_PROVIDER_rce ?= "rce-armv6"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
 PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
+PREFERRED_PROVIDER_resin-supervisor ?= "resin-supervisor-disk"
 
 # Use ths resin splash image package
 SPLASH = "psplash-resin"
