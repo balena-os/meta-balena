@@ -14,7 +14,7 @@ SRC_URI = " \
 	  "
 
 FILES_${PN} = "/resin-data /mnt/data-disk ${sysconfdir}/* ${base_bindir}/*"
-RDEPENDS_${PN} = "bash rce rce-run-supervisor resin-device-progress wireless-tools resin-supervisor-disk socat"
+RDEPENDS_${PN} = "bash rce rce-run-supervisor resin-device-progress wireless-tools resin-supervisor socat"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"

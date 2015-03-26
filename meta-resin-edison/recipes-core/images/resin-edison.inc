@@ -100,7 +100,7 @@ IMAGE_INSTALL += "tzdata"
 
 # Resin related
 DEPENDS_append = " \
-		resin-supervisor-disk \
+		resin-supervisor \
 		edison-dfu \
 		"
 IMAGE_INSTALL += "rce \

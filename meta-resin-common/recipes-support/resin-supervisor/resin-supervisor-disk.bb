@@ -4,13 +4,16 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit deploy
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = " \
 	file://Dockerfile \
 	file://entry.sh \
 	file://supervisor.conf \
 	"
+
+PROVIDES="resin-supervisor"
+RPROVIDES_${PN} = "resin-supervisor"
 
 VERSION = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'master', 'production', d)}"
 TARGET_REPOSITORY ?= "resin/i386-supervisor"
