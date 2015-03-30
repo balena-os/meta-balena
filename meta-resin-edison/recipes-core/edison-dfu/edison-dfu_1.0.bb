@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 
 inherit deploy
 
-PR="r1"
+PR="r2"
 SRC_URI = "file://edison_dnx_fwr.bin \
 	   file://edison_dnx_osr.bin \
 	   file://edison_ifwi-dbg-00.bin \
@@ -25,6 +25,8 @@ SRC_URI = "file://edison_dnx_fwr.bin \
 	   file://flashall.bat \
 	   file://flashall.sh \
 	   file://pft-config-edison.xml \
+	   file://dfu-util.exe \
+	   file://DFU-UTIL_0.8_COPYING \
 	  "
 
 COMPATIBLE_MACHINE = "edison"
@@ -41,6 +43,8 @@ do_deploy() {
     cp ${WORKDIR}/flashall.bat ${DEPLOYDIR}/${DEPLOYMENT_DIRECTORY}/
     cp ${WORKDIR}/flashall.sh ${DEPLOYDIR}/${DEPLOYMENT_DIRECTORY}/
     cp ${WORKDIR}/pft-config-edison.xml ${DEPLOYDIR}/${DEPLOYMENT_DIRECTORY}/
+    cp ${WORKDIR}/dfu-util.exe ${DEPLOYDIR}/${DEPLOYMENT_DIRECTORY}/
+    cp ${WORKDIR}/DFU-UTIL_0.8_COPYING ${DEPLOYDIR}/${DEPLOYMENT_DIRECTORY}/
 
 }
 
