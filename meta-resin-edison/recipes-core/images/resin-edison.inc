@@ -108,6 +108,7 @@ IMAGE_INSTALL += "rce \
 	resin-device-progress \
 	resin-device-register \
 	resin-device-update \
+	resin-btrfs-balance \
 	vpn-init \
 	supervisor-init "
 
