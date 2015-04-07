@@ -2,7 +2,6 @@
 set -e
 
 # Load the following modules:
-modprobe leds-gpio  # Leds
 modprobe snd-bcm2835 # Sound
 
 exit 0
