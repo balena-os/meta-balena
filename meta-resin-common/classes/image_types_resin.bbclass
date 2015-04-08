@@ -157,6 +157,12 @@ IMAGE_CMD_resin-sdcard () {
 		if [ -z "${dst}" ]; then
 			dst=`basename ${src}`
 		fi
+		# Create the directories mentioned in the RESIN_BOOT_PARTITION_FILE
+		for i in `echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}' | sed -e 's/\//\n/g' |  sed '/.*\./d' `; do
+		        directory=$directory/$i
+			mmd -i ${WORKDIR}/boot.img $directory
+		done
+
 		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/${src} ::/${dst}
 	done
 
