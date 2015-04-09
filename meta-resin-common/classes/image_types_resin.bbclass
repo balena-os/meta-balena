@@ -151,6 +151,7 @@ IMAGE_CMD_resin-sdcard () {
 	# Create a vfat filesystem with boot files
 	BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
 	mkfs.vfat -n "${RESIN_BOOT_PART_LABEL}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
+	echo "Copying files in RESIN_BOOT_PARTITION_FILE"
 	for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
 		src=`echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}'`
 		dst=`echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}'`
@@ -158,9 +159,10 @@ IMAGE_CMD_resin-sdcard () {
 			dst=`basename ${src}`
 		fi
 		# Create the directories mentioned in the RESIN_BOOT_PARTITION_FILE
+		directory=""
 		for i in `echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}' | sed -e 's/\//\n/g' |  sed '/.*\./d' `; do
 		        directory=$directory/$i
-			mmd -i ${WORKDIR}/boot.img $directory
+			mmd -D sS -i ${WORKDIR}/boot.img $directory || true
 		done
 
 		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/${src} ::/${dst}
