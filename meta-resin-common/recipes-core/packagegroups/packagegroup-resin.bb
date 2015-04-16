@@ -32,6 +32,7 @@ RDEPENDS_${PN} = "\
 	resin-device-register \
 	resin-device-progress \
 	resin-device-update \
+	resin-btrfs-balance \
 	supervisor-init \
 	vpn-init \
 	bridge-utils \
