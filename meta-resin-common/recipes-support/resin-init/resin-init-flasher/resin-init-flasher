@@ -79,7 +79,31 @@ UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"bootpart=$INTERNAL_DEVICE_UBOOT:2\n"
 # Second partition hardcoded!!!
 UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"uenvcmd= run setemmcroot"
 
+# Conf partition
+mkdir -p $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
+inform "Mounting external device conf partition."
+if ! mount /dev/disk/by-label/flash-conf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
+    fail "Failed to mount disk labeled as 'flash-conf'."
+fi
+
+# Resin configuration file
+if [ -f /etc/resin.conf ]; then
+    source /etc/resin.conf
+else
+    fail "No resin configurarion found."
+fi
+inform "resin configuration found."
+
+# Register device
+uuid=$(openssl rand -hex 31)
+export CONFIG_PATH=$EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/config.json # overwrite the one from resin.conf
+export API_ENDPOINT # coming from resin.conf
+config_json=`cat $CONFIG_PATH`
+echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
+resin-device-register &
+
 # Mount external device boot partition and write uEnv.txt
+resin-device-progress 10 "Prepare next boot..." || true
 mkdir -p $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting external device boot partition."
 if ! mount /dev/disk/by-label/flash-boot $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
@@ -91,6 +115,7 @@ fi
 inform "Wrote uEnv on disk labeled as 'flasher-boot'"
 
 # Flash Resin image on internal device
+resin-device-progress 20 "Flash internal eMMC... will take a while..." || true
 inform "Flash internal device... will take around 5 minutes... "
 if ! dd if=$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
@@ -104,6 +129,7 @@ udevadm trigger
 sleep 2 # udev is a little slow
 
 # Mount internal device boot partition and write uEnv.txt
+resin-device-progress 30 "Prepare next boot..." || true
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting internal device boot partition."
 if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
@@ -114,12 +140,7 @@ if ! echo -e ${UBOOT_FROM_EMMC} > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt
 fi
 inform "Wrote uEnv on disk labeled as 'resin-boot'"
 
-# Conf partition
-mkdir -p $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
-inform "Mounting external device conf partition."
-if ! mount /dev/disk/by-label/flash-conf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
-    fail "Failed to mount disk labeled as 'flash-conf'."
-fi
+# Copy json configuration file
 mkdir -p $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 inform "Mounting internal device conf partition."
 if ! mount /dev/disk/by-label/resin-conf $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
@@ -130,7 +151,12 @@ cp -rvf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/* $INTERNAL_DEVICE_CONF_PART_MOUNT
 # More syncs
 sync && sync && sync
 
+# We have to make sure next boot doesn't register the device again (remove_to_reset_data trick)
+#resin-device-progress 40 "Save device registration..." || true
+#echo "This was done from flashing script" > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/remove_to_reset_data && sync
+
 # umounts
+resin-device-progress 90 "Cleanup and reboot..." || true
 umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
