@@ -15,12 +15,10 @@ dd if=/dev/zero of=/export/data_disk.img bs=1M count=$PARTITION_SIZE
 mkfs.btrfs /export/data_disk.img
 
 # Setup the loop device with the disk image
-losetup -d /dev/loop3 || true
-losetup /dev/loop3 /export/data_disk.img
+mkdir /data_disk
+mount -o loop /export/data_disk.img /data_disk
 
 # Create the directory structures we use for Resin
-mkdir /data_disk
-mount /dev/loop3 /data_disk
 mkdir -p /data_disk/rce
 mkdir -p /data_disk/resin-data
 
@@ -35,6 +33,6 @@ done
 docker pull $TARGET_REPOSITORY:$TARGET_TAG
 docker tag $TARGET_REPOSITORY:$TARGET_TAG $TARGET_REPOSITORY:latest
 
-sync && kill -TERM $(cat /var/run/docker.pid) && umount /data_disk && losetup -d /dev/loop3
+sync && kill -TERM $(cat /var/run/docker.pid) && umount /data_disk
 
 echo "Docker export successful."
