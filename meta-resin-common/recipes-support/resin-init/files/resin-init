@@ -18,7 +18,7 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 
 	# Setup the network from the config.json
 	CONFIG_PATH=/tmp/config.json resin-net-config
-	/etc/init.d/connman restart
+	/etc/init.d/connman start
 
 	# Expand Docker Container to the end of the SD card
 	parted -s /dev/mmcblk0 -- resizepart 4 -1s
@@ -46,6 +46,7 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 
 	touch /boot/remove_to_reset_data && sync
 else
+	/etc/init.d/connman start
 	# Mount rce images directory
 	mount /dev/mmcblk0p6 /mnt/data-disk
 fi
