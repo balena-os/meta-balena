@@ -1,7 +1,8 @@
 Change log
 -----------
 
-* Wait for docker to terminate before calling unmount in resin-supervisor-disk
+* Add --nodnsproxy to connmand startup in both systemd services and init scripts, This disables the internal dns proxy of connman. [Praneeth]
+* Wait for docker to terminate before calling unmount in resin-supervisor-disk [Praneeth]
 
 # 2015-04-19
 
