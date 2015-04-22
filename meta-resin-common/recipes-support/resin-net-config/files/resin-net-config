@@ -7,10 +7,17 @@ if [ -z "$CONFIG_PATH" ]; then
 	exit 1
 fi
 
-if cat "$CONFIG_PATH" | jq -e -r '.files["network/network.config"]'; then
+if cat "$CONFIG_PATH" | jq -e -r '.files["network/settings"]'; then
 	rm -rf /var/lib/connman/*
 	mkdir -p /var/lib/connman
 
-	cat $CONFIG_PATH | jq -r '.files["network/network.config"] // ""' > /var/lib/connman/network.config
 	cat $CONFIG_PATH | jq -r '.files["network/settings"] // ""' > /var/lib/connman/settings
+	if cat "$CONFIG_PATH" | jq -e -r '.files["network/ethernet.config"]'; then
+		cat $CONFIG_PATH | jq -r '.files["network/ethernet.config"] // ""' > /var/lib/connman/ethernet.config
+	fi
+
+	if cat "$CONFIG_PATH" | jq -e -r '.files["network/network.config"]'; then
+		cat $CONFIG_PATH | jq -r '.files["network/network.config"] // ""' > /var/lib/connman/network.config
+	fi
+
 fi
