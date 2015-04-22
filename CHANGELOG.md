@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Wait for docker to terminate before calling unmount in resin-supervisor-disk
+
 # 2015-04-19
 
 * Allowed concurrent building on the resin-supervisor recipe.

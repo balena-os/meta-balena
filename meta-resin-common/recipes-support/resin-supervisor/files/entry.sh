@@ -33,6 +33,6 @@ done
 docker pull $TARGET_REPOSITORY:$TARGET_TAG
 docker tag $TARGET_REPOSITORY:$TARGET_TAG $TARGET_REPOSITORY:latest
 
-sync && kill -TERM $(cat /var/run/docker.pid) && sync && umount /data_disk
+kill -TERM $(cat /var/run/docker.pid) && wait $(cat /var/run/docker.pid) && umount /data_disk
 
 echo "Docker export successful."
