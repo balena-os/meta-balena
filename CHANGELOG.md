@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# 2015-04-27
+
 * Fix resin-net-config to honour network.config and ethernet.config as per the changes in resin-image-maker. [Praneeth]
 * Add tun to NetworkInterfaceBlacklist of connman. [Praneeth]
 * Add --nodnsproxy to connmand startup in both systemd services and init scripts, This disables the internal dns proxy of connman. [Praneeth]
