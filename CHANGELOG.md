@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Change Staging API url to api.staging.resin.io from staging.resin.io [Praneeth]
 # 2015-04-27
 
 * Fix resin-net-config to honour network.config and ethernet.config as per the changes in resin-image-maker. [Praneeth]
