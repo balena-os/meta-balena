@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r1.31"
+PR = "r1.32"
 
 SRC_URI = " \
 	   file://supervisor-init \
@@ -65,7 +65,7 @@ do_install() {
 	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
 		# Staging Resin build
 		# Use staging Resin URL
-		sed -i -e 's:api.resin.io:staging.resin.io:g' ${D}${sysconfdir}/resin.conf
+		sed -i -e 's:api.resin.io:api.staging.resin.io:g' ${D}${sysconfdir}/resin.conf
 		sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${D}${sysconfdir}/resin.conf
 		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_STAGING}:g' ${D}${sysconfdir}/resin.conf
 
