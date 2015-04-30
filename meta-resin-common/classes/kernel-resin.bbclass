@@ -99,7 +99,8 @@ RESIN_CONFIGS[rce] ?= " \
     CONFIG_NF_NAT=y \
     CONFIG_NF_NAT_NEEDED=y \
     CONFIG_POSIX_MQUEUE=y \
-    CONFIG_BTRFS_FS=y"
+    CONFIG_BTRFS_FS=y \
+    CONFIG_TUN=y"
 
 ###########
 # HELPERS #
