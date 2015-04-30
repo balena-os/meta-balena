@@ -21,6 +21,7 @@ rce run -d --privileged --name resin_supervisor \
 	-v /proc/net/fib_trie:/mnt/fib_trie \
 	-v /var/log/supervisor-log:/var/log \
 	-v /:/mnt/root \
+	-v /etc/resolv.conf:/etc/resolv.conf:ro \
 	-e API_ENDPOINT="$API_ENDPOINT" \
 	-e REGISTRY_ENDPOINT="$REGISTRY_ENDPOINT" \
 	-e PUBNUB_SUBSCRIBE_KEY="$PUBNUB_SUBSCRIBE_KEY" \

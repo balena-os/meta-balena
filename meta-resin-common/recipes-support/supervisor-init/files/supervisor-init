@@ -14,6 +14,9 @@ done
 rce stop resin_supervisor || true
 rce rm resin_supervisor || true
 
+# Touch the resolv.conf file before running rce-run-supervisor.
+touch /etc/resolv.conf
+
 # Run supervisor
 echo "Starting Supervisor.."
 rce-run-supervisor

@@ -1,5 +1,6 @@
 [Unit]
 Description=Resin supervisor service
+After=connman.service
 
 [Service]
 Type=forking

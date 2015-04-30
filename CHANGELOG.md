@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix the DNS bug occurring because of docker/rce copying resolv.conf before network connectivity. [Praneeth]
 * Change Staging API url to api.staging.resin.io from staging.resin.io [Praneeth]
 # 2015-04-27
 
