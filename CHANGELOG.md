@@ -2,8 +2,11 @@ Change log
 -----------
 
 * Add support for Parallella [Theodor]
+
+# 2015-05-05
 * Fix the DNS bug occurring because of docker/rce copying resolv.conf before network connectivity. [Praneeth]
 * Change Staging API url to api.staging.resin.io from staging.resin.io [Praneeth]
+
 # 2015-04-27
 
 * Fix resin-net-config to honour network.config and ethernet.config as per the changes in resin-image-maker. [Praneeth]
