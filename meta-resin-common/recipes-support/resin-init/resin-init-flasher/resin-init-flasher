@@ -98,6 +98,7 @@ inform "resin configuration found."
 uuid=$(openssl rand -hex 31)
 export CONFIG_PATH=$EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/config.json # overwrite the one from resin.conf
 export API_ENDPOINT # coming from resin.conf
+resin-net-config; /etc/init.d/connman start # Connect
 config_json=`cat $CONFIG_PATH`
 echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
 resin-device-register &
