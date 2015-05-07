@@ -2,6 +2,8 @@
 
 source /etc/resin.conf
 
+/etc/init.d/connman start
+
 if [ ! -e $CONFIG_PATH ]; then
         /usr/bin/init-bbb-flasher.sh
 fi
