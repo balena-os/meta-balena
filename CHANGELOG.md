@@ -3,7 +3,12 @@ Change log
 
 * Add support for Parallella [Theodor]
 
+# 2015-05-07
+
+* Fix beaglebone connman not starting [Praneeth]
+
 # 2015-05-05
+
 * Fix the DNS bug occurring because of docker/rce copying resolv.conf before network connectivity. [Praneeth]
 * Change Staging API url to api.staging.resin.io from staging.resin.io [Praneeth]
 
