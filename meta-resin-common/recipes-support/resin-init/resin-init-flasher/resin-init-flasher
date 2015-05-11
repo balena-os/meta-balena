@@ -8,7 +8,7 @@
 #   * filesystems labeling scheme is persistent (flasher-*/resin-*)                      #
 # Variables in resin-init-flasher.conf                                                   #
 #   INTERNAL_DEVICE_KERNEL      - internal device (enumerated by kernel) to be flashed   #
-#                                   * it's impossible to known on what to flash because  #
+#                                   * it's impossible to known what dev to flash because #
 #                                     we don't have any labels before flashing something #
 #                                     so we need this info                               #
 #   INTERNAL_DEVICE_UBOOT       - internal device as enumerated by uboot                 #
@@ -30,12 +30,13 @@ INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 
 function clean {
-    rm $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt 2>&1 > /dev/null
-    rm $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt 2>&1 > /dev/null
-    umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT 2>&1 > /dev/null
-    umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT 2>&1 > /dev/null
-    umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT 2>&1 > /dev/null
-    umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT 2>&1 > /dev/null
+    echo "[resin-init-flasher] Cleanup."
+    rm $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
+    rm $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
+    umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1
+    umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1
+    umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1
+    umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1
 }
 
 function fail {
@@ -98,6 +99,9 @@ inform "resin configuration found."
 uuid=$(openssl rand -hex 31)
 export CONFIG_PATH=$EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/config.json # overwrite the one from resin.conf
 export API_ENDPOINT # coming from resin.conf
+if [ ! -f $CONFIG_PATH ]; then
+    fail "$CONFIG_PATH : No such file."
+fi
 resin-net-config; /etc/init.d/connman start # Connect
 config_json=`cat $CONFIG_PATH`
 echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
@@ -126,8 +130,8 @@ fi
 sync && sync && sync
 
 # Trigger udev
+partprobe
 udevadm trigger
-sleep 2 # udev is a little slow
 
 # Mount internal device boot partition and write uEnv.txt
 resin-device-progress 30 "Prepare next boot..." || true

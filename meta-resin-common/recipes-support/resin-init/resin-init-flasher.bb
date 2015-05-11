@@ -24,6 +24,8 @@ RDEPENDS_${PN} = " \
     resin-device-register \
     resin-device-progress \
     connman \
+    resin-net-config \
+    parted \
     "
 
 # This should be just fine
