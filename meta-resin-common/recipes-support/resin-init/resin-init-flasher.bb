@@ -31,12 +31,13 @@ RDEPENDS_${PN} = " \
 # This should be just fine
 RESIN_IMAGE ?= "resin-image-${MACHINE}.resin-sdcard"
 
-python () {
-    if not d.getVar('INTERNAL_DEVICE_KERNEL', True) or not d.getVar('INTERNAL_DEVICE_UBOOT', True):
-        bb.fatal("One or more needed variables are not available in resin-init-flasher. Usually these are provided with a bbappend.")
-}
-
 do_install() {
+    if [ -z "${INTERNAL_DEVICE_KERNEL}" -o -z "${INTERNAL_DEVICE_UBOOT}" ]; then
+        bbfatal "One or more needed variables are not available in resin-init-flasher. \
+            Usually these are provided with a bbappend. This can also mean that this \
+            image is not usable for your selected MACHINE (${MACHINE})."
+    fi
+
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/resin-init-flasher  ${D}${sysconfdir}/init.d/
 
