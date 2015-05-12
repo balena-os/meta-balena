@@ -122,7 +122,7 @@ inform "Wrote uEnv on disk labeled as 'flasher-boot'"
 # Flash Resin image on internal device
 resin-device-progress 20 "Flash internal eMMC... will take a while..." || true
 inform "Flash internal device... will take around 5 minutes... "
-if ! dd if=$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL; then
+if ! dd if=$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL bs=4M; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
 fi
 
