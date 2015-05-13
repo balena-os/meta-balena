@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add support for Adafruit Touch Screen - Switches to using adafruits fork of fbtft [Praneeth]
 * Add support for Parallella [Theodor]
 
 # 2015-05-07

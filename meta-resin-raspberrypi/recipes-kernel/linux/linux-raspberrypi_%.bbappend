@@ -1,23 +1,13 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-raspberrypi:"
 SRC_URI += "file://0001-Disable-rtl8192cu-and-Enable-rtlwifi.patch \
+	    file://0001-Add-Adafruit-FBTFT-8a78f7cfdf840f05f7a5a6e1a9186a89c.patch \
           "
-FBTFT_SRCREV = "bcb4de90206842831bd40b20c93aa3e5c9553ea1"
-SRC_URI_append = " https://github.com/notro/fbtft/archive/${FBTFT_SRCREV}.zip;name=fbtft"
-SRC_URI[fbtft.md5sum] = "d5572f33fb9c901ea78f76ade8a234c6"
-SRC_URI[fbtft.sha256sum] = "66c96130c7f4af2edac603fa30ec34371562bd1d6f8864b3f3fff004074c8985"
 
-do_configure_prepend() {
-	if [ ! -e ${S}/.fbtft_configured ]; then
-		cp -r ${WORKDIR}/fbtft-${FBTFT_SRCREV} ${S}/drivers/video/fbdev/fbtft
-		echo 'source "drivers/video/fbdev/fbtft/Kconfig"' >> ${S}/drivers/video/fbdev/Kconfig
-		echo 'obj-y += fbtft/' >> ${S}/drivers/video/fbdev/Makefile
-		touch ${S}/.fbtft_configured
-	fi
-}
+PR = "${INC_PR}.1"
 
 inherit kernel-resin
 
-RESIN_CONFIGS_append = " fbtft"
+RESIN_CONFIGS_append = " fbtft ft6x06"
 RESIN_CONFIGS[fbtft] = " \
     CONFIG_FB_TFT=m \
     CONFIG_FB_TFT_AGM1264K_FL=m \
@@ -48,3 +38,6 @@ RESIN_CONFIGS[fbtft] = " \
     CONFIG_FB_FLEX=m \
     CONFIG_FB_TFT_FBTFT_DEVICE=m \
     "
+RESIN_CONFIGS[ft6x06] = " \
+   CONFIG_TOUCHSCREEN_FT6X06=m \
+   "
