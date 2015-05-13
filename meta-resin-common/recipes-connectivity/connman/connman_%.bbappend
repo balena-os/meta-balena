@@ -5,7 +5,7 @@ INITSCRIPT_PARAMS = ""
 
 PR = "${INC_PR}.1"
 
-RDEPENDS_${PN} = "resin-connman-conf"
+RDEPENDS_${PN}_append = " resin-connman-conf"
 
 do_configure_append () {
     # Disable the dnsproxy for systemd unit files.
