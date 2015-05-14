@@ -11,9 +11,8 @@ Resin specific targets are:
     resin-image
     resin-image-flasher
 
-RaspberryPi, Nitrogen 6X, Parallella:
-    $ bitbake resin-image
-
-BeagleBone Black:
-    $ bitbake resin-image-flasher
-
+RaspberryPi       :   $ MACHINE=raspberrypi bitbake resin-image
+RaspberryPi 2     :   $ MACHINE=raspberrypi2 bitbake resin-image
+BeagleBone Black  :   $ MACHINE=beaglebone bitbake resin-image-flasher
+Nitrogen 6X       :   $ MACHINE=nitrogen6x bitbake resin-image
+Parallella        :   $ MACHINE=parallella-hdmi-resin bitbake resin-image
