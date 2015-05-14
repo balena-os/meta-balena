@@ -4,7 +4,6 @@ IMAGE_FSTYPES_nitrogen6x = "resin-sdcard"
 RESIN_IMAGE_BOOTLOADER_nitrogen6x = "u-boot"
 RESIN_BOOT_PARTITION_FILES_nitrogen6x = " \
 	${KERNEL_IMAGETYPE}-${MACHINE}.bin:${KERNEL_IMAGETYPE} \
-	uImage-imx6dl-nitrogen6_max.dtb:imx6dl-nitrogen6_max.dtb \
 	uImage-imx6dl-nitrogen6x.dtb:imx6dl-nitrogen6x.dtb \
 	uImage-imx6q-nitrogen6_max.dtb:imx6q-nitrogen6_max.dtb \
 	uImage-imx6q-nitrogen6x.dtb:imx6q-nitrogen6x.dtb \
