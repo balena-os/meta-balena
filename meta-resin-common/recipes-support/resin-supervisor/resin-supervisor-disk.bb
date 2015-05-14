@@ -11,6 +11,7 @@ SRC_URI = " \
 	file://entry.sh \
 	file://supervisor.conf \
 	"
+S = "${WORKDIR}"
 
 PROVIDES="resin-supervisor"
 RPROVIDES_${PN} = "resin-supervisor"
