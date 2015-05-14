@@ -7,8 +7,6 @@ PR = "r1.33"
 
 SRC_URI = " \
 	   file://supervisor-init \
-	   file://inittab \
-	   file://tty-replacement \
 	   file://resin.conf \
 	   file://supervisor-init.service \
 	  "
@@ -77,9 +75,6 @@ do_install() {
 	else
 		# Production Resin build
 		sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_PRODUCTION}:g' ${D}${sysconfdir}/resin.conf
-		install -m 0755 ${WORKDIR}/inittab ${D}${sysconfdir}/
-		install -d ${D}${base_bindir}
-		install -m 0755 ${WORKDIR}/tty-replacement ${D}${base_bindir}
 	fi
 
 }
