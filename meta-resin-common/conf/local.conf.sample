@@ -9,10 +9,10 @@
 GPU_MEM = "16"
 
 # Set this to yes if staging build is desired
-#RESIN_STAGING_BUILD = "yes"
+#RESIN_STAGING_BUILD ?= "yes"
 
 # Compress final SD image with xz
-#RESIN_SDIMG_COMPRESSION = "xz"
+#RESIN_SDIMG_COMPRESSION ?= "xz"
 
 # Parallelism Options
 BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
