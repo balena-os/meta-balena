@@ -1,4 +1,4 @@
-# All resin supported machine
+# All resin supported machines
 #MACHINE ?= "raspberrypi"
 #MACHINE ?= "raspberrypi2"
 #MACHINE ?= "beaglebone"
@@ -20,6 +20,9 @@ PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
 
 # Resin specific distros
 DISTRO ?= "resin"
+
+# Custom downloads directory
+#DL_DIR ?= "${TOPDIR}/downloads"
 
 # Package Management configuration
 PACKAGE_CLASSES ?= "package_deb"
