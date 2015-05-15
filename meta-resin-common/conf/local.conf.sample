@@ -24,6 +24,9 @@ DISTRO ?= "resin"
 # Custom downloads directory
 #DL_DIR ?= "${TOPDIR}/downloads"
 
+# Custom sstate directory
+#SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
+
 # Package Management configuration
 PACKAGE_CLASSES ?= "package_deb"
 
