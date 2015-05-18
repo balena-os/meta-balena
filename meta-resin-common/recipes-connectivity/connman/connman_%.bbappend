@@ -3,7 +3,7 @@ INITSCRIPT_PACKAGES = ""
 INITSCRIPT_NAME = ""
 INITSCRIPT_PARAMS = ""
 
-PR = "${INC_PR}.1"
+PR = "${INC_PR}.2"
 
 do_configure_append () {
         # Disable the dnsproxy for systemd unit files.

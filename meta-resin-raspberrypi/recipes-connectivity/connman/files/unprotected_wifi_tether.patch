@@ -1,0 +1,27 @@
+Because connman does not want to have unprotected tethering.
+
+Upstream-Status: Denied
+
+Signed-off-by: Praneeth Bodduluri <lifeeth@gmail.com>
+
+diff -rupN connman-1.26.orig/src/technology.c connman-1.26/src/technology.c
+--- connman-1.26.orig/src/technology.c	2014-06-07 20:46:22.000000000 +0200
++++ connman-1.26/src/technology.c	2015-05-14 03:34:18.154311541 +0200
+@@ -246,7 +246,7 @@ static int set_tethering(struct connman_
+ 		return -EOPNOTSUPP;
+ 
+ 	if (technology->type == CONNMAN_SERVICE_TYPE_WIFI &&
+-	    (!ident || !passphrase))
++	    (!ident))
+ 		return -EINVAL;
+ 
+ 	for (tech_drivers = technology->driver_list; tech_drivers;
+@@ -912,7 +912,7 @@ static DBusMessage *set_property(DBusCon
+ 		if (technology->type != CONNMAN_SERVICE_TYPE_WIFI)
+ 			return __connman_error_not_supported(msg);
+ 
+-		if (strlen(str) < 8 || strlen(str) > 63)
++		if ((str != NULL ) && (strlen(str) < 8 || strlen(str) > 63))
+ 			return __connman_error_passphrase_required(msg);
+ 
+ 		if (g_strcmp0(technology->tethering_passphrase, str) != 0) {

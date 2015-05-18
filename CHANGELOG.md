@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add support for unprotected WiFi Tethering with Connman [Praneeth]
 * Add support for Adafruit Touch Screen - Switches to using adafruits fork of fbtft [Praneeth]
 * Add support for Parallella [Theodor]
 
