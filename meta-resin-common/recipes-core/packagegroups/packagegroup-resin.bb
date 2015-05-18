@@ -6,9 +6,10 @@ PR = "r1"
 inherit packagegroup
 
 RESIN_INIT_PACKAGE ?= "resin-init"
+RESIN_STAGING_ADDONS = "iozone3 nano"
 
 RDEPENDS_${PN} = "\
-	${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'nano', '', d)} \
+	${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', '${RESIN_STAGING_ADDONS}', '', d)} \
 	${RESIN_INIT_PACKAGE} \
 	linux-firmware-ath9k \
 	linux-firmware-ralink \
