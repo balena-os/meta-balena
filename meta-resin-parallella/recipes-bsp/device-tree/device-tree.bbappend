@@ -3,7 +3,7 @@ SRC_URI_append = " \
     file://led-control.patch;patchdir=${WORKDIR}/common \
     file://Fix-kernel-bootargs.patch;patchdir=${WORKDIR}/parallella \
     "
-S = "${WORKDIR}/devicetree"
+S = "${WORKDIR}"
 
 DEPLOY_DIR_IMAGE := "${DEPLOY_DIR_IMAGE}/device-trees"
 
