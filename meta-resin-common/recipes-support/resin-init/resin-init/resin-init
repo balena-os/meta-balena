@@ -26,7 +26,7 @@ if [ ! -e /boot/remove_to_reset_data ]; then
     datadev=`lsblk $datapart -n -o PKNAME`
     parted -s /dev/$datadev -- resizepart 4 -1s
     parted -s /dev/$datadev -- resizepart 6 -1s
-	
+
 	partprobe
 
 	# Create a directory for our images.
@@ -39,14 +39,11 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 
 	# If there is no uuid already we need to register the device
 	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
-		uuid=$(openssl rand -hex 31)
-		config_json=`cat $CONFIG_PATH`
-		echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
-	resin-device-register &
+		resin-device-register &
 	fi
 	
 	# Load containers
-	
+
 	resin-device-progress 60 "Preparing rce" || true
 
 	touch /boot/remove_to_reset_data && sync

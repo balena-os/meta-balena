@@ -6,8 +6,13 @@ if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
 fi
 
 if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
-	echo "UUID missing from config file, device register cannot continue."
-	exit 1
+	echo "UUID missing from config file, generating our own."
+
+	uuid=$(openssl rand -hex 31)
+	config_json=`cat $CONFIG_PATH`
+	echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
+else
+	read uuid <<<$(jq -r '.uuid' $CONFIG_PATH)
 fi
 
 while true; do
@@ -16,17 +21,17 @@ while true; do
 		read api_key user_id application_id uuid device_type <<<$(jq -r '.apiKey,.userId,.applicationId,.uuid,.deviceType // "raspberry-pi"' $CONFIG_PATH)
 
 		status_code=$(curl -s -X POST -w "%{http_code}" \
-				   -o /var/log/register-device-curl.log \
-				   -d "user=$user_id" \
-				   -d "application=$application_id" \
-				   -d "uuid=$uuid"  \
-				   --data-urlencode "device_type=$device_type" \
-				   "$API_ENDPOINT/ewa/device?apikey=$api_key")
+					-o /var/log/register-device-curl.log \
+					-d "user=$user_id" \
+					-d "application=$application_id" \
+					-d "uuid=$uuid"  \
+					--data-urlencode "device_type=$device_type" \
+					"$API_ENDPOINT/ewa/device?apikey=$api_key")
 
 		if [ "$status_code" -eq 201 ]; then
 			device_id=$(jq -r '.id' /var/log/register-device-curl.log)
 			config_json=`cat $CONFIG_PATH`
-			echo $config_json | jq ".registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
+			echo $config_json | jq ".uuid=\"`$uuid`\"|.registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
 			echo "Registered device with ID: $device_id and UUID: $uuid."
 		else
 			echo "Failed to register device. Status code: $status_code"
