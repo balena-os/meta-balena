@@ -1,6 +1,10 @@
 Change log
 -----------
 
+# 2015-05-20
+
+* Stop spawning getty in production builds [Theodor]
+* Add iozone to staging build [Theodor]
 * Add support for unprotected WiFi Tethering with Connman [Praneeth]
 * Add support for Adafruit Touch Screen - Switches to using adafruits fork of fbtft [Praneeth]
 * Add support for Parallella [Theodor]
