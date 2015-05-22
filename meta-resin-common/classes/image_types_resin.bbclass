@@ -48,8 +48,12 @@ inherit image_types
 # This image depends on the rootfs image
 IMAGE_TYPEDEP_resin-sdcard = "${RESIN_SDIMG_ROOTFS_TYPE}"
 
-# Boot partition volume label
-RESIN_BOOT_PART_LABEL ?= "boot-${MACHINE}"
+# Partition labels
+RESIN_BOOT_FS_LABEL ?= "resin-boot"
+RESIN_ROOT_FS_LABEL ?= "resin-root"
+RESIN_UPDATE_FS_LABEL ?= "resin-updt"
+RESIN_CONFIG_FS_LABEL ?= "resin-conf"
+RESIN_DATA_FS_LABEL ?= "resin-data"
 
 # Boot partition size [in KiB] (will be rounded up to IMAGE_ROOTFS_ALIGNMENT)
 BOOT_SPACE ?= "20480"
@@ -61,6 +65,9 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 RESIN_SDIMG_ROOTFS_TYPE ?= "ext3"
 RESIN_SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
 
+# Default bootloader to virtual/bootloader
+RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
+
 IMAGE_DEPENDS_resin-sdcard = " \
 			e2fsprogs-native \
 			parted-native \
@@ -69,10 +76,11 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			virtual/kernel \
 			${RESIN_IMAGE_BOOTLOADER} \
 			resin-supervisor \
+			btrfs-tools-native \
 			"
 
 # SD card image name
-RESIN_SDIMG = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
+RESIN_SDIMG ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
 
 # Compression method to apply to RESIN_SDIMG after it has been created. Supported
 # compression formats are "gzip", "bzip2" or "xz". The original .resin-sdcard file
@@ -94,7 +102,11 @@ IMAGE_CMD_resin-sdcard () {
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} \+ ${IMAGE_ROOTFS_ALIGNMENT} - 1)
 	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} \- ${BOOT_SPACE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
 	ROOTFS_SIZE=`du -bks ${RESIN_SDIMG_ROOTFS} | awk '{print $1}'`
-	BTRFS_SPACE=`du -bks ${BTRFS_IMAGE} | awk '{print $1}'`
+	if [ -n "${BTRFS_IMAGE}" ]; then
+		BTRFS_SPACE=`du -bks ${BTRFS_IMAGE} | awk '{print $1}'`
+	else
+		BTRFS_SPACE=${IMAGE_ROOTFS_ALIGNMENT}
+	fi
 	# Round up RootFS size to the alignment size as well
 	ROOTFS_SIZE_ALIGNED=$(expr ${ROOTFS_SIZE} \+ ${IMAGE_ROOTFS_ALIGNMENT} \- 1)
 	ROOTFS_SIZE_ALIGNED=$(expr ${ROOTFS_SIZE_ALIGNED} \- ${ROOTFS_SIZE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
@@ -150,7 +162,7 @@ IMAGE_CMD_resin-sdcard () {
 
 	# Create a vfat filesystem with boot files
 	BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
-	mkfs.vfat -n "${RESIN_BOOT_PART_LABEL}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
+	mkfs.vfat -n "${RESIN_BOOT_FS_LABEL}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
 	echo "Copying files in RESIN_BOOT_PARTITION_FILE"
 	for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
 		src=`echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}'`
@@ -168,16 +180,30 @@ IMAGE_CMD_resin-sdcard () {
 		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/${src} ::/${dst}
 	done
 
+    # Create a vfat filesystem for config partition
+    CONFIG_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
+    mkfs.vfat -F 32 -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
+
 	# Add stamp file to vfat partition
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
 	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
+
+    # Label what is not labeled
+    e2label ${RESIN_SDIMG_ROOTFS} ${RESIN_ROOT_FS_LABEL}
+    if [ -n "${BTRFS_IMAGE}" ]; then
+        btrfs filesystem label ${BTRFS_IMAGE} ${RESIN_DATA_FS_LABEL}
+    fi
 
 	# Burn Boot Partition
 	dd if=${WORKDIR}/boot.img of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
 	# Burn Rootfs Partition
 	dd if=${RESIN_SDIMG_ROOTFS} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+    # Burn Config Partition
+    dd if=${WORKDIR}/config.img of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 	# Burn BTRFS Partition
-	dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+	if [ -n "${BTRFS_IMAGE}" ]; then
+		dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+	fi
 }
 
 resin_sdcard_compress () {

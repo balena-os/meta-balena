@@ -16,9 +16,13 @@ PROVIDES="resin-supervisor"
 RPROVIDES_${PN} = "resin-supervisor"
 
 VERSION = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'master', 'production', d)}"
-TARGET_REPOSITORY ?= "resin/i386-supervisor"
 PARTITION_SIZE ?= "1024"
 LED_FILE ?= "/dev/null"
+
+python () {
+    if not d.getVar('TARGET_REPOSITORY', True):
+        bb.fatal("TARGET_REPOSITORY needs to be specifed for resin-supervisor-disk. This variable usually defined in a machine specific bbappend.")
+}
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
