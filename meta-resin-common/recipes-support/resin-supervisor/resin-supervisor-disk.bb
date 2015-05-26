@@ -11,6 +11,7 @@ SRC_URI = " \
 	file://entry.sh \
 	file://supervisor.conf \
 	"
+S = "${WORKDIR}"
 
 PROVIDES="resin-supervisor"
 RPROVIDES_${PN} = "resin-supervisor"
@@ -19,17 +20,16 @@ VERSION = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'master', 'p
 PARTITION_SIZE ?= "1024"
 LED_FILE ?= "/dev/null"
 
-python () {
-    if not d.getVar('TARGET_REPOSITORY', True):
-        bb.fatal("TARGET_REPOSITORY needs to be specifed for resin-supervisor-disk. This variable usually defined in a machine specific bbappend.")
-}
-
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
 do_install () {
+    if [ -z "${TARGET_REPOSITORY}" ]; then
+        bbfatal "One or more needed variables are not available in resin-supervisor-disk. \
+            Usually these are provided with a bbappend."
+    fi
 	install -d ${D}${sysconfdir}
 	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
 	sed -i -e 's:@TARGET_REPOSITORY@:${TARGET_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf

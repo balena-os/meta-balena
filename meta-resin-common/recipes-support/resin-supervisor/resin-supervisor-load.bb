@@ -7,6 +7,7 @@ PR = "r1.2"
 SRC_URI = " \
         file://supervisor.conf \
         "
+S = "${WORKDIR}"
 
 PROVIDES="resin-supervisor"
 RPROVIDES_${PN} = "resin-supervisor"

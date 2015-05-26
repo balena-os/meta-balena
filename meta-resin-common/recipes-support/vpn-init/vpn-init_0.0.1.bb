@@ -12,7 +12,7 @@ SRC_URI = " \
 	file://failsafe-sshkey.pub \
 	file://vpn-init.service \
 	"
-
+S = "${WORKDIR}"
 
 FILES_${PN} = "${sysconfdir}/* ${base_bindir}/* ${bindir}/* /home/root/.ssh/* ${localstatedir}/lib/dropbear/* /etc/default/dropbear"
 RDEPENDS_${PN} = "bash openvpn jq"

@@ -9,6 +9,7 @@ SRC_URI = " \
 	   file://supervisor-init \
 	   file://supervisor-init.service \
 	  "
+S = "${WORKDIR}"
 
 FILES_${PN} = "/resin-data /mnt/data-disk ${sysconfdir}/* ${base_bindir}/*"
 RDEPENDS_${PN} = " \

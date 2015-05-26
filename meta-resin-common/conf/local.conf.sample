@@ -1,0 +1,48 @@
+# All resin supported machines
+#MACHINE ?= "raspberrypi"
+#MACHINE ?= "raspberrypi2"
+#MACHINE ?= "beaglebone"
+#MACHINE ?= "nitrogen6x"
+#MACHINE ?= "parallella-hdmi-resin"
+
+# RaspberryPi specific variables
+GPU_MEM = "16"
+
+# Set this to yes if staging build is desired
+#RESIN_STAGING_BUILD ?= "yes"
+
+# Compress final SD image with xz
+#RESIN_SDIMG_COMPRESSION ?= "xz"
+
+# Parallelism Options
+BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
+PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
+
+# Resin specific distros
+DISTRO ?= "resin"
+
+# Custom downloads directory
+#DL_DIR ?= "${TOPDIR}/downloads"
+
+# Custom sstate directory
+#SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
+
+# Package Management configuration
+PACKAGE_CLASSES ?= "package_deb"
+
+# Additional image features
+USER_CLASSES ?= "buildstats image-mklibs image-prelink"
+
+# By default disable interactive patch resolution (tasks will just fail instead):
+PATCHRESOLVE = "noop"
+
+# Disk Space Monitoring during the build
+BB_DISKMON_DIRS = "\
+    STOPTASKS,${TMPDIR},1G,100K \
+    STOPTASKS,${DL_DIR},1G,100K \
+    STOPTASKS,${SSTATE_DIR},1G,100K \
+    ABORT,${TMPDIR},100M,1K \
+    ABORT,${DL_DIR},100M,1K \
+    ABORT,${SSTATE_DIR},100M,1K"
+
+CONF_VERSION = "1"

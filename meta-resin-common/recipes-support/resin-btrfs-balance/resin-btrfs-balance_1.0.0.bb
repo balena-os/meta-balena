@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 PR = "r1.0"
 
 SRC_URI = "file://resin-btrfs-balance"
+S = "${WORKDIR}"
 
 FILES_${PN} = "${bindir}/*"
 RDEPENDS_${PN} = "bash cronie btrfs-tools util-linux"

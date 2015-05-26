@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 PR = "r1"
 
 SRC_URI = "file://resin-init-board"
+S = "${WORKDIR}"
 
 inherit allarch
 

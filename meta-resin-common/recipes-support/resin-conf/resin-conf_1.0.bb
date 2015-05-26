@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 PR = "r0"
 
 SRC_URI = "file://resin.conf"
+S = "${WORKDIR}"
 
 FILES_${PN} = "${sysconfdir}"
 
