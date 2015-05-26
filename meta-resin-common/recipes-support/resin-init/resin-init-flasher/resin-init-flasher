@@ -96,15 +96,12 @@ fi
 inform "resin configuration found."
 
 # Register device
-uuid=$(openssl rand -hex 31)
 export CONFIG_PATH=$EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/config.json # overwrite the one from resin.conf
 export API_ENDPOINT # coming from resin.conf
 if [ ! -f $CONFIG_PATH ]; then
     fail "$CONFIG_PATH : No such file."
 fi
 resin-net-config; /etc/init.d/connman start # Connect
-config_json=`cat $CONFIG_PATH`
-echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
 resin-device-register &
 
 # Mount external device boot partition and write uEnv.txt
