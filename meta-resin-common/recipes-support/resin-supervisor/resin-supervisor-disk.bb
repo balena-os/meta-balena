@@ -42,8 +42,26 @@ do_deploy () {
     docker build -t looper .
     docker run --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${VERSION} -v ${S}:/export looper
     install ${S}/data_disk.img ${DEPLOYDIR}/data_disk.img
+    echo ${PV} > ${DEPLOYDIR}/VERSION
 }
 
 addtask deploy before do_package after do_install
 do_deploy[dirs] += "${DEPLOYDIR}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+python () {
+    # Get the recipe version from supervisor
+    import subprocess
+
+    target_repository = d.getVar('TARGET_REPOSITORY', True)
+    version = d.getVar('VERSION', True)
+
+    pull_cmd = "docker pull %s:%s" % (target_repository, version)
+    pull_output = subprocess.Popen(pull_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+
+    version_cmd = "echo -n `docker inspect %s:%s | grep '\"VERSION=' | head -n 1 | tr -d ' ' | tr -d '\"' | tr -d 'VERSION=\"' `" % (target_repository, version)
+    version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+    if version_output == "":
+        bb.fatal("Cannot fetch the version")
+    d.setVar('PV', version_output)
+}
