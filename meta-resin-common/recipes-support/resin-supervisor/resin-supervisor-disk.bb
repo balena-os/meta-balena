@@ -7,10 +7,10 @@ inherit deploy
 PR = "r5"
 
 SRC_URI = " \
-	file://Dockerfile \
-	file://entry.sh \
-	file://supervisor.conf \
-	"
+    file://Dockerfile \
+    file://entry.sh \
+    file://supervisor.conf \
+    "
 S = "${WORKDIR}"
 
 PROVIDES="resin-supervisor"
@@ -30,18 +30,18 @@ do_install () {
         bbfatal "One or more needed variables are not available in resin-supervisor-disk. \
             Usually these are provided with a bbappend."
     fi
-	install -d ${D}${sysconfdir}
-	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
-	sed -i -e 's:@TARGET_REPOSITORY@:${TARGET_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
-	sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
+    install -d ${D}${sysconfdir}
+    install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
+    sed -i -e 's:@TARGET_REPOSITORY@:${TARGET_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
+    sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
 }
 
 do_deploy () {
-	install -d ${DEPLOYDIR}
-	cd ${WORKDIR}
-	docker build -t looper .
-	docker run --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${VERSION} -v ${S}:/export looper
-	install ${S}/data_disk.img ${DEPLOYDIR}/data_disk.img
+    install -d ${DEPLOYDIR}
+    cd ${WORKDIR}
+    docker build -t looper .
+    docker run --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${VERSION} -v ${S}:/export looper
+    install ${S}/data_disk.img ${DEPLOYDIR}/data_disk.img
 }
 
 addtask deploy before do_package after do_install
