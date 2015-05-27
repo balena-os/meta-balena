@@ -28,6 +28,9 @@ DISTRO ?= "resin"
 # Custom sstate directory
 #SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
 
+# http://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#ref-classes-rm-work
+#INHERIT += "rm_work"
+
 # Package Management configuration
 PACKAGE_CLASSES ?= "package_deb"
 
