@@ -46,8 +46,7 @@ do_compile () {
             Usually these are provided with a bbappend."
     fi
     docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
-    docker run --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${REPOSITORY_TAG} -v ${B}:/export looper
-    docker ps -a | grep looper | awk '{print $1}' | xargs docker rm # Remove all looper containers
+    docker run --rm=true --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${REPOSITORY_TAG} -v ${B}:/export looper
     docker rmi looper # Remove looper image
 }
 
