@@ -45,7 +45,7 @@ do_compile () {
         bbfatal "One or more needed variables are not available in resin-supervisor-disk. \
             Usually these are provided with a bbappend."
     fi
-    docker build -t looper -f ${WORKDIR}/Dockerfile .
+    docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
     docker run --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${REPOSITORY_TAG} -v ${B}:/export looper
     docker ps -a | grep looper | awk '{print $1}' | xargs docker rm # Remove all looper containers
     docker rmi looper # Remove looper image
