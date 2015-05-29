@@ -45,9 +45,9 @@ do_compile () {
         bbfatal "One or more needed variables are not available in resin-supervisor-disk. \
             Usually these are provided with a bbappend."
     fi
+    touch -t 7805200000 ${WORKDIR}/entry.sh # Make sure docker rebuilds the image only if file is changed in content
     docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
     docker run --rm=true --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${REPOSITORY_TAG} -v ${B}:/export looper
-    docker rmi looper # Remove looper image
 }
 
 do_install () {
