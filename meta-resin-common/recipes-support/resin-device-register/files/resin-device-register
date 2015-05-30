@@ -31,7 +31,7 @@ while true; do
 		if [ "$status_code" -eq 201 ]; then
 			device_id=$(jq -r '.id' /var/log/register-device-curl.log)
 			config_json=`cat $CONFIG_PATH`
-			echo $config_json | jq ".uuid=\"`$uuid`\"|.registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
+			echo $config_json | jq ".uuid=\"$uuid\"|.registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
 			echo "Registered device with ID: $device_id and UUID: $uuid."
 		else
 			echo "Failed to register device. Status code: $status_code"
