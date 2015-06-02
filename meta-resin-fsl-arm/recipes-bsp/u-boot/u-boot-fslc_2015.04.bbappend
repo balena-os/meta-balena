@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_append := "${THISDIR}/${PN}:"
 SRC_URI_append = " file://fix-hummingboard.patch"
 
-# FIX ME
+# FIXME
 # This is a bug in poky fido 13.0.0
 # Is already fixed and will be included in the next fido release
 # http://lists.openembedded.org/pipermail/openembedded-core/2015-April/103926.html
