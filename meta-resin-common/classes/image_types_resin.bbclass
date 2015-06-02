@@ -172,7 +172,7 @@ IMAGE_CMD_resin-sdcard () {
 		fi
 		# Create the directories mentioned in the RESIN_BOOT_PARTITION_FILE
 		directory=""
-		for i in `echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}' | sed -e 's/\//\n/g' |  sed '/.*\./d' `; do
+		for i in `echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}' | sed -e 's/\//\n/g' |  head -n -1 `; do
 		        directory=$directory/$i
 			mmd -D sS -i ${WORKDIR}/boot.img $directory || true
 		done

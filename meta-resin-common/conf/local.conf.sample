@@ -4,6 +4,7 @@
 #MACHINE ?= "beaglebone"
 #MACHINE ?= "nitrogen6x"
 #MACHINE ?= "parallella-hdmi-resin"
+#MACHINE ?= "cubox-i"
 
 # RaspberryPi specific variables
 GPU_MEM = "16"
