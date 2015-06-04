@@ -28,6 +28,11 @@ DISTRO ?= "resin"
 # Custom sstate directory
 #SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
 
+# Inheriting this class has shown to speed up builds due to significantly lower
+# amounts of data stored in the data cache as well as on disk.
+# http://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#ref-classes-rm-work
+#INHERIT += "rm_work"
+
 # Package Management configuration
 PACKAGE_CLASSES ?= "package_deb"
 
