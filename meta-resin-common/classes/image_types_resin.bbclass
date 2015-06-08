@@ -29,7 +29,7 @@ inherit image_types
 #    IMAGE_ROOTFS_ALIGNMENT -> SDIMG_SIZE                     - btrfs partition
 
 #
-#            4MiB              20MiB        ROOTFS_SIZE       ROOTFS_SIZE              4MiB                4MiB                 4MiB                4MiB
+#            4MiB              20MiB        ROOTFS_SIZE       ROOTFS_SIZE              4MiB                16MiB                4MiB                4MiB
 # <-----------------------> <----------> <----------------> <--------------->  <----------------------> <------------> <-----------------------> <------------>
 #  ------------------------ ------------ ------------------ -----------------  ================================================================================
 # | IMAGE_ROOTFS_ALIGNMENT | BOOT_SPACE | ROOTFS_SIZE      |  ROOTFS_SIZE    || IMAGE_ROOTFS_ALIGNMENT || CONFIG_SIZE || IMAGE_ROOTFS_ALIGNMENT || BTRFS_SIZE  ||
@@ -95,7 +95,7 @@ IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 BTRFS_IMAGE = "${DEPLOY_DIR}/images/${MACHINE}/data_disk.img"
 
 # Config size
-CONFIG_SIZE = "4096"
+CONFIG_SIZE = "16384"
 
 IMAGE_CMD_resin-sdcard () {
 	# Align partitions
@@ -182,7 +182,7 @@ IMAGE_CMD_resin-sdcard () {
 
     # Create a vfat filesystem for config partition
     CONFIG_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
-    mkfs.vfat -F 32 -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
+    mkfs.vfat -F 16 -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
 
 	# Add stamp file to vfat partition
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
