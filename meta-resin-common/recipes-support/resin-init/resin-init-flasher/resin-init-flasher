@@ -96,16 +96,15 @@ fi
 inform "resin configuration found."
 
 # Register device
-export CONFIG_PATH=$EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/config.json # overwrite the one from resin.conf
+export CONFIG_PATH # coming from resin.conf
 export API_ENDPOINT # coming from resin.conf
 if [ ! -f $CONFIG_PATH ]; then
     fail "$CONFIG_PATH : No such file."
 fi
-resin-net-config; /etc/init.d/connman start # Connect
+
 resin-device-register &
 
 # Mount external device boot partition and write uEnv.txt
-resin-device-progress 10 "Prepare next boot..." || true
 mkdir -p $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting external device boot partition."
 if ! mount /dev/disk/by-label/flash-boot $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
@@ -117,11 +116,27 @@ fi
 inform "Wrote uEnv on disk labeled as 'flasher-boot'"
 
 # Flash Resin image on internal device
-resin-device-progress 20 "Flash internal eMMC... will take a while..." || true
 inform "Flash internal device... will take around 5 minutes... "
-if ! dd if=$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL bs=4M; then
+dd if=$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+
+if ! kill -0 $DD_PID; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
 fi
+
+IMAGE_FILE_SIZE=`wc -c $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE | awk '{print $1}'`
+
+resin-device-progress 0 "Starting internal eMMC flashing"
+
+while kill -USR1 $DD_PID; do
+    sleep 3
+    if [ ! -s /tmp/dd_progress_log ]; then
+        continue
+    fi
+    IMAGE_WRITTEN_BYTES=`cat /tmp/dd_progress_log | awk 'END{print $1}'`
+    let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE
+    resin-device-progress $RATIO "Flashing internal eMMC"
+    truncate -s 0 /tmp/dd_progress_log
+done
 
 # Many syncs
 sync && sync && sync
@@ -131,7 +146,6 @@ partprobe
 udevadm trigger
 
 # Mount internal device boot partition and write uEnv.txt
-resin-device-progress 30 "Prepare next boot..." || true
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting internal device boot partition."
 if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
@@ -158,7 +172,7 @@ sync && sync && sync
 #echo "This was done from flashing script" > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/remove_to_reset_data && sync
 
 # umounts
-resin-device-progress 90 "Cleanup and reboot..." || true
+resin-device-progress 100 "Cleanup and reboot..." || true
 umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
