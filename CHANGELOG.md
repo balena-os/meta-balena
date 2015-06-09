@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Forcefully remove supervisor container to avoid some issues where a normal remove won't work even though the container is stopped [Page]
+
 # 2015-05-20
 
 * Stop spawning getty in production builds [Theodor]

@@ -12,7 +12,7 @@ done
 # Remove supervisor from previous boot.
 # We have to make sure nobody started it before removing.
 rce stop resin_supervisor || true
-rce rm resin_supervisor || true
+rce rm --force resin_supervisor || true
 
 # Touch the resolv.conf file before running rce-run-supervisor.
 touch /etc/resolv.conf

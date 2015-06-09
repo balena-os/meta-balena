@@ -50,7 +50,7 @@ rce stop resin_supervisor || true
 rce pull "$image_name:$tag"
 
 # Try removing old supervisor. Do not exit if these fail.
-rce rm resin_supervisor || true
+rce rm --force resin_supervisor || true
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
