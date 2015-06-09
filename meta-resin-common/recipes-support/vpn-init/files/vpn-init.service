@@ -1,11 +1,13 @@
 [Unit]
 Description=Resin VPN service
+Wants=connman.service resin-init.service
+After=connman.service resin-init.service
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 ExecStart=-@BASE_BINDIR@/vpn-init
-StandardError=syslog
-RemainAfterExit=no
+StandardError=journal+console
 
 [Install]
 WantedBy=basic.target

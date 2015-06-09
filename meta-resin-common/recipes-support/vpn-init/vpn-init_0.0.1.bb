@@ -58,16 +58,11 @@ do_install() {
 		install -d ${D}${base_bindir}
 		install -m 0755 ${WORKDIR}/vpn-init ${D}${base_bindir}
 		install -d ${D}${systemd_unitdir}/system
-		install -d ${D}${sysconfdir}/systemd/system/basic.target.wants
 		install -c -m 0644 ${WORKDIR}/vpn-init.service ${D}${systemd_unitdir}/system
 		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 			-e 's,@SBINDIR@,${sbindir},g' \
 			-e 's,@BINDIR@,${bindir},g' \
 			${D}${systemd_unitdir}/system/*.service
-
-		# enable the service
-		ln -sf ${systemd_unitdir}/system/vpn-init.service \
-			${D}${sysconfdir}/systemd/system/basic.target.wants/vpn-init.service
 	else
 		install -d ${D}${sysconfdir}/init.d/
 		install -m 0755 ${WORKDIR}/vpn-init  ${D}${sysconfdir}/init.d/vpn-init
