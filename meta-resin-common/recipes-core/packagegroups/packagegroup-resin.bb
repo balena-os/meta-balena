@@ -37,4 +37,5 @@ RDEPENDS_${PN} = "\
 	supervisor-init \
 	vpn-init \
 	bridge-utils \
+	${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)} \
 	"
