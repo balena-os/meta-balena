@@ -6,4 +6,4 @@ IMAGE_FEATURES_append = " \
     splash \
     "
 
-IMAGE_INSTALL_append = " resin-init-flasher kernel-modules"
+IMAGE_INSTALL_append = " packagegroup-resin-flasher"
