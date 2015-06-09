@@ -1,0 +1,13 @@
+[Unit]
+Description=Resin init flasher service
+Wants=connman.service
+After=connman.service
+
+[Service]
+ExecStart=@BASE_BINDIR@/sh @BASE_SBINDIR@/resin-init-flasher
+Type=oneshot
+RemainAfterExit=yes
+StandardError=journal+console
+
+[Install]
+WantedBy=basic.target
