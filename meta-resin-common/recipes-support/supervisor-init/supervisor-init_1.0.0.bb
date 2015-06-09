@@ -14,9 +14,11 @@ S = "${WORKDIR}"
 FILES_${PN} = "/resin-data /mnt/data-disk ${sysconfdir}/* ${base_bindir}/*"
 RDEPENDS_${PN} = " \
     bash \
+    connman \
     rce \
     rce-run-supervisor \
     resin-device-progress \
+    resin-init \
     wireless-tools \
     resin-supervisor \
     socat \
@@ -49,16 +51,11 @@ do_install() {
 		install -d ${D}${base_bindir}
 		install -m 0755 ${WORKDIR}/supervisor-init ${D}${base_bindir}
 		install -d ${D}${systemd_unitdir}/system
-		install -d ${D}${sysconfdir}/systemd/system/basic.target.wants
 		install -c -m 0644 ${WORKDIR}/supervisor-init.service ${D}${systemd_unitdir}/system
 		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 			-e 's,@SBINDIR@,${sbindir},g' \
 			-e 's,@BINDIR@,${bindir},g' \
 			${D}${systemd_unitdir}/system/*.service
-
-		# enable the service
-		ln -sf ${systemd_unitdir}/system/supervisor-init.service \
-			${D}${sysconfdir}/systemd/system/basic.target.wants/supervisor-init.service
 	else
 		install -d ${D}${sysconfdir}/init.d/
 		install -m 0755 ${WORKDIR}/supervisor-init  ${D}${sysconfdir}/init.d/supervisor-init

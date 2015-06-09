@@ -1,12 +1,13 @@
 [Unit]
 Description=Resin supervisor service
-After=connman.service
+Wants=connman.service resin-init.service
+After=connman.service resin-init.service
 
 [Service]
-Type=forking
+Type=oneshot
+RemainAfterExit=yes
 ExecStart=-@BASE_BINDIR@/supervisor-init
-StandardError=syslog
-RemainAfterExit=no
+StandardError=journal+console
 
 [Install]
 WantedBy=basic.target
