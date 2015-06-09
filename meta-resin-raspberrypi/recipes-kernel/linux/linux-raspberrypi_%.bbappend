@@ -7,6 +7,8 @@ PR = "${INC_PR}.1"
 
 inherit kernel-resin
 
+CMDLINE_DEBUG = ""
+
 RESIN_CONFIGS_append = " fbtft ft6x06"
 RESIN_CONFIGS[fbtft] = " \
     CONFIG_FB_TFT=m \
