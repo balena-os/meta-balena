@@ -10,16 +10,8 @@ mkdir -p /tmp/.rce
 mount -o bind /tmp/.rce /.rce
 
 mount -o ro /dev/disk/by-label/resin-boot /boot
+
 if [ ! -e /boot/remove_to_reset_data ]; then
-	mount -o remount,rw /boot
-
-    # Copy the config.json to a standard location in all our images.
-    mcopy -i /dev/disk/by-label/resin-conf ::config.json /tmp/config.json
-
-	# Setup the network from the config.json
-	CONFIG_PATH=/tmp/config.json resin-net-config
-	/etc/init.d/connman start
-
 	# Expand Docker Container to the end of the SD card
     # Some might argue that this is a hack :)
     datapart=`readlink -f /dev/disk/by-label/resin-data`
@@ -28,14 +20,8 @@ if [ ! -e /boot/remove_to_reset_data ]; then
     parted -s /dev/$datadev -- resizepart 6 -1s
 
 	partprobe
-
-	# Create a directory for our images.
-	mkdir -p /mnt/data-disk
 	mount /dev/disk/by-label/resin-data /mnt/data-disk
-
 	btrfs filesystem resize max /mnt/data-disk
-
-	cp /tmp/config.json /mnt/data-disk/config.json
 
 	# If there is no uuid already we need to register the device
 	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
@@ -45,10 +31,9 @@ if [ ! -e /boot/remove_to_reset_data ]; then
 	# Load containers
 
 	resin-device-progress 60 "Preparing rce" || true
-
+	mount -o remount,rw /boot
 	touch /boot/remove_to_reset_data && sync
 else
-	/etc/init.d/connman start
 	# Mount rce images directory
 	mount /dev/disk/by-label/resin-data /mnt/data-disk
 fi
@@ -70,7 +55,7 @@ mount -o bind /mnt/data-disk/resin-data /resin-data
 mount -o bind /mnt/data-disk/rce /var/lib/rce
 
 # Run the board specific init script
-/etc/init.d/resin-init-board
+/sbin/resin-init-board
 
 resin-device-progress 80 "Starting supervisor" || true
 
