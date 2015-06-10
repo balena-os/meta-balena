@@ -1,8 +1,12 @@
 SRC_URI = "ftp://invisible-island.net/${BPN}/current/${BP}-${REVISION}.tgz"
 
 do_configure_prepend() {
+    export cf_cv_working_poll=yes
     #Remove ${includedir} from CPPFLAGS, need for cross compile
     sed -i 's#-I${cf_includedir}##g' ${S}/configure || die "sed CPPFLAGS"
+
+    # The --enable-pc-files requires PKG_CONFIG_LIBDIR existed
+    mkdir -p ${PKG_CONFIG_LIBDIR}
 }
 
 do_install_append() {
@@ -14,5 +18,4 @@ do_install_append() {
                 ln -sf ncurses/$f ${D}${includedir}/$f
         done
     fi
-    oe_multilib_header curses.h
 }
