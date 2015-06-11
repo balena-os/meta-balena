@@ -34,7 +34,7 @@ inherit image_types
 #  ------------------------ ------------ ------------------ -----------------  ================================================================================
 # | IMAGE_ROOTFS_ALIGNMENT | BOOT_SPACE | ROOTFS_SIZE      |  ROOTFS_SIZE    || IMAGE_ROOTFS_ALIGNMENT || CONFIG_SIZE || IMAGE_ROOTFS_ALIGNMENT || BTRFS_SIZE  ||
 #  ------------------------ ------------ ------------------ -----------------  ================================================================================
-# ^                        ^            ^                  ^                 ^^                        ^^             ^^                        ^^             ^^ 
+# ^                        ^            ^                  ^                 ^^                        ^^             ^^                        ^^             ^^
 # |                        |            |                  |                 ||                        ||             ||                        ||             ||
 # 0                      4MiB         4MiB +             4MiB +            4MiB +                      4MiB +         4MiB +                    4MiB +         4MiB +
 #                                     20Mib              20MiB +           20MiB +                     20MiB +        20MiB +                   20MiB +        20MiB +
@@ -147,7 +147,7 @@ IMAGE_CMD_resin-sdcard () {
 	END=$(expr ${START} \+ ${UPDATE_SIZE_ALIGNED})
 	parted -s ${RESIN_SDIMG} unit KiB mkpart primary ext4 ${START} ${END}
 
-	# Create extended partition 
+	# Create extended partition
 	START=${END}
 	parted -s ${RESIN_SDIMG} -- unit KiB mkpart extended ${START} -1s
 
@@ -222,3 +222,7 @@ resin_sdcard_compress () {
 }
 
 IMAGE_POSTPROCESS_COMMAND += "resin_sdcard_compress;"
+
+# Make sure we regenerate images if we modify the files that go in the boot
+# partition
+do_rootfs[vardeps] += "RESIN_BOOT_PARTITION_FILES"
