@@ -1,0 +1,13 @@
+[Unit]
+Description=Resin net config service
+Wants=dev-disk-by\x2dlabel-flash\x2dconf.device
+After=dev-disk-by\x2dlabel-flash\x2dconf.device
+
+[Service]
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-net-config
+Type=oneshot
+RemainAfterExit=yes
+StandardError=journal+console
+
+[Install]
+WantedBy=basic.target
