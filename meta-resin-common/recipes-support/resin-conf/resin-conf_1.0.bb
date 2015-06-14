@@ -24,7 +24,7 @@ do_install() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
         # Staging Resin build
-        sed -i -e 's:api.resin.io:api.staging.resin.io:g' ${D}${sysconfdir}/resin.conf
+        sed -i -e 's:api.resin.io:api.resinstaging.io:g' ${D}${sysconfdir}/resin.conf
         sed -i -e 's:registry.resin.io:registry.staging.resin.io:g' ${D}${sysconfdir}/resin.conf
         sed -i -e 's:^MIXPANEL_TOKEN=.*:MIXPANEL_TOKEN=${MIXPANEL_TOKEN_STAGING}:g' ${D}${sysconfdir}/resin.conf
     else

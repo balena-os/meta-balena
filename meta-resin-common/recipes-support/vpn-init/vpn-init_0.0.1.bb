@@ -37,7 +37,7 @@ do_install() {
 	# Staging Resin build
 	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
 		# Use staging Resin URL
-		sed -i -e 's:vpn.resin.io:vpn.staging.resin.io:g' ${D}${sysconfdir}/openvpn/client.conf
+		sed -i -e 's:vpn.resin.io:vpn.resinstaging.io:g' ${D}${sysconfdir}/openvpn/client.conf
 	# Production Resin Build
 	else
 		# Change dropbear to disable root password logins
