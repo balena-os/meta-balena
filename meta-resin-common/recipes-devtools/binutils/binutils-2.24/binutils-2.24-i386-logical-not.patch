@@ -1,0 +1,19 @@
+binutils FTBFS during stage1 bootstrap - logical not is only applied to the
+left hand side of comparison.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1224187
+
+Signed-off-by: Theodor Gherzan <theodor@resin.io>
+
+diff -Naur binutils-2.24.orig/gas/config/tc-i386.c binutils-2.24/gas/config/tc-i386.c
+--- binutils-2.24.orig/gas/config/tc-i386.c	2013-11-26 12:37:33.000000000 +0100
++++ binutils-2.24/gas/config/tc-i386.c	2015-05-22 11:42:24.647713050 +0200
+@@ -6140,7 +6140,7 @@
+ 	      op.bitfield.regmem = 0;
+ 	      if ((dest + 1) >= i.operands
+ 		  || (op.bitfield.reg32 != 1
+-		      && !op.bitfield.reg64 != 1
++		      && !!op.bitfield.reg64
+ 		      && !operand_type_equal (&op, &regxmm)
+ 		      && !operand_type_equal (&op, &regymm)
+ 		      && !operand_type_equal (&op, &regzmm)
