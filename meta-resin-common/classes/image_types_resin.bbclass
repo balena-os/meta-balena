@@ -154,11 +154,11 @@ IMAGE_CMD_resin-sdcard () {
 	# After creating the extended partition the next logical parition needs a IMAGE_ROOTFS_ALIGNMENT in front of it
 	START=$(expr ${START} \+ ${IMAGE_ROOTFS_ALIGNMENT})
 	END=$(expr ${START} \+ ${CONFIG_SIZE_ALIGNED})
-	parted -s ${RESIN_SDIMG} unit KiB mkpart logical ext2 ${START} ${END}
+    parted -s ${RESIN_SDIMG} unit KiB mkpart logical fat32 ${START} ${END}
 
 	# Create BTRFS partition
 	START=$(expr ${END} \+ ${IMAGE_ROOTFS_ALIGNMENT})
-	parted -s ${RESIN_SDIMG} -- unit KiB mkpart logical ext2 ${START} -1s
+    parted -s ${RESIN_SDIMG} -- unit KiB mkpart logical btrfs ${START} -1s
 
 	# Create a vfat filesystem with boot files
 	BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
@@ -182,7 +182,7 @@ IMAGE_CMD_resin-sdcard () {
 
     # Create a vfat filesystem for config partition
     CONFIG_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
-    mkfs.vfat -F 16 -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
+    mkfs.vfat -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
 
 	# Add stamp file to vfat partition
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
