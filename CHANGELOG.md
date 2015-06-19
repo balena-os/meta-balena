@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* meta-resin switched to systemd now instead of sysvinit [Theodor]
 * Forcefully remove supervisor container to avoid some issues where a normal remove won't work even though the container is stopped [Page]
 
 # 2015-05-20
