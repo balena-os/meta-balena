@@ -12,8 +12,8 @@ FILES_${PN} = "${bindir}/*"
 RDEPENDS_${PN} = "bash rce"
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0775 ${WORKDIR}/rce-run-supervisor ${D}${bindir}/rce-run-supervisor
+    install -d ${D}${bindir}
+    install -m 0775 ${WORKDIR}/rce-run-supervisor ${D}${bindir}/rce-run-supervisor
 }
 
 pkg_postinst_${PN} () {

@@ -1,4 +1,2 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-
-SRC_URI += "file://dropbear.socket \
-	   "
+SRC_URI += "file://dropbear.socket"

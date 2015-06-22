@@ -12,8 +12,8 @@ FILES_${PN} = "${bindir}/*"
 RDEPENDS_${PN} = "bash cronie btrfs-tools util-linux"
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0775 ${WORKDIR}/resin-btrfs-balance ${D}${bindir}/resin-btrfs-balance
+    install -d ${D}${bindir}
+    install -m 0775 ${WORKDIR}/resin-btrfs-balance ${D}${bindir}/resin-btrfs-balance
 }
 
 pkg_postinst_${PN}() {
