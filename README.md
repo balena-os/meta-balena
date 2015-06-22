@@ -1,35 +1,26 @@
-# Resin.io layer for Yocto.
+# Resin.io layers for Yocto
 
-## Layers Structure ##
+## Description
+This repository enables building resin.io for various devices.
 
+## Layers Structure
+* meta-resin-common : layer which contains common recipes for all our supported platforms.
+* meta-resin-* : layer which contains recipes specific to a board / BSP.
+* other files : README, COPYING, etc.
 
-This repository enables building of resin.io support for various devices.
+## Build configuration
 
-* meta-resin-common directory has the recipies common to all our builds.
-* meta-resin-<board> directory has the recipies specific to a board.
+### Production/Staging Builds
 
+RESIN_STAGING_BUILD variable gets injected into DISTRO_FEATURES. If RESIN_STAGING_BUILD contains 'yes' then 'resin-staging' distro feature is added. Based on this, recipes can decide what staging specific changes are needed. By default RESIN_STAGING_BUILD is empty which corresponds to a normal build (resis-staging won't be appended to DISTRO_FEATURE). If user wants a staging build, RESIN_STAGING_BUILD = "yes" needs to be added to local.conf.
 
-The following gives a rough overview of the directories inside individual layers.
+To make it short:
 
-* **classes** : Has the reusable components used by various recipes. 
-    * classes/image-resin-rpi.bbclass - Has the functions used for putting together the image. Yocto generates the rootfs and boot partition tars which are put together with the noobs installer. This function currently enables two new FS types - resin-noobs and resin-noobs-dev that are used in resin-rpi and resin-rpi-dev
-
-* **conf** : Has the configuration file which tells the yocto's builder [bitbake] to use this repo. This is mostly never changed.
-
-* **recipes-core** : The structure of this directory is mimicked from the yocto layers to override the psplash and the image recipes [resin-rpi and resin-rpi-dev] that are actually to be called to put together the build.
-
-* **recipes-devtools** : This has the rce recipe that uses rce-arm.
-
-* **recipes-support** : This has all the other files used in deployment - We currently use the rpi-init to initialise the btrfs partition along with adding in the initial supervisor build. supervisot-init is used to launch the supervisor.
-
-* **recipes-kernel** : This has the recipe for adding additional build configs to the BSP kernel to enable rce support.
-
-
-## Production/Staging Builds ##
-
-###To make it short:###
 * If RESIN_STAGING_BUILD is not present in your local.conf or it doesn't include "yes" : Production build selected (default bahavior)
 * If RESIN_STAGING_BUILD is defined local.conf and includes "yes" : Staging build selected
 
-###Long description:###
-RESIN_STAGING_BUILD variable gets injected into DISTRO_FEATURES. If RESIN_STAGING_BUILD contains 'yes' then 'resin-staging' distro feature is added. Based on this, recipes can decide what staging specific changes are needed. By default RESIN_STAGING_BUILD is empty which corresponds to a normal build (resis-staging won't be appended to DISTRO_FEATURE). If user wants a staging build, RESIN_STAGING_BUILD = "yes" needs to be added to local.conf.
+## Contributing
+
+To contribute send bitbucket pull requests targeting [this](https://bitbucket.org/rulemotion/meta-resin) repository.
+
+Please refer to: [Yocto Contribution Guidelines](https://wiki.yoctoproject.org/wiki/Contribution_Guidelines#General_Information)
