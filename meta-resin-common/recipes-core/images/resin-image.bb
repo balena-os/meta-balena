@@ -7,4 +7,5 @@ IMAGE_FEATURES_append = " \
     package-management \
     ssh-server-dropbear \
 "
+
 IMAGE_INSTALL_append = " packagegroup-resin"

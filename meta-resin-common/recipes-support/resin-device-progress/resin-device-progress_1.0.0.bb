@@ -12,8 +12,8 @@ FILES_${PN} = "${bindir}/*"
 RDEPENDS_${PN} = "bash curl jq"
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0775 ${WORKDIR}/resin-device-progress ${D}${bindir}/resin-device-progress
+    install -d ${D}${bindir}
+    install -m 0775 ${WORKDIR}/resin-device-progress ${D}${bindir}/resin-device-progress
 }
 
 pkg_postinst_${PN} () {

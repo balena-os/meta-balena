@@ -12,8 +12,8 @@ FILES_${PN} = "${bindir}/*"
 RDEPENDS_${PN} = "bash cronie rce rce-run-supervisor util-linux jq resin-conf"
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0775 ${WORKDIR}/resin-device-update ${D}${bindir}/resin-device-update
+    install -d ${D}${bindir}
+    install -m 0775 ${WORKDIR}/resin-device-update ${D}${bindir}/resin-device-update
 
 }
 

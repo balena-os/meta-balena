@@ -7,9 +7,9 @@ PROVIDES = "rce"
 RPROVIDES_${PN} = "rce"
 
 SRC_URI = " \
-	https://s3.amazonaws.com/resin-share/build_requirements/rce-386-${PV}.tar.xz;name=rce \
-	file://cgroupfs-mount \
-	"
+    https://s3.amazonaws.com/resin-share/build_requirements/rce-386-${PV}.tar.xz;name=rce \
+    file://cgroupfs-mount \
+    "
 
 S = "${WORKDIR}/rce-386-${PV}"
 
@@ -30,10 +30,10 @@ INITSCRIPT_NAME = "cgroupfs-mount"
 INITSCRIPT_PARAMS = "defaults 90"
 
 do_install() {
-	install -d ${D}${bindir}
-	install -d ${D}/.rce
-	mkdir -p ${D}${localstatedir}/lib/rce
-	install  -m 0755 ${S}/rce ${D}${bindir}
+    install -d ${D}${bindir}
+    install -d ${D}/.rce
+    mkdir -p ${D}${localstatedir}/lib/rce
+    install  -m 0755 ${S}/rce ${D}${bindir}
 
 }
 

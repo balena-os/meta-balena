@@ -7,9 +7,9 @@ PROVIDES = "rce"
 RPROVIDES_${PN} = "rce"
 
 SRC_URI = " \
-	https://s3.amazonaws.com/resin-share/build_requirements/rce-arm-${PV}.tar.xz;name=rce \
-	file://cgroupfs-mount \
-	"
+    https://s3.amazonaws.com/resin-share/build_requirements/rce-arm-${PV}.tar.xz;name=rce \
+    file://cgroupfs-mount \
+    "
 
 S = "${WORKDIR}/rce-arm-${PV}"
 
@@ -26,15 +26,15 @@ FILES_${PN} = "${bindir}/* /.rce* ${sysconfdir}/* ${localstatedir}/lib/rce*"
 RDEPENDS_${PN} = "ca-certificates"
 
 do_install() {
-	install -d ${D}${bindir}
-	install -d ${D}/.rce
-	mkdir -p ${D}${localstatedir}/lib/rce
-	install  -m 0755 ${S}/rce ${D}${bindir}
+    install -d ${D}${bindir}
+    install -d ${D}/.rce
+    mkdir -p ${D}${localstatedir}/lib/rce
+    install  -m 0755 ${S}/rce ${D}${bindir}
 
-	install -d ${D}${sysconfdir}/init.d
-	install -d ${D}${sysconfdir}/rcS.d
-	install -m 0755 ${WORKDIR}/cgroupfs-mount  ${D}${sysconfdir}/init.d/
-	ln -sf ../init.d/cgroupfs-mount  ${D}${sysconfdir}/rcS.d/S90cgroupfs-mount
+    install -d ${D}${sysconfdir}/init.d
+    install -d ${D}${sysconfdir}/rcS.d
+    install -m 0755 ${WORKDIR}/cgroupfs-mount  ${D}${sysconfdir}/init.d/
+    ln -sf ../init.d/cgroupfs-mount  ${D}${sysconfdir}/rcS.d/S90cgroupfs-mount
 }
 
 pkg_postinst_${PN} () {

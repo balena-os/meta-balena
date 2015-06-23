@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 PR = "r3"
 
 SRC_URI = " \
-	   file://supervisor-init \
-	   file://supervisor-init.service \
-	  "
+    file://supervisor-init \
+    file://supervisor-init.service \
+    "
 S = "${WORKDIR}"
 
 FILES_${PN} = "/resin-data /mnt/data-disk ${sysconfdir}/* ${base_bindir}/*"
@@ -42,34 +42,34 @@ SYSTEMD_SERVICE_${PN} = "supervisor-init.service"
 
 do_install() {
 
-	install -d ${D}/resin-data
-	install -d ${D}/mnt/data-disk
-	install -d ${D}${sysconfdir}/default
-	install -d ${D}${sysconfdir}
+    install -d ${D}/resin-data
+    install -d ${D}/mnt/data-disk
+    install -d ${D}${sysconfdir}/default
+    install -d ${D}${sysconfdir}
 
-	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-		install -d ${D}${base_bindir}
-		install -m 0755 ${WORKDIR}/supervisor-init ${D}${base_bindir}
-		install -d ${D}${systemd_unitdir}/system
-		install -c -m 0644 ${WORKDIR}/supervisor-init.service ${D}${systemd_unitdir}/system
-		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
-			-e 's,@SBINDIR@,${sbindir},g' \
-			-e 's,@BINDIR@,${bindir},g' \
-			${D}${systemd_unitdir}/system/*.service
-	else
-		install -d ${D}${sysconfdir}/init.d/
-		install -m 0755 ${WORKDIR}/supervisor-init  ${D}${sysconfdir}/init.d/supervisor-init
-	fi
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}${base_bindir}
+        install -m 0755 ${WORKDIR}/supervisor-init ${D}${base_bindir}
+        install -d ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/supervisor-init.service ${D}${systemd_unitdir}/system
+        sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+            -e 's,@SBINDIR@,${sbindir},g' \
+            -e 's,@BINDIR@,${bindir},g' \
+            ${D}${systemd_unitdir}/system/*.service
+    else
+        install -d ${D}${sysconfdir}/init.d/
+        install -m 0755 ${WORKDIR}/supervisor-init  ${D}${sysconfdir}/init.d/supervisor-init
+    fi
 
-	if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
-		# Staging Resin build
+    if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
+        # Staging Resin build
 
-		if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-			sed -i -e 's:> /dev/null 2>&1::g' ${D}${base_bindir}/supervisor-init
-		else
-			sed -i -e 's:> /dev/null 2>&1::g' ${D}${sysconfdir}/init.d/supervisor-init
-		fi
-	fi
+        if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+            sed -i -e 's:> /dev/null 2>&1::g' ${D}${base_bindir}/supervisor-init
+        else
+            sed -i -e 's:> /dev/null 2>&1::g' ${D}${sysconfdir}/init.d/supervisor-init
+        fi
+    fi
 
 }
 do_install[vardeps] += "DISTRO_FEATURES"
