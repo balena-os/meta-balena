@@ -20,6 +20,8 @@ if [ ! -e /boot/remove_to_reset_data ]; then
     parted -s /dev/$datadev -- resizepart 6 -1s
 
 	partprobe
+	# Make sure udev updates
+	udevadm trigger && udevadm settle
 	mount /dev/disk/by-label/resin-data /mnt/data-disk
 	btrfs filesystem resize max /mnt/data-disk
 
