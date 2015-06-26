@@ -1,4 +1,4 @@
-SUMMARY = "Resin Package Groups"
+SUMMARY = "Resin Package Group"
 LICENSE = "Apache-2.0"
 
 PR = "r1"
@@ -11,18 +11,12 @@ RESIN_STAGING_ADDONS = "iozone3 nano"
 RDEPENDS_${PN} = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', '${RESIN_STAGING_ADDONS}', '', d)} \
     ${RESIN_INIT_PACKAGE} \
-    linux-firmware-ath9k \
-    linux-firmware-ralink \
-    linux-firmware-rtl8192cu \
     kernel-modules \
-    wireless-tools \
     parted \
     lvm2 \
     openssl \
     dosfstools \
     e2fsprogs \
-    connman \
-    connman-client \
     btrfs-tools \
     apt \
     rce \
@@ -35,7 +29,6 @@ RDEPENDS_${PN} = " \
     resin-device-update \
     resin-btrfs-balance \
     supervisor-init \
-    vpn-init \
     bridge-utils \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)} \
     "
