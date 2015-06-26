@@ -63,12 +63,13 @@ inherit kernel-resin
 
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
+RESIN_CONFIGS ?= "rce brcmfmac"
+
 #
 # RCE specific kernel configuration
 # Keep these updated with
 # https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh
 #
-RESIN_CONFIGS ?= "rce"
 RESIN_CONFIGS_DEPS[rce] ?= " \
     CONFIG_IP_NF_NAT=y \
     CONFIG_IPV6=y \
@@ -101,6 +102,31 @@ RESIN_CONFIGS[rce] ?= " \
     CONFIG_POSIX_MQUEUE=y \
     CONFIG_BTRFS_FS=y \
     CONFIG_TUN=y"
+
+#
+# We use an out-of-tree kernel module for RTL8192CU WiFi devices
+# Deactivate in-tree driver and add all the dependencies of the out-of-the tree
+# one
+#
+RESIN_CONFIGS[rtl8192cu] ?= "\
+    CONFIG_RTL8192CU=n \
+    CONFIG_HOSTAP=m \
+    CONFIG_WIRELESS=y \
+    CONFIG_USB=y \
+    CONFIG_MAC80211=m \
+    CONFIG_CFG80211=m \
+    CONFIG_CFG80211_WEXT=y \
+    CONFIG_WIRELESS_EXT=y \
+    CONFIG_WEXT_PRIV=y \
+    "
+
+#
+# Official RPI WiFi adapter
+# http://thepihut.com/collections/new-products/products/official-raspberry-pi-wifi-adapter
+#
+RESIN_CONFIGS[brcmfmac] += " \
+    CONFIG_BRCMFMAC=m \
+    "
 
 ###########
 # HELPERS #
@@ -213,8 +239,9 @@ python do_kernel_resin_checkconfig() {
             notconfigured = wantedConfigs.difference(configured)
 
             for config in notconfigured:
-                bb.warn("Checking for %s in the kernel configs failed for %s."
-                    % (config, activatedflag))
+                if not config.endswith('=n'):
+                    bb.warn("Checking for %s in the kernel configs failed for %s."
+                        % (config, activatedflag))
 
     # Check configs added with resin defconfig
     resinDefconfig = d.getVar("RESIN_DEFCONFIG_NAME", True)
@@ -224,8 +251,9 @@ python do_kernel_resin_checkconfig() {
         configured = wantedConfigs.intersection(allSetConfigs)
         notconfigured = wantedConfigs.difference(configured)
         for config in notconfigured:
-            bb.warn("Checking for %s in the resin kernel configs failed from %s."
-                % (config, resinDefconfig))
+            if not config.endswith('=n'):
+                bb.warn("Checking for %s in the resin kernel configs failed from %s."
+                    % (config, resinDefconfig))
 }
 addtask kernel_resin_checkconfig after do_kernel_resin_reconfigure before do_compile
 do_kernel_resin_checkconfig[vardeps] += "RESIN_CONFIGS RESIN_CONFIGS_DEPS"
