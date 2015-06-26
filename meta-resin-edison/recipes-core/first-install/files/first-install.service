@@ -1,9 +1,0 @@
-[Unit]
-Description=First install service
-OnFailure=reboot.target
-Requires=dev-disk-by\x2dpartlabel-data_disk.device dev-disk-by\x2dpartlabel-update.device
-After=dev-disk-by\x2dpartlabel-data_disk.device dev-disk-by\x2dpartlabel-update.device
-[Service]
-ExecStart=@BASE_BINDIR@/sh @BASE_SBINDIR@/first-install.sh systemd-service
-StandardOutput=journal+console
-
