@@ -5,20 +5,15 @@ if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
 	exit 1
 fi
 
-if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
-	echo "UUID missing from config file, generating our own."
-
-	uuid=$(openssl rand -hex 31)
-	config_json=`cat $CONFIG_PATH`
-	echo $config_json | jq ".uuid=\"$uuid\"" > $CONFIG_PATH
-else
-	read uuid <<<$(jq -r '.uuid' $CONFIG_PATH)
-fi
-
 while true; do
 	if curl -sL -w '%{http_code}' $API_ENDPOINT/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
 	then
 		read api_key user_id application_id uuid device_type <<<$(jq -r '.apiKey,.userId,.applicationId,.uuid,.deviceType // "raspberry-pi"' $CONFIG_PATH)
+
+		if [ -z "$uuid" ]; then
+			echo "UUID missing from config file, generating our own."
+			uuid=$(openssl rand -hex 31)
+		fi
 
 		status_code=$(curl -s -X POST -w "%{http_code}" \
 					-o /var/log/register-device-curl.log \
