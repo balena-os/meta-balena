@@ -5,7 +5,7 @@ BACKUP_IFS=$IFS
 IFS=$(echo -en "\n\b")
 
 GETOPTS="$(which getopt)"
-if [[ "$OSTYPE" == "darwin"* ]] ; then READLINK=greadlink; GETOPTS="$(brew list gnu-getopt | grep bin/getopt)"; else READLINK=readlink;fi;
+if [[ "$OSTYPE" == "darwin"* ]] ; then READLINK=greadlink; else READLINK=readlink;fi;
 
 if [[ "$OSTYPE" == "cygwin" ]] ;
 then
@@ -225,13 +225,16 @@ else
 	dfu-wait no-prompt
 
 	echo "Flashing boot partition (kernel)"
-	flash-command --alt boot -D "${ESC_BASE_DIR}/resin-edison-edison.hddimg"
+	flash-command --alt resin-boot -D "${ESC_BASE_DIR}/resin-image-edison.hddimg"
+
+	echo "Flashing config partition"
+ 	flash-command --alt resin-conf -D "${ESC_BASE_DIR}/config.img"
 
 	echo "Flashing data_disk, (it can take up to 5 minutes... Please be patient)"
-	flash-command --alt data_disk -D "${ESC_BASE_DIR}/data_disk.img"
+	flash-command --alt resin-data -D "${ESC_BASE_DIR}/data_disk.img"
 
 	echo "Flashing rootfs, (it can take up to 5 minutes... Please be patient)"
-	flash-command --alt rootfs -D "${ESC_BASE_DIR}/resin-edison-edison.ext4" -R
+	flash-command --alt resin-root -D "${ESC_BASE_DIR}/resin-image-edison.ext3" -R
 
 	echo "Rebooting"
 	echo "U-boot & Kernel System Flash Success..."
