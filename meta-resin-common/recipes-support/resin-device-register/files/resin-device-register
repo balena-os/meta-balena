@@ -8,7 +8,7 @@ fi
 while true; do
 	if curl -sL -w '%{http_code}' $API_ENDPOINT/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
 	then
-		read api_key user_id application_id uuid device_type <<<$(jq -r '.apiKey,.userId,.applicationId,.uuid,.deviceType // "raspberry-pi"' $CONFIG_PATH)
+		read api_key user_id application_id device_type uuid <<<$(jq -r '.apiKey,.userId,.applicationId,.deviceType // "raspberry-pi",.uuid // empty' $CONFIG_PATH)
 
 		if [ -z "$uuid" ]; then
 			echo "UUID missing from config file, generating our own."
