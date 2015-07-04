@@ -1,13 +1,13 @@
 include resin-image.inc
 
 # Make sure you have the resin image ready
-IMAGE_DEPENDS_resin-sdcard_beaglebone += "resin-image:do_rootfs"
+IMAGE_DEPENDS_resin-sdcard_append_beaglebone = " resin-image:do_rootfs"
 
 # Make sure we have enough space in boot partition
 BOOT_SPACE_beaglebone = "1572864"
 
 # Put the resin image inside boot partition
-RESIN_BOOT_PARTITION_FILES_beaglebone += "resin-image-beaglebone.resin-sdcard"
+RESIN_BOOT_PARTITION_FILES_append_beaglebone = " resin-image-beaglebone.resin-sdcard"
 
 # Avoid useless space by not using any btrfs partition
 BTRFS_IMAGE_beaglebone = ""
