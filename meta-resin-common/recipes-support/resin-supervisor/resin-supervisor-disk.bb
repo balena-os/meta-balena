@@ -5,7 +5,7 @@ DEPENDS = "util-linux-native"
 
 inherit deploy
 
-PR = "r5"
+PR = "r6"
 
 SRC_URI = " \
     file://Dockerfile \
@@ -111,7 +111,7 @@ do_compile () {
 
     touch -t 7805200000 ${WORKDIR}/entry.sh # Make sure docker rebuilds the image only if file is changed in content
     docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
-    docker run --rm --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${REPOSITORY_TAG} -v ${B}:/export looper
+    docker run --rm --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${REPOSITORY_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
 }
 
 do_install () {
