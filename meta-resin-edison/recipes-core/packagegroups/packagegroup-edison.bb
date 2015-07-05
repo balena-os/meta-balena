@@ -8,10 +8,7 @@ inherit packagegroup
 RDEPENDS_${PN} = "\
     u-boot \
     u-boot-fw-utils \
-    bcm43340-fw \
-    bcm43340-bt \
     bluetooth-rfkill-event \
-    bcm43340-mod \
     sst-fw-bin \
     mcu-fw-load \
     mcu-fw-bin \
