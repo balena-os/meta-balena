@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := "${THISDIR}/files:"
+FILESEXTRAPATHS_append := "${THISDIR}/${PN}:"
 SRC_URI_append = "file://unprotected_wifi_tether.patch \
                   file://unsecured_wifi.patch \
                   "
