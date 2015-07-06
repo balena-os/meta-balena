@@ -1,0 +1,12 @@
+[Unit]
+Description=RCE Socket for the API
+PartOf=rce.service
+
+[Socket]
+ListenStream=/var/run/rce.sock
+SocketMode=0660
+SocketUser=root
+SocketGroup=root
+
+[Install]
+WantedBy=sockets.target
