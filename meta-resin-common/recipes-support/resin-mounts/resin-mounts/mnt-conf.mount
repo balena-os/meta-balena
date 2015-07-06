@@ -1,0 +1,10 @@
+[Unit]
+Description=Resin conf partition mountpoint
+
+[Mount]
+What=/dev/disk/by-label/resin-conf
+Where=/mnt/conf
+Type=vfat
+
+[Install]
+WantedBy=multi-user.target

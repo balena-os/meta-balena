@@ -1,0 +1,11 @@
+[Unit]
+Description=Resin boot partition mountpoint
+
+[Mount]
+What=/dev/disk/by-label/resin-boot
+Where=/boot
+Type=vfat
+Options=ro
+
+[Install]
+WantedBy=multi-user.target
