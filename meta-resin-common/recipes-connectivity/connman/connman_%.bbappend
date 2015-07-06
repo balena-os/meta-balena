@@ -1,12 +1,8 @@
 FILESEXTRAPATHS_append := "${THISDIR}/${PN}:"
-SRC_URI_append = "file://unprotected_wifi_tether.patch \
-                  file://unsecured_wifi.patch \
-                  "
-
-# Don't start connman at boot because we start it in resin-init
-INITSCRIPT_PACKAGES = ""
-INITSCRIPT_NAME = ""
-INITSCRIPT_PARAMS = ""
+SRC_URI_append = " \
+    file://unprotected_wifi_tether.patch \
+    file://unsecured_wifi.patch \
+    "
 
 PR = "${INC_PR}.4"
 
