@@ -1,0 +1,12 @@
+[Unit]
+Description=Resin persistent logs
+Requires=mnt-conf.mount
+After=mnt-conf.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-logs
+
+[Install]
+WantedBy=multi-user.target
