@@ -19,6 +19,15 @@ To make it short:
 * If RESIN_STAGING_BUILD is not present in your local.conf or it doesn't include "yes" : Production build selected (default bahavior)
 * If RESIN_STAGING_BUILD is defined local.conf and includes "yes" : Staging build selected
 
+## Devices support
+
+### WiFi Adapters
+
+We currently tested and provide explicit support for the following WiFi adapters:
+
+* bcm43143 based adapters
+    * Example: Official RPI WiFi adapter [link](http://thepihut.com/collections/new-products/products/official-raspberry-pi-wifi-adapter)
+
 ## Contributing
 
 To contribute send bitbucket pull requests targeting [this](https://bitbucket.org/rulemotion/meta-resin) repository.

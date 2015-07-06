@@ -6,4 +6,7 @@ IMAGE_FEATURES_append = " \
     splash \
     "
 
-IMAGE_INSTALL_append = " packagegroup-resin-flasher"
+IMAGE_INSTALL_append = " \
+    packagegroup-resin-connectivity \
+    packagegroup-resin-flasher \
+    "

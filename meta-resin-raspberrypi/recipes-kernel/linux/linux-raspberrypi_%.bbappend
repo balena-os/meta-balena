@@ -1,6 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/linux-raspberrypi:"
 SRC_URI += " \
-    file://0001-Disable-rtl8192cu-and-Enable-rtlwifi.patch \
     file://0001-Add-Adafruit-FBTFT-8a78f7cfdf840f05f7a5a6e1a9186a89c.patch \
     "
 

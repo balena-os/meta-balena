@@ -6,6 +6,9 @@ IMAGE_FEATURES_append = " \
     splash \
     package-management \
     ssh-server-dropbear \
-"
+    "
 
-IMAGE_INSTALL_append = " packagegroup-resin"
+IMAGE_INSTALL_append = " \
+    packagegroup-resin-connectivity \
+    packagegroup-resin \
+    "
