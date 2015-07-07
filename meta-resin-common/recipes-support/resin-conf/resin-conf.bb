@@ -9,10 +9,9 @@ SRC_URI = " \
     "
 S = "${WORKDIR}"
 
-FILES_${PN} = " \
-    ${sysconfdir} \
-    ${sbindir} \
-    "
+inherit allarch
+
+FILES_${PN} = "${sbindir}"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
