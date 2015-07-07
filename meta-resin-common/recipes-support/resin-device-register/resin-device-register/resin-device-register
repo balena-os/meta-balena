@@ -1,6 +1,8 @@
 #!/bin/bash
 source /usr/sbin/resin-vars
 
+source /etc/resin.conf
+
 if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
     echo "Please set API_ENDPOINT and CONFIG_PATH environment variables."
     exit 1
@@ -29,10 +31,14 @@ while true; do
             config_json=`cat $CONFIG_PATH`
             echo $config_json | jq ".uuid=\"$uuid\"|.registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
             echo "Registered device with ID: $device_id and UUID: $uuid."
+            exit 0
+        elif [ "$status_code" -eq 409 ]; then
+            echo "Device already registered."
+            exit 0
         else
             echo "Failed to register device. Status code: $status_code"
+            exit 1
         fi
-        break
     else
         echo  "Not connected. Trying again..."
         sleep 2
