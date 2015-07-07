@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Increased supervisor update poll interval to once per day (and on reboot)
 * meta-resin switched to systemd now instead of sysvinit [Theodor]
 * Forcefully remove supervisor container to avoid some issues where a normal remove won't work even though the container is stopped [Page]
 
