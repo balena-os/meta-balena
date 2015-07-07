@@ -13,11 +13,15 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
+PACKAGES = "${PN} ${PN}-flasher"
+
 SYSTEMD_SERVICE_${PN} = "resin-net-config.service"
-FILES_${PN} = "${bindir}/*"
 RDEPENDS_${PN} = "bash jq mtools"
 
 do_install() {
+    install -d ${D}${bindir}
+    install -m 0775 ${WORKDIR}/resin-net-config ${D}${bindir}/resin-net-config
+
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/resin-net-config.service ${D}${systemd_unitdir}/system
@@ -25,6 +29,4 @@ do_install() {
         -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/resin-net-config.service
     fi
-    install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/resin-net-config ${D}${bindir}/resin-net-config
 }

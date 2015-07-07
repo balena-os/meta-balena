@@ -1,13 +1,13 @@
 [Unit]
 Description=Resin net config service
-Wants=dev-disk-by\x2dlabel-resin\x2ddata.device
-After=dev-disk-by\x2dlabel-resin\x2ddata.device
+Requires=mnt-conf.mount
+After=mnt-conf.mount
 
 [Service]
-ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-net-config
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-net-config
 Type=oneshot
 RemainAfterExit=yes
 StandardError=journal+console
 
 [Install]
-WantedBy=basic.target
+WantedBy=multi-user.target
