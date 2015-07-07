@@ -1,13 +1,11 @@
 [Unit]
 Description=Resin init service
-Wants=connman.service
-After=connman.service
+After=network.target
 
 [Service]
-ExecStart=@BASE_BINDIR@/sh @BASE_SBINDIR@/resin-init
 Type=oneshot
 RemainAfterExit=yes
-StandardError=journal+console
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-init
 
 [Install]
-WantedBy=basic.target
+WantedBy=multi-user.target
