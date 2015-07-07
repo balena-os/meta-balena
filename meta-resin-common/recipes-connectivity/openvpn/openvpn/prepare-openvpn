@@ -1,6 +1,10 @@
 #!/bin/bash
 
 source /usr/sbin/resin-vars
+if [ ! -f $CONFIG_PATH ]; then
+    echo "$CONFIG_PATH : No such file."
+    exit 1
+fi
 
 while true; do
 	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
@@ -13,10 +17,3 @@ while true; do
 		break
 	fi
 done
-
-if [ -e /etc/init.d/openvpn ]; then
-	/etc/init.d/openvpn start
-else
-	mkdir -p /var/run/openvpn
-	systemctl start openvpn@client.service
-fi

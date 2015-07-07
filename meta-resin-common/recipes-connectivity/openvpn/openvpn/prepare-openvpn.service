@@ -1,0 +1,13 @@
+[Unit]
+Description=Prepare OpenVPN Application On Resin
+Wants=mnt-conf.mount
+After=mnt-conf.mount
+Before=openvpn@client.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BINDIR@/prepare-openvpn
+
+[Install]
+WantedBy=multi-user.target
