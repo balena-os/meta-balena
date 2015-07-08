@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 DEPENDS = "util-linux-native"
 
-inherit deploy
+inherit deploy systemd
 
 PR = "r7"
 
@@ -11,6 +11,13 @@ SRC_URI = " \
     file://Dockerfile \
     file://entry.sh \
     file://supervisor.conf \
+    file://prepare-resin-supervisor \
+    file://prepare-resin-supervisor.service \
+    file://resin-supervisor.service \
+    file://resin-supervisor-host-socket.service \
+    file://update-resin-supervisor \
+    file://update-resin-supervisor.service \
+    file://update-resin-supervisor.timer \
     "
 S = "${WORKDIR}"
 
@@ -23,6 +30,33 @@ LED_FILE ?= "/dev/null"
 
 RESIN_CHECK_CONN_URL ?= "index.docker.io"
 DOCKER_PID_FILE ?= "/var/run/docker.pid"
+
+# MIXPANEL TOKEN
+MIXPANEL_TOKEN_PRODUCTION = "99eec53325d4f45dd0633abd719e3ff1"
+MIXPANEL_TOKEN_STAGING = "cb974f32bab01ecc1171937026774b18"
+
+SYSTEMD_SERVICE_${PN} = " \
+    prepare-resin-supervisor.service \
+    resin-supervisor.service \
+    resin-supervisor-host-socket.service \
+    update-resin-supervisor.service \
+    update-resin-supervisor.timer \
+    "
+
+FILES_${PN} += " \
+    /resin-data \
+    /mnt/data \
+    "
+
+RDEPENDS_${PN} = " \
+    bash \
+    connman \
+    rce \
+    coreutils \
+    socat \
+    resin-conf \
+    resin-device-register \
+    "
 
 # Check if host can reach a specific URL
 # Used for connectivity check
@@ -120,11 +154,37 @@ do_compile () {
 }
 
 do_install () {
+    # Generate supervisor conf
     install -d ${D}${sysconfdir}
     install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
     sed -i -e 's:@TARGET_REPOSITORY@:${TARGET_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
     sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
+
+    install -d ${D}/resin-data
+    install -d ${D}/mnt/data/resin-data
+    install -d ${D}${sysconfdir}/default
+
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/prepare-resin-supervisor ${D}${bindir}
+    install -m 0755 ${WORKDIR}/update-resin-supervisor ${D}${bindir}
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/prepare-resin-supervisor.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/resin-supervisor.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/resin-supervisor-host-socket.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/update-resin-supervisor.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/update-resin-supervisor.timer ${D}${systemd_unitdir}/system
+        sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+            -e 's,@SBINDIR@,${sbindir},g' \
+            -e 's,@BINDIR@,${bindir},g' \
+            ${D}${systemd_unitdir}/system/*.service
+    else
+        install -d ${D}${sysconfdir}/init.d/
+        install -m 0755 ${WORKDIR}/supervisor-init  ${D}${sysconfdir}/init.d/supervisor-init
+    fi
 }
+do_install[vardeps] += "DISTRO_FEATURES TARGET_REPOSITORY LED_FILE"
 
 do_deploy () {
     install ${B}/data_disk.img ${DEPLOYDIR}/data_disk.img

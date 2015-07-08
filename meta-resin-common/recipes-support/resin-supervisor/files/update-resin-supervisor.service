@@ -1,0 +1,19 @@
+[Unit]
+Description=Resin supervisor updater
+Requires=\
+    rce.service \
+    tmp.mount
+Wants=\
+    mnt-conf.mount \
+    connman.service \
+    resin-supervisor.service
+After=\
+    connman.service \
+    rce.service \
+    tmp.mount \
+    mnt-conf.mount \
+    resin-supervisor.service
+
+[Service]
+Type=simple
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/update-resin-supervisor

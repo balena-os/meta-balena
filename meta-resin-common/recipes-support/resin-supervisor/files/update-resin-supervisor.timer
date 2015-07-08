@@ -1,0 +1,9 @@
+[Unit]
+Description=Resin supervisor updater timer
+
+[Timer]
+OnBootSec=15min
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=multi-user.target
