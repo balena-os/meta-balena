@@ -34,7 +34,7 @@ CONNECTIVITY_PACKAGES = " \
     connman \
     connman-client \
     wireless-tools \
-    vpn-init \
+    openvpn \
     "
 
 RDEPENDS_${PN} = " \
