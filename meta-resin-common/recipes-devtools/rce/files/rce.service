@@ -11,6 +11,7 @@ After=\
 
 [Service]
 Type=notify
+Restart=always
 ExecStart=@BINDIR@/rce --restart=false -s btrfs -d -g /var/lib/rce
 MountFlags=slave
 LimitNOFILE=1048576
