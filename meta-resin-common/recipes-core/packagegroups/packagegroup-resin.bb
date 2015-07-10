@@ -13,7 +13,6 @@ include packagegroup-resin.inc
 # Additional packages
 RDEPENDS_${PN} += " \
     resin-supervisor \
-    resin-logs \
     resin-btrfs-balance \
     resin-btrfs-expand \
     resin-logs \
