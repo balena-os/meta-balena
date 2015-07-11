@@ -11,6 +11,8 @@
 #                                   * it's impossible to known what dev to flash because #
 #                                     we don't have any labels before flashing something #
 #                                     so we need this info                               #
+#   BOARD_BOOTLOADER            - bootloader used by the target board                    #
+#                                   * can be either u-boot or grub-efi for the moment    #
 #   INTERNAL_DEVICE_UBOOT       - internal device as enumerated by uboot                 #
 #                                   * we need to know how uboot enumerates the mmc       #
 #                                     device so we can instruct uboot to load kernel     #
@@ -28,6 +30,44 @@ INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/external_conf
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
+
+function prepare_uboot {
+    # Boot from eMMC
+    # FIX ME
+    # Linux indexes mmc devices in the order they are detected:
+    #   * If uSD card is plugged in, uSD device will be enumerated as mmcblk0 while eMMC as
+    #       mmcblk1.
+    #   * If uSD card is not plugged in, eMMC will be enumerated as mmcblk0
+    # So if SD card is plugged we need to boot from mmbblk1p2, otherwise from mmcblk0p2
+    # UBOOT_FROM_EMMC="mmcroot=LABEL=resin-root rw\n"
+    UBOOT_FROM_EMMC="setemmcroot=if mmc dev 0 ; then setenv mmcroot /dev/mmcblk1p2 rw ; else setenv mmcroot /dev/mmcblk0p2 rw ; fi;\n"
+    UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"mmcdev=$INTERNAL_DEVICE_UBOOT\n"
+    UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"bootpart=$INTERNAL_DEVICE_UBOOT:2\n"
+    # Second partition hardcoded!!!
+    UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"uenvcmd= run setemmcroot"
+
+    if ! echo -e ${UBOOT_FROM_EMMC} > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
+        fail "Failed to write uEnv on disk labeled as 'resin-boot'"
+    fi
+    inform "Wrote uEnv on disk labeled as 'resin-boot'"
+
+    if ! echo -e ${UBOOT_FROM_EMMC} > $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
+        fail "Failed to write uEnv on disk labeled as 'flasher-boot'"
+    fi
+    inform "Wrote uEnv on disk labeled as 'flasher-boot'"
+}
+
+function prepare_grub_efi {
+    GRUBCFG=$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI/BOOT/grub.cfg
+    # Delete the initrd lines
+    sed -i "/initrd /d" $GRUBCFG
+    # Delete any LABEL= strings
+    sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
+    # Delete any root= strings
+    sed -i "s/ root=[^ ]*/ /" $GRUBCFG
+    # Add the root= and other standard boot options
+    sed -i "s@linux /vmlinuz *@linux /vmlinuz root=/dev/${INTERNAL_DEVICE_KERNEL}2 @" $GRUBCFG
+}
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -66,20 +106,6 @@ else
 fi
 inform "resin-init-flasher configuration found."
 
-# Boot from eMMC
-# FIX ME
-# Linux indexes mmc devices in the order they are detected:
-#   * If uSD card is plugged in, uSD device will pe enumerated as mmcblk0 while eMMC as
-#       mmcblk1.
-#   * If uSD card is not plugged in, eMMC will be enumerated as mmcblk0
-# So if SD card is plugged we need to boot from mmbblk1p2, otherwise from mmcblk0p2
-# UBOOT_FROM_EMMC="mmcroot=LABEL=resin-root rw\n"
-UBOOT_FROM_EMMC="setemmcroot=if mmc dev 0 ; then setenv mmcroot /dev/mmcblk1p2 rw ; else setenv mmcroot /dev/mmcblk0p2 rw ; fi;\n"
-UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"mmcdev=$INTERNAL_DEVICE_UBOOT\n"
-UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"bootpart=$INTERNAL_DEVICE_UBOOT:2\n"
-# Second partition hardcoded!!!
-UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"uenvcmd= run setemmcroot"
-
 # Conf partition
 mkdir -p $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 inform "Mounting external device conf partition."
@@ -104,16 +130,11 @@ fi
 
 resin-device-register &
 
-# Mount external device boot partition and write uEnv.txt
 mkdir -p $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting external device boot partition."
 if ! mount /dev/disk/by-label/flash-boot $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
     fail "Failed to mount disk labeled as 'flasher-boot'."
 fi
-if ! echo -e ${UBOOT_FROM_EMMC} > $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
-    fail "Failed to write uEnv on disk labeled as 'flasher-boot'"
-fi
-inform "Wrote uEnv on disk labeled as 'flasher-boot'"
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
@@ -145,16 +166,23 @@ sync && sync && sync
 partprobe
 udevadm trigger
 
-# Mount internal device boot partition and write uEnv.txt
+# Mount internal device boot partition to write bootloader config file on it
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting internal device boot partition."
 if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
     fail "Failed to mount disk labeled as 'resin-boot'."
 fi
-if ! echo -e ${UBOOT_FROM_EMMC} > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
-    fail "Failed to write uEnv on disk labeled as 'resin-boot'"
-fi
-inform "Wrote uEnv on disk labeled as 'resin-boot'"
+
+case $BOARD_BOOTLOADER in
+    u-boot)
+        # we need to write our uEnv.txt to the internal and external boot partitions
+        prepare_uboot
+        ;;
+    grub-efi)
+        #
+        prepare_grub_efi
+        ;;
+esac
 
 # Copy json configuration file
 mkdir -p $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
