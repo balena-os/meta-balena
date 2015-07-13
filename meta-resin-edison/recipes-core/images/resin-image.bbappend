@@ -2,6 +2,11 @@ NOHDD_edison = "0"
 
 inherit bootimg
 
+# TODO
+# This was already fixed in poky but fix was not backported to daisy
+# To be removed in the future
+do_bootimg[depends] += "virtual/kernel:do_deploy"
+
 # Do not use legacy nor EFI BIOS
 PCBIOS_edison = "0"
 
