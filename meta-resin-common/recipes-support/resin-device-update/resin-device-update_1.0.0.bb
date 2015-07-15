@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "file://resin-device-update"
 S = "${WORKDIR}"
@@ -20,5 +20,8 @@ do_install() {
 pkg_postinst_${PN}() {
 #!/bin/sh -e
 mkdir -p $D/var/spool/cron
-echo "*/5 * * * * /usr/bin/flock -n /tmp/rdu.lockfile ${bindir}/resin-device-update" >> $D/var/spool/cron/root
+# Run supervisor update once per day
+echo "0 0 * * * /usr/bin/flock -n /tmp/rdu.lockfile ${bindir}/resin-device-update" >> $D/var/spool/cron/root
+# And on reboot
+echo "@reboot /usr/bin/flock -n /tmp/rdu.lockfile ${bindir}/resin-device-update" >> $D/var/spool/cron/root
 }
