@@ -104,7 +104,7 @@
     "tool" : "waitForDevice"
    },
    {
-    "args" : "\"--alt\" \"boot\" \"-D\" \"${boot_file}\" \"-t\" \"4096\"",
+    "args" : "\"--alt\" \"resin-boot\" \"-D\" \"${boot_file}\" \"-t\" \"4096\"",
     "description" : "Flashing boot",
     "mandatory" : true,
     "restrict" : null,
@@ -113,7 +113,16 @@
     "tool" : "dfuDownloader"
    },
    {
-    "args" : "\"--alt\" \"data_disk\" \"-D\" \"${data_disk_file}\" \"-t\" \"4096\"",
+    "args" : "\"--alt\" \"resin-conf\" \"-D\" \"${conf_file}\" \"-t\" \"4096\"",
+    "description" : "Flashing conf",
+    "mandatory" : true,
+    "restrict" : null,
+    "retry" : 2,
+    "timeout" : 1200000,
+    "tool" : "dfuDownloader"
+   },
+   {
+    "args" : "\"--alt\" \"resin-data\" \"-D\" \"${data_disk_file}\" \"-t\" \"4096\"",
     "description" : "Flashing data_disk",
     "mandatory" : true,
     "restrict" : null,
@@ -122,7 +131,7 @@
     "tool" : "dfuDownloader"
    },
    {
-    "args" : "\"--alt\" \"rootfs\" \"-D\" \"${rootfs_file}\" \"-t\" \"4096\" \"-R\"",
+    "args" : "\"--alt\" \"resin-root\" \"-D\" \"${rootfs_file}\" \"-t\" \"4096\" \"-R\"",
     "description" : "Flashing rootfs",
     "mandatory" : true,
     "restrict" : null,
@@ -174,7 +183,7 @@
     "description" : "Boot partition",
     "name" : "Boot partition",
     "type" : "file",
-    "value" : "resin-edison-edison.hddimg"
+    "value" : "resin-image-edison.hddimg"
    },
    "fw_dnx_file" :    {
     "description" : "Firmware DnX",
@@ -216,7 +225,13 @@
     "description" : "Rootfs",
     "name" : "Rootfs",
     "type" : "file",
-    "value" : "resin-edison-edison.ext4"
+    "value" : "resin-image-edison.ext3"
+   },
+   "conf_file" :    {
+    "description" : "conf",
+    "name" : "conf",
+    "type" : "file",
+    "value" : "config.img"
    },
    "data_disk_file" :    {
     "description" : "Data_disk",
