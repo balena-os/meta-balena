@@ -82,7 +82,7 @@ python () {
         pull_output = subprocess.Popen(pull_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
 
     # Inspect for fetching the version only if image exists
-    imagechk_cmd = "docker images | grep %s | grep %s" % (target_repository, tag_repository)
+    imagechk_cmd = "docker images %s | grep %s" % (target_repository, tag_repository)
     imagechk_output = subprocess.Popen(imagechk_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if imagechk_output == "":
         bb.fatal("resin-supervisor-disk: No local supervisor images found.")
