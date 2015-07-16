@@ -5,7 +5,7 @@ DEPENDS = "util-linux-native"
 
 inherit deploy
 
-PR = "r6"
+PR = "r7"
 
 SRC_URI = " \
     file://Dockerfile \
@@ -82,15 +82,20 @@ python () {
         pull_output = subprocess.Popen(pull_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
 
     # Inspect for fetching the version only if image exists
-    imagechk_cmd = "docker images | grep %s | grep %s" % (target_repository, tag_repository)
+    imagechk_cmd = "docker images %s | grep %s" % (target_repository, tag_repository)
     imagechk_output = subprocess.Popen(imagechk_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if imagechk_output == "":
         bb.fatal("resin-supervisor-disk: No local supervisor images found.")
-    version_cmd = "echo -n `docker inspect %s:%s | grep '\"VERSION=' | head -n 1 | tr -d ' ' | tr -d '\"' | tr -d 'VERSION=\"' `" % (target_repository, tag_repository)
+    version_cmd = "echo -n $(docker inspect -f '{{range .Config.Env}}{{.}}{{\"\\n\"}}{{end}}' %s:%s | grep '^VERSION=' | tr -d 'VERSION=\"')" % (target_repository, tag_repository)
     version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if version_output == "" or version_output == None:
         bb.fatal("resin-supervisor-disk: Cannot fetch version.")
-    d.setVar('PV', version_output)
+    image_id_cmd = "echo -n $(docker inspect -f '{{.Id}}' %s:%s)" % (target_repository, tag_repository)
+    image_id_output = subprocess.Popen(image_id_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+    if image_id_output == "" or image_id_output == None:
+        bb.fatal("resin-supervisor-disk: Cannot fetch image id.")
+    d.setVar('SUPERVISOR_VERSION', "%s-%s" % (version_output, image_id_output[:12]))
+    d.setVar('PV', "%s+%s" % (version_output, image_id_output))
 }
 
 do_patch[noexec] = "1"
@@ -123,7 +128,7 @@ do_install () {
 
 do_deploy () {
     install ${B}/data_disk.img ${DEPLOYDIR}/data_disk.img
-    echo ${PV} > ${DEPLOYDIR}/VERSION
+    echo ${SUPERVISOR_VERSION} > ${DEPLOYDIR}/VERSION
 }
 
 addtask deploy before do_package after do_install
