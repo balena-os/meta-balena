@@ -115,7 +115,7 @@ fi
 
 # Resin configuration file
 if [ -f /etc/resin.conf ]; then
-    source /etc/resin.conf
+    source /sbin/resin-vars
 else
     fail "No resin configurarion found."
 fi

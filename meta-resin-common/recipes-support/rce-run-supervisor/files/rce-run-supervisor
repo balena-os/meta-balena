@@ -3,7 +3,7 @@
 set -o pipefail
 set -e
 
-source /etc/resin.conf
+source /sbin/resin-vars
 source /etc/supervisor.conf
 
 image=$1
