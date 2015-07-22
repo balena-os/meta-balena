@@ -28,7 +28,7 @@ do_install() {
     install -d ${D}${sysconfdir}
     install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/
 
-    install -d ${D}${base_sbindir}
+    install -d ${D}${sbindir}
     install -m 0775 ${WORKDIR}/resin-vars ${D}${base_sbindir}/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
