@@ -21,7 +21,7 @@ touch /etc/resolv.conf
 echo "Starting Supervisor.."
 rce-run-supervisor
 
-source /sbin/resin-vars
+source /etc/resin.conf
 export API_ENDPOINT CONFIG_PATH
 resin-device-progress "" "Finished" || true
 
