@@ -4,16 +4,10 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 
 PR = "r0"
 
-SRC_URI = " \
-    file://resin.conf \
-    file://resin-vars \
-    "
+SRC_URI = "file://resin.conf"
 S = "${WORKDIR}"
 
-FILES_${PN} = " \
-    ${sysconfdir} \
-    ${base_sbindir} \
-    "
+FILES_${PN} = "${sysconfdir}"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
@@ -27,9 +21,6 @@ MIXPANEL_TOKEN_STAGING = "cb974f32bab01ecc1171937026774b18"
 do_install() {
     install -d ${D}${sysconfdir}
     install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/
-
-    install -d ${D}${sbindir}
-    install -m 0775 ${WORKDIR}/resin-vars ${D}${base_sbindir}/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
         # Staging Resin build

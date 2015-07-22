@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-source /sbin/resin-vars
+source /etc/resin.conf
 export CONFIG_PATH
 
 mkdir -p /mnt/data-disk

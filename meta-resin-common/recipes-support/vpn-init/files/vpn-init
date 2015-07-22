@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /sbin/resin-vars
+source /etc/resin.conf
 
 while true; do
 	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
