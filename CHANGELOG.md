@@ -2,9 +2,20 @@ Change log
 -----------
 
 * Add Intel NUC support - tested on model D34010WYKH [Jon]
+* Switched supervisor caching to be package.json version + docker image id. [Page]
 * Increased supervisor update poll interval to once per day (and on reboot)
 * meta-resin switched to systemd now instead of sysvinit [Theodor]
+* Edison unification. [Theodor]
+* Moved parallella bitstreams and DTS into the image. [Theodor]
+* Added support for edison phone flash tool. [Praneeth]
 * Forcefully remove supervisor container to avoid some issues where a normal remove won't work even though the container is stopped [Page]
+* Fixed fat config partition not mounting on mac. [Theodor]
+* Cache supervisor based upon package.json version. [Theodor]
+* Updated edison BSP. [Praneeth]
+* Added hummingboard support. [Andrei]
+* Some device registration fixes. [Page]
+* Switched to fido. [Theodor]
+* Beaglebone refactor. [Andrei]
 
 # 2015-05-20
 
