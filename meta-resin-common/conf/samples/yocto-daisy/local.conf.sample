@@ -29,7 +29,7 @@ DISTRO ?= "resin-systemd"
 #INHERIT += "rm_work"
 
 # Package Management configuration
-PACKAGE_CLASSES ?= "package_deb"
+PACKAGE_CLASSES ?= "package_rpm"
 
 # Additional image features
 USER_CLASSES ?= "buildstats image-mklibs image-prelink"
