@@ -1,14 +1,8 @@
 # All resin supported machines
-#MACHINE ?= "raspberrypi"
-#MACHINE ?= "raspberrypi2"
-#MACHINE ?= "beaglebone"
-#MACHINE ?= "nitrogen6x"
-#MACHINE ?= "parallella-hdmi-resin"
-#MACHINE ?= "cubox-i"
-#MACHINE ?= "nuc"
+#MACHINE ?= "edison"
 
-# RaspberryPi specific variables
-GPU_MEM = "16"
+# Recipes that are not available in yocto-daisy
+BBMASK ?= ".*/meta-resin/meta-resin-common/recipes-core/volatile-binds/"
 
 # Set this to yes if staging build is desired
 #RESIN_STAGING_BUILD ?= "yes"
@@ -35,7 +29,7 @@ DISTRO ?= "resin-systemd"
 #INHERIT += "rm_work"
 
 # Package Management configuration
-PACKAGE_CLASSES ?= "package_deb"
+PACKAGE_CLASSES ?= "package_rpm"
 
 # Additional image features
 USER_CLASSES ?= "buildstats image-mklibs image-prelink"
