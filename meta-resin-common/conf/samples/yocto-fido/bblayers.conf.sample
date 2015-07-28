@@ -24,6 +24,12 @@ BEAGLEBONE_BBLAYERS += " \
     ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-beaglebone \
     "
 
+NUC_BBLAYERS += " \
+    ${TOPDIR}/../meta-intel \
+    ${TOPDIR}/../meta-intel/meta-nuc \
+    ${TOPDIR}/../meta-resin/meta-resin-nuc \
+    "
+
 NITROGEN6X_BBLAYERS += " \
     ${TOPDIR}/../meta-fsl-arm \
     ${TOPDIR}/../meta-fsl-arm-extra \
@@ -40,6 +46,7 @@ BBLAYERS ?= " \
     ${CORE_BBLAYERS} \
     ${RASPBERRYPI_BBLAYERS} \
     ${BEAGLEBONE_BBLAYERS} \
+    ${NUC_BBLAYERS} \
     ${NITROGEN6X_BBLAYERS} \
     ${PARALLELLA_BBLAYERS} \
     "
