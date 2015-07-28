@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append_nuc := "${THISDIR}/files"
+FILESEXTRAPATHS_append_nuc := ":${THISDIR}/files"
 
 SRC_URI_append_nuc = " file://grub.cfg"
 
