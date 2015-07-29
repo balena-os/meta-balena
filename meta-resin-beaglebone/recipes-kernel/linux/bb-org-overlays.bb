@@ -25,3 +25,5 @@ do_install_prepend () {
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+COMPATIBLE_MACHINE = "beaglebone"
