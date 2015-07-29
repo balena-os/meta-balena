@@ -1,0 +1,26 @@
+From ad7c2f2d03625db90ac660ab7872b46137df36ff Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Wed, 29 Jul 2015 03:13:32 +0200
+Subject: [PATCH] Install to DESTDIR
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 9b78ae1..0a504e1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -138,7 +138,7 @@ all_arch: $(ARCH_DTB)
+ 
+ PHONY += install_arch
+ install_arch: $(ARCH_DTBO)
+-	cp -v $(obj)/*.dtbo /lib/firmware/
++	cp -v $(obj)/*.dtbo $(DESTDIR)/lib/firmware/
+ 
+ RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o -name CVS \
+                    -o -name .pc -o -name .hg -o -name .git \) -prune -o
+-- 
+2.4.3
+
