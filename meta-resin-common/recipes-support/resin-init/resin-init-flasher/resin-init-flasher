@@ -27,7 +27,6 @@
 # Very long variables :)
 EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/external_boot
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
-EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/external_conf
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 
@@ -75,7 +74,6 @@ function clean {
     rm $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
     umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1
     umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1
-    umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1
     umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1
 }
 
@@ -105,13 +103,6 @@ else
     fail "No configuration for resin-init-flasher."
 fi
 inform "resin-init-flasher configuration found."
-
-# Conf partition
-mkdir -p $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
-inform "Mounting external device conf partition."
-if ! mount /dev/disk/by-label/flash-conf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
-    fail "Failed to mount disk labeled as 'flash-conf'."
-fi
 
 # Resin configuration file
 if [ -f /usr/sbin/resin-vars ]; then
@@ -190,7 +181,7 @@ inform "Mounting internal device conf partition."
 if ! mount /dev/disk/by-label/resin-conf $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
     fail "Failed to mount disk labeled as 'resin-conf'."
 fi
-cp -rvf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT/* $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
+cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
 
 # More syncs
 sync && sync && sync
@@ -203,7 +194,6 @@ sync && sync && sync
 resin-device-progress 100 "Cleanup and reboot..." || true
 umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
-umount $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 
 inform "Rebooting..."

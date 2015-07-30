@@ -11,7 +11,7 @@ mkdir -p /mnt/data-disk
 
 if [ -f /etc/resin-init-flasher.conf ]; then
 	# we have booted from external media and we need to flash on eMMC
-	mount /dev/disk/by-label/flash-conf /mnt/data-disk
+	mcopy -ni /dev/disk/by-label/flash-conf ::config.json $CONFIG_PATH
 else
 	mount /dev/disk/by-label/resin-data /mnt/data-disk
 	# check if this is the first boot - verify if the file remove_to_reset_data exists
