@@ -5,7 +5,6 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 PR = "r0"
 
 SRC_URI = " \
-    file://resin.conf \
     file://resin-vars \
     "
 S = "${WORKDIR}"
@@ -21,9 +20,6 @@ do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
 do_install() {
-    install -d ${D}${sysconfdir}
-    install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/
-
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/resin-vars ${D}${sbindir}/
 }

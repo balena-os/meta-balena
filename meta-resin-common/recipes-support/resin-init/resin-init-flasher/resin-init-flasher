@@ -102,7 +102,7 @@ fi
 if [ -f $FLASHER_CONF_FILE ]; then
     source $FLASHER_CONF_FILE
 else
-    fail "No configurarion for resin-init-flasher."
+    fail "No configuration for resin-init-flasher."
 fi
 inform "resin-init-flasher configuration found."
 
@@ -114,16 +114,16 @@ if ! mount /dev/disk/by-label/flash-conf $EXTERNAL_DEVICE_CONF_PART_MOUNTPOINT; 
 fi
 
 # Resin configuration file
-if [ -f /etc/resin.conf ]; then
+if [ -f /usr/sbin/resin-vars ]; then
     source /usr/sbin/resin-vars
 else
-    fail "No resin configurarion found."
+    fail "No resin configuration found."
 fi
 inform "resin configuration found."
 
 # Register device
-export CONFIG_PATH # coming from resin.conf
-export API_ENDPOINT # coming from resin.conf
+export CONFIG_PATH # coming from resin-vars
+export API_ENDPOINT # coming from resin-vars
 if [ ! -f $CONFIG_PATH ]; then
     fail "$CONFIG_PATH : No such file."
 fi
