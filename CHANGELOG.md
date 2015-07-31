@@ -1,6 +1,12 @@
 Change log
 -----------
 
+* Fetch resin instance variables from config.json (eg API endpoint) [Theodor]
+* Removed unused package management features [Andrei]
+* Add support for multiple yocto versions [Andrei]
+
+# 2015-07-26
+
 * Add Intel NUC support - tested on model D34010WYKH [Jon]
 * Switched supervisor caching to be package.json version + docker image id. [Page]
 * Increased supervisor update poll interval to once per day (and on reboot)
