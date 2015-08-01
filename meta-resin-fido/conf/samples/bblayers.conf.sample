@@ -43,6 +43,13 @@ PARALLELLA_BBLAYERS += " \
     ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-parallella \
     "
 
+VAB820-QUAD_BBLAYERS += " \
+    ${TOPDIR}/../meta-fsl-arm \
+    ${TOPDIR}/../meta-fsl-arm-extra \
+    ${TOPDIR}/../meta-vab820-bsp \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-vab820 \
+    "
+
 BBLAYERS ?= " \
     ${CORE_BBLAYERS} \
     ${RASPBERRYPI_BBLAYERS} \
@@ -50,6 +57,7 @@ BBLAYERS ?= " \
     ${NUC_BBLAYERS} \
     ${NITROGEN6X_BBLAYERS} \
     ${PARALLELLA_BBLAYERS} \
+    ${VAB820-QUAD_BBLAYERS} \
     "
 
 BBLAYERS_NON_REMOVABLE ?= " \
