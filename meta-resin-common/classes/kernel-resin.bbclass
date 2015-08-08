@@ -63,7 +63,7 @@ inherit kernel-resin
 
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
-RESIN_CONFIGS ?= "rce brcmfmac"
+RESIN_CONFIGS ?= "rce brcmfmac systemd"
 
 #
 # RCE specific kernel configuration
@@ -102,6 +102,37 @@ RESIN_CONFIGS[rce] ?= " \
     CONFIG_POSIX_MQUEUE=y \
     CONFIG_BTRFS_FS=y \
     CONFIG_TUN=y"
+
+#
+# systemd specific kernel configuration options
+# see https://github.com/systemd/systemd/blob/master/README for an up-to-date list
+#
+RESIN_CONFIGS[systemd] ?= " \
+    CONFIG_DEVTMPFS=y \
+    CONFIG_CGROUPS=y \
+    CONFIG_INOTIFY_USER=y \
+    CONFIG_SIGNALFD=y \
+    CONFIG_TIMERFD=y \
+    CONFIG_EPOLL=y \
+    CONFIG_NET=y \
+    CONFIG_SYSFS=y \
+    CONFIG_PROC_FS=y \
+    CONFIG_FHANDLE=y \
+    CONFIG_SYSFS_DEPRECATED=n \
+    CONFIG_UEVENT_HELPER_PATH="" \
+    CONFIG_FW_LOADER_USER_HELPER=n \
+    CONFIG_DMIID=y \
+    CONFIG_BLK_DEV_BSG=y \
+    CONFIG_NET_NS=y \
+    CONFIG_DEVPTS_MULTIPLE_INSTANCES=y \
+    CONFIG_IPV6=y \
+    CONFIG_AUTOFS4_FS=y \
+    CONFIG_TMPFS_POSIX_ACL=y \
+    CONFIG_TMPFS_XATTR=y \
+    CONFIG_SECCOMP=y \
+    CONFIG_CGROUP_SCHED=y \
+    CONFIG_FAIR_GROUP_SCHED=y \
+    CONFIG_CFS_BANDWIDTH=y"
 
 #
 # We use an out-of-tree kernel module for RTL8192CU WiFi devices
