@@ -28,9 +28,9 @@ COMPATIBLE_MACHINE = "beaglebone"
 S = "${WORKDIR}/git"
 
 BRANCH = "4.1"
+TAG = "4.1.4-ti-r9"
 
-SRCREV = "d0ce07ed09d393f76889e71192d30c185c9530a5"
-PV = "4.1.3+git${SRCPV}"
+PV = "4.1.4+git${SRCPV}"
 
 # Append to the MACHINE_KERNEL_PR so that a new SRCREV will cause a rebuild
 MACHINE_KERNEL_PR_append = "b"
@@ -47,6 +47,6 @@ MULTI_CONFIG_BASE_SUFFIX = ""
 KERNEL_GIT_URI = "git://github.com/beagleboard/linux.git"
 KERNEL_GIT_PROTOCOL = "git"
 SRC_URI += " \
-    ${KERNEL_GIT_URI};protocol=${KERNEL_GIT_PROTOCOL};branch=${BRANCH} \
+    ${KERNEL_GIT_URI};protocol=${KERNEL_GIT_PROTOCOL};branch=${BRANCH};tag=${TAG} \
     file://defconfig \
     "
