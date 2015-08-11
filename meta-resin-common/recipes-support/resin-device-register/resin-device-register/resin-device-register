@@ -1,8 +1,6 @@
 #!/bin/bash
 source /usr/sbin/resin-vars
 
-source /etc/resin.conf
-
 if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
     echo "Please set API_ENDPOINT and CONFIG_PATH environment variables."
     exit 1
