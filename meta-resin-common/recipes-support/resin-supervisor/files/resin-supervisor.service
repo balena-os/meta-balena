@@ -5,23 +5,23 @@ Requires=\
     prepare-resin-supervisor.service
 Wants=\
     connman.service \
-    resin-device-register
+    resin-device-register.service
 After=\
     rce.service \
     prepare-resin-supervisor.service \
     connman.service \
-    resin-device-register
+    resin-device-register.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 EnvironmentFile=/etc/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf ;keep this after supervisor to overwrite image name
-EnvironmentFile=/etc/resin.conf
 ExecStartPre=@BASE_BINDIR@/touch /etc/resolv.conf
 ExecStartPre=-@BINDIR@/rce stop resin_supervisor
 ExecStartPre=-@BINDIR@/rce rm --force resin_supervisor
-ExecStart=@BINDIR@/rce run -d --privileged --name resin_supervisor \
+ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
+    @BINDIR@/rce run -d --privileged --name resin_supervisor \
     --net=host \
     -v /var/run/rce.sock:/run/docker.sock \
     -v ${CONFIG_PATH}:/boot/config.json  \
@@ -38,7 +38,7 @@ ExecStart=@BINDIR@/rce run -d --privileged --name resin_supervisor \
     -e LED_FILE=${LED_FILE} \
     -e LISTEN_PORT=${LISTEN_PORT} \
     -e SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE} \
-    ${SUPERVISOR_IMAGE}
+    ${SUPERVISOR_IMAGE}'
 ExecStop=-@BINDIR@/rce stop resin_supervisor
 ExecStop=-@BINDIR@/rce rm --force resin_supervisor
 
