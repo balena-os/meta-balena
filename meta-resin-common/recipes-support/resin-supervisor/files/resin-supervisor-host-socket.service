@@ -1,7 +1,7 @@
 [Unit]
 Description=Host socket for resin supervisor
-Requires=resin-supervisor
-After=resin-supervisor
+Requires=resin-supervisor.service
+After=resin-supervisor.service
 
 [Service]
 Restart=always
