@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /etc/resin.conf
+source /usr/sbin/resin-vars
 
 echo "-- $0 $1 $2 $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
 if [ "$#" -ne 2 -o -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
