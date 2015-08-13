@@ -7,7 +7,7 @@ After=syslog.target network.target prepare-openvpn.service resin-device-register
 PrivateTmp=true
 Type=forking
 PIDFile=/var/run/openvpn/resin.pid
-ExecStartPre=-/usr/bin/mkdir -p /var/run/openvpn
+ExecStartPre=-/bin/mkdir -p /var/run/openvpn
 ExecStart=/usr/sbin/openvpn --daemon --writepid /var/run/openvpn/resin.pid --cd /etc/openvpn/ --config resin.conf
 
 [Install]
