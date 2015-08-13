@@ -2,13 +2,13 @@
 Description=Resin supervisor
 Requires=\
     rce.service \
-    prepare-resin-supervisor.service
+    resinx2ddata.mount
 Wants=\
     connman.service \
     resin-device-register.service
 After=\
     rce.service \
-    prepare-resin-supervisor.service \
+    resinx2ddata.mount \
     connman.service \
     resin-device-register.service
 

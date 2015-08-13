@@ -1,0 +1,13 @@
+[Unit]
+Description=resin-data bind mount
+Requires=mnt-data.conf
+After=mnt-data.conf
+
+[Mount]
+What=/mnt/data/resin-data
+Where=/resin-data
+Type=none
+Options=bind
+
+[Install]
+WantedBy=multi-user.target

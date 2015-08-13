@@ -11,8 +11,7 @@ SRC_URI = " \
     file://Dockerfile \
     file://entry.sh \
     file://supervisor.conf \
-    file://prepare-resin-supervisor \
-    file://prepare-resin-supervisor.service \
+    file://resinx2ddata.mount \
     file://resin-supervisor.service \
     file://resin-supervisor-host-socket.service \
     file://update-resin-supervisor \
@@ -36,7 +35,7 @@ MIXPANEL_TOKEN_PRODUCTION = "99eec53325d4f45dd0633abd719e3ff1"
 MIXPANEL_TOKEN_STAGING = "cb974f32bab01ecc1171937026774b18"
 
 SYSTEMD_SERVICE_${PN} = " \
-    prepare-resin-supervisor.service \
+    resinx2ddata.mount \
     resin-supervisor.service \
     resin-supervisor-host-socket.service \
     update-resin-supervisor.service \
@@ -165,12 +164,11 @@ do_install () {
     install -d ${D}${sysconfdir}/default
 
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/prepare-resin-supervisor ${D}${bindir}
     install -m 0755 ${WORKDIR}/update-resin-supervisor ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/prepare-resin-supervisor.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/resinx2ddata.mount ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/resin-supervisor.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/resin-supervisor-host-socket.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/update-resin-supervisor.service ${D}${systemd_unitdir}/system
