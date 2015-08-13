@@ -2,7 +2,7 @@
 Description=RCE Container Engine
 Requires=\
     rce.socket \
-    prepare-rce.service \
+    prepare-rce.service
 Wants=connman.service
 After=\
     connman.service \
