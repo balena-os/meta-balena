@@ -1,5 +1,5 @@
 [Unit]
-Description=RCE Container Engine
+Description=RCE
 Requires=\
     rce.socket \
     prepare-rce.service
