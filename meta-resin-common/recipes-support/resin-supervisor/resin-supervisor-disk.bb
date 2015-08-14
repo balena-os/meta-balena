@@ -30,10 +30,6 @@ LED_FILE ?= "/dev/null"
 RESIN_CHECK_CONN_URL ?= "index.docker.io"
 DOCKER_PID_FILE ?= "/var/run/docker.pid"
 
-# MIXPANEL TOKEN
-MIXPANEL_TOKEN_PRODUCTION = "99eec53325d4f45dd0633abd719e3ff1"
-MIXPANEL_TOKEN_STAGING = "cb974f32bab01ecc1171937026774b18"
-
 SYSTEMD_SERVICE_${PN} = " \
     resinx2ddata.mount \
     resin-supervisor.service \
