@@ -1,7 +1,7 @@
 [Unit]
 Description=resin-data bind mount
-Requires=mnt-data.conf
-After=mnt-data.conf
+Requires=mnt-data.mount
+After=mnt-data.mount
 
 [Mount]
 What=/mnt/data/resin-data
