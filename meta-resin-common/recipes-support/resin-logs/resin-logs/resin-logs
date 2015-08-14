@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This needs further changes as it is broken now
+exit 1
+
 set -e
 
 # Start logging to disk when DEBUG flag is present in the recovery [Initial installation] partition.
