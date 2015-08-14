@@ -11,7 +11,7 @@ SRC_URI = " \
     file://Dockerfile \
     file://entry.sh \
     file://supervisor.conf \
-    file://resinx2ddata.mount \
+    file://resin-data.mount \
     file://resin-supervisor.service \
     file://resin-supervisor-host-socket.service \
     file://update-resin-supervisor \
@@ -31,7 +31,6 @@ RESIN_CHECK_CONN_URL ?= "index.docker.io"
 DOCKER_PID_FILE ?= "/var/run/docker.pid"
 
 SYSTEMD_SERVICE_${PN} = " \
-    resinx2ddata.mount \
     resin-supervisor.service \
     resin-supervisor-host-socket.service \
     update-resin-supervisor.service \
@@ -41,6 +40,7 @@ SYSTEMD_SERVICE_${PN} = " \
 FILES_${PN} += " \
     /resin-data \
     /mnt/data \
+    ${systemd_unitdir} \
     "
 
 RDEPENDS_${PN} = " \
@@ -164,7 +164,11 @@ do_install () {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/resinx2ddata.mount ${D}${systemd_unitdir}/system
+
+        # Yocto gets confused if we use strange file names - so we rename it here
+        # https://bugzilla.yoctoproject.org/show_bug.cgi?id=8161
+        install -c -m 0644 ${WORKDIR}/resin-data.mount ${D}${systemd_unitdir}/system/resin\\x2ddata.mount
+
         install -c -m 0644 ${WORKDIR}/resin-supervisor.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/resin-supervisor-host-socket.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/update-resin-supervisor.service ${D}${systemd_unitdir}/system
