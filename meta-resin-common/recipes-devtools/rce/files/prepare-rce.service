@@ -1,0 +1,9 @@
+[Unit]
+Description=Prepare RCE Container Engine
+Wants=mnt-data.mount tmp.mount
+After=mnt-data.mount tmp.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BINDIR@/prepare-rce

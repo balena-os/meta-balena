@@ -1,13 +1,18 @@
 [Unit]
 Description=Resin init flasher service
-Wants=connman.service
-After=connman.service
+Requires=\
+    boot.mount \
+    mnt-conf.mount \
+    resin-device-register
+After=\
+    boot.mount \
+    mnt-conf.mount \
+    resin-device-register
 
 [Service]
-ExecStart=@BASE_BINDIR@/sh @BASE_SBINDIR@/resin-init-flasher
 Type=oneshot
 RemainAfterExit=yes
-StandardError=journal+console
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-init-flasher
 
 [Install]
-WantedBy=basic.target
+WantedBy=multi-user.target

@@ -4,4 +4,7 @@ set -e
 # Load the following modules:
 modprobe snd-bcm2835 # Sound
 
+# Remove 1-wire kernel module and let users load it if needed
+rmmod w1_gpio
+
 exit 0

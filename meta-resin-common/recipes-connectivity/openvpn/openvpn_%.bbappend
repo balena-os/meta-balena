@@ -1,0 +1,41 @@
+FILESEXTRAPATHS_append := "${THISDIR}/${PN}:"
+
+SRC_URI_append = " \
+    file://ca.crt \
+    file://resin.conf \
+    file://prepare-openvpn \
+    file://prepare-openvpn.service \
+    file://openvpn-resin.service \
+    "
+
+RDEPENDS_${PN} += "bash jq resin-device-register"
+
+SYSTEMD_SERVICE_${PN} = " \
+    openvpn-resin.service \
+    prepare-openvpn.service \
+    "
+SYSTEMD_AUTO_ENABLE = "enable"
+
+do_install_append() {
+    install -d ${D}${sysconfdir}/openvpn
+    install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/openvpn/resin.conf
+    install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
+        # Use staging Resin URL
+        sed -i -e 's:vpn.resin.io:vpn.resinstaging.io:g' ${D}${sysconfdir}/openvpn/resin.conf
+    fi
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}${bindir}
+        install -m 0755 ${WORKDIR}/prepare-openvpn ${D}${bindir}
+        install -d ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/prepare-openvpn.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/openvpn-resin.service ${D}${systemd_unitdir}/system
+        sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+            -e 's,@SBINDIR@,${sbindir},g' \
+            -e 's,@BINDIR@,${bindir},g' \
+            ${D}${systemd_unitdir}/system/*.service
+    fi
+}
+do_install[vardeps] += "DISTRO_FEATURES"

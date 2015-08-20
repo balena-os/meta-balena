@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -e
+
+# Trigger extend if script detect freespace greater than this value
+FREESPACE_LIMIT=10
+
+datapart=$(readlink -f /dev/disk/by-label/resin-data)
+datadev=$(lsblk $datapart -n -o PKNAME)
+for freespace in $(parted -m /dev/$datadev unit MiB print free | awk -F: '$5 == "free;" {sub("MiB", "", $4); print $4}'); do
+    if [ $(echo $freespace'>'$FREESPACE_LIMIT | bc -l) == "1" ]; then
+        echo -n "Expand extended partition... "
+        parted -s /dev/$datadev -- resizepart 4 -1s
+        echo "done."
+
+        echo -n "Expand data partition... "
+        parted -s /dev/$datadev -- resizepart 6 -1s
+        echo "done."
+
+        partprobe
+
+        sync
+
+        exit 0
+    fi
+done
+
+echo "No need to expand."

@@ -11,26 +11,16 @@ SRC_URI = " \
     "
 S = "${WORKDIR}"
 
-inherit update-rc.d allarch systemd
-
-INITSCRIPT_NAME = "resin-init-flasher"
-INITSCRIPT_PARAMS = "start 06 5 ."
+inherit allarch systemd
 
 SYSTEMD_SERVICE_${PN} = "resin-init-flasher.service"
-FILES_${PN} = "${sysconfdir}/* ${base_sbindir}/*"
 
 RDEPENDS_${PN} = " \
     bash \
     coreutils \
     util-linux \
     udev \
-    jq \
-    resin-conf \
-    openssl \
-    resin-device-register \
     resin-device-progress \
-    resin-flasher-net-config \
-    connman \
     parted \
     "
 
@@ -44,9 +34,10 @@ do_install() {
             image is not usable for your selected MACHINE (${MACHINE})."
     fi
 
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/resin-init-flasher ${D}${bindir}
+
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        install -d ${D}${base_sbindir}
-        install -m 0755 ${WORKDIR}/resin-init-flasher ${D}${base_sbindir}
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/resin-init-flasher.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
@@ -55,11 +46,6 @@ do_install() {
             -e 's,@BINDIR@,${bindir},g' \
             -e 's,@SYS_CONFDIR@,${sysconfdir},g' \
             ${D}${systemd_unitdir}/system/resin-init-flasher.service
-    fi
-
-    if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
-        install -d ${D}${sysconfdir}/init.d
-        install -m 0755 ${WORKDIR}/resin-init-flasher  ${D}${sysconfdir}/init.d/
     fi
 
     # Construct resin-init-flasher.conf

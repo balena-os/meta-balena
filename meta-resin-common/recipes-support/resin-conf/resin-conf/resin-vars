@@ -1,5 +1,5 @@
 #!/bin/bash
-CONFIG_PATH=/mnt/data-disk/config.json
+CONFIG_PATH=/mnt/conf/config.json
 
 # If config.json provides redefinitions for our vars let us rewrite their
 # runtime value

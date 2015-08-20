@@ -10,10 +10,9 @@ S = "${WORKDIR}"
 
 inherit allarch
 
-FILES_${PN} = "${base_sbindir}/*"
 RDEPENDS_${PN} = "bash"
 
 do_install() {
-        install -d ${D}${base_sbindir}
-        install -m 0755 ${WORKDIR}/resin-init-board  ${D}${base_sbindir}
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/resin-init-board ${D}${bindir}
 }

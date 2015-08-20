@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#
+# Script used to prepare rce running environment
+#
+
+set -o pipefail
+set -e
+
+# RCE uses this for certs
+mkdir -p /tmp/.rce
+if ! mount | grep /tmp/.rce > /dev/null; then
+    mount -o bind /tmp/.rce /.rce
+fi
+
+# Running directory for RCE
+mkdir -p /mnt/data/rce
+if ! mount | grep /mnt/data/rce > /dev/null; then
+    mount -o bind /mnt/data/rce /var/lib/rce
+fi
+
+exit 0

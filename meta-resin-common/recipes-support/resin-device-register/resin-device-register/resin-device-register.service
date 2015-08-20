@@ -1,0 +1,12 @@
+[Unit]
+Description=Resin device register
+Requires=connman.service mnt-conf.mount
+After=connman.service mnt-conf.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-register
+
+[Install]
+WantedBy=multi-user.target

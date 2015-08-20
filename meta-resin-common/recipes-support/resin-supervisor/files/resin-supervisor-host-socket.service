@@ -1,0 +1,17 @@
+[Unit]
+Description=Host socket for resin supervisor
+Requires=resin-supervisor.service
+After=resin-supervisor.service
+
+[Service]
+Restart=always
+ExecStartPre=-@BASE_BINDIR@/rm -f /resin-data/resin-supervisor/host
+ExecStart=@BASE_BINDIR@/bash -c ' \
+    while true; do \
+        rm -f /resin-data/resin-supervisor/host; \
+        socat UNIX-LISTEN:/resin-data/resin-supervisor/host EXEC:/bin/bash,pty,setsid,setpgid,stderr,ctty; \
+    done'
+ExecStopPost=-@BASE_BINDIR@/rm -f /resin-data/resin-supervisor/host
+
+[Install]
+WantedBy=multi-user.target

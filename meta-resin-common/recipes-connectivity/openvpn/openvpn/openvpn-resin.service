@@ -1,0 +1,14 @@
+[Unit]
+Description=OpenVPN Application On Resin
+Wants=prepare-openvpn.service resin-device-register.service
+After=syslog.target network.target prepare-openvpn.service resin-device-register.service
+
+[Service]
+PrivateTmp=true
+Type=forking
+PIDFile=/var/run/openvpn/resin.pid
+ExecStartPre=-/bin/mkdir -p /var/run/openvpn
+ExecStart=/usr/sbin/openvpn --daemon --writepid /var/run/openvpn/resin.pid --cd /etc/openvpn/ --config resin.conf
+
+[Install]
+WantedBy=multi-user.target

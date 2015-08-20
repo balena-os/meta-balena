@@ -1,0 +1,13 @@
+[Unit]
+Description=Expand extension partition
+Requires=dev-disk-by\x2dlabel-resin\x2ddata.device
+After=dev-disk-by\x2dlabel-resin\x2ddata.device
+Before=mnt-conf.mount mnt-data.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-extend-expand
+
+[Install]
+WantedBy=multi-user.target

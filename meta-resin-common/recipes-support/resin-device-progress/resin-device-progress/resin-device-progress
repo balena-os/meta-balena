@@ -1,0 +1,31 @@
+#!/bin/bash
+
+source /usr/sbin/resin-vars
+
+echo "-- $0 $1 $2 $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
+if [ "$#" -ne 2 -o -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
+    echo "Usage: $0 PERCENTAGE STATE"
+    echo -e "\tPERCENTAGE\tExample: 50"
+    echo -e "\tSTATE\tExample: Loading filesystem"
+    echo "Requires API_ENDPOINT and CONFIG_PATH environment variables to be set."
+    exit 1
+fi
+
+if [ `jq ".registered_at | length" $CONFIG_PATH` -eq 0 ]; then
+    echo "Device registration not complete, provisioning progress cannot be reported."
+    exit 1
+fi
+
+if [ `jq ".deviceId | length" $CONFIG_PATH` -eq 0 ]; then
+    echo "Device id (deviceId) missing from config file, provisioning progress cannot be reported."
+    exit 1
+fi
+
+percentage=$1
+state=$2
+read api_key device_id <<<$(jq -r '.apiKey,.deviceId' $CONFIG_PATH)
+
+curl -s -X PATCH "$API_ENDPOINT/ewa/device($device_id)?apikey=$api_key" \
+     -o "/var/log/provisioning-progress-curl-$percentage.log" \
+     --data-urlencode "provisioning_progress=$percentage" \
+     --data-urlencode "provisioning_state=$state"

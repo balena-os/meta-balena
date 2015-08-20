@@ -95,7 +95,7 @@ IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 BTRFS_IMAGE = "${DEPLOY_DIR}/images/${MACHINE}/data_disk.img"
 
 # Config size
-CONFIG_SIZE = "16384"
+CONFIG_SIZE = "20480"
 
 IMAGE_CMD_resin-sdcard () {
 	# Align partitions

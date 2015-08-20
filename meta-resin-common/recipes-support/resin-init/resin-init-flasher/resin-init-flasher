@@ -25,7 +25,7 @@
 ##########################################################################################
 
 # Very long variables :)
-EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/external_boot
+EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
@@ -72,7 +72,6 @@ function clean {
     echo "[resin-init-flasher] Cleanup."
     rm $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
     rm $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
-    umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1
     umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1
     umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1
 }
@@ -112,19 +111,9 @@ else
 fi
 inform "resin configuration found."
 
-# Register device
-export CONFIG_PATH # coming from resin-vars
-export API_ENDPOINT # coming from resin-vars
+# CONFIG_PATH should exist
 if [ ! -f $CONFIG_PATH ]; then
     fail "$CONFIG_PATH : No such file."
-fi
-
-resin-device-register &
-
-mkdir -p $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
-inform "Mounting external device boot partition."
-if ! mount /dev/disk/by-label/flash-boot $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
-    fail "Failed to mount disk labeled as 'flasher-boot'."
 fi
 
 # Flash Resin image on internal device
@@ -151,7 +140,7 @@ while kill -USR1 $DD_PID; do
 done
 
 # Many syncs
-sync && sync && sync
+sync
 
 # Trigger udev
 partprobe
@@ -175,7 +164,7 @@ case $BOARD_BOOTLOADER in
         ;;
 esac
 
-# Copy json configuration file
+# Copy json configuration file from external (flasher) to the internal (booting) device
 mkdir -p $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 inform "Mounting internal device conf partition."
 if ! mount /dev/disk/by-label/resin-conf $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
@@ -184,15 +173,10 @@ fi
 cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
 
 # More syncs
-sync && sync && sync
-
-# We have to make sure next boot doesn't register the device again (remove_to_reset_data trick)
-#resin-device-progress 40 "Save device registration..." || true
-#echo "This was done from flashing script" > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/remove_to_reset_data && sync
+sync
 
 # umounts
 resin-device-progress 100 "Cleanup and reboot..." || true
-umount $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 

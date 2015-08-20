@@ -1,0 +1,13 @@
+[Unit]
+Description=Resin net config service
+Requires=mnt-conf.mount
+After=mnt-conf.mount
+
+[Service]
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-net-config
+Type=oneshot
+RemainAfterExit=yes
+StandardError=journal+console
+
+[Install]
+WantedBy=multi-user.target

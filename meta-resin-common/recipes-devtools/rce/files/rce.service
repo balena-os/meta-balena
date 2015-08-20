@@ -1,0 +1,23 @@
+[Unit]
+Description=RCE
+Requires=\
+    rce.socket \
+    prepare-rce.service
+Wants=connman.service
+After=\
+    connman.service \
+    rce.socket \
+    prepare-rce.service
+
+[Service]
+Type=notify
+Restart=always
+ExecStart=@BINDIR@/rce --restart=false -s btrfs -d -g /var/lib/rce
+MountFlags=slave
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
+Also=rce.socket

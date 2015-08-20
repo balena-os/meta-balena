@@ -5,7 +5,7 @@ PR = "r1"
 
 inherit packagegroup
 
-RDEPENDS_${PN} = " \
-    kernel-modules \
-    resin-init-flasher \
-    "
+RESIN_INIT_PACKAGE ?= "resin-init-flasher"
+RESIN_MOUNTS ?= "resin-mounts-flasher"
+
+include packagegroup-resin.inc

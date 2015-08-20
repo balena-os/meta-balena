@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# This needs further changes as it is broken now
+exit 1
+
+set -e
+
+# Start logging to disk when DEBUG flag is present in the recovery [Initial installation] partition.
+if [ -e /mnt/conf/debug.txt ]; then
+    echo "Configure persistent logs in /mnt/conf/log"
+    mkdir -p /mnt/conf/log
+    cp -r /var/log/* /mnt/conf/log
+    ln -sf /mnt/conf/log /var
+else
+    echo "Persistent logs deactivated. To activate persistent logs create a debug.txt file in resin-conf partition."
+fi
+
+exit 0
