@@ -33,3 +33,14 @@ We currently tested and provide explicit support for the following WiFi adapters
 To contribute send bitbucket pull requests targeting [this](https://bitbucket.org/rulemotion/meta-resin) repository.
 
 Please refer to: [Yocto Contribution Guidelines](https://wiki.yoctoproject.org/wiki/Contribution_Guidelines#General_Information)
+
+## How to fix various build errors
+
+* Supervisor fails with a log similar to:
+```
+Step 3 : RUN chmod 700 /entry.sh
+---> Running in 445fe69866f9
+operation not supported
+```
+This is probably because of a docker bug where. If you update kernel and don't reboot, docker gets confused. The fix is to reboot you system.
+More info: http://stackoverflow.com/questions/29546388/getting-an-operation-not-supported-error-when-trying-to-run-something-while-bu
