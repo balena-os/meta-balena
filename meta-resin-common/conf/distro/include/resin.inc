@@ -19,3 +19,6 @@ PREFERRED_PROVIDER_resin-supervisor ?= "resin-supervisor-disk"
 SPLASH = "psplash-resin"
 
 IMAGE_CLASSES += "image_types_resin"
+
+# Define the URL were resin exposes source or prebuilt packages
+AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
