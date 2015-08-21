@@ -42,5 +42,5 @@ Step 3 : RUN chmod 700 /entry.sh
 ---> Running in 445fe69866f9
 operation not supported
 ```
-This is probably because of a docker bug where. If you update kernel and don't reboot, docker gets confused. The fix is to reboot you system.
+This is probably because of a docker bug where, if you update kernel and don't reboot, docker gets confused. The fix is to reboot your system.
 More info: http://stackoverflow.com/questions/29546388/getting-an-operation-not-supported-error-when-trying-to-run-something-while-bu
