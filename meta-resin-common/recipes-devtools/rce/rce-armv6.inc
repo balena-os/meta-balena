@@ -1,4 +1,4 @@
-DESCRIPTION = "rce build for ARM v6"
+DESCRIPTION = "rce build for ARMv6 machines"
 
 include rce.inc
 

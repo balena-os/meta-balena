@@ -1,4 +1,4 @@
-DESCRIPTION = "rce build for 386"
+DESCRIPTION = "rce build for 386 machines"
 
 include rce.inc
 

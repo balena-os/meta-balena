@@ -17,14 +17,14 @@ SYSTEMD_SERVICE_${PN} = "rce.service rce.socket"
 
 FILES_${PN} += "/.rce /mnt ${systemd_unitdir}"
 
-RDEPENDS_${PN} = "bash ca-certificates"
+RDEPENDS_${PN} = "ca-certificates"
 
 do_install() {
     install -d ${D}${bindir}
     install -d ${D}/.rce
     install -d ${D}/mnt/data/rce
-    mkdir -p ${D}${localstatedir}/lib/rce
-    install  -m 0755 ${S}/rce ${D}${bindir}
+    install -d ${D}${localstatedir}/lib/rce
+    install -m 0755 ${S}/rce ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
