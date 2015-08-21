@@ -29,7 +29,6 @@ COMPATIBLE_MACHINE = "beaglebone"
 
 S = "${WORKDIR}/git"
 
-BRANCH = "4.1"
 TAG = "4.1.4-ti-r9"
 
 PV = "4.1.4+git${SRCPV}"
@@ -49,6 +48,6 @@ MULTI_CONFIG_BASE_SUFFIX = ""
 KERNEL_GIT_URI = "git://github.com/beagleboard/linux.git"
 KERNEL_GIT_PROTOCOL = "git"
 SRC_URI += " \
-    ${KERNEL_GIT_URI};protocol=${KERNEL_GIT_PROTOCOL};branch=${BRANCH};tag=${TAG} \
+    ${KERNEL_GIT_URI};protocol=${KERNEL_GIT_PROTOCOL};tag=${TAG};nobranch=1 \
     file://defconfig \
     "
