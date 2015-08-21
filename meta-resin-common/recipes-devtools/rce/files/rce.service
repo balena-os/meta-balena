@@ -2,12 +2,14 @@
 Description=RCE
 Requires=\
     rce.socket \
-    prepare-rce.service
+    var-lib-rce.mount \
+    \x2erce.mount
 Wants=connman.service
 After=\
     connman.service \
     rce.socket \
-    prepare-rce.service
+    var-lib-rce.mount \
+    \x2erce.mount
 
 [Service]
 Type=notify

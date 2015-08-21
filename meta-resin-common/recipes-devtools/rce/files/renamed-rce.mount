@@ -1,0 +1,13 @@
+[Unit]
+Description=RCE tmp mountpoint
+Requires=tmp.mount
+After=tmp.mount
+
+[Mount]
+What=/tmp/.rce
+Where=/.rce
+Type=none
+Options=bind
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=RCE data mountpoint
+Requires=mnt-data.mount
+After=mnt-data.mount
+
+[Mount]
+What=/mnt/data/rce
+Where=/var/lib/rce
+Type=none
+Options=bind
+
+[Install]
+WantedBy=multi-user.target
