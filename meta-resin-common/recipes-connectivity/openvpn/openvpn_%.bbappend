@@ -21,11 +21,6 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/openvpn/resin.conf
     install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
 
-    if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
-        # Use staging Resin URL
-        sed -i -e 's:vpn.resin.io:vpn.resinstaging.io:g' ${D}${sysconfdir}/openvpn/resin.conf
-    fi
-
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${bindir}
         install -m 0755 ${WORKDIR}/prepare-openvpn ${D}${bindir}
