@@ -1,6 +1,8 @@
 #!/bin/bash
 
 source /usr/sbin/resin-vars
+VPN_PORT=443
+
 if [ ! -f $CONFIG_PATH ]; then
     echo "$CONFIG_PATH : No such file."
     exit 1
@@ -17,3 +19,5 @@ while true; do
 		break
 	fi
 done
+
+sed -i -e "/remote .*/ c\remote $VPN_ENDPOINT $VPN_PORT" /etc/openvpn/resin.conf

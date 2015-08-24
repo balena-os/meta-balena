@@ -11,4 +11,5 @@ then
     PUBNUB_PUBLISH_KEY=$(jq --raw-output ".pubnubPublishKey" $CONFIG_PATH)
     PUBNUB_SUBSCRIBE_KEY=$(jq --raw-output ".pubnubSubscribeKey" $CONFIG_PATH)
     REGISTRY_ENDPOINT=$(jq --raw-output ".registryEndpoint" $CONFIG_PATH)
+    VPN_ENDPOINT=$(jq --raw-output ".vpnEndpoint" $CONFIG_PATH)
 fi
