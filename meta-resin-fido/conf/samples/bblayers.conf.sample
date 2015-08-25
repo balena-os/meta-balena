@@ -9,6 +9,7 @@ CORE_BBLAYERS ?= " \
     ${TOPDIR}/../poky/meta \
     ${TOPDIR}/../poky/meta-yocto \
     ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-common \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-fido \
     ${TOPDIR}/../meta-openembedded/meta-oe \
     ${TOPDIR}/../meta-openembedded/meta-networking \
     ${TOPDIR}/../meta-openembedded/meta-python \
@@ -55,4 +56,5 @@ BBLAYERS_NON_REMOVABLE ?= " \
     ${TOPDIR}/../poky/meta \
     ${TOPDIR}/../poky/meta-yocto \
     ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-common \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-fido \
     "
