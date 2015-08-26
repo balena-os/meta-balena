@@ -143,8 +143,9 @@ done
 sync
 
 # Trigger udev
-partprobe
+partprobe /dev/$INTERNAL_DEVICE_KERNEL
 udevadm trigger
+udevadm settle
 
 # Mount internal device boot partition to write bootloader config file on it
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
