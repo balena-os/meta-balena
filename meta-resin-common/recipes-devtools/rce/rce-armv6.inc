@@ -1,8 +1,8 @@
-DESCRIPTION = "rce build for ARM v6"
+DESCRIPTION = "rce build for ARMv6 machines"
 
 include rce.inc
 
-SRC_URI_append = " https://s3.amazonaws.com/resin-share/build_requirements/rce-arm-${PV}.tar.xz;name=rce"
+SRC_URI_append = " ${AMAZON_RESIN_SHARE}/rce-arm-${PV}.tar.xz;name=rce"
 S = "${WORKDIR}/rce-arm-${PV}"
 
 # ARMv6 binaries (ARMv7 compatible)
