@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Make openvpn report connected status by creating a file [Praneeth]
 * Fetch resin instance variables from config.json (eg API endpoint) [Theodor]
 * Removed unused package management features [Andrei]
 * Add support for multiple yocto versions [Andrei]
