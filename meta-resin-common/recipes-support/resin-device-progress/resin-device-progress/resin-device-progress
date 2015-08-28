@@ -1,15 +1,32 @@
 #!/bin/bash
 
+help () {
+    cat << EOF
+Script for reporting device progress
+resin-device-progress [options]
+
+Options:
+    -h, --help
+        Display this help and exit.
+
+    -c, --config-path CONFIG_PATH
+        Use a non default config.json file.
+        This argument is passed to resin-vars script.
+
+    -p, --percentage PERCENTAGE
+        Define progress in percentage
+
+    -s, --state STATE
+        String describing the current state.
+EOF
+}
+
 # Parse arguments
-while [[ $# > 1 ]]; do
-    key="$1"
+while [[ $# > 0 ]]; do
+    key=$1
     case $key in
         -h|--help)
-            echo "Usage: $0 [options]"
-            echo -e "\t-c CONFIG_PATH\tArgument passed to resin-vars"
-            echo -e "\t-p PERCENTAGE\tExample: 50"
-            echo -e "\t-s STATE\tExample: Loading filesystem"
-            echo "Requires API_ENDPOINT and CONFIG_PATH environment variables to be set."
+            help
             exit 0
             ;;
         -c|--config-path)
@@ -25,7 +42,7 @@ while [[ $# > 1 ]]; do
             shift
             ;;
         *)
-            # unknown option
+            echo "[WARNING] $0 : Argument '$1' unknown. Ignoring."
             ;;
     esac
     shift
@@ -35,17 +52,17 @@ source /usr/sbin/resin-vars $RESIN_VARS_ARGS
 
 echo "-- $0 $PERCENTAGE $STATE $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
 if [ -z "$PERCENTAGE" -o -z "$STATE" -o -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
-    echo "ERROR: Needed variables not provided."
+    echo "[ERROR] resin-device-progress : Needed variables not provided."
     exit 1
 fi
 
 if [ `jq ".registered_at | length" $CONFIG_PATH` -eq 0 ]; then
-    echo "Device registration not complete, provisioning progress cannot be reported."
+    echo "[ERROR] resin-device-progress : Device registration not complete, provisioning progress cannot be reported."
     exit 1
 fi
 
 if [ `jq ".deviceId | length" $CONFIG_PATH` -eq 0 ]; then
-    echo "Device id (deviceId) missing from config file, provisioning progress cannot be reported."
+    echo "[ERROR] resin-device-progress : Device id (deviceId) missing from config file, provisioning progress cannot be reported."
     exit 1
 fi
 
@@ -55,3 +72,5 @@ curl -s -X PATCH "$API_ENDPOINT/ewa/device($device_id)?apikey=$api_key" \
      -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
      --data-urlencode "provisioning_progress=$PERCENTAGE" \
      --data-urlencode "provisioning_state=$STATE"
+
+exit 0
