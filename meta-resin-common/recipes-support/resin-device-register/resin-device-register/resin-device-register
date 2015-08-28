@@ -1,17 +1,34 @@
 #!/bin/bash
 
-RESIN_VARS_ARGS=""
+help () {
+    cat << EOF
+Register a new resin device
+resin-device-register [options]
+
+Options:
+    -h, --help
+        Display this help and exit.
+
+    -c, --config-path CONFIG_PATH
+        Use a non default config.json file.
+        This argument is passed to resin-vars script.
+EOF
+}
 
 # Parse arguments
-while [[ $# > 1 ]]; do
-    key="$1"
+while [[ $# > 0 ]]; do
+    key=$1
     case $key in
+        -h|--help)
+            help
+            exit 0
+            ;;
         -c|--config-path)
             RESIN_VARS_ARGS="$RESIN_VARS_ARGS --config-path $2"
             shift
             ;;
         *)
-            # unknown option
+            echo "[WARNING] $0 : Argument '$1' unknown. Ignoring."
             ;;
     esac
     shift
@@ -20,7 +37,7 @@ done
 source /usr/sbin/resin-vars $RESIN_VARS_ARGS
 
 if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
-    echo "Please set API_ENDPOINT and CONFIG_PATH environment variables."
+    echo "[ERROR] resin-device-register : Please set API_ENDPOINT and CONFIG_PATH environment variables."
     exit 1
 fi
 
@@ -30,7 +47,7 @@ while true; do
         read api_key user_id application_id device_type uuid <<<$(jq -r '.apiKey,.userId,.applicationId,.deviceType // "raspberry-pi",.uuid // empty' $CONFIG_PATH)
 
         if [ -z "$uuid" ]; then
-            echo "UUID missing from config file, generating our own."
+            echo "[INFO] resin-device-register : UUID missing from config file, generating our own."
             uuid=$(openssl rand -hex 31)
         fi
 
@@ -46,17 +63,17 @@ while true; do
             device_id=$(jq -r '.id' /var/log/register-device-curl.log)
             config_json=`cat $CONFIG_PATH`
             echo $config_json | jq ".uuid=\"$uuid\"|.registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
-            echo "Registered device with ID: $device_id and UUID: $uuid."
+            echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $uuid."
             exit 0
         elif [ "$status_code" -eq 409 ]; then
-            echo "Device already registered."
+            echo "[INFO] resin-device-register : Device already registered."
             exit 0
         else
-            echo "Failed to register device. Status code: $status_code"
+            echo "[ERROR] resin-device-register : Failed to register device. Status code: $status_code"
             exit 1
         fi
     else
-        echo  "Not connected. Trying again..."
+        echo  "[WARNING] resin-device-register: Not connected. Trying again..."
         sleep 2
     fi
 done
