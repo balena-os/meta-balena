@@ -1,3 +1,9 @@
+Configure DS23 as LED driven by gpio-leds
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
 Index: 1.0-r0/zc702/zc702-zynq7.dts
 ===================================================================
 --- 1.0-r0.orig/zc702/zc702-zynq7.dts
