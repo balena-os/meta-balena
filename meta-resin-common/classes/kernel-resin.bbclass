@@ -63,7 +63,7 @@ inherit kernel-resin
 
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
-RESIN_CONFIGS ?= "rce brcmfmac systemd"
+RESIN_CONFIGS ?= "rce brcmfmac systemd leds-gpio"
 
 #
 # RCE specific kernel configuration
@@ -159,6 +159,17 @@ RESIN_CONFIGS[rtl8192cu] ?= "\
 #
 RESIN_CONFIGS[brcmfmac] += " \
     CONFIG_BRCMFMAC=m \
+    "
+
+#
+# Most of the resin supported boards have user controllable LEDs
+#
+RESIN_CONFIGS_DEPS[leds-gpio] ?= " \
+    CONFIG_NEW_LEDS=y \
+    CONFIG_LEDS_CLASS=y \
+    "
+RESIN_CONFIGS[leds-gpio] ?= " \
+    CONFIG_LEDS_GPIO=y \
     "
 
 ###########
