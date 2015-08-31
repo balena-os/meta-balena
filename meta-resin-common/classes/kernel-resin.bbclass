@@ -159,7 +159,11 @@ RESIN_CONFIGS[rtl8192cu] ?= "\
 # Official RPI WiFi adapter
 # http://thepihut.com/collections/new-products/products/official-raspberry-pi-wifi-adapter
 #
-RESIN_CONFIGS[brcmfmac] += " \
+RESIN_CONFIGS_DEPS[brcmfmac] ?= " \
+    CONFIG_CFG80211=m \
+    CONFIG_BRCMFMAC_USB=y \
+    "
+RESIN_CONFIGS[brcmfmac] ?= " \
     CONFIG_BRCMFMAC=m \
     "
 
