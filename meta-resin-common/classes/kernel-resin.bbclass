@@ -107,6 +107,9 @@ RESIN_CONFIGS[rce] ?= " \
 # systemd specific kernel configuration options
 # see https://github.com/systemd/systemd/blob/master/README for an up-to-date list
 #
+RESIN_CONFIGS_DEPS[systemd] ?= " \
+    CONFIG_DMIID=y \
+    "
 RESIN_CONFIGS[systemd] ?= " \
     CONFIG_DEVTMPFS=y \
     CONFIG_CGROUPS=y \
@@ -121,7 +124,6 @@ RESIN_CONFIGS[systemd] ?= " \
     CONFIG_SYSFS_DEPRECATED=n \
     CONFIG_UEVENT_HELPER_PATH="" \
     CONFIG_FW_LOADER_USER_HELPER=n \
-    CONFIG_DMIID=y \
     CONFIG_BLK_DEV_BSG=y \
     CONFIG_NET_NS=y \
     CONFIG_DEVPTS_MULTIPLE_INSTANCES=y \
