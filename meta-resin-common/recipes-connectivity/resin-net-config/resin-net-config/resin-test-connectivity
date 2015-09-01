@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#
+# TEST: Check for connectivity on port 80 for some test URLs
+#
+
+source /var/lib/resin/resin-tests/resin-tests
+
+URL1="http://google.com"
+URL2="http://resin.io"
+
+wget -q --spider $URL1 > /dev/null 2>&1
+if [ "$?" != "0" ]; then
+    wget -q --spider $URL2 > /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+        log FAIL $0
+    fi
+fi
+
+log PASS $0

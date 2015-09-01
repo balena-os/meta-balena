@@ -8,12 +8,12 @@ PR = "r1.1"
 SRC_URI = " \
     file://resin-net-config \
     file://resin-net-config.service \
+    file://run-ptest \
+    file://resin-test-connectivity \
     "
 S = "${WORKDIR}"
 
-inherit allarch systemd
-
-PACKAGES = "${PN} ${PN}-flasher"
+inherit allarch systemd ptest-resin
 
 SYSTEMD_SERVICE_${PN} = "resin-net-config.service"
 RDEPENDS_${PN} = "bash jq mtools"
