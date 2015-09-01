@@ -8,9 +8,13 @@ SRC_URI_append = " \
     file://openvpn-resin.service \
     file://upscript.sh \
     file://downscript.sh \
+    file://run-ptest \
+    file://resin-test-vpn \
     "
 
 RDEPENDS_${PN} += "bash jq"
+
+inherit ptest-resin
 
 SYSTEMD_SERVICE_${PN} = " \
     openvpn-resin.service \

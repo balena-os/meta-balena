@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#
+# TEST: openvpn-resin.service is active
+#
+
+source /var/lib/resin/resin-tests/resin-tests
+
+check_if_service_is_active openvpn-resin.service
+if [ $? -ne 0 ]; then
+    log FAIL $0
+fi
+
+log PASS $0
