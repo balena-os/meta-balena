@@ -2,14 +2,14 @@ DESCRIPTION = "Resin Configuration file"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-PR = "r0"
-
 SRC_URI = " \
     file://resin-vars \
+    file://run-ptest \
+    file://resin-test-config-json \
     "
 S = "${WORKDIR}"
 
-inherit allarch
+inherit allarch ptest-resin
 
 FILES_${PN} = "${sbindir}"
 

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#
+# TEST: resin-supervisor.service is active
+#
+
+source /var/lib/resin/resin-tests/resin-tests
+
+# Check if resin vars exists and defines all needed variables
+if [ ! -f /usr/sbin/resin-vars ]; then
+    log FAIL $0
+fi
+source /usr/sbin/resin-vars
+if [ -z "$API_ENDPOINT" ] || [ -z "$LISTEN_PORT" ] || [ -z "$MIXPANEL_TOKEN" ] || [ -z "$PUBNUB_PUBLISH_KEY" ] || [ -z "$PUBNUB_SUBSCRIBE_KEY" ] || [ -z "$REGISTRY_ENDPOINT" ] || [ -z "$VPN_ENDPOINT" ]; then
+    log FAIL $0
+fi
+
+log PASS $0
