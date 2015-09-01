@@ -10,6 +10,7 @@ RESIN_STAGING_ADDONS = " \
     nano \
     alsa-utils \
     usbutils \
+    ptest-runner \
     "
 
 RDEPENDS_${PN} = " \
