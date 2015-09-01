@@ -126,7 +126,7 @@ fi
 
 IMAGE_FILE_SIZE=`wc -c $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE | awk '{print $1}'`
 
-resin-device-progress 0 "Starting internal eMMC flashing"
+resin-device-progress --percentage 0 --state "Starting internal eMMC flashing"
 
 while kill -USR1 $DD_PID; do
     sleep 3
@@ -135,7 +135,7 @@ while kill -USR1 $DD_PID; do
     fi
     IMAGE_WRITTEN_BYTES=`cat /tmp/dd_progress_log | awk 'END{print $1}'`
     let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE
-    resin-device-progress $RATIO "Flashing internal eMMC"
+    resin-device-progress --percentage $RATIO --state "Flashing internal eMMC"
     truncate -s 0 /tmp/dd_progress_log
 done
 
@@ -177,7 +177,7 @@ cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
 sync
 
 # umounts
-resin-device-progress 100 "Cleanup and reboot..." || true
+resin-device-progress --percentage 100 --state "Cleanup and reboot..." || true
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 

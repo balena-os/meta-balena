@@ -1,10 +1,13 @@
 [Unit]
 Description=Flasher conf partition mountpoint
+Requires=temp-conf.service tmp.mount
+After=temp-conf.service tmp.mount
 
 [Mount]
-What=/dev/disk/by-label/flash-conf
+What=/tmp/conf
 Where=/mnt/conf
-Type=vfat
+Type=none
+Options=bind
 
 [Install]
 WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[Unit]
+Description=Temporary resin config in /tmp/conf
+Requires=mnt-conforig.mount tmp.mount
+After=mnt-conforig.mount tmp.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=@BASE_BINDIR@/mkdir -p /tmp/conf
+ExecStart=@BASE_BINDIR@/cp -vf /mnt/conforig/config.json /tmp/conf/config.json
+
+[Install]
+WantedBy=multi-user.target
