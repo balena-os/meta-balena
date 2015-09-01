@@ -2,7 +2,7 @@
 include recipes-core/images/core-image-minimal.bb
 
 IMAGE_FEATURES_append = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'debug-tweaks', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'debug-tweaks ptest-pkgs', '', d)} \
     splash \
     ssh-server-dropbear \
     "
