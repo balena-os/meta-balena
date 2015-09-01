@@ -2,7 +2,11 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI += " \
     file://dropbear.socket \
     file://failsafe-sshkey.pub \
+    file://run-ptest \
+    file://resin-test-ssh \
     "
+
+inherit ptest-resin
 
 FILES_${PN} += "/home"
 

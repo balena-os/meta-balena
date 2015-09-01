@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#
+# TEST: Check if ssh connections are possible
+#
+
+source /var/lib/resin/resin-tests/resin-tests
+
+PORT=22222
+USER=root
+HOST=localhost
+
+ssh -y  -p $PORT $USER@$HOST exit > /dev/null 2>&1
+if [ "$?" != "0" ]; then
+    log FAIL $0
+fi
+
+log PASS $0
