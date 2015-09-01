@@ -9,9 +9,11 @@ SRC_URI_append = " \
     file://var-lib-rce.mount \
     file://rce.service \
     file://rce.socket \
+    file://run-ptest \
+    file://resin-test-rce \
     "
 
-inherit systemd
+inherit systemd ptest-resin
 
 SYSTEMD_SERVICE_${PN} = "rce.service rce.socket"
 
