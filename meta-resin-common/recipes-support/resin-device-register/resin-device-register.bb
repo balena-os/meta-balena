@@ -8,10 +8,12 @@ PR = "r2"
 SRC_URI = " \
     file://resin-device-register \
     file://resin-device-register.service \
+    file://run-ptest \
+    file://resin-test-device-registered \
     "
 S = "${WORKDIR}"
 
-inherit allarch systemd
+inherit allarch systemd ptest-resin
 
 RDEPENDS_${PN} = " \
     bash \
@@ -20,6 +22,11 @@ RDEPENDS_${PN} = " \
     resin-conf \
     connman \
     openssl \
+    "
+
+RDEPENDS_${PN}-ptest += " \
+    jq \
+    resin-conf \
     "
 
 SYSTEMD_SERVICE_${PN} = "resin-device-register.service"

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#
+# TEST: Device registration tests
+#
+
+source /var/lib/resin/resin-tests/resin-tests
+
+check_if_service_is_active resin-device-register.service
+if [ $? -ne 0 ]; then
+    log FAIL $0
+fi
+
+source /usr/sbin/resin-vars
+
+if [ ! -f "$CONFIG_PATH" ]; then
+    log FAIL $0
+fi
+
+uuid="$(jq '.uuid // empty' $CONFIG_PATH)"
+if [ -z "$uuid" ]; then
+    log FAIL $0
+fi
+
+log PASS $0
