@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#
+# Tiny wrapper for running ptest in resin subdirectory
+#
+ptest-runner resin

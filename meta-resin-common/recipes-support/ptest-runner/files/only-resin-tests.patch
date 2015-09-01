@@ -1,0 +1,31 @@
+Add the ability to run the tests from a specific subdirectory.
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Index: 1.0-r0/ptest-runner
+===================================================================
+--- 1.0-r0.orig/ptest-runner
++++ 1.0-r0/ptest-runner
+@@ -2,12 +2,19 @@
+ ANYFAILED=no
+ echo "START: $0"
+ 
++# Have the ability to run ptest-runner only in a specific subdirectory
++if [ -n "$1" ]; then
++    subdir="$1"
++else
++    subdir="."
++fi
++
+ for libdir in /usr/lib*
+ do
+ 
+     [ ! -d "$libdir" ] && continue
+ 
+-    for x in `ls -d $libdir/*/ptest 2>/dev/null`
++    for x in `ls -d $libdir/$subdir/*/ptest 2>/dev/null`
+     do
+         [ ! -f $x/run-ptest ] && continue
+         [ -h `dirname $x` ] && continue
