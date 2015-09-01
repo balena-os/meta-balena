@@ -1,0 +1,5 @@
+#!/bin/sh
+
+bash ./resin-test-supervisor
+bash ./resin-test-host-socket
+bash ./resin-test-rce-supervisor

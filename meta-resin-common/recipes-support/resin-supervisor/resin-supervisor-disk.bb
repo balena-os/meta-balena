@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 DEPENDS = "util-linux-native"
 
-inherit deploy systemd
+inherit deploy systemd ptest-resin
 
 PR = "r7"
 
@@ -17,6 +17,10 @@ SRC_URI = " \
     file://update-resin-supervisor \
     file://update-resin-supervisor.service \
     file://update-resin-supervisor.timer \
+    file://run-ptest \
+    file://resin-test-supervisor \
+    file://resin-test-host-socket \
+    file://resin-test-rce-supervisor \
     "
 S = "${WORKDIR}"
 
