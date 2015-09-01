@@ -63,7 +63,7 @@ inherit kernel-resin
 
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
-RESIN_CONFIGS ?= "rce brcmfmac systemd"
+RESIN_CONFIGS ?= "rce brcmfmac systemd leds-gpio"
 
 #
 # RCE specific kernel configuration
@@ -75,7 +75,9 @@ RESIN_CONFIGS_DEPS[rce] ?= " \
     CONFIG_IPV6=y \
     CONFIG_IP_NF_IPTABLES=y \
     CONFIG_NF_CONNTRACK=y \
-    CONFIG_NF_CONNTRACK_IPV4=y"
+    CONFIG_NF_CONNTRACK_IPV4=y \
+    CONFIG_NETFILTER=y \
+    "
 RESIN_CONFIGS[rce] ?= " \
     CONFIG_NAMESPACES=y \
     CONFIG_NET_NS=y \
@@ -107,6 +109,9 @@ RESIN_CONFIGS[rce] ?= " \
 # systemd specific kernel configuration options
 # see https://github.com/systemd/systemd/blob/master/README for an up-to-date list
 #
+RESIN_CONFIGS_DEPS[systemd] ?= " \
+    CONFIG_DMIID=y \
+    "
 RESIN_CONFIGS[systemd] ?= " \
     CONFIG_DEVTMPFS=y \
     CONFIG_CGROUPS=y \
@@ -121,7 +126,6 @@ RESIN_CONFIGS[systemd] ?= " \
     CONFIG_SYSFS_DEPRECATED=n \
     CONFIG_UEVENT_HELPER_PATH="" \
     CONFIG_FW_LOADER_USER_HELPER=n \
-    CONFIG_DMIID=y \
     CONFIG_BLK_DEV_BSG=y \
     CONFIG_NET_NS=y \
     CONFIG_DEVPTS_MULTIPLE_INSTANCES=y \
@@ -155,8 +159,23 @@ RESIN_CONFIGS[rtl8192cu] ?= "\
 # Official RPI WiFi adapter
 # http://thepihut.com/collections/new-products/products/official-raspberry-pi-wifi-adapter
 #
-RESIN_CONFIGS[brcmfmac] += " \
+RESIN_CONFIGS_DEPS[brcmfmac] ?= " \
+    CONFIG_CFG80211=m \
+    CONFIG_BRCMFMAC_USB=y \
+    "
+RESIN_CONFIGS[brcmfmac] ?= " \
     CONFIG_BRCMFMAC=m \
+    "
+
+#
+# Most of the resin supported boards have user controllable LEDs
+#
+RESIN_CONFIGS_DEPS[leds-gpio] ?= " \
+    CONFIG_NEW_LEDS=y \
+    CONFIG_LEDS_CLASS=y \
+    "
+RESIN_CONFIGS[leds-gpio] ?= " \
+    CONFIG_LEDS_GPIO=y \
     "
 
 ###########

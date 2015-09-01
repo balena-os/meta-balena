@@ -50,6 +50,11 @@ VAB820-QUAD_BBLAYERS += " \
     ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-vab820 \
     "
 
+ZC702_BBLAYERS += " \
+    ${TOPDIR}/../meta-xilinx \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-zc702 \
+    "
+
 BBLAYERS ?= " \
     ${CORE_BBLAYERS} \
     ${RASPBERRYPI_BBLAYERS} \
@@ -58,6 +63,7 @@ BBLAYERS ?= " \
     ${NITROGEN6X_BBLAYERS} \
     ${PARALLELLA_BBLAYERS} \
     ${VAB820-QUAD_BBLAYERS} \
+    ${ZC702_BBLAYERS} \
     "
 
 BBLAYERS_NON_REMOVABLE ?= " \
