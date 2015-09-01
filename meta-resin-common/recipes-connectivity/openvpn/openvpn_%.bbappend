@@ -6,6 +6,8 @@ SRC_URI_append = " \
     file://prepare-openvpn \
     file://prepare-openvpn.service \
     file://openvpn-resin.service \
+    file://upscript.sh \
+    file://downscript.sh \
     "
 
 RDEPENDS_${PN} += "bash jq resin-device-register"
@@ -19,6 +21,8 @@ SYSTEMD_AUTO_ENABLE = "enable"
 do_install_append() {
     install -d ${D}${sysconfdir}/openvpn
     install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/openvpn/resin.conf
+    install -m 0755 ${WORKDIR}/upscript.sh ${D}${sysconfdir}/openvpn/upscript.sh
+    install -m 0755 ${WORKDIR}/downscript.sh ${D}${sysconfdir}/openvpn/downscript.sh
     install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
