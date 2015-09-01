@@ -1,0 +1,59 @@
+#!/bin/bash
+
+TIMEOUT=10 # In seconds
+
+# Check if a service is active. If it's activating, wait TIMEOUT for it to become active.
+function check_if_service_is_active {
+    SERVICE=$1
+
+    local STARTTIME=$(date +%s)
+    local ENDTIME=$(date +%s)
+
+    while [ $(($ENDTIME - $STARTTIME)) -le $TIMEOUT ]; do
+        local status=$(systemctl is-active $SERVICE)
+        case $status in
+            activating|inactive)
+                sleep 1
+                ;;
+            active)
+                return 0
+                ;;
+            *)
+                return 1
+        esac
+
+        ENDTIME=$(date +%s)
+    done
+    return 2 # timeout
+}
+
+# ptest format log
+function log {
+    # Address log levels
+    case $1 in
+        PASS)
+            logflag=PASS
+            shift
+            ;;
+        FAIL)
+            logflag=FAIL
+            shift
+            ;;
+        SKIP)
+            logflag=SKIP
+            shift
+            ;;
+        *)
+            logflag=LOG
+            ;;
+    esac
+    printf "%s: %s\n" "$logflag" "$(basename $1)"
+    case $logflag in
+        PASS|SKIP)
+            exit 0
+            ;;
+        FAIL)
+            exit 1
+            ;;
+    esac
+}
