@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_append := "${THISDIR}/files:"
 SRC_URI_append = " \
-    file://only-resin-tests.patch \
+    file://only-resin-tests.patch;patchdir=${WORKDIR} \
     file://resin-ptest-runner \
     "
 
