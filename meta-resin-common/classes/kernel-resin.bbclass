@@ -63,7 +63,14 @@ inherit kernel-resin
 
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
-RESIN_CONFIGS ?= "rce brcmfmac ralink systemd leds-gpio"
+RESIN_CONFIGS ?= " \
+    rce \
+    brcmfmac \
+    ralink \
+    r8188eu \
+    systemd \
+    leds-gpio \
+    "
 
 #
 # RCE specific kernel configuration
@@ -153,6 +160,15 @@ RESIN_CONFIGS[rtl8192cu] ?= "\
     CONFIG_CFG80211_WEXT=y \
     CONFIG_WIRELESS_EXT=y \
     CONFIG_WEXT_PRIV=y \
+    "
+
+# Activate R8188EU driver
+RESIN_CONFIGS_DEPS[r8188eu] ?= "\
+    CONFIG_STAGING=y \
+    "
+RESIN_CONFIGS[r8188eu] ?= "\
+    CONFIG_R8188EU=m \
+    CONFIG_88EU_AP_MODE=y \
     "
 
 # rt53xx wireless chipset family to the rt2800usb driver.
