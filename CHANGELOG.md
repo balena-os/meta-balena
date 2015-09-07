@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add ptest support along with some basic tests
 * Make openvpn report connected status by creating a file [Praneeth]
 * Fetch resin instance variables from config.json (eg API endpoint) [Theodor]
 * Removed unused package management features [Andrei]
