@@ -5,12 +5,10 @@ Requires=\
     resin\x2ddata.mount
 Wants=\
     connman.service \
-    resin-device-register.service
 After=\
     rce.service \
     resin\x2ddata.mount \
     connman.service \
-    resin-device-register.service
 
 [Service]
 Type=oneshot
