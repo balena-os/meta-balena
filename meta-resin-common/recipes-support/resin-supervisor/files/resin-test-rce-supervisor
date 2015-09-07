@@ -6,7 +6,7 @@
 
 source /var/lib/resin/resin-tests/resin-tests
 
-state=$(rce inspect --format="{{ .State.Running }}"  resin_supervisor 2>&1)
+state=$(rce inspect --format="{{ .State.Running }}" resin_supervisor 2>&1)
 if [ "$state" == "true" ]; then
     log FAIL $0
 fi
