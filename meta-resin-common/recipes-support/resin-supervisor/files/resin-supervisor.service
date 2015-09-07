@@ -4,11 +4,11 @@ Requires=\
     rce.service \
     resin\x2ddata.mount
 Wants=\
-    connman.service \
+    connman.service
 After=\
     rce.service \
     resin\x2ddata.mount \
-    connman.service \
+    connman.service
 
 [Service]
 Type=oneshot
