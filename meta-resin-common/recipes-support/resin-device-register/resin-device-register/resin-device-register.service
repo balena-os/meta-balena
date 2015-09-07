@@ -4,8 +4,7 @@ Requires=connman.service mnt-conf.mount
 After=connman.service mnt-conf.mount
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-register
 
 [Install]

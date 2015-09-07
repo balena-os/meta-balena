@@ -50,7 +50,6 @@ RDEPENDS_${PN} = " \
     coreutils \
     socat \
     resin-conf \
-    resin-device-register \
     "
 
 # Check if host can reach a specific URL

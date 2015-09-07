@@ -2,8 +2,8 @@
 Description=Resin init flasher service
 Requires=\
     boot.mount \
-    mnt-conf.mount \
-    resin-device-register.service
+    mnt-conf.mount
+Wants=resin-device-register.service
 After=\
     boot.mount \
     mnt-conf.mount \
