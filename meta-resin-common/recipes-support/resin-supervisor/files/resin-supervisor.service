@@ -23,6 +23,7 @@ ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
     --net=host \
     -v /var/run/rce.sock:/run/docker.sock \
     -v $CONFIG_PATH:/boot/config.json  \
+    -v /mnt/data/apps.json:/boot/apps.json \
     -v /resin-data/resin-supervisor:/data \
     -v /proc/net/fib_trie:/mnt/fib_trie \
     -v /var/log/supervisor-log:/var/log \
