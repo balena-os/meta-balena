@@ -28,7 +28,7 @@ BEAGLEBONE_BBLAYERS += " \
 NUC_BBLAYERS += " \
     ${TOPDIR}/../meta-intel \
     ${TOPDIR}/../meta-intel/meta-nuc \
-    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-nuc \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-intel \
     "
 
 NITROGEN6X_BBLAYERS += " \

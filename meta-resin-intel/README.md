@@ -1,7 +1,7 @@
-# Resin.io layer for nuc boards
+# Resin.io layer for Intel boards
 
 ## Description
-This repository enables building resin.io for Intel NUC machines.
+This repository enables building resin.io for Intel machines.
 
 ## Supported machines
 * nuc
