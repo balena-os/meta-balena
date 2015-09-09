@@ -28,10 +28,13 @@ RDEPENDS_${PN} = " \
 RESIN_IMAGE ?= "resin-image-${MACHINE}.resin-sdcard"
 
 do_install() {
-    if [[ -z "${BOARD_BOOTLOADER}" || -z "${INTERNAL_DEVICE_KERNEL}" || -z "${INTERNAL_DEVICE_UBOOT}" ]]; then
+    if [[ -z "${BOARD_BOOTLOADER}" || -z "${INTERNAL_DEVICE_KERNEL}" ]]; then
         bbfatal "One or more needed variables are not available in resin-init-flasher. \
             Usually these are provided with a bbappend. This can also mean that this \
             image is not usable for your selected MACHINE (${MACHINE})."
+    fi
+    if [[ "${BOARD_BOOTLOADER}" == "u-boot" && -z "${INTERNAL_DEVICE_UBOOT}" ]]; then
+        bbfatal "INTERNAL_DEVICE_UBOOT must be defined."
     fi
 
     install -d ${D}${bindir}
