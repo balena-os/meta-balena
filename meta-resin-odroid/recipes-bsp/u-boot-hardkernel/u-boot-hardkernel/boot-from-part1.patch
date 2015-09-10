@@ -1,0 +1,25 @@
+The rootfs in Resin OS is on the second partition while we have the boot bits in the
+first partition. So make sure kernel uses *p2 as rootfs and reads linux and dtb from *p1
+(which has a fat filesystem hence we need to use fatload).
+
+Upstream-Status: Inappropriate [configuration]
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Index: v2011.03+gitAUTOINC+f631c80969-r7/boot.ini
+===================================================================
+--- v2011.03+gitAUTOINC+f631c80969-r7.orig/boot.ini
++++ v2011.03+gitAUTOINC+f631c80969-r7/boot.ini
+@@ -62,9 +62,9 @@ setenv hdmioutput "1"
+ if test "${hpd}" = "0"; then setenv hdmi_hpd "disablehpd=true"; fi
+ if test "${cec}" = "1"; then setenv hdmi_cec "hdmitx=cecf"; fi
+ 
+-setenv bootargs "console=ttyS0,115200n8 console=tty0 root=/dev/mmcblk0p1 rootwait rw no_console_suspend vdaccfg=0xa000 logo=osd1,loaded,0x7900000,720p,full dmfc=3 cvbsmode=576cvbs hdmimode=${m} m_bpp=${m_bpp} vout=${vout_mode} ${disableuhs} ${hdmi_hpd} ${hdmi_cec}"
+-ext4load mmc 0:1 0x21000000 /boot/uImage
+-ext4load mmc 0:1 0x21800000 /boot/meson8b_odroidc.dtb
++setenv bootargs "console=ttyS0,115200n8 console=tty0 root=/dev/mmcblk0p2 rootwait rw no_console_suspend vdaccfg=0xa000 logo=osd1,loaded,0x7900000,720p,full dmfc=3 cvbsmode=576cvbs hdmimode=${m} m_bpp=${m_bpp} vout=${vout_mode} ${disableuhs} ${hdmi_hpd} ${hdmi_cec}"
++fatload mmc 0:1 0x21000000 /uImage
++fatload mmc 0:1 0x21800000 /meson8b_odroidc.dtb
+ fdt addr 21800000
+ 
+ if test "${vpu}" = "0"; then fdt rm /mesonstream; fdt rm /vdec; fdt rm /ppmgr; fi
