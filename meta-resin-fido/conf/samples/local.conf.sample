@@ -8,6 +8,8 @@
 #MACHINE ?= "nuc"
 #MACHINE ?= "vab820-quad"
 #MACHINE ?= "zc702-zynq7"
+#MACHINE ?= "odroid-c1"
+#MACHINE ?= "odroid-ux3"
 
 # RaspberryPi specific variables
 GPU_MEM = "16"
