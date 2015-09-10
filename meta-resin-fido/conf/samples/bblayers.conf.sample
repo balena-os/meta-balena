@@ -55,6 +55,11 @@ ZC702_BBLAYERS += " \
     ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-zc702 \
     "
 
+ODROID_BBLAYERS += " \
+    ${TOPDIR}/../meta-odroid \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-odroid \
+    "
+
 BBLAYERS ?= " \
     ${CORE_BBLAYERS} \
     ${RASPBERRYPI_BBLAYERS} \
@@ -64,6 +69,7 @@ BBLAYERS ?= " \
     ${PARALLELLA_BBLAYERS} \
     ${VAB820-QUAD_BBLAYERS} \
     ${ZC702_BBLAYERS} \
+    ${ODROID_BBLAYERS} \
     "
 
 BBLAYERS_NON_REMOVABLE ?= " \
