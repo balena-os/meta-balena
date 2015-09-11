@@ -7,6 +7,7 @@ do_install_append() {
 		echo "Staging environment"
 	else
 		rm -rf ${D}${systemd_unitdir}/system/serial-getty@.service
+		mkdir -p ${D}${systemd_unitdir}/system
 		touch ${D}${systemd_unitdir}/system/serial-getty@.service
 		rm -rf ${D}${sysconfdir}/systemd/system/getty.target.wants/serial-getty*
 	fi
