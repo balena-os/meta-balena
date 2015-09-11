@@ -1,8 +1,21 @@
 Change log
 -----------
 
+# 2015-09-11
+
+* Add support for C1+ and XU4 ODROID boards [Andrei]
+* Remove device registration in resin-image [Andrei]
+* Add support for r8188eu [Andrei]
+* Add support for Ralink RT5370 [Jon]
 * Make openvpn report connected status by creating a file [Praneeth]
+* Add support for ZC702 boards [Andrei]
+* config.json doesn't change anymore on flasher images [Andrei]
+* Add support for VIA VAB820 boards [Jon]
 * Fetch resin instance variables from config.json (eg API endpoint) [Theodor]
+* We don't load 1-wire driver at boot anymore [Andrei]
+* WiFi can now be configured from config.json - at every boot connman configuration will be redone based on config.json [Andrei]
+* Bring in support for capemgr on beaglebone black [Andrei]
+* Add firmware files for iwlwifi wireless chipsets [Jon]
 * Removed unused package management features [Andrei]
 * Add support for multiple yocto versions [Andrei]
 
