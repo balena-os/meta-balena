@@ -1,7 +1,7 @@
 Change log
 -----------
 
-# 2015-09-11
+# 2015-09-13
 
 * Add support for C1+ and XU4 ODROID boards [Andrei]
 * Remove device registration in resin-image [Andrei]
