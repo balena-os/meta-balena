@@ -10,6 +10,7 @@
 #MACHINE ?= "zc702-zynq7"
 #MACHINE ?= "odroid-c1"
 #MACHINE ?= "odroid-ux3"
+#MACHINE ?= "ts4900"
 
 # RaspberryPi specific variables
 GPU_MEM = "16"
