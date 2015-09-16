@@ -1,0 +1,3 @@
+setenv uimage /uImage
+setenv bootargs root=/dev/mmcblk1p2 rootwait rw console=ttymxc0,115200 enable_wait_mode=off
+if load mmc 0:1 ${fdtaddr} /imx6${cpu}-ts4900-${baseboardid}.dtb; then echo $baseboardid detected; else echo Booting default device tree; load mmc 0:1 ${fdtaddr} /imx6${cpu}-ts4900.dtb; fi; load mmc 0:1 ${loadaddr} /ts4900-fpga.bin; ice40 ${loadaddr} ${filesize}; load mmc 0:1 ${loadaddr} ${uimage};; bootm ${loadaddr} - ${fdtaddr};
