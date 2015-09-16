@@ -7,21 +7,27 @@
 #   * all needed variables are configured in resin-init-flasher.conf                     #
 #   * filesystems labeling scheme is persistent (flasher-*/resin-*)                      #
 # Variables in resin-init-flasher.conf                                                   #
-#   INTERNAL_DEVICE_KERNEL      - internal device (enumerated by kernel) to be flashed   #
+#  INTERNAL_DEVICE_KERNEL       - internal device (enumerated by kernel) to be flashed   #
 #                                   * it's impossible to known what dev to flash because #
 #                                     we don't have any labels before flashing something #
 #                                     so we need this info                               #
-#   BOARD_BOOTLOADER            - bootloader used by the target board                    #
+#  BOARD_BOOTLOADER             - bootloader used by the target board                    #
 #                                   * can be either u-boot or grub-efi for the moment    #
-#   INTERNAL_DEVICE_UBOOT       - internal device as enumerated by uboot                 #
+#  INTERNAL_DEVICE_UBOOT        - internal device as enumerated by uboot                 #
 #                                   * we need to know how uboot enumerates the mmc       #
 #                                     device so we can instruct uboot to load kernel     #
 #                                     from there                                         #
-#   RESIN_IMAGE                 - image to be flashed on internal device                 #
+#  RESIN_IMAGE                  - image to be flashed on internal device                 #
 #                                   * this is defaulted to                               #
 #                                     resin-image-${MACHINE}.resin-sdcard and should be  #
 #                                     just fine                                          #
-#                                                                                        #
+#  BOOTLOADER_FLASH_DEVICE      - device where bootloader binary will be flashed         #
+#                                   * this variable should be set together with          #
+#                                     BOOTLOADER_IMAGE                                   #
+#                                   * if this variable is not set we DO NOT flash u-boot #
+#                                     to internal flash device                           #
+#  BOOTLOADER_IMAGE             - name of the u-boot binary                              #
+#  BOOTLOADER_BLOCK_SIZE_OFFSET - offset at which we write u-boot binary                 #
 ##########################################################################################
 
 # Very long variables :)
@@ -139,13 +145,24 @@ while kill -USR1 $DD_PID; do
     truncate -s 0 /tmp/dd_progress_log
 done
 
-# Many syncs
 sync
 
 # Trigger udev
 partprobe /dev/$INTERNAL_DEVICE_KERNEL
 udevadm trigger
 udevadm settle
+
+# Flash bootloader
+if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
+    if [ -n "$BOOTLOADER_IMAGE" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET" ]; then
+        dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE} of=/dev/${BOOTLOADER_FLASH_DEVICE} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET} seek=1
+        inform "Flashed u-boot image to internal flash"
+    else
+        fail "BOOTLOADER_IMAGE and/or BOOTLOADER_BLOCK_SIZE_OFFSET are not set."
+    fi
+else
+    inform "No need to flash bootloader to a specific device."
+fi
 
 # Mount internal device boot partition to write bootloader config file on it
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
@@ -180,6 +197,9 @@ sync
 resin-device-progress --percentage 100 --state "Cleanup and reboot..." || true
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
+
+# Mark flashing device as done (should be remove in the future for multiple provisionings)
+touch ${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/remove_to_reprovision
 
 inform "Rebooting..."
 reboot
