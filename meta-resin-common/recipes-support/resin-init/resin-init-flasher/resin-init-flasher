@@ -57,11 +57,6 @@ function prepare_uboot {
         fail "Failed to write uEnv on disk labeled as 'resin-boot'"
     fi
     inform "Wrote uEnv on disk labeled as 'resin-boot'"
-
-    if ! echo -e ${UBOOT_FROM_EMMC} > $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
-        fail "Failed to write uEnv on disk labeled as 'flasher-boot'"
-    fi
-    inform "Wrote uEnv on disk labeled as 'flasher-boot'"
 }
 
 function prepare_grub_efi {
@@ -134,7 +129,7 @@ fi
 
 IMAGE_FILE_SIZE=`wc -c $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE | awk '{print $1}'`
 
-resin-device-progress --percentage 0 --state "Starting internal eMMC flashing"
+resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media"
 
 while kill -USR1 $DD_PID; do
     sleep 3
@@ -143,7 +138,7 @@ while kill -USR1 $DD_PID; do
     fi
     IMAGE_WRITTEN_BYTES=`cat /tmp/dd_progress_log | awk 'END{print $1}'`
     let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE
-    resin-device-progress --percentage $RATIO --state "Flashing internal eMMC"
+    resin-device-progress --percentage $RATIO --state "Flashing resin.io on internal media"
     truncate -s 0 /tmp/dd_progress_log
 done
 
@@ -175,7 +170,7 @@ fi
 
 case $BOARD_BOOTLOADER in
     u-boot)
-        # we need to write our uEnv.txt to the internal and external boot partitions
+        # we need to write our uEnv.txt to the internal boot partition
         prepare_uboot
         ;;
     grub-efi)
@@ -196,14 +191,14 @@ cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
 sync
 
 # umounts
-resin-device-progress --percentage 100 --state "Cleanup and reboot..." || true
+resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 
 # Mark flashing device as done (should be remove in the future for multiple provisionings)
 echo "resin-init-flasher: done" > ${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/remove_to_reprovision
 
-inform "Rebooting..."
-reboot
+inform "Shutting down ..."
+shutdown -h now
 
 exit 0

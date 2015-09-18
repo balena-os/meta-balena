@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Changed flasher to shutdown instead of reboot [Jon]
+
 # 2015-11-02
 
 * Fix DNS issues with openvpn [Andrei]
