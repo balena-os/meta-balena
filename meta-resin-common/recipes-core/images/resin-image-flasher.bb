@@ -2,7 +2,7 @@
 include recipes-core/images/core-image-minimal.bb
 
 # Make sure we have enough space in boot partition
-BOOT_SPACE = "1572864"
+RESIN_BOOT_SPACE = "1638400"
 
 # Make sure you have the resin image ready
 IMAGE_DEPENDS_resin-sdcard_append = " resin-image:do_rootfs"

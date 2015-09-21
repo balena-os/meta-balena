@@ -8,7 +8,7 @@ inherit image_types
 #
 # Optional:
 # RESIN_SDIMG_ROOTFS_TYPE 	- rootfs image to be used [default: ext3]
-# BOOT_SPACE			- size of boot partition in KiB [default: 20480]
+# RESIN_BOOT_SPACE		- size of boot partition in KiB [default: 40960]
 # RESIN_SDIMG_COMPRESSION	- define this to compress the final SD image with gzip, xz or bzip2 [default: empty]
 
 #
@@ -17,8 +17,8 @@ inherit image_types
 # The disk layout used is:
 #
 #    0                      -> IMAGE_ROOTFS_ALIGNMENT         - reserved for other data
-#    IMAGE_ROOTFS_ALIGNMENT -> BOOT_SPACE                     - boot partition (usually kernel and bootloaders)
-#    BOOT_SPACE             -> ROOTFS_SIZE                    - rootfs
+#    IMAGE_ROOTFS_ALIGNMENT -> RESIN_BOOT_SPACE               - boot partition (usually kernel and bootloaders)
+#    RESIN_BOOT_SPACE       -> ROOTFS_SIZE                    - rootfs
 #    ROOTFS_SIZE            -> UPDATE_SIZE                    - update partition (this is a duplicate of rootfs so UPDATE_SIZE == ROOTFS_SIZE)
 #    UPDATE_SIZE            -> SDIMG_SIZE                     - extended partition
 #
@@ -29,15 +29,15 @@ inherit image_types
 #    IMAGE_ROOTFS_ALIGNMENT -> SDIMG_SIZE                     - btrfs partition
 
 #
-#            4MiB              20MiB        ROOTFS_SIZE       ROOTFS_SIZE              4MiB                16MiB                4MiB                4MiB
-# <-----------------------> <----------> <----------------> <--------------->  <----------------------> <------------> <-----------------------> <------------>
+#            4MiB                  40MiB          ROOTFS_SIZE       ROOTFS_SIZE              4MiB                16MiB                4MiB                4MiB
+# <-----------------------> <----------------> <----------------> <--------------->  <----------------------> <------------> <-----------------------> <------------>
 #  ------------------------ ------------ ------------------ -----------------  ================================================================================
-# | IMAGE_ROOTFS_ALIGNMENT | BOOT_SPACE | ROOTFS_SIZE      |  ROOTFS_SIZE    || IMAGE_ROOTFS_ALIGNMENT || CONFIG_SIZE || IMAGE_ROOTFS_ALIGNMENT || BTRFS_SIZE  ||
-#  ------------------------ ------------ ------------------ -----------------  ================================================================================
-# ^                        ^            ^                  ^                 ^^                        ^^             ^^                        ^^             ^^
-# |                        |            |                  |                 ||                        ||             ||                        ||             ||
-# 0                      4MiB         4MiB +             4MiB +            4MiB +                      4MiB +         4MiB +                    4MiB +         4MiB +
-#                                     20Mib              20MiB +           20MiB +                     20MiB +        20MiB +                   20MiB +        20MiB +
+# | IMAGE_ROOTFS_ALIGNMENT | RESIN_BOOT_SPACE | ROOTFS_SIZE      |  ROOTFS_SIZE    || IMAGE_ROOTFS_ALIGNMENT || CONFIG_SIZE || IMAGE_ROOTFS_ALIGNMENT || BTRFS_SIZE  ||
+#  ------------------------ ------------------ ------------------ -----------------  ================================================================================
+# ^                        ^                  ^                  ^                 ^^                        ^^             ^^                        ^^             ^^
+# |                        |                  |                  |                 ||                        ||             ||                        ||             ||
+# 0                      4MiB               4MiB +             4MiB +            4MiB +                      4MiB +         4MiB +                    4MiB +         4MiB +
+#                                           20Mib              40MiB +           40MiB +                     40MiB +        40MiB +                   40MiB +        40MiB +
 #                                                        ROOTFS_SIZE       ROOTFS_SIZE +               ROOTFS_SIZE +  ROOTFS_SIZE +             ROOTFS_SIZE +  ROOTFS_SIZE +
 #                                                                          ROOTFS_SIZE                 ROOTFS_SIZE +  ROOTFS_SIZE +             ROOTFS_SIZE +  ROOTFS_SIZE +
 #                                                                                                      4MiB           4MiB +                    4MiB +         4MiB +
@@ -56,7 +56,7 @@ RESIN_CONFIG_FS_LABEL ?= "resin-conf"
 RESIN_DATA_FS_LABEL ?= "resin-data"
 
 # Boot partition size [in KiB] (will be rounded up to IMAGE_ROOTFS_ALIGNMENT)
-BOOT_SPACE ?= "20480"
+RESIN_BOOT_SPACE ?= "40960"
 
 # Set alignment to 4MB [in KiB]
 IMAGE_ROOTFS_ALIGNMENT = "4096"
@@ -99,8 +99,8 @@ CONFIG_SIZE = "20480"
 
 IMAGE_CMD_resin-sdcard () {
 	# Align partitions
-	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE} \+ ${IMAGE_ROOTFS_ALIGNMENT} - 1)
-	BOOT_SPACE_ALIGNED=$(expr ${BOOT_SPACE_ALIGNED} \- ${BOOT_SPACE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
+	RESIN_BOOT_SPACE_ALIGNED=$(expr ${RESIN_BOOT_SPACE} \+ ${IMAGE_ROOTFS_ALIGNMENT} - 1)
+	RESIN_BOOT_SPACE_ALIGNED=$(expr ${RESIN_BOOT_SPACE_ALIGNED} \- ${RESIN_BOOT_SPACE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
 	ROOTFS_SIZE=`du -bks ${RESIN_SDIMG_ROOTFS} | awk '{print $1}'`
 	if [ -n "${BTRFS_IMAGE}" ]; then
 		BTRFS_SPACE=`du -bks ${BTRFS_IMAGE} | awk '{print $1}'`
@@ -119,9 +119,9 @@ IMAGE_CMD_resin-sdcard () {
 	# Config alignment
 	CONFIG_SIZE_ALIGNED=$(expr ${CONFIG_SIZE} \+ ${IMAGE_ROOTFS_ALIGNMENT} \- 1)
 	CONFIG_SIZE_ALIGNED=$(expr ${CONFIG_SIZE_ALIGNED} \- ${CONFIG_SIZE_ALIGNED} \% ${IMAGE_ROOTFS_ALIGNMENT})
-	SDIMG_SIZE=$(expr 3 \* ${IMAGE_ROOTFS_ALIGNMENT} \+ ${BOOT_SPACE_ALIGNED} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${BTRFS_SIZE_ALIGNED} \+ ${CONFIG_SIZE_ALIGNED})
+	SDIMG_SIZE=$(expr 3 \* ${IMAGE_ROOTFS_ALIGNMENT} \+ ${RESIN_BOOT_SPACE_ALIGNED} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${BTRFS_SIZE_ALIGNED} \+ ${CONFIG_SIZE_ALIGNED})
 
-	echo "Creating filesystem with Boot partition ${BOOT_SPACE_ALIGNED} KiB, RootFS ${ROOTFS_SIZE_ALIGNED} KiB, UpdateFS ${UPDATE_SIZE_ALIGNED} KiB, Config ${CONFIG_SIZE_ALIGNED} KiB and BTRFS ${BTRFS_SIZE_ALIGNED} KiB"
+	echo "Creating filesystem with Boot partition ${RESIN_BOOT_SPACE_ALIGNED} KiB, RootFS ${ROOTFS_SIZE_ALIGNED} KiB, UpdateFS ${UPDATE_SIZE_ALIGNED} KiB, Config ${CONFIG_SIZE_ALIGNED} KiB and BTRFS ${BTRFS_SIZE_ALIGNED} KiB"
 	echo "Total SD card size ${SDIMG_SIZE} KiB"
 
 	# Initialize sdcard image file
@@ -132,7 +132,7 @@ IMAGE_CMD_resin-sdcard () {
 
 	# Define START and END; so the parted commands don't get too crowded
 	START=${IMAGE_ROOTFS_ALIGNMENT}
-	END=$(expr ${START} \+ ${BOOT_SPACE_ALIGNED})
+	END=$(expr ${START} \+ ${RESIN_BOOT_SPACE_ALIGNED})
 	# Create boot partition and mark it as bootable
 	parted -s ${RESIN_SDIMG} unit KiB mkpart primary fat32 ${START} ${END}
 	parted -s ${RESIN_SDIMG} set 1 boot on
@@ -197,12 +197,12 @@ IMAGE_CMD_resin-sdcard () {
 	# Burn Boot Partition
 	dd if=${WORKDIR}/boot.img of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
 	# Burn Rootfs Partition
-	dd if=${RESIN_SDIMG_ROOTFS} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+	dd if=${RESIN_SDIMG_ROOTFS} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
     # Burn Config Partition
-    dd if=${WORKDIR}/config.img of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+    dd if=${WORKDIR}/config.img of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 	# Burn BTRFS Partition
 	if [ -n "${BTRFS_IMAGE}" ]; then
-		dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
+		dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 	fi
 }
 

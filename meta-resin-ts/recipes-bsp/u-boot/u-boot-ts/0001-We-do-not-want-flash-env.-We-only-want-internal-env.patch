@@ -1,0 +1,39 @@
+From f0e2358085b948ae8a715ea7042509640e5a96bd Mon Sep 17 00:00:00 2001
+From: Theodor Gherzan <theodor@resin.io>
+Date: Fri, 11 Sep 2015 14:08:15 +0200
+Subject: [PATCH] Don't use environment as we rely on internal variables
+
+Signed-off-by: Theodor Gherzan <theodor@resin.io>
+---
+ include/configs/ts4900.h | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/include/configs/ts4900.h b/include/configs/ts4900.h
+index 6a4e113..78f2b8d 100644
+--- a/include/configs/ts4900.h
++++ b/include/configs/ts4900.h
+@@ -312,19 +312,9 @@
+ #define CONFIG_SYS_NO_FLASH
+ 
+ #define CONFIG_ENV_SIZE			(8 * 1024)
+-#define CONFIG_ENV_IS_IN_SPI_FLASH
+-#define CONFIG_ENV_OFFSET		0x100000
+-#define CONFIG_ENV_SECT_SIZE	(4 * 1024)
+-#define CONFIG_SF_DEFAULT_BUS  0
+-#define CONFIG_SF_DEFAULT_CS   0
+-#define CONFIG_SF_DEFAULT_SPEED 15000000
+-#define CONFIG_SF_DEFAULT_MODE (SPI_MODE_0)
+-
+-#define CONFIG_ENV_SPI_BUS		CONFIG_SF_DEFAULT_BUS
+-#define CONFIG_ENV_SPI_CS		CONFIG_SF_DEFAULT_CS
+-#define CONFIG_ENV_SPI_MODE		CONFIG_SF_DEFAULT_MODE
+-#define CONFIG_ENV_SPI_MAX_HZ	CONFIG_SF_DEFAULT_SPEED
++
+ #define CONFIG_CMD_SPI
++#define CONFIG_ENV_IS_NOWHERE
+ 
+ #define CONFIG_OF_LIBFDT
+ #define CONFIG_CMD_BOOTZ
+-- 
+2.1.4
+
