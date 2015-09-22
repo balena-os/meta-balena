@@ -24,6 +24,8 @@ do_deploy () {
     install ${S}/boot.ub ${DEPLOYDIR}/
 }
 
+do_deploy[dirs] += "${WORKDIR}"
+
 addtask deploy after do_install before do_build
 
 do_compile[noexec] = "1"
