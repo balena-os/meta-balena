@@ -50,6 +50,8 @@ RDEPENDS_${PN} = " \
     coreutils \
     socat \
     resin-conf \
+    systemd \
+    curl \
     "
 
 # Check if host can reach a specific URL
