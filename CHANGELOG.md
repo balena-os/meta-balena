@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Fix supervisor update missing dependencies [Andrei]
+
 # 2015-09-13
 
 * Add support for C1+ and XU4 ODROID boards [Andrei]
