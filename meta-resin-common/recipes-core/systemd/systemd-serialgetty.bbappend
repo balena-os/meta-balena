@@ -8,5 +8,7 @@ do_install_append() {
         echo "Staging environment"
     else
         find ${D} -name "serial-getty@*.service" -delete
+        # We will need to delete empty directory to avoid installed vs shipped QA issue
+        find ${D} -empty -type d -delete
     fi
 }
