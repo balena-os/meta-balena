@@ -5,3 +5,8 @@ do_install_append() {
     sed -i -e 's/.*RuntimeMaxUse.*/RuntimeMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
     sed -i -e 's/.*Storage.*/Storage=volatile/' ${D}${sysconfdir}/systemd/journald.conf
 }
+
+PACKAGECONFIG_remove = "resolved"
+
+# add the following package config here because the edison systemd recipe, which is on daisy, does not implicitly contain it
+PACKAGECONFIG[resolved] = "--enable-resolved,--disable-resolved"
