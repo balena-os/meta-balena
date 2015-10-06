@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Change git repo used for VIA arm boards [Jon]
 * Fix supervisor update missing dependencies [Andrei]
 
 # 2015-09-13

@@ -1,7 +1,7 @@
-# Resin.io layer for vab820-quad boards
+# Resin.io layer for VIA arm boards
 
 ## Description
-This repository enables building resin.io for VIA vab 820 quad machines.
+This repository enables building resin.io for VIA arm machines.
 
 ## Supported machines
 * vab820-quad
@@ -20,6 +20,6 @@ This layer depends on:
 * URI: git://github.org/Freescale/meta-fsl-arm-extra
     * branch: fido
     * revision: bf73e3b4f36dc93766c432e64f4590aee13c790d
-* URI: git://github.com/imrehg/meta-vab820-bsp
+* URI: https://github.com/viaembedded/meta-via-arm/
     * branch: fido
-    * revision: 4aeab87e974fb1b2e934d367b6d977a4d350bd0f
+    * revision: 8e1adf08f9144561cfbf99e78bc1016e64acaf29

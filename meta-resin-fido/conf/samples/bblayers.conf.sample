@@ -46,8 +46,8 @@ PARALLELLA_BBLAYERS += " \
 VAB820-QUAD_BBLAYERS += " \
     ${TOPDIR}/../meta-fsl-arm \
     ${TOPDIR}/../meta-fsl-arm-extra \
-    ${TOPDIR}/../meta-vab820-bsp \
-    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-vab820 \
+    ${TOPDIR}/../meta-via-arm \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-via-arm \
     "
 
 ZC702_BBLAYERS += " \
