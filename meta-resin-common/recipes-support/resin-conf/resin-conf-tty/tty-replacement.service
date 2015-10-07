@@ -1,0 +1,11 @@
+[Unit]
+Description=Resin TTY replacement
+After=resin-supervisor.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/bash @BASE_BINDIR@/tty-replacement
+
+[Install]
+WantedBy=multi-user.target
