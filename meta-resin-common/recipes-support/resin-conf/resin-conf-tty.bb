@@ -17,7 +17,7 @@ inherit allarch systemd
 RDEPENDS_${PN} = " \
     bash \
     "
-SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-stagin', 'tty-replacement.service', '', d)}"
+SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', '', 'tty-replacement.service', d)}"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
@@ -29,16 +29,14 @@ do_install() {
        install -d ${D}${base_bindir}/
        install -m 0755 ${WORKDIR}/tty-replacement ${D}${base_bindir}/
 
-       if ${@bb.utils.contains('DISTRO_FEATURES','systemd','false','true',d)}; then
-           sed -i 's|getty 38400|getty -n -l /bin/tty-replacement 38400|g' ${D}${sysconfdir}/inittab      
-       else
+       if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
            install -d ${D}${systemd_unitdir}/system
            install -c -m 0644 ${WORKDIR}/tty-replacement.service ${D}${systemd_unitdir}/system
 
-             sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
-                 -e 's,@SBINDIR@,${sbindir},g' \
-                 -e 's,@BINDIR@,${bindir},g' \
-                 ${D}${systemd_unitdir}/system/*.service
+           sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+               -e 's,@SBINDIR@,${sbindir},g' \
+               -e 's,@BINDIR@,${bindir},g' \
+               ${D}${systemd_unitdir}/system/*.service
        fi       
    fi
 }
