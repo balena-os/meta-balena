@@ -17,4 +17,5 @@ RDEPENDS_${PN} += " \
     resin-btrfs-expand \
     resin-logs \
     resin-extend-expand \
+    resin-conf-tty \
     "
