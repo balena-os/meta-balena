@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Move to common code the resin-sdcard addition for flasher boards [Jon]
 * Change git repo used for VIA arm boards [Jon]
 * Fix supervisor update missing dependencies [Andrei]
 
