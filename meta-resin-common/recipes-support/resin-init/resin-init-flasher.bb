@@ -51,8 +51,8 @@ do_install() {
 
     # If bootloader needs to be flashed, we require the bootloader name and write offset
     if [ -n "${BOOTLOADER_FLASH_DEVICE}" ]; then
-        if [ -z "${BOOTLOADER_IMAGE}" || -z "${BOOTLOADER_BLOCK_SIZE_OFFSET}" ]]; then
-            bbfatal "BOOTLOADER_FLASH_DEVICE requires BOOTLOADER_IMAGE and BOOTLOADER_BLOCK_SIZE_OFFSET."
+        if [ -z "${BOOTLOADER_IMAGE}" || -z "${BOOTLOADER_BLOCK_SIZE_OFFSET}" || -z "${BOOTLOADER_SKIP_OUTPUT_BLOCKS}" ]]; then
+            bbfatal "BOOTLOADER_FLASH_DEVICE requires BOOTLOADER_IMAGE, BOOTLOADER_BLOCK_SIZE_OFFSET and BOOTLOADER_SKIP_OUTPUT_BLOCKS."
         fi
     fi
 
@@ -65,4 +65,5 @@ do_install() {
     echo "BOOTLOADER_FLASH_DEVICE=${BOOTLOADER_FLASH_DEVICE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_IMAGE=${BOOTLOADER_IMAGE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_BLOCK_SIZE_OFFSET=${BOOTLOADER_BLOCK_SIZE_OFFSET}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
 }
