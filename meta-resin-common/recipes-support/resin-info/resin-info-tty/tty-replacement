@@ -12,7 +12,3 @@ echo "
                                     
  ---------------------------------- " > /dev/tty1
 echo "Booted - Check your resin.io dashboard." > /dev/tty1
-
-
-# Dummy Shell
-read ans
