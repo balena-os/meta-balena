@@ -9,3 +9,6 @@ BOOTLOADER_IMAGE_ts4900 = "u-boot.imx"
 
 # Offset at which we flash u-boot binary
 BOOTLOADER_BLOCK_SIZE_OFFSET_ts4900 = "1024"
+
+# Skipped output blocks when writing u-boot to SPI ROM
+BOOTLOADER_SKIP_OUTPUT_BLOCKS_ts4900 = "1"
