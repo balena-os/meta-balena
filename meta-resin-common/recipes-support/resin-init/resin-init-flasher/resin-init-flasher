@@ -6,28 +6,30 @@
 #   * image is in boot partition of external device                                      #
 #   * all needed variables are configured in resin-init-flasher.conf                     #
 #   * filesystems labeling scheme is persistent (flasher-*/resin-*)                      #
-# Variables in resin-init-flasher.conf                                                   #
-#  INTERNAL_DEVICE_KERNEL       - internal device (enumerated by kernel) to be flashed   #
-#                                   * it's impossible to known what dev to flash because #
-#                                     we don't have any labels before flashing something #
-#                                     so we need this info                               #
-#  BOARD_BOOTLOADER             - bootloader used by the target board                    #
-#                                   * can be either u-boot or grub-efi for the moment    #
-#  INTERNAL_DEVICE_UBOOT        - internal device as enumerated by uboot                 #
-#                                   * we need to know how uboot enumerates the mmc       #
-#                                     device so we can instruct uboot to load kernel     #
-#                                     from there                                         #
-#  RESIN_IMAGE                  - image to be flashed on internal device                 #
-#                                   * this is defaulted to                               #
-#                                     resin-image-${MACHINE}.resin-sdcard and should be  #
-#                                     just fine                                          #
-#  BOOTLOADER_FLASH_DEVICE      - device where bootloader binary will be flashed         #
-#                                   * this variable should be set together with          #
-#                                     BOOTLOADER_IMAGE                                   #
-#                                   * if this variable is not set we DO NOT flash u-boot #
-#                                     to internal flash device                           #
-#  BOOTLOADER_IMAGE             - name of the u-boot binary                              #
-#  BOOTLOADER_BLOCK_SIZE_OFFSET - offset at which we write u-boot binary                 #
+# Variables in resin-init-flasher.conf                                                    #
+#  INTERNAL_DEVICE_KERNEL        - internal device (enumerated by kernel) to be flashed   #
+#                                    * it's impossible to known what dev to flash because #
+#                                      we don't have any labels before flashing something #
+#                                      so we need this info                               #
+#  BOARD_BOOTLOADER              - bootloader used by the target board                    #
+#                                    * can be either u-boot or grub-efi for the moment    #
+#  INTERNAL_DEVICE_UBOOT         - internal device as enumerated by uboot                 #
+#                                    * we need to know how uboot enumerates the mmc       #
+#                                      device so we can instruct uboot to load kernel     #
+#                                      from there                                         #
+#  RESIN_IMAGE                   - image to be flashed on internal device                 #
+#                                    * this is defaulted to                               #
+#                                      resin-image-${MACHINE}.resin-sdcard and should be  #
+#                                      just fine                                          #
+#  BOOTLOADER_FLASH_DEVICE       - device where bootloader binary will be flashed         #
+#                                    * this variable should be set together with          #
+#                                      BOOTLOADER_IMAGE                                   #
+#                                    * if this variable is not set we DO NOT flash u-boot #
+#                                      to internal flash device                           #
+#  BOOTLOADER_IMAGE              - name of the u-boot binary                              #
+#  BOOTLOADER_BLOCK_SIZE_OFFSET  - offset at which we write u-boot binary                 #
+#  BOOTLOADER_SKIP_OUTPUT_BLOCKS - number of blocks to skip when writing bootloader       #
+#                                    * this is the seek param to dd                       #
 ##########################################################################################
 
 # Very long variables :)
@@ -155,7 +157,7 @@ udevadm settle
 # Flash bootloader
 if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
     if [ -n "$BOOTLOADER_IMAGE" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET" ]; then
-        dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE} of=/dev/${BOOTLOADER_FLASH_DEVICE} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET} seek=1
+        dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE} of=/dev/${BOOTLOADER_FLASH_DEVICE} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET} seek=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}
         inform "Flashed u-boot image to internal flash"
     else
         fail "BOOTLOADER_IMAGE and/or BOOTLOADER_BLOCK_SIZE_OFFSET are not set."
