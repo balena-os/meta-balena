@@ -4,7 +4,12 @@ Change log
 * Remove any service that might start getty on the production images [Theodor]
 * Move to common code the resin-sdcard addition for flasher boards [Jon]
 * Change git repo used for VIA arm boards [Jon]
+
+# 2015-10-08 - beaglebone cubox-i edison nitrogen6x nuc odroid-c1 odroid-ux3 parallella-hdmi-resin raspberrypi raspberrypi2 vab820-quad zc702-zynq7
+# 2015-09-29 - ts4900
+
 * Fix supervisor update missing dependencies [Andrei]
+* Added ts4900 support [Andrei]
 
 # 2015-09-13
 
