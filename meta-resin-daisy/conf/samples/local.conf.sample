@@ -7,6 +7,9 @@ BBMASK ?= ".*/meta-resin/meta-resin-common/recipes-core/volatile-binds/"
 # Set this to yes if staging build is desired
 #RESIN_STAGING_BUILD ?= "yes"
 
+# Set this to change the supervisor tag included
+#SUPERVISOR_TAG ?= "master"
+
 # Compress final SD image with xz
 #RESIN_SDIMG_COMPRESSION ?= "xz"
 

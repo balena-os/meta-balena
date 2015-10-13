@@ -10,7 +10,6 @@ S = "${WORKDIR}"
 PROVIDES="resin-supervisor"
 RPROVIDES_${PN} = "resin-supervisor"
 
-VERSION = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'master', 'production', d)}"
 SRC_REPOSITORY = "rpi-supervisor"
 TARGET_REPOSITORY = "armhfv7-supervisor"
 LED_FILE = "/sys/class/leds/beaglebone\:green\:usr3/brightness"
@@ -21,8 +20,8 @@ do_install() {
     install -d ${D}/resin-data
     install -d ${D}/mnt/data-disk
     install -d ${D}${servicedir}
-    docker pull resin/${SRC_REPOSITORY}:${VERSION}
-    docker tag -f resin/${SRC_REPOSITORY}:${VERSION} resin/${TARGET_REPOSITORY}:latest
+    docker pull resin/${SRC_REPOSITORY}:${SUPERVISOR_TAG}
+    docker tag -f resin/${SRC_REPOSITORY}:${SUPERVISOR_TAG} resin/${TARGET_REPOSITORY}:latest
     docker save resin/${TARGET_REPOSITORY}:latest > ${WORKDIR}/${TARGET_REPOSITORY}.tar
     install -m 0444 ${WORKDIR}/${TARGET_REPOSITORY}.tar ${D}/resin-data/${TARGET_REPOSITORY}.tar
     touch ${WORKDIR}/BTRFS_MOUNT_POINT
