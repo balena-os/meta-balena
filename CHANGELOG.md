@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Change update-resin-supervisor.timer to run every 24 hours instead of 5 mins [Praneeth]
 * Remove any service that might start getty on the production images [Theodor]
 * Move to common code the resin-sdcard addition for flasher boards [Jon]
 * Change git repo used for VIA arm boards [Jon]
