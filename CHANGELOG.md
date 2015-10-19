@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Use armv7hf-supervisor for rpi2 [Page]
 * Change update-resin-supervisor.timer to run every 24 hours instead of 5 mins [Praneeth]
 * Remove any service that might start getty on the production images [Theodor]
 * Move to common code the resin-sdcard addition for flasher boards [Jon]
