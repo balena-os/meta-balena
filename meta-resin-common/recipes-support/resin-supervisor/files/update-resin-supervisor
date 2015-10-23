@@ -69,3 +69,4 @@ systemctl start resin-supervisor
 # Mark supervisor as working. This version will run when the device reboots.
 echo "Mark pulled tag as latest..."
 rce tag -f "$image_name:$tag" "$image_name:latest"
+sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" /etc/supervisor.conf
