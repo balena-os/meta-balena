@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Add support for booting from internal device on vab820-quad [Jon]
+
 # 2015-10-28 - beaglebone cubox-i edison nitrogen6x nuc odroid-c1 odroid-ux3 parallella-hdmi-resin raspberrypi raspberrypi2 ts4900 vab820-quad zc702-zynq7
 
 * Update the supervisor.conf supervisor image when updating the supervisor so that switching image/registry can work. [Page]
