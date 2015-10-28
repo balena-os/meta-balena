@@ -17,4 +17,5 @@ do_install_append() {
 
 }
 
-PACKAGECONFIG_remove = "resolved"
+# Network configuration is managed by connman
+PACKAGECONFIG_remove = "resolved networkd"
