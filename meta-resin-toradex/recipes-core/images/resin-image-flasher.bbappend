@@ -1,0 +1,1 @@
+include resin-image.inc
