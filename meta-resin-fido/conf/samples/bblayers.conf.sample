@@ -67,6 +67,11 @@ ODROID_BBLAYERS += " \
     ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-odroid \
     "
 
+TORADEX_BBLAYERS += " \
+    ${TOPDIR}/../meta-toradex \
+    ${TOPDIR}/../../yocto-all/meta-resin/meta-resin-toradex \
+    "
+
 BBLAYERS ?= " \
     ${CORE_BBLAYERS} \
     ${RASPBERRYPI_BBLAYERS} \
@@ -78,6 +83,7 @@ BBLAYERS ?= " \
     ${ZC702_BBLAYERS} \
     ${ODROID_BBLAYERS} \
     ${TSIMX6_BBLAYERS} \
+    ${TORADEX_BBLAYERS} \
     "
 
 BBLAYERS_NON_REMOVABLE ?= " \
