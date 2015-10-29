@@ -1,5 +1,10 @@
 Change log
 -----------
+# 2015-10-29 - apalis-imx6 colibri-imx6
+
+* Added apalis-imx6 and colibri-imx6 support [Theodor]
+
+# 2015-09
 
 * Add firmware for Intel Wireless 7265 chipsets [Jon]
 * Added support for specifying the supervisor tag to include. [Page]
