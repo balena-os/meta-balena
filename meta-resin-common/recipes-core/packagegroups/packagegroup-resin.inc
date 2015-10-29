@@ -10,6 +10,7 @@ RESIN_STAGING_ADDONS = " \
     nano \
     alsa-utils \
     usbutils \
+    i2c-tools \
     "
 
 RDEPENDS_${PN} = " \
