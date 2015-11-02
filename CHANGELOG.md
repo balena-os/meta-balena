@@ -1,6 +1,9 @@
 Change log
 -----------
 
+# 2015-11-02
+
+* Fix DNS issues with openvpn [Andrei]
 * Add support for booting from internal device on vab820-quad [Jon]
 
 # 2015-10-28 - beaglebone cubox-i edison nitrogen6x nuc odroid-c1 odroid-ux3 parallella-hdmi-resin raspberrypi raspberrypi2 ts4900 vab820-quad zc702-zynq7
