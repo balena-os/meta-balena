@@ -1,22 +1,17 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-raspberrypi:"
-SRC_URI += " \
-    file://0001-Add-Adafruit-FBTFT-8a78f7cfdf840f05f7a5a6e1a9186a89c.patch \
-    "
-
-PR = "${INC_PR}.1"
-
 inherit kernel-resin
 
 CMDLINE_DEBUG = ""
 
-RESIN_CONFIGS_append = " fbtft ft6x06"
+RESIN_CONFIGS_append = " fbtft"
 RESIN_CONFIGS[fbtft] = " \
+    CONFIG_STAGING=y \
     CONFIG_FB_TFT=m \
     CONFIG_FB_TFT_AGM1264K_FL=m \
     CONFIG_FB_TFT_BD663474=m \
     CONFIG_FB_TFT_HX8340BN=m \
     CONFIG_FB_TFT_HX8347D=m \
     CONFIG_FB_TFT_HX8353D=m \
+    CONFIG_FB_TFT_ILI9163=m \
     CONFIG_FB_TFT_ILI9320=m \
     CONFIG_FB_TFT_ILI9325=m \
     CONFIG_FB_TFT_ILI9340=m \
@@ -40,6 +35,3 @@ RESIN_CONFIGS[fbtft] = " \
     CONFIG_FB_FLEX=m \
     CONFIG_FB_TFT_FBTFT_DEVICE=m \
     "
-RESIN_CONFIGS[ft6x06] = " \
-   CONFIG_TOUCHSCREEN_FT6X06=m \
-   "
