@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add firmware for Intel Wireless 7265 chipsets [Jon]
 * Added support for specifying the supervisor tag to include. [Page]
 * Changed flasher to shutdown instead of reboot [Jon]
 
