@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Added support for specifying the supervisor tag to include. [Page]
 * Changed flasher to shutdown instead of reboot [Jon]
 
 # 2015-11-02

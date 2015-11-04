@@ -8,6 +8,7 @@ MAINTAINER = "Resin <hello@resin.io>"
 
 RESIN_DEFAULT_DISTRO_FEATURES = "resin"
 RESIN_STAGING_BUILD ?= ""
+SUPERVISOR_TAG ?= "production"
 DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains('RESIN_STAGING_BUILD','yes','resin-staging','',d)}"
 
 PREFERRED_PROVIDER_rce ?= "rce-armv6"

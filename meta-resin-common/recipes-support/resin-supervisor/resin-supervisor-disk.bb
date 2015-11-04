@@ -23,7 +23,6 @@ S = "${WORKDIR}"
 PROVIDES="resin-supervisor"
 RPROVIDES_${PN} = "resin-supervisor"
 
-REPOSITORY_TAG = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'master', 'production', d)}"
 PARTITION_SIZE ?= "1024"
 LED_FILE ?= "/dev/null"
 
@@ -97,7 +96,7 @@ python () {
     import subprocess
 
     target_repository = d.getVar('TARGET_REPOSITORY', True)
-    tag_repository = d.getVar('REPOSITORY_TAG', True)
+    tag_repository = d.getVar('SUPERVISOR_TAG', True)
 
     if not target_repository:
         bb.fatal("resin-supervisor-disk: One or more needed variables are not available in resin-supervisor-disk. Usually these are provided with a bbappend.")
@@ -146,7 +145,7 @@ do_compile () {
 
     touch -t 7805200000 ${WORKDIR}/entry.sh # Make sure docker rebuilds the image only if file is changed in content
     docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
-    docker run --rm --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${REPOSITORY_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
+    docker run --rm --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${SUPERVISOR_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
 }
 
 do_install () {
