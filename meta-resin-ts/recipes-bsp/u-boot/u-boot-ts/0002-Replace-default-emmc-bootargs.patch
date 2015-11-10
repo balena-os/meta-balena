@@ -1,0 +1,27 @@
+From 19a60e75a89a5338ac2f46ac25ae80ded025648c Mon Sep 17 00:00:00 2001
+From: Theodor Gherzan <theodor@resin.io>
+Date: Fri, 11 Sep 2015 14:56:37 +0200
+Subject: [PATCH] Replace-default-env-with-a-resin-env
+
+Signed-off-by: Theodor Gherzan <theodor@resin.io>
+---
+ include/configs/ts4900.h | 79 ++++++++++++------------------------------------
+ 1 file changed, 20 insertions(+), 59 deletions(-)
+
+diff --git a/include/configs/ts4900.h b/include/configs/ts4900.h
+index 6a4e113..27257ee 100644
+--- a/include/configs/ts4900.h
++++ b/include/configs/ts4900.h
+@@ -236,7 +236,7 @@
+ 		"load mmc 1:1 ${loadaddr} /boot/ts4900-fpga.bin; " \
+ 		"ice40 ${loadaddr} ${filesize}; " \
+ 		"load mmc 1:1 ${loadaddr} ${uimage}; " \
+-		"setenv bootargs root=/dev/mmcblk2p1 rootwait rw ${cmdline_append}; " \
++		"setenv bootargs root=/dev/mmcblk2p2 rootwait rw console=ttymxc0,115200 enable_wait_mode=off; " \
+ 		"bootm ${loadaddr} - ${fdtaddr}; \0" \
+ 	"usbprod=usb start; " \
+ 		"if usb storage; " \
+-- 
+2.5.2
+
+
