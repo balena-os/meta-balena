@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 
 RUN apt-get update && apt-get install btrfs-tools curl apt-transport-https -y \
-	&& curl -sSL https://get.docker.com/ubuntu/ | sh
+	&& curl -sSL https://get.docker.com/ | sh
 
 ADD entry.sh /entry.sh
 
