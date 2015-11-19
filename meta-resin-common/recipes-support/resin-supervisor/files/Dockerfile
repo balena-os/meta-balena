@@ -1,4 +1,4 @@
-FROM docker:1.4.1-dind
+FROM docker:1.6.2-dind
 
 RUN apk add --update btrfs-progs bash && rm -rf /var/cache/apk/*
 
