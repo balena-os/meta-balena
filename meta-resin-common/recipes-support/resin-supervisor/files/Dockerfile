@@ -1,6 +1,6 @@
 FROM docker:1.6.2-dind
 
-RUN apk add --update btrfs-progs bash && rm -rf /var/cache/apk/*
+RUN apk add --update btrfs-progs bash util-linux && rm -rf /var/cache/apk/*
 
 ADD entry.sh /entry.sh
 
