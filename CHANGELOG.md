@@ -1,5 +1,8 @@
 Change log
 -----------
+
+* Fix supervisor preloading [Andrei]
+
 # 2015-10-29 - apalis-imx6 colibri-imx6
 
 * Added apalis-imx6 and colibri-imx6 support [Theodor]
