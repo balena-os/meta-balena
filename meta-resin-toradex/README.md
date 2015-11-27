@@ -15,6 +15,9 @@ This layer depends on:
     * layer: meta-resin-common
     * branch: master
     * revision: HEAD
+* URI: git://github.org/Freescale/meta-fsl-arm
+    * branch: fido
+    * revision: 270599a407a36f1ff0cdbe5fcfc03f1a3a61789c
 * URI: http://git.toradex.com/cgit/meta-toradex.git/
     * branch: V2.5
     * revision: 4e86d3bdd18c649197f73e4a7f99a2bfcf7899b8
