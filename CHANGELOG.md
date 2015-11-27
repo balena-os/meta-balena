@@ -1,6 +1,9 @@
 Change log
 -----------
 
+* Removed the global bblayers.conf.sample and local.conf.sample [Jon]
+* Removed the append from the BBMASK declaration in meta-resin-toradex layer.conf [Jon]
+* Fix ${S} and ${DEPLOY_DIR_IMAGE} variables for zc702-zynq7 [Jon]
 * Make resin-supervisor.service restartable on failures [Jon]
 * Fix supervisor preloading [Andrei]
 
