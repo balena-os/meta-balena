@@ -2,7 +2,7 @@
 # intel nuc
 #
 
-IMAGE_FSTYPES_nuc = "resin-sdcard"
+IMAGE_FSTYPES_append_nuc = " resin-sdcard"
 
 # Do not support live USB stick
 NOISO_nuc = "1"

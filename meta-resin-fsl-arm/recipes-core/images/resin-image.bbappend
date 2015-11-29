@@ -2,7 +2,7 @@
 # Nitrogen6x
 #
 
-IMAGE_FSTYPES_nitrogen6x = "resin-sdcard"
+IMAGE_FSTYPES_append_nitrogen6x = " resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_IMAGE_BOOTLOADER_nitrogen6x = "u-boot"
@@ -24,7 +24,7 @@ IMAGE_CMD_resin-sdcard_append_nitrogen6x () {
 # cubox-i
 #
 
-IMAGE_FSTYPES_cubox-i = "resin-sdcard"
+IMAGE_FSTYPES_append_cubox-i = " resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_IMAGE_BOOTLOADER_cubox-i = "u-boot"

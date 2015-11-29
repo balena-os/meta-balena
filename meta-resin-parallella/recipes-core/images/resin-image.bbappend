@@ -1,4 +1,4 @@
-IMAGE_FSTYPES_parallella-hdmi-resin = "resin-sdcard"
+IMAGE_FSTYPES_append_parallella-hdmi-resin = " resin-sdcard"
 
 SDIMG_KERNELIMAGE_parallella-hdmi-resin = "uImage"
 

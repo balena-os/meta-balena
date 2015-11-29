@@ -2,7 +2,7 @@
 # ODROID-UX4 / ODROID-UX3
 #
 
-IMAGE_FSTYPES_odroid-ux3 = "resin-sdcard"
+IMAGE_FSTYPES_append_odroid-ux3 = " resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_BOOT_PARTITION_FILES_odroid-ux3 = " \
@@ -31,7 +31,7 @@ IMAGE_CMD_resin-sdcard_append_odroid-ux3 () {
 # ODROID-C1
 #
 
-IMAGE_FSTYPES_odroid-c1 = "resin-sdcard"
+IMAGE_FSTYPES_append_odroid-c1 = " resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_BOOT_PARTITION_FILES_odroid-c1 = " \

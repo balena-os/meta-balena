@@ -1,4 +1,4 @@
-IMAGE_FSTYPES_rpi = "resin-sdcard"
+IMAGE_FSTYPES_append_rpi = " resin-sdcard"
 
 # Kernel image name is different on Raspberry Pi 1/2
 SDIMG_KERNELIMAGE_raspberrypi  ?= "kernel.img"

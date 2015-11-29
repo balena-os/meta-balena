@@ -1,4 +1,4 @@
-IMAGE_FSTYPES_zc702-zynq7 = "resin-sdcard"
+IMAGE_FSTYPES_append_zc702-zynq7 = " resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_BOOT_PARTITION_FILES_zc702-zynq7 = " \

@@ -2,7 +2,7 @@
 # VIA vab820 quad
 #
 
-IMAGE_FSTYPES_vab820-quad = "resin-sdcard"
+IMAGE_FSTYPES_append_vab820-quad = " resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_IMAGE_BOOTLOADER_vab820-quad = "u-boot-vab820"
