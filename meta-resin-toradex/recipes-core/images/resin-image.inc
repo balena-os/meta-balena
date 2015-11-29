@@ -8,9 +8,9 @@ IMAGE_FSTYPES_apalis-imx6 = "resin-sdcard"
 RESIN_IMAGE_BOOTLOADER_apalis-imx6 = "u-boot"
 
 RESIN_BOOT_PARTITION_FILES_apalis-imx6 = " \
-    ${KERNEL_IMAGETYPE}-${MACHINE}.bin:${KERNEL_IMAGETYPE} \
-    uImage-imx6q-apalis-eval_v1_0.dtb:imx6q-apalis-eval_v1_0.dtb \
-    uImage-imx6q-apalis-eval.dtb:imx6q-apalis-eval.dtb \
+    ${KERNEL_IMAGETYPE}-${MACHINE}.bin:/${KERNEL_IMAGETYPE} \
+    uImage-imx6q-apalis-eval_v1_0.dtb:/imx6q-apalis-eval_v1_0.dtb \
+    uImage-imx6q-apalis-eval.dtb:/imx6q-apalis-eval.dtb \
     "
 
 #
@@ -23,6 +23,6 @@ IMAGE_FSTYPES_colibri-imx6 = "resin-sdcard"
 RESIN_IMAGE_BOOTLOADER_colibri-imx6 = "u-boot"
 
 RESIN_BOOT_PARTITION_FILES_colibri-imx6 = " \
-    ${KERNEL_IMAGETYPE}-${MACHINE}.bin:${KERNEL_IMAGETYPE} \
-    uImage-imx6dl-colibri-eval-v3.dtb:imx6dl-colibri-eval-v3.dtb \
+    ${KERNEL_IMAGETYPE}-${MACHINE}.bin:/${KERNEL_IMAGETYPE} \
+    uImage-imx6dl-colibri-eval-v3.dtb:/imx6dl-colibri-eval-v3.dtb \
     "

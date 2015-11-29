@@ -6,9 +6,9 @@ IMAGE_FSTYPES_odroid-ux3 = "resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_BOOT_PARTITION_FILES_odroid-ux3 = " \
-    boot.ini \
-    zImage \
-    zImage-exynos5422-odroidxu3.dtb:exynos5422-odroidxu3.dtb \
+    boot.ini: \
+    zImage: \
+    zImage-exynos5422-odroidxu3.dtb:/exynos5422-odroidxu3.dtb \
     "
 
 # BOOT components
@@ -35,9 +35,9 @@ IMAGE_FSTYPES_odroid-c1 = "resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_BOOT_PARTITION_FILES_odroid-c1 = " \
-    boot.ini \
-    uImage \
-    uImage-meson8b_odroidc.dtb:meson8b_odroidc.dtb \
+    boot.ini: \
+    uImage: \
+    uImage-meson8b_odroidc.dtb:/meson8b_odroidc.dtb \
     "
 
 IMAGE_CMD_resin-sdcard_append_odroid-c1 () {

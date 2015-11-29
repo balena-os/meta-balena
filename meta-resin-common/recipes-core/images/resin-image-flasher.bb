@@ -27,4 +27,4 @@ RESIN_UPDATE_FS_LABEL = "flash-updt"
 RESIN_CONFIG_FS_LABEL = "flash-conf"
 
 # Put the resin image inside the boot partition
-RESIN_BOOT_PARTITION_FILES_append = " resin-image-${MACHINE}.resin-sdcard"
+RESIN_BOOT_PARTITION_FILES_append = " resin-image-${MACHINE}.resin-sdcard:"
