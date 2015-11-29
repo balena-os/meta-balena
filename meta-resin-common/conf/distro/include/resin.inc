@@ -20,7 +20,7 @@ PREFERRED_PROVIDER_resin-supervisor ?= "resin-supervisor-disk"
 # Use ths resin splash image package
 SPLASH = "psplash-resin"
 
-IMAGE_CLASSES += "image_types_resin"
+IMAGE_CLASSES += "image_types_resin host-update-resin"
 
 # Define the URL where resin exposes source or prebuilt packages
 AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
