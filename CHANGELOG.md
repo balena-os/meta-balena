@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Mechanism for generating resinhup-tar packages. [Andrei]
+* Implement fingerprints for resin-boot and resin-root [Andrei]
 * Explicitly configure kernel with config.gz built in support [Andrei]
 
 # v1.0.3 - 2015-12-10
