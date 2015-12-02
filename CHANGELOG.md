@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Make resin-supervisor.service restartable on failures [Jon]
 * Fix supervisor preloading [Andrei]
 
 # 2015-10-29 - apalis-imx6 colibri-imx6

@@ -11,15 +11,16 @@ After=\
     connman.service
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
+Restart=always
+RestartSec=10s
 EnvironmentFile=/etc/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
 ExecStartPre=@BASE_BINDIR@/touch /etc/resolv.conf
 ExecStartPre=-@BINDIR@/rce stop resin_supervisor
 ExecStartPre=-@BINDIR@/rce rm --force resin_supervisor
 ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
-    @BINDIR@/rce run -d --privileged --name resin_supervisor \
+    @BINDIR@/rce run --privileged --name resin_supervisor \
     --net=host \
     -v /var/run/rce.sock:/run/docker.sock \
     -v $CONFIG_PATH:/boot/config.json  \
