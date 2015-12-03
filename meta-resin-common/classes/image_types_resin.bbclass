@@ -177,7 +177,7 @@ IMAGE_CMD_resin-sdcard () {
         # Check for item format
         case $RESIN_BOOT_PARTITION_FILE in
             *:*) ;;
-            *) bbfatal "Some items in RESIN_BOOT_PARTITION_FILES are not in the 'src:dst' format."
+            *) bbfatal "Some items in RESIN_BOOT_PARTITION_FILES ($RESIN_BOOT_PARTITION_FILE) are not in the 'src:dst' format."
         esac
 
         # Compute src and dst
@@ -200,10 +200,10 @@ IMAGE_CMD_resin-sdcard () {
              *) bbfatal "$dst in RESIN_BOOT_PARTITION_FILES is not an absolute path."
         esac
 
-        # Check src type and existance
+        # Check src type and existence
         if [ -d "$src" ]; then
             if ! $dst_is_dir; then
-                bbfatal "You can't copy a directory to a file."
+                bbfatal "You can't copy a directory to a file. You requested to copy $src in $dst."
             fi
             sources="$(find $src -maxdepth 1 -type f)"
         elif [ -f "$src" ]; then
@@ -223,11 +223,11 @@ IMAGE_CMD_resin-sdcard () {
             echo "Copying $src -> $dst ..."
             # Create the directories parent directories in dst
             directory=""
-            for i in $(echo ${dst} | sed 's|/|\n|g' |  head -n -1); do
-                if [ -z "$i" ]; then
+            for path_segment in $(echo ${dst} | sed 's|/|\n|g' | head -n -1); do
+                if [ -z "$path_segment" ]; then
                     continue
                 fi
-                directory=$directory/$i
+                directory=$directory/$path_segment
                 mmd -D sS -i ${WORKDIR}/boot.img $directory || true
             done
 
