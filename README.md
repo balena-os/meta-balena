@@ -8,9 +8,11 @@ This repository enables building resin.io for various devices.
 * meta-resin-* : layer which contains recipes specific to a board / BSP.
 * other files : README, COPYING, etc.
 
-## Build configuration
+## Configuration
 
-### Production/Staging Builds
+### Build Configuration
+
+#### Production/Staging Builds
 
 RESIN_STAGING_BUILD variable gets injected into DISTRO_FEATURES. If RESIN_STAGING_BUILD contains 'yes' then 'resin-staging' distro feature is added. Based on this, recipes can decide what staging specific changes are needed. By default RESIN_STAGING_BUILD is empty which corresponds to a normal build (resis-staging won't be appended to DISTRO_FEATURE). If user wants a staging build, RESIN_STAGING_BUILD = "yes" needs to be added to local.conf.
 
@@ -18,6 +20,23 @@ To make it short:
 
 * If RESIN_STAGING_BUILD is not present in your local.conf or it doesn't include "yes" : Production build selected (default bahavior)
 * If RESIN_STAGING_BUILD is defined local.conf and includes "yes" : Staging build selected
+
+### Runtime Configuration
+
+#### Persistent logs
+
+Resin host OS uses systemd journal for log storage and management. The default location for this journals is a tmpfs location (/run/log/journal). In order to make these logs persistent:
+```
+$ mkdir /var/log/journal
+$ systemctl restart systemd-journald
+```
+If you want to get back to the default termporary logs:
+```
+$ rm -rf /var/log/journal
+$ systemctl restart systemd-journald
+```
+
+This works because resin host OS doesn't mount /var/log as tmpfs and doesn't create /var/log/journal so systemd will output the journals to /run/log/journal (which is a tmpfs location) by default.
 
 ## Devices support
 
