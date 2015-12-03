@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Persistent systemd journal mechanism [Andrei]
 * Fix supervisor preloading [Andrei]
 
 # 2015-10-29 - apalis-imx6 colibri-imx6
