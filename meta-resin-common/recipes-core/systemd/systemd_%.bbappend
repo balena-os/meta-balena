@@ -3,7 +3,7 @@ do_install_append() {
     # independently of this forwarding
     sed -i -e 's/.*ForwardToSyslog.*/#ForwardToSyslog=yes/' ${D}${sysconfdir}/systemd/journald.conf
     sed -i -e 's/.*RuntimeMaxUse.*/RuntimeMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
-    sed -i -e 's/.*Storage.*/Storage=volatile/' ${D}${sysconfdir}/systemd/journald.conf
+    sed -i -e 's/.*Storage.*/Storage=auto/' ${D}${sysconfdir}/systemd/journald.conf
 
     # Staging Resin build
     if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
@@ -15,6 +15,8 @@ do_install_append() {
        find ${D} -name "getty@*.service" -delete
     fi
 
+    # Make sure /var/log/journal doesn't exist so logs will go to /run/log/journal by default
+    rm -rf ${D}/${localstatedir}/log/journal
 }
 
 # Network configuration is managed by connman
