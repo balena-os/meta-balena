@@ -8,7 +8,43 @@ This repository enables building resin.io for various devices.
 * meta-resin-* : layer which contains recipes specific to a board / BSP.
 * other files : README, COPYING, etc.
 
-## Build configuration
+## How to build for one of the supported boards
+
+### Determine the necessary layers for the targeted board
+
+This repository contains layers named in the form meta-resin-${board_name} with metadata for building Resin OS for various boards. Each of this directoy has a README.md stating that layer's dependencies and revisions
+that will have to used in the following steps.
+
+### Setup the build
+
+For example, for a beaglebone, one should to the following:
+
+Step 1 - clone dependencies and switch to the revision indicated in meta-resin-beaglebone/README.md (following example is for the poky dependency, but one should do this for all the dependencies listed there except
+the meta-resin dependency which should be already checked-out). This example assumes cloning of the dependencies is done in the same directory meta-resin has been cloned.
+
+$ git clone git://git.yoctoproject.org/poky && cd poky && git checkout ${resivion} && cd ../
+
+where ${revision} is the revision stated in meta-resin-beaglebone/README.md
+
+Repeat the above step for all the dependencies.
+
+Step 2 - configure the build
+
+$ source poky/oe-init-build-env
+
+Then set the Resin specific options to build/conf/local.conf file:
+DISTRO = "resin-systemd"
+MACHINE = "beaglebone"
+
+the machine name can be found in meta-resin-beaglebone/README.md under "Supported machines".
+
+Edit build/conf/bblayers.conf file and add to the BBLAYERS variable all the dependencies listed in meta-resin-beaglebone/README.md (except the poky dependencies which should already be added)
+
+Step 3 - start the build:
+
+$ bitbake ${image}
+
+where ${image} is found in meta-resin-beaglebone/README.md under "Supported images".
 
 ### Production/Staging Builds
 
