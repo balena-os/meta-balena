@@ -1,6 +1,9 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+# Each machine should append this with their specific configuration
+IMAGE_FSTYPES = ""
+
 # Make sure we have enough space in boot partition
 RESIN_BOOT_SPACE = "1638400"
 
