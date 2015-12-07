@@ -167,6 +167,7 @@ IMAGE_CMD_resin-sdcard () {
 
 	# Create a vfat filesystem with boot files
 	BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
+	rm -rf ${WORKDIR}/boot.img
 	mkfs.vfat -n "${RESIN_BOOT_FS_LABEL}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
 	echo "Copying files in RESIN_BOOT_PARTITION_FILE"
     echo -n '' > ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT}
