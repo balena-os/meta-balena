@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Explicitly configure kernel with config.gz built in support [Andrei]
+
 # v1.0.3 - 2015-12-10
 
 * Removed the global bblayers.conf.sample and local.conf.sample [Jon]
