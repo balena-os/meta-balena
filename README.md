@@ -55,6 +55,12 @@ To make it short:
 * If RESIN_STAGING_BUILD is not present in your local.conf or it doesn't include "yes" : Production build selected (default bahavior)
 * If RESIN_STAGING_BUILD is defined local.conf and includes "yes" : Staging build selected
 
+### Generation of host OS update bundles
+
+In order to generate update resin host OS bundles, edit the build's local.conf adding:
+
+RESINHUP = "yes"
+
 ## Devices support
 
 ### WiFi Adapters
