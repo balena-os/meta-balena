@@ -1,8 +1,8 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
-# Generate an update
-IMAGE_FSTYPES = "${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', '', 'resinhup-tar', d)}"
+# Generated resinhup-tar based on RESINHUP variable
+IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'resinhup-tar', '', d)}"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'resin-staging', 'debug-tweaks', '', d)} \
