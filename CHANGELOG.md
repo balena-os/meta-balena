@@ -1,7 +1,7 @@
 Change log
 -----------
 
-# v1.0.3
+# v1.0.3 - 2015-12-10
 
 * Removed the global bblayers.conf.sample and local.conf.sample [Jon]
 * Removed the append from the BBMASK declaration in meta-resin-toradex layer.conf [Jon]
