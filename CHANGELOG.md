@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.0.3
+
 * Removed the global bblayers.conf.sample and local.conf.sample [Jon]
 * Removed the append from the BBMASK declaration in meta-resin-toradex layer.conf [Jon]
 * Fix ${S} and ${DEPLOY_DIR_IMAGE} variables for zc702-zynq7 [Jon]

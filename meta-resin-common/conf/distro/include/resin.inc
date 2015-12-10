@@ -3,6 +3,7 @@ require conf/distro/poky.conf
 
 DISTRO = "resin"
 DISTRO_NAME = "Resin (Yocto Project Resin Distro)"
+DISTRO_VERSION = "1.0.3"
 
 MAINTAINER = "Resin <hello@resin.io>"
 
