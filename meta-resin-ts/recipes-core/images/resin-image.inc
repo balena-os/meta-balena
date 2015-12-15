@@ -2,7 +2,7 @@
 # ts4900
 #
 
-IMAGE_FSTYPES_ts4900 = "resin-sdcard"
+IMAGE_FSTYPES_append_ts4900 = " resin-sdcard"
 
 # We burn the FPGA bitstream in uboot so we need it in boot partition
 RDEPENDS_${PN}_append_ts4900 = " ts4900-fpga"

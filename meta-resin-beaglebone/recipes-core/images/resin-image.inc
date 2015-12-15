@@ -1,7 +1,7 @@
-IMAGE_FSTYPES_beaglebone = "resin-sdcard"
+IMAGE_FSTYPES_append_beaglebone = " resin-sdcard"
 
 # Customize resin-sdcard
 RESIN_BOOT_PARTITION_FILES_beaglebone = " \
-    MLO \
-    u-boot.img \
+    MLO: \
+    u-boot.img: \
     "

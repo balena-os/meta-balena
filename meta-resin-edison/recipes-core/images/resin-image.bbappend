@@ -11,7 +11,7 @@ do_bootimg[depends] += "virtual/kernel:do_deploy"
 PCBIOS_edison = "0"
 
 # Specify rootfs image type
-IMAGE_FSTYPES_edison = "hddimg"
+IMAGE_FSTYPES_append_edison = " hddimg"
 
 BOOTIMG_VOLUME_ID_edison = "resin-boot"
 
