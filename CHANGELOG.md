@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Include distribution information file in rootfs [Andrei]
 * Mechanism for generating resinhup-tar packages. [Andrei]
 * Implement fingerprints for resin-boot and resin-root [Andrei]
 * Explicitly configure kernel with config.gz built in support [Andrei]
