@@ -1,6 +1,9 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+# Each machine should append this with their specific configuration
+IMAGE_FSTYPES = ""
+
 # Make sure we have enough space in boot partition
 RESIN_BOOT_SPACE = "1638400"
 
@@ -27,4 +30,7 @@ RESIN_UPDATE_FS_LABEL = "flash-updt"
 RESIN_CONFIG_FS_LABEL = "flash-conf"
 
 # Put the resin image inside the boot partition
-RESIN_BOOT_PARTITION_FILES_append = " resin-image-${MACHINE}.resin-sdcard"
+RESIN_BOOT_PARTITION_FILES_append = " \
+    resin-logo.png:/splash/resin-logo.png \
+    resin-image-${MACHINE}.resin-sdcard: \
+    "

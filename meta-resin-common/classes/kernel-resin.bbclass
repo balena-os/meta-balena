@@ -70,6 +70,8 @@ RESIN_CONFIGS ?= " \
     r8188eu \
     systemd \
     leds-gpio \
+    proc-config \
+    no-logo \
     "
 
 #
@@ -204,6 +206,25 @@ RESIN_CONFIGS_DEPS[leds-gpio] ?= " \
     "
 RESIN_CONFIGS[leds-gpio] ?= " \
     CONFIG_LEDS_GPIO=y \
+    "
+
+#
+# Expose kernel config via procfs
+#
+RESIN_CONFIGS_DEPS[proc-config] ?= " \
+    CONFIG_IKCONFIG=y \
+    CONFIG_PROC_FS=y \
+    CONFIG_EXPERT=y \
+    "
+RESIN_CONFIGS[proc-config] ?= " \
+    CONFIG_IKCONFIG_PROC=y \
+    "
+
+#
+# For a flawless boot experience deactivate logo - we have splash screen providers
+#
+RESIN_CONFIGS[no-logo] ?= " \
+    CONFIG_LOGO=n \
     "
 
 ###########

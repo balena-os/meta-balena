@@ -18,7 +18,6 @@ RDEPENDS_${PN} = " \
     curl \
     jq \
     resin-conf \
-    connman \
     openssl \
     "
 

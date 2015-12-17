@@ -4,9 +4,7 @@ Requires=\
     rce.socket \
     var-lib-rce.mount \
     \x2erce.mount
-Wants=connman.service
 After=\
-    connman.service \
     rce.socket \
     var-lib-rce.mount \
     \x2erce.mount
@@ -14,6 +12,8 @@ After=\
 [Service]
 Type=notify
 Restart=always
+#Adjust OOMscore to -900 to make killing rce unlikely
+OOMScoreAdjust=-900
 ExecStart=@BINDIR@/rce --restart=false -s btrfs -d -g /var/lib/rce
 MountFlags=slave
 LimitNOFILE=1048576

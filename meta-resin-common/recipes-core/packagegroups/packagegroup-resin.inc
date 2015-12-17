@@ -19,4 +19,5 @@ RDEPENDS_${PN} = " \
     ${RESIN_INIT_PACKAGE} \
     ${RESIN_MOUNTS} \
     kernel-modules \
+    os-release \
     "

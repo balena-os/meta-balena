@@ -1,0 +1,153 @@
+#!/bin/sh
+echo "Started $0 $*"
+
+ROOT=
+
+# parse command line params
+action=
+while [ $# != 0 ]; do
+	opt="$1"
+
+	case "$opt" in
+		enable)
+			shift
+
+			action="$opt"
+			services="$1"
+			cmd_args="1"
+			shift
+			;;
+		disable)
+			shift
+
+			action="$opt"
+			services="$1"
+			cmd_args="1"
+			shift
+			;;
+		mask)
+			shift
+
+			action="$opt"
+			services="$1"
+			cmd_args="1"
+			shift
+			;;
+		preset)
+			shift
+
+			action="$opt"
+			services="$1"
+			cmd_args="1"
+			shift
+			;;
+		--root=*)
+			ROOT=${opt##--root=}
+			cmd_args="0"
+			shift
+			;;
+		*)
+			if [ "$cmd_args" = "1" ]; then
+				services="$services $opt" 
+				shift
+			else
+				echo "'$opt' is an unkown option; exiting with error"
+				exit 1
+			fi
+			;;
+	esac
+done
+if [ "$action" = "preset" -a "$service_file" = "" ]; then
+	services=$(for f in `find $ROOT/etc/systemd/system $ROOT/lib/systemd/system $ROOT/usr/lib/systemd/system -type f 2>1`; do basename $f; done)
+	services="$services $opt"
+	presetall=1
+fi
+
+for service in $services; do
+	if [ "$presetall" = "1" ]; then
+		action="preset"
+	fi
+	if [ "$action" = "mask" ]; then
+		if [ ! -d $ROOT/etc/systemd/system/ ]; then
+			mkdir -p $ROOT/etc/systemd/system/
+		fi
+		cmd="ln -s /dev/null $ROOT/etc/systemd/system/$service"
+		echo "$cmd"
+		$cmd
+		exit 0
+	fi
+
+	echo "Try to find location of $service..."
+	# find service file
+	for p in $ROOT/etc/systemd/system \
+		 $ROOT/lib/systemd/system \
+		 $ROOT/usr/lib/systemd/system; do
+		if [ -e $p/$service ]; then
+			service_file=$p/$service
+			service_file=${service_file##$ROOT}
+		fi
+	done
+	if [ -z "$service_file" ]; then
+		echo "'$service' couldn't be found; exiting with error"
+		exit 1
+	fi
+	echo "Found $service in $service_file"
+
+	# If any new unit types are added to systemd they should be added
+	# to this regular expression.
+	unit_types_re='\.\(service\|socket\|device\|mount\|automount\|swap\|target\|path\|timer\|snapshot\)$'
+	if [ "$action" = "preset" ]; then
+		action=`egrep -sh  $service $ROOT/etc/systemd/user-preset/*.preset | cut -f1 -d' '`
+		if [ -z "$action" ]; then
+			globalpreset=`egrep -sh  '\*'  $ROOT/etc/systemd/user-preset/*.preset | cut -f1 -d' '`
+			if [ -n "$globalpreset" ]; then
+				action="$globalpreset"
+			else
+				action="enable"
+			fi
+		fi
+	fi
+	# create the required symbolic links
+	wanted_by=$(sed '/^WantedBy[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
+		        | tr ',' '\n' \
+		        | grep "$unit_types_re")
+
+	for r in $wanted_by; do
+		echo "WantedBy=$r found in $service"
+		if [ "$action" = "enable" ]; then
+			mkdir -p $ROOT/etc/systemd/system/$r.wants
+			ln -s $service_file $ROOT/etc/systemd/system/$r.wants
+			echo "Enabled $service for $wanted_by."
+		else
+			rm -f $ROOT/etc/systemd/system/$r.wants/$service
+			rmdir --ignore-fail-on-non-empty -p $ROOT/etc/systemd/system/$r.wants
+			echo "Disabled $service for $wanted_by."
+		fi
+	done
+
+	# create the required symbolic 'Alias' links
+	alias=$(sed '/^Alias[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
+		        | tr ',' '\n' \
+		        | grep "$unit_types_re")
+
+	for r in $alias; do
+		if [ "$action" = "enable" ]; then
+			mkdir -p $ROOT/etc/systemd/system
+			ln -s $service_file $ROOT/etc/systemd/system/$r
+			echo "Enabled $service for $alias."
+		else
+			rm -f $ROOT/etc/systemd/system/$r
+			echo "Disabled $service for $alias."
+		fi
+	done
+
+	# call us for the other required scripts
+	also=$(sed '/^Also[[:space:]]*=/s,[^=]*=,,p;d' "$ROOT/$service_file" \
+		   | tr ',' '\n')
+	for a in $also; do
+		echo "Also=$a found in $service"
+		if [ "$action" = "enable" ]; then
+			$0 --root=$ROOT enable $a
+		fi
+	done
+done

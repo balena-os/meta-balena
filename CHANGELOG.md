@@ -1,7 +1,35 @@
 Change log
 -----------
 
-# v1.0.3
+* Add resinhup package for running hostOS updates [Andrei]
+* Export deltaEndpoint as DELTA_ENDPOINT [Andrei]
+
+# v1.0.6 - 2016-02-03
+
+* Upgrade systemd to version 216 and add volatile-binds dependency [Florin]
+* Fix racing issue on edison [Andrei]
+* Add support ts7700 [Theodor]
+* Remove obsolete pseudo patch. This patch is now in poky [Florin]
+* Remove obsolete bash patches. These patches are now in poky [Florin]
+* Ensure connman systemd service is enabled on boot [Florin]
+* Change OOM Adjust Score of RCE to -900 [Praneeth]
+* Change OOM Adjust Score of Connman to -1000 [Praneeth]
+* Change OOM Adjust Score of OpenVPN to -1000 [Praneeth]
+
+# v1.0.5 - 2016-01-20
+
+# v1.0.4
+
+* Add mechanism for user loading custom splash logo. [Theodor]
+* Add splash screen for all our images. [Theodor]
+* Make connman an optional network manager [Andrei]
+* Always restart openvpn service [Andrei]
+* Include distribution information file in rootfs [Andrei]
+* Mechanism for generating resinhup-tar packages. [Andrei]
+* Implement fingerprints for resin-boot and resin-root [Andrei]
+* Explicitly configure kernel with config.gz built in support [Andrei]
+
+# v1.0.3 - 2016-01-05
 
 * Removed the global bblayers.conf.sample and local.conf.sample [Jon]
 * Removed the append from the BBMASK declaration in meta-resin-toradex layer.conf [Jon]

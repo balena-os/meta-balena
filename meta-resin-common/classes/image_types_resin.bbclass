@@ -2,9 +2,11 @@ inherit image_types
 
 # Images inheriting this class MUST define:
 # RESIN_IMAGE_BOOTLOADER 	- bootloader
-# RESIN_BOOT_PARTITION_FILES 	- this is a list of files relative to DEPLOY_DIR_IMAGE that will be included in the vfat partition
-#				- should be a list of elements of the following format "FilenameRelativeToDeployDir:FilenameOnTheTarget"
-#				- if FilenameOnTheTarget is omitted the same filename will be used
+# RESIN_BOOT_PARTITION_FILES    - list of items describing files to be deployed on boot partition
+#                               - items need to be in the 'src:dst' format
+#                               - src needs to be relative to DEPLOY_DIR_IMAGE
+#                               - dst needs to be an absolute path
+#                               - if dst is ommited ('src:' format used), absolute path of src will be used as dst
 #
 # Optional:
 # RESIN_SDIMG_ROOTFS_TYPE 	- rootfs image to be used [default: ext3]
@@ -54,6 +56,9 @@ RESIN_ROOT_FS_LABEL ?= "resin-root"
 RESIN_UPDATE_FS_LABEL ?= "resin-updt"
 RESIN_CONFIG_FS_LABEL ?= "resin-conf"
 RESIN_DATA_FS_LABEL ?= "resin-data"
+
+# Used as extension for fingerprint files
+FINGERPRINT_EXT ?= "fingerprint"
 
 # Boot partition size [in KiB] (will be rounded up to IMAGE_ROOTFS_ALIGNMENT)
 RESIN_BOOT_SPACE ?= "40960"
@@ -162,31 +167,89 @@ IMAGE_CMD_resin-sdcard () {
 
 	# Create a vfat filesystem with boot files
 	BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
+	rm -rf ${WORKDIR}/boot.img
 	mkfs.vfat -n "${RESIN_BOOT_FS_LABEL}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
 	echo "Copying files in RESIN_BOOT_PARTITION_FILE"
-	for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
-		src=`echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}'`
-		dst=`echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}'`
-		if [ -z "${dst}" ]; then
-			dst=`basename ${src}`
-		fi
-		# Create the directories mentioned in the RESIN_BOOT_PARTITION_FILE
-		directory=""
-		for i in `echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}' | sed -e 's/\//\n/g' |  head -n -1 `; do
-		        directory=$directory/$i
-			mmd -D sS -i ${WORKDIR}/boot.img $directory || true
-		done
+    echo -n '' > ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT}
+    for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
 
-		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/${src} ::/${dst}
-	done
+        echo "Handling $RESIN_BOOT_PARTITION_FILE ."
+
+        # Check for item format
+        case $RESIN_BOOT_PARTITION_FILE in
+            *:*) ;;
+            *) bbfatal "Some items in RESIN_BOOT_PARTITION_FILES ($RESIN_BOOT_PARTITION_FILE) are not in the 'src:dst' format."
+        esac
+
+        # Compute src and dst
+        src="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}')"
+        dst="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}')"
+        if [ -z "${dst}" ]; then
+            dst="/${src}" # dst was omitted
+        fi
+        src="${DEPLOY_DIR_IMAGE}/$src" # src is relative to deploy dir
+
+        # Check that dst is an absolute path and assess if it should be a directory
+        case $dst in
+            /*)
+                # Check if dst is a directory. Directory path ends with '/'.
+                case $dst in
+                    */) dst_is_dir=true ;;
+                     *) dst_is_dir=false ;;
+                esac
+                ;;
+             *) bbfatal "$dst in RESIN_BOOT_PARTITION_FILES is not an absolute path."
+        esac
+
+        # Check src type and existence
+        if [ -d "$src" ]; then
+            if ! $dst_is_dir; then
+                bbfatal "You can't copy a directory to a file. You requested to copy $src in $dst."
+            fi
+            sources="$(find $src -maxdepth 1 -type f)"
+        elif [ -f "$src" ]; then
+            sources="$src"
+        else
+            bbfatal "$src is an invalid path referenced in RESIN_BOOT_PARTITION_FILES."
+        fi
+
+        # Normalize paths
+        dst=$(realpath -ms $dst)
+        if $dst_is_dir && [ ! "$dst" = "/" ]; then
+            dst="$dst/" # realpath removes last '/' which we need to instruct mcopy that destination is a directory
+        fi
+        src=$(realpath -m $src)
+
+        for src in $sources; do
+            echo "Copying $src -> $dst ..."
+            # Create the directories parent directories in dst
+            directory=""
+            for path_segment in $(echo ${dst} | sed 's|/|\n|g' | head -n -1); do
+                if [ -z "$path_segment" ]; then
+                    continue
+                fi
+                directory=$directory/$path_segment
+                mmd -D sS -i ${WORKDIR}/boot.img $directory || true
+            done
+
+            mcopy -i ${WORKDIR}/boot.img -v ${src} ::${dst}
+            if $dst_is_dir; then
+                md5sum ${src} | awk -v awkdst="$dst$(basename $src)" '{ $2=awkdst; print }' >> ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT}
+            else
+                md5sum ${src} | awk -v awkdst="$dst" '{ $2=awkdst; print }' >> ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT}
+            fi
+        done
+    done
+    # Add stamp file to vfat partition
+    echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/image-version-info ::
+    md5sum ${WORKDIR}/image-version-info | awk -v filepath="/image-version-info" '{ $2=filepath; print }' >> ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT}
+    # Finally add the fingerprint to vfat partition
+    mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT} ::
 
     # Create a vfat filesystem for config partition
     CONFIG_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
     mkfs.vfat -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
-
-	# Add stamp file to vfat partition
-	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
-	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
 
     # Label what is not labeled
     e2label ${RESIN_SDIMG_ROOTFS} ${RESIN_ROOT_FS_LABEL}

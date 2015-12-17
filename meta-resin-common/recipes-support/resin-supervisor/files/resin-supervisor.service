@@ -3,12 +3,9 @@ Description=Resin supervisor
 Requires=\
     rce.service \
     resin\x2ddata.mount
-Wants=\
-    connman.service
 After=\
     rce.service \
-    resin\x2ddata.mount \
-    connman.service
+    resin\x2ddata.mount
 
 [Service]
 Type=simple
@@ -35,6 +32,7 @@ ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
     -e PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY \
     -e PUBNUB_PUBLISH_KEY=$PUBNUB_PUBLISH_KEY \
     -e MIXPANEL_TOKEN=$MIXPANEL_TOKEN \
+    -e DELTA_ENDPOINT=$DELTA_ENDPOINT \
     -e LED_FILE=${LED_FILE} \
     -e LISTEN_PORT=$LISTEN_PORT \
     -e SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE} \

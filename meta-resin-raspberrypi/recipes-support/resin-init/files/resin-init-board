@@ -1,7 +1,0 @@
-#!/bin/sh
-set -e
-
-# Load the following modules:
-modprobe snd-bcm2835 # Sound
-
-exit 0

@@ -1,0 +1,33 @@
+From 2173cbf847fc53ca24950e77958c902edecfc207 Mon Sep 17 00:00:00 2001
+From: Olivier Brunel <jjk@jjacky.com>
+Date: Fri, 5 Dec 2014 16:06:45 +0100
+Subject: [PATCH] journal: Fix navigating backwards missing entries
+
+With DIRECTION_UP (i.e. navigating backwards) in generic_array_bisect() when the
+needle was found as the last item in the array, it wasn't actually processed as
+match, resulting in entries being missed.
+
+https://bugs.freedesktop.org/show_bug.cgi?id=86855
+
+Upstream-Status: Backport
+
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+---
+ src/journal/journal-file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/journal/journal-file.c b/src/journal/journal-file.c
+index 7858435..c5d2d19 100644
+--- a/src/journal/journal-file.c
++++ b/src/journal/journal-file.c
+@@ -1657,7 +1657,7 @@ static int generic_array_bisect(
+                         }
+                 }
+
+-                if (k > n) {
++                if (k >= n) {
+                         if (direction == DIRECTION_UP) {
+                                 i = n;
+                                 subtract_one = true;
+--
+2.1.3
