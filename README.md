@@ -67,6 +67,12 @@ By default resin uses connman on host OS to provide connectivity. If you want to
 
 NETWORK_MANAGER_PACKAGES = "mynetworkmanager mynetworkmanager-client"
 
+### Customizing splash
+
+We configure all of our initial images to produce a resin logo at boot, shutdown or reboot. But we encourage any user to go and replace that logo with their own.
+All you have to do is replace the splash/resin-logo.png file that you will find in the first partition of our images (boot partition) with your own image.
+NOTE: As it currently stands plymouth expects the image to be named resin-logo.png.
+
 ## Devices support
 
 ### WiFi Adapters
