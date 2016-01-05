@@ -15,7 +15,6 @@ RDEPENDS_${PN} = " \
     curl \
     jq \
     resin-conf \
-    connman \
     coreutils \
     resin-device-register \
     "
