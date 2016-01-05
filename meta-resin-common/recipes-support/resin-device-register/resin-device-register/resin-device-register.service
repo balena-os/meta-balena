@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device register
-Requires=connman.service mnt-conf.mount
-After=connman.service mnt-conf.mount
+Requires=mnt-conf.mount
+After=mnt-conf.mount
 
 [Service]
 Type=simple
