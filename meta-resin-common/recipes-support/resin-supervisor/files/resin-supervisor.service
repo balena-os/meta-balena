@@ -3,12 +3,9 @@ Description=Resin supervisor
 Requires=\
     rce.service \
     resin\x2ddata.mount
-Wants=\
-    connman.service
 After=\
     rce.service \
-    resin\x2ddata.mount \
-    connman.service
+    resin\x2ddata.mount
 
 [Service]
 Type=simple

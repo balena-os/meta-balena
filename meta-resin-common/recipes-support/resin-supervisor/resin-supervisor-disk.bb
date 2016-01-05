@@ -44,7 +44,6 @@ FILES_${PN} += " \
 
 RDEPENDS_${PN} = " \
     bash \
-    connman \
     rce \
     coreutils \
     socat \
