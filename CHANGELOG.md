@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Always restart openvpn service [Andrei]
 * Include distribution information file in rootfs [Andrei]
 * Mechanism for generating resinhup-tar packages. [Andrei]
 * Implement fingerprints for resin-boot and resin-root [Andrei]
