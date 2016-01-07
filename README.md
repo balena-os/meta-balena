@@ -61,6 +61,12 @@ In order to generate update resin host OS bundles, edit the build's local.conf a
 
 RESINHUP = "yes"
 
+### Configure custom network manager
+
+By default resin uses connman on host OS to provide connectivity. If you want to change and use other providers, list your packages using NETWORK_MANAGER_PACKAGES. You can add this variable to local.conf. Here is an example:
+
+NETWORK_MANAGER_PACKAGES = "mynetworkmanager mynetworkmanager-client"
+
 ## Devices support
 
 ### WiFi Adapters

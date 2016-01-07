@@ -5,10 +5,8 @@ Requires=\
     tmp.mount
 Wants=\
     mnt-conf.mount \
-    connman.service \
     resin-supervisor.service
 After=\
-    connman.service \
     rce.service \
     tmp.mount \
     mnt-conf.mount \
