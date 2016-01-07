@@ -1,8 +1,8 @@
 # Poky based distro file - keep it at the end to be able to overwrite
 require conf/distro/poky.conf
 
-DISTRO = "resin"
-DISTRO_NAME = "Resin (Yocto Project Resin Distro)"
+DISTRO = "resin-os"
+DISTRO_NAME = "Resin OS"
 DISTRO_VERSION = "1.0.3"
 
 MAINTAINER = "Resin <hello@resin.io>"
