@@ -17,6 +17,8 @@ PREFERRED_PROVIDER_jpeg ?= "jpeg"
 PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
 PREFERRED_PROVIDER_resin-supervisor ?= "resin-supervisor-disk"
 
+SPLASH = "plymouth"
+
 IMAGE_CLASSES += "image_types_resin host-update-resin"
 
 # Define the URL where resin exposes source or prebuilt packages
