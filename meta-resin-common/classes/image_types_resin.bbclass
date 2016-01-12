@@ -214,7 +214,7 @@ IMAGE_CMD_resin-sdcard () {
         fi
 
         # Normalize paths
-        dst=$(realpath -m $dst)
+        dst=$(realpath -ms $dst)
         if $dst_is_dir && [ ! "$dst" = "/" ]; then
             dst="$dst/" # realpath removes last '/' which we need to instruct mcopy that destination is a directory
         fi
