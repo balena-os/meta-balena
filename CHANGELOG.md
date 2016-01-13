@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.0.5 - 2016-01-13
+
 # v1.0.4 - 2016-01-13
 
 * Add mechanism for user loading custom splash logo. [Theodor]
