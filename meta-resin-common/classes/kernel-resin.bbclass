@@ -71,6 +71,7 @@ RESIN_CONFIGS ?= " \
     systemd \
     leds-gpio \
     proc-config \
+    no-logo \
     "
 
 #
@@ -217,6 +218,13 @@ RESIN_CONFIGS_DEPS[proc-config] ?= " \
     "
 RESIN_CONFIGS[proc-config] ?= " \
     CONFIG_IKCONFIG_PROC=y \
+    "
+
+#
+# For a flawless boot experience deactivate logo - we have splash screen providers
+#
+RESIN_CONFIGS[no-logo] ?= " \
+    CONFIG_LOGO=n \
     "
 
 ###########
