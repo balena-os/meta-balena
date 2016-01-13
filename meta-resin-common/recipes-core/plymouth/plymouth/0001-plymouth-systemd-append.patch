@@ -1,0 +1,102 @@
+Mon Sep 17 00:00:00 2001
+From: Theodor Gherzan <theodor@resin.io>
+Date: Thu, 17 Dec 2015 03:07:34 +0100
+Subject: plymouth: Systemd append
+
+Change systemd services in order to make the boot partition mount available
+and provide custom kernel command line.
+
+Signed-off-by: Theodor Gherzan <theodor@resin.io>
+---
+ systemd-units/plymouth-halt.service.in     | 4 +++-
+ systemd-units/plymouth-kexec.service.in    | 4 +++-
+ systemd-units/plymouth-poweroff.service.in | 4 +++-
+ systemd-units/plymouth-reboot.service.in   | 4 +++-
+ systemd-units/plymouth-start.service.in    | 6 ++++--
+ 5 files changed, 16 insertions(+), 6 deletions(-)
+
+--- a/systemd-units/plymouth-halt.service.in
++++ b/systemd-units/plymouth-halt.service.in
+@@ -2,10 +2,12 @@
+ Description=Show Plymouth Halt Screen
+ After=getty@tty1.service display-manager.service plymouth-start.service
+ Before=systemd-halt.service
++PartOf=boot.mount
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+
+ [Service]
+-ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
++Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
+--- a/systemd-units/plymouth-kexec.service.in
++++ b/systemd-units/plymouth-kexec.service.in
+@@ -2,10 +2,12 @@
+ Description=Show Plymouth Reboot with kexec Screen
+ After=getty@tty1.service display-manager.service plymouth-start.service
+ Before=systemd-kexec.service
++PartOf=boot.mount
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+
+ [Service]
+-ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
++Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
+--- a/systemd-units/plymouth-poweroff.service.in
++++ b/systemd-units/plymouth-poweroff.service.in
+@@ -2,10 +2,12 @@
+ Description=Show Plymouth Power Off Screen
+ After=getty@tty1.service display-manager.service plymouth-start.service
+ Before=systemd-poweroff.service
++PartOf=boot.mount
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+
+ [Service]
+-ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
++Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
+--- a/systemd-units/plymouth-reboot.service.in
++++ b/systemd-units/plymouth-reboot.service.in
+@@ -2,10 +2,12 @@
+ Description=Show Plymouth Reboot Screen
+ After=getty@tty1.service display-manager.service plymouth-start.service
+ Before=systemd-reboot.service
++PartOf=boot.mount
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
+
+ [Service]
+-ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
++Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
+--- a/systemd-units/plymouth-start.service.in
++++ b/systemd-units/plymouth-start.service.in
+@@ -2,12 +2,14 @@
+ Description=Show Plymouth Boot Screen
+ DefaultDependencies=no
+ Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
+-After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service
++After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service boot.mount
+ Before=systemd-ask-password-plymouth.service
++Requires=boot.mount
+ ConditionKernelCommandLine=!plymouth.enable=0
+
+ [Service]
+-ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
++Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session --kernel-command-line=${CMDLINE}
+ ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
+ Type=forking
+ KillMode=none
+--
+2.1.4

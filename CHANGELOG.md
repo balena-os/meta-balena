@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Add mechanism for user loading custom splash logo. [Theodor]
+* Add splash screen for all our images. [Theodor]
 * Make connman an optional network manager [Andrei]
 * Always restart openvpn service [Andrei]
 * Include distribution information file in rootfs [Andrei]
