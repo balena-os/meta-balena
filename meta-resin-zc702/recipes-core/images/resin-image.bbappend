@@ -6,5 +6,5 @@ RESIN_BOOT_PARTITION_FILES_zc702-zynq7 = " \
     u-boot.img: \
     uEnv.txt: \
     uImage: \
-    device-trees/zc702-zynq7.dtb: \
+    device-trees/zc702-zynq7.dtb:/ \
     "
