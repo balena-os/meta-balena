@@ -8,6 +8,8 @@ PR = "${INC_PR}.4"
 
 RDEPENDS_${PN}_append = " resin-connman-conf"
 
+SYSTEMD_AUTO_ENABLE = "enable"
+
 do_configure_append () {
     # Disable the dnsproxy for systemd unit files.
     sed -i "s/ExecStart=.*/& --nodnsproxy/" ${B}/src/connman.service
