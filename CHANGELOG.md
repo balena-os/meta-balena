@@ -1,6 +1,10 @@
 Change log
 -----------
 
+* Change OOM Adjust Score of RCE to -900 [Praneeth]
+* Change OOM Adjust Score of Connman to -1000 [Praneeth]
+* Change OOM Adjust Score of OpenVPN to -1000 [Praneeth]
+
 # v1.0.5 - 2016-01-13
 
 # v1.0.4 - 2016-01-13
