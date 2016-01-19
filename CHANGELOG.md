@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Remove obsolete pseudo patch. This patch is now in poky [Florin]
 * Remove obsolete bash patches. These patches are now in poky [Florin]
 * Ensure connman systemd service is enabled on boot [Florin]
 * Change OOM Adjust Score of RCE to -900 [Praneeth]
