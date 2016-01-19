@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Ensure connman systemd service is enabled on boot [Florin]
 * Change OOM Adjust Score of RCE to -900 [Praneeth]
 * Change OOM Adjust Score of Connman to -1000 [Praneeth]
 * Change OOM Adjust Score of OpenVPN to -1000 [Praneeth]
