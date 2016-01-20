@@ -8,9 +8,9 @@ Change log
 * Change OOM Adjust Score of Connman to -1000 [Praneeth]
 * Change OOM Adjust Score of OpenVPN to -1000 [Praneeth]
 
-# v1.0.5 - 2016-01-13
+# v1.0.5 - 2016-01-20
 
-# v1.0.4 - 2016-01-13
+# v1.0.4
 
 * Add mechanism for user loading custom splash logo. [Theodor]
 * Add splash screen for all our images. [Theodor]
@@ -21,7 +21,7 @@ Change log
 * Implement fingerprints for resin-boot and resin-root [Andrei]
 * Explicitly configure kernel with config.gz built in support [Andrei]
 
-# v1.0.3 - 2015-12-10
+# v1.0.3 - 2016-01-05
 
 * Removed the global bblayers.conf.sample and local.conf.sample [Jon]
 * Removed the append from the BBMASK declaration in meta-resin-toradex layer.conf [Jon]
