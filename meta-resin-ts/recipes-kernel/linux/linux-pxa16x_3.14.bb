@@ -11,6 +11,7 @@ SRCREV = "b8e31bb343585cea8516bc8b55a74b8bc20fa294"
 SRC_URI = " \
     git://github.com/embeddedarm/linux-3.14-pxa16x.git;branch=${KBRANCH} \
     file://defconfig \
+    file://initramfs.cpio \
     "
 
 COMPATIBLE_MACHINE = "ts7700"
