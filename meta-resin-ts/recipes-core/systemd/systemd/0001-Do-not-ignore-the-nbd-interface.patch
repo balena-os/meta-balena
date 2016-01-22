@@ -1,0 +1,46 @@
+Mon Sep 17 00:00:00 2001
+From: Theodor Gherzan <theodor@resin.io>
+Date: Mon, 18 Jan 2016 17:18:43 +0100
+Subject: systemd: Do not ignore the nbd interface
+
+[THIS IS MEANT AS A TEMPORARY FIX]
+The ts7700 makes heavy use of the nbd interface. Including the sd being exposed
+as a nbd block, so we would like udev to create its usual links for this type
+of devices.
+
+Signed-off-by: Theodor Gherzan <theodor@resin.io>
+---
+ rules/60-persistent-storage.rules | 2 +-
+ rules/99-systemd.rules.in         | 3 ---
+ 2 files changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/rules/60-persistent-storage.rules b/rules/60-persistent-storage.rules
+index 25b44a5..7dd90a2 100644
+--- a/rules/60-persistent-storage.rules
++++ b/rules/60-persistent-storage.rules
+@@ -14,7 +14,7 @@ ACTION=="add", SUBSYSTEM=="module", KERNEL=="block", ATTR{parameters/events_dfl_
+ SUBSYSTEM!="block", GOTO="persistent_storage_end"
+
+ # skip rules for inappropriate block devices
+-KERNEL=="fd*|mtd*|nbd*|gnbd*|btibm*|dm-*|md*|zram*|mmcblk[0-9]*rpmb", GOTO="persistent_storage_end"
++KERNEL=="fd*|mtd*|gnbd*|btibm*|dm-*|md*|zram*|mmcblk[0-9]*rpmb", GOTO="persistent_storage_end"
+
+ # ignore partitions that span the entire disk
+ TEST=="whole_disk", GOTO="persistent_storage_end"
+diff --git a/rules/99-systemd.rules.in b/rules/99-systemd.rules.in
+index b66d727..888af1e 100644
+--- a/rules/99-systemd.rules.in
++++ b/rules/99-systemd.rules.in
+@@ -25,9 +25,6 @@ SUBSYSTEM=="block", ENV{DEVTYPE}=="disk", KERNEL=="md*", ATTR{md/array_state}=="
+ # Ignore loop devices that don't have any file attached
+ SUBSYSTEM=="block", KERNEL=="loop[0-9]*", ENV{DEVTYPE}=="disk", TEST!="loop/backing_file", ENV{SYSTEMD_READY}="0"
+
+-# Ignore nbd devices in the "add" event, with "change" the nbd is ready
+-ACTION=="add", SUBSYSTEM=="block", KERNEL=="nbd*", ENV{SYSTEMD_READY}="0"
+-
+ # We need a hardware independent way to identify network devices. We
+ # use the /sys/subsystem path for this. Current vanilla kernels don't
+ # actually support that hierarchy right now, however upcoming kernels
+--
+2.1.4
+
