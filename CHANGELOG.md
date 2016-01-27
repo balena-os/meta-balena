@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix racing issue on edison [Andrei]
 * Add support ts7700 [Theodor]
 * Remove obsolete pseudo patch. This patch is now in poky [Florin]
 * Remove obsolete bash patches. These patches are now in poky [Florin]
