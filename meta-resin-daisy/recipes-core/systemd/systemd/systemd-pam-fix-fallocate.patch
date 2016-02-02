@@ -1,0 +1,92 @@
+Upstream-Status: Denied [no desire for uclibc support]
+
+This patch is uclibc specific, thus not suitable for upstream.
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/journal/journal-file.c  |   16 +++++++++++++++-
+ src/journal/journald-kmsg.c |   16 ++++++++++++++--
+ 2 files changed, 29 insertions(+), 3 deletions(-)
+
+diff --git a/src/journal/journal-file.c b/src/journal/journal-file.c
+index f2f1f35..092f87b 100644
+--- a/src/journal/journal-file.c
++++ b/src/journal/journal-file.c
+@@ -38,6 +38,8 @@
+ #include "compress.h"
+ #include "fsprg.h"
+ 
++#include "config.h"
++
+ #define DEFAULT_DATA_HASH_TABLE_SIZE (2047ULL*sizeof(HashItem))
+ #define DEFAULT_FIELD_HASH_TABLE_SIZE (333ULL*sizeof(HashItem))
+ 
+@@ -314,7 +316,7 @@ static int journal_file_verify_header(JournalFile *f) {
+ 
+ static int journal_file_allocate(JournalFile *f, uint64_t offset, uint64_t size) {
+         uint64_t old_size, new_size;
+-        int r;
++        int r = 0;
+ 
+         assert(f);
+ 
+@@ -362,9 +364,21 @@ static int journal_file_allocate(JournalFile *f, uint64_t offset, uint64_t size)
+         /* Note that the glibc fallocate() fallback is very
+            inefficient, hence we try to minimize the allocation area
+            as we can. */
++#ifdef HAVE_POSIX_FALLOCATE
+         r = posix_fallocate(f->fd, old_size, new_size - old_size);
+         if (r != 0)
+                 return -r;
++#else
++        /* Write something every 512 bytes to make sure the block is allocated */
++        uint64_t len = new_size - old_size;
++        uint64_t offset = old_size;
++        for (offset += (len-1) % 512; len > 0; offset += 512) {
++                len -= 512;
++                if (pwrite(f->fd, "", 1, offset) != 1)
++                        return -errno;
++        }
++
++#endif /* HAVE_POSIX_FALLOCATE */
+ 
+         if (fstat(f->fd, &f->last_stat) < 0)
+                 return -errno;
+diff --git a/src/journal/journald-kmsg.c b/src/journal/journald-kmsg.c
+index 12992e7..dc4fa93 100644
+--- a/src/journal/journald-kmsg.c
++++ b/src/journal/journald-kmsg.c
+@@ -437,6 +437,7 @@ fail:
+ int server_open_kernel_seqnum(Server *s) {
+         _cleanup_close_ int fd;
+         uint64_t *p;
++        int r = 0;
+ 
+         assert(s);
+ 
+@@ -449,8 +450,19 @@ int server_open_kernel_seqnum(Server *s) {
+                 log_error("Failed to open /run/systemd/journal/kernel-seqnum, ignoring: %m");
+                 return 0;
+         }
+-
+-        if (posix_fallocate(fd, 0, sizeof(uint64_t)) < 0) {
++#ifdef HAVE_POSIX_FALLOCATE
++        r = posix_fallocate(fd, 0, sizeof(uint64_t));
++#else
++	/* Use good old method to write zeros into the journal file
++	   perhaps very inefficient yet working. */
++	char *buf = alloca(sizeof(uint64_t));
++	off_t oldpos = lseek(fd, 0, SEEK_CUR);
++	bzero(buf, sizeof(uint64_t));
++	lseek(fd, 0, SEEK_SET);
++	r = write(fd, buf, sizeof(uint64_t));
++	lseek(fd, oldpos, SEEK_SET);
++#endif /* HAVE_POSIX_FALLOCATE */
++	if (r < 0) {
+                 log_error("Failed to allocate sequential number file, ignoring: %m");
+                 return 0;
+         }
+-- 
+1.7.9.5
+

@@ -1,0 +1,30 @@
+Upstream-Status: Denied [no desire for uclibc support]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: git/src/shared/util.c
+===================================================================
+--- git.orig/src/shared/util.c	2014-03-15 15:14:21.368160908 -0700
++++ git/src/shared/util.c	2014-03-15 15:44:21.988194688 -0700
+@@ -85,6 +85,8 @@
+ #include "def.h"
+ #include "missing.h"
+ 
++#include "config.h"
++
+ int saved_argc = 0;
+ char **saved_argv = NULL;
+ 
+@@ -6222,7 +6224,13 @@
+ 
+         u = umask(077);
+ 
++#ifdef HAVE_MKOSTEMP
+         fd = mkostemp(pattern, flags);
++#else
++        fd = mkstemp(pattern);
++        if (fd >= 0) fcntl(fd, F_SETFD, flags);
++#endif /* HAVE_MKOSTEMP */
++
+         if (fd < 0)
+                 return -errno;
+ 

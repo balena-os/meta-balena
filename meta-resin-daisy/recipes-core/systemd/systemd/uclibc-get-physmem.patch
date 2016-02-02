@@ -1,0 +1,37 @@
+bypass unimplemented _SC_PHYS_PAGES system configuration API in uclibc
+
+Upstream-Status: Inappropriate [uclibc-specific]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: git/src/shared/util.c
+===================================================================
+--- git.orig/src/shared/util.c	2014-03-15 18:09:34.796358146 -0700
++++ git/src/shared/util.c	2014-03-15 20:16:33.836501084 -0700
+@@ -6332,11 +6332,24 @@
+ 
+         /* We return this as uint64_t in case we are running as 32bit
+          * process on a 64bit kernel with huge amounts of memory */
+-
++#ifdef __UCLIBC__
++        char line[128];
++        FILE *f = fopen("/proc/meminfo", "r");
++        if (f == NULL)
++                return 0;
++        while (!feof(f) && fgets(line, sizeof(line)-1, f)) {
++                if (sscanf(line, "MemTotal: %l kB", &mem) == 1) {
++                        mem *= 1024;
++                        break;
++                }
++        }
++        fclose(f);
++        return (uint64_t) mem;
++#else
+         mem = sysconf(_SC_PHYS_PAGES);
+         assert(mem > 0);
+-
+         return (uint64_t) mem * (uint64_t) page_size();
++#endif
+ }
+ 
+ char* mount_test_option(const char *haystack, const char *needle) {

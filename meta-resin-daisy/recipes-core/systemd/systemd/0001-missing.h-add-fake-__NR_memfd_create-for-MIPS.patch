@@ -1,0 +1,29 @@
+Upstream-Status: Backport
+
+Subject: missing.h: add fake __NR_memfd_create for MIPS
+
+We don't have the correct __NR_memfd_create syscall number yet, so set it to
+0xffffffff for now to prevent compile time errors.
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/shared/missing.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/shared/missing.h b/src/shared/missing.h
+index 3ff1a21..3051cb5 100644
+--- a/src/shared/missing.h
++++ b/src/shared/missing.h
+@@ -167,6 +167,9 @@ static inline int pivot_root(const char *new_root, const char *put_old) {
+ #      define __NR_fanotify_mark 5296
+ #    endif
+ #  endif
++#  ifndef __NR_memfd_create
++#    define __NR_memfd_create 0xffffffff /* FIXME */
++#  endif
+ #else
+ #  ifndef __NR_fanotify_init
+ #    define __NR_fanotify_init 338
+-- 
+1.9.1
+

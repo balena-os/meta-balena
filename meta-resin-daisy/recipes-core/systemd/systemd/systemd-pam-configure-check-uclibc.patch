@@ -1,0 +1,32 @@
+Upstream-Status: Denied [no desire for uclibc support]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac	2014-03-15 17:53:51.756340454 -0700
++++ git/configure.ac	2014-03-15 18:07:34.888355897 -0700
+@@ -78,6 +78,24 @@
+ 
+ M4_DEFINES=
+ 
++# check for few functions not implemented in uClibc
++
++AC_CHECK_FUNCS_ONCE(mkostemp execvpe posix_fallocate)
++
++# check for %ms format support - assume always no if cross compiling
++
++AC_MSG_CHECKING([whether %ms format is supported by *scanf])
++
++AC_LINK_IFELSE(
++	[AC_LANG_PROGRAM([ 
++	 #include <stdio.h>
++	 ],[
++	    char *buf1, *buf2, *buf3, str="1 2.3 abcde" ;
++	    int rc = sscanf(str, "%ms %ms %ms", &buf1, &buf2, &buf3) ;
++	    return (rc==3)?0:1;])],
++	[AC_DEFINE([HAVE_MSFORMAT], [1], [Define if %ms format is supported by *scanf.])],
++	[AC_MSG_RESULT([no])])
++
+ # gtkdocize greps for '^GTK_DOC_CHECK', so it needs to be on its own line
+ m4_ifdef([GTK_DOC_CHECK], [
+ GTK_DOC_CHECK([1.18],[--flavour no-tmpl])],
