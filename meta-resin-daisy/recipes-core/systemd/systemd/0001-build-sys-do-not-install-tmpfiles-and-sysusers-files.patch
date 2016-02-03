@@ -1,0 +1,56 @@
+From bedd083aaedb3bbb14ef579a047bf4b4fed56d9b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Date: Wed, 26 Nov 2014 09:17:50 +0100
+Subject: [PATCH] build-sys: do not install tmpfiles and sysusers files by
+ default
+
+Upstream-Status: Backport
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+---
+ Makefile.am | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index ddd0df1..65bb176 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2039,7 +2039,6 @@ nodist_tmpfiles_DATA = \
+ dist_tmpfiles_DATA = \
+ 	tmpfiles.d/systemd.conf \
+ 	tmpfiles.d/systemd-nologin.conf \
+-	tmpfiles.d/systemd-remote.conf \
+ 	tmpfiles.d/tmp.conf \
+ 	tmpfiles.d/x11.conf \
+ 	tmpfiles.d/var.conf
+@@ -2094,8 +2093,7 @@ SYSINIT_TARGET_WANTS += \
+ 	systemd-sysusers.service
+ 
+ dist_sysusers_DATA = \
+-	sysusers.d/systemd.conf \
+-	sysusers.d/systemd-remote.conf
++	sysusers.d/systemd.conf
+ 
+ nodist_sysusers_DATA = \
+ 	sysusers.d/basic.conf
+@@ -3839,6 +3837,16 @@ systemd_journal_remote_CFLAGS = \
+ systemd_journal_remote_LDADD += \
+ 	$(MICROHTTPD_LIBS)
+ 
++if ENABLE_SYSUSERS
++dist_sysusers_DATA += \
++	sysusers.d/systemd-remote.conf
++endif
++
++if ENABLE_TMPFILES
++dist_tmpfiles_DATA += \
++	tmpfiles.d/systemd-remote.conf
++endif
++
+ if HAVE_GNUTLS
+ systemd_journal_remote_LDADD += \
+ 	$(GNUTLS_LIBS)
+-- 
+1.9.1
+

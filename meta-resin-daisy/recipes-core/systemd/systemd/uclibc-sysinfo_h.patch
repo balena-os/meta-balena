@@ -1,0 +1,19 @@
+Dont include sys/sysinfo.h on uclibc it conflicts with linux/sysinfo.h
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Upstream-Status: Inappropriate [uclibc specific]
+
+Index: systemd-209/src/readahead/readahead-common.c
+===================================================================
+--- systemd-209.orig/src/readahead/readahead-common.c	2014-02-12 18:42:33.810685053 -0800
++++ systemd-209/src/readahead/readahead-common.c	2014-02-19 23:49:31.856661142 -0800
+@@ -22,7 +22,9 @@
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <string.h>
++#ifndef __UCLIBC__
+ #include <sys/sysinfo.h>
++#endif
+ #include <sys/inotify.h>
+ #include <fcntl.h>
+ #include <sys/mman.h>

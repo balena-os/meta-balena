@@ -1,0 +1,56 @@
+Don't install dependency links at install time for the binfmt services, use
+[Install] blocks so that they get created when the service is enabled like a
+traditional service.
+
+The [Install] blocks were rejected upstream as they don't have a way to "enable"
+it on install without static symlinks which can't be disabled, only masked.  We
+however can do that in a postinst.
+
+Upstream-Status: Denied
+Signed-off-by: Ross Burton <ross.burton@intel.com>
+
+diff --git a/Makefile.am b/Makefile.am
+index 7933de6..78acb6f 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -3133,10 +3133,6 @@ INSTALL_DIRS += \
+ 	$(prefix)/lib/binfmt.d \
+ 	$(sysconfdir)/binfmt.d
+ 
+-SYSINIT_TARGET_WANTS += \
+-	systemd-binfmt.service \
+-	proc-sys-fs-binfmt_misc.automount
+-
+ endif
+ 
+ EXTRA_DIST += \
+diff --git a/units/proc-sys-fs-binfmt_misc.automount b/units/proc-sys-fs-binfmt_misc.automount
+index 6be3893..709adef 100644
+--- a/units/proc-sys-fs-binfmt_misc.automount
++++ b/units/proc-sys-fs-binfmt_misc.automount
+@@ -16,3 +16,6 @@ ConditionPathIsReadWrite=/proc/sys/
+ 
+ [Automount]
+ Where=/proc/sys/fs/binfmt_misc
++
++[Install]
++WantedBy=sysinit.target
+diff --git a/units/systemd-binfmt.service.in b/units/systemd-binfmt.service.in
+index 02dfe77..86d3481 100644
+--- a/units/systemd-binfmt.service.in
++++ b/units/systemd-binfmt.service.in
+@@ -11,6 +11,7 @@ Documentation=man:systemd-binfmt.service(8) man:binfmt.d(5)
+ Documentation=https://www.kernel.org/doc/Documentation/binfmt_misc.txt
+ DefaultDependencies=no
+ Conflicts=shutdown.target
++Wants=proc-sys-fs-binfmt_misc.automount
+ After=systemd-readahead-collect.service systemd-readahead-replay.service proc-sys-fs-binfmt_misc.automount
+ Before=sysinit.target shutdown.target
+ ConditionPathIsReadWrite=/proc/sys/
+@@ -24,3 +25,6 @@ ConditionDirectoryNotEmpty=|/run/binfmt.d
+ Type=oneshot
+ RemainAfterExit=yes
+ ExecStart=@rootlibexecdir@/systemd-binfmt
++
++[Install]
++WantedBy=sysinit.target

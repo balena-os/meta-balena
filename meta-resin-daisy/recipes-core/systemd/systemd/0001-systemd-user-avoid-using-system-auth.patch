@@ -1,0 +1,26 @@
+Upstream-Status: Inappropriate [oe specific]
+
+Subject: systemd-user: avoid using system-auth
+
+In OE, we don't provide system-auth, instead, we use common-* files.
+So modify systemd-user file to use common-* files.
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/login/systemd-user | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/login/systemd-user b/src/login/systemd-user
+index 8112d74..99635af 100644
+--- a/src/login/systemd-user
++++ b/src/login/systemd-user
+@@ -2,5 +2,5 @@
+ #
+ # Used by systemd --user instances.
+
+-account  include system-auth
+-session  include system-auth
++account  include common-account
++session  include common-session
+--
+1.9.1

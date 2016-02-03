@@ -1,0 +1,176 @@
+From 5a16bc264c32237e38a844d55e7a1820a31b8440 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Date: Fri, 28 Nov 2014 15:59:59 +0100
+Subject: [PATCH] build-sys: configure the list of system users, files and
+ directories
+
+Choose which system users defined in sysusers.d/systemd.conf and files
+or directories in tmpfiles.d/systemd.conf, should be provided depending
+on comile-time configuration.
+
+Upstream-Status: Backport
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ Makefile.am                                  | 4 ++++
+ configure.ac                                 | 2 ++
+ sysusers.d/.gitignore                        | 1 +
+ sysusers.d/{systemd.conf => systemd.conf.m4} | 8 ++++++++
+ tmpfiles.d/.gitignore                        | 3 ++-
+ tmpfiles.d/{systemd.conf => systemd.conf.m4} | 2 ++
+ 6 files changed, 19 insertions(+), 1 deletion(-)
+ rename sysusers.d/{systemd.conf => systemd.conf.m4} (77%)
+ rename tmpfiles.d/{systemd.conf => systemd.conf.m4} (96%)
+
+Index: git/Makefile.am
+===================================================================
+--- git.orig/Makefile.am	2015-01-23 21:23:04.000000000 +0000
++++ git/Makefile.am	2015-01-23 21:23:04.000000000 +0000
+@@ -5698,6 +5698,10 @@
+ 	$(AM_V_at)$(MKDIR_P) $(dir $@)
+ 	$(AM_V_M4)$(M4) -P $(M4_DEFINES) < $< > $@
+ 
++sysusers.d/%: sysusers.d/%.m4
++	$(AM_V_at)$(MKDIR_P) $(dir $@)
++	$(AM_V_M4)$(M4) -P $(M4_DEFINES) < $< > $@
++
+ tmpfiles.d/%: tmpfiles.d/%.m4
+ 	$(AM_V_at)$(MKDIR_P) $(dir $@)
+ 	$(AM_V_M4)$(M4) -P $(M4_DEFINES) < $< > $@
+Index: git/configure.ac
+===================================================================
+--- git.orig/configure.ac	2015-01-23 21:23:04.000000000 +0000
++++ git/configure.ac	2015-01-23 21:23:04.000000000 +0000
+@@ -971,6 +971,7 @@
+ AC_ARG_ENABLE(timesyncd, AS_HELP_STRING([--disable-timesyncd], [disable timesync daemon]))
+ if test "x$enable_timesyncd" != "xno"; then
+         have_timesyncd=yes
++        M4_DEFINES="$M4_DEFINES -DENABLE_TIMESYNCD"
+ fi
+ AM_CONDITIONAL(ENABLE_TIMESYNCD, [test "$have_timesyncd" = "yes"])
+ 
+@@ -1060,6 +1061,7 @@
+ AS_IF([test "x$enable_networkd" != "xno"], [
+         AC_DEFINE(ENABLE_NETWORKD, 1, [Define if networkd support is to be enabled])
+         have_networkd=yes
++        M4_DEFINES="$M4_DEFINES -DENABLE_NETWORKD"
+ ])
+ AM_CONDITIONAL(ENABLE_NETWORKD, [test "x$have_networkd" = "xyes"])
+ 
+Index: git/sysusers.d/systemd.conf
+===================================================================
+--- git.orig/sysusers.d/systemd.conf	2015-01-23 21:23:02.000000000 +0000
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,12 +0,0 @@
+-#  This file is part of systemd.
+-#
+-#  systemd is free software; you can redistribute it and/or modify it
+-#  under the terms of the GNU Lesser General Public License as published by
+-#  the Free Software Foundation; either version 2.1 of the License, or
+-#  (at your option) any later version.
+-
+-g systemd-journal   - -
+-u systemd-bus-proxy - "systemd Bus Proxy"
+-u systemd-network   - "systemd Network Management"
+-u systemd-resolve   - "systemd Resolver"
+-u systemd-timesync  - "systemd Time Synchronization"
+Index: git/sysusers.d/systemd.conf.m4
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/sysusers.d/systemd.conf.m4	2015-01-23 21:26:30.000000000 +0000
+@@ -0,0 +1,20 @@
++#  This file is part of systemd.
++#
++#  systemd is free software; you can redistribute it and/or modify it
++#  under the terms of the GNU Lesser General Public License as published by
++#  the Free Software Foundation; either version 2.1 of the License, or
++#  (at your option) any later version.
++
++g systemd-journal   - -
++m4_ifdef(`ENABLE_KDBUS',
++u systemd-bus-proxy - "systemd Bus Proxy"
++)m4_dnl
++m4_ifdef(`ENABLE_NETWORKD',
++u systemd-network   - "systemd Network Management"
++)m4_dnl
++m4_ifdef(`ENABLE_RESOLVED',
++u systemd-resolve   - "systemd Resolver"
++)m4_dnl
++m4_ifdef(`ENABLE_TIMESYNCD',
++u systemd-timesync  - "systemd Time Synchronization"
++)m4_dnl
+Index: git/tmpfiles.d/systemd.conf
+===================================================================
+--- git.orig/tmpfiles.d/systemd.conf	2015-01-23 21:23:02.000000000 +0000
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,32 +0,0 @@
+-#  This file is part of systemd.
+-#
+-#  systemd is free software; you can redistribute it and/or modify it
+-#  under the terms of the GNU Lesser General Public License as published by
+-#  the Free Software Foundation; either version 2.1 of the License, or
+-#  (at your option) any later version.
+-
+-# See tmpfiles.d(5) for details
+-
+-d /run/user 0755 root root -
+-F! /run/utmp 0664 root utmp -
+-
+-d /run/systemd/ask-password 0755 root root -
+-d /run/systemd/seats 0755 root root -
+-d /run/systemd/sessions 0755 root root -
+-d /run/systemd/users 0755 root root -
+-d /run/systemd/machines 0755 root root -
+-d /run/systemd/shutdown 0755 root root -
+-d /run/systemd/netif 0755 systemd-network systemd-network -
+-d /run/systemd/netif/links 0755 systemd-network systemd-network -
+-d /run/systemd/netif/leases 0755 systemd-network systemd-network -
+-
+-d /run/log 0755 root root -
+-
+-z /run/log/journal 2755 root systemd-journal - -
+-Z /run/log/journal/%m ~2750 root systemd-journal - -
+-
+-z /var/log/journal 2755 root systemd-journal - -
+-z /var/log/journal/%m 2755 root systemd-journal - -
+-
+-d /var/lib/systemd 0755 root root -
+-d /var/lib/systemd/coredump 0755 root root 3d
+Index: git/tmpfiles.d/systemd.conf.m4
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ git/tmpfiles.d/systemd.conf.m4	2015-01-23 21:26:46.000000000 +0000
+@@ -0,0 +1,34 @@
++#  This file is part of systemd.
++#
++#  systemd is free software; you can redistribute it and/or modify it
++#  under the terms of the GNU Lesser General Public License as published by
++#  the Free Software Foundation; either version 2.1 of the License, or
++#  (at your option) any later version.
++
++# See tmpfiles.d(5) for details
++
++d /run/user 0755 root root -
++F! /run/utmp 0664 root utmp -
++
++d /run/systemd/ask-password 0755 root root -
++d /run/systemd/seats 0755 root root -
++d /run/systemd/sessions 0755 root root -
++d /run/systemd/users 0755 root root -
++d /run/systemd/machines 0755 root root -
++d /run/systemd/shutdown 0755 root root -
++m4_ifdef(`ENABLE_NETWORKD',
++d /run/systemd/netif 0755 systemd-network systemd-network -
++d /run/systemd/netif/links 0755 systemd-network systemd-network -
++d /run/systemd/netif/leases 0755 systemd-network systemd-network -
++)m4_dnl
++
++d /run/log 0755 root root -
++
++z /run/log/journal 2755 root systemd-journal - -
++Z /run/log/journal/%m ~2750 root systemd-journal - -
++
++z /var/log/journal 2755 root systemd-journal - -
++z /var/log/journal/%m 2755 root systemd-journal - -
++
++d /var/lib/systemd 0755 root root -
++d /var/lib/systemd/coredump 0755 root root 3d

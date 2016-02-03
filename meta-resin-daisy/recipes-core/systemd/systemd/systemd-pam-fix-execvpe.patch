@@ -1,0 +1,29 @@
+Upstream-Status: Denied [no desire for uclibc support]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Index: systemd-209/src/nspawn/nspawn.c
+===================================================================
+--- systemd-209.orig/src/nspawn/nspawn.c	2014-02-19 15:03:09.000000000 -0800
++++ systemd-209/src/nspawn/nspawn.c	2014-02-19 23:20:38.720628627 -0800
+@@ -91,6 +91,8 @@
+         LINK_GUEST
+ } LinkJournal;
+ 
++#include "config.h"
++
+ static char *arg_directory = NULL;
+ static char *arg_user = NULL;
+ static sd_id128_t arg_uuid = {};
+@@ -2045,7 +2047,12 @@
+                                 a[0] = (char*) "/sbin/init";
+                                 execve(a[0], a, env_use);
+                         } else if (argc > optind)
++#ifdef HAVE_EXECVPE
+                                 execvpe(argv[optind], argv + optind, env_use);
++#else
++                                environ = env_use;
++                                execvp(argv[optind], argv + optind);
++#endif /* HAVE_EXECVPE */                      
+                         else {
+                                 chdir(home ? home : "/root");
+                                 execle("/bin/bash", "-bash", NULL, env_use);

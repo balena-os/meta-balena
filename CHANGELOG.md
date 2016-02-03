@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Upgrade systemd to version 216 and add volatile-binds dependency [Florin]
 * Fix racing issue on edison [Andrei]
 * Add support ts7700 [Theodor]
 * Remove obsolete pseudo patch. This patch is now in poky [Florin]
