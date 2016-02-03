@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add resinhup package for running hostOS updates [Andrei]
 * Export deltaEndpoint as DELTA_ENDPOINT [Andrei]
 
 # v1.0.6 - 2016-02-03
