@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Export deltaEndpoint as DELTA_ENDPOINT [Andrei]
+
 # v1.0.6 - 2016-02-03
 
 * Upgrade systemd to version 216 and add volatile-binds dependency [Florin]
