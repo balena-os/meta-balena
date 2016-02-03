@@ -18,4 +18,5 @@ RDEPENDS_${PN} += " \
     resin-logs \
     resin-extend-expand \
     resin-info-tty \
+    resinhup \
     "
