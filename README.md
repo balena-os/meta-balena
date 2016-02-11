@@ -73,9 +73,20 @@ We currently tested and provide explicit support for the following WiFi adapters
 
 ## Contributing
 
-To contribute send bitbucket pull requests targeting [this](https://bitbucket.org/rulemotion/meta-resin) repository.
+To contribute send github pull requests targeting [this](https://github.com/resin-os/meta-resin) repository.
 
-Please refer to: [Yocto Contribution Guidelines](https://wiki.yoctoproject.org/wiki/Contribution_Guidelines#General_Information)
+Please refer to: [Yocto Contribution Guidelines](https://wiki.yoctoproject.org/wiki/Contribution_Guidelines#General_Information) and try to use the commit log format as stated there. Example:
+```
+test.bb: I added a test
+
+[Issue #01]
+
+I'm going to explain here what my commit does in a way that history
+would be useful.
+
+Signed-off-by: Joe Developer <joe.developer@example.com>
+```
+
 
 ## How to fix various build errors
 
