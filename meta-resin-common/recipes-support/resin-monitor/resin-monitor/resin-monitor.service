@@ -1,0 +1,6 @@
+[Unit]
+Description=Resin monitor
+
+[Service]
+Type=simple
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-monitor

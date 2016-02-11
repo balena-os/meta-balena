@@ -1,0 +1,10 @@
+[Unit]
+Description=Resin monitor timer
+
+[Timer]
+[Timer]
+OnBootSec=5min
+OnUnitInactiveSec=2min
+
+[Install]
+WantedBy=multi-user.target
