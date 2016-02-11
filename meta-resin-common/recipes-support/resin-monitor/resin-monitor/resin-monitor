@@ -1,0 +1,65 @@
+#!/bin/bash
+
+source /var/lib/resin/resin-helpers
+
+SERVICES=(mnt-data.mount rce.service resin-supervisor.service) # Keep this ordered by prio
+TOKENS=(data-part-fail container-engine-fail supervisor-fail)
+OK_TOKEN="no-fail"
+FIELD="health_status"
+LOCALSTATE=/tmp/.$FIELD
+
+# Load all the needed variables to report to API
+function load_vars {
+    source /usr/sbin/resin-vars
+    read api_key device_id <<<$(jq -r '.apiKey,.deviceId' $CONFIG_PATH)
+    if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" -o -z "$api_key" -o -z "$device_id" -o "$api_key" == "null" -o "$device_id" == "null" ]; then
+        log WARN "resin-monitor : Can't report fail to API as needed variables not defined."
+        return 1
+    fi
+    return 0
+}
+
+# Send report to API
+function report_token {
+    if [ -f "$LOCALSTATE" ] && [ "$(cat $LOCALSTATE)" == "$1" ]; then
+        log "State unchanged, no API call."
+    else
+        log "State changed, API call."
+        curl -s -X PATCH \
+            "$API_ENDPOINT/ewa/device($device_id)?apikey=$api_key" \
+            -H 'Content-Type: application/json;charset=UTF-8' \
+            --data "{\"$FIELD\":\"$1\"}"
+        echo
+        # Save local state
+        echo "$1" > $LOCALSTATE
+    fi
+}
+
+#
+# MAIN
+#
+
+# Check each service
+for idx in ${!SERVICES[@]}; do
+    log "Checking ${SERVICES[$idx]}..."
+    check_if_service_is_active ${SERVICES[$idx]}
+    if [ $? -ne 0 ]; then
+        # Send failed token to API
+        if load_vars; then
+            report_token ${TOKENS[$idx]}
+        fi
+
+        # Log Fail
+        log ERROR "Detected ${SERVICES[$idx]} failed."
+    else
+        log "${SERVICES[$idx]} checked OK."
+    fi
+done
+
+# If we got here nothing failed
+log "All services OK."
+if load_vars; then
+    report_token ${OK_TOKEN}
+fi
+
+return 0
