@@ -1,6 +1,9 @@
 Change log
 -----------
 
+# v1.1.0 - 2016-02-16
+
+* Migrate repositories to github [Florin]
 * Add resinhup package for running hostOS updates [Andrei]
 * Export deltaEndpoint as DELTA_ENDPOINT [Andrei]
 
