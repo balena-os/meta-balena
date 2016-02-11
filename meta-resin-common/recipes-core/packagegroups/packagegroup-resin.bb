@@ -19,4 +19,5 @@ RDEPENDS_${PN} += " \
     resin-extend-expand \
     resin-info-tty \
     resinhup \
+    resin-monitor \
     "
