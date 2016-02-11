@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Implement resin-monitor for monitoring core resin services [Andrei]
 * Add resinhup package for running hostOS updates [Andrei]
 * Export deltaEndpoint as DELTA_ENDPOINT [Andrei]
 
