@@ -43,14 +43,14 @@ fi
 # runtime value
 if [ -f $CONFIG_PATH ]
 then
-    API_ENDPOINT=$(jq --raw-output ".apiEndpoint" $CONFIG_PATH)
-    LISTEN_PORT=$(jq --raw-output ".listenPort" $CONFIG_PATH)
-    MIXPANEL_TOKEN=$(jq --raw-output ".mixpanelToken" $CONFIG_PATH)
-    PUBNUB_PUBLISH_KEY=$(jq --raw-output ".pubnubPublishKey" $CONFIG_PATH)
-    PUBNUB_SUBSCRIBE_KEY=$(jq --raw-output ".pubnubSubscribeKey" $CONFIG_PATH)
-    REGISTRY_ENDPOINT=$(jq --raw-output ".registryEndpoint" $CONFIG_PATH)
-    VPN_ENDPOINT=$(jq --raw-output ".vpnEndpoint" $CONFIG_PATH)
-    DELTA_ENDPOINT=$(jq --raw-output ".deltaEndpoint" $CONFIG_PATH)
+    API_ENDPOINT=$(jq --raw-output ".apiEndpoint // empty" $CONFIG_PATH)
+    LISTEN_PORT=$(jq --raw-output ".listenPort // empty" $CONFIG_PATH)
+    MIXPANEL_TOKEN=$(jq --raw-output ".mixpanelToken // empty" $CONFIG_PATH)
+    PUBNUB_PUBLISH_KEY=$(jq --raw-output ".pubnubPublishKey // empty" $CONFIG_PATH)
+    PUBNUB_SUBSCRIBE_KEY=$(jq --raw-output ".pubnubSubscribeKey // empty" $CONFIG_PATH)
+    REGISTRY_ENDPOINT=$(jq --raw-output ".registryEndpoint // empty" $CONFIG_PATH)
+    VPN_ENDPOINT=$(jq --raw-output ".vpnEndpoint // empty" $CONFIG_PATH)
+    DELTA_ENDPOINT=$(jq --raw-output ".deltaEndpoint // empty" $CONFIG_PATH)
     if [ -z "$API_ENDPOINT" -o -z "$LISTEN_PORT" -o -z "$MIXPANEL_TOKEN" -o -z "$PUBNUB_PUBLISH_KEY" -o -z "$PUBNUB_SUBSCRIBE_KEY" -o -z "$REGISTRY_ENDPOINT" -o -z "$VPN_ENDPOINT" ]; then
         echo "[WARNING] $0 : Couldn't read some variables from $CONFIG_PATH"
     fi
