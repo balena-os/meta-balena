@@ -1,0 +1,49 @@
+From 288a819af7d3a6fab9e0b69ae8dbaac74b36307b Mon Sep 17 00:00:00 2001
+From: Gert Doering <gert@greenie.muc.de>
+Date: Sun, 31 May 2015 15:59:09 +0200
+Subject: [PATCH 1/1] Move res_init() call to inner openvpn_getaddrinfo() loop
+
+A non-working nameserver in /etc/resolv.conf could lead to endless
+loops inside openvpn_getaddrinfo(), because many systems will only
+pick up changes to resolv.conf if res_init() is called again.
+
+To reproduce, run openvpn with --resolv-retry infinite (2.3) or
+--resolv-retry "a high number" (master) on a BSD system.  Linux
+glibc seems to stat() resolv.conf on calls to getaddrinfo() and
+pick up changes automatically.
+
+Trac #523
+
+Signed-off-by: Gert Doering <gert@greenie.muc.de>
+Acked-by: Arne Schwabe <arne@rfc2549.org>
+Message-Id: <1433080749-6892-1-git-send-email-gert@greenie.muc.de>
+URL: http://article.gmane.org/gmane.network.openvpn.devel/9763
+
+Upstream-Status: Backport
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Index: openvpn-2.3.6/src/openvpn/socket.c
+===================================================================
+--- openvpn-2.3.6.orig/src/openvpn/socket.c
++++ openvpn-2.3.6/src/openvpn/socket.c
+@@ -137,10 +137,6 @@ openvpn_getaddrinfo (unsigned int flags,
+ 
+   ASSERT(res);
+ 
+-#if defined(HAVE_DECL_RES_INIT)
+-  res_init ();
+-#endif
+-
+   if (!hostname)
+     hostname = "::";
+ 
+@@ -197,6 +193,9 @@ openvpn_getaddrinfo (unsigned int flags,
+        */
+       while (true)
+         {
++#if defined(HAVE_DECL_RES_INIT)
++  res_init ();
++#endif
+           /* try hostname lookup */
+           hints.ai_flags = 0;
+           dmsg (D_SOCKET_DEBUG, "GETADDRINFO flags=0x%04x ai_family=%d ai_socktype=%d",
