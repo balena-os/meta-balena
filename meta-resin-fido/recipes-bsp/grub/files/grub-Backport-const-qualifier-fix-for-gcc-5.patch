@@ -18,15 +18,15 @@ index bc07d53..44131ed 100644
 +++ b/grub-core/net/bootp.c
 @@ -52,9 +52,9 @@ set_env_limn_ro (const char *intername, const char *suffix,
  }
- 
+
  static void
 -parse_dhcp_vendor (const char *name, void *vend, int limit, int *mask)
 +parse_dhcp_vendor (const char *name, const void *vend, int limit, int *mask)
  {
 -  grub_uint8_t *ptr, *ptr0;
 +  const grub_uint8_t *ptr, *ptr0;
- 
+
    ptr = ptr0 = vend;
- 
+
 --
 2.1.4
