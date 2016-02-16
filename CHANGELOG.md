@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update layer with the ability to use jethro [Theodor]
+
 # v1.1.0 - 2016-02-16
 
 * Migrate repositories to github [Florin]
