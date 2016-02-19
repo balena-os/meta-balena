@@ -8,4 +8,4 @@ This repository enables building resin.io for fido supported machines.
 This layer depends on:
 
 * URI: git://git.yoctoproject.org/poky
-    * branch: fido
+    * branch: jethro
