@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Set IMAGE_ROOTFS_SIZE to zero as default [Florin]
 * Update layer with the ability to use jethro [Theodor]
 
 # v1.1.0 - 2016-02-16
