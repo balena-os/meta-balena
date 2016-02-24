@@ -12,4 +12,4 @@ This layer depends on:
 
 * URI: git://git.yoctoproject.org/poky
 * URI: git://github.com/openembedded/meta-openembedded
-    * layers: meta, meta-networking, meta-python
+    * layers: meta-oe, meta-networking, meta-python
