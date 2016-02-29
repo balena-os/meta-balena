@@ -16,7 +16,6 @@ RDEPENDS_${PN} = " \
     jq \
     resin-conf \
     coreutils \
-    resin-device-register \
     "
 
 do_install() {

@@ -18,6 +18,7 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)} \
     ${RESIN_INIT_PACKAGE} \
     ${RESIN_MOUNTS} \
+    ${RESIN_REGISTER} \
     kernel-modules \
     os-release \
     "

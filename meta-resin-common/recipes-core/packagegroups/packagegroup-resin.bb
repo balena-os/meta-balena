@@ -7,6 +7,7 @@ inherit packagegroup
 
 RESIN_INIT_PACKAGE ?= "resin-init"
 RESIN_MOUNTS ?= "resin-mounts"
+RESIN_REGISTER ?= "resin-supervisor"
 
 include packagegroup-resin.inc
 
