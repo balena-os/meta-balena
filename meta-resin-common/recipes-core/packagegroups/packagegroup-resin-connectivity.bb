@@ -20,6 +20,7 @@ CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
     wireless-tools \
     openvpn \
+    crda \
     "
 
 RDEPENDS_${PN} = " \
