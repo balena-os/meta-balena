@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Include crda in resin images [Andrei]
 * Add support for hid-multitouch - available as kernel module [Andrei]
 * Simplify os-release version and add some resin specific info [Andrei]
 * Set IMAGE_ROOTFS_SIZE to zero as default [Florin]
