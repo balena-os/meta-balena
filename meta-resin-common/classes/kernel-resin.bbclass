@@ -72,6 +72,7 @@ RESIN_CONFIGS ?= " \
     leds-gpio \
     proc-config \
     no-logo \
+    hid-multitouch \
     "
 
 #
@@ -225,6 +226,17 @@ RESIN_CONFIGS[proc-config] ?= " \
 #
 RESIN_CONFIGS[no-logo] ?= " \
     CONFIG_LOGO=n \
+    "
+
+#
+# Support for touchscreens using generic multitouch driver
+#
+RESIN_CONFIGS_DEPS[hid-multitouch] ?= " \
+    CONFIG_INPUT=y \
+    CONFIG_HID=y \
+    "
+RESIN_CONFIGS[hid-multitouch] ?= " \
+    CONFIG_HID_MULTITOUCH=m \
     "
 
 ###########
