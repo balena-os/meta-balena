@@ -110,7 +110,9 @@ python () {
         pull_output = subprocess.Popen(pull_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
 
     # Inspect for fetching the version only if image exists
-    imagechk_cmd = "docker images %s | grep %s" % (target_repository, tag_repository)
+    # on Fedora 23 at least, docker has suffered slight changes (https://bugzilla.redhat.com/show_bug.cgi?id=1312934)
+    # hence we need the following workaround until the above bug is fixed:
+    imagechk_cmd = "docker images | grep '^\S*%s\s*%s'" % (target_repository, tag_repository)
     imagechk_output = subprocess.Popen(imagechk_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if imagechk_output == "":
         bb.fatal("resin-supervisor-disk: No local supervisor images found.")

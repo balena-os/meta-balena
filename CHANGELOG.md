@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Workaround for "docker images" behavior - https://bugzilla.redhat.com/show_bug.cgi?id=1312934 [Florin]
 * Have device registration provided by supervisor in resin-image and resin-device-register in resin-image-flasher [Andrei]
 * Include crda in resin images [Andrei]
 * Add support for hid-multitouch - available as kernel module [Andrei]
