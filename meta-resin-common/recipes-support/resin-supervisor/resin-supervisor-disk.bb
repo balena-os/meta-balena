@@ -124,8 +124,8 @@ python () {
     image_id_output = subprocess.Popen(image_id_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if image_id_output == "" or image_id_output == None:
         bb.fatal("resin-supervisor-disk: Cannot fetch image id.")
-    d.setVar('SUPERVISOR_VERSION', "%s-%s" % (version_output, image_id_output[:12]))
-    d.setVar('PV', "%s+%s" % (version_output, image_id_output))
+    d.setVar('SUPERVISOR_VERSION', "%s-%s" % (version_output, image_id_output.split(':',1)[-1][:12]))
+    d.setVar('PV', "%s+%s" % (version_output, image_id_output.split(':',1)[-1]))
 }
 
 do_patch[noexec] = "1"
