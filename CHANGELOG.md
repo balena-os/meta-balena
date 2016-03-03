@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.1.1 - 2016-03-03
+
 * Make resin-supervisor-disk's PV variable not contain the ':' character [Florin]
 * Workaround for "docker images" behavior - https://bugzilla.redhat.com/show_bug.cgi?id=1312934 [Florin]
 * Have device registration provided by supervisor in resin-image and resin-device-register in resin-image-flasher [Andrei]
