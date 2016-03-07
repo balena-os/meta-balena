@@ -249,6 +249,7 @@ IMAGE_CMD_resin-sdcard () {
 
     # Create a vfat filesystem for config partition
     CONFIG_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
+    rm -rf ${WORKDIR}/config.img
     mkfs.vfat -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
 
     # Label what is not labeled
