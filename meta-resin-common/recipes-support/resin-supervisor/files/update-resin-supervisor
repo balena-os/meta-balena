@@ -18,7 +18,7 @@ if [ -z "$API_KEY" -o -z "$DEVICE_ID" ]; then
 fi
 
 function error_handler {
-    # If rce pull fails, start the old supervisor again and exit
+    # If docker pull fails, start the old supervisor again and exit
     rm -rf $UPDATECONF
     systemctl start resin-supervisor
     exit 1
@@ -40,12 +40,12 @@ fi
 
 # Get image id of tag. This will be non-empty only in case it's already downloaded.
 echo "Getting image id..."
-imageid=$(rce inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+imageid=$(docker inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 # Check if image is downloaded and there is a running container.
 # The second condition is needed to make sure the image has not stopped since we first run it.
 echo "Getting check if already updated image is running..."
-if [[ -n "$imageid" && $(rce ps -q --no-trunc | xargs rce inspect -f '{{.Image}}' | grep "$imageid") ]]; then
+if [[ -n "$imageid" && $(docker ps -q --no-trunc | xargs docker inspect -f '{{.Image}}' | grep "$imageid") ]]; then
     echo "Latest supervisor version already running."
     exit 0
 fi
@@ -59,7 +59,7 @@ echo "SUPERVISOR_IMAGE=$image_name:$tag" > $UPDATECONF
 
 # Pull target version.
 echo "Update supervisor..."
-rce pull "$image_name:$tag"
+docker pull "$image_name:$tag"
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
@@ -68,5 +68,5 @@ systemctl start resin-supervisor
 
 # Mark supervisor as working. This version will run when the device reboots.
 echo "Mark pulled tag as latest..."
-rce tag -f "$image_name:$tag" "$image_name:latest"
+docker tag -f "$image_name:$tag" "$image_name:latest"
 sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" /etc/supervisor.conf
