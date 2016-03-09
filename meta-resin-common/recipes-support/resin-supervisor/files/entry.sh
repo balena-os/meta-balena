@@ -19,11 +19,11 @@ mkdir /data_disk
 mount -o loop /export/data_disk.img /data_disk
 
 # Create the directory structures we use for Resin
-mkdir -p /data_disk/rce
+mkdir -p /data_disk/docker
 mkdir -p /data_disk/resin-data
 
 # Start docker with the created image.
-docker -d -g /data_disk/rce -s btrfs &
+docker daemon -g /data_disk/docker -s btrfs &
 echo "Waiting for docker to become ready.."
 while [ ! -S /var/run/docker.sock ]
 do
