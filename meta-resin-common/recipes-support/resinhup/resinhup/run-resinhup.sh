@@ -130,16 +130,16 @@ log "Found slug $slug for this device."
 log "Stop all containers..."
 systemctl stop resin-supervisor > /dev/null 2>&1
 systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
-rce stop $(rce ps -a -q) > /dev/null 2>&1
+docker stop $(docker ps -a -q) > /dev/null 2>&1
 
 # Pull resinhup and tag it accordingly
 log "Pulling resinhup..."
-rce pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+docker pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 if [ $? -ne 0 ]; then
     tryup
     log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG ."
 fi
-rce tag -f registry.resinstaging.io/resinhup/resinhup-$slug:$TAG resinhup
+docker tag -f registry.resinstaging.io/resinhup/resinhup-$slug:$TAG resinhup
 
 # Run resinhup
 log "Running resinhup..."
@@ -147,10 +147,10 @@ resin-device-progress --percentage 50 --state "Host OS Update: Running..."
 RESINHUP_STARTTIME=$(date +%s)
 if [ "$FORCE" == "yes" ]; then
     log "Running in force mode..."
-    rce run --privileged --rm --net=host -e RESINHUP_FORCE=yes --volume /:/host resinhup
+    docker run --privileged --rm --net=host -e RESINHUP_FORCE=yes --volume /:/host resinhup
 else
     log "Not running in force mode..."
-    rce run --privileged --rm --net=host                       --volume /:/host resinhup
+    docker run --privileged --rm --net=host                       --volume /:/host resinhup
 fi
 if [ $? -eq 0 ]; then
     RESINHUP_ENDTIME=$(date +%s)
