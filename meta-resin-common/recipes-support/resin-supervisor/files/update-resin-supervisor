@@ -67,7 +67,7 @@ if [ -z "$API_KEY" -o -z "$DEVICE_ID" ]; then
 fi
 
 function error_handler {
-    # If rce pull fails, start the old supervisor again and exit
+    # If docker pull fails, start the old supervisor again and exit
     rm -rf $UPDATECONF
     systemctl start resin-supervisor
     exit 1
