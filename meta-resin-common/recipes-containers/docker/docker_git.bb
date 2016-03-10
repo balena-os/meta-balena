@@ -23,6 +23,7 @@ SRCBRANCH = "v1.10.3"
 SRC_URI = "\
   git://github.com/docker/docker.git;branch=${SRCBRANCH};nobranch=1 \
   file://docker.service \
+  file://var-lib-docker.mount \
 	"
 
 # Apache-2.0 for docker
@@ -102,7 +103,7 @@ do_compile() {
 inherit systemd
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "docker.service"
+SYSTEMD_SERVICE_${PN} = "docker.service var-lib-docker.mount"
 
 do_install() {
   mkdir -p ${D}/${bindir}
@@ -112,6 +113,7 @@ do_install() {
   install -d ${D}${systemd_unitdir}/system
   install -m 644 ${S}/contrib/init/systemd/docker.* ${D}/${systemd_unitdir}/system
   install -m 644 ${WORKDIR}/docker.service ${D}/${systemd_unitdir}/system
+  install -m 644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
 }
 
 inherit useradd
