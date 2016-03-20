@@ -30,7 +30,7 @@ trap 'error_handler $LINENO' ERR
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and tag..."
-data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/ewa/supervisor_release?\$filter=device/id%20eq%20$DEVICE_ID&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
+data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/supervisor_release?\$filter=device/id%20eq%20$DEVICE_ID&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
 read tag image_name <<<$data
 
 # Check that we didn't somehow get an empty tag version.
