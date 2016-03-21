@@ -6,7 +6,7 @@ PR = "r0"
 inherit packagegroup
 
 # By default resin uses connman as network manager.
-NETWORK_MANAGER_PACKAGES ?= "connman connman-client"
+NETWORK_MANAGER_PACKAGES ?= "networkmanager"
 
 CONNECTIVITY_MODULES = ""
 
@@ -21,6 +21,7 @@ CONNECTIVITY_PACKAGES = " \
     wireless-tools \
     openvpn \
     crda \
+    dnsmasq \
     "
 
 RDEPENDS_${PN} = " \
