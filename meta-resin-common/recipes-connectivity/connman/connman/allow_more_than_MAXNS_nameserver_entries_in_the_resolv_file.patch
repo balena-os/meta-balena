@@ -1,0 +1,31 @@
+When using a DNS cache and resolver (like dnsmasq for example) we can have more than MAXNS entries
+in a custom resolv file (these entries can be the nameservers received from DHCP and/or added through
+connman's configuration files).
+
+Upstream-Status: Inappropriate [configuration specific]
+
+Signed-off-by: Florin Sarbu <florin@resin.io>
+
+Index: connman-1.30/src/resolver.c
+===================================================================
+--- connman-1.30.orig/src/resolver.c
++++ connman-1.30/src/resolver.c
+@@ -115,8 +115,8 @@ static int resolvfile_export(void)
+ 	if (count)
+ 		g_string_append_printf(content, "\n");
+ 
+-	for (count = 0, list = g_list_last(resolvfile_list);
+-						list && (count < MAXNS);
++	for (list = g_list_last(resolvfile_list);
++						list;
+ 						list = g_list_previous(list)) {
+ 		struct resolvfile_entry *entry = list->data;
+ 
+@@ -125,7 +125,6 @@ static int resolvfile_export(void)
+ 
+ 		g_string_append_printf(content, "nameserver %s\n",
+ 								entry->server);
+-		count++;
+ 	}
+ 
+ 	old_umask = umask(022);
