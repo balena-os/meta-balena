@@ -18,6 +18,7 @@ CONNECTIVITY_FIRMWARES ?= " \
 
 CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
+    dnsmasq \
     wireless-tools \
     openvpn \
     crda \
