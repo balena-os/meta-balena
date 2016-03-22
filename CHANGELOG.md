@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Add dnsmasq and do changes to connman so dnsmasq is used according to our platform needs [Florin]
+
 # v1.1.1 - 2016-03-03
 
 * Make resin-supervisor-disk's PV variable not contain the ':' character [Florin]
