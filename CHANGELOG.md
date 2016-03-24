@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Define "rce" as a provider for the "docker" package [Florin]
+
 # v1.1.1 - 2016-03-03
 
 * Make resin-supervisor-disk's PV variable not contain the ':' character [Florin]

@@ -13,7 +13,7 @@ RDEPENDS_${PN} = " \
     bash \
     jq \
     systemd \
-    rce \
+    docker \
     coreutils \
     resin-device-progress \
     "

@@ -44,7 +44,7 @@ FILES_${PN} += " \
 
 RDEPENDS_${PN} = " \
     bash \
-    rce \
+    docker \
     coreutils \
     socat \
     resin-conf \
