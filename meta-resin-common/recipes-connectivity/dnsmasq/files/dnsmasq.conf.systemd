@@ -1,0 +1,8 @@
+[Unit]
+Wants=rce.service resin-net-config.service
+After=rce.service resin-net-config.service
+
+[Service]
+OOMScoreAdjust=-1000
+ExecStart=
+ExecStart=/usr/bin/dnsmasq -x /run/dnsmasq.pid -a 127.0.0.1 -7 /etc/dnsmasq.d/ -r /etc/resolv.dnsmasq -z

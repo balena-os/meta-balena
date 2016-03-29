@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add dnsmasq and do changes to connman so dnsmasq is used according to our platform needs [Florin]
 * Define "rce" as a provider for the "docker" package [Florin]
 
 # v1.1.1 - 2016-03-03

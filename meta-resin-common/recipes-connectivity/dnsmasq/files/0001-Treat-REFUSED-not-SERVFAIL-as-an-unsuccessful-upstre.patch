@@ -1,0 +1,45 @@
+From 4ace25c5d6c30949be9171ff1c524b2139b989d3 Mon Sep 17 00:00:00 2001
+From: Chris Novakovic <chris@chrisn.me.uk>
+Date: Mon, 25 Jan 2016 21:54:35 +0000
+Subject: [PATCH] Treat REFUSED (not SERVFAIL) as an unsuccessful upstream
+ response
+
+Commit 51967f9807665dae403f1497b827165c5fa1084b began treating SERVFAIL
+as a successful response from an upstream server (thus ignoring future
+responses to the query from other upstream servers), but a typo in that
+commit means that REFUSED responses are accidentally being treated as
+successful instead of SERVFAIL responses.
+
+This commit corrects this typo and provides the behaviour intended by
+commit 51967f9: SERVFAIL responses are considered successful (and will
+be sent back to the requester), while REFUSED responses are considered
+unsuccessful (and dnsmasq will wait for responses from other upstream
+servers that haven't responded yet).
+
+The patch was imported from the dnsmasq git server
+(git://thekelleys.org.uk/dnsmasq.git) as of commit id
+4ace25c5d6c30949be9171ff1c524b2139b989d3.
+
+Signed-off-by: Florin Sarbu <florin.sarbu@resin.io>
+
+Upstream-Status: Accepted [version 2.76]
+---
+ src/forward.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/forward.c b/src/forward.c
+index 414f988..9b464d3 100644
+--- a/src/forward.c
++++ b/src/forward.c
+@@ -853,7 +853,7 @@ void reply_query(int fd, int family, time_t now)
+      we get a good reply from another server. Kill it when we've
+      had replies from all to avoid filling the forwarding table when
+      everything is broken */
+-  if (forward->forwardall == 0 || --forward->forwardall == 1 || RCODE(header) != SERVFAIL)
++  if (forward->forwardall == 0 || --forward->forwardall == 1 || RCODE(header) != REFUSED)
+     {
+       int check_rebind = 0, no_cache_dnssec = 0, cache_secure = 0, bogusanswer = 0;
+ 
+-- 
+2.7.4
+
