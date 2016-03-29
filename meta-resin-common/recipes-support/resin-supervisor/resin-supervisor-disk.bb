@@ -13,7 +13,6 @@ SRC_URI = " \
     file://supervisor.conf \
     file://resin-data.mount \
     file://resin-supervisor.service \
-    file://resin-supervisor-host-socket.service \
     file://update-resin-supervisor \
     file://update-resin-supervisor.service \
     file://update-resin-supervisor.timer \
@@ -31,7 +30,6 @@ DOCKER_PID_FILE ?= "/var/run/docker.pid"
 
 SYSTEMD_SERVICE_${PN} = " \
     resin-supervisor.service \
-    resin-supervisor-host-socket.service \
     update-resin-supervisor.service \
     update-resin-supervisor.timer \
     "
@@ -46,7 +44,6 @@ RDEPENDS_${PN} = " \
     bash \
     docker \
     coreutils \
-    socat \
     resin-conf \
     systemd \
     curl \
