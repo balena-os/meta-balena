@@ -1,0 +1,19 @@
+[Unit]
+Description=Docker Application Container Engine
+Documentation=http://docs.docker.com
+After=network.target docker.socket
+Requires=docker.socket
+
+[Service]
+Type=notify
+Restart=always
+ExecStart=/usr/bin/docker daemon -s btrfs -H fd://
+#Adjust OOMscore to -900 to make killing docker unlikely
+OOMScoreAdjust=-900
+MountFlags=slave
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
