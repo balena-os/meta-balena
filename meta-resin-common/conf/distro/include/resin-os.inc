@@ -17,7 +17,7 @@ RESIN_STAGING_BUILD ?= ""
 SUPERVISOR_TAG ?= "production"
 DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains('RESIN_STAGING_BUILD','yes','resin-staging','',d)}"
 
-PREFERRED_PROVIDER_docker ?= "rce-armv6"
+PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
 PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
 PREFERRED_PROVIDER_resin-supervisor ?= "resin-supervisor-disk"
