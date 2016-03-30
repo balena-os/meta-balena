@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Switch to docker 1.10.3 [Theodor]
 * Remove deprecated mmcroot from flasher init script [Andrei]
 * Deploy license.manifest [Andrei]
 
