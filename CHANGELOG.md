@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Switch to docker 1.10.3 [Theodor]
 * Add resin-init-board as a runtime dependency to resin-init-flasher [Florin]
 
 # v1.1.2 - 2016-04-13
