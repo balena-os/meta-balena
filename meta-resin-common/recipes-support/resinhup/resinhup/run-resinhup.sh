@@ -2,7 +2,6 @@
 
 # Default values
 TAG=latest
-SUPERVISOR_TAG=
 FORCE=no
 LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
@@ -20,13 +19,17 @@ Options:
         Display this help and exit.
 
   -f, --force
-        Run the resinhup tool withut fingerprints check and validation.
+        Run the resinhup tool without fingerprints check and validation.
 
   -t <TAG>, --tag <TAG>
         Use a specific tag for resinhup image.
         Default: latest.
 
-  -s <SUPERVISOR TAG>, --supervisor-tag <SUPERVISOR TAG>
+  --supervisor-image <SUPERVISOR IMAGE>
+        In the case of a successful host OS update, bring in a newer supervisor too
+        using this image name.
+
+  --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
         using this tag.
 
@@ -132,11 +135,18 @@ while [[ $# > 0 ]]; do
             TAG=$2
             shift
             ;;
-        -s|--supervisor-tag)
+        --supervisor-image)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
             fi
-            SUPERVISOR_TAG=$2
+            UPDATER_SUPERVISOR_IMAGE=$2
+            shift
+            ;;
+        --supervisor-tag)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            UPDATER_SUPERVISOR_TAG=$2
             shift
             ;;
         -n|--nolog)
@@ -209,24 +219,27 @@ RESINHUP_EXIT=$?
 if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means update done while exit code 2 means that only intermediate step was done and will continue after reboot
     RESINHUP_ENDTIME=$(date +%s)
 
-    # Hack rpi2 supervisor image: resin/rpi-supervisor -> resin/armv7hf-supervisor
-    source /etc/supervisor.conf
-    if [ "$SUPERVISOR_IMAGE" == "resin/rpi-supervisor" ] && [ "$slug" == "raspberry-pi2" ]; then
-        log "On rpi2 we hack a docker tag for resin-supervisor..."
-        rce tag -f resin/rpi-supervisor resin/armv7hf-supervisor
-    fi
-
     if [ $RESINHUP_EXIT -eq 0 ]; then
-        if [ ! -z $SUPERVISOR_TAG ]; then
+        if [ ! -z $UPDATER_SUPERVISOR_TAG ]; then
+            log "Supervisor update requested through arguments ."
+
+            # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
+            if [ -z $UPDATER_SUPERVISOR_IMAGE ]; then
+                log "No supervisor image provided. Using the one from /etc/supervisor.conf ."
+                source /etc/supervisor.conf
+                UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
+            fi
+
             # Update supervisor
             resin-device-progress --percentage 75 --state "Host OS Update: Done. Updating supervisor..."
             log "Updating supervisor..."
-            rce pull "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG"
+            update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
             if [ $? -ne 0 ]; then
                 tryup
-                log ERROR "Could not pull $SUPERVISOR_IMAGE:$TAG ."
+                log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
             fi
-            rce tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
+        else
+            log "Supervisor update not requested through arguments ."
         fi
         resin-device-progress --percentage 100 --state "Host OS Update: Done. Rebooting device..."
     else
