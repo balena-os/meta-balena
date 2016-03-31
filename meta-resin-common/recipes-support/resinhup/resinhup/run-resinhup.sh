@@ -2,10 +2,10 @@
 
 # Default values
 TAG=latest
-SUPERVISOR_TAG=
 FORCE=no
 LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
+ONLY_SUPERVISOR=no
 
 source /etc/profile
 
@@ -20,15 +20,22 @@ Options:
         Display this help and exit.
 
   -f, --force
-        Run the resinhup tool withut fingerprints check and validation.
+        Run the resinhup tool without fingerprints check and validation.
 
   -t <TAG>, --tag <TAG>
         Use a specific tag for resinhup image.
         Default: latest.
 
-  -s <SUPERVISOR TAG>, --supervisor-tag <SUPERVISOR TAG>
+  --supervisor-image <SUPERVISOR IMAGE>
+        In the case of a successful host OS update, bring in a newer supervisor too
+        using this image name.
+
+  --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
         using this tag.
+
+  --only-supervisor
+        Update only the supervisor.
 
   -n, --nolog
         By default tool logs to stdout and file. This flag deactivates log to
@@ -104,6 +111,19 @@ function runhacks {
         log "Save timestamp..."
         date -u +%4Y%2m%2d%2H%2M%2S > /etc/timestamp
     fi
+
+    # Some old devices didn't have curl which we need for supervisor update
+    # If that's the case, replace by wget usage
+    if which curl &>/dev/null; then
+        log "Curl hack: Curl in place."
+    else
+        script_path="/usr/bin/update-resin-supervisor"
+        if ! [ -e $script_path ]; then
+            log "Curl hack: Missing $script_path, aborting."
+        fi
+        sed --in-place "s|curl --silent --header \"User-Agent:\" --compressed|wget -qO-|" $script_path
+        sed --in-place "s|curl -s --compressed|wget -qO-|" $script_path
+    fi
 }
 
 #
@@ -132,12 +152,22 @@ while [[ $# > 0 ]]; do
             TAG=$2
             shift
             ;;
-        -s|--supervisor-tag)
+        --supervisor-image)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
             fi
-            SUPERVISOR_TAG=$2
+            UPDATER_SUPERVISOR_IMAGE=$2
             shift
+            ;;
+        --supervisor-tag)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            UPDATER_SUPERVISOR_TAG=$2
+            shift
+            ;;
+        --only-supervisor)
+            ONLY_SUPERVISOR=yes
             ;;
         -n|--nolog)
             LOG=no
@@ -173,61 +203,90 @@ if [ -z $slug ]; then
 fi
 log "Found slug $slug for this device."
 
+# Run hacks
+runhacks
+
+# Detect containers engine
+if which docker &>/dev/null; then
+    DOCKER=docker
+else if which rce &>/dev/null; then
+    DOCKER=rce
+else
+    log ERROR "Can't detect the containers engine on the host OS."
+fi
+
+# Supervisor update
+if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
+    log "Supervisor update requested through arguments ."
+    resin-device-progress --percentage 25 --state "Host OS Update: Done. Updating supervisor..."
+
+    # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
+    if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
+    log "No supervisor image provided. Using the one from /etc/supervisor.conf ."
+        source /etc/supervisor.conf
+        UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
+    fi
+
+    log "Updating supervisor..."
+    if [[ $(readlink /sbin/init) == *"sysvinit"* ]]; then
+        # Supervisor update on sysvinit based OS
+        $DOCKER pull "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG"
+        if [ $? -ne 0 ]; then
+            log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
+        fi
+        $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
+    else
+        # Supervisor update on systemd based OS
+        update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
+        if [ $? -ne 0 ]; then
+            log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
+        fi
+    fi
+
+    # That's it if we only wanted supervisor update
+    if [ "$ONLY_SUPERVISOR" == "yes" ]; then
+        log "Update only of the supervisor requested."
+        exit 0
+    fi
+else
+    log "Supervisor update not requested through arguments ."
+fi
+
 # Avoid supervisor cleaning up resinhup and stop containers
+resin-device-progress --percentage 50 --state "Host OS Update: Preparing..."
 log "Stopping all containers..."
 systemctl stop resin-supervisor > /dev/null 2>&1
 systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
-rce stop $(rce ps -a -q) > /dev/null 2>&1
+$DOCKER stop $($DOCKER ps -a -q) > /dev/null 2>&1
 log "Removing all containers..."
-rce rm $(rce ps -a -q) > /dev/null 2>&1
+$DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 /etc/init.d/crond stop > /dev/null 2>&1 # We might have cron jobs which restart supervisor
 
 # Pull resinhup and tag it accordingly
 log "Pulling resinhup..."
-rce pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+$DOCKER pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 if [ $? -ne 0 ]; then
     tryup
     log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG ."
 fi
-rce tag -f registry.resinstaging.io/resinhup/resinhup-$slug:$TAG resinhup
-
-# Run hacks
-runhacks
 
 # Run resinhup
 log "Running resinhup..."
-resin-device-progress --percentage 50 --state "Host OS Update: Running..."
+resin-device-progress --percentage 75 --state "Host OS Update: Running..."
 RESINHUP_STARTTIME=$(date +%s)
 if [ "$FORCE" == "yes" ]; then
     log "Running in force mode..."
-    rce run --privileged --rm --net=host -e RESINHUP_FORCE=yes --volume /:/host resinhup
+    $DOCKER run --privileged --rm --net=host -e RESINHUP_FORCE=yes --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 else
     log "Not running in force mode..."
-    rce run --privileged --rm --net=host                       --volume /:/host resinhup
+    $DOCKER run --privileged --rm --net=host                       --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 fi
 RESINHUP_EXIT=$?
 if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means update done while exit code 2 means that only intermediate step was done and will continue after reboot
     RESINHUP_ENDTIME=$(date +%s)
 
-    # Hack rpi2 supervisor image: resin/rpi-supervisor -> resin/armv7hf-supervisor
-    source /etc/supervisor.conf
-    if [ "$SUPERVISOR_IMAGE" == "resin/rpi-supervisor" ] && [ "$slug" == "raspberry-pi2" ]; then
-        log "On rpi2 we hack a docker tag for resin-supervisor..."
-        rce tag -f resin/rpi-supervisor resin/armv7hf-supervisor
-    fi
-
     if [ $RESINHUP_EXIT -eq 0 ]; then
-        if [ ! -z $SUPERVISOR_TAG ]; then
-            # Update supervisor
-            resin-device-progress --percentage 75 --state "Host OS Update: Done. Updating supervisor..."
-            log "Updating supervisor..."
-            rce pull "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG"
-            if [ $? -ne 0 ]; then
-                tryup
-                log ERROR "Could not pull $SUPERVISOR_IMAGE:$TAG ."
-            fi
-            rce tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
-        fi
+
         resin-device-progress --percentage 100 --state "Host OS Update: Done. Rebooting device..."
     else
         resin-device-progress --percentage 100 --state "Host OS Update: Please restart update after reboot..."
