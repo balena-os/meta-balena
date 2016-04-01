@@ -1,0 +1,58 @@
+From 8467a8a5b95164d046d03d3db9e4ca84ebf9e361 Mon Sep 17 00:00:00 2001
+From: Petros Angelatos <petrosagg@gmail.com>
+Date: Tue, 22 Mar 2016 03:13:37 -0700
+Subject: [PATCH] btrfs-progs: utils: make sure set_label_mounted uses correct
+ length buffers
+
+When `btrfs filesystem label /foo bar` command is invoked, it will pass
+the buffer allocated in the argv array directly to set_label_mounted()
+and then to the BTRFS_IOC_SET_FSLABEL ioctl.
+
+However, the kernel code handling the ioctl will always try to copy
+BTRFS_LABEL_SIZE bytes[1] from the userland pointer. Under certain
+conditions and when the label is small enough, the command will fail
+with:
+
+    [root@localhost /]# btrfs filesystem label /mnt f
+    ERROR: unable to set label Bad address
+
+Fix this by making sure we pass a BTRFS_LABEL_SIZE sized buffer to the
+ioctl containing the desired label.
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/fs/btrfs/ioctl.c?id=refs/tags/v4.5#n5231
+
+Upstream-Status: Submitted [https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg51880.html]
+
+Signed-off-by: Petros Angelatos <petrosagg@gmail.com>
+---
+ utils.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/utils.c b/utils.c
+index c0c564e..ec6c613 100644
+--- a/utils.c
++++ b/utils.c
+@@ -1755,9 +1755,10 @@ static int set_label_unmounted(const char *dev, const char *label)
+ 	return 0;
+ }
+ 
+-static int set_label_mounted(const char *mount_path, const char *label)
++static int set_label_mounted(const char *mount_path, const char *labelp)
+ {
+ 	int fd;
++	char label[BTRFS_LABEL_SIZE];
+ 
+ 	fd = open(mount_path, O_RDONLY | O_NOATIME);
+ 	if (fd < 0) {
+@@ -1765,6 +1766,8 @@ static int set_label_mounted(const char *mount_path, const char *label)
+ 		return -1;
+ 	}
+ 
++	memset(label, '\0', sizeof(label));
++	strncpy(label, labelp, sizeof(label));
+ 	if (ioctl(fd, BTRFS_IOC_SET_FSLABEL, label) < 0) {
+ 		fprintf(stderr, "ERROR: unable to set label %s\n",
+ 			strerror(errno));
+-- 
+2.7.2
+
