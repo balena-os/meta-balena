@@ -75,12 +75,26 @@ function error_handler {
 
 trap 'error_handler $LINENO' ERR
 
+# Detect containers engine
+if which docker &>/dev/null; then
+    DOCKER=docker
+elif which rce &>/dev/null; then
+    DOCKER=rce
+else
+    error_handler $LINENO "no container engine detected"
+fi
+
 # Get target supervisor tag from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and tag..."
 if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/supervisor_release?\$select=supervisor_version,image_name&\$filter=device/any(d:d/id%20eq%20$DEVICE_ID)&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
     echo "Supervisor configuration found from API."
+
+    if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
+        echo "WARN: Ignore image/tag arguments as API overrides them."
+    fi
+
     read tag image_name <<<$data
 
     # Check that we didn't somehow get an empty tag version.
@@ -90,12 +104,12 @@ if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/su
 
     # Get image id of tag. This will be non-empty only in case it's already downloaded.
     echo "Getting image id..."
-    imageid=$(rce inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+    imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
     # Check if image is downloaded and there is a running container.
     # The second condition is needed to make sure the image has not stopped since we first run it.
     echo "Getting check if already updated image is running..."
-    if [[ -n "$imageid" && $(rce ps -q --no-trunc | xargs rce inspect -f '{{.Image}}' | grep "$imageid") ]]; then
+    if [[ -n "$imageid" && $($DOCKER ps -q --no-trunc | xargs $DOCKER inspect -f '{{.Image}}' | grep "$imageid") ]]; then
         echo "Latest supervisor version already running."
         exit 0
     fi
@@ -123,7 +137,7 @@ echo "SUPERVISOR_IMAGE=$image_name:$tag" > $UPDATECONF
 
 # Pull target version.
 echo "Update supervisor..."
-rce pull "$image_name:$tag"
+$DOCKER pull "$image_name:$tag"
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
@@ -132,5 +146,5 @@ systemctl start resin-supervisor
 
 # Mark supervisor as working. This version will run when the device reboots.
 echo "Mark pulled tag as latest..."
-rce tag -f "$image_name:$tag" "$image_name:latest"
+$DOCKER tag -f "$image_name:$tag" "$image_name:latest"
 sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" /etc/supervisor.conf
