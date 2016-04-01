@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add p2p to NetworkInterfaceBlacklist in connman main.conf file [Florin]
 * Add dnsmasq and do changes to connman so dnsmasq is used according to our platform needs [Florin]
 * Define "rce" as a provider for the "docker" package [Florin]
 
