@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Use realpath from coreutils-native for generating SD images [Andrei]
 * Add rsync to our image [Theodor]
 * Add p2p to NetworkInterfaceBlacklist in connman main.conf file [Florin]
 * Add dnsmasq and do changes to connman so dnsmasq is used according to our platform needs [Florin]
