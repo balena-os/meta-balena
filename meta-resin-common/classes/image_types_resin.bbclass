@@ -82,6 +82,7 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			${RESIN_IMAGE_BOOTLOADER} \
 			resin-supervisor \
 			btrfs-tools-native \
+			coreutils-native \
 			"
 
 # SD card image name
