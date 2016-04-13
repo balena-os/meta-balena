@@ -21,6 +21,7 @@ RDEPENDS_${PN} = " \
     util-linux \
     udev \
     resin-device-progress \
+    resin-init-board \
     parted \
     "
 
