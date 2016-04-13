@@ -7,6 +7,11 @@ DISTRO_VERSION = "1.1.1"
 
 MAINTAINER = "Resin <hello@resin.io>"
 
+# Strip down unneeded features
+POKY_DEFAULT_DISTRO_FEATURES_remove = "ptest"
+POKY_DEFAULT_DISTRO_FEATURES_remove = "wayland"
+DISTRO_FEATURES_DEFAULT_remove = "x11"
+
 RESIN_DEFAULT_DISTRO_FEATURES = "resin"
 RESIN_STAGING_BUILD ?= ""
 SUPERVISOR_TAG ?= "production"

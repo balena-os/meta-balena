@@ -1,6 +1,55 @@
 #!/bin/bash
 set -o pipefail
 
+# Help function
+function update-resin-supervisor-help {
+    cat << EOF
+Wrapper to run supervisor agent updates on resin distributions.
+$0 <OPTION>
+
+Options:
+  -h, --help
+        Display this help and exit.
+
+  -i <SUPERVISOR IMAGE>, --supervisor-image <SUPERVISOR IMAGE>
+        Set supervisor image to update to.
+
+  -t <SUPERVISOR TAG>, --supervisor-tag <SUPERVISOR TAG>
+        Set supervisor tag to update to.
+EOF
+}
+
+# Parse arguments
+while [[ $# > 0 ]]; do
+    arg="$1"
+
+    case $arg in
+        -h|--help)
+            update-resin-supervisor-help
+            exit 0
+            ;;
+        -i|--supervisor-image)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            UPDATER_SUPERVISOR_IMAGE=$2
+            shift
+            ;;
+        -t|--supervisor-tag)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            UPDATER_SUPERVISOR_TAG=$2
+            shift
+            ;;
+        *)
+            log ERROR "Unrecognized option $1."
+            ;;
+    esac
+    shift
+done
+
+# Don't souce before parsing args - resin-vars parses args too
 source /usr/sbin/resin-vars
 
 # A temporary file used until next reboot
@@ -26,28 +75,57 @@ function error_handler {
 
 trap 'error_handler $LINENO' ERR
 
+# Detect containers engine
+if which docker &>/dev/null; then
+    DOCKER=docker
+elif which rce &>/dev/null; then
+    DOCKER=rce
+else
+    error_handler $LINENO "no container engine detected"
+fi
+
 # Get target supervisor tag from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and tag..."
-data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/supervisor_release?\$select=supervisor_version,image_name&\$filter=device/any(d:d/id%20eq%20$DEVICE_ID)&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
-read tag image_name <<<$data
+if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/supervisor_release?\$select=supervisor_version,image_name&\$filter=device/any(d:d/id%20eq%20$DEVICE_ID)&apikey=$API_KEY" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
+    echo "Supervisor configuration found from API."
 
-# Check that we didn't somehow get an empty tag version.
-if [ -z "$tag" ]; then
-    error_handler $LINENO "no tag"
-fi
+    if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
+        echo "WARN: Ignore image/tag arguments as API overrides them."
+    fi
 
-# Get image id of tag. This will be non-empty only in case it's already downloaded.
-echo "Getting image id..."
-imageid=$(rce inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+    read tag image_name <<<$data
 
-# Check if image is downloaded and there is a running container.
-# The second condition is needed to make sure the image has not stopped since we first run it.
-echo "Getting check if already updated image is running..."
-if [[ -n "$imageid" && $(rce ps -q --no-trunc | xargs rce inspect -f '{{.Image}}' | grep "$imageid") ]]; then
-    echo "Latest supervisor version already running."
-    exit 0
+    # Check that we didn't somehow get an empty tag version.
+    if [ -z "$tag" ]; then
+        error_handler $LINENO "no tag received"
+    fi
+
+    # Get image id of tag. This will be non-empty only in case it's already downloaded.
+    echo "Getting image id..."
+    imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+
+    # Check if image is downloaded and there is a running container.
+    # The second condition is needed to make sure the image has not stopped since we first run it.
+    echo "Getting check if already updated image is running..."
+    if [[ -n "$imageid" && $($DOCKER ps -q --no-trunc | xargs $DOCKER inspect -f '{{.Image}}' | grep "$imageid") ]]; then
+        echo "Latest supervisor version already running."
+        exit 0
+    fi
+else
+    echo "No supervisor configuration found from API. Using arguments for image and tag."
+    if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
+        echo "ERROR: No tag argument provided."
+        error_handler $LINENO "no tag argument provided"
+    fi
+    if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
+        source /etc/supervisor.conf
+        UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
+    fi
+    echo "Set based on arguments image=$UPDATER_SUPERVISOR_IMAGE and tag=$UPDATER_SUPERVISOR_TAG."
+    image_name=$UPDATER_SUPERVISOR_IMAGE
+    tag=$UPDATER_SUPERVISOR_TAG
 fi
 
 # Try to stop old supervisor to prevent from deleting the intermediate images while downloading the new one
@@ -59,7 +137,7 @@ echo "SUPERVISOR_IMAGE=$image_name:$tag" > $UPDATECONF
 
 # Pull target version.
 echo "Update supervisor..."
-rce pull "$image_name:$tag"
+$DOCKER pull "$image_name:$tag"
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
@@ -68,5 +146,5 @@ systemctl start resin-supervisor
 
 # Mark supervisor as working. This version will run when the device reboots.
 echo "Mark pulled tag as latest..."
-rce tag -f "$image_name:$tag" "$image_name:latest"
+$DOCKER tag -f "$image_name:$tag" "$image_name:latest"
 sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" /etc/supervisor.conf
