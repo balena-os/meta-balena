@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.1.2 - 2016-04-13
+
 * Execute resin-init-board from the flasher also [Florin]
 * Use realpath from coreutils-native for generating SD images [Andrei]
 * Add rsync to our image [Theodor]
