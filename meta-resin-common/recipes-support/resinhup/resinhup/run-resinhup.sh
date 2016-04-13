@@ -124,6 +124,12 @@ function runhacks {
         sed --in-place "s|curl --silent --header \"User-Agent:\" --compressed|wget -qO-|" $script_path
         sed --in-place "s|curl -s --compressed|wget -qO-|" $script_path
     fi
+
+    # Make switch from rce to docker backwards compatible
+    if [ -d $BTRFS_MOUNTPOINT/rce ]; then
+        echo "Docker hack: Make switch from rce to docker backwards compatible"
+        ln -sf $BTRFS_MOUNTPOINT/rce $BTRFS_MOUNTPOINT/docker
+    fi
 }
 
 #
