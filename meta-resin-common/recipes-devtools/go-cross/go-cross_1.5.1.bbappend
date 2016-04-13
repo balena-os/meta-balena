@@ -1,1 +1,2 @@
 DEPENDS = "virtual/${TARGET_PREFIX}gcc"
+INHIBIT_SYSROOT_STRIP = "1"
