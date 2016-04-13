@@ -98,6 +98,9 @@ if [ "$EUID" -ne 0 ]; then
     fail "Please run as root."
 fi
 
+echo "Board specific initialization..."
+/usr/bin/resin-init-board
+
 # Configuration file
 if [ -f $FLASHER_CONF_FILE ]; then
     source $FLASHER_CONF_FILE
