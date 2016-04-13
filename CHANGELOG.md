@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Execute resin-init-board from the flasher also [Florin]
 * Use realpath from coreutils-native for generating SD images [Andrei]
 * Add rsync to our image [Theodor]
 * Add p2p to NetworkInterfaceBlacklist in connman main.conf file [Florin]
