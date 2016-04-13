@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Add resin-init-board as a runtime dependency to resin-init-flasher [Florin]
+
 # v1.1.2 - 2016-04-13
 
 * Execute resin-init-board from the flasher also [Florin]
