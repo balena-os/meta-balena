@@ -8,6 +8,10 @@ This repository enables building resin.io for various devices.
 * meta-resin-* : layers which contain recipes specific to yocto versions.
 * other files : README, COPYING, etc.
 
+## Dependencies
+
+* docker
+* jq
 
 ## Build flags
 
