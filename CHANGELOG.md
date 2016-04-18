@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Don't bind mount /etc/resolv.conf anymore [Florin]
 * Have dnsmasq listen on 127.0.0.2 instead of 127.0.0.1 [Florin]
 
 # v1.1.3 - 2016-04-13
