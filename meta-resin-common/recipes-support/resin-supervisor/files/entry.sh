@@ -5,6 +5,8 @@
 set -o errexit
 set -o nounset
 
+DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
+
 export PARTITION_SIZE=${PARTITION_SIZE:=1000}
 export TARGET_REPOSITORY=${TARGET_REPOSITORY:=resin/i386-supervisor}
 export TARGET_TAG=${TARGET_TAG:=master}
@@ -25,9 +27,17 @@ mkdir -p /data_disk/resin-data
 # Start docker with the created image.
 docker daemon -g /data_disk/docker -s btrfs &
 echo "Waiting for docker to become ready.."
+STARTTIME=$(date +%s)
+ENDTIME=$(date +%s)
 while [ ! -S /var/run/docker.sock ]
 do
-	sleep 1
+    if [ $(($ENDTIME - $STARTTIME)) -le $DOCKER_TIMEOUT ]; then
+        sleep 1
+        ENDTIME=$(date +%s)
+    else
+        echo "Timeout while waiting for docker to come up."
+        exit 1
+    fi
 done
 
 docker pull $TARGET_REPOSITORY:$TARGET_TAG
