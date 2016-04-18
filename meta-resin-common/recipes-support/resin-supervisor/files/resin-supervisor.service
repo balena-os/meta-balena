@@ -13,7 +13,6 @@ Restart=always
 RestartSec=10s
 EnvironmentFile=/etc/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
-ExecStartPre=@BASE_BINDIR@/touch /etc/resolv.conf
 ExecStartPre=-@BINDIR@/rce stop resin_supervisor
 ExecStartPre=-@BINDIR@/rce rm --force resin_supervisor
 ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
@@ -26,7 +25,6 @@ ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
     -v /proc/net/fib_trie:/mnt/fib_trie \
     -v /var/log/supervisor-log:/var/log \
     -v /:/mnt/root \
-    -v /etc/resolv.conf:/etc/resolv.conf:ro \
     -e API_ENDPOINT=$API_ENDPOINT \
     -e REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT \
     -e PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY \
