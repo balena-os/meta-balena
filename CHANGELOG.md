@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Have dnsmasq listen on 127.0.0.2 instead of 127.0.0.1 [Florin]
+
 # v1.1.3 - 2016-04-13
 
 * Add resin-init-board as a runtime dependency to resin-init-flasher [Florin]
