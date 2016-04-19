@@ -1,0 +1,30 @@
+From 76e95c0db3f30f0279c54f7c0041c59fa24bf7a6 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Fri, 6 May 2016 01:00:14 +0200
+Subject: [PATCH 1/2] configure.ac: Fix with current autoconf
+
+Old versions of autoconf define _AC_SRCPATHS, new (2.60 and later) use _AC_SRCDIRS.
+
+Upstream-Status: Pending
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 16adb1d..0bd1c91 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -48,7 +48,7 @@ AC_CANONICAL_TARGET
+ AM_MAINTAINER_MODE
+ 
+ if test -z "$ac_abs_top_srcdir"; then
+-    _AC_SRCPATHS(.)
++    _AC_SRCDIRS(.)
+ fi
+ if test -r .Conf.settings1; then
+     . ./.Conf.settings1
+-- 
+2.1.4
+
