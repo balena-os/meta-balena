@@ -101,7 +101,9 @@ do_compile() {
     ./hack/make.sh dynbinary
 }
 
-inherit systemd
+inherit systemd binary-compress
+
+FILES_COMPRESS = "${bindir}/docker"
 
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "docker.service var-lib-docker.mount"
