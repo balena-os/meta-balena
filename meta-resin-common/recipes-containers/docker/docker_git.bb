@@ -59,7 +59,7 @@ do_compile() {
     x86_64)
       GOARCH=amd64
       ;;
-    i586)
+    i586|i686)
       GOARCH=386
       ;;
     arm)
