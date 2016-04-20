@@ -4,6 +4,11 @@ set -o pipefail
 
 source /usr/sbin/resin-vars
 
+if [ ! -f $CONFIG_PATH ]; then
+    echo "resin-net-config: $CONFIG_PATH does not exist."
+    exit 1
+fi
+
 if cat "$CONFIG_PATH" | jq -e -r '.files["network/settings"]'; then
 	rm -rf /var/lib/connman/*
 	mkdir -p /var/lib/connman
