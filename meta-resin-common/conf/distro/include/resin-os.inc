@@ -28,3 +28,6 @@ IMAGE_CLASSES += "image_types_resin host-update-resin"
 
 # Define the URL where resin exposes source or prebuilt packages
 AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
+
+# have build information available on the target under /etc/build
+INHERIT += "image-buildinfo"
