@@ -3,7 +3,7 @@ require conf/distro/poky.conf
 
 DISTRO = "resin-os"
 DISTRO_NAME = "Resin OS"
-DISTRO_VERSION = "1.1.3"
+DISTRO_VERSION = "1.1.4"
 
 MAINTAINER = "Resin <hello@resin.io>"
 
