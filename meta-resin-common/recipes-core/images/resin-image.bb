@@ -1,6 +1,8 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+inherit image-resin
+
 #
 # Set size of rootfs at a fixed value of maximum 180MiB
 #
