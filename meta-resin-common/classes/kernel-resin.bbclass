@@ -89,6 +89,8 @@ RESIN_CONFIGS_DEPS[docker] ?= " \
     CONFIG_NETFILTER=y \
     "
 RESIN_CONFIGS[docker] ?= " \
+    CONFIG_ADVISE_SYSCALLS=y \
+    CONFIG_MEMCG=y \
     CONFIG_NAMESPACES=y \
     CONFIG_NET_NS=y \
     CONFIG_PID_NS=y \
