@@ -1,6 +1,8 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+inherit image-resin
+
 # Each machine should append this with their specific configuration
 IMAGE_FSTYPES = ""
 

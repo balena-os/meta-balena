@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Deploy license.manifest [Andrei]
+
 # v1.1.4 - 2016-04-20
 
 * Add build information in the target rootfs [Florin]
