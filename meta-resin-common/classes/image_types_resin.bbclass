@@ -1,7 +1,7 @@
 inherit image_types
 
 # Images inheriting this class MUST define:
-# RESIN_IMAGE_BOOTLOADER 	- bootloader
+# RESIN_IMAGE_BOOTLOADER        - bootloader
 # RESIN_BOOT_PARTITION_FILES    - list of items describing files to be deployed on boot partition
 #                               - items need to be in the 'src:dst' format
 #                               - src needs to be relative to DEPLOY_DIR_IMAGE
@@ -9,9 +9,9 @@ inherit image_types
 #                               - if dst is ommited ('src:' format used), absolute path of src will be used as dst
 #
 # Optional:
-# RESIN_SDIMG_ROOTFS_TYPE 	- rootfs image to be used [default: ext3]
-# RESIN_BOOT_SPACE		- size of boot partition in KiB [default: 40960]
-# RESIN_SDIMG_COMPRESSION	- define this to compress the final SD image with gzip, xz or bzip2 [default: empty]
+# RESIN_SDIMG_ROOTFS_TYPE       - rootfs image to be used [default: ext3]
+# RESIN_BOOT_SPACE              - size of boot partition in KiB [default: 40960]
+# RESIN_SDIMG_COMPRESSION       - define this to compress the final SD image with gzip, xz or bzip2 [default: empty]
 
 #
 # Create an image that can by written onto a SD card using dd.
@@ -33,7 +33,7 @@ inherit image_types
 #
 #            4MiB                  40MiB          ROOTFS_SIZE       ROOTFS_SIZE              4MiB                16MiB                4MiB                4MiB
 # <-----------------------> <----------------> <----------------> <--------------->  <----------------------> <------------> <-----------------------> <------------>
-#  ------------------------ ------------ ------------------ -----------------  ================================================================================
+#  ------------------------ ------------ ------------------ -----------------------  ================================================================================
 # | IMAGE_ROOTFS_ALIGNMENT | RESIN_BOOT_SPACE | ROOTFS_SIZE      |  ROOTFS_SIZE    || IMAGE_ROOTFS_ALIGNMENT || CONFIG_SIZE || IMAGE_ROOTFS_ALIGNMENT || BTRFS_SIZE  ||
 #  ------------------------ ------------------ ------------------ -----------------  ================================================================================
 # ^                        ^                  ^                  ^                 ^^                        ^^             ^^                        ^^             ^^
