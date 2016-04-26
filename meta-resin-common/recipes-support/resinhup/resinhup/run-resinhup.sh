@@ -53,7 +53,7 @@ function tryup {
 # Catch INT signals and try to bring things back
 trap ctrl_c INT
 function ctrl_c() {
-    resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
+    /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
     log "Trapped INT signal"
     tryup
     exit 1
@@ -82,7 +82,7 @@ function log {
         printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
     fi
     if [ "$loglevel" == "ERROR" ]; then
-        resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
         exit 1
     fi
 }
@@ -179,7 +179,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-resin-device-progress --percentage 10 --state "Host OS Update: Preparing..."
+/usr/bin/resin-device-progress --percentage 10 --state "Host OS Update: Preparing..."
 
 # Init log file
 # LOGFILE init and header
@@ -218,7 +218,7 @@ fi
 # Supervisor update
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
-    resin-device-progress --percentage 25 --state "Host OS Update: Done. Updating supervisor..."
+    /usr/bin/resin-device-progress --percentage 25 --state "Host OS Update: Done. Updating supervisor..."
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
@@ -237,7 +237,7 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
         $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
     else
         # Supervisor update on systemd based OS
-        update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
+        /usr/bin/update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
         if [ $? -ne 0 ]; then
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
         fi
@@ -253,7 +253,7 @@ else
 fi
 
 # Avoid supervisor cleaning up resinhup and stop containers
-resin-device-progress --percentage 50 --state "Host OS Update: Preparing..."
+/usr/bin/resin-device-progress --percentage 50 --state "Host OS Update: Preparing..."
 log "Stopping all containers..."
 systemctl stop resin-supervisor > /dev/null 2>&1
 systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
@@ -272,7 +272,7 @@ fi
 
 # Run resinhup
 log "Running resinhup..."
-resin-device-progress --percentage 75 --state "Host OS Update: Running..."
+/usr/bin/resin-device-progress --percentage 75 --state "Host OS Update: Running..."
 RESINHUP_STARTTIME=$(date +%s)
 if [ "$FORCE" == "yes" ]; then
     log "Running in force mode..."
@@ -287,9 +287,9 @@ if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means
 
     if [ $RESINHUP_EXIT -eq 0 ]; then
 
-        resin-device-progress --percentage 100 --state "Host OS Update: Done. Rebooting device..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Done. Rebooting device..."
     else
-        resin-device-progress --percentage 100 --state "Host OS Update: Please restart update after reboot..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Please restart update after reboot..."
     fi
     log "Update suceeded in $(($RESINHUP_ENDTIME - $RESINHUP_STARTTIME)) seconds."
     # Everything is fine - Reboot
