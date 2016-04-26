@@ -7,7 +7,7 @@ S = "${WORKDIR}"
 
 inherit allarch
 
-FILES_${PN} = "${sbindir}"
+FILES_${PN} = "${bindir}"
 
 RDEPENDS_${PN} = " \
     bash \
@@ -19,6 +19,6 @@ RDEPENDS_${PN} = " \
     "
 
 do_install() {
-    install -d ${D}${sbindir}
-    install -m 0755 ${WORKDIR}/run-resinhup.sh ${D}${sbindir}
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/run-resinhup.sh ${D}${bindir}
 }
