@@ -101,6 +101,18 @@ function checkqueue {
 # MAIN
 #
 
+# Get the absolute script location
+pushd `dirname $0` > /dev/null 2>&1
+SCRIPTPATH=`pwd`
+popd > /dev/null 2>&1
+
+# Tools we need on device
+UPDATE_TOOLS="\
+$SCRIPTPATH/../../meta-resin-common/recipes-support/resinhup/resinhup/run_resinhup.sh \
+$SCRIPTPATH/../../meta-resin-common/recipes-support/resin-supervisor/files/update-resin-supervisor \
+$SCRIPTPATH/../../meta-resin-common/recipes-support/resin-device-progress/resin-device-progress/resin-device-progress \
+"
+
 # Log timer
 STARTTIME=$(date +%s)
 
@@ -196,7 +208,7 @@ for uuid in $UUIDS; do
     # Transfer the scripts
     # TODO transfer files only if device doesn't provide run-resinhup.sh
     log "[$CURRENT_UPDATE/$NR_UPDATES] Transfer scripts..."
-    scp -o Hostname=$uuid.vpn run-resinhup.sh resin-device-progress $SSH_HOST:/usr/bin > $uuid.resinhup.log 2>&1
+    scp -o Hostname=$uuid.vpn $UPDATE_TOOLS $SSH_HOST:/usr/bin > $uuid.resinhup.log 2>&1
 
     # Connect to device
     log "[$CURRENT_UPDATE/$NR_UPDATES] Running update in background..."
