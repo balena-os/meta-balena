@@ -22,6 +22,10 @@ Options:
   -f, --force
         Run the resinhup tool withut fingerprints check and validation.
 
+  --staging
+        Do this update for devices in staging.
+        By default resinhup assumes the devices are in production.
+
   -u <UUID>, --uuid <UUID>
         Update this UUID. Multiple -u can be provided to updated mutiple devices.
 
@@ -40,6 +44,10 @@ Options:
   --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
         using this tag.
+
+  --supervisor-image <SUPERVISOR IMAGE>
+        In the case of a successful host OS update, bring in a newer supervisor too
+        using this image.
 EOF
 }
 
@@ -108,7 +116,7 @@ popd > /dev/null 2>&1
 
 # Tools we need on device
 UPDATE_TOOLS="\
-$SCRIPTPATH/../../meta-resin-common/recipes-support/resinhup/resinhup/run_resinhup.sh \
+$SCRIPTPATH/../../meta-resin-common/recipes-support/resinhup/resinhup/run-resinhup.sh \
 $SCRIPTPATH/../../meta-resin-common/recipes-support/resin-supervisor/files/update-resin-supervisor \
 $SCRIPTPATH/../../meta-resin-common/recipes-support/resin-device-progress/resin-device-progress/resin-device-progress \
 "
@@ -127,6 +135,9 @@ while [[ $# > 0 ]]; do
             ;;
         -f|--force)
             RESINHUP_ARGS="$RESINHUP_ARGS --force"
+            ;;
+        --staging)
+            RESINHUP_ARGS="$RESINHUP_ARGS --staging"
             ;;
         -u|--uuid)
             if [ -z "$2" ]; then
@@ -162,6 +173,15 @@ while [[ $# > 0 ]]; do
             fi
             SUPERVISOR_TAG=$2
             RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-tag $SUPERVISOR_TAG"
+            shift
+            ;;
+
+        --supervisor-image)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            SUPERVISOR_IMAGE=$2
+            RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-image $SUPERVISOR_IMAGE"
             shift
             ;;
 
