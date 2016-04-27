@@ -251,14 +251,14 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
         fi
     fi
-
-    # That's it if we only wanted supervisor update
-    if [ "$ONLY_SUPERVISOR" == "yes" ]; then
-        log "Update only of the supervisor requested."
-        exit 0
-    fi
 else
     log "Supervisor update not requested through arguments ."
+fi
+
+# That's it if we only wanted supervisor update
+if [ "$ONLY_SUPERVISOR" == "yes" ]; then
+    log "Update only of the supervisor requested."
+    exit 0
 fi
 
 # Avoid supervisor cleaning up resinhup and stop containers
