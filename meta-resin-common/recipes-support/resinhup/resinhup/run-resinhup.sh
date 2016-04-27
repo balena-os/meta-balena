@@ -89,7 +89,8 @@ function log {
 
 function runhacks {
     # we might need to repartition this so make sure it is unmounted
-    umount /boot
+    log "Make sure /boot is unmounted..."
+    umount /boot &> /dev/null
 
     # can't fix label of BTRFS partition from container
     if [ -d /mnt/data ]; then
@@ -207,9 +208,9 @@ log "Found slug $slug for this device."
 runhacks
 
 # Detect containers engine
-if which docker &>/dev/null; then
+if which docker &> /dev/null; then
     DOCKER=docker
-else if which rce &>/dev/null; then
+elif which rce &> /dev/null; then
     DOCKER=rce
 else
     log ERROR "Can't detect the containers engine on the host OS."
@@ -218,7 +219,7 @@ fi
 # Supervisor update
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
-    /usr/bin/resin-device-progress --percentage 25 --state "Host OS Update: Done. Updating supervisor..."
+    /usr/bin/resin-device-progress --percentage 25 --state "Host OS Update: Updating supervisor..."
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
