@@ -48,6 +48,9 @@ Options:
   --supervisor-image <SUPERVISOR IMAGE>
         In the case of a successful host OS update, bring in a newer supervisor too
         using this image.
+
+  --only-supervisor
+        Update only the supervisor.
 EOF
 }
 
@@ -175,7 +178,6 @@ while [[ $# > 0 ]]; do
             RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-tag $SUPERVISOR_TAG"
             shift
             ;;
-
         --supervisor-image)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
@@ -184,7 +186,10 @@ while [[ $# > 0 ]]; do
             RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-image $SUPERVISOR_IMAGE"
             shift
             ;;
-
+        --only-supervisor)
+            RESINHUP_ARGS="$RESINHUP_ARGS --only-supervisor"
+            shift
+            ;;
         *)
             log ERROR "Unrecognized option $1."
             ;;
