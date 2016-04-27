@@ -3,6 +3,7 @@
 # Default values
 TAG=latest
 FORCE=no
+STAGING=no
 LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
@@ -21,6 +22,10 @@ Options:
 
   -f, --force
         Run the resinhup tool without fingerprints check and validation.
+
+  --staging
+        Do this update for devices in staging.
+        By default resinhup assumes the devices are in production.
 
   -t <TAG>, --tag <TAG>
         Use a specific tag for resinhup image.
@@ -145,6 +150,9 @@ while [[ $# > 0 ]]; do
             ;;
         -f|--force)
             FORCE="yes"
+            ;;
+        --staging)
+            STAGING="yes"
             ;;
         -t|--tag)
             if [ -z "$2" ]; then
@@ -275,13 +283,17 @@ fi
 log "Running resinhup..."
 /usr/bin/resin-device-progress --percentage 75 --state "Host OS Update: Running..."
 RESINHUP_STARTTIME=$(date +%s)
+
+# Setup -e arguments
+RESINHUP_ENV=""
 if [ "$FORCE" == "yes" ]; then
-    log "Running in force mode..."
-    $DOCKER run --privileged --rm --net=host -e RESINHUP_FORCE=yes --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
-else
-    log "Not running in force mode..."
-    $DOCKER run --privileged --rm --net=host                       --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+    RESINHUP_ENV="$RESINHUP_ENV -e RESINHUP_FORCE=yes"
 fi
+if [ "$STAGING" == "yes" ]; then
+    RESINHUP_ENV="$RESINHUP_ENV -e RESINHUP_STAGING=yes"
+fi
+
+$DOCKER run --privileged --rm --net=host $RESINHUP_ENV --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 RESINHUP_EXIT=$?
 if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means update done while exit code 2 means that only intermediate step was done and will continue after reboot
     RESINHUP_ENDTIME=$(date +%s)
