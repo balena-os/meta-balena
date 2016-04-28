@@ -3,6 +3,7 @@
 # Default values
 TAG=latest
 FORCE=no
+STAGING=no
 LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
@@ -21,6 +22,10 @@ Options:
 
   -f, --force
         Run the resinhup tool without fingerprints check and validation.
+
+  --staging
+        Do this update for devices in staging.
+        By default resinhup assumes the devices are in production.
 
   -t <TAG>, --tag <TAG>
         Use a specific tag for resinhup image.
@@ -53,7 +58,7 @@ function tryup {
 # Catch INT signals and try to bring things back
 trap ctrl_c INT
 function ctrl_c() {
-    resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
+    /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
     log "Trapped INT signal"
     tryup
     exit 1
@@ -82,14 +87,15 @@ function log {
         printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
     fi
     if [ "$loglevel" == "ERROR" ]; then
-        resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
         exit 1
     fi
 }
 
 function runhacks {
     # we might need to repartition this so make sure it is unmounted
-    umount /boot
+    log "Make sure /boot is unmounted..."
+    umount /boot &> /dev/null
 
     # can't fix label of BTRFS partition from container
     if [ -d /mnt/data ]; then
@@ -145,6 +151,9 @@ while [[ $# > 0 ]]; do
         -f|--force)
             FORCE="yes"
             ;;
+        --staging)
+            STAGING="yes"
+            ;;
         -t|--tag)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
@@ -179,7 +188,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-resin-device-progress --percentage 10 --state "Host OS Update: Preparing..."
+/usr/bin/resin-device-progress --percentage 10 --state "Host OS Update: Preparing..."
 
 # Init log file
 # LOGFILE init and header
@@ -207,9 +216,9 @@ log "Found slug $slug for this device."
 runhacks
 
 # Detect containers engine
-if which docker &>/dev/null; then
+if which docker &> /dev/null; then
     DOCKER=docker
-else if which rce &>/dev/null; then
+elif which rce &> /dev/null; then
     DOCKER=rce
 else
     log ERROR "Can't detect the containers engine on the host OS."
@@ -218,7 +227,7 @@ fi
 # Supervisor update
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
-    resin-device-progress --percentage 25 --state "Host OS Update: Done. Updating supervisor..."
+    /usr/bin/resin-device-progress --percentage 25 --state "Host OS Update: Updating supervisor..."
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
@@ -237,23 +246,23 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
         $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
     else
         # Supervisor update on systemd based OS
-        update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
+        /usr/bin/update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
         if [ $? -ne 0 ]; then
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
         fi
-    fi
-
-    # That's it if we only wanted supervisor update
-    if [ "$ONLY_SUPERVISOR" == "yes" ]; then
-        log "Update only of the supervisor requested."
-        exit 0
     fi
 else
     log "Supervisor update not requested through arguments ."
 fi
 
+# That's it if we only wanted supervisor update
+if [ "$ONLY_SUPERVISOR" == "yes" ]; then
+    log "Update only of the supervisor requested."
+    exit 0
+fi
+
 # Avoid supervisor cleaning up resinhup and stop containers
-resin-device-progress --percentage 50 --state "Host OS Update: Preparing..."
+/usr/bin/resin-device-progress --percentage 50 --state "Host OS Update: Preparing..."
 log "Stopping all containers..."
 systemctl stop resin-supervisor > /dev/null 2>&1
 systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
@@ -272,24 +281,28 @@ fi
 
 # Run resinhup
 log "Running resinhup..."
-resin-device-progress --percentage 75 --state "Host OS Update: Running..."
+/usr/bin/resin-device-progress --percentage 75 --state "Host OS Update: Running..."
 RESINHUP_STARTTIME=$(date +%s)
+
+# Setup -e arguments
+RESINHUP_ENV=""
 if [ "$FORCE" == "yes" ]; then
-    log "Running in force mode..."
-    $DOCKER run --privileged --rm --net=host -e RESINHUP_FORCE=yes --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
-else
-    log "Not running in force mode..."
-    $DOCKER run --privileged --rm --net=host                       --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+    RESINHUP_ENV="$RESINHUP_ENV -e RESINHUP_FORCE=yes"
 fi
+if [ "$STAGING" == "yes" ]; then
+    RESINHUP_ENV="$RESINHUP_ENV -e RESINHUP_STAGING=yes"
+fi
+
+$DOCKER run --privileged --rm --net=host $RESINHUP_ENV --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 RESINHUP_EXIT=$?
 if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means update done while exit code 2 means that only intermediate step was done and will continue after reboot
     RESINHUP_ENDTIME=$(date +%s)
 
     if [ $RESINHUP_EXIT -eq 0 ]; then
 
-        resin-device-progress --percentage 100 --state "Host OS Update: Done. Rebooting device..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Done. Rebooting device..."
     else
-        resin-device-progress --percentage 100 --state "Host OS Update: Please restart update after reboot..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Please restart update after reboot..."
     fi
     log "Update suceeded in $(($RESINHUP_ENDTIME - $RESINHUP_STARTTIME)) seconds."
     # Everything is fine - Reboot
