@@ -5,3 +5,5 @@ meta-resin-*/conf/samples/conf-notes.txt
 
 # Log files
 *.log
+
+*.jwt
