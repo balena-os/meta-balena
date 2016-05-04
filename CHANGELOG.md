@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Remove deprecated mmcroot from flasher init script [Andrei]
 * Deploy license.manifest [Andrei]
 
 # v1.1.4 - 2016-04-20

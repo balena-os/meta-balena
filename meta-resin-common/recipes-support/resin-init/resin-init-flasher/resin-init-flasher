@@ -39,19 +39,9 @@ INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 
 function prepare_uboot {
-    # Boot from eMMC
-    # FIX ME
-    # Linux indexes mmc devices in the order they are detected:
-    #   * If uSD card is plugged in, uSD device will be enumerated as mmcblk0 while eMMC as
-    #       mmcblk1.
-    #   * If uSD card is not plugged in, eMMC will be enumerated as mmcblk0
-    # So if SD card is plugged we need to boot from mmbblk1p2, otherwise from mmcblk0p2
-    # UBOOT_FROM_EMMC="mmcroot=LABEL=resin-root rw\n"
-    UBOOT_FROM_EMMC="setemmcroot=if mmc dev 0 ; then setenv mmcroot /dev/mmcblk1p2 rw ; else setenv mmcroot /dev/mmcblk0p2 rw ; fi;\n"
-    UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"mmcdev=$INTERNAL_DEVICE_UBOOT\n"
+    UBOOT_FROM_EMMC="mmcdev=$INTERNAL_DEVICE_UBOOT\n"
     UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"bootpart=$INTERNAL_DEVICE_UBOOT:2\n"
     # Second partition hardcoded!!!
-    UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"uenvcmd= run setemmcroot"
 
     if ! echo -e ${UBOOT_FROM_EMMC} > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
         fail "Failed to write uEnv on disk labeled as 'resin-boot'"
