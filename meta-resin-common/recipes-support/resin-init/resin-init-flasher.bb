@@ -76,3 +76,5 @@ do_deploy() {
 
     echo -e "mmcdev=${EXTERNAL_DEVICE_UBOOT}\nbootpart=${EXTERNAL_DEVICE_UBOOT}:2" > ${DEPLOYDIR}/uEnv.txt
 }
+
+addtask deploy before do_package after do_install
