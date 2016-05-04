@@ -7,6 +7,7 @@ STAGING=no
 LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
+NOREBOOT=no
 
 source /etc/profile
 
@@ -45,6 +46,9 @@ Options:
   -n, --nolog
         By default tool logs to stdout and file. This flag deactivates log to
         $LOGFILE file.
+
+  --no-reboot
+        Don't reboot if update is successful. This is useful when debugging.
 EOF
 }
 
@@ -181,6 +185,9 @@ while [[ $# > 0 ]]; do
         -n|--nolog)
             LOG=no
             ;;
+        --no-reboot)
+            NOREBOOT=yes
+            ;;
         *)
             log ERROR "Unrecognized option $1."
             ;;
@@ -305,9 +312,14 @@ if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means
         /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Please restart update after reboot..."
     fi
     log "Update suceeded in $(($RESINHUP_ENDTIME - $RESINHUP_STARTTIME)) seconds."
+
     # Everything is fine - Reboot
-    log "Rebooting board in 5 seconds..."
-    nohup bash -c " /bin/sleep 5 ; /sbin/reboot " &
+    if [ "$NOREBOOT" == "no" ]; then
+        log "Rebooting board in 5 seconds..."
+        nohup bash -c " /bin/sleep 5 ; /sbin/reboot " &
+    else
+        log "'No-reboot' requested."
+    fi
 else
     RESINHUP_ENDTIME=$(date +%s)
     # Don't tryup so support can have a chance to see what went wrong and how to recover
