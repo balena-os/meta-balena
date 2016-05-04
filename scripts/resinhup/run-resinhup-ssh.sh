@@ -51,6 +51,12 @@ Options:
 
   --only-supervisor
         Update only the supervisor.
+
+  --no-reboot
+        Run run-resinhup.sh with --no-reboot
+
+  --resinhup-tag
+        Run run-resinhup.sh with --tag.
 EOF
 }
 
@@ -186,9 +192,19 @@ while [[ $# > 0 ]]; do
             RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-image $SUPERVISOR_IMAGE"
             shift
             ;;
+        --resinhup-tag)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            RESINHUP_TAG=$2
+            RESINHUP_ARGS="$RESINHUP_ARGS --tag $RESINHUP_TAG"
+            shift
+            ;;
         --only-supervisor)
             RESINHUP_ARGS="$RESINHUP_ARGS --only-supervisor"
-            shift
+            ;;
+        --no-reboot)
+            RESINHUP_ARGS="$RESINHUP_ARGS --no-reboot"
             ;;
         *)
             log ERROR "Unrecognized option $1."

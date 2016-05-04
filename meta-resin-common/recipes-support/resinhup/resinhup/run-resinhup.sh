@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # Default values
-TAG=latest
+TAG=1.0b
 FORCE=no
 STAGING=no
 LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
+NOREBOOT=no
 
 source /etc/profile
 
@@ -45,6 +46,9 @@ Options:
   -n, --nolog
         By default tool logs to stdout and file. This flag deactivates log to
         $LOGFILE file.
+
+  --no-reboot
+        Don't reboot if update is successful. This is useful when debugging.
 EOF
 }
 
@@ -58,7 +62,7 @@ function tryup {
 # Catch INT signals and try to bring things back
 trap ctrl_c INT
 function ctrl_c() {
-    /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
+    /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Failed. Contact support..."
     log "Trapped INT signal"
     tryup
     exit 1
@@ -87,7 +91,7 @@ function log {
         printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
     fi
     if [ "$loglevel" == "ERROR" ]; then
-        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Failed. Contact support..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Failed. Contact support..."
         exit 1
     fi
 }
@@ -181,6 +185,9 @@ while [[ $# > 0 ]]; do
         -n|--nolog)
             LOG=no
             ;;
+        --no-reboot)
+            NOREBOOT=yes
+            ;;
         *)
             log ERROR "Unrecognized option $1."
             ;;
@@ -188,7 +195,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-/usr/bin/resin-device-progress --percentage 10 --state "Host OS Update: Preparing..."
+/usr/bin/resin-device-progress --percentage 10 --state "Resin Update: Preparing..."
 
 # Init log file
 # LOGFILE init and header
@@ -227,7 +234,7 @@ fi
 # Supervisor update
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
-    /usr/bin/resin-device-progress --percentage 25 --state "Host OS Update: Updating supervisor..."
+    /usr/bin/resin-device-progress --percentage 25 --state "Resin Update: Updating supervisor..."
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
@@ -262,7 +269,7 @@ if [ "$ONLY_SUPERVISOR" == "yes" ]; then
 fi
 
 # Avoid supervisor cleaning up resinhup and stop containers
-/usr/bin/resin-device-progress --percentage 50 --state "Host OS Update: Preparing..."
+/usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 log "Stopping all containers..."
 systemctl stop resin-supervisor > /dev/null 2>&1
 systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
@@ -281,7 +288,7 @@ fi
 
 # Run resinhup
 log "Running resinhup..."
-/usr/bin/resin-device-progress --percentage 75 --state "Host OS Update: Running..."
+/usr/bin/resin-device-progress --percentage 75 --state "Resin Update: Running host OS update..."
 RESINHUP_STARTTIME=$(date +%s)
 
 # Setup -e arguments
@@ -300,14 +307,19 @@ if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means
 
     if [ $RESINHUP_EXIT -eq 0 ]; then
 
-        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Done. Rebooting device..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Done. Rebooting device..."
     else
-        /usr/bin/resin-device-progress --percentage 100 --state "Host OS Update: Please restart update after reboot..."
+        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Intermediate step done. Rebooting device..."
     fi
     log "Update suceeded in $(($RESINHUP_ENDTIME - $RESINHUP_STARTTIME)) seconds."
+
     # Everything is fine - Reboot
-    log "Rebooting board in 5 seconds..."
-    nohup bash -c " /bin/sleep 5 ; /sbin/reboot " &
+    if [ "$NOREBOOT" == "no" ]; then
+        log "Rebooting board in 5 seconds..."
+        nohup bash -c " /bin/sleep 5 ; /sbin/reboot " &
+    else
+        log "'No-reboot' requested."
+    fi
 else
     RESINHUP_ENDTIME=$(date +%s)
     # Don't tryup so support can have a chance to see what went wrong and how to recover
