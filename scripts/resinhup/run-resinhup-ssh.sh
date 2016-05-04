@@ -3,7 +3,7 @@
 RESINHUP_ARGS=""
 UUIDS=""
 SSH_HOST=""
-APP=""
+USER_APP=""
 
 NUM=0
 QUEUE=""
@@ -33,8 +33,9 @@ Options:
         SSH host to be used in ssh connections and other places. Please have them called
         resin/resinstaging because this flag is used in API URL too.
 
-  -a <APP>, --app <APP>
-        Update all the devices in this app.
+  -a <USER_APP>, --app <USER_APP>
+        Update all the devices in this app. The argument needs to be in the format
+        user:appname in order to make sure we update the application of a specific user.
 
   -m <MAX_THREADS>, --max-threads <MAX_THREADS>
         Maximum number of threads to be used when updating devices in parallel. Useful to
@@ -166,7 +167,7 @@ while [[ $# > 0 ]]; do
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
             fi
-            APP=$2
+            USER_APP=$2
             shift
             ;;
         -m|--max-threads)
@@ -214,12 +215,17 @@ while [[ $# > 0 ]]; do
 done
 
 # Add the uuids from the appuuids file to UUID
-if [ -n "$APP" ]; then
+if [ -n "$USER_APP" ]; then
+    RESIN_USER=$(echo "$USER_APP" | cut -d: -f1)
+    RESIN_APP=$(echo "$USER_APP" | cut -d: -f2)
+    if [ -z "$RESIN_USER" ] || [ -z "$RESIN_APP" ]; then
+        log ERROR "Wrong app argument provided: $USER_APP. Check help."
+    fi
     if [ -f $SSH_HOST.jwt ]; then
         JWT=$(cat $SSH_HOST.jwt)
-        NEW_UUIDS=$(curl -s -H "Authorization: Bearer $JWT" "https://api.$SSH_HOST.io/ewa/device?\$expand=application&\$filter=application/app_name%20eq%20"\'$APP\' | jq -r '.d[].uuid')
+        NEW_UUIDS=$(curl -s -H "Authorization: Bearer $JWT" "https://api.$SSH_HOST.io/ewa/device?\$expand=application,user&\$filter=application/app_name%20eq%20'$RESIN_APP'%20and%20application/user/username%20eq%20'$RESIN_USER'" | jq -r '.d[].uuid')
         if [ $? -ne 0 ] || [ -z "$NEW_UUIDS" ]; then
-            log ERROR "Failed to query for $APP on $SSH_HOST"
+            log ERROR "Failed to query for app $RESIN_APP of user $RESIN_USER on $SSH_HOST"
         fi
         UUIDS="$UUIDS $NEW_UUIDS"
     else
