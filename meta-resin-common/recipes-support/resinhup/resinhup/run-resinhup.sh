@@ -155,6 +155,8 @@ function runPostHacks {
         else
             log "Docker hack: Avoided as docker is already switched from rce."
         fi
+    else
+        log "Docker hack: Avoided as requested hostOS version is not >= 1.1.5."
     fi
 }
 
