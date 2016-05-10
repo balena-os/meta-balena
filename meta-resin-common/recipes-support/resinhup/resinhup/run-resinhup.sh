@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-TAG=1.0b
+TAG=1.0
 FORCE=no
 STAGING=no
 LOGFILE=/tmp/`basename "$0"`.log
@@ -30,11 +30,17 @@ Options:
 
   -t <TAG>, --tag <TAG>
         Use a specific tag for resinhup image.
-        Default: latest.
+        Default: 1.0 .
 
-  --supervisor-image <SUPERVISOR IMAGE>
-        In the case of a successful host OS update, bring in a newer supervisor too
-        using this image name.
+  --remote <REMOTE>
+        Run the updater with this remote configuration.
+
+  --hostos-version <HOSTOS_VERSION>
+        Run the updater for this specific HostOS version.
+        This is a mandatory argument.
+
+  --supervisor-registry <SUPERVISOR REGISTRY>
+        Update supervisor getting the image from this registry.
 
   --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
@@ -96,19 +102,12 @@ function log {
     fi
 }
 
-function runhacks {
+function runPreHacks {
     # we might need to repartition this so make sure it is unmounted
     log "Make sure /boot is unmounted..."
     umount /boot &> /dev/null
 
     # can't fix label of BTRFS partition from container
-    if [ -d /mnt/data ]; then
-        BTRFS_MOUNTPOINT=/mnt/data
-    elif [ -d /mnt/data-disk ]; then
-        BTRFS_MOUNTPOINT=/mnt/data-disk
-    else
-        log ERROR "Can't find the resin-data mountpoint."
-    fi
     btrfs filesystem label $BTRFS_MOUNTPOINT resin-data
 
     # Some devices never actually update /etc/timestamp because they are hard-rebooted.
@@ -134,6 +133,34 @@ function runhacks {
         sed --in-place "s|curl --silent --header \"User-Agent:\" --compressed|wget -qO-|" $script_path
         sed --in-place "s|curl -s --compressed|wget -qO-|" $script_path
     fi
+}
+
+function runPostHacks {
+    # Switch from rce to docker - HostOS version with this change is 1.1.5
+    log "Docker hack: Make switch from rce to docker backwards compatible"
+    if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
+        if [ "$DOCKER" == "rce" ]; then
+            # Stop rce first in all the ways possible :)
+            systemctl stop rce &> /dev/null
+            killall rce
+            dockerpid=$(pidof rce)
+            kill -9 $dockerpid &> /dev/null
+
+            if [ -d $BTRFS_MOUNTPOINT/docker ]; then
+                log ERROR "$BTRFS_MOUNTPOINT/docker already exists"
+            else
+                mv -f $BTRFS_MOUNTPOINT/rce $BTRFS_MOUNTPOINT/docker
+                sync
+            fi
+        else
+            log "Docker hack: Avoided as docker is already switched from rce."
+        fi
+    fi
+}
+
+# Test if a version is greater than another
+function version_gt() {
+    test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"
 }
 
 #
@@ -165,11 +192,25 @@ while [[ $# > 0 ]]; do
             TAG=$2
             shift
             ;;
-        --supervisor-image)
+        --hostos-version)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
             fi
-            UPDATER_SUPERVISOR_IMAGE=$2
+            HOSTOS_VERSION=$2
+            shift
+            ;;
+        --remote)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            REMOTE=$2
+            shift
+            ;;
+        --supervisor-registry)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            SUPERVISOR_REGISTRY=$2
             shift
             ;;
         --supervisor-tag)
@@ -197,6 +238,11 @@ done
 
 /usr/bin/resin-device-progress --percentage 10 --state "Resin Update: Preparing..."
 
+# Check that HostOS version was provided
+if [ -z "$HOSTOS_VERSION" ]; then
+    log ERROR "--hostos-version is required."
+fi
+
 # Init log file
 # LOGFILE init and header
 if [ "$LOG" == "yes" ]; then
@@ -219,8 +265,17 @@ if [ -z $slug ]; then
 fi
 log "Found slug $slug for this device."
 
-# Run hacks
-runhacks
+# Detect BTRFS_MOUNTPOINT
+if [ -d /mnt/data ]; then
+    BTRFS_MOUNTPOINT=/mnt/data
+elif [ -d /mnt/data-disk ]; then
+    BTRFS_MOUNTPOINT=/mnt/data-disk
+else
+    log ERROR "Can't find the resin-data mountpoint."
+fi
+
+# Run pre hacks
+runPreHacks
 
 # Detect containers engine
 if which docker &> /dev/null; then
@@ -231,17 +286,28 @@ else
     log ERROR "Can't detect the containers engine on the host OS."
 fi
 
+# Detect arch
+source /etc/supervisor.conf
+arch=`echo "$SUPERVISOR_IMAGE" | sed -n "s/.*\/\([a-zA-Z0-9]*\)-.*/\1/p"`
+if [ -z "$arch" ]; then
+    log ERROR "Can't detect arch from /etc/supervisor.conf ."
+else
+    log "Detected arch: $arch ."
+fi
+
 # Supervisor update
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
     /usr/bin/resin-device-progress --percentage 25 --state "Resin Update: Updating supervisor..."
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
-    if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
-    log "No supervisor image provided. Using the one from /etc/supervisor.conf ."
-        source /etc/supervisor.conf
+    if [ -z "$SUPERVISOR_REGISTRY" ]; then
         UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
+    else
+        UPDATER_SUPERVISOR_IMAGE="$SUPERVISOR_REGISTRY/resin/$arch-supervisor"
     fi
+
+    log "Update to supervisor $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG..."
 
     log "Updating supervisor..."
     if [[ $(readlink /sbin/init) == *"sysvinit"* ]]; then
@@ -268,6 +334,26 @@ if [ "$ONLY_SUPERVISOR" == "yes" ]; then
     exit 0
 fi
 
+# Migrate docker images to docker engine 1.10 - HostOS version with this change is 1.1.5
+log "Migrating to engine 1.10..."
+if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
+    if [ "$DOCKER" == "rce" ]; then
+        log "Running engine migrator 1.10... please wait..."
+        DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
+        $DOCKER pull $DOCKER_MIGRATOR
+        $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
+        if [ $? -eq 0 ]; then
+            log "Migration to engine 1.10 done."
+        else
+            log ERROR "Migration to engine 1.10 failed."
+        fi
+    else
+        log "No need to migrate to engine 1.10 as docker switch is already there"
+    fi
+else
+    log "No need to migrate to engine 1.10 as you are not updating to a version >= 1.1.5."
+fi
+
 # Avoid supervisor cleaning up resinhup and stop containers
 /usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 log "Stopping all containers..."
@@ -287,7 +373,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Run resinhup
-log "Running resinhup..."
+log "Running resinhup for version $HOSTOS_VERSION ..."
 /usr/bin/resin-device-progress --percentage 75 --state "Resin Update: Running host OS update..."
 RESINHUP_STARTTIME=$(date +%s)
 
@@ -299,17 +385,27 @@ fi
 if [ "$STAGING" == "yes" ]; then
     RESINHUP_ENV="$RESINHUP_ENV -e RESINHUP_STAGING=yes"
 fi
+if [ -n "$REMOTE" ]; then
+    RESINHUP_ENV="$RESINHUP_ENV -e REMOTE=$REMOTE"
+fi
+RESINHUP_ENV="$RESINHUP_ENV -e VERSION=$HOSTOS_VERSION"
 
 $DOCKER run --privileged --rm --net=host $RESINHUP_ENV --volume /:/host registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 RESINHUP_EXIT=$?
-if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ]; then # exitcode 0 means update done while exit code 2 means that only intermediate step was done and will continue after reboot
+# RESINHUP_EXIT
+#   0 - update done
+#   2 - only intermediate step was done and will continue after reboot
+#   3 - device already updated at a requested version or later
+if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ] || [ $RESINHUP_EXIT -eq 3 ]; then
     RESINHUP_ENDTIME=$(date +%s)
 
     if [ $RESINHUP_EXIT -eq 0 ]; then
-
         /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Done. Rebooting device..."
-    else
+        runPostHacks
+    elif [ $RESINHUP_EXIT -eq 2 ]; then
         /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Intermediate step done. Rebooting device..."
+    elif [ $RESINHUP_EXIT -eq 3 ]; then
+        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Device already at requested version..."
     fi
     log "Update suceeded in $(($RESINHUP_ENDTIME - $RESINHUP_STARTTIME)) seconds."
 
