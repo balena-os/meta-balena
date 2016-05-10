@@ -42,13 +42,20 @@ Options:
         not network bash network if devices are in the same one. If value is 0, all
         updates will start in parallel.
 
+  --remote <REMOTE>
+        Run run-resinhup.sh with --remote
+        This is a mandatory argument.
+
+  --hostos-version <HOSTOS_VERSION>
+        Run run-resinhup.sh with --version
+        This is a mandatory argument.
+
+  --supervisor-registry <SUPERVISOR REGISTRY>
+        Run run-resinhup.sh with ----supervisor-registry
+
   --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
         using this tag.
-
-  --supervisor-image <SUPERVISOR IMAGE>
-        In the case of a successful host OS update, bring in a newer supervisor too
-        using this image.
 
   --only-supervisor
         Update only the supervisor.
@@ -177,20 +184,36 @@ while [[ $# > 0 ]]; do
             MAX_THREADS=$2
             shift
             ;;
+        --remote)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            REMOTE=$2
+            RESINHUP_ARGS="$RESINHUP_ARGS --remote $REMOTE"
+            shift
+            ;;
+        --hostos-version)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            HOSTOS_VERSION=$2
+            RESINHUP_ARGS="$RESINHUP_ARGS --hostos-version $HOSTOS_VERSION"
+            shift
+            ;;
+        --supervisor-registry)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            SUPERVISOR_REGISTRY=$2
+            RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-registry $SUPERVISOR_REGISTRY"
+            shift
+            ;;
         --supervisor-tag)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
             fi
             SUPERVISOR_TAG=$2
             RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-tag $SUPERVISOR_TAG"
-            shift
-            ;;
-        --supervisor-image)
-            if [ -z "$2" ]; then
-                log ERROR "\"$1\" argument needs a value."
-            fi
-            SUPERVISOR_IMAGE=$2
-            RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-image $SUPERVISOR_IMAGE"
             shift
             ;;
         --resinhup-tag)
