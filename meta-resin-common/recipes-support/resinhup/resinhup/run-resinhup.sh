@@ -365,6 +365,7 @@ $DOCKER stop $($DOCKER ps -a -q) > /dev/null 2>&1
 log "Removing all containers..."
 $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 /etc/init.d/crond stop > /dev/null 2>&1 # We might have cron jobs which restart supervisor
+/usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 
 # Pull resinhup and tag it accordingly
 log "Pulling resinhup..."
