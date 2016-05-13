@@ -11,7 +11,7 @@ SRC_URI = " \
     "
 S = "${WORKDIR}"
 
-inherit allarch systemd
+inherit allarch systemd deploy
 
 SYSTEMD_SERVICE_${PN} = "resin-init-flasher.service"
 
@@ -68,3 +68,13 @@ do_install() {
     echo "BOOTLOADER_BLOCK_SIZE_OFFSET=${BOOTLOADER_BLOCK_SIZE_OFFSET}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
 }
+
+do_deploy() {
+    if [ -z "EXTERNAL_DEVICE_UBOOT" ]; then
+        bbfatal "EXTERNAL_DEVICE_UBOOT is required in order to hardcode the initial uEnv.txt"
+    fi
+
+    echo -e "mmcdev=${EXTERNAL_DEVICE_UBOOT}\nbootpart=${EXTERNAL_DEVICE_UBOOT}:2" > ${DEPLOYDIR}/uEnv.txt
+}
+
+addtask deploy before do_package after do_install

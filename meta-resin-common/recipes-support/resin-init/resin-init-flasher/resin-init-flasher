@@ -39,13 +39,14 @@ INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 
 function prepare_uboot {
-    UBOOT_FROM_EMMC="mmcdev=$INTERNAL_DEVICE_UBOOT\n"
-    UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"bootpart=$INTERNAL_DEVICE_UBOOT:2\n"
-    # Second partition hardcoded!!!
-
-    if ! echo -e ${UBOOT_FROM_EMMC} > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
+    if ! cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT ; then
         fail "Failed to write uEnv on disk labeled as 'resin-boot'"
     fi
+
+    # Modify internal uEnv to use internal storage medium
+    sed -i "s/mmcdev=[0-9]*/mmcdev=$INTERNAL_DEVICE_UBOOT/g" $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt
+    sed -i "s/bootpart=[0-9]*/bootpart=$INTERNAL_DEVICE_UBOOT/g" $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt
+
     inform "Wrote uEnv on disk labeled as 'resin-boot'"
 }
 
