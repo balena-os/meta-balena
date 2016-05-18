@@ -35,5 +35,4 @@ RESIN_CONFIG_FS_LABEL = "flash-conf"
 RESIN_BOOT_PARTITION_FILES_append = " \
     resin-logo.png:/splash/resin-logo.png \
     resin-image-${MACHINE}.resin-sdcard: \
-    uEnv.txt: \
     "
