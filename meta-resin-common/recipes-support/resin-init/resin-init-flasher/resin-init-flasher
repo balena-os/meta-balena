@@ -124,13 +124,13 @@ fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
-dd if=$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+dd if=/opt/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
 
 if ! kill -0 $DD_PID; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
 fi
 
-IMAGE_FILE_SIZE=`wc -c $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_IMAGE | awk '{print $1}'`
+IMAGE_FILE_SIZE=`wc -c /opt/$RESIN_IMAGE | awk '{print $1}'`
 
 resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media"
 
