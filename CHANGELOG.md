@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Move resin-image sdcard file in the rootfs instead of the boot partition [Florin]
 * Add compression mechanism for binaries, using upx [Theodor]
 * Switch to docker 1.10.3 [Theodor]
 * Remove deprecated mmcroot from flasher init script [Andrei]
