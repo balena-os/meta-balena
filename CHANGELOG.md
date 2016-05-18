@@ -1,8 +1,9 @@
 Change log
 -----------
 
-# v1.1.4 - 2016-04-20
+# v1.1.4 - 2016-05-16
 
+* Move resin-image sdcard file in the rootfs instead of the boot partition [Florin]
 * Add build information in the target rootfs [Florin]
 * Don't bind mount /etc/resolv.conf anymore [Florin]
 * Have dnsmasq listen on 127.0.0.2 instead of 127.0.0.1 [Florin]
