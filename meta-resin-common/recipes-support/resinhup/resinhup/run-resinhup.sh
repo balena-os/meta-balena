@@ -299,6 +299,11 @@ else
     log "Detected arch: $arch ."
 fi
 
+# We need to stop update-resin-supervisor.timer otherwise it might restart supervisor which
+# will delete downloaded layers. Same for cron jobs.
+systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
+/etc/init.d/crond stop > /dev/null 2>&1 # We might have cron jobs which restart supervisor
+
 # Supervisor update
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
@@ -318,13 +323,16 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
         # Supervisor update on sysvinit based OS
         $DOCKER pull "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG"
         if [ $? -ne 0 ]; then
+            tryup
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
+
         fi
         $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
     else
         # Supervisor update on systemd based OS
         /usr/bin/update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
         if [ $? -ne 0 ]; then
+            tryup
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
         fi
     fi
@@ -362,11 +370,9 @@ fi
 /usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 log "Stopping all containers..."
 systemctl stop resin-supervisor > /dev/null 2>&1
-systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
 $DOCKER stop $($DOCKER ps -a -q) > /dev/null 2>&1
 log "Removing all containers..."
 $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
-/etc/init.d/crond stop > /dev/null 2>&1 # We might have cron jobs which restart supervisor
 /usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 
 # Pull resinhup and tag it accordingly
