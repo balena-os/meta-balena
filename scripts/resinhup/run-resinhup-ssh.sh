@@ -43,15 +43,15 @@ Options:
         updates will start in parallel.
 
   --remote <REMOTE>
-        Run run-resinhup.sh with --remote
-        This is a mandatory argument.
+        Run run-resinhup.sh with --remote . See run-resinhup.sh help for more details.
 
   --hostos-version <HOSTOS_VERSION>
-        Run run-resinhup.sh with --version
+        Run run-resinhup.sh with --version .  See run-resinhup.sh help for more details.
         This is a mandatory argument.
 
   --supervisor-registry <SUPERVISOR REGISTRY>
-        Run run-resinhup.sh with ----supervisor-registry
+        Run run-resinhup.sh with ----supervisor-registry . See run-resinhup.sh help for
+        more details.
 
   --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
@@ -61,10 +61,10 @@ Options:
         Update only the supervisor.
 
   --no-reboot
-        Run run-resinhup.sh with --no-reboot
+        Run run-resinhup.sh with --no-reboot . See run-resinhup.sh help for more details.
 
   --resinhup-tag
-        Run run-resinhup.sh with --tag.
+        Run run-resinhup.sh with --tag . See run-resinhup.sh help for more details.
 EOF
 }
 
