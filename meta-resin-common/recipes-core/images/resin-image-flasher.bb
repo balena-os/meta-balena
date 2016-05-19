@@ -6,9 +6,6 @@ inherit image-resin
 # Each machine should append this with their specific configuration
 IMAGE_FSTYPES = ""
 
-# Make sure we have enough space in boot partition
-RESIN_BOOT_SPACE = "1638400"
-
 # Make sure you have the resin image ready
 IMAGE_DEPENDS_resin-sdcard_append = " resin-image:do_rootfs"
 
@@ -25,14 +22,22 @@ IMAGE_INSTALL_append = " \
 # Avoid useless space by not using any btrfs partition
 BTRFS_IMAGE = ""
 
+# We do not use a back-up rootfs partition for the flasher image, so just default to IMAGE_ROOTFS_ALIGNMENT size
+UPDATE_SIZE_ALIGNED = "${IMAGE_ROOTFS_ALIGNMENT}"
+
 # Avoid naming clash with resin image labels
 RESIN_BOOT_FS_LABEL = "flash-boot"
 RESIN_ROOT_FS_LABEL = "flash-root"
 RESIN_UPDATE_FS_LABEL = "flash-updt"
 RESIN_CONFIG_FS_LABEL = "flash-conf"
 
-# Put the resin image inside the boot partition
-RESIN_BOOT_PARTITION_FILES_append = " \
-    resin-logo.png:/splash/resin-logo.png \
-    resin-image-${MACHINE}.resin-sdcard: \
-    "
+# Put the resin logo, uEnv.txt files inside the boot partition
+RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"
+
+# Put resin-image in the flasher rootfs
+add_resin_image_to_flasher_rootfs() {
+    mkdir -p ${WORKDIR}/rootfs/opt
+    cp ${DEPLOY_DIR_IMAGE}/resin-image-${MACHINE}.resin-sdcard ${WORKDIR}/rootfs/opt
+}
+
+IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
