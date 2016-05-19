@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add support for migration to docker engine 1.10 in resinhup [Andrei]
 * Move resin-image sdcard file in the rootfs instead of the boot partition [Florin]
 * Add compression mechanism for binaries, using upx [Theodor]
 * Switch to docker 1.10.3 [Theodor]
