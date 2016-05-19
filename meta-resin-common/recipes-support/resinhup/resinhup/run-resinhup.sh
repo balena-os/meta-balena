@@ -34,6 +34,8 @@ Options:
 
   --remote <REMOTE>
         Run the updater with this remote configuration.
+        This argument will be passed to resinhup and will be used as the location from
+        which the update bundles will be downloaded.
 
   --hostos-version <HOSTOS_VERSION>
         Run the updater for this specific HostOS version.
