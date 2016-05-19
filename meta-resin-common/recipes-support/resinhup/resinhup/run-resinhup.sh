@@ -145,10 +145,11 @@ function runPostHacks {
             # Stop rce first in all the ways possible :)
             systemctl stop rce &> /dev/null
             killall rce
+            sleep 10 # wait for rce to gracefully shutdown
             dockerpid=$(pidof rce)
             kill -9 $dockerpid &> /dev/null
 
-            if [ -d $BTRFS_MOUNTPOINT/docker ]; then
+            if [ -d "$BTRFS_MOUNTPOINT/docker" ]; then
                 log ERROR "$BTRFS_MOUNTPOINT/docker already exists"
             else
                 mv -f $BTRFS_MOUNTPOINT/rce $BTRFS_MOUNTPOINT/docker
