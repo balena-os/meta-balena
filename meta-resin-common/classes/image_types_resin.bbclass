@@ -269,6 +269,12 @@ IMAGE_CMD_resin-sdcard () {
 	if [ -n "${BTRFS_IMAGE}" ]; then
 		dd if=${BTRFS_IMAGE} of=${RESIN_SDIMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE_ALIGNED} \+ ${UPDATE_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${CONFIG_SIZE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})) && sync && sync
 	fi
+
+    # Handle GRUB instalation
+    if [ "${BURN_GRUB}" == "1" ]; then
+        dd if=${DEPLOY_DIR_IMAGE}/grub/boot.img of=${RESIN_SDIMG} conv=notrunc bs=446 count=1
+        dd if=${DEPLOY_DIR_IMAGE}/grub/core.img of=${RESIN_SDIMG} conv=notrunc bs=512 seek=1
+    fi
 }
 
 resin_sdcard_compress () {
