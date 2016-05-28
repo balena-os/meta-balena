@@ -1,0 +1,105 @@
+We do not need nameserver addresses (either configured through connman's settings or received through DHCP) added to the routing table.
+We rely only on connman setting the default routing interface as set through PreferredTechnologies setting. For example:
+
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         192.168.2.1     0.0.0.0         UG    0      0        0 wlan0
+52.73.237.197   *               255.255.255.255 UH    0      0        0 tun0
+172.17.0.0      *               255.255.0.0     U     0      0        0 docker0
+192.168.0.0     *               255.255.255.0   U     0      0        0 eth0
+192.168.2.0     *               255.255.255.0   U     0      0        0 wlan0
+192.168.2.1     *               255.255.255.255 UH    0      0        0 wlan0
+
+In the above example, nameservers will be routed through the default gateway, rather than expect connman to create entries such as:
+
+8.8.4.4         192.168.0.1     255.255.255.255 UGH   0      0        0 eth0
+8.8.4.4         192.168.2.1     255.255.255.255 UGH   0      0        0 wlan0
+8.8.8.8         192.168.0.1     255.255.255.255 UGH   0      0        0 eth0
+8.8.8.8         192.168.2.1     255.255.255.255 UGH   0      0        0 wlan0
+
+which could break name resolution. 8.8.4.4 and 8.8.8.8 would be routed through 192.168.0.1 and in case there is a captive portal in subnet
+192.168.0.0 then it would resolve all domain queries and point to the captive portal's address for example, instead of having the name resolution
+done by an actual nameserver.
+
+Upstream-Status: Inappropriate [configuration specific]
+
+Signed-off-by: Florin Sarbu <florin@resin.io>
+
+Index: connman-1.30/src/connection.c
+===================================================================
+--- connman-1.30.orig/src/connection.c
++++ connman-1.30/src/connection.c
+@@ -878,16 +878,42 @@ int __connman_connection_gateway_add(str
+ 	if (type == CONNMAN_IPCONFIG_TYPE_IPV4 &&
+ 				new_gateway->ipv4_gateway) {
+ 		add_host_route(AF_INET, index, gateway, service_type);
+-		__connman_service_nameserver_add_routes(service,
+-					new_gateway->ipv4_gateway->gateway);
++
++/*  we do not want to add routes to nameservers in the routing table (no matter if they are configured in connman's
++    config files or received through DHCP).
++
++    having them configured in the routing table will introduce issues when we expect that, for example, a public
++    DNS server is reachable through the default route but it will instead be reachable through one of these
++    configured routes from the routing table thus redirecting all access to this public DNS nameserver to, for example,
++    a subnet which has a captive portal on it and effectively breaking all nameserver querying.
++
++    the only problem with removing this is when one of the subnets is advertising a nameserver which is only accessible
++    through that particular subnet (and it is not directly part of that subnet connected to our machine as anyway connman
++    would not add nameservers host routes for nameservers that are on the subnet) */
++
++//		__connman_service_nameserver_add_routes(service,
++//					new_gateway->ipv4_gateway->gateway);
+ 		type4 = CONNMAN_IPCONFIG_TYPE_IPV4;
+ 	}
+ 
+ 	if (type == CONNMAN_IPCONFIG_TYPE_IPV6 &&
+ 				new_gateway->ipv6_gateway) {
+ 		add_host_route(AF_INET6, index, gateway, service_type);
+-		__connman_service_nameserver_add_routes(service,
+-					new_gateway->ipv6_gateway->gateway);
++
++/*  we do not want to add routes to nameservers in the routing table (no matter if they are configured in connman's
++    config files or received through DHCP).
++
++    having them configured in the routing table will introduce issues when we expect that, for example, a public
++    DNS server is reachable through the default route but it will instead be reachable through one of these
++    configured routes from the routing table thus redirecting all access to this public DNS nameserver to, for example,
++    a subnet which has a captive portal on it and effectively breaking all nameserver querying.
++
++    the only problem with removing this is when one of the subnets is advertising a nameserver which is only accessible
++    through that particular subnet (and it is not directly part of that subnet connected to our machine as anyway connman
++    would not add nameservers host routes for nameservers that are on the subnet) */
++
++//		__connman_service_nameserver_add_routes(service,
++//					new_gateway->ipv6_gateway->gateway);
+ 		type6 = CONNMAN_IPCONFIG_TYPE_IPV6;
+ 	}
+ 
+Index: connman-1.30/src/service.c
+===================================================================
+--- connman-1.30.orig/src/service.c
++++ connman-1.30/src/service.c
+@@ -3301,8 +3301,20 @@ static DBusMessage *set_property(DBusCon
+ 
+ 		g_string_free(str, TRUE);
+ 
+-		if (gw && strlen(gw))
+-			__connman_service_nameserver_add_routes(service, gw);
++/*  we do not want to add routes to nameservers in the routing table (no matter if they are configured in connman's
++    config files or received through DHCP).
++
++    having them configured in the routing table will introduce issues when we expect that, for example, a public
++    DNS server is reachable through the default route but it will instead be reachable through one of these
++    configured routes from the routing table thus redirecting all access to this public DNS nameserver to, for example,
++    a subnet which has a captive portal on it and effectively breaking all nameserver querying.
++
++    the only problem with removing this is when one of the subnets is advertising a nameserver which is only accessible
++    through that particular subnet (and it is not directly part of that subnet connected to our machine as anyway connman
++    would not add nameservers host routes for nameservers that are on the subnet) */
++
++//		if (gw && strlen(gw))
++//			__connman_service_nameserver_add_routes(service, gw);
+ 
+ 		nameserver_add_all(service, CONNMAN_IPCONFIG_TYPE_ALL);
+ 		dns_configuration_changed(service);
