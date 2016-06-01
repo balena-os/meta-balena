@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Set PreferredTechnologies to "wifi,ethernet" [Florin]
 * Do not add nameserver routes in the kernel IP routing table [Florin]
 * Add support for migration to docker engine 1.10 in resinhup [Andrei]
 * Move resin-image sdcard file in the rootfs instead of the boot partition [Florin]
