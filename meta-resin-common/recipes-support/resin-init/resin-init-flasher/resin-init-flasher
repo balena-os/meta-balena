@@ -1,65 +1,37 @@
 #!/bin/bash
-##########################################################################################
-#                                                                                        #
-# Script which burns an image from an external device to an internal device              #
-# Assumptions:                                                                           #
-#   * image is in boot partition of external device                                      #
-#   * all needed variables are configured in resin-init-flasher.conf                     #
-#   * filesystems labeling scheme is persistent (flasher-*/resin-*)                      #
-# Variables in resin-init-flasher.conf                                                    #
-#  INTERNAL_DEVICE_KERNEL        - internal device (enumerated by kernel) to be flashed   #
-#                                    * it's impossible to known what dev to flash because #
-#                                      we don't have any labels before flashing something #
-#                                      so we need this info                               #
-#  BOARD_BOOTLOADER              - bootloader used by the target board                    #
-#                                    * can be either u-boot or grub-efi for the moment    #
-#  INTERNAL_DEVICE_UBOOT         - internal device as enumerated by uboot                 #
-#                                    * we need to know how uboot enumerates the mmc       #
-#                                      device so we can instruct uboot to load kernel     #
-#                                      from there                                         #
-#  RESIN_IMAGE                   - image to be flashed on internal device                 #
-#                                    * this is defaulted to                               #
-#                                      resin-image-${MACHINE}.resin-sdcard and should be  #
-#                                      just fine                                          #
-#  BOOTLOADER_FLASH_DEVICE       - device where bootloader binary will be flashed         #
-#                                    * this variable should be set together with          #
-#                                      BOOTLOADER_IMAGE                                   #
-#                                    * if this variable is not set we DO NOT flash u-boot #
-#                                      to internal flash device                           #
-#  BOOTLOADER_IMAGE              - name of the u-boot binary                              #
-#  BOOTLOADER_BLOCK_SIZE_OFFSET  - offset at which we write u-boot binary                 #
-#  BOOTLOADER_SKIP_OUTPUT_BLOCKS - number of blocks to skip when writing bootloader       #
-#                                    * this is the seek param to dd                       #
-##########################################################################################
+#
+# Script which burns an image from an external device to an internal device
+# Assumptions:
+#   * image is in boot partition of external device
+#   * all needed variables are configured in resin-init-flasher.conf
+#   * filesystems labeling scheme is persistent (flasher-*/resin-*)
+# Variables in resin-init-flasher.conf
+#  INTERNAL_DEVICE_KERNEL                 - internal device (enumerated by kernel) to be flashed
+#                                             * it's impossible to known what dev to flash because
+#                                               we don't have any labels before flashing something
+#                                               so we need this info
+#  INTERNAL_DEVICE_BOOTLOADER_CONFIG      - name of the bootloader config for internal media boot
+#  INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH - relative path to internal boot partition where
+#                                               INTERNAL_DEVICE_BOOTLOADER_CONFIG will be copied to
+#  RESIN_IMAGE                            - image to be flashed on internal device
+#                                             * this is defaulted to
+#                                               resin-image-${MACHINE}.resin-sdcard and should be
+#                                               just fine
+#  BOOTLOADER_FLASH_DEVICE                - device where bootloader binary will be flashed
+#                                             * this variable should be set together with
+#                                               BOOTLOADER_IMAGE
+#                                             * if this variable is not set we DO NOT flash u-boot
+#                                               to internal flash device
+#  BOOTLOADER_IMAGE                       - name of the u-boot binary
+#  BOOTLOADER_BLOCK_SIZE_OFFSET           - offset at which we write u-boot binary
+#  BOOTLOADER_SKIP_OUTPUT_BLOCKS          - number of blocks to skip when writing bootloader
+#                                             * this is the seek param to dd
 
 # Very long variables :)
 EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
-
-function prepare_uboot {
-    UBOOT_FROM_EMMC="mmcdev=$INTERNAL_DEVICE_UBOOT\n"
-    UBOOT_FROM_EMMC=$UBOOT_FROM_EMMC"bootpart=$INTERNAL_DEVICE_UBOOT:2\n"
-    # Second partition hardcoded!!!
-
-    if ! echo -e ${UBOOT_FROM_EMMC} > $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt; then
-        fail "Failed to write uEnv on disk labeled as 'resin-boot'"
-    fi
-    inform "Wrote uEnv on disk labeled as 'resin-boot'"
-}
-
-function prepare_grub_efi {
-    GRUBCFG=$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI/BOOT/grub.cfg
-    # Delete the initrd lines
-    sed -i "/initrd /d" $GRUBCFG
-    # Delete any LABEL= strings
-    sed -i "s/ LABEL=[^ ]*/ /" $GRUBCFG
-    # Delete any root= strings
-    sed -i "s/ root=[^ ]*/ /" $GRUBCFG
-    # Add the root= and other standard boot options
-    sed -i "s@linux /vmlinuz *@linux /vmlinuz root=/dev/${INTERNAL_DEVICE_KERNEL}2 @" $GRUBCFG
-}
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -154,23 +126,18 @@ else
     inform "No need to flash bootloader to a specific device."
 fi
 
-# Mount internal device boot partition to write bootloader config file on it
-mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
-inform "Mounting internal device boot partition."
-if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
-    fail "Failed to mount disk labeled as 'resin-boot'."
+if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
+        if [[ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then
+            fail "INTERNAL_DEVICE_BOOTLOADER_CONFIG needs INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH to be set."
+        fi
+        # Mount internal device boot partition to write bootloader config file on it
+        mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+        inform "Mounting internal device boot partition."
+        if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
+            fail "Failed to mount disk labeled as 'resin-boot'."
+        fi
+        cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH
 fi
-
-case $BOARD_BOOTLOADER in
-    u-boot)
-        # we need to write our uEnv.txt to the internal boot partition
-        prepare_uboot
-        ;;
-    grub-efi)
-        #
-        prepare_grub_efi
-        ;;
-esac
 
 # Copy json configuration file from external (flasher) to the internal (booting) device
 mkdir -p $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
