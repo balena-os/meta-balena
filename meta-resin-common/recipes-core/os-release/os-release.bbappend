@@ -2,7 +2,7 @@
 OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV"
 
 # Simplify VERSION output
-VERSION = "${DISTRO_VERSION}"
+VERSION = "${HOSTOS_VERSION}"
 
 # Generate RESIN_BOARD_REV and META_RESIN_REV
 python __anonymous () {

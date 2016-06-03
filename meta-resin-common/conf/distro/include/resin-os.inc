@@ -4,6 +4,25 @@ require conf/distro/poky.conf
 DISTRO = "resin-os"
 DISTRO_NAME = "Resin OS"
 DISTRO_VERSION = "1.1.4"
+HOSTOS_VERSION = "${DISTRO_VERSION}"
+python () {
+    ''' Set HOSTOS_VERSION from board VERSION if available '''
+
+    # Find board VERSION location based on poky meta layer
+    bblayers = d.getVar('BBLAYERS', True).split()
+    poky = [layer for layer in bblayers if layer.endswith('poky/meta')]
+    if not poky:
+        return
+    board_version_path = os.path.join(poky[0], '../../../', 'VERSION')
+
+    # Set HOSTOS_VERSION
+    try:
+        with open(board_version_path, 'r') as v:
+            board_version = v.read()
+        d.setVar('HOSTOS_VERSION', board_version)
+    except:
+        return
+}
 
 MAINTAINER = "Resin <hello@resin.io>"
 

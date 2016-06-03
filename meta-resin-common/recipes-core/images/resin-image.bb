@@ -40,7 +40,7 @@ generate_rootfs_fingerprints () {
 }
 
 generate_hostos_version () {
-    echo ${DISTRO_VERSION} > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
+    echo "${HOSTOS_VERSION}" > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
 }
 
 ROOTFS_POSTPROCESS_COMMAND += " generate_rootfs_fingerprints ; "
