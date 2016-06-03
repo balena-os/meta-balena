@@ -180,6 +180,9 @@ if ! mount /dev/disk/by-label/resin-conf $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT; 
 fi
 cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
 
+echo "Board specific flash procedure..."
+/usr/bin/resin-init-flasher-board
+
 # More syncs
 sync
 

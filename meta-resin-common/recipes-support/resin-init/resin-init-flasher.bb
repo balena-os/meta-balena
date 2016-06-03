@@ -23,6 +23,7 @@ RDEPENDS_${PN} = " \
     resin-device-progress \
     resin-init-board \
     parted \
+    resin-init-flasher-board \
     "
 
 # This should be just fine

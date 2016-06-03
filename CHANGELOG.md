@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Provide script to inject board specific flashing procedures [Theodor]
 * Implement and document host OS new versioning scheme [Andrei]
 * Set PreferredTechnologies to "wifi,ethernet" [Florin]
 * Do not add nameserver routes in the kernel IP routing table [Florin]
