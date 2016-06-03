@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Remove board specific bootloader handling from the flasher [Florin]
 * Provide script to inject board specific flashing procedures [Theodor]
 * Implement and document host OS new versioning scheme [Andrei]
 * Set PreferredTechnologies to "wifi,ethernet" [Florin]
