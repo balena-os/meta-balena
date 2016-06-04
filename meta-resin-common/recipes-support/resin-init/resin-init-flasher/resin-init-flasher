@@ -158,9 +158,6 @@ resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 
-# Mark flashing device as done (should be remove in the future for multiple provisionings)
-echo "resin-init-flasher: done" > ${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/remove_to_reprovision
-
 inform "Shutting down ..."
 shutdown -h now
 
