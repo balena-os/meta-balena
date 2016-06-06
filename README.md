@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/resin-os/meta-resin.png?label=ready&title=Ready)](https://waffle.io/resin-os/meta-resin)
 # Resin.io layers for Yocto
 
 ## Description
