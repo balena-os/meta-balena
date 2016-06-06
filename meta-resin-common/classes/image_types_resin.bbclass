@@ -140,7 +140,7 @@ IMAGE_CMD_resin-sdcard () {
 	START=${IMAGE_ROOTFS_ALIGNMENT}
 	END=$(expr ${START} \+ ${RESIN_BOOT_SPACE_ALIGNED})
 	# Create boot partition and mark it as bootable
-	parted -s ${RESIN_SDIMG} unit KiB mkpart primary fat32 ${START} ${END}
+	parted -s ${RESIN_SDIMG} unit KiB mkpart primary fat16 ${START} ${END}
 	parted -s ${RESIN_SDIMG} set 1 boot on
 
 	# Create rootfs partition
@@ -160,7 +160,7 @@ IMAGE_CMD_resin-sdcard () {
 	# After creating the extended partition the next logical parition needs a IMAGE_ROOTFS_ALIGNMENT in front of it
 	START=$(expr ${START} \+ ${IMAGE_ROOTFS_ALIGNMENT})
 	END=$(expr ${START} \+ ${CONFIG_SIZE_ALIGNED})
-    parted -s ${RESIN_SDIMG} unit KiB mkpart logical fat32 ${START} ${END}
+    parted -s ${RESIN_SDIMG} unit KiB mkpart logical fat16 ${START} ${END}
 
 	# Create BTRFS partition
 	START=$(expr ${END} \+ ${IMAGE_ROOTFS_ALIGNMENT})
