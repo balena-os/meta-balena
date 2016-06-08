@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.2 - 2016-06-08
+
 * Remove board specific bootloader handling from the flasher [Florin]
 * Provide script to inject board specific flashing procedures [Theodor]
 * Implement and document host OS new versioning scheme [Andrei]
