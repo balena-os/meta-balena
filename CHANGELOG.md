@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Implement mechanism for compressed kernel modules [Andrei]
 * Fix connman multiple IP over DHCP [Andrei]
 * Have the ability to inject custom docker images for connectable builds [Andrei]
 * Integrate resin-provisioner [Andrei]
