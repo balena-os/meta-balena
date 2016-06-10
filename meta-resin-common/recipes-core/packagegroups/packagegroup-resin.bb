@@ -7,13 +7,13 @@ inherit packagegroup
 
 RESIN_INIT_PACKAGE ?= "resin-init"
 RESIN_MOUNTS ?= "resin-mounts"
-RESIN_REGISTER ?= "resin-supervisor"
+RESIN_REGISTER ?= "docker-disk"
 
 include packagegroup-resin.inc
 
 # Additional packages
 RDEPENDS_${PN} += " \
-    resin-supervisor \
+    docker-disk \
     resin-btrfs-balance \
     resin-btrfs-expand \
     resin-logs \
