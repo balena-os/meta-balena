@@ -80,7 +80,7 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			dosfstools-native \
 			virtual/kernel \
 			${RESIN_IMAGE_BOOTLOADER} \
-			resin-supervisor \
+			docker-disk \
 			btrfs-tools-native \
 			coreutils-native \
 			"
