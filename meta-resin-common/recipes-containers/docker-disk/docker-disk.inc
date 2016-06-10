@@ -34,8 +34,6 @@ do_compile () {
     # Make sure there is at least one available loop device
     losetup -f > /dev/null 2>&1 || bbfatal "docker-disk: Host must have at least one available loop device."
 
-    # Build and run the container which produces the BTRFS image
-    touch -t 7805200000 ${WORKDIR}/entry.sh # Make sure docker rebuilds the image only if file is changed in content
     docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
     docker run --rm --privileged -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
 }
