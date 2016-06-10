@@ -39,7 +39,9 @@ DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains
 PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
 PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
-PREFERRED_PROVIDER_resin-supervisor ?= "resin-supervisor-disk"
+
+CUSTOM_PRELOADED_DOCKER_IMAGE ?= "no"
+PREFERRED_PROVIDER_docker-disk = "${@bb.utils.contains('CUSTOM_PRELOADED_DOCKER_IMAGE','yes','docker-custom-disk','docker-resin-supervisor-disk',d)}"
 
 SPLASH = "plymouth"
 
