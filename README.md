@@ -68,6 +68,34 @@ We configure all of our initial images to produce a resin logo at boot, shutdown
 All you have to do is replace the splash/resin-logo.png file that you will find in the first partition of our images (boot partition) with your own image.
 NOTE: As it currently stands plymouth expects the image to be named resin-logo.png.
 
+### Selecting the docker image to be injected in the BTRFS partition
+
+By default resin-supervisor images gets injected in the BTRFS partition. This means that the final image will have preloaded the resin-supervisor docker image in the BTRFS partition.
+
+This default behavior can be modified by defining `CUSTOM_PRELOADED_DOCKER_IMAGE = "yes"` in the build's `local.conf`. This variable alone will leave the BTRFS partition without any image preloaded. In addition to this, two other variables can be used to inject a specific dockerhub image:
+* TARGET_REPOSITORY - the image name wanted to be injected
+* TARGET_TAG - the image tag wanted to be injected. If not defined it will default to `latest`. Otherwise will use the specified value.
+
+Example: having an image without any docker image preloaded - add `CUSTOM_PRELOADED_DOCKER_IMAGE="yes"` to build's `local.conf`.
+
+Example: having an image with ubuntu:latest docker image preloaded - add `CUSTOM_PRELOADED_DOCKER_IMAGE = "yes"` and `TARGET_REPOSITORY = "ubuntu"` to build's `local.conf`.
+
+Example: having an image with ubuntu:15:10 docker image preloaded - add `CUSTOM_PRELOADED_DOCKER_IMAGE = "yes"`, `TARGET_REPOSITORY = "ubuntu"` and `TARGET_TAG = "15.04"` to build's `local.conf`.
+
+Hint: Modifing any of the TARGET_* variables, will retrigger the generation of the BTRFS partition without any issues but, if CUSTOM_PRELOADED_DOCKER_IMAGE is changed in a working build (not one from scatch), the user will need to cleansstate the docker-image providers issuing a command similar to `bitbake docker-custom-disk -c cleansstate ; bitbake docker-resin-supervisor-disk -c cleansstate`. Failing to do so, while changing CUSTOM_PRELOADED_DOCKER_IMAGE in a working build, will result in a build error similar to:
+
+> ERROR: The recipe docker-custom-disk is trying to install files into a shared area when those files already exist. Those files and their manifest location are:
+>    ???/build/tmp/sysroots/beaglebone/sysroot-providers/docker-disk
+>  Matched in manifest-beaglebone-docker-resin-supervisor-disk.populate_sysroot
+> Please verify which recipe should provide the above files.
+> The build has stopped as continuing in this scenario WILL break things, if not now, possibly in the future (we've seen builds fail several months later). If the system knew how to recover from this automatically
+> it would however there are several different scenarios which can result in this and we don't know which one this is. It may be you have switched providers of something like virtual/kernel (e.g. from linux-yocto t
+> o linux-yocto-dev), in that case you need to execute the clean task for both recipes and it will resolve this error. It may be you changed DISTRO_FEATURES from systemd to udev or vice versa. Cleaning those recipe
+> s should again resolve this error however switching DISTRO_FEATURES on an existing build directory is not supported, you should really clean out tmp and rebuild (reusing sstate should be safe). It could be the ov
+> erlapping files detected are harmless in which case adding them to SSTATE_DUPWHITELIST may be the correct solution. It could also be your build is including two different conflicting versions of things (e.g. blue
+> z 4 and bluez 5 and the correct solution for that would be to resolve the conflict. If in doubt, please ask on the mailing list, sharing the error and filelist above.
+> ERROR: If the above message is too much, the simpler version is you're advised to wipe out tmp and rebuild (reusing sstate is fine). That will likely fix things in most (but not all) cases.
+
 ## Devices support
 
 ### WiFi Adapters
