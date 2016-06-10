@@ -107,3 +107,7 @@ do_install () {
     fi
 }
 do_install[vardeps] += "DISTRO_FEATURES TARGET_REPOSITORY LED_FILE"
+
+do_deploy_append () {
+    echo ${SUPERVISOR_VERSION} > ${DEPLOYDIR}/VERSION
+}
