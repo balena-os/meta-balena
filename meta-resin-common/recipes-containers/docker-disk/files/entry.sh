@@ -1,18 +1,16 @@
 #!/bin/bash
 
-#--- This script is now setup to fail if any environment variable is missing.
-
 set -o errexit
 set -o nounset
 
 DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
 
+# Default values
 export PARTITION_SIZE=${PARTITION_SIZE:=1000}
-export TARGET_REPOSITORY=${TARGET_REPOSITORY:=resin/i386-supervisor}
-export TARGET_TAG=${TARGET_TAG:=master}
+export TARGET_REPOSITORY=${TARGET_REPOSITORY:=}
+export TARGET_TAG=${TARGET_TAG:=}
 
-## Add code to check /export directories presence
-#-- Create a blank disk image.
+# Create a BTRFS disk image
 dd if=/dev/zero of=/export/data_disk.img bs=1M count=$PARTITION_SIZE
 mkfs.btrfs /export/data_disk.img
 
@@ -40,8 +38,10 @@ do
     fi
 done
 
-docker pull $TARGET_REPOSITORY:$TARGET_TAG
-docker tag $TARGET_REPOSITORY:$TARGET_TAG $TARGET_REPOSITORY:latest
+if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
+    docker pull $TARGET_REPOSITORY:$TARGET_TAG
+    docker tag $TARGET_REPOSITORY:$TARGET_TAG $TARGET_REPOSITORY:latest
+fi
 
 kill -TERM $(cat /var/run/docker.pid) && wait $(cat /var/run/docker.pid) && umount /data_disk
 
