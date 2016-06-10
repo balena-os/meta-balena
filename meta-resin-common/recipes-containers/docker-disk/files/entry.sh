@@ -6,9 +6,7 @@ set -o nounset
 DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
 
 # Default values
-export PARTITION_SIZE=${PARTITION_SIZE:=1000}
-export TARGET_REPOSITORY=${TARGET_REPOSITORY:=}
-export TARGET_TAG=${TARGET_TAG:=}
+PARTITION_SIZE=${PARTITION_SIZE:=1024}
 
 # Create a BTRFS disk image
 dd if=/dev/zero of=/export/data_disk.img bs=1M count=$PARTITION_SIZE
