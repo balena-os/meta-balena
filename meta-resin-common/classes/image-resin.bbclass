@@ -2,6 +2,10 @@
 # Resin images customizations
 #
 
+# When building a Resin OS image, we also generate the kernel modules headers
+# and ship them in the deploy directory for out-of-tree kernel modules build
+DEPENDS += "kernel-modules-headers"
+
 # Deploy license.manifest
 DEPLOY_IMAGE_LICENSE_MANIFEST = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.license.manifest"
 DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST = "${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.license.manifest"
