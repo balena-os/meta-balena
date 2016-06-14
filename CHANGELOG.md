@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add recipe for deploying an archive with kernel modules headers [Florin]
 * Have the ability at build time to configure the preloaded docker image in the BTRFS partition [Andrei]
 
 # v1.2 - 2016-06-08
