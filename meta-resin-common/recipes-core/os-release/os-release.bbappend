@@ -1,13 +1,15 @@
 # Add custom resin fields
-OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV"
+OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG"
 
 # Simplify VERSION output
 VERSION = "${HOSTOS_VERSION}"
 
-# Generate RESIN_BOARD_REV and META_RESIN_REV
+
 python __anonymous () {
     import subprocess
+    import json
 
+    # Generate RESIN_BOARD_REV and META_RESIN_REV
     version = d.getVar("VERSION", True)
     bblayers = d.getVar("BBLAYERS", True)
 
@@ -28,4 +30,15 @@ python __anonymous () {
             d.setVar('META_RESIN_REV', metaresinrev)
     else:
         bb.warn("Cannot get the revisions of your repositories.")
+
+    # Generate SLUG to be included in os-release
+    machine = d.getVar("MACHINE", True)
+    jsonfile = os.path.normpath(os.path.join(resinboardpath, '..', machine + ".json"))
+    try:
+        with open(jsonfile, 'r') as fd:
+            machinejson = json.load(fd)
+        slug = machinejson['slug']
+        d.setVar('SLUG', slug)
+    except Exception as e:
+        bb.warn("os-release: Can't get the machine json so os-release won't include this information.")
 }
