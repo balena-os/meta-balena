@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Sanitize target arch for x86 machines [Florin]
 * Ensure kernel build artefacts are present for kernel-modules-headers [Florin]
 * Add "set -e" to resin-init-flasher [Florin]
 * Add recipe for deploying an archive with kernel modules headers [Florin]
