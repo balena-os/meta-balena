@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Define and implement resin connectable builds [Andrei]
 * Sanitize target arch for x86 machines [Florin]
 * Ensure kernel build artefacts are present for kernel-modules-headers [Florin]
 * Add "set -e" to resin-init-flasher [Florin]
