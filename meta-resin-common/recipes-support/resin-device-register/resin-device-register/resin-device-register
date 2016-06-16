@@ -44,12 +44,7 @@ fi
 while true; do
     if curl -sL -w '%{http_code}' $API_ENDPOINT/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
     then
-        read api_key user_id application_id device_type uuid <<<$(jq -r '.apiKey,.userId,.applicationId,.deviceType // "raspberry-pi",.uuid // empty' $CONFIG_PATH)
-
-        if [ -z "$uuid" ]; then
-            echo "[INFO] resin-device-register : UUID missing from config file, generating our own."
-            uuid=$(openssl rand -hex 31)
-        fi
+        read api_key user_id application_id device_type uuid <<<$(jq -r '.apiKey,.userId,.applicationId,.deviceType // "raspberry-pi",.uuid' $CONFIG_PATH)
 
         status_code=$(curl -s -X POST -w "%{http_code}" \
                     -o /var/log/register-device-curl.log \
@@ -62,7 +57,7 @@ while true; do
         if [ "$status_code" -eq 201 ]; then
             device_id=$(jq -r '.id' /var/log/register-device-curl.log)
             config_json=`cat $CONFIG_PATH`
-            echo $config_json | jq ".uuid=\"$uuid\"|.registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
+            echo $config_json | jq ".registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
             echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $uuid."
             exit 0
         elif [ "$status_code" -eq 409 ]; then
