@@ -5,6 +5,9 @@ require docker-disk.inc
 TARGET_TAG = "${SUPERVISOR_TAG}"
 LED_FILE ?= "/dev/null"
 
+# By default preload supervisor image
+SUPERVISOR_NO_PRELOAD ?= "0"
+
 inherit systemd
 
 SRC_URI += " \
@@ -43,10 +46,18 @@ python () {
     import subprocess
 
     target_repository = d.getVar('TARGET_REPOSITORY', True)
-    tag_repository = d.getVar('SUPERVISOR_TAG', True)
+    tag_repository = d.getVar('TARGET_TAG', True)
+    no_preload = d.getVar('SUPERVISOR_NO_PRELOAD', True)
 
     if not target_repository:
         bb.fatal("resin-supervisor-disk: One or more needed variables are not available in resin-supervisor-disk. Usually these are provided with a bbappend.")
+
+    if no_preload == "1":
+        d.setVar('TARGET_REPOSITORY','')
+        d.setVar('TARGET_TAG','')
+        d.setVar('SUPERVISOR_VERSION','0.0.0')
+        d.setVar('PV','0.0.0')
+        return
 
     # Only pull if connectivity - to avoid warnings and delay
     if connected(d) == "yes":
@@ -72,11 +83,7 @@ python () {
     d.setVar('PV', "%s+%s" % (version_output, image_id_output.split(':',1)[-1]))
 }
 
-do_compile_prepend () {
-    if [ -z "${TARGET_REPOSITORY}" ]; then
-        bbfatal "resin-supervisor-disk: One or more needed variables are not available in resin-supervisor-disk. Usually these are provided with a bbappend."
-    fi
-}
+do_compile[vardeps] += "SUPERVISOR_NO_PRELOAD"
 
 do_install () {
     # Generate supervisor conf
