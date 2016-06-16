@@ -35,6 +35,7 @@ RDEPENDS_${PN} = " \
     resin-conf \
     systemd \
     curl \
+    resin-device-uuid \
     "
 
 python () {
