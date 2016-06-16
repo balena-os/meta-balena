@@ -11,7 +11,7 @@ DEPENDS = "virtual/kernel"
 
 SRC_URI = "git://github.com/resin-os/module-headers.git;protocol=https"
 
-SRCREV = "3f717f05abd042f80d7a35acff6cbfda5ed1cea4"
+SRCREV = "73ee06f5133f9658f691f0c385b1c3e794e6bdd3"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}"
