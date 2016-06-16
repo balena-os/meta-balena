@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add "set -e" to resin-init-flasher [Florin]
 * Add recipe for deploying an archive with kernel modules headers [Florin]
 * Have the ability at build time to configure the preloaded docker image in the BTRFS partition [Andrei]
 
