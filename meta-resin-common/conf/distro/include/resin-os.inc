@@ -34,14 +34,24 @@ DISTRO_FEATURES_DEFAULT_remove = "x11"
 RESIN_DEFAULT_DISTRO_FEATURES = "resin"
 RESIN_STAGING_BUILD ?= ""
 SUPERVISOR_TAG ?= "production"
+
+RESIN_CONNECTABLE ?= "1"
+RESIN_CONNECTABLE_SERVICES = "openvpn docker-resin-supervisor-disk"
+RESIN_CONNECTABLE_ENABLE_SERVICES ?= "1"
+python () {
+    resin_connectable = d.getVar('RESIN_CONNECTABLE', True)
+    if not resin_connectable == '1':
+        # Resin base OS
+        d.setVar('RESIN_CONNECTABLE_ENABLE_SERVICES', '0')
+}
+INHERIT += "resin-connectable-service"
+PREFERRED_PROVIDER_docker-disk = "${@bb.utils.contains('RESIN_CONNECTABLE','1','docker-resin-supervisor-disk','docker-custom-disk',d)}"
+
 DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains('RESIN_STAGING_BUILD','yes','resin-staging','',d)}"
 
 PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
 PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
-
-CUSTOM_PRELOADED_DOCKER_IMAGE ?= "no"
-PREFERRED_PROVIDER_docker-disk = "${@bb.utils.contains('CUSTOM_PRELOADED_DOCKER_IMAGE','yes','docker-custom-disk','docker-resin-supervisor-disk',d)}"
 
 SPLASH = "plymouth"
 
