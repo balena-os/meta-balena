@@ -18,7 +18,7 @@ python () {
     # Set HOSTOS_VERSION
     try:
         with open(board_version_path, 'r') as v:
-            board_version = v.read()
+            board_version = v.read().strip()
         d.setVar('HOSTOS_VERSION', board_version)
     except:
         return
