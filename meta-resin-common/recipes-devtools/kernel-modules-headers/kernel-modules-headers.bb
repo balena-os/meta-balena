@@ -24,6 +24,7 @@ do_configure[noexec] = "1"
 
 do_compile() {
     mkdir -p kernel_modules_headers
+    cp -n ${STAGING_KERNEL_BUILDDIR}/.config ${STAGING_KERNEL_BUILDDIR}/Module.symvers ${STAGING_KERNEL_DIR}
     ${S}/gen_mod_headers ${STAGING_KERNEL_DIR} kernel_modules_headers ${TRANSLATED_TARGET_ARCH} ARCH=${TRANSLATED_TARGET_ARCH} CROSS_COMPILE=${TARGET_PREFIX}
     tar -cjf kernel_modules_headers.tar.bz2 kernel_modules_headers
     rm -rf kernel_modules_headers
