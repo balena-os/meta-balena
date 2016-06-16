@@ -27,6 +27,8 @@
 #  BOOTLOADER_SKIP_OUTPUT_BLOCKS          - number of blocks to skip when writing bootloader
 #                                             * this is the seek param to dd
 
+set -e
+
 # Very long variables :)
 EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
