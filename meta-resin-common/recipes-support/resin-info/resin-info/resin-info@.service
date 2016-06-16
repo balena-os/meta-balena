@@ -1,11 +1,11 @@
 [Unit]
-Description=Resin TTY replacement
+Description=Resin info on %I
 After=resin-supervisor.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/bash @BASE_BINDIR@/tty-replacement
+ExecStart=@SBINDIR@/bash @SBINDIR@/resin-info %I
 
 [Install]
 WantedBy=multi-user.target

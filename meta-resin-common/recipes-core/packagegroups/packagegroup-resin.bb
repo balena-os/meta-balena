@@ -18,7 +18,7 @@ RDEPENDS_${PN} += " \
     resin-btrfs-expand \
     resin-logs \
     resin-extend-expand \
-    resin-info-tty \
+    resin-info \
     resinhup \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-provisioner', '', d)} \
