@@ -1,0 +1,88 @@
+#!/bin/bash
+
+help () {
+    cat << EOF
+Tool for managing resin connectable OS
+resin-connectable [options]
+
+Options:
+    -h, --help
+        Display this help and exit.
+
+    -c, --config-path CONFIG_PATH
+        Use a non default resin-connectable.conf file.
+        Default: /etc/resin-connectable.conf
+
+    -e, --enable
+        Systemd operation
+        Enable all the resin connectable services
+
+    -d, --disable
+        Systemd operation
+        Disable all the resin connectable services
+
+    -s, --start
+        Systemd operation
+        Start all the resin connectable services
+
+    -t, --stop
+        Systemd operation
+        Stop all the resin connectable services
+EOF
+}
+
+# Parse arguments
+while [[ $# > 0 ]]; do
+    key=$1
+    case $key in
+        -h|--help)
+            help
+            exit 0
+            ;;
+        -c|--config-path)
+            CONFIG_PATH=$2
+            shift
+            ;;
+        -e|--enable)
+            SYSTEMD_OPERATION="enable"
+            ;;
+        -d|--disable)
+            SYSTEMD_OPERATION="disable"
+            ;;
+        -s|--start)
+            SYSTEMD_OPERATION="start"
+            ;;
+        -t|--stop)
+            SYSTEMD_OPERATION="stop"
+            ;;
+        *)
+            echo "[WARNING] $0 : Argument '$1' unknown. Ignoring."
+            ;;
+    esac
+    shift
+done
+
+# Default values
+if [ -z "$CONFIG_PATH" ]; then
+    CONFIG_PATH=/etc/resin-connectable.conf
+fi
+
+# Check if operation was selected
+if [ -z "$SYSTEMD_OPERATION" ]; then
+    echo "[ERROR] $0 : No systemd operation selected. Check help."
+    exit 1
+fi
+
+# Perform systemd operation
+if [ -f $CONFIG_PATH ]
+then
+    services=$(cat $CONFIG_PATH)
+    for service in $services; do
+        echo systemctl $SYSTEMD_OPERATION $service
+    done
+else
+    echo "[ERROR] $0 : '$CONFIG_PATH' not found."
+    exit 1
+fi
+
+exit 0
