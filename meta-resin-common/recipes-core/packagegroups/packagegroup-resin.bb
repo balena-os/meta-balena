@@ -21,4 +21,5 @@ RDEPENDS_${PN} += " \
     resin-info-tty \
     resinhup \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
+    ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-provisioner', '', d)} \
     "
