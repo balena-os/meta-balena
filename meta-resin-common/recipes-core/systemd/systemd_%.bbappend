@@ -5,14 +5,12 @@ do_install_append() {
     sed -i -e 's/.*RuntimeMaxUse.*/RuntimeMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
     sed -i -e 's/.*Storage.*/Storage=volatile/' ${D}${sysconfdir}/systemd/journald.conf
 
-    # Staging Resin build
-    if ${@bb.utils.contains('DISTRO_FEATURES','resin-staging','true','false',d)}; then
-        echo "Staging environment"
-    else
-       if $(readlink autovt@.service) == "getty@*.service"; then
-           rm ${D}/lib/systemd/system/autovt@.service
-       fi
-       find ${D} -name "getty@*.service" -delete
+    if ${@bb.utils.contains('DISTRO_FEATURES','debug-image','false','true',d)}; then
+        # Non-Debug image
+        if $(readlink autovt@.service) == "getty@*.service"; then
+            rm ${D}/lib/systemd/system/autovt@.service
+        fi
+        find ${D} -name "getty@*.service" -delete
     fi
 
 }
