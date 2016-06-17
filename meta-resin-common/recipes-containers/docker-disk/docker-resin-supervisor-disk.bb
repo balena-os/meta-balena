@@ -52,6 +52,9 @@ python () {
     if not target_repository:
         bb.fatal("resin-supervisor-disk: One or more needed variables are not available in resin-supervisor-disk. Usually these are provided with a bbappend.")
 
+    # Set SUPERVISOR_IMAGE so we can have it saved in case of no preloaded images
+    d.setVar('SUPERVISOR_IMAGE', target_repository)
+
     if no_preload == "1":
         d.setVar('TARGET_REPOSITORY','')
         d.setVar('TARGET_TAG','')
@@ -89,7 +92,7 @@ do_install () {
     # Generate supervisor conf
     install -d ${D}${sysconfdir}
     install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
-    sed -i -e 's:@TARGET_REPOSITORY@:${TARGET_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
+    sed -i -e 's:@TARGET_REPOSITORY@:${SUPERVISOR_IMAGE}:g' ${D}${sysconfdir}/supervisor.conf
     sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
 
     install -d ${D}/resin-data
