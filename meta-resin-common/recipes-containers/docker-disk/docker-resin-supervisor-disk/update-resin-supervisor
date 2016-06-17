@@ -115,12 +115,17 @@ if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/su
     fi
 else
     echo "No supervisor configuration found from API. Using arguments for image and tag."
+    source /etc/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
-        echo "ERROR: No tag argument provided."
-        error_handler $LINENO "no tag argument provided"
+        # Try to get the tag from supervisor.conf
+        if [ -n "$SUPERVISOR_TAG" ]; then
+            UPDATER_SUPERVISOR_TAG=$SUPERVISOR_TAG
+        else
+            echo "ERROR: No tag argument provided."
+            error_handler $LINENO "no tag argument provided"
+        fi
     fi
     if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
-        source /etc/supervisor.conf
         UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
     fi
     echo "Set based on arguments image=$UPDATER_SUPERVISOR_IMAGE and tag=$UPDATER_SUPERVISOR_TAG."
@@ -148,3 +153,4 @@ systemctl start resin-supervisor
 echo "Mark pulled tag as latest..."
 $DOCKER tag -f "$image_name:$tag" "$image_name:latest"
 sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" /etc/supervisor.conf
+sed --in-place "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/supervisor.conf
