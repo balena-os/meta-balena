@@ -10,7 +10,11 @@ SRC_URI_append = " \
     file://downscript.sh \
     "
 
-RDEPENDS_${PN} += "bash jq"
+RDEPENDS_${PN} += " \
+    bash \
+    jq \
+    resin-device-uuid \
+    "
 
 SYSTEMD_SERVICE_${PN} = " \
     openvpn-resin.service \
