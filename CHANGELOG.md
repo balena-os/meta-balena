@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Integrate resin-provisioner [Andrei]
 * Include slug and machine in os-release [Andrei]
 * Define and implement resin connectable builds [Andrei]
 * Sanitize target arch for x86 machines [Florin]
