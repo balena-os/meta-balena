@@ -10,5 +10,13 @@ SRCREV = "d3aed1c9203e3c9fc1fdf610dabe4f18bb332e42"
 inherit resin-go
 GO_IMPORT = "github.com/resin-os/resin-provisioner"
 
+inherit binary-compress
+FILES_COMPRESS = "${bindir}/provisioner-simple-client"
+
+do_install_append() {
+    # We currently don't use the server binary
+    rm -rf ${D}${bindir}/provisioner-server
+}
+
 # There is a bash script in the sources
 RDEPENDS_${PN}-staticdev = "bash"
