@@ -4,8 +4,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 
 DEPENDS = "coreos-systemd-go-dbus gorilla-mux"
 
-SRC_URI = "git://github.com/resin-os/resin-provisioner;protocol=https;destsuffix=${PN}-${PV}/src/${GO_IMPORT}"
-SRCREV = "d3aed1c9203e3c9fc1fdf610dabe4f18bb332e42"
+SRC_URI = "git://github.com/resin-os/resin-provisioner;protocol=https;tag=v${PV};destsuffix=${PN}-${PV}/src/${GO_IMPORT}"
 
 inherit resin-go
 GO_IMPORT = "github.com/resin-os/resin-provisioner"
