@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Split the registration and uuid generation, of a device, into separate packages [Theodor]
 * Sanitize target arch for x86 machines [Florin]
 * Ensure kernel build artefacts are present for kernel-modules-headers [Florin]
 * Add "set -e" to resin-init-flasher [Florin]

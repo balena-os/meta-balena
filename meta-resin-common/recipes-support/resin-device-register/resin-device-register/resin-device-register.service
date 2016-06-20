@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device register
-Requires=mnt-conf.mount
-After=mnt-conf.mount
+Requires=mnt-conf.mount resin-device-uuid.service
+After=mnt-conf.mount resin-device-uuid.service
 
 [Service]
 Type=simple

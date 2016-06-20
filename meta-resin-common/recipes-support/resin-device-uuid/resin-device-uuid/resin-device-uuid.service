@@ -1,0 +1,11 @@
+[Unit]
+Description=Resin device uuid
+Requires=mnt-conf.mount
+After=mnt-conf.mount
+
+[Service]
+Type=simple
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-uuid
+
+[Install]
+WantedBy=multi-user.target
