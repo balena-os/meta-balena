@@ -1,6 +1,9 @@
 Change log
 -----------
 
+* Integrate resin-provisioner [Andrei]
+* Include slug and machine in os-release [Andrei]
+* Define and implement resin connectable builds [Andrei]
 * Split the registration and uuid generation, of a device, into separate packages [Theodor]
 * Sanitize target arch for x86 machines [Florin]
 * Ensure kernel build artefacts are present for kernel-modules-headers [Florin]

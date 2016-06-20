@@ -4,13 +4,13 @@ source /usr/sbin/resin-vars
 VPN_PORT=443
 
 if [ ! -f $CONFIG_PATH ]; then
-    echo "$CONFIG_PATH : No such file."
+    echo "prepare-openvpn: $CONFIG_PATH - No such file."
     exit 1
 fi
 
 while true; do
-	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ]; then
-		echo "UUID missing from config file, VPN cannot connect"
+	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ] || [ `jq ".apiKey | length" $CONFIG_PATH` -eq 0 ]; then
+		echo "prepare-openvpn: UUID and/or APIKEY missing from config file, VPN cannot connect"
 		sleep 2
 	else
 		read uuid api_key <<<$(jq -r '.uuid,.apiKey' $CONFIG_PATH)
