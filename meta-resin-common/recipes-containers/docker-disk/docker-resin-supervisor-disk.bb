@@ -1,12 +1,8 @@
 require docker-disk.inc
 
-# TARGET_REPOSITORY needs to be defined externally (ex. bbappend)
-# as it is arch specific
-TARGET_TAG = "${SUPERVISOR_TAG}"
+TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
+TARGET_TAG ?= "${SUPERVISOR_TAG}"
 LED_FILE ?= "/dev/null"
-
-# By default preload supervisor image
-SUPERVISOR_NO_PRELOAD ?= "0"
 
 inherit systemd
 
@@ -46,18 +42,14 @@ python () {
     import subprocess
 
     target_repository = d.getVar('TARGET_REPOSITORY', True)
+    supervisor_repository = d.getVar('SUPERVISOR_REPOSITORY', True)
     tag_repository = d.getVar('TARGET_TAG', True)
-    no_preload = d.getVar('SUPERVISOR_NO_PRELOAD', True)
 
-    if not target_repository:
+    if not supervisor_repository:
         bb.fatal("resin-supervisor-disk: One or more needed variables are not available in resin-supervisor-disk. Usually these are provided with a bbappend.")
 
-    # Set SUPERVISOR_IMAGE so we can have it saved in case of no preloaded images
-    d.setVar('SUPERVISOR_IMAGE', target_repository)
-
-    if no_preload == "1":
-        d.setVar('TARGET_REPOSITORY','')
-        d.setVar('TARGET_TAG','')
+    # Version 0.0.0 means that the supervisor image was either not preloaded or a custom image was preloaded
+    if target_repository == "" or target_repository != supervisor_repository:
         d.setVar('SUPERVISOR_VERSION','0.0.0')
         d.setVar('PV','0.0.0')
         return
@@ -86,13 +78,11 @@ python () {
     d.setVar('PV', "%s+%s" % (version_output, image_id_output.split(':',1)[-1]))
 }
 
-do_compile[vardeps] += "SUPERVISOR_NO_PRELOAD"
-
 do_install () {
     # Generate supervisor conf
     install -d ${D}${sysconfdir}
     install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
-    sed -i -e 's:@TARGET_REPOSITORY@:${SUPERVISOR_IMAGE}:g' ${D}${sysconfdir}/supervisor.conf
+    sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
     sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
 
     install -d ${D}/resin-data
