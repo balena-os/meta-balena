@@ -80,19 +80,21 @@ The switch for these types is done based on a build variable `RESIN_CONNECTABLE`
 
 In this case, docker-resin-supervisor-disk will be used as a docker-disk provider. All the needed services for connecting the device to resin will be installed (systemd services, VPN configuration etc.). By default the systemd services which are part of communicating to resin are enabled. This default behavior can be customized using `RESIN_CONNECTABLE_ENABLE_SERVICES` build variable.
 
-As well, by default the docker resin-supervisor image will be preloaded in the BTRFS partition. This behavior can also be modified using `SUPERVISOR_NO_PRELOAD` build environment. This leaves the possibility of creating a build without provisioning the supervisor image which can be done later at runtime if needed.
+As well, by default, the docker resin-supervisor image will be preloaded in the BTRFS partition. This behavior can be modified using TARGET_REPOSITORY/TARGET_TAG build variables. This leaves the possibility of creating a build without provisioning the supervisor image or creating one with all the supervisor services but with a custom image. TARGET_REPOSITORY/TARGET_TAG are decribed below.
 
 Example: having a connectable image with services enabled and supervisor docker image preloaded - nothing to be done to build's `local.conf` as these imply default values of all the variables.
 
 Example: having a connectable image with services disabled and supervisor docker image preloaded - add/set `RESIN_CONNECTABLE_ENABLE_SERVICES = "0"` to build's `local.conf`.
 
-Example: having a connectable image with services disabled and supervisor docker image not preloaded - add/set `RESIN_CONNECTABLE_ENABLE_SERVICES = "0"` and `SUPERVISOR_NO_PRELOAD = "1"` to build's `local.conf`.
+Example: having a connectable image with services disabled and no docker image preloaded - add/set `RESIN_CONNECTABLE_ENABLE_SERVICES = "0"`, `TARGET_REPOSITORY = ""` and `TARGET_TAG = ""`  to build's `local.conf`.
+
+Example: having a connectable image with services disabled and custom docker image preloaded - add/set `RESIN_CONNECTABLE_ENABLE_SERVICES = "0"`, `TARGET_REPOSITORY = "mycustomimage"` and `TARGET_TAG = "1.0"`  to build's `local.conf`.
 
 Connectable images will have a tool for managing the resin services installed on the target called `resin-connectable`. Check help message by running `resin-connectable -h` for more information.
 
 #### RESIN_CONNECTABLE = "0"
 
-In this case, docker-custom-disk will be used as a docker-disk provider. All the services and software bits responsible for communicating with resin infrastructure will not be installed. In this case `RESIN_CONNECTABLE_ENABLE_SERVICES` and `SUPERVISOR_NO_PRELOAD` has no effect on the build as they only apply for connectable builds.
+In this case, docker-custom-disk will be used as a docker-disk provider. All the services and software bits responsible for communicating with resin infrastructure will not be installed. In this case `RESIN_CONNECTABLE_ENABLE_SERVICES` has no effect on the build as it only applies for connectable builds.
 
 Without any other configuration, the build will leave the BTRFS partition without any image preloaded. In addition to this, two other variables can be used to inject a specific dockerhub image:
 * TARGET_REPOSITORY - the image name wanted to be injected
