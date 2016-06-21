@@ -10,6 +10,7 @@ This repository enables building resin.io for various devices.
 
 ## Dependencies
 
+* http://www.yoctoproject.org/docs/latest/yocto-project-qs/yocto-project-qs.html#packages
 * docker
 * jq
 
