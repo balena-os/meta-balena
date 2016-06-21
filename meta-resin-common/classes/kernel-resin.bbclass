@@ -385,3 +385,8 @@ do_kernel_resin_checkconfig[dirs] += "${WORKDIR} ${B}"
 # Force compile to depend on the last resin task in the chain
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 
+# copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
+do_deploy_append () {
+    install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
+    install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
+}
