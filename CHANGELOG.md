@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Have the ability to inject custom docker images for connectable builds [Andrei]
 * Integrate resin-provisioner [Andrei]
 * Include slug and machine in os-release [Andrei]
 * Define and implement resin connectable builds [Andrei]
