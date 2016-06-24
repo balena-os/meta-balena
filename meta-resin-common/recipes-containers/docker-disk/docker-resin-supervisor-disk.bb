@@ -1,7 +1,7 @@
 require docker-disk.inc
 
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
-TARGET_TAG ?= "${SUPERVISOR_TAG}"
+TARGET_TAG ?= "v1.11.5"
 LED_FILE ?= "/dev/null"
 
 inherit systemd
