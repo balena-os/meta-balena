@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.3 - 2016-06-24
+
 * Implement mechanism for compressed kernel modules [Andrei]
 * Fix connman multiple IP over DHCP [Andrei]
 * Have the ability to inject custom docker images for connectable builds [Andrei]
