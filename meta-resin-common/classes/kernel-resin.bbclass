@@ -231,6 +231,15 @@ RESIN_CONFIGS[no-logo] ?= " \
     "
 
 #
+# Compress Kernel modules
+#
+RESIN_CONFIGS[compress-kmodules] ?= " \
+    CONFIG_MODULE_COMPRESS=y \
+    CONFIG_MODULE_COMPRESS_GZIP=y \
+    CONFIG_DEBUG_INFO=n \
+    "
+
+#
 # Support for touchscreens using generic multitouch driver
 #
 RESIN_CONFIGS_DEPS[hid-multitouch] ?= " \
