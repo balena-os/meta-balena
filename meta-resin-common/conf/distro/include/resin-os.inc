@@ -33,7 +33,6 @@ DISTRO_FEATURES_DEFAULT_remove = "x11"
 
 RESIN_DEFAULT_DISTRO_FEATURES = "resin"
 RESIN_STAGING_BUILD ?= ""
-SUPERVISOR_TAG ?= "production"
 
 RESIN_CONNECTABLE ?= "1"
 RESIN_CONNECTABLE_SERVICES = "openvpn docker-resin-supervisor-disk"
