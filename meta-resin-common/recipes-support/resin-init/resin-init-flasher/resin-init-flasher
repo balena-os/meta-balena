@@ -96,7 +96,7 @@ fi
 
 IMAGE_FILE_SIZE=`wc -c /opt/$RESIN_IMAGE | awk '{print $1}'`
 
-resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media"
+resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media" || true
 
 while kill -USR1 $DD_PID; do
     sleep 3
@@ -105,7 +105,7 @@ while kill -USR1 $DD_PID; do
     fi
     IMAGE_WRITTEN_BYTES=`cat /tmp/dd_progress_log | awk 'END{print $1}'`
     let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE
-    resin-device-progress --percentage $RATIO --state "Flashing resin.io on internal media"
+    resin-device-progress --percentage $RATIO --state "Flashing resin.io on internal media" || true
     truncate -s 0 /tmp/dd_progress_log
 done
 
