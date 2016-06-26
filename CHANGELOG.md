@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update to latest kernel-modules-headers [Florin]
+
 # v1.3 - 2016-06-24
 
 * Implement mechanism for compressed kernel modules [Andrei]
