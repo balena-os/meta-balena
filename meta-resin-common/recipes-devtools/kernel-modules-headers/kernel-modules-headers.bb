@@ -18,8 +18,6 @@ B = "${WORKDIR}"
 
 inherit deploy
 
-do_patch[noexec] = "1"
-
 do_configure[noexec] = "1"
 
 do_compile() {
