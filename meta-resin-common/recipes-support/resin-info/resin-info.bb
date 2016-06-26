@@ -35,6 +35,7 @@ do_install() {
             for ttydev in ${TTY}; do
                 ln -sf ${systemd_unitdir}/system/resin-info@.service \
                     ${D}${sysconfdir}/systemd/system/multi-user.target.wants/resin-info@$ttydev.service
+            done
 
             sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
                 -e 's,@SBINDIR@,${sbindir},g' \
