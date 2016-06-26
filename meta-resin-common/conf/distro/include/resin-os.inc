@@ -32,7 +32,7 @@ POKY_DEFAULT_DISTRO_FEATURES_remove = "wayland"
 DISTRO_FEATURES_DEFAULT_remove = "x11"
 
 RESIN_DEFAULT_DISTRO_FEATURES = "resin"
-RESIN_STAGING_BUILD ?= ""
+DEBUG_IMAGE ?= "0"
 
 RESIN_CONNECTABLE ?= "1"
 RESIN_CONNECTABLE_SERVICES = "openvpn docker-resin-supervisor-disk"
@@ -46,7 +46,7 @@ python () {
 INHERIT += "resin-connectable-service"
 PREFERRED_PROVIDER_docker-disk = "${@bb.utils.contains('RESIN_CONNECTABLE','1','docker-resin-supervisor-disk','docker-custom-disk',d)}"
 
-DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains('RESIN_STAGING_BUILD','yes','resin-staging','',d)}"
+DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains('DEBUG_IMAGE','1','debug-image','',d)}"
 
 PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
