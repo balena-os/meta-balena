@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.4 - 2016-06-27
+
 * Replace STAGING_BUILD by DEBUG_IMAGE and various refactorings [Andrei]
 * Update to latest kernel-modules-headers [Florin]
 
