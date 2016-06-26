@@ -104,7 +104,7 @@ while kill -USR1 $DD_PID; do
         continue
     fi
     IMAGE_WRITTEN_BYTES=`cat /tmp/dd_progress_log | awk 'END{print $1}'`
-    let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE
+    let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE || true
     resin-device-progress --percentage $RATIO --state "Flashing resin.io on internal media" || true
     truncate -s 0 /tmp/dd_progress_log
 done
