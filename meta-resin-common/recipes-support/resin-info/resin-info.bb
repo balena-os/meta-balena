@@ -32,7 +32,7 @@ do_install() {
             install -m 0644 ${WORKDIR}/resin-info@.service ${D}${systemd_unitdir}/system/
 
             # Enable services
-            for ttydev in ${TTY}; do
+            for ttydev in ${TTYS}; do
                 ln -sf ${systemd_unitdir}/system/resin-info@.service \
                     ${D}${sysconfdir}/systemd/system/multi-user.target.wants/resin-info@$ttydev.service
             done
@@ -44,3 +44,5 @@ do_install() {
        fi
    fi
 }
+
+FILES_${PN} += "${systemd_unitdir}/system/*.service ${sysconfdir}"
