@@ -7,6 +7,7 @@ Requires=docker.socket var-lib-docker.mount
 [Service]
 Type=notify
 Restart=always
+ExecStartPre=/bin/sh -c "/usr/bin/test -s /etc/docker/key.json || /bin/rm /etc/docker/key.json"
 ExecStart=/usr/bin/docker daemon -s btrfs -H fd://
 #Adjust OOMscore to -900 to make killing docker unlikely
 OOMScoreAdjust=-900
