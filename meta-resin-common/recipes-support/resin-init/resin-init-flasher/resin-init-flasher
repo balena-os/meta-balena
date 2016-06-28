@@ -39,8 +39,8 @@ function clean {
     echo "[resin-init-flasher] Cleanup."
     rm $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
     rm $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
-    umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1
-    umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1
+    umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1 || true
+    umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1 || true
 }
 
 function fail {
@@ -139,6 +139,7 @@ if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
             fail "Failed to mount disk labeled as 'resin-boot'."
         fi
         cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH
+        umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 fi
 
 # Copy json configuration file from external (flasher) to the internal (booting) device
@@ -157,7 +158,6 @@ sync
 
 # umounts
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
-umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 
 inform "Shutting down ..."
