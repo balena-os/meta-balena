@@ -37,8 +37,6 @@ FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
-    rm $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
-    rm $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/uEnv.txt > /dev/null 2>&1
     umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1 || true
     umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1 || true
 }
