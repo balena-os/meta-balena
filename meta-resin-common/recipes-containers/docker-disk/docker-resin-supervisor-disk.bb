@@ -31,7 +31,7 @@ RDEPENDS_${PN} = " \
     bash \
     docker \
     coreutils \
-    resin-conf \
+    resin-vars \
     systemd \
     curl \
     resin-device-uuid \

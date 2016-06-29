@@ -17,7 +17,7 @@ RDEPENDS_${PN} = " \
     bash \
     curl \
     jq \
-    resin-conf \
+    resin-vars \
     resin-device-uuid \
     "
 
