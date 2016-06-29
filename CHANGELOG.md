@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update resin supervisor to v1.11.6 [Florin]
 * Refactor openvpn dependencies [Florin]
 
 # v1.4 - 2016-06-27
