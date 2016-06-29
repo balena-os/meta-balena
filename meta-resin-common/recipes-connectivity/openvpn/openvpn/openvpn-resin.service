@@ -1,7 +1,7 @@
 [Unit]
 Description=OpenVPN Application On Resin
-Wants=prepare-openvpn.service resin-device-uuid.service
-After=syslog.target network.target prepare-openvpn.service resin-device-uuid.service
+Requires=prepare-openvpn.service
+After=syslog.target network.target prepare-openvpn.service
 
 [Service]
 PrivateTmp=true
