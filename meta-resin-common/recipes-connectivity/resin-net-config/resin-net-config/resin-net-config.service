@@ -1,5 +1,5 @@
 [Unit]
-Description=Resin net config service
+Description=Resin network configure service
 Requires=mnt-conf.mount
 After=mnt-conf.mount
 
