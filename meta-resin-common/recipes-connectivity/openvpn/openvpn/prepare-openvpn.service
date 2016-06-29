@@ -1,8 +1,7 @@
 [Unit]
 Description=Prepare OpenVPN Application On Resin
-Wants=mnt-conf.mount
-After=mnt-conf.mount
-Before=openvpn@client.service
+Requires=mnt-conf.mount resin-device-uuid.service
+After=mnt-conf.mount resin-device-uuid.service
 
 [Service]
 Type=oneshot

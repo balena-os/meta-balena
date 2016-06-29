@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Refactor openvpn dependencies [Florin]
+
 # v1.4 - 2016-06-27
 
 * Replace STAGING_BUILD by DEBUG_IMAGE and various refactorings [Andrei]
