@@ -22,7 +22,7 @@ do_configure[noexec] = "1"
 
 do_compile() {
     mkdir -p kernel_modules_headers
-    if [ "${TRANSLATED_TARGET_ARCH}" = "x86-64" ] || [ "${TRANSLATED_TARGET_ARCH}" = "i686" ]; then
+    if echo ${TRANSLATED_TARGET_ARCH} | grep  -q -e "[ix].*86" ; then
         TGT_ARCH="x86"
     else
         TGT_ARCH=${TRANSLATED_TARGET_ARCH}
