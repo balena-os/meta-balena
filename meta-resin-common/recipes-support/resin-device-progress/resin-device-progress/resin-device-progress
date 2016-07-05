@@ -71,6 +71,7 @@ read api_key device_id <<<$(jq -r '.apiKey,.deviceId' $CONFIG_PATH)
 curl -s -X PATCH "$API_ENDPOINT/v1/device($device_id)?apikey=$api_key" \
      -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
      --data-urlencode "provisioning_progress=$PERCENTAGE" \
-     --data-urlencode "provisioning_state=$STATE"
+     --data-urlencode "provisioning_state=$STATE" \
+     --data-urlencode "status=configuring"
 
 exit 0
