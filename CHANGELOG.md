@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Both remove systemd-serialgetty symlinks and disable systemd-getty-generator for non-debug builds [Florin]
 * Disable ntp from connman and rely only on systemd-timesyncd with selected timeservers [Florin]
 
 # v1.7 - 2016-07-14
