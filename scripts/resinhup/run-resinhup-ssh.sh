@@ -134,7 +134,7 @@ popd > /dev/null 2>&1
 # Tools we need on device
 UPDATE_TOOLS="\
 $SCRIPTPATH/../../meta-resin-common/recipes-support/resinhup/resinhup/run-resinhup.sh \
-$SCRIPTPATH/../../meta-resin-common/recipes-support/resin-supervisor/files/update-resin-supervisor \
+$SCRIPTPATH/../../meta-resin-common/recipes-containers/docker-disk/docker-resin-supervisor-disk/update-resin-supervisor \
 $SCRIPTPATH/../../meta-resin-common/recipes-support/resin-device-progress/resin-device-progress/resin-device-progress \
 "
 
