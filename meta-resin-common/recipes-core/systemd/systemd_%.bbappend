@@ -1,3 +1,7 @@
+FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
+
+SRC_URI_append = "${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', '', ' file://remove_systemd-getty-generator.patch', d)}"
+
 do_install_append() {
     # we disable forwarding to syslog; in the future we will have rsyslog which can read the journal
     # independently of this forwarding
