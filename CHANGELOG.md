@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.6 - 2016-07-06
+
 # v1.5 - 2016-07-04
 
 * Update resin supervisor to v1.11.6 [Florin]
