@@ -64,5 +64,18 @@ fakeroot python generate_compressed_kernel_module_deps() {
         return("Command '%s' returned %d:\n%s" % (e.cmd, e.returncode, e.output))
 }
 
+#
+# Cleanup backup files
+#
+remove_backup_files () {
+    BACKUP_FILES="/etc/passwd- /etc/shadow- /etc/group- /etc/gshadow-"
+    for file in $BACKUP_FILES; do
+        if [ -f "${IMAGE_ROOTFS}$file" ]; then
+            rm ${IMAGE_ROOTFS}$file
+        fi
+    done
+}
+
 ROOTFS_POSTPROCESS_COMMAND += "generate_compressed_kernel_module_deps ; "
 IMAGE_POSTPROCESS_COMMAND =+ "deploy_image_license_manifest ; fix_hddimg_symlink ; "
+IMAGE_PREPROCESS_COMMAND += "remove_backup_files ; "
