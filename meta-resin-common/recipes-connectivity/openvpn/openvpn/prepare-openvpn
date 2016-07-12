@@ -2,6 +2,7 @@
 
 source /usr/sbin/resin-vars
 VPN_PORT=443
+TMPDIR=/run
 
 if [ ! -f $CONFIG_PATH ]; then
     echo "prepare-openvpn: $CONFIG_PATH - No such file."
@@ -20,4 +21,7 @@ while true; do
 	fi
 done
 
-sed -i -e "/remote .*/ c\remote $VPN_ENDPOINT $VPN_PORT" /etc/openvpn/resin.conf
+mkdir -p $TMPDIR/openvpn
+
+# Create openvpn configuration
+sed -e "/remote .*/ c\remote $VPN_ENDPOINT $VPN_PORT" /etc/openvpn/resin.conf > $TMPDIR/openvpn/resin.conf
