@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Add support for resinhup when running kernel modules operations [Andrei]
+
 # v1.6 - 2016-07-06
 
 # v1.5 - 2016-07-04
