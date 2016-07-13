@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Disable ntp from connman and rely only on systemd-timesyncd with selected timeservers [Florin]
+
 # v1.7 - 2016-07-14
 
 * Various meta-resin layer tweaks [Andrei]
