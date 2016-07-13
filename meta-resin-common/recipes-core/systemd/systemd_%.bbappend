@@ -15,6 +15,11 @@ do_install_append() {
 
 }
 
+# add pool.ntp.org as default ntp server
+PACKAGECONFIG[ntp] = "--with-ntp-servers=pool.ntp.org time1.google.com time2.google.com time3.google.com time4.google.com,,,"
+
+PACKAGECONFIG_append = " ntp"
+
 # Network configuration is managed by connman
 PACKAGECONFIG_remove = "resolved networkd"
 
