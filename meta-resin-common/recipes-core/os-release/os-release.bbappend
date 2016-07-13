@@ -4,7 +4,6 @@ OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE"
 # Simplify VERSION output
 VERSION = "${HOSTOS_VERSION}"
 
-
 python __anonymous () {
     import subprocess
     import json

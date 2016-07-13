@@ -1,4 +1,13 @@
 #!/bin/bash
+
+#
+# resin-net-config
+# ----------------
+#
+# Script which translates network configuration from CONFIG_PATH into connman
+# configuration
+#
+
 set -e
 set -o pipefail
 
@@ -7,18 +16,35 @@ source /usr/sbin/resin-vars
 if [ ! -f $CONFIG_PATH ]; then
     echo "resin-net-config: $CONFIG_PATH does not exist."
     exit 1
+else
+    echo "resin-net-config: Found config.json in $CONFIG_PATH ."
 fi
 
-if cat "$CONFIG_PATH" | jq -e -r '.files["network/settings"]'; then
-	rm -rf /var/lib/connman/*
-	mkdir -p /var/lib/connman
+settings=$(cat "$CONFIG_PATH" | jq -r '.files["network/settings"] // ""')
+ethernet_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/ethernet.config"] // ""')
+network_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/network.config"]' // ""')
 
-	cat $CONFIG_PATH | jq -r '.files["network/settings"] // ""' > /var/lib/connman/settings
-	if cat "$CONFIG_PATH" | jq -e -r '.files["network/ethernet.config"]'; then
-		cat $CONFIG_PATH | jq -r '.files["network/ethernet.config"] // ""' > /var/lib/connman/ethernet.config
-	fi
+if [ -n "$settings" ] || [ -n "$ethernet_config" ] || [ -n "$network_config" ]; then
+    echo "resin-net-config: Erasing old connman configuration..."
+    rm -rf /var/lib/connman/*
+    mkdir -p /var/lib/connman
 
-	if cat "$CONFIG_PATH" | jq -e -r '.files["network/network.config"]'; then
-		cat $CONFIG_PATH | jq -r '.files["network/network.config"] // ""' > /var/lib/connman/network.config
-	fi
+    if [ -n "$settings" ]; then
+        echo "resin-net-config: Configure connman settings..."
+        echo -e "$settings" > /var/lib/connman/settings
+    fi
+
+    if [ -n "$ethernet_config" ]; then
+        echo "resin-net-config: Configuring connman ethernet.config ."
+        echo -e "$ethernet_config" > /var/lib/connman/ethernet.config
+    fi
+
+    if [ -n "$network_config" ]; then
+        echo "resin-net-config: Configuring connman network.config ."
+        echo -e "$network_config" > /var/lib/connman/network.config
+    fi
+else
+    echo "resin-net-config: No network configuration found in $CONFIG_PATH."
 fi
+
+exit 0

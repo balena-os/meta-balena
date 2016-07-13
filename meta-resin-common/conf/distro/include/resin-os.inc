@@ -1,4 +1,4 @@
-# Poky based distro file - keep it at the end to be able to overwrite
+# Poky based distro file
 require conf/distro/poky.conf
 
 DISTRO = "resin-os"
@@ -31,9 +31,11 @@ POKY_DEFAULT_DISTRO_FEATURES_remove = "ptest"
 POKY_DEFAULT_DISTRO_FEATURES_remove = "wayland"
 DISTRO_FEATURES_DEFAULT_remove = "x11"
 
-RESIN_DEFAULT_DISTRO_FEATURES = "resin"
+# Debug image mode
 DEBUG_IMAGE ?= "0"
+DISTRO_FEATURES_append = " ${@bb.utils.contains('DEBUG_IMAGE','1','debug-image','',d)}"
 
+# Resin connectable
 RESIN_CONNECTABLE ?= "1"
 RESIN_CONNECTABLE_SERVICES = "openvpn docker-resin-supervisor-disk"
 RESIN_CONNECTABLE_ENABLE_SERVICES ?= "1"
@@ -46,8 +48,7 @@ python () {
 INHERIT += "resin-connectable-service"
 PREFERRED_PROVIDER_docker-disk = "${@bb.utils.contains('RESIN_CONNECTABLE','1','docker-resin-supervisor-disk','docker-custom-disk',d)}"
 
-DISTRO_FEATURES_append = " ${RESIN_DEFAULT_DISTRO_FEATURES} ${@bb.utils.contains('DEBUG_IMAGE','1','debug-image','',d)}"
-
+# Providers
 PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
 PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
