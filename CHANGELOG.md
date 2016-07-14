@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Various meta-resin layer tweaks [Andrei]
 * Add support for resinhup when running kernel modules operations [Andrei]
 * Update supervisor to 1.12.1 [Pablo]
 
