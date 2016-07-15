@@ -36,7 +36,12 @@ IMAGE_INSTALL_append = " \
     "
 
 generate_rootfs_fingerprints () {
-    find ${IMAGE_ROOTFS} -xdev -type f -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | sort -k2 > ${IMAGE_ROOTFS}/${RESIN_ROOT_FS_LABEL}.${FINGERPRINT_EXT}
+    IGNORE_FILES=" \
+        -not -name machine-id \
+        -not -name resin-root.fingerprint \
+        -not -name ld.so.cache \
+        -not -name aux-cache"
+    find ${IMAGE_ROOTFS} -xdev -type f $IGNORE_FILES -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | sort -k2 > ${IMAGE_ROOTFS}/${RESIN_ROOT_FS_LABEL}.${FINGERPRINT_EXT}
 }
 
 generate_hostos_version () {
