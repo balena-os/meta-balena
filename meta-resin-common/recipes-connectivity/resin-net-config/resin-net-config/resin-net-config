@@ -22,7 +22,7 @@ fi
 
 settings=$(cat "$CONFIG_PATH" | jq -r '.files["network/settings"] // ""')
 ethernet_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/ethernet.config"] // ""')
-network_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/network.config"]' // ""')
+network_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/network.config"] // ""')
 
 if [ -n "$settings" ] || [ -n "$ethernet_config" ] || [ -n "$network_config" ]; then
     echo "resin-net-config: Erasing old connman configuration..."
