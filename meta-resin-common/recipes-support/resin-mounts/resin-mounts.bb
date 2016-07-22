@@ -6,6 +6,7 @@ SRC_URI = " \
     file://mnt-boot.mount \
     file://mnt-conf.mount \
     file://mnt-data.mount \
+    file://openvpn-conf.mount \
     "
 
 S = "${WORKDIR}"
@@ -18,6 +19,7 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-boot.mount \
     mnt-conf.mount \
     mnt-data.mount \
+    openvpn-conf.mount \
     "
 
 FILES_${PN} += " \
@@ -37,6 +39,7 @@ do_install () {
             ${WORKDIR}/mnt-boot.mount \
             ${WORKDIR}/mnt-conf.mount \
             ${WORKDIR}/mnt-data.mount \
+            ${WORKDIR}/openvpn-conf.mount \
             ${D}${systemd_unitdir}/system
     fi
 }

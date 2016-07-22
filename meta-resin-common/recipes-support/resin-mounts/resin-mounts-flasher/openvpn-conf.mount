@@ -1,0 +1,12 @@
+[Unit]
+Description=Resin openvpn configuration
+Requires=prepare-openvpn.service
+After=prepare-openvpn.service
+
+[Mount]
+What=/run/openvpn/resin.conf
+Where=/etc/openvpn/resin.conf
+Type=bind
+
+[Install]
+WantedBy=multi-user.target
