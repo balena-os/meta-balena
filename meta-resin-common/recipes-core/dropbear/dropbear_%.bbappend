@@ -6,6 +6,9 @@ SRC_URI += " \
 
 FILES_${PN} += "/home"
 
+SYSTEMD_SERVICE_${PN} += "dropbearkey.service"
+SYSTEMD_AUTO_ENABLE = "enable"
+
 do_install_append() {
     if ! ${@bb.utils.contains('DISTRO_FEATURES','debug-image','true','false',d)}; then
         # Disable root password logins
