@@ -1,7 +1,7 @@
 [Unit]
 Description=OpenVPN Application On Resin
-Requires=prepare-openvpn.service
-After=syslog.target network.target prepare-openvpn.service
+Requires=prepare-openvpn.service openvpn-conf.mount
+After=syslog.target network.target prepare-openvpn.service openvpn-conf.mount
 
 [Service]
 PrivateTmp=true
