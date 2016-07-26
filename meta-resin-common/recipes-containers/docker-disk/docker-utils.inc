@@ -1,19 +1,23 @@
-RESIN_CHECK_CONN_URL ?= "index.docker.io"
+RESIN_CHECK_CONN_URL ?= "http://index.docker.io"
 DOCKER_PID_FILE ?= "/var/run/docker.pid"
 
 # Check if host can reach a specific URL
 # Used for connectivity check
 def connected(d):
-    import socket
+    import urllib
 
     REMOTE_SERVER = d.getVar('RESIN_CHECK_CONN_URL', True)
+    ALL_PROXY = d.getVar('ALL_PROXY', True)
+
     try:
-        host = socket.gethostbyname(REMOTE_SERVER)
-        socket.create_connection((host, 80), 2)
+        if ALL_PROXY:
+            urllib.urlopen(REMOTE_SERVER, proxies={'http':ALL_PROXY})
+        else:
+            urllib.urlopen(REMOTE_SERVER)
+    except IOError:
+        return "no"
+    else:
         return "yes"
-    except:
-        pass
-    return "no"
 
 # Check if docker is running and usable for current user
 def usable_docker(d):
