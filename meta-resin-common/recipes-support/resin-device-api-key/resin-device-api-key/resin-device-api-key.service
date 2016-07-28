@@ -1,0 +1,11 @@
+[Unit]
+Description=Resin device API key
+Requires=mnt-conf.mount resin-device-uuid.service
+After=mnt-conf.mount resin-device-uuid.service
+
+[Service]
+Type=simple
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-api-key
+
+[Install]
+WantedBy=multi-user.target

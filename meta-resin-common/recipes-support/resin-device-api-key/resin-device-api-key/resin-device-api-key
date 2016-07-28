@@ -1,0 +1,59 @@
+#!/bin/bash
+
+help () {
+    cat << EOF
+Generate device api key for a new resin device
+resin-device-api-key [options]
+
+Options:
+    -h, --help
+        Display this help and exit.
+
+    -c, --config-path CONFIG_PATH
+        Use a non default config.json file.
+        This argument is passed to resin-vars script.
+EOF
+}
+
+# Parse arguments
+while [[ $# > 0 ]]; do
+    key=$1
+    case $key in
+        -h|--help)
+            help
+            exit 0
+            ;;
+        -c|--config-path)
+            CONFIG_PATH=$2
+            shift
+            ;;
+        *)
+            echo "[WARNING] $0 : Argument '$1' unknown. Ignoring."
+            ;;
+    esac
+    shift
+done
+
+source /usr/sbin/resin-vars --config-path $CONFIG_PATH
+
+if [ -z "$CONFIG_PATH" ]; then
+    echo "[ERROR] resin-device-api-key : Please set CONFIG_PATH environment variable."
+    exit 1
+fi
+
+if [ ! -f "$CONFIG_PATH" ]; then
+    echo "[INFO] resin-device-api-key: Config file is missing. Creating.."
+    echo '{}' > $CONFIG_PATH
+else
+    read device_api_key <<<$(jq -r '.deviceApiKey //empty' $CONFIG_PATH)
+fi
+
+if [ -z "$device_api_key" ]; then
+    echo "[INFO] resin-device-api-key: Device API key missing from config file. Generating..."
+    device_api_key=$(openssl rand -hex 31)
+    echo $(cat $CONFIG_PATH | jq ".deviceApiKey=\"$device_api_key\"") > $CONFIG_PATH
+else
+    echo "[INFO] resin-device-api-key : Device already has device API key assigned."
+fi
+
+exit 0

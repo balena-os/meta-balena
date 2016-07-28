@@ -1,6 +1,9 @@
 Change log
 -----------
 
+* Switch to the new device register endpoint which exchanges the provisioning key for a device api key [Page]
+* Switch to using a device api key for api calls and vpn authentication if it is present 
+
 # v2.0.1 - 2017-04-19
 
 * Don't use getty generator even for development images [Andrei]
