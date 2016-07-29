@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v1.13.0 [Andrei]
 * Start dropbearkey.service at boot and don't wait for first connection [Andrei]
 * Both remove systemd-serialgetty symlinks and disable systemd-getty-generator for non-debug builds [Florin]
 * Disable ntp from connman and rely only on systemd-timesyncd with selected timeservers [Florin]
