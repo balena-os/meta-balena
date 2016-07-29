@@ -5,7 +5,7 @@ After=resin-supervisor.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@SBINDIR@/bash @SBINDIR@/resin-info %I
+ExecStart=@BASE_BINDIR@/bash @SBINDIR@/resin-info %I
 
 [Install]
 WantedBy=multi-user.target
