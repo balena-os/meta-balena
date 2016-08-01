@@ -24,6 +24,7 @@ SRC_URI = "\
   git://github.com/docker/docker.git;branch=${SRCBRANCH};nobranch=1 \
   file://docker.service \
   file://var-lib-docker.mount \
+  file://0001-bucket-correct-broken-unaligned-load-store-in-armv5.patch \
 	"
 
 # Apache-2.0 for docker
