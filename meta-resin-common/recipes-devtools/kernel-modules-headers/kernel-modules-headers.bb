@@ -24,6 +24,8 @@ do_compile() {
     mkdir -p kernel_modules_headers
     if echo ${TRANSLATED_TARGET_ARCH} | grep  -q -e "[ix].*86" ; then
         TGT_ARCH="x86"
+    elif [ "${TRANSLATED_TARGET_ARCH}" = "aarch64" ]; then
+        TGT_ARCH="arm64"
     else
         TGT_ARCH=${TRANSLATED_TARGET_ARCH}
     fi
