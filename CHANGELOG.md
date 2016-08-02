@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix boltdb alignment issue for armv5 in docker, fixes docker 1.10.3 on armv5 devices [Lorenzo]
 * Include firmware for iwlwifi-8000C-13 - 6th generation Intel NUC [Andrei]
 * Disable DHCP server functionality from dnsmasq [Florin]
 * Update supervisor to v1.13.0 [Andrei]
