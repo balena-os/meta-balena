@@ -3,7 +3,7 @@ require conf/distro/poky.conf
 
 DISTRO = "resin-os"
 DISTRO_NAME = "Resin OS"
-DISTRO_VERSION = "1.7"
+DISTRO_VERSION = "1.8"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''

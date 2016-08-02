@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.8 - 2016-08-02
+
 * Fix plymouth output to tty1 [Theodor]
 * Use FAT16 filesystems as we do for partitions [Andrei]
 * Fix boltdb alignment issue for armv5 in docker, fixes docker 1.10.3 on armv5 devices [Lorenzo]
