@@ -81,12 +81,13 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  Type=forking
 --- a/systemd-units/plymouth-start.service.in
 +++ b/systemd-units/plymouth-start.service.in
-@@ -2,12 +2,14 @@
+@@ -1,12 +1,14 @@
  Description=Show Plymouth Boot Screen
  DefaultDependencies=no
- Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
+-Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
++Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service systemd-udev-settle.service
 -After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service
-+After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service boot.mount
++After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service boot.mount
  Before=systemd-ask-password-plymouth.service
 +Requires=boot.mount
  ConditionKernelCommandLine=!plymouth.enable=0
