@@ -28,7 +28,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  [Service]
 -ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
 +Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
-+ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --tty=tty1 --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
  ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
  Type=forking
 --- a/systemd-units/plymouth-kexec.service.in
@@ -44,7 +44,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  [Service]
 -ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
 +Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
-+ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --tty=tty1 --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
  ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
  Type=forking
 --- a/systemd-units/plymouth-poweroff.service.in
@@ -60,7 +60,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  [Service]
 -ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
 +Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
-+ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --tty=tty1 --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
  ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
  Type=forking
 --- a/systemd-units/plymouth-reboot.service.in
@@ -76,7 +76,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  [Service]
 -ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session
 +Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
-+ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --tty=tty1 --mode=shutdown --attach-to-session --kernel-command-line=${CMDLINE}
  ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
  Type=forking
 --- a/systemd-units/plymouth-start.service.in
@@ -95,7 +95,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  [Service]
 -ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
 +Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
-+ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session --kernel-command-line=${CMDLINE}
++ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --tty=tty1 --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session --kernel-command-line=${CMDLINE}
  ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
  Type=forking
  KillMode=none
