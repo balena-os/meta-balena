@@ -22,7 +22,11 @@ SYSTEMD_SERVICE_${PN} = " \
     temp-conf.service \
     "
 
+FILES_${PN} += " /mnt/conf"
+
 do_install () {
+    install -d ${D}/mnt/conf
+
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system
         install -c -m 0644 \
