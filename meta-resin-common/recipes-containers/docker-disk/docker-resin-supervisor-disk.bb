@@ -23,7 +23,6 @@ SYSTEMD_SERVICE_${PN} = " \
 
 FILES_${PN} += " \
     /resin-data \
-    /mnt/data \
     ${systemd_unitdir} \
     "
 
@@ -86,7 +85,6 @@ do_install () {
     sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
 
     install -d ${D}/resin-data
-    install -d ${D}/mnt/data/resin-data
 
     install -d ${D}${bindir}
     install -m 0755 ${WORKDIR}/update-resin-supervisor ${D}${bindir}
