@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Include firmware for iwlwifi-7265D and ibt [Michal]
+
 # v1.8 - 2016-08-02
 
 * Fix plymouth output to tty1 [Theodor]
