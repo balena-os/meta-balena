@@ -12,6 +12,8 @@ CONNECTIVITY_MODULES = ""
 
 CONNECTIVITY_FIRMWARES ?= " \
     linux-firmware-ath9k \
+    linux-firmware-ibt \
+    linux-firmware-iwlwifi-7265D \
     linux-firmware-ralink \
     linux-firmware-rtl8192cu \
     "
