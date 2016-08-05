@@ -22,7 +22,7 @@ SYSTEMD_SERVICE_${PN} = " \
     temp-conf.service \
     "
 
-FILES_${PN} += " /mnt/conf"
+FILES_${PN} += "/mnt/conf"
 
 do_install () {
     install -d ${D}/mnt/conf
