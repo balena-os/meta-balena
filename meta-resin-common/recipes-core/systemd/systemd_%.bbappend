@@ -4,6 +4,8 @@ SRC_URI_append = "${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', '', ' f
 
 FILES_${PN} += " \
     /srv \
+    /etc/localtime \
+    /etc/mtab \
     "
 
 do_install_append() {
@@ -22,6 +24,9 @@ do_install_append() {
     fi
 
     install -d -m 0755 /srv
+
+    ln -s ${D}${datadir}/zoneinfo ${D}${sysconfdir}/localtime
+    ln -s ${D}/proc/self/mounts ${D}${sysconfdir}/mtab
 }
 
 # add pool.ntp.org as default ntp server
