@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Set the default supervisor tag in /etc/supervisor.conf to the bundled supervisor tag. [Page]
 * Update firmware: iwlwifi-7265D-10 -> iwlwifi-7265D-13 [Michal]
 
 # v1.8 - 2016-08-02
