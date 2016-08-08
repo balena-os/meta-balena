@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update firmware: iwlwifi-7265D-10 -> iwlwifi-7265D-13 [Michal]
+
 # v1.8 - 2016-08-02
 
 * Fix plymouth output to tty1 [Theodor]

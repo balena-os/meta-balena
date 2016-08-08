@@ -1,6 +1,6 @@
-PACKAGES =+ "${PN}-iwlwifi-7265D-10"
-RDEPENDS_${PN}-iwlwifi-7265D-10 = "${PN}-iwlwifi-license"
-FILES_${PN}-iwlwifi-7265D-10 = "/lib/firmware/iwlwifi-7265D-10.ucode"
+PACKAGES =+ "${PN}-iwlwifi-7265D-13"
+RDEPENDS_${PN}-iwlwifi-7265D-13 = "${PN}-iwlwifi-license"
+FILES_${PN}-iwlwifi-7265D-13 = "/lib/firmware/iwlwifi-7265D-13.ucode"
 
 PACKAGES =+ "${PN}-iwlwifi-8000C-13"
 RDEPENDS_${PN}-iwlwifi-8000C-13 = "${PN}-iwlwifi-license"
