@@ -20,6 +20,52 @@ else
     echo "resin-net-config: Found config.json in $CONFIG_PATH ."
 fi
 
+# output to stdout if status changed from disabled, no output if already enabled
+service_enable() {
+    local _name=$1
+    if ! systemctl is-enabled $_name >/dev/null; then
+        systemctl enable $_name 2>&1
+    fi
+}
+
+# output to stdout if status changed from enabled, no output if already disabled
+service_disable() {
+    local _name=$1
+    if systemctl is-enabled $_name >/dev/null; then
+        systemctl disable $_name 2>&1
+    fi
+}
+
+# start either connman or NetworkManager. connman is the default.
+set_manager() {
+    local _connectivity=$(cat "$CONFIG_PATH" | jq -r '.connectivity // ""')
+    local _tmp
+
+    if [ "$_connectivity" = "networkmanager" ] || [ "$_connectivity" = "NetworkManager" ]; then
+	_tmp=$(
+	    service_enable NetworkManager
+	    service_enable ModemManager
+	    service_disable connman
+	    service_disable ofono
+	)
+	if [ -n "$_tmp" ]; then
+	    reboot
+	fi
+    else # connman
+	_tmp=$(
+	    service_disable NetworkManager
+	    service_disable ModemManager
+	    service_enable connman
+	    service_enable ofono
+	)
+	if [ -n "$_tmp" ]; then
+	    reboot
+	fi
+    fi
+}
+
+set_manager
+
 settings=$(cat "$CONFIG_PATH" | jq -r '.files["network/settings"] // ""')
 ethernet_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/ethernet.config"] // ""')
 network_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/network.config"] // ""')
