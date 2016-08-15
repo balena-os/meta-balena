@@ -1,0 +1,19 @@
+We use the --with-resolvconf configure option. When enabled, NM no
+longer compiles.
+
+Upstream-Status: Inappropriate [configuration specific]
+
+Signed-off-by: Michal Mazurek <michal@resin.io>
+
+Index: NetworkManager-1.0.4/src/dns-manager/nm-dns-manager.c
+===================================================================
+--- NetworkManager-1.0.4.orig/src/dns-manager/nm-dns-manager.c	2016-08-12 15:20:57.289321734 +0200
++++ NetworkManager-1.0.4/src/dns-manager/nm-dns-manager.c	2016-08-12 15:21:17.764864494 +0200
+@@ -37,6 +37,7 @@
+ #include <glib.h>
+ #include <glib/gi18n.h>
+ 
++#include "gio/gio.h"
+ #include "nm-utils.h"
+ #include "nm-dns-manager.h"
+ #include "nm-ip4-config.h"
