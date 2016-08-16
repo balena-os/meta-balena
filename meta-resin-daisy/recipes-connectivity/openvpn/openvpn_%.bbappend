@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 # Fix DNS issues
 SRC_URI_append = " \
