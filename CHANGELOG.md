@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add NetworkManager support, as an alternative to ConnMan [Michal]
 * Update supervisor to v2.1.1 [Pablo]
 * Add device-type.json file to the boot partitions of our images [Florin]
 * Enable kernel modules ip6table_nat, nf_nat_ipv6 and subset of ip_set [Florin]
