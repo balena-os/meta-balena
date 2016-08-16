@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 RESIN_CONNECTABLE_SRCURI = " \
     file://ca.crt \
