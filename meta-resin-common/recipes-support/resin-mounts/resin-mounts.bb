@@ -6,6 +6,7 @@ SRC_URI = " \
     file://mnt-boot.mount \
     file://mnt-conf.mount \
     file://mnt-data.mount \
+    file://etc-docker.mount \
     "
 
 S = "${WORKDIR}"
@@ -18,6 +19,7 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-boot.mount \
     mnt-conf.mount \
     mnt-data.mount \
+    etc-docker.mount \
     "
 
 FILES_${PN} += " \
@@ -30,6 +32,7 @@ do_install () {
     install -d ${D}/mnt/conf
     install -d ${D}/mnt/data
     install -d ${D}/mnt/boot
+    install -d ${D}/etc/docker
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
@@ -37,6 +40,7 @@ do_install () {
             ${WORKDIR}/mnt-boot.mount \
             ${WORKDIR}/mnt-conf.mount \
             ${WORKDIR}/mnt-data.mount \
+            ${WORKDIR}/etc-docker.mount \
             ${D}${systemd_unitdir}/system
     fi
 }
