@@ -2,6 +2,12 @@ FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 SRC_URI_append = "${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', '', ' file://remove_systemd-getty-generator.patch', d)}"
 
+FILES_${PN} += " \
+    /srv \
+    /etc/localtime \
+    /etc/mtab \
+    "
+
 do_install_append() {
     # we disable forwarding to syslog; in the future we will have rsyslog which can read the journal
     # independently of this forwarding
@@ -17,6 +23,10 @@ do_install_append() {
         find ${D} -name "getty@*.service" -delete
     fi
 
+    install -d -m 0755 /srv
+
+    ln -s ${D}${datadir}/zoneinfo ${D}${sysconfdir}/localtime
+    ln -s ${D}/proc/self/mounts ${D}${sysconfdir}/mtab
 }
 
 # add pool.ntp.org as default ntp server

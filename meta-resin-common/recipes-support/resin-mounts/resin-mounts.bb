@@ -20,7 +20,15 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-data.mount \
     "
 
+FILES_${PN} += " \
+    /mnt/data \
+    /mnt/conf \
+    "
+
 do_install () {
+    install -d ${D}/mnt/conf
+    install -d ${D}/mnt/data
+
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 \
