@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.9 - 2016-08-24
+
 * Provide custom splash logo for our flasher type [Theodor]
 * Update supervisor to v1.14.0 [Pablo]
 * Set the default supervisor tag in /etc/supervisor.conf to the bundled supervisor tag. [Page]
