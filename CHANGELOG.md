@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.10 - 2016-08-24
+
 # v1.9 - 2016-08-24
 
 * Provide custom splash logo for our flasher type [Theodor]
