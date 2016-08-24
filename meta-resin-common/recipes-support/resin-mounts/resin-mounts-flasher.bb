@@ -4,9 +4,9 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 
 SRC_URI = " \
     file://mnt-boot.mount \
-    file://mnt-conf.mount \
-    file://mnt-conforig.mount \
+    file://mnt-bootorig-config.json.mount \
     file://temp-conf.service \
+    file://mnt-bootorig.mount \
     "
 
 S = "${WORKDIR}"
@@ -17,27 +17,29 @@ PACKAGES = "${PN}"
 
 SYSTEMD_SERVICE_${PN} = " \
     mnt-boot.mount \
-    mnt-conf.mount \
-    mnt-conforig.mount \
+    mnt-bootorig-config.json.mount \
     temp-conf.service \
+    mnt-bootorig.mount \
     "
 
 FILES_${PN} += " \
     /mnt/conf \
     /mnt/boot \
+    /mnt/bootorig \
     "
 
 do_install () {
     install -d ${D}/mnt/conf
     install -d ${D}/mnt/boot
+    install -d ${D}/mnt/bootorig
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system
         install -c -m 0644 \
             ${WORKDIR}/mnt-boot.mount \
-            ${WORKDIR}/mnt-conf.mount \
-            ${WORKDIR}/mnt-conforig.mount \
+            ${WORKDIR}/mnt-bootorig-config.json.mount \
             ${WORKDIR}/temp-conf.service \
+            ${WORKDIR}/mnt-bootorig.mount \
             ${D}${sysconfdir}/systemd/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \

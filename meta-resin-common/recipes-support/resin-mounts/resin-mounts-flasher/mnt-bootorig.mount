@@ -1,0 +1,10 @@
+[Unit]
+Description=Flasher boot partition mountpoint
+
+[Mount]
+What=/dev/disk/by-label/flash-boot
+Where=/mnt/bootorig
+Type=vfat
+
+[Install]
+WantedBy=multi-user.target
