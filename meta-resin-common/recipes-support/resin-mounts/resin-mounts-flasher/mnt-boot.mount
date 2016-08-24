@@ -3,7 +3,7 @@ Description=Flasher boot partition mountpoint
 
 [Mount]
 What=/dev/disk/by-label/flash-boot
-Where=/boot
+Where=/mnt/boot
 Type=vfat
 
 [Install]
