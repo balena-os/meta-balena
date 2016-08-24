@@ -66,6 +66,7 @@ set_manager() {
 
 set_manager
 
+# configure connman
 settings=$(cat "$CONFIG_PATH" | jq -r '.files["network/settings"] // ""')
 ethernet_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/ethernet.config"] // ""')
 network_config=$(cat "$CONFIG_PATH" | jq -r '.files["network/network.config"] // ""')
@@ -92,5 +93,10 @@ if [ -n "$settings" ] || [ -n "$ethernet_config" ] || [ -n "$network_config" ]; 
 else
     echo "resin-net-config: No network configuration found in $CONFIG_PATH."
 fi
+
+# configure NetworkManager
+rm -rf /etc/NetworkManager/system-connections/
+cp -r $CONFIG_NM /etc/NetworkManager/
+chmod 600 /etc/NetworkManager/system-connections/*
 
 exit 0
