@@ -34,6 +34,7 @@ EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
+SPLASH_DIRNAME=splash
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -126,19 +127,22 @@ else
     inform "No need to flash bootloader to a specific device."
 fi
 
+# Mount internal device boot partition
+mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+inform "Mounting internal device boot partition."
+if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
+        fail "Failed to mount disk labeled as 'resin-boot'."
+fi
+# Copy custom splash dir
+cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
+# Copy bootloader config file
 if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
         if [[ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then
             fail "INTERNAL_DEVICE_BOOTLOADER_CONFIG needs INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH to be set."
         fi
-        # Mount internal device boot partition to write bootloader config file on it
-        mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
-        inform "Mounting internal device boot partition."
-        if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
-            fail "Failed to mount disk labeled as 'resin-boot'."
-        fi
         cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH
-        umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 fi
+umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
 # Copy json configuration file from external (flasher) to the internal (booting) device
 mkdir -p $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
