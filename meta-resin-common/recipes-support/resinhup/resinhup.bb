@@ -16,6 +16,7 @@ RDEPENDS_${PN} = " \
     docker \
     coreutils \
     resin-device-progress \
+    busybox \
     "
 
 do_install() {
