@@ -1,11 +1,11 @@
 [Unit]
 Description=Resin init flasher service
 Requires=\
-    boot.mount \
+    mnt-boot.mount \
     mnt-conf.mount
 Wants=resin-device-register.service
 After=\
-    boot.mount \
+    mnt-boot.mount \
     mnt-conf.mount \
     resin-device-register.service
 
