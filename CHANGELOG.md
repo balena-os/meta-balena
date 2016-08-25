@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Make dropbear host key generation atomic [Michal]
 * Change the TUN device used by OpenVPN to resin-vpn to minimize conflict with user applications using tun0 [Praneeth]
 * Update supervisor to v2.1.0 [Pablo]
 * Use FHS structure in the root of resinhup packages [Andrei]
