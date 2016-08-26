@@ -1,0 +1,71 @@
+commit 6cdc4ba6cd5178037466c50ebe03a7eb111c43b1
+Author: Nalin Dahyabhai <nalin@redhat.com>
+Date:   Wed Feb 17 15:10:51 2016 -0500
+
+    Try to handle changing names for journal packages
+    
+    When checking if we have the development files for libsystemd's journal
+    APIs, check for either 'libsystemd >= 209' and 'libsystemd-journal'.  If
+    we find 'libsystemd', define the 'journald' tag, which defaults to using
+    the 'libsystemd.pc' file.  If we find the older 'libsystemd-journal',
+    define both the 'journald' and 'journald_compat' tags, which causes the
+    'libsystemd-journal.pc' file to be consulted instead.
+    
+    Signed-off-by: Nalin Dahyabhai <nalin@redhat.com> (github: nalind)
+
+Upstream-Status: Backport
+
+Signed-off-by: Michal Mazurek <michal@resin.io>
+
+diff --git a/daemon/logger/journald/read.go b/daemon/logger/journald/read.go
+index 80c1fbd..8d94c30 100644
+--- a/daemon/logger/journald/read.go
++++ b/daemon/logger/journald/read.go
+@@ -2,7 +2,6 @@
+ 
+ package journald
+ 
+-// #cgo pkg-config: libsystemd-journal
+ // #include <sys/types.h>
+ // #include <sys/poll.h>
+ // #include <systemd/sd-journal.h>
+diff --git a/daemon/logger/journald/read_native.go b/daemon/logger/journald/read_native.go
+new file mode 100644
+index 0000000..bba6de5
+--- /dev/null
++++ b/daemon/logger/journald/read_native.go
+@@ -0,0 +1,6 @@
++// +build linux,cgo,!static_build,journald,!journald_compat
++
++package journald
++
++// #cgo pkg-config: libsystemd
++import "C"
+diff --git a/daemon/logger/journald/read_native_compat.go b/daemon/logger/journald/read_native_compat.go
+new file mode 100644
+index 0000000..3f7a43c
+--- /dev/null
++++ b/daemon/logger/journald/read_native_compat.go
+@@ -0,0 +1,6 @@
++// +build linux,cgo,!static_build,journald,journald_compat
++
++package journald
++
++// #cgo pkg-config: libsystemd-journal
++import "C"
+diff --git a/hack/make.sh b/hack/make.sh
+index 7d7cb0d..acee4a9 100755
+--- a/hack/make.sh
++++ b/hack/make.sh
+@@ -118,8 +118,10 @@ fi
+ 
+ if [ -z "$DOCKER_CLIENTONLY" ]; then
+ 	DOCKER_BUILDTAGS+=" daemon"
+-	if pkg-config libsystemd-journal 2> /dev/null ; then
++	if pkg-config 'libsystemd >= 209' 2> /dev/null ; then
+ 		DOCKER_BUILDTAGS+=" journald"
++	elif pkg-config 'libsystemd-journal' 2> /dev/null ; then
++		DOCKER_BUILDTAGS+=" journald journald_compat"
+ 	fi
+ fi
+ 
