@@ -10,7 +10,7 @@ PARTITION_SIZE=${PARTITION_SIZE:=1024}
 
 # Create a BTRFS disk image
 dd if=/dev/zero of=/export/data_disk.img bs=1M count=$PARTITION_SIZE
-mkfs.btrfs /export/data_disk.img
+mkfs.btrfs --mixed --metadata=single /export/data_disk.img
 
 # Setup the loop device with the disk image
 mkdir /data_disk
