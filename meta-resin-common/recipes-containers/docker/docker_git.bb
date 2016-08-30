@@ -26,6 +26,7 @@ SRC_URI = "\
   file://var-lib-docker.mount \
   file://0001-bucket-correct-broken-unaligned-load-store-in-armv5.patch \
   file://journal.patch \
+  file://0002-Inherit-StopSignal-from-Dockerfile.patch \
 	"
 
 # Apache-2.0 for docker
