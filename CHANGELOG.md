@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Make Docker log to journald [Michal]
+
 # v1.10 - 2016-08-24
 
 # v1.9 - 2016-08-24
