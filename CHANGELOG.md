@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Backport STOPSIGNAL fix for docker [petrosagg]
 * Make Docker log to journald [Michal]
 
 # v1.10 - 2016-08-24
