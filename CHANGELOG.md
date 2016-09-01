@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Use FHS structure in the root of resinhup packages [Andrei]
+
 # v1.11 - 2016-08-31
 
 * Backport STOPSIGNAL fix for docker [petrosagg]
