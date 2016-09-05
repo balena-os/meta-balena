@@ -4,12 +4,12 @@ Requires=\
     docker.service \
     tmp.mount
 Wants=\
-    mnt-conf.mount \
+    mnt-boot.mount \
     resin-supervisor.service
 After=\
     docker.service \
     tmp.mount \
-    mnt-conf.mount \
+    mnt-boot.mount \
     resin-supervisor.service
 
 [Service]
