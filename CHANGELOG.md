@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v2.1.0 [Pablo]
 * Use FHS structure in the root of resinhup packages [Andrei]
 
 # v1.11 - 2016-08-31
