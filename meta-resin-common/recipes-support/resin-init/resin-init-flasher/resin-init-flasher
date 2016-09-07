@@ -30,7 +30,7 @@
 set -e
 
 # Very long variables :)
-EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/boot # mounted by systemd
+EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/mnt/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
@@ -135,6 +135,8 @@ if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; 
 fi
 # Copy custom splash dir
 cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
+# Copy json configuration file from external (flasher) to the internal (booting) device
+cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 # Copy bootloader config file
 if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
         if [[ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then
@@ -144,14 +146,6 @@ if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
 fi
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
-# Copy json configuration file from external (flasher) to the internal (booting) device
-mkdir -p $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
-inform "Mounting internal device conf partition."
-if ! mount /dev/disk/by-label/resin-conf $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT; then
-    fail "Failed to mount disk labeled as 'resin-conf'."
-fi
-cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT/
-
 echo "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
 
@@ -160,7 +154,6 @@ sync
 
 # umounts
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
-umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT
 
 inform "Shutting down ..."
 shutdown -h now

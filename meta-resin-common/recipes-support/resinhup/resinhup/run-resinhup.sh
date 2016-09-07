@@ -8,6 +8,7 @@ LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
 NOREBOOT=no
+BOOT_MOUNTPOINT="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
 
 source /etc/profile
 
@@ -106,8 +107,12 @@ function log {
 
 function runPreHacks {
     # we might need to repartition this so make sure it is unmounted
-    log "Make sure /boot is unmounted..."
-    umount /boot &> /dev/null
+    log "Make sure resin-boot is unmounted..."
+    if [ -z $BOOT_MOUNTPOINT ]; then
+        log ERROR "Mount point for resin-boot partition could not be found"
+    else
+        umount $BOOT_MOUNTPOINT &> /dev/null
+    fi
 
     # can't fix label of BTRFS partition from container
     btrfs filesystem label $BTRFS_MOUNTPOINT resin-data

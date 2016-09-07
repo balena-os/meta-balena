@@ -1,0 +1,14 @@
+[Unit]
+Description=Flasher boot partition mountpoint
+Requires=mnt-bootorig.mount mnt-bootorig-config.json.mount
+After=mnt-bootorig.mount mnt-bootorig-config.json.mount
+
+[Mount]
+What=/mnt/bootorig
+Where=/mnt/boot
+Type=None
+Options=rbind
+
+
+[Install]
+WantedBy=multi-user.target

@@ -41,7 +41,7 @@ if [ -z "$CONFIG_PATH" ]; then
     exit 1
 fi
 
-if [ ! -f "$CONFIG_PATH" ]; then
+if [ ! -s "$CONFIG_PATH" ]; then
     echo "[INFO] resin-device-uuid: Config file is missing. Creating.."
     echo '{}' > $CONFIG_PATH
 else

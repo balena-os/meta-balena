@@ -248,10 +248,11 @@ IMAGE_CMD_resin-sdcard () {
     # Finally add the fingerprint to vfat partition
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT} ::
 
-    # Create a vfat filesystem for config partition
     CONFIG_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
     rm -rf ${WORKDIR}/config.img
-    mkfs.vfat -n "${RESIN_CONFIG_FS_LABEL}" -S 512 -C ${WORKDIR}/config.img $CONFIG_BLOCKS
+    # Create an ext4 filesystem for config partition
+    dd if=/dev/zero of=${WORKDIR}/config.img count=${CONFIG_BLOCKS} bs=1024
+    mkfs.ext4 -F -L "${RESIN_CONFIG_FS_LABEL}" ${WORKDIR}/config.img
 
     # Label what is not labeled
     e2label ${RESIN_SDIMG_ROOTFS} ${RESIN_ROOT_FS_LABEL}

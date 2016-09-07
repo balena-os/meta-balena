@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device uuid
-Requires=mnt-conf.mount
-After=mnt-conf.mount
+Requires=mnt-boot.mount
+After=mnt-boot.mount
 
 [Service]
 Type=simple

@@ -28,6 +28,7 @@ ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
     -v /var/log/supervisor-log:/var/log \
     -v /:/mnt/root \
     -e DOCKER_ROOT=/mnt/root/var/lib/docker \
+    -e BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT \
     -e API_ENDPOINT=$API_ENDPOINT \
     -e REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT \
     -e PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY \
