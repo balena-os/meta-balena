@@ -1,5 +1,6 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI += " \
+    file://atomic-hostkey.patch \
     file://dropbear.socket \
     file://failsafe-sshkey.pub \
     "
