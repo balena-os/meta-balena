@@ -12,7 +12,7 @@ RestartSec=10s
 OOMScoreAdjust=-1000
 PIDFile=/var/run/openvpn/resin.pid
 ExecStartPre=-/bin/mkdir -p /var/run/openvpn
-ExecStart=/usr/sbin/openvpn --daemon --writepid /var/run/openvpn/resin.pid --cd /etc/openvpn/ --config resin.conf
+ExecStart=/usr/sbin/openvpn --daemon --writepid /var/run/openvpn/resin.pid --cd /etc/openvpn/ --config /run/openvpn/resin.conf
 
 [Install]
 WantedBy=multi-user.target
