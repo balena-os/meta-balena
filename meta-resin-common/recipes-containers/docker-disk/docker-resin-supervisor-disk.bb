@@ -82,6 +82,7 @@ do_install () {
     install -d ${D}${sysconfdir}
     install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
     sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
+    sed -i -e 's:@TARGET_TAG@:${TARGET_TAG}:g' ${D}${sysconfdir}/supervisor.conf
     sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
 
     install -d ${D}/resin-data
