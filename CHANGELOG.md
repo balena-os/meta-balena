@@ -1,7 +1,6 @@
 Change log
 -----------
 
-* Make openvpn configuration read-only [Theodor]
 * Change partition type of resin-conf from vfat to ext4 [Theodor]
 * Move config.json to resin-boot partition [Theodor]
 * Change resin-boot mount point from /boot to /mnt/boot [Theodor]
