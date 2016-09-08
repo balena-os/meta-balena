@@ -6,7 +6,8 @@ After=prepare-openvpn.service
 [Mount]
 What=/run/openvpn/resin.conf
 Where=/etc/openvpn/resin.conf
-Type=bind
+Type=none
+Options=bind
 
 [Install]
 WantedBy=multi-user.target

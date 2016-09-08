@@ -7,7 +7,7 @@ SRC_URI = " \
     file://mnt-bootorig-config.json.mount \
     file://temp-conf.service \
     file://mnt-bootorig.mount \
-    file://openvpn-conf.mount \
+    file://etc-openvpn-resin.conf.mount \
     "
 
 S = "${WORKDIR}"
@@ -21,7 +21,7 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-bootorig-config.json.mount \
     temp-conf.service \
     mnt-bootorig.mount \
-    openvpn-conf.mount \
+    etc-openvpn-resin.conf.mount \
     "
 
 FILES_${PN} += " \
@@ -42,7 +42,7 @@ do_install () {
             ${WORKDIR}/mnt-bootorig-config.json.mount \
             ${WORKDIR}/temp-conf.service \
             ${WORKDIR}/mnt-bootorig.mount \
-            ${WORKDIR}/openvpn-conf.mount \
+            ${WORKDIR}/etc-openvpn-resin.conf.mount \
             ${D}${sysconfdir}/systemd/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
