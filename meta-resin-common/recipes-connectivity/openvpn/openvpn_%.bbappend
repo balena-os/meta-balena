@@ -11,7 +11,7 @@ RESIN_CONNECTABLE_SRCURI = " \
     "
 SRC_URI_append = " ${@bb.utils.contains("RESIN_CONNECTABLE","1","${RESIN_CONNECTABLE_SRCURI}","",d)}"
 
-RDEPENDS_${PN} += "${@bb.utils.contains("RESIN_CONNECTABLE","1","bash jq resin-device-uuid","",d)}"
+RDEPENDS_${PN} += "${@bb.utils.contains("RESIN_CONNECTABLE","1","bash jq resin-device-uuid sed","",d)}"
 
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains("RESIN_CONNECTABLE","1","openvpn-resin.service prepare-openvpn.service","",d)}"
 
