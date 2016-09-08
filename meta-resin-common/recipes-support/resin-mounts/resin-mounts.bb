@@ -7,6 +7,7 @@ SRC_URI = " \
     file://mnt-conf.mount \
     file://mnt-data.mount \
     file://etc-docker.mount \
+    file://etc-dropbear.mount \
     "
 
 S = "${WORKDIR}"
@@ -20,6 +21,7 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-conf.mount \
     mnt-data.mount \
     etc-docker.mount \
+    etc-dropbear.mount \
     "
 
 FILES_${PN} += " \
@@ -41,6 +43,7 @@ do_install () {
             ${WORKDIR}/mnt-conf.mount \
             ${WORKDIR}/mnt-data.mount \
             ${WORKDIR}/etc-docker.mount \
+            ${WORKDIR}/etc-dropbear.mount \
             ${D}${systemd_unitdir}/system
     fi
 }
