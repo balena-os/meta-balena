@@ -20,4 +20,4 @@ while true; do
 	fi
 done
 
-sed -i -e "/remote .*/ c\remote $VPN_ENDPOINT $VPN_PORT" /etc/openvpn/resin.conf
+sed -e "/remote .*/ c\remote $VPN_ENDPOINT $VPN_PORT" /etc/openvpn/resin.conf > /run/openvpn/resin.conf
