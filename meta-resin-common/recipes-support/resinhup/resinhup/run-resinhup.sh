@@ -116,8 +116,8 @@ function runPreHacks {
         umount $BOOT_MOUNTPOINT &> /dev/null
     fi
 
-    # can't fix label of BTRFS partition from container
-    btrfs filesystem label $BTRFS_MOUNTPOINT resin-data
+    # can't fix label of data partition from container
+    e2label $DATA_MOUNTPOINT resin-data
 
     # Some devices never actually update /etc/timestamp because they are hard-rebooted.
     # Force a /etc/timestamp update so we don't get into TLS issues.
@@ -156,10 +156,10 @@ function runPostHacks {
             dockerpid=$(pidof rce)
             kill -9 $dockerpid &> /dev/null
 
-            if [ -d "$BTRFS_MOUNTPOINT/docker" ]; then
-                log ERROR "$BTRFS_MOUNTPOINT/docker already exists"
+            if [ -d "$DATA_MOUNTPOINT/docker" ]; then
+                log ERROR "$DATA_MOUNTPOINT/docker already exists"
             else
-                mv -f $BTRFS_MOUNTPOINT/rce $BTRFS_MOUNTPOINT/docker
+                mv -f $DATA_MOUNTPOINT/rce $DATA_MOUNTPOINT/docker
                 sync
             fi
         else
@@ -277,11 +277,11 @@ if [ -z $slug ]; then
 fi
 log "Found slug $slug for this device."
 
-# Detect BTRFS_MOUNTPOINT
+# Detect DATA_MOUNTPOINT
 if [ -d /mnt/data ]; then
-    BTRFS_MOUNTPOINT=/mnt/data
+    DATA_MOUNTPOINT=/mnt/data
 elif [ -d /mnt/data-disk ]; then
-    BTRFS_MOUNTPOINT=/mnt/data-disk
+    DATA_MOUNTPOINT=/mnt/data-disk
 else
     log ERROR "Can't find the resin-data mountpoint."
 fi
@@ -361,7 +361,7 @@ if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
         log "Running engine migrator 1.10... please wait..."
         DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
         $DOCKER pull $DOCKER_MIGRATOR
-        $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
+        $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s aufs
         if [ $? -eq 0 ]; then
             log "Migration to engine 1.10 done."
         else
