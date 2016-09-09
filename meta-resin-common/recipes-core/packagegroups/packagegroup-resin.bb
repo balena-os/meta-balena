@@ -14,10 +14,9 @@ include packagegroup-resin.inc
 # Additional packages
 RDEPENDS_${PN} += " \
     docker-disk \
-    resin-btrfs-balance \
-    resin-btrfs-expand \
+    resin-filesystem-expand \
     resin-logs \
-    resin-extend-expand \
+    resin-data-expander \
     resin-info \
     resin-hostname \
     resinhup \
