@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Use aufs as docker storage driver with ext4 as backing filesystem instead of btrfs [Florin]
 * Replace connman with NetworkManager [Michal]
 * Generate config.json from the build system [Theodor]
 * Add usb-modeswitch [Michal]
