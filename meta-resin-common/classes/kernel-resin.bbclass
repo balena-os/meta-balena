@@ -114,9 +114,13 @@ RESIN_CONFIGS[docker] ?= " \
     CONFIG_NF_NAT=y \
     CONFIG_NF_NAT_NEEDED=y \
     CONFIG_POSIX_MQUEUE=y \
-    CONFIG_BTRFS_FS=y \
-    CONFIG_BTRFS_FS_POSIX_ACL=y \
-    CONFIG_TUN=y"
+    CONFIG_TUN=y \
+    CONFIG_EXT4_FS=y \
+    CONFIG_EXT4_FS_POSIX_ACL=y \
+    CONFIG_EXT4_FS_SECURITY=y \
+    CONFIG_AUFS_FS=y \
+    CONFIG_AUFS_XATTR=y \
+    "
 
 #
 # systemd specific kernel configuration options
