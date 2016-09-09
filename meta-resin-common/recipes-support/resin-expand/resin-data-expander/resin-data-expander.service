@@ -7,7 +7,7 @@ Before=mnt-conf.mount mnt-data.mount
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-extend-expand
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-data-expander
 
 [Install]
 WantedBy=multi-user.target
