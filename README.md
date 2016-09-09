@@ -69,7 +69,7 @@ We configure all of our initial images to produce a resin logo at boot, shutdown
 All you have to do is replace the splash/resin-logo.png file that you will find in the first partition of our images (boot partition) with your own image.
 NOTE: As it currently stands plymouth expects the image to be named resin-logo.png.
 
-### Build flavors and selecting the docker image to be injected in the BTRFS partition
+### Build flavors and selecting the docker image to be injected in the Data partition
 
 We currently distinguish two types of builds:
 * builds that are connectable to resin by including all the software bits needed for communication with resin infrastructure
@@ -81,7 +81,7 @@ The switch for these types is done based on a build variable `RESIN_CONNECTABLE`
 
 In this case, docker-resin-supervisor-disk will be used as a docker-disk provider. All the needed services for connecting the device to resin will be installed (systemd services, VPN configuration etc.). By default the systemd services which are part of communicating to resin are enabled. This default behavior can be customized using `RESIN_CONNECTABLE_ENABLE_SERVICES` build variable.
 
-As well, by default, the docker resin-supervisor image will be preloaded in the BTRFS partition. This behavior can be modified using TARGET_REPOSITORY/TARGET_TAG build variables. This leaves the possibility of creating a build without provisioning the supervisor image or creating one with all the supervisor services but with a custom image. TARGET_REPOSITORY/TARGET_TAG are decribed below.
+As well, by default, the docker resin-supervisor image will be preloaded in the Data partition. This behavior can be modified using TARGET_REPOSITORY/TARGET_TAG build variables. This leaves the possibility of creating a build without provisioning the supervisor image or creating one with all the supervisor services but with a custom image. TARGET_REPOSITORY/TARGET_TAG are decribed below.
 
 Example: having a connectable image with services enabled and supervisor docker image preloaded - nothing to be done to build's `local.conf` as these imply default values of all the variables.
 
@@ -97,7 +97,7 @@ Connectable images will have a tool for managing the resin services installed on
 
 In this case, docker-custom-disk will be used as a docker-disk provider. All the services and software bits responsible for communicating with resin infrastructure will not be installed. In this case `RESIN_CONNECTABLE_ENABLE_SERVICES` has no effect on the build as it only applies for connectable builds.
 
-Without any other configuration, the build will leave the BTRFS partition without any image preloaded. In addition to this, two other variables can be used to inject a specific dockerhub image:
+Without any other configuration, the build will leave the Data partition without any image preloaded. In addition to this, two other variables can be used to inject a specific dockerhub image:
 * TARGET_REPOSITORY - the image name wanted to be injected
 * TARGET_TAG - the image tag wanted to be injected. If not defined it will default to `latest`. Otherwise will use the specified value.
 
@@ -107,7 +107,7 @@ Example: having a non-connectable image with ubuntu:latest docker image preloade
 
 Example: having a non-connectable image with ubuntu:15:10 docker image preloaded - add/set `RESIN_CONNECTABLE = "0"`, `TARGET_REPOSITORY = "ubuntu"` and `TARGET_TAG = "15.04"` to build's `local.conf`.
 
-Hint: Modifing any of the TARGET_* variables, will retrigger the generation of the BTRFS partition without any issues but, if `RESIN_CONNECTABLE` is changed in a working build (not one from scatch), the user will need to cleansstate the docker-image providers issuing a command similar to `bitbake docker-custom-disk -c cleansstate ; bitbake docker-resin-supervisor-disk -c cleansstate`. Failing to do so, while changing `RESIN_CONNECTABLE` in a working build, will result in a build error similar to:
+Hint: Modifing any of the TARGET_* variables, will retrigger the generation of the Data partition without any issues but, if `RESIN_CONNECTABLE` is changed in a working build (not one from scatch), the user will need to cleansstate the docker-image providers issuing a command similar to `bitbake docker-custom-disk -c cleansstate ; bitbake docker-resin-supervisor-disk -c cleansstate`. Failing to do so, while changing `RESIN_CONNECTABLE` in a working build, will result in a build error similar to:
 
 > ERROR: The recipe docker-custom-disk is trying to install files into a shared area when those files already exist. Those files and their manifest location are:
 >    ???/build/tmp/sysroots/beaglebone/sysroot-providers/docker-disk
