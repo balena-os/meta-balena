@@ -8,9 +8,10 @@ DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
 # Default values
 PARTITION_SIZE=${PARTITION_SIZE:=1024}
 
-# Create a BTRFS disk image
-dd if=/dev/zero of=/export/data_disk.img bs=1M count=$PARTITION_SIZE
-mkfs.btrfs --mixed --metadata=single /export/data_disk.img
+# Create sparse file to hold ext4 resin-data partition
+dd if=/dev/zero of=/export/data_disk.img bs=1M count=0 seek=$PARTITION_SIZE
+# now partition the newly created file to ext4
+mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -F /export/data_disk.img
 
 # Setup the loop device with the disk image
 mkdir /data_disk
@@ -21,7 +22,7 @@ mkdir -p /data_disk/docker
 mkdir -p /data_disk/resin-data
 
 # Start docker with the created image.
-docker daemon -g /data_disk/docker -s btrfs &
+docker daemon -g /data_disk/docker -s aufs &
 echo "Waiting for docker to become ready.."
 STARTTIME=$(date +%s)
 ENDTIME=$(date +%s)
