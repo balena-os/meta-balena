@@ -1,0 +1,2489 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Subject: Rewrite the dispatcher in C to avoid requiring Tcl.
+Last-Update: 2011-12-05
+
+---
+ Makefile                    |    5 
+ usb_modeswitch_dispatcher.c | 2451 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 2455 insertions(+), 1 deletion(-)
+
+Upstream-Status: Inappropriate [not author]
+
+This patch came from Ubuntu.
+
+Signed-off-by: Michal Mazurek <michal@resin.io>
+
+Index: b/usb_modeswitch_dispatcher.c
+===================================================================
+--- /dev/null
++++ b/usb_modeswitch_dispatcher.c
+@@ -0,0 +1,2451 @@
++/*
++  Mode switching tool for controlling flip flop (multiple device) USB gear
++  Version 15.10, 2015/10/02 by Mathieu Trudel-Lapierre <mathieu@canonical.com>
++  (maps roughly to 2.2.5 upstream)
++
++  Created with initial help from:
++    "usb_modeswitch.tcl" by Joshua Dietze
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of the GNU General Public License as published by
++  the Free Software Foundation; either version 2 of the License, or
++  (at your option) any later version.
++
++  This program is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++  GNU General Public License for more details:
++
++  http://www.gnu.org/licenses/gpl.txt
++
++*/
++
++#define _GNU_SOURCE
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdarg.h>
++#include <limits.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <string.h>
++#include <libgen.h>
++#include <ctype.h>
++#include <unistd.h>
++#include <regex.h>
++#include <dirent.h>
++#include <pipeline.h>
++#include <libudev.h>
++#include <time.h>
++#include <glob.h>
++#include <syslog.h>
++#include <errno.h>
++
++#define RUN_DIR "/run/usb_modeswitch"
++#define BIND_LIST "/run/usb_modeswitch/bind_list"
++#define DEFAULT_TMPCONFIG "/run/usb_modeswitch/current_cfg"
++#define LOGFILE_TEMPL "/var/log/usb_modeswitch.log"  /* will be suffixed with a device ID */
++#define DB_DIR "/usr/share/usb_modeswitch"
++#define DB_ETCDIR "/etc/usb_modeswitch.d"
++#define BIN_DIR "/usr/sbin"
++#define DEV_DIR_BASE "/sys/bus/usb/devices"
++#define CONFIG_PACK_NAME "configPack.tar.gz"
++#define MODPROBE "modprobe"
++#define USB_STORAGE_DELAY_USE "/sys/module/usb_storage/parameters/delay_use"
++#define MODULES_PATH "/lib/modules"
++#define CDC_MBIM_DRIVER_PATH "kernel/drivers/net/usb/cdc_mbim.ko"
++#define CDC_MBIM_SYS_PATH "/sys/bus/usb/drivers/cdc_mbim"
++#define OSRELEASE_FILE "/proc/sys/kernel/osrelease"
++
++struct list_entry {
++	char *data;
++	struct list_entry *next;
++};
++
++struct conf_data {
++	char *dev_dir;
++
++	char *config_pack_path;
++	char *config_name;
++	char *config_param;
++	char *generic_config_name;
++
++	char *dev_param;
++	char *bus_param;
++	char *vendor_product_param;
++
++	char *device_config;
++
++	char *driver_id_path;
++	char *driver_module;
++	char *target_vendor;
++	char *target_product;
++	char *target_class;
++	int wait_before;
++	int target_config;
++	int driver_loading;
++	int check_success;
++	int no_mbim_check;
++
++	char **config_list;
++};
++
++struct dev_attr {
++	char *attr;
++	char *value;
++};
++
++/* SCSI Vendor   */
++#define sVe 0
++
++/* SCSI Model    */
++#define sMo 1
++
++/* SCSI Revision */
++#define sRe 2
++
++/* USB idVendor */
++#define idVendor 0
++/* USB idProduct */
++#define idProduct 1
++
++/* USB Manufacturer */
++#define uMa 2
++
++/* USB Product name */
++#define uPr 3
++
++/* USB Serial No.   */
++#define uSe 4
++
++/* USB bNumConfigurations */
++#define bNumConfigurations 5
++
++/* USB bConfigurationValue */
++#define bConfigurationValue 6
++
++/* USB devnum */
++#define devnum 7
++
++/* USB busnum */
++#define busnum 8
++
++const char *config_places[] = {
++		"/etc/usb_modeswitch.conf",
++		"/etc/sysconfig/usb_modeswitch",
++		"/etc/default/usb_modeswitch",
++		NULL};
++
++#define NUM_SCSI_ATTRS 3 /* always define to number of items in list below (minus NULL) */
++const char *scsi_attrs[] = {
++		"vendor",
++		"model",
++		"rev",
++		NULL };
++
++#define NUM_USB_ATTRS 9  /* always define to number of items in list below (minus NULL) */
++const char *usb_attrs[] = {
++		"idVendor",
++		"idProduct",
++		"manufacturer",
++		"product",
++		"serial",
++		"bNumConfigurations",
++		"bConfigurationValue",
++		"devnum",
++		"busnum",
++		NULL };
++
++int logging = 0;
++int noswitching = 0;
++int stordelay = 0;
++
++FILE *logfile = NULL;
++char* device = NULL;
++char* config_file = NULL;
++char* device_iface_class = NULL;
++struct conf_data config;
++struct dev_attr *scsi[NUM_SCSI_ATTRS];
++struct dev_attr *usb[NUM_USB_ATTRS];
++struct timespec sleep_500;
++
++char* substring(const char* str, size_t begin, size_t len);
++char* rtrim(char *s);
++void free_list(struct list_entry *list);
++char* join_path(char *base_path, char *add_path);
++int parse_global_config();
++int has_interrupt (char* if_dir);
++char* symlink_name (char* path);
++void unbind_driver (char* devdir, char* ifdir);
++void check_driver_bind (char* vid, char* pid);
++int parse_device_config(char *device_config);
++void remove_from_bind_list (char *id);
++int add_to_list (char* name, char *id);
++int in_bind_list (char *id);
++void modeswitch_log(const char* format, ...);
++void read_attrs(char *subsystem, struct dev_attr **dev_type, char **attr_list, char *dir);
++void read_scsi_attrs(char *dir);
++void read_usb_attrs(char *dir, char* ifdir);
++void config_get_list(char *config_name);
++char* config_get_config(char *config_name);
++int match_device(char *config_name);
++int read_pipeline (pipeline *p, int logging, int* no_driver_loading, int* found_ok);
++void prepare_run_dir();
++int check_success(char *dir);
++void set_storage_delay(int secs);
++int check_mbim_available (void);
++char* get_iface_ifdir (int iface);
++int get_iface_ifclass (int iface);
++int check_iface (int iface);
++void log_attributes ();
++
++static int min(int a, int b)
++{
++	return a > b ? b : a;
++}
++
++int main(int argc, char* argv[])
++{
++	regex_t reg;
++	regmatch_t match[3];
++	char *val, *tmpval, *tmp;
++	char bus_id[PATH_MAX], *kernel_name = NULL;
++	char dev_top[PATH_MAX];
++	char *udev_args = NULL;
++	char *msg, *sys_dir, *fname, *selected_config, *ifdir;
++	char line[PATH_MAX];
++	char *os_type;
++	int i;
++	int scsi_needed;
++	int no_data = 0;
++	int counter;
++	int no_driver_loading;
++	int found_ok;
++	int if_chk = 0;
++	int iface;
++	int mbim_cfg_no = 0;
++	int length;
++	int version_fd;
++	ssize_t version_rb;
++	pipeline *p;
++	FILE *rc;
++	glob_t path_glob;
++	int glob_status;
++
++	sleep_500.tv_sec = 0;  				// 0 seconds...
++	sleep_500.tv_nsec = 500000000l;		// ... plus .5 seconds.
++
++	/*
++	 * The facility to add a symbolic link pointing to the
++	 * ttyUSB port which provides interrupt transfer, i.e.
++	 * the port to connect through.
++	 * Will check for interrupt endpoint in ttyUSB port (lowest if
++	 * there is more than one); if found, return "gsmmodem[n]" name
++	 * to udev for symlink creation.
++	 *
++	 * This is run once for every known device interface by
++	 * an udev rule.
++	 */
++
++	if (argc > 1 && strcmp(argv[1], "--symlink-name") == 0 ) {
++
++		if (argv[2] != NULL && (val = symlink_name(argv[2])) != NULL)
++				printf("%s\n", val);
++		else {
++			printf("Invalid parameters for --symlink-name.\n");
++			_exit(1);
++		}
++
++		_exit(0);
++	}
++	else if (argc > 1
++		 && (strcmp(argv[1], "--switch-mode") == 0
++			|| strcmp(argv[1], "--switch-systemd") == 0
++			|| strcmp(argv[1], "--switch-upstart") == 0)) {
++		udev_args = argv[2];
++	}
++	else if (argc > 1 && strstr(argv[1], "--") == argv[1]) {
++		/* The argument passed isn't --symlink-name, but starts with --,
++		 * so we don't care much about it, just display "usage".
++		 */
++		printf("Invalid arguments. This program should only be called via a udev rule.\n");
++		_exit(1);
++	}
++	else if (argc < 3) {
++		/* Where there are no arguments passed to the dispatcher. */
++		printf("Too few arguments. This program should only be called via a udev rule.\n");
++		_exit(1);
++	}
++	parse_global_config();
++
++	if (access(DB_DIR, X_OK) != 0 && access(DB_ETCDIR, X_OK) != 0) {
++		modeswitch_log("\nError: no config database found in /usr/share or /etc. Exiting.\n");
++		return 1;
++	}
++
++	if (strcmp(argv[1], "--switch-systemd") == 0) {
++		char *c;
++		modeswitch_log("\nStarted via systemd\n");
++		/*
++		 * Trim leading - and /, and replace / with -
++		 */
++		while (udev_args[0] == '-' || udev_args[0] == '/')
++			udev_args++;
++		udev_args = strdup(udev_args);
++		for (c = udev_args; *c; ++c)
++			if (*c == '/')
++				*c = '-';
++	} else if (strcmp(argv[1], "--switch-upstart") == 0) {
++		modeswitch_log("\nStarted via upstart\n");
++	} else if (strstr(argv[1], "--switch") == NULL) {
++		modeswitch_log("\nNo command given. Exit\n");
++		return 1;
++	}
++
++	openlog("usb_modeswitch", LOG_PID, LOG_DAEMON);
++
++	/*
++	 * udev_args (argv[2]) contains the values provided from the udev rule separated by "/"
++	 */
++	if (!udev_args) {
++		modeswitch_log("\nNo data from udev. Exiting\n");
++		return 1;
++	}
++	else {
++		if (stordelay > 0)
++			set_storage_delay(stordelay);
++		modeswitch_log("Raw args from udev: %s\n\n", udev_args);
++	}
++
++	/*
++	 * arg 0: the bus id for the device (udev: %b), often ommitted
++	 * arg 1: the "kernel name" for the device (udev: %k)
++	 *
++	 * Used to determine the top directory for the device in sysfs
++	 */
++	if ((kernel_name = strchr(udev_args, '/')) != NULL) {
++		kernel_name = kernel_name + 1;
++		length = min(kernel_name - udev_args - 1, sizeof(bus_id) - 1);
++        } else {
++		kernel_name = udev_args;
++		length = 0;
++        }
++
++	strncpy (bus_id, udev_args, length);
++	bus_id[length] = '\0';
++
++	if (strlen(kernel_name) > 0 && strlen(bus_id) == 0) {
++		char *colon = strchr (kernel_name, ':');
++
++		modeswitch_log("Bus ID for device not given by udev.\n");
++		modeswitch_log(" Trying to determine it from kernel name (%s) ...\n", kernel_name);
++
++		if (colon) {
++			length = min(colon - kernel_name, sizeof(dev_top) - 1);
++			strncpy (dev_top, kernel_name, length);
++			dev_top[length] = '\0';
++		} else {
++			strncpy(dev_top, kernel_name, sizeof(dev_top) - 1);
++			dev_top[sizeof(dev_top) - 1] = '\0';
++			if (strchr(kernel_name, '-') != NULL && strchr(kernel_name, '.') != NULL)
++				if_chk = 1;
++		}
++	}
++	else if (strlen(bus_id) > 0) {
++		strcpy(dev_top, bus_id);
++	}
++	else {
++		modeswitch_log("No device number values given from udev! Exit.\n");
++		return 1;
++	}
++
++	if (!*dev_top) {
++		modeswitch_log("Could not determine top device dir from udev values! Exit.\n");
++		return 1;
++	}
++
++	asprintf(&config.dev_dir, "%s/%s", DEV_DIR_BASE, dev_top);
++	if (access(config.dev_dir, X_OK) != 0) {
++		modeswitch_log("Top device directory not found (%s)! Exit.\n", config.dev_dir);
++		return 1;
++	}
++	modeswitch_log("Use top device dir %s\n", config.dev_dir);
++
++	/* Now reading the USB attributes */
++	/* TODO: make this return a bool and check USB ID existance w/early out. */
++	read_usb_attrs(config.dev_dir, NULL);
++
++	/* also "read" scsi to initialize the data structures at least to empty strings */
++	/* TODO: same as above. */
++	read_scsi_attrs(config.dev_dir);
++
++	if (usb[idVendor]->value == NULL || usb[idProduct]->value == NULL
++	    || strlen(usb[idVendor]->value) + strlen(usb[idProduct]->value) < 8) {
++		modeswitch_log("USB IDs not found in sysfs tree. Exiting.\n");
++		return 1;
++	}
++
++	iface = 0;
++	if (if_chk) {
++		modeswitch_log("Check class of first interface ...\n");
++
++		iface = check_iface(0);
++		if (iface < 0) {
++			modeswitch_log(" No access to interface 0. Exit\n");
++			return 1;
++		} else {
++			modeswitch_log(" Device is in install mode.\n");
++		}
++	}
++	ifdir = get_iface_ifdir(iface);
++
++	modeswitch_log("Use interface %s", ifdir);
++
++	modeswitch_log("\n----------------\nUSB values from sysfs:\n");
++	for (i = 0; i < NUM_USB_ATTRS; i++) {
++		modeswitch_log("  %s\t%s\n", usb[i]->attr, usb[i]->value);
++	}
++	modeswitch_log("----------------\n");
++
++	if (noswitching) {
++		modeswitch_log("\nSwitching globally disabled. Exit.\n");
++		syslog(LOG_NOTICE, "usb_modeswitch: switching disabled, no action for %s:%s",
++		       usb[0]->value, usb[1]->value);
++		return 0;
++	}
++
++	if (strcmp(usb[bNumConfigurations]->value, "1") == 0) {
++		config.config_param = strdup("-u -1");
++		modeswitch_log("bNumConfigurations is 1 - don't check for active configuration\n");
++	}
++	else {
++		config.config_param = 0;
++	}
++
++	if (usb[devnum]->value != NULL && strlen(usb[devnum]->value) > 0)
++		asprintf(&config.dev_param, "-g %s", usb[devnum]->value);
++	else
++		config.dev_param = strdup("");
++
++	if (usb[busnum]->value != NULL && strlen(usb[busnum]->value) > 0)
++		asprintf(&config.bus_param, "-b %s", usb[busnum]->value);
++	else
++		config.bus_param = strdup("");
++
++	/*
++	 * Retrieve the full list of available configurations from the config pack,
++	 * but also look for files matching the USB ID name in config directories,
++	 * in /usr/share/usb-modeswitch and /etc/usb-modeswitch.d.
++	 *
++	 * Check (and switch) for the operating system if Huawei device present.
++	 */
++	version_fd = open("/proc/version", O_RDONLY);
++	version_rb = read(version_fd, &line, sizeof(line) - 1);
++	os_type = "linux";
++	if (version_rb != -1 && strcasestr(line, "android"))
++		os_type = "android";
++
++	asprintf(&config.config_name, "%s:%s", usb[idVendor]->value, usb[idProduct]->value);
++	config_get_list(config.config_name);
++
++	if (config.config_list == NULL) {
++		modeswitch_log("Aargh! Config file missing for $usb(idVendor):$usb(idProduct)! Exit.\n");
++		return 1;
++	}
++
++	/*
++	 * Look through the list of possible configurations available to find
++	 * the last to match. This is to make sure we get an overriding config
++	 * if one exists, or at least a config directly from the tarball.
++	 * If nothing matches, the config_name is a new device that nothing else
++	 * defines (the pack of configs, or files in /usr/share, or in /etc...
++	 */
++	selected_config = NULL;
++	for (i = 0; config.config_list[i] != NULL; i++) {
++		if (strstr(config.config_list[i], config.config_name) != NULL) {
++			selected_config = config.config_list[i];
++		}
++	}
++	if (selected_config == NULL) {
++		free(config.config_name);
++		asprintf(&config.config_name, "%s:#%s", usb[idVendor]->value, os_type);
++		for (i = 0; config.config_list[i] != NULL; i++) {
++			if (strstr(config.config_list[i], config.config_name) != NULL) {
++				selected_config = config.config_list[i];
++			}
++		}
++	}
++
++	scsi_needed = 0;
++	if (selected_config != NULL) {
++		int len = strlen (selected_config);
++		if (selected_config[len - 2] == ':' &&
++		    selected_config[len - 1] == 's')
++			scsi_needed = 1;
++	}
++
++	if (!scsi_needed)
++		modeswitch_log("SCSI attributes not needed, move on.\n");
++
++	// TODO: factor this out to another function (including ^).
++	/*
++	 * Getting the SCSI values via libusb results in a detached
++	 * usb-storage driver. Not good for devices that want to be
++	 * left alone. Fortunately, the sysfs tree provides the values
++	 * too without need for direct access
++	 *
++	 * First we wait until the SCSI data is ready - or timeout.
++	 * Timeout means: no storage driver was bound to the device.
++	 * We run 20 times max, every half second (max. 10 seconds
++	 * total)
++	 *
++	 * We also check if the device itself changes, probably
++	 * because it was switched by the kernel (or even unplugged).
++	 * Then we do simply nothing and exit quietly ...
++	 */
++
++	i = 0;
++	while (scsi_needed == 1 && i < 20) {
++		nanosleep(&sleep_500, NULL);
++		i++;
++		modeswitch_log("waiting for storage tree in sysfs\n");
++
++		asprintf(&sys_dir, "%s/%s", config.dev_dir, kernel_name);
++		if (access(sys_dir, X_OK) != 0) {
++			/* Device is gone. Unplugged? Switched by kernel? */
++			modeswitch_log("sysfs device tree is gone; exiting.\n");
++			return 1;
++		}
++
++		asprintf(&fname, "%s/product", config.dev_dir);
++
++		if (access(fname, F_OK) == 0) {
++			modeswitch_log("file name exists: %s\n", fname);
++		}
++		else {
++			modeswitch_log("file name not readable: %s\n", fname);
++			continue;
++		}
++
++		rc = fopen(fname, "r");
++		fgets(line, PATH_MAX, rc);
++		val = strdup(rtrim(line));
++		fclose(rc);
++
++		if (strcmp(val, usb[uPr]->value) != 0) {
++			/* Device has just changed. Switched by someone else? */
++			modeswitch_log("device has changed; exiting.\n");
++			return 0;
++		}
++		free(val);
++
++		/* Searching the storage/SCSI tree; might take a while.
++		 * The SCSI tree in sysfs needs to all be there, so we'll slowly
++		 * get through each of the subdirectories checking for existence:
++		 * first the /sys/devices/xxx/host* directory; then its target*
++		 * subdirectory. Only ever the first subdirectory with that name,
++		 * for USB modems they shouldn't have more anyway.
++		 */
++		asprintf(&val, "%s/host*", sys_dir);
++		glob_status = glob(val, 0, NULL, &path_glob);
++		if (glob_status == 0 && path_glob.gl_pathv[0] != NULL) {
++			asprintf(&sys_dir, "%s/target*", path_glob.gl_pathv[0]);
++			globfree(&path_glob);
++			free(val);
++			glob_status = glob(sys_dir, 0, NULL, &path_glob);
++			if (glob_status == 0 && path_glob.gl_pathv[0] != NULL) {
++				if (strstr(path_glob.gl_pathv[0], "target") != NULL) {
++					asprintf(&sys_dir, "%s/*", path_glob.gl_pathv[0]);
++					globfree(&path_glob);
++					glob_status = glob(sys_dir, 0, NULL, &path_glob);
++					if (glob_status == 0 && path_glob.gl_pathv[0] != NULL) {
++						asprintf(&val, "%s/vendor", path_glob.gl_pathv[0]);
++						free(sys_dir);
++						asprintf(&sys_dir, "%s", path_glob.gl_pathv[0]);
++						if (access(val, F_OK) == 0) {
++							/* Finally SCSI structure is ready, get the values */
++							read_scsi_attrs(sys_dir);
++							break;
++						}
++					}
++					globfree(&path_glob);
++				}
++			}
++			else
++				globfree(&path_glob);
++		}
++		else
++			globfree(&path_glob);
++	}
++
++	if (scsi_needed) {
++		if (i == 20 && strlen(scsi[sVe]->value) == 0) {
++			modeswitch_log("SCSI tree not found; you may want to check if this path/file exists:\n");
++			modeswitch_log("%s/vendor\n", sys_dir);
++		}
++		else {
++			modeswitch_log("----------------\nSCSI values from sysfs:");
++			modeswitch_log(" vendor\t%s\n", scsi[sVe]->value);
++			modeswitch_log(" model\t%s\n", scsi[sMo]->value);
++			modeswitch_log(" revision\t%s\n", scsi[sRe]->value);
++			modeswitch_log("----------------\n");
++		}
++		modeswitch_log("Waiting 2 secs. after SCSI device was added.\n");
++		sleep(2);
++	}
++	else {
++		nanosleep(&sleep_500, NULL);
++	}
++
++	/*
++	 * If SCSI tree in sysfs was not identified, try and get the values
++	 * from a (nonswitching) call of usb_modeswitch; this detaches the
++	 * storage driver, so it's just the last resort.
++	 */
++	if (scsi_needed && strcmp(scsi[sVe]->value, "") == 0) {
++		char *hex_vendor, *hex_product;
++		char *attr_name, *attr_val;
++		const char *line2;
++
++		asprintf(&hex_vendor, "0x%s", usb[idVendor]->value);
++		asprintf(&hex_product, "0x%s", usb[idProduct]->value);
++		asprintf(&tmpval, "%s/usb_modeswitch", BIN_DIR);
++		p = pipeline_new_command_args (tmpval,
++                                       "-v", hex_vendor,
++                                       "-p", hex_product,
++                                       "2>/dev/null", NULL);
++		free(tmpval);
++		free(hex_vendor);
++		free(hex_product);
++		pipeline_want_out (p, -1);
++		pipeline_start (p);
++
++		regcomp(&reg, "(Vendor|Model|Revision) String: (.*?)", REG_EXTENDED);
++
++		while ((line2 = pipeline_readline(p)) != NULL) {
++			tmp = rtrim(strdup(line2));
++			if (regexec(&reg, line2, 3, match, 0) == 0) {
++				attr_name = substring(tmp,
++								   match[1].rm_so,
++								   match[1].rm_eo - match[1].rm_so);
++				attr_val = substring(tmp,
++                                   match[2].rm_so,
++                                   match[2].rm_eo - match[2].rm_so);
++
++				i = -1;
++				if (strcmp(attr_name, "Vendor") == 0)
++					i = sVe;
++				else if (strcmp(attr_name, "Model") == 0)
++					i = sMo;
++				else if (strcmp(attr_name, "Revision") == 0)
++					i = sRe;
++
++				if (i != -1) {
++					scsi[i]->attr = strdup(scsi_attrs[i]);
++					scsi[i]->value = attr_val;
++				}
++			}
++		}
++		regfree(&reg);
++
++		modeswitch_log("SCSI values from usb_modeswitch:\n");
++		modeswitch_log(" vendor\t%s\n", scsi[sVe]->value);
++		modeswitch_log(" model\t%s\n", scsi[sMo]->value);
++		modeswitch_log(" revision\t%s\n", scsi[sRe]->value);
++	}
++	modeswitch_log("\n");
++
++	/* General wait - this is important (1.2.3) */
++	nanosleep(&sleep_500, NULL);
++
++	/*
++	 * Now check for a matching config file. Matching is done by match_device()
++	 */
++	selected_config = NULL;
++	for (i = 0; config.config_list[i] != NULL; i++) {
++		if (strstr(config.config_list[i], config.config_name) != NULL &&
++                    match_device(config.config_list[i])) {
++			selected_config = config.config_list[i];
++		}
++		//else
++		//	modeswitch_log("* no match, not switching with this config\n");
++	}
++
++	if (selected_config != NULL) {
++		if (config_get_config (selected_config) != NULL) {
++			parse_device_config (config.device_config);
++			if (config.wait_before == 0) {
++				modeswitch_log("! matched, now switching\n");
++			}
++			else {
++				modeswitch_log("Delay time of %d seconds.\n", config.wait_before);
++				sleep(config.wait_before);
++				modeswitch_log(" wait is over, start mode switch.\n");
++			}
++
++			asprintf(&config.vendor_product_param, "-v %s -p %s", usb[idVendor]->value, usb[idProduct]->value);
++
++			if (config.no_mbim_check == 0
++			    && strcmp(usb[bNumConfigurations]->value, "1") > 0) {
++				modeswitch_log("Device may have an MBIM configuration, check driver ...\n");
++				if (check_mbim_available()) {
++					modeswitch_log(" driver for MBIM devices is available\n");
++					modeswitch_log("Find MBIM configuration number ...\n");
++					asprintf(&msg,
++						"%s/usb_modeswitch -j -Q %s %s %s 2>&1",
++						BIN_DIR,
++						config.bus_param,
++						config.dev_param,
++						config.vendor_product_param);
++					p = pipeline_new();
++					pipeline_command_argstr (p, msg);
++					pipeline_want_out (p, -1);
++					pipeline_start (p);
++					tmp = pipeline_readline(p);
++					mbim_cfg_no = atoi(tmp);
++					if (mbim_cfg_no > 0) {
++						config.target_config = mbim_cfg_no;
++						config.driver_module = 0;
++						free(config.device_config);
++						config.device_config = strdup(DEFAULT_TMPCONFIG);
++						rc = fopen(config.device_config, "w");
++						fprintf(rc, "Configuration=%d\n", mbim_cfg_no);
++						fclose(rc);
++					} else {
++						modeswitch_log(" No MBIM configuration found, switch to legacy modem mode\n");
++					}
++				} else {
++					modeswitch_log(" no MBIM driver found, switch to legacy modem mode\n");
++				}
++			}
++
++			unbind_driver (config.dev_dir, ifdir);
++
++			/* Now we are actually switching */
++			no_driver_loading = 0;
++			found_ok = 0;
++			asprintf(&msg,
++					"%s/usb_modeswitch %s -D -s 20 -c %s %s %s %s %s 2>&1",
++					BIN_DIR,
++					logging ? "-W" : "-Q",
++					config.device_config,
++					config.config_param,
++					config.bus_param,
++					config.dev_param,
++					config.vendor_product_param);
++			p = pipeline_new();
++			pipeline_command_argstr (p, msg);
++			pipeline_want_out (p, -1);
++			pipeline_start (p);
++			if (logging) {
++				modeswitch_log("Command to be run:\n%s\n\n", msg);
++				modeswitch_log("Verbose debug output of usb_modeswitch and libusb follows\n");
++				modeswitch_log("(Note that some USB errors are expected in the process)\n");
++				modeswitch_log("--------------------------------\n");
++			}
++			free(msg);
++			no_data = read_pipeline(p, logging, &no_driver_loading, &found_ok);
++			if (logging) {
++				modeswitch_log("--------------------------------\n");
++				modeswitch_log("(end of usb_modeswitch output)\n");
++			}
++			pipeline_free(p);
++			if (strstr(config.device_config, "current_cfg") != NULL) {
++				unlink(config.device_config);
++			}
++		}
++	}
++	else {
++		modeswitch_log("Aargh! Config file missing for %s! Exiting.\n", config.config_name);
++		return 1;
++	}
++
++	/*
++	 * Switching is complete; success checking was either
++	 * done by usb_modeswitch and logged via syslog OR bus/dev
++	 * parameter were used; then we do check for success HERE
++	 */
++	if (config.target_config != -1) {
++		char *confval = strrchr(ifdir, ':');
++		if (confval) {
++			char *ifdir_base;
++			int len = strlen(ifdir) - strlen(confval);
++
++			ifdir_base = strndup(ifdir, len);
++			free(ifdir);
++			asprintf(&ifdir, "%s:%d.0", ifdir_base, config.target_config);
++			free(ifdir_base);
++		}
++	}
++
++	if (found_ok == 1) {
++		if (check_success(config.dev_dir)) {
++			modeswitch_log ("Mode switching was successful, found %s:%s (%s: %s)",
++			                usb[idVendor]->value, usb[idProduct]->value,
++			                usb[uMa]->value, usb[uPr]->value);
++			syslog(LOG_NOTICE, "usb_modeswitch: switched to %s:%s on %s/%s",
++			       usb[idVendor]->value, usb[idProduct]->value,
++			       usb[busnum]->value, usb[devnum]->value);
++		}
++		else {
++			modeswitch_log ("Target config not matching - current values are:\n");
++			log_attributes();
++			modeswitch_log ("\nMode switching may have failed. Exit\n");
++			return 1;
++		}
++	}
++	else {
++		if (access(config.dev_dir, X_OK) != 0) {
++			modeswitch_log("Device directory in sysfs is done! Something went wrong, abort.\n");
++			return 1;
++		}
++
++		/* Give the device another second if it's not fully back yet. */
++		asprintf(&fname, "%s/idProduct", config.dev_dir);
++		if (access(fname, F_OK) != 0) {
++			sleep(1);
++			if (access(fname, F_OK) != 0)
++				sleep(1);
++		}
++		if (access(fname, F_OK) == 0) {
++			read_usb_attrs(config.dev_dir, ifdir);
++		}
++	}
++
++	if (found_ok == 1 && config.driver_module != 0 && device_iface_class != NULL && strlen(device_iface_class) > 0) {
++		if (!strstr(device_iface_class, "ff")) {
++			config.driver_module = 0;
++			modeswitch_log (" No vendor-specific class found, skip driver check\n");
++		}
++	}
++
++	if (found_ok == 1 && config.driver_module) {
++		if(strlen(usb[idVendor]->value) > 4 &&
++		   strlen(usb[idProduct]->value) > 4 &&
++		   strcmp(usb[idVendor]->value, "0000") != 0 &&
++		   strcmp(usb[idProduct]->value, "0000") != 0) {
++			if (no_data)
++				modeswitch_log("Libusb1 bug prevented device searching, and device ID not found afterwards.\n");
++			modeswitch_log("No vendor/product ID found or given, can't continue. Abort.\n");
++			return 1;
++		}
++
++
++		/* wait for any drivers to bind automatically */
++		sleep(1);
++
++		modeswitch_log("Now check for bound driver ...\n");
++		asprintf(&val, "%s/%s/driver", config.dev_dir, ifdir);
++		if (access(val, F_OK) != 0) {
++			modeswitch_log(" no driver has bound to interface 0 yet\n");
++
++			add_to_list("link_list", config.config_name);
++
++			/* If device is known, the sh wrapper will take care, else: */
++			if (in_bind_list(config.config_name) == 0) {
++				modeswitch_log("Device not in \"bind_list\" yet, bind it now\n");
++
++				/* load driver */
++				check_driver_bind(usb[idVendor]->value, usb[idProduct]->value);
++
++				/* Old/slow systems may take a while to create the devices */
++				counter = 0;
++				while (access(val, F_OK) != 0) {
++					if (counter == 14)
++						break;
++					nanosleep(&sleep_500, NULL);
++					counter++;
++				}
++				if (counter == 14) {
++					modeswitch_log(" driver binding failed\n");
++				}
++				else {
++					modeswitch_log(" driver was bound to the device\n");
++					add_to_list("bind_list", config.config_name);
++				}
++			}
++		}
++		else {
++			modeswitch_log(" driver has bound, device is known\n");
++			asprintf(&tmpval, "%s/%s/ttyUSB*", config.dev_dir, ifdir);
++			glob_status = glob(tmpval, 0, NULL, &path_glob);
++			if (glob_status == 0 && path_glob.gl_pathv[0] != NULL) {
++				add_to_list("link_list", config.config_name);
++			}
++			globfree(&path_glob);
++			free(tmpval);
++		}
++		free(val);
++	}
++	else {
++		/* Just in case "NoDriverLoading" was added after the first bind */
++		remove_from_bind_list (config.config_name);
++	}
++
++	if (config.driver_loading == 0) {
++		/* "NoDriverLoading" was set */
++		modeswitch_log("Doing no driver check or bind for this device\n");
++	}
++
++	/*
++	 * In newer kernels there is a switch to avoid the use of a device
++	 * reset (e.g. from usb-storage) which would likely switch back
++	 * a mode-switching device.
++	 */
++	if (found_ok == 1) {
++		modeswitch_log("Check for AVOID_RESET_QUIRK kernel attribute\n");
++		asprintf(&fname, "%s/avoid_reset_quirk", config.dev_dir);
++		if (access(fname, F_OK) == 0) {
++			int fd = open(fname, O_WRONLY);
++			if (fd < 0)
++				perror("Error opening quirk file");
++			if (write(fd, "1", 1) > 0)
++				modeswitch_log(" AVOID_RESET_QUIRK activated\n");
++			else
++				perror(" Error setting the attribute");
++		}
++		else
++			modeswitch_log(" not present in this kernel\n");
++	}
++
++	modeswitch_log("\nAll done, exit\n\n");
++
++	return 0;
++}
++
++int read_pipeline (pipeline *p, int logging, int* no_driver_loading, int* found_ok)
++{
++	regex_t reg_ids, reg_nodata;
++	regmatch_t *match;
++	const char *tmp;
++	char *tmpval;
++	int no_data = 0;
++
++	regcomp(&reg_ids, "ok:([0-9a-f]{4}):([0-9a-f]{4})", REG_EXTENDED | REG_ICASE);
++	regcomp(&reg_nodata, "ok:no_data", REG_EXTENDED | REG_ICASE);
++	match = malloc(sizeof(*match) * 3);
++
++	while ((tmp = pipeline_readline(p)) != NULL) {
++		if (strstr(tmp, "ok:")) {
++			if (regexec(&reg_ids, tmp, 3, match, 0) == 0) {
++				tmpval = substring(tmp,
++						   match[1].rm_so,
++						   match[1].rm_eo - match[1].rm_so);
++				usb[idVendor]->value = strdup(tmpval);
++				tmpval = substring(tmp,
++						   match[2].rm_so,
++						   match[2].rm_eo - match[2].rm_so);
++				usb[idProduct]->value = strdup(tmpval);
++				*found_ok = 1;
++			}
++			if (regexec(&reg_nodata, tmp, 0, NULL, 0) == 0) {
++				no_data = 1;
++				*found_ok = 1;
++			}
++			if (strstr(tmp, "ok:busdev")) {
++				*found_ok = 1;
++			}
++		}
++
++		if (logging)
++			modeswitch_log("%s", tmp);
++	}
++
++	regfree(&reg_ids);
++	regfree(&reg_nodata);
++	free(match);
++
++	return no_data;
++}
++
++char* substring(const char* str, size_t begin, size_t len)
++{
++	if (str == 0 || strlen(str) == 0 || strlen(str) < begin || strlen(str) < (begin+len))
++		return 0;
++
++	return strndup(str + begin, len);
++}
++
++char* rtrim(char *s)
++{
++    char* back = s + strlen(s);
++
++    while(back >= s && isspace(*--back));
++
++    *(back+1) = '\0';
++
++    return s;
++}
++
++void free_list(struct list_entry *list)
++{
++	struct list_entry *entry, *copy;
++
++	entry = list;
++	while(entry != NULL && entry->data != NULL) {
++		copy = entry->next;
++		free(entry->data);
++		free(entry);
++		entry = copy;
++	}
++
++	return;
++}
++
++char* join_path(char *base_path, char *add_path)
++{
++	char *cleanpath = malloc(PATH_MAX);
++	char *token;
++
++	memset(cleanpath, '\0', 1);
++
++	token = strtok(base_path, "/");
++	while (token != NULL) {
++		if (strcmp(token, "..") == 0) {
++			token = strtok(NULL, "/");
++			continue;
++		}
++		else {
++			strcat(cleanpath, "/");
++			strcat(cleanpath, token);
++		}
++		token = strtok(NULL, "/");
++	}
++	token = NULL;
++
++	token = strtok(add_path, "/");
++	while (token != NULL) {
++		if (strcmp(token, "..") == 0) {
++			cleanpath = dirname(strdup(cleanpath));
++			token = strtok(NULL, "/");
++			continue;
++		}
++		else {
++			strcat(cleanpath, "/");
++			strcat(cleanpath, token);
++		}
++		token = strtok(NULL, "/");
++	}
++	return cleanpath;
++}
++
++int parse_global_config()
++{
++
++	char* temp_val;
++	char line[PATH_MAX];
++	int i, j;
++	FILE *rc;
++	regex_t disable_switching_re, enable_logging_re, storagedelay_re;
++	regmatch_t *disable_switching_m = NULL, *enable_logging_m = NULL;
++	regmatch_t *storage_delay_m = NULL;
++
++	for ( i = 0; config_places[i] != NULL; i++) {
++		j = access(config_places[i], F_OK);
++		if (j == 0) {
++			config_file = strdup(config_places[i]);
++			break;
++		}
++	}
++
++	if (config_file == NULL) {
++		perror("no config file readable");
++		return 1;
++	}
++
++	rc = fopen(config_file, "r");
++
++	if (regcomp(&disable_switching_re, "^DisableSwitching[[:space:]]*=[[:space:]]*([^[:space:]]+)", REG_EXTENDED) != 0) {
++		return 1;
++	}
++
++	if (regcomp(&enable_logging_re, "^EnableLogging[[:space:]]*=[[:space:]]*([^[:space:]]+)", REG_EXTENDED) != 0) {
++		regfree (&disable_switching_re);
++		return 1;
++	}
++
++	if (regcomp(&storagedelay_re, "^SetStorageDelay[[:space:]]*=[[:space:]]*([^[:space:]]+)", REG_EXTENDED) != 0) {
++		regfree (&disable_switching_re);
++		return 1;
++	}
++
++	disable_switching_m = malloc(sizeof(*disable_switching_m)*2);
++	enable_logging_m = malloc(sizeof(*enable_logging_m)*2);
++	storage_delay_m = malloc(sizeof(*storage_delay_m)*2);
++
++	while (fgets(line, PATH_MAX, rc) != NULL) {
++		if (regexec(&disable_switching_re, line, 2, disable_switching_m, 0) == 0) {
++			temp_val = substring(line,
++						disable_switching_m[1].rm_so,
++						disable_switching_m[1].rm_eo - disable_switching_m[1].rm_so);
++			noswitching = atoi(temp_val);
++			free(temp_val);
++		}
++		if (regexec(&enable_logging_re, line, 2, enable_logging_m, 0) == 0) {
++			temp_val = substring(line,
++						enable_logging_m[1].rm_so,
++						enable_logging_m[1].rm_eo - enable_logging_m[1].rm_so);
++			logging = atoi(temp_val);
++			free(temp_val);
++		}
++		if (regexec(&storagedelay_re, line, 2, storage_delay_m, 0) == 0) {
++			temp_val = substring(line,
++						storage_delay_m[1].rm_so,
++						storage_delay_m[1].rm_eo - storage_delay_m[1].rm_so);
++			stordelay = atoi(temp_val);
++			free(temp_val);
++		}
++	}
++	fclose (rc);
++
++	regfree(&disable_switching_re);
++	regfree(&enable_logging_re);
++	regfree(&storagedelay_re);
++	free(disable_switching_m);
++	free(enable_logging_m);
++	free(storage_delay_m);
++
++	modeswitch_log("Use global config file: %s\n\n", config_file);
++
++	return 0;
++}
++
++int has_interrupt (char* if_dir)
++{
++	DIR *dir;
++	FILE *dev_type;
++	struct dirent *ent;
++	int found_tty = 0, ret_val = 0;
++	char *fname = NULL, line[PATH_MAX];
++
++	dir = opendir (if_dir);
++	if (dir != NULL) {
++		while ((ent = readdir (dir)) != NULL) {
++			if (strncmp (ent->d_name, "ttyUSB", 6)) {
++				found_tty = 1;
++				break;
++			}
++		}
++		closedir (dir);
++
++		dir = NULL;
++		dir = opendir (if_dir);
++		if (dir != NULL && found_tty == 1) {
++			while ((ent = readdir (dir)) != NULL) {
++				if (strncmp (ent->d_name, "ep_", 3)) {
++					asprintf(&fname, "%s/%s/type", if_dir, ent->d_name);
++					dev_type = fopen(fname, "r");
++					free (fname);
++					if (dev_type != NULL) {
++						while (fgets(line, PATH_MAX, dev_type) != NULL) {
++							if (strstr(line, "Interrupt")) {
++								modeswitch_log("\n %s has interrupt transfer type\n", if_dir);
++								ret_val = 1;
++								break;
++							}
++						}
++						/*R: break-before-close fd leak */
++						fclose (dev_type);
++					}
++				}
++				if (ret_val == 1) {
++					break;
++				}
++			}
++		}
++		else {
++			ret_val = 0;
++		}
++		closedir (dir);
++	}
++	else {
++		//perror ("");
++		ret_val = -1;
++	}
++
++	return ret_val;
++}
++
++/*R: review done until here */
++
++/* Checking for interrupt endpoint in ttyUSB port (lowest if there is
++ * more than one); if found, check for unused "gsmmodem[n]" name.
++ * Link for first modem will be "gsmmodem", then "gsmmodem2" and up
++ */
++char* symlink_name (char* path)
++{
++	char rawpath_buf[PATH_MAX], dev_rawpath_buf[PATH_MAX];
++	char *msg, *dev_linkpath, *linkpath, *trimpath, *cleanpath;
++	char re_str[PATH_MAX];
++	char *dev_top, *if_root, *if_dir;
++	char *symlink_name, *symlink_basename;
++	char *token, *w_token, *dev_dir;
++	int my_if;
++	int seen = 0;
++	int n_chars, right_port, i, idx, x;
++	struct stat buf;
++	regex_t re;
++	regmatch_t *match;
++
++	asprintf(&msg, "usb_modeswitch called with --symlink-name\n parameter: %s\n", path);
++	modeswitch_log("%s\n", msg);
++
++	/* In case the device path is returned as /class/tty/ttyUSB,
++	 * get the USB device path from linked tree "device"
++	 */
++	asprintf(&linkpath, "/sys%s", path);
++	asprintf(&dev_linkpath, "/sys%s/device", path);
++	x = lstat (linkpath, &buf);
++	if (x == 0) {
++		if (S_ISLNK (buf.st_mode)) {
++			n_chars = readlink (linkpath, rawpath_buf, PATH_MAX);
++			rawpath_buf[n_chars] = '\0';
++			n_chars = readlink (dev_linkpath, dev_rawpath_buf, PATH_MAX);
++			dev_rawpath_buf[n_chars] = '\0';
++			if (n_chars > 0) {
++				trimpath = basename ((char*)dev_rawpath_buf);
++			}
++		}
++	}
++	else
++		perror("Couldn't read path for symlink name");
++
++	cleanpath = join_path((char*)rawpath_buf, (char*)dev_rawpath_buf);
++	modeswitch_log("\n Use path %s\n", cleanpath);
++
++	if (regcomp(&re, "ttyUSB[0-9]+", REG_EXTENDED) != 0) {
++			return NULL;
++	}
++	if (regexec(&re, (char*)cleanpath, 0, NULL, 0) != 0) {
++		modeswitch_log("Could not find port name in path\n %s. Abort", cleanpath);
++		return NULL;
++	}
++	regfree(&re);
++
++	device = trimpath;
++	modeswitch_log("My name is %s\n", trimpath);
++
++	//TODO: strip the doubledots off rawpath
++
++	if (regcomp(&re, "usb[0-9]+/([0-9]+-[0-9]+)/", REG_EXTENDED) != 0) {
++			return NULL;
++	}
++	match = malloc(sizeof(*match)*2);
++	if (regexec(&re, cleanpath, 2, match, 0) == 0) {
++		dev_top = substring(cleanpath,
++							match[1].rm_so,
++							match[1].rm_eo - match[1].rm_so);
++	}
++	else {
++		modeswitch_log("Could not find device directory in path\n %s. Aborting", cleanpath);
++		return NULL;
++	}
++	regfree(&re);
++	free(match);
++
++	match = malloc(sizeof(*match)*2);
++	sprintf(re_str, "[0-9]+\\.([0-9]+)/%s", trimpath);
++	if (regcomp(&re, re_str, REG_EXTENDED) != 0) {
++		return NULL;
++	}
++	if (regexec(&re, cleanpath, 2, match, 0) == 0) {
++		my_if = atoi(substring(cleanpath,
++							match[1].rm_so,
++							match[1].rm_eo - match[1].rm_so));
++	}
++	else {
++		modeswitch_log("Could not find interface number in path\n %s. Abort", cleanpath);
++		return NULL;
++	}
++	regfree(&re);
++	free(match);
++
++	match = malloc(sizeof(*match)*2);
++	sprintf(re_str, "^.*(%s[:/])[0-9]", dev_top);
++	if (regcomp(&re, re_str, REG_EXTENDED) != 0) {
++		return NULL;
++	}
++
++	if (regexec(&re, cleanpath, 2, match, 0) == 0) {
++		if_root = substring(cleanpath,
++							match[0].rm_so,
++							match[0].rm_eo - match[0].rm_so);
++	}
++	else {
++		modeswitch_log("Could not find interface root number in path\n %s. Aborting", cleanpath);
++		return NULL;
++	}
++	regfree(&re);
++	free(match);
++
++	modeswitch_log("\n");
++
++	dev_dir = malloc(PATH_MAX);
++	memset(dev_dir, '\0', 1);
++	token = strtok(strdup(cleanpath), "/");
++	while (token != NULL) {
++		if (strcmp(token, dev_top) == 0) {
++			seen = 1;
++		}
++		w_token = strdup(token);
++		token = strtok(NULL, "/");
++		if (seen == 0) {
++			strcat(dev_dir, "/");
++			strcat(dev_dir, w_token);
++		}
++	}
++
++	modeswitch_log("My port is %s, my interface is %d\n", trimpath, my_if);
++	modeswitch_log(" devDir: %s\n dev_top: %s\n sysPath: %s\n", dev_dir, dev_top, cleanpath);
++	modeswitch_log(" ifRoot: %s\n", if_root);
++
++	asprintf(&if_dir, "/sys%s.%d", if_root, my_if);
++
++	modeswitch_log("\nCheck my endpoints in %s", if_dir);
++	if (has_interrupt(if_dir) == 1) {
++		modeswitch_log("\n--> I am an interrupt port\n");
++		right_port = 1;
++	}
++	else {
++		modeswitch_log("\n--> I am not an interrupt port\n");
++		right_port = 0;
++	}
++
++
++	/* There are devices with more than one interrupt interface.
++	 * Assume that the lowest of these is usable. Check all
++	 * possible lower interfaces.
++	 */
++	if ( right_port == 1 && my_if > 0 ) {
++		modeswitch_log ("Look for lower ports with interrupt endpoints");
++		for (i = 0; i < my_if; i++) {
++			sprintf(if_dir, "/sys%s.%d", if_root, i);
++			modeswitch_log (" in ifDir %s ...", if_dir);
++			if (has_interrupt (if_dir) == 1) {
++				modeswitch_log ("\n--> found an interrupt interface below me\n");
++				right_port = 0;
++				break;
++			}
++		}
++	}
++
++	if (right_port == 0) {
++		modeswitch_log ("Return empty name and exit\n");
++		return strdup("");
++	}
++
++	modeswitch_log ("\n--> No interrupt interface below me\n");
++
++	idx = 2;
++	asprintf (&symlink_basename, "gsmmodem");
++	while ( idx < 256 ) {
++		asprintf(&symlink_name, "%s%d", symlink_basename, idx);
++		x = lstat (symlink_name, &buf);
++		if (x != 0)
++			break;
++		free(symlink_name);
++		symlink_name = NULL;
++		idx++;
++	}
++	free (symlink_basename);
++
++	if (symlink_name != NULL) {
++		modeswitch_log ("Return symlink name \"%s\" and exit\n", symlink_name);
++		return symlink_name;
++	}
++	else {
++		return NULL;
++	}
++}
++
++void unbind_driver (char *devdir, char *ifdir)
++{
++	char *driver_path;
++	int fd = -1;
++	int c = -1;
++
++	asprintf(&driver_path, "%s/%s/driver/unbind", devdir, ifdir);
++
++	modeswitch_log("Unbinding driver\n");
++
++	fd = open(driver_path, O_WRONLY);
++	if (fd > -1) {
++		c = write(fd, ifdir, strlen(ifdir));
++		if (c != strlen(ifdir))
++			modeswitch_log("Error while trying to unbind driver.\n");
++		close(fd);
++	}
++
++	free(driver_path);
++}
++
++/*
++ *  Load and bind driver (default "option")
++ */
++void check_driver_bind (char* vid, char* pid)
++{
++	const char *path_raw;
++	char *path = NULL;
++	char *token = NULL;
++	char *loader = NULL, *id_file;
++	char *vendor_spec, *product_spec;
++	struct stat buf;
++	int i, x, status;
++	pipeline *p;
++	FILE *new_id_f;
++
++	path_raw = getenv("PATH");
++	if (path_raw) {
++		path = strdup(path_raw);
++		token = strtok(path, ":");
++		while (token != NULL) {
++			asprintf(&loader, "%s/%s", token, MODPROBE);
++			x = lstat (loader, &buf);
++			if (x == 0)
++				break;
++			else {
++				free(loader);
++				loader = NULL;
++			}
++			token = strtok(NULL, ":");
++		}
++		token = NULL;
++		free(path);
++	} else {
++		asprintf(&loader, "%s", MODPROBE);
++	}
++
++	modeswitch_log("Module loader is %s\n", loader);
++
++	asprintf(&id_file, "%s/new_id", config.driver_id_path);
++	x = lstat(id_file, &buf);
++	if (x != 0) {	/* if id_file (new_id file for module) doesn't exist... */
++		if (loader == NULL) {
++			modeswitch_log("Can't do anymore without module loader; get \"modtools\"!\n");
++			return;
++		}
++
++		modeswitch_log("\nTry to load module \"%s\"\n", config.driver_module);
++
++		p = pipeline_new_command_args (loader, config.driver_module, NULL);
++		status = pipeline_run(p);
++		if (status != 0) {
++			modeswitch_log(" Running \"%s %s\" gave an error: %d\n", loader, config.driver_module, status);
++			perror("");
++		}
++		else {
++			modeswitch_log(" Module was loaded successfully: %d\n", status);
++		}
++	}
++	else {
++		modeswitch_log("Module is active already\n");
++	}
++
++	i = 0;
++	while (i < 50) {
++		x = lstat(id_file, &buf);
++		if (x == 0)
++			break;
++		sleep(20);
++		i++;
++	}
++
++	if (i < 50) {
++		modeswitch_log("Try to add ID to driver \"%s\"\n", config.driver_module);
++		syslog(LOG_NOTICE, "usb_modeswitch: add device ID %s:%s to driver %s", vid, pid, config.driver_module);
++		syslog(LOG_NOTICE, "usb_modeswitch: please report the device ID to the Linux USB developers!");
++		new_id_f = fopen(id_file, "a");
++		if (new_id_f != NULL) {
++			if (fprintf(new_id_f, "%s %s ff", vid, pid) > 0) {
++				modeswitch_log(" ID added to driver; check for new devices in /dev\n");
++			}
++			else {
++				modeswitch_log("Error adding ID to driver\n");
++			}
++		}
++		else {
++			modeswitch_log("Couldn't open ID file for writing\n");
++		}
++	}
++	else {
++		modeswitch_log(" \"%s\" not found, check if kernel version is at least 2.6.27\n",
++				id_file);
++		modeswitch_log("Fall back to \"usbserial\"");
++		asprintf(&config.driver_module, "usbserial");
++		modeswitch_log("\nTry to unload driver \"%s\"\n", config.driver_module);
++		p = pipeline_new_command_args (loader, "-r", config.driver_module, NULL);
++		status = pipeline_run (p);
++		if (status != 0) {
++			modeswitch_log(" Running \"%s %s\" gave an error: %d\n", loader, config.driver_module, status);
++			modeswitch_log("No more fallbacks.\n");
++			return;
++		}
++
++		sleep(50);
++
++		modeswitch_log("\nTry to load driver \"usbserial\" with device IDs\n");
++		asprintf(&vendor_spec, "vendor=0x%s", vid);
++		asprintf(&product_spec, "product=0x%s", pid);
++		p = pipeline_new_command_args (loader, "-v usbserial", vendor_spec, product_spec, NULL);
++		free(vendor_spec);
++		free(product_spec);
++		status = pipeline_run (p);
++		if (status != 0) {
++			modeswitch_log(" Running \"%s usbserial\" gave an error:\n %d\n", loader, status);
++		}
++		else {
++			modeswitch_log(" Driver was loaded successfully:\n%d\n", status);
++		}
++	}
++
++	free (loader);
++
++	return;
++}
++
++int parse_device_config (char *device_config)
++{
++	char *temp_val = NULL;
++	char line[PATH_MAX];
++	FILE* rc;
++	regex_t module_re, path_re, wb_re, class_re, config_re, success_re, vendor_re, product_re;
++	regex_t product_list_re, driver_loading_re, mbim_check_re;
++	regmatch_t *match_m = NULL;
++
++	config.driver_module = 0;
++	config.driver_id_path = 0;
++	config.wait_before = 0;
++	config.target_class = 0;
++	config.target_vendor = 0;
++	config.target_product = 0;
++	config.target_config = -1; /* set as default a value that bConfigurationValue should never have */
++	config.check_success = 20;
++	config.driver_loading = 1;
++	config.no_mbim_check = 0;
++
++	rc = fopen(device_config, "r");
++
++	regcomp(&module_re, "^DriverModule[[:space:]]*=[[:space:]]*[[:punct:]]?([[:alnum:]_]*)[[:punct:]]?", REG_EXTENDED);
++	regcomp(&path_re, "^DriverIDPath[[:space:]]*=[[:space:]]*[[:punct:]]?([[:alnum:]_/:-]+)[[:punct:]]?", REG_EXTENDED);
++	regcomp(&wb_re, "^WaitBefore[[:space:]]*=[[:space:]]*([0-9]+)", REG_EXTENDED);
++	regcomp(&vendor_re, "^TargetVendor[[:space:]]*=[[:space:]]*0x([[:alnum:]]+)[[:space:]]?$", REG_EXTENDED);
++	regcomp(&product_re, "^TargetProduct[[:space:]]*=[[:space:]]*0x([[:alnum:]]+)[[:space:]]?$", REG_EXTENDED);
++	regcomp(&product_list_re, "^TargetProductList[[:space:]]*=[[:space:]]*[[:punct:]]?([0-9a-fA-F,]+)[[:punct:]]?[[:space:]]?$", REG_EXTENDED);
++	regcomp(&class_re, "^TargetClass[[:space:]]*=[[:space:]]*0x([[:alnum:]]+)[[:space:]]?$", REG_EXTENDED);
++	regcomp(&config_re, "^Configuration[[:space:]]*=[[:space:]]*([0-9]+)", REG_EXTENDED);
++	regcomp(&success_re, "^CheckSuccess[[:space:]]*=[[:space:]]*([0-9]+)", REG_EXTENDED);
++	regcomp(&driver_loading_re, "^NoDriverLoading[[:space:]]*=[[:space:]]*(1|yes|true)[[:space:]]?$", REG_EXTENDED);
++	regcomp(&mbim_check_re, "^NoMBIMCheck[[:space:]]*=[[:space:]]*([0-9]+)", REG_EXTENDED);
++
++	while (fgets(line, PATH_MAX, rc) != NULL) {
++		match_m = malloc(sizeof(*match_m)*2);
++		if (regexec(&module_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			asprintf(&config.driver_module, "%s", temp_val);
++			modeswitch_log("config: DriverModule set to %s\n", config.driver_module);
++		}
++		else if (regexec(&path_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			asprintf(&config.driver_id_path, "%s", temp_val);
++			modeswitch_log("config: DriverIDPath set to %s\n", config.driver_id_path);
++		}
++		else if (regexec(&class_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			asprintf(&config.target_class, "%s", temp_val);
++			modeswitch_log("config: TargetClass set to %s\n", config.target_class);
++		}
++		else if (regexec(&vendor_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			asprintf(&config.target_vendor, "%s", temp_val);
++			modeswitch_log("config: TargetVendor set to %s\n", config.target_vendor);
++		}
++		else if (regexec(&product_re, line, 2, match_m, 0) == 0 ||
++		         regexec(&product_list_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			asprintf(&config.target_product, "%s", temp_val);
++			modeswitch_log("config: TargetProduct set to %s\n", config.target_product);
++		}
++		else if (regexec(&wb_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			config.wait_before = atoi(temp_val);
++			modeswitch_log("config: WaitBefore set to %d\n", config.wait_before);
++		}
++		else if (regexec(&config_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			config.target_config = atoi(temp_val);
++			modeswitch_log("config: Configuration set to %d\n", config.target_config);
++		}
++		else if (regexec(&success_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			config.check_success = atoi(temp_val);
++			modeswitch_log("config: CheckSuccess set to %d\n", config.check_success);
++		}
++		else if (regexec(&mbim_check_re, line, 2, match_m, 0) == 0) {
++			temp_val = substring(line,
++			                     match_m[1].rm_so,
++			                     match_m[1].rm_eo - match_m[1].rm_so);
++			config.no_mbim_check = atoi(temp_val);
++			modeswitch_log("config: NoMBIMCheck set to %d\n", config.no_mbim_check);
++		}
++		else if (regexec(&driver_loading_re, line, 2, match_m, 0) == 0) {
++			config.driver_loading = 0;
++        		modeswitch_log("config: NoDriverLoading is set to active\n");
++		}
++		free(match_m);
++	}
++
++	fclose(rc);
++
++	if (temp_val != NULL)
++		free(temp_val);
++
++	regfree(&module_re);
++	regfree(&path_re);
++	regfree(&wb_re);
++	regfree(&vendor_re);
++	regfree(&product_re);
++	regfree(&product_list_re);
++	regfree(&class_re);
++	regfree(&config_re);
++	regfree(&success_re);
++	regfree(&driver_loading_re);
++
++	/*
++	 * For general driver loading; TODO: add respective device names.
++	 * Presently only useful for HSO devices (which are recounted now).
++	 */
++	if (config.driver_loading) {
++		if (!config.driver_module || strlen(config.driver_module) == 0) {
++			asprintf(&config.driver_module, "option");
++			asprintf(&config.driver_id_path, "/sys/bus/usb-serial/drivers/option1");
++		}
++		else {
++			if (!config.driver_id_path || strlen(config.driver_id_path) == 0)
++				asprintf(&config.driver_id_path, "/sys/bus/usb/drivers/%s", config.driver_module);
++		}
++		modeswitch_log("Driver module is \"%s\", ID path is %s\n", config.driver_module, config.driver_id_path);
++	}
++	else
++		modeswitch_log("Driver will not be handled by usb_modeswitch\n");
++
++	return 1;
++}
++
++void remove_from_bind_list (char *id)
++{
++	FILE *bind_list_f;
++	char line[PATH_MAX];
++	char *text;
++	struct list_entry *bind_id, *entry, *copy;
++
++	bind_list_f = fopen (BIND_LIST, "r");
++
++	if (bind_list_f != NULL) {
++		bind_id = malloc (sizeof(*bind_id));
++		entry = bind_id;
++
++		if (fgets(line, PATH_MAX, bind_list_f) != NULL) {
++			text = rtrim(line);
++			if (strcmp(text, "") != 0)
++				entry->data = strdup(text);
++			else
++				entry->data = NULL;
++		}
++		else {
++			free (bind_id);
++			bind_id = NULL;
++		}
++
++		while(fgets(line, PATH_MAX, bind_list_f) != NULL) {
++			text = rtrim(line);
++			if (entry->data != NULL) {
++				entry->next = malloc (sizeof(*entry));
++				entry = entry->next;
++			}
++			if (strcmp(text, "") != 0)
++				entry->data = strdup(text);
++			else
++				entry->data = NULL;
++		}
++		fclose (bind_list_f);
++
++		entry->next = NULL;
++	}
++	else {
++		return;
++	}
++
++	copy = entry = bind_id;
++	copy = entry == NULL ? NULL : entry->next;
++
++	if (entry != NULL && strcmp(entry->data, id) == 0) {
++		bind_id = copy;
++		entry = bind_id;
++	}
++
++	while (entry != NULL && entry->data != NULL && copy != NULL) {
++		if (strcmp(copy->data, id) == 0) {
++			entry->next = copy->next;
++		}
++		if (copy->next) {
++			copy = copy->next;
++			entry = entry->next;
++		}
++		else
++			break;
++	}
++
++	if (bind_id == NULL || bind_id->data == NULL) {
++		if (unlink(BIND_LIST) != 0) {
++			perror("Couldn't remove empty bind list file");
++		}
++		return;
++	}
++
++	if ((bind_list_f = fopen (BIND_LIST, "w")) != NULL) {
++
++		entry = bind_id;
++		while (entry != NULL && entry->data != NULL) {
++			fprintf(bind_list_f, "%s\n", entry->data);
++			entry = entry->next;
++		}
++		fclose(bind_list_f);
++	}
++	else
++		perror("Couldn't open bind list for writing");
++
++	free_list(bind_id);
++	return;
++}
++
++int add_to_list (char* name, char *id)
++{
++	char *list_file, *line;
++	char buffer[PATH_MAX];
++	struct list_entry *bind_id, *entry;
++	struct stat buf;
++	FILE *rc = NULL;
++	int ret_val;
++
++	ret_val = 0;
++
++	prepare_run_dir();
++
++	asprintf(&list_file, "%s/%s", RUN_DIR, name);
++
++	bind_id = malloc (sizeof(*bind_id));
++	bind_id->data = NULL;
++	bind_id->next = NULL;
++
++	if (strcmp(name, "bind_list") == 0 &&
++			stat(BIND_LIST, &buf) == 0 &&
++			stat(list_file, &buf) == 0) {
++		if (rename(BIND_LIST, list_file) == -1) {
++			perror ("Error renaming the old bind list file");
++			ret_val = -1;
++			goto out;
++		}
++	}
++
++	entry = bind_id;
++	if (stat(list_file, &buf) == 0) {
++		rc = fopen (list_file, "r");
++		while (fgets(buffer, PATH_MAX, rc) != NULL) {
++			entry->data = NULL;
++			entry->next = NULL;
++			line = strdup(rtrim(buffer));
++			if (strcmp(line, "") == 0)
++				continue;
++			if (strcmp(line, id) == 0) {
++				// go to out, for cleanup and to return.
++				ret_val = -1;
++				goto out;
++			}
++			entry->data = line;
++			entry->next = malloc (sizeof(*entry));
++			entry = entry->next;
++		}
++		fclose(rc);
++		rc = NULL;
++	}
++	entry->data = strdup(id);
++	entry->next = NULL;
++
++	if ((rc = fopen (list_file, "w")) != NULL) {
++		entry = bind_id;
++		while(entry != NULL && entry->data != NULL) {
++			fprintf(rc, "%s\n", entry->data);
++			entry = entry->next;
++		}
++		ret_val = 1;
++		fclose(rc);
++		rc = NULL;
++	}
++	else
++		perror("Couldn't open bind list for writing");
++
++out:
++	if (rc)
++		fclose(rc);
++	free_list(bind_id);
++	free(list_file);
++	return ret_val;
++}
++
++int in_bind_list (char *id)
++{
++	FILE *bind_list;
++	char buffer[PATH_MAX];
++	char *line;
++	int ret_val;
++
++	if((bind_list = fopen(BIND_LIST, "r")) == NULL) {
++		perror("Unable to open bind list file");
++		return 0;
++	}
++
++	ret_val = 0;
++	while (fgets(buffer, PATH_MAX, bind_list) != NULL) {
++		line = strdup(rtrim(buffer));
++		if (strcmp(line, "") == 0)
++			continue;
++		if (strcmp(line, id) == 0) {
++			ret_val = 1;
++			goto out;
++		}
++	}
++
++out:
++	fclose(bind_list);
++
++	if (ret_val)
++		modeswitch_log("Found %s in bind_list\n", id);
++	else
++		modeswitch_log("No %s in bind_list\n", id);
++
++	return ret_val;
++}
++
++void modeswitch_log(const char* format, ...)
++{
++	char *logfile_name;
++	time_t now;
++	va_list args;
++
++	if (logging == 0)
++		return;
++
++	if (logfile == NULL) {
++		//sprintf(logfile_name, "%s%s", LOGFILE_TEMPL, device);
++		/* short-circuit temporarily to write to a single log file. */
++		asprintf(&logfile_name, "%s", LOGFILE_TEMPL);
++		if ((logfile = fopen(logfile_name, "w")) != NULL) {
++			time(&now);
++			fprintf(logfile, "\n\nUSB_ModeSwitch log from %s\n", ctime(&now));
++		}
++		else {
++			logging = 0;
++			perror(logfile_name);
++			return;
++		}
++	}
++
++	if (logfile != NULL) {
++		va_start(args, format);
++		vfprintf(logfile, format, args);
++		va_end(args);
++		fflush(logfile);
++	}
++
++	return;
++}
++
++void read_attrs(char *subsystem, struct dev_attr **dev_type, char **attr_list, char *dir)
++{
++	FILE *rc;
++	char value[PATH_MAX];
++	char *attr_path;
++	int i;
++
++	if (access(dir, X_OK) == 0)
++		modeswitch_log("\n%s dir exists: %s\n", subsystem, dir);
++
++	for (i = 0; attr_list[i] != NULL; i++) {
++		asprintf(&attr_path, "%s/%s", dir, attr_list[i]);
++		dev_type[i] = malloc(sizeof(**dev_type));
++		dev_type[i]->attr = attr_list[i];
++		if ((rc = fopen(attr_path, "r")) != NULL) {
++			if (fgets(value, PATH_MAX, rc) != NULL) {
++				dev_type[i]->value = strdup(rtrim(value));
++			}
++			else {
++				dev_type[i]->value = 0;
++				modeswitch_log("Warning: %s attribute %s not found.\n", subsystem, attr_list[i]);
++			}
++			fclose(rc);
++		}
++		else {
++			dev_type[i]->value = 0;
++			modeswitch_log("Warning: %s attribute \"%s\" not readable.\n", subsystem, attr_list[i]);
++			perror("Could not read attribute");
++		}
++		free(attr_path);
++	}
++
++	return;
++}
++
++void read_scsi_attrs(char *dir)
++{
++	read_attrs("SCSI", scsi, (char **) scsi_attrs, dir);
++
++	return;
++}
++
++void read_usb_attrs(char* dir, char* ifdir)
++{
++	FILE *rc;
++	char *bInterfaceClass_fname;
++	char value[PATH_MAX];
++
++	read_attrs("USB", usb, (char **) usb_attrs, dir);
++
++	if (ifdir != NULL) {
++		asprintf(&bInterfaceClass_fname, "%s/bInterfaceClass", ifdir);
++		if ((rc = fopen(bInterfaceClass_fname, "r")) != NULL) {
++			if (fgets(value, PATH_MAX, rc) != NULL)
++				device_iface_class = strdup(value);
++		}
++	}
++
++	return;
++}
++
++void config_get_list(char *config_name)
++{
++	char **config_list;
++	pipeline *p;
++	const char *line;
++	char *config_path,*dup_line;
++	glob_t config_glob;
++	int i, j, glob_status;
++
++	// TODO: factor out to main or parse_global_config
++	if (config.config_pack_path == NULL) {
++		asprintf(&config.config_pack_path, "%s/%s", DB_DIR, CONFIG_PACK_NAME);
++	}
++	// -----------------------
++
++	/*
++	 * XXX: not quite the same functionality as the original, but it will do for now:
++	 * 		until there's a better way, append to the list and make sure the last entries
++	 * 		override previous ones when comes the time to read files. This way, we can read
++	 * 		the list from the tarball, override with files outside of it if some are shipped
++	 * 		(or if the tarball doesn't exist), and retain the possibility of overriding any
++	 * 		such config file with user-written configs from /etc/usb_modeswitch.d
++	 */
++	config_list = NULL;
++
++	i = 0;
++	config_list = realloc(config_list, sizeof(*config_list) * (i + 1) + sizeof(NULL));
++	if (access(config.config_pack_path, F_OK) == 0) {
++		modeswitch_log("Found packed config collection %s\n", config.config_pack_path);
++
++		p = pipeline_new_command_args ("tar", "-tzf", config.config_pack_path, NULL);
++		pipeline_want_out (p, -1);
++		pipeline_start (p);
++		line = pipeline_readline(p);
++		dup_line = strdup(line);
++		if (line != NULL) {
++			config_list[0] = strdup(rtrim(dup_line));
++			i++;
++		}
++		free(dup_line);
++
++		while ((line = pipeline_readline(p)) != NULL) {
++			dup_line = strdup(line);
++			config_list = realloc(config_list, sizeof(*config_list) * (i + 1) + sizeof(NULL));
++			config_list[i] = strdup(rtrim(dup_line));
++			free(dup_line);
++			i++;
++		}
++		pipeline_free(p);
++	}
++
++	// Fallback to looking for single files in the db directories
++	// ... or use extra files to override shipped configurations.
++	asprintf(&config_path, "%s/%s*", DB_DIR, config_name);
++	modeswitch_log("Searching entries named: %s\n", config_path);
++
++	glob_status = glob(config_path, 0, NULL, &config_glob);
++	if (glob_status == 0) {
++		for (j = 0; config_glob.gl_pathv[j] != NULL; j++, i++) {
++			config_list = realloc(config_list, sizeof(*config_list) * (i + 2) + sizeof(NULL));
++			config_list[i] = strdup(basename(config_glob.gl_pathv[j]));
++		}
++		globfree(&config_glob);
++	}
++	else if (glob_status == GLOB_NOMATCH) {
++		globfree(&config_glob);
++		// try again, with the /etc/ directory now.
++		sprintf(config_path, "%s/%s*", DB_ETCDIR, config_name);
++		modeswitch_log("Searching overriding entries named: %s\n", config_path);
++
++		glob_status = glob(config_path, 0, NULL, &config_glob);
++		if (glob_status == 0) {
++			for (j = 0; config_glob.gl_pathv[j] != NULL; j++, i++) {
++				config_list = realloc(config_list, sizeof(*config_list) * (i + 2) + sizeof(NULL));
++				config_list[i] = strdup(basename(config_glob.gl_pathv[j]));
++			}
++			globfree(&config_glob);
++		}
++		else
++			globfree(&config_glob);
++	}
++	else {
++		modeswitch_log("Error: glob error\n");
++	}
++	config_list[i] = NULL;
++
++	config.config_list = config_list;
++
++	free(config_path);
++
++	return;
++}
++
++char* config_get_config(char *config_name)
++{
++	FILE *tmpconf;
++	char *config_path, *etc_config_path;
++	const char *line;
++	pipeline *p;
++
++	asprintf(&config_path, "%s/%s", DB_DIR, config_name);
++	asprintf(&etc_config_path, "%s/%s", DB_ETCDIR, config_name);
++
++	prepare_run_dir ();
++
++	// Overriding from /etc/ or flat files in /usr/share
++	if (access(etc_config_path, F_OK) == 0) {
++		modeswitch_log("Use overriden config %s from collection %s\n", config_name, DB_ETCDIR);
++		syslog(LOG_NOTICE,
++                       "usb_modeswitch: use overriden config %s from collection %s; make sure this is intended",
++                       config_name, DB_ETCDIR);
++		syslog(LOG_NOTICE,
++                       "usb_modeswitch: please report any new or corrected settings; otherwise, check for outdated files");
++		config.device_config = strdup(etc_config_path);
++	}
++	else if (access(config_path, F_OK) == 0) {
++		modeswitch_log("Use overriden config %s from collection %s\n", config_name, DB_DIR);
++		config.device_config = strdup(config_path);
++	}
++	else if (access(config.config_pack_path, F_OK) == 0) {
++		config.device_config = strdup(DEFAULT_TMPCONFIG);
++		modeswitch_log("Extract config %s from collection %s\n", config_name, config.config_pack_path);
++		tmpconf = fopen(config.device_config, "w");
++		if (!tmpconf) {
++			perror("Could not open temporary config file for writing");
++			free(config.device_config);
++			config.device_config = NULL;
++			goto out;
++		}
++		p = pipeline_new_command_args ("tar", "-xzOf", config.config_pack_path, config_name, NULL);
++		pipeline_want_out (p, -1);
++		pipeline_start (p);
++		while ((line = pipeline_readline(p)) != NULL) {
++			fprintf(tmpconf, "%s", line);
++		}
++		pipeline_free(p);
++		fclose(tmpconf);
++	}
++	else {
++		modeswitch_log("Could not determine or load a usable configuration file.\n");
++		config.device_config = NULL;
++	}
++
++out:
++	free(config_path);
++	free(etc_config_path);
++
++	return config.device_config;
++}
++
++int match_device(char *config_name)
++{
++	char **info_list;
++	char *cname, *info;
++	char *token, *attr, *value;
++	struct dev_attr **match_tmp, **system = NULL;
++	int i, j, idx, ret_val;
++
++	ret_val = 0;
++	idx = 0;
++
++	/* skip if config_name is a file left around by a package manager */
++	if (strstr(config_name, ".dpkg") != NULL ||
++            strstr(config_name, ".rpm") != NULL)
++		return ret_val;
++
++	cname = strdup(config_name);
++
++	info_list = NULL;
++	match_tmp = NULL;
++
++	token = strtok(cname, ":");
++	if (token != NULL) {
++		info_list = realloc(info_list, sizeof(*info_list));
++		info_list[0] = token;
++	}
++
++	i = 1;
++	while ((token = strtok(NULL, ":")) != NULL) {
++		info_list = realloc(info_list, sizeof(*info_list) * (i+2) + sizeof(NULL));
++		info_list[i] = token;
++		i++;
++	}
++	info_list[i] = NULL;
++
++	if (info_list[0] == NULL || info_list[1] == NULL) {
++		ret_val = 0;
++		goto out;
++	}
++
++	if (info_list[2] == NULL) {
++		if (strcmp(info_list[0], usb[idVendor]->value) == 0 &&
++			strcmp(info_list[1], usb[idProduct]->value) == 0)
++		ret_val = 1;
++		goto out;
++	}
++
++	token = NULL;
++	i = 2;
++	j = 0;
++
++	while (info_list[i] != NULL) {
++		info = strdup(info_list[i]);
++
++		if (strcmp(info_list[i], "?") == 0) {
++			ret_val = 0;
++			goto out;
++		}
++
++		match_tmp = realloc(match_tmp, sizeof(*match_tmp) * (j+1) + sizeof(NULL));
++
++		attr = strdup(strtok(info, "="));
++		value = strdup(strtok(NULL, "="));
++		match_tmp[j] = malloc(sizeof(**match_tmp));
++		match_tmp[j]->attr = attr;
++
++		if (value != NULL) {
++			match_tmp[j]->value = value;
++		}
++		else {
++			match_tmp[j]->value = strdup("");
++		}
++
++		free(info);
++		i++;
++		j++;
++	}
++	match_tmp[j] = NULL;
++
++	for(i = 0; match_tmp[i] != NULL; i++) {
++		modeswitch_log("match %s\n", match_tmp[i]->attr);
++		modeswitch_log("  match string: %s\n", match_tmp[i]->value);
++
++		if (match_tmp[i]->attr[0] == 's')
++			system = scsi;
++		else if (match_tmp[i]->attr[0] == 'u')
++			system = usb;
++
++		if (strcmp(match_tmp[i]->attr, "uMa") == 0)
++			idx = uMa;
++		else if (strcmp(match_tmp[i]->attr, "uPr") == 0)
++			idx = uPr;
++		else if (strcmp(match_tmp[i]->attr, "uSe") == 0)
++			idx = uSe;
++		else if (strcmp(match_tmp[i]->attr, "sVe") == 0)
++			idx = sVe;
++		else if (strcmp(match_tmp[i]->attr, "sMo") == 0)
++			idx = sMo;
++		else if (strcmp(match_tmp[i]->attr, "sRe") == 0)
++			idx = sRe;
++
++		modeswitch_log(" device string: %s\n", system[idx]->value);
++		if (system[idx]->value != NULL) {
++			if (strstr(system[idx]->value, match_tmp[i]->value) == 0)
++				break;
++		}
++	}
++
++	//printf("match/j: %d/%d\n", match, j);
++	if (match_tmp[i] == NULL) {
++		ret_val = 1;
++	}
++
++out:
++	for (i = 0; match_tmp != NULL && match_tmp[i] != NULL; i++) {
++		free(match_tmp[i]->attr);
++		free(match_tmp[i]->value);
++	}
++
++	free(info_list);
++	free(cname);
++
++	return ret_val;
++}
++
++void prepare_run_dir ()
++{
++	int success = 0;
++
++	success = mkdir (RUN_DIR, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
++	if (success < 0) {
++		if (errno != EEXIST) {
++			modeswitch_log("prepare_run_dir(): could not create %s: %s",
++			               RUN_DIR,
++			               strerror(errno));
++			_exit(1);
++		}
++		else {
++			/* RUN_DIR already exists, so just ensure that it is writable */
++			if (access(RUN_DIR, W_OK) != 0) {
++				modeswitch_log("prepare_run_dir(): can't write to %s: %s",
++				               RUN_DIR,
++				               strerror(errno));
++				_exit(1);
++			}
++		}
++	}
++}
++
++int check_success (char *dir)
++{
++	char *ifdir;
++	int i = 0;
++	int expected = 1;
++
++	modeswitch_log("Check success of mode switch for max. %d seconds ...", config.check_success);
++
++	for (i = 0; i <= config.check_success; i++) {
++		sleep(1);
++		if (access(RUN_DIR, X_OK) != 0) {
++			modeswitch_log(" Wait for device file system (%d sec.) ...\n", i);
++			continue;
++		}
++		else
++			modeswitch_log(" Read attributes ...");
++
++		ifdir = get_iface_ifdir(0);
++		if (ifdir == NULL)
++			continue;
++		read_usb_attrs(dir, basename(ifdir));
++		free(ifdir);
++
++		if (usb[idProduct]->value == NULL || usb[idVendor]->value == NULL) {
++			modeswitch_log(" Essential attributes are missing, continue wait ...\n");
++			continue;
++		}
++
++		if (config.target_config != -1 && usb[bConfigurationValue]->value != NULL &&
++				(atoi(usb[bConfigurationValue]->value) != config.target_config)) {
++			modeswitch_log(" bConfigurationValue doesn't match the expected value. ('%d' != '%d')\n",
++			               config.target_config, atoi(usb[bConfigurationValue]->value));
++			continue;
++		}
++
++		if (config.target_class != NULL && device_iface_class != NULL &&
++				strstr(config.target_class, device_iface_class) == NULL) {
++			modeswitch_log(" Device class couldn't be matched with expected class. ('%s' != '%s')\n",
++			               config.target_class, device_iface_class);
++			expected = 0;
++		}
++
++		if (config.target_vendor != NULL && usb[idVendor]->value != NULL &&
++				strstr(config.target_vendor, usb[idVendor]->value) == NULL) {
++			modeswitch_log(" idVendor doesn't match the expected value. ('%s' != '%s')\n",
++			               config.target_vendor, usb[idVendor]->value);
++			expected = 0;
++		}
++
++		if (config.target_product != NULL && usb[idProduct]->value != NULL &&
++				strstr(config.target_product, usb[idProduct]->value) == NULL) {
++			modeswitch_log(" idProduct doesn't match the expected value. ('%s' != '%s')\n",
++			               config.target_product, usb[idProduct]->value);
++			expected = 0;
++		}
++
++		if (expected == 1) {
++			modeswitch_log (" All attributes matched\n");
++		} else {
++			if (strstr(config.config_name, ":#") != NULL) {
++				modeswitch_log(" idProduct has changed after generic mode-switch, assume success");
++			} else {
++				modeswitch_log(" Attributes are different but target values are unexpected:");
++				log_attributes();
++			}
++		}
++		break;
++	}
++
++	if (i > 20)
++		return 0;
++
++	return 1;
++}
++
++void
++set_storage_delay (int secs)
++{
++	int delay_param = -1;
++	char delay_val[100];
++	int current_val;
++	ssize_t read_count, write_count;
++	char *write_val;
++	int write_len;
++
++	write_len = asprintf(&write_val, "%d", secs);
++	modeswitch_log ("Adjust delay for USB storage devices ...\n");
++
++	delay_param = open(USB_STORAGE_DELAY_USE, O_RDWR);
++	if (delay_param > -1) {
++		read_count = read(delay_param, &delay_val, 100);
++		if (read_count > 0) {
++			current_val = atoi(delay_val);
++			if (current_val < secs) {
++				write_count = write(delay_param, write_val, write_len);
++				if ((int)write_count == write_len)
++					modeswitch_log(" Delay set to %d seconds\n");
++				else
++					modeswitch_log(" Error: could not fully write new value\n");
++			} else {
++				modeswitch_log(" Current value is higher or equal to %d. Leave it alone\n");
++			}
++		}
++		close(delay_param);
++	} else {
++		modeswitch_log ("Error: could not access delay_use attribute: %s\n", strerror(errno));
++	}
++}
++
++int
++check_mbim_available (void)
++{
++	int kver_fd = -1;
++	ssize_t read_count;
++	char kversion[100];
++	char *cdc_mbim_module_path;
++	struct stat buf;
++
++	kver_fd = open(OSRELEASE_FILE, O_RDONLY);
++	if (kver_fd > -1) {
++		read_count = read(kver_fd, &kversion, 100);
++		if (read_count > 0) {
++			asprintf(&cdc_mbim_module_path, "%s/%s/%s",
++			         MODULES_PATH,
++			         kversion,
++			         CDC_MBIM_DRIVER_PATH);
++			if (!stat(cdc_mbim_module_path, &buf))
++				goto success;
++			if (!stat(CDC_MBIM_SYS_PATH, &buf))
++				goto success;
++		}
++	}
++
++	free(cdc_mbim_module_path);
++	return 0;
++success:
++	free(cdc_mbim_module_path);
++	return 1;
++}
++
++char *
++get_iface_ifdir (int iface)
++{
++	char *dev_iface_path;
++	char *ifdir = NULL;
++	glob_t path_glob;
++	struct stat buf;
++	int glob_status = 0;
++
++	asprintf(&dev_iface_path, "%s/*.%d", config.dev_dir, iface);
++	glob_status = glob(dev_iface_path, 0, NULL, &path_glob);
++	if (glob_status != 0)
++		return NULL;
++
++	if (path_glob.gl_pathc > 0) {
++		stat(path_glob.gl_pathv[0], &buf);
++		if (S_ISDIR (buf.st_mode))
++			ifdir = strdup(path_glob.gl_pathv[0]);
++	}
++
++	return ifdir;
++}
++
++int
++get_iface_ifclass (int iface)
++{
++	char *ifdir;
++	char *bifclass_path;
++	char class_str[10];
++	int fd = -1;
++	int class = 0;
++
++	ifdir = get_iface_ifdir(iface);
++	if (ifdir == NULL)
++		return -1;
++
++	asprintf(&bifclass_path, "%s/bInterfaceClass", ifdir);
++	free(ifdir);
++
++	fd = open(bifclass_path, O_RDONLY);
++	if (fd == -1)
++		return -1;
++
++	read(fd, &class_str, 10);
++	class = atoi(class_str);
++	close(fd);
++
++	return class;
++}
++
++int
++check_iface (int iface)
++{
++	int validated;
++
++	validated = get_iface_ifclass(iface);
++	if (validated == 8 || validated == 3)
++		return validated;
++
++	return -1;
++}
++
++void
++log_attributes ()
++{
++	int i;
++
++	for (i = 0; i < NUM_USB_ATTRS; i++) {
++		modeswitch_log("\t%s: %s\n",
++		               usb_attrs[i],
++		               usb[i]->value != NULL ? usb[i]->value : "");
++	}
++}
+Index: b/Makefile
+===================================================================
+--- a/Makefile
++++ b/Makefile
+@@ -45,9 +45,12 @@ jim/libjim.a:
+ dispatcher-script: usb_modeswitch.tcl
+ 	sed 's_!/usr/bin/tclsh_!'"$(TCL)"'_' < usb_modeswitch.tcl > usb_modeswitch_dispatcher
+ 
+-dispatcher-shared: jim/libjim.so dispatcher.c usb_modeswitch.string
++dispatcher-shared-jim: dispatcher.c usb_modeswitch.string
+ 	$(CC) dispatcher.c $(LDFLAGS) -Ljim -ljim -Ijim -o usb_modeswitch_dispatcher $(CFLAGS)
+ 
++dispatcher-shared:
++	$(CC) $(CFLAGS) usb_modeswitch_dispatcher.c -o usb_modeswitch_dispatcher -lpipeline -ludev
++
+ dispatcher-static: jim/libjim.a dispatcher.c usb_modeswitch.string
+ 	$(CC) dispatcher.c $(LDFLAGS) jim/libjim.a -Ijim -o usb_modeswitch_dispatcher $(CFLAGS)
+ 
