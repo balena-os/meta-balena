@@ -59,7 +59,7 @@
 #       a) [optional] Define RESIN_DEFCONFIG_NAME. Default: "resin-defconfig"
 #       b) Add RESIN_DEFCONFIG_NAME to SRC_URI.
 
-inherit kernel-resin
+inherit kernel-resin compress-kernel-modules
 
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
