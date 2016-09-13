@@ -62,3 +62,6 @@ AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
 
 # have build information available on the target under /etc/build
 INHERIT += "image-buildinfo"
+
+# we want our custom version with no TCL dependency
+PREFERRED_VERSION_usb-modeswitch ?= "2.2.5"
