@@ -34,6 +34,9 @@ RESIN_CONFIG_FS_LABEL = "flash-conf"
 # Put the resin logo, uEnv.txt files inside the boot partition
 RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"
 
+# add the generated <machine-name>.json to the flash-boot partition, renamed as device-type.json
+RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-type.json"
+
 # Put resin-image in the flasher rootfs
 add_resin_image_to_flasher_rootfs() {
     mkdir -p ${WORKDIR}/rootfs/opt
