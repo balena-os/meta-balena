@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add device-type.json file to the boot partitions of our images [Florin]
 * Enable kernel modules ip6table_nat, nf_nat_ipv6 and subset of ip_set [Florin]
 * Change openvpn to use config file from /run [Florin]
 * Change partition type of resin-conf from vfat to ext4 [Theodor]
