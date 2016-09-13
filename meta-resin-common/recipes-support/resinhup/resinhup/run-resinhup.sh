@@ -407,7 +407,11 @@ if [ -n "$REMOTE" ]; then
 fi
 RESINHUP_ENV="$RESINHUP_ENV -e VERSION=$HOSTOS_VERSION"
 
-$DOCKER run --privileged --rm --net=host $RESINHUP_ENV --volume /:/host --volume /lib/modules:/lib/modules:ro registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+$DOCKER run --privileged --rm --net=host $RESINHUP_ENV \
+    --volume /:/host \
+    --volume /lib/modules:/lib/modules:ro \
+    --volume /var/run/docker.sock:/var/run/docker.sock \
+    registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
 RESINHUP_EXIT=$?
 # RESINHUP_EXIT
 #   0 - update done
