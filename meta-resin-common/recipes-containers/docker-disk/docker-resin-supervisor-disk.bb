@@ -14,6 +14,7 @@ SRC_URI += " \
     file://update-resin-supervisor.service \
     file://update-resin-supervisor.timer \
     file://resin.target \
+    file://multi-user.conf \
     "
 
 SYSTEMD_SERVICE_${PN} = " \
@@ -113,6 +114,10 @@ do_install () {
     install -d ${D}${sysconfdir}/systemd/system/resin.target.wants
 
     install -c -m 0644 ${WORKDIR}/resin.target ${D}${systemd_unitdir}/system/
+
+    # Install drop in to introduce dependecies on multi-user target
+    install -d ${D}${sysconfdir}/systemd/system/multi-user.target.d/
+    install -c -m 0644 ${WORKDIR}/multi-user.conf ${D}${sysconfdir}/systemd/system/multi-user.target.d/
 }
 do_install[vardeps] += "DISTRO_FEATURES TARGET_REPOSITORY LED_FILE"
 
