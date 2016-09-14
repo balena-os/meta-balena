@@ -13,6 +13,7 @@ SRC_URI += " \
     file://update-resin-supervisor \
     file://update-resin-supervisor.service \
     file://update-resin-supervisor.timer \
+    file://resin.target \
     "
 
 SYSTEMD_SERVICE_${PN} = " \
@@ -24,6 +25,7 @@ SYSTEMD_SERVICE_${PN} = " \
 FILES_${PN} += " \
     /resin-data \
     ${systemd_unitdir} \
+    ${sysconfdir} \
     "
 
 RDEPENDS_${PN} = " \
@@ -105,6 +107,12 @@ do_install () {
             -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/*.service
     fi
+
+    # Install our custom resin target
+    install -d ${D}${systemd_unitdir}/system/resin.target.wants
+    install -d ${D}${sysconfdir}/systemd/system/resin.target.wants
+
+    install -c -m 0644 ${WORKDIR}/resin.target ${D}${systemd_unitdir}/system/
 }
 do_install[vardeps] += "DISTRO_FEATURES TARGET_REPOSITORY LED_FILE"
 
