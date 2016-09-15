@@ -8,6 +8,7 @@ SRC_URI = " \
     file://mnt-data.mount \
     file://etc-docker.mount \
     file://etc-dropbear.mount \
+    file://etc-systemd-system-resin.target.wants.mount \
     "
 
 S = "${WORKDIR}"
@@ -22,6 +23,7 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-data.mount \
     etc-docker.mount \
     etc-dropbear.mount \
+    etc-systemd-system-resin.target.wants.mount \
     "
 
 FILES_${PN} += " \
@@ -44,6 +46,7 @@ do_install () {
             ${WORKDIR}/mnt-data.mount \
             ${WORKDIR}/etc-docker.mount \
             ${WORKDIR}/etc-dropbear.mount \
+            ${WORKDIR}/etc-systemd-system-resin.target.wants.mount \
             ${D}${systemd_unitdir}/system
     fi
 }
