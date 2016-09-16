@@ -9,6 +9,7 @@ SRC_URI = " \
     file://etc-docker.mount \
     file://etc-dropbear.mount \
     file://etc-systemd-system-resin.target.wants.mount \
+    file://resin-bind.target \
     "
 
 S = "${WORKDIR}"
@@ -30,6 +31,8 @@ FILES_${PN} += " \
     /mnt/data \
     /mnt/conf \
     /mnt/boot \
+    ${systemd_unitdir} \
+    ${sysconfdir} \
     "
 
 do_install () {
@@ -37,6 +40,14 @@ do_install () {
     install -d ${D}/mnt/data
     install -d ${D}/mnt/boot
     install -d ${D}/etc/docker
+
+    install -d ${D}${systemd_unitdir}/system
+
+    # Install our custom resin bind target
+    install -d ${D}${systemd_unitdir}/system/resin-bind.target.wants
+    install -d ${D}${sysconfdir}/systemd/system/resin-bind.target.wants
+    install -c -m 0644 ${WORKDIR}/resin-bind.target ${D}${systemd_unitdir}/system/
+
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
