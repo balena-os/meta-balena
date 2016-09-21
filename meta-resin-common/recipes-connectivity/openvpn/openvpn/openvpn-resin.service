@@ -15,4 +15,4 @@ ExecStartPre=-/bin/mkdir -p /var/run/openvpn
 ExecStart=/usr/sbin/openvpn --daemon --writepid /var/run/openvpn/resin.pid --cd /etc/openvpn/ --config /run/openvpn/resin.conf
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=resin.target
