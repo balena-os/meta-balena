@@ -8,9 +8,11 @@ LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
 NOREBOOT=no
-BOOT_MOUNTPOINT="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
 
+# Don't run anything before this source as it sets PATH here
 source /etc/profile
+
+BOOT_MOUNTPOINT="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
 
 # Help function
 function help {
