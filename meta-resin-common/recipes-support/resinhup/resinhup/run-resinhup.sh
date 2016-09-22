@@ -111,7 +111,7 @@ function runPreHacks {
     # we might need to repartition this so make sure it is unmounted
     log "Make sure resin-boot is unmounted..."
     if [ -z $BOOT_MOUNTPOINT ]; then
-        log ERROR "Mount point for resin-boot partition could not be found"
+        log WARN "Mount point for resin-boot partition could not be found. Probably is already unmounted."
     else
         umount $BOOT_MOUNTPOINT &> /dev/null
     fi
