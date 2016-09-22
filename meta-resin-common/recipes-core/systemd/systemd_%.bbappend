@@ -23,10 +23,10 @@ do_install_append() {
         find ${D} -name "getty@*.service" -delete
     fi
 
-    install -d -m 0755 /srv
+    install -d -m 0755 ${D}/srv
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
-    ln -s /proc/self/mounts ${D}${sysconfdir}/mtab
+    ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
 }
 
 # add pool.ntp.org as default ntp server
