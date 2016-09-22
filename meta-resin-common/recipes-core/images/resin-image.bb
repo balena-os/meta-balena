@@ -49,6 +49,10 @@ generate_hostos_version () {
     echo "${HOSTOS_VERSION}" > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
 }
 
+read_only_rootfs_hook_append () {
+    sed -i -e "s:^DROPBEAR_RSAKEY_DIR=.*$:DROPBEAR_RSAKEY_DIR=/etc/dropbear:" ${IMAGE_ROOTFS}/etc/default/dropbear
+}
+
 IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
