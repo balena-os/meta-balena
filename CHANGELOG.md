@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update supervisor to v2.2.0 [Kostas]
+
 # v1.13 - 2016-09-23
 
 # v1.12 - 2016-09-21
