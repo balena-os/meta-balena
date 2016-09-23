@@ -101,18 +101,6 @@ if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/su
     if [ -z "$tag" ]; then
         error_handler $LINENO "no tag received"
     fi
-
-    # Get image id of tag. This will be non-empty only in case it's already downloaded.
-    echo "Getting image id..."
-    imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
-
-    # Check if image is downloaded and there is a running container.
-    # The second condition is needed to make sure the image has not stopped since we first run it.
-    echo "Getting check if already updated image is running..."
-    if [[ -n "$imageid" && $($DOCKER ps -q --no-trunc | xargs $DOCKER inspect -f '{{.Image}}' | grep "$imageid") ]]; then
-        echo "Latest supervisor version already running."
-        exit 0
-    fi
 else
     echo "No supervisor configuration found from API. Using arguments for image and tag."
     source /etc/supervisor.conf
@@ -133,7 +121,16 @@ else
     tag=$UPDATER_SUPERVISOR_TAG
 fi
 
-# Try to stop old supervisor to prevent from deleting the intermediate images while downloading the new one
+# Get image id of tag. This will be non-empty only in case it's already downloaded.
+echo "Getting image id..."
+imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+
+if [ -n "$imageid" ]; then
+    echo "Supervisor $image_name:$tag already downloaded."
+    exit 0
+fi
+
+# Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
 echo "Stop supervisor..."
 systemctl stop resin-supervisor
 
@@ -141,7 +138,7 @@ systemctl stop resin-supervisor
 echo "SUPERVISOR_IMAGE=$image_name:$tag" > $UPDATECONF
 
 # Pull target version.
-echo "Update supervisor..."
+echo "Pulling supervisor $image_name:$tag..."
 $DOCKER pull "$image_name:$tag"
 
 # Run supervisor with the device-type-specific options.
