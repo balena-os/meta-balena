@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update supervisor to v2.2.1 [petrosagg]
+
 # v1.14 - 2016-09-23
 
 * Update supervisor to v2.2.0 [Kostas]
