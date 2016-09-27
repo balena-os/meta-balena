@@ -19,6 +19,7 @@ RDEPENDS_${PN} += " \
     resin-logs \
     resin-extend-expand \
     resin-info \
+    resin-hostname \
     resinhup \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-provisioner', '', d)} \
