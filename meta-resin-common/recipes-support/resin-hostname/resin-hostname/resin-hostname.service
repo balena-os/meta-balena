@@ -1,0 +1,12 @@
+[Unit]
+Description=Resin Hostname Configuration
+Requires=resin-device-uuid.service
+After=resin-device-uuid.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BINDIR@/%p
+
+[Install]
+WantedBy=multi-user.target

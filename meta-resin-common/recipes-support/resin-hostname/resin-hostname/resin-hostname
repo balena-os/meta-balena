@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+. /usr/sbin/resin-vars
+
+if [ -z "$CONFIG_HOSTNAME" ]; then
+    CONFIG_HOSTNAME=$(jq -r '.uuid //empty' $CONFIG_PATH)
+fi
+
+if [ -z "$CONFIG_HOSTNAME" ]; then
+    echo "[ERROR]: Unexpected uuid missing from config.json."
+    exit 1
+fi
+
+# Set hostname temporary hostname
+hostnamectl set-hostname "$CONFIG_HOSTNAME"
+
+exit 0
