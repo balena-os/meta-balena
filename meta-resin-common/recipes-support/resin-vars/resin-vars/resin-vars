@@ -54,6 +54,7 @@ then
     REGISTRY_ENDPOINT=$(jq --raw-output ".registryEndpoint // empty" $CONFIG_PATH)
     VPN_ENDPOINT=$(jq --raw-output ".vpnEndpoint // empty" $CONFIG_PATH)
     DELTA_ENDPOINT=$(jq --raw-output ".deltaEndpoint // empty" $CONFIG_PATH)
+    CONFIG_HOSTNAME=$(jq --raw-output ".hostname // empty" $CONFIG_PATH)
     if [ -z "$API_ENDPOINT" -o -z "$LISTEN_PORT" -o -z "$MIXPANEL_TOKEN" -o -z "$PUBNUB_PUBLISH_KEY" -o -z "$PUBNUB_SUBSCRIBE_KEY" -o -z "$REGISTRY_ENDPOINT" -o -z "$VPN_ENDPOINT" ]; then
         echo "[WARNING] $0 : Couldn't read some variables from $CONFIG_PATH"
     fi
