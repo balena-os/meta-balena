@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Enable gzip kernel module compression for all boards. [Michal]
+
 # v1.15 - 2016-09-24
 
 * Update supervisor to v2.2.1 [petrosagg]
