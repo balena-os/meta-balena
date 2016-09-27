@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.16 - 2016-09-27
+
 * Update supervisor to v2.3.0 [Pablo]
 
 # v1.15 - 2016-09-24
