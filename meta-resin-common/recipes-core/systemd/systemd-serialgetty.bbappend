@@ -1,5 +1,5 @@
 do_install_append() {
-    if ${@bb.utils.contains('DISTRO_FEATURES','debug-image','false','true',d)}; then
+    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
         if [ ! -z "${SERIAL_CONSOLES}" ] ; then
             tmp="${SERIAL_CONSOLES}"
             for entry in $tmp ; do

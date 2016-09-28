@@ -10,7 +10,7 @@ IMAGE_FSTYPES = ""
 IMAGE_DEPENDS_resin-sdcard_append = " resin-image:do_rootfs"
 
 IMAGE_FEATURES_append = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', 'debug-tweaks', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
     splash \
     "
 

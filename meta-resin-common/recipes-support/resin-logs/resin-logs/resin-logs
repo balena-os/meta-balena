@@ -5,7 +5,7 @@ exit 1
 
 set -e
 
-# Start logging to disk when DEBUG flag is present in the recovery [Initial installation] partition.
+# Start logging to disk when DEVELOPMENT flag is present in the recovery [Initial installation] partition.
 if [ -e /mnt/conf/debug.txt ]; then
     echo "Configure persistent logs in /mnt/conf/log"
     mkdir -p /mnt/conf/log

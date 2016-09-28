@@ -40,16 +40,16 @@ Before bitbake-ing with meta-resin support, a few flags can be changed in the co
 Editing of local.conf is to be done after source-ing.
 See below for explanation on such build flags.
 
-### Debug Images
+### Development Images
 
-The DEBUG_IMAGE variable gets injected into DISTRO_FEATURES. If DEBUG_IMAGE = "1" then 'debug-image' distro feature is added.
-Based on this, recipes can decide what debug specific changes are needed. By default DEBUG_IMAGE = "0" which corresponds to a normal (non-debug) build (debug-image won't be appended to DISTRO_FEATURE).
-If user wants a build which creates debug images (to use the serial console for example), DEBUG_IMAGE = "1" needs to be added to local.conf.
+The DEVELOPMENT_IMAGE variable gets injected into DISTRO_FEATURES. If DEVELOPMENT_IMAGE = "1" then 'development-image' distro feature is added.
+Based on this, recipes can decide what development specific changes are needed. By default DEVELOPMENT_IMAGE = "0" which corresponds to a normal (non-development) build (development-image won't be appended to DISTRO_FEATURE).
+If user wants a build which creates development images (to use the serial console for example), DEVELOPMENT_IMAGE = "1" needs to be added to local.conf.
 
 To make it short:
 
-* If DEBUG_IMAGE is not present in your local.conf or it is not "1" : Non-debug images will be generated (default behavior)
-* If DEBUG_IMAGE is defined local.conf and its value is "1" : Debug images will be generated
+* If DEVELOPMENT_IMAGE is not present in your local.conf or it is not "1" : Non-development images will be generated (default behavior)
+* If DEVELOPMENT_IMAGE is defined local.conf and its value is "1" : Development images will be generated
 
 ### Generation of host OS update bundles
 

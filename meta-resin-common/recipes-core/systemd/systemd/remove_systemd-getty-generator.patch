@@ -1,4 +1,4 @@
-We do not need the getty generator to spawn getty on serial consoles in non-debug builds.
+We do not need the getty generator to spawn getty on serial consoles in non-development builds.
 
 Upstream-Status: Inappropriate [configuration specific]
 
