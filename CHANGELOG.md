@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Generate config.json from the build system [Theodor]
 * Add usb-modeswitch [Michal]
 * Allow hostname to be defined through config.json [Theodor]
 * Expose docker socket over TCP on development images [Andrei]
