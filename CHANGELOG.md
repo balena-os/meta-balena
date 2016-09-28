@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Replace DEBUG_IMAGE with DEVELOPMENT_IMAGE [Theodor]
 * Update supervisor to v2.5.0 [Pablo]
 
 # v1.16 - 2016-09-27
