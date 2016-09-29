@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Start using gzip archives for kernel module headers [Andrei]
 * Update supervisor to v2.8.3 [Pablo]
 * Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
 
