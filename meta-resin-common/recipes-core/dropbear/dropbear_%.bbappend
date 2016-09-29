@@ -3,6 +3,7 @@ SRC_URI += " \
     file://atomic-hostkey.patch \
     file://dropbear.socket \
     file://failsafe-sshkey.pub \
+    file://ssh.service \
     "
 
 FILES_${PN} += "/home"
@@ -24,5 +25,9 @@ do_install_append() {
 
     install -d ${D}${sysconfdir}/default
     echo 'DROPBEAR_PORT="22222"' >> ${D}/etc/default/dropbear # Change default dropbear port to 22222
+
+    # Advertise SSH service using an avahi service file
+    mkdir -p ${D}/etc/avahi/services
+    install -m 0644 ${WORKDIR}/ssh.service ${D}/etc/avahi/services
 }
 do_install[vardeps] += "DISTRO_FEATURES"
