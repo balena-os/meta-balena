@@ -22,6 +22,7 @@ CONNECTIVITY_PACKAGES = " \
     wireless-tools \
     openvpn \
     crda \
+    avahi-daemon \
     "
 
 RDEPENDS_${PN} = " \
