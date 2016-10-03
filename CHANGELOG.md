@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Replace connman with NetworkManager [Michal]
 * Add usb-modeswitch [Michal]
 * Allow hostname to be defined through config.json [Theodor]
 * Expose docker socket over TCP on development images [Andrei]
