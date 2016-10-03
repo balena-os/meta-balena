@@ -34,7 +34,7 @@ PACKAGECONFIG[ntp] = "--with-ntp-servers=pool.ntp.org time1.google.com time2.goo
 
 PACKAGECONFIG_append = " ntp"
 
-# Network configuration is managed by connman
+# Network configuration is managed by NetworkManager
 PACKAGECONFIG_remove = "resolved networkd"
 
 # Add missing users/groups defined in /usr/lib/sysusers.d/*
