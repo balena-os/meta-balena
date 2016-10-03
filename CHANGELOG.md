@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Replace connman with NetworkManager [Michal]
 * Generate config.json from the build system [Theodor]
 * Add usb-modeswitch [Michal]
 * Allow hostname to be defined through config.json [Theodor]
