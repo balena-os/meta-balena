@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Integrate and configure avahi [Andrei]
 * Start using gzip archives for kernel module headers [Andrei]
 * Replace DEBUG_IMAGE with DEVELOPMENT_IMAGE [Theodor]
 * Update supervisor to v2.5.0 [Pablo]
