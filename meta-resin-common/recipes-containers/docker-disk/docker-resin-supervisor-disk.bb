@@ -65,7 +65,7 @@ python () {
     imagechk_output = subprocess.Popen(imagechk_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if imagechk_output == "":
         bb.fatal("resin-supervisor-disk: No local supervisor images found.")
-    version_cmd = "echo -n $(docker inspect -f '{{range .Config.Env}}{{.}}{{\"\\n\"}}{{end}}' %s:%s | grep '^VERSION=' | tr -d 'VERSION=\"')" % (target_repository, tag_repository)
+    version_cmd = "echo -n $(docker inspect %s:%s | jq --raw-output '.[0].Config.Env[] | select(startswith(\"VERSION=\")) | split(\"VERSION=\") | .[1]')" % (target_repository, tag_repository)
     version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if version_output == "" or version_output == None:
         bb.fatal("resin-supervisor-disk: Cannot fetch version.")
