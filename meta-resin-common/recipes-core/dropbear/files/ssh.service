@@ -28,6 +28,7 @@
 
   <service>
     <type>_ssh._tcp</type>
+    <subtype>_resin-device._sub._ssh._tcp</subtype>
     <port>22222</port>
   </service>
 
