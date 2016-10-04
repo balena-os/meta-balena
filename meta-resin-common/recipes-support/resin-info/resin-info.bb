@@ -22,7 +22,7 @@ do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
 do_install() {
-    if ${@bb.utils.contains('DISTRO_FEATURES','debug-image','false','true',d)}; then
+    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
         install -d ${D}${sbindir}/
         install -m 0755 ${WORKDIR}/resin-info ${D}${sbindir}/
 

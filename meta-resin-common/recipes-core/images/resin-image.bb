@@ -25,7 +25,7 @@ IMAGE_ROOTFS_MAXSIZE = "184320"
 IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'resinhup-tar', '', d)}"
 
 IMAGE_FEATURES_append = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', 'debug-tweaks', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
     splash \
     ssh-server-dropbear \
     "

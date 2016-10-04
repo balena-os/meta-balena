@@ -11,7 +11,7 @@ SYSTEMD_SERVICE_${PN} += "dropbearkey.service"
 SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install_append() {
-    if ! ${@bb.utils.contains('DISTRO_FEATURES','debug-image','true','false',d)}; then
+    if ! ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
         # Disable root password logins
         install -d ${D}${sysconfdir}/default
         echo 'DROPBEAR_EXTRA_ARGS="-g"' >> ${D}/etc/default/dropbear

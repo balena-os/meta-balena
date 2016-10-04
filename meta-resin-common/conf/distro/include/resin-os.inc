@@ -31,9 +31,9 @@ POKY_DEFAULT_DISTRO_FEATURES_remove = "ptest"
 POKY_DEFAULT_DISTRO_FEATURES_remove = "wayland"
 DISTRO_FEATURES_DEFAULT_remove = "x11"
 
-# Debug image mode
-DEBUG_IMAGE ?= "0"
-DISTRO_FEATURES_append = " ${@bb.utils.contains('DEBUG_IMAGE','1','debug-image','',d)}"
+# Development image mode
+DEVELOPMENT_IMAGE ?= "0"
+DISTRO_FEATURES_append = " ${@bb.utils.contains('DEVELOPMENT_IMAGE','1','development-image','',d)}"
 
 # Resin connectable
 RESIN_CONNECTABLE ?= "1"

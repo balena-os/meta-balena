@@ -1,6 +1,6 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
-SRC_URI_append = "${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', '', ' file://remove_systemd-getty-generator.patch', d)}"
+SRC_URI_append = "${@bb.utils.contains('DISTRO_FEATURES', 'development-image', '', ' file://remove_systemd-getty-generator.patch', d)}"
 
 FILES_${PN} += " \
     /srv \
@@ -15,8 +15,8 @@ do_install_append() {
     sed -i -e 's/.*RuntimeMaxUse.*/RuntimeMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
     sed -i -e 's/.*Storage.*/Storage=volatile/' ${D}${sysconfdir}/systemd/journald.conf
 
-    if ${@bb.utils.contains('DISTRO_FEATURES','debug-image','false','true',d)}; then
-        # Non-Debug image
+    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
+        # Non-development image
         if $(readlink autovt@.service) == "getty@*.service"; then
             rm ${D}/lib/systemd/system/autovt@.service
         fi
