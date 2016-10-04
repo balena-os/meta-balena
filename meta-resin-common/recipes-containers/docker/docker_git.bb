@@ -26,6 +26,7 @@ SRC_URI = "\
   file://var-lib-docker.mount \
   file://0001-bucket-correct-broken-unaligned-load-store-in-armv5.patch \
   file://journal.patch \
+  file://docker.conf.systemd \
   file://0002-Inherit-StopSignal-from-Dockerfile.patch \
   file://0003-Safer-file-io-for-configuration-files.patch \
   file://0004-Set-permission-on-atomic-file-write.patch \
@@ -123,6 +124,11 @@ do_install() {
   install -m 0644 ${S}/contrib/init/systemd/docker.* ${D}/${systemd_unitdir}/system
   install -m 0644 ${WORKDIR}/docker.service ${D}/${systemd_unitdir}/system
   install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
+
+  if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
+    install -d ${D}${sysconfdir}/systemd/system/docker.service.d
+    install -c -m 0644 ${WORKDIR}/docker.conf.systemd ${D}${sysconfdir}/systemd/system/docker.service.d/docker.conf
+  fi
 }
 
 inherit useradd
