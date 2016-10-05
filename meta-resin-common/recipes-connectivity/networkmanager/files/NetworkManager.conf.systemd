@@ -4,5 +4,3 @@ After=resin-net-config.service
 
 [Service]
 OOMScoreAdjust=-1000
-ExecStart=
-ExecStart=/usr/sbin/connmand -n --nodnsproxy

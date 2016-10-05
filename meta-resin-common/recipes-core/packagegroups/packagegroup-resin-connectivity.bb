@@ -5,8 +5,8 @@ PR = "r0"
 
 inherit packagegroup
 
-# By default resin uses connman as network manager.
-NETWORK_MANAGER_PACKAGES ?= "connman connman-client"
+# By default resin uses networkmanager
+NETWORK_MANAGER_PACKAGES ?= "networkmanager"
 
 CONNECTIVITY_MODULES = ""
 
