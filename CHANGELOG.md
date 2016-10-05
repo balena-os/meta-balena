@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add usb-modeswitch [Michal]
 * Allow hostname to be defined through config.json [Theodor]
 * Expose docker socket over TCP on development images [Andrei]
 * Integrate and configure avahi [Andrei]
