@@ -24,6 +24,19 @@ fix_hddimg_symlink () {
     fi
 }
 
+# Initialize config.json
+# Requires 1 argument: Path to destination of config.json
+init_config_json() {
+   if [ -z ${1} ]; then
+       bbfatal "init_config_json: Needs one argument, that has to be a path"
+   fi
+
+   echo '{}' > ${1}/config.json
+   if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
+       echo $(cat ${1}/config.json | jq ".hostname=\"resin\"") > ${1}/config.json
+   fi
+}
+
 #
 # We need run depmod even if the modules are compressed
 # Inspired from rootfs.py
