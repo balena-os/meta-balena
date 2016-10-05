@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Allow hostname to be defined through config.json [Theodor]
 * Expose docker socket over TCP on development images [Andrei]
 * Integrate and configure avahi [Andrei]
 * Start using gzip archives for kernel module headers [Andrei]
