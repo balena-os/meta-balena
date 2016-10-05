@@ -248,11 +248,8 @@ IMAGE_CMD_resin-sdcard () {
     # Finally add the fingerprint to vfat partition
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT} ::
 
-    # Generate and inject config.json
-    echo '{}' > ${WORKDIR}/config.json
-    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
-        echo $(cat ${WORKDIR}/config.json | jq ".hostname=\"resin\"") > ${WORKDIR}/config.json
-    fi
+    init_config_json ${WORKDIR}
+
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/config.json ::
 
     CONFIG_BLOCKS=$(LC_ALL=C parted -s ${RESIN_SDIMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
