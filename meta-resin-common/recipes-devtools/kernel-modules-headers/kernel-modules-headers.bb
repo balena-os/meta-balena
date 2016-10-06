@@ -29,7 +29,7 @@ do_compile() {
     else
         TGT_ARCH=${TRANSLATED_TARGET_ARCH}
     fi
-    ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${TGT_ARCH} ${TARGET_PREFIX}
+    ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${TGT_ARCH} ${TARGET_PREFIX} "${CC}"
     tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
     rm -rf kernel_modules_headers
 }
