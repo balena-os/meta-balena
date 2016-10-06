@@ -2,6 +2,7 @@
 Description=Flasher conf partition mountpoint
 Requires=mnt-bootorig.mount temp-conf.service tmp.mount
 After=mnt-bootorig.mount temp-conf.service tmp.mount
+DefaultDependencies=no
 
 [Mount]
 What=/tmp/conf/config.json

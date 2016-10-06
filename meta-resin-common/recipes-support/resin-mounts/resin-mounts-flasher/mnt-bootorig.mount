@@ -1,5 +1,6 @@
 [Unit]
 Description=Flasher boot partition mountpoint
+DefaultDependencies=no
 
 [Mount]
 What=/dev/disk/by-label/flash-boot
