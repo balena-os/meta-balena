@@ -19,8 +19,8 @@ IMAGE_INSTALL_append = " \
     packagegroup-resin-flasher \
     "
 
-# Avoid useless space by not using any btrfs partition
-BTRFS_IMAGE = ""
+# Avoid useless space by not using any data image partition
+DATA_IMAGE = ""
 
 # We do not use a back-up rootfs partition for the flasher image, so just default to IMAGE_ROOTFS_ALIGNMENT size
 UPDATE_SIZE_ALIGNED = "${IMAGE_ROOTFS_ALIGNMENT}"

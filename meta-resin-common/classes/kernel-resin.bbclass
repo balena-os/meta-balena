@@ -114,9 +114,13 @@ RESIN_CONFIGS[docker] ?= " \
     CONFIG_NF_NAT=y \
     CONFIG_NF_NAT_NEEDED=y \
     CONFIG_POSIX_MQUEUE=y \
-    CONFIG_BTRFS_FS=y \
-    CONFIG_BTRFS_FS_POSIX_ACL=y \
-    CONFIG_TUN=y"
+    CONFIG_TUN=y \
+    CONFIG_EXT4_FS=y \
+    CONFIG_EXT4_FS_POSIX_ACL=y \
+    CONFIG_EXT4_FS_SECURITY=y \
+    CONFIG_AUFS_FS=y \
+    CONFIG_AUFS_XATTR=y \
+    "
 
 #
 # systemd specific kernel configuration options
@@ -301,6 +305,147 @@ def appendLineToFile (filepath, line):
 #########
 # TASKS #
 #########
+
+#
+# Add aufs patches
+#
+
+python do_kernel_resin_aufs_fetch_and_unpack() {
+
+    import collections, os.path, re
+    from bb.fetch2.git import Git
+
+    kernelsource = d.getVar('S', True)
+
+    if os.path.isdir(kernelsource + "/fs/aufs"):
+        bb.note("The kernel source tree has the fs/aufs directory. Will not fetch and unpack aufs patches.")
+        return
+
+    # get the kernel version from the top Makefile in the kernel source tree
+    topmakefile = kernelsource + "/Makefile"
+    with open(topmakefile, 'r') as makefile:
+        lines = makefile.readlines()
+
+    kernelversion = ""
+    for s in lines:
+        m = re.match("VERSION = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + m.group(1)
+        m = re.match("PATCHLEVEL = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + '.' + m.group(1)
+        m = re.match("SUBLEVEL = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + '.' + m.group(1)
+        m = re.match("EXTRAVERSION = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + '.' + m.group(1)
+
+    # define an ordered dictionary with aufs branch names as keys and branch revisions as values
+    aufsdict = collections.OrderedDict([
+        ('3.0', 'aa3d7447003abd5e3c437de52d8da2e6203390ac'),
+        ('3.1', '269a613efab1718fd587c2bfc945d095b57f56e2'),
+        ('3.2', '5809bf47aeb6e8257691287f9a218660c110acc5'),
+        ('3.2.x', '16af2a5afdfd14bc482963942b2e657a032da43d'),
+        ('3.3', 'df60b373c5f6c22835fdb8521b12973e9d6e06df'),
+        ('3.4', 'bfbe10165cbfc0cd7b1d7e9c878f1a3f2b6872f1'),
+        ('3.5', '3e310a136e71bb284a959d95c77f5b7af132280b'),
+        ('3.6', '82d56105d0bdbdf5959b16f788fed4f6a530373f'),
+        ('3.7', '27b5f7469fe5259aa489e92fdb6d88900ec8c0a4'),
+        ('3.8', 'e98c69e26250b411e51cc92bf73df2f0829d0759'),
+        ('3.9', 'f88513f985e153aaf3e2950622c2a2329c3c3f8f'),
+        ('3.10', '4a8ee1833947c5aba704bf09fad612f4c4ecd827'),
+        ('3.10.x', '3ec542bfe6854491bceb77b40c46f3b63849445a'),
+        ('3.11', '35fd8e89d9cbd3b665dd11c3ae901ac52b07bcbb'),
+        ('3.12', 'fcc197ae3a575b6f1b2aa1e51fe250eaadd4292b'),
+        ('3.12.x', '74a2fd46ecfeb9d520e50779734a473037924831'),
+        ('3.12.31+', 'bc1683ef045db170785c86eeebe57798445af63c'),
+        ('3.13', 'b8ca8d15cf8e635d310acab5e571e31399a842b2'),
+        ('3.14', 'b279b0bb265eb0c71c0420becd127c90f09b0003'),
+        ('3.14.21+', 'aea8b249e0a369981f2b2c9a58f5aaf200e31594'),
+        ('3.14.40+', '6eb622e3346262bd20b05458c371b864577b8c27'),
+        ('3.15', '19702ee73cdc4a102593969537938f3183d4b841'),
+        ('3.16', 'cb287d372de85fad6a15afa198d7526383037381'),
+        ('3.17', 'a511fd5b5b4a311c906e200ef8abc42d1387b94d'),
+        ('3.18', 'b5a25205ee21187e20e1d998f98763d09f442c26'),
+        ('3.18.1+', 'cb74b62417010b75273fa1e1ee89d2a4782a728f'),
+        ('3.18.25+', '0591c3182066555d46564404a29786232d49e977'),
+        ('3.19', '2a2a3ee407810b4a3e19c3d5cfdb7f371d5df835'),
+        ('4.0', 'f3daf663294ae51cde1105450705a83d7f0abf84'),
+        ('4.1', '0f55e31aefd360c19cc9d38b256c63fdbdb1cb0e'),
+        ('4.1.13+', '149f0ce41b5c17ad206c8399e97f27f62163d179'),
+        ('4.2', 'c41877758208364ab2a3fb4576e08d8521280f0f'),
+        ('4.3', '32a6b994ca7ce59a729ed59cd9e9d2238bdc8b8e'),
+        ('4.4', '7d174ae40b4c9c876ee51aa50fa4ee1f3747de23'),
+        ('4.5', '6dd8031372d2d0c0e134cfc4770f2c5a3f9bc7c4'),
+        ('4.6', '4ae7c7529ad9814789c65832dfb0646ed7b475e5'),
+        ('4.7', '7731e69c5a26de9519332be64d973c91a377a582'),
+    ])
+
+
+    # match with the correct aufs branch for our kernel version
+    # from the aufs git repo README file:
+
+    # 'For (an unreleased) example:
+    # If you are using "linux-4.10" and the "aufs4.10" branch
+    # does not exist in aufs-util repository, then "aufs4.9", "aufs4.8"
+    # or something numerically smaller is the branch for your kernel.'
+
+    for key, value in reversed(aufsdict.items()) :
+        if key.split('+')[0] is kernelversion:
+            aufsbranch = key
+            break
+
+        keylen = len(key.split('+')[0].split('.'))
+        if int(key.split('+')[0].split('.')[0]) > int(kernelversion.split('.')[0]):
+            continue
+        elif int(key.split('+')[0].split('.')[0]) < int(kernelversion.split('.')[0]):
+            aufsbranch = key
+            break
+
+        if int(key.split('+')[0].split('.')[1]) > int(kernelversion.split('.')[1]):
+            continue
+        elif int(key.split('+')[0].split('.')[1]) < int(kernelversion.split('.')[1]):
+            aufsbranch = key
+            break
+
+        if keylen is 3:
+            if int(key.split('+')[0].split('.')[2][:-1] + '0') <= int(kernelversion.split('.')[2]):
+                aufsbranch = key
+                break
+        else:
+            aufsbranch = key
+            break
+
+    if kernelversion.split('.')[0] is '3':
+        srcuri = "git://git.code.sf.net/p/aufs/aufs3-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
+    elif kernelversion.split('.')[0] is '4':
+        srcuri = "git://github.com/sfjro/aufs4-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
+
+    d.setVar('SRCREV_aufs', aufsdict[aufsbranch])
+    aufsgit = Git()
+    urldata = bb.fetch.FetchData(srcuri, d)
+    aufsgit.download(urldata, d)
+    aufsgit.unpack(urldata, d.getVar('WORKDIR', True), d)
+}
+
+# add our task to task queue - we need the kernel version (so we need to have the sources unpacked and patched) in order to know what aufs patches version we fetch and unpack
+addtask kernel_resin_aufs_fetch_and_unpack after do_patch before do_configure
+
+# copy needed aufs files and apply aufs patches
+apply_aufs_patches () {
+    # bail out if it looks like the kernel source tree already has the fs/aufs directory
+    if [ -d ${S}/fs/aufs ]; then
+        exit
+    fi
+    cp -r ${WORKDIR}/aufs_standalone/Documentation ${WORKDIR}/aufs_standalone/fs ${S}
+    cp ${WORKDIR}/aufs_standalone/include/uapi/linux/aufs_type.h ${S}/include/uapi/linux/
+    cd ${S}
+    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-kbuild.patch'`
+    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-base.patch'`
+    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-mmap.patch'`
+}
+do_kernel_resin_aufs_fetch_and_unpack[postfuncs] += "apply_aufs_patches"
 
 #
 # Inject resin configs

@@ -1,6 +1,6 @@
 require docker-disk.inc
 
-# By default no docker image in the BTRFS disk
+# By default no docker image in the data disk
 TARGET_REPOSITORY ?= ""
 TARGET_TAG ?= ""
 

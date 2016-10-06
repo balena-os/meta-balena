@@ -14,7 +14,7 @@ Type=notify
 Restart=always
 #Adjust OOMscore to -900 to make killing rce unlikely
 OOMScoreAdjust=-900
-ExecStart=@BINDIR@/rce --restart=false -s btrfs -d -g /var/lib/rce
+ExecStart=@BINDIR@/rce --restart=false -s aufs -d -g /var/lib/rce
 MountFlags=slave
 LimitNOFILE=1048576
 LimitNPROC=1048576
