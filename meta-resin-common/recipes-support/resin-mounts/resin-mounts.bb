@@ -11,6 +11,7 @@ SRC_URI = " \
     file://etc-systemd-system-resin.target.wants.mount \
     file://etc-hostname.mount \
     file://etc-supervisor.conf.mount \
+    file://etc-NetworkManager-systemx2dconnections.mount \
     file://resin-bind.target \
     "
 
@@ -65,5 +66,11 @@ do_install () {
             ${WORKDIR}/etc-supervisor.conf.mount \
             ${WORKDIR}/etc-systemd-system-resin.target.wants.mount \
             ${D}${systemd_unitdir}/system
+
+        # Yocto gets confused if we use strange file names - so we rename it here
+        # https://bugzilla.yoctoproject.org/show_bug.cgi?id=8161
+        install -c -m 0644 ${WORKDIR}/etc-NetworkManager-systemx2dconnections.mount ${D}${systemd_unitdir}/system/etc-NetworkManager-system\\x2dconnections.mount
+
+        ln -sf ${systemd_unitdir}/system/etc-NetworkManager-system\\x2dconnections.mount ${D}${sysconfdir}/systemd/system/resin-bind.target.wants
     fi
 }
