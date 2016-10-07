@@ -16,7 +16,6 @@ else
 fi
 
 CONFIG_NM=${CONFIG_PATH%/*}/system-connections/
-rm -rf /etc/NetworkManager/system-connections/
 cp -r $CONFIG_NM /etc/NetworkManager/
 chmod 600 /etc/NetworkManager/system-connections/*
 
