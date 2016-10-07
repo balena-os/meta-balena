@@ -1,0 +1,14 @@
+[Unit]
+Description=Resin reset OS configuration
+Requires=mnt-conf.mount
+After=mnt-conf.mount
+ConditionPathExists=!@RESIN_CONF_MP@/remove_me_to_reset
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-conf-reset || @BASE_BINDIR@/mv @RESIN_CONF_MP@/rollback @RESIN_CONF_MP@/root-overlay
+ExecStartPost=@BASE_BINDIR@/touch @RESIN_CONF_MP@/remove_me_to_reset
+
+[Install]
+WantedBy=multi-user.target

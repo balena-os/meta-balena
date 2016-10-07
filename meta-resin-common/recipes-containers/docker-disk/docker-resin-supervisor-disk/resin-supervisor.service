@@ -3,11 +3,13 @@ Description=Resin supervisor
 Requires=\
     docker.service \
     resin\x2ddata.mount \
-    resin-device-uuid.service
+    resin-device-uuid.service \
+    etc-systemd-system-resin.target.wants.mount
 After=\
     docker.service \
     resin\x2ddata.mount \
-    resin-device-uuid.service
+    resin-device-uuid.service \
+    etc-systemd-system-resin.target.wants.mount
 
 [Service]
 Type=simple

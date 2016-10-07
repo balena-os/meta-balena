@@ -14,6 +14,8 @@ if [ -z "$CONFIG_HOSTNAME" ]; then
 fi
 
 # Set hostname temporary hostname
-hostnamectl set-hostname "$CONFIG_HOSTNAME"
+hostname "$CONFIG_HOSTNAME"
+# Commit hostname
+echo "$CONFIG_HOSTNAME" > /etc/hostname
 
 exit 0

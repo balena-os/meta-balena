@@ -28,13 +28,13 @@ do_install() {
 
         if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
             install -d ${D}${systemd_unitdir}/system/
-            install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
+            install -d ${D}${sysconfdir}/systemd/system/resin.target.wants/
             install -m 0644 ${WORKDIR}/resin-info@.service ${D}${systemd_unitdir}/system/
 
             # Enable services
             for ttydev in ${TTYS}; do
                 ln -sf ${systemd_unitdir}/system/resin-info@.service \
-                    ${D}${sysconfdir}/systemd/system/multi-user.target.wants/resin-info@$ttydev.service
+                    ${D}${sysconfdir}/systemd/system/resin.target.wants/resin-info@$ttydev.service
             done
 
             sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
