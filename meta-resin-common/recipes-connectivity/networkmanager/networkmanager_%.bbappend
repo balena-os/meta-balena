@@ -1,3 +1,5 @@
+inherit deploy
+
 DEPENDS += "nss"
 
 FILESEXTRAPATHS_append := ":${THISDIR}/files"
@@ -5,6 +7,7 @@ FILESEXTRAPATHS_append := ":${THISDIR}/files"
 SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
     file://NetworkManager.conf \
+    file://resin-sample \
     "
 
 RDEPENDS_${PN}_append = " resin-net-config resolvconf"
@@ -25,3 +28,10 @@ do_install_append() {
 
     ln -s /var/run/resolvconf/interface/NetworkManager ${D}/etc/resolv.dnsmasq
 }
+
+do_deploy() {
+    mkdir -p "${DEPLOYDIR}/system-connections/"
+    install -m 0600 "${WORKDIR}/resin-sample" "${DEPLOYDIR}/system-connections/"
+}
+
+addtask deploy before do_package after do_install
