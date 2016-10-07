@@ -18,8 +18,8 @@ inherit gnomebase gettext systemd bluetooth vala
 SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
 "
-SRC_URI[md5sum] = "337e676261ca94af08f8e9b6f9b09a5b"
-SRC_URI[sha256sum] = "c4d5e075998a291074501602a5068a7e54d9e0f2658aba079d58145d65be531d"
+SRC_URI[md5sum] = "59b5b5585467756787c6cb535cbd306e"
+SRC_URI[sha256sum] = "a864e347ddf6da8dabd40e0185b8c10a655d4a94b45cbaa2b3bb4b5e8360d204"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
