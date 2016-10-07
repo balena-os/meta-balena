@@ -6,7 +6,7 @@ After=resin-device-uuid.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BINDIR@/%p
+ExecStart=@BINDIR@/resin-hostname
 
 [Install]
 WantedBy=multi-user.target
