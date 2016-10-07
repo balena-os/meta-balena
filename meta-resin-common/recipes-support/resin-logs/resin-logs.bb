@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 SRC_URI = " \
     file://resin-logs \
     file://resin-logs.service \
+    file://01-create-volatile.conf \
     "
 S = "${WORKDIR}"
 
@@ -22,6 +23,9 @@ RDEPENDS_${PN} = " \
 
 do_install() {
     install -d ${D}${bindir}
+    install -d ${D}${sysconfdir}/tmpfiles.d/
+
+    install -m 0644 ${WORKDIR}/01-create-volatile.conf ${D}${sysconfdir}/tmpfiles.d/
     install -m 0775 ${WORKDIR}/resin-logs ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
