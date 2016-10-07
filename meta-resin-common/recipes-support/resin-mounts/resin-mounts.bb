@@ -12,6 +12,7 @@ SRC_URI = " \
     file://etc-hostname.mount \
     file://etc-supervisor.conf.mount \
     file://etc-NetworkManager-systemx2dconnections.mount \
+    file://var-log-journal.mount \
     file://resin-bind.target \
     "
 
@@ -30,6 +31,7 @@ SYSTEMD_SERVICE_${PN} = " \
     etc-systemd-system-resin.target.wants.mount \
     etc-hostname.mount \
     etc-supervisor.conf.mount \
+    var-log-journal.mount \
     "
 
 FILES_${PN} += " \
@@ -65,6 +67,7 @@ do_install () {
             ${WORKDIR}/etc-hostname.mount \
             ${WORKDIR}/etc-supervisor.conf.mount \
             ${WORKDIR}/etc-systemd-system-resin.target.wants.mount \
+            ${WORKDIR}/var-log-journal.mount \
             ${D}${systemd_unitdir}/system
 
         # Yocto gets confused if we use strange file names - so we rename it here
