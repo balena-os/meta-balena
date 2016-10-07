@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Added a warning when skipping pulling the supervisor [Page]
 * Achieve read-only root filesystem [Theodor]
 * Implement aufs fetch and unpack functionality in kernel-resin.bbclass [Florin]
 * Use aufs as docker storage driver with ext4 as backing filesystem instead of btrfs [Florin]

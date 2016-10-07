@@ -60,6 +60,8 @@ python () {
     if connected(d) == "yes":
         pull_cmd = "docker pull %s:%s" % (target_repository, tag_repository)
         pull_output = subprocess.Popen(pull_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+    else:
+        bb.warn("resin-supervisor-disk: No connectivity, skipped pulling supervisor image.")
 
     # Inspect for fetching the version only if image exists
     # on Fedora 23 at least, docker has suffered slight changes (https://bugzilla.redhat.com/show_bug.cgi?id=1312934)
