@@ -13,9 +13,6 @@ inherit allarch systemd
 
 SYSTEMD_SERVICE_${PN} = "resin-logs.service"
 
-# This is broken for now so don't activate the service
-SYSTEMD_AUTO_ENABLE = "disable"
-
 RDEPENDS_${PN} = " \
     bash \
     coreutils \
