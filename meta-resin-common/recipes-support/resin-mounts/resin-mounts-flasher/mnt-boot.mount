@@ -1,8 +1,10 @@
 [Unit]
 Description=Flasher boot partition mountpoint
+DefaultDependencies=no
 Requires=mnt-bootorig.mount mnt-bootorig-config.json.mount
 After=mnt-bootorig.mount mnt-bootorig-config.json.mount
-DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
 
 [Mount]
 What=/mnt/bootorig

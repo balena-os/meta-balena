@@ -1,8 +1,10 @@
 [Unit]
 Description=Flasher conf partition mountpoint
+DefaultDependencies=no
 Requires=mnt-bootorig.mount temp-conf.service tmp.mount
 After=mnt-bootorig.mount temp-conf.service tmp.mount
-DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
 
 [Mount]
 What=/tmp/conf/config.json
