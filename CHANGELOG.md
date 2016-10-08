@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Configure kernel with CONFIG_SECCOMP [Andrei]
 * Update kernel-module-headers to v0.0.7 [Lorenzo]
 * Implement persistent logging functionality [Andrei]
 * Increase the root filesystem size to 300M [Andrei]
