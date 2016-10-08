@@ -1,5 +1,8 @@
 [Unit]
 Description=Resin conf partition mountpoint
+DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
 
 [Mount]
 What=/dev/disk/by-label/resin-conf
