@@ -4,7 +4,7 @@ include recipes-core/images/core-image-minimal.bb
 inherit image-resin
 
 #
-# Set size of rootfs at a fixed value of maximum 180MiB
+# Set size of rootfs at a fixed value of maximum 300MiB
 #
 
 # keep this aligned to IMAGE_ROOTFS_ALIGNMENT
@@ -18,7 +18,7 @@ IMAGE_ROOTFS_EXTRA_SPACE = "0"
 
 # core-image-minimal add 4M to IMAGE_ROOTFS_EXTRA_SPACE
 # Make IMAGE_ROOTFS_MAXSIZE = IMAGE_ROOTFS_SIZE + 4M
-IMAGE_ROOTFS_MAXSIZE = "184320"
+IMAGE_ROOTFS_MAXSIZE = "303104"
 
 
 # Generated resinhup-tar based on RESINHUP variable
