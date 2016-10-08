@@ -1,0 +1,67 @@
+From 52f366ca77b8a2b74b6c1595c1622821b7523338 Mon Sep 17 00:00:00 2001
+From: Petros Angelatos <petrosagg@gmail.com>
+Date: Sat, 8 Oct 2016 04:58:29 -0700
+Subject: [PATCH] Revert "iface-modem: the Command() method is only allowed
+ when running in debug mode"
+
+This reverts commit 64f49c0c7261d7de2eae03477cd69cf540184041.
+---
+ introspection/org.freedesktop.ModemManager1.Modem.xml |  9 +++------
+ src/mm-iface-modem.c                                  | 12 ------------
+ 2 files changed, 3 insertions(+), 18 deletions(-)
+
+diff --git a/introspection/org.freedesktop.ModemManager1.Modem.xml b/introspection/org.freedesktop.ModemManager1.Modem.xml
+index a5a236c..289306f 100644
+--- a/introspection/org.freedesktop.ModemManager1.Modem.xml
++++ b/introspection/org.freedesktop.ModemManager1.Modem.xml
+@@ -173,14 +173,11 @@
+ 
+     <!--
+        Command
+-       @cmd The command string, e.g. "AT+GCAP" or "+GCAP" (leading AT is inserted if necessary).
+-       @timeout The number of seconds to wait for a response.
+-       @response The modem's response.
++       @cmd The command string, e.g. "AT+GCAP" or "+GCAP" (leading AT is inserted if necessary)
++       @timeout The number of seconds to wait for a response
++       @response The modem's response
+ 
+        Send an arbitrary AT command to a modem and get the response.
+-
+-       Note that using this interface call is only allowed when running
+-       ModemManager in debug mode.
+       -->
+     <method name="Command">
+       <arg name="cmd"      type="s" direction="in"  />
+diff --git a/src/mm-iface-modem.c b/src/mm-iface-modem.c
+index 7c31f9a..2625550 100644
+--- a/src/mm-iface-modem.c
++++ b/src/mm-iface-modem.c
+@@ -25,7 +25,6 @@
+ #include "mm-base-sim.h"
+ #include "mm-bearer-list.h"
+ #include "mm-log.h"
+-#include "mm-context.h"
+ 
+ #define SIGNAL_QUALITY_RECENT_TIMEOUT_SEC        60
+ #define SIGNAL_QUALITY_INITIAL_CHECK_TIMEOUT_SEC 3
+@@ -698,17 +697,6 @@ handle_command_auth_ready (MMBaseModem *self,
+         return;
+     }
+ 
+-    /* If we are not in Debug mode, report an error */
+-    if (!mm_context_get_debug ()) {
+-        g_dbus_method_invocation_return_error (ctx->invocation,
+-                                               MM_CORE_ERROR,
+-                                               MM_CORE_ERROR_UNAUTHORIZED,
+-                                               "Cannot send AT command to modem: "
+-                                               "operation only allowed in debug mode");
+-        handle_command_context_free (ctx);
+-        return;
+-    }
+-
+     /* If command is not implemented, report an error */
+     if (!MM_IFACE_MODEM_GET_INTERFACE (self)->command ||
+         !MM_IFACE_MODEM_GET_INTERFACE (self)->command_finish) {
+-- 
+2.10.0
+
