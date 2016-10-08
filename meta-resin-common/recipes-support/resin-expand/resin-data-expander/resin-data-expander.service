@@ -1,8 +1,10 @@
 [Unit]
 Description=Expand extension partition
+DefaultDependencies=no
 Requires=dev-disk-by\x2dlabel-resin\x2ddata.device
 After=dev-disk-by\x2dlabel-resin\x2ddata.device
-Before=mnt-conf.mount mnt-data.mount
+Before=mnt-conf.mount mnt-data.mount umount.target
+Conflicts=umount.target
 
 [Service]
 Type=oneshot
