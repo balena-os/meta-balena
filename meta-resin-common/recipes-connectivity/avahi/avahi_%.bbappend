@@ -1,4 +1,8 @@
+FILESEXTRAPATHS_append := ":${THISDIR}/files"
+
 SRC_URI_append = " file://avahi-daemon.conf"
+
+FILES_avahi-daemon += "${sysconfdir}/systemd/system/avahi-daemon.service.d/avahi-daemon.conf"
 
 do_install_append() {
     # Move example services as we don't want to advertise example services
