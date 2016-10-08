@@ -1,18 +1,15 @@
-#!/bin/bash
-
-# This needs further changes as it is broken now
-exit 1
+#!/bin/sh
 
 set -e
 
-# Start logging to disk when DEVELOPMENT flag is present in the recovery [Initial installation] partition.
-if [ -e /mnt/conf/debug.txt ]; then
-    echo "Configure persistent logs in /mnt/conf/log"
-    mkdir -p /mnt/conf/log
-    cp -r /var/log/* /mnt/conf/log
-    ln -sf /mnt/conf/log /var
-else
-    echo "Persistent logs deactivated. To activate persistent logs create a debug.txt file in resin-conf partition."
+. /usr/sbin/resin-vars
+
+if [ "$PERSISTENT_LOGGING" == "yes" ]; then
+    echo "[INFO] Configure persistent logs in /mnt/conf/root-overlay/var/log/journal"
+    echo -e "[Journal]\nStorage=persistent\n" > /etc/systemd/journald.conf.d/resin-logs.conf
+elif [ "$PERSISTENT_LOGGING" == "no" ]; then
+    echo "[INFO] Configure volatile logs in /run/log/journal"
+    echo -e "[Journal]\nStorage=volatile\n" > /etc/systemd/journald.conf.d/resin-logs.conf
 fi
 
 exit 0
