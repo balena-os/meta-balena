@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update kernel-module-headers to v0.0.7 [Lorenzo]
 * Implement persistent logging functionality [Andrei]
 * Increase the root filesystem size to 300M [Andrei]
 * Bump supervisor to 2.5.2 [Andrei]
