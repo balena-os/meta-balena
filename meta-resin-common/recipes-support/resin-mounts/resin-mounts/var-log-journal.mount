@@ -1,0 +1,16 @@
+[Unit]
+Description=ResinOS persistent logging location
+DefaultDependencies=no
+Requires=mnt-conf.mount resin-conf-reset.service
+After=mnt-conf.mount resin-conf-reset.service
+Before=umount.target
+Conflicts=umount.target
+
+[Mount]
+What=/mnt/conf/root-overlay/var/log/journal
+Where=/var/log/journal
+Type=None
+Options=bind
+
+[Install]
+WantedBy=resin-bind.target

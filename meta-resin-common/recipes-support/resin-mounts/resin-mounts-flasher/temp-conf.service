@@ -1,8 +1,10 @@
 [Unit]
 Description=Temporary resin config in /tmp/conf
+DefaultDependencies=no
 Requires=mnt-bootorig.mount tmp.mount
 After=mnt-bootorig.mount tmp.mount
-DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
 
 [Service]
 Type=oneshot

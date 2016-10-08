@@ -6,6 +6,7 @@ FILES_${PN} += " \
     /srv \
     /etc/localtime \
     /etc/mtab \
+    ${sysconfdir}/systemd/journald.conf.d \
     "
 
 do_install_append() {
@@ -24,6 +25,7 @@ do_install_append() {
     fi
 
     install -d -m 0755 ${D}/srv
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
     ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
