@@ -4,6 +4,7 @@ SRC_URI += " \
     file://dropbear.socket \
     file://failsafe-sshkey.pub \
     file://ssh.service \
+    file://dropbearkey.conf \
     "
 
 FILES_${PN} += "/home"
@@ -29,5 +30,11 @@ do_install_append() {
     # Advertise SSH service using an avahi service file
     mkdir -p ${D}/etc/avahi/services
     install -m 0644 ${WORKDIR}/ssh.service ${D}/etc/avahi/services
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}${sysconfdir}/systemd/system/dropbearkey.service.d
+        install -c -m 0644 ${WORKDIR}/dropbearkey.conf ${D}${sysconfdir}/systemd/system/dropbearkey.service.d
+    fi
+
 }
 do_install[vardeps] += "DISTRO_FEATURES"
