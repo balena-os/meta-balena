@@ -3,6 +3,7 @@ id=resin-sample
 type=wifi
 
 [wifi]
+hidden=true
 mode=infrastructure
 ssid=My_Wifi_Ssid
 
