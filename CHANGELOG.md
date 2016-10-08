@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Bump supervisor to 2.5.2 [Andrei]
 * Added a warning when skipping pulling the supervisor [Page]
 * Achieve read-only root filesystem [Theodor]
 * Implement aufs fetch and unpack functionality in kernel-resin.bbclass [Florin]
