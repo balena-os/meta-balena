@@ -73,6 +73,7 @@ RESIN_CONFIGS ?= " \
     hid-multitouch \
     ip6tables_nat \
     ip_set \
+    seccomp \
     "
 
 #
@@ -277,6 +278,10 @@ RESIN_CONFIGS_DEPS[ip6tables_nat] = " \
     "
 RESIN_CONFIGS[ip6tables_nat] = " \
     CONFIG_IP6_NF_NAT=m \
+    "
+
+RESIN_CONFIGS[seccomp] = " \
+    CONFIG_SECCOMP=y \
     "
 
 ###########
