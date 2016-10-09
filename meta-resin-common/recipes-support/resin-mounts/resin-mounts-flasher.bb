@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 SRC_URI = " \
     file://mnt-boot.mount \
     file://mnt-bootorig-config.json.mount \
+    file://mnt-conf.mount \
     file://temp-conf.service \
     file://mnt-bootorig.mount \
     file://etc-NetworkManager-systemx2dconnections.mount \
@@ -31,6 +32,7 @@ FILES_${PN} += " \
 
 do_install () {
     install -d ${D}/mnt/conf
+    install -d ${D}/mnt/conf/root-overlay/etc/NetworkManager/system-connections
     install -d ${D}/mnt/boot
     install -d ${D}/mnt/bootorig
 
@@ -39,6 +41,7 @@ do_install () {
         install -c -m 0644 \
             ${WORKDIR}/mnt-boot.mount \
             ${WORKDIR}/mnt-bootorig-config.json.mount \
+            ${WORKDIR}/mnt-conf.mount \
             ${WORKDIR}/temp-conf.service \
             ${WORKDIR}/mnt-bootorig.mount \
             ${D}${sysconfdir}/systemd/system
