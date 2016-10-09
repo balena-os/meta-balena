@@ -31,6 +31,7 @@ FILES_${PN} += " \
 
 do_install () {
     install -d ${D}/mnt/conf
+    install -d ${D}/mnt/conf/root-overlay/etc/NetworkManager/system-connections
     install -d ${D}/mnt/boot
     install -d ${D}/mnt/bootorig
 
