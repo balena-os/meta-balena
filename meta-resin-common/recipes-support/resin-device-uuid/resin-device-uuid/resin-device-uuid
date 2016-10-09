@@ -50,7 +50,7 @@ fi
 
 if [ -z "$uuid" ]; then
     echo "[INFO] resin-device-uuid: UUID missing from config file. Generating..."
-    uuid=$(openssl rand -hex 31)
+    uuid=$(HOME=/home/root openssl rand -hex 31)
     echo $(cat $CONFIG_PATH | jq ".uuid=\"$uuid\"") > $CONFIG_PATH
 else
     echo "[INFO] resin-device-uuid : Device already has uuid assigned."
