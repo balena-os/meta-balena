@@ -34,7 +34,7 @@ init_config_json() {
    echo '{}' > ${1}/config.json
 
    # Default no to persistent-logging
-   echo $(cat ${1}/config.json | jq ".persistentLogging=\"no\"") > ${1}/config.json
+   echo $(cat ${1}/config.json | jq ".persistentLogging=false") > ${1}/config.json
 
    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
        echo $(cat ${1}/config.json | jq ".hostname=\"resin\"") > ${1}/config.json

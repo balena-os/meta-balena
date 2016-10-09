@@ -60,7 +60,7 @@ then
         echo "[WARNING] $0 : Couldn't read some variables from $CONFIG_PATH"
     fi
     if [ -z "$PERSISTENT_LOGGING" ]; then
-        PERSISTENT_LOGGING=no
+        PERSISTENT_LOGGING=false
     fi
 else
     echo "[WARNING] $0 : '$CONFIG_PATH' not found."
