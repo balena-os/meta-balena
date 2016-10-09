@@ -5,6 +5,7 @@ After=mnt-boot.mount home-root-.rnd.mount
 
 [Service]
 Type=simple
+Environment="HOME=/home/root"
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-uuid
 
 [Install]
