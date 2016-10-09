@@ -7,7 +7,6 @@ Requires=docker.socket var-lib-docker.mount
 [Service]
 Type=notify
 Restart=always
-ExecStartPre=/bin/sh -c "/usr/bin/test -s /etc/docker/key.json || /bin/rm -f /etc/docker/key.json"
 ExecStart=/usr/bin/docker daemon --log-driver=journald -s btrfs -H fd:// --dns 172.17.0.1
 ExecStartPost=/sbin/sysctl -w net.ipv4.conf.docker0.route_localnet=1
 ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p udp --dport 53 -j DNAT --dst 172.17.0.1/32 --to 127.0.0.2:53
