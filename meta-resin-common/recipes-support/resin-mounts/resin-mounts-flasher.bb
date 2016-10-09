@@ -7,6 +7,7 @@ SRC_URI = " \
     file://mnt-bootorig-config.json.mount \
     file://temp-conf.service \
     file://mnt-bootorig.mount \
+    file://etc-NetworkManager-systemx2dconnections.mount \
     "
 
 S = "${WORKDIR}"
@@ -45,5 +46,9 @@ do_install () {
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \
             ${D}${sysconfdir}/systemd/system/*
+
+        # Yocto gets confused if we use strange file names - so we rename it here
+        # https://bugzilla.yoctoproject.org/show_bug.cgi?id=8161
+        install -c -m 0644 ${WORKDIR}/etc-NetworkManager-systemx2dconnections.mount ${D}${sysconfdir}/systemd/system/etc-NetworkManager-system\\x2dconnections.mount
     fi
 }
