@@ -1,0 +1,10 @@
+[Unit]
+Description=Resin flasher conf partition mountpoint
+
+[Mount]
+What=/dev/disk/by-label/flash-conf
+Where=/mnt/conf
+Type=ext4
+
+[Install]
+WantedBy=multi-user.target
