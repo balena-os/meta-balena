@@ -20,7 +20,15 @@ RDEPENDS_${PN} = " \
 
 SYSTEMD_SERVICE_${PN} = "resin-device-uuid.service"
 
+FILES_${PN} += "/home/root/.rnd"
+
 do_install() {
+    # Create an initial file where openssl will save its state
+    # We will bind mount here a location in resin-conf partition to make it rw
+    mkdir -p ${D}/home/root/
+    touch ${D}/home/root/.rnd
+    chmod 0600 ${D}/home/root/.rnd
+
     install -d ${D}${bindir}
     install -m 0775 ${WORKDIR}/resin-device-uuid ${D}${bindir}
 

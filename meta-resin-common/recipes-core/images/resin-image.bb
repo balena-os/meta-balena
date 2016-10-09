@@ -8,7 +8,7 @@ inherit image-resin
 #
 
 # keep this aligned to IMAGE_ROOTFS_ALIGNMENT
-IMAGE_ROOTFS_SIZE = "180224"
+IMAGE_ROOTFS_SIZE = "303104"
 
 # No overhead factor
 IMAGE_OVERHEAD_FACTOR = "1.0"
@@ -16,9 +16,9 @@ IMAGE_OVERHEAD_FACTOR = "1.0"
 # No extra space
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 
-# core-image-minimal add 4M to IMAGE_ROOTFS_EXTRA_SPACE
+# core-image-minimal adds 4M to IMAGE_ROOTFS_EXTRA_SPACE
 # Make IMAGE_ROOTFS_MAXSIZE = IMAGE_ROOTFS_SIZE + 4M
-IMAGE_ROOTFS_MAXSIZE = "303104"
+IMAGE_ROOTFS_MAXSIZE = "307200"
 
 
 # Generated resinhup-tar based on RESINHUP variable
