@@ -1,0 +1,13 @@
+[Unit]
+Description=ResinOS hostname
+Requires=tmp.mount systemd-tmpfiles-setup.service
+After=tmp.mount systemd-tmpfiles-setup.service
+
+[Mount]
+What=/tmp/hostname
+Where=/etc/hostname
+Type=None
+Options=bind
+
+[Install]
+WantedBy=multi-user.target
