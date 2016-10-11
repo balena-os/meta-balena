@@ -93,6 +93,11 @@ remove_backup_files () {
     done
 }
 
+# We generate the host keys in /etc/dropbear
+read_only_rootfs_hook_append () {
+    sed -i -e "s:^DROPBEAR_RSAKEY_DIR=.*$:DROPBEAR_RSAKEY_DIR=/etc/dropbear:" ${IMAGE_ROOTFS}/etc/default/dropbear
+}
+
 ROOTFS_POSTPROCESS_COMMAND += "generate_compressed_kernel_module_deps ; "
 IMAGE_POSTPROCESS_COMMAND =+ "deploy_image_license_manifest ; fix_hddimg_symlink ; "
 IMAGE_PREPROCESS_COMMAND += "remove_backup_files ; "
