@@ -1,12 +1,12 @@
 [Unit]
-Description=NetworkManager system connections bind mount
+Description=OpenSSL random state bind mount
 Requires=tmp.mount systemd-tmpfiles-setup.service
 After=tmp.mount systemd-tmpfiles-setup.service
 
 [Mount]
-What=/tmp/NetworkManager/system-connections
-Where=/etc/NetworkManager/system-connections
-Type=None
+What=/tmp/.rnd
+Where=/home/root/.rnd
+Type=none
 Options=bind
 
 [Install]

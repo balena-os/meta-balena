@@ -1,11 +1,11 @@
 [Unit]
-Description=NetworkManager system connections bind mount
+Description=ResinOS hostname
 Requires=tmp.mount systemd-tmpfiles-setup.service
 After=tmp.mount systemd-tmpfiles-setup.service
 
 [Mount]
-What=/tmp/NetworkManager/system-connections
-Where=/etc/NetworkManager/system-connections
+What=/tmp/hostname
+Where=/etc/hostname
 Type=None
 Options=bind
 
