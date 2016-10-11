@@ -1,0 +1,14 @@
+[Unit]
+Description=Dropbear Host Key Mount Point
+Requires=tmp.mount systemd-tmpfiles-setup.service
+After=tmp.mount systemd-tmpfiles-setup.service
+Before=dropbearkey.service
+
+[Mount]
+What=/tmp/dropbear
+Where=/etc/dropbear
+Type=none
+Options=bind
+
+[Install]
+WantedBy=multi-user.target
