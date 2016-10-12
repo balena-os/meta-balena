@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v2.6.2 [Pablo]
 * Configure kernel with CONFIG_SECCOMP [Andrei]
 * Update kernel-module-headers to v0.0.7 [Lorenzo]
 * Implement persistent logging functionality [Andrei]
