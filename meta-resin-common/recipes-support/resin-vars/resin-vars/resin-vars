@@ -11,7 +11,7 @@ Options:
 
     -c, --config-path CONFIG_PATH
         Use a non default config.json file.
-        Default: /mnt/conf/config.json
+        Default: /mnt/boot/config.json
 EOF
 }
 
