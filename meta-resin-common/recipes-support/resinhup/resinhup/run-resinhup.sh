@@ -265,7 +265,9 @@ if [ "$LOG" == "yes" ]; then
 fi
 
 # Get the slug
-if [ -f /mnt/conf/config.json ]; then
+if [ -f /mnt/boot/config.json ]; then
+    slug=$(jq -r .deviceType /mnt/boot/config.json)
+elif [ -f /mnt/conf/config.json ]; then
     slug=$(jq -r .deviceType /mnt/conf/config.json)
 elif [ -f /mnt/data-disk/config.json ]; then
     slug=$(jq -r .deviceType /mnt/data-disk/config.json)
