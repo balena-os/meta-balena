@@ -1,0 +1,8 @@
+[Unit]
+Description=Automount systemd presistent state
+
+[Automount]
+Where=/mnt/conf/systemd
+
+[Install]
+WantedBy=multi-user.target
