@@ -456,7 +456,7 @@ do_kernel_resin_aufs_fetch_and_unpack[postfuncs] += "apply_aufs_patches"
 # Inject resin configs
 #
 python do_kernel_resin_injectconfig() {
-    activatedflags = d.getVar("RESIN_CONFIGS").split()
+    activatedflags = d.getVar("RESIN_CONFIGS", True).split()
     if not activatedflags:
         bb.warn("No resin specific kernel configuration flags selected.")
         return
@@ -519,7 +519,7 @@ do_kernel_resin_reconfigure[dirs] += "${B}"
 # Check that all the wanted configs got activated in kernel
 #
 python do_kernel_resin_checkconfig() {
-    activatedflags = d.getVar("RESIN_CONFIGS").split()
+    activatedflags = d.getVar("RESIN_CONFIGS", True).split()
     if not activatedflags:
         bb.warn("No resin specific kernel configuration flags selected.")
         return
