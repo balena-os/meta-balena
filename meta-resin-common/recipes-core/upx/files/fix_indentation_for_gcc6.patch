@@ -1,0 +1,29 @@
+Upstream-Status: Pending
+
+Signed-off-by: Florin Sarbu <florin@resin.io>
+
+Index: upx-3.91-src/src/p_vmlinx.cpp
+===================================================================
+--- upx-3.91-src.orig/src/p_vmlinx.cpp
++++ upx-3.91-src/src/p_vmlinx.cpp
+@@ -94,11 +94,15 @@ PackVmlinuxBase<T>::compare_Phdr(void co
+     Phdr const *const b = (Phdr const *)bb;
+     unsigned const xa = a->p_type - Phdr::PT_LOAD;
+     unsigned const xb = b->p_type - Phdr::PT_LOAD;
+-            if (xa < xb)         return -1;  // PT_LOAD first
+-            if (xa > xb)         return  1;
+-    if (a->p_paddr < b->p_paddr) return -1;  // ascending by .p_paddr
+-    if (a->p_paddr > b->p_paddr) return  1;
+-                                 return  0;
++    if (xa < xb)
++         return -1;  // PT_LOAD first
++    if (xa > xb)
++         return  1;
++    if (a->p_paddr < b->p_paddr)
++        return -1;  // ascending by .p_paddr
++    if (a->p_paddr > b->p_paddr)
++        return  1;
++    return  0;
+ }
+ 
+ template <class T>
