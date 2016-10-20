@@ -30,7 +30,7 @@ The root directory generally also includes the following files:
 * `README.md`
 * `VERSION`
 
-and one or more files named `<yocto-machine-name>.coffee`, one for each of the boards that the repository will add support for (eg. [`raspberry-pi3.coffee`](https://github.com/resin-os/resin-raspberrypi/blob/master/raspberrypi3.coffee) for Raspberry Pi 3 in `resin-raspberrypi`). This file contains information on the Yocto build for the specific board, in [CoffeeScript](http://coffeescript.org/) format. A minimal version of this file, using [Raspberry Pi 3 as the example](https://github.com/resin-os/resin-raspberrypi/), would be:
+and one or more files named `<board-name>.coffee`, where `<board-name>` is equal to the corresponding `yocto-machine-name`. Should add one for each of the boards that the repository adds support for (eg. [`raspberry-pi3.coffee`](https://github.com/resin-os/resin-raspberrypi/blob/master/raspberrypi3.coffee) for Raspberry Pi 3 in `resin-raspberrypi`). This file contains information on the Yocto build for the specific board, in [CoffeeScript](http://coffeescript.org/) format. A minimal version of this file, using [Raspberry Pi 3 as the example](https://github.com/resin-os/resin-raspberrypi/), would be:
 
 ```
 module.exports =
@@ -63,12 +63,14 @@ The layout so far looks as follows:
 ├── VERSION
 ├── layers
 │   ├── meta-openembedded
-│   ├── meta-<board-family>
+│   ├── meta-<vendor>
 │   ├── meta-resin
 │   ├── meta-resin-<board-family>
 │   ├── oe-meta-go
 │   └── poky
-├── <board>.coffee
+├── <board-name-1>.coffee
+├── <board-name-2>.coffee
+...
 └── resin-yocto-scripts
 ```
 
