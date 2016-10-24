@@ -301,10 +301,10 @@ else
 fi
 
 # Detect arch
-source /etc/resin-supervisor/supervisor.conf
+source /etc/supervisor.conf
 arch=`echo "$SUPERVISOR_IMAGE" | sed -n "s/.*\/\([a-zA-Z0-9]*\)-.*/\1/p"`
 if [ -z "$arch" ]; then
-    log ERROR "Can't detect arch from /etc/resin-supervisor/supervisor.conf ."
+    log ERROR "Can't detect arch from /etc/supervisor.conf ."
 else
     log "Detected arch: $arch ."
 fi
@@ -319,7 +319,7 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
     /usr/bin/resin-device-progress --percentage 25 --state "Resin Update: Updating supervisor..."
 
-    # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/resin-supervisor/supervisor.conf
+    # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$SUPERVISOR_REGISTRY" ]; then
         UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
     else
