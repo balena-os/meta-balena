@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v2.7.0 [Pablo]
 * Add guide for new board adoption [Florin]
 * Update supervisor to v2.6.2 [Pablo]
 * Configure kernel with CONFIG_SECCOMP [Andrei]
