@@ -19,7 +19,7 @@ do_install_append() {
         echo 'DROPBEAR_EXTRA_ARGS="-g"' >> ${D}/etc/default/dropbear
     fi
 
-    if [ "${RESIN_CONNECTABLE}" == "1" ]; then
+    if [ "${RESIN_CONNECTABLE_ENABLE_SERVICES}" = "1" ]; then
         mkdir -p ${D}/home/root/.ssh
         mkdir -p ${D}${localstatedir}/lib/dropbear/ # This will enable the authorized_keys to be updated even when the device has read_only root.
         install -m 0400 ${WORKDIR}/failsafe-sshkey.pub ${D}/${localstatedir}/lib/dropbear/authorized_keys
@@ -39,4 +39,4 @@ do_install_append() {
     fi
 
 }
-do_install[vardeps] += "DISTRO_FEATURES RESIN_CONNECTABLE"
+do_install[vardeps] += "DISTRO_FEATURES RESIN_CONNECTABLE_ENABLE_SERVICES"
