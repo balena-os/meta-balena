@@ -84,11 +84,11 @@ python () {
 
 do_install () {
     # Generate supervisor conf
-    install -d ${D}${sysconfdir}
-    install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
-    sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
-    sed -i -e 's:@TARGET_TAG@:${TARGET_TAG}:g' ${D}${sysconfdir}/supervisor.conf
-    sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
+    install -d ${D}${sysconfdir}/resin-supervisor/
+    install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/resin-supervisor/
+    sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
+    sed -i -e 's:@TARGET_TAG@:${TARGET_TAG}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
+    sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
 
     install -d ${D}/resin-data
 
