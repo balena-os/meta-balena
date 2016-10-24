@@ -4,6 +4,9 @@ Change log
 * Update supervisor to v2.7.0 [Pablo]
 * Add guide for new board adoption [Florin]
 * Update supervisor to v2.6.2 [Pablo]
+
+# v2.0-beta.1 - 2016-10-11
+
 * Configure kernel with CONFIG_SECCOMP [Andrei]
 * Update kernel-module-headers to v0.0.7 [Lorenzo]
 * Implement persistent logging functionality [Andrei]
