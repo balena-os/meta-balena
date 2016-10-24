@@ -10,7 +10,7 @@ populate() {
     if [ -f $2 ]; then
         mkdir -p "$(dirname $1)" && cp $2 $1
     else
-        mkdir -p $1 && find $2 -type f -type l -exec cp {} $1 +
+        mkdir -p $1 && find $2 \( -type f -o -type l \) -exec cp {} $1 +
     fi
 }
 

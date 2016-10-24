@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Move supervisor.conf from /etc to /etc/resin-supervisor [Theodor]
 * Update supervisor to v2.7.0 [Pablo]
 * Add guide for new board adoption [Florin]
 * Update supervisor to v2.6.2 [Pablo]

@@ -10,7 +10,7 @@ SRC_URI = " \
     file://etc-dropbear.mount \
     file://etc-systemd-system-resin.target.wants.mount \
     file://etc-hostname.mount \
-    file://etc-supervisor.conf.mount \
+    file://etc-resinx2dsupervisor.mount \
     file://etc-NetworkManager-systemx2dconnections.mount \
     file://var-log-journal.mount \
     file://etc-systemd-journald.conf.d.mount \
@@ -32,7 +32,6 @@ SYSTEMD_SERVICE_${PN} = " \
     etc-dropbear.mount \
     etc-systemd-system-resin.target.wants.mount \
     etc-hostname.mount \
-    etc-supervisor.conf.mount \
     var-log-journal.mount \
     etc-systemd-journald.conf.d.mount \
     home-root-.rnd.mount \
@@ -69,7 +68,6 @@ do_install () {
             ${WORKDIR}/etc-docker.mount \
             ${WORKDIR}/etc-dropbear.mount \
             ${WORKDIR}/etc-hostname.mount \
-            ${WORKDIR}/etc-supervisor.conf.mount \
             ${WORKDIR}/etc-systemd-system-resin.target.wants.mount \
             ${WORKDIR}/var-log-journal.mount \
             ${WORKDIR}/etc-systemd-journald.conf.d.mount \
@@ -79,7 +77,9 @@ do_install () {
         # Yocto gets confused if we use strange file names - so we rename it here
         # https://bugzilla.yoctoproject.org/show_bug.cgi?id=8161
         install -c -m 0644 ${WORKDIR}/etc-NetworkManager-systemx2dconnections.mount ${D}${systemd_unitdir}/system/etc-NetworkManager-system\\x2dconnections.mount
+        install -c -m 0644 ${WORKDIR}/etc-resinx2dsupervisor.mount ${D}${systemd_unitdir}/system/etc-resin\\x2dsupervisor.mount
 
+        ln -sf ${systemd_unitdir}/system/etc-resin\\x2dsupervisor.mount ${D}${sysconfdir}/systemd/system/resin-bind.target.wants
         ln -sf ${systemd_unitdir}/system/etc-NetworkManager-system\\x2dconnections.mount ${D}${sysconfdir}/systemd/system/resin-bind.target.wants
     fi
 }

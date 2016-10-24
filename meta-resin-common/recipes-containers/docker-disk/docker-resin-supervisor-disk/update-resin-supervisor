@@ -103,7 +103,7 @@ if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/su
     fi
 else
     echo "No supervisor configuration found from API. Using arguments for image and tag."
-    source /etc/supervisor.conf
+    source /etc/resin-supervisor/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
         # Try to get the tag from supervisor.conf
         if [ -n "$SUPERVISOR_TAG" ]; then
@@ -149,5 +149,5 @@ systemctl start resin-supervisor
 # Mark supervisor as working. This version will run when the device reboots.
 echo "Mark pulled tag as latest..."
 $DOCKER tag -f "$image_name:$tag" "$image_name:latest"
-sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" /etc/supervisor.conf
-sed --in-place "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/supervisor.conf
+sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" /etc/resin-supervisor/supervisor.conf
+sed --in-place "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf
