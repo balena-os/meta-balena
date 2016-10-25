@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0-beta.2 - 2016-10-25
+
 * Update supervisor to v2.7.1 [Pablo]
 * Move supervisor.conf from /etc to /etc/resin-supervisor [Theodor]
 * Update supervisor to v2.7.0 [Pablo]
