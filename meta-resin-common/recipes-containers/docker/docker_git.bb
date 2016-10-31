@@ -45,7 +45,6 @@ PV = "${DOCKER_VERSION}+git${SRCREV}"
 
 DEPENDS = " \
   go-cross \
-  btrfs-tools \
   git \
   "
 
