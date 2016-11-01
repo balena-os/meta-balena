@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix aufs patching on non git kernel sources [Andrei]
 * Update supervisor to v2.8.1 [Pablo]
 
 # v2.0-beta.2 - 2016-10-25
