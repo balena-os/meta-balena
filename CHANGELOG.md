@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Truncate hostname to 7 characters [Michal]
 * Fix aufs patching on non git kernel sources [Andrei]
 * Update supervisor to v2.8.1 [Pablo]
 
