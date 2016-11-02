@@ -23,7 +23,7 @@ IMAGE_CMD_resinhup-tar () {
 
     # Populate
     mcopy -i ${WORKDIR}/boot.img -sv ::/ ${RESIN_HUP_TEMP_DIR_BOOT}
-    tar -xf ${IMAGE_NAME}.rootfs.tar -C ${RESIN_HUP_TEMP_DIR}
+    tar -xf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.tar -C ${RESIN_HUP_TEMP_DIR}
 
     # Quirks
     # We need to save some files that docker shadows with bind mounts
