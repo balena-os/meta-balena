@@ -31,6 +31,8 @@ SRC_URI = "\
   file://0004-Set-permission-on-atomic-file-write.patch \
   file://0005-Update-layer-store-to-sync-transaction-files-before-.patch \
   file://0006-Atomically-save-libtrust-key-file.patch \
+  file://0007-daemon-register-container-as-late-as-possible.patch \
+  file://0008-daemon-cleanup-as-early-as-possible.patch \
 	"
 
 # Apache-2.0 for docker
