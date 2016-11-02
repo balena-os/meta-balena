@@ -446,9 +446,14 @@ apply_aufs_patches () {
     cp -r ${WORKDIR}/aufs_standalone/Documentation ${WORKDIR}/aufs_standalone/fs ${S}
     cp ${WORKDIR}/aufs_standalone/include/uapi/linux/aufs_type.h ${S}/include/uapi/linux/
     cd ${S}
-    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-kbuild.patch'`
-    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-base.patch'`
-    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-mmap.patch'`
+    if [ -d "${S}/.git" ]; then
+        PATCH_CMD="git apply -3"
+    else
+        PATCH_CMD="patch -p1"
+    fi
+    $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-kbuild.patch'`
+    $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-base.patch'`
+    $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-mmap.patch'`
 }
 do_kernel_resin_aufs_fetch_and_unpack[postfuncs] += "apply_aufs_patches"
 
