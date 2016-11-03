@@ -88,17 +88,6 @@ and a number of directories out of which the mandatory ones are:
     - `samples/bblayers.conf.sample` file in which all the required Yocto layers are listed, see this [bblayers.conf.sample](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/samples/bblayers.conf.sample) from `meta-resin-raspberrypi` for an example, and see the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#var-BBLAYERS)
     - `samples/local.conf.sample` file which defines part of the build configuration (see the meta-resin [README.md][meta-resin-readme] for an overview of some of the variables use in the `local.conf.sample` file). An existing file can be used (e.g. [local.conf.sample](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/samples/local.conf.sample)) but making sure the "Supported machines" area lists the appropriate machines this repository is used for. See also the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#structure-build-conf-local.conf).
 
-- `recipes-containers/docker-disk` directory, which contains docker-resin-supervisor-disk.bbappend that shall define the following variable(s):
-
-    - `SUPERVISOR_REPOSITORY_<yocto-machine-name>`: this variable is used to specify the build of the supervisor. It can be one of (must match the architecture of the board):
-        *  **resin/armv7hf-supervisor** (for armv7 boards),
-        * **resin/i386-supervisor**
-        (for x86 boards),
-        * **resin/amd64-supervisor** (for x86-64 boards),
-        * **resin/rpi-supervisor** (for raspberry pi 1),
-        * **resin/armel-supervisor** (for armv5 boards).
-
-    - `LED_FILE_<yocto-machine-name>`: this variable should point to the [Linux sysfs path of an unused LED](https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-led) if available for that particular board. This allows the unused LED to be flashed for quick visual device identification purposes. If no such unused LED exists, this variable shall not be used.
 
 - `recipes-core/images` directory, which contains at least a `resin-image.bbappend` file. Depending on the type of board you are adding support for, you should have your device support either just `resin-image` or both `resin-image-flasher` and `resin-image`. Generally, `resin-image` is for boards that boot directly
 from external storage (these boards do not have internal storage to install resin.io on). `resin-image-flasher` is used when the targeted board has internal storage so this flasher image is burned onto an SD card or USB stick that is used for the initial boot. When booted, this flasher image will automatically install resin.io on internal storage.
@@ -142,6 +131,10 @@ from external storage (these boards do not have internal storage to install resi
     ```
     will result that after flashing the file `grub.cfg`_internal is copied with the name `grub.cfg` to the /EFI/BOOT/ directory on the resin-boot partition.
 
+and the optional ones are:
+
+- `recipes-containers/docker-disk` directory, which contains docker-resin-supervisor-disk.bbappend that can define the following variable(s):
+    - `LED_FILE_<yocto-machine-name>`: this variable should point to the [Linux sysfs path of an unused LED](https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-led) if available for that particular board. This allows the unused LED to be flashed for quick visual device identification purposes. If no such unused LED exists, this variable shall not be used.
 
 The directory structure then looks similar to this:
 ```
