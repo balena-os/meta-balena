@@ -33,6 +33,7 @@ SRC_URI = "\
   file://0006-Atomically-save-libtrust-key-file.patch \
   file://0007-daemon-register-container-as-late-as-possible.patch \
   file://0008-daemon-cleanup-as-early-as-possible.patch \
+  file://0009-graph-aufs-durably-write-layer-on-disk-before-return.patch \
 	"
 
 # Apache-2.0 for docker
