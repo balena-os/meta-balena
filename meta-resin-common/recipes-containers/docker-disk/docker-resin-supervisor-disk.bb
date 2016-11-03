@@ -1,5 +1,13 @@
 require docker-disk.inc
 
+# Resin supervisor supported CPU archtectures
+SUPERVISOR_REPOSITORY_armv5 = "resin/armel-supervisor"
+SUPERVISOR_REPOSITORY_armv6 = "resin/rpi-supervisor"
+SUPERVISOR_REPOSITORY_armv7a = "resin/armv7hf-supervisor"
+SUPERVISOR_REPOSITORY_aarch64 = "resin/armv7hf-supervisor"
+SUPERVISOR_REPOSITORY_x86 = "resin/i386-supervisor"
+SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
+
 SUPERVISOR_TAG ?= "v2.8.3"
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
 TARGET_TAG ?= "${SUPERVISOR_TAG}"
@@ -46,7 +54,7 @@ python () {
     tag_repository = d.getVar('TARGET_TAG', True)
 
     if not supervisor_repository:
-        bb.fatal("resin-supervisor-disk: One or more needed variables are not available in resin-supervisor-disk. Usually these are provided with a bbappend.")
+        bb.fatal("resin-supervisor-disk: There is no support for this architecture.")
 
     # Version 0.0.0 means that the supervisor image was either not preloaded or a custom image was preloaded
     if target_repository == "" or target_repository != supervisor_repository:
