@@ -211,3 +211,9 @@ For specific examples on how board support is provided for existing devices, see
 [meta-resin-readme]: https://github.com/resin-os/meta-resin/blob/master/README.md
 [local.conf.sample intel]: https://github.com/resin-os/resin-intel/blob/master/layers/meta-resin-intel/conf/samples/local.conf.sample
 [bblayers.conf.sample intel]: https://github.com/resin-os/resin-intel/blob/master/layers/meta-resin-intel/conf/samples/bblayers.conf.sample
+
+## FAQ
+
+### Kernel complains that CONFIG_AUFS was not activated
+
+The versions before v2.0-beta.3 didn't support kernel sources that were not git repositories. Starting with this version aufs patches will get applied on kernel recipes which use tar achives for example as well. For the older version this is considered a limitation.
