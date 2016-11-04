@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix container name conflict when creating a docker container [petrosagg]
 * Don't compress docker binary anymore with UPX [Andrei]
 * Fix /var/lib/docker corruption after power cut [petrosagg]
 * Truncate hostname to 7 characters [Michal]
