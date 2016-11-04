@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0-beta.3 - 2016-11-04
+
 * Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
 * Fix container name conflict when creating a docker container [petrosagg]
 * Don't compress docker binary anymore with UPX [Andrei]
