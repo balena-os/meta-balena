@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Don't compress docker binary anymore with UPX [Andrei]
 * Fix /var/lib/docker corruption after power cut [petrosagg]
 * Truncate hostname to 7 characters [Michal]
 * Fix aufs patching on non git kernel sources [Andrei]
