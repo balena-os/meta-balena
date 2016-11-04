@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
 * Fix container name conflict when creating a docker container [petrosagg]
 * Don't compress docker binary anymore with UPX [Andrei]
 * Fix /var/lib/docker corruption after power cut [petrosagg]
