@@ -45,3 +45,36 @@ fi
 kill -TERM $(cat /var/run/docker.pid) && wait $(cat /var/run/docker.pid) && umount /data_disk
 
 echo "Docker export successful."
+
+# Export 2
+
+# Create the directory structures we use for Resin
+mkdir -p /export2/data_disk/docker
+mkdir -p /export2/data_disk/resin-data
+
+# Start docker with the created image.
+docker daemon -g /export2/data_disk/docker -s aufs &
+echo "Waiting for docker to become ready.."
+STARTTIME=$(date +%s)
+ENDTIME=$(date +%s)
+while [ ! -S /var/run/docker.sock ]
+do
+    if [ $(($ENDTIME - $STARTTIME)) -le $DOCKER_TIMEOUT ]; then
+        sleep 1
+        ENDTIME=$(date +%s)
+    else
+        echo "Timeout while waiting for docker to come up."
+        exit 1
+    fi
+done
+
+if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
+    docker pull $TARGET_REPOSITORY:$TARGET_TAG
+    docker tag $TARGET_REPOSITORY:$TARGET_TAG $TARGET_REPOSITORY:latest
+fi
+
+kill -TERM $(cat /var/run/docker.pid) && wait $(cat /var/run/docker.pid) 
+
+adduser owner && addgroup owner
+chown owner:owner /export2/data_disk/ -R
+echo "Docker export 2 successful."
