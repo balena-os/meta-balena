@@ -4,7 +4,7 @@ Description=Resin data partition mountpoint
 [Mount]
 What=/dev/disk/by-label/resin-data
 Where=/mnt/data
-Type=ext4
+Type=ubifs
 
 [Install]
 WantedBy=multi-user.target

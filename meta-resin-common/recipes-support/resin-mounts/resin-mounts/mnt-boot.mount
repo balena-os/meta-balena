@@ -7,7 +7,7 @@ Conflicts=umount.target
 [Mount]
 What=/dev/disk/by-label/resin-boot
 Where=/mnt/boot
-Type=vfat
+Type=ubifs
 
 [Install]
 WantedBy=multi-user.target

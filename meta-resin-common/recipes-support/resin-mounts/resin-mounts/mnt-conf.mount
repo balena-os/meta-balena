@@ -7,7 +7,7 @@ Conflicts=umount.target
 [Mount]
 What=/dev/disk/by-label/resin-conf
 Where=/mnt/conf
-Type=ext4
+Type=ubifs
 
 [Install]
 WantedBy=multi-user.target
