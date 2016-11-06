@@ -1,0 +1,3 @@
+KERNEL=="ubi0_1", TAG+="systemd", SYMLINK+="disk/by-label/resin-data"
+KERNEL=="ubi0_2", TAG+="systemd", SYMLINK+="disk/by-label/resin-conf"
+KERNEL=="ubi0_3", TAG+="systemd", SYMLINK+="disk/by-label/resin-boot"
