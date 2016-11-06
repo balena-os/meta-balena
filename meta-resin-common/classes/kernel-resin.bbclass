@@ -121,6 +121,7 @@ RESIN_CONFIGS[docker] ?= " \
     CONFIG_EXT4_FS_SECURITY=y \
     CONFIG_AUFS_FS=y \
     CONFIG_AUFS_XATTR=y \
+    CONFIG_IP_NF_TARGET_REJECT=y \
     "
 
 #
