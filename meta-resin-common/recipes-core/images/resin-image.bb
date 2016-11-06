@@ -28,7 +28,6 @@ IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
     splash \
     ssh-server-dropbear \
-    read-only-rootfs \
     "
 
 IMAGE_INSTALL_append = " \
