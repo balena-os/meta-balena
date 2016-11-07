@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update supervisor to v2.8.2 [Pablo]
+
 # v2.0-beta.3 - 2016-11-04
 
 * Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
