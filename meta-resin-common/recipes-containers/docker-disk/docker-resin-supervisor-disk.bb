@@ -9,7 +9,7 @@ SUPERVISOR_REPOSITORY_x86 = "resin/i386-supervisor"
 SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
 
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
-TARGET_TAG ?= "v2.8.1"
+TARGET_TAG ?= "v2.8.2"
 LED_FILE ?= "/dev/null"
 
 inherit systemd
