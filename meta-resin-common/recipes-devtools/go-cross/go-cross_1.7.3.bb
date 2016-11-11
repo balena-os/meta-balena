@@ -1,3 +1,7 @@
+inherit cross
+
+require go_${PV}.inc
+
 DEPENDS_append = " virtual/${TARGET_PREFIX}gcc libgcc"
 INHIBIT_SYSROOT_STRIP = "1"
 #
@@ -31,7 +35,6 @@ do_compile() {
   env "GOROOT=${WORKDIR}/go-${PV}/go" "${WORKDIR}/go-${PV}/go/bin/go" env
 }
 
-#
 # Use GOARCH 386 for i686 too
 # Fix pushed to upstream: https://github.com/mem/oe-meta-go/pull/4
 # https://github.com/mem/oe-meta-go/pull/4/commits/2585beb9660e72a3502b92d56a469b4c1d620e24
