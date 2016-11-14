@@ -1,0 +1,37 @@
+From 8259cf3c72e149ccdec2070d7f885119d92d94c6 Mon Sep 17 00:00:00 2001
+From: Austin Clements <austin@google.com>
+Date: Fri, 19 Aug 2016 15:51:00 -0400
+Subject: [PATCH 5/5] runtime/debug: enable TestFreeOSMemory on all arches
+
+TestFreeOSMemory was disabled on many arches because of issue #9993.
+Since that's been fixed, enable the test everywhere.
+
+Change-Id: I298c38c3e04128d9c8a1f558980939d5699bea03
+Reviewed-on: https://go-review.googlesource.com/27403
+Run-TryBot: Austin Clements <austin@google.com>
+Reviewed-by: Brad Fitzpatrick <bradfitz@golang.org>
+Reviewed-by: Minux Ma <minux@golang.org>
+
+Upstream-Status: Backport
+---
+ src/runtime/debug/garbage_test.go | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/runtime/debug/garbage_test.go b/src/runtime/debug/garbage_test.go
+index 6ec94aa..d1fa7db 100644
+--- a/src/runtime/debug/garbage_test.go
++++ b/src/runtime/debug/garbage_test.go
+@@ -89,10 +89,6 @@ func TestReadGCStats(t *testing.T) {
+ var big = make([]byte, 1<<20)
+ 
+ func TestFreeOSMemory(t *testing.T) {
+-	if runtime.GOARCH == "arm64" || runtime.GOARCH == "ppc64" || runtime.GOARCH == "ppc64le" || runtime.GOARCH == "mips64" || runtime.GOARCH == "mips64le" ||
+-		runtime.GOOS == "nacl" {
+-		t.Skip("issue 9993; scavenger temporarily disabled on systems with physical pages larger than logical pages")
+-	}
+ 	var ms1, ms2 runtime.MemStats
+ 
+ 	if big == nil {
+-- 
+2.10.2
+

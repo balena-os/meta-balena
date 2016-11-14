@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Fix page size detection in go for arm64 boards [Andrei]
+
 # v2.0-beta.4 - 2016-11-09
 
 * Update supervisor to v2.8.2 [Pablo]
