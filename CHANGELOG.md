@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix racing issue in between connman and openvpn related to tun device rename [Andrei]
 * Update supervisor to v2.8.2 [Pablo]
 * Update supervisor to v2.8.1 [Pablo]
 
