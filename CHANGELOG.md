@@ -1,6 +1,10 @@
 Change log
 -----------
 
+* Fix /var/lib/docker corruption after power cut [petrosagg]
+* Fix container name conflict when creating a docker container [petrosagg]
+* docker: enable using local resolver in containers [petrosagg]
+* docker: backport fix for atomic key.json writing [petrosagg]
 * Fix racing issue in between connman and openvpn related to tun device rename [Andrei]
 * Update supervisor to v2.8.2 [Pablo]
 * Update supervisor to v2.8.1 [Pablo]

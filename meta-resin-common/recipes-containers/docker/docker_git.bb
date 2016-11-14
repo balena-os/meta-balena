@@ -30,6 +30,11 @@ SRC_URI = "\
   file://0003-Safer-file-io-for-configuration-files.patch \
   file://0004-Set-permission-on-atomic-file-write.patch \
   file://0005-Update-layer-store-to-sync-transaction-files-before-.patch \
+  file://0006-Atomically-save-libtrust-key-file.patch \
+  file://0007-daemon-register-container-as-late-as-possible.patch \
+  file://0008-daemon-cleanup-as-early-as-possible.patch \
+  file://0009-graph-aufs-durably-write-layer-on-disk-before-return.patch \
+  file://0010-pkg-ioutils-sync-parent-directory-too.patch \
 	"
 
 # Apache-2.0 for docker
