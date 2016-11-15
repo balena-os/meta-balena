@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.20 - 2016-11-15
+
 * Fix /var/lib/docker corruption after power cut [petrosagg]
 * Fix container name conflict when creating a docker container [petrosagg]
 * docker: enable using local resolver in containers [petrosagg]
