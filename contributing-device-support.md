@@ -116,6 +116,7 @@ from external storage (these boards do not have internal storage to install resi
 - `recipes-support/resin-init` directory - shall contain a `resin-init-flasher.bbappend` file if you intend to install resin.io to internal storage and hence use the flasher image. This shall define the following variables:
 
   - `INTERNAL_DEVICE_KERNEL_<yocto-machine-name>`: used to identify the internal storage where resin.io will be written to.
+
   - `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>`: used to specify the filename of the bootloader configuration file used by your board when booting from internal media. Must be the same as the *FilenameOnTheTarget* parameter of the bootloader internal config file used in the `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` variable from `recipes-core/images/resin-image-flasher.bbappend`.
 
   - `INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_<yocto-machine-name>`: used to specify the relative path, including filename, to the resin-boot partition where `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>` will be copied to.
@@ -130,6 +131,36 @@ from external storage (these boards do not have internal storage to install resi
     INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_intel-corei7-64 = "/EFI/BOOT/grub.cfg"
     ```
     will result that after flashing the file `grub.cfg`_internal is copied with the name `grub.cfg` to the /EFI/BOOT/ directory on the resin-boot partition.
+
+
+  - `BOOTLOADER_FLASH_DEVICE`: used to identify the internal storage where the bootloader needs to be flashed to. This is only the case usually when the bootloader needs to be in a SPI flash like memory where the bootrom code expect it to read it from raw disk instead from a partition.
+    Note that if `BOOTLOADER_FLASH_DEVICE` is set, then also `BOOTLOADER_IMAGE`, `BOOTLOADER_BLOCK_SIZE_OFFSET` and `BOOTLOADER_SKIP_OUTPUT_BLOCKS` need to be set.
+
+  - `BOOTLOADER_IMAGE`: used to specify the name of the bootloader binary, from the resin-boot partition, that is to be written to `BOOTLOADER_FLASH_DEVICE`.
+
+  - `BOOTLOADER_BLOCK_SIZE_OFFSET`: used to specify the block size with which `BOOTLOADER_IMAGE` is to be written to `BOOTLOADER_FLASH_DEVICE`.
+
+  - `BOOTLOADER_SKIP_OUTPUT_BLOCKS`: used to specify how many blocks of size `BOOTLOADER_BLOCK_SIZE_OFFSET` need to be skipped from `BOOTLOADER_FLASH_DEVICE` when writing `BOOTLOADER_IMAGE` to it.
+
+    Note: Some hardware requires the use of a MLO (a.k.a. SPL - secondary program loader) that is to be copied in static RAM and executed from there (static RAM is small in size) and this first stage bootloader is responsible for initializing the regular RAM and then copying the regular bootloader to this regular RAM and passing execution to it.
+    For this purpose a second set of variables called BOOTLOADER_FLASH_DEVICE_1, BOOTLOADER_IMAGE_1, BOOTLOADER_BLOCK_SIZE_OFFSET_1 and BOOTLOADER_SKIP_OUTPUT_BLOCKS_1 can be used to accomodate this use case.
+
+    For example, setting
+
+    ```sh
+    BOOTLOADER_FLASH_DEVICE = "mtdblock0"
+    ````
+    ```sh
+    BOOTLOADER_IMAGE = "u-boot.imx"
+    ```
+    ```sh
+    BOOTLOADER_BLOCK_SIZE_OFFSET = "1024"
+    ```
+    and
+    ```sh
+    BOOTLOADER_SKIP_OUTPUT_BLOCKS = "3"
+    ```
+    will result that the file u-boot.imx from the resin-boot partition is written to /dev/mtdblock0 with a block size of 1024 bytes and after the first 3 * 1024 bytes of /dev/mtdblock0.
 
 and the optional ones are:
 
