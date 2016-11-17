@@ -106,7 +106,7 @@ do_compile() {
 
   # Pass the needed cflags/ldflags so that cgo
   # can find the needed headers files and libraries
-  export CGO_CFLAGS="${BUILDSDK_CFLAGS} ${TARGET_CC_ARCH}"
+  export CGO_CFLAGS="${BUILDSDK_CFLAGS} ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
   export CGO_LDFLAGS="${BUILDSDK_LDFLAGS}  ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
 
   DOCKER_GITCOMMIT="${SRCREV}" \
