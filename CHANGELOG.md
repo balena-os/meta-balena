@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Allow resin-init-flasher to also flash both MLO and regular u-boot at the same time [Florin]
 * Fix page size detection in go for arm64 boards [Andrei]
 
 # v2.0-beta.4 - 2016-11-09

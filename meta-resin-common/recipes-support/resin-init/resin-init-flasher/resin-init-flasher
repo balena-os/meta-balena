@@ -26,6 +26,13 @@
 #  BOOTLOADER_BLOCK_SIZE_OFFSET           - offset at which we write u-boot binary
 #  BOOTLOADER_SKIP_OUTPUT_BLOCKS          - number of blocks to skip when writing bootloader
 #                                             * this is the seek param to dd
+#
+#  Certain hardware requires that the bootloader is split into MLO and u-boot.img rather than having
+# it all bundled in a u-boot.img binary. To address this requirement, this flashing script will further
+# look for variables called BOOTLOADER_FLASH_DEVICE_1, BOOTLOADER_IMAGE_1, BOOTLOADER_BLOCK_SIZE_OFFSET_1,
+# BOOTLOADER_SKIP_OUTPUT_BLOCKS_1 to be used in the same way as BOOTLOADER_FLASH_DEVICE, BOOTLOADER_IMAGE,
+# BOOTLOADER_BLOCK_SIZE_OFFSET, BOOTLOADER_SKIP_OUTPUT_BLOCKS so that user can specify both MLO and u-boot
+# to be written in the respective devices.
 
 set -e
 
@@ -115,16 +122,27 @@ partprobe /dev/$INTERNAL_DEVICE_KERNEL
 udevadm trigger
 udevadm settle
 
-# Flash bootloader
+# Flash bootloader(s)
 if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
     if [ -n "$BOOTLOADER_IMAGE" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET" ]; then
         dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE} of=/dev/${BOOTLOADER_FLASH_DEVICE} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET} seek=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}
-        inform "Flashed u-boot image to internal flash"
+        inform "Flashed ${BOOTLOADER_IMAGE} to internal flash"
     else
         fail "BOOTLOADER_IMAGE and/or BOOTLOADER_BLOCK_SIZE_OFFSET are not set."
     fi
 else
-    inform "No need to flash bootloader to a specific device."
+    inform "No need to flash first stage bootloader to a specific device."
+fi
+
+if [ -n "$BOOTLOADER_FLASH_DEVICE_1" ]; then
+    if [ -n "$BOOTLOADER_IMAGE_1" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET_1" ]; then
+        dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE_1} of=/dev/${BOOTLOADER_FLASH_DEVICE_1} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET_1} seek=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}
+        inform "Flashed ${BOOTLOADER_IMAGE_1} to internal flash"
+    else
+        fail "BOOTLOADER_IMAGE_1 and/or BOOTLOADER_BLOCK_SIZE_OFFSET_1 are not set."
+    fi
+else
+    inform "No need to flash second stage bootloader to a specific device."
 fi
 
 # Mount internal device boot partition
