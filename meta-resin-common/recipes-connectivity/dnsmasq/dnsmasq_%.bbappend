@@ -1,7 +1,6 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/files"
 
 SRC_URI_append = " \
-    file://0001-Treat-REFUSED-not-SERVFAIL-as-an-unsuccessful-upstre.patch \
     file://dnsmasq.conf \
     file://dnsmasq.conf.systemd \
     file://resolv.conf \
