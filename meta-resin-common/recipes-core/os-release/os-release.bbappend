@@ -13,7 +13,7 @@ python __anonymous () {
     bblayers = d.getVar("BBLAYERS", True)
 
     # Detect the path of meta-resin-common
-    metaresincommonpath = filter(lambda x: x.endswith('meta-resin-common'), bblayers.split())
+    metaresincommonpath = list(filter(lambda x: x.endswith('meta-resin-common'), bblayers.split()))
 
     if metaresincommonpath:
         resinboardpath = os.path.join(metaresincommonpath[0], '../../')
