@@ -68,7 +68,7 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 
 # Use an uncompressed ext3 by default as rootfs
 RESIN_SDIMG_ROOTFS_TYPE ?= "ext3"
-RESIN_SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
+RESIN_SDIMG_ROOTFS = "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
 
 # Default bootloader to virtual/bootloader
 RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
@@ -85,7 +85,7 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			"
 
 # SD card image name
-RESIN_SDIMG ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
+RESIN_SDIMG ?= "${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resin-sdcard"
 
 # Compression method to apply to RESIN_SDIMG after it has been created. Supported
 # compression formats are "gzip", "bzip2" or "xz". The original .resin-sdcard file
