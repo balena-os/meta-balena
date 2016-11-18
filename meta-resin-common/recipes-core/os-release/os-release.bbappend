@@ -20,8 +20,8 @@ python __anonymous () {
         metaresinpath = os.path.join(metaresincommonpath[0], '../')
 
         cmd = 'git log -n1 --format=format:%h '
-        resinboardrev = subprocess.Popen('cd ' + resinboardpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
-        metaresinrev = subprocess.Popen('cd ' + metaresinpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
+        resinboardrev = subprocess.Popen('cd ' + resinboardpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].decode()
+        metaresinrev = subprocess.Popen('cd ' + metaresinpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0].decode()
 
         if resinboardrev:
             d.setVar('RESIN_BOARD_REV', resinboardrev)
