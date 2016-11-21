@@ -1,0 +1,6 @@
+[Unit]
+Wants=resin-net-config.service
+After=resin-net-config.service
+
+[Service]
+OOMScoreAdjust=-1000
