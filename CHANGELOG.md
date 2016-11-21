@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* systemd: enable watchdog at 10 seconds [Florin]
+
 # v1.20 - 2016-11-15
 
 * Fix /var/lib/docker corruption after power cut [petrosagg]
