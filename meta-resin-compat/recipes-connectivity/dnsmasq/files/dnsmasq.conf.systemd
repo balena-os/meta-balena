@@ -1,0 +1,8 @@
+[Unit]
+Wants=docker.service resin-net-config.service
+After=docker.service resin-net-config.service
+
+[Service]
+OOMScoreAdjust=-1000
+ExecStart=
+ExecStart=/usr/bin/dnsmasq -x /run/dnsmasq.pid -a 127.0.0.2 -7 /etc/dnsmasq.d/ -r /etc/resolv.dnsmasq -z
