@@ -1,6 +1,9 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
-SRC_URI_append = "${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', '', ' file://remove_systemd-getty-generator.patch', d)}"
+SRC_URI_append = " \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'debug-image', '', ' file://remove_systemd-getty-generator.patch', d)} \
+    file://watchdog.conf \
+    "
 
 FILES_${PN} += " \
     /srv \
@@ -24,6 +27,10 @@ do_install_append() {
     fi
 
     install -d -m 0755 /srv
+
+    # enable watchdog
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
+    install -m 0644 ${WORKDIR}/watchdog.conf ${D}/${sysconfdir}/systemd/system.conf.d
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
     ln -s /proc/self/mounts ${D}${sysconfdir}/mtab
