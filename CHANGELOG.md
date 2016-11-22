@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.21 - 2016-11-22
+
 * systemd: enable watchdog at 10 seconds [Florin]
 
 # v1.20 - 2016-11-15
