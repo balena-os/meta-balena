@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v2.8.3 [Pablo]
 * Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
 * systemd: enable watchdog at 10 seconds [Florin]
 * Allow resin-init-flasher to also flash both MLO and regular u-boot at the same time [Florin]
