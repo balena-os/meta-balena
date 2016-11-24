@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Advance meta-resin-common to poky morty [Florin]
 * Update supervisor to v2.8.3 [Pablo]
 * Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
 * systemd: enable watchdog at 10 seconds [Florin]
