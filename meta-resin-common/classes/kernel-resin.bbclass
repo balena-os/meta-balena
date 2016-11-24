@@ -270,6 +270,7 @@ RESIN_CONFIGS[ip_set] = " \
 
 RESIN_CONFIGS_DEPS[ip6tables_nat] = " \
     CONFIG_NF_CONNTRACK_IPV6=m \
+    CONFIG_IP6_NF_IPTABLES=m \
     "
 RESIN_CONFIGS[ip6tables_nat] = " \
     CONFIG_IP6_NF_NAT=m \
