@@ -4,12 +4,14 @@ Requires=\
     docker.service \
     resin\x2ddata.mount \
     resin-device-uuid.service \
-    etc-systemd-system-resin.target.wants.mount
+    etc-systemd-system-resin.target.wants.mount \
+    etc-resin\x2dsupervisor.mount
 After=\
     docker.service \
     resin\x2ddata.mount \
     resin-device-uuid.service \
-    etc-systemd-system-resin.target.wants.mount
+    etc-systemd-system-resin.target.wants.mount \
+    etc-resin\x2dsupervisor.mount
 
 [Service]
 Type=simple
