@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v2.8.3 [Pablo]
 * Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
 
 # v1.21 - 2016-11-22
