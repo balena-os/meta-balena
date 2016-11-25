@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
+
 # v1.21 - 2016-11-22
 
 * systemd: enable watchdog at 10 seconds [Florin]
