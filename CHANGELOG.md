@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
 * systemd: enable watchdog at 10 seconds [Florin]
 * Allow resin-init-flasher to also flash both MLO and regular u-boot at the same time [Florin]
 * Fix page size detection in go for arm64 boards [Andrei]
