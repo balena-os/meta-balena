@@ -9,7 +9,7 @@ SUPERVISOR_REPOSITORY_x86 = "resin/i386-supervisor"
 SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
 
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
-TARGET_TAG ?= "v2.8.3"
+TARGET_TAG ?= "v2.8.2"
 LED_FILE ?= "/dev/null"
 
 inherit systemd
@@ -79,15 +79,15 @@ python () {
     if imagechk_output == "":
         bb.fatal("resin-supervisor-disk: No local supervisor images found.")
     version_cmd = "echo -n $(docker inspect %s:%s | jq --raw-output '.[0].Config.Env[] | select(startswith(\"VERSION=\")) | split(\"VERSION=\") | .[1]')" % (target_repository, tag_repository)
-    version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0].decode()
+    version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if version_output == "" or version_output == None:
         bb.fatal("resin-supervisor-disk: Cannot fetch version.")
     image_id_cmd = "echo -n $(docker inspect -f '{{.Id}}' %s:%s)" % (target_repository, tag_repository)
     image_id_output = subprocess.Popen(image_id_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if image_id_output == "" or image_id_output == None:
         bb.fatal("resin-supervisor-disk: Cannot fetch image id.")
-    d.setVar('SUPERVISOR_VERSION', "%s-%s" % (version_output, image_id_output.decode().split(':',1)[-1][:12]))
-    d.setVar('PV', "%s+%s" % (version_output, image_id_output.decode().split(':',1)[-1]))
+    d.setVar('SUPERVISOR_VERSION', "%s-%s" % (version_output, image_id_output.split(':',1)[-1][:12]))
+    d.setVar('PV', "%s+%s" % (version_output, image_id_output.split(':',1)[-1]))
 }
 
 do_install () {

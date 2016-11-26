@@ -1,0 +1,49 @@
+[Unit]
+Description=Resin supervisor
+Requires=\
+    docker.service \
+    resin\x2ddata.mount \
+    resin-device-uuid.service \
+    etc-systemd-system-resin.target.wants.mount
+After=\
+    docker.service \
+    resin\x2ddata.mount \
+    resin-device-uuid.service \
+    etc-systemd-system-resin.target.wants.mount
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10s
+EnvironmentFile=/etc/resin-supervisor/supervisor.conf
+EnvironmentFile=-/tmp/update-supervisor.conf
+ExecStartPre=-@BINDIR@/docker stop resin_supervisor
+ExecStartPre=-@BINDIR@/docker rm --force resin_supervisor
+ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
+    @BINDIR@/docker run --privileged --name resin_supervisor \
+    --net=host \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v $CONFIG_PATH:/boot/config.json  \
+    -v /mnt/data/apps.json:/boot/apps.json \
+    -v /resin-data/resin-supervisor:/data \
+    -v /proc/net/fib_trie:/mnt/fib_trie \
+    -v /var/log/supervisor-log:/var/log \
+    -v /:/mnt/root \
+    -e DOCKER_ROOT=/mnt/root/var/lib/docker \
+    -e DOCKER_SOCKET=/var/run/docker.sock \
+    -e BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT \
+    -e API_ENDPOINT=$API_ENDPOINT \
+    -e REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT \
+    -e PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY \
+    -e PUBNUB_PUBLISH_KEY=$PUBNUB_PUBLISH_KEY \
+    -e MIXPANEL_TOKEN=$MIXPANEL_TOKEN \
+    -e DELTA_ENDPOINT=$DELTA_ENDPOINT \
+    -e LED_FILE=${LED_FILE} \
+    -e LISTEN_PORT=$LISTEN_PORT \
+    -e SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE} \
+    ${SUPERVISOR_IMAGE}'
+ExecStop=-@BINDIR@/docker stop resin_supervisor
+ExecStop=-@BINDIR@/docker rm --force resin_supervisor
+
+[Install]
+WantedBy=multi-user.target

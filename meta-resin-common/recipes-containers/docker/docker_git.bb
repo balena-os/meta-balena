@@ -36,6 +36,7 @@ SRC_URI = "\
   file://0008-daemon-cleanup-as-early-as-possible.patch \
   file://0009-graph-aufs-durably-write-layer-on-disk-before-return.patch \
   file://0010-pkg-ioutils-sync-parent-directory-too.patch \
+  file://0011-fix-compilation-errors-with-btrfs-progs-4.5.patch \
 "
 
 # Apache-2.0 for docker
@@ -106,8 +107,8 @@ do_compile() {
 
   # Pass the needed cflags/ldflags so that cgo
   # can find the needed headers files and libraries
-  export CGO_CFLAGS="${BUILDSDK_CFLAGS} ${TARGET_CC_ARCH}"
-  export CGO_LDFLAGS="${BUILDSDK_LDFLAGS}  ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
+  export CGO_CFLAGS="${CFLAGS} ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
+  export CGO_LDFLAGS="${LDFLAGS}  ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
 
   DOCKER_GITCOMMIT="${SRCREV}" \
     ./hack/make.sh dynbinary

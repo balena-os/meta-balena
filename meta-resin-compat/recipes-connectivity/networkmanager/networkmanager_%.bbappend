@@ -1,4 +1,4 @@
-inherit deploy gobject-introspection
+inherit deploy
 
 DEPENDS += "nss"
 
@@ -17,11 +17,6 @@ PACKAGECONFIG_append = " systemd modemmanager ppp"
 PACKAGES += "${PN}-bash-completion"
 
 FILES_${PN}-bash-completion = "${datadir}/bash-completion"
-
-FILES_libnmglib += " \
-    ${libdir}/libnm-glib.so.* \
-    ${libdir}/girepository-*/*.typelib \
-    "
 
 do_install_append() {
     install -m 0644 ${WORKDIR}/NetworkManager.conf ${D}${sysconfdir}/NetworkManager/
