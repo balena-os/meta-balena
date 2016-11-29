@@ -30,12 +30,12 @@ do_compile() {
         TGT_ARCH=${TRANSLATED_TARGET_ARCH}
     fi
     ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${TGT_ARCH} ${TARGET_PREFIX}
-    tar -cjf kernel_modules_headers.tar.bz2 kernel_modules_headers
+    tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
     rm -rf kernel_modules_headers
 }
 
 do_deploy() {
-    cp kernel_modules_headers.tar.bz2 ${DEPLOYDIR}
+    cp kernel_modules_headers.tar.gz ${DEPLOYDIR}
 }
 
 do_compile[depends] += "virtual/kernel:do_deploy"
