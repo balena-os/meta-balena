@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add missing dependency for the resin-supervisor.service [Theodor]
 * Specify the supervisor tag with a local variable [Theodor]
 * Update supervisor to v2.8.3 [Pablo]
 * Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
