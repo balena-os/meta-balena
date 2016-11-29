@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix missing [Manager] section for systemd watchdog setting [Florin]
 * Add missing dependency for the resin-supervisor.service [Theodor]
 * Specify the supervisor tag with a local variable [Theodor]
 * Update supervisor to v2.8.3 [Pablo]
