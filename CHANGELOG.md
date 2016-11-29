@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.22 - 2016-11-29
+
 * Fix missing [Manager] section for systemd watchdog setting [Florin]
 * Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
 * Specify the supervisor tag with a local variable [Theodor]
