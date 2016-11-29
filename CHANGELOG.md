@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix missing [Manager] section for systemd watchdog setting [Florin]
 * Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
 * Specify the supervisor tag with a local variable [Theodor]
 * Start using gzip archives for kernel module headers [Andrei]
