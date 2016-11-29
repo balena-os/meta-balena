@@ -8,8 +8,9 @@ SUPERVISOR_REPOSITORY_aarch64 = "resin/armv7hf-supervisor"
 SUPERVISOR_REPOSITORY_x86 = "resin/i386-supervisor"
 SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
 
+SUPERVISOR_TAG ?= "v2.8.3"
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
-TARGET_TAG ?= "v2.8.3"
+TARGET_TAG ?= "${SUPERVISOR_TAG}"
 LED_FILE ?= "/dev/null"
 
 inherit systemd
@@ -95,8 +96,8 @@ do_install () {
     install -d ${D}${sysconfdir}/resin-supervisor/
     install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/resin-supervisor/
     sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
-    sed -i -e 's:@TARGET_TAG@:${TARGET_TAG}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
     sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
+    sed -i -e 's:@SUPERVISOR_TAG@:${SUPERVISOR_TAG}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
 
     install -d ${D}/resin-data
 

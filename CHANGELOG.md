@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Specify the supervisor tag with a local variable [Theodor]
 * Update supervisor to v2.8.3 [Pablo]
 * Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
 * systemd: enable watchdog at 10 seconds [Florin]
