@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
 * Specify the supervisor tag with a local variable [Theodor]
 * Start using gzip archives for kernel module headers [Andrei]
 * Update supervisor to v2.8.3 [Pablo]
