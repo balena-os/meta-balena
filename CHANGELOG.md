@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add inode tuning (1 inode for 8192 bytes ) in mkfs.ext4 for the resin-data partition [Praneeth]
 * Fix missing [Manager] section for systemd watchdog setting [Florin]
 * Add missing dependency for the resin-supervisor.service [Theodor]
 * Specify the supervisor tag with a local variable [Theodor]
