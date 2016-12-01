@@ -116,8 +116,8 @@ function runPreHacks {
         umount $BOOT_MOUNTPOINT &> /dev/null
     fi
 
-    # can't fix label of data partition from container
-    e2label $DATA_MOUNTPOINT resin-data
+    # can't fix label of BTRFS partition from container
+    btrfs filesystem label $DATA_MOUNTPOINT resin-data
 
     # Some devices never actually update /etc/timestamp because they are hard-rebooted.
     # Force a /etc/timestamp update so we don't get into TLS issues.
@@ -363,7 +363,7 @@ if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
         log "Running engine migrator 1.10... please wait..."
         DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
         $DOCKER pull $DOCKER_MIGRATOR
-        $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s aufs
+        $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
         if [ $? -eq 0 ]; then
             log "Migration to engine 1.10 done."
         else
