@@ -8,6 +8,7 @@ LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
 NOREBOOT=no
+REGISTRY=registry.resinstaging.io/resinhup
 
 # Don't run anything before this source as it sets PATH here
 source /etc/profile
@@ -32,6 +33,9 @@ Options:
   -t <TAG>, --tag <TAG>
         Use a specific tag for resinhup image.
         Default: 1.0 .
+
+  -r <REGISTRY>, --registry <REGISTRY>
+	The Docker registry to pull from, without the trailing slash.
 
   --remote <REMOTE>
         Run the updater with this remote configuration.
@@ -212,6 +216,13 @@ while [[ $# > 0 ]]; do
             HOSTOS_VERSION=$2
             shift
             ;;
+        -r|--registry)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            REGISTRY=$2
+            shift
+            ;;
         --remote)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
@@ -362,7 +373,7 @@ log "Migrating to engine 1.10..."
 if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
     if [ "$DOCKER" == "rce" ]; then
         log "Running engine migrator 1.10... please wait..."
-        DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
+        DOCKER_MIGRATOR="$REGISTRY/$arch-v1.10-migrator"
         $DOCKER pull $DOCKER_MIGRATOR
         $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s aufs
         if [ $? -eq 0 ]; then
@@ -388,10 +399,10 @@ $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 
 # Pull resinhup and tag it accordingly
 log "Pulling resinhup..."
-$DOCKER pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+$DOCKER pull $REGISTRY/resinhup-$slug:$TAG
 if [ $? -ne 0 ]; then
     tryup
-    log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG ."
+    log ERROR "Could not pull $REGISTRY/resinhup-$slug:$TAG ."
 fi
 
 # Run resinhup
@@ -416,7 +427,7 @@ $DOCKER run --privileged --rm --net=host $RESINHUP_ENV \
     --volume /:/host \
     --volume /lib/modules:/lib/modules:ro \
     --volume /var/run/docker.sock:/var/run/docker.sock \
-    registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+    $REGISTRY/resinhup-$slug:$TAG
 RESINHUP_EXIT=$?
 # RESINHUP_EXIT
 #   0 - update done
