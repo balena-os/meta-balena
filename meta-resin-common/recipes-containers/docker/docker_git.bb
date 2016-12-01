@@ -24,9 +24,8 @@ SRC_URI = "\
   git://github.com/docker/docker.git;branch=${SRCBRANCH};nobranch=1 \
   file://docker.service \
   file://var-lib-docker.mount \
-  file://0001-bucket-correct-broken-unaligned-load-store-in-armv5.patch \
-  file://journal.patch \
   file://docker.conf.systemd \
+  file://0001-bucket-correct-broken-unaligned-load-store-in-armv5.patch \
   file://0002-Inherit-StopSignal-from-Dockerfile.patch \
   file://0003-Safer-file-io-for-configuration-files.patch \
   file://0004-Set-permission-on-atomic-file-write.patch \
@@ -37,6 +36,7 @@ SRC_URI = "\
   file://0009-graph-aufs-durably-write-layer-on-disk-before-return.patch \
   file://0010-pkg-ioutils-sync-parent-directory-too.patch \
   file://0011-fix-compilation-errors-with-btrfs-progs-4.5.patch \
+  file://0012-Try-to-handle-changing-names-for-journal-packages.patch \
 "
 
 # Apache-2.0 for docker

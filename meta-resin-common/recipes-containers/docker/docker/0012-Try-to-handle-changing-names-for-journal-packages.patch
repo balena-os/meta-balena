@@ -1,21 +1,26 @@
-commit 6cdc4ba6cd5178037466c50ebe03a7eb111c43b1
-Author: Nalin Dahyabhai <nalin@redhat.com>
-Date:   Wed Feb 17 15:10:51 2016 -0500
+From 891586001dbe84b77b0a04de0cfa6686d30807a2 Mon Sep 17 00:00:00 2001
+From: Nalin Dahyabhai <nalin@redhat.com>
+Date: Wed, 17 Feb 2016 15:10:51 -0500
+Subject: [PATCH 11/15] Try to handle changing names for journal packages
 
-    Try to handle changing names for journal packages
-    
-    When checking if we have the development files for libsystemd's journal
-    APIs, check for either 'libsystemd >= 209' and 'libsystemd-journal'.  If
-    we find 'libsystemd', define the 'journald' tag, which defaults to using
-    the 'libsystemd.pc' file.  If we find the older 'libsystemd-journal',
-    define both the 'journald' and 'journald_compat' tags, which causes the
-    'libsystemd-journal.pc' file to be consulted instead.
-    
-    Signed-off-by: Nalin Dahyabhai <nalin@redhat.com> (github: nalind)
+When checking if we have the development files for libsystemd's journal
+APIs, check for either 'libsystemd >= 209' and 'libsystemd-journal'.  If
+we find 'libsystemd', define the 'journald' tag, which defaults to using
+the 'libsystemd.pc' file.  If we find the older 'libsystemd-journal',
+define both the 'journald' and 'journald_compat' tags, which causes the
+'libsystemd-journal.pc' file to be consulted instead.
 
+Signed-off-by: Nalin Dahyabhai <nalin@redhat.com> (github: nalind)
 Upstream-Status: Backport
-
 Signed-off-by: Michal Mazurek <michal@resin.io>
+---
+ daemon/logger/journald/read.go               | 1 -
+ daemon/logger/journald/read_native.go        | 6 ++++++
+ daemon/logger/journald/read_native_compat.go | 6 ++++++
+ hack/make.sh                                 | 4 +++-
+ 4 files changed, 15 insertions(+), 2 deletions(-)
+ create mode 100644 daemon/logger/journald/read_native.go
+ create mode 100644 daemon/logger/journald/read_native_compat.go
 
 diff --git a/daemon/logger/journald/read.go b/daemon/logger/journald/read.go
 index 80c1fbd..8d94c30 100644
@@ -54,10 +59,10 @@ index 0000000..3f7a43c
 +// #cgo pkg-config: libsystemd-journal
 +import "C"
 diff --git a/hack/make.sh b/hack/make.sh
-index 7d7cb0d..acee4a9 100755
+index ca01fd8..cdd0348 100755
 --- a/hack/make.sh
 +++ b/hack/make.sh
-@@ -118,8 +118,10 @@ fi
+@@ -107,8 +107,10 @@ fi
  
  if [ -z "$DOCKER_CLIENTONLY" ]; then
  	DOCKER_BUILDTAGS+=" daemon"
@@ -69,3 +74,6 @@ index 7d7cb0d..acee4a9 100755
  	fi
  fi
  
+-- 
+2.10.2
+
