@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Deactivate CONFIG_WATCHDOG_NOWAYOUT to make sure we can shutdown [Andrei]
+
 # v1.22 - 2016-11-29
 
 * Fix missing [Manager] section for systemd watchdog setting [Florin]
