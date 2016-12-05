@@ -73,6 +73,7 @@ RESIN_CONFIGS ?= " \
     hid-multitouch \
     ip6tables_nat \
     ip_set \
+    wd-nowayout \
     "
 
 #
@@ -278,6 +279,16 @@ RESIN_CONFIGS_DEPS[ip6tables_nat] = " \
     "
 RESIN_CONFIGS[ip6tables_nat] = " \
     CONFIG_IP6_NF_NAT=m \
+    "
+
+#
+# The flasher images relies on shutdown at the end of the flashing process.
+# Having no way out we might end up rebooting the board before shutdown because
+# systemd is disabling watchdog before killing the other processes which might
+# take more than the watchdog timer.
+#
+RESIN_CONFIGS[wd-nowayout] = " \
+    CONFIG_WATCHDOG_NOWAYOUT=n \
     "
 
 ###########
