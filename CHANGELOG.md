@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0-beta.7 - 2016-12-05
+
 * Fix supervisor.conf's SUPERVISOR_TAG variable [Florin]
 
 # v2.0-beta.6 - 2016-12-05
