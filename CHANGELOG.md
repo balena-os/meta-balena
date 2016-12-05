@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0-beta.6 - 2016-12-05
+
 * Deactivate CONFIG_WATCHDOG_NOWAYOUT to make sure we can shutdown [Andrei]
 
 # v2.0-beta.5 - 2016-11-30
