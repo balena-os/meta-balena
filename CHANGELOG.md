@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Fix supervisor.conf's SUPERVISOR_TAG variable [Florin]
+
 # v1.23 - 2016-12-05
 
 * Deactivate CONFIG_WATCHDOG_NOWAYOUT to make sure we can shutdown [Andrei]
