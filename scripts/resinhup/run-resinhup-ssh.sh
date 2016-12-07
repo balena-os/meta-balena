@@ -20,7 +20,7 @@ Options:
         Display this help and exit.
 
   -f, --force
-        Run the resinhup tool withut fingerprints check and validation.
+        Run the resinhup tool without fingerprints check and validation.
 
   --staging
         Do this update for devices in staging.
