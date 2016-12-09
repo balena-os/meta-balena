@@ -170,7 +170,7 @@ function runPostHacks {
         if [ "$DOCKER" == "rce" ]; then
             # Stop rce first in all the ways possible :)
             systemctl stop rce &> /dev/null
-            killall rce
+            killall rce &> /dev/null
             sleep 10 # wait for rce to gracefully shutdown
             dockerpid=$(pidof rce)
             kill -9 $dockerpid &> /dev/null
