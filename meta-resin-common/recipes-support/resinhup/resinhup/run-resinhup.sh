@@ -40,6 +40,7 @@ Options:
 
   --hostos-version <HOSTOS_VERSION>
         Run the updater for this specific HostOS version.
+        Omit the 'v' in front of the version. e.g.: 1.2.3 and not v1.2.3.
         This is a mandatory argument.
 
   --supervisor-registry <SUPERVISOR REGISTRY>
@@ -48,6 +49,7 @@ Options:
   --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
         using this tag.
+        Don't omit the 'v' in front of the version. e.g.: v1.2.3 and not 1.2.3.
 
   --only-supervisor
         Update only the supervisor.
@@ -336,7 +338,6 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
         if [ $? -ne 0 ]; then
             tryup
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
-
         fi
         $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
     else
