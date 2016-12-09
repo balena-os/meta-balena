@@ -108,13 +108,29 @@ function log {
 }
 
 function runPreHacks {
-    local _boot_mountpoint="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
+    local _boot_mountpoint
 
-    # we might need to repartition this so make sure it is unmounted
+    if which blkid &> /dev/null; then
+        _boot_mountpoint="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
+    else
+        log WARN "Can't rely on blkid to detect boot partition mountpoint. Fallback to version based detection..."
+        if version_gt $HOSTOS_VERSION "1.12.0" || [ "$HOSTOS_VERSION" == "1.12.0" ]; then
+            # Boot partition is mounted in /mnt/boot
+            _boot_mountpoint=/mnt/boot
+        else
+            # Boot partition is mounted in /boot
+            _boot_mountpoint=/boot
+        fi
+    fi
+
+    # We might need to repartition boot partition so make sure it is unmounted
     log "Make sure resin-boot is unmounted..."
     if [ -z $_boot_mountpoint ]; then
         log WARN "Mount point for resin-boot partition could not be found. It is probably already unmounted."
-    # XXX support old devices
+    else
+        log "Boot partition detected in $_boot_mountpoint ."
+    fi
+    # FIXME: support old devices
     elif [ $_boot_mountpoint = "/boot" ]; then
         umount $_boot_mountpoint &> /dev/null
     fi
