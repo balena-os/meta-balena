@@ -164,6 +164,34 @@ function runPreHacks {
 }
 
 function runPostHacks {
+    log "Cleanup docker images..."
+    $DOCKER rmi -f registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG &> /dev/null
+    $DOCKER rmi -f registry.resinstaging.io/resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
+    $DOCKER rmi -f resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
+
+    # This is just an optimization so next time docker starts it won't have to index everything
+    # risking the systemd service to timeout.
+    # Migrate docker images to docker engine 1.10 - HostOS version with this change is 1.1.5
+    log "Migrating to engine 1.10..."
+    if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
+        if [ "$DOCKER" == "rce" ]; then
+            log "Running engine migrator 1.10... please wait..."
+            DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
+            $DOCKER pull $DOCKER_MIGRATOR
+            $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
+            if [ $? -eq 0 ]; then
+                log "Migration to engine 1.10 done."
+            else
+                log ERROR "Migration to engine 1.10 failed."
+            fi
+            $DOCKER rmi -f $DOCKER_MIGRATOR
+        else
+            log "No need to migrate to engine 1.10 as docker switch is already there"
+        fi
+    else
+        log "No need to migrate to engine 1.10 as you are not updating to a version >= 1.1.5."
+    fi
+
     # Switch from rce to docker - HostOS version with this change is 1.1.5
     log "Docker hack: Make switch from rce to docker backwards compatible"
     if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
@@ -372,26 +400,6 @@ fi
 if [ "$ONLY_SUPERVISOR" == "yes" ]; then
     log "Update only of the supervisor requested."
     exit 0
-fi
-
-# Migrate docker images to docker engine 1.10 - HostOS version with this change is 1.1.5
-log "Migrating to engine 1.10..."
-if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
-    if [ "$DOCKER" == "rce" ]; then
-        log "Running engine migrator 1.10... please wait..."
-        DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
-        $DOCKER pull $DOCKER_MIGRATOR
-        $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
-        if [ $? -eq 0 ]; then
-            log "Migration to engine 1.10 done."
-        else
-            log ERROR "Migration to engine 1.10 failed."
-        fi
-    else
-        log "No need to migrate to engine 1.10 as docker switch is already there"
-    fi
-else
-    log "No need to migrate to engine 1.10 as you are not updating to a version >= 1.1.5."
 fi
 
 # Avoid supervisor cleaning up resinhup and stop containers
