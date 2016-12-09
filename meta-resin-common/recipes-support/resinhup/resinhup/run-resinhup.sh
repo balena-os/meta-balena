@@ -313,18 +313,22 @@ fi
 
 # Get the slug
 if [ -f /mnt/boot/config.json ]; then
-    slug=$(jq -r .deviceType /mnt/boot/config.json)
+    CONFIGJSON=/mnt/boot/config.json
 elif [ -f /mnt/conf/config.json ]; then
-    slug=$(jq -r .deviceType /mnt/conf/config.json)
+    CONFIGJSON=/mnt/conf/config.json
 elif [ -f /mnt/data-disk/config.json ]; then
-    slug=$(jq -r .deviceType /mnt/data-disk/config.json)
+    CONFIGJSON=/mnt/data-disk/config.json
 else
     log ERROR "Don't know where config.json is."
 fi
-if [ -z $slug ]; then
+SLUG=$(jq -r .deviceType $CONFIGJSON)
+APIKEY=$(jq -r .apiKey $CONFIGJSON)
+DEVICEID=$(jq -r .deviceId $CONFIGJSON)
+
+if [ -z $SLUG ]; then
     log ERROR "Could not get the SLUG."
 fi
-log "Found slug $slug for this device."
+log "Found slug $SLUG for this device."
 
 # Detect BTRFS_MOUNTPOINT
 if [ -d /mnt/data ]; then
@@ -365,6 +369,15 @@ systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
     /usr/bin/resin-device-progress --percentage 25 --state "Resin Update: Updating supervisor..."
+
+    # Before doing anything make sure the API has the version we want to update to
+    # Otherwise we risk that next time update-resin-supervisor script gets called,
+    # the supervisor version will change back to the old one
+    supervisor_id=`curl -s "https://api.resin.io/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"$UPDATER_SUPERVISOR_TAG\" and .device_type == \"$SLUG\") | .id // empty"`
+    if [ -z "$supervisor_id" ]; then
+        log ERROR "Could not get the supervisor version id ($UPDATER_SUPERVISOR_TAG) from the API ."
+    fi
+    curl -s "https://api.resin.io/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$supervisor_id\"}" > /dev/null 2>&1
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$SUPERVISOR_REGISTRY" ]; then
@@ -411,12 +424,12 @@ log "Removing all containers..."
 $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 /usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 
-# Pull resinhup and tag it accordingly
+# Pull resinhup
 log "Pulling resinhup..."
-$DOCKER pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+$DOCKER pull registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG
 if [ $? -ne 0 ]; then
     tryup
-    log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG ."
+    log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG ."
 fi
 
 # Run resinhup
