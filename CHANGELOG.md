@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* kernel-modules-headers: specify cross compiler command [Florin]
 * Update kernel-module-headers to v0.0.7 [Florin]
 
 # v1.24 - 2016-12-05
