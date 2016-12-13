@@ -131,7 +131,7 @@ function runPreHacks {
         log "Boot partition detected in $_boot_mountpoint ."
     fi
     # FIXME: support old devices
-    if [ $_boot_mountpoint = "/boot" ]; then
+    if [ "$_boot_mountpoint" = "/boot" ]; then
         umount $_boot_mountpoint &> /dev/null
     fi
 
