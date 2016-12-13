@@ -40,6 +40,7 @@ Options:
 
   --hostos-version <HOSTOS_VERSION>
         Run the updater for this specific HostOS version.
+        Omit the 'v' in front of the version. e.g.: 1.2.3 and not v1.2.3.
         This is a mandatory argument.
 
   --supervisor-registry <SUPERVISOR REGISTRY>
@@ -48,6 +49,7 @@ Options:
   --supervisor-tag <SUPERVISOR TAG>
         In the case of a successful host OS update, bring in a newer supervisor too
         using this tag.
+        Don't omit the 'v' in front of the version. e.g.: v1.2.3 and not 1.2.3.
 
   --only-supervisor
         Update only the supervisor.
@@ -106,13 +108,29 @@ function log {
 }
 
 function runPreHacks {
-    local _boot_mountpoint="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
+    local _boot_mountpoint
 
-    # we might need to repartition this so make sure it is unmounted
+    if which blkid &> /dev/null; then
+        _boot_mountpoint="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
+    else
+        log WARN "Can't rely on blkid to detect boot partition mountpoint. Fallback to version based detection..."
+        if version_gt $HOSTOS_VERSION "1.12.0" || [ "$HOSTOS_VERSION" == "1.12.0" ]; then
+            # Boot partition is mounted in /mnt/boot
+            _boot_mountpoint=/mnt/boot
+        else
+            # Boot partition is mounted in /boot
+            _boot_mountpoint=/boot
+        fi
+    fi
+
+    # We might need to repartition boot partition so make sure it is unmounted
     log "Make sure resin-boot is unmounted..."
     if [ -z $_boot_mountpoint ]; then
         log WARN "Mount point for resin-boot partition could not be found. It is probably already unmounted."
-    # XXX support old devices
+    else
+        log "Boot partition detected in $_boot_mountpoint ."
+    fi
+    # FIXME: support old devices
     elif [ $_boot_mountpoint = "/boot" ]; then
         umount $_boot_mountpoint &> /dev/null
     fi
@@ -146,13 +164,41 @@ function runPreHacks {
 }
 
 function runPostHacks {
+    log "Cleanup docker images..."
+    $DOCKER rmi -f registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG &> /dev/null
+    $DOCKER rmi -f registry.resinstaging.io/resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
+    $DOCKER rmi -f resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
+
+    # This is just an optimization so next time docker starts it won't have to index everything
+    # risking the systemd service to timeout.
+    # Migrate docker images to docker engine 1.10 - HostOS version with this change is 1.1.5
+    log "Migrating to engine 1.10..."
+    if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
+        if [ "$DOCKER" == "rce" ]; then
+            log "Running engine migrator 1.10... please wait..."
+            DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
+            $DOCKER pull $DOCKER_MIGRATOR
+            $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
+            if [ $? -eq 0 ]; then
+                log "Migration to engine 1.10 done."
+            else
+                log ERROR "Migration to engine 1.10 failed."
+            fi
+            $DOCKER rmi -f $DOCKER_MIGRATOR
+        else
+            log "No need to migrate to engine 1.10 as docker switch is already there"
+        fi
+    else
+        log "No need to migrate to engine 1.10 as you are not updating to a version >= 1.1.5."
+    fi
+
     # Switch from rce to docker - HostOS version with this change is 1.1.5
     log "Docker hack: Make switch from rce to docker backwards compatible"
     if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
         if [ "$DOCKER" == "rce" ]; then
             # Stop rce first in all the ways possible :)
             systemctl stop rce &> /dev/null
-            killall rce
+            killall rce &> /dev/null
             sleep 10 # wait for rce to gracefully shutdown
             dockerpid=$(pidof rce)
             kill -9 $dockerpid &> /dev/null
@@ -267,18 +313,22 @@ fi
 
 # Get the slug
 if [ -f /mnt/boot/config.json ]; then
-    slug=$(jq -r .deviceType /mnt/boot/config.json)
+    CONFIGJSON=/mnt/boot/config.json
 elif [ -f /mnt/conf/config.json ]; then
-    slug=$(jq -r .deviceType /mnt/conf/config.json)
+    CONFIGJSON=/mnt/conf/config.json
 elif [ -f /mnt/data-disk/config.json ]; then
-    slug=$(jq -r .deviceType /mnt/data-disk/config.json)
+    CONFIGJSON=/mnt/data-disk/config.json
 else
     log ERROR "Don't know where config.json is."
 fi
-if [ -z $slug ]; then
+SLUG=$(jq -r .deviceType $CONFIGJSON)
+APIKEY=$(jq -r .apiKey $CONFIGJSON)
+DEVICEID=$(jq -r .deviceId $CONFIGJSON)
+
+if [ -z $SLUG ]; then
     log ERROR "Could not get the SLUG."
 fi
-log "Found slug $slug for this device."
+log "Found slug $SLUG for this device."
 
 # Detect BTRFS_MOUNTPOINT
 if [ -d /mnt/data ]; then
@@ -320,6 +370,15 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
     /usr/bin/resin-device-progress --percentage 25 --state "Resin Update: Updating supervisor..."
 
+    # Before doing anything make sure the API has the version we want to update to
+    # Otherwise we risk that next time update-resin-supervisor script gets called,
+    # the supervisor version will change back to the old one
+    supervisor_id=`curl -s "https://api.resin.io/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"$UPDATER_SUPERVISOR_TAG\" and .device_type == \"$SLUG\") | .id // empty"`
+    if [ -z "$supervisor_id" ]; then
+        log ERROR "Could not get the supervisor version id ($UPDATER_SUPERVISOR_TAG) from the API ."
+    fi
+    curl -s "https://api.resin.io/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$supervisor_id\"}" > /dev/null 2>&1
+
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$SUPERVISOR_REGISTRY" ]; then
         UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
@@ -336,7 +395,6 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
         if [ $? -ne 0 ]; then
             tryup
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
-
         fi
         $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
     else
@@ -357,26 +415,6 @@ if [ "$ONLY_SUPERVISOR" == "yes" ]; then
     exit 0
 fi
 
-# Migrate docker images to docker engine 1.10 - HostOS version with this change is 1.1.5
-log "Migrating to engine 1.10..."
-if version_gt $HOSTOS_VERSION "1.1.5" || [ "$HOSTOS_VERSION" == "1.1.5" ]; then
-    if [ "$DOCKER" == "rce" ]; then
-        log "Running engine migrator 1.10... please wait..."
-        DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
-        $DOCKER pull $DOCKER_MIGRATOR
-        $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
-        if [ $? -eq 0 ]; then
-            log "Migration to engine 1.10 done."
-        else
-            log ERROR "Migration to engine 1.10 failed."
-        fi
-    else
-        log "No need to migrate to engine 1.10 as docker switch is already there"
-    fi
-else
-    log "No need to migrate to engine 1.10 as you are not updating to a version >= 1.1.5."
-fi
-
 # Avoid supervisor cleaning up resinhup and stop containers
 /usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 log "Stopping all containers..."
@@ -386,12 +424,12 @@ log "Removing all containers..."
 $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 /usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
 
-# Pull resinhup and tag it accordingly
+# Pull resinhup
 log "Pulling resinhup..."
-$DOCKER pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+$DOCKER pull registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG
 if [ $? -ne 0 ]; then
     tryup
-    log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$slug:$TAG ."
+    log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG ."
 fi
 
 # Run resinhup
@@ -415,8 +453,8 @@ RESINHUP_ENV="$RESINHUP_ENV -e VERSION=$HOSTOS_VERSION"
 $DOCKER run --privileged --rm --net=host $RESINHUP_ENV \
     --volume /:/host \
     --volume /lib/modules:/lib/modules:ro \
-    --volume /var/run/docker.sock:/var/run/docker.sock \
-    registry.resinstaging.io/resinhup/resinhup-$slug:$TAG
+    --volume /var/run/$DOCKER.sock:/var/run/$DOCKER.sock \
+    registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG
 RESINHUP_EXIT=$?
 # RESINHUP_EXIT
 #   0 - update done

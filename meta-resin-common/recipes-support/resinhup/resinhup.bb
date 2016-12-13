@@ -17,6 +17,7 @@ RDEPENDS_${PN} = " \
     coreutils \
     resin-device-progress \
     busybox \
+    util-linux-blkid \
     "
 
 do_install() {
