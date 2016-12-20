@@ -1,23 +1,29 @@
-#!/bin/bash
+#!/bin/sh
 
-source /usr/sbin/resin-vars
-VPN_PORT=443
+set -e
+
+. /usr/sbin/resin-vars
+
+_vpn_port=443
+readonly _vpn_port
 
 if [ ! -f $CONFIG_PATH ]; then
-    echo "prepare-openvpn: $CONFIG_PATH - No such file."
-    exit 1
+	echo "prepare-openvpn: $CONFIG_PATH - No such file."
+	exit 1
 fi
 
-while true; do
-	if [ `jq ".uuid | length" $CONFIG_PATH` -eq 0 ] || [ `jq ".apiKey | length" $CONFIG_PATH` -eq 0 ]; then
+while :; do
+	_uuid=$(jq -r '.uuid' $CONFIG_PATH)
+	_api_key=$(jq -r '.apiKey' $CONFIG_PATH)
+
+	if [ "$_uuid" = "null" ] || [ "$_api_key" = "null" ]; then
 		echo "prepare-openvpn: UUID and/or APIKEY missing from config file, VPN cannot connect"
 		sleep 2
 	else
-		read uuid api_key <<<$(jq -r '.uuid,.apiKey' $CONFIG_PATH)
-		echo $uuid > /var/volatile/vpnfile
-		echo $api_key >> /var/volatile/vpnfile
+		echo $_uuid > /var/volatile/vpnfile
+		echo $_api_key >> /var/volatile/vpnfile
 		break
 	fi
 done
 
-sed -e "/remote .*/ c\remote $VPN_ENDPOINT $VPN_PORT" /etc/openvpn/resin.conf > /run/openvpn/resin.conf
+sed -e "/remote .*/ c\remote $VPN_ENDPOINT $_vpn_port" /etc/openvpn/resin.conf > /run/openvpn/resin.conf
