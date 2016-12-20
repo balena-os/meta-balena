@@ -14,6 +14,8 @@ python __anonymous () {
 
     # Detect the path of meta-resin-common
     metaresincommonpath = filter(lambda x: x.endswith('meta-resin-common'), bblayers.split())
+    if sys.version_info.major >= 3 :
+         metaresincommonpath = list(metaresincommonpath)
 
     if metaresincommonpath:
         resinboardpath = os.path.join(metaresincommonpath[0], '../../')
