@@ -23,7 +23,11 @@ python __anonymous () {
 
         cmd = 'git log -n1 --format=format:%h '
         resinboardrev = subprocess.Popen('cd ' + resinboardpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
+        if sys.version_info.major >= 3 :
+            resinboardrev = resinboardrev.decode()
         metaresinrev = subprocess.Popen('cd ' + metaresinpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
+        if sys.version_info.major >= 3 :
+            metaresinrev = metaresinrev.decode()
 
         if resinboardrev:
             d.setVar('RESIN_BOARD_REV', resinboardrev)
