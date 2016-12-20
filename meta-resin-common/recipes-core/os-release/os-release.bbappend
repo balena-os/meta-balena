@@ -54,7 +54,8 @@ python do_fix_quotes () {
             field = line.split('=')[0].strip()
             value = line.split('=')[1].strip()
             match = re.match(r"^[A-Za-z0-9]*$", value)
-            if not match:
+            match_quoted = re.match(r"^\".*\"$", value)
+            if not match and not match_quoted:
                 value = '"' + value + '"'
             f.write('{0}={1}\n'.format(field, value))
 }
