@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Rewrite prepare-openvpn (style) and make it fail on error [Michal]
+* Ensure prepare-openvpn.service starts after var-volatile.mount [Michal]
 * kernel-modules-headers: specify cross compiler command [Florin]
 * Update kernel-module-headers to v0.0.7 [Florin]
 
