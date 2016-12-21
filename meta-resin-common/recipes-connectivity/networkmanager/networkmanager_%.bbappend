@@ -18,6 +18,11 @@ PACKAGES += "${PN}-bash-completion"
 
 FILES_${PN}-bash-completion = "${datadir}/bash-completion"
 
+# we disable introspection as we do not use it and it also fails to compile (on poky krogoth/morty) if we don't disable it or if we don't inherit gobject-introspection
+# (we don't want to inherit gobject-introspection for compatibility reasons with regards to older poky versions which do not have the gobject-introspection.bbclass)
+PACKAGECONFIG[introspection] = "--enable-introspection=no,,,"
+PACKAGECONFIG_append = " introspection"
+
 do_install_append() {
     install -m 0644 ${WORKDIR}/NetworkManager.conf ${D}${sysconfdir}/NetworkManager/
 
