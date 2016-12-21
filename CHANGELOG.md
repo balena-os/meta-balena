@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v2.9.0 [Pablo]
 * Rewrite prepare-openvpn (style) and make it fail on error [Michal]
 * Ensure prepare-openvpn.service starts after var-volatile.mount [Michal]
 
