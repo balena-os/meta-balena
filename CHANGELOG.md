@@ -1,6 +1,9 @@
 Change log
 -----------
 
+* Rewrite prepare-openvpn (style) and make it fail on error [Michal]
+* Ensure prepare-openvpn.service starts after var-volatile.mount [Michal]
+
 # v2.0-beta.7 - 2016-12-05
 
 * Fix supervisor.conf's SUPERVISOR_TAG variable [Florin]
