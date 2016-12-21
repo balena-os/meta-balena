@@ -464,8 +464,9 @@ if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ] || [ $RESINHUP_EXIT -eq 
     RESINHUP_ENDTIME=$(date +%s)
 
     if [ $RESINHUP_EXIT -eq 0 ]; then
-        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Done. Rebooting device..."
+        /usr/bin/resin-device-progress --percentage 80 --state "Resin Update: Finalizing..."
         runPostHacks
+        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Done. Rebooting device..."
     elif [ $RESINHUP_EXIT -eq 2 ]; then
         /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Intermediate step done. Rebooting device..."
     elif [ $RESINHUP_EXIT -eq 3 ]; then
