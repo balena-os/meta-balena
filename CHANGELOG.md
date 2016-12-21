@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Introduce meta-resin-morty for using meta-resin with poky morty [Florin]
 * Add resinhup machine independent support in U-Boot [Andrei]
 * Remove BTRFS support from the kernel [Michal]
 * Backport dropbear atomic hostkey generation patch [Florin]
