@@ -404,6 +404,11 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
             tryup
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
         fi
+        # Remove the old supervisor
+        for image_id in $($DOCKER images | grep supervisor | grep -v latest | grep -v "$UPDATER_SUPERVISOR_TAG" | awk '{print $3}' | sort -u); do
+            log "Removing old supervisor image with ID $image_id..."
+            $DOCKER rmi -f $image_id
+        done
     fi
 else
     log "Supervisor update not requested through arguments ."
