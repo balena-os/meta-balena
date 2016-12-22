@@ -396,7 +396,7 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
             tryup
             log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
         fi
-        $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
+        $DOCKER tag -f "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG" "$UPDATER_SUPERVISOR_IMAGE:latest"
     else
         # Supervisor update on systemd based OS
         /usr/bin/update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
