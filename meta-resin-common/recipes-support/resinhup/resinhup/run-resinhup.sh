@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-TAG=1.0
+TAG=v1.0.0
 FORCE=no
 STAGING=no
 LOGFILE=/tmp/`basename "$0"`.log
