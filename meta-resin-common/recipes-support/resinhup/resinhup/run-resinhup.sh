@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # Default values
-TAG=1.0
+TAG=v1.0.0
 FORCE=no
 STAGING=no
 LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
 NOREBOOT=no
+MAXRETRIES=5
 
 # Don't run anything before this source as it sets PATH here
 source /etc/profile
@@ -60,6 +61,11 @@ Options:
 
   --no-reboot
         Don't reboot if update is successful. This is useful when debugging.
+
+  --max-retries
+        Some commands will be tried a couple of times before failing the update.
+        e.g. docker pulls
+        By default: 5 retries.
 EOF
 }
 
@@ -73,7 +79,7 @@ function tryup {
 # Catch INT signals and try to bring things back
 trap ctrl_c INT
 function ctrl_c() {
-    /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Failed. Contact support..."
+    /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: Update failed."
     log "Trapped INT signal"
     tryup
     exit 1
@@ -102,7 +108,28 @@ function log {
         printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
     fi
     if [ "$loglevel" == "ERROR" ]; then
-        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Failed. Contact support..."
+        /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: Update failed."
+        exit 1
+    fi
+}
+
+function retrycommand {
+    local _command="$1"
+    local _try=0
+    local _max=$MAXRETRIES
+    local _timeoutfactor=30
+    local _timeout
+    until [ $_try -ge $_max ]; do
+        $_command && break
+        _try=$(($_try+1))
+        _timeout=$(($_timeoutfactor * ($RANDOM%$_max + 1)))
+        log WARN "Retrying [$_try/$_max] in $_timeout seconds."
+        sleep $_timeout
+    done
+
+    if [ $_try -ge $_max ]; then
+        tryup
+        log ERROR "Failed after $_max attempts!"
         exit 1
     fi
 }
@@ -165,7 +192,7 @@ function runPreHacks {
 
 function runPostHacks {
     log "Cleanup docker images..."
-    $DOCKER rmi -f registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG &> /dev/null
+    $DOCKER rmi -f $RESINHUP_REGISTRY/$TAG-$SLUG  &> /dev/null
     $DOCKER rmi -f registry.resinstaging.io/resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
     $DOCKER rmi -f resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
 
@@ -177,7 +204,7 @@ function runPostHacks {
         if [ "$DOCKER" == "rce" ]; then
             log "Running engine migrator 1.10... please wait..."
             DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
-            $DOCKER pull $DOCKER_MIGRATOR
+            retrycommand "$DOCKER pull $DOCKER_MIGRATOR"
             $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
             if [ $? -eq 0 ]; then
                 log "Migration to engine 1.10 done."
@@ -288,6 +315,13 @@ while [[ $# > 0 ]]; do
         --no-reboot)
             NOREBOOT=yes
             ;;
+        --max-retries)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            MAXRETRIES=$2
+            shift
+            ;;
         *)
             log ERROR "Unrecognized option $1."
             ;;
@@ -295,7 +329,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-/usr/bin/resin-device-progress --percentage 10 --state "Resin Update: Preparing..."
+/usr/bin/resin-device-progress --percentage 10 --state "ResinOS: Preparing update..."
 
 # Check that HostOS version was provided
 if [ -z "$HOSTOS_VERSION" ]; then
@@ -368,7 +402,7 @@ systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
 # Supervisor update
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Supervisor update requested through arguments ."
-    /usr/bin/resin-device-progress --percentage 25 --state "Resin Update: Updating supervisor..."
+    /usr/bin/resin-device-progress --percentage 25 --state "ResinOS: Updating supervisor..."
 
     # Before doing anything make sure the API has the version we want to update to
     # Otherwise we risk that next time update-resin-supervisor script gets called,
@@ -391,19 +425,18 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     log "Updating supervisor..."
     if [[ $(readlink /sbin/init) == *"sysvinit"* ]]; then
         # Supervisor update on sysvinit based OS
-        $DOCKER pull "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG"
-        if [ $? -ne 0 ]; then
-            tryup
-            log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
-        fi
-        $DOCKER tag -f "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG" "$SUPERVISOR_IMAGE:latest"
+        retrycommand "$DOCKER pull $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG"
+        $DOCKER tag -f "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG" "$UPDATER_SUPERVISOR_IMAGE:latest"
     else
         # Supervisor update on systemd based OS
-        /usr/bin/update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG
-        if [ $? -ne 0 ]; then
-            tryup
-            log ERROR "Could not update supervisor to $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG ."
-        fi
+        retrycommand "/usr/bin/update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG"
+
+        # Remove the old supervisor
+        systemctl stop resin-supervisor > /dev/null 2>&1
+        for image_id in $($DOCKER images | grep supervisor | grep -v latest | grep -v "$UPDATER_SUPERVISOR_TAG" | awk '{print $3}' | sort -u); do
+            log "Removing old supervisor image with ID $image_id..."
+            $DOCKER rmi -f $image_id
+        done
     fi
 else
     log "Supervisor update not requested through arguments ."
@@ -416,25 +449,26 @@ if [ "$ONLY_SUPERVISOR" == "yes" ]; then
 fi
 
 # Avoid supervisor cleaning up resinhup and stop containers
-/usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
+/usr/bin/resin-device-progress --percentage 50 --state "ResinOS: Preparing update..."
 log "Stopping all containers..."
 systemctl stop resin-supervisor > /dev/null 2>&1
 $DOCKER stop $($DOCKER ps -a -q) > /dev/null 2>&1
 log "Removing all containers..."
 $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
-/usr/bin/resin-device-progress --percentage 50 --state "Resin Update: Preparing host OS update..."
+/usr/bin/resin-device-progress --percentage 50 --state "ResinOS: Preparing update..."
 
-# Pull resinhup
+# Pull resinhup - rce can only pull from v1 (resin staging registry)
 log "Pulling resinhup..."
-$DOCKER pull registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG
-if [ $? -ne 0 ]; then
-    tryup
-    log ERROR "Could not pull registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG ."
+if [ "$DOCKER" == "rce" ]; then
+    RESINHUP_REGISTRY="registry.resinstaging.io/resin/resinhup"
+else
+    RESINHUP_REGISTRY="resin/resinhup-test"
 fi
+retrycommand "$DOCKER pull $RESINHUP_REGISTRY:$TAG-$SLUG"
 
 # Run resinhup
 log "Running resinhup for version $HOSTOS_VERSION ..."
-/usr/bin/resin-device-progress --percentage 75 --state "Resin Update: Running host OS update..."
+/usr/bin/resin-device-progress --percentage 70 --state "ResinOS: Running updater..."
 RESINHUP_STARTTIME=$(date +%s)
 
 # Setup -e arguments
@@ -454,7 +488,7 @@ $DOCKER run --privileged --rm --net=host $RESINHUP_ENV \
     --volume /:/host \
     --volume /lib/modules:/lib/modules:ro \
     --volume /var/run/$DOCKER.sock:/var/run/$DOCKER.sock \
-    registry.resinstaging.io/resinhup/resinhup-$SLUG:$TAG
+    $RESINHUP_REGISTRY:$TAG-$SLUG
 RESINHUP_EXIT=$?
 # RESINHUP_EXIT
 #   0 - update done
@@ -464,12 +498,13 @@ if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ] || [ $RESINHUP_EXIT -eq 
     RESINHUP_ENDTIME=$(date +%s)
 
     if [ $RESINHUP_EXIT -eq 0 ]; then
-        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Done. Rebooting device..."
+        /usr/bin/resin-device-progress --percentage 90 --state "ResinOS: Finalizing update..."
         runPostHacks
+        /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: Done. Rebooting..."
     elif [ $RESINHUP_EXIT -eq 2 ]; then
-        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Intermediate step done. Rebooting device..."
+        /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: Intermediate step done. Rebooting device..."
     elif [ $RESINHUP_EXIT -eq 3 ]; then
-        /usr/bin/resin-device-progress --percentage 100 --state "Resin Update: Device already at requested version..."
+        /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: Already updated. Rebooting device..."
     fi
     log "Update suceeded in $(($RESINHUP_ENDTIME - $RESINHUP_STARTTIME)) seconds."
 
