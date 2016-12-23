@@ -4,6 +4,8 @@ RESINHUP_ARGS=""
 UUIDS=""
 SSH_HOST=""
 USER_APP=""
+NOCOLORS=no
+FAILED=0
 
 NUM=0
 QUEUE=""
@@ -65,35 +67,66 @@ Options:
 
   --resinhup-tag
         Run run-resinhup.sh with --tag . See run-resinhup.sh help for more details.
+
+  --max-retries
+        Run run-resinhup.sh with --max-retries . See run-resinhup.sh help for more details.
+
+  --no-colors
+        Avoid terminal colors. Activated by default.
 EOF
 }
 
 # Log function helper
 function log {
-    # Address log levels
+    local COL
+    local COLEND='\e[0m'
+    local loglevel=LOG
+
     case $1 in
         ERROR)
-            loglevel=ERROR
+            COL='\e[31m'
+            loglevel=ERR
             shift
             ;;
         WARN)
-            loglevel=WARNING
+            COL='\e[33m'
+            loglevel=WRN
+            shift
+            ;;
+        SUCCESS)
+            COL='\e[32m'
+            loglevel=LOG
             shift
             ;;
         *)
+            COL=$COLEND
             loglevel=LOG
             ;;
     esac
-    ENDTIME=$(date +%s)
-    if [ "z$LOG" == "zyes" ]; then
-        printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1" | tee -a $LOGFILE
-    else
-        printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
+
+    if [ "$NOCOLORS" == "yes" ]; then
+        COLEND=''
+        COL=''
     fi
+
+    ENDTIME=$(date +%s)
+    printf "${COL}[%09d%s%s${COLEND}\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
     if [ "$loglevel" == "ERROR" ]; then
         exit 1
     fi
 }
+
+cleanstop() {
+    log WARN "Force close requested. Waiting for already started updates... Please wait!"
+    while [ -n "$QUEUE" ]; do
+        checkqueue
+        sleep 0.5
+    done
+    wait
+    log ERROR "Forced stop."
+    exit 1
+}
+trap 'cleanstop' SIGINT SIGTERM
 
 function addtoqueue {
     NUM=$(($NUM+1))
@@ -104,9 +137,10 @@ function regeneratequeue {
     OLDREQUEUE=$QUEUE
     QUEUE=""
     NUM=0
-    for PID in $OLDREQUEUE; do
+    for entry in $OLDREQUEUE; do
+        PID=$(echo $entry | cut -d: -f1)
         if [ -d /proc/$PID  ] ; then
-            QUEUE="$QUEUE $PID"
+            QUEUE="$QUEUE $entry"
             NUM=$(($NUM+1))
         fi
     done
@@ -114,9 +148,19 @@ function regeneratequeue {
 
 function checkqueue {
     OLDCHQUEUE=$QUEUE
-    for PID in $OLDCHQUEUE; do
-        if [ ! -d /proc/$PID ] ; then
-            regeneratequeue # at least one PID has finished
+    for entry in $OLDCHQUEUE; do
+        local _PID=$(echo $entry | cut -d: -f1)
+        if [ ! -d /proc/$_PID ] ; then
+            wait $_PID
+            local _exitcode=$?
+            local _UUID=$(echo $entry | cut -d: -f2)
+            if [ "$_exitcode" != "0" ]; then
+                log WARN "Updating $_UUID failed."
+                FAILED=1
+            else
+                log SUCCESS "Updating $_UUID succeeded."
+            fi
+            regeneratequeue
             break
         fi
     done
@@ -230,6 +274,17 @@ while [[ $# > 0 ]]; do
         --no-reboot)
             RESINHUP_ARGS="$RESINHUP_ARGS --no-reboot"
             ;;
+        --max-retries)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            MAXRETRIES=$2
+            RESINHUP_ARGS="$RESINHUP_ARGS --max-retries $MAXRETRIES"
+            shift
+            ;;
+        --no-colors)
+            NOCOLORS=yes
+            ;;
         *)
             log ERROR "Unrecognized option $1."
             ;;
@@ -273,20 +328,29 @@ fi
 for uuid in $UUIDS; do
     CURRENT_UPDATE=$(($CURRENT_UPDATE+1))
 
-    log "[$CURRENT_UPDATE/$NR_UPDATES] Will update $uuid on $SSH_HOST"
+    log "[$CURRENT_UPDATE/$NR_UPDATES] Updating $uuid on $SSH_HOST."
+
+    # Check SSH/VPN connection
+    ssh $SSH_HOST -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o Hostname=$uuid.vpn exit > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        log WARN "[$CURRENT_UPDATE/$NR_UPDATES] Can't connect to device. Skipping..."
+        continue
+    fi
 
     # Transfer the scripts
     # TODO transfer files only if device doesn't provide run-resinhup.sh
-    log "[$CURRENT_UPDATE/$NR_UPDATES] Transfer scripts..."
-    scp -o Hostname=$uuid.vpn $UPDATE_TOOLS $SSH_HOST:/usr/bin > $uuid.resinhup.log 2>&1
+    scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o Hostname=$uuid.vpn $UPDATE_TOOLS $SSH_HOST:/usr/bin > $uuid.resinhup.log 2>&1
+    if [ $? -ne 0 ]; then
+        log WARN "[$CURRENT_UPDATE/$NR_UPDATES] Could not scp needed tools to device. Skipping..."
+        continue
+    fi
 
     # Connect to device
-    log "[$CURRENT_UPDATE/$NR_UPDATES] Running update in background..."
-    ssh $SSH_HOST -o Hostname=$uuid.vpn run-resinhup.sh $RESINHUP_ARGS >> $uuid.resinhup.log 2>&1 &
+    ssh $SSH_HOST -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o Hostname=$uuid.vpn /usr/bin/run-resinhup.sh $RESINHUP_ARGS >> $uuid.resinhup.log 2>&1 &
 
     # Manage queue of threads
     PID=$!
-    addtoqueue $PID
+    addtoqueue $PID:$uuid
     while [ $NUM -ge $MAX_THREADS ]; do
         checkqueue
         sleep 0.5
@@ -295,7 +359,15 @@ done
 
 # Wait for all threads
 log "Waiting for all threads to finish..."
+while [ -n "$QUEUE" ]; do
+    checkqueue
+    sleep 0.5
+done
 wait
+
+if [ $FAILED -eq 1 ]; then
+    log ERROR "At least one device failed to update."
+fi
 
 # Success
 exit 0
