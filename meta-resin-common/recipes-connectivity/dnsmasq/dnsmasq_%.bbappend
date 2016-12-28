@@ -9,8 +9,10 @@ SRC_URI_append = " \
 
 do_install_append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
-        install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
+        if [ ! -e ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf ]; then
+            install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
+            install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
+        fi
         install -c -m 0644 ${WORKDIR}/resolv.conf ${D}${sysconfdir}
     fi
 }

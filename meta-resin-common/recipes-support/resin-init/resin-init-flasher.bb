@@ -8,6 +8,7 @@ PR = "r2"
 SRC_URI = " \
     file://resin-init-flasher \
     file://resin-init-flasher.service \
+    file://dnsmasq.conf.systemd \
     "
 S = "${WORKDIR}"
 
@@ -50,6 +51,8 @@ do_install() {
             -e 's,@BINDIR@,${bindir},g' \
             -e 's,@SYS_CONFDIR@,${sysconfdir},g' \
             ${D}${systemd_unitdir}/system/resin-init-flasher.service
+        install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
+        install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
     fi
 
     # If bootloader needs to be flashed, we require the bootloader name and write offset
