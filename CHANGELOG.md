@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Remove BTRFS support from the kernel [Michal]
 * Backport dropbear atomic hostkey generation patch [Florin]
 * Update supervisor to v2.9.0 [Pablo]
 * Rewrite prepare-openvpn (style) and make it fail on error [Michal]
