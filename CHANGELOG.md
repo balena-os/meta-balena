@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add resinhup machine independent support in U-Boot [Andrei]
 * Implement cache and other tiny fixes in resinhup wrappers [Andrei]
 * Backport dropbear atomic hostkey generation patch [Florin]
 * Update supervisor to v2.9.0 [Pablo]
