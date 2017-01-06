@@ -48,8 +48,7 @@ Options:
         Update supervisor getting the image from this registry.
 
   --supervisor-tag <SUPERVISOR TAG>
-        In the case of a successful host OS update, bring in a newer supervisor too
-        using this tag.
+        Before updating ResinOS, update Supervisor using this tag.
         Don't omit the 'v' in front of the version. e.g.: v1.2.3 and not 1.2.3.
 
   --only-supervisor
