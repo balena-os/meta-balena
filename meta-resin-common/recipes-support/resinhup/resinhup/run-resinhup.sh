@@ -506,6 +506,7 @@ if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ] || [ $RESINHUP_EXIT -eq 
         /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: Already updated. Rebooting device..."
     fi
     log "Update suceeded in $(($RESINHUP_ENDTIME - $RESINHUP_STARTTIME)) seconds."
+    RESINHUP_EXIT=0
 
     # Everything is fine - Reboot
     if [ "$NOREBOOT" == "no" ]; then
