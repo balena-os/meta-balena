@@ -56,8 +56,8 @@ Options:
         more details.
 
   --supervisor-tag <SUPERVISOR TAG>
-        In the case of a successful host OS update, bring in a newer supervisor too
-        using this tag.
+        Run run-resinhup.sh with this --supervisor-tag argument. See run-resinhup.sh
+        help for more details.
 
   --only-supervisor
         Update only the supervisor.
