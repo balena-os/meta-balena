@@ -8,6 +8,7 @@ LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
 NOREBOOT=no
+CACHE=no
 MAXRETRIES=5
 
 # Don't run anything before this source as it sets PATH here
@@ -65,6 +66,10 @@ Options:
         Some commands will be tried a couple of times before failing the update.
         e.g. docker pulls
         By default: 5 retries.
+
+  --cache
+        Try to find cached images. If found, don't pull new ones but load the
+        ones already there. To be used ONLY in development or demos.
 EOF
 }
 
@@ -248,6 +253,31 @@ function version_gt() {
     test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"
 }
 
+function cachedpull() {
+    local _image="$1"
+    local _image_escaped=$(echo "$_image" | sed -r "s/[\/\.:-]/_/g")
+
+    if [ "$CACHE" == "yes" ]; then
+        if [ "$($DOCKER images -q ${_image})" == "" ]; then
+            if [ -f $BTRFS_MOUNTPOINT/resinhup/cache/${_image_escaped}.tar.gz ]; then
+                log "Found cached image [${_image}]. Loading it..."
+                $DOCKER load < $BTRFS_MOUNTPOINT/resinhup/cache/${_image_escaped}.tar.gz
+            else
+                log "Did not find cached image [${_image}]. Pulling..."
+                retrycommand "$DOCKER pull ${_image}"
+                log "Caching image..."
+                mkdir -p $BTRFS_MOUNTPOINT/resinhup/cache
+                $DOCKER save ${_image} | gzip > $BTRFS_MOUNTPOINT/resinhup/cache/${_image_escaped}.tar.gz
+            fi
+        else
+            log "Image already pulled [${_image}]. No need to use any cache or pull."
+        fi
+    else
+        log "Pulling ${_image}..."
+        retrycommand "$DOCKER pull ${_image}"
+    fi
+}
+
 #
 # MAIN
 #
@@ -320,6 +350,9 @@ while [[ $# > 0 ]]; do
             fi
             MAXRETRIES=$2
             shift
+            ;;
+        --cache)
+            CACHE=yes
             ;;
         *)
             log ERROR "Unrecognized option $1."
@@ -457,13 +490,19 @@ $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 /usr/bin/resin-device-progress --percentage 50 --state "ResinOS: Preparing update..."
 
 # Pull resinhup - rce can only pull from v1 (resin staging registry)
-log "Pulling resinhup..."
 if [ "$DOCKER" == "rce" ]; then
     RESINHUP_REGISTRY="registry.resinstaging.io/resin/resinhup"
+    RESINOS_REGISTRY="registry.resinstaging.io/resin/resinos"
 else
     RESINHUP_REGISTRY="resin/resinhup-test"
+    RESINOS_REGISTRY="resin/resinos"
 fi
-retrycommand "$DOCKER pull $RESINHUP_REGISTRY:$TAG-$SLUG"
+cachedpull "$RESINHUP_REGISTRY:$TAG-$SLUG"
+
+# Cache resinos image too
+if [ "$CACHE" = "yes" ]; then
+    cachedpull "$RESINOS_REGISTRY:$HOSTOS_VERSION-$SLUG"
+fi
 
 # Run resinhup
 log "Running resinhup for version $HOSTOS_VERSION ..."
