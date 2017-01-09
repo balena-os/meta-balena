@@ -1,0 +1,40 @@
+From 733679785a6bccc217e6fcaa991da31d7a105c1f Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Wed, 4 Jan 2017 16:14:45 +0100
+Subject: Integrate machine independent resin environment configuration
+
+This patch integrates resin default environment configuration in an u-boot which
+has a version without Kconfig support.
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Upstream-Status: Inappropriate [configuration]
+
+---
+ common/env_common.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/common/env_common.c b/common/env_common.c
+index 253fffb..7975884 100644
+--- a/common/env_common.c
++++ b/common/env_common.c
+@@ -32,6 +32,8 @@
+ #include <errno.h>
+ #include <malloc.h>
+ 
++#include <env_resin.h>
++
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+ /************************************************************************
+@@ -127,6 +129,7 @@ const uchar default_environment[] = {
+ 	"soc="		CONFIG_SYS_SOC			"\0"
+ #endif
+ #endif
++	RESIN_ENV
+ #ifdef	CONFIG_EXTRA_ENV_SETTINGS
+ 	CONFIG_EXTRA_ENV_SETTINGS
+ #endif
+-- 
+2.7.4
+
