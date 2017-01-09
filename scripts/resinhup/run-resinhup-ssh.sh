@@ -56,8 +56,8 @@ Options:
         more details.
 
   --supervisor-tag <SUPERVISOR TAG>
-        In the case of a successful host OS update, bring in a newer supervisor too
-        using this tag.
+        Run run-resinhup.sh with this --supervisor-tag argument. See run-resinhup.sh
+        help for more details.
 
   --only-supervisor
         Update only the supervisor.
@@ -73,6 +73,9 @@ Options:
 
   --no-colors
         Avoid terminal colors. Activated by default.
+
+  --cache
+        Run run-resinhup.sh with --cache . See run-resinhup.sh help for more details.
 EOF
 }
 
@@ -111,7 +114,7 @@ function log {
 
     ENDTIME=$(date +%s)
     printf "${COL}[%09d%s%s${COLEND}\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
-    if [ "$loglevel" == "ERROR" ]; then
+    if [ "$loglevel" == "ERR" ]; then
         exit 1
     fi
 }
@@ -284,6 +287,9 @@ while [[ $# > 0 ]]; do
             ;;
         --no-colors)
             NOCOLORS=yes
+            ;;
+        --cache)
+            RESINHUP_ARGS="$RESINHUP_ARGS --cache"
             ;;
         *)
             log ERROR "Unrecognized option $1."
