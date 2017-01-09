@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.25 - 2017-01-09
+
 * Add resinhup machine independent support in U-Boot [Andrei]
 * Implement cache and other tiny fixes in resinhup wrappers [Andrei]
 * Backport dropbear atomic hostkey generation patch [Florin]
