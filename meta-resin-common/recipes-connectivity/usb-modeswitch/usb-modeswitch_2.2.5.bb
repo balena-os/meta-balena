@@ -20,6 +20,8 @@ SRC_URI[sha256sum] = "8b2340303732aabc8c8e1cdd7d4352f61dcb942839f58ce22ba0ecfa12
 FILES_${PN} = "${bindir} ${sysconfdir} ${nonarch_base_libdir}/udev/usb_modeswitch ${sbindir} ${localstatedir}/lib/usb_modeswitch"
 RRECOMMENDS_${PN} = "usb-modeswitch-data"
 
+TARGET_CC_ARCH += "${LDFLAGS}"
+
 do_compile() {
 	oe_runmake shared
 }

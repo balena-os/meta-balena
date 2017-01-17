@@ -1,11 +1,21 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI += " \
-    file://use_atomic_key_generation_in_all_cases.patch \
     file://dropbear.socket \
     file://failsafe-sshkey.pub \
     file://ssh.service \
     file://dropbearkey.conf \
     "
+
+# starting with dropbear version 2016.73, code indentation has been fixed thus making our current patch (use_atomic_key_generation_in_all_cases.patch) not work anymore
+# we work around this by detecting the dropbear version and applying the right patch for it
+python() {
+    packageVersion = d.getVar('PV', True)
+    srcURI = d.getVar('SRC_URI', True)
+    if packageVersion >= '2016.73':
+        d.setVar('SRC_URI', srcURI + ' ' + 'file://use_atomic_key_generation_in_all_cases_reworked.patch')
+    else:
+        d.setVar('SRC_URI', srcURI + ' ' + 'file://use_atomic_key_generation_in_all_cases.patch')
+}
 
 FILES_${PN} += "/home"
 
