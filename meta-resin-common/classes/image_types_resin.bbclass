@@ -47,6 +47,16 @@ inherit image_types
 #                                                                                                                                               4MiB           4MiB +
 #                                                                                                                                                              4MiB
 
+# check if we are running on a poky version which deploys to IMGDEPLOYDIR instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
+python() {
+    if d.getVar('IMGDEPLOYDIR', True):
+        d.setVar('RESIN_SDIMG_ROOTFS', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}')
+        d.setVar('RESIN_SDIMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resin-sdcard')
+    else:
+        d.setVar('RESIN_SDIMG_ROOTFS', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}')
+        d.setVar('RESIN_SDIMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard')
+}
+
 # This image depends on the rootfs image
 IMAGE_TYPEDEP_resin-sdcard = "${RESIN_SDIMG_ROOTFS_TYPE}"
 
@@ -68,7 +78,6 @@ IMAGE_ROOTFS_ALIGNMENT = "4096"
 
 # Use an uncompressed ext3 by default as rootfs
 RESIN_SDIMG_ROOTFS_TYPE ?= "ext3"
-RESIN_SDIMG_ROOTFS = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_SDIMG_ROOTFS_TYPE}"
 
 # Default bootloader to virtual/bootloader
 RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
@@ -84,9 +93,6 @@ IMAGE_DEPENDS_resin-sdcard = " \
 			btrfs-tools-native \
 			coreutils-native \
 			"
-
-# SD card image name
-RESIN_SDIMG ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resin-sdcard"
 
 # Compression method to apply to RESIN_SDIMG after it has been created. Supported
 # compression formats are "gzip", "bzip2" or "xz". The original .resin-sdcard file

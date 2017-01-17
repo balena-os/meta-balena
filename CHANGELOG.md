@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Introduce meta-resin-morty for using meta-resin with poky morty [Florin]
+
 # v1.25 - 2017-01-09
 
 * Add resinhup machine independent support in U-Boot [Andrei]
