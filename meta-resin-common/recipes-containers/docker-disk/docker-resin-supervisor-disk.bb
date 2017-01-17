@@ -17,6 +17,7 @@ inherit systemd
 
 SRC_URI += " \
     file://resin-data.mount \
+    file://start-resin-supervisor \
     file://supervisor.conf \
     file://resin-supervisor.service \
     file://update-resin-supervisor \
@@ -102,6 +103,7 @@ do_install () {
 
     install -d ${D}${bindir}
     install -m 0755 ${WORKDIR}/update-resin-supervisor ${D}${bindir}
+    install -m 0755 ${WORKDIR}/start-resin-supervisor ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system

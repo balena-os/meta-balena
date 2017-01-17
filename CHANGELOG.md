@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Do not remove the supervisor container in every start [Pablo]
 * Update supervisor to v3.0.0 [Pablo]
 
 # v1.26-rc0 - 2017-01-27
