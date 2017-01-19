@@ -6,8 +6,8 @@ inherit image-resin
 # Each machine should append this with their specific configuration
 IMAGE_FSTYPES = ""
 
-# Make sure you have the resin image ready
-IMAGE_DEPENDS_resin-sdcard_append = " resin-image:do_rootfs"
+# Make sure you have the sdcard resin image ready
+IMAGE_DEPENDS_resin-sdcard_append = " resin-image:do_image_resin_sdcard"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
