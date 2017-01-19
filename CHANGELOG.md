@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Prevent docker from thrashing the page cache using posix_fadvise [petrosagg]
 * Add support for downgrades in resinhup and logging enhancements [Andrei]
 * Update default resinhup tag to v1.1.0 [Andrei]
 * Introduce meta-resin-morty for using meta-resin with poky morty [Florin]
