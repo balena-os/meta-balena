@@ -19,8 +19,6 @@ Restart=always
 RestartSec=10s
 EnvironmentFile=/etc/resin-supervisor/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
-ExecStartPre=-@BINDIR@/docker stop resin_supervisor
-ExecStartPre=-@BINDIR@/docker rm --force resin_supervisor
 ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
     @BINDIR@/docker run --privileged --name resin_supervisor \
     --net=host \
@@ -44,8 +42,8 @@ ExecStart=@BASE_BINDIR@/bash -c 'source @SBINDIR@/resin-vars && \
     -e LISTEN_PORT=$LISTEN_PORT \
     -e SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE} \
     ${SUPERVISOR_IMAGE}'
-ExecStop=-@BINDIR@/docker stop resin_supervisor
-ExecStop=-@BINDIR@/docker rm --force resin_supervisor
+ExecStop=@BINDIR@/docker stop -t 2 resin_supervisor
+ExecStopPost=@BINDIR@/docker rm --force resin_supervisor
 
 [Install]
 WantedBy=multi-user.target
