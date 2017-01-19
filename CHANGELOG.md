@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update default resinhup tag to v1.1.0 [Andrei]
 * Introduce meta-resin-morty for using meta-resin with poky morty [Florin]
 
 # v1.25 - 2017-01-09
