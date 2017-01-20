@@ -199,7 +199,7 @@ function runPreHacks {
 
 function runPostHacks {
     log "Cleanup docker images..."
-    $DOCKER rmi -f $RESINHUP_REGISTRY/$TAG-$SLUG  &> /dev/null
+    $DOCKER rmi -f $RESINHUP_REGISTRY:$TAG-$SLUG  &> /dev/null
     $DOCKER rmi -f registry.resinstaging.io/resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
     $DOCKER rmi -f resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
 
