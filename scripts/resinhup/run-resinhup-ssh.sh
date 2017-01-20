@@ -76,6 +76,9 @@ Options:
 
   --cache
         Run run-resinhup.sh with --cache . See run-resinhup.sh help for more details.
+
+  --allow-downgrades
+        Run run-resinhup.sh with --allow-downgrades . See run-resinhup.sh help for more details.
 EOF
 }
 
@@ -290,6 +293,9 @@ while [[ $# > 0 ]]; do
             ;;
         --cache)
             RESINHUP_ARGS="$RESINHUP_ARGS --cache"
+            ;;
+        --allow-downgrades)
+            RESINHUP_ARGS="$RESINHUP_ARGS --allow-downgrades"
             ;;
         *)
             log ERROR "Unrecognized option $1."
