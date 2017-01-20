@@ -358,6 +358,7 @@ for uuid in $UUIDS; do
     fi
 
     # Connect to device
+    echo "Running run-resinhup.sh $RESINHUP_ARGS ..." >> $uuid.resinhup.log
     ssh $SSH_HOST -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o Hostname=$uuid.vpn /usr/bin/run-resinhup.sh $RESINHUP_ARGS >> $uuid.resinhup.log 2>&1 &
 
     # Manage queue of threads
