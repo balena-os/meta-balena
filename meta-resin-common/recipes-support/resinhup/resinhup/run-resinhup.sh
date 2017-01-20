@@ -557,7 +557,8 @@ $DOCKER logs resinhup >> $LOGFILE 2>&1
 $DOCKER rm -f resinhup > /dev/null 2>&1
 
 # RESINHUP_EXIT
-#   0 - update done
+#   0 - update succeeded
+#   1 - update failed
 #   2 - only intermediate step was done and will continue after reboot
 #   3 - device already updated at a requested version or later
 if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ] || [ $RESINHUP_EXIT -eq 3 ]; then
