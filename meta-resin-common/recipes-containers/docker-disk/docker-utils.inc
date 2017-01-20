@@ -26,7 +26,7 @@ def usable_docker(d):
     except:
         return "no"
     pid = f.read()
-    f.close
+    f.close()
     if not os.path.exists("/proc/%s" % pid):
         return "no"
 
