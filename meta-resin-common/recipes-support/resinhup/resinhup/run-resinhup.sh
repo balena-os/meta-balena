@@ -3,8 +3,8 @@
 # Default values
 TAG=v1.1.0
 FORCE=no
+ALLOW_DOWNGRADES=no
 STAGING=no
-LOGFILE=/tmp/`basename "$0"`.log
 LOG=yes
 ONLY_SUPERVISOR=no
 NOREBOOT=no
@@ -70,6 +70,9 @@ Options:
   --cache
         Try to find cached images. If found, don't pull new ones but load the
         ones already there. To be used ONLY in development or demos.
+
+  --allow-downgrades
+        Allow updating to the same version or to an older one.
 EOF
 }
 
@@ -106,7 +109,7 @@ function log {
             ;;
     esac
     ENDTIME=$(date +%s)
-    if [ "z$LOG" == "zyes" ]; then
+    if [ "z$LOG" == "zyes" ] && [ -n "$LOGFILE" ]; then
         printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1" | tee -a $LOGFILE
     else
         printf "[%09d%s%s\n" "$(($ENDTIME - $STARTTIME))" "][$loglevel]" "$1"
@@ -354,12 +357,36 @@ while [[ $# > 0 ]]; do
         --cache)
             CACHE=yes
             ;;
+        --allow-downgrades)
+            ALLOW_DOWNGRADES=yes
+            ;;
         *)
             log ERROR "Unrecognized option $1."
             ;;
     esac
     shift
 done
+
+# Detect BTRFS_MOUNTPOINT
+if [ -d /mnt/data ]; then
+    BTRFS_MOUNTPOINT=/mnt/data
+elif [ -d /mnt/data-disk ]; then
+    BTRFS_MOUNTPOINT=/mnt/data-disk
+else
+    log ERROR "Can't find the resin-data mountpoint."
+fi
+
+# Init log file
+# LOGFILE init and header
+LOGFILE=$BTRFS_MOUNTPOINT/resinhup/$(basename "$0").log
+mkdir -p $(dirname $LOGFILE)
+if [ "$LOG" == "yes" ]; then
+    echo "================"`basename "$0"`" HEADER START====================" > $LOGFILE
+    date >> $LOGFILE
+    echo "Force mode: $FORCE" >> $LOGFILE
+    echo "Resinhup tag: $TAG" >> $LOGFILE
+    echo "Allow downgrades: $ALLOW_DOWNGRADES" >> $LOGFILE
+fi
 
 /usr/bin/resin-device-progress --percentage 10 --state "ResinOS: Preparing update..."
 
@@ -375,6 +402,7 @@ if [ "$LOG" == "yes" ]; then
     date >> $LOGFILE
     echo "Force mode: $FORCE" >> $LOGFILE
     echo "Resinhup tag: $TAG" >> $LOGFILE
+    echo "Allow downgrades: $ALLOW_DOWNGRADES" >> $LOGFILE
 fi
 
 # Get the slug
@@ -395,15 +423,6 @@ if [ -z $SLUG ]; then
     log ERROR "Could not get the SLUG."
 fi
 log "Found slug $SLUG for this device."
-
-# Detect BTRFS_MOUNTPOINT
-if [ -d /mnt/data ]; then
-    BTRFS_MOUNTPOINT=/mnt/data
-elif [ -d /mnt/data-disk ]; then
-    BTRFS_MOUNTPOINT=/mnt/data-disk
-else
-    log ERROR "Can't find the resin-data mountpoint."
-fi
 
 # Run pre hacks
 runPreHacks
@@ -520,14 +539,23 @@ fi
 if [ -n "$REMOTE" ]; then
     RESINHUP_ENV="$RESINHUP_ENV -e REMOTE=$REMOTE"
 fi
+if [ "$ALLOW_DOWNGRADES" == "yes" ]; then
+    RESINHUP_ENV="$RESINHUP_ENV -e ALLOW_DOWNGRADES=yes"
+fi
 RESINHUP_ENV="$RESINHUP_ENV -e VERSION=$HOSTOS_VERSION"
 
-$DOCKER run --privileged --rm --net=host $RESINHUP_ENV \
+$DOCKER rm -f resinhup > /dev/null 2>&1
+$DOCKER run --privileged --name resinhup --net=host $RESINHUP_ENV \
     --volume /:/host \
     --volume /lib/modules:/lib/modules:ro \
     --volume /var/run/$DOCKER.sock:/var/run/$DOCKER.sock \
     $RESINHUP_REGISTRY:$TAG-$SLUG
 RESINHUP_EXIT=$?
+
+# Save logs
+$DOCKER logs resinhup >> $LOGFILE 2>&1
+$DOCKER rm -f resinhup > /dev/null 2>&1
+
 # RESINHUP_EXIT
 #   0 - update done
 #   2 - only intermediate step was done and will continue after reboot
