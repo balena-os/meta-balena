@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-TAG=v1.1.0
+TAG=v1.1.1
 FORCE=no
 ALLOW_DOWNGRADES=no
 STAGING=no
