@@ -76,6 +76,9 @@ Options:
 
   --cache
         Run run-resinhup.sh with --cache . See run-resinhup.sh help for more details.
+
+  --allow-downgrades
+        Run run-resinhup.sh with --allow-downgrades . See run-resinhup.sh help for more details.
 EOF
 }
 
@@ -291,6 +294,9 @@ while [[ $# > 0 ]]; do
         --cache)
             RESINHUP_ARGS="$RESINHUP_ARGS --cache"
             ;;
+        --allow-downgrades)
+            RESINHUP_ARGS="$RESINHUP_ARGS --allow-downgrades"
+            ;;
         *)
             log ERROR "Unrecognized option $1."
             ;;
@@ -352,6 +358,7 @@ for uuid in $UUIDS; do
     fi
 
     # Connect to device
+    echo "Running run-resinhup.sh $RESINHUP_ARGS ..." >> $uuid.resinhup.log
     ssh $SSH_HOST -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o Hostname=$uuid.vpn /usr/bin/run-resinhup.sh $RESINHUP_ARGS >> $uuid.resinhup.log 2>&1 &
 
     # Manage queue of threads
