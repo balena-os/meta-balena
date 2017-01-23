@@ -414,7 +414,7 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
     # does not exist in aufs-util repository, then "aufs4.9", "aufs4.8"
     # or something numerically smaller is the branch for your kernel.'
 
-    for key, value in reversed(aufsdict.items()) :
+    for key, value in reversed(list(aufsdict.items())) :
         if key.split('+')[0] is kernelversion:
             aufsbranch = key
             break
