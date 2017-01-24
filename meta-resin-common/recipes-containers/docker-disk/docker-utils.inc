@@ -9,7 +9,8 @@ def connected(d):
     REMOTE_SERVER = d.getVar('RESIN_CHECK_CONN_URL', True)
     try:
         host = socket.gethostbyname(REMOTE_SERVER)
-        socket.create_connection((host, 80), 2)
+        testSocket = socket.create_connection((host, 80), 2)
+        testSocket.close()
         return "yes"
     except:
         pass
