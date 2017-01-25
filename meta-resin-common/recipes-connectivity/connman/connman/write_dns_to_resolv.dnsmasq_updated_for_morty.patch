@@ -1,0 +1,13 @@
+Index: connman/src/resolver.c
+===================================================================
+--- connman.orig/src/resolver.c
++++ connman/src/resolver.c
+@@ -133,7 +133,7 @@ static int resolvfile_export(void)
+ 
+ 	old_umask = umask(022);
+ 
+-	fd = open(RESOLV_CONF_STATEDIR, O_RDWR | O_CREAT | O_CLOEXEC,
++	fd = open("/etc/resolv.dnsmasq", O_RDWR | O_CREAT | O_CLOEXEC,
+ 					S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+ 	if (fd < 0) {
+ 		connman_warn_once("Cannot create "RESOLV_CONF_STATEDIR" "

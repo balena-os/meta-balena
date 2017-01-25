@@ -1,0 +1,61 @@
+From c0b7f8a68aeaf69891de3ba3c0eeed03dc28bbcd Mon Sep 17 00:00:00 2001
+From: Florin Sarbu <florin@resin.io>
+Date: Wed, 25 Jan 2017 15:40:33 +0100
+Subject: [PATCH 1/2] Revert "rt2870sta: Update rt3071.bin to match rt2870.bin"
+
+This reverts commit 9564a7916109033fbf87a532d96c39aef8637f3c.
+---
+ rt3071.bin | Bin 4096 -> 4096 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+diff --git a/rt3071.bin b/rt3071.bin
+index df12e5fd9f013d8165b3ab271088069f96b6e62f..b1f44e0207aef4728ec0d401a499512f048a0b7b 100644
+GIT binary patch
+delta 1119
+zcmb_aTWHfz7*0;oIG5F?X_}~OF&1s+RGQ7<x~W5Vv15q4bsMNik>QI9nYJ%p<8)7g
+zMvsah!^=QW&?#Q_;Dgc)!541>5uXmT5mdyW3;1H=Nvl|W_TilT|M!3S{>%AwS(j@Z
+z#{paw;A#PP2n1JwU>y)iATqoNBA~JzgmwYx91vfq9!B<3e7Ng$W8dytL*tR%Z_qU2
+z%O7wbYq)2t{edojN4LMX$KTuQ?@jv8_W9rS^BV^FJsN*uh<~y-aByGXN?N#}3l9y!
+zI!zEkEaOM^+MJ;UEQ1!(x@GpyY7_|8g5Yu)P%0HZ1mH6u(JlZ*at*1#9x_pMN68d+
+z^Q4UL+l&xZblOyA9RpN-Db+DF4%yY2byTKlQO=G*L<gncIow#@E#k-L@9*sac$Azk
+zx~WQVd-&urR16i<egH#lIeW9+nQ3$~Yn__|<NZ8)!_ex|HP%=<YGuWoz0KZYZ#6X4
+z8nf)`tW@l+&}K=4@D8=ODEXRNywEWRrZ25;HndgdfaT_Qu!%4<1W(e@&~w)lEPd)9
+z!sMl{m`j*jAkdfqPteQA=kPxLRte6S)o!aZ>B~!F_HeFllYI=O_8&RSixXdx`Bw15
+zHAmqCj|{{K_{I~B;6N)?giC(PS)P~~yH`fJ1FUD{V77TWq6(^^EkJz=u5>=?v<t7`
+zDZB!F%3NPAekCNGmJXIl+c=4lrD#g3zf2I)@JM^hNJsO?rtM~8kV#QM8iu2DuF(Nr
+znz)-Nv&crp0LxG^Z<#GqNuQ9aSdzzw(gNAI?t2y2S#zU0Lrv@C<e9jd@Qf><((ArF
+z{=lK~0Jrb}-T|a0C`Sjg&M5_+Ess$R**JVsUeyxMHt2yr0vOimEC$sCJ^pKhT)D(x
+zMQSd-SzKQw|Bqe`yK-KG-dLgnceCO82HjTz>EJKX!dgbm#66ZPboa?JmE@<kHaxb+
+zY&F|1q;@U=I9aF@+HAC?$>3;|{AOjkNer1?8k5=K1`VD-NlN37$b4m!0j{FtBg_Fs
+z4kmOMU<|46v9%EnR$L@QXS{Mn$n3#Wq_KK<0bJqjCTHMbZ;TAVTi){^5`iy$D<JZP
+N|JPv%f(Rea{sh7rqyhi{
+
+delta 1629
+zcmZ`(Z)_Ar6z|T?{p(%RyXpOdJG^C6S~vsUTCLhMp^=s=xX?Sewh1<5CDnxJhXq<S
+z>Uk4L{bGz$7L1XYqD@E?6$_=5RKQ%LUrda-CXo2W(cGFKhOU8)F$(AG-Zd1AUuNF#
+zy*I!2CvP4Wu+UYhRDgdy@TY+PEf6{YLI**35QHaDct`}XpTU}X5ZweK`z41{XyDPB
+zCCTL!8hP|k&qVt`pGs6j%|QYoMfJ1(TkZa9oq>2Jusa(V-W3?$9T?69J{$=AK8Vhb
+zpzY72*Iz)_4>nC7YPvcayo!T=k<g}zy1I}$@qHAkAhdttw}gFb4P1&#YTLMU6&~Xh
+z22D;VBnj9+D@0vI?=J0SvLU76nIwjK@^*!Q^-G36cw6N`$YLX^pEezh72}@|of$;l
+zPYDc;Vnd2KORmyB42t{8L~Xk7fjmu#eAyuK9J{X=Wg<^AaFKyI!zR%NKoBi+o0}C_
+zCDPJBtY-QxI50Gpik8h5v$Ys6#>|~&|5#UL?5WCf5^CpYw=p&Pm_Z;%dpM&QE}O&V
+z9`jkEO2(97ZZ1Zui9VQ}_6EPU8ssB>?YdmSpcQ>+ak6_0Q9JY@!>X1wrh_g_E*^v3
+zhiLOZhL(XXLLXjO_UN!Y{522Ba&CsU6W@ow)^@-RT%Yy|{INAG=$ly=!@}svb#3P1
+z@}shOgetEU-b9hiQtoaKxMPW(+N%x$L^9e3j+O#5^zc>nibrL`(WbY}IQg>Krl%Ab
+zN@0F1byrWRZo%b{VxZ*GcdM%<#dCItv;#V}7NOqXyHj!N{h@x==bfUcw>RHZ8iR^I
+zsGw%3Mp5_(4i$TGplq(izLKX@U-FiGG6sv{f=D2sJ#J(C$;0DM9ML-r{gElwXFzj*
+z8ln_r6|bTLN!EiX?Kl5_lr+it$-|Mi>!Pb*G~|w${>Y>dxuQgVI9XR0jg9wh8Q=c&
+zxV%?Sk2n<`L}MCsor0gCXy)7(E`wu}I_Zh_WN>3CgT4Az=@)(xa|=f^QrdAQ31X+L
+zS+%b8h)Zc?r(5x`)5EA@K{mrwO7j&AZdcw-YJYp$_-rwwZLD9vB~#4erh9ZujbV`~
+zSNwn~tIy{1T70J;;CsJ*qd$wgR<PiWT33DS@hom!sRZ}Y+8;~Q(=%Sb_5E@;3_Y2<
+z(c5b#wN`J^`%F-IsTr_v@tfMPw`JQk;)gVM%NWaYOr>XR%h*24PEZ}q@hU0^D0Yp2
+zk7@1-a|8F>K>RuZQ&jqudF$FY-V@xs_MA`f&Fi~@iVrfXHFMfKzAT5epL}i1*x2x1
+zL5T0kJ5XYr$X}ww%S4`EGV;8Qzq0WqhCL`jh<t%bZd;mVk_#nH6Zt%ooVGNxbpMwx
+z#fvU6&lTp_tQRg?vp>SI3=%Ic68RiG-b&=N^mt2mA;9(oh4$J|R@0z?L)Ox$SZicq
+zGUHy}AofzoJ8U{T)f0J81M?_xBG1<VOL{5~Yv7UvJT-6uC1&&P8kn_!i-AI<lT|_Q
+zSSfbqoi+2!vVud2%jG-lz-~vY-l_se3oDBiT@7v*CfbkwBi1Oy<$HzK3YC{d<?P_1
+Ns7*Jt^UZ&J_b*5DfJp!V
+
+-- 
+2.7.4
+
