@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Make /home/root/.docker writable [Theodor]
 * Prevent docker from thrashing the page cache using posix_fadvise [petrosagg]
 * Introduce meta-resin-morty for using meta-resin with poky morty [Florin]
 * Add resinhup machine independent support in U-Boot [Andrei]
