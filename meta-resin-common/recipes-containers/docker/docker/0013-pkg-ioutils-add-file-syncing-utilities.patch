@@ -1,0 +1,90 @@
+From 4defb5521a7a0c5d02a147241664a85044fb40e1 Mon Sep 17 00:00:00 2001
+From: Petros Angelatos <petrosagg@gmail.com>
+Date: Thu, 1 Dec 2016 01:20:59 +0000
+Subject: [PATCH 12/15] pkg/ioutils: add file syncing utilities
+
+Utility functions that operate on a path and fsync it.
+
+Upstream-Status: Pending
+Signed-off-by: Petros Angelatos <petrosagg@gmail.com>
+---
+ pkg/ioutils/sync.go | 67 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 pkg/ioutils/sync.go
+
+diff --git a/pkg/ioutils/sync.go b/pkg/ioutils/sync.go
+new file mode 100644
+index 0000000..f5bcecb
+--- /dev/null
++++ b/pkg/ioutils/sync.go
+@@ -0,0 +1,67 @@
++package ioutils
++
++import (
++	"os"
++	"path/filepath"
++	"syscall"
++)
++
++func syncPath(path string, flag int) error {
++	file, err := os.OpenFile(path, flag, 0)
++	defer file.Close()
++	if err != nil {
++		return err
++	}
++
++	if err := file.Sync(); err != nil {
++		return err
++	}
++
++	return nil
++}
++
++func SyncReg(path string) error {
++	return syncPath(path, syscall.O_RDONLY)
++}
++
++func SyncDir(path string) error {
++	return syncPath(path, syscall.O_DIRECTORY)
++}
++
++func Sync(path string) error {
++	fi, err := os.Lstat(path)
++	if err != nil {
++		return err
++	}
++
++	if fi.IsDir() {
++		return SyncDir(path)
++	} else if fi.Mode().IsRegular() {
++		return SyncReg(path)
++	}
++
++	return nil
++}
++
++func SyncWithParent(path string) error {
++	if err := Sync(path); err != nil {
++		return err
++	}
++
++	return SyncDir(filepath.Dir(path))
++}
++
++func SyncWithAncestors(path string) error {
++	if err := Sync(path); err != nil {
++		return err
++	}
++
++	// fsync all parent directories
++	for path = filepath.Dir(path); path != "/"; path = filepath.Dir(path) {
++		if err := SyncDir(path); err != nil {
++			return err
++		}
++	}
++
++	return nil
++}
+-- 
+2.10.2
+
