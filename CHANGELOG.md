@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.26-rc0 - 2017-01-27
+
 * Add xt_set kernel module for all of our devices [Theodor]
 * Prevent docker from thrashing the page cache using posix_fadvise [petrosagg]
 * Add support for downgrades in resinhup and logging enhancements [Andrei]
