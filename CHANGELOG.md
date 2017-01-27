@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0-beta.8 - 2017-01-27
+
 * Add xt_set kernel module for all of our devices [Theodor]
 * Make /home/root/.docker writable [Theodor]
 * Prevent docker from thrashing the page cache using posix_fadvise [petrosagg]
