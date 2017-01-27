@@ -74,6 +74,7 @@ RESIN_CONFIGS ?= " \
     ip6tables_nat \
     ip_set \
     wd-nowayout \
+    xtables \
     "
 
 #
@@ -289,6 +290,15 @@ RESIN_CONFIGS[ip6tables_nat] = " \
 #
 RESIN_CONFIGS[wd-nowayout] = " \
     CONFIG_WATCHDOG_NOWAYOUT=n \
+    "
+
+RESIN_CONFIGS_DEPS[xtables] = " \
+    CONFIG_NETFILTER_ADVANCED=m \
+    CONFIG_IP_SET=m \
+    "
+
+RESIN_CONFIGS[xtables] = " \
+    CONFIG_NETFILTER_XT_SET=m \
     "
 
 ###########
