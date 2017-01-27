@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add xt_set kernel module for all of our devices [Theodor]
 * Make /home/root/.docker writable [Theodor]
 * Prevent docker from thrashing the page cache using posix_fadvise [petrosagg]
 * Introduce meta-resin-morty for using meta-resin with poky morty [Florin]
