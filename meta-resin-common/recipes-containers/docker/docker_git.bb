@@ -136,10 +136,15 @@ do_install() {
     install -d ${D}${sysconfdir}/systemd/system/docker.service.d
     install -c -m 0644 ${WORKDIR}/docker.conf.systemd ${D}${sysconfdir}/systemd/system/docker.service.d/docker.conf
   fi
+
+  install -d ${D}/home/root/.docker
 }
 
 inherit useradd
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r docker"
 
-FILES_${PN} += "/lib/systemd/system/*"
+FILES_${PN} += " \
+  /lib/systemd/system/* \
+  /home/root/* \
+  "
