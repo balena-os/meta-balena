@@ -1,8 +1,8 @@
 [Unit]
 Description=Docker Application Container Engine
 Documentation=http://docs.docker.com
-After=network.target docker.socket var-lib-docker.mount etc-docker.mount
-Requires=docker.socket var-lib-docker.mount etc-docker.mount
+After=network.target docker.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount
+Requires=docker.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount
 Wants=dnsmasq.service
 Before=dnsmasq.service
 
