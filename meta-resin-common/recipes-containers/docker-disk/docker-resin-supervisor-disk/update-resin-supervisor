@@ -134,12 +134,14 @@ fi
 echo "Stop supervisor..."
 systemctl stop resin-supervisor
 
-# Store the tagged image string so resin-supervisor.service can pick it up
-echo "SUPERVISOR_IMAGE=$image_name:$tag" > $UPDATECONF
-
 # Pull target version.
 echo "Pulling supervisor $image_name:$tag..."
 $DOCKER pull "$image_name:$tag"
+
+$DOCKER rm --force resin_supervisor || true
+
+# Store the tagged image string so resin-supervisor.service can pick it up
+echo "SUPERVISOR_IMAGE=$image_name:$tag" > $UPDATECONF
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
