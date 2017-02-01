@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update supervisor to v3.0.0 [Pablo]
+
 # v2.0-beta.8 - 2017-01-27
 
 * Add xt_set kernel module for all of our devices [Theodor]
