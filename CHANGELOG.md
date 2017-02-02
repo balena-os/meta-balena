@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix bug with the .docker mountpoint [Theodor]
 * Remove the supervisor container in the update script [Pablo]
 * Do not remove the supervisor container in every start [Pablo]
 * Update supervisor to v3.0.0 [Pablo]
