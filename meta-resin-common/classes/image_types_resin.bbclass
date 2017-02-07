@@ -9,7 +9,7 @@ inherit image_types
 #                               - if dst is ommited ('src:' format used), absolute path of src will be used as dst
 #
 # Optional:
-# RESIN_SDIMG_ROOTFS_TYPE       - rootfs image to be used [default: ext3]
+# RESIN_SDIMG_ROOTFS_TYPE       - rootfs image to be used [default: ext4]
 # RESIN_BOOT_SPACE              - size of boot partition in KiB [default: 40960]
 # RESIN_SDIMG_COMPRESSION       - define this to compress the final SD image with gzip, xz or bzip2 [default: empty]
 
@@ -76,8 +76,7 @@ RESIN_BOOT_SPACE ?= "40960"
 # Set alignment to 4MB [in KiB]
 IMAGE_ROOTFS_ALIGNMENT = "4096"
 
-# Use an uncompressed ext3 by default as rootfs
-RESIN_SDIMG_ROOTFS_TYPE ?= "ext3"
+RESIN_SDIMG_ROOTFS_TYPE ?= "ext4"
 
 # Default bootloader to virtual/bootloader
 RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"

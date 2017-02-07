@@ -36,6 +36,9 @@ do_install_append() {
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
     ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
+
+    # resolv.conf is a static file containing the dnsmasq IP and deployed by dnsmasq package
+    rm -rf ${D}/${sysconfdir}/resolv.conf
 }
 
 # add pool.ntp.org as default ntp server
