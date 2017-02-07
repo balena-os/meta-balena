@@ -20,6 +20,7 @@ RDEPENDS_${PN} = " \
     coreutils \
     util-linux \
     udev \
+    resin-device-register \
     resin-device-progress \
     resin-init-board \
     parted \
@@ -61,7 +62,7 @@ do_install() {
 
     # Construct resin-init-flasher.conf
     install -d ${D}${sysconfdir}
-    echo "INTERNAL_DEVICE_KERNEL=${INTERNAL_DEVICE_KERNEL}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "INTERNAL_DEVICE_KERNEL=\"${INTERNAL_DEVICE_KERNEL}\"" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG=${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH=${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "RESIN_IMAGE=${RESIN_IMAGE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf

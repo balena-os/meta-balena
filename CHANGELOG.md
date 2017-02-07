@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add support for multiple entries in INTERNAL_DEVICE_KERNEL [Andrei]
 * Fix bug with the .docker mountpoint [Theodor]
 * Remove the supervisor container in the update script [Pablo]
 * Do not remove the supervisor container in every start [Pablo]

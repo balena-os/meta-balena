@@ -10,6 +10,8 @@
 #                                             * it's impossible to known what dev to flash because
 #                                               we don't have any labels before flashing something
 #                                               so we need this info
+#                                             * when multiple entries provided, the first block device
+#                                               found will be used
 #  INTERNAL_DEVICE_BOOTLOADER_CONFIG      - name of the bootloader config for internal media boot
 #  INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH - relative path to internal boot partition where
 #                                               INTERNAL_DEVICE_BOOTLOADER_CONFIG will be copied to
@@ -94,7 +96,19 @@ fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
-dd if=/opt/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+internal_dev=""
+for d in $INTERNAL_DEVICE_KERNEL; do
+    if [ -b "/dev/$d" ]; then
+        internal_dev=$d
+        break
+    fi
+done
+if [ -z "$internal_dev" ]; then
+    resin-device-progress --percentage 100 --state "Failed to find any block devices." || true
+    fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
+fi
+inform "$internal_dev will be used for flashing."
+dd if=/opt/$RESIN_IMAGE of=/dev/$internal_dev bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
 
 if ! kill -0 $DD_PID; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
@@ -118,7 +132,7 @@ done
 sync
 
 # Trigger udev
-partprobe /dev/$INTERNAL_DEVICE_KERNEL
+partprobe /dev/$internal_dev
 udevadm trigger
 udevadm settle
 
@@ -176,10 +190,23 @@ umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 echo "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
 
-# More syncs
+# Give a chance for the device to register
+STARTTIME=$(date +%s)
+ENDTIME=$(date +%s)
+TIMEOUT=10
+while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
+do
+    if [ $(($ENDTIME - $STARTTIME)) -le $TIMEOUT ]; then
+        sleep 1
+        ENDTIME=$(date +%s)
+    else
+        inform "Timeout while waiting for register to finish. No network?"
+        break
+    fi
+done
+
 sync
 
-# umounts
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 
 inform "Shutting down ..."
