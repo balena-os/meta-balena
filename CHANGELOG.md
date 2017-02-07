@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Use static resolv.conf [Andrei]
 * Switch rootfs to ext4 [Andrei]
 * Adapt resinhup for poky morty migration [Florin]
 * Add support for multiple entries in INTERNAL_DEVICE_KERNEL [Andrei]
