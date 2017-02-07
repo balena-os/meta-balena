@@ -23,7 +23,13 @@ IMAGE_CMD_resinhup-tar () {
 
     # Populate
     mcopy -i ${WORKDIR}/boot.img -sv ::/ ${RESIN_HUP_TEMP_DIR_BOOT}
-    tar -xf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.tar -C ${RESIN_HUP_TEMP_DIR}
+    # check if we are running on a poky version which deploys to IMGDEPLOYDIR instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
+    # and create the archive accordingly
+    if [ -d ${IMGDEPLOYDIR} ]; then
+        tar -xf ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar -C ${RESIN_HUP_TEMP_DIR}
+    else
+        tar -xf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar -C ${RESIN_HUP_TEMP_DIR}
+    fi
 
     # Quirks
     # We need to save some files that docker shadows with bind mounts
