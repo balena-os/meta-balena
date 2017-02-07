@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0-beta.9 - 2017-02-07
+
 * Use static resolv.conf [Andrei]
 * Switch rootfs to ext4 [Andrei]
 * Adapt resinhup for poky morty migration [Florin]
