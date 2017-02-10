@@ -4,7 +4,8 @@ Requires=mnt-boot.mount home-root-.rnd.mount
 After=mnt-boot.mount home-root-.rnd.mount
 
 [Service]
-Type=simple
+Type=oneshot
+RemainAfterExit=yes
 Environment="HOME=/home/root"
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-uuid
 
