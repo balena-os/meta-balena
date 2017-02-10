@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Introduce new host OS versioning scheme [Andrei]
 * Add jethro support [Andrei]
 * Fix missing quotes when testing for IMGDEPLOYDIR [Florin]
 
