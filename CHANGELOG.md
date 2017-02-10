@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Fix missing quotes when testing for IMGDEPLOYDIR [Florin]
+
 # v2.0-beta.9 - 2017-02-07
 
 * Use static resolv.conf [Andrei]
