@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Fix sectors per track for targets smaller than 512 MB [Andrei]
+
 # v2.0.0-beta10 - 2017-02-13
 
 * Introduce new host OS versioning scheme [Andrei]
