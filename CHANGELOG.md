@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Halve the UUID length to 16 bytes [Michal]
+
 # v2.0.0-beta11 - 2017-02-15
 
 * Fix sectors per track for targets smaller than 512 MB [Andrei]
