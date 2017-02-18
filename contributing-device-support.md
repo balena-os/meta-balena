@@ -37,9 +37,9 @@ module.exports =
   yocto:
     machine: 'raspberrypi3'
     image: 'resin-image'
-    fstype: 'resin-sdcard'
+    fstype: 'resinos-img'
     version: 'yocto-jethro'
-    deployArtifact: 'resin-image-raspberrypi3.resin-sdcard'
+    deployArtifact: 'resin-image-raspberrypi3.resinos-img'
     compressed: true
 ```
 
@@ -94,7 +94,7 @@ from external storage (these boards do not have internal storage to install resi
 
   The `resin-image.bbappend` file shall define the following variables:
 
-    - `IMAGE_FSTYPES_<yocto-machine-name>`: this variable is used to declare the type of the produced image. It can be ext3, ext4, resin-sdcard etc. The usual type for a board that can boot from SD card, USB, is "resin-sdcard".
+    - `IMAGE_FSTYPES_<yocto-machine-name>`: this variable is used to declare the type of the produced image. It can be ext3, ext4, resinos-img etc. The usual type for a board that can boot from SD card, USB, is "resinos-img".
 
     - `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>`: this allows adding files from the build's deploy directory into the vfat formatted resin-boot partition (can be used to add bootloader config files, first stage bootloader, initramfs or anything else needed for the booting process to take place for your particular board). If the board uses different bootloader configuration files when booting from either external media (USB thumb drive, SD card etc.) or from internal media (mSATA, eMMC etc) then you would want to make use of this variable to make sure the different bootloader configuration files get copied over and further manipulated as needed (see `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>` and `INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_<yocto-machine-name>` below). Please note that you only reference these files here, it is the responsibility of a `.bb` or `.bbappend` to provide and deploy them (for bootloader config files this is done with an append typically in `recipes-bsp/<your board's bootloader>/<your board's bootloader>.bbappend`, see [resin-intel grub bbappend][resin-intel grub append] for an example).
 
