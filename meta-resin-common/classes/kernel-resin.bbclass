@@ -76,6 +76,7 @@ RESIN_CONFIGS ?= " \
     seccomp \
     wd-nowayout \
     xtables \
+    audit \
     "
 
 #
@@ -310,6 +311,13 @@ RESIN_CONFIGS_DEPS[xtables] = " \
 
 RESIN_CONFIGS[xtables] = " \
     CONFIG_NETFILTER_XT_SET=m \
+    "
+
+# Deactivate the audit susbsystem and the audit syscall
+
+RESIN_CONFIGS[audit] = " \
+    CONFIG_AUDIT=n \
+    CONFIG_AUDITSYSCALL=n \
     "
 
 ###########
