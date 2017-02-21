@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Introduce debug tools package group add mkfs.ext4 in resin-image [Andrei]
 * Halve the UUID length to 16 bytes [Michal]
 
 # v2.0.0-beta11 - 2017-02-15

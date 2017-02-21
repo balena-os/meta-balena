@@ -32,6 +32,7 @@ IMAGE_FEATURES_append = " \
     "
 
 IMAGE_INSTALL_append = " \
+    packagegroup-resin-debugtools \
     packagegroup-resin-connectivity \
     packagegroup-resin \
     "
