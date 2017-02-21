@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Configure an armv7ve repository for the Resin Supervisor [Michal]
 * Fix the location where to create the resinhup bundles when using poky morty [Florin]
 * Introduce debug tools package group add mkfs.ext4 in resin-image [Andrei]
 * Halve the UUID length to 16 bytes [Michal]
