@@ -96,14 +96,14 @@ RESIN_STATE_FS = "${WORKDIR}/${RESIN_STATE_FS_LABEL}.img"
 # resinos-img depends on the rootfs image
 IMAGE_TYPEDEP_resinos-img = "${RESIN_ROOT_FSTYPE}"
 IMAGE_DEPENDS_resinos-img = " \
-    e2fsprogs-native \
-    parted-native \
-    mtools-native \
+    coreutils-native \
+    docker-disk \
     dosfstools-native \
+    e2fsprogs-native \
+    mtools-native \
+    parted-native \
     virtual/kernel \
     ${RESIN_IMAGE_BOOTLOADER} \
-    docker-disk \
-    coreutils-native \
     "
 
 IMAGE_CMD_resinos-img () {
