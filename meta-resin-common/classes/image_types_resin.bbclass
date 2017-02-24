@@ -141,7 +141,6 @@ IMAGE_CMD_resinos-img () {
         RESIN_DATA_SIZE_ALIGNED=${RESIN_IMAGE_ALIGNMENT}
     fi
 
-    # Total raw image size
     RESIN_RAW_IMG_SIZE=$(expr \
         ${RESIN_IMAGE_ALIGNMENT} \+ \
         ${RESIN_BOOT_SIZE_ALIGNED} \+ \
