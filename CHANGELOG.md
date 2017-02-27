@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.0-beta12 - 2017-02-27
+
 * Disable audit subsystem [Theodor]
 * Run openvpn on flasher too [Andrei]
 * Add VARIANT/VARIANT_ID in os-release [Andrei]
