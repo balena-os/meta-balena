@@ -190,7 +190,7 @@ IMAGE_CMD_resinos-img () {
     # resin-state
     START=$(expr ${START} \+ ${RESIN_IMAGE_ALIGNMENT})
     END=$(expr ${START} \+ ${RESIN_STATE_SIZE_ALIGNED})
-    parted -s ${RESIN_RAW_IMG} unit KiB mkpart logical fat16 ${START} ${END}
+    parted -s ${RESIN_RAW_IMG} unit KiB mkpart logical ext4 ${START} ${END}
 
     # resin-data
     START=$(expr ${END} \+ ${RESIN_IMAGE_ALIGNMENT})
