@@ -1,6 +1,9 @@
 Change log
 -----------
 
+* Run openvpn on flasher too [Andrei]
+* Add VARIANT/VARIANT_ID in os-release [Andrei]
+* Modify partitions label, define entire resinOS space used to 700MiB and other minor changes [Andrei]
 * Update supervisor to v3.0.1 [Pablo]
 * Configure an armv7ve repository for the Resin Supervisor [Michal]
 * Fix the location where to create the resinhup bundles when using poky morty [Florin]

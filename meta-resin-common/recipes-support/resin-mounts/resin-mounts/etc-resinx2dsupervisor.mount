@@ -1,10 +1,10 @@
 [Unit]
 Description=ResinOS supervisor configuration
-Requires=mnt-conf.mount resin-conf-reset.service
-After=mnt-conf.mount resin-conf-reset.service
+Requires=mnt-state.mount resin-state-reset.service
+After=mnt-state.mount resin-state-reset.service
 
 [Mount]
-What=/mnt/conf/root-overlay/etc/resin-supervisor
+What=/mnt/state/root-overlay/etc/resin-supervisor
 Where=/etc/resin-supervisor
 Type=None
 Options=bind

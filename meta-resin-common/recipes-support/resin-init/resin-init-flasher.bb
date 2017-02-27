@@ -28,7 +28,7 @@ RDEPENDS_${PN} = " \
     "
 
 # This should be just fine
-RESIN_IMAGE ?= "resin-image-${MACHINE}.resin-sdcard"
+RESIN_IMAGE ?= "resin-image-${MACHINE}.resinos-img"
 
 do_install() {
     if [[ -z "${INTERNAL_DEVICE_KERNEL}" ]]; then

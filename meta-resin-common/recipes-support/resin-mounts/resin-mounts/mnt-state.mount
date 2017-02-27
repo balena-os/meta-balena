@@ -1,12 +1,12 @@
 [Unit]
-Description=Resin conf partition mountpoint
+Description=Resin state partition mountpoint
 DefaultDependencies=no
 Before=umount.target
 Conflicts=umount.target
 
 [Mount]
-What=/dev/disk/by-label/resin-conf
-Where=/mnt/conf
+What=/dev/disk/by-label/resin-state
+Where=/mnt/state
 Type=ext4
 
 [Install]

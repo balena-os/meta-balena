@@ -1,8 +1,8 @@
 inherit image_types
 
 # This image depends on the rootfs image exported as tar and needs the temporary boot image
-# from resin-sdcard
-IMAGE_TYPEDEP_resinhup-tar = "tar resin-sdcard"
+# from resinos-img
+IMAGE_TYPEDEP_resinhup-tar = "tar resinos-img"
 
 IMAGE_DEPENDS_resinhup-tar = " \
     tar-native \
@@ -20,7 +20,7 @@ IMAGE_CMD_resinhup-tar () {
     mkdir -p ${RESIN_HUP_TEMP_DIR_BOOT}
 
     # Populate
-    mcopy -i ${WORKDIR}/boot.img -sv ::/ ${RESIN_HUP_TEMP_DIR_BOOT}
+    mcopy -i ${RESIN_BOOT_FS} -sv ::/ ${RESIN_HUP_TEMP_DIR_BOOT}
     # check if we are running on a poky version which deploys to IMGDEPLOYDIR instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
     # and extract the appropriate archive; also based on this set the correct location where to create the resin hostOS update bundle in
     if [ -d "${IMGDEPLOYDIR}" ]; then

@@ -31,14 +31,14 @@ SYSTEMD_SERVICE_${PN} = " \
     "
 
 FILES_${PN} += " \
-    /mnt/conf \
+    /mnt/state \
     /mnt/boot \
     /mnt/bootorig \
     ${sysconfdir}/tmpfiles.d/ \
     "
 
 do_install () {
-    install -d ${D}/mnt/conf
+    install -d ${D}/mnt/state
     install -d ${D}/mnt/boot
     install -d ${D}/mnt/bootorig
     install -d ${D}${sysconfdir}/tmpfiles.d

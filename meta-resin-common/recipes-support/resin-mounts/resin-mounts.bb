@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 
 SRC_URI = " \
     file://mnt-boot.mount \
-    file://mnt-conf.mount \
+    file://mnt-state.mount \
     file://mnt-data.mount \
     file://etc-docker.mount \
     file://etc-dropbear.mount \
@@ -27,7 +27,7 @@ PACKAGES = "${PN}"
 
 SYSTEMD_SERVICE_${PN} = " \
     mnt-boot.mount \
-    mnt-conf.mount \
+    mnt-state.mount \
     mnt-data.mount \
     etc-docker.mount \
     etc-dropbear.mount \
@@ -41,14 +41,14 @@ SYSTEMD_SERVICE_${PN} = " \
 
 FILES_${PN} += " \
     /mnt/data \
-    /mnt/conf \
+    /mnt/state \
     /mnt/boot \
     ${systemd_unitdir} \
     ${sysconfdir} \
     "
 
 do_install () {
-    install -d ${D}/mnt/conf
+    install -d ${D}/mnt/state
     install -d ${D}/mnt/data
     install -d ${D}/mnt/boot
     install -d ${D}/etc/docker
@@ -65,7 +65,7 @@ do_install () {
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 \
             ${WORKDIR}/mnt-boot.mount \
-            ${WORKDIR}/mnt-conf.mount \
+            ${WORKDIR}/mnt-state.mount \
             ${WORKDIR}/mnt-data.mount \
             ${WORKDIR}/etc-docker.mount \
             ${WORKDIR}/etc-dropbear.mount \

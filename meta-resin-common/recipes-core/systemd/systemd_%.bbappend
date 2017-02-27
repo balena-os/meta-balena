@@ -3,6 +3,8 @@ FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 SRC_URI_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', '', ' file://remove_systemd-getty-generator.patch', d)} \
     file://watchdog.conf \
+    file://resin.target \
+    file://multi-user.conf \
     "
 
 FILES_${PN} += " \
@@ -39,6 +41,15 @@ do_install_append() {
 
     # resolv.conf is a static file containing the dnsmasq IP and deployed by dnsmasq package
     rm -rf ${D}/${sysconfdir}/resolv.conf
+
+    # Install our custom resin target
+    install -d ${D}${systemd_unitdir}/system/resin.target.wants
+    install -d ${D}${sysconfdir}/systemd/system/resin.target.wants
+    install -c -m 0644 ${WORKDIR}/resin.target ${D}${systemd_unitdir}/system/
+
+    # multi-user will trigger resin-target
+    install -d ${D}${sysconfdir}/systemd/system/multi-user.target.d/
+    install -c -m 0644 ${WORKDIR}/multi-user.conf ${D}${sysconfdir}/systemd/system/multi-user.target.d/
 }
 
 # add pool.ntp.org as default ntp server

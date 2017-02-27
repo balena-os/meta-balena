@@ -1,8 +1,11 @@
 # Add custom resin fields
-OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE"
+OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE VARIANT VARIANT_ID"
 
 # Simplify VERSION output
 VERSION = "${HOSTOS_VERSION}"
+
+VARIANT = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','Development','Production',d)}"
+VARIANT_ID = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','dev','prod',d)}"
 
 python __anonymous () {
     import subprocess

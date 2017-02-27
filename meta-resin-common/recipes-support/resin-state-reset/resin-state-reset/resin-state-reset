@@ -2,7 +2,7 @@
 set -e
 
 TARGET_GROUP=resin-bind.target
-RESIN_CONF_MP=@RESIN_CONF_MP@
+RESIN_STATE_MP=@RESIN_STATE_MP@
 
 # Takes 2 arguments (What, Where)
 populate() {
@@ -15,14 +15,14 @@ populate() {
 }
 
 # Create rollback data
-if [ -d ${RESIN_CONF_MP}/root-overlay ]; then
-    mv ${RESIN_CONF_MP}/root-overlay ${RESIN_CONF_MP}/rollback || (echo "[ERROR] Unable to backup data. Refusing to reset partition" ; exit 1)
+if [ -d ${RESIN_STATE_MP}/root-overlay ]; then
+    mv ${RESIN_STATE_MP}/root-overlay ${RESIN_STATE_MP}/rollback || (echo "[ERROR] Unable to backup data. Refusing to reset partition" ; exit 1)
 fi
 
 # Purge data
-rm -rf ${RESIN_CONF_MP}/root-overlay
+rm -rf ${RESIN_STATE_MP}/root-overlay
 
-# Re-populate resin-conf with factory state
+# Re-populate resin-state with factory state
 MLIST=$(find /etc/systemd/system/${TARGET_GROUP}.wants -name "*.mount")
 
 IFS=' ' read -ra mounts <<< $MLIST
@@ -35,4 +35,4 @@ do
 done
 
 # Clean after ourselves
-rm -rf ${RESIN_CONF_MP}/rollback
+rm -rf ${RESIN_STATE_MP}/rollback

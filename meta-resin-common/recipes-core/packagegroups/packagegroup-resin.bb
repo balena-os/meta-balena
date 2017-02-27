@@ -19,7 +19,7 @@ RDEPENDS_${PN} += " \
     resin-data-expander \
     resin-info \
     resin-hostname \
-    resin-conf-reset \
+    resin-state-reset \
     resinhup \
     aufs-util \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
