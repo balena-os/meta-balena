@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Disable audit subsystem [Theodor]
 * Run openvpn on flasher too [Andrei]
 * Add VARIANT/VARIANT_ID in os-release [Andrei]
 * Modify partitions label, define entire resinOS space used to 700MiB and other minor changes [Andrei]
