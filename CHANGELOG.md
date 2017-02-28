@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Fix a compile error on krogoth boards [Andrei]
+
 # v2.0.0-beta12 - 2017-02-27
 
 * Disable audit subsystem [Theodor]
