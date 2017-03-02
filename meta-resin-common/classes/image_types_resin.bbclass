@@ -87,7 +87,6 @@ RESIN_FINGERPRINT_EXT ?= "fingerprint"
 RESIN_FINGERPRINT_FILENAME ?= "resinos"
 RESIN_BOOT_FINGERPRINT_PATH ?= "${WORKDIR}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
 RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
-RESIN_IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 RESIN_RAW_IMG_COMPRESSION ?= ""
 RESIN_DATA_FS = "${DEPLOY_DIR}/images/${MACHINE}/${RESIN_DATA_FS_LABEL}.img"
 RESIN_BOOT_FS = "${WORKDIR}/${RESIN_BOOT_FS_LABEL}.img"
@@ -274,7 +273,7 @@ IMAGE_CMD_resinos-img () {
             fi
         done
     done
-    echo "${IMAGE_NAME}-${RESIN_IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
+    echo "${IMAGE_NAME}" > ${WORKDIR}/image-version-info
     mcopy -i ${RESIN_BOOT_FS} -v ${WORKDIR}/image-version-info ::
     md5sum ${WORKDIR}/image-version-info | awk -v filepath="/image-version-info" '{ $2=filepath; print }' >> ${RESIN_BOOT_FINGERPRINT_PATH}
     mcopy -i ${RESIN_BOOT_FS} -v ${RESIN_BOOT_FINGERPRINT_PATH} ::
