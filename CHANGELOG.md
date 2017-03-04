@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Implement resin-uboot based on v2.0 specification [Andrei]
+
 # v2.0.0-beta13 - 2017-02-27
 
 * Fix a compile error on krogoth boards [Andrei]
