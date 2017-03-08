@@ -22,27 +22,27 @@ do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
 do_install() {
-    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
-        install -d ${D}${sbindir}/
-        install -m 0755 ${WORKDIR}/resin-info ${D}${sbindir}/
+    install -d ${D}${sbindir}/
+    install -m 0755 ${WORKDIR}/resin-info ${D}${sbindir}/
 
-        if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-            install -d ${D}${systemd_unitdir}/system/
-            install -d ${D}${sysconfdir}/systemd/system/resin.target.wants/
-            install -m 0644 ${WORKDIR}/resin-info@.service ${D}${systemd_unitdir}/system/
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}${systemd_unitdir}/system/
+        install -d ${D}${sysconfdir}/systemd/system/resin.target.wants/
+        install -m 0644 ${WORKDIR}/resin-info@.service ${D}${systemd_unitdir}/system/
 
+        if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
             # Enable services
             for ttydev in ${TTYS}; do
                 ln -sf ${systemd_unitdir}/system/resin-info@.service \
                     ${D}${sysconfdir}/systemd/system/resin.target.wants/resin-info@$ttydev.service
             done
+        fi
 
-            sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
-                -e 's,@SBINDIR@,${sbindir},g' \
-                -e 's,@BINDIR@,${bindir},g' \
-                ${D}${systemd_unitdir}/system/*.service
-       fi
-   fi
+        sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+            -e 's,@SBINDIR@,${sbindir},g' \
+            -e 's,@BINDIR@,${bindir},g' \
+            ${D}${systemd_unitdir}/system/*.service
+    fi
 }
 
 FILES_${PN} += "${systemd_unitdir}/system/*.service ${sysconfdir}"
