@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Avoid running the filesystem expander when we know we cannot expand [Theodor]
 * Implement resin-uboot based on v2.0 specification [Andrei]
 
 # v2.0.0-beta13 - 2017-02-27
