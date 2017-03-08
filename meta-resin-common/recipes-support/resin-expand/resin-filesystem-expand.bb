@@ -16,6 +16,8 @@ RDEPENDS_${PN} = " \
     bash \
     coreutils \
     e2fsprogs-resize2fs \
+    e2fsprogs-e2fsck \
+    e2fsprogs-dumpe2fs \
     "
 
 do_install() {

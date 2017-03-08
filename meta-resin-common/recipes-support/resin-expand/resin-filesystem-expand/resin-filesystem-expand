@@ -4,11 +4,18 @@ set -e
 
 DATA_PARTITION=/dev/disk/by-label/resin-data
 
-echo -n "Expand ext4 partition on $DATA_PARTITION... "
-e2fsck -y -f $DATA_PARTITION
-resize2fs -f $DATA_PARTITION
-echo "done."
+fs_blocks=$(dumpe2fs -h $DATA_PARTITION | awk -F: '/Block count/{count=$2} /Block size/{size=$2} END{print count*size}')
 
-sync
+part_blocks=$(parted $DATA_PARTITION u b p | grep "Disk $(readlink -f $DATA_PARTITION)" | grep -o -E "[0-9]*.$")
+part_block_size=$(expr $(blockdev --getsz $DATA_PARTITION) / 512)
+
+if [ $(expr ${part_blocks%?} - $fs_blocks) -ge $part_block_size ]; then
+    echo -n "Expand ext4 partition on $DATA_PARTITION... "
+    e2fsck -y -f $DATA_PARTITION
+    resize2fs -f $DATA_PARTITION
+    echo "done."
+
+    sync
+fi
 
 exit 0
