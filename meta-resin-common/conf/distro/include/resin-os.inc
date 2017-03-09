@@ -69,3 +69,8 @@ PREFERRED_VERSION_usb-modeswitch ?= "2.2.5"
 # Identification file flags
 RESIN_IMAGE_FLAG_FILE = "resin-image"
 RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
+
+# Initramfs
+INITRAMFS_IMAGE = "resin-image-initramfs"
+INITRAMFS_IMAGE_BUNDLE = "1"
+KERNEL_INITRAMFS = "-initramfs"
