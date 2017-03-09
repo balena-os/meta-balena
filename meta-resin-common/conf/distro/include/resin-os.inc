@@ -65,3 +65,7 @@ INHERIT += "image-buildinfo"
 
 # we want our custom version with no TCL dependency
 PREFERRED_VERSION_usb-modeswitch ?= "2.2.5"
+
+# Identification file flags
+RESIN_IMAGE_FLAG_FILE = "resin-image"
+RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
