@@ -18,8 +18,6 @@ python __anonymous() {
 
 RESIN_BOOT_PART = "1"
 RESIN_DEFAULT_ROOT_PART = "2"
-RESIN_IMAGE_FLAG_FILE = ".resin-image"
-RESIN_FLASHER_FLAG_FILE = ".resin-image-flasher"
 RESIN_ENV_FILE = "resinOS_uEnv.txt"
 RESIN_UBOOT_MMC_DEVICES ?= "0 1 2"
 
@@ -34,8 +32,3 @@ do_generate_resin_uboot_configuration () {
 EOF
 }
 addtask do_generate_resin_uboot_configuration after do_patch before do_configure
-
-do_deploy_append () {
-    echo "DO NOT REMOVE THIS FILE" > ${DEPLOYDIR}/${RESIN_IMAGE_FLAG_FILE}
-    echo "DO NOT REMOVE THIS FILE" > ${DEPLOYDIR}/${RESIN_FLASHER_FLAG_FILE}
-}
