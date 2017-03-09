@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Change "test -z" with "test -n" in the U-Boot MMC scanning procedure [Florin]
+* Implement MMC scanning for U-Boot [Andrei]
 * Resin-info should not be present in our production images [Theodor]
 * Implement resin-uboot based on v2.0 specification [Andrei]
 

@@ -18,26 +18,24 @@ python __anonymous() {
 
 RESIN_BOOT_PART = "1"
 RESIN_DEFAULT_ROOT_PART = "2"
-RESIN_FLASHER_EXTERNAL_FLAG_FILE = ".resin-image-flasher"
+RESIN_IMAGE_FLAG_FILE = ".resin-image"
+RESIN_FLASHER_FLAG_FILE = ".resin-image-flasher"
 RESIN_ENV_FILE = "resinOS_uEnv.txt"
+RESIN_UBOOT_MMC_DEVICES ?= "0 1 2"
 
 do_generate_resin_uboot_configuration () {
-    # RESIN_INTERNAL_MMC is mandatory
-    if [ -z "${RESIN_INTERNAL_MMC}" ]; then
-        bbfatal "RESIN_INTERNAL_MMC is a mandatory variable. Please define."
-    fi
-
     cat > ${S}/include/config_resin.h <<EOF
-#define RESIN_INTERNAL_MMC ${RESIN_INTERNAL_MMC}
-#define RESIN_EXTERNAL_MMC ${RESIN_EXTERNAL_MMC}
+#define RESIN_UBOOT_MMC_DEVICES ${RESIN_UBOOT_MMC_DEVICES}
 #define RESIN_BOOT_PART ${RESIN_BOOT_PART}
 #define RESIN_DEFAULT_ROOT_PART ${RESIN_DEFAULT_ROOT_PART}
-#define RESIN_FLASHER_EXTERNAL_FLAG_FILE ${RESIN_FLASHER_EXTERNAL_FLAG_FILE}
+#define RESIN_IMAGE_FLAG_FILE ${RESIN_IMAGE_FLAG_FILE}
+#define RESIN_FLASHER_FLAG_FILE ${RESIN_FLASHER_FLAG_FILE}
 #define RESIN_ENV_FILE ${RESIN_ENV_FILE}
 EOF
 }
 addtask do_generate_resin_uboot_configuration after do_patch before do_configure
 
 do_deploy_append () {
-    echo "DO NOT REMOVE THIS FILE" > ${DEPLOYDIR}/${RESIN_FLASHER_EXTERNAL_FLAG_FILE}
+    echo "DO NOT REMOVE THIS FILE" > ${DEPLOYDIR}/${RESIN_IMAGE_FLAG_FILE}
+    echo "DO NOT REMOVE THIS FILE" > ${DEPLOYDIR}/${RESIN_FLASHER_FLAG_FILE}
 }
