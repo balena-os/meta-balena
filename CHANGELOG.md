@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Refactor persistent logging [Theodor]
 * Add support for RDT promote [Andrei]
 * Fix image flag files on non uboot boards [Andrei]
 * Update supervisor to v4.0.0 [Pablo]
