@@ -4,13 +4,19 @@ set -e
 TARGET_GROUP=resin-bind.target
 RESIN_STATE_MP=@RESIN_STATE_MP@
 
-# Takes 2 arguments (What, Where)
+#
+# Mirrors path $1 with path $2
+# Takes 2 arguments
 populate() {
     # Re-construct directory structure and populate files
     if [ -f $2 ]; then
-        mkdir -p "$(dirname $1)" && cp $2 $1
+        mkdir -p -- "$(dirname $1)"
+        cp -- "$2" "$1"
+    elif [ -d "$2" ]; then
+        mkdir -p -- "$1"
+        find "$2" \( -type f -o -type l \) -exec cp {} "$1" +
     else
-        mkdir -p $1 && find $2 \( -type f -o -type l \) -exec cp {} $1 +
+        mkdir -p -- "$1"
     fi
 }
 
