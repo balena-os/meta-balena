@@ -15,8 +15,7 @@ include packagegroup-resin.inc
 RDEPENDS_${PN} += " \
     docker-disk \
     resin-filesystem-expand \
-    resin-logs \
-    resin-data-expander \
+    resin-persistent-logs \
     resin-info \
     resin-hostname \
     resin-state-reset \
