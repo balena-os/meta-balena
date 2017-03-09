@@ -24,4 +24,4 @@ ExecStart=@BINDIR@/start-resin-supervisor
 ExecStop=-@BINDIR@/docker stop resin_supervisor
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=resin.target
