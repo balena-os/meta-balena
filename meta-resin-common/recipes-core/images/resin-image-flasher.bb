@@ -46,10 +46,14 @@ add_resin_image_to_flasher_rootfs() {
     cp ${DEPLOY_DIR_IMAGE}/resin-image-${MACHINE}.resinos-img ${WORKDIR}/rootfs/opt
 }
 
-IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
+add_image_flag_file () {
+    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_FLASHER_FLAG_FILE}
+}
+
+IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; add_image_flag_file;"
 
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
 
 # Resin flasher flag file
-RESIN_BOOT_PARTITION_FILES_append = " .resin-image-flasher:/.resin-image-flasher"
+RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_FLASHER_FLAG_FILE}:/${RESIN_FLASHER_FLAG_FILE}"
