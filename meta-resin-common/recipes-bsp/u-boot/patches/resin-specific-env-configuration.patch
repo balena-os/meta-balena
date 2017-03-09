@@ -72,8 +72,8 @@ index 0000000..dfef80c
 +				"setenv resin_flasher_mmcdev ${resin_scan_mmcdev}; " \
 +				"exit; " \
 +			"else; " \
-+				"if test -z \"${resin_image_mmcdev}\"; then " \
-+					"if run resin_image_detect; then " \
++				"if test -n \"${resin_image_mmcdev}\"; then ;" \
++					"else if run resin_image_detect; then " \
 +						"setenv resin_image_mmcdev ${resin_scan_mmcdev}; " \
 +					"fi; " \
 +				"fi; " \
