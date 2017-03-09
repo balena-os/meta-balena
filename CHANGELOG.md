@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Resin-info should not be present in our production images [Theodor]
 * Implement resin-uboot based on v2.0 specification [Andrei]
 
 # v2.0.0-beta13 - 2017-02-27
