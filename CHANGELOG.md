@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add support for RDT promote [Andrei]
 * Fix image flag files on non uboot boards [Andrei]
 * Update supervisor to v4.0.0 [Pablo]
 * Change "test -z" with "test -n" in the U-Boot MMC scanning procedure [Florin]
