@@ -43,7 +43,11 @@ generate_hostos_version () {
     echo "${HOSTOS_VERSION}" > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
 }
 
-IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; "
+add_image_flag_file () {
+    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_IMAGE_FLAG_FILE}
+}
+
+IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; add_image_flag_file; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
 RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"
@@ -55,4 +59,4 @@ RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-typ
 RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
 
 # Resin image flag file
-RESIN_BOOT_PARTITION_FILES_append = " .resin-image:/.resin-image"
+RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_IMAGE_FLAG_FILE}:/${RESIN_IMAGE_FLAG_FILE}"
