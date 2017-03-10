@@ -1,0 +1,26 @@
+#!/bin/sh
+
+FREESPACE_LIMIT=10
+datapart=$(readlink -f /dev/disk/by-label/resin-data)
+datadev=$(lsblk $datapart -n -o PKNAME)
+
+resindataexpander_enabled() {
+    for freespace in $(parted -m /dev/$datadev unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
+        if [ $(echo $freespace \> $FREESPACE_LIMIT | bc -l) == "1" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+resindataexpander_run() {
+    echo -n "resindataexpander: Expand extended partition... "
+    parted -s /dev/$datadev -- resizepart 4 -1s
+    echo "done."
+    echo -n "resindataexpander: Expand data partition... "
+    parted -s /dev/$datadev -- resizepart 6 -1s
+    echo "done."
+
+    partprobe
+    sync
+}

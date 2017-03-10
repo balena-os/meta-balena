@@ -1,0 +1,12 @@
+[Unit]
+Description=Resin persistent logs
+Requires=systemd-journald.service
+After=systemd-journald.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BINDIR@/resin-persistent-logs
+
+[Install]
+WantedBy=multi-user.target

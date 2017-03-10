@@ -19,7 +19,8 @@ do_install_append() {
     # independently of this forwarding
     sed -i -e 's/.*ForwardToSyslog.*/#ForwardToSyslog=yes/' ${D}${sysconfdir}/systemd/journald.conf
     sed -i -e 's/.*RuntimeMaxUse.*/RuntimeMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
-    sed -i -e 's/.*Storage.*/Storage=volatile/' ${D}${sysconfdir}/systemd/journald.conf
+    sed -i -e 's/.*SystemMaxUse.*/SystemMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
+    sed -i -e 's/.*Storage.*/Storage=auto/' ${D}${sysconfdir}/systemd/journald.conf
 
     if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
         # Non-development image
@@ -50,6 +51,9 @@ do_install_append() {
     # multi-user will trigger resin-target
     install -d ${D}${sysconfdir}/systemd/system/multi-user.target.d/
     install -c -m 0644 ${WORKDIR}/multi-user.conf ${D}${sysconfdir}/systemd/system/multi-user.target.d/
+
+    # We take care of journald flush ourselves
+    rm ${D}/lib/systemd/system/sysinit.target.wants/systemd-journal-flush.service
 }
 
 # add pool.ntp.org as default ntp server
