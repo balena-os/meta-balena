@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Use stateless flasher partitions [Andrei]
 * Refactor persistent logging [Theodor]
 * Add support for RDT promote [Andrei]
 * Fix image flag files on non uboot boards [Andrei]
