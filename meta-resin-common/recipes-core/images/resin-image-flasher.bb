@@ -21,8 +21,9 @@ IMAGE_INSTALL_append = " \
     packagegroup-resin-flasher \
     "
 
-# Avoid useless space by not using any data image partition
+# Avoid useless space - no data or state on flasher
 RESIN_DATA_FS = ""
+RESIN_STATE_FS = ""
 
 # We do not use a second root fs partition for the flasher image, so just default to RESIN_IMAGE_ALIGNMENT
 RESIN_ROOTB_SIZE = "${RESIN_IMAGE_ALIGNMENT}"
