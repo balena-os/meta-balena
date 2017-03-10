@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.0-rc1 - 2017-03-10
+
 * Use stateless flasher partitions [Andrei]
 * Refactor persistent logging [Theodor]
 * Add support for RDT promote [Andrei]
