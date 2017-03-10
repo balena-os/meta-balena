@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix initramfs-framework for non-morty boards [Theodor]
 * Fix flasher when it might corrupt the internal device [Andrei]
 
 # v2.0.0-rc1 - 2017-03-10
