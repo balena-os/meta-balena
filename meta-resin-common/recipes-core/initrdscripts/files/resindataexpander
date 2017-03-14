@@ -6,7 +6,8 @@ datadev=$(lsblk $datapart -n -o PKNAME)
 
 resindataexpander_enabled() {
     # On flasher avoid expanding partition
-    if [ -f /dev/disk/by-label/flash-boot ]; then
+    if [ -h /dev/disk/by-label/flash-boot ]; then
+        echo "[INFO] Flasher detected. Avoiding expand partition mechanism."
         return 1
     fi
 

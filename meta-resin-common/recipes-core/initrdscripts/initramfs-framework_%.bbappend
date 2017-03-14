@@ -21,7 +21,6 @@ PACKAGES_append = " \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
     initramfs-module-ro-rootfs \
-    initramfs-module-rootfs \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
