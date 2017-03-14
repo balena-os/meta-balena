@@ -5,10 +5,11 @@ datapart=$(readlink -f /dev/disk/by-label/resin-data)
 datadev=$(lsblk $datapart -n -o PKNAME)
 
 resindataexpander_enabled() {
-    if [ -z "$datapart" ]; then
-        echo "resindataexpander: No data partition found. Skipping expander."
+    # On flasher avoid expanding partition
+    if [ -f /dev/disk/by-label/flash-boot ]; then
         return 1
     fi
+
     for freespace in $(parted -m /dev/$datadev unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
         if [ $(echo $freespace \> $FREESPACE_LIMIT | bc -l) == "1" ]; then
             return 0
