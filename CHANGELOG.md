@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.0-rc3 - 2017-03-14
+
 * Fix flasher detection in initramfs scripts [Andrei]
 * Fix initramfs-framework build on morty [Andrei]
 
