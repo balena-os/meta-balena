@@ -1,6 +1,11 @@
 #!/bin/sh
 
 machineid_enabled() {
+    # On flasher we don't need persistent machine-id
+    if [ -f /dev/disk/by-label/flash-boot ]; then
+        return 1
+    fi
+
     if ! mount -t ext4 /dev/disk/by-label/resin-state "$ROOTFS_DIR"/mnt/state; then
         echo "[ERROR] Not able to mount resin-state, machine-id will not be persistent"
         return 1
