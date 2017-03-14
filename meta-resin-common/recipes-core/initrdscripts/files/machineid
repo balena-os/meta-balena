@@ -2,7 +2,8 @@
 
 machineid_enabled() {
     # On flasher we don't need persistent machine-id
-    if [ -f /dev/disk/by-label/flash-boot ]; then
+    if [ -h /dev/disk/by-label/flash-boot ]; then
+        echo "[INFO] Flasher detected. Avoiding persistent machine-id."
         return 1
     fi
 
