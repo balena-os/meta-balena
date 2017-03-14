@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=cbbffd568227ada506640fe950a4823b \
 
 DEPENDS = "intltool-native libnl dbus dbus-glib dbus-glib-native libgudev util-linux libndp libnewt polkit"
 
-inherit gnomebase gettext systemd bluetooth vala
+inherit gobject-introspection gnomebase gettext systemd bluetooth vala
 
 SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
@@ -69,7 +69,12 @@ PACKAGES =+ "libnmutil libnmglib libnmglib-vpn ${PN}-tests \
 "
 
 FILES_libnmutil += "${libdir}/libnm-util.so.*"
-FILES_libnmglib += "${libdir}/libnm-glib.so.*"
+
+FILES_libnmglib += " \
+    ${libdir}/libnm-glib.so.* \
+    ${libdir}/girepository-*/*.typelib \ 
+    "
+
 FILES_libnmglib-vpn += "${libdir}/libnm-glib-vpn.so.*"
 
 FILES_${PN}-adsl = "${libdir}/NetworkManager/libnm-device-plugin-adsl.so"
