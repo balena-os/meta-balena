@@ -52,7 +52,7 @@ Options:
         This is a mandatory argument.
 
   --supervisor-registry <SUPERVISOR REGISTRY>
-        Run run-resinhup.sh with ----supervisor-registry . See run-resinhup.sh help for
+        Run run-resinhup.sh with --supervisor-registry . See run-resinhup.sh help for
         more details.
 
   --supervisor-tag <SUPERVISOR TAG>
@@ -213,7 +213,7 @@ while [[ $# > 0 ]]; do
             UUIDS="$UUIDS $2"
             shift
             ;;
-        -s|--sshhost)
+        -s|--ssh-host)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
             fi
