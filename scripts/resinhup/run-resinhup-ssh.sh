@@ -52,7 +52,7 @@ Options:
         This is a mandatory argument.
 
   --supervisor-registry <SUPERVISOR REGISTRY>
-        Run run-resinhup.sh with ----supervisor-registry . See run-resinhup.sh help for
+        Run run-resinhup.sh with --supervisor-registry . See run-resinhup.sh help for
         more details.
 
   --supervisor-tag <SUPERVISOR TAG>
