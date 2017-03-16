@@ -213,7 +213,7 @@ while [[ $# > 0 ]]; do
             UUIDS="$UUIDS $2"
             shift
             ;;
-        -s|--sshhost)
+        -s|--ssh-host)
             if [ -z "$2" ]; then
                 log ERROR "\"$1\" argument needs a value."
             fi
