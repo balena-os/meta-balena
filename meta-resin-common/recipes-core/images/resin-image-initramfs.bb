@@ -9,7 +9,7 @@ PACKAGE_INSTALL = " \
     initramfs-module-debug \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
-    initramfs-module-ro-rootfs \
+    initramfs-module-rorootfs \
     initramfs-module-udev \
     initramfs-framework-base \
     udev \
