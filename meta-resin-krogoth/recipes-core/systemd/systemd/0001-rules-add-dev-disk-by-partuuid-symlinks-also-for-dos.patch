@@ -1,0 +1,35 @@
+From cf1d3efce9ada4a7401a273b215896bce32610d1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Date: Mon, 9 May 2016 11:24:55 +0200
+Subject: [PATCH] rules: add /dev/disk/by-partuuid symlinks also for dos
+ partition tables
+
+blkid reports PARTUUID values also for partitions that are defined by a
+dos partitioning scheme. Instead of limiting the partitioning scheme to
+"gpt or dos" just drop the test for the partitioning scheme and trust
+blkid to do the right thing.
+
+
+Upstream-Status: Backport
+
+Signed-off-by: Florin Sarbu <florin@resin.io>
+
+---
+ rules/60-persistent-storage.rules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rules/60-persistent-storage.rules b/rules/60-persistent-storage.rules
+index 7ad8a55..4087339 100644
+--- a/rules/60-persistent-storage.rules
++++ b/rules/60-persistent-storage.rules
+@@ -78,7 +78,7 @@ ENV{DEVTYPE}=="disk", ENV{ID_WWN_WITH_EXTENSION}=="?*", SYMLINK+="disk/by-id/wwn
+ ENV{DEVTYPE}=="partition", ENV{ID_WWN_WITH_EXTENSION}=="?*", SYMLINK+="disk/by-id/wwn-$env{ID_WWN_WITH_EXTENSION}-part%n"
+ 
+ # by-partlabel/by-partuuid links (partition metadata)
+-ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_UUID}=="?*", SYMLINK+="disk/by-partuuid/$env{ID_PART_ENTRY_UUID}"
++ENV{ID_PART_ENTRY_UUID}=="?*", SYMLINK+="disk/by-partuuid/$env{ID_PART_ENTRY_UUID}"
+ ENV{ID_PART_ENTRY_SCHEME}=="gpt", ENV{ID_PART_ENTRY_NAME}=="?*", SYMLINK+="disk/by-partlabel/$env{ID_PART_ENTRY_NAME}"
+ 
+ # add symlink to GPT root disk
+-- 
+2.9.3

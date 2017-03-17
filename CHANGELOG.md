@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Enable by-partuuid symlinks for our DOS partition scheme also for Poky Jethro and Poky Krogoth based boards [Florin]
 * Ship with e2fsprogs-tune2fs [Michal]
 
 # v2.0.0-rc3 - 2017-03-14
