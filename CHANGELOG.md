@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Ship with e2fsprogs-tune2fs [Michal]
+
 # v2.0.0-rc3 - 2017-03-14
 
 * Fix flasher detection in initramfs scripts [Andrei]
