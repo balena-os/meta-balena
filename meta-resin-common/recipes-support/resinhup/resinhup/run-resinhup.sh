@@ -302,10 +302,10 @@ else
 fi
 
 # Detect arch
-source /etc/supervisor.conf
+source /etc/resin-supervisor/supervisor.conf
 arch=`echo "$SUPERVISOR_IMAGE" | sed -n "s/.*\/\([a-zA-Z0-9]*\)-.*/\1/p"`
 if [ -z "$arch" ]; then
-    log ERROR "Can't detect arch from /etc/supervisor.conf ."
+    log ERROR "Can't detect arch from /etc/resin-supervisor/supervisor.conf ."
 else
     log "Detected arch: $arch ."
 fi
