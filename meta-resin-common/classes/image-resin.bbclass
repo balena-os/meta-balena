@@ -8,12 +8,19 @@ inherit image_types_resin
 # and ship them in the deploy directory for out-of-tree kernel modules build
 DEPENDS += "kernel-modules-headers"
 
-# Deploy license.manifest
-DEPLOY_IMAGE_LICENSE_MANIFEST = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.license.manifest"
-DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST = "${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.license.manifest"
-IMAGE_LICENSE_MANIFEST = "${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest"
 # Deploy the license.manifest of the current image we baked
 deploy_image_license_manifest () {
+    IMAGE_LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest"
+    # XXX support for post morty yocto versions
+    # Check if we are running on a poky version which deploys to IMGDEPLOYDIR instead
+    # of DEPLOY_DIR_IMAGE (poky morty introduced this change)
+    if [ -d "${IMGDEPLOYDIR}" ]; then
+        DEPLOY_IMAGE_LICENSE_MANIFEST="${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.license.manifest"
+        DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST="${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.license.manifest"
+    else
+        DEPLOY_IMAGE_LICENSE_MANIFEST="${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.license.manifest"
+        DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST="${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.license.manifest"
+    fi
     cp -f ${IMAGE_LICENSE_MANIFEST} ${DEPLOY_IMAGE_LICENSE_MANIFEST}
     ln -sf ${IMAGE_NAME}.rootfs.license.manifest ${DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST}
 }
