@@ -225,8 +225,13 @@ resinhup_backwards_compatible_link () {
     fi
 }
 
+add_image_flag_file () {
+    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_FLAG_FILE}
+}
+
 ROOTFS_POSTPROCESS_COMMAND += " \
     generate_compressed_kernel_module_deps ; \
+    add_image_flag_file ; \
     resin_boot_dirgen_and_deploy ; \
     resin_root_quirks ; \
     "

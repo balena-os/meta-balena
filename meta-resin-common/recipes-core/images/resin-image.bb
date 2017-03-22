@@ -1,6 +1,7 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+RESIN_FLAG_FILE = "${RESIN_IMAGE_FLAG_FILE}"
 inherit image-resin
 
 #
@@ -43,11 +44,7 @@ generate_hostos_version () {
     echo "${HOSTOS_VERSION}" > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
 }
 
-add_image_flag_file () {
-    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_IMAGE_FLAG_FILE}
-}
-
-IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; add_image_flag_file; "
+IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
 RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"

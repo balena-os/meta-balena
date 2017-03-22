@@ -1,6 +1,7 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+RESIN_FLAG_FILE = "${RESIN_FLASHER_FLAG_FILE}"
 inherit image-resin
 
 # Each machine should append this with their specific configuration
@@ -47,11 +48,7 @@ add_resin_image_to_flasher_rootfs() {
     cp ${DEPLOY_DIR_IMAGE}/resin-image-${MACHINE}.resinos-img ${WORKDIR}/rootfs/opt
 }
 
-add_image_flag_file () {
-    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_FLASHER_FLAG_FILE}
-}
-
-IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; add_image_flag_file;"
+IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
 
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
