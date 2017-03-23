@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Make rootfs identical to resinhup packages [Andrei]
+
 # v2.0.0-rc4 - 2017-03-17
 
 * Enable by-partuuid symlinks for our DOS partition scheme also for Poky Jethro and Poky Krogoth based boards [Florin]

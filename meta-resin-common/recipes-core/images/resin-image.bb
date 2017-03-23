@@ -1,6 +1,7 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+RESIN_FLAG_FILE = "${RESIN_IMAGE_FLAG_FILE}"
 inherit image-resin
 
 #
@@ -15,7 +16,7 @@ IMAGE_ROOTFS_EXTRA_SPACE = "0"
 IMAGE_ROOTFS_MAXSIZE = "319488"
 
 # Generated resinhup-tar based on RESINHUP variable
-IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'resinhup-tar', '', d)}"
+IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
@@ -31,23 +32,17 @@ IMAGE_INSTALL_append = " \
     "
 
 generate_rootfs_fingerprints () {
-    IGNORE_FILES=" \
-        -not -name machine-id \
+    find ${IMAGE_ROOTFS} -xdev -type f \
         -not -name ${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT} \
-        -not -name ld.so.cache \
-        -not -name aux-cache"
-    find ${IMAGE_ROOTFS} -xdev -type f $IGNORE_FILES -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | sort -k2 > ${IMAGE_ROOTFS}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
+        -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | \
+        sort -k2 > ${IMAGE_ROOTFS}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
 }
 
 generate_hostos_version () {
     echo "${HOSTOS_VERSION}" > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
 }
 
-add_image_flag_file () {
-    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_IMAGE_FLAG_FILE}
-}
-
-IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; add_image_flag_file; "
+IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
 RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"

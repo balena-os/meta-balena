@@ -83,6 +83,8 @@ RESIN_STATE_SIZE ?= "20480"
 RESIN_IMAGE_ALIGNMENT ?= "4096"
 IMAGE_ROOTFS_ALIGNMENT = "${RESIN_IMAGE_ALIGNMENT}"
 
+RESIN_BOOT_WORKDIR ?= "${WORKDIR}/${RESIN_BOOT_FS_LABEL}"
+
 RESIN_FINGERPRINT_EXT ?= "fingerprint"
 RESIN_FINGERPRINT_FILENAME ?= "resinos"
 RESIN_BOOT_FINGERPRINT_PATH ?= "${WORKDIR}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
@@ -207,82 +209,11 @@ IMAGE_CMD_resinos-img () {
     RESIN_BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
     rm -rf ${RESIN_BOOT_FS}
     mkfs.vfat -n "${RESIN_BOOT_FS_LABEL}" -S 512 -C ${RESIN_BOOT_FS} $RESIN_BOOT_BLOCKS
-    echo "Copying files in boot partition..."
-    echo -n '' > ${RESIN_BOOT_FINGERPRINT_PATH}
-    for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
-        echo "Handling $RESIN_BOOT_PARTITION_FILE ."
-
-        # Check for item format
-        case $RESIN_BOOT_PARTITION_FILE in
-            *:*) ;;
-            *) bbfatal "Some items in RESIN_BOOT_PARTITION_FILES ($RESIN_BOOT_PARTITION_FILE) are not in the 'src:dst' format."
-        esac
-
-        # Compute src and dst
-        src="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}')"
-        dst="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}')"
-        if [ -z "${dst}" ]; then
-            dst="/${src}" # dst was omitted
-        fi
-        src="${DEPLOY_DIR_IMAGE}/$src" # src is relative to deploy dir
-
-        # Check that dst is an absolute path and assess if it should be a directory
-        case $dst in
-            /*)
-                # Check if dst is a directory. Directory path ends with '/'.
-                case $dst in
-                    */) dst_is_dir=true ;;
-                     *) dst_is_dir=false ;;
-                esac
-                ;;
-             *) bbfatal "$dst in RESIN_BOOT_PARTITION_FILES is not an absolute path."
-        esac
-
-        # Check src type and existence
-        if [ -d "$src" ]; then
-            if ! $dst_is_dir; then
-                bbfatal "You can't copy a directory to a file. You requested to copy $src in $dst."
-            fi
-            sources="$(find $src -maxdepth 1 -type f)"
-        elif [ -f "$src" ]; then
-            sources="$src"
-        else
-            bbfatal "$src is an invalid path referenced in RESIN_BOOT_PARTITION_FILES."
-        fi
-
-        # Normalize paths
-        dst=$(realpath -ms $dst)
-        if $dst_is_dir && [ ! "$dst" = "/" ]; then
-            dst="$dst/" # realpath removes last '/' which we need to instruct mcopy that destination is a directory
-        fi
-        src=$(realpath -m $src)
-
-        for src in $sources; do
-            echo "Copying $src -> $dst ..."
-            # Create the directories parent directories in dst
-            directory=""
-            for path_segment in $(echo ${dst} | sed 's|/|\n|g' | head -n -1); do
-                if [ -z "$path_segment" ]; then
-                    continue
-                fi
-                directory=$directory/$path_segment
-                mmd -D sS -i ${RESIN_BOOT_FS} $directory || true
-            done
-
-            mcopy -i ${RESIN_BOOT_FS} -v ${src} ::${dst}
-            if $dst_is_dir; then
-                md5sum ${src} | awk -v awkdst="$dst$(basename $src)" '{ $2=awkdst; print }' >> ${RESIN_BOOT_FINGERPRINT_PATH}
-            else
-                md5sum ${src} | awk -v awkdst="$dst" '{ $2=awkdst; print }' >> ${RESIN_BOOT_FINGERPRINT_PATH}
-            fi
-        done
-    done
-    echo "${IMAGE_NAME}" > ${WORKDIR}/image-version-info
-    mcopy -i ${RESIN_BOOT_FS} -v ${WORKDIR}/image-version-info ::
-    md5sum ${WORKDIR}/image-version-info | awk -v filepath="/image-version-info" '{ $2=filepath; print }' >> ${RESIN_BOOT_FINGERPRINT_PATH}
-    mcopy -i ${RESIN_BOOT_FS} -v ${RESIN_BOOT_FINGERPRINT_PATH} ::
-    init_config_json ${WORKDIR}
-    mcopy -i ${RESIN_BOOT_FS} -v ${WORKDIR}/config.json ::
+    if [ "$(ls -A ${RESIN_BOOT_WORKDIR})" ]; then
+        mcopy -i ${RESIN_BOOT_FS} -sv ${RESIN_BOOT_WORKDIR}/* ::
+    else
+        bbwarn "Boot partition was detected empty."
+    fi
 
     # resin-state
     if [ -n "${RESIN_STATE_FS}" ]; then
