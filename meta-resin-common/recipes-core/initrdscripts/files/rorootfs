@@ -1,0 +1,7 @@
+#!/bin/sh
+
+bootparam_ro="true"
+
+rorootfs_enabled() {
+    return 1
+}

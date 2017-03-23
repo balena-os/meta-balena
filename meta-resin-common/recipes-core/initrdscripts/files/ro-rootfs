@@ -1,3 +1,0 @@
-#!/bin/sh
-
-bootparam_ro="true"

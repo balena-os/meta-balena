@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Properly implement the ro_rootfs script [Theodor]
 * Make rootfs identical to resinhup packages [Andrei]
 
 # v2.0.0-rc4 - 2017-03-17
