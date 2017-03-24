@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix audit disable dependencies [Theodor]
 * Properly implement the ro_rootfs script [Theodor]
 * Make rootfs identical to resinhup packages [Andrei]
 

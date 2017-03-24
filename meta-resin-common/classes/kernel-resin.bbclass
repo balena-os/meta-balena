@@ -314,6 +314,10 @@ RESIN_CONFIGS[xtables] = " \
     "
 
 # Deactivate the audit susbsystem and the audit syscall
+RESIN_CONFIGS_DEPS[audit] = " \
+    CONFIG_HAVE_AUDITSYSCALL=n \
+    CONIFG_SECURITY=n \
+    "
 
 RESIN_CONFIGS[audit] = " \
     CONFIG_AUDIT=n \
