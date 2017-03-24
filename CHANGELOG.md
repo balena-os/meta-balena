@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Make the initrams framework also parse root=LABEL= params [Florin]
 * Fix audit disable dependencies [Theodor]
 * Properly implement the ro_rootfs script [Theodor]
 * Make rootfs identical to resinhup packages [Andrei]
