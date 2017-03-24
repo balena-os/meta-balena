@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.0-rc5 - 2017-03-24
+
 * Fix busybox switch_root when console=null [Andrei]
 * Make the initrams framework also parse root=LABEL= params [Florin]
 * Fix audit disable dependencies [Theodor]
