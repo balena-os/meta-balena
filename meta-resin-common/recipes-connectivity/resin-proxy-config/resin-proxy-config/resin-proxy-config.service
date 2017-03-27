@@ -1,0 +1,12 @@
+[Unit]
+Description=Resin proxy configuration service
+Requires=mnt-boot.mount
+After=mnt-boot.mount dnsmasq.service
+
+[Service]
+Type=oneshot
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-proxy-config
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
