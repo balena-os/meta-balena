@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Don't stop plymouth at boot [Andrei]
+
 # v2.0.0-rc5 - 2017-03-24
 
 * Fix busybox switch_root when console=null [Andrei]
