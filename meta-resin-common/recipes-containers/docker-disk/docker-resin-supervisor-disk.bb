@@ -72,13 +72,6 @@ python () {
     else:
         bb.warn("resin-supervisor-disk: No connectivity, skipped pulling supervisor image.")
 
-    # Inspect for fetching the version only if image exists
-    # on Fedora 23 at least, docker has suffered slight changes (https://bugzilla.redhat.com/show_bug.cgi?id=1312934)
-    # hence we need the following workaround until the above bug is fixed:
-    imagechk_cmd = "docker images | grep '^\S*%s\s*%s'" % (target_repository, tag_repository)
-    imagechk_output = subprocess.Popen(imagechk_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
-    if imagechk_output == "":
-        bb.fatal("resin-supervisor-disk: No local supervisor images found.")
     version_cmd = "echo -n $(docker inspect %s:%s | jq --raw-output '.[0].Config.Env[] | select(startswith(\"VERSION=\")) | split(\"VERSION=\") | .[1]')" % (target_repository, tag_repository)
     version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     if sys.version_info.major >= 3 :
