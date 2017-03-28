@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Skip the check that uses "docker images" for the supervisor image [Pablo]
 * Don't stop plymouth at boot [Andrei]
 
 # v2.0.0-rc5 - 2017-03-24
