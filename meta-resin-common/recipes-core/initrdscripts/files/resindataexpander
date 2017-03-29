@@ -20,12 +20,12 @@ resindataexpander_enabled() {
 }
 
 resindataexpander_run() {
-    echo -n "resindataexpander: Expand extended partition... "
+    info "resindataexpander: Expand extended partition... "
     parted -s /dev/$datadev -- resizepart 4 -1s
-    echo "done."
-    echo -n "resindataexpander: Expand data partition... "
+    info "resindataexpander: Finished expanding extended partition."
+    info "resindataexpander: Expand data partition... "
     parted -s /dev/$datadev -- resizepart 6 -1s
-    echo "done."
+    info "resindataexpander: Finished expanding data partition."
 
     partprobe
     sync

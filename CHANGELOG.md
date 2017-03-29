@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Replace echo with info in the resindataexpander initramfs script [Florin]
 * Don't stop plymouth at boot [Andrei]
 
 # v2.0.0-rc5 - 2017-03-24
