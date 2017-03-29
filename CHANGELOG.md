@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v4.1.0 [Pablo]
 * run-resinhup-ssh: fix typos for commandline arguments and help [Gergely]
 * Update supervisor to v4.0.0 [Pablo]
 * Remove the supervisor container in the update script [Pablo]
