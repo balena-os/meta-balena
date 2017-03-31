@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.0-rc6 - 2017-03-31
+
 * Update supervisor to v4.1.1 [Pablo]
 * Replace echo with info in the resindataexpander initramfs script [Florin]
 * Don't stop plymouth at boot [Andrei]
