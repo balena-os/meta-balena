@@ -9,6 +9,9 @@ GO_IMPORT = "github.com/resin-os/resin-provisioner"
 
 inherit binary-compress
 FILES_COMPRESS = "${bindir}/resin-provision"
+# FIXME upx fails to compress resin-provision on Aarch64
+# upx: /usr/bin/resin-provision: UnknownExecutableFormatException
+FILES_COMPRESS_aarch64 = ""
 
 do_install_append() {
     # We currently don't use the server binary
