@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Tidy arch detection in kernel-modules-headers [fboudra]
+
 # v2.0.0 - 2017-03-31
 
 # v2.0.0-rc6 - 2017-03-31
