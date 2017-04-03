@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Don't attempt UPX compression on aarch64 [fboudra]
 * Tidy arch detection in kernel-modules-headers [fboudra]
 
 # v2.0.0 - 2017-03-31
