@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update resin-provisioner to v1.0.5 [Joe]
+
 # v2.0.0 - 2017-03-31
 
 # v2.0.0-rc6 - 2017-03-31
