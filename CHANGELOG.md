@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Avoid writing to /root when running nohup [pvizeli]
 * Update supervisor to v4.1.2 [Pablo]
 * run-resinhup-ssh: fix typos for commandline arguments and help [Gergely]
 * Update supervisor to v4.0.0 [Pablo]
