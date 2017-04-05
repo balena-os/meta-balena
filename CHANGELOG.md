@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Use supervisor tag as supervisor recipe PV [Andrei}
+
 # v2.0.3 - 2017-05-10
 
 * Copy resinOS_uEnv.txt from external to internal media [Theodor]
