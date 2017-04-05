@@ -49,9 +49,6 @@ RDEPENDS_${PN} = " \
     "
 
 python () {
-    # Get the recipe version from supervisor
-    import subprocess
-
     target_repository = d.getVar('TARGET_REPOSITORY', True)
     supervisor_repository = d.getVar('SUPERVISOR_REPOSITORY', True)
     tag_repository = d.getVar('TARGET_TAG', True)
@@ -63,36 +60,9 @@ python () {
     if target_repository == "" or target_repository != supervisor_repository:
         d.setVar('SUPERVISOR_VERSION','0.0.0')
         d.setVar('PV','0.0.0')
-        return
-
-    # Only pull if connectivity - to avoid warnings and delay
-    if connected(d) == "yes":
-        pull_cmd = "docker pull %s:%s" % (target_repository, tag_repository)
-        pull_output = subprocess.Popen(pull_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
     else:
-        bb.warn("resin-supervisor-disk: No connectivity, skipped pulling supervisor image.")
-
-    # Inspect for fetching the version only if image exists
-    # on Fedora 23 at least, docker has suffered slight changes (https://bugzilla.redhat.com/show_bug.cgi?id=1312934)
-    # hence we need the following workaround until the above bug is fixed:
-    imagechk_cmd = "docker images | grep '^\S*%s\s*%s'" % (target_repository, tag_repository)
-    imagechk_output = subprocess.Popen(imagechk_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
-    if imagechk_output == "":
-        bb.fatal("resin-supervisor-disk: No local supervisor images found.")
-    version_cmd = "echo -n $(docker inspect %s:%s | jq --raw-output '.[0].Config.Env[] | select(startswith(\"VERSION=\")) | split(\"VERSION=\") | .[1]')" % (target_repository, tag_repository)
-    version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
-    if sys.version_info.major >= 3 :
-        version_output = version_output.decode()
-    if version_output == "" or version_output == None:
-        bb.fatal("resin-supervisor-disk: Cannot fetch version.")
-    image_id_cmd = "echo -n $(docker inspect -f '{{.Id}}' %s:%s)" % (target_repository, tag_repository)
-    image_id_output = subprocess.Popen(image_id_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
-    if sys.version_info.major >= 3 :
-        image_id_output = image_id_output.decode()
-    if image_id_output == "" or image_id_output == None:
-        bb.fatal("resin-supervisor-disk: Cannot fetch image id.")
-    d.setVar('SUPERVISOR_VERSION', "%s-%s" % (version_output, image_id_output.split(':',1)[-1][:12]))
-    d.setVar('PV', "%s+%s" % (version_output, image_id_output.split(':',1)[-1]))
+        d.setVar('SUPERVISOR_VERSION', "%s" % tag_repository)
+        d.setVar('PV', "%s" % tag_repository)
 }
 
 do_install () {
