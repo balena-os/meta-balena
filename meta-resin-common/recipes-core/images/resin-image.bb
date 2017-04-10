@@ -12,8 +12,11 @@ IMAGE_ROOTFS_SIZE = "315392"
 IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 # core-image-minimal adds 4M to IMAGE_ROOTFS_EXTRA_SPACE
-# Make IMAGE_ROOTFS_MAXSIZE = IMAGE_ROOTFS_SIZE + 4M
-IMAGE_ROOTFS_MAXSIZE = "319488"
+python () {
+    image_rootfs_size = d.getVar('IMAGE_ROOTFS_SIZE', True)
+    image_rootfs_maxsize = int(image_rootfs_size) + 4 * 1024
+    d.setVar('IMAGE_ROOTFS_MAXSIZE', image_rootfs_maxsize)
+}
 
 # Generated resinhup-tar based on RESINHUP variable
 IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"

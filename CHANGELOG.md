@@ -1,6 +1,11 @@
 Change log
 -----------
 
+* Add aufs hashes for more kernel versions [fboudra]
+* Calculate IMAGE_ROOTFS_MAXSIZE dynamically [fboudra]
+* Don't attempt UPX compression on aarch64 [fboudra]
+* Tidy arch detection in kernel-modules-headers [fboudra]
+
 # v2.0.0 - 2017-03-31
 
 # v2.0.0-rc6 - 2017-03-31

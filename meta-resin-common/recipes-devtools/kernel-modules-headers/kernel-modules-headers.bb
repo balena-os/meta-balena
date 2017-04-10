@@ -16,20 +16,13 @@ SRCREV = "v0.0.7"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}"
 
-inherit deploy
+inherit deploy kernel-arch
 
 do_configure[noexec] = "1"
 
 do_compile() {
     mkdir -p kernel_modules_headers
-    if echo ${TRANSLATED_TARGET_ARCH} | grep  -q -e "[ix].*86" ; then
-        TGT_ARCH="x86"
-    elif [ "${TRANSLATED_TARGET_ARCH}" = "aarch64" ]; then
-        TGT_ARCH="arm64"
-    else
-        TGT_ARCH=${TRANSLATED_TARGET_ARCH}
-    fi
-    ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${TGT_ARCH} ${TARGET_PREFIX} "${CC}"
+    ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${ARCH} ${TARGET_PREFIX} "${CC}"
     tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
     rm -rf kernel_modules_headers
 }
