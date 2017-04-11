@@ -10,6 +10,10 @@ SRC_URI_append = " \
     file://resin-sample \
     "
 
+# XXX do a build in the source directories (by doing so we avoid a bunch of errors when building outside the source directory)
+# (the git version of NM already can handle build_dir != source_dir so most likely we need to check and maybe remove this on the next stable version of NM)
+B = "${S}"
+
 RDEPENDS_${PN}_append = " resin-net-config resolvconf"
 FILES_${PN}_append = "${sysconfdir}/*"
 EXTRA_OECONF += "--with-resolvconf=/sbin/resolvconf"
@@ -32,6 +36,10 @@ do_install_append() {
     fi
 
     ln -s /var/run/resolvconf/interface/NetworkManager ${D}/etc/resolv.dnsmasq
+
+    # remove these empty not-used (at this moment) directories so we don't have to package them
+    rmdir ${D}${libdir}/NetworkManager/conf.d
+    rmdir ${D}${libdir}/NetworkManager/VPN
 }
 
 do_deploy() {

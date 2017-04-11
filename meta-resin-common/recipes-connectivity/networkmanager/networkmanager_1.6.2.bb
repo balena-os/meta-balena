@@ -8,7 +8,7 @@ SECTION = "net/misc"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cbbffd568227ada506640fe950a4823b \
                     file://libnm-util/COPYING;md5=1c4fa765d6eb3cd2fbd84344a1b816cd \
-                    file://docs/api/html/license.html;md5=6baf214193dfc5d10b297b41fc2d22c9 \
+                    file://docs/api/html/license.html;md5=8eb8e72bab097b9d11763002cb003697 \
 "
 
 DEPENDS = "intltool-native libnl dbus dbus-glib dbus-glib-native libgudev util-linux libndp libnewt polkit"
@@ -18,8 +18,8 @@ inherit gnomebase gettext systemd bluetooth vala
 SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
 "
-SRC_URI[md5sum] = "59b5b5585467756787c6cb535cbd306e"
-SRC_URI[sha256sum] = "a864e347ddf6da8dabd40e0185b8c10a655d4a94b45cbaa2b3bb4b5e8360d204"
+SRC_URI[md5sum] = "89c975afe19fbac854191edb6e9bcd3b"
+SRC_URI[sha256sum] = "b22b6f55cde37bec4982f9be4b1808a21101d807a05049c670116d95059a26f9"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
@@ -27,6 +27,7 @@ EXTRA_OECONF = " \
     --disable-ifcfg-rh \
     --disable-ifnet \
     --disable-ifcfg-suse \
+    --disable-json-validation \
     --disable-more-warnings \
     --with-iptables=${sbindir}/iptables \
     --with-tests \

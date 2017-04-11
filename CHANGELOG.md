@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update NetworkManager to version 1.6.2 [Florin]
 * Update supervisor to v4.1.2 [Pablo]
 * Add aufs hashes for more kernel versions [fboudra]
 * Calculate IMAGE_ROOTFS_MAXSIZE dynamically [fboudra]
