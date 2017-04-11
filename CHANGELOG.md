@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v4.1.2 [Pablo]
 * Add aufs hashes for more kernel versions [fboudra]
 * Calculate IMAGE_ROOTFS_MAXSIZE dynamically [fboudra]
 * Don't attempt UPX compression on aarch64 [fboudra]
