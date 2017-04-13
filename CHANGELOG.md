@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Revert 05288ce19781f9ab3b8c528f49537516b58db050 [Theodor]
 * Update NetworkManager to version 1.6.2 [Florin]
 * Update supervisor to v4.1.2 [Pablo]
 * Add aufs hashes for more kernel versions [fboudra]
