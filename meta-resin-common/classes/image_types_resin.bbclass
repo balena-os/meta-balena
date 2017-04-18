@@ -240,9 +240,7 @@ IMAGE_CMD_resinos-img () {
     if [ -n "${RESIN_DATA_FS}" ]; then
         dd if=${RESIN_DATA_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_STATE_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
     fi
-}
 
-resinos_img_compress () {
     # Optionally apply compression
     case "${RESIN_RAW_IMG_COMPRESSION}" in
     "gzip")
@@ -256,8 +254,6 @@ resinos_img_compress () {
         ;;
     esac
 }
-
-IMAGE_POSTPROCESS_COMMAND += "resinos_img_compress;"
 
 # Make sure we regenerate images if we modify the files that go in the boot
 # partition
