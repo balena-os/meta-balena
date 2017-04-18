@@ -19,7 +19,7 @@ RDEPENDS_${PN} = " \
     openssl \
     "
 
-SYSTEMD_SERVICE_${PN} = "resin-unique-key.service"
+SYSTEMD_SERVICE_${PN} = "resin-device-uuid.service resin-device-api-key.service"
 
 FILES_${PN} += "/home/root/.rnd"
 
@@ -35,7 +35,8 @@ do_install() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/resin-unique-key.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/resin-device-uuid.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/resin-device-api-key.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \

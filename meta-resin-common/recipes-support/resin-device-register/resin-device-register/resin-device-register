@@ -60,6 +60,8 @@ while true; do
                     --data-urlencode "user=$user_id" \
                     --data-urlencode "application=$application_id" \
                     --data-urlencode "device_type=$device_type" \
+                    --data-urlencode "uuid=$uuid" \
+                    --data-urlencode "api_key=$device_api_key" \
                     "$API_ENDPOINT/device/register?apikey=$api_key")
 
         if [ "$status_code" -eq 201 ]; then
