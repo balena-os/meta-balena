@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.1 - 2017-04-19
+
 * Don't use getty generator even for development images [Andrei]
 * Fix resinos-img image compression [Theodor]
 * Revert 05288ce19781f9ab3b8c528f49537516b58db050 [Theodor]
