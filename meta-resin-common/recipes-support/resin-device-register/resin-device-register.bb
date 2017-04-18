@@ -18,8 +18,7 @@ RDEPENDS_${PN} = " \
     curl \
     jq \
     resin-vars \
-    resin-device-uuid \
-    resin-device-api-key \
+    resin-unique-key \
     "
 
 SYSTEMD_SERVICE_${PN} = "resin-device-register.service"

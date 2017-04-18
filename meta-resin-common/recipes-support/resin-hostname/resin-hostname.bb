@@ -15,7 +15,7 @@ SYSTEMD_SERVICE_${PN} = "resin-hostname.service"
 RDEPENDS_${PN} = " \
     coreutils \
     jq \
-    resin-device-uuid \
+    resin-unique-key \
     "
 
 do_install() {
