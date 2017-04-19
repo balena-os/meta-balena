@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 SRC_URI_append = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', '', ' file://remove_systemd-getty-generator.patch', d)} \
+    file://remove_systemd-getty-generator.patch \
     file://watchdog.conf \
     file://resin.target \
     file://multi-user.conf \

@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Don't use getty generator even for development images [Andrei]
 * Fix resinos-img image compression [Theodor]
 * Revert 05288ce19781f9ab3b8c528f49537516b58db050 [Theodor]
 * Update NetworkManager to version 1.6.2 [Florin]
