@@ -4,5 +4,5 @@ Description=Simple theme with white background and logo.
 ModuleName=script
 
 [script]
-ImageDir=/mnt/boot/splash
+ImageDir=/usr/share/plymouth/themes/resin
 ScriptFile=/usr/share/plymouth/themes/resin/resin.script
