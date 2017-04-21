@@ -6,7 +6,7 @@ PR = "r0"
 inherit packagegroup
 
 # By default resin uses networkmanager
-NETWORK_MANAGER_PACKAGES ?= "networkmanager"
+NETWORK_MANAGER_PACKAGES ?= "networkmanager networkmanager-openvpn"
 
 CONNECTIVITY_MODULES = ""
 
