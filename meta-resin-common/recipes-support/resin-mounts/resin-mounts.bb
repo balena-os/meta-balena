@@ -12,6 +12,7 @@ SRC_URI = " \
     file://etc-hostname.mount \
     file://etc-resinx2dsupervisor.mount \
     file://etc-NetworkManager-systemx2dconnections.mount \
+    file://var-lib-systemd.mount \
     file://var-log-journal.mount \
     file://home-root-.rnd.mount \
     file://home-root-.docker.mount \
@@ -32,6 +33,7 @@ SYSTEMD_SERVICE_${PN} = " \
     etc-dropbear.mount \
     etc-systemd-system-resin.target.wants.mount \
     etc-hostname.mount \
+    var-lib-systemd.mount \
     var-log-journal.mount \
     home-root-.rnd.mount \
     home-root-.docker.mount \
@@ -69,6 +71,7 @@ do_install () {
             ${WORKDIR}/etc-dropbear.mount \
             ${WORKDIR}/etc-hostname.mount \
             ${WORKDIR}/etc-systemd-system-resin.target.wants.mount \
+            ${WORKDIR}/var-lib-systemd.mount \
             ${WORKDIR}/var-log-journal.mount \
             ${WORKDIR}/home-root-.rnd.mount \
             ${WORKDIR}/home-root-.docker.mount \
