@@ -77,6 +77,7 @@ RESIN_CONFIGS ?= " \
     wd-nowayout \
     xtables \
     audit \
+    governor \
     "
 
 #
@@ -322,6 +323,10 @@ RESIN_CONFIGS_DEPS[audit] = " \
 RESIN_CONFIGS[audit] = " \
     CONFIG_AUDIT=n \
     CONFIG_AUDITSYSCALL=n \
+    "
+
+RESIN_CONFIGS_DEPS[governor] ?= " \
+    CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y \
     "
 
 ###########
