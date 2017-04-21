@@ -15,6 +15,16 @@ SRC_URI_append = " \
 do_install_append() {
     rm -r ${D}${sysconfdir}/plymouth # we use /usr/share/plymouth, not /etc/plymouth
 
+    # remove all libs except script.so (used by the resin theme) and the
+    # renderers/ directory
+    rm ${D}${nonarch_libdir}/plymouth/details.*
+    rm ${D}${nonarch_libdir}/plymouth/fade-throbber.*
+    rm ${D}${nonarch_libdir}/plymouth/space-flares.*
+    rm ${D}${nonarch_libdir}/plymouth/text.*
+    rm ${D}${nonarch_libdir}/plymouth/throbgress.*
+    rm ${D}${nonarch_libdir}/plymouth/tribar.*
+    rm ${D}${nonarch_libdir}/plymouth/two-step.*
+
     rm -r ${D}${datadir}/plymouth/themes
     mkdir -p ${D}${datadir}/plymouth/themes/resin
     install -m 644 ${WORKDIR}/resin.script ${D}${datadir}/plymouth/themes/resin/
