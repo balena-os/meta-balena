@@ -10,7 +10,10 @@ SRC_URI_append = " \
     file://resin.plymouth \
     "
 
+# install our theme, and remove some extra files to save a significant
+# amount of space
 do_install_append() {
+    rm -r ${D}${sysconfdir}/plymouth # we use /usr/share/plymouth, not /etc/plymouth
     install -d ${D}${datadir}/plymouth/themes/resin
     install -m 644 ${WORKDIR}/resin.script ${D}${datadir}/plymouth/themes/resin/
     install -m 644 ${WORKDIR}/resin.plymouth ${D}${datadir}/plymouth/themes/resin/
