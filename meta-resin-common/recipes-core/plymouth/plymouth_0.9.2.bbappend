@@ -24,6 +24,9 @@ do_deploy() {
     install ${WORKDIR}/resin-logo.png ${DEPLOYDIR}/resin-logo.png
 }
 
+# by setting a logo we avoid installing the default one
+LOGO = "/mnt/boot/splash/resin-logo.png"
+
 PACKAGES_remove = "${PN}-initrd"
 FILES_${PN}-initrd = ""
 RDEPENDS_${PN}-initrd = ""

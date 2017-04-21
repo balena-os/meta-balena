@@ -2,7 +2,7 @@
 Window.SetBackgroundTopColor(1, 1, 1);
 Window.SetBackgroundBottomColor(1, 1, 1);
 # only PNG is supported
-pi_image = Image("resin-logo.png");
+pi_image = Image("special://logo");
 
 screen_ratio = Window.GetHeight() / Window.GetWidth();
 pi_image_ratio = pi_image.GetHeight() / pi_image.GetWidth();
