@@ -21,7 +21,7 @@ do_install_append() {
 }
 
 do_deploy() {
-  install ${WORKDIR}/resin-logo.png ${DEPLOYDIR}/resin-logo.png
+    install ${WORKDIR}/resin-logo.png ${DEPLOYDIR}/resin-logo.png
 }
 
 PACKAGES_remove = "${PN}-initrd"
