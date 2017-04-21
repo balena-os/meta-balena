@@ -49,6 +49,7 @@ S = "${WORKDIR}/git"
 
 DOCKER_VERSION = "1.10.3"
 PV = "${DOCKER_VERSION}+git${SRCREV}"
+PR = "r0"
 
 DEPENDS = " \
   go-cross \
