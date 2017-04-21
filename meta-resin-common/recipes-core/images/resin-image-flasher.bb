@@ -53,5 +53,8 @@ IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
 
+# Resin VPN NetworkManager config file
+RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-vpn:/system-connections/resin-vpn"
+
 # Resin flasher flag file
 RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_FLASHER_FLAG_FILE}:/${RESIN_FLASHER_FLAG_FILE}"

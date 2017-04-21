@@ -20,10 +20,14 @@ while :; do
 		echo "prepare-openvpn: UUID and/or APIKEY missing from config file, VPN cannot connect"
 		sleep 2
 	else
-		echo $_uuid > /var/volatile/vpnfile
-		echo $_api_key >> /var/volatile/vpnfile
 		break
 	fi
 done
 
-sed -e "/remote .*/ c\remote $VPN_ENDPOINT $_vpn_port" /etc/openvpn/resin.conf > /run/openvpn/resin.conf
+VPNTEMPLATE=${CONFIG_PATH%/*}/system-connections/resin-vpn
+VPNFILE=/etc/NetworkManager/system-connections/resin-vpn
+
+sed "s/<<remote>>/$VPN_ENDPOINT/;
+     s/<<port>>/$_vpn_port/;
+     s/<<user>>/$_uuid/;
+     s/<<password>>/$_api_key/" $VPNTEMPLATE > $VPNFILE

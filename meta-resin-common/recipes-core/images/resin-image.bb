@@ -56,5 +56,8 @@ RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-typ
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
 
+# Resin VPN NetworkManager config file
+RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-vpn:/system-connections/resin-vpn"
+
 # Resin image flag file
 RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_IMAGE_FLAG_FILE}:/${RESIN_IMAGE_FLAG_FILE}"

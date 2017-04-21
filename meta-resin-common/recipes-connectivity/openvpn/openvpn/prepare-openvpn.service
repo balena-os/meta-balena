@@ -1,7 +1,7 @@
 [Unit]
-Description=Prepare OpenVPN Application On Resin
-Requires=mnt-boot.mount resin-device-uuid.service var-volatile.mount
-After=mnt-boot.mount resin-device-uuid.service var-volatile.mount
+Description=Prepare OpenVPN NetworkManager config On Resin
+Requires=mnt-boot.mount resin-device-uuid.service resin-net-config.service
+After=mnt-boot.mount resin-device-uuid.service resin-net-config.service
 
 [Service]
 Type=oneshot

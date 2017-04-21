@@ -1,6 +1,7 @@
 [connection]
 id=resin-sample
 type=wifi
+secondaries=df32c2c2-2000-11e7-b51d-d050990ac729
 
 [wifi]
 hidden=true
