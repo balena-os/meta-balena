@@ -14,7 +14,9 @@ SRC_URI_append = " \
 # amount of space
 do_install_append() {
     rm -r ${D}${sysconfdir}/plymouth # we use /usr/share/plymouth, not /etc/plymouth
-    install -d ${D}${datadir}/plymouth/themes/resin
+
+    rm -r ${D}${datadir}/plymouth/themes
+    mkdir -p ${D}${datadir}/plymouth/themes/resin
     install -m 644 ${WORKDIR}/resin.script ${D}${datadir}/plymouth/themes/resin/
     install -m 644 ${WORKDIR}/resin.plymouth ${D}${datadir}/plymouth/themes/resin/
 
