@@ -1,5 +1,5 @@
 [Unit]
-Description=Resin device uuid
+Description=Resin device api key
 Requires=mnt-boot.mount home-root-.rnd.mount
 After=mnt-boot.mount home-root-.rnd.mount
 
@@ -7,7 +7,7 @@ After=mnt-boot.mount home-root-.rnd.mount
 Type=oneshot
 RemainAfterExit=yes
 Environment="HOME=/home/root"
-ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-uuid
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-unique-key deviceApiKey
 
 [Install]
 WantedBy=multi-user.target
