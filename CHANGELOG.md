@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.2 - 2017-04-24
+
 * Fix build of kernel-modules-headers on kernel 4.8+ [Andrei]
 * Use ondemand as default governor [Andrei]
 * Do not force fsck on the data partition [Theodor]
