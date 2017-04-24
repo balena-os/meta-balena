@@ -42,6 +42,9 @@ Options:
         not network bash network if devices are in the same one. If value is 0, all
         updates will start in parallel.
 
+  -r <REGISTRY>, --registry <REGISTRY>
+        Run run-resinhup.sh with --registry . See run-resinhup.sh help for more details.
+
   --remote <REMOTE>
         Run run-resinhup.sh with --remote . See run-resinhup.sh help for more details.
 
@@ -182,6 +185,14 @@ while [[ $# > 0 ]]; do
                 log ERROR "\"$1\" argument needs a value."
             fi
             MAX_THREADS=$2
+            shift
+            ;;
+        -r|--registry)
+            if [ -z "$2" ]; then
+                log ERROR "\"$1\" argument needs a value."
+            fi
+            REGISTRY=$2
+            RESINHUP_ARGS="$RESINHUP_ARGS --registry $REGISTRY"
             shift
             ;;
         --remote)
