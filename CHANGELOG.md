@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix build of kernel-modules-headers on kernel 4.8+ [Andrei]
 * Use ondemand as default governor [Andrei]
 * Do not force fsck on the data partition [Theodor]
 * Switch to the new device register endpoint which exchanges the provisioning key for a device api key [Page]
