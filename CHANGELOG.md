@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Explicitly set CONFIG_HIDRAW=y [Michal]
+
 # v2.0.2 - 2017-04-24
 
 * Fix build of kernel-modules-headers on kernel 4.8+ [Andrei]
