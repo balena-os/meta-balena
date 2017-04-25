@@ -221,7 +221,7 @@ resinhup_backwards_compatible_link () {
         RESIN_HUP_BUNDLE="${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.resinhup-tar"
     fi
     if [ -f ${DEPLOY_IMAGE_TAR} ]; then
-        ln -sv ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar ${RESIN_HUP_BUNDLE}
+        ln -fsv ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar ${RESIN_HUP_BUNDLE}
     fi
 }
 
