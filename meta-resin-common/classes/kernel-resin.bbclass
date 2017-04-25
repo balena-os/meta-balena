@@ -264,6 +264,7 @@ RESIN_CONFIGS_DEPS[hid-multitouch] ?= " \
     "
 RESIN_CONFIGS[hid-multitouch] ?= " \
     CONFIG_HID_MULTITOUCH=m \
+    CONFIG_HIDRAW=y \
     "
 
 RESIN_CONFIGS[ip_set] = " \
