@@ -1,0 +1,11 @@
+[Unit]
+Description=Config.json watcher
+Requires=mnt-boot.mount
+After=mnt-boot.mount
+
+[Service]
+Type=oneshot
+ExecStart=/bin/echo 'config.json changed'
+
+[Install]
+WantedBy=mnt-boot.mount
