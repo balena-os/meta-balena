@@ -117,6 +117,14 @@ do_install() {
   mkdir -p ${D}/${bindir}
   install -m 0755 ${S}/bundles/${DOCKER_VERSION}/binary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
 
+  ln -sf rce-docker ${D}/${bindir}/docker
+  ln -sf rce-docker ${D}/${bindir}/dockerd
+  ln -sf rce-docker ${D}/${bindir}/docker-containerd
+  ln -sf rce-docker ${D}/${bindir}/docker-containerd-shim
+  ln -sf rce-docker ${D}/${bindir}/docker-containerd-ctr
+  ln -sf rce-docker ${D}/${bindir}/docker-runc
+  ln -sf rce-docker ${D}/${bindir}/docker-proxy
+
   install -d ${D}${systemd_unitdir}/system
   install -m 0644 ${S}/contrib/init/systemd/docker.* ${D}/${systemd_unitdir}/system
   install -m 0644 ${WORKDIR}/docker.service ${D}/${systemd_unitdir}/system
