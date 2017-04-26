@@ -25,17 +25,9 @@ SRC_URI = "\
   file://docker.service \
   file://var-lib-docker.mount \
   file://docker.conf.systemd \
-  file://0002-Inherit-StopSignal-from-Dockerfile.patch \
-  file://0003-Safer-file-io-for-configuration-files.patch \
-  file://0004-Set-permission-on-atomic-file-write.patch \
-  file://0005-Update-layer-store-to-sync-transaction-files-before-.patch \
-  file://0006-Atomically-save-libtrust-key-file.patch \
-  file://0007-daemon-register-container-as-late-as-possible.patch \
   file://0008-daemon-cleanup-as-early-as-possible.patch \
   file://0009-graph-aufs-durably-write-layer-on-disk-before-return.patch \
   file://0010-pkg-ioutils-sync-parent-directory-too.patch \
-  file://0011-fix-compilation-errors-with-btrfs-progs-4.5.patch \
-  file://0012-Try-to-handle-changing-names-for-journal-packages.patch \
   file://0015-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
   file://0016-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
 "
