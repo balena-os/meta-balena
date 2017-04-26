@@ -9,7 +9,7 @@ Before=dnsmasq.service
 [Service]
 Type=notify
 Restart=always
-ExecStart=/usr/bin/docker daemon --log-driver=journald -s aufs -H fd:// --dns 172.17.0.1
+ExecStart=/usr/bin/dockerd --log-driver=journald -s aufs -H fd:// --dns 172.17.0.1
 ExecStartPost=/sbin/sysctl -w net.ipv4.conf.docker0.route_localnet=1
 ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p udp --dport 53 -j DNAT --dst 172.17.0.1/32 --to 127.0.0.2:53
 ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p tcp --dport 53 -j DNAT --dst 172.17.0.1/32 --to 127.0.0.2:53
