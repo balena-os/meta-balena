@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update Docker to 17.03.1 [Theodor]
 * Include fsck.vfat in resinOS [Andrei]
 
 # v2.0.6 - 2017-06-06
