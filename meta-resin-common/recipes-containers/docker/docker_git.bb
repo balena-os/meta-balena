@@ -57,7 +57,7 @@ DEPENDS = " \
   "
 
 DEPENDS_append_class-target = "lvm2"
-RDEPENDS_${PN} = "curl util-linux iptables"
+RDEPENDS_${PN} = "curl util-linux iptables tini"
 RRECOMMENDS_${PN} += " kernel-module-dm-thin-pool kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
 
