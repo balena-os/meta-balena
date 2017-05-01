@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v4.2.2 [Page]
 * Explicitly set CONFIG_HIDRAW=y [Michal]
 
 # v2.0.2 - 2017-04-24
