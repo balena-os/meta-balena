@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Disable coredumps [Jon]
 * Add bind mounts for systemd persistent data [Jon]
 * Update supervisor to v4.2.2 [Page]
 * Explicitly set CONFIG_HIDRAW=y [Michal]
