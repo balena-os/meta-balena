@@ -1,11 +1,11 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 SRC_URI_append = " \
-    file://remove_systemd-getty-generator.patch \
-    file://watchdog.conf \
-    file://resin.target \
-    file://multi-user.conf \
     file://coredump.conf \
+    file://multi-user.conf \
+    file://remove_systemd-getty-generator.patch \
+    file://resin.target \
+    file://watchdog.conf \
     "
 
 FILES_${PN} += " \
