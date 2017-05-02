@@ -5,6 +5,7 @@ SRC_URI_append = " \
     file://watchdog.conf \
     file://resin.target \
     file://multi-user.conf \
+    ${@bb.utils.contains('DISTRO_FEATURES','development-image','','file://coredump.conf',d)} \
     "
 
 FILES_${PN} += " \
@@ -36,6 +37,12 @@ do_install_append() {
     # enable watchdog
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
     install -m 0644 ${WORKDIR}/watchdog.conf ${D}/${sysconfdir}/systemd/system.conf.d
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
+        # enable watchdog
+        install -d -m 0755 ${D}/${sysconfdir}/systemd/coredump.conf.d
+        install -m 0644 ${WORKDIR}/coredump.conf ${D}/${sysconfdir}/systemd/coredump.conf.d
+    fi
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
     ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
