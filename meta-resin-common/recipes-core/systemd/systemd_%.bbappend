@@ -1,10 +1,11 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 SRC_URI_append = " \
-    file://remove_systemd-getty-generator.patch \
-    file://watchdog.conf \
-    file://resin.target \
+    file://coredump.conf \
     file://multi-user.conf \
+    file://remove_systemd-getty-generator.patch \
+    file://resin.target \
+    file://watchdog.conf \
     "
 
 FILES_${PN} += " \
@@ -36,6 +37,9 @@ do_install_append() {
     # enable watchdog
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
     install -m 0644 ${WORKDIR}/watchdog.conf ${D}/${sysconfdir}/systemd/system.conf.d
+
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/coredump.conf.d
+    install -m 0644 ${WORKDIR}/coredump.conf ${D}/${sysconfdir}/systemd/coredump.conf.d
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
     ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
