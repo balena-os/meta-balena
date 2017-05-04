@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add iwlwifi 8265 firmware [Florin]
 * Disable coredumps [Jon]
 * Add bind mounts for systemd persistent data [Jon]
 * Update supervisor to v4.2.2 [Page]
