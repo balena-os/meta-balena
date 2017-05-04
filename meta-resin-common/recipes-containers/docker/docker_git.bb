@@ -45,10 +45,11 @@ DEPENDS = " \
   go-cross \
   btrfs-tools \
   git \
+  systemd \
   "
 
 DEPENDS_append_class-target = "lvm2"
-RDEPENDS_${PN} = "curl util-linux iptables tini"
+RDEPENDS_${PN} = "curl util-linux iptables tini systemd"
 RRECOMMENDS_${PN} += " kernel-module-dm-thin-pool kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
 
