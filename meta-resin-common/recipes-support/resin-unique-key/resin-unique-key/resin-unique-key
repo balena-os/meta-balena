@@ -50,7 +50,7 @@ fi
 
 if [ -z "$key" ]; then
     echo "[INFO] resin-unique-key: $key_name missing from config file. Generating..."
-    key=$(openssl rand -hex 16)
+    key=$(openssl rand -hex 31)
     echo $(cat $CONFIG_PATH | jq ".$key_name=\"$key\"") > $CONFIG_PATH
 else
     echo "[INFO] resin-unique-key : Device already has $key_name assigned."
