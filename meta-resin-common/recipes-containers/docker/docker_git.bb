@@ -25,11 +25,11 @@ SRC_URI = "\
   file://docker.service \
   file://var-lib-docker.mount \
   file://docker.conf.systemd \
-  file://0008-daemon-cleanup-as-early-as-possible.patch \
-  file://0009-graph-aufs-durably-write-layer-on-disk-before-return.patch \
-  file://0010-pkg-ioutils-sync-parent-directory-too.patch \
-  file://0015-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
-  file://0016-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
+  file://0001-graph-aufs-durably-write-layer-on-disk-before-return.patch \
+  file://0002-pkg-ioutils-sync-parent-directory-too.patch \
+  file://0003-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
+  file://0004-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
+  file://0005-daemon-cleanup-as-early-as-possible.patch \
 "
 
 # Apache-2.0 for docker
