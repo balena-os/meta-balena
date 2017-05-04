@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix unique key length at 62 hex chars [Page]
 * Disable coredumps [Jon]
 * Add bind mounts for systemd persistent data [Jon]
 * Update supervisor to v4.2.2 [Page]
