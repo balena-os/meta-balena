@@ -6,6 +6,7 @@ Change log
 * Add bind mounts for systemd persistent data [Jon]
 * Update supervisor to v4.2.2 [Page]
 * Explicitly set CONFIG_HIDRAW=y [Michal]
+* Fix symlink creation in resinhup_backwards_compatible_link() [Michal]
 
 # v2.0.2 - 2017-04-24
 
