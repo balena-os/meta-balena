@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Prevent resin-unique-key from running concurrently [Michal]
 * Add iwlwifi 8265 firmware [Florin]
 * Disable coredumps [Jon]
 * Add bind mounts for systemd persistent data [Jon]
