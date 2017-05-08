@@ -179,6 +179,7 @@ resin_boot_dirgen_and_deploy () {
     # Keep this after everything is ready in the resin-boot directory
     find ${RESIN_BOOT_WORKDIR} -xdev -type f \
         -not -name ${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT} \
+        -not -name config.json \
         -exec md5sum {} \; | sed "s#${RESIN_BOOT_WORKDIR}##g" | \
         sort -k2 > ${RESIN_BOOT_WORKDIR}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
 
