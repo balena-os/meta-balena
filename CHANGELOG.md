@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix resin-state-conf copying mechanism [Theodor]
 * Don't fingerprint config.json [Andrei]
 * Prevent resin-unique-key from running concurrently [Michal]
 * Add iwlwifi 8265 firmware [Florin]
