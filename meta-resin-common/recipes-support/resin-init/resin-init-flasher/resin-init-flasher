@@ -44,6 +44,7 @@ INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
+RESIN_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -179,12 +180,18 @@ else
     inform "No system connections found to transfer on the internal device."
 fi
 # Copy bootloader config file
-if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
+if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]] && [[ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
         if [[ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then
             fail "INTERNAL_DEVICE_BOOTLOADER_CONFIG needs INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH to be set."
         fi
         cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH
 fi
+
+# Copy resinOS bootloader config file
+if [[ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${RESIN_BOOTLOADER_CONFIG}" ]]; then
+        cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+fi
+
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
 echo "Board specific flash procedure..."
