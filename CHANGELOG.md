@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.3 - 2017-05-10
+
 * Copy resinOS_uEnv.txt from external to internal media [Theodor]
 * Fix resin-state-conf copying mechanism [Theodor]
 * Don't fingerprint config.json [Andrei]
