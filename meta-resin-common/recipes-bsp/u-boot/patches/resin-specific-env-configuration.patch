@@ -13,16 +13,16 @@ Signed-off-by: Andrei Gherzan <andrei@resin.io>
 
 Upstream-Status: Inappropriate [configuration]
 ---
- include/env_resin.h | 85 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
+ include/env_resin.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
  create mode 100644 include/env_resin.h
 
 diff --git a/include/env_resin.h b/include/env_resin.h
 new file mode 100644
-index 0000000..dfef80c
+index 0000000..2ff0fa5
 --- /dev/null
 +++ b/include/env_resin.h
-@@ -0,0 +1,84 @@
+@@ -0,0 +1,89 @@
 +#ifndef HEADER_ENV_RESIN_H
 +#define HEADER_ENV_RESIN_H
 +
@@ -35,75 +35,80 @@ index 0000000..dfef80c
 + *     resin_set_kernel_root  - needs to be integrated with board
 + *                              specific configuration
 + *     resin_kernel_root      - the root kernel argument
-+ *     resin_mmcdev           - MMC device index to be used at boot
++ *     resin_dev_type         - device type from where we boot (e.g. mmc, usb etc.)
++ *     resin_dev_index        - device index to be used at boot
 + */
 +
 +#include <config_resin.h>
 +
 +#define RESIN_ENV \
-+	"resin_env_file=" __stringify(RESIN_ENV_FILE) "\0" \
-+	"resin_flasher_flag_file=" __stringify(RESIN_FLASHER_FLAG_FILE) "\0" \
-+	"resin_image_flag_file=" __stringify(RESIN_IMAGE_FLAG_FILE) "\0" \
-+	"resin_uboot_mmc_devices=" __stringify(RESIN_UBOOT_MMC_DEVICES) "\0" \
-+	"resin_boot_part=" __stringify(RESIN_BOOT_PART) "\0" \
-+	"resin_root_part=" __stringify(RESIN_DEFAULT_ROOT_PART) "\0" \
-+	\
-+	"resin_find_root_part_uuid=" \
-+		"part uuid mmc ${resin_mmcdev}:${resin_root_part} resin_root_part_uuid\0" \
-+	\
-+	"resin_load_env_file=" \
-+		"echo Loading ${resin_env_file} from mmc device ${resin_mmcdev} partition ${resin_boot_part};" \
-+		"fatload mmc ${resin_mmcdev}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_env_file};\0" \
-+	\
-+	"resin_import_env_file=" \
-+		"echo Import ${resin_env_file} in environment;" \
-+		"env import -t ${resin_kernel_load_addr} ${filesize}\0" \
-+	\
-+	"resin_flasher_detect=" \
-+		"fatload mmc ${resin_scan_mmcdev}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_flasher_flag_file};\0" \
-+	\
-+	"resin_image_detect=" \
-+		"fatload mmc ${resin_scan_mmcdev}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_image_flag_file};\0" \
-+	\
-+	"resin_scan_mmcdevs=" \
-+		"echo Scanning MMC devices ${resin_uboot_mmc_devices};" \
-+		"for resin_scan_mmcdev in ${resin_uboot_mmc_devices}; do " \
-+			"if run resin_flasher_detect; then " \
-+				"setenv resin_flasher_mmcdev ${resin_scan_mmcdev}; " \
-+				"exit; " \
-+			"else; " \
-+				"if test -n \"${resin_image_mmcdev}\"; then ;" \
-+					"else if run resin_image_detect; then " \
-+						"setenv resin_image_mmcdev ${resin_scan_mmcdev}; " \
-+					"fi; " \
-+				"fi; " \
-+			"fi; " \
-+		"done;\0" \
-+	\
-+	"resin_set_mmcdev=" \
-+		"run resin_scan_mmcdevs; " \
-+		"if test -n ${resin_flasher_mmcdev}; then " \
-+			"echo Found resin flasher on MMC ${resin_flasher_mmcdev}; "\
-+			"setenv resin_mmcdev ${resin_flasher_mmcdev}; "\
-+		"else; "\
-+			"if test -n \"${resin_image_mmcdev}\"; then " \
-+				"echo Found resin image on MMC ${resin_image_mmcdev}; "\
-+				"setenv resin_mmcdev ${resin_image_mmcdev}; "\
-+			"else; " \
-+				"echo ERROR: Could not find a resin image of any sort.; " \
-+			"fi; " \
-+		"fi;\0" \
-+	\
-+	"resin_inject_env_file=" \
-+		"if run resin_load_env_file; then " \
-+			"run resin_import_env_file;" \
-+		"fi;\0" \
-+	\
-+	"resin_set_kernel_root=" \
-+		"run resin_set_mmcdev;" \
-+		"run resin_inject_env_file;" \
-+		"run resin_find_root_part_uuid;" \
-+		"setenv resin_kernel_root root=PARTUUID=${resin_root_part_uuid}\0"
++       "resin_env_file=" __stringify(RESIN_ENV_FILE) "\0" \
++       "resin_flasher_flag_file=" __stringify(RESIN_FLASHER_FLAG_FILE) "\0" \
++       "resin_image_flag_file=" __stringify(RESIN_IMAGE_FLAG_FILE) "\0" \
++       "resin_uboot_devices=" __stringify(RESIN_UBOOT_DEVICES) "\0" \
++       "resin_boot_part=" __stringify(RESIN_BOOT_PART) "\0" \
++       "resin_root_part=" __stringify(RESIN_DEFAULT_ROOT_PART) "\0" \
++       \
++       "resin_find_root_part_uuid=" \
++               "part uuid ${resin_dev_type} ${resin_dev_index}:${resin_root_part} resin_root_part_uuid\0" \
++       \
++       "resin_load_env_file=" \
++               "echo Loading ${resin_env_file} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_boot_part};" \
++               "fatload ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_env_file};\0" \
++       \
++       "resin_import_env_file=" \
++               "echo Import ${resin_env_file} in environment;" \
++               "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
++       \
++       "resin_flasher_detect=" \
++               "fatload ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_flasher_flag_file};\0" \
++       \
++       "resin_image_detect=" \
++               "fatload ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_image_flag_file};\0" \
++       \
++       "resin_scan_devs=" \
++               "echo Scanning MMC and USB devices ${resin_uboot_devices}; " \
++               "for resin_scan_dev_type in mmc usb; do " \
++                       "for resin_scan_dev_index in ${resin_uboot_devices}; do " \
++                               "if run resin_flasher_detect; then " \
++                                       "setenv resin_flasher_dev_index ${resin_scan_dev_index}; " \
++                                       "setenv resin_dev_type ${resin_scan_dev_type}; " \
++                                       "exit; " \
++                               "else; " \
++                                       "if test -n \"${resin_image_dev_index}\"; then ;" \
++                                               "else if run resin_image_detect; then " \
++                                                       "setenv resin_image_dev_index ${resin_scan_dev_index}; " \
++                                                       "setenv resin_dev_type ${resin_scan_dev_type}; " \
++                                               "fi; " \
++                                       "fi; " \
++                               "fi; " \
++                       "done;" \
++               "done;\0"  \
++       \
++       "resin_set_dev_index=" \
++               "run resin_scan_devs; " \
++               "if test -n ${resin_flasher_dev_index}; then " \
++                       "echo Found resin flasher on ${resin_dev_type} ${resin_flasher_dev_index}; "\
++                       "setenv resin_dev_index ${resin_flasher_dev_index}; "\
++               "else; "\
++                       "if test -n \"${resin_image_dev_index}\"; then " \
++                               "echo Found resin image on ${resin_dev_type} ${resin_image_dev_index}; "\
++                               "setenv resin_dev_index ${resin_image_dev_index}; "\
++                       "else; " \
++                               "echo ERROR: Could not find a resin image of any sort.; " \
++                       "fi; " \
++               "fi;\0" \
++       \
++       "resin_inject_env_file=" \
++               "if run resin_load_env_file; then " \
++                       "run resin_import_env_file;" \
++               "fi;\0" \
++       \
++       "resin_set_kernel_root=" \
++               "run resin_set_dev_index;" \
++               "run resin_inject_env_file;" \
++               "run resin_find_root_part_uuid;" \
++               "setenv resin_kernel_root root=PARTUUID=${resin_root_part_uuid}\0"
 +
 +#endif /* HEADER_ENV_RESIN_H */
 +
