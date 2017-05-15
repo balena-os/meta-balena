@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Enable the resin-uboot implementation to also boot flasher images from USB media [Florin]
 * Use supervisor tag as supervisor recipe PV [Andrei}
 
 # v2.0.3 - 2017-05-10
