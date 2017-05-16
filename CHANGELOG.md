@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Add e2fsprogs utilities for resinhup [Will]
+
 # v1.26 - 2017-04-25
 
 * Avoid writing to /root when running nohup [pvizeli]
