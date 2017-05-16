@@ -56,6 +56,14 @@ if [ -f $CONFIG_PATH ]; then
     CONFIG_HOSTNAME=$(jq --raw-output ".hostname // empty" $CONFIG_PATH)
     PERSISTENT_LOGGING=$(jq --raw-output ".persistentLogging // empty" $CONFIG_PATH)
     COUNTRY=$(jq --raw-output ".country // empty" $CONFIG_PATH)
+    UUID=$(jq --raw-output ".uuid // empty" $CONFIG_PATH)
+    PROVISIONING_API_KEY=$(jq --raw-output ".apiKey // empty" $CONFIG_PATH)
+    DEVICE_API_KEY=$(jq --raw-output ".deviceApiKey // empty" $CONFIG_PATH)
+    DEVICE_ID=$(jq --raw-output '.deviceId // empty' $CONFIG_PATH)
+    USER_ID=$(jq --raw-output '.userId // empty' $CONFIG_PATH)
+    APPLICATION_ID=$(jq --raw-output '.applicationId // empty' $CONFIG_PATH)
+    DEVICE_TYPE=$(jq --raw-output '.deviceType // empty' $CONFIG_PATH)
+    REGISTERED_AT=$(jq --raw-output '.registered_at // empty' $CONFIG_PATH)
     if [ -z "$API_ENDPOINT" -o -z "$LISTEN_PORT" -o -z "$MIXPANEL_TOKEN" -o -z "$PUBNUB_PUBLISH_KEY" -o -z "$PUBNUB_SUBSCRIBE_KEY" -o -z "$REGISTRY_ENDPOINT" -o -z "$VPN_ENDPOINT" ]; then
         echo "[WARNING] $0 : Couldn't read some variables from $CONFIG_PATH"
     fi

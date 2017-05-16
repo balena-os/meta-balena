@@ -46,23 +46,19 @@ fi
 while true; do
     if curl -sL -w '%{http_code}' "$API_ENDPOINT"/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
     then
-        # The `apiKey` default is mainly so that we don't hit issues where we've already registered
-        # and then everything goes out of line due to an empty apiKey
-        read api_key user_id application_id device_type uuid device_api_key registered_at <<<$(jq -r '.apiKey // .deviceApiKey,.userId,.applicationId,.deviceType,.uuid,.deviceApiKey,.registered_at // empty' "$CONFIG_PATH")
-
-        if [ -n "${registered_at}" ]; then
+        if [ -n "${REGISTERED_AT}" ]; then
             echo "[INFO] resin-device-register : Device already registered."
             exit 0
         fi
 
         status_code=$(curl -s -X POST -w "%{http_code}" \
                     --output $LOG_FILE \
-                    --data-urlencode "user=$user_id" \
-                    --data-urlencode "application=$application_id" \
-                    --data-urlencode "device_type=$device_type" \
-                    --data-urlencode "uuid=$uuid" \
-                    --data-urlencode "api_key=$device_api_key" \
-                    "$API_ENDPOINT/device/register?apikey=$api_key")
+                    --data-urlencode "user=$USER_ID" \
+                    --data-urlencode "application=$APPLICATION_ID" \
+                    --data-urlencode "device_type=$DEVICE_TYPE" \
+                    --data-urlencode "uuid=$UUID" \
+                    --data-urlencode "api_key=$DEVICE_API_KEY" \
+                    "$API_ENDPOINT/device/register?apikey=$PROVISIONING_API_KEY")
 
         if [ "$status_code" -eq 201 ]; then
             device_id=$(jq -r '.id' $LOG_FILE)
