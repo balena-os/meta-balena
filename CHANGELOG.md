@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update resinhup tag to v1.1.2 [Will]
 * Add e2fsprogs utilities for resinhup [Will]
 
 # v1.26 - 2017-04-25
