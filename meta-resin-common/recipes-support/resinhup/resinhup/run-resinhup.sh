@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-TAG=v1.1.1
+TAG=v1.1.2
 FORCE=no
 ALLOW_DOWNGRADES=no
 STAGING=no
@@ -33,7 +33,7 @@ Options:
 
   -t <TAG>, --tag <TAG>
         Use a specific tag for resinhup image.
-        Default: 1.0 .
+        Default: $TAG
 
   --remote <REMOTE>
         Run the updater with this remote configuration.
@@ -56,8 +56,7 @@ Options:
         Update only the supervisor.
 
   -n, --nolog
-        By default tool logs to stdout and file. This flag deactivates log to
-        $LOGFILE file.
+        By default tool logs to stdout and file. This flag deactivates log to file.
 
   --no-reboot
         Don't reboot if update is successful. This is useful when debugging.
@@ -65,7 +64,7 @@ Options:
   --max-retries
         Some commands will be tried a couple of times before failing the update.
         e.g. docker pulls
-        By default: 5 retries.
+        By default: $MAXRETRIES retries.
 
   --cache
         Try to find cached images. If found, don't pull new ones but load the
