@@ -78,6 +78,8 @@ RESIN_CONFIGS ?= " \
     xtables \
     audit \
     governor \
+    mbim \
+    qmi \
     "
 
 #
@@ -328,6 +330,16 @@ RESIN_CONFIGS[audit] = " \
 
 RESIN_CONFIGS_DEPS[governor] ?= " \
     CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y \
+    "
+
+# support for mbim cell modems
+RESIN_CONFIGS[mbim] = " \
+    CONFIG_USB_NET_CDC_MBIM=m \
+    "
+
+# support for qmi cell modems
+RESIN_CONFIGS[qmi] = " \
+    CONFIG_USB_NET_QMI_WWAN=m \
     "
 
 ###########
