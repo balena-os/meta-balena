@@ -9,6 +9,7 @@ Requires=\
     etc-resin\x2dsupervisor.mount
 After=\
     docker.service \
+    systemd-timesyncd.service \
     resin\x2ddata.mount \
     resin-device-uuid.service \
     resin-device-api-key.service \

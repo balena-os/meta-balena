@@ -1,6 +1,6 @@
 Change log
 -----------
-
+* Set start of resin-supervisor in dependence to timesync [Pascal]
 * Disable all password logins on production images, rather than just root logins - this gets rid of the password prompt dialog that users have seen. [Page]
 
 # v2.0.4 - 2017-05-16
