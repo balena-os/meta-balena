@@ -24,9 +24,9 @@ SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install_append() {
     if ! ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
-        # Disable root password logins
+        # Disable password logins
         install -d ${D}${sysconfdir}/default
-        echo 'DROPBEAR_EXTRA_ARGS="-g"' >> ${D}/etc/default/dropbear
+        echo 'DROPBEAR_EXTRA_ARGS="-s"' >> ${D}/etc/default/dropbear
     fi
 
     if [ "${RESIN_CONNECTABLE_ENABLE_SERVICES}" = "1" ]; then
