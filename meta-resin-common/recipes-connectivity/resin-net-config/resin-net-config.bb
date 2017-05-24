@@ -16,7 +16,7 @@ inherit allarch systemd
 PACKAGES = "${PN} ${PN}-flasher"
 
 SYSTEMD_SERVICE_${PN} = "resin-net-config.service"
-RDEPENDS_${PN} = "bash jq"
+RDEPENDS_${PN} = "bash jq iw"
 
 do_install() {
     install -d ${D}${bindir}
