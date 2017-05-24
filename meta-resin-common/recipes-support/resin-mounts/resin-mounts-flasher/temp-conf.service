@@ -10,7 +10,7 @@ Conflicts=umount.target
 Type=oneshot
 RemainAfterExit=yes
 ExecStartPre=@BASE_BINDIR@/mkdir -p /tmp/conf
-ExecStart=@BASE_BINDIR@/cp -vf /mnt/bootorig/config.json /tmp/conf/config.json
+ExecStart=@BASE_BINDIR@/cp -vf /mnt/bootorig/config.json /tmp/conf/config.json || @BASE_BINDIR@/touch /tmp/conf/config.json
 
 [Install]
 WantedBy=multi-user.target
