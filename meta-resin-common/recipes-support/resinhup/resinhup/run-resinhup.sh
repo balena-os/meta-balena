@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-TAG=v1.1.2
+TAG=v1.1.3
 FORCE=no
 ALLOW_DOWNGRADES=no
 STAGING=no
@@ -10,6 +10,7 @@ ONLY_SUPERVISOR=no
 NOREBOOT=no
 CACHE=no
 MAXRETRIES=5
+SCRIPTNAME=run-resinhup.sh
 
 # Don't run anything before this source as it sets PATH here
 source /etc/profile
@@ -18,7 +19,7 @@ source /etc/profile
 function help {
     cat << EOF
 Wrapper to run host OS updates on resin distributions.
-$0 <OPTION>
+$SCRIPTNAME <OPTION>
 
 Options:
   -h, --help
@@ -377,10 +378,10 @@ fi
 
 # Init log file
 # LOGFILE init and header
-LOGFILE=$BTRFS_MOUNTPOINT/resinhup/$(basename "$0").log
+LOGFILE=$BTRFS_MOUNTPOINT/resinhup/$SCRIPTNAME.log
 mkdir -p $(dirname $LOGFILE)
 if [ "$LOG" == "yes" ]; then
-    echo "================"`basename "$0"`" HEADER START====================" > $LOGFILE
+    echo "================$SCRIPTNAME HEADER START====================" > $LOGFILE
     date >> $LOGFILE
     echo "Force mode: $FORCE" >> $LOGFILE
     echo "Resinhup tag: $TAG" >> $LOGFILE
@@ -397,7 +398,7 @@ fi
 # Init log file
 # LOGFILE init and header
 if [ "$LOG" == "yes" ]; then
-    echo "================"`basename "$0"`" HEADER START====================" > $LOGFILE
+    echo "================$SCRIPTNAME HEADER START====================" > $LOGFILE
     date >> $LOGFILE
     echo "Force mode: $FORCE" >> $LOGFILE
     echo "Resinhup tag: $TAG" >> $LOGFILE
