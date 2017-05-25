@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Remove resinhup script name heuristics to use with proxy [Gergely]
+* Update resinhup tag to v1.1.3 [Gergely]
 * Update resinhup tag to v1.1.2 [Will]
 * Add e2fsprogs utilities for resinhup [Will]
 
