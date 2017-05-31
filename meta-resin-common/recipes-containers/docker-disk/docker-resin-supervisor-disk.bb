@@ -1,5 +1,7 @@
 require docker-disk.inc
 
+PR = "r0"
+
 # Resin supervisor supported CPU archtectures
 SUPERVISOR_REPOSITORY_armv5 = "resin/armel-supervisor"
 SUPERVISOR_REPOSITORY_armv6 = "resin/rpi-supervisor"
