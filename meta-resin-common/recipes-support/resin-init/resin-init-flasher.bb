@@ -1,4 +1,4 @@
-DESCRIPTION = "Resin custom INIT file - use for flashig internal devices from external ones"
+DESCRIPTION = "Resin custom INIT file - use for flashing internal devices from external ones"
 SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
@@ -8,6 +8,7 @@ PR = "r2"
 SRC_URI = " \
     file://resin-init-flasher \
     file://resin-init-flasher.service \
+    file://dnsmasq.conf.systemd \
     "
 S = "${WORKDIR}"
 
@@ -51,6 +52,8 @@ do_install() {
             -e 's,@BINDIR@,${bindir},g' \
             -e 's,@SYS_CONFDIR@,${sysconfdir},g' \
             ${D}${systemd_unitdir}/system/resin-init-flasher.service
+        install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
+        install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
     fi
 
     # If bootloader needs to be flashed, we require the bootloader name and write offset
