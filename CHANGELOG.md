@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Various build fixes when using other package formats like ipk [Andrei]
 * Define IMAGE_NAME_SUFFIX, needed for resinhup, for Yocto versions older than Morty [Florin]
 * Add support for modifying the regulatory domain for wifi interfaces [Michal]
 * Add support for qmi and mbim cell modems [Joshua]
