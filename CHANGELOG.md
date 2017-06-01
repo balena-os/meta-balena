@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Define IMAGE_NAME_SUFFIX, needed for resinhup, for Yocto versions older than Morty [Florin]
 * Add support for modifying the regulatory domain for wifi interfaces [Michal]
 * Add support for qmi and mbim cell modems [Joshua]
 * Disable all password logins on production images, rather than just root logins - this gets rid of the password prompt dialog that users have seen. [Page]
