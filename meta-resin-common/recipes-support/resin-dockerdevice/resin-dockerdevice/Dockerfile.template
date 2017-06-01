@@ -1,0 +1,10 @@
+FROM #{VERSION}
+
+VOLUME /mnt/state
+VOLUME /mnt/data
+VOLUME /mnt/data/docker
+VOLUME /mnt/boot
+VOLUME /var/lib/docker
+
+STOPSIGNAL 37
+CMD ["/usr/bin/entry.sh"]
