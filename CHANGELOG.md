@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v2.0.5 - 2017-06-02
+
 * Fix dependencies for mount service in /var/lib [Andrei]
 * Various build fixes when using other package formats like ipk [Andrei]
 * Define IMAGE_NAME_SUFFIX, needed for resinhup, for Yocto versions older than Morty [Florin]
