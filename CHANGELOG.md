@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v4.3.1 [Pablo]
 * Add BeagleBone memory hack to script to resinhup [Gergely]
 * Add busybox patch to fix tar unpacking [Will]
 * Get correct current version in resinhup script [Andrei]
