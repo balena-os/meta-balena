@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update supervisor to v4.2.4 [Pablo]
+
 # v2.0.5 - 2017-06-02
 
 * Fix dependencies for mount service in /var/lib [Andrei]
