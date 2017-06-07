@@ -11,6 +11,7 @@ NOREBOOT=no
 CACHE=no
 MAXRETRIES=5
 SCRIPTNAME=run-resinhup.sh
+DEFAULT_CURRENT_HOSTOS_VERSION=1.0.0
 
 # Don't run anything before this source as it sets PATH here
 source /etc/profile
@@ -148,7 +149,7 @@ function runPreHacks {
         _boot_mountpoint="$(grep $(blkid | grep resin-boot | cut -d ":" -f 1) /proc/mounts | cut -d ' ' -f 2)"
     else
         log WARN "Can't rely on blkid to detect boot partition mountpoint. Fallback to version based detection..."
-        if version_gt $HOSTOS_VERSION "1.12.0" || [ "$HOSTOS_VERSION" == "1.12.0" ]; then
+        if version_gt $CURRENT_HOSTOS_VERSION "1.12.0" || [ "$CURRENT_HOSTOS_VERSION" == "1.12.0" ]; then
             # Boot partition is mounted in /mnt/boot
             _boot_mountpoint=/mnt/boot
         else
@@ -281,6 +282,19 @@ function cachedpull() {
     fi
 }
 
+function setCurrentVersion() {
+	local _version_file=/etc/os-release
+	if [ ! -f "$_version_file" ]; then
+		CURRENT_HOSTOS_VERSION=$DEFAULT_CURRENT_HOSTOS_VERSION
+		return
+	fi
+	CURRENT_HOSTOS_VERSION=$(cat "$_version_file" | grep VERSION= | cut -d= -f2 | tr -d '"' | head -n1)
+	if [[ ! $CURRENT_HOSTOS_VERSION =~ ^([0-9]+\.)([0-9]+\.)([0-9]+)(\-[a-zA-Z0-9]+)?(\+rev[0-9]+)?$ ]]; then
+		CURRENT_HOSTOS_VERSION=$DEFAULT_CURRENT_HOSTOS_VERSION
+		return
+	fi
+}
+
 #
 # MAIN
 #
@@ -386,6 +400,12 @@ if [ "$LOG" == "yes" ]; then
     echo "Force mode: $FORCE" >> $LOGFILE
     echo "Resinhup tag: $TAG" >> $LOGFILE
     echo "Allow downgrades: $ALLOW_DOWNGRADES" >> $LOGFILE
+fi
+
+# Determine current host OS version
+setCurrentVersion()
+if [ -z "$CURRENT_HOSTOS_VERSION" ]; then
+	log ERROR "Can't determine current host OS version."
 fi
 
 /usr/bin/resin-device-progress --percentage 10 --state "ResinOS: Preparing update..."
