@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Get correct current version in resinhup script [Andrei]
 * Remove resinhup script name heuristics to use with proxy [Gergely]
 * Update resinhup tag to v1.1.3 [Gergely]
 * Update resinhup tag to v1.1.2 [Will]
