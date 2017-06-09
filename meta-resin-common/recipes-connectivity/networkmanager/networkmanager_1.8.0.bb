@@ -17,9 +17,10 @@ inherit gnomebase gettext systemd bluetooth vala
 
 SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
+    file://0001-build-fix-race-creating-libnm-core-tests-directory-f.patch \
 "
-SRC_URI[md5sum] = "89c975afe19fbac854191edb6e9bcd3b"
-SRC_URI[sha256sum] = "b22b6f55cde37bec4982f9be4b1808a21101d807a05049c670116d95059a26f9"
+SRC_URI[md5sum] = "de0e70933a17ee6a682e8440015c9b1e"
+SRC_URI[sha256sum] = "fa5a5c6a36cdf95b12df34cc575bd61a74f297ede9be22cac4807a1aff3cf69e"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
@@ -51,7 +52,6 @@ PACKAGECONFIG[systemd] = " \
 PACKAGECONFIG[bluez5] = "--enable-bluez5-dun,--disable-bluez5-dun,bluez5"
 # consolekit is not picked by shlibs, so add it to RDEPENDS too
 PACKAGECONFIG[consolekit] = "--with-session-tracking=consolekit,,consolekit,consolekit"
-PACKAGECONFIG[concheck] = "--with-libsoup=yes,--with-libsoup=no,libsoup-2.4"
 PACKAGECONFIG[modemmanager] = "--with-modem-manager-1=yes,--with-modem-manager-1=no,modemmanager"
 PACKAGECONFIG[ppp] = "--enable-ppp,--disable-ppp,ppp,ppp"
 # Use full featured dhcp client instead of internal one
