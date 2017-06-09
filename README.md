@@ -19,12 +19,12 @@ This repository enables building resin.io for various devices.
 `meta-resin` version is kept in `DISTRO_VERSION` variable. `resin-<board>` version is kept in the file called VERSION located in the root of the `resin-<board>` repository and read in the build as variable HOSTOS_VERSION.
 
 * The version of `meta-resin` is in the format is 3 numbers separated by a dot. The patch number can have a `beta` label. e.g. 1.2.3, 1.2.3-beta1, 2.0.0-beta1.
-* The version of `resin-<board>` is constructed by appending to the `meta-resin` version a `rev` label. This will have the semantics of a board revision which adapts a specific `meta-resin` version for a targeted board. For example a meta-resin 1.2.3 can go through 3 board revisions at the end of which the final version will be 1.2.3.rev3 .
-* The first `resin-board` release based on a specific `meta-resin` release X.Y.Z, will be X.Y.Z.rev1 . Example: the first `resin-board` version based on `meta-resin` 1.2.3 will be 1.2.3.rev1 .
-* When updating `meta-resin` version in `resin-board`, the revision will reset to 1. Ex: 1.2.3.rev4 will be updated to 1.2.4.rev1 .
+* The version of `resin-<board>` is constructed by appending to the `meta-resin` version a `rev` label. This will have the semantics of a board revision which adapts a specific `meta-resin` version for a targeted board. For example a meta-resin 1.2.3 can go through 3 board revisions at the end of which the final version will be 1.2.3+rev3 .
+* The first `resin-board` release based on a specific `meta-resin` release X.Y.Z, will be X.Y.Z+rev1 . Example: the first `resin-board` version based on `meta-resin` 1.2.3 will be 1.2.3+rev1 .
+* When updating `meta-resin` version in `resin-board`, the revision will reset to 1. Ex: 1.2.3+rev4 will be updated to 1.2.4+rev1 .
 * Note that the final OS version is NOT based on semver specification so parsing of such a version needs to be handled in a custom way.
-* e.g. For `meta-resin` release 1.2.3 there can be `resin-<board>` releases 1.2.3.rev`X`.
-* e.g. For `meta-resin` release 2.0.0-beta0 there can be `resin-<board>` releases 2.0.0-beta0.rev`X`.
+* e.g. For `meta-resin` release 1.2.3 there can be `resin-<board>` releases 1.2.3+rev`X`.
+* e.g. For `meta-resin` release 2.0.0-beta0 there can be `resin-<board>` releases 2.0.0-beta0+rev`X`.
 
 We define host OS version as the `resin-<board>` version and we use this version as HOSTOS_VERSION.
 
