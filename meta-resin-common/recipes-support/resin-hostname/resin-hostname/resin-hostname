@@ -6,7 +6,7 @@ set -e
 
 if [ -z "$CONFIG_HOSTNAME" ]; then
     # take just the first 7 characters
-    CONFIG_HOSTNAME=$(jq -r '.uuid //empty' $CONFIG_PATH | sed -e 's/\(.......\).*/\1/')
+    CONFIG_HOSTNAME=$(jq -r '.uuid //empty' "$CONFIG_PATH" | sed -e 's/\(.......\).*/\1/')
 fi
 
 if [ -z "$CONFIG_HOSTNAME" ]; then
