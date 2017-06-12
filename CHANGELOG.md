@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Unify managed/unmanaged images and change behavior based on apiEndpoint in config.json [Andrei]
 * Update Docker to 17.03.1 [Theodor]
 * Include fsck.vfat in resinOS [Andrei]
 

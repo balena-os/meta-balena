@@ -91,7 +91,7 @@ fi
 inform "resin configuration found."
 
 # CONFIG_PATH should exist
-if [ ! -f $CONFIG_PATH ]; then
+if [ ! -f "$CONFIG_PATH" ]; then
     fail "$CONFIG_PATH : No such file."
 fi
 
@@ -109,13 +109,13 @@ if [ -z "$internal_dev" ]; then
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
 inform "$internal_dev will be used for flashing."
-dd if=/opt/$RESIN_IMAGE of=/dev/$internal_dev bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+dd if="/opt/$RESIN_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
 
 if ! kill -0 $DD_PID; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
 fi
 
-IMAGE_FILE_SIZE=`wc -c /opt/$RESIN_IMAGE | awk '{print $1}'`
+IMAGE_FILE_SIZE=$(wc -c /opt/"$RESIN_IMAGE" | awk '{print $1}')
 
 resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media" || true
 
@@ -124,7 +124,7 @@ while kill -USR1 $DD_PID; do
     if [ ! -s /tmp/dd_progress_log ]; then
         continue
     fi
-    IMAGE_WRITTEN_BYTES=`cat /tmp/dd_progress_log | awk 'END{print $1}'`
+    IMAGE_WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
     let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE || true
     resin-device-progress --percentage $RATIO --state "Flashing resin.io on internal media" || true
     truncate -s 0 /tmp/dd_progress_log
@@ -133,14 +133,14 @@ done
 sync
 
 # Trigger udev
-partprobe /dev/$internal_dev
+partprobe /dev/"$internal_dev"
 udevadm trigger
 udevadm settle
 
 # Flash bootloader(s)
 if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
     if [ -n "$BOOTLOADER_IMAGE" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET" ]; then
-        dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE} of=/dev/${BOOTLOADER_FLASH_DEVICE} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET} seek=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}
+        dd if="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE}" of="/dev/${BOOTLOADER_FLASH_DEVICE}" bs="${BOOTLOADER_BLOCK_SIZE_OFFSET}" seek="${BOOTLOADER_SKIP_OUTPUT_BLOCKS}"
         inform "Flashed ${BOOTLOADER_IMAGE} to internal flash"
     else
         fail "BOOTLOADER_IMAGE and/or BOOTLOADER_BLOCK_SIZE_OFFSET are not set."
@@ -151,7 +151,7 @@ fi
 
 if [ -n "$BOOTLOADER_FLASH_DEVICE_1" ]; then
     if [ -n "$BOOTLOADER_IMAGE_1" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET_1" ]; then
-        dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE_1} of=/dev/${BOOTLOADER_FLASH_DEVICE_1} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET_1} seek=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}
+        dd if="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE_1}" of=/dev/"${BOOTLOADER_FLASH_DEVICE_1}" bs="${BOOTLOADER_BLOCK_SIZE_OFFSET_1}" seek="${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}"
         inform "Flashed ${BOOTLOADER_IMAGE_1} to internal flash"
     else
         fail "BOOTLOADER_IMAGE_1 and/or BOOTLOADER_BLOCK_SIZE_OFFSET_1 are not set."
@@ -169,7 +169,7 @@ fi
 # Copy custom splash dir
 cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
 # Copy json configuration file from external (flasher) to the internal (booting) device
-cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
 # Copy Network Manager connection files
 CONFIG_NM="${CONFIG_PATH%/*}/system-connections/"
 if [ -d "$CONFIG_NM" ]; then
@@ -184,7 +184,7 @@ if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]] && [[ -f "${EXTERNAL_DEVICE_B
         if [[ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then
             fail "INTERNAL_DEVICE_BOOTLOADER_CONFIG needs INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH to be set."
         fi
-        cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH
+        cp "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH"
 fi
 
 # Copy resinOS bootloader config file
@@ -203,7 +203,7 @@ ENDTIME=$(date +%s)
 TIMEOUT=10
 while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
 do
-    if [ $(($ENDTIME - $STARTTIME)) -le $TIMEOUT ]; then
+    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
         sleep 1
         ENDTIME=$(date +%s)
     else

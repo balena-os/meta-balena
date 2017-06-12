@@ -22,6 +22,5 @@ RDEPENDS_${PN} += " \
     resin-state-reset \
     resinhup \
     aufs-util \
-    ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-provisioner', '', d)} \
     "
