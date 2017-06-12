@@ -12,6 +12,11 @@ if [ ! -f $CONFIG_PATH ]; then
 	exit 1
 fi
 
+if [ "$MANAGED_IMAGE" == "false" ]; then
+	echo "prepare-openvpn: Avoid preparing openvpn on unmanaged images."
+	exit 1
+fi
+
 while :; do
 	_uuid=$(jq -r '.uuid' $CONFIG_PATH)
 	# If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
