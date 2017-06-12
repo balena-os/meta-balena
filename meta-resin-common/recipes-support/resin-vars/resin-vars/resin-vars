@@ -56,6 +56,13 @@ if [ -f $CONFIG_PATH ]; then
     CONFIG_HOSTNAME=$(jq --raw-output ".hostname // empty" $CONFIG_PATH)
     PERSISTENT_LOGGING=$(jq --raw-output ".persistentLogging // empty" $CONFIG_PATH)
     COUNTRY=$(jq --raw-output ".country // empty" $CONFIG_PATH)
+    if [ -z "$API_ENDPOINT" ]; then
+        MANAGED_IMAGE=false
+        echo "[INFO] $0 : ResinOS unmanaged image."
+    else
+        MANAGED_IMAGE=true
+        echo "[INFO] $0 : ResinOS managed image."
+    fi
     if [ -z "$API_ENDPOINT" -o -z "$LISTEN_PORT" -o -z "$MIXPANEL_TOKEN" -o -z "$PUBNUB_PUBLISH_KEY" -o -z "$PUBNUB_SUBSCRIBE_KEY" -o -z "$REGISTRY_ENDPOINT" -o -z "$VPN_ENDPOINT" ]; then
         echo "[WARNING] $0 : Couldn't read some variables from $CONFIG_PATH"
     fi
