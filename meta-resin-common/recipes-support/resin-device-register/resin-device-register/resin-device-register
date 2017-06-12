@@ -18,7 +18,7 @@ EOF
 }
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [ $# -gt 0 ]; do
     key=$1
     case $key in
         -h|--help)
@@ -36,7 +36,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-source /usr/sbin/resin-vars $RESIN_VARS_ARGS
+source /usr/sbin/resin-vars "$RESIN_VARS_ARGS"
 
 if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
     echo "[ERROR] resin-device-register : Please set API_ENDPOINT and CONFIG_PATH environment variables."
@@ -44,11 +44,11 @@ if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
 fi
 
 while true; do
-    if curl -sL -w '%{http_code}' $API_ENDPOINT/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
+    if curl -sL -w '%{http_code}' "$API_ENDPOINT"/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
     then
         # The `apiKey` default is mainly so that we don't hit issues where we've already registered
         # and then everything goes out of line due to an empty apiKey
-        read api_key user_id application_id device_type uuid device_api_key registered_at <<<$(jq -r '.apiKey // .deviceApiKey,.userId,.applicationId,.deviceType,.uuid,.deviceApiKey,.registered_at // empty' $CONFIG_PATH)
+        read api_key user_id application_id device_type uuid device_api_key registered_at <<<$(jq -r '.apiKey // .deviceApiKey,.userId,.applicationId,.deviceType,.uuid,.deviceApiKey,.registered_at // empty' "$CONFIG_PATH")
 
         if [ -n "${registered_at}" ]; then
             echo "[INFO] resin-device-register : Device already registered."
@@ -66,8 +66,8 @@ while true; do
 
         if [ "$status_code" -eq 201 ]; then
             device_id=$(jq -r '.id' $LOG_FILE)
-            config_json=`cat $CONFIG_PATH`
-            echo $config_json | jq ".registered_at=\"$(date +%s)\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
+            config_json=$(cat "$CONFIG_PATH")
+            echo "$config_json" | jq ".registered_at=\"$(date +%s)\"|.deviceId=\"$device_id\"" > "$CONFIG_PATH"
             echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $uuid."
             exit 0
         else
