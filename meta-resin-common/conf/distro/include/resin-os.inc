@@ -75,3 +75,6 @@ INITRAMFS_IMAGE = "resin-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
+
+# resinOS defaults to ipk packages
+PACKAGE_CLASSES ?= "package_ipk"
