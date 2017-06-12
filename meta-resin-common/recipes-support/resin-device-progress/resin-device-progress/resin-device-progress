@@ -22,7 +22,7 @@ EOF
 }
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [ "$#" -gt "0" ]; do
     key=$1
     case $key in
         -h|--help)
@@ -48,7 +48,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-source /usr/sbin/resin-vars $RESIN_VARS_ARGS
+source /usr/sbin/resin-vars "$RESIN_VARS_ARGS"
 
 echo "-- $0 $PERCENTAGE $STATE $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
 if [ -z "$PERCENTAGE" -o -z "$STATE" -o -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
@@ -56,18 +56,18 @@ if [ -z "$PERCENTAGE" -o -z "$STATE" -o -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" 
     exit 1
 fi
 
-if [ `jq ".registered_at | length" $CONFIG_PATH` -eq 0 ]; then
+if [ "$(jq ".registered_at | length" "$CONFIG_PATH")" -eq 0 ]; then
     echo "[ERROR] resin-device-progress : Device registration not complete, provisioning progress cannot be reported."
     exit 1
 fi
 
-if [ `jq ".deviceId | length" $CONFIG_PATH` -eq 0 ]; then
+if [ "$(jq ".deviceId | length" "$CONFIG_PATH")" -eq 0 ]; then
     echo "[ERROR] resin-device-progress : Device id (deviceId) missing from config file, provisioning progress cannot be reported."
     exit 1
 fi
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
-read device_api_key device_id <<<$(jq -r '.apiKey // .deviceApiKey,.deviceId' $CONFIG_PATH)
+read device_api_key device_id <<<$(jq -r '.apiKey // .deviceApiKey,.deviceId' "$CONFIG_PATH")
 
 curl -s -X PATCH "$API_ENDPOINT/v1/device($device_id)?apikey=$device_api_key" \
      -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
