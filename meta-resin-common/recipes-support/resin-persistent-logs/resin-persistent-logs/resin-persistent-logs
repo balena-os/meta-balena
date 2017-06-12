@@ -4,15 +4,15 @@ set -e
 
 . /usr/sbin/resin-vars
 
-if [ "$PERSISTENT_LOGGING" == "true" ] && [ ! -d /var/log/journal ]; then
+if [ "$PERSISTENT_LOGGING" = "true" ] && [ ! -d /var/log/journal ]; then
     systemctl start var-log-journal.mount
     journalctl --flush
-    echo "$(basename $0): Persistent logging activated."
-elif [ "$PERSISTENT_LOGGING" == "true" ] && [ -d /var/log/journal ]; then
-    echo "$(basename $0): Persistent logging already activated."
+    echo "$(basename "$0"): Persistent logging activated."
+elif [ "$PERSISTENT_LOGGING" = "true" ] && [ -d /var/log/journal ]; then
+    echo "$(basename "$0"): Persistent logging already activated."
     journalclt --flush
-elif [ "$PERSISTENT_LOGGING" == "false" ] && [ -d /var/log/journal ]; then
-    echo "$(basename $0): Persistent logging was deactivated but system reboot is needed."
+elif [ "$PERSISTENT_LOGGING" = "false" ] && [ -d /var/log/journal ]; then
+    echo "$(basename "$0"): Persistent logging was deactivated but system reboot is needed."
 else
-    echo "$(basename $0): Persistent logging deactivated."
+    echo "$(basename "$0"): Persistent logging deactivated."
 fi
