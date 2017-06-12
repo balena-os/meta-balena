@@ -18,27 +18,18 @@ DESCRIPTION = "Linux container runtime \
  subtle and/or glaring issues. \
  "
 
-SRCREV = "20f81dde9bd97c86b2d0e33bbbf1388018611929"
-SRCBRANCH = "v1.10.3"
+SRCREV = "670a205440471d72528f123ab7b686179d04e8e2"
+SRCBRANCH = "17.03.1-resin"
 SRC_URI = "\
-  git://github.com/docker/docker.git;branch=${SRCBRANCH};nobranch=1 \
+  git://github.com/resin-os/docker.git;branch=${SRCBRANCH};nobranch=1 \
   file://docker.service \
   file://var-lib-docker.mount \
   file://docker.conf.systemd \
-  file://0001-bucket-correct-broken-unaligned-load-store-in-armv5.patch \
-  file://0002-Inherit-StopSignal-from-Dockerfile.patch \
-  file://0003-Safer-file-io-for-configuration-files.patch \
-  file://0004-Set-permission-on-atomic-file-write.patch \
-  file://0005-Update-layer-store-to-sync-transaction-files-before-.patch \
-  file://0006-Atomically-save-libtrust-key-file.patch \
-  file://0007-daemon-register-container-as-late-as-possible.patch \
-  file://0008-daemon-cleanup-as-early-as-possible.patch \
-  file://0009-graph-aufs-durably-write-layer-on-disk-before-return.patch \
-  file://0010-pkg-ioutils-sync-parent-directory-too.patch \
-  file://0011-fix-compilation-errors-with-btrfs-progs-4.5.patch \
-  file://0012-Try-to-handle-changing-names-for-journal-packages.patch \
-  file://0015-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
-  file://0016-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
+  file://0001-graph-aufs-durably-write-layer-on-disk-before-return.patch \
+  file://0002-pkg-ioutils-sync-parent-directory-too.patch \
+  file://0003-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
+  file://0004-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
+  file://0005-daemon-cleanup-as-early-as-possible.patch \
 "
 
 # Apache-2.0 for docker
@@ -47,17 +38,18 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=aadc30f9c14d876ded7bedc0afd2d3d7"
 
 S = "${WORKDIR}/git"
 
-DOCKER_VERSION = "1.10.3"
+DOCKER_VERSION = "17.03.1-ce"
 PV = "${DOCKER_VERSION}+git${SRCREV}"
 
 DEPENDS = " \
   go-cross \
   btrfs-tools \
   git \
+  systemd \
   "
 
 DEPENDS_append_class-target = "lvm2"
-RDEPENDS_${PN} = "curl util-linux iptables"
+RDEPENDS_${PN} = "curl util-linux iptables tini systemd"
 RRECOMMENDS_${PN} += " kernel-module-dm-thin-pool kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
 
@@ -112,8 +104,9 @@ do_compile() {
   export CGO_CFLAGS="${CFLAGS} ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
   export CGO_LDFLAGS="${LDFLAGS}  ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
 
-  DOCKER_GITCOMMIT="${SRCREV}" \
-    ./hack/make.sh dynbinary
+  export DOCKER_GITCOMMIT="${SRCREV}"
+
+  ./hack/make.sh binary-rce-docker
 }
 
 inherit systemd
@@ -123,8 +116,15 @@ SYSTEMD_SERVICE_${PN} = "docker.service var-lib-docker.mount"
 
 do_install() {
   mkdir -p ${D}/${bindir}
-  install -m 0755 ${S}/bundles/${DOCKER_VERSION}/dynbinary/docker-${DOCKER_VERSION} \
-    ${D}/${bindir}/docker
+  install -m 0755 ${S}/bundles/${DOCKER_VERSION}/binary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
+
+  ln -sf rce-docker ${D}/${bindir}/docker
+  ln -sf rce-docker ${D}/${bindir}/dockerd
+  ln -sf rce-docker ${D}/${bindir}/docker-containerd
+  ln -sf rce-docker ${D}/${bindir}/docker-containerd-shim
+  ln -sf rce-docker ${D}/${bindir}/docker-containerd-ctr
+  ln -sf rce-docker ${D}/${bindir}/docker-runc
+  ln -sf rce-docker ${D}/${bindir}/docker-proxy
 
   install -d ${D}${systemd_unitdir}/system
   install -m 0644 ${S}/contrib/init/systemd/docker.* ${D}/${systemd_unitdir}/system
