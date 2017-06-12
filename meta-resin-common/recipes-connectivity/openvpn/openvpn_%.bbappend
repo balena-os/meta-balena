@@ -13,6 +13,7 @@ SRC_URI_append = " \
 RDEPENDS_${PN} += "bash jq resin-unique-key sed"
 
 SYSTEMD_SERVICE_${PN} = "openvpn-resin.service prepare-openvpn.service"
+SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/openvpn
