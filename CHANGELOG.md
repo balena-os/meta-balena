@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add busybox patch to fix tar unpacking [Will]
 * Get correct current version in resinhup script [Andrei]
 * Remove resinhup script name heuristics to use with proxy [Gergely]
 * Update resinhup tag to v1.1.3 [Gergely]
