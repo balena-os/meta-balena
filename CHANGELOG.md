@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update supervisor to v4.3.1 [Andrei]
+
 # v2.0.6 - 2017-06-06
 
 * Update supervisor to v4.2.4 [Pablo]
