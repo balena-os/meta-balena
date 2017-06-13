@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Set NetworkManager connection attempts to infinity [petrosagg]
 * Update Docker to 17.03.1 [Theodor]
 * Include fsck.vfat in resinOS [Andrei]
 
