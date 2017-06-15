@@ -61,7 +61,7 @@ do_install_append() {
 }
 
 # add pool.ntp.org as default ntp server
-PACKAGECONFIG[ntp] = "--with-ntp-servers=pool.ntp.org time1.google.com time2.google.com time3.google.com time4.google.com,,,"
+PACKAGECONFIG[ntp] = "--with-ntp-servers=0.resinio.pool.ntp.org 1.resinio.pool.ntp.org 2.resinio.pool.ntp.org 3.resinio.pool.ntp.org,,,"
 
 PACKAGECONFIG_append = " ntp"
 
