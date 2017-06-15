@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Undefine backwards compatibilty variable, INITRAMFS_TASK [Theodor]
+* Enable CONFIG_KEYS, docker 17 requirment [Theodor]
 * Update NetworkManager to 1.8.0 [Andrei]
 * Update supervisor to v4.3.1 [Andrei]
 * Set NetworkManager connection attempts to infinity [petrosagg]
