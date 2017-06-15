@@ -1,6 +1,6 @@
 inherit deploy
 
-DEPENDS += "nss"
+DEPENDS += "curl"
 
 FILESEXTRAPATHS_append := ":${THISDIR}/files"
 
@@ -9,10 +9,6 @@ SRC_URI_append = " \
     file://NetworkManager.conf \
     file://resin-sample \
     "
-
-# XXX do a build in the source directories (by doing so we avoid a bunch of errors when building outside the source directory)
-# (the git version of NM already can handle build_dir != source_dir so most likely we need to check and maybe remove this on the next stable version of NM)
-B = "${S}"
 
 RDEPENDS_${PN}_append = " resin-net-config resolvconf"
 FILES_${PN}_append = "${sysconfdir}/*"
