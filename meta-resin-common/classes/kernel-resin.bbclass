@@ -196,7 +196,7 @@ RESIN_CONFIGS[r8188eu] ?= "\
     "
 
 # rt53xx wireless chipset family to the rt2800usb driver.
-# Supported chips: RT5370
+# Supported chips: RT5370 RT5572
 RESIN_CONFIGS_DEPS[ralink] ?= "\
     CONFIG_CFG80211=m \
     CONFIG_MAC80211=m \
@@ -205,6 +205,7 @@ RESIN_CONFIGS_DEPS[ralink] ?= "\
     "
 RESIN_CONFIGS[ralink] ?= "\
     CONFIG_RT2800USB_RT53XX=y \
+    CONFIG_RT2800USB_RT55XX=y \
     "
 
 #
