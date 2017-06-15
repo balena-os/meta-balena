@@ -57,6 +57,11 @@ Options:
   --only-supervisor
         Update only the supervisor.
 
+  --supervisor-release-update
+        After the resinOS update, check the default supervisor for that release,
+        and tag the device for that version, if the current supervisor is older.
+        The update will happen by the regular supervisor update script upon reboot.
+
   -n, --nolog
         By default tool logs to stdout and file. This flag deactivates log to file.
 
@@ -264,6 +269,10 @@ function runPostHacks {
     else
         log "Docker hack: Avoided as requested hostOS version is not >= 1.1.5."
     fi
+
+    if [ "$SUPERVISOR_RELEASE_UPDATE" == "yes" ]; then
+        setReleaseSupervisorVersion
+    fi
 }
 
 # Test if a version is greater than another
@@ -307,6 +316,46 @@ function setCurrentVersion() {
 		CURRENT_HOSTOS_VERSION=$DEFAULT_CURRENT_HOSTOS_VERSION
 		return
 	fi
+}
+
+# Setting new supervisor  if the target resinOS version release includes a newer supervisor
+# than running that's running on the device. Supervisor will be updated on the next boot.
+function setReleaseSupervisorVersion() {
+    if [ "$STAGING" == "yes" ]; then
+        API_URL="https://api.resinstaging.io"
+        DEFAULT_SUPERVISOR_VERSION_URL_BASE="https://s3.amazonaws.com/resin-staging-img/"
+    else
+        API_URL="https://api.resin.io"
+        DEFAULT_SUPERVISOR_VERSION_URL_BASE="https://s3.amazonaws.com/resin-production-img-cloudformation/"
+    fi
+    DEFAULT_SUPERVISOR_VERSION_URL="${DEFAULT_SUPERVISOR_VERSION_URL_BASE}images/${SLUG}/${HOSTOS_VERSION}/VERSION"
+
+    # Get supervisor version for target resinOS release, it is in format of "a.b.c-shortsha", e.g. "4.1.2-f566dc4dd241",
+    # and tag new version for the device if it's newer than the current version, from the API
+    DEFAULT_SUPERVISOR_VERSION=$(curl -s "$DEFAULT_SUPERVISOR_VERSION_URL" | sed 's/-[[:xdigit:]]*//')
+    if [ -z "$DEFAULT_SUPERVISOR_VERSION" ] || [ -z "${DEFAULT_SUPERVISOR_VERSION##*xml*}" ]; then
+        log ERROR "Could not get the default supervisor version for this resinOS release, skipping update."
+    else
+        CURRENT_SUPERVISOR_VERSION=$(curl -s "${API_URL}/v2/device(${DEVICEID})?apikey=${APIKEY}" | jq .d[].supervisor_version | tr -d '"')
+        if [ -z "$CURRENT_SUPERVISOR_VERSION" ]; then
+            log ERROR "Could not get current supervisor version, skipping update."
+        else
+            if version_gt "$DEFAULT_SUPERVISOR_VERSION" "$CURRENT_SUPERVISOR_VERSION" ; then
+                log "Supervisor update: retagging from ${CURRENT_SUPERVISOR_VERSION} to ${DEFAULT_SUPERVISOR_VERSION}"
+                # Make sure the API has the version we want to update to, Otherwise we risk that next time
+                # update-resin-supervisor script gets called, the supervisor version will change back to the old one
+                SUPERVISOR_ID=$(curl -s "${API_URL}/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"v${DEFAULT_SUPERVISOR_VERSION}\" and .device_type == \"$SLUG\") | .id // empty")
+                if [ -z "$SUPERVISOR_ID" ]; then
+                    log ERROR "Supervisor update: could not get the supervisor version id for v${DEFAULT_SUPERVISOR_VERSION} from the API ."
+                else
+                    # Tag new supervisor
+                    curl -s "${API_URL}/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"${SUPERVISOR_ID}\"}"
+                fi
+            else
+                log "Supervisor update: no update needed."
+            fi
+        fi
+    fi
 }
 
 #
@@ -368,6 +417,9 @@ while [[ $# > 0 ]]; do
             ;;
         --only-supervisor)
             ONLY_SUPERVISOR=yes
+            ;;
+        --supervisor-release-update)
+            SUPERVISOR_RELEASE_UPDATE=yes
             ;;
         -n|--nolog)
             LOG=no
