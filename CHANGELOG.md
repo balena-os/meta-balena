@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add BeagleBone memory hack to script to resinhup [Gergely]
 * Add busybox patch to fix tar unpacking [Will]
 * Get correct current version in resinhup script [Andrei]
 * Remove resinhup script name heuristics to use with proxy [Gergely]

@@ -196,6 +196,20 @@ function runPreHacks {
         sed --in-place "s|curl --silent --header \"User-Agent:\" --compressed|wget -qO-|" $script_path
         sed --in-place "s|curl -s --compressed|wget -qO-|" $script_path
     fi
+
+    # Earlier BeagleBone releases might fail to update due to memory pressure.
+    # The fix for this was released in v1.24.0, for versions below that apply
+    # changes manually
+    if [ "$SLUG" == "beaglebone-black" ] ||
+       [ "$SLUG" == "beaglebone-green" ] ||
+       [ "$SLUG" == "beaglebone-green-wifi" ]; then
+           if version_gt $CURRENT_HOSTOS_VERSION "1.24.0" || [ "$CURRENT_HOSTOS_VERSION" == "1.24.0" ]; then
+               log "BeagleBone memory hack: no changes required."
+           else
+               log "BeagleBone memory hack: applying memory settings."
+               sysctl -w vm.min_free_kbytes="8192" vm.dirty_ratio="5" vm.dirty_background_ratio="10"
+           fi
+    fi
 }
 
 function runPostHacks {
