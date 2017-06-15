@@ -16,81 +16,76 @@
 
 'use strict';
 
-//const path = require('path');
-//const semver = require('semver');
+const execSync = require('child_process').execSync;
+const exec = require('child_process').exec;
+
+const getAuthor = (commitHash) => {
+  return execSync(`git show --quiet --format="%an" ${commitHash}`, {
+    encoding: 'utf8'
+  }).replace('\n', '');
+};
+
+const isIncrementalCommit = (changeType) => {
+  return Boolean(changeType) && changeType.trim().toLowerCase() !== 'none';
+};
+
+// Update verison info in `meta-resin-common/conf/distro/include/resin-os.inc`
+const metaUpdate = (cwd, version, callback) => {
+  return exec(`sed -i 's/^DISTRO_VERSION = ".*"/DISTRO_VERSION = "${version}/g' meta-resin-common/conf/distro/include/resin-os.inc`, {
+    encoding: 'utf8',
+  }, callback);
+};
 
 module.exports = {
-	defaultInitialVersion: '2.0.3',
-	changelogFile: 'CHANGELOG.md',
-	editChangelog: true,
-	editVersion: true,
-	lowerCaseFooterTags: true,
-	parseFooterTags: true,
-	includeMergeCommits: false,
+  // This setup allows the editing and parsing of footer tags to get version and type information,
+  // as well as ensuring tags of the type 'v<major>.<minor>.<patch>' are used.
+  // It increments in a semver compatible fashion and does not do ano NPM package info update (N/A).
+  editChangelog: true,
+  parseFooterTags: true,
+  getGitReferenceFromVersion: 'v-prefix',
+  incrementVersion: 'semver',
+  updateVersion: metaUpdate,
 
-	getGitReferenceFromVersion: 'v-prefix',
+  // Always add the entry to the top of the Changelog, below the header.
+  addEntryToChangelog: {
+    preset: 'prepend',
+    fromLine: 6
+  },
 
-	addEntryToChangelog: {
-		preset: 'prepend',
-		fromLine: 3
-	},
+  // Only include a commit when there is a footer tag of 'change-type'.
+  // Ensures commits which do not up versions are not included.
+  includeCommitWhen: (commit) => {
+    return isIncrementalCommit(commit.footer['change-type']);
+  },
 
-	includeCommitWhen: (commit) => {
-		return commit.footer['Change-Type'];
-	},
+  // Determine the type from 'change-type:' tag.
+  // Should no explicit change type be made, then no changes are assumed.
+  getIncrementLevelFromCommit: (commit) => {
+    if (isIncrementalCommit(commit.footer['change-type'])) {
+      return commit.footer['change-type'].trim().toLowerCase();
+    }
+  },
 
-	getIncrementLevelFromCommit: (commit) => {
-		return commit.footer['Change-Type'];
-	},
+  // If a 'changelog-entry' tag is found, use this as the subject rather than the
+  // first line of the commit.
+  transformTemplateData: (data) => {
+    data.commits.forEach((commit) => {
+      commit.subject = commit.footer['changelog-entry'] || commit.subject;
+      commit.author = getAuthor(commit.hash);
+    });
 
-	updateVersion: (cwd, version, callback) => {
-		return null;
-		const distroIncPath = path.join(cwd, 'meta-resin-common/conf/distro/include/resin-os.inc');
-		const cleanedVersion = semver.clean(version);
-		if (!cleanedVersion) {
-			return callback(new Error(`Invalid version: ${version}`));
-		}
-		var r = new FileReader();
-		return null;
-	},
+    return data;
+  },
 
-	transformTemplateData: (data) => {
-		data.major = data.commits.filter(function (el) {
-			return el.footer['Change-Type'] == 'major';
-		});
-		data.minor = data.commits.filter(function (el) {
-			return el.footer['Change-Type'] == 'minor';
-		});
-		data.patch = data.commits.filter(function (el) {
-			return el.footer['Change-Type'] == 'patch';
-		});
-		return data;
-	},
-
-	template: ['## v{{version}} - {{moment date "Y-MM-DD"}}',
-		'{{#if major.length}}',
-			'',
-			'### Major changes',
-			'',
-			'{{#each major}}',
-				'- {{subject}}',
-			'{{/each}}',
-		'{{/if}}',
-		'{{#if minor.length}}',
-			'',
-			'### Minor changes',
-			'',
-			'{{#each minor}}',
-				'- {{subject}}',
-			'{{/each}}',
-		'{{/if}}',
-		'{{#if patch.length}}',
-			'',
-			'### Patch changes',
-			'',
-			'{{#each patch}}',
-				'- {{subject}}',
-			'{{/each}}',
-		'{{/if}}',
-	].join('\n')
+  template: [
+    '## v{{version}} - {{moment date "Y-MM-DD"}}',
+    '',
+    '{{#each commits}}',
+    '{{#if this.author}}',
+    '* {{capitalize this.subject}} [{{this.author}}]',
+    '{{else}}',
+    '* {{capitalize this.subject}}',
+    '{{/if}}',
+    '{{/each}}'
+  ].join('\n')
 };
