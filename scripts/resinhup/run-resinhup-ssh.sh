@@ -62,6 +62,9 @@ Options:
   --only-supervisor
         Update only the supervisor.
 
+  --supervisor-release-update
+        Run run-resinhup.sh with --supervisor-release-update . See run-resinhup.sh help for more details.
+
   --no-reboot
         Run run-resinhup.sh with --no-reboot . See run-resinhup.sh help for more details.
 
@@ -265,6 +268,9 @@ while [[ $# > 0 ]]; do
             SUPERVISOR_TAG=$2
             RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-tag $SUPERVISOR_TAG"
             shift
+            ;;
+        --supervisor-release-update)
+            RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-release-update"
             ;;
         --resinhup-tag)
             if [ -z "$2" ]; then

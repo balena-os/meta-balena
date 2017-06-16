@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add flag to automatically supervisor after resinhup [Gergely]
 * Add BeagleBone memory hack to script to resinhup [Gergely]
 * Add busybox patch to fix tar unpacking [Will]
 * Get correct current version in resinhup script [Andrei]
