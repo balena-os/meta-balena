@@ -16,7 +16,7 @@ EOF
 }
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [ $# -gt 0 ]; do
     key=$1
     case $key in
         -h|--help)
@@ -34,7 +34,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-source /usr/sbin/resin-vars --config-path $CONFIG_PATH
+source /usr/sbin/resin-vars --config-path "$CONFIG_PATH"
 
 if [ -z "$CONFIG_PATH" ]; then
     echo "[ERROR] resin-unique-key : Please set CONFIG_PATH environment variable."
@@ -43,15 +43,16 @@ fi
 
 if [ ! -s "$CONFIG_PATH" ]; then
     echo "[INFO] resin-unique-key: Config file is missing. Creating.."
-    echo '{}' > $CONFIG_PATH
+    echo '{}' > "$CONFIG_PATH"
 else
-    read key <<<$(jq -r ".$key_name //empty" $CONFIG_PATH)
+    read key <<<$(jq -r ".$key_name //empty" "$CONFIG_PATH")
 fi
 
 if [ -z "$key" ]; then
     echo "[INFO] resin-unique-key: $key_name missing from config file. Generating..."
     key=$(openssl rand -hex 16)
-    echo $(cat $CONFIG_PATH | jq ".$key_name=\"$key\"") > $CONFIG_PATH
+    generated_json=$(jq ".$key_name=\"$key\"" "$CONFIG_PATH")
+    echo "$generated_json" > "$CONFIG_PATH"
 else
     echo "[INFO] resin-unique-key : Device already has $key_name assigned."
 fi

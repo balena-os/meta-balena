@@ -7,22 +7,22 @@ set -e
 _vpn_port=443
 readonly _vpn_port
 
-if [ ! -f $CONFIG_PATH ]; then
+if [ ! -f "$CONFIG_PATH" ]; then
 	echo "prepare-openvpn: $CONFIG_PATH - No such file."
 	exit 1
 fi
 
 while :; do
-	_uuid=$(jq -r '.uuid' $CONFIG_PATH)
+	_uuid=$(jq -r '.uuid' "$CONFIG_PATH")
 	# If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
-	_device_api_key=$(jq -r '.apiKey // .deviceApiKey' $CONFIG_PATH)
+	_device_api_key=$(jq -r '.apiKey // .deviceApiKey' "$CONFIG_PATH")
 
 	if [ "$_uuid" = "null" ] || [ "$_device_api_key" = "null" ]; then
 		echo "prepare-openvpn: UUID and/or APIKEY missing from config file, VPN cannot connect"
 		sleep 2
 	else
-		echo $_uuid > /var/volatile/vpnfile
-		echo $_device_api_key >> /var/volatile/vpnfile
+		echo "$_uuid" > /var/volatile/vpnfile
+		echo "$_device_api_key" >> /var/volatile/vpnfile
 		break
 	fi
 done

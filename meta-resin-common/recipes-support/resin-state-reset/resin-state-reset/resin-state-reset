@@ -9,8 +9,8 @@ RESIN_STATE_MP=@RESIN_STATE_MP@
 # Takes 2 arguments
 populate() {
     # Re-construct directory structure and populate files
-    if [ -f $2 ]; then
-        mkdir -p -- "$(dirname $1)"
+    if [ -f "$2" ]; then
+        mkdir -p -- "$(dirname "$1")"
         cp -- "$2" "$1"
     elif [ -d "$2" ]; then
         mkdir -p -- "$1"
@@ -35,9 +35,9 @@ IFS=' ' read -ra mounts <<< $MLIST
 
 for m in "${mounts[@]}"
 do
-    WHAT="$(systemctl show "$(basename "$(readlink -f $m)")" -p What | cut -d '=' -f 2)"
-    WHERE="$(systemctl show "$(basename "$(readlink -f $m)")" -p Where | cut -d '=' -f 2)"
-    populate $WHAT $WHERE
+    WHAT="$(systemctl show "$(basename "$(readlink -f "$m")")" -p What | cut -d '=' -f 2)"
+    WHERE="$(systemctl show "$(basename "$(readlink -f "$m")")" -p Where | cut -d '=' -f 2)"
+    populate "$WHAT" "$WHERE"
 done
 
 # Clean after ourselves

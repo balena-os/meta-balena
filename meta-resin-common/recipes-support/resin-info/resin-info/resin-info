@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Clear screen
-clear > /dev/$1
+clear > /dev/"$1"
 echo "
   _____           _         _         
  |  __ \         (_)       (_)      
@@ -9,6 +9,6 @@ echo "
  |  _  // _ \/ __| | '_ \  | |/ _ \ 
  | | \ \  __/\__ \ | | | |_| | (_) |
  |_|  \_\___||___/_|_| |_(_)_|\___/ 
-                                    
- ---------------------------------- " > /dev/$1
-echo "Booted - Check your resin.io dashboard." > /dev/$1
+
+ ---------------------------------- " > /dev/"$1"
+echo "Booted - Check your resin.io dashboard." > /dev/"$1"
