@@ -4,7 +4,7 @@ set -e
 
 DATA_PARTITION=/dev/disk/by-label/resin-data
 
-echo -n "Expand ext4 partition on $DATA_PARTITION... "
+echo -n "Expand ext4 filesystem on $DATA_PARTITION... "
 e2fsck -y $DATA_PARTITION
 resize2fs -f $DATA_PARTITION
 echo "done."
