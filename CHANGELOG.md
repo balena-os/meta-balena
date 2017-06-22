@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add busybox patch to fix tar unpacking [Will]
 * Include support for the RT5572 wireless chipset [Theodor]
 * Add a quirk for /etc/mtab [Will]
 * Switch to resin.io ntp pool [petrosagg]
