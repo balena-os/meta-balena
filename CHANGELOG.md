@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Include support for the RT5572 wireless chipset [Theodor]
 * Add a quirk for /etc/mtab [Will]
 * Switch to resin.io ntp pool [petrosagg]
 * Undefine backwards compatibilty variable, INITRAMFS_TASK [Theodor]
