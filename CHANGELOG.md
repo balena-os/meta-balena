@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Allow downloading a missing supervisor [Will]
 * Add busybox patch to fix tar unpacking [Will]
 * Include support for the RT5572 wireless chipset [Theodor]
 * Add a quirk for /etc/mtab [Will]
