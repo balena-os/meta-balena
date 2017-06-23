@@ -18,6 +18,7 @@ RDEPENDS_${PN} += " \
     resin-btrfs-expand \
     resin-logs \
     resin-extend-expand \
+    dosfstools \
     resin-info \
     resinhup \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
