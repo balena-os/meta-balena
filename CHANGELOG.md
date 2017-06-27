@@ -1,8 +1,8 @@
 Change log
 -----------
 
-* Force ipk packages and include opkg package management in resinOS images [Andrei]
-* Update supervisor to v5.0.0
+* Add prerequisites for ipk packages in resinOS images [Andrei]
+* Update supervisor to v5.0.0 [Pablo]
 * Allow downloading a missing supervisor [Will]
 * Add busybox patch to fix tar unpacking [Will]
 * Include support for the RT5572 wireless chipset [Theodor]
