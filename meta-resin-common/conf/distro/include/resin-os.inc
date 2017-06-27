@@ -61,7 +61,7 @@ IMAGE_CLASSES += "image_types_resin"
 AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
 
 # have build information available on the target under /etc/build
-INHERIT += "image-buildinfo"
+INHERIT += "image-buildinfo resin-sanity"
 
 # we want our custom version with no TCL dependency
 PREFERRED_VERSION_usb-modeswitch ?= "2.2.5"
@@ -75,3 +75,6 @@ INITRAMFS_IMAGE = "resin-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
+
+# resinOS defaults to ipk packages
+PACKAGE_CLASSES ?= "package_ipk"

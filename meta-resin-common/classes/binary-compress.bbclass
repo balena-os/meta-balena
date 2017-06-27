@@ -26,4 +26,4 @@ find_and_compress() {
     fi
 }
 
-do_package[postfuncs] += "find_and_compress"
+PACKAGEBUILDPKGD += "find_and_compress"
