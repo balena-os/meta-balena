@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# iptables configuration for redsocks
+#
+
+set -e
+
+. /usr/sbin/resin-vars
+
+if [ ! -f "$CONFIG_PATH" ]; then
+	echo "resin-proxy-config: $CONFIG_PATH does not exist."
+	exit 1
+else
+	echo "resin-proxy-config: Found config.json in $CONFIG_PATH ."
+fi
+
+REDSOCKSCONF=${CONFIG_PATH%/*}/system-proxy/redsocks.conf
+NOPROXYFILE=${CONFIG_PATH%/*}/system-proxy/no_proxy
+
+# Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
+iptables -t nat -D OUTPUT -p tcp -j REDSOCKS || true
+iptables -t nat -F REDSOCKS || true
+iptables -t nat -X REDSOCKS || true
+
+if [ ! -f "$REDSOCKSCONF" ]; then
+	echo "resin-proxy-config: No proxy configuration found, skipping."
+	exit 0
+fi
+
+# Redsocks needs a redsocks user to work properly with our setup
+id -u redsocks > /dev/null 2>&1 || (echo "ERROR: redsocks user doesn't exist" && exit 1)
+
+# Set up iptables chain for redsocks
+iptables -t nat -N REDSOCKS
+
+# Traffic coming from redsocks should not go back to redsocks...
+iptables -t nat -A REDSOCKS -m owner --uid-owner redsocks -j RETURN
+
+# Use every line in the no_proxy file as an IP/subnet to not redirect through redsocks
+if [ -f "$NOPROXYFILE" ]; then
+	while read -r line; do
+		if [ ! -z "$line" ]; then
+			iptables -t nat -A REDSOCKS -d "$line" -j RETURN
+		fi
+	done < "$NOPROXYFILE"
+fi
+
+iptables -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN
+iptables -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN
+iptables -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN
+iptables -t nat -A REDSOCKS -d 169.254.0.0/16 -j RETURN
+iptables -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN
+iptables -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN
+iptables -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN
+iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
+iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 12345
+iptables -t nat -A OUTPUT -p tcp -j REDSOCKS

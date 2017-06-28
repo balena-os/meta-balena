@@ -80,6 +80,7 @@ RESIN_CONFIGS ?= " \
     governor \
     mbim \
     qmi \
+    misc \
     "
 
 #
@@ -342,6 +343,11 @@ RESIN_CONFIGS[mbim] = " \
 # support for qmi cell modems
 RESIN_CONFIGS[qmi] = " \
     CONFIG_USB_NET_QMI_WWAN=m \
+    "
+
+# various other configurations
+RESIN_CONFIGS[misc] = " \
+    CONFIG_NF_NAT_REDIRECT=m \
     "
 
 ###########

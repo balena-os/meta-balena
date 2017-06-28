@@ -179,6 +179,15 @@ if [ -d "$CONFIG_NM" ]; then
 else
     inform "No system connections found to transfer on the internal device."
 fi
+# Copy proxy configuration files
+CONFIG_PROXY="${CONFIG_PATH%/*}/system-proxy/"
+if [ -d "$CONFIG_PROXY" ]; then
+    inform "Transferring proxy configuration on the internal device."
+    rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-proxy/"
+    cp -rvf "$CONFIG_PROXY" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
+else
+    inform "No proxy configuration found to transfer on the internal device."
+fi
 # Copy bootloader config file
 if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]] && [[ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
         if [[ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then

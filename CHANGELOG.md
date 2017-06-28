@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Add support for transparent proxy redirection using redsocks [Pablo]
 * Add prerequisites for ipk packages in resinOS images [Andrei]
 * Update supervisor to v5.0.0 [Pablo]
 * Allow downloading a missing supervisor [Will]
