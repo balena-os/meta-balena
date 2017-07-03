@@ -30,6 +30,7 @@ SRC_URI = "\
   file://0003-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
   file://0004-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
   file://0005-daemon-cleanup-as-early-as-possible.patch \
+  file://0006-container-make-sure-config-on-disk-has-a-valid-Confi.patch \
 "
 
 # Apache-2.0 for docker

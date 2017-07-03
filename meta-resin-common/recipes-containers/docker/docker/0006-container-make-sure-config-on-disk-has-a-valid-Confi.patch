@@ -1,0 +1,35 @@
+From 39e7dac6723622a5a0d025d8065104649b7df2f7 Mon Sep 17 00:00:00 2001
+From: Petros Angelatos <petrosagg@gmail.com>
+Date: Sat, 1 Jul 2017 18:39:13 -0700
+Subject: [PATCH] container: make sure config on disk has a valid Config
+
+We've seen cases where container config on disk is a valid JSON but
+misses the Config object. Due to the way docker loads it in memory, it
+can cause a nul pointer exception.
+
+This patch checks for that and doesn't load the container in this case
+
+Upstream-Status: Investigating github.com/moby/moby#33018
+Signed-off-by: Petros Angelatos <petrosagg@gmail.com>
+---
+ container/container.go | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/container/container.go b/container/container.go
+index fc4fe2717f..39a40fb6a7 100644
+--- a/container/container.go
++++ b/container/container.go
+@@ -139,6 +139,10 @@ func (container *Container) FromDisk() error {
+ 		return err
+ 	}
+ 
++	if container.Config == nil {
++		return fmt.Errorf("Invalid container config.json, missing Config property")
++	}
++
+ 	if err := label.ReserveLabel(container.ProcessLabel); err != nil {
+ 		return err
+ 	}
+-- 
+2.13.1
+
