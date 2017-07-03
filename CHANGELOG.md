@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Add Dockerfile template and entry.sh for running the generated tar as a Docker container [Praneeth]
+
 # v2.0.7 - 2017-06-28
 
 * Add support for transparent proxy redirection using redsocks [Pablo]
