@@ -452,6 +452,7 @@ fi
 SLUG=$(jq -r .deviceType $CONFIGJSON)
 APIKEY=$(jq -r .apiKey $CONFIGJSON)
 DEVICEID=$(jq -r .deviceId $CONFIGJSON)
+API_ENDPOINT=$(jq -r .apiEndpoint $CONFIGJSON)
 
 if [ -z $SLUG ]; then
     log ERROR "Could not get the SLUG."
@@ -492,11 +493,11 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     # Before doing anything make sure the API has the version we want to update to
     # Otherwise we risk that next time update-resin-supervisor script gets called,
     # the supervisor version will change back to the old one
-    supervisor_id=`curl -s "https://api.resin.io/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"$UPDATER_SUPERVISOR_TAG\" and .device_type == \"$SLUG\") | .id // empty"`
+    supervisor_id=`curl -s "${API_ENDPOINT}/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"$UPDATER_SUPERVISOR_TAG\" and .device_type == \"$SLUG\") | .id // empty"`
     if [ -z "$supervisor_id" ]; then
         log ERROR "Could not get the supervisor version id ($UPDATER_SUPERVISOR_TAG) from the API ."
     fi
-    curl -s "https://api.resin.io/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$supervisor_id\"}" > /dev/null 2>&1
+    curl -s "${API_ENDPOINT}/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$supervisor_id\"}" > /dev/null 2>&1
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$SUPERVISOR_REGISTRY" ]; then
