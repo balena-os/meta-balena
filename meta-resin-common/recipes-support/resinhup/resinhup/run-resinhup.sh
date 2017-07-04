@@ -424,8 +424,8 @@ fi
 
 /usr/bin/resin-device-progress --percentage 10 --state "ResinOS: Preparing update..."
 
-# Check that HostOS version was provided
-if [ -z "$HOSTOS_VERSION" ]; then
+# Check that HostOS version was provided, and not only supervisor update was requested
+if [ -z "$HOSTOS_VERSION" -a -z "$ONLY_SUPERVISOR" ]; then
     log ERROR "--hostos-version is required."
 fi
 
@@ -528,9 +528,13 @@ else
     log "Supervisor update not requested through arguments ."
 fi
 
-# That's it if we only wanted supervisor update
+# If we only wanted supervisor update, then this is the end of the resinhup process.
+# Since the supervisor at this stage should be down, start it back up again
+# and that will also clear the progress bar so do not have to do that explicitly.
 if [ "$ONLY_SUPERVISOR" == "yes" ]; then
     log "Update only of the supervisor requested."
+    log "Starting up supervisor."
+    systemctl start resin-supervisor > /dev/null 2>&1
     exit 0
 fi
 
