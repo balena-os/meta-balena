@@ -1,6 +1,17 @@
 Change log
 -----------
 
+# v2.0.8 - 2017-07-04
+
+* Resin-vars: Fetch all the vars in resin-vars [Pagan Gazzard]
+* Add comment in supervisor.conf for clarity [Petros Angelatos]
+* Prevent supervisor from killing itself [Pablo Carranza Velez]
+* Store both image and tag in the temporary supervisor.conf [Pablo Carranza Velez]
+* Use current changelog format with versionist [Andrei Gherzan]
+* Update supervisor to v5.1.0 and use aarch64-supervisor for aarch64 [Pablo Carranza Velez]
+* Validate docker config from disk to avoid panicing [Petros Angelatos]
+* Versionist: add support for full versionist use [Gergely Imreh]
+
 # v2.0.7 - 2017-06-28
 
 * Add support for transparent proxy redirection using redsocks [Pablo]
