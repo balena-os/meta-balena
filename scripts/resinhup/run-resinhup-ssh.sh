@@ -192,7 +192,7 @@ $SCRIPTPATH/../../meta-resin-common/recipes-support/resin-device-progress/resin-
 STARTTIME=$(date +%s)
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [[ $# -gt 0 ]]; do
     arg="$1"
 
     case $arg in

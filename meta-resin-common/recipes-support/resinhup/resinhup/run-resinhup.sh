@@ -317,7 +317,7 @@ function setCurrentVersion() {
 STARTTIME=$(date +%s)
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [[ $# -gt 0 ]]; do
     arg="$1"
 
     case $arg in
