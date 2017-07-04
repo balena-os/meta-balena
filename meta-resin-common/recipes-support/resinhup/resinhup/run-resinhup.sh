@@ -417,7 +417,7 @@ if [ "$LOG" == "yes" ]; then
 fi
 
 # Determine current host OS version
-setCurrentVersion()
+setCurrentVersion
 if [ -z "$CURRENT_HOSTOS_VERSION" ]; then
 	log ERROR "Can't determine current host OS version."
 fi
