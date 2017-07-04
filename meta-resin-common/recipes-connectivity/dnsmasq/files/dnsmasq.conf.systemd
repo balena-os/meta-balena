@@ -1,6 +1,6 @@
 [Unit]
-Wants=docker.service resin-net-config.service
-After=docker.service resin-net-config.service
+Wants=resin-net-config.service
+After=resin-net-config.service
 
 [Service]
 OOMScoreAdjust=-1000

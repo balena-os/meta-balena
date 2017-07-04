@@ -11,12 +11,13 @@ FILES_${PN} = "${bindir}"
 
 RDEPENDS_${PN} = " \
     bash \
-    jq \
-    systemd \
-    docker \
-    coreutils \
-    resin-device-progress \
     busybox \
+    coreutils \
+    docker \
+    e2fsprogs-tune2fs \
+    jq \
+    resin-device-progress \
+    systemd \
     "
 
 do_install() {

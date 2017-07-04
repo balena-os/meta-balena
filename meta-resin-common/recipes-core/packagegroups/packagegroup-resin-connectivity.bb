@@ -22,6 +22,7 @@ CONNECTIVITY_PACKAGES = " \
     crda \
     dnsmasq \
     openvpn \
+    resin-proxy-config \
     usb-modeswitch \
     wireless-tools \
     "

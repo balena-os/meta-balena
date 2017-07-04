@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e
+
+TARGET_GROUP=resin-bind.target
+RESIN_STATE_MP=@RESIN_STATE_MP@
+
+#
+# Mirrors path $1 with path $2
+# Takes 2 arguments
+populate() {
+    # Re-construct directory structure and populate files
+    if [ -f "$2" ]; then
+        mkdir -p -- "$(dirname "$1")"
+        cp -- "$2" "$1"
+    elif [ -d "$2" ]; then
+        mkdir -p -- "$1"
+        find "$2" \( -type f -o -type l \) -exec cp -av {} "$1" +
+    else
+        mkdir -p -- "$1"
+    fi
+}
+
+# Create rollback data
+if [ -d ${RESIN_STATE_MP}/root-overlay ]; then
+    mv ${RESIN_STATE_MP}/root-overlay ${RESIN_STATE_MP}/rollback || (echo "[ERROR] Unable to backup data. Refusing to reset partition" ; exit 1)
+fi
+
+# Purge data
+rm -rf ${RESIN_STATE_MP}/root-overlay
+
+# Re-populate resin-state with factory state
+MLIST=$(find /etc/systemd/system/${TARGET_GROUP}.wants -name "*.mount")
+
+IFS=' ' read -ra mounts <<< $MLIST
+
+for m in "${mounts[@]}"
+do
+    WHAT="$(systemctl show "$(basename "$(readlink -f "$m")")" -p What | cut -d '=' -f 2)"
+    WHERE="$(systemctl show "$(basename "$(readlink -f "$m")")" -p Where | cut -d '=' -f 2)"
+    populate "$WHAT" "$WHERE"
+done
+
+# Clean after ourselves
+rm -rf ${RESIN_STATE_MP}/rollback

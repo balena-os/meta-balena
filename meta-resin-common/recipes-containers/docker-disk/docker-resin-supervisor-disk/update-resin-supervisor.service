@@ -2,7 +2,7 @@
 Description=Resin supervisor updater
 Requires=\
     docker.service \
-    etc-supervisor.conf.mount \
+    etc-resin\x2dsupervisor.mount \
     tmp.mount
 Wants=\
     mnt-boot.mount \
@@ -11,7 +11,7 @@ After=\
     docker.service \
     tmp.mount \
     mnt-boot.mount \
-    etc-supervisor.conf.mount \
+    etc-resin\x2dsupervisor.mount \
     resin-supervisor.service
 
 [Service]

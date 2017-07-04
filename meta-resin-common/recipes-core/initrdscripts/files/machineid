@@ -1,0 +1,25 @@
+#!/bin/sh
+
+machineid_enabled() {
+    # On flasher we don't need persistent machine-id
+    if [ -h /dev/disk/by-label/flash-boot ]; then
+        echo "[INFO] Flasher detected. Avoiding persistent machine-id."
+        return 1
+    fi
+
+    if ! mount -t ext4 /dev/disk/by-label/resin-state "$ROOTFS_DIR"/mnt/state; then
+        echo "[ERROR] Not able to mount resin-state, machine-id will not be persistent"
+        return 1
+    fi
+    return 0
+}
+
+machineid_run() {
+    # setup the environment
+    if [ ! -e "$ROOTFS_DIR"/mnt/state/machine-id ]; then
+        touch "$ROOTFS_DIR"/mnt/state/machine-id
+    fi
+
+    # Mount machine-id
+    mount -o bind "$ROOTFS_DIR"/mnt/state/machine-id "$ROOTFS_DIR"/etc/machine-id
+}

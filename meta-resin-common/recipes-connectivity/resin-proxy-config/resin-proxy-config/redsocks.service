@@ -1,0 +1,14 @@
+[Unit]
+Description=redsocks transparent proxy redirector
+Requires=mnt-boot.mount resin-proxy-config.service
+After=mnt-boot.mount resin-proxy-config.service dnsmasq.service
+ConditionPathExists=/mnt/boot/system-proxy/redsocks.conf
+
+[Service]
+User=redsocks
+ExecStart=@BINDIR@/redsocks -c /mnt/boot/system-proxy/redsocks.conf
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target

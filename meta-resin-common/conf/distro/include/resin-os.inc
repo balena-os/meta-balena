@@ -3,7 +3,7 @@ require conf/distro/poky.conf
 
 DISTRO = "resin-os"
 DISTRO_NAME = "Resin OS"
-DISTRO_VERSION = "2.0-beta.1"
+DISTRO_VERSION = "2.0.8"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''
@@ -55,13 +55,26 @@ PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
 
 SPLASH = "plymouth"
 
-IMAGE_CLASSES += "image_types_resin image_types_resin_ubi host-update-resin"
+IMAGE_CLASSES += "image_types_resin image_types_resin_ubi"
 
 # Define the URL where resin exposes source or prebuilt packages
 AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
 
 # have build information available on the target under /etc/build
-INHERIT += "image-buildinfo"
+INHERIT += "image-buildinfo resin-sanity"
 
 # we want our custom version with no TCL dependency
 PREFERRED_VERSION_usb-modeswitch ?= "2.2.5"
+
+# Identification file flags
+RESIN_IMAGE_FLAG_FILE = "resin-image"
+RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
+
+# Initramfs
+INITRAMFS_IMAGE = "resin-image-initramfs"
+INITRAMFS_IMAGE_BUNDLE = "1"
+KERNEL_INITRAMFS = "-initramfs"
+INITRAMFS_TASK = ""
+
+# resinOS defaults to ipk packages
+PACKAGE_CLASSES ?= "package_ipk"

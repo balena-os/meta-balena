@@ -1,0 +1,32 @@
+#!/bin/sh
+
+FREESPACE_LIMIT=10
+datapart=$(readlink -f /dev/disk/by-label/resin-data)
+datadev=$(lsblk $datapart -n -o PKNAME)
+
+resindataexpander_enabled() {
+    # On flasher avoid expanding partition
+    if [ -h /dev/disk/by-label/flash-boot ]; then
+        echo "[INFO] Flasher detected. Avoiding expand partition mechanism."
+        return 1
+    fi
+
+    for freespace in $(parted -m /dev/$datadev unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
+        if [ $(echo $freespace \> $FREESPACE_LIMIT | bc -l) == "1" ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+resindataexpander_run() {
+    info "resindataexpander: Expand extended partition... "
+    parted -s /dev/$datadev -- resizepart 4 -1s
+    info "resindataexpander: Finished expanding extended partition."
+    info "resindataexpander: Expand data partition... "
+    parted -s /dev/$datadev -- resizepart 6 -1s
+    info "resindataexpander: Finished expanding data partition."
+
+    partprobe
+    sync
+}

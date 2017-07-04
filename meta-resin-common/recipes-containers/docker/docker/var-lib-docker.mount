@@ -1,7 +1,7 @@
 [Unit]
 Description=Docker data mountpoint
-Requires=mnt-data.mount
-After=mnt-data.mount
+Requires=mnt-data.mount var-volatile-lib.service
+After=mnt-data.mount var-volatile-lib.service
 
 [Mount]
 What=/mnt/data/docker

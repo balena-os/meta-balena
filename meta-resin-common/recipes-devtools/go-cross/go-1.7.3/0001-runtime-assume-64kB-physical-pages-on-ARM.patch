@@ -1,0 +1,59 @@
+From d7de8b6d231289b7a6b205508c6f02a5a475cc84 Mon Sep 17 00:00:00 2001
+From: Austin Clements <austin@google.com>
+Date: Mon, 18 Jul 2016 12:32:29 -0400
+Subject: [PATCH 1/5] runtime: assume 64kB physical pages on ARM
+
+Currently we assume the physical page size on ARM is 4kB. While this
+is usually true, the architecture also supports 16kB and 64kB physical
+pages, and Linux (and possibly other OSes) can be configured to use
+these larger page sizes.
+
+With Go 1.6, such a configuration could potentially run, but generally
+resulted in memory corruption or random panics. With current master,
+this configuration will cause the runtime to panic during init on
+Linux when it checks the true physical page size (and will still cause
+corruption or panics on other OSes).
+
+However, the assumed physical page size only has to be a multiple of
+the true physical page size, the scavenger can now deal with large
+physical page sizes, and the rest of the runtime can deal with a
+larger assumed physical page size than the true size. Hence, there's
+little disadvantage to conservatively setting the assumed physical
+page size to 64kB on ARM.
+
+This may result in some extra memory use, since we can only return
+memory at multiples of the assumed physical page size. However, it is
+a simple change that should make Go run on systems configured for
+larger page sizes. The following commits will make the runtime query
+the actual physical page size from the OS, but this is a simple step
+there.
+
+Updates #12480.
+
+Change-Id: I851829595bc9e0c76235c847a7b5f62ad82b5302
+Reviewed-on: https://go-review.googlesource.com/25021
+Run-TryBot: Austin Clements <austin@google.com>
+TryBot-Result: Gobot Gobot <gobot@golang.org>
+Reviewed-by: Minux Ma <minux@golang.org>
+
+Upstream-Status: Backport
+---
+ src/runtime/internal/sys/arch_arm.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/runtime/internal/sys/arch_arm.go b/src/runtime/internal/sys/arch_arm.go
+index f90f52d..880494a 100644
+--- a/src/runtime/internal/sys/arch_arm.go
++++ b/src/runtime/internal/sys/arch_arm.go
+@@ -8,7 +8,7 @@ const (
+ 	ArchFamily    = ARM
+ 	BigEndian     = 0
+ 	CacheLineSize = 32
+-	PhysPageSize  = 65536*GoosNacl + 4096*(1-GoosNacl)
++	PhysPageSize  = 65536
+ 	PCQuantum     = 4
+ 	Int64Align    = 4
+ 	HugePageSize  = 0
+-- 
+2.10.2
+

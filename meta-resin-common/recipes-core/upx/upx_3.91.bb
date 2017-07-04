@@ -4,6 +4,7 @@ SUMMARY = "Ultimate executable compressor."
 SRC_URI = " \
     http://upx.sourceforge.net/download/${PN}-${PV}-src.tar.bz2 \
     http://downloads.sourceforge.net/sevenzip/lzma465.tar.bz2;name=lzma;subdir=lzma-465 \
+    file://fix_indentation_for_gcc6.patch \
     "
 
 SRC_URI[md5sum] = "c6d0b3ea2ecb28cb8031d59a4b087a43"

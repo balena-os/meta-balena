@@ -1,28 +1,25 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+RESIN_FLAG_FILE = "${RESIN_IMAGE_FLAG_FILE}"
 inherit image-resin
 
 #
-# Set size of rootfs at a fixed value of maximum 300MiB
+# The total space taken by resin is 700MiB (which includes all partitions but
+# resin-data)
 #
-
-# keep this aligned to IMAGE_ROOTFS_ALIGNMENT
-IMAGE_ROOTFS_SIZE = "303104"
-
-# No overhead factor
+IMAGE_ROOTFS_SIZE = "315392"
 IMAGE_OVERHEAD_FACTOR = "1.0"
-
-# No extra space
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
-
 # core-image-minimal adds 4M to IMAGE_ROOTFS_EXTRA_SPACE
-# Make IMAGE_ROOTFS_MAXSIZE = IMAGE_ROOTFS_SIZE + 4M
-IMAGE_ROOTFS_MAXSIZE = "307200"
-
+python () {
+    image_rootfs_size = d.getVar('IMAGE_ROOTFS_SIZE', True)
+    image_rootfs_maxsize = int(image_rootfs_size) + 4 * 1024
+    d.setVar('IMAGE_ROOTFS_MAXSIZE', image_rootfs_maxsize)
+}
 
 # Generated resinhup-tar based on RESINHUP variable
-IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'resinhup-tar', '', d)}"
+IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
@@ -31,17 +28,16 @@ IMAGE_FEATURES_append = " \
     "
 
 IMAGE_INSTALL_append = " \
+    packagegroup-resin-debugtools \
     packagegroup-resin-connectivity \
     packagegroup-resin \
     "
 
 generate_rootfs_fingerprints () {
-    IGNORE_FILES=" \
-        -not -name machine-id \
-        -not -name resin-root.fingerprint \
-        -not -name ld.so.cache \
-        -not -name aux-cache"
-    find ${IMAGE_ROOTFS} -xdev -type f $IGNORE_FILES -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | sort -k2 > ${IMAGE_ROOTFS}/${RESIN_ROOT_FS_LABEL}.${FINGERPRINT_EXT}
+    find ${IMAGE_ROOTFS} -xdev -type f \
+        -not -name ${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT} \
+        -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | \
+        sort -k2 > ${IMAGE_ROOTFS}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
 }
 
 generate_hostos_version () {
@@ -58,3 +54,6 @@ RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-typ
 
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
+
+# Resin image flag file
+RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_IMAGE_FLAG_FILE}:/${RESIN_IMAGE_FLAG_FILE}"

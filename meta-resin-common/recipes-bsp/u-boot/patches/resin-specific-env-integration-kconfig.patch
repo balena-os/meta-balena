@@ -1,0 +1,40 @@
+From 40731af98d8a1ad6a2c8dfb4ee9641ecb90dfe4c Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Wed, 1 Mar 2017 23:53:02 +0100
+Subject: Integrate machine independent resin environment configuration
+
+This patch integrates resin default environment configuration in an u-boot which
+has a version with Kconfig support.
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Upstream-Status: Inappropriate [configuration]
+
+---
+ include/env_default.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/env_default.h b/include/env_default.h
+index ea6704a..09cd81a 100644
+--- a/include/env_default.h
++++ b/include/env_default.h
+@@ -10,6 +10,8 @@
+ 
+ #include <env_callback.h>
+ 
++#include <env_resin.h>
++
+ #ifdef DEFAULT_ENV_INSTANCE_EMBEDDED
+ env_t environment __PPCENV__ = {
+ 	ENV_CRC,	/* CRC Sum */
+@@ -22,6 +24,7 @@ static char default_environment[] = {
+ #else
+ const uchar default_environment[] = {
+ #endif
++    RESIN_ENV
+ #ifdef	CONFIG_ENV_CALLBACK_LIST_DEFAULT
+ 	ENV_CALLBACK_VAR "=" CONFIG_ENV_CALLBACK_LIST_DEFAULT "\0"
+ #endif
+-- 
+2.7.4
+

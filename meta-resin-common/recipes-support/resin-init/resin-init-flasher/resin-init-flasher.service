@@ -6,8 +6,7 @@ Requires=\
 Wants=resin-device-register.service
 After=\
     mnt-boot.mount \
-    mnt-bootorig-config.json.mount \
-    resin-device-register.service
+    mnt-bootorig-config.json.mount
 
 [Service]
 Type=oneshot

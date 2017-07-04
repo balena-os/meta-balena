@@ -1,5 +1,7 @@
 #!/bin/bash
 
+LOG_FILE=/var/log/register-device-curl.log
+
 help () {
     cat << EOF
 Register a new resin device
@@ -16,7 +18,7 @@ EOF
 }
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [ $# -gt 0 ]; do
     key=$1
     case $key in
         -h|--help)
@@ -34,7 +36,7 @@ while [[ $# > 0 ]]; do
     shift
 done
 
-source /usr/sbin/resin-vars $RESIN_VARS_ARGS
+source /usr/sbin/resin-vars "$RESIN_VARS_ARGS"
 
 if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
     echo "[ERROR] resin-device-register : Please set API_ENDPOINT and CONFIG_PATH environment variables."
@@ -42,26 +44,27 @@ if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
 fi
 
 while true; do
-    if curl -sL -w '%{http_code}' $API_ENDPOINT/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
+    if curl -sL -w '%{http_code}' "$API_ENDPOINT"/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
     then
-        read api_key user_id application_id device_type uuid <<<$(jq -r '.apiKey,.userId,.applicationId,.deviceType // "raspberry-pi",.uuid' $CONFIG_PATH)
+        if [ -n "${REGISTERED_AT}" ]; then
+            echo "[INFO] resin-device-register : Device already registered."
+            exit 0
+        fi
 
         status_code=$(curl -s -X POST -w "%{http_code}" \
-                    -o /var/log/register-device-curl.log \
-                    -d "user=$user_id" \
-                    -d "application=$application_id" \
-                    -d "uuid=$uuid"  \
-                    --data-urlencode "device_type=$device_type" \
-                    "$API_ENDPOINT/ewa/device?apikey=$api_key")
+                    --output $LOG_FILE \
+                    --data-urlencode "user=$USER_ID" \
+                    --data-urlencode "application=$APPLICATION_ID" \
+                    --data-urlencode "device_type=$DEVICE_TYPE" \
+                    --data-urlencode "uuid=$UUID" \
+                    --data-urlencode "api_key=$DEVICE_API_KEY" \
+                    "$API_ENDPOINT/device/register?apikey=$PROVISIONING_API_KEY")
 
         if [ "$status_code" -eq 201 ]; then
-            device_id=$(jq -r '.id' /var/log/register-device-curl.log)
-            config_json=`cat $CONFIG_PATH`
-            echo $config_json | jq ".registered_at=\"`date +%s`\"|.deviceId=\"$device_id\"" > $CONFIG_PATH
+            device_id=$(jq -r '.id' $LOG_FILE)
+            config_json=$(cat "$CONFIG_PATH")
+            echo "$config_json" | jq ".registered_at=\"$(date +%s)\"|.deviceId=\"$device_id\"" > "$CONFIG_PATH"
             echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $uuid."
-            exit 0
-        elif [ "$status_code" -eq 409 ]; then
-            echo "[INFO] resin-device-register : Device already registered."
             exit 0
         else
             echo "[ERROR] resin-device-register : Failed to register device. Status code: $status_code"

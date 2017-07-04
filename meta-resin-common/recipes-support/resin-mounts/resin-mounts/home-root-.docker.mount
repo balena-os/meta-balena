@@ -1,0 +1,13 @@
+[Unit]
+Description=OpenSSL random state bind mount
+Requires=mnt-state.mount resin-state-reset.service
+After=mnt-state.mount resin-state-reset.service
+
+[Mount]
+What=/mnt/state/root-overlay/home/root/.docker
+Where=/home/root/.docker
+Type=none
+Options=bind
+
+[Install]
+WantedBy=resin-bind.target

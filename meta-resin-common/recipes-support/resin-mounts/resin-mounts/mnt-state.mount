@@ -1,0 +1,13 @@
+[Unit]
+Description=Resin state partition mountpoint
+DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
+
+[Mount]
+What=/dev/disk/by-label/resin-state
+Where=/mnt/state
+Type=ubifs
+
+[Install]
+WantedBy=multi-user.target

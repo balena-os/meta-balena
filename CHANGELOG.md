@@ -1,7 +1,223 @@
 Change log
 -----------
 
+# v2.0.8 - 2017-07-04
+
+* Resin-vars: Fetch all the vars in resin-vars [Pagan Gazzard]
+* Add comment in supervisor.conf for clarity [Petros Angelatos]
+* Prevent supervisor from killing itself [Pablo Carranza Velez]
+* Store both image and tag in the temporary supervisor.conf [Pablo Carranza Velez]
+* Use current changelog format with versionist [Andrei Gherzan]
+* Update supervisor to v5.1.0 and use aarch64-supervisor for aarch64 [Pablo Carranza Velez]
+* Validate docker config from disk to avoid panicing [Petros Angelatos]
+* Versionist: add support for full versionist use [Gergely Imreh]
+
+# v2.0.7 - 2017-06-28
+
+* Add support for transparent proxy redirection using redsocks [Pablo]
+* Add prerequisites for ipk packages in resinOS images [Andrei]
+* Update supervisor to v5.0.0 [Pablo]
+* Allow downloading a missing supervisor [Will]
+* Add busybox patch to fix tar unpacking [Will]
+* Include support for the RT5572 wireless chipset [Theodor]
+* Add a quirk for /etc/mtab [Will]
+* Switch to resin.io ntp pool [petrosagg]
+* Undefine backwards compatibilty variable, INITRAMFS_TASK [Theodor]
+* Enable CONFIG_KEYS, docker 17 requirment [Theodor]
+* Update NetworkManager to 1.8.0 [Andrei]
+* Update supervisor to v4.3.1 [Andrei]
+* Set NetworkManager connection attempts to infinity [petrosagg]
+* Update Docker to 17.03.1 [Theodor]
+* Include fsck.vfat in resinOS [Andrei]
+
+# v2.0.6 - 2017-06-06
+
+* Update supervisor to v4.2.4 [Pablo]
+
+# v2.0.5 - 2017-06-02
+
+* Fix dependencies for mount service in /var/lib [Andrei]
+* Various build fixes when using other package formats like ipk [Andrei]
+* Define IMAGE_NAME_SUFFIX, needed for resinhup, for Yocto versions older than Morty [Florin]
+* Add support for modifying the regulatory domain for wifi interfaces [Michal]
+* Add support for qmi and mbim cell modems [Joshua]
+* Disable all password logins on production images, rather than just root logins - this gets rid of the password prompt dialog that users have seen. [Page]
+
+# v2.0.4 - 2017-05-16
+
+* Enable the resin-uboot implementation to also boot flasher images from USB media [Florin]
+* Use supervisor tag as supervisor recipe PV [Andrei}
+
+# v2.0.3 - 2017-05-10
+
+* Copy resinOS_uEnv.txt from external to internal media [Theodor]
+* Fix resin-state-conf copying mechanism [Theodor]
+* Don't fingerprint config.json [Andrei]
+* Prevent resin-unique-key from running concurrently [Michal]
+* Add iwlwifi 8265 firmware [Florin]
+* Disable coredumps [Jon]
+* Add bind mounts for systemd persistent data [Jon]
+* Update supervisor to v4.2.2 [Page]
+* Explicitly set CONFIG_HIDRAW=y [Michal]
+* Fix symlink creation in resinhup_backwards_compatible_link() [Michal]
+
+# v2.0.2 - 2017-04-24
+
+* Fix build of kernel-modules-headers on kernel 4.8+ [Andrei]
+* Use ondemand as default governor [Andrei]
+* Do not force fsck on the data partition [Theodor]
+* Switch to the new device register endpoint which exchanges the provisioning key for a device api key [Page]
+* Switch to using a device api key for api calls and vpn authentication if it is present [Page]
+
+# v2.0.1 - 2017-04-19
+
+* Don't use getty generator even for development images [Andrei]
+* Fix resinos-img image compression [Theodor]
+* Revert 05288ce19781f9ab3b8c528f49537516b58db050 [Theodor]
+* Update NetworkManager to version 1.6.2 [Florin]
+* Update supervisor to v4.1.2 [Pablo]
+* Add aufs hashes for more kernel versions [fboudra]
+* Calculate IMAGE_ROOTFS_MAXSIZE dynamically [fboudra]
+* Don't attempt UPX compression on aarch64 [fboudra]
+* Tidy arch detection in kernel-modules-headers [fboudra]
+
+# v2.0.0 - 2017-03-31
+
+# v2.0.0-rc6 - 2017-03-31
+
+* Update supervisor to v4.1.1 [Pablo]
+* Replace echo with info in the resindataexpander initramfs script [Florin]
+* Don't stop plymouth at boot [Andrei]
+
+# v2.0.0-rc5 - 2017-03-24
+
+* Fix busybox switch_root when console=null [Andrei]
+* Make the initrams framework also parse root=LABEL= params [Florin]
+* Fix audit disable dependencies [Theodor]
+* Properly implement the ro_rootfs script [Theodor]
+* Make rootfs identical to resinhup packages [Andrei]
+
+# v2.0.0-rc4 - 2017-03-17
+
+* Enable by-partuuid symlinks for our DOS partition scheme also for Poky Jethro and Poky Krogoth based boards [Florin]
+* Ship with e2fsprogs-tune2fs [Michal]
+
+# v2.0.0-rc3 - 2017-03-14
+
+* Fix flasher detection in initramfs scripts [Andrei]
+* Fix initramfs-framework build on morty [Andrei]
+
+# v2.0.0-rc2 - 2017-03-14
+
+* Fix initramfs-framework for non-morty boards [Theodor]
+* Fix flasher when it might corrupt the internal device [Andrei]
+
+# v2.0.0-rc1 - 2017-03-10
+
+* Use stateless flasher partitions [Andrei]
+* Refactor persistent logging [Theodor]
+* Add support for RDT promote [Andrei]
+* Fix image flag files on non uboot boards [Andrei]
+* Update supervisor to v4.0.0 [Pablo]
+* Change "test -z" with "test -n" in the U-Boot MMC scanning procedure [Florin]
+* Implement MMC scanning for U-Boot [Andrei]
+* Resin-info should not be present in our production images [Theodor]
+* Implement resin-uboot based on v2.0 specification [Andrei]
+
+# v2.0.0-beta13 - 2017-02-27
+
+* Fix a compile error on krogoth boards [Andrei]
+
+# v2.0.0-beta12 - 2017-02-27
+
+* Disable audit subsystem [Theodor]
+* Run openvpn on flasher too [Andrei]
+* Add VARIANT/VARIANT_ID in os-release [Andrei]
+* Modify partitions label, define entire resinOS space used to 700MiB and other minor changes [Andrei]
+* Update supervisor to v3.0.1 [Pablo]
+* Configure an armv7ve repository for the Resin Supervisor [Michal]
+* Fix the location where to create the resinhup bundles when using poky morty [Florin]
+* Introduce debug tools package group add mkfs.ext4 in resin-image [Andrei]
+* Halve the UUID length to 16 bytes [Michal]
+
+# v2.0.0-beta11 - 2017-02-15
+
+* Fix sectors per track for targets smaller than 512 MB [Andrei]
+
+# v2.0.0-beta10 - 2017-02-13
+
+* Introduce new host OS versioning scheme [Andrei]
+* Add jethro support [Andrei]
+* Fix missing quotes when testing for IMGDEPLOYDIR [Florin]
+
+# v2.0-beta.9 - 2017-02-07
+
+* Use static resolv.conf [Andrei]
+* Switch rootfs to ext4 [Andrei]
+* Adapt resinhup for poky morty migration [Florin]
+* Add support for multiple entries in INTERNAL_DEVICE_KERNEL [Andrei]
+* Fix bug with the .docker mountpoint [Theodor]
+* Remove the supervisor container in the update script [Pablo]
+* Do not remove the supervisor container in every start [Pablo]
+* Update supervisor to v3.0.0 [Pablo]
+
+# v2.0-beta.8 - 2017-01-27
+
+* Add xt_set kernel module for all of our devices [Theodor]
+* Make /home/root/.docker writable [Theodor]
+* Prevent docker from thrashing the page cache using posix_fadvise [petrosagg]
+* Introduce meta-resin-morty for using meta-resin with poky morty [Florin]
+* Add resinhup machine independent support in U-Boot [Andrei]
+* Remove BTRFS support from the kernel [Michal]
+* Backport dropbear atomic hostkey generation patch [Florin]
+* Update supervisor to v2.9.0 [Pablo]
+* Rewrite prepare-openvpn (style) and make it fail on error [Michal]
+* Ensure prepare-openvpn.service starts after var-volatile.mount [Michal]
+
+# v2.0-beta.7 - 2016-12-05
+
+* Fix supervisor.conf's SUPERVISOR_TAG variable [Florin]
+
+# v2.0-beta.6 - 2016-12-05
+
+* Deactivate CONFIG_WATCHDOG_NOWAYOUT to make sure we can shutdown [Andrei]
+
+# v2.0-beta.5 - 2016-11-30
+
+* Add inode tuning (1 inode for 8192 bytes ) in mkfs.ext4 for the resin-data partition [Praneeth]
+* Fix missing [Manager] section for systemd watchdog setting [Florin]
+* Add missing dependency for the resin-supervisor.service [Theodor]
+* Specify the supervisor tag with a local variable [Theodor]
+* Update supervisor to v2.8.3 [Pablo]
+* Activate kernel configs for supporting iptables REJECT, MASQUERADE targets [Florin]
+* systemd: enable watchdog at 10 seconds [Florin]
+* Allow resin-init-flasher to also flash both MLO and regular u-boot at the same time [Florin]
+* Fix page size detection in go for arm64 boards [Andrei]
+
+# v2.0-beta.4 - 2016-11-09
+
+* Update supervisor to v2.8.2 [Pablo]
+
+# v2.0-beta.3 - 2016-11-04
+
+* Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
+* Fix container name conflict when creating a docker container [petrosagg]
+* Don't compress docker binary anymore with UPX [Andrei]
+* Fix /var/lib/docker corruption after power cut [petrosagg]
+* Truncate hostname to 7 characters [Michal]
+* Fix aufs patching on non git kernel sources [Andrei]
+* Update supervisor to v2.8.1 [Pablo]
+
+# v2.0-beta.2 - 2016-10-25
+
+* Update supervisor to v2.7.1 [Pablo]
+* Move supervisor.conf from /etc to /etc/resin-supervisor [Theodor]
+* Update supervisor to v2.7.0 [Pablo]
+* Add guide for new board adoption [Florin]
 * Update supervisor to v2.6.2 [Pablo]
+
+# v2.0-beta.1 - 2016-10-11
+
 * Configure kernel with CONFIG_SECCOMP [Andrei]
 * Update kernel-module-headers to v0.0.7 [Lorenzo]
 * Implement persistent logging functionality [Andrei]

@@ -40,7 +40,7 @@ do_compile () {
 do_compile[vardeps] += "PARTITION_SIZE TARGET_REPOSITORY TARGET_TAG"
 
 do_deploy () {
-    install ${B}/data_disk.img ${DEPLOYDIR}/data_disk.img
+    install ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
 }
 addtask deploy before do_package after do_install
 

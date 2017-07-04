@@ -1,8 +1,11 @@
 # Add custom resin fields
-OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE"
+OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE VARIANT VARIANT_ID"
 
 # Simplify VERSION output
 VERSION = "${HOSTOS_VERSION}"
+
+VARIANT = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','Development','Production',d)}"
+VARIANT_ID = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','dev','prod',d)}"
 
 python __anonymous () {
     import subprocess
@@ -14,6 +17,8 @@ python __anonymous () {
 
     # Detect the path of meta-resin-common
     metaresincommonpath = filter(lambda x: x.endswith('meta-resin-common'), bblayers.split())
+    if sys.version_info.major >= 3 :
+         metaresincommonpath = list(metaresincommonpath)
 
     if metaresincommonpath:
         resinboardpath = os.path.join(metaresincommonpath[0], '../../')
@@ -21,7 +26,11 @@ python __anonymous () {
 
         cmd = 'git log -n1 --format=format:%h '
         resinboardrev = subprocess.Popen('cd ' + resinboardpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
+        if sys.version_info.major >= 3 :
+            resinboardrev = resinboardrev.decode()
         metaresinrev = subprocess.Popen('cd ' + metaresinpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
+        if sys.version_info.major >= 3 :
+            metaresinrev = metaresinrev.decode()
 
         if resinboardrev:
             d.setVar('RESIN_BOARD_REV', resinboardrev)
@@ -54,7 +63,8 @@ python do_fix_quotes () {
             field = line.split('=')[0].strip()
             value = line.split('=')[1].strip()
             match = re.match(r"^[A-Za-z0-9]*$", value)
-            if not match:
+            match_quoted = re.match(r"^\".*\"$", value)
+            if not match and not match_quoted:
                 value = '"' + value + '"'
             f.write('{0}={1}\n'.format(field, value))
 }

@@ -20,7 +20,7 @@ Options:
         Display this help and exit.
 
   -f, --force
-        Run the resinhup tool withut fingerprints check and validation.
+        Run the resinhup tool without fingerprints check and validation.
 
   --staging
         Do this update for devices in staging.
@@ -46,11 +46,11 @@ Options:
         Run run-resinhup.sh with --remote . See run-resinhup.sh help for more details.
 
   --hostos-version <HOSTOS_VERSION>
-        Run run-resinhup.sh with --version .  See run-resinhup.sh help for more details.
+        Run run-resinhup.sh with --version . See run-resinhup.sh help for more details.
         This is a mandatory argument.
 
   --supervisor-registry <SUPERVISOR REGISTRY>
-        Run run-resinhup.sh with ----supervisor-registry . See run-resinhup.sh help for
+        Run run-resinhup.sh with --supervisor-registry . See run-resinhup.sh help for
         more details.
 
   --supervisor-tag <SUPERVISOR TAG>

@@ -1,10 +1,11 @@
 [Unit]
 Description=Resin device register
-Requires=mnt-boot.mount resin-device-uuid.service
-After=mnt-boot.mount resin-device-uuid.service
+Requires=mnt-boot.mount resin-device-uuid.service resin-device-api-key.service
+After=mnt-boot.mount resin-device-uuid.service resin-device-api-key.service
 
 [Service]
-Type=simple
+Type=oneshot
+RemainAfterExit=yes
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-device-register
 
 [Install]

@@ -74,6 +74,13 @@ RESIN_CONFIGS ?= " \
     ip6tables_nat \
     ip_set \
     seccomp \
+    wd-nowayout \
+    xtables \
+    audit \
+    governor \
+    mbim \
+    qmi \
+    misc \
     "
 
 #
@@ -109,19 +116,26 @@ RESIN_CONFIGS[docker] ?= " \
     CONFIG_BRIDGE=y \
     CONFIG_NF_NAT_IPV4=y \
     CONFIG_IP_NF_FILTER=y \
-    CONFIG_IP_NF_TARGET_MASQUERADE=y \
+    CONFIG_IP6_NF_FILTER=m \
+    CONFIG_IP_NF_TARGET_REJECT=m \
+    CONFIG_IP6_NF_TARGET_REJECT=m \
+    CONFIG_IP_NF_TARGET_MASQUERADE=m \
+    CONFIG_IP6_NF_TARGET_MASQUERADE=m \
     CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y \
     CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y \
     CONFIG_NF_NAT=y \
     CONFIG_NF_NAT_NEEDED=y \
     CONFIG_POSIX_MQUEUE=y \
     CONFIG_TUN=y \
+    CONFIG_BTRFS_FS=n \
+    CONFIG_BTRFS_FS_POSIX_ACL=n \
     CONFIG_EXT4_FS=y \
     CONFIG_EXT4_FS_POSIX_ACL=y \
     CONFIG_EXT4_FS_SECURITY=y \
     CONFIG_AUFS_FS=y \
     CONFIG_AUFS_XATTR=y \
     CONFIG_IP_NF_TARGET_REJECT=y \
+    CONFIG_KEYS=y \
     "
 
 #
@@ -184,7 +198,7 @@ RESIN_CONFIGS[r8188eu] ?= "\
     "
 
 # rt53xx wireless chipset family to the rt2800usb driver.
-# Supported chips: RT5370
+# Supported chips: RT5370 RT5572
 RESIN_CONFIGS_DEPS[ralink] ?= "\
     CONFIG_CFG80211=m \
     CONFIG_MAC80211=m \
@@ -193,6 +207,7 @@ RESIN_CONFIGS_DEPS[ralink] ?= "\
     "
 RESIN_CONFIGS[ralink] ?= "\
     CONFIG_RT2800USB_RT53XX=y \
+    CONFIG_RT2800USB_RT55XX=y \
     "
 
 #
@@ -255,6 +270,7 @@ RESIN_CONFIGS_DEPS[hid-multitouch] ?= " \
     "
 RESIN_CONFIGS[hid-multitouch] ?= " \
     CONFIG_HID_MULTITOUCH=m \
+    CONFIG_HIDRAW=y \
     "
 
 RESIN_CONFIGS[ip_set] = " \
@@ -276,6 +292,7 @@ RESIN_CONFIGS[ip_set] = " \
 
 RESIN_CONFIGS_DEPS[ip6tables_nat] = " \
     CONFIG_NF_CONNTRACK_IPV6=m \
+    CONFIG_IP6_NF_IPTABLES=m \
     "
 RESIN_CONFIGS[ip6tables_nat] = " \
     CONFIG_IP6_NF_NAT=m \
@@ -283,6 +300,55 @@ RESIN_CONFIGS[ip6tables_nat] = " \
 
 RESIN_CONFIGS[seccomp] = " \
     CONFIG_SECCOMP=y \
+    "
+
+#
+# The flasher images relies on shutdown at the end of the flashing process.
+# Having no way out we might end up rebooting the board before shutdown because
+# systemd is disabling watchdog before killing the other processes which might
+# take more than the watchdog timer.
+#
+RESIN_CONFIGS[wd-nowayout] = " \
+    CONFIG_WATCHDOG_NOWAYOUT=n \
+    "
+
+RESIN_CONFIGS_DEPS[xtables] = " \
+    CONFIG_NETFILTER_ADVANCED=m \
+    CONFIG_IP_SET=m \
+    "
+
+RESIN_CONFIGS[xtables] = " \
+    CONFIG_NETFILTER_XT_SET=m \
+    "
+
+# Deactivate the audit susbsystem and the audit syscall
+RESIN_CONFIGS_DEPS[audit] = " \
+    CONFIG_HAVE_AUDITSYSCALL=n \
+    CONIFG_SECURITY=n \
+    "
+
+RESIN_CONFIGS[audit] = " \
+    CONFIG_AUDIT=n \
+    CONFIG_AUDITSYSCALL=n \
+    "
+
+RESIN_CONFIGS_DEPS[governor] ?= " \
+    CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y \
+    "
+
+# support for mbim cell modems
+RESIN_CONFIGS[mbim] = " \
+    CONFIG_USB_NET_CDC_MBIM=m \
+    "
+
+# support for qmi cell modems
+RESIN_CONFIGS[qmi] = " \
+    CONFIG_USB_NET_QMI_WWAN=m \
+    "
+
+# various other configurations
+RESIN_CONFIGS[misc] = " \
+    CONFIG_NF_NAT_REDIRECT=m \
     "
 
 ###########
@@ -386,6 +452,9 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         ('4.5', '6dd8031372d2d0c0e134cfc4770f2c5a3f9bc7c4'),
         ('4.6', '4ae7c7529ad9814789c65832dfb0646ed7b475e5'),
         ('4.7', '7731e69c5a26de9519332be64d973c91a377a582'),
+        ('4.8', '34599e5c1fbc295f96ffbbc7e8129921e6f79a8a'),
+        ('4.9', '8a73f3f87e9150de4ac807de1562a060112cbbe6'),
+        ('4.10', '14d1526d7436f2e4371893d4ecd4dda3b26f3730'),
     ])
 
 
@@ -397,7 +466,7 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
     # does not exist in aufs-util repository, then "aufs4.9", "aufs4.8"
     # or something numerically smaller is the branch for your kernel.'
 
-    for key, value in reversed(aufsdict.items()) :
+    for key, value in reversed(list(aufsdict.items())) :
         if key.split('+')[0] is kernelversion:
             aufsbranch = key
             break
@@ -447,9 +516,14 @@ apply_aufs_patches () {
     cp -r ${WORKDIR}/aufs_standalone/Documentation ${WORKDIR}/aufs_standalone/fs ${S}
     cp ${WORKDIR}/aufs_standalone/include/uapi/linux/aufs_type.h ${S}/include/uapi/linux/
     cd ${S}
-    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-kbuild.patch'`
-    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-base.patch'`
-    git apply -3 < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-mmap.patch'`
+    if [ -d "${S}/.git" ]; then
+        PATCH_CMD="git apply -3"
+    else
+        PATCH_CMD="patch -p1"
+    fi
+    $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-kbuild.patch'`
+    $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-base.patch'`
+    $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-mmap.patch'`
 }
 do_kernel_resin_aufs_fetch_and_unpack[postfuncs] += "apply_aufs_patches"
 
@@ -457,7 +531,7 @@ do_kernel_resin_aufs_fetch_and_unpack[postfuncs] += "apply_aufs_patches"
 # Inject resin configs
 #
 python do_kernel_resin_injectconfig() {
-    activatedflags = d.getVar("RESIN_CONFIGS").split()
+    activatedflags = d.getVar("RESIN_CONFIGS", True).split()
     if not activatedflags:
         bb.warn("No resin specific kernel configuration flags selected.")
         return
@@ -520,7 +594,7 @@ do_kernel_resin_reconfigure[dirs] += "${B}"
 # Check that all the wanted configs got activated in kernel
 #
 python do_kernel_resin_checkconfig() {
-    activatedflags = d.getVar("RESIN_CONFIGS").split()
+    activatedflags = d.getVar("RESIN_CONFIGS", True).split()
     if not activatedflags:
         bb.warn("No resin specific kernel configuration flags selected.")
         return
@@ -566,3 +640,10 @@ do_deploy_append () {
     install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
     install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
 }
+
+# Don't trigger in the kernel image without initramfs
+# Boards should:
+# a) use kernel-image-initramfs and deploy in in the rootfs (ex bbb)
+# b) use boot deployment using RESIN_BOOT_PARTITION_FILES mechanism to deploy
+#    the initramfs bundled kernel image
+RDEPENDS_kernel-base = ""

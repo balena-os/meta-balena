@@ -10,12 +10,14 @@
 #                                             * it's impossible to known what dev to flash because
 #                                               we don't have any labels before flashing something
 #                                               so we need this info
+#                                             * when multiple entries provided, the first block device
+#                                               found will be used
 #  INTERNAL_DEVICE_BOOTLOADER_CONFIG      - name of the bootloader config for internal media boot
 #  INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH - relative path to internal boot partition where
 #                                               INTERNAL_DEVICE_BOOTLOADER_CONFIG will be copied to
 #  RESIN_IMAGE                            - image to be flashed on internal device
 #                                             * this is defaulted to
-#                                               resin-image-${MACHINE}.resin-sdcard and should be
+#                                               resin-image-${MACHINE}.resinos-img and should be
 #                                               just fine
 #  BOOTLOADER_FLASH_DEVICE                - device where bootloader binary will be flashed
 #                                             * this variable should be set together with
@@ -26,6 +28,13 @@
 #  BOOTLOADER_BLOCK_SIZE_OFFSET           - offset at which we write u-boot binary
 #  BOOTLOADER_SKIP_OUTPUT_BLOCKS          - number of blocks to skip when writing bootloader
 #                                             * this is the seek param to dd
+#
+#  Certain hardware requires that the bootloader is split into MLO and u-boot.img rather than having
+# it all bundled in a u-boot.img binary. To address this requirement, this flashing script will further
+# look for variables called BOOTLOADER_FLASH_DEVICE_1, BOOTLOADER_IMAGE_1, BOOTLOADER_BLOCK_SIZE_OFFSET_1,
+# BOOTLOADER_SKIP_OUTPUT_BLOCKS_1 to be used in the same way as BOOTLOADER_FLASH_DEVICE, BOOTLOADER_IMAGE,
+# BOOTLOADER_BLOCK_SIZE_OFFSET, BOOTLOADER_SKIP_OUTPUT_BLOCKS so that user can specify both MLO and u-boot
+# to be written in the respective devices.
 
 set -e
 
@@ -35,6 +44,7 @@ INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
+RESIN_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -81,19 +91,31 @@ fi
 inform "resin configuration found."
 
 # CONFIG_PATH should exist
-if [ ! -f $CONFIG_PATH ]; then
+if [ ! -f "$CONFIG_PATH" ]; then
     fail "$CONFIG_PATH : No such file."
 fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
-dd if=/opt/$RESIN_IMAGE of=/dev/$INTERNAL_DEVICE_KERNEL bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+internal_dev=""
+for d in $INTERNAL_DEVICE_KERNEL; do
+    if [ -b "/dev/$d" ]; then
+        internal_dev=$d
+        break
+    fi
+done
+if [ -z "$internal_dev" ]; then
+    resin-device-progress --percentage 100 --state "Failed to find any block devices." || true
+    fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
+fi
+inform "$internal_dev will be used for flashing."
+dd if="/opt/$RESIN_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
 
 if ! kill -0 $DD_PID; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
 fi
 
-IMAGE_FILE_SIZE=`wc -c /opt/$RESIN_IMAGE | awk '{print $1}'`
+IMAGE_FILE_SIZE=$(wc -c /opt/"$RESIN_IMAGE" | awk '{print $1}')
 
 resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media" || true
 
@@ -102,7 +124,7 @@ while kill -USR1 $DD_PID; do
     if [ ! -s /tmp/dd_progress_log ]; then
         continue
     fi
-    IMAGE_WRITTEN_BYTES=`cat /tmp/dd_progress_log | awk 'END{print $1}'`
+    IMAGE_WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
     let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE || true
     resin-device-progress --percentage $RATIO --state "Flashing resin.io on internal media" || true
     truncate -s 0 /tmp/dd_progress_log
@@ -111,20 +133,31 @@ done
 sync
 
 # Trigger udev
-partprobe /dev/$INTERNAL_DEVICE_KERNEL
+partprobe /dev/"$internal_dev"
 udevadm trigger
 udevadm settle
 
-# Flash bootloader
+# Flash bootloader(s)
 if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
     if [ -n "$BOOTLOADER_IMAGE" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET" ]; then
-        dd if=${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE} of=/dev/${BOOTLOADER_FLASH_DEVICE} bs=${BOOTLOADER_BLOCK_SIZE_OFFSET} seek=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}
-        inform "Flashed u-boot image to internal flash"
+        dd if="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE}" of="/dev/${BOOTLOADER_FLASH_DEVICE}" bs="${BOOTLOADER_BLOCK_SIZE_OFFSET}" seek="${BOOTLOADER_SKIP_OUTPUT_BLOCKS}"
+        inform "Flashed ${BOOTLOADER_IMAGE} to internal flash"
     else
         fail "BOOTLOADER_IMAGE and/or BOOTLOADER_BLOCK_SIZE_OFFSET are not set."
     fi
 else
-    inform "No need to flash bootloader to a specific device."
+    inform "No need to flash first stage bootloader to a specific device."
+fi
+
+if [ -n "$BOOTLOADER_FLASH_DEVICE_1" ]; then
+    if [ -n "$BOOTLOADER_IMAGE_1" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET_1" ]; then
+        dd if="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE_1}" of="/dev/${BOOTLOADER_FLASH_DEVICE_1}" bs="${BOOTLOADER_BLOCK_SIZE_OFFSET_1}" seek="${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}"
+        inform "Flashed ${BOOTLOADER_IMAGE_1} to internal flash"
+    else
+        fail "BOOTLOADER_IMAGE_1 and/or BOOTLOADER_BLOCK_SIZE_OFFSET_1 are not set."
+    fi
+else
+    inform "No need to flash second stage bootloader to a specific device."
 fi
 
 # Mount internal device boot partition
@@ -136,7 +169,7 @@ fi
 # Copy custom splash dir
 cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
 # Copy json configuration file from external (flasher) to the internal (booting) device
-cp -rvf $CONFIG_PATH $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
 # Copy Network Manager connection files
 CONFIG_NM="${CONFIG_PATH%/*}/system-connections/"
 if [ -d "$CONFIG_NM" ]; then
@@ -146,22 +179,50 @@ if [ -d "$CONFIG_NM" ]; then
 else
     inform "No system connections found to transfer on the internal device."
 fi
+# Copy proxy configuration files
+CONFIG_PROXY="${CONFIG_PATH%/*}/system-proxy/"
+if [ -d "$CONFIG_PROXY" ]; then
+    inform "Transferring proxy configuration on the internal device."
+    rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-proxy/"
+    cp -rvf "$CONFIG_PROXY" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
+else
+    inform "No proxy configuration found to transfer on the internal device."
+fi
 # Copy bootloader config file
-if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
+if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]] && [[ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]]; then
         if [[ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then
             fail "INTERNAL_DEVICE_BOOTLOADER_CONFIG needs INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH to be set."
         fi
-        cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH
+        cp "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH"
 fi
+
+# Copy resinOS bootloader config file
+if [[ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${RESIN_BOOTLOADER_CONFIG}" ]]; then
+        cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+fi
+
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
 echo "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
 
-# More syncs
+# Give a chance for the device to register
+STARTTIME=$(date +%s)
+ENDTIME=$(date +%s)
+TIMEOUT=10
+while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
+do
+    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+        sleep 1
+        ENDTIME=$(date +%s)
+    else
+        inform "Timeout while waiting for register to finish. No network?"
+        break
+    fi
+done
+
 sync
 
-# umounts
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 
 inform "Shutting down ..."

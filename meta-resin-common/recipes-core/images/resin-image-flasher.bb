@@ -1,13 +1,14 @@
 # Base this image on core-image-minimal
 include recipes-core/images/core-image-minimal.bb
 
+RESIN_FLAG_FILE = "${RESIN_FLASHER_FLAG_FILE}"
 inherit image-resin
 
 # Each machine should append this with their specific configuration
 IMAGE_FSTYPES = ""
 
 # Make sure you have the resin image ready
-IMAGE_DEPENDS_resin-sdcard_append = " resin-image:do_rootfs"
+IMAGE_DEPENDS_resinos-img_append = " resin-image:do_rootfs"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
@@ -21,17 +22,19 @@ IMAGE_INSTALL_append = " \
     packagegroup-resin-flasher \
     "
 
-# Avoid useless space by not using any data image partition
-DATA_IMAGE = ""
+# Avoid useless space - no data or state on flasher
+RESIN_DATA_FS = ""
+RESIN_STATE_FS = ""
 
-# We do not use a back-up rootfs partition for the flasher image, so just default to IMAGE_ROOTFS_ALIGNMENT size
-UPDATE_SIZE_ALIGNED = "${IMAGE_ROOTFS_ALIGNMENT}"
+# We do not use a second root fs partition for the flasher image, so just default to RESIN_IMAGE_ALIGNMENT
+RESIN_ROOTB_SIZE = "${RESIN_IMAGE_ALIGNMENT}"
 
 # Avoid naming clash with resin image labels
 RESIN_BOOT_FS_LABEL = "flash-boot"
-RESIN_ROOT_FS_LABEL = "flash-root"
-RESIN_UPDATE_FS_LABEL = "flash-updt"
-RESIN_CONFIG_FS_LABEL = "flash-conf"
+RESIN_ROOTA_FS_LABEL = "flash-rootA"
+RESIN_ROOTB_FS_LABEL = "flash-rootB"
+RESIN_STATE_FS_LABEL = "flash-state"
+RESIN_DATA_FS_LABEL = "flash-data"
 
 # Put the resin logo, uEnv.txt files inside the boot partition
 RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"
@@ -42,10 +45,13 @@ RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-typ
 # Put resin-image in the flasher rootfs
 add_resin_image_to_flasher_rootfs() {
     mkdir -p ${WORKDIR}/rootfs/opt
-    cp ${DEPLOY_DIR_IMAGE}/resin-image-${MACHINE}.resin-sdcard ${WORKDIR}/rootfs/opt
+    cp ${DEPLOY_DIR_IMAGE}/resin-image-${MACHINE}.resinos-img ${WORKDIR}/rootfs/opt
 }
 
 IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
 
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
+
+# Resin flasher flag file
+RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_FLASHER_FLAG_FILE}:/${RESIN_FLASHER_FLAG_FILE}"

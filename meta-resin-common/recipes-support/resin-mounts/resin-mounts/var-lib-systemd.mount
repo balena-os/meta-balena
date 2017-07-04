@@ -1,0 +1,16 @@
+[Unit]
+Description=ResinOS persistent systemd state location
+DefaultDependencies=no
+Requires=mnt-state.mount resin-state-reset.service systemd-tmpfiles-setup.service var-volatile-lib.service
+After=mnt-state.mount resin-state-reset.service systemd-tmpfiles-setup.service var-volatile-lib.service
+Before=umount.target
+Conflicts=umount.target
+
+[Mount]
+What=/mnt/state/root-overlay/var/lib/systemd
+Where=/var/lib/systemd
+Type=None
+Options=bind
+
+[Install]
+WantedBy=resin-bind.target

@@ -14,12 +14,12 @@ include packagegroup-resin.inc
 # Additional packages
 RDEPENDS_${PN} += " \
     docker-disk \
+    dosfstools \
     resin-filesystem-expand \
-    resin-logs \
-    resin-data-expander \
+    resin-persistent-logs \
     resin-info \
     resin-hostname \
-    resin-conf-reset \
+    resin-state-reset \
     resinhup \
     aufs-util \
     resin-udevmount \
