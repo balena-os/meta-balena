@@ -31,7 +31,7 @@ const isIncrementalCommit = (changeType) => {
 
 // Update verison info in `meta-resin-common/conf/distro/include/resin-os.inc`
 const metaUpdate = (cwd, version, callback) => {
-  return exec(`sed -i 's/^DISTRO_VERSION = ".*"/DISTRO_VERSION = "${version}/g' meta-resin-common/conf/distro/include/resin-os.inc`, {
+  return exec(`sed -i 's/^DISTRO_VERSION = ".*"/DISTRO_VERSION = "${version}"/g' meta-resin-common/conf/distro/include/resin-os.inc`, {
     encoding: 'utf8',
   }, callback);
 };
