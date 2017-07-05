@@ -81,6 +81,7 @@ RESIN_CONFIGS ?= " \
     mbim \
     qmi \
     misc \
+    redsocks \
     "
 
 #
@@ -348,6 +349,11 @@ RESIN_CONFIGS[qmi] = " \
 # various other configurations
 RESIN_CONFIGS[misc] = " \
     CONFIG_NF_NAT_REDIRECT=m \
+    "
+
+# configs needed for our usage of redsocks
+RESIN_CONFIGS[redsocks] = " \
+    CONFIG_NETFILTER_XT_MATCH_OWNER=m \
     "
 
 ###########
