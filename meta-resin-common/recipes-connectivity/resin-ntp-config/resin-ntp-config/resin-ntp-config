@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# copy over NTP configuration
+#
+
+set -e
+
+. /usr/sbin/resin-vars
+
+if [ ! -f "$CONFIG_PATH" ]; then
+	echo "resin-ntp-config: $CONFIG_PATH does not exist."
+	exit 1
+else
+	echo "resin-ntp-config: Found config.json in $CONFIG_PATH ."
+fi
+
+if [ ! -z "$NTP_SERVERS" ]; then
+	cat >/etc/systemd/timesyncd.conf <<EOF
+[Time]
+NTP=$NTP_SERVERS
+EOF
+fi
+
+exit 0
