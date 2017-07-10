@@ -13,3 +13,4 @@ This layer depends on:
 * URI: git://git.yoctoproject.org/poky
 * URI: git://github.com/openembedded/meta-openembedded
     * layers: meta-oe, meta-networking, meta-python
+* URI: https://github.com/mem/oe-meta-go.git
