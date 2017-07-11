@@ -82,6 +82,7 @@ RESIN_CONFIGS ?= " \
     qmi \
     misc \
     redsocks \
+    ${DOCKER_STORAGE} \
     "
 
 #
@@ -133,9 +134,16 @@ RESIN_CONFIGS[docker] ?= " \
     CONFIG_EXT4_FS=y \
     CONFIG_EXT4_FS_POSIX_ACL=y \
     CONFIG_EXT4_FS_SECURITY=y \
+    CONFIG_KEYS=y \
+    "
+
+RESIN_CONFIGS[aufs] = " \
     CONFIG_AUFS_FS=y \
     CONFIG_AUFS_XATTR=y \
-    CONFIG_KEYS=y \
+    "
+
+RESIN_CONFIGS[overlay2] = " \
+    CONFIG_OVERLAY_FS=y \
     "
 
 #
@@ -385,7 +393,7 @@ def appendLineToFile (filepath, line):
 #########
 
 #
-# Add aufs patches
+# Configuration for docker storage
 #
 
 python do_kernel_resin_aufs_fetch_and_unpack() {
@@ -394,10 +402,6 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
     from bb.fetch2.git import Git
 
     kernelsource = d.getVar('S', True)
-
-    if os.path.isdir(kernelsource + "/fs/aufs"):
-        bb.note("The kernel source tree has the fs/aufs directory. Will not fetch and unpack aufs patches.")
-        return
 
     # get the kernel version from the top Makefile in the kernel source tree
     topmakefile = kernelsource + "/Makefile"
@@ -408,6 +412,7 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
     for s in lines:
         m = re.match("VERSION = (\d+)", s)
         if m:
+            kernelversion_major = m.group(1)
             kernelversion = kernelversion + m.group(1)
         m = re.match("PATCHLEVEL = (\d+)", s)
         if m:
@@ -418,6 +423,21 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         m = re.match("EXTRAVERSION = (\d+)", s)
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
+
+    docker_storage = d.getVar('DOCKER_STORAGE', True)
+    bb.note("Kernel will be configured for " + docker_storage + " docker storage driver.")
+
+    # If overlay2, we assume support in the kernel source so no need for extra
+    # patches
+    if docker_storage == "overlay2":
+        if int(kernelversion_major) < 4:
+            bb.fatal("overlay2 is only available from kernel version 4.0. Can't use overlay2 as DOCKER_STORAGE.")
+        return
+
+    # Everything from here is for aufs
+    if os.path.isdir(kernelsource + "/fs/aufs"):
+        bb.note("The kernel source tree has the fs/aufs directory. Will not fetch and unpack aufs patches.")
+        return
 
     # define an ordered dictionary with aufs branch names as keys and branch revisions as values
     aufsdict = collections.OrderedDict([
@@ -512,11 +532,12 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
 
 # add our task to task queue - we need the kernel version (so we need to have the sources unpacked and patched) in order to know what aufs patches version we fetch and unpack
 addtask kernel_resin_aufs_fetch_and_unpack after do_patch before do_configure
+kernel_resin_aufs_fetch_and_unpack[vardeps] += "DOCKER_STORAGE"
 
 # copy needed aufs files and apply aufs patches
 apply_aufs_patches () {
     # bail out if it looks like the kernel source tree already has the fs/aufs directory
-    if [ -d ${S}/fs/aufs ]; then
+    if [ -d ${S}/fs/aufs ] || [ "${DOCKER_STORAGE}" != "aufs" ]; then
         exit
     fi
     cp -r ${WORKDIR}/aufs_standalone/Documentation ${WORKDIR}/aufs_standalone/fs ${S}
