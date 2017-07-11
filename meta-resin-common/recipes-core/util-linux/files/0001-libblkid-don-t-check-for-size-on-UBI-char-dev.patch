@@ -1,0 +1,29 @@
+From 4360f56cf6e40b10ab6ace4cf74073de2381c192 Mon Sep 17 00:00:00 2001
+From: Karel Zak <kzak@redhat.com>
+Date: Tue, 11 Jul 2017 12:17:40 +0200
+Subject: [PATCH] libblkid: don't check for size on UBI (char dev)
+
+Signed-off-by: Karel Zak <kzak@redhat.com>
+
+Upstream-Status: Backport
+Signed-off-by: Michal Mazurek <michal@resin.io>
+---
+ libblkid/src/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libblkid/src/probe.c b/libblkid/src/probe.c
+index 3f4900e..9f56f52 100644
+--- a/libblkid/src/probe.c
++++ b/libblkid/src/probe.c
+@@ -658,7 +658,7 @@ unsigned char *blkid_probe_get_buffer(blkid_probe pr, uint64_t off, uint64_t len
+ 		return NULL;
+ 	}
+ 
+-	if (len == 0 || pr->off + pr->size < real_off + len) {
++	if (len == 0 || (!S_ISCHR(pr->mode) && pr->off + pr->size < real_off + len)) {
+ 		DBG(BUFFER, ul_debug("\t  ignore: request out of probing area"));
+ 		errno = 0;
+ 		return NULL;
+-- 
+2.7.4
+
