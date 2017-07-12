@@ -174,3 +174,7 @@ Boolean. Enable or disable persistent logging on this device.
 
 String. The country in which the device is operating. This is used for setting with WiFi regulatory domain.
 
+### ntpServers
+
+String. A space-separated list of NTP servers to use for time synchronization. Defaults to resinio.pool.ntp.org servers.
+
