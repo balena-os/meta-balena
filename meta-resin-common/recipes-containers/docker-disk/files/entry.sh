@@ -39,7 +39,6 @@ done
 
 if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
     docker pull $TARGET_REPOSITORY:$TARGET_TAG
-    docker tag $TARGET_REPOSITORY:$TARGET_TAG $TARGET_REPOSITORY:latest
 fi
 
 kill -TERM $(cat /var/run/docker.pid) && wait $(cat /var/run/docker.pid) && umount /resin-data
