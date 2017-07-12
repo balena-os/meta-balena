@@ -42,3 +42,9 @@ done
 
 # Clean after ourselves
 rm -rf ${RESIN_STATE_MP}/rollback
+
+# Make sure everything is on disk otherwise the flag 'remove_me_to_reset'
+# might end up before other data on state partition. If so, in the case of a
+# power loss we might end up in a state with inconsistent data (eg.
+# supervisor.conf is empty).
+sync
