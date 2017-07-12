@@ -157,3 +157,20 @@ operation not supported
 ```
 This is probably because of a docker bug where, if you update kernel and don't reboot, docker gets confused. The fix is to reboot your system.
 More info: http://stackoverflow.com/questions/29546388/getting-an-operation-not-supported-error-when-trying-to-run-something-while-bu
+
+## config.json
+
+The behaviour of resinOS can be configured by setting the following keys in the config.json file in the boot partition. This configuration file is also used by the supervisor.
+
+### hostname
+
+String. The configured hostname of this device, otherwise the UUID is used.
+
+### persistentLogging
+
+Boolean. Enable or disable persistent logging on this device.
+
+### country
+
+String. The country in which the device is operating. This is used for setting with WiFi regulatory domain.
+
