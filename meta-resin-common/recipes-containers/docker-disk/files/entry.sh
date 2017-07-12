@@ -21,8 +21,9 @@ mount -o loop /export/resin-data.img /resin-data
 mkdir -p /resin-data/docker
 mkdir -p /resin-data/resin-data
 
-# Start docker with the created image.
-docker daemon -g /resin-data/docker -s aufs &
+# Start docker with the created image
+echo "Starting docker daemon with $DOCKER_STORAGE storage driver."
+docker daemon -g /resin-data/docker -s $DOCKER_STORAGE &
 echo "Waiting for docker to become ready.."
 STARTTIME=$(date +%s)
 ENDTIME=$(date +%s)
@@ -36,12 +37,15 @@ do
         exit 1
     fi
 done
+echo "Docker started."
 
 if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
+    echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}..."
     docker pull $TARGET_REPOSITORY:$TARGET_TAG
     docker tag $TARGET_REPOSITORY:$TARGET_TAG $TARGET_REPOSITORY:latest
 fi
 
+echo "Stopping docker..."
 kill -TERM $(cat /var/run/docker.pid) && wait $(cat /var/run/docker.pid) && umount /resin-data
 
 echo "Docker export successful."
