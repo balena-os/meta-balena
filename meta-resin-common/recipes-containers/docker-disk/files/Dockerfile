@@ -1,4 +1,4 @@
-FROM docker:1.10.3-dind
+FROM docker:17.03-dind
 
 RUN apk add --update bash util-linux && rm -rf /var/cache/apk/*
 
