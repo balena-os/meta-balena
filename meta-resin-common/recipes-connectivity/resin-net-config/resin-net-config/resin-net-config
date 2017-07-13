@@ -24,4 +24,11 @@ if [ ! -z "$COUNTRY" ]; then
 	iw reg set "$COUNTRY"
 fi
 
+# add additional DNS servers to dnsmasq configuration
+DNS_SERVER_FILE=/run/dnsmasq.servers
+echo > $DNS_SERVER_FILE
+for dns in $DNS_SERVERS; do
+	echo "server=$dns" >> $DNS_SERVER_FILE
+done
+
 exit 0

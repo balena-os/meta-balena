@@ -178,3 +178,6 @@ String. The country in which the device is operating. This is used for setting w
 
 String. A space-separated list of NTP servers to use for time synchronization. Defaults to resinio.pool.ntp.org servers.
 
+### dnsServers
+
+String. A space-separated list of preferred DNS servers to use for name resolution. Falls back to DHCP provided servers and Google DNS.
