@@ -106,6 +106,7 @@ IMAGE_DEPENDS_resinos-img = " \
     virtual/kernel \
     ${RESIN_IMAGE_BOOTLOADER} \
     "
+IMAGE_DEPENDS_resinos-ubi = "mtd-utils-native"
 
 IMAGE_CMD_resinos-img () {
     #
@@ -253,6 +254,170 @@ IMAGE_CMD_resinos-img () {
         xz -k "${RESIN_RAW_IMG}"
         ;;
     esac
+}
+
+# Generate the boot partition directory and deploy it to rootfs
+resin_boot_dirgen_and_deploy () {
+    echo "Generating work directory for resin-boot partition..."
+    rm -rf ${RESIN_BOOT_WORKDIR}
+    for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
+        echo "Handling $RESIN_BOOT_PARTITION_FILE ."
+
+        # Check for item format
+        case $RESIN_BOOT_PARTITION_FILE in
+            *:*) ;;
+            *) bbfatal "Some items in RESIN_BOOT_PARTITION_FILES ($RESIN_BOOT_PARTITION_FILE) are not in the 'src:dst' format."
+        esac
+
+        # Compute src and dst
+        src="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}')"
+        dst="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}')"
+        if [ -z "${dst}" ]; then
+            dst="/${src}" # dst was omitted
+        fi
+        src="${DEPLOY_DIR_IMAGE}/$src" # src is relative to deploy dir
+
+        # Check that dst is an absolute path and assess if it should be a directory
+        case $dst in
+            /*)
+                # Check if dst is a directory. Directory path ends with '/'.
+                case $dst in
+                    */) dst_is_dir=true ;;
+                     *) dst_is_dir=false ;;
+                esac
+                ;;
+             *) bbfatal "$dst in RESIN_BOOT_PARTITION_FILES is not an absolute path."
+        esac
+
+        # Check src type and existence
+        if [ -d "$src" ]; then
+            if ! $dst_is_dir; then
+                bbfatal "You can't copy a directory to a file. You requested to copy $src in $dst."
+            fi
+            sources="$(find $src -maxdepth 1 -type f)"
+        elif [ -f "$src" ]; then
+            sources="$src"
+        else
+            bbfatal "$src is an invalid path referenced in RESIN_BOOT_PARTITION_FILES."
+        fi
+
+        # Normalize paths
+        dst=$(realpath -ms $dst)
+        if $dst_is_dir && [ ! "$dst" = "/" ]; then
+            dst="$dst/" # realpath removes last '/' which we need to instruct mcopy that destination is a directory
+        fi
+        src=$(realpath -m $src)
+
+        for src in $sources; do
+            echo "Copying $src -> $dst ..."
+            # Create the directories parent directories in dst
+            directory=""
+            for path_segment in $(echo ${RESIN_BOOT_WORKDIR}/${dst} | sed 's|/|\n|g' | head -n -1); do
+                if [ -z "$path_segment" ]; then
+                    continue
+                fi
+                directory=$directory/$path_segment
+                mkdir -p $directory
+            done
+            cp -rvfL $src ${RESIN_BOOT_WORKDIR}/$dst
+        done
+    done
+    echo "${IMAGE_NAME}" > ${RESIN_BOOT_WORKDIR}/image-version-info
+    init_config_json ${RESIN_BOOT_WORKDIR}
+
+    # Keep this after everything is ready in the resin-boot directory
+    find ${RESIN_BOOT_WORKDIR} -xdev -type f \
+        ! -name ${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT} \
+        ! -name config.json \
+        -exec md5sum {} \; | sed "s#${RESIN_BOOT_WORKDIR}##g" | \
+        sort -k2 > ${RESIN_BOOT_WORKDIR}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
+
+    echo "Install resin-boot in the rootfs..."
+    cp -rvf ${RESIN_BOOT_WORKDIR} ${IMAGE_ROOTFS}/${RESIN_BOOT_FS_LABEL}
+}
+
+UBIMULTIVOL_BUILD = "boot rootfsA rootfsB state data"
+UBINIZE_ARGS ?= "-m 0x4000 -p 0x400000"
+
+RESIN_BOOT_DIR ?= "${DEPLOY_DIR_IMAGE}/boot"
+RESIN_ROOTB_DIR ?= "${DEPLOY_DIR_IMAGE}/rootb"
+RESIN_STATE_DIR ?= "${DEPLOY_DIR_IMAGE}/state"
+RESIN_DATA_DIR ?= "${DEPLOY_DIR_IMAGE}/data_disk"
+
+IMAGE_CMD_resinos-ubi () {
+	MKUBIFS_ARGS_boot="-e 0x1f8000 -c 2000 -m 0x4000 -x lzo"
+	ADDITIONAL_MKUBIFS_ARGS_boot="-r ${RESIN_BOOT_DIR} -o ${DEPLOY_DIR_IMAGE}/boot.ubifs"
+	ADDITIONAL_UBINIZE_ARGS_boot="mode=ubi\nimage=${DEPLOY_DIR_IMAGE}/boot.ubifs\nvol_id=0\nvol_size=70MiB\nvol_type=dynamic\nvol_name=${RESIN_BOOT_FS_LABEL}"
+												#        40MB usable space
+
+	MKUBIFS_ARGS_rootfsA="-e 0x1f8000 -c 2000 -m 0x4000 -x lzo"
+	ADDITIONAL_MKUBIFS_ARGS_rootfsA="-r ${IMAGE_ROOTFS} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfsA.ubifs"
+	ADDITIONAL_UBINIZE_ARGS_rootfsA="mode=ubi\nimage=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfsA.ubifs\nvol_id=1\nvol_size=240MiB\nvol_type=dynamic\nvol_name=${RESIN_ROOTA_FS_LABEL}"
+												                    #        200MB usable space
+
+	MKUBIFS_ARGS_rootfsB="-e 0x1f8000 -c 2000 -m 0x4000 -x lzo"
+	ADDITIONAL_MKUBIFS_ARGS_rootfsB="-r ${RESIN_ROOTB_DIR} -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfsB.ubifs"
+	ADDITIONAL_UBINIZE_ARGS_rootfsB="mode=ubi\nimage=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfsB.ubifs\nvol_id=2\nvol_size=240MiB\nvol_type=dynamic\nvol_name=${RESIN_ROOTB_FS_LABEL}"
+
+	MKUBIFS_ARGS_state="-e 0x1f8000 -c 2000 -m 0x4000 -x lzo"
+	ADDITIONAL_MKUBIFS_ARGS_state="-r ${RESIN_STATE_DIR} -o ${DEPLOY_DIR_IMAGE}/state.ubifs"
+	ADDITIONAL_UBINIZE_ARGS_state="mode=ubi\nimage=${DEPLOY_DIR_IMAGE}/state.ubifs\nvol_id=3\nvol_size=50MiB\nvol_type=dynamic\nvol_name=${RESIN_STATE_FS_LABEL}"
+													#  20MB usable space
+
+	MKUBIFS_ARGS_data="-e 0x1f8000 -c 10000 -m 0x4000 -x lzo"
+	ADDITIONAL_MKUBIFS_ARGS_data="-r ${DEPLOY_DIR_IMAGE}/data_disk -o ${DEPLOY_DIR_IMAGE}/data.ubifs"
+	ADDITIONAL_UBINIZE_ARGS_data="mode=ubi\nimage=${DEPLOY_DIR_IMAGE}/data.ubifs\nvol_id=4\nvol_type=dynamic\nvol_name=${RESIN_DATA_FS_LABEL}\nvol_flags=autoresize"
+
+	echo "Checking for Existing DIRs"
+	rm -rf "${RESIN_BOOT_DIR}/"
+	rm -rf "${RESIN_STATE_DIR}/"
+	rm -rf "${RESIN_ROOTB_DIR}/"
+	rm -rf "${RESIN_DATA_DIR}/"
+
+	echo "Create Resin state DIR"
+	mkdir -p ${RESIN_STATE_DIR}
+	touch ${RESIN_STATE_DIR}/README_-_DO_NOT_DELETE_FILES_IN_THIS_DIRECTORY.txt
+
+	echo "Create Resin data DIR"
+	mkdir -p ${RESIN_DATA_DIR}
+
+	echo "Create Resin rootb DIR"
+	mkdir -p ${RESIN_ROOTB_DIR}
+
+	echo "Copying files in RESIN_BOOT_PARTITION_FILE"
+	mkdir ${RESIN_BOOT_DIR}
+	cp -r ${RESIN_BOOT_WORKDIR}/* ${RESIN_BOOT_DIR}/
+	echo -n '' > ${WORKDIR}/${RESIN_BOOT_FS_LABEL}.${FINGERPRINT_EXT}
+
+	# Split MKUBIFS_ARGS_<name>
+	for name in ${UBIMULTIVOL_BUILD}; do
+		eval local mkubifs_args=\"\$MKUBIFS_ARGS_${name}\"
+		eval local additional_mkubifs_args=\"\$ADDITIONAL_MKUBIFS_ARGS_${name}\"
+
+		mkfs.ubifs ${additional_mkubifs_args} ${mkubifs_args}
+	done
+
+	# Split UBINIZE_ARGS_<name>
+	for name in ${UBIMULTIVOL_BUILD}; do
+		eval local additional_ubinize_args=\"\$ADDITIONAL_UBINIZE_ARGS_${name}\"
+
+		echo \[${name}\] >> ubinize.cfg
+		echo ${additional_ubinize_args} >> ubinize.cfg
+	done
+
+	ubinize -o ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-ubi \
+	    ${UBINIZE_ARGS} ubinize.cfg
+
+	# Cleanup cfg file
+	mv ubinize.cfg ${DEPLOY_DIR_IMAGE}/
+
+	# Create own symlinks for 'named' volumes
+	if [ -e ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubifs ]; then
+		ln -sf ${IMAGE_NAME}.rootfs.ubifs ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.ubifs
+	fi
+	if [ -e ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-ubi ]; then
+		ln -sf ${IMAGE_NAME}.rootfs.resinos-ubi ${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.resinos-ubi
+	fi
 }
 
 # Make sure we regenerate images if we modify the files that go in the boot
