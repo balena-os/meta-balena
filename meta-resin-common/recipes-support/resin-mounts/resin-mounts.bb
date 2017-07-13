@@ -9,6 +9,7 @@ SRC_URI = " \
     file://etc-docker.mount \
     file://etc-dropbear.mount \
     file://etc-systemd-system-resin.target.wants.mount \
+    file://etc-systemd-timesyncd.conf.mount \
     file://etc-hostname.mount \
     file://etc-resinx2dsupervisor.mount \
     file://etc-NetworkManager-systemx2dconnections.mount \
@@ -32,6 +33,7 @@ SYSTEMD_SERVICE_${PN} = " \
     etc-docker.mount \
     etc-dropbear.mount \
     etc-systemd-system-resin.target.wants.mount \
+    etc-systemd-timesyncd.conf.mount \
     etc-hostname.mount \
     var-lib-systemd.mount \
     var-log-journal.mount \
@@ -60,7 +62,6 @@ do_install () {
     install -d ${D}${sysconfdir}/systemd/system/resin-bind.target.wants
     install -c -m 0644 ${WORKDIR}/resin-bind.target ${D}${systemd_unitdir}/system/
 
-
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 \
@@ -71,6 +72,7 @@ do_install () {
             ${WORKDIR}/etc-dropbear.mount \
             ${WORKDIR}/etc-hostname.mount \
             ${WORKDIR}/etc-systemd-system-resin.target.wants.mount \
+            ${WORKDIR}/etc-systemd-timesyncd.conf.mount \
             ${WORKDIR}/var-lib-systemd.mount \
             ${WORKDIR}/var-log-journal.mount \
             ${WORKDIR}/home-root-.rnd.mount \
