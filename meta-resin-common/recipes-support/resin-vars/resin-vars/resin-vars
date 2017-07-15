@@ -64,6 +64,8 @@ if [ -f $CONFIG_PATH ]; then
     APPLICATION_ID=$(jq --raw-output '.applicationId // empty' $CONFIG_PATH)
     DEVICE_TYPE=$(jq --raw-output '.deviceType // empty' $CONFIG_PATH)
     REGISTERED_AT=$(jq --raw-output '.registered_at // empty' $CONFIG_PATH)
+    NTP_SERVERS=$(jq --raw-output '.ntpServers // empty' $CONFIG_PATH)
+    DNS_SERVERS=$(jq --raw-output '.dnsServers // empty' $CONFIG_PATH)
     if [ -z "$API_ENDPOINT" -o -z "$LISTEN_PORT" -o -z "$MIXPANEL_TOKEN" -o -z "$PUBNUB_PUBLISH_KEY" -o -z "$PUBNUB_SUBSCRIBE_KEY" -o -z "$REGISTRY_ENDPOINT" -o -z "$VPN_ENDPOINT" ]; then
         echo "[WARNING] $0 : Couldn't read some variables from $CONFIG_PATH"
     fi

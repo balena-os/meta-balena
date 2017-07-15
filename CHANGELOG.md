@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.0.9 - 2017-07-06
+
+* Fix splash image migration in flasher images [Andrei Gherzan]
+* Add missing netfilter configs for our redsocks usage [Florin Sarbu]
+
 # v2.0.8 - 2017-07-04
 
 * Resin-vars: Fetch all the vars in resin-vars [Pagan Gazzard]

@@ -140,6 +140,12 @@ would be useful.
 Signed-off-by: Joe Developer <joe.developer@example.com>
 ```
 
+We take advantage of a change log file to keep track of what was changed in a specific version. We used to handle that file manually by adding entries to it at every pull request. In order to avoid racing issues when pushing multiple PRs, we started to use versionist which will generate the change log at every release. This tool uses two footers from commit log: `Change-type` and `Changelog-entry`. Each PR needs to have at least one commit which will specify both of these two commit log footers. In this way, when a new release is handled, the next version will be computed based on `Change-type` and the entries in the change log file will be generated based on `Changelog-entry`.
+
+In the common case where each PR addresses one specific task (issue, bug, feature etc.) the PR will contain a commit which will include `Change-type` and `Changelog-entry` in its commit log. Usually, but not necessary, this commit is the last one in the branch.
+
+`Change-type` is mandatory and, because meta-resin follows semver, can take one of the following values: patch, minor or major. `Changelog-entry` defaults to the subject line.
+
 
 ## How to fix various build errors
 
@@ -151,3 +157,27 @@ operation not supported
 ```
 This is probably because of a docker bug where, if you update kernel and don't reboot, docker gets confused. The fix is to reboot your system.
 More info: http://stackoverflow.com/questions/29546388/getting-an-operation-not-supported-error-when-trying-to-run-something-while-bu
+
+## config.json
+
+The behaviour of resinOS can be configured by setting the following keys in the config.json file in the boot partition. This configuration file is also used by the supervisor.
+
+### hostname
+
+String. The configured hostname of this device, otherwise the UUID is used.
+
+### persistentLogging
+
+Boolean. Enable or disable persistent logging on this device.
+
+### country
+
+String. The country in which the device is operating. This is used for setting with WiFi regulatory domain.
+
+### ntpServers
+
+String. A space-separated list of NTP servers to use for time synchronization. Defaults to resinio.pool.ntp.org servers.
+
+### dnsServers
+
+String. A space-separated list of preferred DNS servers to use for name resolution. Falls back to DHCP provided servers and Google DNS.

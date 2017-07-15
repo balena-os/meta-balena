@@ -1,0 +1,14 @@
+[Unit]
+Description=Resin NTP configuration service
+DefaultDependencies=no
+Requires=mnt-boot.mount etc-systemd-timesyncd.conf.mount
+After=mnt-boot.mount etc-systemd-timesyncd.conf.mount
+Before=systemd-timesyncd.service
+
+[Service]
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-ntp-config
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
