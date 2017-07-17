@@ -1,8 +1,10 @@
-# Base this image on core-image-minimal
-include recipes-core/images/core-image-minimal.bb
+SUMMARY = "Resin image flasher"
+IMAGE_LINGUAS = " "
+LICENSE = "Apache-2.0"
+
+inherit core-image image-resin
 
 RESIN_FLAG_FILE = "${RESIN_FLASHER_FLAG_FILE}"
-inherit image-resin
 
 # Each machine should append this with their specific configuration
 IMAGE_FSTYPES = ""
@@ -17,7 +19,10 @@ IMAGE_FEATURES_append = " \
     ssh-server-dropbear \
     "
 
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL = " \
+    packagegroup-core-boot \
+    ${ROOTFS_PKGMANAGE_BOOTSTRAP} \
+    ${CORE_IMAGE_EXTRA_INSTALL} \
     packagegroup-resin-connectivity \
     packagegroup-resin-flasher \
     "
