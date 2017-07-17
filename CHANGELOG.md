@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Update supervisor to v6.0.1 [Pablo]
 * Update supervisor to v5.1.0 and use aarch64 specific supervisor images [Andrei]
 * Conditionally add btrfs-tools label patch [Florin]
 * Include fsck.vfat in resinOS [Will]
