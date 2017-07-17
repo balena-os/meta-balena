@@ -1,22 +1,20 @@
-# Base this image on core-image-minimal
-include recipes-core/images/core-image-minimal.bb
+SUMMARY = "Resin image"
+IMAGE_LINGUAS = " "
+LICENSE = "Apache-2.0"
+
+inherit core-image image-resin
 
 RESIN_FLAG_FILE = "${RESIN_IMAGE_FLAG_FILE}"
-inherit image-resin
 
 #
-# The total space taken by resin is 700MiB (which includes all partitions but
-# resin-data)
+# The default root filesystem partition size is set in such a way that the
+# entire space taken by resinOS would not exceed 700 MiB. This  can be
+# overwritten by board specific layers.
 #
-IMAGE_ROOTFS_SIZE = "315392"
+IMAGE_ROOTFS_SIZE = "319488"
 IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
-# core-image-minimal adds 4M to IMAGE_ROOTFS_EXTRA_SPACE
-python () {
-    image_rootfs_size = d.getVar('IMAGE_ROOTFS_SIZE', True)
-    image_rootfs_maxsize = int(image_rootfs_size) + 4 * 1024
-    d.setVar('IMAGE_ROOTFS_MAXSIZE', image_rootfs_maxsize)
-}
+IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
 
 # Generated resinhup-tar based on RESINHUP variable
 IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"
@@ -28,7 +26,10 @@ IMAGE_FEATURES_append = " \
     read-only-rootfs \
     "
 
-IMAGE_INSTALL_append = " \
+IMAGE_INSTALL = " \
+    packagegroup-core-boot \
+    ${ROOTFS_PKGMANAGE_BOOTSTRAP} \
+    ${CORE_IMAGE_EXTRA_INSTALL} \
     packagegroup-resin-debugtools \
     packagegroup-resin-connectivity \
     packagegroup-resin \
