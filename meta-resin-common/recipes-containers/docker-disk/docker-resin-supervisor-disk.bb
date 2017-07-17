@@ -4,11 +4,11 @@ require docker-disk.inc
 SUPERVISOR_REPOSITORY_armv5 = "resin/armel-supervisor"
 SUPERVISOR_REPOSITORY_armv6 = "resin/rpi-supervisor"
 SUPERVISOR_REPOSITORY_armv7a = "resin/armv7hf-supervisor"
-SUPERVISOR_REPOSITORY_aarch64 = "resin/armv7hf-supervisor"
+SUPERVISOR_REPOSITORY_aarch64 = "resin/aarch64-supervisor"
 SUPERVISOR_REPOSITORY_x86 = "resin/i386-supervisor"
 SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
 
-SUPERVISOR_TAG ?= "v4.3.1"
+SUPERVISOR_TAG ?= "v5.1.0"
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
 TARGET_TAG ?= "${SUPERVISOR_TAG}"
 LED_FILE ?= "/dev/null"
