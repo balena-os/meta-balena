@@ -115,6 +115,10 @@ Hint: Modifing any of the TARGET_* variables, will retrigger the generation of t
 > z 4 and bluez 5 and the correct solution for that would be to resolve the conflict. If in doubt, please ask on the mailing list, sharing the error and filelist above.
 > ERROR: If the above message is too much, the simpler version is you're advised to wipe out tmp and rebuild (reusing sstate is fine). That will likely fix things in most (but not all) cases.
 
+### Docker storage driver
+
+By the default the build system will set all the bits needed for the docker to be able to use the `aufs` storage driver. This can be changed by defining `DOCKER_STORAGE` in your local.conf. It supports `aufs` and `overlay2`.
+
 ## Devices support
 
 ### WiFi Adapters

@@ -78,3 +78,6 @@ INITRAMFS_TASK = ""
 
 # resinOS defaults to ipk packages
 PACKAGE_CLASSES ?= "package_ipk"
+
+# Default the docker storage driver to aufs
+DOCKER_STORAGE ?= "aufs"
