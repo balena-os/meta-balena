@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.27 - 2017-07-17
+
 * Resinhup script fixes [Gergely]
 * Update supervisor to v6.0.1 [Pablo]
 * Update supervisor to v5.1.0 and use aarch64 specific supervisor images [Andrei]
