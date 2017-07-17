@@ -317,7 +317,7 @@ function setCurrentVersion() {
 STARTTIME=$(date +%s)
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [[ $# -gt 0 ]]; do
     arg="$1"
 
     case $arg in
@@ -417,15 +417,15 @@ if [ "$LOG" == "yes" ]; then
 fi
 
 # Determine current host OS version
-setCurrentVersion()
+setCurrentVersion
 if [ -z "$CURRENT_HOSTOS_VERSION" ]; then
 	log ERROR "Can't determine current host OS version."
 fi
 
 /usr/bin/resin-device-progress --percentage 10 --state "ResinOS: Preparing update..."
 
-# Check that HostOS version was provided
-if [ -z "$HOSTOS_VERSION" ]; then
+# Check that HostOS version was provided, and not only supervisor update was requested
+if [ -z "$HOSTOS_VERSION" -a -z "$ONLY_SUPERVISOR" ]; then
     log ERROR "--hostos-version is required."
 fi
 
@@ -452,6 +452,7 @@ fi
 SLUG=$(jq -r .deviceType $CONFIGJSON)
 APIKEY=$(jq -r .apiKey $CONFIGJSON)
 DEVICEID=$(jq -r .deviceId $CONFIGJSON)
+API_ENDPOINT=$(jq -r .apiEndpoint $CONFIGJSON)
 
 if [ -z $SLUG ]; then
     log ERROR "Could not get the SLUG."
@@ -492,11 +493,11 @@ if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
     # Before doing anything make sure the API has the version we want to update to
     # Otherwise we risk that next time update-resin-supervisor script gets called,
     # the supervisor version will change back to the old one
-    supervisor_id=`curl -s "https://api.resin.io/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"$UPDATER_SUPERVISOR_TAG\" and .device_type == \"$SLUG\") | .id // empty"`
+    supervisor_id=`curl -s "${API_ENDPOINT}/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"$UPDATER_SUPERVISOR_TAG\" and .device_type == \"$SLUG\") | .id // empty"`
     if [ -z "$supervisor_id" ]; then
         log ERROR "Could not get the supervisor version id ($UPDATER_SUPERVISOR_TAG) from the API ."
     fi
-    curl -s "https://api.resin.io/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$supervisor_id\"}" > /dev/null 2>&1
+    curl -s "${API_ENDPOINT}/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$supervisor_id\"}" > /dev/null 2>&1
 
     # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
     if [ -z "$SUPERVISOR_REGISTRY" ]; then
@@ -527,9 +528,13 @@ else
     log "Supervisor update not requested through arguments ."
 fi
 
-# That's it if we only wanted supervisor update
+# If we only wanted supervisor update, then this is the end of the resinhup process.
+# Since the supervisor at this stage should be down, start it back up again
+# and that will also clear the progress bar so do not have to do that explicitly.
 if [ "$ONLY_SUPERVISOR" == "yes" ]; then
     log "Update only of the supervisor requested."
+    log "Starting up supervisor."
+    systemctl start resin-supervisor > /dev/null 2>&1
     exit 0
 fi
 
