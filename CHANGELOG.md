@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Conditionally add btrfs-tools label patch [Florin]
 * Include fsck.vfat in resinOS [Will]
 * Update supervisor to v4.3.1 [Pablo]
 * Add BeagleBone memory hack to script to resinhup [Gergely]
