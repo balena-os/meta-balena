@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.1.0 - 2017-07-19
+
+* Update supervisor to v6.0.1 [Pablo Carranza Velez]
+* Add support for overlay2 as docker storage driver [Andrei Gherzan]
+* Detect filesystem type automatically in resin mount systemd services [Michal Mazurek]
+* Fix util-linux to work with ubifs [Michal Mazurek]
+* Allow setting DNS servers in config.json [Will Newton]
+* Make sure resin-state-reset doesn't end up in an inconsistent state [Andrei Gherzan]
+* Remove latest supervisor tag as it is not used anymore [Andrei Gherzan]
+* Add NTP configuration service [Will Newton]
+* Use full list of resin NTP servers [Will Newton]
+* Document config.json keys in README.md [Will Newton]
+* Document Change-type and Changelog-entry git commit footers [Andrei Gherzan]
+* Add systemd as a required distro feature [Will Newton]
+
 # v2.0.9 - 2017-07-06
 
 * Fix splash image migration in flasher images [Andrei Gherzan]
