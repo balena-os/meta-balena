@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.28 - 2017-07-19
+
 # v1.27 - 2017-07-17
 
 * Resinhup script fixes [Gergely]
