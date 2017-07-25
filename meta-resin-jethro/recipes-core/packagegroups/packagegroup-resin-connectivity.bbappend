@@ -16,8 +16,8 @@ CONNECTIVITY_FIRMWARES_append = " \
     linux-firmware-iwlwifi-7260-9 \
     linux-firmware-iwlwifi-7265-8 \
     linux-firmware-iwlwifi-7265-9 \
-    linux-firmware-iwlwifi-7265D-13 \
-    linux-firmware-iwlwifi-8000C-13 \
+    linux-firmware-iwlwifi-7265d-13 \
+    linux-firmware-iwlwifi-8000c-13 \
     linux-firmware-rtl8188eu \
     linux-firmware-wl12xx \
     "
