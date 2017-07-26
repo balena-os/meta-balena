@@ -185,3 +185,15 @@ String. A space-separated list of NTP servers to use for time synchronization. D
 ### dnsServers
 
 String. A space-separated list of preferred DNS servers to use for name resolution. Falls back to DHCP provided servers and Google DNS.
+
+## Yocto version support
+
+The following Yocto versions are supported:
+ * Morty (2.2)
+  * **TESTED**
+ * Krogoth (2.1)
+  * **TESTED**
+ * Jethro (2.0)
+  * **TESTED**
+ * Fido (1.8)
+  * **UNTESTED**
