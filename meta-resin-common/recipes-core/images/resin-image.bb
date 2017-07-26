@@ -55,7 +55,10 @@ RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"
 RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-type.json"
 
 # example NetworkManager config file
-RESIN_BOOT_PARTITION_FILES_append = " system-connections/resin-sample:/system-connections/resin-sample"
+RESIN_BOOT_PARTITION_FILES_append = " \
+    system-connections/resin-sample.ignore:/system-connections/resin-sample.ignore \
+    system-connections/README.ignore:/system-connections/README.ignore \
+    "
 
 # Resin image flag file
 RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_IMAGE_FLAG_FILE}:/${RESIN_IMAGE_FLAG_FILE}"

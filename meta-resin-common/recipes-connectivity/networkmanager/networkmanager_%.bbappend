@@ -7,7 +7,8 @@ FILESEXTRAPATHS_append := ":${THISDIR}/files"
 SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
     file://NetworkManager.conf \
-    file://resin-sample \
+    file://README.ignore \
+    file://resin-sample.ignore \
     "
 
 RDEPENDS_${PN}_append = " resin-net-config resolvconf"
@@ -40,7 +41,8 @@ do_install_append() {
 
 do_deploy() {
     mkdir -p "${DEPLOYDIR}/system-connections/"
-    install -m 0600 "${WORKDIR}/resin-sample" "${DEPLOYDIR}/system-connections/"
+    install -m 0600 "${WORKDIR}/resin-sample.ignore" "${DEPLOYDIR}/system-connections/"
+    install -m 0600 "${WORKDIR}/README.ignore" "${DEPLOYDIR}/system-connections/"
 }
 
 addtask deploy before do_package after do_install
