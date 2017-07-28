@@ -68,9 +68,6 @@ if [ -f $CONFIG_PATH ]; then
          NTP_SERVERS=\(.ntpServers // "")
          DNS_SERVERS=\(.dnsServers // "")
          "' $CONFIG_PATH)"
-    if [ -z "$API_ENDPOINT" -o -z "$LISTEN_PORT" -o -z "$MIXPANEL_TOKEN" -o -z "$PUBNUB_PUBLISH_KEY" -o -z "$PUBNUB_SUBSCRIBE_KEY" -o -z "$REGISTRY_ENDPOINT" -o -z "$VPN_ENDPOINT" ]; then
-        echo "[WARNING] $0 : Couldn't read some variables from $CONFIG_PATH"
-    fi
     if [ -z "$PERSISTENT_LOGGING" ]; then
         PERSISTENT_LOGGING=false
     fi
