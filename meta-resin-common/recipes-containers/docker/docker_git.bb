@@ -38,6 +38,7 @@ SRC_URI = "\
   file://0014-pkg-archive-make-unpacking-durable.patch \
   file://0015-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
   file://0016-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
+  file://0017-fix-compilation-errors-with-btrfs-progs-4.5.patch \
 "
 
 # Apache-2.0 for docker

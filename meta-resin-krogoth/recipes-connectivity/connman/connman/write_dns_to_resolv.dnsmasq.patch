@@ -1,0 +1,20 @@
+We need /etc/resolv.conf with only 127.0.0.1 and also need connman to write the DNS entries
+in a different file that is to be used by dnsmasq (/etc/resolv.dnsmasq).
+
+Upstream-Status: Inappropriate [configuration specific]
+
+Signed-off-by: Florin Sarbu <florin@resin.io>
+
+Index: connman-1.30/src/resolver.c
+===================================================================
+--- connman-1.30.orig/src/resolver.c
++++ connman-1.30/src/resolver.c
+@@ -130,7 +130,7 @@ static int resolvfile_export(void)
+ 
+ 	old_umask = umask(022);
+ 
+-	fd = open("/etc/resolv.conf", O_RDWR | O_CREAT | O_CLOEXEC,
++	fd = open("/etc/resolv.dnsmasq", O_RDWR | O_CREAT | O_CLOEXEC,
+ 					S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+ 	if (fd < 0) {
+ 		err = -errno;
