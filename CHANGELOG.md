@@ -1,6 +1,8 @@
 Change log
 -----------
 
+* Update supervisor to v6.1.2 [Pablo]
+
 # v1.29 - 2017-07-28
 
 * No significant changes
