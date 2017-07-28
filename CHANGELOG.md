@@ -1,7 +1,13 @@
 Change log
 -----------
 
+# v1.29 - 2017-07-28
+
+* No significant changes
+
 # v1.28 - 2017-07-19
+
+* No significant changes
 
 # v1.27 - 2017-07-17
 
