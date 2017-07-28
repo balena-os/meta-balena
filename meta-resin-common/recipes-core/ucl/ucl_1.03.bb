@@ -11,6 +11,8 @@ SRC_URI = " \
 SRC_URI[md5sum] = "852bd691d8abc75b52053465846fba34"
 SRC_URI[sha256sum] = "b865299ffd45d73412293369c9754b07637680e5c826915f097577cd27350348"
 
-inherit autotools native
+inherit autotools
 
 CFLAGS += "-std=c90"
+
+BBCLASSEXTEND = "native"
