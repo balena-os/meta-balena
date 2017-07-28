@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Do not deploy systemd's resolv.conf file but rather use the one we add through dnsmasq [Florin]
 * Conditionally use IMGDEPLOYDIR over DEPLOY_DIR_IMAGE [Florin]
 * Plymouth: change splash image scaling to full screen instead of half [Gergely]
 * Resinhip: bump default resinhup container to v1.2.1 (Alpine Linux) [Gergely]
