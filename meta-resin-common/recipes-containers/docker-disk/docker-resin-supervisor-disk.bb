@@ -9,7 +9,7 @@ SUPERVISOR_REPOSITORY_aarch64 = "resin/aarch64-supervisor"
 SUPERVISOR_REPOSITORY_x86 = "resin/i386-supervisor"
 SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
 
-SUPERVISOR_TAG ?= "v6.0.1"
+SUPERVISOR_TAG ?= "v6.1.2"
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
 TARGET_TAG ?= "${SUPERVISOR_TAG}"
 LED_FILE ?= "/dev/null"
