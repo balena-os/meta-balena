@@ -25,5 +25,3 @@ python resinos_sanity_handler() {
 
 addhandler resinos_sanity_handler
 resinos_sanity_handler[eventmask] = "bb.event.BuildStarted"
-
-REQUIRED_DISTRO_FEATURES += " systemd"
