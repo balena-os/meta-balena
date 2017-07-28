@@ -1,0 +1,25 @@
+From d89760f6a310c35633d2a502d9ad3ea00da65937 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Fri, 28 Jul 2017 14:14:48 +0100
+Subject: [PATCH] Revert "rce: create stripped binary"
+
+This reverts commit 98fba56e88e4549b19ee1b20b4e61c93ab465ba4.
+---
+ hack/make/binary-rce-docker | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/hack/make/binary-rce-docker b/hack/make/binary-rce-docker
+index 7e0fb8f..c560fba 100644
+--- a/hack/make/binary-rce-docker
++++ b/hack/make/binary-rce-docker
+@@ -8,7 +8,6 @@ set -e
+ 	export BINARY_SHORT_NAME="$DOCKER_RCE_BINARY_NAME"
+ 	export GO_PACKAGE='github.com/docker/docker/cmd/rce'
+ 	export IAMSTATIC='false'
+-	export LDFLAGS="$LDFLAGS -s"
+ 	export LDFLAGS_STATIC_DOCKER=''
+ 	export BUILDFLAGS=( "${BUILDFLAGS[@]/netgo /}" ) # disable netgo, since we don't need it for a dynamic binary
+ 	export BUILDFLAGS=( "${BUILDFLAGS[@]/static_build /}" ) # we're not building a "static" binary
+-- 
+2.7.4
+

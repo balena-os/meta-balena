@@ -18,8 +18,13 @@ DESCRIPTION = "Linux container runtime \
  subtle and/or glaring issues. \
  "
 
-SRCREV = "670a205440471d72528f123ab7b686179d04e8e2"
-SRCBRANCH = "17.03.1-resin"
+inherit binary-compress
+FILES_COMPRESS = "${bindir}/mobynit"
+
+SRCREV = "0061a9754280bf89cb3734f62d3441941e5f2240"
+# XXX this should be a temporary branch until we will include mobynit support
+# in a release branch
+SRCBRANCH = "bootable-containers"
 SRC_URI = "\
   git://github.com/resin-os/docker.git;branch=${SRCBRANCH};nobranch=1 \
   file://docker.service \
@@ -29,27 +34,31 @@ SRC_URI = "\
   file://0002-pkg-ioutils-sync-parent-directory-too.patch \
   file://0003-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
   file://0004-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
-  file://0005-daemon-cleanup-as-early-as-possible.patch \
-  file://0006-container-make-sure-config-on-disk-has-a-valid-Confi.patch \
+  file://0007-Revert-rce-create-stripped-binary.patch \
 "
+
+# XXX These patched don't apply anymore on this branch
+# file://0005-daemon-cleanup-as-early-as-possible.patch
+# file://0006-container-make-sure-config-on-disk-has-a-valid-Confi.patch
 
 # Apache-2.0 for docker
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=aadc30f9c14d876ded7bedc0afd2d3d7"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
 
 S = "${WORKDIR}/git"
 
-DOCKER_VERSION = "17.03.1-ce"
+DOCKER_VERSION = "17.06.0-dev"
 PV = "${DOCKER_VERSION}+git${SRCREV}"
 
 DEPENDS = " \
   go-cross \
+  golang.org-x-sys \
   btrfs-tools \
   git \
   systemd \
   "
 
-DEPENDS_append_class-target = "lvm2"
+DEPENDS_append_class-target = " lvm2"
 RDEPENDS_${PN} = "curl util-linux iptables tini systemd"
 RRECOMMENDS_${PN} += " kernel-module-dm-thin-pool kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
@@ -95,7 +104,7 @@ do_compile() {
   rm -rf .gopath
   mkdir -p .gopath/src/"$(dirname "${DOCKER_PKG}")"
   ln -sf ../../../.. .gopath/src/"${DOCKER_PKG}"
-  export GOPATH="${S}/.gopath:${S}/vendor:${STAGING_DIR_TARGET}/${prefix}/local/go"
+  export GOPATH="${S}/.gopath:${S}/vendor:${STAGING_DIR_TARGET}/${prefix}/local/go:${STAGING_DIR_TARGET}/${libdir}/${TARGET_SYS}/go"
   cd -
 
   export CGO_ENABLED="1"
@@ -108,6 +117,16 @@ do_compile() {
   export DOCKER_GITCOMMIT="${SRCREV}"
 
   ./hack/make.sh binary-rce-docker
+
+  # Compile mobynit
+  cd ${S}/cmd/mobynit
+  go build \
+    -tags 'exclude_graphdriver_devicemapper exclude_graphdriver_zfs
+    exclude_graphdriver_btrfs' \
+    -ldflags '-extldflags "-static"' \
+    .
+  cd -
+
 }
 
 inherit systemd
@@ -118,6 +137,7 @@ SYSTEMD_SERVICE_${PN} = "docker.service var-lib-docker.mount"
 do_install() {
   mkdir -p ${D}/${bindir}
   install -m 0755 ${S}/bundles/${DOCKER_VERSION}/binary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
+  install -m 0755 ${S}/cmd/mobynit/mobynit ${D}/${bindir}/mobynit
 
   ln -sf rce-docker ${D}/${bindir}/docker
   ln -sf rce-docker ${D}/${bindir}/dockerd
@@ -149,4 +169,5 @@ GROUPADD_PARAM_${PN} = "-r docker"
 FILES_${PN} += " \
   /lib/systemd/system/* \
   /home/root/.docker/ \
+  ${bindir}/mobynit \
   "
