@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.2.0 - 2017-07-28
+
+* Update supervisor to v6.1.2 [Pablo Carranza Velez]
+* Support building with Yocto Pyro [Will Newton]
+* Disable resin-sample NetworkManager connection [Will Newton]
+* Remove support for Yocto Daisy [Will Newton]
+
 # v2.1.0 - 2017-07-19
 
 * Update supervisor to v6.0.1 [Pablo Carranza Velez]
