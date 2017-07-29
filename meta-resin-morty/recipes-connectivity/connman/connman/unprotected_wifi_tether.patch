@@ -17,12 +17,12 @@ Index: connman-1.33/src/technology.c
  		return -EINVAL;
  
  	for (tech_drivers = technology->driver_list; tech_drivers;
-@@ -926,7 +926,7 @@ static DBusMessage *set_property(DBusCon
+@@ -925,7 +925,7 @@ static DBusMessage *set_property(DBusCon
+ 
  		err = __connman_service_check_passphrase(CONNMAN_SERVICE_SECURITY_PSK,
  							str);
- 		if (err < 0)
--			return __connman_error_passphrase_required(msg);
-+			if ((str != NULL ) && (strlen(str) < 8 || strlen(str) > 63))
+-		if (err < 0)
++		if (str != NULL && err < 0)
+ 			return __connman_error_passphrase_required(msg);
  
  		if (g_strcmp0(technology->tethering_passphrase, str) != 0) {
- 			g_free(technology->tethering_passphrase);
