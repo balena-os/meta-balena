@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Fix connman unprotected_wifi_tether.patch splitout [Florin]
 * Update supervisor to v6.1.2 [Pablo]
 
 # v1.29 - 2017-07-28

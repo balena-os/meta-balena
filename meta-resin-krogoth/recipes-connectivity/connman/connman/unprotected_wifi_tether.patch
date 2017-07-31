@@ -4,10 +4,10 @@ Upstream-Status: Denied
 
 Signed-off-by: Praneeth Bodduluri <lifeeth@gmail.com>
 
-Index: connman-1.33/src/technology.c
+Index: connman-1.31/src/technology.c
 ===================================================================
---- connman-1.33.orig/src/technology.c
-+++ connman-1.33/src/technology.c
+--- connman-1.31.orig/src/technology.c
++++ connman-1.31/src/technology.c
 @@ -249,7 +249,7 @@ static int set_tethering(struct connman_
  		return -EOPNOTSUPP;
  
@@ -17,12 +17,12 @@ Index: connman-1.33/src/technology.c
  		return -EINVAL;
  
  	for (tech_drivers = technology->driver_list; tech_drivers;
-@@ -926,7 +926,7 @@ static DBusMessage *set_property(DBusCon
- 		err = __connman_service_check_passphrase(CONNMAN_SERVICE_SECURITY_PSK,
- 							str);
- 		if (err < 0)
--			return __connman_error_passphrase_required(msg);
-+			if ((str != NULL ) && (strlen(str) < 8 || strlen(str) > 63))
+@@ -923,7 +923,7 @@ static DBusMessage *set_property(DBusCon
+ 		if (technology->type != CONNMAN_SERVICE_TYPE_WIFI)
+ 			return __connman_error_not_supported(msg);
+ 
+-		if (strlen(str) < 8 || strlen(str) > 63)
++		if ((str != NULL ) && (strlen(str) < 8 || strlen(str) > 63))
+ 			return __connman_error_passphrase_required(msg);
  
  		if (g_strcmp0(technology->tethering_passphrase, str) != 0) {
- 			g_free(technology->tethering_passphrase);
