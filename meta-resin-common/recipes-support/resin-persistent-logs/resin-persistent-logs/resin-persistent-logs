@@ -10,7 +10,7 @@ if [ "$PERSISTENT_LOGGING" = "true" ] && [ ! -d /var/log/journal ]; then
     echo "$(basename "$0"): Persistent logging activated."
 elif [ "$PERSISTENT_LOGGING" = "true" ] && [ -d /var/log/journal ]; then
     echo "$(basename "$0"): Persistent logging already activated."
-    journalclt --flush
+    journalctl --flush
 elif [ "$PERSISTENT_LOGGING" = "false" ] && [ -d /var/log/journal ]; then
     echo "$(basename "$0"): Persistent logging was deactivated but system reboot is needed."
 else
