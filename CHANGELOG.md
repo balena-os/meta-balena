@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Resinhip: bump default resinhup container to v1.2.1 (Alpine Linux) [Gergely]
 * Resinhup: add flag to update the supervisor to the one released with the target OS version [Gergely]
 * Fix connman unprotected_wifi_tether.patch splitout [Florin]
 * Update supervisor to v6.1.2 [Pablo]
