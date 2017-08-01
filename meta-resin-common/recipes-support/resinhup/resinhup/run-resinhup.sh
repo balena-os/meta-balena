@@ -54,6 +54,10 @@ Options:
         Before updating ResinOS, update Supervisor using this tag.
         Don't omit the 'v' in front of the version. e.g.: v1.2.3 and not 1.2.3.
 
+  --supervisor-release-update
+        Update the supervisor to the version that ships with the target host OS
+        releases, if that is newer than the version run by the device.
+
   --only-supervisor
         Update only the supervisor.
 
@@ -309,6 +313,135 @@ function setCurrentVersion() {
 	fi
 }
 
+function getSupervisorVersionFromRelease() {
+    # When updating, check if the target resinOS version has newer default supervisor
+    # than what is running on the device at the moment. If there is, fill out the
+    # UPDATER_SUPERVISOR_TAG parameter, plus some some helper parameters so not to
+    # redo work in the next step (pulling the supervisor)
+
+    if [ "$STAGING" == "yes" ]; then
+        DEFAULT_SUPERVISOR_VERSION_URL_BASE="https://s3.amazonaws.com/resin-staging-img/"
+    else
+        DEFAULT_SUPERVISOR_VERSION_URL_BASE="https://s3.amazonaws.com/resin-production-img-cloudformation/"
+    fi
+    DEFAULT_SUPERVISOR_VERSION_URL="${DEFAULT_SUPERVISOR_VERSION_URL_BASE}images/${SLUG}/${HOSTOS_VERSION}/VERSION"
+
+    # Get supervisor version for target resinOS release, it is in format of "a.b.c-shortsha", e.g. "4.1.2-f566dc4dd241",
+    # and tag new version for the device if it's newer than the current version, from the API
+    DEFAULT_SUPERVISOR_VERSION=$(curl -s "$DEFAULT_SUPERVISOR_VERSION_URL" | sed 's/-.*//')
+    if [ -z "$DEFAULT_SUPERVISOR_VERSION" ] || [ -z "${DEFAULT_SUPERVISOR_VERSION##*xml*}" ]; then
+        log ERROR "Could not get the default supervisor version for this resinOS release, bailing out."
+    else
+        CURRENT_SUPERVISOR_VERSION=$(curl -s "${API_ENDPOINT}/v2/device(${DEVICEID})?\$select=supervisor_version&apikey=${APIKEY}" | jq -r '.d[0].supervisor_version')
+        if [ -z "$CURRENT_SUPERVISOR_VERSION" ]; then
+            log ERROR "Could not get current supervisor version from the API, bailing out."
+        else
+            if version_gt "$DEFAULT_SUPERVISOR_VERSION" "$CURRENT_SUPERVISOR_VERSION" ; then
+                log "Supervisor update: will be upgrading from v${CURRENT_SUPERVISOR_VERSION} to v${DEFAULT_SUPERVISOR_VERSION}"
+                UPDATER_SUPERVISOR_TAG="v${DEFAULT_SUPERVISOR_VERSION}"
+                # Get the supervisor id and image name
+                if data=$(curl -s "${API_ENDPOINT}/v2/supervisor_release?\$select=id,image_name&\$filter=((device_type%20eq%20'$SLUG')%20and%20(supervisor_version%20eq%20'$UPDATER_SUPERVISOR_TAG'))&apikey=${APIKEY}" | jq -e -r '.d[0].id,.d[0].image_name'); then
+                    read UPDATER_SUPERVISOR_ID UPDATER_SUPERVISOR_IMAGE_NAME <<<$data
+                    log "Extracted supervisor vars: ID: $UPDATER_SUPERVISOR_ID; Image Name: $UPDATER_SUPERVISOR_IMAGE_NAME"
+                fi
+            else
+                log "Supervisor update: no update needed."
+            fi
+        fi
+    fi
+}
+
+function pullSupervisor() {
+    # Pulling the supervisor, and preparing to update things later
+    # This can work with either manually set supervisor tag, or automatically
+    # set from the target resinOS update.
+    # Just pull the image, if requested, through cache, and do the update steps
+    # later when the rest of the update is successful.
+    # One thing is always updated in this step: the supervisor.conf with the image name,
+    # which includes the remote registry to call from. It should be the same for all 1.X
+    # devices now regardless of version, so updating it all the time (and not atomically
+    # as the update goes) should be correct under these assumptions.
+
+    log "Supervisor update requested through arguments..."
+    /usr/bin/resin-device-progress --percentage 25 --state "ResinOS: Preparing supervisor..."
+
+    # When requesting default supervisor update, this variable would be already filled
+    # out by the supervisor version check function. If empty, try to figure the image out.
+    if [ -z "$UPDATER_SUPERVISOR_IMAGE_NAME" ]; then
+        # Default UPDATER_SUPERVISOR_IMAGE to the one in supervisor.conf
+        if [ -z "$SUPERVISOR_REGISTRY" ]; then
+            UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
+        else
+            UPDATER_SUPERVISOR_IMAGE="$SUPERVISOR_REGISTRY/resin/$arch-supervisor"
+        fi
+    else
+        UPDATER_SUPERVISOR_IMAGE=$UPDATER_SUPERVISOR_IMAGE_NAME
+    fi
+
+    log "Pulling supervisor $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG..."
+    cachedpull "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG"
+}
+
+function updateSupervisorConf() {
+    # Update the supervisor config file with the new image and tag values.
+    # If needed mount the new root filesystem as well.
+
+    local _mountnewroot="$1"
+    if [ "$_mountnewroot" == "yes" ]; then
+        _newroot_mountpoint="/tmp/newroot"
+        local _current_root_device
+        local _new_root_number
+        _current_root_device=$(findmnt -n --raw --evaluate --output=source /)
+        case $_current_root_device in
+            *p2)
+                _new_root_number=3
+                ;;
+            *p3)
+                _new_root_number=2
+                ;;
+            *)
+                log ERROR "Current root partition ${_current_root_device} is not first or second root partition, aborting."
+                ;;
+        esac
+        local _new_root_device="${_current_root_device%?}${_new_root_number}"
+        log "Mounting new rootfs from ${_new_root_device} to ${_newroot_mountpoint}"
+        mkdir -p ${_newroot_mountpoint}
+        mount "${_new_root_device}" "${_newroot_mountpoint}"
+        SUPERVISORCONFPATH="${_newroot_mountpoint}${SUPERVISORCONF}"
+    else
+        SUPERVISORCONFPATH="$SUPERVISORCONF"
+    fi
+
+    log "Updating ${SUPERVISORCONFPATH}"
+    if grep -q "SUPERVISOR_IMAGE" "${SUPERVISORCONFPATH}"; then
+        sed --in-place "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$UPDATER_SUPERVISOR_IMAGE|" "${SUPERVISORCONFPATH}"
+    else
+        echo "SUPERVISOR_IMAGE=$UPDATER_SUPERVISOR_IMAGE" >> ${SUPERVISORCONFPATH}
+    fi
+    if grep -q "SUPERVISOR_TAG" "${SUPERVISORCONF}"; then
+        sed --in-place "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$UPDATER_SUPERVISOR_TAG|" "${SUPERVISORCONFPATH}"
+    else
+        echo "SUPERVISOR_TAG=$UPDATER_SUPERVISOR_TAG" >> ${SUPERVISORCONFPATH}
+    fi
+
+    if [ "$_mountnewroot" == "yes" ]; then
+        log "Unmounting ${_newroot_mountpoint}"
+        umount ${_newroot_mountpoint} &> /dev/null
+    fi
+}
+
+# Actually updating the supervisor by tagging the new version as "latest" and updating the API
+function updateSupervisor() {
+    log "Updating supervisor tag..."
+    $DOCKER tag -f "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG" "$UPDATER_SUPERVISOR_IMAGE:latest"
+
+    log "Setting supervisor version in the API"
+    if [ -z "$UPDATER_SUPERVISOR_ID" ]; then
+        UPDATER_SUPERVISOR_ID=$(curl -s "${API_ENDPOINT}/v2/supervisor_release?\$select=id,image_name&\$filter=((device_type%20eq%20'$SLUG')%20and%20(supervisor_version%20eq%20'$UPDATER_SUPERVISOR_TAG'))&apikey=${APIKEY}" | jq -e -r '.d[0].id')
+    fi
+    curl -s "${API_ENDPOINT}/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$UPDATER_SUPERVISOR_ID\"}" > /dev/null 2>&1
+}
+
 #
 # MAIN
 #
@@ -365,6 +498,9 @@ while [[ $# -gt 0 ]]; do
             fi
             UPDATER_SUPERVISOR_TAG=$2
             shift
+            ;;
+        --supervisor-release-update)
+            SUPERVISOR_RELEASE_UPDATE=yes
             ;;
         --only-supervisor)
             ONLY_SUPERVISOR=yes
@@ -472,58 +608,34 @@ else
 fi
 
 # Detect arch
-source /etc/supervisor.conf
+SUPERVISORCONF="/etc/supervisor.conf"
+source "${SUPERVISORCONF}"
 arch=`echo "$SUPERVISOR_IMAGE" | sed -n "s/.*\/\([a-zA-Z0-9]*\)-.*/\1/p"`
 if [ -z "$arch" ]; then
-    log ERROR "Can't detect arch from /etc/supervisor.conf ."
+    log ERROR "Can't detect arch from ${SUPERVISORCONF} ."
 else
     log "Detected arch: $arch ."
 fi
 
 # We need to stop update-resin-supervisor.timer otherwise it might restart supervisor which
 # will delete downloaded layers. Same for cron jobs.
+log "Stopping timers and cronjobs"
 systemctl stop update-resin-supervisor.timer > /dev/null 2>&1
 /etc/init.d/crond stop > /dev/null 2>&1 # We might have cron jobs which restart supervisor
 
+# Avoid supervisor cleaning up resinhup and stop containers
+log "Stopping all containers..."
+systemctl stop resin-supervisor > /dev/null 2>&1
+$DOCKER stop $($DOCKER ps -a -q) > /dev/null 2>&1
+log "Removing all containers..."
+$DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
+
 # Supervisor update
+if [ ! -z "$SUPERVISOR_RELEASE_UPDATE" ]; then
+    getSupervisorVersionFromRelease
+fi
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then
-    log "Supervisor update requested through arguments ."
-    /usr/bin/resin-device-progress --percentage 25 --state "ResinOS: Updating supervisor..."
-
-    # Before doing anything make sure the API has the version we want to update to
-    # Otherwise we risk that next time update-resin-supervisor script gets called,
-    # the supervisor version will change back to the old one
-    supervisor_id=`curl -s "${API_ENDPOINT}/v2/supervisor_release?apikey=$APIKEY" | jq -r ".d[] | select(.supervisor_version == \"$UPDATER_SUPERVISOR_TAG\" and .device_type == \"$SLUG\") | .id // empty"`
-    if [ -z "$supervisor_id" ]; then
-        log ERROR "Could not get the supervisor version id ($UPDATER_SUPERVISOR_TAG) from the API ."
-    fi
-    curl -s "${API_ENDPOINT}/v2/device($DEVICEID)?apikey=$APIKEY" -X PATCH -H 'Content-Type: application/json;charset=UTF-8' --data-binary "{\"supervisor_release\": \"$supervisor_id\"}" > /dev/null 2>&1
-
-    # Default UPDATER_SUPERVISOR_IMAGE to the one in /etc/supervisor.conf
-    if [ -z "$SUPERVISOR_REGISTRY" ]; then
-        UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
-    else
-        UPDATER_SUPERVISOR_IMAGE="$SUPERVISOR_REGISTRY/resin/$arch-supervisor"
-    fi
-
-    log "Update to supervisor $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG..."
-
-    log "Updating supervisor..."
-    if [[ $(readlink /sbin/init) == *"sysvinit"* ]]; then
-        # Supervisor update on sysvinit based OS
-        retrycommand "$DOCKER pull $UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG"
-        $DOCKER tag -f "$UPDATER_SUPERVISOR_IMAGE:$UPDATER_SUPERVISOR_TAG" "$UPDATER_SUPERVISOR_IMAGE:latest"
-    else
-        # Supervisor update on systemd based OS
-        retrycommand "/usr/bin/update-resin-supervisor --supervisor-image $UPDATER_SUPERVISOR_IMAGE --supervisor-tag $UPDATER_SUPERVISOR_TAG"
-
-        # Remove the old supervisor
-        systemctl stop resin-supervisor > /dev/null 2>&1
-        for image_id in $($DOCKER images | grep supervisor | grep -v latest | grep -v "$UPDATER_SUPERVISOR_TAG" | awk '{print $3}' | sort -u); do
-            log "Removing old supervisor image with ID $image_id..."
-            $DOCKER rmi -f $image_id
-        done
-    fi
+    pullSupervisor
 else
     log "Supervisor update not requested through arguments ."
 fi
@@ -532,19 +644,15 @@ fi
 # Since the supervisor at this stage should be down, start it back up again
 # and that will also clear the progress bar so do not have to do that explicitly.
 if [ "$ONLY_SUPERVISOR" == "yes" ]; then
-    log "Update only of the supervisor requested."
-    log "Starting up supervisor."
-    systemctl start resin-supervisor > /dev/null 2>&1
+    updateSupervisorConf
+    updateSupervisor
+    /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: update finished. Restarting supervisor..."
+    log "Update of only the supervisor was requested."
+    log "Starting processes back up."
+    tryup
     exit 0
 fi
 
-# Avoid supervisor cleaning up resinhup and stop containers
-/usr/bin/resin-device-progress --percentage 50 --state "ResinOS: Preparing update..."
-log "Stopping all containers..."
-systemctl stop resin-supervisor > /dev/null 2>&1
-$DOCKER stop $($DOCKER ps -a -q) > /dev/null 2>&1
-log "Removing all containers..."
-$DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 /usr/bin/resin-device-progress --percentage 50 --state "ResinOS: Preparing update..."
 
 # Pull resinhup - rce can only pull from v1 (resin staging registry)
@@ -593,7 +701,8 @@ RESINHUP_EXIT=$?
 
 # Save logs
 $DOCKER logs resinhup >> $LOGFILE 2>&1
-$DOCKER rm -f resinhup > /dev/null 2>&1
+$DOCKER rm -f resinhup &> /dev/null
+$DOCKER rm -f resinos &> /dev/null
 
 # RESINHUP_EXIT
 #   0 - update succeeded
@@ -605,6 +714,11 @@ if [ $RESINHUP_EXIT -eq 0 ] || [ $RESINHUP_EXIT -eq 2 ] || [ $RESINHUP_EXIT -eq 
 
     if [ $RESINHUP_EXIT -eq 0 ]; then
         /usr/bin/resin-device-progress --percentage 90 --state "ResinOS: Finalizing update..."
+        # If this tag is set and we get to this point, then we had a supervisor update done
+        if [ -n "$UPDATER_SUPERVISOR_TAG" ]; then
+            updateSupervisorConf "yes"
+            updateSupervisor
+        fi
         runPostHacks
         /usr/bin/resin-device-progress --percentage 100 --state "ResinOS: Done. Rebooting..."
     elif [ $RESINHUP_EXIT -eq 2 ]; then
