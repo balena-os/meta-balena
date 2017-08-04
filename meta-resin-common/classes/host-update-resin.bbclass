@@ -12,8 +12,6 @@ IMAGE_DEPENDS_resinhup-tar = " \
 RESIN_HUP_TEMP_DIR = "${WORKDIR}/resinhup"
 RESIN_HUP_TEMP_DIR_BOOT = "${RESIN_HUP_TEMP_DIR}/${RESIN_BOOT_FS_LABEL}"
 
-RESIN_HUP_BUNDLE ?= "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinhup-tar"
-
 QUIRK_FILES ?= "etc/hostname etc/hosts etc/resolv.conf"
 
 IMAGE_CMD_resinhup-tar () {
@@ -23,7 +21,15 @@ IMAGE_CMD_resinhup-tar () {
 
     # Populate
     mcopy -i ${WORKDIR}/boot.img -sv ::/ ${RESIN_HUP_TEMP_DIR_BOOT}
-    tar -xf ${IMAGE_NAME}.rootfs.tar -C ${RESIN_HUP_TEMP_DIR}
+    # check if we are running on a poky version which deploys to IMGDEPLOYDIR instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
+    # and extract the appropriate archive; also based on this set the correct location where to create the resin hostOS update bundle in
+    if [ -d "${IMGDEPLOYDIR}" ]; then
+        tar -xf ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar -C ${RESIN_HUP_TEMP_DIR}
+        RESIN_HUP_BUNDLE="${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resinhup-tar"
+    else
+        tar -xf ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.tar -C ${RESIN_HUP_TEMP_DIR}
+        RESIN_HUP_BUNDLE="${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinhup-tar"
+    fi
 
     # Quirks
     # We need to save some files that docker shadows with bind mounts
