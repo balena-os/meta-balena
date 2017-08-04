@@ -393,10 +393,10 @@ function updateSupervisorConf() {
         local _new_root_number
         _current_root_device=$(findmnt -n --raw --evaluate --output=source /)
         case $_current_root_device in
-            *p2)
+            *2)
                 _new_root_number=3
                 ;;
-            *p3)
+            *3)
                 _new_root_number=2
                 ;;
             *)
