@@ -56,7 +56,7 @@ inherit image_types
 #   +-------------------+
 #
 
-RESIN_ROOT_FSTYPE ?= "ext4"
+RESIN_ROOT_FSTYPE ?= "hostapp-ext4"
 
 python() {
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR
@@ -65,10 +65,12 @@ python() {
         d.setVar('RESIN_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.${RESIN_ROOT_FSTYPE}')
         d.setVar('RESIN_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resinos-img')
         d.setVar('RESIN_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
+        d.setVar('RESIN_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
     else:
         d.setVar('RESIN_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_ROOT_FSTYPE}')
         d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-img')
         d.setVar('RESIN_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
+        d.setVar('RESIN_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
 }
 
 
@@ -265,4 +267,15 @@ do_rootfs[vardeps] += "RESIN_BOOT_PARTITION_FILES"
 IMAGE_CMD_docker () {
     DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=1.22 docker import -)
     DOCKER_API_VERSION=1.22 docker save ${DOCKER_IMAGE} > ${RESIN_DOCKER_IMG}
+}
+
+IMAGE_TYPEDEP_hostapp-ext4 = "docker"
+
+IMAGE_DEPENDS_hostapp-ext4 = " \
+    mkfs-hostapp-native \
+    "
+
+IMAGE_CMD_hostapp-ext4 () {
+    dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
+    mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
 }
