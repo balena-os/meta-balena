@@ -96,6 +96,7 @@ RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
 RESIN_RAW_IMG_COMPRESSION ?= ""
 RESIN_DATA_FS ?= "${DEPLOY_DIR}/images/${MACHINE}/${RESIN_DATA_FS_LABEL}.img"
 RESIN_BOOT_FS = "${WORKDIR}/${RESIN_BOOT_FS_LABEL}.img"
+RESIN_ROOTB_FS = "${WORKDIR}/${RESIN_ROOTB_FS_LABEL}.img"
 RESIN_STATE_FS ?= "${WORKDIR}/${RESIN_STATE_FS_LABEL}.img"
 
 # resinos-img depends on the rootfs image
@@ -219,6 +220,12 @@ IMAGE_CMD_resinos-img () {
         bbwarn "Boot partition was detected empty."
     fi
 
+    # resin-rootB
+    RESIN_ROOTB_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | awk '/ 3 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
+    rm -rf ${RESIN_ROOTB_FS}
+    dd if=/dev/zero of=${RESIN_ROOTB_FS} seek=${RESIN_ROOTB_BLOCKS} count=0 bs=1024
+    mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -F -L "${RESIN_ROOTB_FS_LABEL}" ${RESIN_ROOTB_FS}
+
     # resin-state
     if [ -n "${RESIN_STATE_FS}" ]; then
         RESIN_STATE_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
@@ -238,6 +245,7 @@ IMAGE_CMD_resinos-img () {
     #
     dd if=${RESIN_BOOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${RESIN_IMAGE_ALIGNMENT})
     dd if=${RESIN_ROOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED}))
+    dd if=${RESIN_ROOTB_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED}))
     if [ -n "${RESIN_STATE_FS}" ]; then
         dd if=${RESIN_STATE_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
     fi
