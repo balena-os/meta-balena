@@ -236,13 +236,13 @@ IMAGE_CMD_resinos-img () {
     #
     # Burn partitions
     #
-    dd if=${RESIN_BOOT_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* ${RESIN_IMAGE_ALIGNMENT})
-    dd if=${RESIN_ROOT_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED}))
+    dd if=${RESIN_BOOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${RESIN_IMAGE_ALIGNMENT})
+    dd if=${RESIN_ROOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED}))
     if [ -n "${RESIN_STATE_FS}" ]; then
-        dd if=${RESIN_STATE_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
+        dd if=${RESIN_STATE_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
     fi
     if [ -n "${RESIN_DATA_FS}" ]; then
-        dd if=${RESIN_DATA_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_STATE_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
+        dd if=${RESIN_DATA_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_STATE_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
     fi
 
     # Optionally apply compression
