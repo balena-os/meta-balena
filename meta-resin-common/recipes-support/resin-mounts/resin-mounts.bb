@@ -15,6 +15,8 @@ SRC_URI = " \
     file://mnt-boot.mount \
     file://mnt-data.mount \
     file://mnt-state.mount \
+    file://mnt-sysroot-active.mount \
+    file://mnt-sysroot-inactive.mount \
     file://var-lib-systemd.mount \
     file://var-log-journal.mount \
     file://resin-bind.target \
@@ -37,6 +39,8 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-boot.mount \
     mnt-data.mount \
     mnt-state.mount \
+    mnt-sysroot-active.mount \
+    mnt-sysroot-inactive.mount \
     var-lib-systemd.mount \
     var-log-journal.mount \
     "
@@ -45,6 +49,8 @@ FILES_${PN} += " \
     /mnt/boot \
     /mnt/data \
     /mnt/state \
+    /mnt/sysroot/active \
+    /mnt/sysroot/inactive \
     ${sysconfdir} \
     ${systemd_unitdir} \
     "
@@ -54,6 +60,8 @@ do_install () {
     install -d ${D}/mnt/boot
     install -d ${D}/mnt/data
     install -d ${D}/mnt/state
+    install -d ${D}/mnt/sysroot/active
+    install -d ${D}/mnt/sysroot/inactive
 
     install -d ${D}${systemd_unitdir}/system
 
@@ -75,6 +83,8 @@ do_install () {
             ${WORKDIR}/mnt-boot.mount \
             ${WORKDIR}/mnt-data.mount \
             ${WORKDIR}/mnt-state.mount \
+            ${WORKDIR}/mnt-sysroot-active.mount \
+            ${WORKDIR}/mnt-sysroot-inactive.mount \
             ${WORKDIR}/var-lib-systemd.mount \
             ${WORKDIR}/var-log-journal.mount \
             ${D}${systemd_unitdir}/system
