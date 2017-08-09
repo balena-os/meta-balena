@@ -1,6 +1,8 @@
 Change log
 -----------
 
+# v1.30 - 2017-08-16
+
 * Update supervisor to v6.1.3 [Pablo]
 * Do not deploy systemd's resolv.conf file but rather use the one we add through dnsmasq [Florin]
 * Conditionally use IMGDEPLOYDIR over DEPLOY_DIR_IMAGE [Florin]
