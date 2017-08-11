@@ -76,6 +76,12 @@ sync -f "$SYSROOT"
 mv "$SYSROOT/counter.new" "$SYSROOT/counter"
 sync -f "$SYSROOT"
 
+# Run any defined hooks
+for hook in "/etc/hostapp-update-hooks.d/"*; do
+	[ -e "$hook" ] || break
+	"$hook" "$CONTAINER_ID"
+done
+
 if [ "$reboot" = 1 ]; then
 	reboot
 fi
