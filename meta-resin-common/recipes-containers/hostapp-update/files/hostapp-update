@@ -1,0 +1,81 @@
+#!/bin/sh
+
+set -eu
+
+local_image=""
+remote_image=""
+reboot=0
+
+while getopts 'f:i:r' flag; do
+	case "${flag}" in
+	f) local_image=$(realpath "${OPTARG}") ;;
+	i) remote_image="${OPTARG}" ;;
+	r) reboot=1 ;;
+	*) error "Unexpected option ${flag}" ;;
+	esac
+done
+
+export DOCKER_HOST="unix:///var/run/docker-host.sock"
+SYSROOT="/mnt/sysroot/inactive"
+
+# Initialize sysroot
+mkdir -p /mnt/sysroot
+for dir in 'dev' 'etc' 'docker' 'hostapps' 'mnt/state' 'proc' 'sbin' 'sys' 'tmp'; do
+	mkdir -p "$SYSROOT/$dir"
+done
+if [ ! -f "$SYSROOT/etc/machine-id" ]; then
+	touch "$SYSROOT/etc/machine-id"
+fi
+if [ ! -L "$SYSROOT/sbin/init" ]; then
+	ln -sf /current/bootstrap/init "$SYSROOT/sbin/init"
+fi
+
+# Remove previous hostapp
+for container in $(docker ps --all --quiet); do
+	docker rm --force --volumes "$container"
+done
+for image in $(docker images --all --quiet); do
+	docker rmi --force "$image"
+done
+for bootstrap in "$SYSROOT/hostapps/"*; do
+	[ -e "$bootstrap" ] || break
+	rm -rf "$bootstrap"
+done
+
+# Load new hostapp
+if [ "$local_image" != "" ]; then
+	HOSTAPP_IMAGE=$(docker load --quiet -i "$local_image" | cut -d: -f1 --complement | tr -d ' ')
+elif [ "$remote_image" != "" ]; then
+	HOSTAPP_IMAGE="$remote_image"
+	docker pull "$HOSTAPP_IMAGE"
+fi
+CONTAINER_ID=$(docker create --runtime="bare" --volume=/bootstrap "$HOSTAPP_IMAGE" /bin/sh)
+BOOTSTRAP=$(docker inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/bootstrap" { print $2 }' | head -n1)
+
+# Create bootstrap entry
+rm -rf "$SYSROOT/hostapps/.new"
+mkdir -p "$SYSROOT/hostapps/.new"
+ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/bootstrap"
+sync -f "$SYSROOT"
+mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
+sync -f "$SYSROOT"
+
+# Mark it as current hostapp
+ln -srf "$SYSROOT/hostapps/$CONTAINER_ID" "$SYSROOT/current.new"
+sync -f "$SYSROOT"
+mv -T "$SYSROOT/current.new" "$SYSROOT/current"
+sync -f "$SYSROOT"
+
+# Mark it as current partition
+cur_counter=0
+if [ -f "/mnt/sysroot/active/counter" ]; then
+	cur_counter=$(cat /mnt/sysroot/active/counter)
+fi
+echo $(($cur_counter + 1)) > "$SYSROOT/counter.new"
+sync -f "$SYSROOT"
+mv "$SYSROOT/counter.new" "$SYSROOT/counter"
+sync -f "$SYSROOT"
+
+if [ "$reboot" = 1 ]; then
+	reboot
+fi
