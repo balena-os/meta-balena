@@ -9,6 +9,11 @@ RESIN_CONNECTABLE_SRCURI = " \
     file://upscript.sh \
     file://downscript.sh \
     "
+
+inherit useradd
+USERADD_PACKAGES = "${PN}"
+USERADD_PARAM_${PN} += "--system -d / -M --shell /bin/nologin openvpn"
+
 SRC_URI_append = " ${@bb.utils.contains("RESIN_CONNECTABLE","1","${RESIN_CONNECTABLE_SRCURI}","",d)}"
 
 RDEPENDS_${PN} += "${@bb.utils.contains("RESIN_CONNECTABLE","1","bash jq resin-unique-key sed","",d)}"
