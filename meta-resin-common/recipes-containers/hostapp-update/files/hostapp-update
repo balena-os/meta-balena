@@ -27,7 +27,10 @@ if [ ! -f "$SYSROOT/etc/machine-id" ]; then
 	touch "$SYSROOT/etc/machine-id"
 fi
 if [ ! -L "$SYSROOT/sbin/init" ]; then
-	ln -sf /current/bootstrap/init "$SYSROOT/sbin/init"
+	ln -sf /current/boot/init "$SYSROOT/sbin/init"
+fi
+if [ ! -L "$SYSROOT/boot" ]; then
+	ln -sf /current/boot "$SYSROOT/boot"
 fi
 
 # Remove previous hostapp
@@ -37,9 +40,9 @@ done
 for image in $(docker images --all --quiet); do
 	docker rmi --force "$image"
 done
-for bootstrap in "$SYSROOT/hostapps/"*; do
-	[ -e "$bootstrap" ] || break
-	rm -rf "$bootstrap"
+for hostapp in "$SYSROOT/hostapps/"*; do
+	[ -e "$hostapp" ] || break
+	rm -rf "$hostapp"
 done
 
 # Load new hostapp
@@ -49,13 +52,13 @@ elif [ "$remote_image" != "" ]; then
 	HOSTAPP_IMAGE="$remote_image"
 	docker pull "$HOSTAPP_IMAGE"
 fi
-CONTAINER_ID=$(docker create --runtime="bare" --volume=/bootstrap "$HOSTAPP_IMAGE" /bin/sh)
-BOOTSTRAP=$(docker inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/bootstrap" { print $2 }' | head -n1)
+CONTAINER_ID=$(docker create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
+BOOTSTRAP=$(docker inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
 
-# Create bootstrap entry
+# Create boot entry
 rm -rf "$SYSROOT/hostapps/.new"
 mkdir -p "$SYSROOT/hostapps/.new"
-ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/bootstrap"
+ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/boot"
 sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
