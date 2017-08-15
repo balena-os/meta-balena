@@ -11,6 +11,8 @@ RESIN_FLAG_FILE = "${RESIN_FLASHER_FLAG_FILE}"
 # Each machine should append this with their specific configuration
 IMAGE_FSTYPES = ""
 
+RESIN_ROOT_FSTYPE = "ext4"
+
 # Make sure you have the resin image ready
 IMAGE_DEPENDS_resinos-img_append = " resin-image:do_rootfs"
 
