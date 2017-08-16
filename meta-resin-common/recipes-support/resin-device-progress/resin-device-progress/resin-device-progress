@@ -51,7 +51,7 @@ done
 source /usr/sbin/resin-vars "$RESIN_VARS_ARGS"
 
 echo "-- $0 $PERCENTAGE $STATE $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
-if [ -z "$PERCENTAGE" -o -z "$STATE" -o -z "$API_ENDPOINT"]; then
+if [ -z "$PERCENTAGE" ] || [ -z "$STATE" ] || [ -z "$API_ENDPOINT" ]; then
     echo "[ERROR] resin-device-progress : Needed variables not provided."
     exit 1
 fi
@@ -67,7 +67,7 @@ if [ -z "$DEVICE_ID" ]; then
 fi
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
-_device_api_key=${PROVISIONING_API_KEY:-DEVICE_API_KEY}
+_device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
 
 curl -s -X PATCH "$API_ENDPOINT/v1/device($DEVICE_ID)?apikey=$_device_api_key" \
      -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
