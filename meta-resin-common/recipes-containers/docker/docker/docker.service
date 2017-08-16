@@ -9,10 +9,10 @@ Before=dnsmasq.service
 [Service]
 Type=notify
 Restart=always
-ExecStart=/usr/bin/dockerd --log-driver=journald -s @DOCKER_STORAGE@ -H fd:// --dns 172.17.0.1
+ExecStart=/usr/bin/dockerd --log-driver=journald -s @DOCKER_STORAGE@ -H fd:// --dns 10.114.101.1 --bip 10.114.101.1/24 --fixed-cidr=10.114.101.0/25
 ExecStartPost=/sbin/sysctl -w net.ipv4.conf.docker0.route_localnet=1
-ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p udp --dport 53 -j DNAT --dst 172.17.0.1/32 --to 127.0.0.2:53
-ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p tcp --dport 53 -j DNAT --dst 172.17.0.1/32 --to 127.0.0.2:53
+ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p udp --dport 53 -j DNAT --dst 10.114.101.1/32 --to 127.0.0.2:53
+ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p tcp --dport 53 -j DNAT --dst 10.114.101.1/32 --to 127.0.0.2:53
 #Adjust OOMscore to -900 to make killing docker unlikely
 OOMScoreAdjust=-900
 MountFlags=slave
