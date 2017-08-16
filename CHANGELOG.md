@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v2.3.0 - 2017-08-16
+
+* Resize the splash logo to full screen instead of half screen [Gergely Imreh]
+* Set docker bridge subnet to 10.114.101.1/24 [Petros Angelatos]
+* Re-enable UPX compression on AArch64 [Will Newton]
+* Resin-device-progress: fix typos that broke script [Gergely Imreh]
+* Upgrade upx to 3.94 [Will Newton]
+* Set deviceType in config.json [Will Newton]
+* Update supervisor to v6.1.3 [Pablo Carranza Velez]
+* Fix typo in resin-persistent-logs [Will Newton]
+* Use BBCLASSEXTEND rather than inherit native [Florin Sarbu]
+
 # v2.2.0 - 2017-07-28
 
 * Update supervisor to v6.1.2 [Pablo Carranza Velez]
