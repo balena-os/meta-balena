@@ -1,0 +1,10 @@
+[Unit]
+Description=Config.json path watch
+Requires=mnt-boot.mount
+After=mnt-boot.mount
+
+[Path]
+PathChanged=/mnt/boot/config.json
+
+[Install]
+WantedBy=mnt-boot.mount

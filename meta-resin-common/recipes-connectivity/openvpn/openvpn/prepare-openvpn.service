@@ -9,4 +9,4 @@ RemainAfterExit=yes
 ExecStart=@BINDIR@/prepare-openvpn
 
 [Install]
-WantedBy=resin.target
+WantedBy=config-json.service
