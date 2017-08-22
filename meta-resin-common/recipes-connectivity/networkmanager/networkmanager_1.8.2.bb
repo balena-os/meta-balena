@@ -8,7 +8,7 @@ SECTION = "net/misc"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cbbffd568227ada506640fe950a4823b \
                     file://libnm-util/COPYING;md5=1c4fa765d6eb3cd2fbd84344a1b816cd \
-                    file://docs/api/html/license.html;md5=8eb8e72bab097b9d11763002cb003697 \
+                    file://docs/api/html/license.html;md5=eb0c003714e5391000fdfd9c9615cccf \
 "
 
 DEPENDS = "intltool-native libnl dbus dbus-glib dbus-glib-native libgudev util-linux libndp libnewt polkit"
@@ -19,8 +19,8 @@ SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
     file://0001-build-fix-race-creating-libnm-core-tests-directory-f.patch \
 "
-SRC_URI[md5sum] = "de0e70933a17ee6a682e8440015c9b1e"
-SRC_URI[sha256sum] = "fa5a5c6a36cdf95b12df34cc575bd61a74f297ede9be22cac4807a1aff3cf69e"
+SRC_URI[md5sum] = "1acf7a551905ae85d9987aadbb5f7205"
+SRC_URI[sha256sum] = "71a5efcd9e4c237ab57b2893ccc8f91f884ace3bec0e2bd4b31a4c9677ff1bf4"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
