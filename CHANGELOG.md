@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.4.0
+## (2017-08-23)
+
+* Use separate line for version in changelog file [Andrei Gherzan]
+* Run OpenVPN service as openvpn user [Andreas Fitzek]
+* Update supervisor to v6.2.1 [Akis Kesoglou]
+* Watch for VPN config changes in config.json [Pagan Gazzard]
+
 # v2.3.0
 ## (2017-08-16)
 
