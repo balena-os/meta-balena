@@ -78,7 +78,8 @@ module.exports = {
   },
 
   template: [
-    '# v{{version}} - {{moment date "Y-MM-DD"}}',
+    '# v{{version}}',
+    '## ({{moment date "Y-MM-DD"}})',
     '',
     '{{#each commits}}',
     '{{#if this.author}}',

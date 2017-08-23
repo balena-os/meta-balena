@@ -1,7 +1,8 @@
 Change log
 -----------
 
-# v2.3.0 - 2017-08-16
+# v2.3.0
+## (2017-08-16)
 
 * Resize the splash logo to full screen instead of half screen [Gergely Imreh]
 * Set docker bridge subnet to 10.114.101.1/24 [Petros Angelatos]
@@ -13,14 +14,16 @@ Change log
 * Fix typo in resin-persistent-logs [Will Newton]
 * Use BBCLASSEXTEND rather than inherit native [Florin Sarbu]
 
-# v2.2.0 - 2017-07-28
+# v2.2.0
+## (2017-07-28)
 
 * Update supervisor to v6.1.2 [Pablo Carranza Velez]
 * Support building with Yocto Pyro [Will Newton]
 * Disable resin-sample NetworkManager connection [Will Newton]
 * Remove support for Yocto Daisy [Will Newton]
 
-# v2.1.0 - 2017-07-19
+# v2.1.0
+## (2017-07-19)
 
 * Update supervisor to v6.0.1 [Pablo Carranza Velez]
 * Add support for overlay2 as docker storage driver [Andrei Gherzan]
@@ -35,12 +38,14 @@ Change log
 * Document Change-type and Changelog-entry git commit footers [Andrei Gherzan]
 * Add systemd as a required distro feature [Will Newton]
 
-# v2.0.9 - 2017-07-06
+# v2.0.9
+## (2017-07-06)
 
 * Fix splash image migration in flasher images [Andrei Gherzan]
 * Add missing netfilter configs for our redsocks usage [Florin Sarbu]
 
-# v2.0.8 - 2017-07-04
+# v2.0.8
+## (2017-07-04)
 
 * Resin-vars: Fetch all the vars in resin-vars [Pagan Gazzard]
 * Add comment in supervisor.conf for clarity [Petros Angelatos]
@@ -51,7 +56,8 @@ Change log
 * Validate docker config from disk to avoid panicing [Petros Angelatos]
 * Versionist: add support for full versionist use [Gergely Imreh]
 
-# v2.0.7 - 2017-06-28
+# v2.0.7
+## (2017-06-28)
 
 * Add support for transparent proxy redirection using redsocks [Pablo]
 * Add prerequisites for ipk packages in resinOS images [Andrei]
@@ -69,11 +75,13 @@ Change log
 * Update Docker to 17.03.1 [Theodor]
 * Include fsck.vfat in resinOS [Andrei]
 
-# v2.0.6 - 2017-06-06
+# v2.0.6
+## (2017-06-06)
 
 * Update supervisor to v4.2.4 [Pablo]
 
-# v2.0.5 - 2017-06-02
+# v2.0.5
+## (2017-06-02)
 
 * Fix dependencies for mount service in /var/lib [Andrei]
 * Various build fixes when using other package formats like ipk [Andrei]
@@ -82,12 +90,14 @@ Change log
 * Add support for qmi and mbim cell modems [Joshua]
 * Disable all password logins on production images, rather than just root logins - this gets rid of the password prompt dialog that users have seen. [Page]
 
-# v2.0.4 - 2017-05-16
+# v2.0.4
+## (2017-05-16)
 
 * Enable the resin-uboot implementation to also boot flasher images from USB media [Florin]
 * Use supervisor tag as supervisor recipe PV [Andrei}
 
-# v2.0.3 - 2017-05-10
+# v2.0.3
+## (2017-05-10)
 
 * Copy resinOS_uEnv.txt from external to internal media [Theodor]
 * Fix resin-state-conf copying mechanism [Theodor]
@@ -100,7 +110,8 @@ Change log
 * Explicitly set CONFIG_HIDRAW=y [Michal]
 * Fix symlink creation in resinhup_backwards_compatible_link() [Michal]
 
-# v2.0.2 - 2017-04-24
+# v2.0.2
+## (2017-04-24)
 
 * Fix build of kernel-modules-headers on kernel 4.8+ [Andrei]
 * Use ondemand as default governor [Andrei]
@@ -108,7 +119,8 @@ Change log
 * Switch to the new device register endpoint which exchanges the provisioning key for a device api key [Page]
 * Switch to using a device api key for api calls and vpn authentication if it is present [Page]
 
-# v2.0.1 - 2017-04-19
+# v2.0.1
+## (2017-04-19)
 
 * Don't use getty generator even for development images [Andrei]
 * Fix resinos-img image compression [Theodor]
@@ -120,15 +132,18 @@ Change log
 * Don't attempt UPX compression on aarch64 [fboudra]
 * Tidy arch detection in kernel-modules-headers [fboudra]
 
-# v2.0.0 - 2017-03-31
+# v2.0.0
+## (2017-03-31)
 
-# v2.0.0-rc6 - 2017-03-31
+# v2.0.0-rc6
+## (2017-03-31)
 
 * Update supervisor to v4.1.1 [Pablo]
 * Replace echo with info in the resindataexpander initramfs script [Florin]
 * Don't stop plymouth at boot [Andrei]
 
-# v2.0.0-rc5 - 2017-03-24
+# v2.0.0-rc5
+## (2017-03-24)
 
 * Fix busybox switch_root when console=null [Andrei]
 * Make the initrams framework also parse root=LABEL= params [Florin]
@@ -136,22 +151,26 @@ Change log
 * Properly implement the ro_rootfs script [Theodor]
 * Make rootfs identical to resinhup packages [Andrei]
 
-# v2.0.0-rc4 - 2017-03-17
+# v2.0.0-rc4
+## (2017-03-17)
 
 * Enable by-partuuid symlinks for our DOS partition scheme also for Poky Jethro and Poky Krogoth based boards [Florin]
 * Ship with e2fsprogs-tune2fs [Michal]
 
-# v2.0.0-rc3 - 2017-03-14
+# v2.0.0-rc3
+## (2017-03-14)
 
 * Fix flasher detection in initramfs scripts [Andrei]
 * Fix initramfs-framework build on morty [Andrei]
 
-# v2.0.0-rc2 - 2017-03-14
+# v2.0.0-rc2
+## (2017-03-14)
 
 * Fix initramfs-framework for non-morty boards [Theodor]
 * Fix flasher when it might corrupt the internal device [Andrei]
 
-# v2.0.0-rc1 - 2017-03-10
+# v2.0.0-rc1
+## (2017-03-10)
 
 * Use stateless flasher partitions [Andrei]
 * Refactor persistent logging [Theodor]
@@ -163,11 +182,13 @@ Change log
 * Resin-info should not be present in our production images [Theodor]
 * Implement resin-uboot based on v2.0 specification [Andrei]
 
-# v2.0.0-beta13 - 2017-02-27
+# v2.0.0-beta13
+## (2017-02-27)
 
 * Fix a compile error on krogoth boards [Andrei]
 
-# v2.0.0-beta12 - 2017-02-27
+# v2.0.0-beta12
+## (2017-02-27)
 
 * Disable audit subsystem [Theodor]
 * Run openvpn on flasher too [Andrei]
@@ -179,17 +200,20 @@ Change log
 * Introduce debug tools package group add mkfs.ext4 in resin-image [Andrei]
 * Halve the UUID length to 16 bytes [Michal]
 
-# v2.0.0-beta11 - 2017-02-15
+# v2.0.0-beta11
+## (2017-02-15)
 
 * Fix sectors per track for targets smaller than 512 MB [Andrei]
 
-# v2.0.0-beta10 - 2017-02-13
+# v2.0.0-beta10
+## (2017-02-13)
 
 * Introduce new host OS versioning scheme [Andrei]
 * Add jethro support [Andrei]
 * Fix missing quotes when testing for IMGDEPLOYDIR [Florin]
 
-# v2.0-beta.9 - 2017-02-07
+# v2.0-beta.9
+## (2017-02-07)
 
 * Use static resolv.conf [Andrei]
 * Switch rootfs to ext4 [Andrei]
@@ -200,7 +224,8 @@ Change log
 * Do not remove the supervisor container in every start [Pablo]
 * Update supervisor to v3.0.0 [Pablo]
 
-# v2.0-beta.8 - 2017-01-27
+# v2.0-beta.8
+## (2017-01-27)
 
 * Add xt_set kernel module for all of our devices [Theodor]
 * Make /home/root/.docker writable [Theodor]
@@ -213,15 +238,18 @@ Change log
 * Rewrite prepare-openvpn (style) and make it fail on error [Michal]
 * Ensure prepare-openvpn.service starts after var-volatile.mount [Michal]
 
-# v2.0-beta.7 - 2016-12-05
+# v2.0-beta.7
+## (2016-12-05)
 
 * Fix supervisor.conf's SUPERVISOR_TAG variable [Florin]
 
-# v2.0-beta.6 - 2016-12-05
+# v2.0-beta.6
+## (2016-12-05)
 
 * Deactivate CONFIG_WATCHDOG_NOWAYOUT to make sure we can shutdown [Andrei]
 
-# v2.0-beta.5 - 2016-11-30
+# v2.0-beta.5
+## (2016-11-30)
 
 * Add inode tuning (1 inode for 8192 bytes ) in mkfs.ext4 for the resin-data partition [Praneeth]
 * Fix missing [Manager] section for systemd watchdog setting [Florin]
@@ -233,11 +261,13 @@ Change log
 * Allow resin-init-flasher to also flash both MLO and regular u-boot at the same time [Florin]
 * Fix page size detection in go for arm64 boards [Andrei]
 
-# v2.0-beta.4 - 2016-11-09
+# v2.0-beta.4
+## (2016-11-09)
 
 * Update supervisor to v2.8.2 [Pablo]
 
-# v2.0-beta.3 - 2016-11-04
+# v2.0-beta.3
+## (2016-11-04)
 
 * Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in `resin-<board>` anymore [Andrei]
 * Fix container name conflict when creating a docker container [petrosagg]
@@ -247,7 +277,8 @@ Change log
 * Fix aufs patching on non git kernel sources [Andrei]
 * Update supervisor to v2.8.1 [Pablo]
 
-# v2.0-beta.2 - 2016-10-25
+# v2.0-beta.2
+## (2016-10-25)
 
 * Update supervisor to v2.7.1 [Pablo]
 * Move supervisor.conf from /etc to /etc/resin-supervisor [Theodor]
@@ -255,7 +286,8 @@ Change log
 * Add guide for new board adoption [Florin]
 * Update supervisor to v2.6.2 [Pablo]
 
-# v2.0-beta.1 - 2016-10-11
+# v2.0-beta.1
+## (2016-10-11)
 
 * Configure kernel with CONFIG_SECCOMP [Andrei]
 * Update kernel-module-headers to v0.0.7 [Lorenzo]
@@ -276,21 +308,26 @@ Change log
 * Replace DEBUG_IMAGE with DEVELOPMENT_IMAGE [Theodor]
 * Update supervisor to v2.5.0 [Pablo]
 
-# v1.16 - 2016-09-27
+# v1.16
+## (2016-09-27)
 
 * Update supervisor to v2.3.0 [Pablo]
 
-# v1.15 - 2016-09-24
+# v1.15
+## (2016-09-24)
 
 * Update supervisor to v2.2.1 [petrosagg]
 
-# v1.14 - 2016-09-23
+# v1.14
+## (2016-09-23)
 
 * Update supervisor to v2.2.0 [Kostas]
 
-# v1.13 - 2016-09-23
+# v1.13
+## (2016-09-23)
 
-# v1.12 - 2016-09-21
+# v1.12
+## (2016-09-21)
 
 * Update supervisor to v2.1.1 [Pablo]
 * Add device-type.json file to the boot partitions of our images [Florin]
@@ -304,21 +341,25 @@ Change log
 * Update supervisor to v2.1.0 [Pablo]
 * Use FHS structure in the root of resinhup packages [Andrei]
 
-# v1.11 - 2016-08-31
+# v1.11
+## (2016-08-31)
 
 * Backport STOPSIGNAL fix for docker [petrosagg]
 * Make Docker log to journald [Michal]
 
-# v1.10 - 2016-08-24
+# v1.10
+## (2016-08-24)
 
-# v1.9 - 2016-08-24
+# v1.9
+## (2016-08-24)
 
 * Provide custom splash logo for our flasher type [Theodor]
 * Update supervisor to v1.14.0 [Pablo]
 * Set the default supervisor tag in /etc/supervisor.conf to the bundled supervisor tag. [Page]
 * Update firmware: iwlwifi-7265D-10 -> iwlwifi-7265D-13 [Michal]
 
-# v1.8 - 2016-08-02
+# v1.8
+## (2016-08-02)
 
 * Fix plymouth output to tty1 [Theodor]
 * Use FAT16 filesystems as we do for partitions [Andrei]
@@ -330,25 +371,30 @@ Change log
 * Both remove systemd-serialgetty symlinks and disable systemd-getty-generator for non-debug builds [Florin]
 * Disable ntp from connman and rely only on systemd-timesyncd with selected timeservers [Florin]
 
-# v1.7 - 2016-07-14
+# v1.7
+## (2016-07-14)
 
 * Various meta-resin layer tweaks [Andrei]
 * Add support for resinhup when running kernel modules operations [Andrei]
 * Update supervisor to 1.12.1 [Pablo]
 
-# v1.6 - 2016-07-06
+# v1.6
+## (2016-07-06)
 
-# v1.5 - 2016-07-04
+# v1.5
+## (2016-07-04)
 
 * Update resin supervisor to v1.11.6 [Florin]
 * Refactor openvpn dependencies [Florin]
 
-# v1.4 - 2016-06-27
+# v1.4
+## (2016-06-27)
 
 * Replace STAGING_BUILD by DEBUG_IMAGE and various refactorings [Andrei]
 * Update to latest kernel-modules-headers [Florin]
 
-# v1.3 - 2016-06-24
+# v1.3
+## (2016-06-24)
 
 * Implement mechanism for compressed kernel modules [Andrei]
 * Fix connman multiple IP over DHCP [Andrei]
@@ -363,7 +409,8 @@ Change log
 * Add recipe for deploying an archive with kernel modules headers [Florin]
 * Have the ability at build time to configure the preloaded docker image in the BTRFS partition [Andrei]
 
-# v1.2 - 2016-06-08
+# v1.2
+## (2016-06-08)
 
 * Remove board specific bootloader handling from the flasher [Florin]
 * Provide script to inject board specific flashing procedures [Theodor]
@@ -377,17 +424,20 @@ Change log
 * Remove deprecated mmcroot from flasher init script [Andrei]
 * Deploy license.manifest [Andrei]
 
-# v1.1.4 - 2016-04-20
+# v1.1.4
+## (2016-04-20)
 
 * Add build information in the target rootfs [Florin]
 * Don't bind mount /etc/resolv.conf anymore [Florin]
 * Have dnsmasq listen on 127.0.0.2 instead of 127.0.0.1 [Florin]
 
-# v1.1.3 - 2016-04-13
+# v1.1.3
+## (2016-04-13)
 
 * Add resin-init-board as a runtime dependency to resin-init-flasher [Florin]
 
-# v1.1.2 - 2016-04-13
+# v1.1.2
+## (2016-04-13)
 
 * Execute resin-init-board from the flasher also [Florin]
 * Use realpath from coreutils-native for generating SD images [Andrei]
@@ -396,7 +446,8 @@ Change log
 * Add dnsmasq and do changes to connman so dnsmasq is used according to our platform needs [Florin]
 * Define "rce" as a provider for the "docker" package [Florin]
 
-# v1.1.1 - 2016-03-03
+# v1.1.1
+## (2016-03-03)
 
 * Make resin-supervisor-disk's PV variable not contain the ':' character [Florin]
 * Workaround for "docker images" behavior - https://bugzilla.redhat.com/show_bug.cgi?id=1312934 [Florin]
@@ -407,13 +458,15 @@ Change log
 * Set IMAGE_ROOTFS_SIZE to zero as default [Florin]
 * Update layer with the ability to use jethro [Theodor]
 
-# v1.1.0 - 2016-02-16
+# v1.1.0
+## (2016-02-16)
 
 * Migrate repositories to github [Florin]
 * Add resinhup package for running hostOS updates [Andrei]
 * Export deltaEndpoint as DELTA_ENDPOINT [Andrei]
 
-# v1.0.6 - 2016-02-03
+# v1.0.6
+## (2016-02-03)
 
 * Upgrade systemd to version 216 and add volatile-binds dependency [Florin]
 * Fix racing issue on edison [Andrei]
@@ -425,7 +478,8 @@ Change log
 * Change OOM Adjust Score of Connman to -1000 [Praneeth]
 * Change OOM Adjust Score of OpenVPN to -1000 [Praneeth]
 
-# v1.0.5 - 2016-01-20
+# v1.0.5
+## (2016-01-20)
 
 # v1.0.4
 
@@ -438,7 +492,8 @@ Change log
 * Implement fingerprints for resin-boot and resin-root [Andrei]
 * Explicitly configure kernel with config.gz built in support [Andrei]
 
-# v1.0.3 - 2016-01-05
+# v1.0.3
+## (2016-01-05)
 
 * Removed the global bblayers.conf.sample and local.conf.sample [Jon]
 * Removed the append from the BBMASK declaration in meta-resin-toradex layer.conf [Jon]
