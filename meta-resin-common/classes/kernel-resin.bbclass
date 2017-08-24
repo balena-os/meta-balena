@@ -82,6 +82,7 @@ RESIN_CONFIGS ?= " \
     qmi \
     misc \
     redsocks \
+    reduce-size \
     ${DOCKER_STORAGE} \
     "
 
@@ -365,6 +366,18 @@ RESIN_CONFIGS[redsocks] = " \
     CONFIG_NETFILTER_XT_TARGET_REDIRECT=m \
     "
 
+# disable some large and commonly enabled configs to reduce image size
+RESIN_CONFIGS[reduce-size] = " \
+    CONFIG_OCFS2_FS=n \
+    CONFIG_GFS2_FS=n \
+    CONFIG_REISERFS_FS=n \
+    CONFIG_NTFS_FS=n \
+    CONFIG_JFS_FS=n \
+    CONFIG_HFS_FS=n \
+    CONFIG_HFSPLUS_FS=n \
+    CONFIG_UDF_FS=n \
+    CONFIG_BLK_DEV_DRBD=n \
+    "
 ###########
 # HELPERS #
 ###########
