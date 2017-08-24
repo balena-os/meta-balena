@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.4.1
+## (2017-08-24)
+
+* Fix variable referencing in default variable substitution inside prepare-openvpn script [Florin Sarbu]
+
 # v2.4.0
 ## (2017-08-23)
 
