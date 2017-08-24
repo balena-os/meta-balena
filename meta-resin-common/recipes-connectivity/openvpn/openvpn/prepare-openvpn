@@ -8,7 +8,7 @@ _vpn_port=443
 readonly _vpn_port
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
-_device_api_key=${PROVISIONING_API_KEY:-DEVICE_API_KEY}
+_device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
 
 if [ "$UUID" = "null" ] || [ "$_device_api_key" = "null" ]; then
 	echo "prepare-openvpn: UUID and/or APIKEY missing from config file, VPN cannot connect"
