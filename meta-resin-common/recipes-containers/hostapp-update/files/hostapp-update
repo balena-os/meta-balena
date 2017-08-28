@@ -15,6 +15,11 @@ while getopts 'f:i:r' flag; do
 	esac
 done
 
+if [ "$local_image" =  "" ] && [ "$remote_image" = "" ]; then
+	echo "At least one of -f or -i is required"
+	exit 1
+fi
+
 export DOCKER_HOST="unix:///var/run/docker-host.sock"
 SYSROOT="/mnt/sysroot/inactive"
 
