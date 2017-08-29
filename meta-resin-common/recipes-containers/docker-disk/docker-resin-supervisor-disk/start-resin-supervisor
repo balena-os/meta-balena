@@ -31,4 +31,8 @@ runSupervisor() {
         ${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}
 }
 
-([ "$SUPERVISOR_IMAGE_ID" == "$SUPERVISOR_CONTAINER_IMAGE_ID" ] && docker start --attach resin_supervisor) || runSupervisor
+if [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
+    docker start --attach resin_supervisor
+else
+    runSupervisor
+fi
