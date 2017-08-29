@@ -2,8 +2,6 @@ SUMMARY = "Resin image"
 IMAGE_LINGUAS = " "
 LICENSE = "Apache-2.0"
 
-inherit core-image image-resin distro_features_check
-
 REQUIRED_DISTRO_FEATURES += " systemd"
 
 RESIN_FLAG_FILE = "${RESIN_IMAGE_FLAG_FILE}"
@@ -20,6 +18,8 @@ IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
 
 # Generated resinhup-tar based on RESINHUP variable
 IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"
+
+inherit core-image image-resin distro_features_check
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
