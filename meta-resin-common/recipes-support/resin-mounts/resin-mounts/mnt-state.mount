@@ -3,6 +3,8 @@ Description=Resin state partition mountpoint
 DefaultDependencies=no
 Before=umount.target
 Conflicts=umount.target
+Requires=systemd-fsck@dev-disk-by\x2dlabel-resin\x2dstate.service
+After=systemd-fsck@dev-disk-by\x2dlabel-resin\x2dstate.service
 
 [Mount]
 What=/dev/disk/by-label/resin-state
