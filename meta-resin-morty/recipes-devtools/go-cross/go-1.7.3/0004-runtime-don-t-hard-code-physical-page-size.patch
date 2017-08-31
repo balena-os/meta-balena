@@ -1,0 +1,424 @@
+From 6dda7b2f5fb675a2747fea5ae020248245b8903f Mon Sep 17 00:00:00 2001
+From: Austin Clements <austin@google.com>
+Date: Mon, 18 Jul 2016 12:24:02 -0400
+Subject: [PATCH 3/5] runtime: don't hard-code physical page size
+
+Now that the runtime fetches the true physical page size from the OS,
+make the physical page size used by heap growth a variable instead of
+a constant. This isn't used in any performance-critical paths, so it
+shouldn't be an issue.
+
+sys.PhysPageSize is also renamed to sys.DefaultPhysPageSize to make it
+clear that it's not necessarily the true page size. There are no uses
+of this constant any more, but we'll keep it around for now.
+
+Updates #12480 and #10180.
+
+Change-Id: I6c23b9df860db309c38c8287a703c53817754f03
+Reviewed-on: https://go-review.googlesource.com/25022
+Run-TryBot: Austin Clements <austin@google.com>
+TryBot-Result: Gobot Gobot <gobot@golang.org>
+Reviewed-by: Rick Hudson <rlh@golang.org>
+
+Upstream-Status: Backport
+---
+ src/runtime/internal/sys/arch_386.go      | 16 ++++++++--------
+ src/runtime/internal/sys/arch_amd64.go    | 16 ++++++++--------
+ src/runtime/internal/sys/arch_amd64p32.go | 16 ++++++++--------
+ src/runtime/internal/sys/arch_arm.go      | 16 ++++++++--------
+ src/runtime/internal/sys/arch_arm64.go    | 16 ++++++++--------
+ src/runtime/internal/sys/arch_mips64.go   | 16 ++++++++--------
+ src/runtime/internal/sys/arch_mips64le.go | 16 ++++++++--------
+ src/runtime/internal/sys/arch_ppc64.go    | 16 ++++++++--------
+ src/runtime/internal/sys/arch_ppc64le.go  | 16 ++++++++--------
+ src/runtime/internal/sys/arch_s390x.go    | 16 ++++++++--------
+ src/runtime/malloc.go                     | 12 ++++++------
+ src/runtime/mbitmap.go                    |  2 +-
+ src/runtime/mem_linux.go                  |  9 +++------
+ src/runtime/mheap.go                      | 12 ++++++------
+ 14 files changed, 96 insertions(+), 99 deletions(-)
+
+diff --git a/src/runtime/internal/sys/arch_386.go b/src/runtime/internal/sys/arch_386.go
+index 48c42f7..61d6722 100644
+--- a/src/runtime/internal/sys/arch_386.go
++++ b/src/runtime/internal/sys/arch_386.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = I386
+-	BigEndian     = 0
+-	CacheLineSize = 64
+-	PhysPageSize  = GoosNacl*65536 + (1-GoosNacl)*4096 // 4k normally; 64k on NaCl
+-	PCQuantum     = 1
+-	Int64Align    = 4
+-	HugePageSize  = 1 << 21
+-	MinFrameSize  = 0
++	ArchFamily          = I386
++	BigEndian           = 0
++	CacheLineSize       = 64
++	DefaultPhysPageSize = GoosNacl*65536 + (1-GoosNacl)*4096 // 4k normally; 64k on NaCl
++	PCQuantum           = 1
++	Int64Align          = 4
++	HugePageSize        = 1 << 21
++	MinFrameSize        = 0
+ )
+ 
+ type Uintreg uint32
+diff --git a/src/runtime/internal/sys/arch_amd64.go b/src/runtime/internal/sys/arch_amd64.go
+index 1bbdb99..1f2114a 100644
+--- a/src/runtime/internal/sys/arch_amd64.go
++++ b/src/runtime/internal/sys/arch_amd64.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = AMD64
+-	BigEndian     = 0
+-	CacheLineSize = 64
+-	PhysPageSize  = 4096
+-	PCQuantum     = 1
+-	Int64Align    = 8
+-	HugePageSize  = 1 << 21
+-	MinFrameSize  = 0
++	ArchFamily          = AMD64
++	BigEndian           = 0
++	CacheLineSize       = 64
++	DefaultPhysPageSize = 4096
++	PCQuantum           = 1
++	Int64Align          = 8
++	HugePageSize        = 1 << 21
++	MinFrameSize        = 0
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/internal/sys/arch_amd64p32.go b/src/runtime/internal/sys/arch_amd64p32.go
+index b7011a4..0779855 100644
+--- a/src/runtime/internal/sys/arch_amd64p32.go
++++ b/src/runtime/internal/sys/arch_amd64p32.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = AMD64
+-	BigEndian     = 0
+-	CacheLineSize = 64
+-	PhysPageSize  = 65536*GoosNacl + 4096*(1-GoosNacl)
+-	PCQuantum     = 1
+-	Int64Align    = 8
+-	HugePageSize  = 1 << 21
+-	MinFrameSize  = 0
++	ArchFamily          = AMD64
++	BigEndian           = 0
++	CacheLineSize       = 64
++	DefaultPhysPageSize = 65536*GoosNacl + 4096*(1-GoosNacl)
++	PCQuantum           = 1
++	Int64Align          = 8
++	HugePageSize        = 1 << 21
++	MinFrameSize        = 0
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/internal/sys/arch_arm.go b/src/runtime/internal/sys/arch_arm.go
+index 880494a..899010b 100644
+--- a/src/runtime/internal/sys/arch_arm.go
++++ b/src/runtime/internal/sys/arch_arm.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = ARM
+-	BigEndian     = 0
+-	CacheLineSize = 32
+-	PhysPageSize  = 65536
+-	PCQuantum     = 4
+-	Int64Align    = 4
+-	HugePageSize  = 0
+-	MinFrameSize  = 4
++	ArchFamily          = ARM
++	BigEndian           = 0
++	CacheLineSize       = 32
++	DefaultPhysPageSize = 65536
++	PCQuantum           = 4
++	Int64Align          = 4
++	HugePageSize        = 0
++	MinFrameSize        = 4
+ )
+ 
+ type Uintreg uint32
+diff --git a/src/runtime/internal/sys/arch_arm64.go b/src/runtime/internal/sys/arch_arm64.go
+index aaaa4b0..2d57dda 100644
+--- a/src/runtime/internal/sys/arch_arm64.go
++++ b/src/runtime/internal/sys/arch_arm64.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = ARM64
+-	BigEndian     = 0
+-	CacheLineSize = 32
+-	PhysPageSize  = 65536
+-	PCQuantum     = 4
+-	Int64Align    = 8
+-	HugePageSize  = 0
+-	MinFrameSize  = 8
++	ArchFamily          = ARM64
++	BigEndian           = 0
++	CacheLineSize       = 32
++	DefaultPhysPageSize = 65536
++	PCQuantum           = 4
++	Int64Align          = 8
++	HugePageSize        = 0
++	MinFrameSize        = 8
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/internal/sys/arch_mips64.go b/src/runtime/internal/sys/arch_mips64.go
+index d567259..0f6de74 100644
+--- a/src/runtime/internal/sys/arch_mips64.go
++++ b/src/runtime/internal/sys/arch_mips64.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = MIPS64
+-	BigEndian     = 1
+-	CacheLineSize = 32
+-	PhysPageSize  = 16384
+-	PCQuantum     = 4
+-	Int64Align    = 8
+-	HugePageSize  = 0
+-	MinFrameSize  = 8
++	ArchFamily          = MIPS64
++	BigEndian           = 1
++	CacheLineSize       = 32
++	DefaultPhysPageSize = 16384
++	PCQuantum           = 4
++	Int64Align          = 8
++	HugePageSize        = 0
++	MinFrameSize        = 8
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/internal/sys/arch_mips64le.go b/src/runtime/internal/sys/arch_mips64le.go
+index f8cdf2b..4ced35b 100644
+--- a/src/runtime/internal/sys/arch_mips64le.go
++++ b/src/runtime/internal/sys/arch_mips64le.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = MIPS64
+-	BigEndian     = 0
+-	CacheLineSize = 32
+-	PhysPageSize  = 16384
+-	PCQuantum     = 4
+-	Int64Align    = 8
+-	HugePageSize  = 0
+-	MinFrameSize  = 8
++	ArchFamily          = MIPS64
++	BigEndian           = 0
++	CacheLineSize       = 32
++	DefaultPhysPageSize = 16384
++	PCQuantum           = 4
++	Int64Align          = 8
++	HugePageSize        = 0
++	MinFrameSize        = 8
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/internal/sys/arch_ppc64.go b/src/runtime/internal/sys/arch_ppc64.go
+index f908ce2..80595ee 100644
+--- a/src/runtime/internal/sys/arch_ppc64.go
++++ b/src/runtime/internal/sys/arch_ppc64.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = PPC64
+-	BigEndian     = 1
+-	CacheLineSize = 128
+-	PhysPageSize  = 65536
+-	PCQuantum     = 4
+-	Int64Align    = 8
+-	HugePageSize  = 0
+-	MinFrameSize  = 32
++	ArchFamily          = PPC64
++	BigEndian           = 1
++	CacheLineSize       = 128
++	DefaultPhysPageSize = 65536
++	PCQuantum           = 4
++	Int64Align          = 8
++	HugePageSize        = 0
++	MinFrameSize        = 32
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/internal/sys/arch_ppc64le.go b/src/runtime/internal/sys/arch_ppc64le.go
+index 3d95f9e..f68e777 100644
+--- a/src/runtime/internal/sys/arch_ppc64le.go
++++ b/src/runtime/internal/sys/arch_ppc64le.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = PPC64
+-	BigEndian     = 0
+-	CacheLineSize = 128
+-	PhysPageSize  = 65536
+-	PCQuantum     = 4
+-	Int64Align    = 8
+-	HugePageSize  = 0
+-	MinFrameSize  = 32
++	ArchFamily          = PPC64
++	BigEndian           = 0
++	CacheLineSize       = 128
++	DefaultPhysPageSize = 65536
++	PCQuantum           = 4
++	Int64Align          = 8
++	HugePageSize        = 0
++	MinFrameSize        = 32
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/internal/sys/arch_s390x.go b/src/runtime/internal/sys/arch_s390x.go
+index ca1cb86..4ec4bf8 100644
+--- a/src/runtime/internal/sys/arch_s390x.go
++++ b/src/runtime/internal/sys/arch_s390x.go
+@@ -5,14 +5,14 @@
+ package sys
+ 
+ const (
+-	ArchFamily    = S390X
+-	BigEndian     = 1
+-	CacheLineSize = 256
+-	PhysPageSize  = 4096
+-	PCQuantum     = 2
+-	Int64Align    = 8
+-	HugePageSize  = 0
+-	MinFrameSize  = 8
++	ArchFamily          = S390X
++	BigEndian           = 1
++	CacheLineSize       = 256
++	DefaultPhysPageSize = 4096
++	PCQuantum           = 2
++	Int64Align          = 8
++	HugePageSize        = 0
++	MinFrameSize        = 8
+ )
+ 
+ type Uintreg uint64
+diff --git a/src/runtime/malloc.go b/src/runtime/malloc.go
+index 931af2a..514c0df 100644
+--- a/src/runtime/malloc.go
++++ b/src/runtime/malloc.go
+@@ -230,13 +230,13 @@ func mallocinit() {
+ 		// The OS init code failed to fetch the physical page size.
+ 		throw("failed to get system page size")
+ 	}
+-	if sys.PhysPageSize < physPageSize {
+-		print("runtime: kernel page size (", physPageSize, ") is larger than runtime page size (", sys.PhysPageSize, ")\n")
+-		throw("bad kernel page size")
++	if physPageSize < minPhysPageSize {
++		print("system page size (", physPageSize, ") is smaller than minimum page size (", minPhysPageSize, ")\n")
++		throw("bad system page size")
+ 	}
+-	if sys.PhysPageSize%physPageSize != 0 {
+-		print("runtime: runtime page size (", sys.PhysPageSize, ") is not a multiple of kernel page size (", physPageSize, ")\n")
+-		throw("bad kernel page size")
++	if physPageSize&(physPageSize-1) != 0 {
++		print("system page size (", physPageSize, ") must be a power of 2\n")
++		throw("bad system page size")
+ 	}
+ 
+ 	var p, bitmapSize, spansSize, pSize, limit uintptr
+diff --git a/src/runtime/mbitmap.go b/src/runtime/mbitmap.go
+index d05a072..f5b10f3 100644
+--- a/src/runtime/mbitmap.go
++++ b/src/runtime/mbitmap.go
+@@ -151,7 +151,7 @@ func (h *mheap) mapBits(arena_used uintptr) {
+ 
+ 	n := (arena_used - mheap_.arena_start) / heapBitmapScale
+ 	n = round(n, bitmapChunk)
+-	n = round(n, sys.PhysPageSize)
++	n = round(n, physPageSize)
+ 	if h.bitmap_mapped >= n {
+ 		return
+ 	}
+diff --git a/src/runtime/mem_linux.go b/src/runtime/mem_linux.go
+index cd0bf26..094658d 100644
+--- a/src/runtime/mem_linux.go
++++ b/src/runtime/mem_linux.go
+@@ -22,17 +22,14 @@ const (
+ var addrspace_vec [1]byte
+ 
+ func addrspace_free(v unsafe.Pointer, n uintptr) bool {
+-	// Step by the minimum possible physical page size. This is
+-	// safe even if we have the wrong physical page size; mincore
+-	// will just return EINVAL for unaligned addresses.
+-	for off := uintptr(0); off < n; off += minPhysPageSize {
++	for off := uintptr(0); off < n; off += physPageSize {
+ 		// Use a length of 1 byte, which the kernel will round
+ 		// up to one physical page regardless of the true
+ 		// physical page size.
+ 		errval := mincore(unsafe.Pointer(uintptr(v)+off), 1, &addrspace_vec[0])
+ 		if errval == -_EINVAL {
+ 			// Address is not a multiple of the physical
+-			// page size. That's fine.
++			// page size. Shouldn't happen, but just ignore it.
+ 			continue
+ 		}
+ 		// ENOMEM means unmapped, which is what we want.
+@@ -138,7 +135,7 @@ func sysUnused(v unsafe.Pointer, n uintptr) {
+ 		}
+ 	}
+ 
+-	if uintptr(v)&(sys.PhysPageSize-1) != 0 || n&(sys.PhysPageSize-1) != 0 {
++	if uintptr(v)&(physPageSize-1) != 0 || n&(physPageSize-1) != 0 {
+ 		// madvise will round this to any physical page
+ 		// *covered* by this range, so an unaligned madvise
+ 		// will release more memory than intended.
+diff --git a/src/runtime/mheap.go b/src/runtime/mheap.go
+index 8db2fcc..dfb484c 100644
+--- a/src/runtime/mheap.go
++++ b/src/runtime/mheap.go
+@@ -401,7 +401,7 @@ func (h *mheap) mapSpans(arena_used uintptr) {
+ 	n := arena_used
+ 	n -= h.arena_start
+ 	n = n / _PageSize * sys.PtrSize
+-	n = round(n, sys.PhysPageSize)
++	n = round(n, physPageSize)
+ 	if h.spans_mapped >= n {
+ 		return
+ 	}
+@@ -909,14 +909,14 @@ func scavengelist(list *mSpanList, now, limit uint64) uintptr {
+ 		if (now-uint64(s.unusedsince)) > limit && s.npreleased != s.npages {
+ 			start := s.base()
+ 			end := start + s.npages<<_PageShift
+-			if sys.PhysPageSize > _PageSize {
++			if physPageSize > _PageSize {
+ 				// We can only release pages in
+-				// PhysPageSize blocks, so round start
++				// physPageSize blocks, so round start
+ 				// and end in. (Otherwise, madvise
+ 				// will round them *out* and release
+ 				// more memory than we want.)
+-				start = (start + sys.PhysPageSize - 1) &^ (sys.PhysPageSize - 1)
+-				end &^= sys.PhysPageSize - 1
++				start = (start + physPageSize - 1) &^ (physPageSize - 1)
++				end &^= physPageSize - 1
+ 				if end <= start {
+ 					// start and end don't span a
+ 					// whole physical page.
+@@ -926,7 +926,7 @@ func scavengelist(list *mSpanList, now, limit uint64) uintptr {
+ 			len := end - start
+ 
+ 			released := len - (s.npreleased << _PageShift)
+-			if sys.PhysPageSize > _PageSize && released == 0 {
++			if physPageSize > _PageSize && released == 0 {
+ 				continue
+ 			}
+ 			memstats.heap_released += uint64(released)
+-- 
+2.10.2
+
