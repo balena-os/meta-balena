@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.4.2
+## (2017-08-31)
+
+* Update NetworkManager to 1.8.2 [Andrei Gherzan]
+* Only install systemd-analyze in development images [Will Newton]
+* Avoid removing the supervisor container when the supervisor exits [Pablo Carranza Velez]
+* Update supervisor to v6.2.5 [Pablo Carranza Velez]
+
 # v2.4.1
 ## (2017-08-24)
 
