@@ -7,7 +7,10 @@ SECTION = "devel/kernel"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-DEPENDS = "virtual/kernel"
+DEPENDS = " \
+    virtual/kernel \
+    bc-native \
+    "
 
 SRC_URI = "git://github.com/resin-os/module-headers.git;protocol=https"
 
