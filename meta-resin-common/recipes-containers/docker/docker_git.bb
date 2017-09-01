@@ -49,10 +49,12 @@ DEPENDS = " \
   systemd \
   "
 
-DEPENDS_append_class-target = "lvm2"
+DEPENDS_append_class-target = " lvm2"
 RDEPENDS_${PN} = "curl util-linux iptables tini systemd"
 RRECOMMENDS_${PN} += " kernel-module-dm-thin-pool kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
+
+inherit systemd go
 
 do_configure() {
 }
@@ -109,8 +111,6 @@ do_compile() {
 
   ./hack/make.sh binary-rce-docker
 }
-
-inherit systemd
 
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "docker.service var-lib-docker.mount"
