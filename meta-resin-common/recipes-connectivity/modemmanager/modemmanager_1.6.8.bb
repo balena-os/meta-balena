@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = " \
     file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
 "
 
-inherit gnomebase gettext systemd vala gobject-introspection bash-completion
+inherit gnomebase gettext systemd vala bash-completion
 
 DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native"
 
@@ -48,3 +48,8 @@ FILES_${PN}-staticdev += " \
 FILES_${PN}-dbg += "${libdir}/ModemManager/.debug"
 
 SYSTEMD_SERVICE_${PN} = "ModemManager.service"
+
+# XXX
+# Introspection is not available in all yocto versions. We don't take advantage of
+# it in resin so disabling it for the time being. To be revised.
+EXTRA_OECONF_prepend = "--disable-introspection "
