@@ -1,0 +1,527 @@
+From 276a52de55fb48c4e56a778f1f7cac9292d8fad7 Mon Sep 17 00:00:00 2001
+From: Austin Clements <austin@google.com>
+Date: Mon, 18 Jul 2016 21:40:02 -0400
+Subject: [PATCH 2/5] runtime: fetch physical page size from the OS
+
+Currently the physical page size assumed by the runtime is hard-coded.
+On Linux the runtime at least fetches the OS page size during init and
+sanity checks against the hard-coded value, but they may still differ.
+On other OSes we wouldn't even notice.
+
+Add support on all OSes to fetch the actual OS physical page size
+during runtime init and lift the sanity check of PhysPageSize from the
+Linux init code to general malloc init. Currently this is the only use
+of the retrieved page size, but we'll add more shortly.
+
+Updates #12480 and #10180.
+
+Change-Id: I065f2834bc97c71d3208edc17fd990ec9058b6da
+Reviewed-on: https://go-review.googlesource.com/25050
+Run-TryBot: Austin Clements <austin@google.com>
+TryBot-Result: Gobot Gobot <gobot@golang.org>
+Reviewed-by: Rick Hudson <rlh@golang.org>
+
+Upstream-Status: Backport
+---
+ src/runtime/defs1_solaris_amd64.go |  1 +
+ src/runtime/export_mmap_test.go    |  6 +++++
+ src/runtime/malloc.go              | 22 +++++++++++++++++
+ src/runtime/os3_solaris.go         |  9 +++++++
+ src/runtime/os_darwin.go           | 22 ++++++++++++++++-
+ src/runtime/os_dragonfly.go        | 17 +++++++++++--
+ src/runtime/os_freebsd.go          | 17 +++++++++++--
+ src/runtime/os_linux.go            | 12 +--------
+ src/runtime/os_nacl.go             |  1 +
+ src/runtime/os_netbsd.go           | 17 +++++++++++--
+ src/runtime/os_openbsd.go          | 17 +++++++++++--
+ src/runtime/os_plan9.go            | 50 ++++++++++++++++++++++++++++++++++++++
+ src/runtime/os_windows.go          |  8 ++++++
+ src/runtime/runtime_mmap_test.go   | 28 +++++++++++++++++++--
+ 14 files changed, 205 insertions(+), 22 deletions(-)
+
+diff --git a/src/runtime/defs1_solaris_amd64.go b/src/runtime/defs1_solaris_amd64.go
+index 3bb6f69..85a7b40 100644
+--- a/src/runtime/defs1_solaris_amd64.go
++++ b/src/runtime/defs1_solaris_amd64.go
+@@ -78,6 +78,7 @@ const (
+ 	_ITIMER_VIRTUAL = 0x1
+ 	_ITIMER_PROF    = 0x2
+ 
++	__SC_PAGESIZE         = 0xb
+ 	__SC_NPROCESSORS_ONLN = 0xf
+ 
+ 	_PTHREAD_CREATE_DETACHED = 0x40
+diff --git a/src/runtime/export_mmap_test.go b/src/runtime/export_mmap_test.go
+index bc8191e..f569627 100644
+--- a/src/runtime/export_mmap_test.go
++++ b/src/runtime/export_mmap_test.go
+@@ -9,7 +9,13 @@
+ package runtime
+ 
+ var Mmap = mmap
++var Munmap = munmap
+ 
+ const ENOMEM = _ENOMEM
+ const MAP_ANON = _MAP_ANON
+ const MAP_PRIVATE = _MAP_PRIVATE
++const MAP_FIXED = _MAP_FIXED
++
++func GetPhysPageSize() uintptr {
++	return physPageSize
++}
+diff --git a/src/runtime/malloc.go b/src/runtime/malloc.go
+index 4f0a2ce..931af2a 100644
+--- a/src/runtime/malloc.go
++++ b/src/runtime/malloc.go
+@@ -172,6 +172,14 @@ const (
+ 
+ const _MaxArena32 = 1<<32 - 1
+ 
++// physPageSize is the size in bytes of the OS's physical pages.
++// Mapping and unmapping operations must be done at multiples of
++// physPageSize.
++//
++// This must be set by the OS init code (typically in osinit) before
++// mallocinit.
++var physPageSize uintptr
++
+ // OS-defined helpers:
+ //
+ // sysAlloc obtains a large chunk of zeroed memory from the
+@@ -217,6 +225,20 @@ func mallocinit() {
+ 		throw("bad TinySizeClass")
+ 	}
+ 
++	// Check physPageSize.
++	if physPageSize == 0 {
++		// The OS init code failed to fetch the physical page size.
++		throw("failed to get system page size")
++	}
++	if sys.PhysPageSize < physPageSize {
++		print("runtime: kernel page size (", physPageSize, ") is larger than runtime page size (", sys.PhysPageSize, ")\n")
++		throw("bad kernel page size")
++	}
++	if sys.PhysPageSize%physPageSize != 0 {
++		print("runtime: runtime page size (", sys.PhysPageSize, ") is not a multiple of kernel page size (", physPageSize, ")\n")
++		throw("bad kernel page size")
++	}
++
+ 	var p, bitmapSize, spansSize, pSize, limit uintptr
+ 	var reserved bool
+ 
+diff --git a/src/runtime/os3_solaris.go b/src/runtime/os3_solaris.go
+index 15881cf..03a6c1a 100644
+--- a/src/runtime/os3_solaris.go
++++ b/src/runtime/os3_solaris.go
+@@ -127,8 +127,17 @@ func getncpu() int32 {
+ 	return n
+ }
+ 
++func getPageSize() uintptr {
++	n := int32(sysconf(__SC_PAGESIZE))
++	if n <= 0 {
++		return 0
++	}
++	return uintptr(n)
++}
++
+ func osinit() {
+ 	ncpu = getncpu()
++	physPageSize = getPageSize()
+ }
+ 
+ func tstart_sysvicall(newm *m) uint32
+diff --git a/src/runtime/os_darwin.go b/src/runtime/os_darwin.go
+index 8f21815..ddbd0df 100644
+--- a/src/runtime/os_darwin.go
++++ b/src/runtime/os_darwin.go
+@@ -50,11 +50,19 @@ func osinit() {
+ 	// can look at the environment first.
+ 
+ 	ncpu = getncpu()
++
++	physPageSize = getPageSize()
+ }
+ 
++const (
++	_CTL_HW      = 6
++	_HW_NCPU     = 3
++	_HW_PAGESIZE = 7
++)
++
+ func getncpu() int32 {
+ 	// Use sysctl to fetch hw.ncpu.
+-	mib := [2]uint32{6, 3}
++	mib := [2]uint32{_CTL_HW, _HW_NCPU}
+ 	out := uint32(0)
+ 	nout := unsafe.Sizeof(out)
+ 	ret := sysctl(&mib[0], 2, (*byte)(unsafe.Pointer(&out)), &nout, nil, 0)
+@@ -64,6 +72,18 @@ func getncpu() int32 {
+ 	return 1
+ }
+ 
++func getPageSize() uintptr {
++	// Use sysctl to fetch hw.pagesize.
++	mib := [2]uint32{_CTL_HW, _HW_PAGESIZE}
++	out := uint32(0)
++	nout := unsafe.Sizeof(out)
++	ret := sysctl(&mib[0], 2, (*byte)(unsafe.Pointer(&out)), &nout, nil, 0)
++	if ret >= 0 && int32(out) > 0 {
++		return uintptr(out)
++	}
++	return 0
++}
++
+ var urandom_dev = []byte("/dev/urandom\x00")
+ 
+ //go:nosplit
+diff --git a/src/runtime/os_dragonfly.go b/src/runtime/os_dragonfly.go
+index 85d4aad..edf7581 100644
+--- a/src/runtime/os_dragonfly.go
++++ b/src/runtime/os_dragonfly.go
+@@ -54,8 +54,9 @@ const stackSystem = 0
+ 
+ // From DragonFly's <sys/sysctl.h>
+ const (
+-	_CTL_HW  = 6
+-	_HW_NCPU = 3
++	_CTL_HW      = 6
++	_HW_NCPU     = 3
++	_HW_PAGESIZE = 7
+ )
+ 
+ var sigset_all = sigset{[4]uint32{^uint32(0), ^uint32(0), ^uint32(0), ^uint32(0)}}
+@@ -71,6 +72,17 @@ func getncpu() int32 {
+ 	return 1
+ }
+ 
++func getPageSize() uintptr {
++	mib := [2]uint32{_CTL_HW, _HW_PAGESIZE}
++	out := uint32(0)
++	nout := unsafe.Sizeof(out)
++	ret := sysctl(&mib[0], 2, (*byte)(unsafe.Pointer(&out)), &nout, nil, 0)
++	if ret >= 0 {
++		return uintptr(out)
++	}
++	return 0
++}
++
+ //go:nosplit
+ func futexsleep(addr *uint32, val uint32, ns int64) {
+ 	systemstack(func() {
+@@ -141,6 +153,7 @@ func newosproc(mp *m, stk unsafe.Pointer) {
+ 
+ func osinit() {
+ 	ncpu = getncpu()
++	physPageSize = getPageSize()
+ }
+ 
+ var urandom_dev = []byte("/dev/urandom\x00")
+diff --git a/src/runtime/os_freebsd.go b/src/runtime/os_freebsd.go
+index c187ee8..30eaedf 100644
+--- a/src/runtime/os_freebsd.go
++++ b/src/runtime/os_freebsd.go
+@@ -41,8 +41,9 @@ func osyield()
+ 
+ // From FreeBSD's <sys/sysctl.h>
+ const (
+-	_CTL_HW  = 6
+-	_HW_NCPU = 3
++	_CTL_HW      = 6
++	_HW_NCPU     = 3
++	_HW_PAGESIZE = 7
+ )
+ 
+ var sigset_all = sigset{[4]uint32{^uint32(0), ^uint32(0), ^uint32(0), ^uint32(0)}}
+@@ -58,6 +59,17 @@ func getncpu() int32 {
+ 	return 1
+ }
+ 
++func getPageSize() uintptr {
++	mib := [2]uint32{_CTL_HW, _HW_PAGESIZE}
++	out := uint32(0)
++	nout := unsafe.Sizeof(out)
++	ret := sysctl(&mib[0], 2, (*byte)(unsafe.Pointer(&out)), &nout, nil, 0)
++	if ret >= 0 {
++		return uintptr(out)
++	}
++	return 0
++}
++
+ // FreeBSD's umtx_op syscall is effectively the same as Linux's futex, and
+ // thus the code is largely similar. See Linux implementation
+ // and lock_futex.go for comments.
+@@ -128,6 +140,7 @@ func newosproc(mp *m, stk unsafe.Pointer) {
+ 
+ func osinit() {
+ 	ncpu = getncpu()
++	physPageSize = getPageSize()
+ }
+ 
+ var urandom_dev = []byte("/dev/urandom\x00")
+diff --git a/src/runtime/os_linux.go b/src/runtime/os_linux.go
+index 796e05a..9104558 100644
+--- a/src/runtime/os_linux.go
++++ b/src/runtime/os_linux.go
+@@ -207,17 +207,7 @@ func sysargs(argc int32, argv **byte) {
+ 			startupRandomData = (*[16]byte)(unsafe.Pointer(val))[:]
+ 
+ 		case _AT_PAGESZ:
+-			// Check that the true physical page size is
+-			// compatible with the runtime's assumed
+-			// physical page size.
+-			if sys.PhysPageSize < val {
+-				print("runtime: kernel page size (", val, ") is larger than runtime page size (", sys.PhysPageSize, ")\n")
+-				exit(1)
+-			}
+-			if sys.PhysPageSize%val != 0 {
+-				print("runtime: runtime page size (", sys.PhysPageSize, ") is not a multiple of kernel page size (", val, ")\n")
+-				exit(1)
+-			}
++			physPageSize = val
+ 		}
+ 
+ 		archauxv(tag, val)
+diff --git a/src/runtime/os_nacl.go b/src/runtime/os_nacl.go
+index 1dacc1a..c968b1a 100644
+--- a/src/runtime/os_nacl.go
++++ b/src/runtime/os_nacl.go
+@@ -116,6 +116,7 @@ func osinit() {
+ 	ncpu = 1
+ 	getg().m.procid = 2
+ 	//nacl_exception_handler(funcPC(sigtramp), nil);
++	physPageSize = 65536
+ }
+ 
+ func signame(sig uint32) string {
+diff --git a/src/runtime/os_netbsd.go b/src/runtime/os_netbsd.go
+index 4c44b2b..3e94c3b 100644
+--- a/src/runtime/os_netbsd.go
++++ b/src/runtime/os_netbsd.go
+@@ -79,8 +79,9 @@ var sigset_all = sigset{[4]uint32{^uint32(0), ^uint32(0), ^uint32(0), ^uint32(0)
+ 
+ // From NetBSD's <sys/sysctl.h>
+ const (
+-	_CTL_HW  = 6
+-	_HW_NCPU = 3
++	_CTL_HW      = 6
++	_HW_NCPU     = 3
++	_HW_PAGESIZE = 7
+ )
+ 
+ func getncpu() int32 {
+@@ -94,6 +95,17 @@ func getncpu() int32 {
+ 	return 1
+ }
+ 
++func getPageSize() uintptr {
++	mib := [2]uint32{_CTL_HW, _HW_PAGESIZE}
++	out := uint32(0)
++	nout := unsafe.Sizeof(out)
++	ret := sysctl(&mib[0], 2, (*byte)(unsafe.Pointer(&out)), &nout, nil, 0)
++	if ret >= 0 {
++		return uintptr(out)
++	}
++	return 0
++}
++
+ //go:nosplit
+ func semacreate(mp *m) {
+ }
+@@ -186,6 +198,7 @@ func netbsdMstart() {
+ 
+ func osinit() {
+ 	ncpu = getncpu()
++	physPageSize = getPageSize()
+ }
+ 
+ var urandom_dev = []byte("/dev/urandom\x00")
+diff --git a/src/runtime/os_openbsd.go b/src/runtime/os_openbsd.go
+index 9a5c53e..c2b3b97 100644
+--- a/src/runtime/os_openbsd.go
++++ b/src/runtime/os_openbsd.go
+@@ -64,8 +64,9 @@ const (
+ 
+ // From OpenBSD's <sys/sysctl.h>
+ const (
+-	_CTL_HW  = 6
+-	_HW_NCPU = 3
++	_CTL_HW      = 6
++	_HW_NCPU     = 3
++	_HW_PAGESIZE = 7
+ )
+ 
+ func getncpu() int32 {
+@@ -81,6 +82,17 @@ func getncpu() int32 {
+ 	return 1
+ }
+ 
++func getPageSize() uintptr {
++	mib := [2]uint32{_CTL_HW, _HW_PAGESIZE}
++	out := uint32(0)
++	nout := unsafe.Sizeof(out)
++	ret := sysctl(&mib[0], 2, (*byte)(unsafe.Pointer(&out)), &nout, nil, 0)
++	if ret >= 0 {
++		return uintptr(out)
++	}
++	return 0
++}
++
+ //go:nosplit
+ func semacreate(mp *m) {
+ }
+@@ -163,6 +175,7 @@ func newosproc(mp *m, stk unsafe.Pointer) {
+ 
+ func osinit() {
+ 	ncpu = getncpu()
++	physPageSize = getPageSize()
+ }
+ 
+ var urandom_dev = []byte("/dev/urandom\x00")
+diff --git a/src/runtime/os_plan9.go b/src/runtime/os_plan9.go
+index 2f3a0d1..333f222 100644
+--- a/src/runtime/os_plan9.go
++++ b/src/runtime/os_plan9.go
+@@ -217,6 +217,55 @@ func getproccount() int32 {
+ 	return ncpu
+ }
+ 
++var devswap = []byte("/dev/swap\x00")
++var pagesize = []byte(" pagesize\n")
++
++func getPageSize() uintptr {
++	var buf [2048]byte
++	var pos int
++	fd := open(&devswap[0], _OREAD, 0)
++	if fd < 0 {
++		// There's not much we can do if /dev/swap doesn't
++		// exist. However, nothing in the memory manager uses
++		// this on Plan 9, so it also doesn't really matter.
++		return minPhysPageSize
++	}
++	for pos < len(buf) {
++		n := read(fd, unsafe.Pointer(&buf[pos]), int32(len(buf)-pos))
++		if n <= 0 {
++			break
++		}
++		pos += int(n)
++	}
++	closefd(fd)
++	text := buf[:pos]
++	// Find "<n> pagesize" line.
++	bol := 0
++	for i, c := range text {
++		if c == '\n' {
++			bol = i + 1
++		}
++		if bytesHasPrefix(text[i:], pagesize) {
++			// Parse number at the beginning of this line.
++			return uintptr(_atoi(text[bol:]))
++		}
++	}
++	// Again, the page size doesn't really matter, so use a fallback.
++	return minPhysPageSize
++}
++
++func bytesHasPrefix(s, prefix []byte) bool {
++	if len(s) < len(prefix) {
++		return false
++	}
++	for i, p := range prefix {
++		if s[i] != p {
++			return false
++		}
++	}
++	return true
++}
++
+ var pid = []byte("#c/pid\x00")
+ 
+ func getpid() uint64 {
+@@ -236,6 +285,7 @@ func getpid() uint64 {
+ func osinit() {
+ 	initBloc()
+ 	ncpu = getproccount()
++	physPageSize = getPageSize()
+ 	getg().m.procid = getpid()
+ 	notify(unsafe.Pointer(funcPC(sigtramp)))
+ }
+diff --git a/src/runtime/os_windows.go b/src/runtime/os_windows.go
+index 8529b35..95088ac 100644
+--- a/src/runtime/os_windows.go
++++ b/src/runtime/os_windows.go
+@@ -205,6 +205,12 @@ func getproccount() int32 {
+ 	return int32(info.dwnumberofprocessors)
+ }
+ 
++func getPageSize() uintptr {
++	var info systeminfo
++	stdcall1(_GetSystemInfo, uintptr(unsafe.Pointer(&info)))
++	return uintptr(info.dwpagesize)
++}
++
+ const (
+ 	currentProcess = ^uintptr(0) // -1 = current process
+ 	currentThread  = ^uintptr(1) // -2 = current thread
+@@ -256,6 +262,8 @@ func osinit() {
+ 
+ 	ncpu = getproccount()
+ 
++	physPageSize = getPageSize()
++
+ 	// Windows dynamic priority boosting assumes that a process has different types
+ 	// of dedicated threads -- GUI, IO, computational, etc. Go processes use
+ 	// equivalent threads that all do a mix of GUI, IO, computations, etc.
+diff --git a/src/runtime/runtime_mmap_test.go b/src/runtime/runtime_mmap_test.go
+index cf240c1..2eca6b9 100644
+--- a/src/runtime/runtime_mmap_test.go
++++ b/src/runtime/runtime_mmap_test.go
+@@ -8,15 +8,15 @@ package runtime_test
+ 
+ import (
+ 	"runtime"
+-	"runtime/internal/sys"
+ 	"testing"
++	"unsafe"
+ )
+ 
+ // Test that the error value returned by mmap is positive, as that is
+ // what the code in mem_bsd.go, mem_darwin.go, and mem_linux.go expects.
+ // See the uses of ENOMEM in sysMap in those files.
+ func TestMmapErrorSign(t *testing.T) {
+-	p := runtime.Mmap(nil, ^uintptr(0)&^(sys.PhysPageSize-1), 0, runtime.MAP_ANON|runtime.MAP_PRIVATE, -1, 0)
++	p := runtime.Mmap(nil, ^uintptr(0)&^(runtime.GetPhysPageSize()-1), 0, runtime.MAP_ANON|runtime.MAP_PRIVATE, -1, 0)
+ 
+ 	// The runtime.mmap function is nosplit, but t.Errorf is not.
+ 	// Reset the pointer so that we don't get an "invalid stack
+@@ -28,3 +28,27 @@ func TestMmapErrorSign(t *testing.T) {
+ 		t.Errorf("mmap = %v, want %v", v, runtime.ENOMEM)
+ 	}
+ }
++
++func TestPhysPageSize(t *testing.T) {
++	// Mmap fails if the address is not page aligned, so we can
++	// use this to test if the page size is the true page size.
++	ps := runtime.GetPhysPageSize()
++
++	// Get a region of memory to play with. This should be page-aligned.
++	b := uintptr(runtime.Mmap(nil, 2*ps, 0, runtime.MAP_ANON|runtime.MAP_PRIVATE, -1, 0))
++	if b < 4096 {
++		t.Fatalf("Mmap: %v", b)
++	}
++
++	// Mmap should fail at a half page into the buffer.
++	err := uintptr(runtime.Mmap(unsafe.Pointer(uintptr(b)+ps/2), ps, 0, runtime.MAP_ANON|runtime.MAP_PRIVATE|runtime.MAP_FIXED, -1, 0))
++	if err >= 4096 {
++		t.Errorf("Mmap should have failed with half-page alignment %d, but succeeded: %v", ps/2, err)
++	}
++
++	// Mmap should succeed at a full page into the buffer.
++	err = uintptr(runtime.Mmap(unsafe.Pointer(uintptr(b)+ps), ps, 0, runtime.MAP_ANON|runtime.MAP_PRIVATE|runtime.MAP_FIXED, -1, 0))
++	if err < 4096 {
++		t.Errorf("Mmap at full-page alignment %d failed: %v", ps, err)
++	}
++}
+-- 
+2.10.2
+
