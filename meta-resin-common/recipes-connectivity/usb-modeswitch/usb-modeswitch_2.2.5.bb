@@ -17,6 +17,8 @@ SRC_URI = " \
 SRC_URI[md5sum] = "ef86a19f0b3c4f64896d78a2ffb748e9"
 SRC_URI[sha256sum] = "8b2340303732aabc8c8e1cdd7d4352f61dcb942839f58ce22ba0ecfa122426d5"
 
+inherit pkgconfig
+
 FILES_${PN} = "${bindir} ${sysconfdir} ${nonarch_base_libdir}/udev/usb_modeswitch ${sbindir} ${localstatedir}/lib/usb_modeswitch"
 RRECOMMENDS_${PN} = "usb-modeswitch-data"
 
