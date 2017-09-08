@@ -104,7 +104,7 @@ do_compile() {
   export DOCKER_GITCOMMIT="${SRCREV}"
   export DOCKER_BUILDTAGS='exclude_graphdriver_btrfs exclude_graphdirver_zfs exclude_graphdriver_devicemapper'
 
-  ./hack/make.sh binary-rce-docker
+  ./hack/make.sh dynbinary-rce-docker
 
   # Compile mobynit
   cd .gopath/src/"${DOCKER_PKG}"/cmd/mobynit
@@ -117,7 +117,7 @@ SYSTEMD_SERVICE_${PN} = "docker.service docker-host.service var-lib-docker.mount
 
 do_install() {
   mkdir -p ${D}/${bindir}
-  install -m 0755 ${S}/bundles/${DOCKER_VERSION}/binary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
+  install -m 0755 ${S}/bundles/${DOCKER_VERSION}/dynbinary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
   install -d ${D}/boot
   install -m 0755 ${S}/cmd/mobynit/mobynit ${D}/boot/init
 
