@@ -193,6 +193,10 @@ resin_boot_dirgen_and_deploy () {
 
     echo "Install resin-boot in the rootfs..."
     cp -rvf ${RESIN_BOOT_WORKDIR} ${IMAGE_ROOTFS}/${RESIN_BOOT_FS_LABEL}
+
+    echo "Generating ${RESIN_BOOTFILES_LIST} ..."
+    mkdir -p $(dirname ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST})
+    find ${RESIN_BOOT_WORKDIR} -type f | sed "s#${RESIN_BOOT_WORKDIR}##g" > ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST}
 }
 
 QUIRK_FILES ?= " \
