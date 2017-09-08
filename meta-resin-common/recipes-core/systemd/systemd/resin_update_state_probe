@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -o errexit
+set -o pipefail
+
+dev=$1
+
+# Only when root is mounted we can differenciate
+ROOT_MOUNTED=$(findmnt --output LABEL | grep resin-root | wc -l)
+if [ "$ROOT_MOUNTED" -eq 0]; then
+	exit 1
+fi
+
+for mountpoint in $(findmnt --noheadings --output TARGET $dev); do
+    if [ "$mountpoint" == "/" ] || [ "$mountpoint" == "/mnt/sysroot/active" ]; then
+        echo 'RESIN_UPDATE_STATE=active'
+        exit 0
+    fi
+done
+
+echo 'RESIN_UPDATE_STATE=inactive'

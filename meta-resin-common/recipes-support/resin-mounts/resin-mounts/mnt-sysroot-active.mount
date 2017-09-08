@@ -1,0 +1,13 @@
+[Unit]
+Description=Resin active root partition mountpoint
+DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
+
+[Mount]
+What=/dev/disk/by-state/active
+Where=/mnt/sysroot/active
+Type=auto
+
+[Install]
+WantedBy=multi-user.target

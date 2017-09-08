@@ -18,43 +18,37 @@ DESCRIPTION = "Linux container runtime \
  subtle and/or glaring issues. \
  "
 
-SRCREV = "670a205440471d72528f123ab7b686179d04e8e2"
-SRCBRANCH = "17.03.1-resin"
+inherit binary-compress
+FILES_COMPRESS = "/boot/init"
+
+SRCREV = "7d1b49da3f9b7f2215c3e9f357c9b104efef2aa2"
+SRCBRANCH = "17.06-resin"
 SRC_URI = "\
   git://github.com/resin-os/docker.git;branch=${SRCBRANCH};nobranch=1 \
   file://docker.service \
+  file://docker-host.service \
   file://var-lib-docker.mount \
   file://docker.conf.systemd \
-  file://0001-graph-aufs-durably-write-layer-on-disk-before-return.patch \
-  file://0002-pkg-ioutils-sync-parent-directory-too.patch \
-  file://0003-pkg-fadvise-implementation-of-posix_fadvise-2.patch \
-  file://0004-pkg-archive-use-fadvise-to-prevent-pagecache-thrashi.patch \
-  file://0005-daemon-cleanup-as-early-as-possible.patch \
-  file://0006-container-make-sure-config-on-disk-has-a-valid-Confi.patch \
 "
 
 # Apache-2.0 for docker
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=aadc30f9c14d876ded7bedc0afd2d3d7"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
 
 S = "${WORKDIR}/git"
 
-DOCKER_VERSION = "17.03.1-ce"
+BBCLASSEXTEND = " native"
+
+DOCKER_VERSION = "17.06.0-dev"
 PV = "${DOCKER_VERSION}+git${SRCREV}"
 
-DEPENDS = " \
-  go-cross \
-  btrfs-tools \
-  git \
-  systemd \
-  "
-
-DEPENDS_append_class-target = " lvm2"
-RDEPENDS_${PN} = "curl util-linux iptables tini systemd"
-RRECOMMENDS_${PN} += " kernel-module-dm-thin-pool kernel-module-nf-nat"
+DEPENDS_append_class-native = " go"
+DEPENDS_append_class-target = " systemd go-cross"
+RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd"
+RRECOMMENDS_${PN} += " kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
 
-inherit systemd go
+inherit systemd
 
 do_configure() {
 }
@@ -108,16 +102,24 @@ do_compile() {
   export CGO_LDFLAGS="${LDFLAGS}  ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
 
   export DOCKER_GITCOMMIT="${SRCREV}"
+  export DOCKER_BUILDTAGS='exclude_graphdriver_btrfs exclude_graphdirver_zfs exclude_graphdriver_devicemapper'
 
   ./hack/make.sh binary-rce-docker
+
+  # Compile mobynit
+  cd .gopath/src/"${DOCKER_PKG}"/cmd/mobynit
+  go build -ldflags '-extldflags "-static"' .
+  cd -
 }
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "docker.service var-lib-docker.mount"
+SYSTEMD_SERVICE_${PN} = "docker.service docker-host.service var-lib-docker.mount"
 
 do_install() {
   mkdir -p ${D}/${bindir}
   install -m 0755 ${S}/bundles/${DOCKER_VERSION}/binary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
+  install -d ${D}/boot
+  install -m 0755 ${S}/cmd/mobynit/mobynit ${D}/boot/init
 
   ln -sf rce-docker ${D}/${bindir}/docker
   ln -sf rce-docker ${D}/${bindir}/dockerd
@@ -129,8 +131,13 @@ do_install() {
 
   install -d ${D}${systemd_unitdir}/system
   install -m 0644 ${S}/contrib/init/systemd/docker.* ${D}/${systemd_unitdir}/system
+
   install -m 0644 ${WORKDIR}/docker.service ${D}/${systemd_unitdir}/system
   sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/docker.service
+
+  install -m 0644 ${WORKDIR}/docker-host.service ${D}/${systemd_unitdir}/system
+  sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/docker-host.service
+
   install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
 
   if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
@@ -149,4 +156,5 @@ GROUPADD_PARAM_${PN} = "-r docker"
 FILES_${PN} += " \
   /lib/systemd/system/* \
   /home/root/.docker/ \
+  /boot/init \
   "

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -o errexit
+
+# We force the PATH to be the standard linux path in order to use the host's
+# docker daemon instead of the result of docker-native. This avoids version
+# mismatches
+DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
+
+sysroot="/"
+tmpdir=""
+
+while getopts 'i:o:s:t:' flag; do
+	case "${flag}" in
+        i) input=$(realpath "${OPTARG}") ;;
+        o) output=$(realpath "${OPTARG}") ;;
+        s) sysroot=$(realpath "${OPTARG}") ;;
+        t) tmpdir=$(realpath "${OPTARG}") ;;
+        *) error "Unexpected option ${flag}" ;;
+	esac
+done
+
+if [ -z "$tmpdir" ]; then
+    echo "Missing tmpdir"
+    exit 1
+fi
+
+if ! [ -f "$input" ]; then
+    echo "File does not exist: $input"
+    exit 1
+fi
+
+if ! [ -f "$output" ]; then
+    echo "File does not exist: $output"
+    exit 1
+fi
+
+cleanup_docker() {
+    docker rmi @IMAGE@ || true
+}
+
+$DOCKER load -i "$sysroot/usr/share/mkfs-hostapp-ext4-image.tar"
+trap cleanup_docker EXIT
+
+$DOCKER run --privileged --rm -v "$input:/input:ro" -v "$tmpdir:$tmpdir:ro" -v "$output:/output" -e "PATH=$PATH" @IMAGE@

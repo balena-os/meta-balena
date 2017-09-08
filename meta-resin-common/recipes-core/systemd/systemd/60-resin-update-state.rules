@@ -1,0 +1,1 @@
+ENV{ID_FS_LABEL_ENC}=="resin-root*", IMPORT{program}="resin_update_state_probe $devnode", SYMLINK+="disk/by-state/$env{RESIN_UPDATE_STATE}"

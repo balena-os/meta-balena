@@ -56,7 +56,7 @@ inherit image_types
 #   +-------------------+
 #
 
-RESIN_ROOT_FSTYPE ?= "ext4"
+RESIN_ROOT_FSTYPE ?= "hostapp-ext4"
 
 python() {
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR
@@ -64,9 +64,13 @@ python() {
     if d.getVar('IMGDEPLOYDIR', True):
         d.setVar('RESIN_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.${RESIN_ROOT_FSTYPE}')
         d.setVar('RESIN_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resinos-img')
+        d.setVar('RESIN_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
+        d.setVar('RESIN_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
     else:
         d.setVar('RESIN_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${RESIN_ROOT_FSTYPE}')
         d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-img')
+        d.setVar('RESIN_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
+        d.setVar('RESIN_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
 }
 
 
@@ -92,6 +96,7 @@ RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
 RESIN_RAW_IMG_COMPRESSION ?= ""
 RESIN_DATA_FS ?= "${DEPLOY_DIR}/images/${MACHINE}/${RESIN_DATA_FS_LABEL}.img"
 RESIN_BOOT_FS = "${WORKDIR}/${RESIN_BOOT_FS_LABEL}.img"
+RESIN_ROOTB_FS = "${WORKDIR}/${RESIN_ROOTB_FS_LABEL}.img"
 RESIN_STATE_FS ?= "${WORKDIR}/${RESIN_STATE_FS_LABEL}.img"
 
 # resinos-img depends on the rootfs image
@@ -215,6 +220,12 @@ IMAGE_CMD_resinos-img () {
         bbwarn "Boot partition was detected empty."
     fi
 
+    # resin-rootB
+    RESIN_ROOTB_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | awk '/ 3 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
+    rm -rf ${RESIN_ROOTB_FS}
+    dd if=/dev/zero of=${RESIN_ROOTB_FS} seek=${RESIN_ROOTB_BLOCKS} count=0 bs=1024
+    mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -F -L "${RESIN_ROOTB_FS_LABEL}" ${RESIN_ROOTB_FS}
+
     # resin-state
     if [ -n "${RESIN_STATE_FS}" ]; then
         RESIN_STATE_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | awk '/ 5 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
@@ -232,13 +243,14 @@ IMAGE_CMD_resinos-img () {
     #
     # Burn partitions
     #
-    dd if=${RESIN_BOOT_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* ${RESIN_IMAGE_ALIGNMENT})
-    dd if=${RESIN_ROOT_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED}))
+    dd if=${RESIN_BOOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${RESIN_IMAGE_ALIGNMENT})
+    dd if=${RESIN_ROOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED}))
+    dd if=${RESIN_ROOTB_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED}))
     if [ -n "${RESIN_STATE_FS}" ]; then
-        dd if=${RESIN_STATE_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
+        dd if=${RESIN_STATE_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
     fi
     if [ -n "${RESIN_DATA_FS}" ]; then
-        dd if=${RESIN_DATA_FS} of=${RESIN_RAW_IMG} conv=notrunc,fsync seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_STATE_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
+        dd if=${RESIN_DATA_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_STATE_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
     fi
 
     # Optionally apply compression
@@ -258,3 +270,20 @@ IMAGE_CMD_resinos-img () {
 # Make sure we regenerate images if we modify the files that go in the boot
 # partition
 do_rootfs[vardeps] += "RESIN_BOOT_PARTITION_FILES"
+
+# XXX(petrosagg): This should be eventually implemented using a docker-native daemon
+IMAGE_CMD_docker () {
+    DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=1.22 docker import -)
+    DOCKER_API_VERSION=1.22 docker save ${DOCKER_IMAGE} > ${RESIN_DOCKER_IMG}
+}
+
+IMAGE_TYPEDEP_hostapp-ext4 = "docker"
+
+IMAGE_DEPENDS_hostapp-ext4 = " \
+    mkfs-hostapp-native \
+    "
+
+IMAGE_CMD_hostapp-ext4 () {
+    dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
+    mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
+}

@@ -15,6 +15,7 @@ include packagegroup-resin.inc
 RDEPENDS_${PN} += " \
     docker-disk \
     dosfstools \
+    hostapp-update \
     resin-filesystem-expand \
     resin-persistent-logs \
     resin-info \

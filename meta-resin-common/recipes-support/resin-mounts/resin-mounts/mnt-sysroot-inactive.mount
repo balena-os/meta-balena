@@ -1,0 +1,13 @@
+[Unit]
+Description=Resin inactive root partition mountpoint
+DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
+
+[Mount]
+What=/dev/disk/by-state/inactive
+Where=/mnt/sysroot/inactive
+Type=auto
+
+[Install]
+WantedBy=multi-user.target
