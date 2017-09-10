@@ -1,0 +1,11 @@
+# Copyright (c) 2013 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# This file specifies udev rules to configure certain Huawei modems to select
+# the USB configuration expected by Chrome OS.
+# Huawei ME936: Select the MBIM configuration
+ACTION=="add|change", SUBSYSTEM=="usb", \
+  ENV{DEVTYPE}=="usb_device|usb_interface", \
+  ATTRS{idVendor}=="12d1", ATTRS{idProduct}=="15bb", \
+  ATTRS{bNumConfigurations}=="3", ATTRS{bConfigurationValue}!="3", \
+  RUN+="/lib/udev/mm-huawei-configuration-switch.sh %E{DEVTYPE} %S%p 3"
