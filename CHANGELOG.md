@@ -1,6 +1,24 @@
 Change log
 -----------
 
+# v2.5.0
+## (2017-09-12)
+
+* Remove obsolete Go recipes [Will Newton]
+* Dynamically link docker [Petros Angelatos]
+* Include connectivity firmwares in Pyro [Will Newton]
+* Add glib-2.0-native dependencies for Pyro [Will Newton]
+* Switch to hostapp enabled rootfs [Petros Angelatos]
+* Update docker to 17.06 [Petros Angelatos]
+* Update modem manager to 1.6.8 [Andrei Gherzan]
+* Use poky go recipes for Pyro and above [Will Newton]
+* Patch mtools directory creation [Will Newton]
+* Enable building Docker on Yocto Pyro [Will Newton]
+* Enable fsck for resin-state partition [Will Newton]
+* Add host tool dependencies for Yocto Pyro [Will Newton]
+* Move systemd sanity check to image recipes [Will Newton]
+* Disable rarely used kernel configs for size [Will Newton]
+
 # v2.4.2
 ## (2017-08-31)
 
