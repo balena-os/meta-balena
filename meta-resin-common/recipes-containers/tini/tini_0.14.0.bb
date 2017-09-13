@@ -18,6 +18,9 @@ S = "${WORKDIR}/git"
 
 BBCLASSEXTEND = "native"
 
+# tini links with -static, so no PIE for us
+SECURITY_CFLAGS_pn-${PN} = "${SECURITY_NO_PIE_CFLAGS}"
+
 inherit cmake
 
 do_install() {
