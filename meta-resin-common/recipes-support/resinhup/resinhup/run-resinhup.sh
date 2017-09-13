@@ -234,7 +234,7 @@ function runPostHacks {
         if [ "$DOCKER" == "rce" ]; then
             log "Running engine migrator 1.10... please wait..."
             DOCKER_MIGRATOR="registry.resinstaging.io/resinhup/$arch-v1.10-migrator"
-            retrycommand "$DOCKER pull $DOCKER_MIGRATOR"
+            cachedpull "$DOCKER_MIGRATOR"
             $DOCKER run --rm -v /var/lib/rce:/var/lib/docker $DOCKER_MIGRATOR -s btrfs
             if [ $? -eq 0 ]; then
                 log "Migration to engine 1.10 done."

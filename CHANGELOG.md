@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Resinhup: allow cached pull of the resinhup updater container as well [Gergely]
 * Resinhup: run supervisor update to the release version by default and add negative flag [Gergely]
 * Resinhup: fix update failure on Intel NUC due to partition matching [Gergely]
 * Update supervisor to v6.2.5 [Pablo]
