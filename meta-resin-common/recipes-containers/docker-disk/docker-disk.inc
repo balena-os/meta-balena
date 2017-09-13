@@ -34,8 +34,8 @@ do_compile () {
     # Make sure there is at least one available loop device
     losetup -f > /dev/null 2>&1 || bbfatal "docker-disk: Host must have at least one available loop device."
 
-    docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
-    docker run --rm --privileged -e DOCKER_STORAGE=${DOCKER_STORAGE} -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
+    DOCKER_API_VERSION=1.22 docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
+    DOCKER_API_VERSION=1.22 docker run --rm --privileged -e DOCKER_STORAGE=${DOCKER_STORAGE} -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
 }
 do_compile[vardeps] += "PARTITION_SIZE TARGET_REPOSITORY TARGET_TAG"
 
