@@ -34,8 +34,13 @@ do_compile () {
     # Make sure there is at least one available loop device
     losetup -f > /dev/null 2>&1 || bbfatal "docker-disk: Host must have at least one available loop device."
 
-    docker build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
-    docker run --rm --privileged -e DOCKER_STORAGE=${DOCKER_STORAGE} -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
+    # We force the PATH to be the standard linux path in order to use the host's
+    # docker daemon instead of the result of docker-native. This avoids version
+    # mismatches
+    DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
+
+    $DOCKER build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
+    $DOCKER run --rm --privileged -e DOCKER_STORAGE=${DOCKER_STORAGE} -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
 }
 do_compile[vardeps] += "PARTITION_SIZE TARGET_REPOSITORY TARGET_TAG"
 
