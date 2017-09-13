@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.5.1
+## (2017-09-13)
+
+* Force use of host's docker daemon for the docker-disk recipe [Florin Sarbu]
+* Remove unused plymouth files to reduce size [Michal Mazurek]
+
 # v2.5.0
 ## (2017-09-12)
 
