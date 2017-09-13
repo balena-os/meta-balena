@@ -12,6 +12,7 @@ CACHE=no
 MAXRETRIES=5
 SCRIPTNAME=run-resinhup.sh
 DEFAULT_CURRENT_HOSTOS_VERSION=1.0.0
+SUPERVISOR_RELEASE_UPDATE=yes
 
 # Don't run anything before this source as it sets PATH here
 source /etc/profile
@@ -54,9 +55,12 @@ Options:
         Before updating ResinOS, update Supervisor using this tag.
         Don't omit the 'v' in front of the version. e.g.: v1.2.3 and not 1.2.3.
 
-  --supervisor-release-update
-        Update the supervisor to the version that ships with the target host OS
-        releases, if that is newer than the version run by the device.
+  --no-supervisor-release-update
+        By default the script updates the supervisor to the version that ships
+        with the target host OS releases, if that is newer than the version run
+        on the device. This tag switches this default update method, and no
+        supervisor update is performed, unless a version tag is provided (see
+        the previous option).
 
   --only-supervisor
         Update only the supervisor.
@@ -497,10 +501,11 @@ while [[ $# -gt 0 ]]; do
                 log ERROR "\"$1\" argument needs a value."
             fi
             UPDATER_SUPERVISOR_TAG=$2
+            SUPERVISOR_RELEASE_UPDATE=no
             shift
             ;;
-        --supervisor-release-update)
-            SUPERVISOR_RELEASE_UPDATE=yes
+        --no-supervisor-release-update)
+            SUPERVISOR_RELEASE_UPDATE=no
             ;;
         --only-supervisor)
             ONLY_SUPERVISOR=yes
@@ -631,7 +636,7 @@ log "Removing all containers..."
 $DOCKER rm $($DOCKER ps -a -q) > /dev/null 2>&1
 
 # Supervisor update
-if [ ! -z "$SUPERVISOR_RELEASE_UPDATE" ]; then
+if [ "$SUPERVISOR_RELEASE_UPDATE" == "yes" ]; then
     getSupervisorVersionFromRelease
 fi
 if [ ! -z "$UPDATER_SUPERVISOR_TAG" ]; then

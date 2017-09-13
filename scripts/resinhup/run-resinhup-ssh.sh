@@ -59,8 +59,8 @@ Options:
         Run run-resinhup.sh with this --supervisor-tag argument. See run-resinhup.sh
         help for more details.
 
-  --supervisor-release-update
-        Run run-resinhup.sh with --supervisor-release-update . See run-resinhup.sh help for more details.
+  --no-supervisor-release-update
+        Run run-resinhup.sh with --no-supervisor-release-update . See run-resinhup.sh help for more details.
 
   --only-supervisor
         Update only the supervisor.
@@ -269,8 +269,8 @@ while [[ $# -gt 0 ]]; do
             RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-tag $SUPERVISOR_TAG"
             shift
             ;;
-        --supervisor-release-update)
-            RESINHUP_ARGS="$RESINHUP_ARGS --supervisor-release-update"
+        --no-supervisor-release-update)
+            RESINHUP_ARGS="$RESINHUP_ARGS --no-supervisor-release-update"
             ;;
         --resinhup-tag)
             if [ -z "$2" ]; then
