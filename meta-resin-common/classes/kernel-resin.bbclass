@@ -83,6 +83,7 @@ RESIN_CONFIGS ?= " \
     misc \
     redsocks \
     reduce-size \
+    security \
     ${DOCKER_STORAGE} \
     "
 
@@ -378,6 +379,13 @@ RESIN_CONFIGS[reduce-size] = " \
     CONFIG_UDF_FS=n \
     CONFIG_BLK_DEV_DRBD=n \
     "
+
+# security features
+RESIN_CONFIGS[security] = " \
+    CONFIG_CC_STACKPROTECTOR=y \
+    CONFIG_CC_STACKPROTECTOR_STRONG=y \
+    "
+
 ###########
 # HELPERS #
 ###########
