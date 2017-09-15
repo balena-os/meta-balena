@@ -1,6 +1,6 @@
 [Unit]
-Wants=resin-net-config.service
-After=resin-net-config.service
+Wants=resin-net-config.service var-lib-NetworkManager.mount
+After=resin-net-config.service var-lib-NetworkManager.mount
 
 [Service]
 OOMScoreAdjust=-1000
