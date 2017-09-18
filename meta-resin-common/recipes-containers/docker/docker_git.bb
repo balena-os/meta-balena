@@ -42,13 +42,16 @@ BBCLASSEXTEND = " native"
 DOCKER_VERSION = "17.06.0-dev"
 PV = "${DOCKER_VERSION}+git${SRCREV}"
 
-DEPENDS_append_class-native = " go"
-DEPENDS_append_class-target = " systemd go-cross"
+DEPENDS_append_class-target = " systemd"
 RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd"
 RRECOMMENDS_${PN} += " kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
 
-inherit systemd
+inherit systemd go
+
+# oe-meta-go recipes try to build go-cross-native
+DEPENDS_remove_class-native = "go-cross-native"
+DEPENDS_append_class-native = " go-native"
 
 do_configure() {
 }
