@@ -16,6 +16,7 @@ RDEPENDS_${PN} += " \
     docker-disk \
     dosfstools \
     hostapp-update \
+    hostapp-update-hooks \
     resin-filesystem-expand \
     resin-persistent-logs \
     resin-info \
