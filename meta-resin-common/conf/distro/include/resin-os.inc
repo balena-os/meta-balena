@@ -82,3 +82,10 @@ PACKAGE_CLASSES ?= "package_ipk"
 
 # Default the docker storage driver to aufs
 DOCKER_STORAGE ?= "aufs"
+
+# Path of the file describing the boot partition entries
+RESIN_BOOTFILES_LIST = "/usr/share/hostapp-update/bootfiles.txt"
+
+# Partition fingerprints files
+RESIN_FINGERPRINT_EXT ?= "fingerprint"
+RESIN_FINGERPRINT_FILENAME ?= "resinos"
