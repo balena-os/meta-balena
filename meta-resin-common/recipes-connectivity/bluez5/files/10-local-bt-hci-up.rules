@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="bluetooth", KERNEL=="hci[0-9]*", RUN+="/usr/bin/hciconfig %k up"
