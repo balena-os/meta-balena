@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.6.0
+## (2017-09-20)
+
+* Provide generic hostapp update hooks [Andrei Gherzan]
+* Deploy a list of boot files in root partition [Andrei Gherzan]
+* Update supervisor to v6.2.9 [Pablo Carranza Velez]
+* Add usbutils package [Will Newton]
+* Switch docker to inherit from Go class [Will Newton]
+* Enable zram kernel module by default [Will Newton]
+* Make sure hci bluetooth interfaces are activated once booted [Florin Sarbu]
+* Enable kernel stack protection [Will Newton]
+* Enable Yocto security flags on all builds [Will Newton]
+* Update gnutls to 3.5.9 in morty because of blocking NetworkManager [Robert Fritzsche]
+
 # v2.5.1
 ## (2017-09-13)
 
