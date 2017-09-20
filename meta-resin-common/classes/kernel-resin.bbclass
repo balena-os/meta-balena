@@ -84,6 +84,7 @@ RESIN_CONFIGS ?= " \
     redsocks \
     reduce-size \
     security \
+    zram \
     ${DOCKER_STORAGE} \
     "
 
@@ -384,6 +385,14 @@ RESIN_CONFIGS[reduce-size] = " \
 RESIN_CONFIGS[security] = " \
     CONFIG_CC_STACKPROTECTOR=y \
     CONFIG_CC_STACKPROTECTOR_STRONG=y \
+    "
+
+# zram provides a compressed in-memory swap device
+RESIN_CONFIGS[zram] = " \
+    CONFIG_ZSMALLOC=m \
+    CONFIG_ZRAM=m \
+    CONFIG_CRYPTO=y \
+    CONFIG_CRYPTO_LZO=m \
     "
 
 ###########
