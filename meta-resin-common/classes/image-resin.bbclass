@@ -11,6 +11,10 @@ DEPENDS += "kernel-modules-headers"
 # Deploy the license.manifest of the current image we baked
 deploy_image_license_manifest () {
     IMAGE_LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest"
+    if [ ! -f "${IMAGE_LICENSE_MANIFEST}" ]; then
+        # Pyro and above have renamed this file
+        IMAGE_LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/image_license.manifest"
+    fi
     # XXX support for post morty yocto versions
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR instead
     # of DEPLOY_DIR_IMAGE (poky morty introduced this change)
