@@ -43,7 +43,7 @@ init_config_json() {
    echo '{}' > ${1}/config.json
 
    # Default no to persistent-logging
-   echo $(cat ${1}/config.json | jq ".persistentLogging=false") > ${1}/config.json
+   echo $(cat ${1}/config.json | jq -S ".persistentLogging=false") > ${1}/config.json
 
    # Find board json and extract slug
    common_path=$(echo "${BBLAYERS}" | grep -o -E '[^ ]+meta-resin-common')
@@ -51,10 +51,10 @@ init_config_json() {
    slug=$(jq .slug $json_path)
 
    # Set deviceType for supervisor
-   echo $(cat ${1}/config.json | jq ".deviceType=$slug") > ${1}/config.json
+   echo $(cat ${1}/config.json | jq -S ".deviceType=$slug") > ${1}/config.json
 
    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
-       echo $(cat ${1}/config.json | jq ".hostname=\"resin\"") > ${1}/config.json
+       echo $(cat ${1}/config.json | jq -S ".hostname=\"resin\"") > ${1}/config.json
    fi
 }
 
