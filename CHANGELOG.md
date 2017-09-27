@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.6.1
+## (2017-09-27)
+
+* Fixes for Pyro-based flasher images [Will Newton]
+* Sort config.json keys [Will Newton]
+
 # v2.6.0
 ## (2017-09-20)
 
