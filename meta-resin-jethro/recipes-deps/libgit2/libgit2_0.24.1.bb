@@ -1,0 +1,4 @@
+LIC_FILES_CHKSUM = "file://COPYING;md5=34197a479f637beb9e09e56893f48bc2"
+SRC_URI[md5sum] = "4489377788528ab0fce5a3e77e3264bc"
+SRC_URI[sha256sum] = "0269ec198c54e44f275f8f51e7391681a03aa45555e2ab6ce60b0757b6bde3de"
+require libgit2-release.inc
