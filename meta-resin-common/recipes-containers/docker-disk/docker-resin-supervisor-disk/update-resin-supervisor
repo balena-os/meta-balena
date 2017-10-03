@@ -61,7 +61,7 @@ if [ -z "$API_ENDPOINT" ]; then
 fi
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
-_device_api_key=${PROVISIONING_API_KEY:-DEVICE_API_KEY}
+_device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
 if [ -z "$_device_api_key" -o -z "$DEVICE_ID" ]; then
     echo "PROVISIONING_API_KEY or DEVICE_API_KEY, and DEVICE_ID variables must be set."
     exit 1
