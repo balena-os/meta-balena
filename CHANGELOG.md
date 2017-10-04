@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.7.1
+## (2017-10-04)
+
+* Update docker [Theodor Gherzan]
+* Ensure docker links with systemd in pyro [Will Newton]
+
 # v2.7.0
 ## (2017-10-04)
 
