@@ -5,7 +5,8 @@ set -o errexit
 # We force the PATH to be the standard linux path in order to use the host's
 # docker daemon instead of the result of docker-native. This avoids version
 # mismatches
-DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
+HOST_PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+DOCKER=$(PATH="$HOST_PATH" which docker)
 
 sysroot="/"
 tmpdir=""
@@ -42,4 +43,4 @@ cleanup_docker() {
 $DOCKER load -i "$sysroot/usr/share/mkfs-hostapp-ext4-image.tar"
 trap cleanup_docker EXIT
 
-$DOCKER run --privileged --rm -v "$input:/input:ro" -v "$tmpdir:$tmpdir:ro" -v "$output:/output" -e "PATH=$PATH" @IMAGE@
+$DOCKER run --privileged --rm -v "$input:/input:ro" -v "$tmpdir:$tmpdir:ro" -v "$output:/output" -e "PATH=$PATH:$HOST_PATH" @IMAGE@
