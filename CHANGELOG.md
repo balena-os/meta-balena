@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.7.0
+## (2017-10-04)
+
+* Add support for overaly2 in mobynit [Theodor Gherzan]
+* GPT support [Theodor Gherzan]
+* Update-resin-supervisor: device API key is substituted incorrectly [Gergely Imreh]
+* Support kernel 4.13 [Will Newton]
+* Update supervisor to v6.3.0 [Akis Kesoglou]
+
 # v2.6.1
 ## (2017-09-27)
 
