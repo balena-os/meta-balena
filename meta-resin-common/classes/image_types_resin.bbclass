@@ -20,8 +20,8 @@ inherit image_types
 #                                 msdos. Defaults to msdos
 # DEVICE_SPECIFIC_SPACE         - total amount of extra space that a device needs
 #                                 for its configuration
-#                                 
-#                                 
+#
+#
 #
 # Partition table:
 #
@@ -161,7 +161,7 @@ IMAGE_CMD_resinos-img () {
         RESIN_DATA_SIZE_ALIGNED=${RESIN_IMAGE_ALIGNMENT}
     fi
 
-    if [ $(expr ${DEVICE_SPECIFC_SPACE} % ${RESIN_IMAGE_ALIGNMENT}) -ne 0  ]; then
+    if [ $(expr ${DEVICE_SPECIFIC_SPACE} % ${RESIN_IMAGE_ALIGNMENT}) -ne 0  ]; then
         bbfatal "The space reserved for your specific device is not aligned to ${RESIN_IMAGE_ALIGNMENT}."
     fi
 
