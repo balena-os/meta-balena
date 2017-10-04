@@ -21,7 +21,7 @@ DESCRIPTION = "Linux container runtime \
 inherit binary-compress
 FILES_COMPRESS = "/boot/init"
 
-SRCREV = "7d1b49da3f9b7f2215c3e9f357c9b104efef2aa2"
+SRCREV = "eb610c8300470c357d0224c5c7c7a21e6013beb2"
 SRCBRANCH = "17.06-resin"
 SRC_URI = "\
   git://github.com/resin-os/docker.git;branch=${SRCBRANCH};nobranch=1 \
@@ -123,6 +123,7 @@ do_install() {
   install -m 0755 ${S}/bundles/${DOCKER_VERSION}/dynbinary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
   install -d ${D}/boot
   install -m 0755 ${S}/cmd/mobynit/mobynit ${D}/boot/init
+  echo ${DOCKER_STORAGE} > ${D}/boot/storage-driver
 
   ln -sf rce-docker ${D}/${bindir}/docker
   ln -sf rce-docker ${D}/${bindir}/dockerd
@@ -160,4 +161,5 @@ FILES_${PN} += " \
   /lib/systemd/system/* \
   /home/root/.docker/ \
   /boot/init \
+  /boot/storage-driver \
   "
