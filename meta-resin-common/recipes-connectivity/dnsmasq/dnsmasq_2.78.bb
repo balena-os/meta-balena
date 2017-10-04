@@ -1,18 +1,15 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/files"
+require recipes-support/dnsmasq/dnsmasq.inc
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
-    file://dnsmasq.conf \
+    file://lua.patch \
     file://dnsmasq.conf.systemd \
     file://resolv.conf \
     "
 
-# for dnsmasq versions older than 2.76 we need to still apply the following patch:
-python() {
-    packageVersion = d.getVar('PV', True)
-    srcURI = d.getVar('SRC_URI', True)
-    if packageVersion < '2.76':
-        d.setVar('SRC_URI', srcURI + ' ' + 'file://0001-Treat-REFUSED-not-SERVFAIL-as-an-unsuccessful-upstre.patch')
-}
+SRC_URI[dnsmasq-2.78.md5sum] = "3bb97f264c73853f802bf70610150788"
+SRC_URI[dnsmasq-2.78.sha256sum] = "c92e5d78aa6353354d02aabf74590d08980bb1385d8a00b80ef9bc80430aa1dc"
 
 do_install_append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
