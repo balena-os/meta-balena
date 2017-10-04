@@ -21,7 +21,7 @@ DESCRIPTION = "Linux container runtime \
 inherit binary-compress
 FILES_COMPRESS = "/boot/init"
 
-SRCREV = "eb610c8300470c357d0224c5c7c7a21e6013beb2"
+SRCREV = "8e4e6f1ef96b18483ae849a4fb25b3d8639bd0cf"
 SRCBRANCH = "17.06-resin"
 SRC_URI = "\
   git://github.com/resin-os/docker.git;branch=${SRCBRANCH};nobranch=1 \
