@@ -47,7 +47,7 @@ RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd"
 RRECOMMENDS_${PN} += " kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
 
-inherit systemd go
+inherit systemd go pkgconfig
 
 # oe-meta-go recipes try to build go-cross-native
 DEPENDS_remove_class-native = "go-cross-native"
