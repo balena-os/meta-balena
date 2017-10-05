@@ -31,8 +31,13 @@ runSupervisor() {
         ${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}
 }
 
-if [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
+if [ -z "$SUPERVISOR_IMAGE_ID" ]; then
+    # No supervisor image exists on the device, try to pull it
+    systemctl start update-resin-supervisor
+elif [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
+    # Supervisor image exists, and the current supervisor container is created from
     docker start --attach resin_supervisor
 else
+    # No supervisor container exists or there's a different supervisor image to run
     runSupervisor
 fi
