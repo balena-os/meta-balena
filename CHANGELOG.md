@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.7.2
+## (2017-10-05)
+
+* Fix mkfs.hostapp-ext4 with pyro [Andrei Gherzan]
+* Fix a syntax error in image_types_resin [Andrei Gherzan]
+* Add a fixed goarch.bbclass for pyro [Will Newton]
+* Docker: Improved pull progress reporting [Akis Kesoglou]
+* Update supervisor to v6.3.1 [Akis Kesoglou]
+
 # v2.7.1
 ## (2017-10-04)
 
