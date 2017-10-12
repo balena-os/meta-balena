@@ -89,7 +89,7 @@ fi
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and tag..."
-if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v1/supervisor_release?\$select=supervisor_version,image_name&\$filter=device/any(d:d/id%20eq%20$DEVICE_ID)&apikey=$_device_api_key" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
+if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v3/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/id%20eq%20$DEVICE_ID)&apikey=$_device_api_key" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
     echo "Supervisor configuration found from API."
 
     if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
