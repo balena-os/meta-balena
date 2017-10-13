@@ -1,0 +1,120 @@
+From 3bb6bf6ece1448488564433aa2662f0d45e8f7d4 Mon Sep 17 00:00:00 2001
+From: Aleksander Morgado <aleksander@aleksander.es>
+Date: Sat, 25 Mar 2017 01:11:45 +0100
+Subject: [PATCH 2/8] broadband-modem: query supported flow control modes
+ before setting
+
+Instead of assuming XON/XOFF is supported, we query the supported flow
+control modes, and then we set the best one based on that, preferring
+hardware flow control over software flow control.
+
+Upstream-Status: Backport
+Signed-off-by: Will Newton <willn@resin.io>
+---
+ src/mm-broadband-modem.c | 79 ++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 60 insertions(+), 19 deletions(-)
+
+diff --git a/src/mm-broadband-modem.c b/src/mm-broadband-modem.c
+index d7bd96a6..9911bd1e 100644
+--- a/src/mm-broadband-modem.c
++++ b/src/mm-broadband-modem.c
+@@ -3019,12 +3019,59 @@ modem_load_supported_charsets (MMIfaceModem *self,
+ /* configuring flow control (Modem interface) */
+ 
+ static gboolean
+-modem_setup_flow_control_finish (MMIfaceModem *self,
+-                                 GAsyncResult *res,
+-                                 GError **error)
++modem_setup_flow_control_finish (MMIfaceModem  *self,
++                                 GAsyncResult  *res,
++                                 GError       **error)
+ {
+-    /* Completely ignore errors */
+-    return TRUE;
++    return g_task_propagate_boolean (G_TASK (res), error);
++}
++
++static void
++ifc_test_ready (MMBaseModem  *self,
++                GAsyncResult *res,
++                GTask        *task)
++{
++    GError        *error = NULL;
++    const gchar   *response;
++    MMFlowControl  mask;
++    const gchar   *cmd;
++
++    /* Completely ignore errors in AT+IFC=? */
++    response = mm_base_modem_at_command_finish (self, res, &error);
++    if (!response)
++        goto out;
++
++    /* Parse response */
++    mask = mm_parse_ifc_test_response (response, &error);
++    if (mask == MM_FLOW_CONTROL_UNKNOWN)
++        goto out;
++
++    /* We prefer the methods in this order:
++     *  RTS/CTS
++     *  XON/XOFF
++     *  None.
++     */
++    if (mask & MM_FLOW_CONTROL_RTS_CTS)
++        cmd = "+IFC=2,2";
++    else if (mask & MM_FLOW_CONTROL_XON_XOFF)
++        cmd = "+IFC=1,1";
++    else if (mask & MM_FLOW_CONTROL_NONE)
++        cmd = "+IFC=0,0";
++    else
++        g_assert_not_reached ();
++
++    /* Set flow control settings and ignore result */
++    mm_base_modem_at_command (self, cmd, 3, FALSE, NULL, NULL);
++
++out:
++    /* Ignore errors */
++    if (error) {
++        mm_dbg ("couldn't load supported flow control methods: %s", error->message);
++        g_error_free (error);
++    }
++
++    g_task_return_boolean (task, TRUE);
++    g_object_unref (task);
+ }
+ 
+ static void
+@@ -3032,23 +3079,17 @@ modem_setup_flow_control (MMIfaceModem *self,
+                           GAsyncReadyCallback callback,
+                           gpointer user_data)
+ {
+-    GSimpleAsyncResult *result;
++    GTask *task;
++
++    task = g_task_new (self, NULL, callback, user_data);
+ 
+-    /* By default, try to set XOFF/XON flow control */
++    /* Query supported flow control methods */
+     mm_base_modem_at_command (MM_BASE_MODEM (self),
+-                              "+IFC=1,1",
++                              "+IFC=?",
+                               3,
+-                              FALSE,
+-                              NULL,
+-                              NULL);
+-
+-    result = g_simple_async_result_new (G_OBJECT (self),
+-                                        callback,
+-                                        user_data,
+-                                        modem_setup_flow_control);
+-    g_simple_async_result_set_op_res_gboolean (result, TRUE);
+-    g_simple_async_result_complete_in_idle (result);
+-    g_object_unref (result);
++                              TRUE,
++                              (GAsyncReadyCallback)ifc_test_ready,
++                              task);
+ }
+ 
+ /*****************************************************************************/
+-- 
+2.13.6
+

@@ -1,0 +1,174 @@
+From 0f085208195c2ed7f1668f9a1a44520a906e3632 Mon Sep 17 00:00:00 2001
+From: Aleksander Morgado <aleksander@aleksander.es>
+Date: Sat, 25 Mar 2017 18:17:41 +0100
+Subject: [PATCH 5/8] port-serial: new internal method to run tcsetattr()
+
+The method takes care of looping if EAGAIN errors happen, as well as
+checking whether all attributes were set or not.
+
+Upstream-Status: Backport
+Signed-off-by: Will Newton <willn@resin.io>
+---
+ src/mm-port-serial.c | 119 ++++++++++++++++++++++++---------------------------
+ 1 file changed, 57 insertions(+), 62 deletions(-)
+
+diff --git a/src/mm-port-serial.c b/src/mm-port-serial.c
+index 583dfb98..a3e56edc 100644
+--- a/src/mm-port-serial.c
++++ b/src/mm-port-serial.c
+@@ -428,9 +428,62 @@ parse_stopbits (guint i)
+ }
+ 
+ static gboolean
++internal_tcsetattr (MMPortSerial          *self,
++                    gint                   fd,
++                    const struct termios  *options,
++                    GError               **error)
++{
++    guint          count;
++    struct termios other;
++
++#define MAX_TCSETATTR_RETRIES 4
++
++    for (count = 0; count < MAX_TCSETATTR_RETRIES; count++) {
++        /* try to set the new port attributes */
++        errno = 0;
++        if (tcsetattr (fd, TCSANOW, options) == 0)
++            break;
++
++        /* hard error if not EAGAIN */
++        if (errno != EAGAIN) {
++            g_set_error (error, MM_CORE_ERROR, MM_CORE_ERROR_FAILED,
++                         "couldn't set serial port attributes: %s", g_strerror (errno));
++            return FALSE;
++        }
++
++        /* try a few times if EAGAIN */
++        g_usleep (100000);
++    }
++
++    /* too many retries? */
++    if (count == MAX_TCSETATTR_RETRIES) {
++        g_set_error (error, MM_CORE_ERROR, MM_CORE_ERROR_FAILED,
++                     "couldn't set serial port attributes: too many retries (%u)", count);
++        return FALSE;
++    }
++
++    /* tcsetattr() returns 0 if any of the requested attributes could be set,
++     * so we should double-check that all were set and log if not. Just with
++     * debug level, as we're ignoring this issue all together anyway.
++     */
++    memset (&other, 0, sizeof (struct termios));
++    errno = 0;
++    if (tcgetattr (fd, &other) != 0)
++        mm_dbg ("(%s): couldn't get serial port attributes after setting them: %s",
++                mm_port_get_device (MM_PORT (self)), g_strerror (errno));
++    else if (memcmp (options, &other, sizeof (struct termios)) != 0)
++        mm_dbg ("(%s): port attributes not fully set",
++                mm_port_get_device (MM_PORT (self)));
++
++#undef MAX_TCSETATTR_RETRIES
++
++    return TRUE;
++}
++
++static gboolean
+ real_config_fd (MMPortSerial *self, int fd, GError **error)
+ {
+-    struct termios stbuf, other;
++    struct termios stbuf;
+     int speed;
+     int bits;
+     int parity;
+@@ -488,32 +541,7 @@ real_config_fd (MMPortSerial *self, int fd, GError **error)
+         return FALSE;
+     }
+ 
+-    if (tcsetattr (fd, TCSANOW, &stbuf) < 0) {
+-        g_set_error (error,
+-                     MM_CORE_ERROR,
+-                     MM_CORE_ERROR_FAILED,
+-                     "%s: failed to set serial port attributes; errno %d",
+-                     __func__, errno);
+-        return FALSE;
+-    }
+-
+-    /* tcsetattr() returns 0 if any of the requested attributes could be set,
+-     * so we should double-check that all were set and log a warning if not.
+-     */
+-    memset (&other, 0, sizeof (struct termios));
+-    errno = 0;
+-    if (tcgetattr (fd, &other) != 0) {
+-        mm_warn ("(%s): tcgetattr() error: %d",
+-                 mm_port_get_device (MM_PORT (self)),
+-                 errno);
+-    }
+-
+-    if (memcmp (&stbuf, &other, sizeof (other)) != 0) {
+-        mm_warn ("(%s): port attributes not fully set",
+-                 mm_port_get_device (MM_PORT (self)));
+-    }
+-
+-    return TRUE;
++    return internal_tcsetattr (self, fd, &stbuf, error);
+ }
+ 
+ static void
+@@ -1648,15 +1676,11 @@ static gboolean
+ set_speed (MMPortSerial *self, speed_t speed, GError **error)
+ {
+     struct termios options;
+-    int fd, count = 4;
+-    gboolean success = FALSE;
+ 
+     g_assert (self->priv->fd >= 0);
+ 
+-    fd = self->priv->fd;
+-
+     memset (&options, 0, sizeof (struct termios));
+-    if (tcgetattr (fd, &options) != 0) {
++    if (tcgetattr (self->priv->fd, &options) != 0) {
+         g_set_error (error,
+                      MM_CORE_ERROR,
+                      MM_CORE_ERROR_FAILED,
+@@ -1673,36 +1697,7 @@ set_speed (MMPortSerial *self, speed_t speed, GError **error)
+     if (self->priv->rts_cts)
+         options.c_cflag |= (CRTSCTS);
+ 
+-    while (count-- > 0) {
+-        if (tcsetattr (fd, TCSANOW, &options) == 0) {
+-            success = TRUE;
+-            break;  /* Operation successful */
+-        }
+-
+-        /* Try a few times if EAGAIN */
+-        if (errno == EAGAIN)
+-            g_usleep (100000);
+-        else {
+-            /* If not EAGAIN, hard error */
+-            g_set_error (error,
+-                            MM_CORE_ERROR,
+-                            MM_CORE_ERROR_FAILED,
+-                            "%s: tcsetattr() error %d",
+-                            __func__, errno);
+-            return FALSE;
+-        }
+-    }
+-
+-    if (!success) {
+-        g_set_error (error,
+-                        MM_CORE_ERROR,
+-                        MM_CORE_ERROR_FAILED,
+-                        "%s: tcsetattr() retry timeout",
+-                        __func__);
+-        return FALSE;
+-    }
+-
+-    return TRUE;
++    return internal_tcsetattr (self, self->priv->fd, &options, error);
+ }
+ 
+ /*****************************************************************************/
+-- 
+2.13.6
+

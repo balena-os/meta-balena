@@ -1,0 +1,125 @@
+From 901f8a6f2c4d2b6c7f5e6dfd59cacf991eedf5f3 Mon Sep 17 00:00:00 2001
+From: Aleksander Morgado <aleksander@aleksander.es>
+Date: Sat, 25 Mar 2017 18:27:09 +0100
+Subject: [PATCH 7/8] port-serial: remove all default flow control settings
+
+We won't set XON/XOFF by default and we won't allow setting RTS/CTS
+via a property. The serial port by default starts with no flow control
+configured.
+
+Upstream-Status: Backport
+Signed-off-by: Will Newton <willn@resin.io>
+---
+ src/mm-port-serial.c | 34 ++++++----------------------------
+ src/mm-port-serial.h |  1 -
+ 2 files changed, 6 insertions(+), 29 deletions(-)
+
+diff --git a/src/mm-port-serial.c b/src/mm-port-serial.c
+index 486e8b24..65b7508a 100644
+--- a/src/mm-port-serial.c
++++ b/src/mm-port-serial.c
+@@ -56,7 +56,6 @@ enum {
+     PROP_SEND_DELAY,
+     PROP_FD,
+     PROP_SPEW_CONTROL,
+-    PROP_RTS_CTS,
+     PROP_FLASH_OK,
+ 
+     LAST_PROP
+@@ -97,7 +96,6 @@ struct _MMPortSerialPrivate {
+     guint stopbits;
+     guint64 send_delay;
+     gboolean spew_control;
+-    gboolean rts_cts;
+     gboolean flash_ok;
+ 
+     guint queue_id;
+@@ -505,21 +503,19 @@ real_config_fd (MMPortSerial *self, int fd, GError **error)
+                  errno);
+     }
+ 
+-    stbuf.c_iflag &= ~(IGNCR | ICRNL | IUCLC | INPCK | IXON | IXANY );
++    stbuf.c_cflag &= ~(CBAUD | CSIZE | CSTOPB | PARENB | PARODD | CRTSCTS);
++    stbuf.c_iflag &= ~(IGNCR | ICRNL | IUCLC | INPCK | IXON | IXOFF | IXANY );
+     stbuf.c_oflag &= ~(OPOST | OLCUC | OCRNL | ONLCR | ONLRET);
+     stbuf.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHONL);
+     stbuf.c_cc[VMIN] = 1;
+     stbuf.c_cc[VTIME] = 0;
+     stbuf.c_cc[VEOF] = 1;
+ 
+-    /* Use software handshaking and ignore parity/framing errors */
+-    stbuf.c_iflag |= (IXON | IXOFF | IXANY | IGNPAR);
++    /* Ignore parity/framing errors */
++    stbuf.c_iflag |= IGNPAR;
+ 
+-    /* Set up port speed and serial attributes; also ignore modem control
+-     * lines since most drivers don't implement RTS/CTS anyway.
+-     */
+-    stbuf.c_cflag &= ~(CBAUD | CSIZE | CSTOPB | PARENB | CRTSCTS);
+-    stbuf.c_cflag |= (bits | CREAD | 0 | parity | stopbits | CLOCAL);
++    /* Set up port speed and serial attributes and enable receiver in local mode */
++    stbuf.c_cflag |= (bits | parity | stopbits | CLOCAL | CREAD);
+ 
+     errno = 0;
+     if (cfsetispeed (&stbuf, speed) != 0) {
+@@ -1693,10 +1689,6 @@ set_speed (MMPortSerial *self, speed_t speed, GError **error)
+     cfsetospeed (&options, speed);
+     options.c_cflag |= (CLOCAL | CREAD);
+ 
+-    /* Configure flow control as well here */
+-    if (self->priv->rts_cts)
+-        options.c_cflag |= (CRTSCTS);
+-
+     return internal_tcsetattr (self, self->priv->fd, &options, error);
+ }
+ 
+@@ -2000,9 +1992,6 @@ set_property (GObject *object,
+     case PROP_SPEW_CONTROL:
+         self->priv->spew_control = g_value_get_boolean (value);
+         break;
+-    case PROP_RTS_CTS:
+-        self->priv->rts_cts = g_value_get_boolean (value);
+-        break;
+     case PROP_FLASH_OK:
+         self->priv->flash_ok = g_value_get_boolean (value);
+         break;
+@@ -2042,9 +2031,6 @@ get_property (GObject *object,
+     case PROP_SPEW_CONTROL:
+         g_value_set_boolean (value, self->priv->spew_control);
+         break;
+-    case PROP_RTS_CTS:
+-        g_value_set_boolean (value, self->priv->rts_cts);
+-        break;
+     case PROP_FLASH_OK:
+         g_value_set_boolean (value, self->priv->flash_ok);
+         break;
+@@ -2153,14 +2139,6 @@ mm_port_serial_class_init (MMPortSerialClass *klass)
+                                G_PARAM_READWRITE));
+ 
+     g_object_class_install_property
+-        (object_class, PROP_RTS_CTS,
+-         g_param_spec_boolean (MM_PORT_SERIAL_RTS_CTS,
+-                               "RTSCTS",
+-                               "Enable RTS/CTS flow control",
+-                               FALSE,
+-                               G_PARAM_READWRITE));
+-
+-    g_object_class_install_property
+         (object_class, PROP_FLASH_OK,
+          g_param_spec_boolean (MM_PORT_SERIAL_FLASH_OK,
+                                "FlashOk",
+diff --git a/src/mm-port-serial.h b/src/mm-port-serial.h
+index 223b9ce1..0514e360 100644
+--- a/src/mm-port-serial.h
++++ b/src/mm-port-serial.h
+@@ -36,7 +36,6 @@
+ #define MM_PORT_SERIAL_PARITY       "parity"
+ #define MM_PORT_SERIAL_STOPBITS     "stopbits"
+ #define MM_PORT_SERIAL_SEND_DELAY   "send-delay"
+-#define MM_PORT_SERIAL_RTS_CTS      "rts-cts"
+ #define MM_PORT_SERIAL_FD           "fd" /* Construct-only */
+ #define MM_PORT_SERIAL_SPEW_CONTROL "spew-control" /* Construct-only */
+ #define MM_PORT_SERIAL_FLASH_OK     "flash-ok" /* Construct-only */
+-- 
+2.13.6
+
