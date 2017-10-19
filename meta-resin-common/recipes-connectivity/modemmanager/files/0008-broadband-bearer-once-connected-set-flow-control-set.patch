@@ -1,0 +1,489 @@
+From ae95a35d34c8f14a8d94539f3fa7fb4b64b159d4 Mon Sep 17 00:00:00 2001
+From: Aleksander Morgado <aleksander@aleksander.es>
+Date: Sat, 25 Mar 2017 18:30:02 +0100
+Subject: [PATCH 8/8] broadband-bearer: once connected, set flow control
+ settings
+
+During modem initialization we detected the flow control settings
+supported by the modem, and selected the best one to use from them,
+notifying it to the device via AT+IFC. The device was therefore
+instructed to use that flow control setting for data transmission in
+the TTY (i.e. not during AT control commands).
+
+The missing thing was to also configure ourselves our end of the
+serial port with the same flow control settings when getting into data
+mode. By doing it ourselves, we avoid requiring any explicit setting
+in pppd for flow control; pppd can assume the flow control settings
+are already the expected ones.
+
+Worth noting that all this setup is completely ignored for TTYs
+exposed directly via USB.
+
+https://bugs.freedesktop.org/show_bug.cgi?id=100394
+
+Upstream-Status: Backport
+Signed-off-by: Will Newton <willn@resin.io>
+---
+ .gitignore                |   2 +
+ src/Makefile.am           |  28 +++++++++++
+ src/mm-broadband-bearer.c | 125 ++++++++++++++++++++++++++++++++++++++++++++--
+ src/mm-broadband-bearer.h |   3 ++
+ src/mm-broadband-modem.c  |  50 +++++++++++++++----
+ src/mm-broadband-modem.h  |   3 ++
+ src/mm-modem-helpers.h    |   2 +-
+ 7 files changed, 197 insertions(+), 16 deletions(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 0ac83820..cc20d5a2 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -66,6 +66,28 @@ EXTRA_DIST += $(udevrules_DATA)
+ 
+ noinst_LTLIBRARIES += libhelpers.la
+ 
++HELPER_ENUMS_INPUTS = \
++	$(srcdir)/mm-modem-helpers.h \
++	$(NULL)
++
++HELPER_ENUMS_GENERATED = \
++	mm-helper-enums-types.h \
++	mm-helper-enums-types.c \
++	$(NULL)
++
++mm-helper-enums-types.h: Makefile.am $(HELPER_ENUMS_INPUTS) $(top_srcdir)/build-aux/mm-enums-template.h
++	$(AM_V_GEN) $(GLIB_MKENUMS) \
++		--fhead "#include \"mm-modem-helpers.h\"\n#ifndef __MM_HELPER_ENUMS_TYPES_H__\n#define __MM_HELPER_ENUMS_TYPES_H__\n" \
++		--template $(top_srcdir)/build-aux/mm-enums-template.h \
++		--ftail "#endif /* __MM_HELPER_ENUMS_TYPES_H__ */\n" \
++		$(HELPER_ENUMS_INPUTS) > $@
++
++mm-helper-enums-types.c: Makefile.am $(top_srcdir)/build-aux/mm-enums-template.c mm-helper-enums-types.h
++	$(AM_V_GEN) $(GLIB_MKENUMS) \
++		--fhead "#include \"mm-helper-enums-types.h\"" \
++		--template $(top_srcdir)/build-aux/mm-enums-template.c \
++		$(HELPER_ENUMS_INPUTS) > $@
++
+ libhelpers_la_SOURCES = \
+ 	mm-error-helpers.c \
+ 	mm-error-helpers.h \
+@@ -81,6 +103,8 @@ libhelpers_la_SOURCES = \
+ 	mm-sms-part-cdma.c \
+ 	$(NULL)
+ 
++nodist_libhelpers_la_SOURCES = $(HELPER_ENUMS_GENERATED)
++
+ if WITH_QMI
+ libhelpers_la_SOURCES += \
+ 	mm-modem-helpers-qmi.c \
+@@ -95,6 +119,10 @@ libhelpers_la_SOURCES += \
+ 	$(NULL)
+ endif
+ 
++# Request to build enum types before anything else
++BUILT_SOURCES += $(HELPER_ENUMS_GENERATED)
++CLEANFILES    += $(HELPER_ENUMS_GENERATED)
++
+ ################################################################################
+ # ports library
+ ################################################################################
+diff --git a/src/mm-broadband-bearer.c b/src/mm-broadband-bearer.c
+index aeff2ef4..b67819f9 100644
+--- a/src/mm-broadband-bearer.c
++++ b/src/mm-broadband-bearer.c
+@@ -35,6 +35,7 @@
+ #include "mm-log.h"
+ #include "mm-modem-helpers.h"
+ #include "mm-port-enums-types.h"
++#include "mm-helper-enums-types.h"
+ 
+ static void async_initable_iface_init (GAsyncInitableIface *iface);
+ 
+@@ -48,6 +49,14 @@ typedef enum {
+     CONNECTION_TYPE_CDMA,
+ } ConnectionType;
+ 
++enum {
++    PROP_0,
++    PROP_FLOW_CONTROL,
++    PROP_LAST
++};
++
++static GParamSpec *properties[PROP_LAST];
++
+ struct _MMBroadbandBearerPrivate {
+     /*-- Common stuff --*/
+     /* Data port used when modem is connected */
+@@ -55,6 +64,9 @@ struct _MMBroadbandBearerPrivate {
+     /* Current connection type */
+     ConnectionType connection_type;
+ 
++    /* PPP specific */
++    MMFlowControl flow_control;
++
+     /*-- 3GPP specific --*/
+     /* CID of the PDP context */
+     guint cid;
+@@ -246,6 +258,20 @@ dial_cdma_ready (MMBaseModem *modem,
+         return;
+     }
+ 
++    /* Configure flow control to use while connected */
++    if (ctx->self->priv->flow_control != MM_FLOW_CONTROL_NONE) {
++        gchar *flow_control_str;
++
++        flow_control_str = mm_flow_control_build_string_from_mask (ctx->self->priv->flow_control);
++        mm_dbg ("[%s] Setting flow control: %s", mm_port_get_device (ctx->data), flow_control_str);
++        g_free (flow_control_str);
++
++        if (!mm_port_serial_set_flow_control (MM_PORT_SERIAL (ctx->data), ctx->self->priv->flow_control, &error)) {
++            mm_warn ("Couldn't set flow control settings: %s", error->message);
++            g_clear_error (&error);
++        }
++    }
++
+     /* The ATD command has succeeded, and therefore the TTY is in data mode now.
+      * Instead of waiting for setting the port as connected later in
+      * connect_succeeded(), we do it right away so that we stop our polling. */
+@@ -549,6 +575,8 @@ atd_ready (MMBaseModem *modem,
+            GAsyncResult *res,
+            Dial3gppContext *ctx)
+ {
++    GError *error = NULL;
++
+     /* DO NOT check for cancellable here. If we got here without errors, the
+      * bearer is really connected and therefore we need to reflect that in
+      * the state machine. */
+@@ -568,6 +596,20 @@ atd_ready (MMBaseModem *modem,
+         return;
+     }
+ 
++    /* Configure flow control to use while connected */
++    if (ctx->self->priv->flow_control != MM_FLOW_CONTROL_NONE) {
++        gchar *flow_control_str;
++
++        flow_control_str = mm_flow_control_build_string_from_mask (ctx->self->priv->flow_control);
++        mm_dbg ("[%s] Setting flow control: %s", mm_port_get_device (MM_PORT (ctx->dial_port)), flow_control_str);
++        g_free (flow_control_str);
++
++        if (!mm_port_serial_set_flow_control (MM_PORT_SERIAL (ctx->dial_port), ctx->self->priv->flow_control, &error)) {
++            mm_warn ("Couldn't set flow control settings: %s", error->message);
++            g_clear_error (&error);
++        }
++    }
++
+     /* The ATD command has succeeded, and therefore the TTY is in data mode now.
+      * Instead of waiting for setting the port as connected later in
+      * connect_succeeded(), we do it right away so that we stop our polling. */
+@@ -1367,6 +1409,16 @@ data_flash_cdma_ready (MMPortSerial *data,
+ 
+     mm_port_serial_flash_finish (data, res, &error);
+ 
++    /* Cleanup flow control */
++    if (ctx->self->priv->flow_control != MM_FLOW_CONTROL_NONE) {
++        GError *flow_control_error = NULL;
++
++        if (!mm_port_serial_set_flow_control (MM_PORT_SERIAL (data), MM_FLOW_CONTROL_NONE, &flow_control_error)) {
++            mm_dbg ("Couldn't reset flow control settings: %s", flow_control_error->message);
++            g_clear_error (&flow_control_error);
++        }
++    }
++
+     /* We kept the serial port open during connection, now we close that open
+      * count */
+     mm_port_serial_close (data);
+@@ -1484,6 +1536,16 @@ data_flash_3gpp_ready (MMPortSerial *data,
+ 
+     mm_port_serial_flash_finish (data, res, &error);
+ 
++    /* Cleanup flow control */
++    if (ctx->self->priv->flow_control != MM_FLOW_CONTROL_NONE) {
++        GError *flow_control_error = NULL;
++
++        if (!mm_port_serial_set_flow_control (MM_PORT_SERIAL (data), MM_FLOW_CONTROL_NONE, &flow_control_error)) {
++            mm_dbg ("Couldn't reset flow control settings: %s", flow_control_error->message);
++            g_clear_error (&flow_control_error);
++        }
++    }
++
+     /* We kept the serial port open during connection, now we close that open
+      * count */
+     mm_port_serial_close (data);
+@@ -2056,18 +2118,62 @@ mm_broadband_bearer_new (MMBroadbandModem *modem,
+                          GAsyncReadyCallback callback,
+                          gpointer user_data)
+ {
++    MMFlowControl flow_control;
++
++    /* Inherit flow control from modem object directly */
++    g_object_get (modem,
++                  MM_BROADBAND_MODEM_FLOW_CONTROL, &flow_control,
++                  NULL);
++
+     g_async_initable_new_async (
+         MM_TYPE_BROADBAND_BEARER,
+         G_PRIORITY_DEFAULT,
+         cancellable,
+         callback,
+         user_data,
+-        MM_BASE_BEARER_MODEM,  modem,
+-        MM_BASE_BEARER_CONFIG, properties,
++        MM_BASE_BEARER_MODEM,             modem,
++        MM_BASE_BEARER_CONFIG,            properties,
++        MM_BROADBAND_BEARER_FLOW_CONTROL, flow_control,
+         NULL);
+ }
+ 
+ static void
++set_property (GObject      *object,
++              guint         prop_id,
++              const GValue *value,
++              GParamSpec   *pspec)
++{
++    MMBroadbandBearer *self = MM_BROADBAND_BEARER (object);
++
++    switch (prop_id) {
++    case PROP_FLOW_CONTROL:
++        self->priv->flow_control = g_value_get_flags (value);
++        break;
++    default:
++        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++        break;
++    }
++}
++
++static void
++get_property (GObject    *object,
++              guint       prop_id,
++              GValue     *value,
++              GParamSpec *pspec)
++{
++    MMBroadbandBearer *self = MM_BROADBAND_BEARER (object);
++
++    switch (prop_id) {
++    case PROP_FLOW_CONTROL:
++        g_value_set_flags (value, self->priv->flow_control);
++        break;
++    default:
++        G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
++        break;
++    }
++}
++
++static void
+ mm_broadband_bearer_init (MMBroadbandBearer *self)
+ {
+     /* Initialize private data */
+@@ -2077,6 +2183,7 @@ mm_broadband_bearer_init (MMBroadbandBearer *self)
+ 
+     /* Set defaults */
+     self->priv->connection_type = CONNECTION_TYPE_NONE;
++    self->priv->flow_control    = MM_FLOW_CONTROL_NONE;
+ }
+ 
+ static void
+@@ -2104,8 +2211,9 @@ mm_broadband_bearer_class_init (MMBroadbandBearerClass *klass)
+ 
+     g_type_class_add_private (object_class, sizeof (MMBroadbandBearerPrivate));
+ 
+-    /* Virtual methods */
+-    object_class->dispose = dispose;
++    object_class->get_property = get_property;
++    object_class->set_property = set_property;
++    object_class->dispose      = dispose;
+ 
+     base_bearer_class->connect = connect;
+     base_bearer_class->connect_finish = connect_finish;
+@@ -2125,4 +2233,13 @@ mm_broadband_bearer_class_init (MMBroadbandBearerClass *klass)
+     klass->disconnect_3gpp_finish = detailed_disconnect_finish;
+     klass->disconnect_cdma = disconnect_cdma;
+     klass->disconnect_cdma_finish = detailed_disconnect_finish;
++
++    properties[PROP_FLOW_CONTROL] =
++        g_param_spec_flags (MM_BROADBAND_BEARER_FLOW_CONTROL,
++                            "Flow control",
++                            "Flow control settings to use during connection",
++                            MM_TYPE_FLOW_CONTROL,
++                            MM_FLOW_CONTROL_NONE,
++                            G_PARAM_READWRITE);
++    g_object_class_install_property (object_class, PROP_FLOW_CONTROL, properties[PROP_FLOW_CONTROL]);
+ }
+diff --git a/src/mm-broadband-bearer.h b/src/mm-broadband-bearer.h
+index a3e9b165..7100708e 100644
+--- a/src/mm-broadband-bearer.h
++++ b/src/mm-broadband-bearer.h
+@@ -25,6 +25,7 @@
+ #define _LIBMM_INSIDE_MM
+ #include <libmm-glib.h>
+ 
++#include "mm-modem-helpers.h"
+ #include "mm-base-bearer.h"
+ #include "mm-broadband-modem.h"
+ 
+@@ -39,6 +40,8 @@ typedef struct _MMBroadbandBearer MMBroadbandBearer;
+ typedef struct _MMBroadbandBearerClass MMBroadbandBearerClass;
+ typedef struct _MMBroadbandBearerPrivate MMBroadbandBearerPrivate;
+ 
++#define MM_BROADBAND_BEARER_FLOW_CONTROL "broadband-bearer-flow-control"
++
+ struct _MMBroadbandBearer {
+     MMBaseBearer parent;
+     MMBroadbandBearerPrivate *priv;
+diff --git a/src/mm-broadband-modem.c b/src/mm-broadband-modem.c
+index 9911bd1e..1cd9bccf 100644
+--- a/src/mm-broadband-modem.c
++++ b/src/mm-broadband-modem.c
+@@ -53,6 +53,7 @@
+ #include "mm-port-serial-qcdm.h"
+ #include "libqcdm/src/errors.h"
+ #include "libqcdm/src/commands.h"
++#include "mm-helper-enums-types.h"
+ 
+ static void iface_modem_init (MMIfaceModem *iface);
+ static void iface_modem_3gpp_init (MMIfaceModem3gpp *iface);
+@@ -112,9 +113,13 @@ enum {
+     PROP_MODEM_MESSAGING_SMS_DEFAULT_STORAGE,
+     PROP_MODEM_VOICE_CALL_LIST,
+     PROP_MODEM_SIMPLE_STATUS,
++    PROP_MODEM_SIM_HOT_SWAP_SUPPORTED,
++    PROP_FLOW_CONTROL,
+     PROP_LAST
+ };
+ 
++static GParamSpec *properties[PROP_LAST];
++
+ /* When CIND is supported, invalid indicators are marked with this value */
+ #define CIND_INDICATOR_INVALID 255
+ #define CIND_INDICATOR_IS_VALID(u) (u != CIND_INDICATOR_INVALID)
+@@ -141,6 +146,7 @@ struct _MMBroadbandModemPrivate {
+     guint modem_cind_max_signal_quality;
+     guint modem_cind_indicator_roaming;
+     guint modem_cind_indicator_service;
++    MMFlowControl flow_control;
+ 
+     /*<--- Modem 3GPP interface --->*/
+     /* Properties */
+@@ -3027,17 +3033,20 @@ modem_setup_flow_control_finish (MMIfaceModem  *self,
+ }
+ 
+ static void
+-ifc_test_ready (MMBaseModem  *self,
++ifc_test_ready (MMBaseModem  *_self,
+                 GAsyncResult *res,
+                 GTask        *task)
+ {
+-    GError        *error = NULL;
+-    const gchar   *response;
+-    MMFlowControl  mask;
+-    const gchar   *cmd;
++    MMBroadbandModem *self;
++    GError           *error = NULL;
++    const gchar      *response;
++    MMFlowControl     mask;
++    const gchar      *cmd;
++
++    self = MM_BROADBAND_MODEM (_self);
+ 
+     /* Completely ignore errors in AT+IFC=? */
+-    response = mm_base_modem_at_command_finish (self, res, &error);
++    response = mm_base_modem_at_command_finish (_self, res, &error);
+     if (!response)
+         goto out;
+ 
+@@ -3051,17 +3060,23 @@ ifc_test_ready (MMBaseModem  *self,
+      *  XON/XOFF
+      *  None.
+      */
+-    if (mask & MM_FLOW_CONTROL_RTS_CTS)
++    if (mask & MM_FLOW_CONTROL_RTS_CTS) {
++        self->priv->flow_control = MM_FLOW_CONTROL_RTS_CTS;
+         cmd = "+IFC=2,2";
+-    else if (mask & MM_FLOW_CONTROL_XON_XOFF)
++    } else if (mask & MM_FLOW_CONTROL_XON_XOFF) {
++        self->priv->flow_control = MM_FLOW_CONTROL_XON_XOFF;
+         cmd = "+IFC=1,1";
+-    else if (mask & MM_FLOW_CONTROL_NONE)
++    } else if (mask & MM_FLOW_CONTROL_NONE) {
++        self->priv->flow_control = MM_FLOW_CONTROL_NONE;
+         cmd = "+IFC=0,0";
+-    else
++    } else
+         g_assert_not_reached ();
+ 
++    /* Notify the flow control property update */
++    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_FLOW_CONTROL]);
++
+     /* Set flow control settings and ignore result */
+-    mm_base_modem_at_command (self, cmd, 3, FALSE, NULL, NULL);
++    mm_base_modem_at_command (_self, cmd, 3, FALSE, NULL, NULL);
+ 
+ out:
+     /* Ignore errors */
+@@ -10309,6 +10324,9 @@ get_property (GObject *object,
+     case PROP_MODEM_SIMPLE_STATUS:
+         g_value_set_object (value, self->priv->modem_simple_status);
+         break;
++    case PROP_FLOW_CONTROL:
++        g_value_set_flags (value, self->priv->flow_control);
++        break;
+     default:
+         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+         break;
+@@ -10337,6 +10355,7 @@ mm_broadband_modem_init (MMBroadbandModem *self)
+     self->priv->modem_messaging_sms_default_storage = MM_SMS_STORAGE_UNKNOWN;
+     self->priv->current_sms_mem1_storage = MM_SMS_STORAGE_UNKNOWN;
+     self->priv->current_sms_mem2_storage = MM_SMS_STORAGE_UNKNOWN;
++    self->priv->flow_control = MM_FLOW_CONTROL_NONE;
+ }
+ 
+ static void
+@@ -10791,4 +10810,13 @@ mm_broadband_modem_class_init (MMBroadbandModemClass *klass)
+     g_object_class_override_property (object_class,
+                                       PROP_MODEM_SIMPLE_STATUS,
+                                       MM_IFACE_MODEM_SIMPLE_STATUS);
++
++    properties[PROP_FLOW_CONTROL] =
++        g_param_spec_flags (MM_BROADBAND_MODEM_FLOW_CONTROL,
++                            "Flow control",
++                            "Flow control settings to use in the connected TTY",
++                            MM_TYPE_FLOW_CONTROL,
++                            MM_FLOW_CONTROL_NONE,
++                            G_PARAM_READABLE);
++    g_object_class_install_property (object_class, PROP_FLOW_CONTROL, properties[PROP_FLOW_CONTROL]);
+ }
+diff --git a/src/mm-broadband-modem.h b/src/mm-broadband-modem.h
+index 93ffeb54..0a6f1de3 100644
+--- a/src/mm-broadband-modem.h
++++ b/src/mm-broadband-modem.h
+@@ -24,6 +24,7 @@
+ 
+ #include <ModemManager.h>
+ 
++#include "mm-modem-helpers.h"
+ #include "mm-charsets.h"
+ #include "mm-base-modem.h"
+ 
+@@ -38,6 +39,8 @@ typedef struct _MMBroadbandModem MMBroadbandModem;
+ typedef struct _MMBroadbandModemClass MMBroadbandModemClass;
+ typedef struct _MMBroadbandModemPrivate MMBroadbandModemPrivate;
+ 
++#define MM_BROADBAND_MODEM_FLOW_CONTROL "broadband-modem-flow-control"
++
+ struct _MMBroadbandModem {
+     MMBaseModem parent;
+     MMBroadbandModemPrivate *priv;
+diff --git a/src/mm-modem-helpers.h b/src/mm-modem-helpers.h
+index 89230676..3321e9a5 100644
+--- a/src/mm-modem-helpers.h
++++ b/src/mm-modem-helpers.h
+@@ -101,7 +101,7 @@ GRegex *mm_voice_clip_regex_get (void);
+  * For simplicity, we'll only consider flow control methods available in both
+  * TE and TA. */
+ 
+-typedef enum {
++typedef enum { /*< underscore_name=mm_flow_control >*/
+     MM_FLOW_CONTROL_UNKNOWN   = 0,
+     MM_FLOW_CONTROL_NONE      = 1 << 0,  /* IFC=0,0 */
+     MM_FLOW_CONTROL_XON_XOFF  = 1 << 1,  /* IFC=1,1 */
+-- 
+2.13.6
+
