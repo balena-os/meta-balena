@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.7.3
+## (2017-10-20)
+
+* Update API call in update-resin-supervisor for pine 5 [Gergely Imreh]
+* Fix start-resin-supervisor to start even when no supervisor image present [Gergely Imreh]
+* Update supervisor to v6.3.5 [Akis Kesoglou]
+* Fix fsck of boot partition with dosfstools [Will Newton]
+* Backport ModemManager flow control patches [Will Newton]
+* Update dnsmasq to 2.78 [Will Newton]
+
 # v2.7.2
 ## (2017-10-05)
 
