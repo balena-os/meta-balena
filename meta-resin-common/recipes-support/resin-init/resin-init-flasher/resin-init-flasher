@@ -71,7 +71,7 @@ if [ "$EUID" -ne 0 ]; then
     fail "Please run as root."
 fi
 
-echo "Board specific initialization..."
+inform "Board specific initialization..."
 /usr/bin/resin-init-board
 
 # Configuration file
@@ -204,7 +204,7 @@ fi
 
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
-echo "Board specific flash procedure..."
+inform "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
 
 # Give a chance for the device to register
