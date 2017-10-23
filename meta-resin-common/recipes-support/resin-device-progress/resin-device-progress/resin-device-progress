@@ -48,7 +48,8 @@ while [ "$#" -gt "0" ]; do
     shift
 done
 
-source /usr/sbin/resin-vars "$RESIN_VARS_ARGS"
+# shellcheck disable=SC2086
+source /usr/sbin/resin-vars $RESIN_VARS_ARGS
 
 echo "-- $0 $PERCENTAGE $STATE $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
 if [ -z "$PERCENTAGE" ] || [ -z "$STATE" ] || [ -z "$API_ENDPOINT" ]; then
