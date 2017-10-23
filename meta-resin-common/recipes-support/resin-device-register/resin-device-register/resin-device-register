@@ -36,7 +36,8 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-source /usr/sbin/resin-vars "$RESIN_VARS_ARGS"
+# shellcheck disable=SC2086
+source /usr/sbin/resin-vars $RESIN_VARS_ARGS
 
 if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
     echo "[ERROR] resin-device-register : Please set API_ENDPOINT and CONFIG_PATH environment variables."
