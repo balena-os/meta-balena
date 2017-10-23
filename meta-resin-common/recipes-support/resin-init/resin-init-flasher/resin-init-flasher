@@ -119,7 +119,7 @@ IMAGE_FILE_SIZE=$(wc -c /opt/"$RESIN_IMAGE" | awk '{print $1}')
 
 resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media" || true
 
-while kill -USR1 $DD_PID; do
+while kill -USR1 $DD_PID 2>/dev/null; do
     sleep 3
     if [ ! -s /tmp/dd_progress_log ]; then
         continue
