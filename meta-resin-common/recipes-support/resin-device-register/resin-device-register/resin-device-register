@@ -39,7 +39,7 @@ done
 # shellcheck disable=SC2086
 source /usr/sbin/resin-vars $RESIN_VARS_ARGS
 
-if [ -z "$API_ENDPOINT" -o -z "$CONFIG_PATH" ]; then
+if [ -z "$API_ENDPOINT" ] || [ -z "$CONFIG_PATH" ]; then
     echo "[ERROR] resin-device-register : Please set API_ENDPOINT and CONFIG_PATH environment variables."
     exit 1
 fi
@@ -65,7 +65,7 @@ while true; do
             device_id=$(jq -r '.id' $LOG_FILE)
             config_json=$(cat "$CONFIG_PATH")
             echo "$config_json" | jq -S ".registered_at=\"$(date +%s)\"|.deviceId=\"$device_id\"" > "$CONFIG_PATH"
-            echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $uuid."
+            echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $UUID."
             exit 0
         else
             echo "[ERROR] resin-device-register : Failed to register device. Status code: $status_code"
