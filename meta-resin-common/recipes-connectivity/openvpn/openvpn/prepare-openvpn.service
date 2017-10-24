@@ -5,7 +5,6 @@ After=mnt-boot.mount resin-device-uuid.service resin-device-api-key.service var-
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
 ExecStart=@BINDIR@/prepare-openvpn
 
 [Install]
