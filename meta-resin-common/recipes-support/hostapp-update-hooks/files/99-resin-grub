@@ -1,0 +1,18 @@
+#!/bin/sh
+
+#
+# Script which configures the grub.cfg to use an updated root index
+#
+
+set -o errexit
+
+new_part=$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/inactive")
+new_part_label=$(blkid "$new_part" | awk '{print $2}')
+
+printf "[INFO] Switching root partition to %s..." "$new_part_label..."
+sed "s/root=[^ ]* /"root=$new_part_label" /" /mnt/boot/EFI/BOOT/grub.cfg > /mnt/boot/EFI/BOOT/grub.cfg.new
+
+sync -f /mnt/boot/EFI/BOOT
+mv /mnt/boot/EFI/BOOT/grub.cfg.new /mnt/boot/EFI/BOOT/grub.cfg
+sync -f /mnt/boot/EFI/BOOT
+printf " done.\n"
