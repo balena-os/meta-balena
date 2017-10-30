@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.7.5
+## (2017-10-30)
+
+* Ensure OpenVPN is restarted when config.json changes [Will Newton]
+* Support grub boards with hostapp-update-hooks [Theodor Gherzan]
+
 # v2.7.4
 ## (2017-10-24)
 
