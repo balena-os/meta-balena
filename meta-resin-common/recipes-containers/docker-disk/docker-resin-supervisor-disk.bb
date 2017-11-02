@@ -8,6 +8,7 @@ SUPERVISOR_REPOSITORY_armv7ve = "resin/armv7hf-supervisor"
 SUPERVISOR_REPOSITORY_aarch64 = "resin/aarch64-supervisor"
 SUPERVISOR_REPOSITORY_x86 = "resin/i386-supervisor"
 SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
+SUPERVISOR_REPOSITORY_intel-quark = "resin/i386-nlp-supervisor"
 
 SUPERVISOR_TAG ?= "v6.4.2"
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
