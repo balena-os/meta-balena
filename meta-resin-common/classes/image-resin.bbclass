@@ -201,6 +201,32 @@ resin_boot_dirgen_and_deploy () {
     echo "Generating ${RESIN_BOOTFILES_LIST} ..."
     mkdir -p $(dirname ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST})
     find ${RESIN_BOOT_WORKDIR} -type f | sed "s#${RESIN_BOOT_WORKDIR}##g" > ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST}
+
+	# This is a sanity check
+	# When updating the hostOS we are using atomic operations for copying new
+	# files in the boot partition. This requires twice the size of a file with
+	# every copy operation. This means that the boot partition needs to have
+	# available at least free space as much as the largest file deployed.
+	# First Calculate size of the data
+	DATA_SECTORS=$(expr $(du --apparent-size -ks ${RESIN_BOOT_WORKDIR} | cut -f 1) \* 2)
+	# Calculate fs overhead
+	DIR_BYTES=$(expr $(find ${RESIN_BOOT_WORKDIR} | tail -n +2 | wc -l) \* 32)
+	DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${RESIN_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 32))
+	FAT_BYTES=$(expr $DATA_SECTORS \* 4)
+	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${RESIN_BOOT_WOKDIR} -type d | tail -n +2 | wc -l) \* 4))
+	DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
+	FAT_SECTORS=$(expr $(expr $FAT_BYTES + 511) / 512 \* 2)
+	FAT_OVERHEAD_SECTORS=$(expr $DIR_SECTORS + $FAT_SECTORS)
+	# Find the largest file and calculate the size in sectors
+	LARGEST_FILE_SECTORS=$(expr $(find ${RESIN_BOOT_WORKDIR} -type f -exec du --apparent-size -k {} + | sort -n -r | head -n1 | cut -f1) \* 2)
+	if [ -n "$LARGEST_FILE_SECTORS" ]; then
+		TOTAL_SECTORS=$(expr $DATA_SECTORS \+ $FAT_OVERHEAD_SECTORS \+ $LARGEST_FILE_SECTORS)
+		BOOT_SIZE_SECTORS=$(expr ${RESIN_BOOT_SIZE} \* 2)
+		bbnote "resin-boot: FAT overhead $FAT_OVERHEAD_SECTORS sectors, data $DATA_SECTORS sectors, largest file $LARGEST_FILE_SECTORS sectors, boot size $BOOT_SIZE_SECTORS sectors."
+		if [ $TOTAL_SECTORS -gt $BOOT_SIZE_SECTORS ]; then
+			bbfatal "resin-boot: Not enough space for atomic copy operations."
+		fi
+	fi
 }
 
 QUIRK_FILES ?= " \
