@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.7.6
+## (2017-11-06)
+
+* Add supervisor for the intel-quark family [Theodor Gherzan]
+* Update ModemManager to version 1.6.10 [Florin Sarbu]
+* Update supervisor to v6.4.2 [Pablo Carranza Velez]
+
 # v2.7.5
 ## (2017-10-30)
 
