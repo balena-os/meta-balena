@@ -9,17 +9,6 @@ inherit allarch
 
 FILES_${PN} = "${bindir}"
 
-RDEPENDS_${PN} = " \
-    bash \
-    busybox \
-    coreutils \
-    docker \
-    e2fsprogs-tune2fs \
-    jq \
-    resin-device-progress \
-    systemd \
-    "
-
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${WORKDIR}/run-resinhup.sh ${D}${bindir}
