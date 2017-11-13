@@ -20,12 +20,12 @@ if [ "$local_image" =  "" ] && [ "$remote_image" = "" ]; then
 	exit 1
 fi
 
-export DOCKER_HOST="unix:///var/run/docker-host.sock"
+export DOCKER_HOST="unix:///var/run/balena-host.sock"
 SYSROOT="/mnt/sysroot/inactive"
 
 # Initialize sysroot
 mkdir -p /mnt/sysroot
-for dir in 'dev' 'etc' 'docker' 'hostapps' 'mnt/state' 'proc' 'sbin' 'sys' 'tmp'; do
+for dir in 'dev' 'etc' 'balena' 'hostapps' 'mnt/state' 'proc' 'sbin' 'sys' 'tmp'; do
 	mkdir -p "$SYSROOT/$dir"
 done
 if [ ! -f "$SYSROOT/etc/machine-id" ]; then
@@ -39,11 +39,11 @@ if [ ! -L "$SYSROOT/boot" ]; then
 fi
 
 # Remove previous hostapp
-for container in $(docker ps --all --quiet); do
-	docker rm --force --volumes "$container"
+for container in $(balena ps --all --quiet); do
+	balena rm --force --volumes "$container"
 done
-for image in $(docker images --all --quiet); do
-	docker rmi --force "$image"
+for image in $(balena images --all --quiet); do
+	balena rmi --force "$image"
 done
 for hostapp in "$SYSROOT/hostapps/"*; do
 	[ -e "$hostapp" ] || break
@@ -52,13 +52,13 @@ done
 
 # Load new hostapp
 if [ "$local_image" != "" ]; then
-	HOSTAPP_IMAGE=$(docker load --quiet -i "$local_image" | cut -d: -f1 --complement | tr -d ' ')
+	HOSTAPP_IMAGE=$(balena load --quiet -i "$local_image" | cut -d: -f1 --complement | tr -d ' ')
 elif [ "$remote_image" != "" ]; then
 	HOSTAPP_IMAGE="$remote_image"
-	docker pull "$HOSTAPP_IMAGE"
+	balena pull "$HOSTAPP_IMAGE"
 fi
-CONTAINER_ID=$(docker create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
-BOOTSTRAP=$(docker inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
+CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
+BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
 
 # Create boot entry
 rm -rf "$SYSROOT/hostapps/.new"

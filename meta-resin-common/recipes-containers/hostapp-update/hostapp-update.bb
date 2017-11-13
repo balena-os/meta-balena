@@ -14,7 +14,7 @@ BBCLASSEXTEND = "native"
 FILES_${PN} = "${bindir}"
 
 RDEPENDS_${PN} = " \
-    docker \
+    balena \
     "
 
 do_install() {
