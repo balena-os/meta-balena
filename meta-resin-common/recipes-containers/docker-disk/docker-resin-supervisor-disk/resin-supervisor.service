@@ -1,14 +1,14 @@
 [Unit]
 Description=Resin supervisor
 Requires=\
-    docker.service \
+    balena.service \
     resin\x2ddata.mount \
     resin-device-uuid.service \
     resin-device-api-key.service \
     etc-systemd-system-resin.target.wants.mount \
     etc-resin\x2dsupervisor.mount
 After=\
-    docker.service \
+    balena.service \
     resin\x2ddata.mount \
     resin-device-uuid.service \
     resin-device-api-key.service \
@@ -21,9 +21,9 @@ Restart=always
 RestartSec=10s
 EnvironmentFile=/etc/resin-supervisor/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
-ExecStartPre=-@BINDIR@/docker stop resin_supervisor
+ExecStartPre=-@BINDIR@/balena stop resin_supervisor
 ExecStart=@BINDIR@/start-resin-supervisor
-ExecStop=-@BINDIR@/docker stop resin_supervisor
+ExecStop=-@BINDIR@/balena stop resin_supervisor
 
 [Install]
 WantedBy=resin.target
