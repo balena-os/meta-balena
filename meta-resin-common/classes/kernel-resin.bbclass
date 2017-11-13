@@ -364,6 +364,7 @@ RESIN_CONFIGS[misc] = " \
 
 # configs needed for our usage of redsocks
 RESIN_CONFIGS[redsocks] = " \
+    CONFIG_NETFILTER_ADVANCED=y \
     CONFIG_NETFILTER_XT_MATCH_OWNER=m \
     CONFIG_NETFILTER_XT_TARGET_REDIRECT=m \
     "
