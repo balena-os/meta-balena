@@ -23,7 +23,7 @@ FILES_${PN} = "${sysconfdir}/hostapp-update-hooks.d"
 
 RDEPENDS_${PN} = " \
 	util-linux \
-	docker \
+	balena \
 	"
 
 do_install() {
