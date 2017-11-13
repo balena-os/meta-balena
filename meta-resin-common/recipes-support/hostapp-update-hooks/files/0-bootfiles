@@ -98,6 +98,8 @@ if [ -z "$container_id" ]; then
 fi
 
 # Deploy all files in the bootfiles list
+bootfiles_list_new="/tmp/$(basename $bootfiles_list).new"
+docker cp "$container_id:$bootfiles_list" "$bootfiles_list_new"
 while read entry; do
 	deploy "$entry"
-done < "$bootfiles_list"
+done < "$bootfiles_list_new"
