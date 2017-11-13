@@ -62,7 +62,7 @@
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
 RESIN_CONFIGS ?= " \
-    docker \
+    balena \
     brcmfmac \
     ralink \
     r8188eu \
@@ -89,11 +89,11 @@ RESIN_CONFIGS ?= " \
     "
 
 #
-# Docker specific kernel configuration
+# Balena specific kernel configuration
 # Keep these updated with
-# https://raw.githubusercontent.com/docker/docker/master/contrib/check-config.sh
+# https://raw.githubusercontent.com/resin-os/balena/master/contrib/check-config.sh
 #
-RESIN_CONFIGS_DEPS[docker] ?= " \
+RESIN_CONFIGS_DEPS[balena] ?= " \
     CONFIG_IP_NF_NAT=y \
     CONFIG_IPV6=y \
     CONFIG_IP_NF_IPTABLES=y \
@@ -101,7 +101,7 @@ RESIN_CONFIGS_DEPS[docker] ?= " \
     CONFIG_NF_CONNTRACK_IPV4=y \
     CONFIG_NETFILTER=y \
     "
-RESIN_CONFIGS[docker] ?= " \
+RESIN_CONFIGS[balena] ?= " \
     CONFIG_ADVISE_SYSCALLS=y \
     CONFIG_MEMCG=y \
     CONFIG_NAMESPACES=y \
@@ -424,7 +424,7 @@ def appendLineToFile (filepath, line):
 #########
 
 #
-# Configuration for docker storage
+# Configuration for balena storage
 #
 
 python do_kernel_resin_aufs_fetch_and_unpack() {
