@@ -53,7 +53,7 @@ python __anonymous () {
 
 #
 # Add quotes around values not matching [A-Za-z0-9]*
-# Failing to do so will confuse docker info
+# Failing to do so will confuse the container engine
 #
 python do_fix_quotes () {
     import re
