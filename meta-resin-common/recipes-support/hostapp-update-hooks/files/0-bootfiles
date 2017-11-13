@@ -59,13 +59,13 @@ isModified() {
 copyFromContainer() {
 	local _file="$1"
 	mkdir -p "$boot_mountpoint/$(dirname "$_file")"
-	docker cp "$container_id:/resin-boot/$_file" "$boot_mountpoint/$_file.new"
+	balena cp "$container_id:/resin-boot/$_file" "$boot_mountpoint/$_file.new"
 	sync -f $boot_mountpoint
 	mv "$boot_mountpoint/$_file.new" "$boot_mountpoint/$_file"
 	sync -f $boot_mountpoint
 }
 
-# Deploys file from docker container to boot partition
+# Deploys file from container to boot partition
 # Arguments:
 # 		$1: file path relative to boot partition's root
 deploy() {
@@ -90,7 +90,7 @@ deploy() {
 # MAIN
 #
 
-export DOCKER_HOST="unix:///var/run/docker-host.sock"
+export DOCKER_HOST="unix:///var/run/balena-host.sock"
 
 if [ -z "$container_id" ]; then
 	echo "[ERROR] Container ID provided as an argument is needed."
@@ -99,7 +99,7 @@ fi
 
 # Deploy all files in the bootfiles list
 bootfiles_list_new="/tmp/$(basename $bootfiles_list).new"
-docker cp "$container_id:$bootfiles_list" "$bootfiles_list_new"
+balena cp "$container_id:$bootfiles_list" "$bootfiles_list_new"
 while read entry; do
 	deploy "$entry"
 done < "$bootfiles_list_new"
