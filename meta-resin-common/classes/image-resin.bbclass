@@ -237,7 +237,7 @@ QUIRK_FILES ?= " \
     "
 resin_root_quirks () {
     # Quirks
-    # We need to save some files that docker shadows with bind mounts
+    # We need to save some files that the container engine shadows with bind mounts
     # https://docs.docker.com/engine/userguide/networking/default_network/configure-dns/
     # Make sure you run this before packing
     if [ "${QUIRK_FILES}" != "" ];then
