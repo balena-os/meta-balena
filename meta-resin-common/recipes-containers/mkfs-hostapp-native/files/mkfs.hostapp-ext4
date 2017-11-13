@@ -37,7 +37,7 @@ if ! [ -f "$output" ]; then
 fi
 
 cleanup_docker() {
-    docker rmi @IMAGE@ || true
+    $DOCKER rmi @IMAGE@ || true
 }
 
 $DOCKER load -i "$sysroot/usr/share/mkfs-hostapp-ext4-image.tar"

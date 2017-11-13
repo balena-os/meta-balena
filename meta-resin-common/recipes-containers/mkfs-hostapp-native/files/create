@@ -4,7 +4,7 @@ set -ex
 
 SYSROOT="/mnt/sysroot/inactive"
 
-dockerd -s=@DOCKER_STORAGE@ --data-root="$SYSROOT/docker" -H unix:///var/run/docker-host.sock &
+balenad -s=@DOCKER_STORAGE@ --data-root="$SYSROOT/balena" -H unix:///var/run/balena-host.sock &
 pid=$!
 sleep 5
 

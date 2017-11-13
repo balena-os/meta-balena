@@ -11,7 +11,7 @@ SRC_URI = " \
 inherit native
 
 DEPENDS = " \
-    docker-native \
+    balena-native \
     hostapp-update-native \
     e2fsprogs-native \
     "
