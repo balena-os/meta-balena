@@ -57,6 +57,7 @@ FILES_${PN} += " \
 
 do_install () {
     install -d ${D}/etc/docker
+    ln -sf docker ${D}/etc/balena
     install -d ${D}/mnt/boot
     install -d ${D}/mnt/data
     install -d ${D}/mnt/state
