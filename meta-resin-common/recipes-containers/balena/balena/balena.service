@@ -1,0 +1,24 @@
+[Unit]
+Description=Balena Application Container Engine
+Documentation=https://www.balena.io/docs/getting-started
+After=network.target balena.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount
+Requires=balena.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount
+Wants=dnsmasq.service
+Before=dnsmasq.service
+
+[Service]
+Type=notify
+Restart=always
+ExecStart=/usr/bin/balenad --log-driver=journald -s @DOCKER_STORAGE@ -H fd:// --dns 10.114.101.1 --bip 10.114.101.1/24 --fixed-cidr=10.114.101.0/25
+ExecStartPost=/sbin/sysctl -w net.ipv4.conf.balena0.route_localnet=1
+ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p udp --dport 53 -j DNAT --dst 10.114.101.1/32 --to 127.0.0.2:53
+ExecStartPost=/usr/sbin/iptables -t nat -I DOCKER -p tcp --dport 53 -j DNAT --dst 10.114.101.1/32 --to 127.0.0.2:53
+#Adjust OOMscore to -900 to make killing unlikely
+OOMScoreAdjust=-900
+MountFlags=slave
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
