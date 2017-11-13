@@ -1,37 +1,25 @@
-HOMEPAGE = "http://www.docker.com"
-SUMMARY = "Linux container runtime"
-DESCRIPTION = "Linux container runtime \
- Docker complements kernel namespacing with a high-level API which \
- operates at the process level. It runs unix processes with strong \
- guarantees of isolation and repeatability across servers. \
- . \
- Docker is a great building block for automating distributed systems: \
- large-scale web deployments, database clusters, continuous deployment \
- systems, private PaaS, service-oriented architectures, etc. \
- . \
- This package contains the daemon and client. Using docker.io on non-amd64 \
- hosts is not supported at this time. Please be careful when using it \
- on anything besides amd64. \
- . \
- Also, note that kernel version 3.8 or above is required for proper \
- operation of the daemon process, and that any lower versions may have \
- subtle and/or glaring issues. \
- "
+HOMEPAGE = "https://www.balena.io/"
+SUMMARY = "A Moby-based container engine for IoT"
+DESCRIPTION = "Balena is a new container engine purpose-built for embedded \
+and IoT use cases and compatible with Docker containers. Based on Docker’s \
+Moby Project, balena supports container deltas for 10-70x more efficient \
+bandwidth usage, has 3.5x smaller binaries, uses RAM and storage more \
+conservatively, and focuses on atomicity and durability of container \
+pulling."
 
 inherit binary-compress
 FILES_COMPRESS = "/boot/init"
 
-SRCREV = "7d07e4f76d6f2678c0c4020bed4ac9ab5f5ce91f"
+SRCREV = "9c78e9b21021d2d2bbd17ebacc7ba9eacacc0742"
 SRCBRANCH = "17.06-resin"
 SRC_URI = "\
-  git://github.com/resin-os/docker.git;branch=${SRCBRANCH};nobranch=1 \
-  file://docker.service \
-  file://docker-host.service \
+  git://github.com/resin-os/balena.git;branch=${SRCBRANCH};nobranch=1 \
+  file://balena.service \
+  file://balena-host.service \
   file://var-lib-docker.mount \
-  file://docker.conf.systemd \
+  file://balena.conf.systemd \
 "
 
-# Apache-2.0 for docker
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
 
@@ -39,8 +27,8 @@ S = "${WORKDIR}/git"
 
 BBCLASSEXTEND = " native"
 
-DOCKER_VERSION = "17.06.0-dev"
-PV = "${DOCKER_VERSION}+git${SRCREV}"
+BALENA_VERSION = "17.06.0-dev"
+PV = "${BALENA_VERSION}+git${SRCREV}"
 
 DEPENDS_append_class-target = " systemd"
 RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd"
@@ -107,7 +95,7 @@ do_compile() {
   export DOCKER_GITCOMMIT="${SRCREV}"
   export DOCKER_BUILDTAGS='exclude_graphdriver_btrfs exclude_graphdirver_zfs exclude_graphdriver_devicemapper'
 
-  ./hack/make.sh dynbinary-rce-docker
+  ./hack/make.sh dynbinary-balena
 
   # Compile mobynit
   cd .gopath/src/"${DOCKER_PKG}"/cmd/mobynit
@@ -116,50 +104,54 @@ do_compile() {
 }
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "docker.service docker-host.service var-lib-docker.mount"
+SYSTEMD_SERVICE_${PN} = "balena.service balena-host.service var-lib-docker.mount"
 
 do_install() {
   mkdir -p ${D}/${bindir}
-  install -m 0755 ${S}/bundles/${DOCKER_VERSION}/dynbinary-rce-docker/rce-docker ${D}/${bindir}/rce-docker
+  install -m 0755 ${S}/bundles/${BALENA_VERSION}/dynbinary-balena/balena ${D}/${bindir}/balena
   install -d ${D}/boot
   install -m 0755 ${S}/cmd/mobynit/mobynit ${D}/boot/init
   echo ${DOCKER_STORAGE} > ${D}/boot/storage-driver
 
-  ln -sf rce-docker ${D}/${bindir}/docker
-  ln -sf rce-docker ${D}/${bindir}/dockerd
-  ln -sf rce-docker ${D}/${bindir}/docker-containerd
-  ln -sf rce-docker ${D}/${bindir}/docker-containerd-shim
-  ln -sf rce-docker ${D}/${bindir}/docker-containerd-ctr
-  ln -sf rce-docker ${D}/${bindir}/docker-runc
-  ln -sf rce-docker ${D}/${bindir}/docker-proxy
+  ln -sf balena ${D}/${bindir}/balenad
+  ln -sf balena ${D}/${bindir}/balena-containerd
+  ln -sf balena ${D}/${bindir}/balena-containerd-shim
+  ln -sf balena ${D}/${bindir}/balena-containerd-ctr
+  ln -sf balena ${D}/${bindir}/balena-runc
+  ln -sf balena ${D}/${bindir}/balena-proxy
 
   install -d ${D}${systemd_unitdir}/system
-  install -m 0644 ${S}/contrib/init/systemd/docker.* ${D}/${systemd_unitdir}/system
+  install -m 0644 ${S}/contrib/init/systemd/balena.* ${D}/${systemd_unitdir}/system
 
-  install -m 0644 ${WORKDIR}/docker.service ${D}/${systemd_unitdir}/system
-  sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/docker.service
+  install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
+  sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
 
-  install -m 0644 ${WORKDIR}/docker-host.service ${D}/${systemd_unitdir}/system
-  sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/docker-host.service
+  install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
+  sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/balena-host.service
 
   install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
 
   if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
-    install -d ${D}${sysconfdir}/systemd/system/docker.service.d
-    install -c -m 0644 ${WORKDIR}/docker.conf.systemd ${D}${sysconfdir}/systemd/system/docker.service.d/docker.conf
-    sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${sysconfdir}/systemd/system/docker.service.d/docker.conf
+    install -d ${D}${sysconfdir}/systemd/system/balena.service.d
+    install -c -m 0644 ${WORKDIR}/balena.conf.systemd ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
+    sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
   fi
 
   install -d ${D}/home/root/.docker
+  ln -sf .docker ${D}/home/root/.balena
+
+  install -d ${D}${localstatedir}/lib/docker
+  ln -sf docker ${D}${localstatedir}/lib/balena
 }
 
 inherit useradd
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "-r docker"
+GROUPADD_PARAM_${PN} = "-r balena"
 
 FILES_${PN} += " \
   /lib/systemd/system/* \
-  /home/root/.docker/ \
+  /home/root \
   /boot/init \
   /boot/storage-driver \
+  ${localstatedir} \
   "
