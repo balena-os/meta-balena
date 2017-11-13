@@ -2,22 +2,22 @@
 
 source /usr/sbin/resin-vars
 
-SUPERVISOR_IMAGE_ID=$(docker inspect --format='{{.Id}}' $SUPERVISOR_IMAGE:$SUPERVISOR_TAG)
-SUPERVISOR_CONTAINER_IMAGE_ID=$(docker inspect --format='{{.Image}}' resin_supervisor || echo "")
+SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' $SUPERVISOR_IMAGE:$SUPERVISOR_TAG)
+SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
 runSupervisor() {
-    docker rm --force resin_supervisor || true
-    docker run --privileged --name resin_supervisor \
+    balena rm --force resin_supervisor || true
+    balena run --privileged --name resin_supervisor \
         --net=host \
-        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v /var/run/balena.sock:/var/run/balena.sock \
         -v $CONFIG_PATH:/boot/config.json  \
         -v /mnt/data/apps.json:/boot/apps.json \
         -v /resin-data/resin-supervisor:/data \
         -v /proc/net/fib_trie:/mnt/fib_trie \
         -v /var/log/supervisor-log:/var/log \
         -v /:/mnt/root \
-        -e DOCKER_ROOT=/mnt/root/var/lib/docker \
-        -e DOCKER_SOCKET=/var/run/docker.sock \
+        -e DOCKER_ROOT=/mnt/root/var/lib/balena \
+        -e DOCKER_SOCKET=/var/run/balena.sock \
         -e BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT \
         -e API_ENDPOINT=$API_ENDPOINT \
         -e REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT \
@@ -36,7 +36,7 @@ if [ -z "$SUPERVISOR_IMAGE_ID" ]; then
     systemctl start update-resin-supervisor
 elif [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
     # Supervisor image exists, and the current supervisor container is created from
-    docker start --attach resin_supervisor
+    balena start --attach resin_supervisor
 else
     # No supervisor container exists or there's a different supervisor image to run
     runSupervisor

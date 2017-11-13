@@ -41,7 +41,7 @@ FILES_${PN} += " \
 
 RDEPENDS_${PN} = " \
     bash \
-    docker \
+    balena \
     coreutils \
     resin-vars \
     systemd \

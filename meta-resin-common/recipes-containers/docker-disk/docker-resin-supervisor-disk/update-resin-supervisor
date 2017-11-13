@@ -81,6 +81,8 @@ if which docker &>/dev/null; then
     DOCKER=docker
 elif which rce &>/dev/null; then
     DOCKER=rce
+elif which balena &>/dev/null; then
+	DOCKER=balena
 else
     error_handler $LINENO "no container engine detected"
 fi
