@@ -1,0 +1,16 @@
+#!/bin/sh
+
+fsckext4_enabled() {
+    # On flasher we don't run fsck.ext4
+    if [ -h /dev/disk/by-label/flash-boot ]; then
+        echo "[INFO] Flasher detected. We don't run fsck.ext4 on the ext4 partitions when provisioning."
+        return 1
+    fi
+    return 0
+}
+
+fsckext4_run() {
+    fsck.ext4 -p /dev/disk/by-label/resin-rootA
+    fsck.ext4 -p /dev/disk/by-label/resin-rootB
+    fsck.ext4 -p /dev/disk/by-label/resin-state
+}

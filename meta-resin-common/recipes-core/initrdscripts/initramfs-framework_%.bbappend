@@ -1,6 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
+    file://fsckext4 \
     file://machineid \
     file://resindataexpander \
     file://rorootfs \
@@ -9,6 +10,7 @@ SRC_URI_append = " \
     "
 
 do_install_append() {
+    install -m 0755 ${WORKDIR}/fsckext4 ${D}/init.d/87-fsckext4
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
 
@@ -18,12 +20,17 @@ do_install_append() {
 }
 
 PACKAGES_append = " \
+    initramfs-module-fsckext4 \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
+
+SUMMARY_initramfs-module-fsckext4 = "Filesystem check for ext4 partitions"
+RDEPENDS_initramfs-module-fsckext4 = "${PN}-base e2fsprogs-e2fsck"
+FILES_initramfs-module-fsckext4 = "/init.d/87-fsckext4"
 
 SUMMARY_initramfs-module-machineid = "Bind mount machine-id to rootfs"
 RDEPENDS_initramfs-module-machineid = "${PN}-base initramfs-module-udev"
