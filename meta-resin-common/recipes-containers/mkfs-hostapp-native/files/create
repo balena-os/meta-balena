@@ -8,7 +8,7 @@ balenad -s=@DOCKER_STORAGE@ --data-root="$SYSROOT/balena" -H unix:///var/run/bal
 pid=$!
 sleep 5
 
-hostapp-update -f /input
+hostapp-update -f /input -n
 
 kill $pid
 wait $pid
