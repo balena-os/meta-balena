@@ -200,7 +200,12 @@ resin_boot_dirgen_and_deploy () {
 
     echo "Generating ${RESIN_BOOTFILES_LIST} ..."
     mkdir -p $(dirname ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST})
-    find ${RESIN_BOOT_WORKDIR} -type f | sed "s#${RESIN_BOOT_WORKDIR}##g" > ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST}
+	rm -rf ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST}
+    for boot_file in $(find ${RESIN_BOOT_WORKDIR} -type f); do
+		boot_file_size=$(du -sk $boot_file | cut -f 1)
+		boot_file=$(echo $boot_file | sed "s#${RESIN_BOOT_WORKDIR}##g")
+		echo "$boot_file $boot_file_size" >> ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST}
+	done
 
 	# This is a sanity check
 	# When updating the hostOS we are using atomic operations for copying new
