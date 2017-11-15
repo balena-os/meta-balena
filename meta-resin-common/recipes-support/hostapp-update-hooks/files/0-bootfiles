@@ -97,9 +97,40 @@ if [ -z "$container_id" ]; then
 	exit 1
 fi
 
-# Deploy all files in the bootfiles list
 bootfiles_list_new="/tmp/$(basename $bootfiles_list).new"
 balena cp "$container_id:$bootfiles_list" "$bootfiles_list_new"
+
+# Do a dry run for copying the boot files and figure out if we would get in a
+# out of space situation
+boot_mnt="$(findmnt --noheadings --canonicalize --output TARGET /dev/disk/by-label/resin-boot)"
+boot_space="$(df -k --output=avail /mnt/boot | grep -v Avail)"
+available="$boot_space"
+available_threshold="512" # All sizes in K
+echo -n "[INFO] Checking if boot partition can accommodate the new update... "
 while read entry; do
-	deploy "$entry"
+	filename="$(echo $entry | cut -d' ' -f1)"
+	if isBlacklisted $filename; then
+		continue
+	fi
+	filesize="$(echo $entry | cut -d' ' -f2)"
+	if [ "$filesize" = "$filename" ]; then
+		# Old OS didn't include sizes too so we skip this check
+		echo -n "skipped... "
+		break
+	fi
+	available="$(expr $available - $filesize)"
+	if [ -f "${boot_mnt}${filename}" ]; then
+		available="$(expr $available + $(du -sk ${boot_mnt}${filename} | cut -f1))"
+	fi
+	if [ "$available" -lt "$available_threshold" ]; then
+		echo "[ERROR] Boot files copy operations will fail with out of space error."
+		exit 1
+	fi
+done < "$bootfiles_list_new"
+echo "success."
+
+# Deploy all files in the bootfiles list
+while read entry; do
+	filename="$(echo $entry | cut -d' ' -f1)"
+	deploy "$filename"
 done < "$bootfiles_list_new"
