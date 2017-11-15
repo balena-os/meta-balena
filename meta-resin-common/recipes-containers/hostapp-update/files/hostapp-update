@@ -5,12 +5,16 @@ set -eu
 local_image=""
 remote_image=""
 reboot=0
+hooks=1
 
-while getopts 'f:i:r' flag; do
+hooks_list="@RESIN_HOSTAPP_HOOKS_LIST@"
+
+while getopts 'f:i:rn' flag; do
 	case "${flag}" in
 	f) local_image=$(realpath "${OPTARG}") ;;
 	i) remote_image="${OPTARG}" ;;
 	r) reboot=1 ;;
+	n) hooks=0 ;;
 	*) error "Unexpected option ${flag}" ;;
 	esac
 done
@@ -84,11 +88,16 @@ sync -f "$SYSROOT"
 mv "$SYSROOT/counter.new" "$SYSROOT/counter"
 sync -f "$SYSROOT"
 
-# Run any defined hooks
-for hook in "/etc/hostapp-update-hooks.d/"*; do
-	[ -e "$hook" ] || break
-	"$hook" "$CONTAINER_ID"
-done
+# Run all the defined hooks in the host OS we update to
+if [ "$hooks" = 1 ]; then
+	hooks_list_new="/tmp/$(basename $hooks_list).new"
+	balena cp "$CONTAINER_ID:$hooks_list" "$hooks_list_new"
+	while read entry; do
+		echo "Running $(basename $entry) hook from next OS..."
+		balena cp "$CONTAINER_ID:$entry" "/tmp/$(basename $entry)"
+		"/tmp/$(basename $entry)" "$CONTAINER_ID"
+	done < "$hooks_list_new"
+fi
 
 if [ "$reboot" = 1 ]; then
 	reboot
