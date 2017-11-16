@@ -23,7 +23,7 @@ boot_mountpoint="/mnt/boot"
 # 	$1: file to be checked
 # Return value:
 # 	0: file is blacklisted
-# 	1: file si not blacklisted
+# 	1: file is not blacklisted
 isBlacklisted() {
 	local _file="$1"
 	for b in $bootfiles_blacklist; do
@@ -67,7 +67,7 @@ copyFromContainer() {
 
 # Deploys file from docker container to boot partition
 # Arguments:
-# 		$1: file path relative to boot partition's root
+# 	$1: file path relative to boot partition's root
 deploy() {
 	local _file="$1"
 	printf "[INFO] Deploying %s%s..." "${boot_mountpoint}" "${_file}"
