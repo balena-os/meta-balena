@@ -4,7 +4,7 @@ require conf/distro/include/security_flags.inc
 
 DISTRO = "resin-os"
 DISTRO_NAME = "Resin OS"
-DISTRO_VERSION = "2.7.7"
+DISTRO_VERSION = "2.7.8"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''

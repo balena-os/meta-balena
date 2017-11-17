@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.7.8
+## (2017-11-17)
+
+* Do our best to ensure we copy to internal media the config.json after resin-device-register was able to register the board [Florin Sarbu]
+
 # v2.7.7
 ## (2017-11-17)
 
