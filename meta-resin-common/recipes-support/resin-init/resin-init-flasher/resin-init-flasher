@@ -169,8 +169,6 @@ fi
 # Copy custom splash dir
 mkdir -p "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME"
 cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME/* $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
-# Copy json configuration file from external (flasher) to the internal (booting) device
-cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
 # Copy Network Manager connection files
 CONFIG_NM="${CONFIG_PATH%/*}/system-connections/"
 if [ -d "$CONFIG_NM" ]; then
@@ -202,8 +200,6 @@ if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${RESIN_BOOTLOADER_CONFIG}" ]; 
         cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 fi
 
-umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
-
 inform "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
 
@@ -221,6 +217,10 @@ do
         break
     fi
 done
+
+# Copy json configuration file from external (flasher) to the internal (booting) device
+cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
+umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
 sync
 
