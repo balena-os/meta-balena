@@ -1,6 +1,19 @@
 Change log
 -----------
 
+# v2.7.7
+## (2017-11-17)
+
+* Delete the provisioning key after registering, to fix VPN authentication in flasher images [Pablo Carranza Velez]
+* Resin-image-initramfs: Include ext4 filesystem check module in our initramfs [Florin Sarbu]
+* Hostapp-update-hooks: fix typos in hook [Gergely Imreh]
+* Image-resin.bbclass: Add build time dependency on coreutils-native [Florin Sarbu]
+* Hostapp-update-hooks: Use boot files list from the 'next' OS [Andrei Gherzan]
+* Add required kernel config dependency for being able to use redsocks [Florin Sarbu]
+* Check for enough space in boot partition to support atomic copy operations [Andrei Gherzan]
+* Update libmbim to version 1.14.2 [Florin Sarbu]
+* Update libqmi to version 1.18.0 [Florin Sarbu]
+
 # v2.7.6
 ## (2017-11-06)
 
