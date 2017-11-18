@@ -13,7 +13,10 @@ SRC_URI_append = " \
 
 RDEPENDS_${PN}_append = " resin-net-config resolvconf"
 FILES_${PN}_append = "${sysconfdir}/*"
-EXTRA_OECONF += "--with-resolvconf=/sbin/resolvconf"
+EXTRA_OECONF += " \
+    --with-resolvconf=/sbin/resolvconf \
+    --disable-ovs \
+    "
 PACKAGECONFIG_append = " systemd modemmanager ppp"
 PACKAGES += "${PN}-bash-completion"
 

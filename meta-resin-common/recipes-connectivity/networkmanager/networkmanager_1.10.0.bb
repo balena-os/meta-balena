@@ -19,8 +19,8 @@ SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
     file://0001-build-fix-race-creating-libnm-core-tests-directory-f.patch \
 "
-SRC_URI[md5sum] = "1acf7a551905ae85d9987aadbb5f7205"
-SRC_URI[sha256sum] = "71a5efcd9e4c237ab57b2893ccc8f91f884ace3bec0e2bd4b31a4c9677ff1bf4"
+SRC_URI[md5sum] = "c4308b83f77a7cb8c6e0e0ec1a30c89f"
+SRC_URI[sha256sum] = "8abbd60cf0e56003a7b9428ceb50a58c80e02e045ac31c3399e9227a712e04de"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
