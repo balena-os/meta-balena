@@ -20,5 +20,4 @@ RDEPENDS_${PN} = " \
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${WORKDIR}/hostapp-update ${D}${bindir}
-    sed -i -e "s:@RESIN_HOSTAPP_HOOKS_LIST@:${RESIN_HOSTAPP_HOOKS_LIST}:g" ${D}${bindir}/hostapp-update
 }
