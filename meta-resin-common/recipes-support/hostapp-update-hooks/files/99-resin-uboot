@@ -6,7 +6,7 @@
 
 set -o errexit
 
-new_part=$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/inactive")
+new_part=$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active")
 blockdev=$(basename "$new_part")
 new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 

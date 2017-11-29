@@ -6,7 +6,7 @@
 
 set -o errexit
 
-new_part=$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/inactive")
+new_part=$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active")
 new_part_label=$(blkid "$new_part" | awk '{print $2}')
 
 printf "[INFO] Switching root partition to %s..." "$new_part_label..."
