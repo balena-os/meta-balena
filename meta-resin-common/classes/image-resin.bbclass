@@ -198,15 +198,6 @@ resin_boot_dirgen_and_deploy () {
     echo "Install resin-boot in the rootfs..."
     cp -rvf ${RESIN_BOOT_WORKDIR} ${IMAGE_ROOTFS}/${RESIN_BOOT_FS_LABEL}
 
-    echo "Generating ${RESIN_BOOTFILES_LIST} ..."
-    mkdir -p $(dirname ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST})
-	rm -rf ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST}
-    for boot_file in $(find ${RESIN_BOOT_WORKDIR} -type f); do
-		boot_file_size=$(du -sk $boot_file | cut -f 1)
-		boot_file=$(echo $boot_file | sed "s#${RESIN_BOOT_WORKDIR}##g")
-		echo "$boot_file $boot_file_size" >> ${IMAGE_ROOTFS}/${RESIN_BOOTFILES_LIST}
-	done
-
 	# This is a sanity check
 	# When updating the hostOS we are using atomic operations for copying new
 	# files in the boot partition. This requires twice the size of a file with
