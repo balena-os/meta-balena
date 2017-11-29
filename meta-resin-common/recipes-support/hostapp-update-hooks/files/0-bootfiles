@@ -1,15 +1,14 @@
 #!/bin/sh
 
 #
-# Script to deploy the boot files from rootfs (in container) to the boot
-# partition
+# Script to deploy the boot files from rootfs to the boot partition
+#
+# This hook is meant to run in the `next` resinOS container
 #
 
 set -o errexit
 
 # Variables
-container_id="$1"
-bootfiles_list="@RESIN_BOOTFILES_LIST@"
 boot_fingerprint="@RESIN_BOOT_FINGERPRINT@"
 bootfiles_blacklist="\
 	/config.json \
@@ -53,35 +52,50 @@ isModified() {
 	fi
 }
 
-# Copies a file from a container to the boot filesystem atomically and durable
+# Copies a file from /resin-boot to boot partition filesystem atomically and durable
 # Arguments:
 # 	$1: boot partition file
-copyFromContainer() {
+copyBootFile() {
 	local _file="$1"
 	mkdir -p "$boot_mountpoint/$(dirname "$_file")"
-	balena cp "$container_id:/resin-boot/$_file" "$boot_mountpoint/$_file.new"
-	sync -f $boot_mountpoint
-	mv "$boot_mountpoint/$_file.new" "$boot_mountpoint/$_file"
-	sync -f $boot_mountpoint
+	if cp "/resin-boot/$_file" "$boot_mountpoint/$_file.new"; then
+		sync -f $boot_mountpoint
+		mv "$boot_mountpoint/$_file.new" "$boot_mountpoint/$_file"
+		sync -f $boot_mountpoint
+	else
+		# Cleanup all new files we deployed
+		find "$boot_mountpoint" -type f -name "*.new" -exec rm -f {} \;
+		for file in $new_deployed_files; do
+			rm -f "$boot_mountpoint/$file"
+		done
+		exit 1
+	fi
 }
 
-# Deploys file from container to boot partition
+# Deploys files to boot partition
 # Arguments:
 # 	$1: file path relative to boot partition's root
 deploy() {
 	local _file="$1"
 	printf "[INFO] Deploying %s%s..." "${boot_mountpoint}" "${_file}"
-	if isModified "$_file"; then
-		if isBlacklisted "$_file"; then
-			printf " file modified but blacklisted. Ignoring.\n"
+	if isBlacklisted "$_file"; then
+		printf " file modified but blacklisted. Ignoring.\n"
+	else
+		if [ -f "$boot_mountpoint/$_file" ]; then
+			if isModified "$_file"; then
+				printf " overwriting modified file..."
+				copyBootFile "$_file"
+				printf " done.\n"
+			else
+				copyBootFile "$_file"
+				printf " done.\n"
+			fi
 		else
-			printf " overwriting modified file..."
-			copyFromContainer "$_file"
+			new_deployed_files="$new_deployed_files $_file"
+			printf " new file..."
+			copyBootFile "$_file"
 			printf " done.\n"
 		fi
-	else
-		copyFromContainer "$_file"
-		printf " done.\n"
 	fi
 }
 
@@ -90,47 +104,31 @@ deploy() {
 # MAIN
 #
 
-export DOCKER_HOST="unix:///var/run/balena-host.sock"
-
-if [ -z "$container_id" ]; then
-	echo "[ERROR] Container ID provided as an argument is needed."
-	exit 1
-fi
-
-bootfiles_list_new="/tmp/$(basename $bootfiles_list).new"
-balena cp "$container_id:$bootfiles_list" "$bootfiles_list_new"
-
-# Do a dry run for copying the boot files and figure out if we would get in a
+# Do a dry run for copying the boot files and figure out if we would get in an
 # out of space situation
-boot_mnt="$(findmnt --noheadings --canonicalize --output TARGET /dev/disk/by-label/resin-boot)"
-boot_space="$(df -k --output=avail /mnt/boot | grep -v Avail)"
+boot_space="$(df -B1 --output=avail $boot_mountpoint | grep -v Avail)"
 available="$boot_space"
-available_threshold="512" # All sizes in K
-echo -n "[INFO] Checking if boot partition can accommodate the new update... "
-while read entry; do
-	filename="$(echo $entry | cut -d' ' -f1)"
-	if isBlacklisted $filename; then
+available_threshold="524288" # All sizes in bytes
+printf "[INFO] Checking if boot partition can accommodate the new update... "
+for filename in $(find /resin-boot -type f | sed 's#/resin-boot##g'); do
+	if isBlacklisted "$filename"; then
 		continue
 	fi
-	filesize="$(echo $entry | cut -d' ' -f2)"
-	if [ "$filesize" = "$filename" ]; then
-		# Old OS didn't include sizes too so we skip this check
-		echo -n "skipped... "
-		break
-	fi
-	available="$(expr $available - $filesize)"
-	if [ -f "${boot_mnt}${filename}" ]; then
-		available="$(expr $available + $(du -sk ${boot_mnt}${filename} | cut -f1))"
-	fi
+	filesize="$(du -b "/resin-boot${filename}" | cut -f1)"
+	available="$((available - filesize))"
 	if [ "$available" -lt "$available_threshold" ]; then
+		echo "fail."
 		echo "[ERROR] Boot files copy operations will fail with out of space error."
 		exit 1
 	fi
-done < "$bootfiles_list_new"
+	if [ -f "${boot_mountpoint}${filename}" ]; then
+		available="$((available + $(du -b "${boot_mountpoint}${filename}" | cut -f1)))"
+	fi
+done
 echo "success."
 
 # Deploy all files in the bootfiles list
-while read entry; do
-	filename="$(echo $entry | cut -d' ' -f1)"
+new_deployed_files=""
+for filename in $(find /resin-boot -type f | sed 's#/resin-boot##g'); do
 	deploy "$filename"
-done < "$bootfiles_list_new"
+done

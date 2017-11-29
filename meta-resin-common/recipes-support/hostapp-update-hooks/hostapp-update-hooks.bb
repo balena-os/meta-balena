@@ -21,7 +21,6 @@ python __anonymous() {
 
 FILES_${PN} = " \
 	${sysconfdir}/hostapp-update-hooks.d \
-	${RESIN_HOSTAPP_HOOKS_LIST} \
 	"
 
 RDEPENDS_${PN} = " \
@@ -31,12 +30,10 @@ RDEPENDS_${PN} = " \
 
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/
-	mkdir -p ${D}$(dirname ${RESIN_HOSTAPP_HOOKS_LIST})
 	for h in ${HOSTAPP_HOOKS}; do
 		install -m 0755 $h ${D}${sysconfdir}/hostapp-update-hooks.d
-		echo "${sysconfdir}/hostapp-update-hooks.d/$h" >> ${D}${RESIN_HOSTAPP_HOOKS_LIST}
 	done
 
-	sed -i -e 's:@RESIN_BOOTFILES_LIST@:${RESIN_BOOTFILES_LIST}:g; s:@RESIN_BOOT_FINGERPRINT@:${RESIN_BOOT_FINGERPRINT}:g;' \
+	sed -i -e 's:@RESIN_BOOT_FINGERPRINT@:${RESIN_BOOT_FINGERPRINT}:g;' \
 	 	${D}${sysconfdir}/hostapp-update-hooks.d/0-bootfiles
 }
