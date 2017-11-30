@@ -45,6 +45,7 @@ INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
 RESIN_BOOTLOADER_CONFIG=resinOS_uEnv.txt
+CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -99,6 +100,10 @@ fi
 inform "Flash internal device... will take around 5 minutes... "
 internal_dev=""
 for d in $INTERNAL_DEVICE_KERNEL; do
+    if [ "$CURRENT_ROOT" = "$d" ]; then
+        inform "$d is our install media, skip it..."
+        continue
+    fi
     if [ -b "/dev/$d" ]; then
         internal_dev=$d
         break
