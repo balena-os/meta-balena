@@ -205,9 +205,6 @@ if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${RESIN_BOOTLOADER_CONFIG}" ]; 
         cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 fi
 
-inform "Board specific flash procedure..."
-/usr/bin/resin-init-flasher-board
-
 # Give a chance for the device to register
 STARTTIME=$(date +%s)
 ENDTIME=$(date +%s)
@@ -228,6 +225,9 @@ cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
 sync
+
+inform "Board specific flash procedure..."
+/usr/bin/resin-init-flasher-board
 
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 
