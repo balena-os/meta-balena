@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v2.8.1
+## (2017-12-01)
+
+* Kernel-modules-headers: Include aarch64 fix [Theodor Gherzan]
+
+# v2.8.0
+## (2017-11-30)
+
+* Support for legacy bootloaders [Theodor Gherzan]
+* Update NetworkManager to version 1.10.0 [Florin Sarbu]
+* Update aufs for kernel versions from 4.4 to 4.13 [Florin Sarbu]
+
 # v2.7.8
 ## (2017-11-17)
 
