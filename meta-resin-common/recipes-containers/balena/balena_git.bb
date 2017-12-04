@@ -111,7 +111,7 @@ do_install() {
   install -m 0755 ${S}/bundles/${BALENA_VERSION}/dynbinary-balena/balena ${D}/${bindir}/balena
   install -d ${D}/boot
   install -m 0755 ${S}/cmd/mobynit/mobynit ${D}/boot/init
-  echo ${DOCKER_STORAGE} > ${D}/boot/storage-driver
+  echo ${BALENA_STORAGE} > ${D}/boot/storage-driver
 
   ln -sf balena ${D}/${bindir}/balenad
   ln -sf balena ${D}/${bindir}/balena-containerd
@@ -124,17 +124,17 @@ do_install() {
   install -m 0644 ${S}/contrib/init/systemd/balena.* ${D}/${systemd_unitdir}/system
 
   install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
-  sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
+  sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
 
   install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
-  sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${systemd_unitdir}/system/balena-host.service
+  sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena-host.service
 
   install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
 
   if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
     install -d ${D}${sysconfdir}/systemd/system/balena.service.d
     install -c -m 0644 ${WORKDIR}/balena.conf.systemd ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
-    sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
+    sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
   fi
 
   install -d ${D}/home/root/.docker

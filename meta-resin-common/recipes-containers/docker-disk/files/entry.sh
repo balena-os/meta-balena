@@ -22,8 +22,8 @@ mkdir -p /resin-data/docker
 mkdir -p /resin-data/resin-data
 
 # Start docker with the created image
-echo "Starting docker daemon with $DOCKER_STORAGE storage driver."
-docker daemon -g /resin-data/docker -s $DOCKER_STORAGE &
+echo "Starting docker daemon with $BALENA_STORAGE storage driver."
+docker daemon -g /resin-data/docker -s $BALENA_STORAGE &
 echo "Waiting for docker to become ready.."
 STARTTIME=$(date +%s)
 ENDTIME=$(date +%s)

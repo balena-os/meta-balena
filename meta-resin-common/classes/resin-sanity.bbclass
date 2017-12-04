@@ -10,7 +10,9 @@ def resinos_build_configuration():
 	success = True
 	if d.getVar('PACKAGE_CLASSES', True) != "package_ipk":
 		bb.warn("ResinOS distro depends on opkg packages (ipk). Make sure PACKAGE_CLASSES is set on package_ipk.")
-	if d.getVar('DOCKER_STORAGE', True) not in ['aufs', 'overlay2']:
+	if d.getVar('DOCKER_STORAGE', True):
+		bb.warn("DOCKER_STORAGE variable was replaced by BALENA_STORAGE. Please update your build configuration.")
+	if d.getVar('BALENA_STORAGE', True) not in ['aufs', 'overlay2']:
 		bb.error("ResinOS supports only aufs and overlay2 as docker storage drivers.")
 		success = False
 	return success

@@ -23,7 +23,7 @@ do_compile () {
     mkdir -p ${B}/work
 
     cp Dockerfile create mkfs.hostapp-ext4 ${B}/work/
-    sed -i "s/@DOCKER_STORAGE@/${DOCKER_STORAGE}/g" ${B}/work/create
+    sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${B}/work/create
 
     IMAGE_ID=$(DOCKER_API_VERSION=1.22 docker build ${B}/work | grep -o -E '[a-z0-9]{12}' | tail -n1)
     DOCKER_API_VERSION=1.22 docker save "$IMAGE_ID" > ${B}/work/mkfs-hostapp-ext4-image.tar

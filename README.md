@@ -117,7 +117,7 @@ Hint: Modifing any of the TARGET_* variables, will retrigger the generation of t
 
 ### Docker storage driver
 
-By the default the build system will set all the bits needed for the docker to be able to use the `aufs` storage driver. This can be changed by defining `DOCKER_STORAGE` in your local.conf. It supports `aufs` and `overlay2`.
+By the default the build system will set all the bits needed for the docker to be able to use the `aufs` storage driver. This can be changed by defining `BALENA_STORAGE` in your local.conf. It supports `aufs` and `overlay2`.
 
 ## Devices support
 
