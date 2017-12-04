@@ -16,6 +16,7 @@ bootfiles_blacklist="\
 	/splash/resin-logo.png \
 	"
 boot_mountpoint="/mnt/boot"
+DURING_UDPATE=${DURING_UPDATE:-0}
 
 # Checks if a file is present in the blacklist
 # Arguments:
@@ -63,12 +64,14 @@ copyBootFile() {
 		mv "$boot_mountpoint/$_file.new" "$boot_mountpoint/$_file"
 		sync -f $boot_mountpoint
 	else
-		# Cleanup all new files we deployed
-		find "$boot_mountpoint" -type f -name "*.new" -exec rm -f {} \;
-		for file in $new_deployed_files; do
-			rm -f "$boot_mountpoint/$file"
-		done
-		exit 1
+		if [ "$DURING_UPDATE" = "1" ]; then
+			# Cleanup all new files we deployed
+			find "$boot_mountpoint" -type f -name "*.new" -exec rm -f {} \;
+			for file in $new_deployed_files; do
+				rm -f "$boot_mountpoint/$file"
+			done
+			exit 1
+		fi
 	fi
 }
 
@@ -79,7 +82,7 @@ deploy() {
 	local _file="$1"
 	printf "[INFO] Deploying %s%s..." "${boot_mountpoint}" "${_file}"
 	if isBlacklisted "$_file"; then
-		printf " file modified but blacklisted. Ignoring.\n"
+		printf "file blacklisted. Ignoring.\n"
 	else
 		if [ -f "$boot_mountpoint/$_file" ]; then
 			if isModified "$_file"; then
@@ -114,15 +117,17 @@ for filename in $(find /resin-boot -type f | sed 's#/resin-boot##g'); do
 	if isBlacklisted "$filename"; then
 		continue
 	fi
-	filesize="$(du -b "/resin-boot${filename}" | cut -f1)"
+	filesize=$(stat --format %s "/resin-boot${filename}")
 	available="$((available - filesize))"
 	if [ "$available" -lt "$available_threshold" ]; then
 		echo "fail."
 		echo "[ERROR] Boot files copy operations will fail with out of space error."
-		exit 1
+		if [ "$DURING_UPDATE" = "1" ]; then
+			exit 1
+		fi
 	fi
 	if [ -f "${boot_mountpoint}${filename}" ]; then
-		available="$((available + $(du -b "${boot_mountpoint}${filename}" | cut -f1)))"
+		available="$((available + $(stat --format %s "${boot_mountpoint}${filename}")))"
 	fi
 done
 echo "success."
