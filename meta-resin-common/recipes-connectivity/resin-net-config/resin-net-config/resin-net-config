@@ -31,4 +31,17 @@ for dns in $DNS_SERVERS; do
 	echo "server=$dns" >> $DNS_SERVER_FILE
 done
 
+# Setup DNS bridge interface
+DNS_INTERFACE_NAME="resin-dns"
+DNS_INTERFACE_IP="10.114.102.1"
+if [ ! -d "/sys/class/net/${DNS_INTERFACE_NAME}" ]; then
+	ip link add name ${DNS_INTERFACE_NAME} type bridge
+fi
+if [ "$(cat /sys/class/net/${DNS_INTERFACE_NAME}/operstate)" = "down" ]; then
+	ip link set ${DNS_INTERFACE_NAME} up
+fi
+if [ "$(ip addr show ${DNS_INTERFACE_NAME} | grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | grep -o "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*")" != "${DNS_INTERFACE_IP}" ]; then
+	ip address add ${DNS_INTERFACE_IP}/24 dev ${DNS_INTERFACE_NAME}
+fi
+
 exit 0
