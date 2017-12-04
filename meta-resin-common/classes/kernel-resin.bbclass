@@ -85,7 +85,7 @@ RESIN_CONFIGS ?= " \
     reduce-size \
     security \
     zram \
-    ${DOCKER_STORAGE} \
+    ${BALENA_STORAGE} \
     "
 
 #
@@ -455,14 +455,14 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
 
-    docker_storage = d.getVar('DOCKER_STORAGE', True)
-    bb.note("Kernel will be configured for " + docker_storage + " docker storage driver.")
+    balena_storage = d.getVar('BALENA_STORAGE', True)
+    bb.note("Kernel will be configured for " + balena_storage + " balena storage driver.")
 
     # If overlay2, we assume support in the kernel source so no need for extra
     # patches
-    if docker_storage == "overlay2":
+    if balena_storage == "overlay2":
         if int(kernelversion_major) < 4:
-            bb.fatal("overlay2 is only available from kernel version 4.0. Can't use overlay2 as DOCKER_STORAGE.")
+            bb.fatal("overlay2 is only available from kernel version 4.0. Can't use overlay2 as BALENA_STORAGE.")
         return
 
     # Everything from here is for aufs
@@ -566,12 +566,12 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
 
 # add our task to task queue - we need the kernel version (so we need to have the sources unpacked and patched) in order to know what aufs patches version we fetch and unpack
 addtask kernel_resin_aufs_fetch_and_unpack after do_patch before do_configure
-kernel_resin_aufs_fetch_and_unpack[vardeps] += "DOCKER_STORAGE"
+kernel_resin_aufs_fetch_and_unpack[vardeps] += "BALENA_STORAGE"
 
 # copy needed aufs files and apply aufs patches
 apply_aufs_patches () {
     # bail out if it looks like the kernel source tree already has the fs/aufs directory
-    if [ -d ${S}/fs/aufs ] || [ "${DOCKER_STORAGE}" != "aufs" ]; then
+    if [ -d ${S}/fs/aufs ] || [ "${BALENA_STORAGE}" != "aufs" ]; then
         exit
     fi
     cp -r ${WORKDIR}/aufs_standalone/Documentation ${WORKDIR}/aufs_standalone/fs ${S}

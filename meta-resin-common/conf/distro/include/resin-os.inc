@@ -81,7 +81,12 @@ INITRAMFS_TASK = ""
 PACKAGE_CLASSES ?= "package_ipk"
 
 # Default the docker storage driver to aufs
-DOCKER_STORAGE ?= "aufs"
+BALENA_STORAGE ?= "aufs"
+python () {
+	docker_storage = d.getVar('DOCKER_STORAGE', True)
+	if docker_storage:
+		d.setVar('BALENA_STORAGE', docker_storage)
+}
 
 # Partition fingerprints files
 RESIN_FINGERPRINT_EXT ?= "fingerprint"

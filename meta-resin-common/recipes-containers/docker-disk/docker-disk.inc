@@ -40,7 +40,7 @@ do_compile () {
     DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
 
     $DOCKER build -t looper -f ${WORKDIR}/Dockerfile ${WORKDIR}
-    $DOCKER run --rm --privileged -e DOCKER_STORAGE=${DOCKER_STORAGE} -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
+    $DOCKER run --rm --privileged -e BALENA_STORAGE=${BALENA_STORAGE} -e PARTITION_SIZE=${PARTITION_SIZE} -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/export looper
 }
 do_compile[vardeps] += "PARTITION_SIZE TARGET_REPOSITORY TARGET_TAG"
 
