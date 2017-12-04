@@ -70,6 +70,20 @@ sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
 
+if [ "$hooks" = 1 ]; then
+	# Run the defined hooks in the host OS we update to
+	if balena run --rm -v /mnt:/mnt -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
+		echo "New hooks ran successfully."
+	else
+		# Something went wrong with the new hooks. Run the current ones to
+		# cleanup the system.
+		echo "Failed to run the new hooks. Running current hooks... "
+		hostapp-update-hooks || true
+		echo "Update failed."
+		exit 1
+	fi
+fi
+
 # Mark it as current hostapp
 ln -srf "$SYSROOT/hostapps/$CONTAINER_ID" "$SYSROOT/current.new"
 sync -f "$SYSROOT"
@@ -85,24 +99,6 @@ echo $((cur_counter + 1)) > "$SYSROOT/counter.new"
 sync -f "$SYSROOT"
 mv "$SYSROOT/counter.new" "$SYSROOT/counter"
 sync -f "$SYSROOT"
-
-if [ "$hooks" = 1 ]; then
-	# Run all the defined hooks in the host OS we update to
-	if balena run -v /mnt:/mnt -v /mnt/sysroot/inactive:/mnt/sysroot/active --rm "$HOSTAPP_IMAGE" bash -ec "for hook in /etc/hostapp-update-hooks.d/*; do \$hook; done"; then
-		echo "New hooks ran successfully."
-	else
-		# Something went wrong with the new hooks. Run the current ones to
-		# cleanup the system.
-		echo "Failed to run the new hooks. Running current hooks... "
-		for hook in /etc/hostapp-update-hooks.d/*; do
-			# Try to recover as much as possible so run all hooks without
-			# failing on error
-			"$hook" || true
-		done
-		echo "Update failed."
-		exit 1
-	fi
-fi
 
 if [ "$reboot" = 1 ]; then
 	reboot
