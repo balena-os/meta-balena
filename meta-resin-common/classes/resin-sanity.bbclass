@@ -13,7 +13,7 @@ def resinos_build_configuration():
 	if d.getVar('DOCKER_STORAGE', True):
 		bb.warn("DOCKER_STORAGE variable was replaced by BALENA_STORAGE. Please update your build configuration.")
 	if d.getVar('BALENA_STORAGE', True) not in ['aufs', 'overlay2']:
-		bb.error("ResinOS supports only aufs and overlay2 as docker storage drivers.")
+		bb.error("ResinOS supports only aufs and overlay2 as balena storage drivers.")
 		success = False
 	return success
 
