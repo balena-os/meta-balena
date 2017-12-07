@@ -25,6 +25,7 @@ RDEPENDS_${PN} = " \
     resin-init-board \
     parted \
     resin-init-flasher-board \
+    util-linux-lsblk \
     "
 
 # This should be just fine
