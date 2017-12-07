@@ -113,7 +113,7 @@ boot_space="$(df -B1 --output=avail $boot_mountpoint | grep -v Avail)"
 available="$boot_space"
 available_threshold="524288" # All sizes in bytes
 printf "[INFO] Checking if boot partition can accommodate the new update... "
-for filepath in $(find /resin-boot -type f | sed 's#/^resin-boot##g'); do
+for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 	if isBlacklisted "$filepath"; then
 		continue
 	fi
@@ -134,6 +134,6 @@ echo "success."
 
 # Deploy all files in the bootfiles list
 new_deployed_files=""
-for filepath in $(find /resin-boot -type f | sed 's#/^resin-boot##g'); do
+for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 	deploy "$filepath"
 done
