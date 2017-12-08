@@ -16,6 +16,7 @@ SRC_URI = "\
   git://github.com/resin-os/balena.git;branch=${SRCBRANCH};nobranch=1 \
   file://balena.service \
   file://balena-host.service \
+  file://balena-healthcheck \
   file://var-lib-docker.mount \
   file://balena.conf.systemd \
 "
@@ -31,7 +32,7 @@ BALENA_VERSION = "17.06.0-dev"
 PV = "${BALENA_VERSION}+git${SRCREV}"
 
 DEPENDS_append_class-target = " systemd"
-RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd"
+RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd healthdog"
 RRECOMMENDS_${PN} += " kernel-module-nf-nat"
 DOCKER_PKG="github.com/docker/docker"
 
@@ -130,6 +131,9 @@ do_install() {
   sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena-host.service
 
   install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
+
+  mkdir -p ${D}/usr/lib/balena
+  install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
 
   if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
     install -d ${D}${sysconfdir}/systemd/system/balena.service.d
