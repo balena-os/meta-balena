@@ -2,13 +2,20 @@
 
 source /usr/sbin/resin-vars
 
+# The tmp supervisor.conf is used by the supervisor updater
+if [ -f /tmp/update-supervisor.conf ]; then
+    source /tmp/update-supervisor.conf
+else
+    source /etc/resin-supervisor/supervisor.conf
+fi
+
 SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' $SUPERVISOR_IMAGE:$SUPERVISOR_TAG)
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
 runSupervisor() {
     balena rm --force resin_supervisor || true
-    balena run --privileged --name resin_supervisor \
-        --net=host \
+    balena run -d --privileged --name resin_supervisor \
+        --net=host --restart=always \
         -v /var/run/balena.sock:/var/run/balena.sock \
         -v $CONFIG_PATH:/boot/config.json  \
         -v /mnt/data/apps.json:/boot/apps.json \
@@ -36,7 +43,7 @@ if [ -z "$SUPERVISOR_IMAGE_ID" ]; then
     systemctl start update-resin-supervisor
 elif [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
     # Supervisor image exists, and the current supervisor container is created from
-    balena start --attach resin_supervisor
+    balena start resin_supervisor
 else
     # No supervisor container exists or there's a different supervisor image to run
     runSupervisor
