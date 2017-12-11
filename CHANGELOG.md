@@ -1,6 +1,22 @@
 Change log
 -----------
 
+# v2.9.0
+## (2017-12-11)
+
+* Update supervisor to v6.5.1 [Pablo Carranza Velez]
+* Use healthcheck with systemd and healthdog for supervisor [Andrei Gherzan]
+* Update supervisor to v6.5.0 [Pablo Carranza Velez]
+* Fix openvpn reporting when connectivity goes out, due to a filesystem permissions issue [Pablo Carranza Velez]
+* Update balena cu include healthcheck support [Andrei Gherzan]
+* Add healthdog monitoring of balena [Andrei Gherzan]
+* Run the update container as privileged [Florin Sarbu]
+* Fix 0-bootfiles when running hooks [Andrei Gherzan]
+* Add the lsblk binary to the flasher rootfs [Florin Sarbu]
+* Add boot partition space check for 0-bootfiles hostapp-update hook [Andrei Gherzan]
+* Fix hostapp-update to run the hooks for the OS we update to [Andrei Gherzan]
+* Switch to balena [Andrei Gherzan]
+
 # v2.8.1
 ## (2017-12-01)
 
