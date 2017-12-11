@@ -25,6 +25,7 @@ SRC_URI += " \
     file://update-resin-supervisor \
     file://update-resin-supervisor.service \
     file://update-resin-supervisor.timer \
+    file://resin-supervisor-healthcheck \
     "
 
 SYSTEMD_SERVICE_${PN} = " \
@@ -37,12 +38,14 @@ FILES_${PN} += " \
     /resin-data \
     ${systemd_unitdir} \
     ${sysconfdir} \
+    /usr/lib/resin-supervisor \
     "
 
 RDEPENDS_${PN} = " \
     bash \
     balena \
     coreutils \
+    healthdog \
     resin-vars \
     systemd \
     curl \
@@ -95,6 +98,9 @@ do_install () {
             -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/*.service
     fi
+
+    install -d ${D}/usr/lib/resin-supervisor
+    install -m 0755 ${WORKDIR}/resin-supervisor-healthcheck ${D}/usr/lib/resin-supervisor/resin-supervisor-healthcheck
 }
 do_install[vardeps] += "DISTRO_FEATURES TARGET_REPOSITORY LED_FILE"
 

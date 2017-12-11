@@ -19,10 +19,11 @@ After=\
 Type=simple
 Restart=always
 RestartSec=10s
+WatchdogSec=60
 EnvironmentFile=/etc/resin-supervisor/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
 ExecStartPre=-@BINDIR@/balena stop resin_supervisor
-ExecStart=@BINDIR@/start-resin-supervisor
+ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/resin-supervisor/resin-supervisor-healthcheck @BINDIR@/start-resin-supervisor
 ExecStop=-@BINDIR@/balena stop resin_supervisor
 
 [Install]

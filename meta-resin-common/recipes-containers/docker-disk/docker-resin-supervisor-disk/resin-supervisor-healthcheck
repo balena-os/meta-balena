@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -o errexit
+
+if [ "$(balena inspect --format '{{.State.Health.Status}}' resin_supervisor)" = "unhealthy" ]; then
+    exit 1
+fi
