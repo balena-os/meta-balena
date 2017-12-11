@@ -10,7 +10,7 @@ pulling."
 inherit binary-compress
 FILES_COMPRESS = "/boot/init"
 
-SRCREV = "8d578b733f7d072c9d518392ff86347313501db5"
+SRCREV = "748e0c102458bbab56e2b928fdffcbf41c8a870c"
 SRCBRANCH = "17.06-resin"
 SRC_URI = "\
   git://github.com/resin-os/balena.git;branch=${SRCBRANCH};nobranch=1 \
