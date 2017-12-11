@@ -16,11 +16,7 @@ After=\
     etc-resin\x2dsupervisor.mount
 
 [Service]
-Type=simple
-Restart=always
-RestartSec=10s
-EnvironmentFile=/etc/resin-supervisor/supervisor.conf
-EnvironmentFile=-/tmp/update-supervisor.conf
+Type=oneshot
 ExecStartPre=-@BINDIR@/balena stop resin_supervisor
 ExecStart=@BINDIR@/start-resin-supervisor
 ExecStop=-@BINDIR@/balena stop resin_supervisor
