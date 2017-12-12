@@ -16,7 +16,7 @@ runSupervisor() {
         -v /proc/net/fib_trie:/mnt/fib_trie \
         -v /var/log/supervisor-log:/var/log \
         -v /:/mnt/root \
-        -e DOCKER_ROOT=/mnt/root/var/lib/balena \
+        -e DOCKER_ROOT=/mnt/root/var/lib/docker \
         -e DOCKER_SOCKET=/var/run/balena.sock \
         -e BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT \
         -e API_ENDPOINT=$API_ENDPOINT \
