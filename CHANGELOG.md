@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.9.1
+## (2017-12-12)
+
+* Update supervisor to v6.5.3 [Pablo Carranza Velez]
+* Pass /mnt/root/var/lib/docker as DOCKER_ROOT to the supervisor [Florin Sarbu]
+
 # v2.9.0
 ## (2017-12-11)
 
