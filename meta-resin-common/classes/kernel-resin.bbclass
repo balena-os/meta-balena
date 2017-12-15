@@ -138,6 +138,8 @@ RESIN_CONFIGS[balena] ?= " \
     CONFIG_EXT4_FS_POSIX_ACL=y \
     CONFIG_EXT4_FS_SECURITY=y \
     CONFIG_KEYS=y \
+    CONFIG_MEMCG=y \
+    CONFIG_MEMCG_SWAP=y \
     "
 
 RESIN_CONFIGS[aufs] = " \
