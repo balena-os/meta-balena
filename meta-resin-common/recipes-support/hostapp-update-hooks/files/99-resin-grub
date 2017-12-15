@@ -18,9 +18,10 @@ new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT)
 new_part_label=$(blkid "$new_part" | awk '{print $2}')
 
 printf "[INFO] Switching root partition to %s..." "$new_part_label..."
-sed "s/root=[^ ]* /"root=$new_part_label" /" /mnt/boot/EFI/BOOT/grub.cfg > /mnt/boot/EFI/BOOT/grub.cfg.new
+grub_cfg=$(find /mnt/boot/ -name grub.cfg)
+sed "s/root=[^ ]* /"root=$new_part_label" /" "$grub_cfg" > "$grub_cfg".new
 
-sync -f /mnt/boot/EFI/BOOT
-mv /mnt/boot/EFI/BOOT/grub.cfg.new /mnt/boot/EFI/BOOT/grub.cfg
-sync -f /mnt/boot/EFI/BOOT
+sync -f $(dirname "$grub_cfg")
+mv "$grub_cfg".new "$grub_cfg"
+sync -f $(dirname "$grub_cfg")
 printf " done.\n"
