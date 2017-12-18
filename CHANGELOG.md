@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.9.2
+## (2017-12-18)
+
+* Activate memory/swap cgroups in kernel [Andrei Gherzan]
+* Make the grub hostapp update hook also work with non-EFI grub configs [Florin Sarbu]
+
 # v2.9.1
 ## (2017-12-12)
 
