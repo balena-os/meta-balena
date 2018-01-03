@@ -7,5 +7,6 @@ inherit packagegroup
 
 RDEPENDS_${PN} = " \
     e2fsprogs-mke2fs \
+    lsof \
     usbutils \
     "
