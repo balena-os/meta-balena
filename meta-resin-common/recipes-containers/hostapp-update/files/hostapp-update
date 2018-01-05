@@ -6,13 +6,15 @@ local_image=""
 remote_image=""
 reboot=0
 hooks=1
+hooks_rollback=1
 
-while getopts 'f:i:rn' flag; do
+while getopts 'f:i:rnx' flag; do
 	case "${flag}" in
 	f) local_image=$(realpath "${OPTARG}") ;;
 	i) remote_image="${OPTARG}" ;;
 	r) reboot=1 ;;
 	n) hooks=0 ;;
+	x) hooks_rollback=0 ;;
 	*) error "Unexpected option ${flag}" ;;
 	esac
 done
@@ -75,10 +77,14 @@ if [ "$hooks" = 1 ]; then
 	if balena run --privileged --rm -v /mnt:/mnt -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
 		echo "New hooks ran successfully."
 	else
-		# Something went wrong with the new hooks. Run the current ones to
-		# cleanup the system.
-		echo "Failed to run the new hooks. Running current hooks... "
-		hostapp-update-hooks || true
+		# Something went wrong with the new hooks.
+		if [ "$hooks_rollback" = 1 ]; then
+			# Run the current ones to cleanup the system.
+			echo "Failed to run the new hooks. Running current hooks... "
+			hostapp-update-hooks || true
+		else
+			echo "Failed to run the new hooks... "
+		fi
 		echo "Update failed."
 		exit 1
 	fi
