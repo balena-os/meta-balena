@@ -22,6 +22,7 @@ RDEPENDS_${PN} += " \
     resin-info \
     resin-hostname \
     resin-state-reset \
+    resin-device-progress \
     ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util', '', d)} \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-provisioner', '', d)} \
