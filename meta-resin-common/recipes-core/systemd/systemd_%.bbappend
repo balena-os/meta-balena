@@ -10,6 +10,23 @@ SRC_URI_append = " \
     file://resin_update_state_probe \
     "
 
+python() {
+	import re
+
+	pv = d.getVar('PV', True)
+	srcuri = d.getVar('SRC_URI', True)
+
+	# Versions before 236 are affected by CVE-2017-15908
+	# https://nvd.nist.gov/vuln/detail/CVE-2017-15908
+	# Backport the relevant patch on the affected versions
+	m = re.search('([0-9]*)\+*(.*)',pv)
+	systemd_version = int(m.group(1))
+	if systemd_version <= 229:
+		d.setVar('SRC_URI', srcuri + ' file://0001-resolved-fix-loop-on-packets-with-pseudo-dns-types-229.patch')
+	elif systemd_version < 236:
+		d.setVar('SRC_URI', srcuri + ' file://0001-resolved-fix-loop-on-packets-with-pseudo-dns-types.patch')
+}
+
 FILES_${PN} += " \
     /srv \
     /etc/localtime \
