@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.9.3
+## (2018-01-09)
+
+* Add lsof package [Florin Sarbu]
+* Bring back resin-device-progress in resin-image [Andrei Gherzan]
+* Update supervisor to v6.5.7 [Pablo Carranza Velez]
+* Make hostapp-update-hooks rollback on failure optional [Gergely Imreh]
+
 # v2.9.2
 ## (2017-12-18)
 
