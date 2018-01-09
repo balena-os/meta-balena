@@ -74,7 +74,7 @@ sync -f "$SYSROOT"
 
 if [ "$hooks" = 1 ]; then
 	# Run the defined hooks in the host OS we update to
-	if balena run --privileged --rm -v /mnt:/mnt -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
+	if balena run --privileged --rm -v /dev:/dev -v /mnt:/mnt -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
 		echo "New hooks ran successfully."
 	else
 		# Something went wrong with the new hooks.
