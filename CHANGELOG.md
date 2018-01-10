@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.9.4
+## (2018-01-10)
+
+* Systemd: Backport patch to fix Remote DOS of systemd-resolve service [Andrei Gherzan]
+* Hostapp-update: Bind mount /dev from host so we can resolv labels [Andrei Gherzan]
+* NetworkManager: Allow managing "non-balena" bridge interfaces [Andrei Gherzan]
+
 # v2.9.3
 ## (2018-01-09)
 
