@@ -8,6 +8,3 @@ Conflicts=umount.target
 What=/dev/disk/by-state/active
 Where=/mnt/sysroot/active
 Type=auto
-
-[Install]
-WantedBy=multi-user.target

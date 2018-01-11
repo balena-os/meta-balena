@@ -8,6 +8,3 @@ Conflicts=umount.target
 What=/dev/disk/by-state/inactive
 Where=/mnt/sysroot/inactive
 Type=auto
-
-[Install]
-WantedBy=multi-user.target
