@@ -21,7 +21,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  Description=Show Plymouth Halt Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-halt.service
-+PartOf=mnt-boot.mount
++PartOf=mnt-boot.service
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 
@@ -37,7 +37,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  Description=Show Plymouth Reboot with kexec Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-kexec.service
-+PartOf=mnt-boot.mount
++PartOf=mnt-boot.service
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 
@@ -53,7 +53,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  Description=Show Plymouth Power Off Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-poweroff.service
-+PartOf=mnt-boot.mount
++PartOf=mnt-boot.service
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 
@@ -69,7 +69,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  Description=Show Plymouth Reboot Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-reboot.service
-+PartOf=mnt-boot.mount
++PartOf=mnt-boot.service
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 
@@ -87,9 +87,9 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
 -Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
 +Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service systemd-udev-settle.service
 -After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service
-+After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service mnt-boot.mount
++After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service mnt-boot.service
  Before=systemd-ask-password-plymouth.service
-+Requires=mnt-boot.mount
++Requires=mnt-boot.service
  ConditionKernelCommandLine=!plymouth.enable=0
 
  [Service]
