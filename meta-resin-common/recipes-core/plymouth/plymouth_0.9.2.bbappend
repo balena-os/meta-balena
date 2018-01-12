@@ -47,3 +47,14 @@ PACKAGECONFIG = ""
 RDEPENDS_${PN} = "bash"
 
 addtask deploy before do_package after do_install
+
+# TODO
+# systemd-ask-password-plymouth.service has a bug and ends up as an invalid
+# service. For now mask it as we don't use it anyway.
+pkg_postinst_${PN}_append () {
+	if [ -n "$D" ]; then
+		OPTS="--root=$D"
+	fi
+	systemctl $OPTS mask systemd-ask-password-plymouth.service
+	systemctl $OPTS mask systemd-ask-password-plymouth.path
+}
