@@ -1,10 +1,9 @@
 [Unit]
 Description=Balena Application Container Engine
 Documentation=https://www.balena.io/docs/getting-started
-After=network.target balena.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount
-Requires=balena.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount
 Wants=dnsmasq.service
-Before=dnsmasq.service
+Requires=balena.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount
+After=network.target balena.socket var-lib-docker.mount etc-docker.mount home-root-.docker.mount dnsmasq.service
 
 [Service]
 Type=notify
