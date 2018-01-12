@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin Hostname Configuration
-Requires=mnt-boot.mount resin-device-uuid.service etc-hostname.mount
-After=mnt-boot.mount resin-device-uuid.service etc-hostname.mount
+Requires=mnt-boot.service resin-device-uuid.service etc-hostname.mount
+After=mnt-boot.service resin-device-uuid.service etc-hostname.mount
 
 [Service]
 Type=oneshot
