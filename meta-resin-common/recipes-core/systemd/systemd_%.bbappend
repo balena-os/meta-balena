@@ -9,6 +9,7 @@ SRC_URI_append = " \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
     file://0002-core-Avoid-empty-directory-warning-when-we-are-bind-.patch \
+    file://0001-Don-t-run-specific-services-in-container.patch \
     "
 
 python() {
