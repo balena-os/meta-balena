@@ -1,0 +1,16 @@
+[Unit]
+Description=Resin state partition mountpoint
+DefaultDependencies=no
+Requires=systemd-udev-settle.service
+After=systemd-udev-settle.service
+Before=umount.target
+Conflicts=umount.target
+ConditionVirtualization=!docker
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/mount /dev/disk/by-label/resin-state /mnt/state
+
+[Install]
+WantedBy=multi-user.target
