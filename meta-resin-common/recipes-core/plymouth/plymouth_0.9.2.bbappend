@@ -5,6 +5,7 @@ inherit deploy
 SRC_URI_append = " \
     file://0001-plymouth-systemd-append.patch \
     file://0002-plymouth-default-theme-is-resin.patch \
+    file://0003-dont-start-services-in-container.patch \
     file://resin-logo.png \
     file://resin.script \
     file://resin.plymouth \
