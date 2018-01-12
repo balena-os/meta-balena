@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.9.6
+## (2018-01-12)
+
+* Update supervisor to v6.5.9 [Pablo Carranza Velez]
+
 # v2.9.5
 ## (2018-01-11)
 
