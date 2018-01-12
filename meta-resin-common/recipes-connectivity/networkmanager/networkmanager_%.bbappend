@@ -9,6 +9,7 @@ SRC_URI_append = " \
     file://NetworkManager.conf \
     file://README.ignore \
     file://resin-sample.ignore \
+    file://nm-tmpfiles.conf \
     "
 
 RDEPENDS_${PN}_append = " resin-net-config resolvconf"
@@ -25,6 +26,9 @@ PACKAGECONFIG[introspection] = "--enable-introspection=no,,,"
 PACKAGECONFIG_append = " introspection"
 
 do_install_append() {
+    install -d ${D}${sysconfdir}/tmpfiles.d
+    install -m 0644 ${WORKDIR}/nm-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
+
     install -m 0644 ${WORKDIR}/NetworkManager.conf ${D}${sysconfdir}/NetworkManager/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
