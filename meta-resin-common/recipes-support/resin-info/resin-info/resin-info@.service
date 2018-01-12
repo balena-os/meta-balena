@@ -1,6 +1,7 @@
 [Unit]
 Description=Resin info on %I
 After=resin-supervisor.service
+ConditionVirtualization=!docker
 
 [Service]
 Type=oneshot
