@@ -12,9 +12,9 @@ SRC_URI = " \
     file://etc-systemd-timesyncd.conf.mount \
     file://home-root-.docker.mount \
     file://home-root-.rnd.mount \
-    file://mnt-boot.mount \
-    file://mnt-data.mount \
-    file://mnt-state.mount \
+    file://mnt-boot.service \
+    file://mnt-data.service \
+    file://mnt-state.service \
     file://mnt-sysroot-active.mount \
     file://mnt-sysroot-inactive.mount \
     file://var-lib-systemd.mount \
@@ -36,9 +36,9 @@ SYSTEMD_SERVICE_${PN} = " \
     etc-systemd-timesyncd.conf.mount \
     home-root-.docker.mount \
     home-root-.rnd.mount \
-    mnt-boot.mount \
-    mnt-data.mount \
-    mnt-state.mount \
+    mnt-boot.service \
+    mnt-data.service \
+    mnt-state.service \
     mnt-sysroot-active.mount \
     mnt-sysroot-inactive.mount \
     var-lib-systemd.mount \
@@ -81,9 +81,9 @@ do_install () {
             ${WORKDIR}/etc-systemd-timesyncd.conf.mount \
             ${WORKDIR}/home-root-.docker.mount \
             ${WORKDIR}/home-root-.rnd.mount \
-            ${WORKDIR}/mnt-boot.mount \
-            ${WORKDIR}/mnt-data.mount \
-            ${WORKDIR}/mnt-state.mount \
+            ${WORKDIR}/mnt-boot.service \
+            ${WORKDIR}/mnt-data.service \
+            ${WORKDIR}/mnt-state.service \
             ${WORKDIR}/mnt-sysroot-active.mount \
             ${WORKDIR}/mnt-sysroot-inactive.mount \
             ${WORKDIR}/var-lib-systemd.mount \
