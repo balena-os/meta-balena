@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device uuid
-Requires=mnt-boot.mount home-root-.rnd.mount
-After=mnt-boot.mount home-root-.rnd.mount
+Requires=mnt-boot.service home-root-.rnd.mount
+After=mnt-boot.service home-root-.rnd.mount
 
 [Service]
 Type=oneshot
