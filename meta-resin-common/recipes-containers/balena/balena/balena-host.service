@@ -1,10 +1,9 @@
 [Unit]
 Description=Balena Application Container Engine (host)
 Documentation=https://www.balena.io/docs/getting-started
-After=network.target mnt-sysroot-active.mount mnt-sysroot-inactive.mount
 Wants=dnsmasq.service
 Requires=mnt-sysroot-active.mount mnt-sysroot-inactive.mount
-Before=dnsmasq.service
+After=network.target mnt-sysroot-active.mount mnt-sysroot-inactive.mount dnsmasq.service
 
 [Service]
 Type=notify
