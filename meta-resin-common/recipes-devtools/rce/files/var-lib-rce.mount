@@ -1,7 +1,7 @@
 [Unit]
 Description=RCE data mountpoint
-Requires=mnt-data.mount
-After=mnt-data.mount
+Requires=mnt-data.service
+After=mnt-data.service
 
 [Mount]
 What=/mnt/data/rce
