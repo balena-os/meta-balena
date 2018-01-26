@@ -1,3 +1,5 @@
+inherit deploy
+
 # Add custom resin fields
 OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE VARIANT VARIANT_ID"
 
@@ -69,3 +71,11 @@ python do_fix_quotes () {
             f.write('{0}={1}\n'.format(field, value))
 }
 addtask fix_quotes after do_compile before do_install
+
+do_deploy() {
+    # Issue #906
+    # Make the os-release available in the deploy directory as well so we can
+    # include it in the boot partition
+    install -m 644 ${D}/etc/os-release ${DEPLOYDIR}/os-release
+}
+addtask do_deploy before do_package after do_install
