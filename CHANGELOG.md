@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.9.7
+## (2018-01-26)
+
+* Install os-release file in the boot partition [Andrei Gherzan]
+* Update balena to include locks fix [Andrei Gherzan]
+* Healthdog: Fix RPATH on newer meta-rust [Andrei Gherzan]
+* Update supervisor to v6.6.0 [Pablo Carranza Velez]
+
 # v2.9.6
 ## (2018-01-12)
 
