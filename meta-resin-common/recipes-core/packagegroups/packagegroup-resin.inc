@@ -13,4 +13,5 @@ RDEPENDS_${PN} = " \
     rsync \
     kernel-modules \
     os-release \
+    less \
     "
