@@ -95,6 +95,11 @@ Without any other configuration, the build will leave the Data partition without
 * TARGET_REPOSITORY - the image name wanted to be injected
 * TARGET_TAG - the image tag wanted to be injected. If not defined it will default to `latest`. Otherwise will use the specified value.
 
+You can also load a specific docker image from a custom private registry by using the following variables:
+* PRIVATE_REGISTRY - the private registry to login
+* PRIVATE_REGISTRY_USER - the user name to use to login to the private registry
+* PRIVATE_REGISTRY_PASSWORD - the user password to use to login to the private registry
+
 Example: having a non-connectable image without any docker image preloaded - add/set `RESIN_CONNECTABLE="0"` to build's `local.conf`.
 
 Example: having a non-connectable image with ubuntu:latest docker image preloaded - add/set `RESIN_CONNECTABLE = "0"` and `TARGET_REPOSITORY = "ubuntu"` to build's `local.conf`.
