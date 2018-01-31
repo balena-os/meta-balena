@@ -32,6 +32,11 @@ do
 done
 echo "Docker started."
 
+if [ -n "${PRIVATE_REGISTRY}" ] && [ -n "${PRIVATE_REGISTRY_USER}" ] && [ -n "${PRIVATE_REGISTRY_PASSWORD}" ]; then
+    echo "login ${PRIVATE_REGISTRY}..."
+    docker login -u "${PRIVATE_REGISTRY_USER}" -p "${PRIVATE_REGISTRY_PASSWORD}" "${PRIVATE_REGISTRY}"
+fi
+
 if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
     echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}..."
 	docker pull "${TARGET_REPOSITORY}:${TARGET_TAG}"

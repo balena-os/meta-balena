@@ -47,6 +47,9 @@ do_compile () {
     $DOCKER run --privileged --rm -e BALENA_STORAGE=${BALENA_STORAGE} \
         -e USER_ID=$(id -u) -e USER_GID=$(id -u) \
         -e TARGET_REPOSITORY=${TARGET_REPOSITORY} -e TARGET_TAG=${TARGET_TAG} \
+        -e PRIVATE_REGISTRY="${PRIVATE_REGISTRY}" \
+        -e PRIVATE_REGISTRY_USER="${PRIVATE_REGISTRY_USER}" \
+        -e PRIVATE_REGISTRY_PASSWORD="${PRIVATE_REGISTRY_PASSWORD}" \
         -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}/resin-data:/resin-data \
         --name ${_container_name} ${_image_name}
     docker rmi ${_image_name}
