@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 help () {
     cat << EOF
@@ -53,6 +53,7 @@ if [ -f $CONFIG_PATH ]; then
          PUBNUB_SUBSCRIBE_KEY=\(.pubnubSubscribeKey // "")
          REGISTRY_ENDPOINT=\(.registryEndpoint // "")
          VPN_ENDPOINT=\(.vpnEndpoint // "")
+         VPN_PORT=\(.vpnPort // "")
          DELTA_ENDPOINT=\(.deltaEndpoint // "")
          CONFIG_HOSTNAME=\(.hostname // "")
          PERSISTENT_LOGGING=\(.persistentLogging // "")
@@ -68,9 +69,10 @@ if [ -f $CONFIG_PATH ]; then
          NTP_SERVERS=\(.ntpServers // "")
          DNS_SERVERS=\(.dnsServers // "")
          "' $CONFIG_PATH)"
-    if [ -z "$PERSISTENT_LOGGING" ]; then
-        PERSISTENT_LOGGING=false
-    fi
+
+    # Various default values
+    PERSISTENT_LOGGING=${PERSISTENT_LOGGING:-false}
+    VPN_PORT=${VPN_PORT:-443}
 else
     echo "[WARNING] $0 : '$CONFIG_PATH' not found."
 fi
