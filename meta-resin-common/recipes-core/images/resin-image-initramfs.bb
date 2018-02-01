@@ -7,7 +7,7 @@ PACKAGE_INSTALL = " \
     base-passwd \
     busybox \
     initramfs-module-debug \
-    initramfs-module-fsckext4 \
+    initramfs-module-fsck \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
