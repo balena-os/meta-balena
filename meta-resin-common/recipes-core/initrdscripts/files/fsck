@@ -1,0 +1,21 @@
+#!/bin/sh
+
+fsck_enabled() {
+    # On flasher we don't run fsck
+    if [ -h /dev/disk/by-label/flash-boot ]; then
+        echo "[INFO] Flasher detected. We don't run fsck on the partitions when provisioning."
+        return 1
+    fi
+    return 0
+}
+
+fsck_run() {
+    # fsck uses mtab to see if a device is mounted
+    if [ ! -e "/etc/mtab" ]; then
+        ln -sf /proc/mounts /etc/mtab
+    fi
+    fsck.vfat -a -w /dev/disk/by-label/resin-boot
+    fsck.ext4 -p /dev/disk/by-label/resin-rootA
+    fsck.ext4 -p /dev/disk/by-label/resin-rootB
+    fsck.ext4 -p /dev/disk/by-label/resin-state
+}
