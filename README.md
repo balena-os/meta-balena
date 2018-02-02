@@ -130,13 +130,30 @@ We currently tested and provide explicit support for the following WiFi adapters
 
 ## Contributing
 
-To contribute send github pull requests targeting [this](https://github.com/resin-os/meta-resin) repository.
+### Waffle.io
+
+resin-os repositories use [https://waffle.io/resin-os/meta-resin](https://waffle.io/resin-os/meta-resin) to manage its issues (including PRs). We define there the issues flow and automatic rules to assign labels.
+
+### Development flow
+
+To contribute send github pull requests targeting [this](https://github.com/resin-os/meta-resin) or any [resin-os](https://github.com/resin-os) repository. Here are the steps you need to follow:
+
+1. Always work on a github issue - create one or make sure you have one in a resin-os repository.
+2. Create a branch using the following naming scheme:
+  * If the issue you are referencing is in the repository you are pushing to use the following branch namng scheme `<issue number>-<branch name>`. Example: 123-bug-fix.
+  * If the issue you are referencing is not in the repository you are pushing to, use the following branch naming scheme: `<username>/<repo>#<issue number>-<branch name>`. Example: resin-os/meta-resin#123-bug-fix.
+3. Work on the branch and when you're ready push to remote (as soon as you push the branch, the issue you referenced in the branch name will move to "In Progress").
+4. Usually the last commit in the patches set is a commit which adds an entry to the CHANGELOG.md file. We avoid this when the change is minor and doesn't impact the user experience.
+5. When branch work is ready, create a pull request:
+  * Add a short but descriptive title.
+  * Add description in which you need to mention @agherzan @telphan and @floion for review. This will move the issue and associated PR to "In Review".
+  * Optionally, if the PR completely fixes the referenced issue, you can merge them by adding "Fixes #123" in the description (followed the example). This will make the issue to get closed when the PR gets merged.
+  * The new pull request will be automatically placed in "In Progress" and the associated issue will be moved as well to "In Progress" if there is a "Fixes" line in description (as explained above).
+6. When at least two people from the ones you mentioned in the description give positive feedback (usually this means a "LGTM" comment), the PR can be merged. This will close the PR and if there is a "Fixes" line, it will close the associated issue too.
 
 Please refer to: [Yocto Contribution Guidelines](https://wiki.yoctoproject.org/wiki/Contribution_Guidelines#General_Information) and try to use the commit log format as stated there. Example:
 ```
 test.bb: I added a test
-
-[Issue #01]
 
 I'm going to explain here what my commit does in a way that history
 would be useful.
