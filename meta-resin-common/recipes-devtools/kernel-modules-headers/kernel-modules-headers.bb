@@ -34,7 +34,7 @@ do_deploy() {
     cp kernel_modules_headers.tar.gz ${DEPLOYDIR}
 }
 
-do_compile[depends] += "virtual/kernel:do_deploy"
+do_compile[depends] += "virtual/kernel:do_deploy virtual/kernel:do_patch"
 addtask deploy before do_package after do_install
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
