@@ -5,7 +5,7 @@ RESIN_CONNECTABLE_SRCURI = " \
     file://resin.conf \
     file://prepare-openvpn \
     file://prepare-openvpn.service \
-    file://openvpn-resin.service \
+    file://openvpn.service \
     file://upscript.sh \
     file://downscript.sh \
     "
@@ -18,7 +18,7 @@ SRC_URI_append = " ${@bb.utils.contains("RESIN_CONNECTABLE","1","${RESIN_CONNECT
 
 RDEPENDS_${PN} += "${@bb.utils.contains("RESIN_CONNECTABLE","1","bash jq resin-unique-key sed","",d)}"
 
-SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains("RESIN_CONNECTABLE","1","openvpn-resin.service prepare-openvpn.service","",d)}"
+SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains("RESIN_CONNECTABLE","1","openvpn.service prepare-openvpn.service","",d)}"
 
 do_install_append() {
     if [ ${RESIN_CONNECTABLE} -eq 1 ]; then
@@ -33,7 +33,7 @@ do_install_append() {
             install -m 0755 ${WORKDIR}/prepare-openvpn ${D}${bindir}
             install -d ${D}${systemd_unitdir}/system
             install -c -m 0644 ${WORKDIR}/prepare-openvpn.service ${D}${systemd_unitdir}/system
-            install -c -m 0644 ${WORKDIR}/openvpn-resin.service ${D}${systemd_unitdir}/system
+            install -c -m 0644 ${WORKDIR}/openvpn.service ${D}${systemd_unitdir}/system
             sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
                 -e 's,@SBINDIR@,${sbindir},g' \
                 -e 's,@BINDIR@,${bindir},g' \
