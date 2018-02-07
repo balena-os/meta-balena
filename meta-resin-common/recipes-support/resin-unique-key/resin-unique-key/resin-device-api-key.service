@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device api key
-Requires=mnt-boot.service home-root-.rnd.mount
-After=mnt-boot.service home-root-.rnd.mount resin-device-uuid.service
+Requires=resin-boot.service home-root-.rnd.mount
+After=resin-boot.service home-root-.rnd.mount resin-device-uuid.service
 
 [Service]
 Type=oneshot

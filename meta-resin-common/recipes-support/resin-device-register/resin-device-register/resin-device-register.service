@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device register
-Requires=mnt-boot.service resin-device-uuid.service resin-device-api-key.service
-After=mnt-boot.service resin-device-uuid.service resin-device-api-key.service
+Requires=resin-boot.service resin-device-uuid.service resin-device-api-key.service
+After=resin-boot.service resin-device-uuid.service resin-device-api-key.service
 
 [Service]
 Type=oneshot

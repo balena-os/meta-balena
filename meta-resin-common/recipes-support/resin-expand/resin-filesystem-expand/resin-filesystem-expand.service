@@ -3,7 +3,7 @@ Description=Expand resin-data partition
 DefaultDependencies=no
 Requires=systemd-udev-settle.service
 After=systemd-udev-settle.service
-Before=mnt-data.service umount.target
+Before=resin-data.service umount.target
 Conflicts=umount.target
 ConditionVirtualization=!docker
 
