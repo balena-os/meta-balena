@@ -1,7 +1,7 @@
 [Unit]
 Description=redsocks transparent proxy redirector
-Requires=mnt-boot.service resin-proxy-config.service
-After=mnt-boot.service resin-proxy-config.service dnsmasq.service
+Requires=resin-boot.service resin-proxy-config.service
+After=resin-boot.service resin-proxy-config.service dnsmasq.service
 ConditionPathExists=/mnt/boot/system-proxy/redsocks.conf
 
 [Service]

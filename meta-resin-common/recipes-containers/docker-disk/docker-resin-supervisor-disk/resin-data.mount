@@ -1,7 +1,7 @@
 [Unit]
 Description=resin-data bind mount
-Requires=mnt-data.service
-After=mnt-data.service
+Requires=resin-data.service
+After=resin-data.service
 
 [Mount]
 What=/mnt/data/resin-data

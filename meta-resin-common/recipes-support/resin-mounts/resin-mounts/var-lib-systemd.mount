@@ -1,8 +1,8 @@
 [Unit]
 Description=ResinOS persistent systemd state location
 DefaultDependencies=no
-Requires=mnt-state.service resin-state-reset.service systemd-tmpfiles-setup.service var-volatile-lib.service
-After=mnt-state.service resin-state-reset.service systemd-tmpfiles-setup.service var-volatile-lib.service
+Requires=resin-state.service resin-state-reset.service systemd-tmpfiles-setup.service var-volatile-lib.service
+After=resin-state.service resin-state-reset.service systemd-tmpfiles-setup.service var-volatile-lib.service
 Before=umount.target
 Conflicts=umount.target
 

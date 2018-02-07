@@ -1,7 +1,7 @@
 [Unit]
 Description=Dropbear Host Key Mount Point
-Requires=mnt-state.service resin-state-reset.service
-After=mnt-state.service resin-state-reset.service
+Requires=resin-state.service resin-state-reset.service
+After=resin-state.service resin-state-reset.service
 Before=dropbearkey.service
 
 [Mount]

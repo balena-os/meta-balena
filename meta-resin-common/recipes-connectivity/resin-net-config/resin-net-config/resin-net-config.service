@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin network configure service
-Requires=mnt-boot.service etc-NetworkManager-system\x2dconnections.mount
-After=mnt-boot.service etc-NetworkManager-system\x2dconnections.mount
+Requires=resin-boot.service etc-NetworkManager-system\x2dconnections.mount
+After=resin-boot.service etc-NetworkManager-system\x2dconnections.mount
 
 [Service]
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-net-config
