@@ -1,5 +1,5 @@
 [Unit]
-Description=OpenVPN Application On Resin
+Description=OpenVPN
 Requires=prepare-openvpn.service
 After=syslog.target network.target prepare-openvpn.service
 
