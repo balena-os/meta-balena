@@ -1,5 +1,5 @@
 [Unit]
-Description=Resin boot partition mountpoint
+Description=Resin state partition mount service
 DefaultDependencies=no
 Requires=systemd-udev-settle.service
 After=systemd-udev-settle.service
@@ -10,7 +10,8 @@ ConditionVirtualization=!docker
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/mount /dev/disk/by-label/resin-boot /mnt/boot
+ExecStart=/usr/bin/resin-partition-mounter --mount resin-state
+ExecStop=/usr/bin/resin-partition-mounter --umount resin-state
 
 [Install]
 WantedBy=multi-user.target

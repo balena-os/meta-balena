@@ -12,14 +12,15 @@ SRC_URI = " \
     file://etc-systemd-timesyncd.conf.mount \
     file://home-root-.docker.mount \
     file://home-root-.rnd.mount \
-    file://mnt-boot.service \
-    file://mnt-data.service \
-    file://mnt-state.service \
+    file://resin-boot.service \
+    file://resin-data.service \
+    file://resin-state.service \
     file://mnt-sysroot-active.mount \
     file://mnt-sysroot-inactive.mount \
     file://var-lib-systemd.mount \
     file://var-log-journal.mount \
     file://resin-bind.target \
+    file://resin-partition-mounter \
     "
 
 S = "${WORKDIR}"
@@ -36,9 +37,9 @@ SYSTEMD_SERVICE_${PN} = " \
     etc-systemd-timesyncd.conf.mount \
     home-root-.docker.mount \
     home-root-.rnd.mount \
-    mnt-boot.service \
-    mnt-data.service \
-    mnt-state.service \
+    resin-boot.service \
+    resin-data.service \
+    resin-state.service \
     mnt-sysroot-active.mount \
     mnt-sysroot-inactive.mount \
     var-lib-systemd.mount \
@@ -55,6 +56,8 @@ FILES_${PN} += " \
     ${systemd_unitdir} \
     "
 
+RDEPENDS_${PN} += "util-linux"
+
 do_install () {
     install -d ${D}/etc/docker
     ln -sf docker ${D}/etc/balena
@@ -63,6 +66,9 @@ do_install () {
     install -d ${D}/mnt/state
     install -d ${D}/mnt/sysroot/active
     install -d ${D}/mnt/sysroot/inactive
+
+    install -d ${D}${bindir}
+    install -m 755 ${WORKDIR}/resin-partition-mounter ${D}${bindir}
 
     install -d ${D}${systemd_unitdir}/system
 
@@ -81,9 +87,9 @@ do_install () {
             ${WORKDIR}/etc-systemd-timesyncd.conf.mount \
             ${WORKDIR}/home-root-.docker.mount \
             ${WORKDIR}/home-root-.rnd.mount \
-            ${WORKDIR}/mnt-boot.service \
-            ${WORKDIR}/mnt-data.service \
-            ${WORKDIR}/mnt-state.service \
+            ${WORKDIR}/resin-boot.service \
+            ${WORKDIR}/resin-data.service \
+            ${WORKDIR}/resin-state.service \
             ${WORKDIR}/mnt-sysroot-active.mount \
             ${WORKDIR}/mnt-sysroot-inactive.mount \
             ${WORKDIR}/var-lib-systemd.mount \

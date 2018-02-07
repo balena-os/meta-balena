@@ -1,0 +1,102 @@
+#!/bin/sh
+
+set -e
+
+help () {
+	cat << EOF
+Mount a resin partition label
+$0 <ARGUMENTS>
+
+ARGUMENTS:
+	-h, --help
+		Print this message.
+	--mount <LABEL>
+		Action: Mount label
+	--umount <LABEL>
+		Action: Unmount label
+EOF
+}
+
+# Parse arguments
+while [ "$#" -ge 1 ]; do
+	i="$1"
+	case $i in
+		-h|--help)
+			help
+			exit 0
+			;;
+		--mount)
+			if [ -z "$2" ]; then
+				echo "ERROR: $1 argument needs a value."
+			fi
+			part_label="$2"
+			action="mount"
+			shift
+			;;
+		--umount)
+			if [ -z "$2" ]; then
+				echo "ERROR: $1 argument needs a value."
+			fi
+			part_label="$2"
+			action="umount"
+			shift
+			;;
+		*)
+			echo "ERROR: Unrecognized option $1."
+			help
+			exit 1
+			;;
+	esac
+	shift
+done
+
+if [ -z "$action" ]; then
+	echo "ERROR: Required arguments not provided."
+	help
+	exit 1
+fi
+
+part_mountpoint="/mnt/${part_label#resin-}"
+label_path="/dev/disk/by-label/$part_label"
+
+if [ ! -d "$part_mountpoint" ]; then
+	echo "ERROR: Target mountpoint $part_mountpoint not found."
+	exit 1
+fi
+if [ ! -L "$label_path" ]; then
+	echo "ERROR: Could not find $part_label."
+	exit 1
+fi
+
+mounted=false
+for m in $(findmnt --output TARGET --canonicalize --noheading "$label_path"); do
+	if [ "$m" = "$part_mountpoint" ]; then
+		mounted=true
+		break
+	fi
+done
+
+case $action in
+	mount)
+		if [ "$mounted" = true ]; then
+			echo "INFO: $label_path already mounted in $part_mountpoint."
+			exit 0
+		else
+			echo "INFO: Mounting $label_path in $part_mountpoint."
+			mount "$label_path" "$part_mountpoint"
+		fi
+		;;
+	umount)
+		if [ "$mounted" = false ]; then
+			echo "INFO: $part_mountpoint already unmounted."
+			exit 0
+		else
+			echo "INFO: Unmounting $label_path."
+			umount "$part_mountpoint"
+		fi
+		;;
+	*)
+		echo "ERROR: Unknown action to carry on."
+		exit 1
+		;;
+esac
