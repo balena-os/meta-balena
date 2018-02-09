@@ -13,8 +13,8 @@ DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native"
 
 SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
 "
-SRC_URI[md5sum] = "67160b94c0eda90ebf95d1b620229ca1"
-SRC_URI[sha256sum] = "bc74326fa69ae8012f806e235f3d296144922669b952d4d4987dd0af645d5f68"
+SRC_URI[md5sum] = "b050387fdee6ca3530282de338ab94e4"
+SRC_URI[sha256sum] = "d465094fc6fc173354f5a00d212049056829cc245d60a9083f3c53f86a8f90ec"
 
 S = "${WORKDIR}/ModemManager-${PV}"
 
