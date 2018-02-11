@@ -13,6 +13,6 @@ SRC_URI[sha256sum] = "b865299ffd45d73412293369c9754b07637680e5c826915f097577cd27
 
 inherit autotools
 
-CFLAGS += "-std=c90"
+CFLAGS_append = " -std=c90"
 
 BBCLASSEXTEND = "native"
