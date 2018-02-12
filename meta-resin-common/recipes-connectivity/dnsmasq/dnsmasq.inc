@@ -13,10 +13,10 @@ SRC_URI = "http://www.thekelleys.org.uk/dnsmasq/${@['archive/', ''][float(d.getV
            file://dnsmasq-resolvconf.service \
            file://dnsmasq-noresolvconf.service \
            file://dnsmasq.conf.systemd \
-           file://resolv.conf \
+           file://resolv-conf.dnsmasq \
 "
 
-inherit pkgconfig update-rc.d systemd
+inherit pkgconfig update-rc.d systemd update-alternatives
 
 INITSCRIPT_NAME = "dnsmasq"
 INITSCRIPT_PARAMS = "defaults"
@@ -78,7 +78,7 @@ do_install () {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
         install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
-        install -c -m 0644 ${WORKDIR}/resolv.conf ${D}${sysconfdir}
+        install -c -m 0644 ${WORKDIR}/resolv-conf.dnsmasq ${D}${sysconfdir}
     fi
 }
 
@@ -88,3 +88,8 @@ RPROVIDES_${PN} += "${PN}-systemd"
 RREPLACES_${PN} += "${PN}-systemd"
 RCONFLICTS_${PN} += "${PN}-systemd"
 SYSTEMD_SERVICE_${PN} = "dnsmasq.service"
+
+ALTERNATIVE_${PN} = "resolv-conf"
+ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.dnsmasq"
+ALTERNATIVE_LINK_NAME[resolv-conf] = "${sysconfdir}/resolv.conf"
+ALTERNATIVE_PRIORITY[resolv-conf] = "60"
