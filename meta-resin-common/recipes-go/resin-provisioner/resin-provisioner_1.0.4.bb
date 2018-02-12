@@ -15,7 +15,6 @@ do_install_append() {
     rm -rf ${D}${bindir}/provisioner-server
     # We also don't need the test simple client binary
     rm -rf ${D}${bindir}/provisioner-simple-client
+    # do not package anything except /usr/bin/
+    rm -rf ${D}/usr/lib
 }
-
-# There is a bash script in the sources
-RDEPENDS_${PN}-staticdev = "bash"
