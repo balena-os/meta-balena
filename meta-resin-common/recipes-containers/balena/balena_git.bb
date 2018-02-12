@@ -13,7 +13,7 @@ FILES_COMPRESS = "/boot/init"
 SRCREV = "0fe5161dac2db56a32d428e5e455efd62ad26a50"
 SRCBRANCH = "17.06-resin"
 SRC_URI = "\
-  git://github.com/resin-os/balena.git;branch=${SRCBRANCH};nobranch=1 \
+  git://github.com/resin-os/balena.git;branch=${SRCBRANCH};nobranch=1;destsuffix=git/src/import \
   file://balena.service \
   file://balena-host.service \
   file://balena-healthcheck \
@@ -22,7 +22,9 @@ SRC_URI = "\
 "
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
+LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
+
+GO_IMPORT = "import"
 
 S = "${WORKDIR}/git"
 
@@ -79,12 +81,11 @@ do_compile() {
   # Set GOPATH. See 'PACKAGERS.md'. Don't rely on
   # docker to download its dependencies but rather
   # use dependencies packaged independently.
-  cd ${S}
+  cd ${S}/src/import
   rm -rf .gopath
   mkdir -p .gopath/src/"$(dirname "${DOCKER_PKG}")"
   ln -sf ../../../.. .gopath/src/"${DOCKER_PKG}"
-  export GOPATH="${S}/.gopath:${S}/vendor:${STAGING_DIR_TARGET}/${prefix}/local/go"
-  cd -
+  export GOPATH="${S}/src/import/.gopath:${S}/src/import/vendor:${STAGING_DIR_TARGET}/${prefix}/local/go"
 
   export CGO_ENABLED="1"
 
@@ -109,9 +110,9 @@ SYSTEMD_SERVICE_${PN} = "balena.service balena-host.service var-lib-docker.mount
 
 do_install() {
   mkdir -p ${D}/${bindir}
-  install -m 0755 ${S}/bundles/${BALENA_VERSION}/dynbinary-balena/balena ${D}/${bindir}/balena
+  install -m 0755 ${S}/src/import/bundles/${BALENA_VERSION}/dynbinary-balena/balena ${D}/${bindir}/balena
   install -d ${D}/boot
-  install -m 0755 ${S}/cmd/mobynit/mobynit ${D}/boot/init
+  install -m 0755 ${S}/src/import/cmd/mobynit/mobynit ${D}/boot/init
   echo ${BALENA_STORAGE} > ${D}/boot/storage-driver
 
   ln -sf balena ${D}/${bindir}/balenad
@@ -122,7 +123,7 @@ do_install() {
   ln -sf balena ${D}/${bindir}/balena-proxy
 
   install -d ${D}${systemd_unitdir}/system
-  install -m 0644 ${S}/contrib/init/systemd/balena.* ${D}/${systemd_unitdir}/system
+  install -m 0644 ${S}/src/import/contrib/init/systemd/balena.* ${D}/${systemd_unitdir}/system
 
   install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
   sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
