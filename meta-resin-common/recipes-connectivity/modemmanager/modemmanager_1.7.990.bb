@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = " \
 
 inherit gnomebase gettext systemd vala bash-completion
 
-DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native"
+DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native libxslt-native"
 
 SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
 "
