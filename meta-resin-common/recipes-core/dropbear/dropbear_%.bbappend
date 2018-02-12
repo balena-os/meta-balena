@@ -6,14 +6,15 @@ SRC_URI += " \
     file://dropbearkey.conf \
     "
 
-# starting with dropbear version 2016.73, code indentation has been fixed thus making our current patch (use_atomic_key_generation_in_all_cases.patch) not work anymore
+# In dropbear versions 2016.73 and 2016.74 the code indentation has been fixed thus making our current patch (use_atomic_key_generation_in_all_cases.patch) not work anymore
 # we work around this by detecting the dropbear version and applying the right patch for it
+# Also, starting with dropbear version 2017.75 this patch is included so no need to apply it for the 2017.75 version or newer ones
 python() {
     packageVersion = d.getVar('PV', True)
     srcURI = d.getVar('SRC_URI', True)
-    if packageVersion >= '2016.73':
+    if packageVersion >= '2016.73' and packageVersion <= '2016.74':
         d.setVar('SRC_URI', srcURI + ' ' + 'file://use_atomic_key_generation_in_all_cases_reworked.patch')
-    else:
+    elif packageVersion < '2016.73':
         d.setVar('SRC_URI', srcURI + ' ' + 'file://use_atomic_key_generation_in_all_cases.patch')
 }
 
