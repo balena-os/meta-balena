@@ -18,6 +18,7 @@ SRC_URI = " \
     file://mnt-sysroot-active.mount \
     file://mnt-sysroot-inactive.mount \
     file://var-lib-systemd.mount \
+    file://var-lib-NetworkManager.mount \
     file://var-log-journal.mount \
     file://resin-bind.target \
     file://resin-partition-mounter \
@@ -43,6 +44,7 @@ SYSTEMD_SERVICE_${PN} = " \
     mnt-sysroot-active.mount \
     mnt-sysroot-inactive.mount \
     var-lib-systemd.mount \
+    var-lib-NetworkManager.mount \
     var-log-journal.mount \
     "
 
@@ -93,6 +95,7 @@ do_install () {
             ${WORKDIR}/mnt-sysroot-active.mount \
             ${WORKDIR}/mnt-sysroot-inactive.mount \
             ${WORKDIR}/var-lib-systemd.mount \
+            ${WORKDIR}/var-lib-NetworkManager.mount \
             ${WORKDIR}/var-log-journal.mount \
             ${D}${systemd_unitdir}/system
 
