@@ -5,15 +5,15 @@ Requires=\
     resin\x2ddata.mount \
     resin-device-uuid.service \
     resin-device-api-key.service \
-    etc-systemd-system-resin.target.wants.mount \
-    etc-resin\x2dsupervisor.mount
+    bind-etc-systemd-system-resin.target.wants.service \
+    bind-etc-resin-supervisor.service
 After=\
     balena.service \
     resin\x2ddata.mount \
     resin-device-uuid.service \
     resin-device-api-key.service \
-    etc-systemd-system-resin.target.wants.mount \
-    etc-resin\x2dsupervisor.mount
+    bind-etc-systemd-system-resin.target.wants.service \
+    bind-etc-resin-supervisor.service
 
 [Service]
 Type=simple

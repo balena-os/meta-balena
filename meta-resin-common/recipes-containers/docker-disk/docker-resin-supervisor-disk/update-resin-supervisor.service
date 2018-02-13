@@ -2,7 +2,7 @@
 Description=Resin supervisor updater
 Requires=\
     balena.service \
-    etc-resin\x2dsupervisor.mount \
+    bind-etc-resin-supervisor.service \
     tmp.mount
 Wants=\
     mnt-boot.mount \
@@ -11,7 +11,7 @@ After=\
     balena.service \
     tmp.mount \
     mnt-boot.mount \
-    etc-resin\x2dsupervisor.mount \
+    bind-etc-resin-supervisor.service \
     resin-supervisor.service
 
 [Service]
