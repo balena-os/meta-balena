@@ -91,3 +91,6 @@ python () {
 # Partition fingerprints files
 RESIN_FINGERPRINT_EXT ?= "fingerprint"
 RESIN_FINGERPRINT_FILENAME ?= "resinos"
+
+# Hostname is generated at runtime based on config.json
+hostname_pn-base-files = ""
