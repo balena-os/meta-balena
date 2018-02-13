@@ -10,7 +10,7 @@ ConditionPathExists=!@RESIN_STATE_MP@/remove_me_to_reset
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-state-reset || @BASE_BINDIR@/mv @RESIN_STATE_MP@/rollback @RESIN_STATE_MP@/root-overlay
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-state-reset
 ExecStartPost=@BASE_BINDIR@/touch @RESIN_STATE_MP@/remove_me_to_reset
 
 [Install]
