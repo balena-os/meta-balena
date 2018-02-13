@@ -1,0 +1,16 @@
+[Unit]
+Description=Bind mount for @target@
+DefaultDependencies=no
+Requires=resin-state.service resin-state-reset.service var-volatile-lib.service systemd-tmpfiles-setup.service
+After=resin-state.service resin-state-reset.service var-volatile-lib.service systemd-tmpfiles-setup.service
+Before=umount.target
+Conflicts=umount.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=Yes
+ExecStart=/usr/bin/bindmount --target @target@ --bind-root /mnt/state/root-overlay --command mount
+ExecStop=/usr/bin/bindmount --target @target@ --bind-root /mnt/state/root-overlay --command unmount
+
+[Install]
+WantedBy=multi-user.target

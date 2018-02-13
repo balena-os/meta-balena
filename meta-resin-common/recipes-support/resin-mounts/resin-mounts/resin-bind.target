@@ -1,3 +1,0 @@
-[Unit]
-Description=Resin bind target
-Documentation=man:systemd.target(5)
