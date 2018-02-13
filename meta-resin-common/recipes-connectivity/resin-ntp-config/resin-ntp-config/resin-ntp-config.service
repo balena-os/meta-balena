@@ -1,8 +1,8 @@
 [Unit]
 Description=Resin NTP configuration service
 DefaultDependencies=no
-Requires=resin-boot.service etc-systemd-timesyncd.conf.mount
-After=resin-boot.service etc-systemd-timesyncd.conf.mount
+Requires=resin-boot.service bind-etc-systemd-timesyncd.conf.service
+After=resin-boot.service bind-etc-systemd-timesyncd.conf.service
 Before=systemd-timesyncd.service
 
 [Service]
