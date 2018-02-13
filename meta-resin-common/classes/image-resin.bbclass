@@ -226,7 +226,6 @@ resin_boot_dirgen_and_deploy () {
 }
 
 QUIRK_FILES ?= " \
-    etc/hostname \
     etc/hosts \
     etc/resolv.conf \
     etc/mtab \
