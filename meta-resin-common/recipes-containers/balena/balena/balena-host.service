@@ -2,8 +2,9 @@
 Description=Balena Application Container Engine (host)
 Documentation=https://www.balena.io/docs/getting-started
 Wants=dnsmasq.service
-Requires=mnt-sysroot-active.mount mnt-sysroot-inactive.mount
-After=network.target mnt-sysroot-active.mount mnt-sysroot-inactive.mount dnsmasq.service
+Requires=mnt-sysroot-active.service mnt-sysroot-inactive.service
+After=network.target mnt-sysroot-active.service mnt-sysroot-inactive.service dnsmasq.service
+ConditionVirtualization=!docker
 
 [Service]
 Type=notify
