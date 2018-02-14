@@ -41,6 +41,9 @@ while [ "$#" -ge 1 ]; do
 			action="umount"
 			shift
 			;;
+		--sysroot)
+			sysroot="yes"
+			;;
 		*)
 			echo "ERROR: Unrecognized option $1."
 			help
@@ -56,8 +59,13 @@ if [ -z "$action" ]; then
 	exit 1
 fi
 
-part_mountpoint="/mnt/${part_label#resin-}"
-label_path="/dev/disk/by-label/$part_label"
+if [ -z "$sysroot" ]; then
+	part_mountpoint="/mnt/${part_label#resin-}"
+	label_path="/dev/disk/by-label/$part_label"
+else
+	part_mountpoint="/mnt/sysroot/$part_label"
+	label_path="/dev/disk/by-state/$part_label"
+fi
 
 if [ ! -d "$part_mountpoint" ]; then
 	echo "ERROR: Target mountpoint $part_mountpoint not found."
