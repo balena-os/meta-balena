@@ -6,8 +6,8 @@ SRC_URI = " \
     file://resin-boot.service \
     file://resin-data.service \
     file://resin-state.service \
-    file://mnt-sysroot-active.mount \
-    file://mnt-sysroot-inactive.mount \
+    file://mnt-sysroot-active.service \
+    file://mnt-sysroot-inactive.service \
     file://resin-partition-mounter \
     file://bind-path.service.in \
     "
@@ -22,8 +22,8 @@ SYSTEMD_SERVICE_${PN} = " \
     resin-boot.service \
     resin-data.service \
     resin-state.service \
-    mnt-sysroot-active.mount \
-    mnt-sysroot-inactive.mount \
+    mnt-sysroot-active.service \
+    mnt-sysroot-inactive.service \
     ${@bindmounts_systemd_services(d)} \
     "
 
