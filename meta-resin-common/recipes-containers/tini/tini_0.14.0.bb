@@ -20,6 +20,10 @@ BBCLASSEXTEND = "native"
 # tini links with -static, so no PIE for us
 SECURITY_CFLAGS_pn-${PN} = "${SECURITY_NO_PIE_CFLAGS}"
 
+# the following is needed for Poky Rocko - in addition to the above
+# (tini links with -static and because we don't have rcrt1.o in our glibc we disable PIE for it:)
+SECURITY_CFLAGS_pn-${PN} += "${SECURITY_NOPIE_CFLAGS}"
+
 inherit cmake
 
 do_install() {
