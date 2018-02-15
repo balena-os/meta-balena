@@ -14,7 +14,7 @@ IMAGE_FSTYPES = ""
 RESIN_ROOT_FSTYPE = "ext4"
 
 # Make sure you have the resin image ready
-IMAGE_DEPENDS_resinos-img_append = " resin-image:do_rootfs"
+do_image_resinos_img[depends] += "resin-image:do_rootfs"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
