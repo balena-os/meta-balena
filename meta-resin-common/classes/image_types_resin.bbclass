@@ -78,6 +78,8 @@ python() {
         d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-img')
         d.setVar('RESIN_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
         d.setVar('RESIN_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
+
+    d.setVar('RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("RESIN_IMAGE_BOOTLOADER", True).split()))
 }
 
 
@@ -107,15 +109,15 @@ RESIN_STATE_FS ?= "${WORKDIR}/${RESIN_STATE_FS_LABEL}.img"
 
 # resinos-img depends on the rootfs image
 IMAGE_TYPEDEP_resinos-img = "${RESIN_ROOT_FSTYPE}"
-IMAGE_DEPENDS_resinos-img = " \
-    coreutils-native \
-    docker-disk \
-    dosfstools-native \
-    e2fsprogs-native \
-    mtools-native \
-    parted-native \
-    virtual/kernel \
-    ${RESIN_IMAGE_BOOTLOADER} \
+do_image_resinos_img[depends] = " \
+    coreutils-native:do_populate_sysroot \
+    docker-disk:do_deploy \
+    dosfstools-native:do_populate_sysroot \
+    e2fsprogs-native:do_populate_sysroot \
+    mtools-native:do_populate_sysroot \
+    parted-native:do_populate_sysroot \
+    virtual/kernel:do_deploy \
+    ${RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
 
 device_specific_configuration() {
@@ -342,8 +344,8 @@ IMAGE_CMD_docker () {
 
 IMAGE_TYPEDEP_hostapp-ext4 = "docker"
 
-IMAGE_DEPENDS_hostapp-ext4 = " \
-    mkfs-hostapp-native \
+do_image_hostapp_ext4[depends] = " \
+    mkfs-hostapp-native:do_populate_sysroot \
     "
 
 IMAGE_CMD_hostapp-ext4 () {
