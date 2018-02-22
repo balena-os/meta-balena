@@ -8,6 +8,6 @@ python __anonymous() {
 	for p in packages.split():
 		if p == "linux-firmware-iwlwifi-8000c":
 			return
-	d.setVar("PACKAGES", packages + " linux-firmware-iwlwifi-8000c")
+	d.setVar("PACKAGES", "linux-firmware-iwlwifi-8000c " + packages)
 }
 FILES_${PN}-iwlwifi-8000c = "${nonarch_base_libdir}/firmware/iwlwifi-8000C-*.ucode"
