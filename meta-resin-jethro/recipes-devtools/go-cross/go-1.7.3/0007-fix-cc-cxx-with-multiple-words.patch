@@ -1,0 +1,47 @@
+In yocto CC/CXX can have (and will have) multiple words. Take whem all into
+consideration when constructing the gcc command.
+
+Upstream-Status: Pending
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Index: go/src/cmd/go/build.go
+===================================================================
+--- go.orig/src/cmd/go/build.go
++++ go/src/cmd/go/build.go
+@@ -2990,12 +2990,18 @@ func (b *builder) gccld(p *Package, out
+ func (b *builder) gccCmd(objdir string) []string {
+ 	return b.ccompilerCmd("CC", defaultCC, objdir)
+ }
++func (b *builder) gccCmdFull() []string {
++	return envList("CC", defaultCC)
++}
+
+ // gxxCmd returns a g++ command line prefix
+ // defaultCXX is defined in zdefaultcc.go, written by cmd/dist.
+ func (b *builder) gxxCmd(objdir string) []string {
+ 	return b.ccompilerCmd("CXX", defaultCXX, objdir)
+ }
++func (b *builder) gxxCmdFull() []string {
++	return envList("CXX", defaultCXX)
++}
+
+ // gfortranCmd returns a gfortran command line prefix.
+ func (b *builder) gfortranCmd(objdir string) []string {
+Index: go/src/cmd/go/env.go
+===================================================================
+--- go.orig/src/cmd/go/env.go
++++ go/src/cmd/go/env.go
+@@ -51,10 +51,11 @@ func mkEnv() []envVar {
+
+ 	if goos != "plan9" {
+ 		cmd := b.gccCmd(".")
+-		env = append(env, envVar{"CC", cmd[0]})
++		env = append(env, envVar{"CC", strings.Join(b.gccCmdFull(), " ")})
+ 		env = append(env, envVar{"GOGCCFLAGS", strings.Join(cmd[3:], " ")})
+ 		cmd = b.gxxCmd(".")
+-		env = append(env, envVar{"CXX", cmd[0]})
++		env = append(env, envVar{"CXX", strings.Join(b.gxxCmdFull(), " ")})
++
+ 	}
+
+ 	if buildContext.CgoEnabled {
