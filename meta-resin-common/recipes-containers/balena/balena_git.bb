@@ -91,8 +91,8 @@ do_compile() {
 
   # Pass the needed cflags/ldflags so that cgo
   # can find the needed headers files and libraries
-  export CGO_CFLAGS="${CFLAGS} ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
-  export CGO_LDFLAGS="${LDFLAGS}  ${TARGET_CC_ARCH} --sysroot=${STAGING_DIR_TARGET}"
+  export CGO_CFLAGS="${CFLAGS} --sysroot=${STAGING_DIR_TARGET}"
+  export CGO_LDFLAGS="${LDFLAGS}  --sysroot=${STAGING_DIR_TARGET}"
 
   export DOCKER_GITCOMMIT="${SRCREV}"
   export DOCKER_BUILDTAGS='exclude_graphdriver_btrfs exclude_graphdirver_zfs exclude_graphdriver_devicemapper'
