@@ -17,4 +17,5 @@ SRC_URI += " \
     file://0004-runtime-don-t-hard-code-physical-page-size.patch \
     file://0005-syscall-make-Getpagesize-return-page-size-from-runti.patch \
     file://0006-runtime-debug-enable-TestFreeOSMemory-on-all-arches.patch \
+    file://0007-fix-cc-cxx-with-multiple-words.patch \
 "
