@@ -1,0 +1,22 @@
+This patch activates the experimental flag when running bluetoothd.
+
+	-E, --experimental
+		Enable experimental interfaces. Those interfaces are not
+		guaranteed to be compatible or present in future releases.
+
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Index: bluez-5.46/src/bluetooth.service.in
+===================================================================
+--- bluez-5.46.orig/src/bluetooth.service.in
++++ bluez-5.46/src/bluetooth.service.in
+@@ -6,7 +6,7 @@ ConditionPathIsDirectory=/sys/class/blue
+ [Service]
+ Type=dbus
+ BusName=org.bluez
+-ExecStart=@libexecdir@/bluetoothd
++ExecStart=@libexecdir@/bluetoothd --experimental
+ NotifyAccess=main
+ #WatchdogSec=10
+ #Restart=on-failure
