@@ -1,6 +1,51 @@
 Change log
 -----------
 
+# v2.10.0
+## (2018-02-27)
+
+* Make sure rocko update doesn't add packages resinOS doesn't depend on [Andrei Gherzan]
+* Run bluetoothd with --experimental flag [Andrei Gherzan]
+* Resin-image-flasher fixes for rocko support [Andrei Gherzan]
+* Use the correct, full yocto CC/CXX variables when using go [Andrei Gherzan]
+* Fix 8000c in PACKAGES [Andrei Gherzan]
+* Always have /lib/modules directory in rootfs as supervisor requires it [Andrei Gherzan]
+* Fix console output when running resinOS with systemd >= 232 [Andrei Gherzan]
+* Bring back the package which includes firmware for wilwifi 8000c [Andrei Gherzan]
+* Update OpenVPN to 2.4.3 [Andrei Gherzan]
+* Replace deprecated variable IMAGE_DEPENDS from image_types_resin.bbclass [Florin Sarbu]
+* Replace deprecated variable IMAGE_DEPENDS from resin-image-flasher.bb [Florin Sarbu]
+* Adapt sysroot services/units to be used with resinOS in container [Andrei Gherzan]
+* Remove deprecated firmware: 8000c [Andrei Gherzan]
+* Resin-state-reset: This service now only removes the root-overlay [Andrei Gherzan]
+* Fix resin-provisioner 1.0.4 compile error on Poky Rocko [Florin Sarbu]
+* Make resin-provisioner only package the resulted go binary [Florin Sarbu]
+* Prepare the balena recipe for Poky Rocko [Florin Sarbu]
+* Use update-alternatives for deploying resolv.conf through dnsmasq [Florin Sarbu]
+* Make ModemManager depend on libxslt-native at build-time for Poky Rocko [Florin Sarbu]
+* Add initial structure for supporting Poky Rocko [Florin Sarbu]
+* Do not apply the use_atomic_key_generation_in_all_cases patch for dropbear 2017.75 or newer [Florin Sarbu]
+* Make image-resin.bbclass depend on jq-native at buildtime [Florin Sarbu]
+* Fix ucl-native ACC conformance test configure error on gcc6 [Florin Sarbu]
+* Update ModemManager to version 1.7.990 [Florin Sarbu]
+* Rename partition mount services to <label>.service and handle stopping services [Andrei Gherzan]
+* Rename openvpn-resin service to openvpn [Andrei Gherzan]
+* Kernel-resin: Fix warnings about CONFIG_DEVPTS_MULTIPLE_INSTANCES [Andrei Gherzan]
+* Update supervisor to v6.6.3 [Pablo Carranza Velez]
+* Let systemd handle openvpn run directory [Andrei Gherzan]
+* Add support for running resinOS in a docker container [Andrei Gherzan]
+* Add fs check for boot partition in initramfs [Andrei Gherzan]
+* Fix kernel-modules-headers when building from sstate [Andrei Gherzan]
+* Avoid mount warnings when using systemd mount units on files [Andrei Gherzan]
+* Add support for private docker registry [Bruno Binet]
+* Docker-disk: Various improvements [Andrei Gherzan]
+* Networkmanager: Use bash-completion bbclass [Andrei Gherzan]
+* Use VPN port from config.json (defaulting it to 443) [Andrei Gherzan]
+* Housekeeping: adding PR template [Gergely Imreh]
+* Replace busybox less by GNU less [Andrei Gherzan]
+* Fix BALENA_STORAGE when machine specific definition is used [Andrei Gherzan]
+* Coreutils: Set uptime to use procfs for accurate uptime [Andrei Gherzan]
+
 # v2.9.7
 ## (2018-01-26)
 
