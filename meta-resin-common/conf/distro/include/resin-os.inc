@@ -94,3 +94,5 @@ RESIN_FINGERPRINT_FILENAME ?= "resinos"
 
 # Hostname is generated at runtime based on config.json
 hostname_pn-base-files = ""
+
+BAD_RECOMMENDATIONS += "shared-mime-info"
