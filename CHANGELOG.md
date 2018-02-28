@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.10.1
+## (2018-02-28)
+
+* Fix docker-disk when not including any docker image [Florin Sarbu]
+
 # v2.10.0
 ## (2018-02-27)
 
