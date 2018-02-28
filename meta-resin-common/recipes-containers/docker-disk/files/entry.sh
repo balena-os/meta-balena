@@ -43,7 +43,9 @@ if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
 fi
 
 echo "Stopping docker..."
-kill -TERM "$(cat /var/run/docker.pid)" && wait "$(cat /var/run/docker.pid)"
+kill -TERM "$(cat /var/run/docker.pid)"
+# don't let wait() error out and crash the build if the docker daemon has already been stopped
+wait $(cat /var/run/docker.pid) || true
 
 # Make all files owned by the build system
 chown -R "$USER_ID:$USER_GID" "$DATA_VOLUME"
