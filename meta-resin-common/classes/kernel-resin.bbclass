@@ -241,6 +241,7 @@ RESIN_CONFIGS[brcmfmac] ?= " \
 RESIN_CONFIGS_DEPS[leds-gpio] ?= " \
     CONFIG_NEW_LEDS=y \
     CONFIG_LEDS_CLASS=y \
+    CONFIG_GPIOLIB=y \
     "
 RESIN_CONFIGS[leds-gpio] ?= " \
     CONFIG_LEDS_GPIO=y \
