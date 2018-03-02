@@ -12,14 +12,17 @@ SYSTEMD_SERVICE_${PN} += "${@bindmounts_systemd_services(d)}"
 FILES_${PN} += " \
 	${sysconfdir} \
 	${systemd_unitdir} \
+	/home/root/.ssh \
 	"
 
 BINDMOUNTS += " \
 	/etc/dropbear \
 	/etc/hostname \
+	/etc/openvpn \
 	/etc/NetworkManager/system-connections \
 	/home/root/.rnd \
 	/var/lib/NetworkManager \
+	/home/root/.ssh \
 	"
 
 PACKAGES = "${PN}"
@@ -57,4 +60,6 @@ do_compile[dirs] = "${WORKDIR}"
 do_install () {
 	install -d ${D}${sysconfdir}
 	touch ${D}/${sysconfdir}/hostname
+	install -d ${D}${sysconfdir}/openvpn
+	install -d ${D}/home/root/.ssh
 }
