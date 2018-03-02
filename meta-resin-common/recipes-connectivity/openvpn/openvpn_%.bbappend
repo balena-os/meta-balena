@@ -1,8 +1,6 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
+FILESEXTRAPATHS_append := ":${THISDIR}/files"
 
-RESIN_CONNECTABLE_SRCURI = " \
-    file://ca.crt \
-    file://resin.conf \
+SRC_URI += " \
     file://prepare-openvpn \
     file://prepare-openvpn.service \
     file://openvpn.service \
@@ -14,31 +12,22 @@ inherit useradd
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} += "--system -d / -M --shell /bin/nologin openvpn"
 
-SRC_URI_append = " ${@bb.utils.contains("RESIN_CONNECTABLE","1","${RESIN_CONNECTABLE_SRCURI}","",d)}"
+RDEPENDS_${PN} += "resin-vars"
 
-RDEPENDS_${PN} += "${@bb.utils.contains("RESIN_CONNECTABLE","1","bash jq resin-unique-key sed","",d)}"
-
-SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains("RESIN_CONNECTABLE","1","openvpn.service prepare-openvpn.service","",d)}"
+SYSTEMD_SERVICE_${PN} = "openvpn.service prepare-openvpn.service"
+SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install_append() {
-    if [ ${RESIN_CONNECTABLE} -eq 1 ]; then
-        install -d ${D}${sysconfdir}/openvpn
-        install -m 0755 ${WORKDIR}/resin.conf ${D}${sysconfdir}/openvpn/resin.conf
-        install -m 0755 ${WORKDIR}/upscript.sh ${D}${sysconfdir}/openvpn/upscript.sh
-        install -m 0755 ${WORKDIR}/downscript.sh ${D}${sysconfdir}/openvpn/downscript.sh
-        install -m 0755 ${WORKDIR}/ca.crt ${D}${sysconfdir}/openvpn/ca.crt
+	install -d ${D}${bindir}
+	install -m 0755 ${WORKDIR}/prepare-openvpn ${D}${bindir}
 
-        if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-            install -d ${D}${bindir}
-            install -m 0755 ${WORKDIR}/prepare-openvpn ${D}${bindir}
-            install -d ${D}${systemd_unitdir}/system
-            install -c -m 0644 ${WORKDIR}/prepare-openvpn.service ${D}${systemd_unitdir}/system
-            install -c -m 0644 ${WORKDIR}/openvpn.service ${D}${systemd_unitdir}/system
-            sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
-                -e 's,@SBINDIR@,${sbindir},g' \
-                -e 's,@BINDIR@,${bindir},g' \
-                ${D}${systemd_unitdir}/system/*.service
-        fi
-    fi
+	install -d ${D}${sysconfdir}/openvpn-misc
+	install -m 0755 ${WORKDIR}/upscript.sh ${D}${sysconfdir}/openvpn-misc
+	install -m 0755 ${WORKDIR}/downscript.sh ${D}${sysconfdir}/openvpn-misc
+
+	install -d ${D}${systemd_unitdir}/system
+	install -c -m 0644 \
+		${WORKDIR}/prepare-openvpn.service \
+		${WORKDIR}/openvpn.service \
+		${D}${systemd_unitdir}/system
 }
-do_install[vardeps] += "DISTRO_FEATURES RESIN_CONNECTABLE"

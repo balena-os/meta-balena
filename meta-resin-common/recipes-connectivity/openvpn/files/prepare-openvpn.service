@@ -1,11 +1,8 @@
 [Unit]
-Description=Prepare OpenVPN Application On Resin
+Description=Prepare OpenVPN
 Requires=resin-boot.service resin-device-uuid.service resin-device-api-key.service var-volatile.mount
 After=resin-boot.service resin-device-uuid.service resin-device-api-key.service var-volatile.mount
 
 [Service]
 Type=oneshot
-ExecStart=@BINDIR@/prepare-openvpn
-
-[Install]
-WantedBy=config-json.service
+ExecStart=/usr/bin/prepare-openvpn
