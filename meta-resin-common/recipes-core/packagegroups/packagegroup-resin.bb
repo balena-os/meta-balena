@@ -25,6 +25,4 @@ RDEPENDS_${PN} += " \
     resin-device-progress \
     timeinit \
     ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util', '', d)} \
-    ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
-    ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-provisioner', '', d)} \
     "
