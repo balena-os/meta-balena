@@ -7,4 +7,4 @@ After=resin-boot.service
 PathChanged=/mnt/boot/config.json
 
 [Install]
-WantedBy=resin-boot.service
+WantedBy=basic.target
