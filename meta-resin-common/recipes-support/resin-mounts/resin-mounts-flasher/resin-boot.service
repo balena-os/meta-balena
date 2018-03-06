@@ -1,0 +1,14 @@
+[Unit]
+Description=Resin boot partition mount compatibility service
+DefaultDependencies=no
+Requires=mnt-boot.mount
+After=mnt-boot.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/echo "Boot partition mounted"
+ExecStop=/bin/echo "This is a service wrapper. Use mnt-boot.mount instead."
+
+[Install]
+WantedBy=multi-user.target
