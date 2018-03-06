@@ -9,8 +9,8 @@ Conflicts=umount.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStartPre=@BASE_BINDIR@/mkdir -p /tmp/conf
-ExecStart=@BASE_BINDIR@/cp -vf /mnt/bootorig/config.json /tmp/conf/config.json
+ExecStartPre=/bin/mkdir -p /tmp/conf
+ExecStart=/bin/cp -vf /mnt/bootorig/config.json /tmp/conf/config.json
 
 [Install]
 WantedBy=multi-user.target

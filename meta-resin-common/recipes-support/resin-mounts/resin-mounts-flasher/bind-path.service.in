@@ -1,0 +1,16 @@
+[Unit]
+Description=Flasher bind mount for @target@
+DefaultDependencies=no
+Requires=tmp.mount systemd-tmpfiles-setup.service
+After=tmp.mount systemd-tmpfiles-setup.service
+Before=umount.target
+Conflicts=umount.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=Yes
+ExecStart=/usr/bin/bindmount --target @target@ --bind-root /tmp/root-overlay --command mount
+ExecStop=/usr/bin/bindmount --target @target@ --bind-root /tmp/root-overlay --command unmount
+
+[Install]
+WantedBy=multi-user.target
