@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.11.0
+## (2018-03-08)
+
+* Fix docker-disk when docker build fails to not leave root files behind [Andrei Gherzan]
+* Update supervisor to v7.1.0 [Pablo Carranza Velez]
+* Fix connectivity in flasher images [Andrei Gherzan]
+* Add missing kernel config dependency for leds-gpio [Andrei Gherzan]
+
 # v2.10.1
 ## (2018-02-28)
 
