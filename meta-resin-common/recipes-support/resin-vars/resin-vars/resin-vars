@@ -73,6 +73,11 @@ if [ -f $CONFIG_PATH ]; then
     # Various default values
     PERSISTENT_LOGGING=${PERSISTENT_LOGGING:-false}
     VPN_PORT=${VPN_PORT:-443}
+    if [ "$VPN_PORT" = "1723" ]; then
+        # There is a bug in the cli which defaults VPN port to this port.
+        # If this was found in the config assume default 443.
+        VPN_PORT=443
+    fi
 else
     echo "[WARNING] $0 : '$CONFIG_PATH' not found."
 fi
