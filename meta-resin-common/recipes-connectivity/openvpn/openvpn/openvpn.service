@@ -14,4 +14,5 @@ PIDFile=/var/run/openvpn/resin.pid
 ExecStart=/usr/sbin/openvpn --daemon --writepid /var/run/openvpn/resin.pid --cd /etc/openvpn/ --config /run/openvpn/resin.conf
 
 [Install]
+Alias=openvpn-resin.service
 WantedBy=resin.target
