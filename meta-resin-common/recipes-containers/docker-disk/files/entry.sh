@@ -1,7 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
 set -o errexit
 set -o nounset
+
+finish() {
+    # Make all files owned by the build system
+    chown -R "$USER_ID:$USER_GID" "$DATA_VOLUME"
+}
+
+trap finish EXIT
 
 DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
 DATA_VOLUME=/resin-data
@@ -12,7 +19,8 @@ groupadd -g "$USER_GID" docker-disk-group
 useradd -u "$USER_ID" -g "$USER_GID" -p "" docker-disk-user
 
 # Create the directory structures we use for Resin
-mkdir -p $DATA_VOLUME/{docker,resin-data}
+mkdir -p $DATA_VOLUME/docker
+mkdir -p $DATA_VOLUME/resin-data
 
 # Start docker with the created image
 echo "Starting docker daemon with $BALENA_STORAGE storage driver."
@@ -45,7 +53,4 @@ fi
 echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"
 # don't let wait() error out and crash the build if the docker daemon has already been stopped
-wait $(cat /var/run/docker.pid) || true
-
-# Make all files owned by the build system
-chown -R "$USER_ID:$USER_GID" "$DATA_VOLUME"
+wait "$(cat /var/run/docker.pid)" || true
