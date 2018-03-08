@@ -1,8 +1,9 @@
 #!/bin/sh
 
-source /usr/sbin/resin-vars
+# shellcheck disable=SC1091
+. /usr/sbin/resin-vars
 
-SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' $SUPERVISOR_IMAGE:$SUPERVISOR_TAG)
+SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG")
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
 runSupervisor() {
@@ -10,7 +11,7 @@ runSupervisor() {
     balena run --privileged --name resin_supervisor \
         --net=host \
         -v /var/run/balena.sock:/var/run/balena.sock \
-        -v $CONFIG_PATH:/boot/config.json  \
+        -v "$CONFIG_PATH:/boot/config.json"  \
         -v /mnt/data/apps.json:/boot/apps.json \
         -v /resin-data/resin-supervisor:/data \
         -v /proc/net/fib_trie:/mnt/fib_trie \
@@ -18,17 +19,17 @@ runSupervisor() {
         -v /:/mnt/root \
         -e DOCKER_ROOT=/mnt/root/var/lib/docker \
         -e DOCKER_SOCKET=/var/run/balena.sock \
-        -e BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT \
-        -e API_ENDPOINT=$API_ENDPOINT \
-        -e REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT \
-        -e PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY \
-        -e PUBNUB_PUBLISH_KEY=$PUBNUB_PUBLISH_KEY \
-        -e MIXPANEL_TOKEN=$MIXPANEL_TOKEN \
-        -e DELTA_ENDPOINT=$DELTA_ENDPOINT \
-        -e LED_FILE=${LED_FILE} \
-        -e LISTEN_PORT=$LISTEN_PORT \
-        -e SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG} \
-        ${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}
+        -e "BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT" \
+        -e "API_ENDPOINT=$API_ENDPOINT" \
+        -e "REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT" \
+        -e "PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY" \
+        -e "PUBNUB_PUBLISH_KEY=$PUBNUB_PUBLISH_KEY" \
+        -e "MIXPANEL_TOKEN=$MIXPANEL_TOKEN" \
+        -e "DELTA_ENDPOINT=$DELTA_ENDPOINT" \
+        -e "LED_FILE=${LED_FILE}" \
+        -e "LISTEN_PORT=$LISTEN_PORT" \
+        -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" \
+        "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}"
 }
 
 if [ -z "$SUPERVISOR_IMAGE_ID" ]; then
