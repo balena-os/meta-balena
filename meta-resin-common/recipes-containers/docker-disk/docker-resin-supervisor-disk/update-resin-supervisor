@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/bin/sh
+
 set -o pipefail
 
 # Help function
-function update-resin-supervisor-help {
+update_resin_supervisor_help() {
     cat << EOF
 Wrapper to run supervisor agent updates on resin distributions.
 $0 <OPTION>
@@ -20,37 +21,41 @@ EOF
 }
 
 # Parse arguments
-while [[ $# > 0 ]]; do
+while [ $# -gt 0 ]; do
     arg="$1"
 
     case $arg in
         -h|--help)
-            update-resin-supervisor-help
+            update_resin_supervisor_help
             exit 0
             ;;
         -i|--supervisor-image)
             if [ -z "$2" ]; then
-                log ERROR "\"$1\" argument needs a value."
+                echo "ERROR: \"$1\" argument needs a value."
+                exit 1
             fi
             UPDATER_SUPERVISOR_IMAGE=$2
             shift
             ;;
         -t|--supervisor-tag)
             if [ -z "$2" ]; then
-                log ERROR "\"$1\" argument needs a value."
+                echo "ERROR: \"$1\" argument needs a value."
+                exit 1
             fi
             UPDATER_SUPERVISOR_TAG=$2
             shift
             ;;
         *)
-            log ERROR "Unrecognized option $1."
+            echo "ERROR: Unrecognized option $1."
+            exit 1
             ;;
     esac
     shift
 done
 
-# Don't souce before parsing args - resin-vars parses args too
-source /usr/sbin/resin-vars
+# Don't source before parsing args - resin-vars parses args too
+# shellcheck disable=SC1091
+. /usr/sbin/resin-vars
 
 # A temporary file used until next reboot
 UPDATECONF=/tmp/update-supervisor.conf
@@ -67,24 +72,27 @@ if [ -z "$_device_api_key" ]; then
     exit 1
 fi
 
-function error_handler {
+error_handler() {
+    [ $? -eq 0 ] && exit 0
+
     # If docker pull fails, start the old supervisor again and exit
     rm -rf $UPDATECONF
     systemctl start resin-supervisor
     exit 1
 }
 
-trap 'error_handler $LINENO' ERR
+trap error_handler EXIT
 
 # Detect containers engine
-if which docker &>/dev/null; then
+if which docker > /dev/null 2>&1; then
     DOCKER=docker
-elif which rce &>/dev/null; then
+elif which rce > /dev/null 2>&1; then
     DOCKER=rce
-elif which balena &>/dev/null; then
-	DOCKER=balena
+elif which balena > /dev/null 2>&1; then
+    DOCKER=balena
 else
-    error_handler $LINENO "no container engine detected"
+    echo "ERROR: No container engine detected."
+    error_handler "no container engine detected"
 fi
 
 # Get target supervisor tag from API.
@@ -98,22 +106,29 @@ if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v3/su
         echo "WARN: Ignore image/tag arguments as API overrides them."
     fi
 
-    read tag image_name <<<$data
+    tag=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $1}')
+    image_name=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $2}')
+    if [ -z "$tag" ] || [ -z "$image_name" ]; then
+        echo "ERROR: Unexpected API data."
+        error_handler "unexpected API data"
+    fi
 
     # Check that we didn't somehow get an empty tag version.
     if [ -z "$tag" ]; then
-        error_handler $LINENO "no tag received"
+        echo "ERROR: No tag received."
+        error_handler "no tag received"
     fi
 else
     echo "No supervisor configuration found from API. Using arguments for image and tag."
-    source /etc/resin-supervisor/supervisor.conf
+    # shellcheck disable=SC1091
+    . /etc/resin-supervisor/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
         # Try to get the tag from supervisor.conf
         if [ -n "$SUPERVISOR_TAG" ]; then
             UPDATER_SUPERVISOR_TAG=$SUPERVISOR_TAG
         else
             echo "ERROR: No tag argument provided."
-            error_handler $LINENO "no tag argument provided"
+            error_handler "no tag argument provided"
         fi
     fi
     if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
