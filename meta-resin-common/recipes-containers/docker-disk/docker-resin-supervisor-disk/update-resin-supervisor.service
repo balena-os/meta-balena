@@ -16,4 +16,4 @@ After=\
 
 [Service]
 Type=simple
-ExecStart=@BASE_BINDIR@/bash @BINDIR@/update-resin-supervisor
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/update-resin-supervisor
