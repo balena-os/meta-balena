@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.11.1
+## (2018-03-08)
+
+* Resin-vars: Assume VPN port 443 if 1723 is provided in config.json [Andrei Gherzan]
+* Make update-resin-supervisor POSIX compliant [Andrei Gherzan]
+* Add resin-openvpn.service alias for openvpn.service [Andrei Gherzan]
+
 # v2.11.0
 ## (2018-03-08)
 
