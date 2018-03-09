@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.12.0
+## (2018-03-09)
+
+* Update supervisor to v7.1.7 [Theodor Gherzan]
+
 # v2.11.2
 ## (2018-03-09)
 
