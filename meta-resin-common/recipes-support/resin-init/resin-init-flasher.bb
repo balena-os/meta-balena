@@ -32,11 +32,11 @@ RDEPENDS_${PN} = " \
 RESIN_IMAGE ?= "resin-image-${MACHINE}.resinos-img"
 
 do_install() {
-    if [[ -z "${INTERNAL_DEVICE_KERNEL}" ]]; then
+    if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
         bbfatal "INTERNAL_DEVICE_KERNEL must be defined."
     fi
 
-    if [[ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" && -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]]; then
+    if [ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ] && [ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]; then
         bbfatal "INTERNAL_DEVICE_BOOTLOADER_CONFIG requires INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH to be set."
     fi
 
@@ -56,7 +56,7 @@ do_install() {
 
     # If bootloader needs to be flashed, we require the bootloader name and write offset
     if [ -n "${BOOTLOADER_FLASH_DEVICE}" ]; then
-        if [[ -z "${BOOTLOADER_IMAGE}" || -z "${BOOTLOADER_BLOCK_SIZE_OFFSET}" || -z "${BOOTLOADER_SKIP_OUTPUT_BLOCKS}" ]]; then
+        if [ -z "${BOOTLOADER_IMAGE}" ] || [ -z "${BOOTLOADER_BLOCK_SIZE_OFFSET}" ] || [ -z "${BOOTLOADER_SKIP_OUTPUT_BLOCKS}" ]; then
             bbfatal "BOOTLOADER_FLASH_DEVICE requires BOOTLOADER_IMAGE, BOOTLOADER_BLOCK_SIZE_OFFSET and BOOTLOADER_SKIP_OUTPUT_BLOCKS."
         fi
     fi
