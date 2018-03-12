@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.12.1
+## (2018-03-12)
+
+* Disable openvpn time-based tls key renegotiation [Will Boyce]
+
 # v2.12.0
 ## (2018-03-09)
 
