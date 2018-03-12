@@ -1,8 +1,8 @@
 [Unit]
 Description=Flasher bind mount for @target@
 DefaultDependencies=no
-Requires=tmp.mount systemd-tmpfiles-setup.service
-After=tmp.mount systemd-tmpfiles-setup.service
+Requires=tmp.mount var-volatile-lib.service systemd-tmpfiles-setup.service
+After=tmp.mount var-volatile-lib.service systemd-tmpfiles-setup.service
 Before=umount.target
 Conflicts=umount.target
 
