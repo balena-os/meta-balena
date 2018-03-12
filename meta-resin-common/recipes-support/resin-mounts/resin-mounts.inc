@@ -19,6 +19,7 @@ BINDMOUNTS += " \
 	/etc/hostname \
 	/etc/NetworkManager/system-connections \
 	/home/root/.rnd \
+	/var/lib/NetworkManager \
 	"
 
 PACKAGES = "${PN}"
