@@ -7,7 +7,7 @@ inherit cargo
 
 # how to get healthdog could be as easy as but default to a git checkout:
 # SRC_URI += "crate://crates.io/healthdog/0.1.0"
-SRC_URI += "git://git@github.com/resin-os/healthdog-rs.git;protocol=ssh"
+SRC_URI += "git://git@github.com/resin-os/healthdog-rs.git;protocol=https"
 SRCREV = "a10155844f251d00ec49348e58b2846803386085"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR=""
