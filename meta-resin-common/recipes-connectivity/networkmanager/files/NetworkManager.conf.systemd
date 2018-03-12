@@ -1,6 +1,6 @@
 [Unit]
-Wants=resin-net-config.service
-After=resin-net-config.service
+Wants=resin-net-config.service bind-var-lib-NetworkManager.service
+After=resin-net-config.service bind-var-lib-NetworkManager.service
 
 [Service]
 OOMScoreAdjust=-1000
