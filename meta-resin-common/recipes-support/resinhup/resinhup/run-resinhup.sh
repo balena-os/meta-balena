@@ -220,11 +220,16 @@ function runPreHacks {
     fi
 }
 
+function dockerCleanRepo {
+    local repo=$1
+    $DOCKER images --no-trunc | grep "${repo}" | awk '{ print $3 }' | uniq | xargs -t $DOCKER rmi -f  &> /dev/null 2>&1 || true
+}
+
 function runPostHacks {
     log "Cleanup docker images..."
-    $DOCKER rmi -f $RESINHUP_REGISTRY:$TAG-$SLUG  &> /dev/null
-    $DOCKER rmi -f registry.resinstaging.io/resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
-    $DOCKER rmi -f resin/resinos:$HOSTOS_VERSION-$SLUG &> /dev/null
+    dockerCleanRepo "$RESINHUP_REGISTRY"
+    dockerCleanRepo "registry.resinstaging.io/resin/resinos"
+    dockerCleanRepo "resin/resinos"
 
     # This is just an optimization so next time docker starts it won't have to index everything
     # risking the systemd service to timeout.
