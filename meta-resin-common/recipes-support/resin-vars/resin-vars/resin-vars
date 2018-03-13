@@ -68,6 +68,7 @@ if [ -f $CONFIG_PATH ]; then
          REGISTERED_AT=\(.registered_at // "")
          NTP_SERVERS=\(.ntpServers // "")
          DNS_SERVERS=\(.dnsServers // "")
+         BALENA_ROOT_CA=\(.balenaRootCA // "")
          "' $CONFIG_PATH)"
 
     # Various default values
