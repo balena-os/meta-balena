@@ -1,0 +1,13 @@
+[Unit]
+Description=OS configuration device key service
+DefaultDependencies=no
+Requires=resin-boot.service
+After=resin-boot.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/os-config generate-api-key
+
+[Install]
+WantedBy=basic.target
