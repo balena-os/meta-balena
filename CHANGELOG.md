@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.12.2
+## (2018-03-14)
+
+* Update supervisor to v7.1.11 [Akis Kesoglou]
+* Balena: Update package to include deadlock fix [Andrei Gherzan]
+* Remove bashisms in resin-init-flasher recipe [Andrei Gherzan]
+
 # v2.12.1
 ## (2018-03-12)
 
