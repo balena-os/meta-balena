@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.12.3
+## (2018-03-15)
+
+* Update supervisor to v7.1.14 [Florin Sarbu]
+
 # v2.12.2
 ## (2018-03-14)
 
