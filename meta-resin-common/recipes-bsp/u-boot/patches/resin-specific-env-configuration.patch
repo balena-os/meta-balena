@@ -1,28 +1,24 @@
-From 20c288af1e401549f434f22e420dfa1409c57078 Mon Sep 17 00:00:00 2001
-From: Andrei Gherzan <andrei@resin.io>
-Date: Wed, 4 Jan 2017 15:58:42 +0100
-Subject: [PATCH] Add resin specific environment configuration
+From 2b57d07d2d2261bb59b00fa0073ffa5ed8605c6d Mon Sep 17 00:00:00 2001
+From: Preben Rynning Myrvoll <prm@datarespons.no>
+Date: Thu, 15 Mar 2018 09:54:53 +0100
+Subject: [PATCH] Adding support to boot from boot and rootfs, and use of
+ /counter to select new/old image
 
-This patch defines all the needed bits on which resinhup relies when swiching
-the root partition. The interface with uboot is done through an env file
-(resinOS_uEnv.txt) located in the first partition which, if it exists, might
-overwrite the default root partition index. In order to overwrite this, the env
-file must define `resin_root_part`.
+Support booting from boot (vfat), rootfs (ext4), and also to use
+/counter files inside rootfs to select new/old image.
 
-Signed-off-by: Andrei Gherzan <andrei@resin.io>
-
-Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Preben Rynning Myrvoll <prm@datarespons.no>
 ---
- include/env_resin.h | 89 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+ include/env_resin.h | 186 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 186 insertions(+)
  create mode 100644 include/env_resin.h
 
 diff --git a/include/env_resin.h b/include/env_resin.h
 new file mode 100644
-index 0000000..2ff0fa5
+index 0000000..4d5cbaf
 --- /dev/null
 +++ b/include/env_resin.h
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,186 @@
 +#ifndef HEADER_ENV_RESIN_H
 +#define HEADER_ENV_RESIN_H
 +
@@ -31,12 +27,19 @@ index 0000000..2ff0fa5
 + *     resin_kernel_load_addr - kernel load address as we use the same
 + *                              to load the env file
 + *     resin_root_part        - existing in the env file to import (optional)
++ *     resin_boot_from_root   - if existent, load boot files from root (optional)
++ *     resin_boot_counter     - if existent the root partition counter file
++ *                              will be used to set correct root part. Set to 1
++ *                              to get high count or 2 to get low count (optional)
 + * Defines:
 + *     resin_set_kernel_root  - needs to be integrated with board
 + *                              specific configuration
 + *     resin_kernel_root      - the root kernel argument
-+ *     resin_dev_type         - device type from where we boot (e.g. mmc, usb etc.)
-+ *     resin_dev_index        - device index to be used at boot
++ *     resin_loader           - loader to use for resin boot images (fat or ext4)
++ *     resin_dev_type         - device type to be used (e.g. mmc, usb etc.)
++ *     resin_dev_index        - device index to be used
++ *     resin_dev_boot_part    - device partition to be used to boot
++ *     resin_dev_root_part    - device partition to be used as root
 + */
 +
 +#include <config_resin.h>
@@ -48,55 +51,134 @@ index 0000000..2ff0fa5
 +       "resin_uboot_devices=" __stringify(RESIN_UBOOT_DEVICES) "\0" \
 +       "resin_boot_part=" __stringify(RESIN_BOOT_PART) "\0" \
 +       "resin_root_part=" __stringify(RESIN_DEFAULT_ROOT_PART) "\0" \
++       "resin_bc_filename=counter\0" \
++       "resin_bc_size=10\0" \
++       \
++       "resin_load_bc_file=" \
++               "echo Loading ${resin_bc_filename} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_root_part_index};" \
++               "${resin_loader} ${resin_dev_type} ${resin_dev_index}:${resin_root_part_index} ${resin_bc_load_value_addr} ${resin_bc_filename};\0" \
++       \
++       "resin_set_bc_values=" \
++               "setenv resin_bc_stored_value_addr ${resin_bc_load_value_addr};" \
++               "setexpr resin_bc_load_value_addr ${resin_bc_load_value_addr} + ${resin_bc_size};" \
++               "setenv resin_bc_root_part ${resin_root_part_index};\0" \
++       \
++       "resin_set_bc_root_part=" \
++               "setenv resin_bc_load_value_addr ${resin_kernel_load_addr};" \
++               "for resin_root_part_index in ${resin_bc_root_parts}; do " \
++                       "if run resin_load_bc_file; then " \
++                               "if test -n \"${resin_bc_root_part}\"; then " \
++                                       "if itest ${resin_boot_counter} == 1; then " \
++                                               "if itest.s *${resin_bc_load_value_addr} > *${resin_bc_stored_value_addr}; then " \
++                                                       "run resin_set_bc_values;" \
++                                                       "echo Setting boot counter (high) NEW partition to ${resin_bc_root_part};" \
++                                               "fi;" \
++                                       "else;" \
++                                               "if itest.s *${resin_bc_load_value_addr} < *${resin_bc_stored_value_addr}; then " \
++                                                       "run resin_set_bc_values;" \
++                                                       "echo Setting boot counter (low) NEW partition to ${resin_bc_root_part};" \
++                                               "fi;" \
++                                       "fi;" \
++                               "else;" \
++                                        "run resin_set_bc_values;" \
++                                        "echo Setting initial boot counter based partition to ${resin_bc_root_part};" \
++                               "fi; " \
++                       "fi; " \
++               "done;\0" \
 +       \
 +       "resin_find_root_part_uuid=" \
-+               "part uuid ${resin_dev_type} ${resin_dev_index}:${resin_root_part} resin_root_part_uuid\0" \
++               "part uuid ${resin_dev_type} ${resin_dev_index}:${resin_dev_root_part} resin_root_part_uuid\0" \
 +       \
 +       "resin_load_env_file=" \
-+               "echo Loading ${resin_env_file} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_boot_part};" \
-+               "fatload ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_env_file};\0" \
++               "echo Loading ${resin_env_file} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_dev_boot_part};" \
++               "${resin_loader} ${resin_dev_type} ${resin_dev_index}:${resin_dev_boot_part} ${resin_kernel_load_addr} ${resin_env_file};\0" \
 +       \
 +       "resin_import_env_file=" \
 +               "echo Import ${resin_env_file} in environment;" \
 +               "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
 +       \
 +       "resin_flasher_detect=" \
-+               "fatload ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_flasher_flag_file};\0" \
++               "${resin_loader} ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_root_part_index} ${resin_kernel_load_addr} ${resin_flasher_flag_file};\0" \
 +       \
 +       "resin_image_detect=" \
-+               "fatload ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_image_flag_file};\0" \
++               "${resin_loader} ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_root_part_index} ${resin_kernel_load_addr} ${resin_image_flag_file};\0" \
 +       \
-+       "resin_scan_devs=" \
-+               "echo Scanning MMC and USB devices ${resin_uboot_devices}; " \
++       "resin_counter_detect=" \
++               "${resin_loader} ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_root_part_index} ${resin_kernel_load_addr} ${resin_bc_filename};\0" \
++       \
++       "resin_scan_devs_and_parts_image=" \
++               "if test -n \"${resin_boot_counter}\"; then " \
++                       "if run resin_counter_detect; then " \
++                               "setenv resin_bc_root_parts ${resin_bc_root_parts} ${resin_root_part_index};" \
++                               "setenv resin_image_dev_index ${resin_scan_dev_index};" \
++                               "setenv resin_dev_type ${resin_scan_dev_type};" \
++                       "fi;" \
++               "else;" \
++                       "if test -n \"${resin_image_dev_index}\"; then ;" \
++                               "else if run resin_image_detect; then " \
++                                       "setenv resin_image_dev_index ${resin_scan_dev_index};" \
++                                       "setenv resin_dev_type ${resin_scan_dev_type};" \
++                                       "setenv resin_dev_boot_part ${resin_root_part_index};" \
++                                       "if test -n \"${resin_boot_from_root}\"; then " \
++                                               "setenv resin_dev_root_part ${resin_dev_boot_part};" \
++                                       "else; " \
++                                               "setenv resin_dev_root_part ${resin_root_part};" \
++                                       "fi;" \
++                               "fi;" \
++                       "fi;" \
++               "fi;\0" \
++       \
++       "resin_scan_devs_and_parts=" \
++               "echo Scanning MMC and USB devices ${resin_uboot_devices} and partitions ${resin_scan_parts}; " \
++               "setenv resin_bc_root_parts;" \
 +               "for resin_scan_dev_type in mmc usb; do " \
 +                       "for resin_scan_dev_index in ${resin_uboot_devices}; do " \
-+                               "if run resin_flasher_detect; then " \
-+                                       "setenv resin_flasher_dev_index ${resin_scan_dev_index}; " \
-+                                       "setenv resin_dev_type ${resin_scan_dev_type}; " \
-+                                       "exit; " \
-+                               "else; " \
-+                                       "if test -n \"${resin_image_dev_index}\"; then ;" \
-+                                               "else if run resin_image_detect; then " \
-+                                                       "setenv resin_image_dev_index ${resin_scan_dev_index}; " \
-+                                                       "setenv resin_dev_type ${resin_scan_dev_type}; " \
-+                                               "fi; " \
-+                                       "fi; " \
-+                               "fi; " \
++                               "for resin_root_part_index in ${resin_scan_parts}; do " \
++                                       "if run resin_flasher_detect; then " \
++                                               "setenv resin_flasher_dev_index ${resin_scan_dev_index}; " \
++                                               "setenv resin_dev_type ${resin_scan_dev_type}; " \
++                                               "setenv resin_dev_boot_part ${resin_root_part_index};" \
++                                               "if test -n \"${resin_boot_from_root}\"; then " \
++                                                       "setenv resin_dev_root_part ${resin_dev_boot_part};" \
++                                               "else; " \
++                                                       "setenv resin_dev_root_part ${resin_root_part};" \
++                                               "fi;" \
++                                               "exit; " \
++                                       "else;" \
++                                               "run resin_scan_devs_and_parts_image;" \
++                                       "fi;" \
++                               "done;" \
 +                       "done;" \
 +               "done;\0"  \
 +       \
-+       "resin_set_dev_index=" \
-+               "run resin_scan_devs; " \
-+               "if test -n ${resin_flasher_dev_index}; then " \
-+                       "echo Found resin flasher on ${resin_dev_type} ${resin_flasher_dev_index}; "\
-+                       "setenv resin_dev_index ${resin_flasher_dev_index}; "\
-+               "else; "\
-+                       "if test -n \"${resin_image_dev_index}\"; then " \
-+                               "echo Found resin image on ${resin_dev_type} ${resin_image_dev_index}; "\
-+                               "setenv resin_dev_index ${resin_image_dev_index}; "\
-+                       "else; " \
-+                               "echo ERROR: Could not find a resin image of any sort.; " \
++       "resin_set_dev_and_part_image=" \
++               "if test -n \"${resin_bc_root_parts}\"; then " \
++                       "echo Found resin images on ${resin_dev_type} ${resin_image_dev_index} - partitions ${resin_bc_root_parts};" \
++                       "setenv resin_dev_index ${resin_image_dev_index};" \
++                       "run resin_set_bc_root_part;" \
++                       "if test -n \"${resin_bc_root_part}\"; then " \
++                               "setenv resin_dev_boot_part ${resin_bc_root_part};" \
++                               "setenv resin_dev_root_part ${resin_bc_root_part};" \
++                               "echo Selected boot counter based root on ${resin_dev_type} ${resin_image_dev_index}:${resin_dev_root_part};" \
++                       "else;" \
++                               "echo ERROR - Failed to find boot counter based root partition..;" \
 +                       "fi; " \
++               "else;" \
++                       "if test -n \"${resin_image_dev_index}\"; then " \
++                               "echo Found resin image on ${resin_dev_type} ${resin_image_dev_index}:${resin_dev_boot_part};" \
++                               "setenv resin_dev_index ${resin_image_dev_index};" \
++                       "else;" \
++                               "echo ERROR: Could not find a resin image in partitions of any sort.;" \
++                       "fi;" \
++               "fi;\0" \
++       \
++       "resin_set_dev_and_part=" \
++               "run resin_scan_devs_and_parts;" \
++               "if test -n \"${resin_flasher_dev_index}\"; then " \
++                       "echo Found resin flasher on ${resin_dev_type} ${resin_flasher_dev_index}:${resin_dev_boot_part};" \
++                       "setenv resin_dev_index ${resin_flasher_dev_index};" \
++               "else;" \
++                       "run resin_set_dev_and_part_image;" \
 +               "fi;\0" \
 +       \
 +       "resin_inject_env_file=" \
@@ -105,13 +187,24 @@ index 0000000..2ff0fa5
 +               "fi;\0" \
 +       \
 +       "resin_set_kernel_root=" \
-+               "run resin_set_dev_index;" \
++               "setenv resin_flasher_dev_index;" \
++               "setenv resin_image_dev_index;" \
++               "if test -n \"${resin_boot_from_root}\"; then " \
++                       "setenv resin_loader ext4load;" \
++                       "setenv resin_root_part_a ${resin_root_part}; " \
++                       "setexpr resin_root_part_b ${resin_root_part} + 1; " \
++                       "setenv resin_scan_parts ${resin_root_part_a} ${resin_root_part_b};" \
++               "else; " \
++                       "setenv resin_loader fatload;" \
++                       "setenv resin_scan_parts ${resin_boot_part};" \
++               "fi; " \
++               "run resin_set_dev_and_part;" \
 +               "run resin_inject_env_file;" \
 +               "run resin_find_root_part_uuid;" \
 +               "setenv resin_kernel_root root=PARTUUID=${resin_root_part_uuid}\0"
 +
 +#endif /* HEADER_ENV_RESIN_H */
 +
---
-2.7.4
+-- 
+1.9.1
 
