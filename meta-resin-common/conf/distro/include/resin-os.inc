@@ -40,7 +40,6 @@ DISTRO_FEATURES_append = " ${@bb.utils.contains('DEVELOPMENT_IMAGE','1','develop
 PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
 PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
-PREFERRED_PROVIDER_docker-disk ?= "docker-resin-supervisor-disk"
 
 SPLASH = "plymouth"
 
