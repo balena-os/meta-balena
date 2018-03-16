@@ -64,6 +64,7 @@ RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 RESIN_CONFIGS ?= " \
     balena \
     brcmfmac \
+    cdc-acm \
     ralink \
     r8188eu \
     systemd \
@@ -397,6 +398,11 @@ RESIN_CONFIGS[zram] = " \
     CONFIG_ZRAM=m \
     CONFIG_CRYPTO=y \
     CONFIG_CRYPTO_LZO=m \
+    "
+
+# USB Modem (CDC ACM) support
+RESIN_CONFIGS[cdc-acm] = " \
+    CONFIG_USB_ACM=m \
     "
 
 ###########
