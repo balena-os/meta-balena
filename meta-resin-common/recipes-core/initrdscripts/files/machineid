@@ -7,6 +7,19 @@ machineid_enabled() {
         return 1
     fi
 
+    start="$(date +%s)"
+    end="$(date +%s)"
+    while [ ! -L "/dev/disk/by-label/resin-state" ]; do
+        if [ $((end - start)) -le 30 ]; then
+            sleep 1
+            end="$(date +%s)"
+        else
+            echo "[ERROR] Timeout while waiting for resin-state label to appear."
+            echo "[ERROR] Not able to mount resin-state, machine-id will not be persistent"
+            return 1
+        fi
+    done
+
     if ! mount -t ext4 /dev/disk/by-label/resin-state "$ROOTFS_DIR"/mnt/state; then
         echo "[ERROR] Not able to mount resin-state, machine-id will not be persistent"
         return 1
