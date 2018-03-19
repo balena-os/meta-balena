@@ -6,4 +6,4 @@ OnBootSec=15min
 OnUnitInactiveSec=1d
 
 [Install]
-WantedBy=resin.target
+WantedBy=multi-user.target
