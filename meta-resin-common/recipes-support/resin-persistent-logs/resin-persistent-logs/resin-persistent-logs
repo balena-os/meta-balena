@@ -5,6 +5,7 @@ set -e
 . /usr/sbin/resin-vars
 
 if [ "$PERSISTENT_LOGGING" = "true" ] && [ ! -d /var/log/journal ]; then
+    mkdir -p /var/log/journal
     systemctl start bind-var-log-journal.service
     journalctl --flush
     echo "$(basename "$0"): Persistent logging activated."
