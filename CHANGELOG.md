@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.12.4
+## (2018-03-20)
+
+* Fix persistent logging [Andrei Gherzan]
+* USB Modem (CDC ACM) support enabled as kernel module [Andrei Gherzan]
+* Update supervisor to v7.1.18 [Pablo Carranza Velez]
+* Add support for persistent NetworkManager state directory [Andrei Gherzan]
+
 # v2.12.3
 ## (2018-03-15)
 
