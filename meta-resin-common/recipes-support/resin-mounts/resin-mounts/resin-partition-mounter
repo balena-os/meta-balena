@@ -2,6 +2,8 @@
 
 set -e
 
+LABEL_TIMEOUT=30
+
 help () {
 	cat << EOF
 Mount a resin partition label
@@ -71,10 +73,20 @@ if [ ! -d "$part_mountpoint" ]; then
 	echo "ERROR: Target mountpoint $part_mountpoint not found."
 	exit 1
 fi
-if [ ! -L "$label_path" ]; then
-	echo "ERROR: Could not find $part_label."
-	exit 1
-fi
+
+
+# Waiting for the filesystem label
+start="$(date +%s)"
+end="$(date +%s)"
+while [ ! -L "$label_path" ]; do
+	if [ $((end - start)) -le "$LABEL_TIMEOUT" ]; then
+		sleep 1
+		end="$(date +%s)"
+	else
+		echo "ERROR: Timeout while waiting for filesystem label to appear."
+		return 1
+	fi
+done
 
 mounted=false
 for m in $(findmnt --output TARGET --canonicalize --noheading "$label_path"); do
