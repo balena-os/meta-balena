@@ -13,7 +13,6 @@ inherit allarch systemd
 SYSTEMD_SERVICE_${PN} = "resin-filesystem-expand.service"
 
 RDEPENDS_${PN} = " \
-    bash \
     coreutils \
     e2fsprogs-resize2fs \
     "
