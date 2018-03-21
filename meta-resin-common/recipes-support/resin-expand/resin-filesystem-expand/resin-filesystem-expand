@@ -1,12 +1,25 @@
-#!/bin/bash
+#!/bin/sh
 
 DATA_PARTITION=/dev/disk/by-label/resin-data
+LABEL_TIMEOUT=30
 
-echo -n "Expand ext4 filesystem on $DATA_PARTITION... "
+# Waiting for the filesystem label
+start="$(date +%s)"
+end="$(date +%s)"
+while [ ! -L "$DATA_PARTITION" ]; do
+	if [ $((end - start)) -le "$LABEL_TIMEOUT" ]; then
+		sleep 1
+		end="$(date +%s)"
+	else
+		echo "[ERROR] Timeout while waiting for filesystem label to appear."
+		return 1
+	fi
+done
+
+echo "[INFO] Filesystem check on $DATA_PARTITION... "
 e2fsck -y $DATA_PARTITION
+echo "[INFO] Expand ext4 filesystem on $DATA_PARTITION... "
 resize2fs -f $DATA_PARTITION
-echo "done."
-
 sync
 
 exit 0

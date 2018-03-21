@@ -1,8 +1,6 @@
 [Unit]
 Description=Expand resin-data partition
 DefaultDependencies=no
-Requires=systemd-udev-settle.service
-After=systemd-udev-settle.service
 Before=resin-data.service umount.target
 Conflicts=umount.target
 ConditionVirtualization=!docker
@@ -10,7 +8,7 @@ ConditionVirtualization=!docker
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-filesystem-expand
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-filesystem-expand
 
 [Install]
 WantedBy=multi-user.target
