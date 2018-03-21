@@ -18,7 +18,7 @@ REDSOCKSCONF=${CONFIG_PATH%/*}/system-proxy/redsocks.conf
 NOPROXYFILE=${CONFIG_PATH%/*}/system-proxy/no_proxy
 
 # Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
-iptables -t nat -D OUTPUT -p tcp -j REDSOCKS || true
+iptables -t nat -D PREROUTING -p tcp -j REDSOCKS || true
 iptables -t nat -F REDSOCKS || true
 iptables -t nat -X REDSOCKS || true
 
@@ -54,4 +54,4 @@ iptables -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
 iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 12345
-iptables -t nat -A OUTPUT -p tcp -j REDSOCKS
+iptables -t nat -A PREROUTING -p tcp -j REDSOCKS
