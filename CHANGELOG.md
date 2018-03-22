@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.12.5
+## (2018-03-22)
+
+* Fig slang configure build warning [Andrei Gherzan]
+* Fix racing issue of state label existance in initramfs [Andrei Gherzan]
+* Stop dependending on udev settle at boot [Andrei Gherzan]
+
 # v2.12.4
 ## (2018-03-20)
 
