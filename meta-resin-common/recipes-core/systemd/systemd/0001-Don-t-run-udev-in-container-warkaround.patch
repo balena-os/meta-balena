@@ -1,0 +1,87 @@
+From 7f12bfd1de789074972dbe29bca467bd53a9d4bd Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Mon, 5 Mar 2018 19:50:52 +0000
+Subject: [PATCH] Don't run udev in container - workaround
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+---
+ units/systemd-udev-settle.service.in  | 3 +++
+ units/systemd-udev-trigger.service.in | 3 +++
+ units/systemd-udevd-control.socket    | 3 +++
+ units/systemd-udevd-kernel.socket     | 3 +++
+ units/systemd-udevd.service.in        | 3 +++
+ 5 files changed, 15 insertions(+)
+
+diff --git a/units/systemd-udev-settle.service.in b/units/systemd-udev-settle.service.in
+index 0817803a3..443f8aa30 100644
+--- a/units/systemd-udev-settle.service.in
++++ b/units/systemd-udev-settle.service.in
+@@ -18,6 +18,9 @@ After=systemd-udev-trigger.service
+ Before=sysinit.target
+ ConditionPathIsReadWrite=/sys
+ 
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Service]
+ Type=oneshot
+ TimeoutSec=180
+diff --git a/units/systemd-udev-trigger.service.in b/units/systemd-udev-trigger.service.in
+index 1e04d11fe..5a8b66e1b 100644
+--- a/units/systemd-udev-trigger.service.in
++++ b/units/systemd-udev-trigger.service.in
+@@ -14,6 +14,9 @@ After=systemd-udevd-kernel.socket systemd-udevd-control.socket systemd-hwdb-upda
+ Before=sysinit.target
+ ConditionPathIsReadWrite=/sys
+ 
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Service]
+ Type=oneshot
+ RemainAfterExit=yes
+diff --git a/units/systemd-udevd-control.socket b/units/systemd-udevd-control.socket
+index 46f704ed7..01f30b620 100644
+--- a/units/systemd-udevd-control.socket
++++ b/units/systemd-udevd-control.socket
+@@ -12,6 +12,9 @@ DefaultDependencies=no
+ Before=sockets.target
+ ConditionPathIsReadWrite=/sys
+ 
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Socket]
+ Service=systemd-udevd.service
+ ListenSequentialPacket=/run/udev/control
+diff --git a/units/systemd-udevd-kernel.socket b/units/systemd-udevd-kernel.socket
+index 1a1620695..5cbbfad9a 100644
+--- a/units/systemd-udevd-kernel.socket
++++ b/units/systemd-udevd-kernel.socket
+@@ -12,6 +12,9 @@ DefaultDependencies=no
+ Before=sockets.target
+ ConditionPathIsReadWrite=/sys
+ 
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Socket]
+ Service=systemd-udevd.service
+ ReceiveBuffer=128M
+diff --git a/units/systemd-udevd.service.in b/units/systemd-udevd.service.in
+index 46d637883..ca737b979 100644
+--- a/units/systemd-udevd.service.in
++++ b/units/systemd-udevd.service.in
+@@ -14,6 +14,9 @@ After=systemd-udevd-control.socket systemd-udevd-kernel.socket systemd-sysusers.
+ Before=sysinit.target
+ ConditionPathIsReadWrite=/sys
+ 
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Service]
+ Type=notify
+ OOMScoreAdjust=-1000
+-- 
+2.16.2
+
