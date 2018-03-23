@@ -20,7 +20,6 @@ RDEPENDS_${PN} += " \
     resin-extend-expand \
     dosfstools \
     resin-info \
-    resinhup \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-connectable', '', d)} \
     ${@bb.utils.contains('RESIN_CONNECTABLE', '1', 'resin-provisioner', '', d)} \
     "
