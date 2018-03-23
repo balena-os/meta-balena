@@ -1,6 +1,7 @@
 Change log
 -----------
 
+* Resinhup: removing script from this repo, as it is moved to its own [Gergely]
 * Update supervisor to v6.2.9 [Pablo]
 * Resinhup: allow cached pull of the resinhup updater container as well [Gergely]
 * Resinhup: run supervisor update to the release version by default and add negative flag [Gergely]
