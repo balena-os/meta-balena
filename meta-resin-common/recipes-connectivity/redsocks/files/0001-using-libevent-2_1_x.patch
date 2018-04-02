@@ -1,0 +1,33 @@
+From 792a06ba87621b3c9e921c7fd080cb350ff6892b Mon Sep 17 00:00:00 2001
+From: Apollon Oikonomopoulos <apoikos@debian.org>
+Date: Thu, 29 Mar 2018 22:50:56 +0300
+Subject: [PATCH] Fix redsocks_evbuffer_readline with libevent 2.1
+
+_EVENT_NUMERIC_VERSION was renamed to EVENT__NUMERIC_VERSION in libevent
+2.1. As a result, redsocks_evbuffer_readline would end up using
+evbuffer_readline(buf), which causes client connections to hang
+indefinitely.
+
+Switch the check to using LIBEVENT_VERSION_NUMBER instead.
+LIBEVENT_VERSION_NUMBER has been around since libevent 2.0.3 and
+redsocks is already using it in other parts of the code.
+
+Upstream-Status: Pending
+
+---
+ utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utils.c b/utils.c
+index 824d0cc..30ee290 100644
+--- a/utils.c
++++ b/utils.c
+@@ -117,7 +117,7 @@ int redsocks_gettimeofday(struct timeval *tv)
+ 
+ char *redsocks_evbuffer_readline(struct evbuffer *buf)
+ {
+-#if _EVENT_NUMERIC_VERSION >= 0x02000000
++#if LIBEVENT_VERSION_NUMBER >= 0x02000000
+ 	return evbuffer_readln(buf, NULL, EVBUFFER_EOL_CRLF);
+ #else
+ 	return evbuffer_readline(buf);
