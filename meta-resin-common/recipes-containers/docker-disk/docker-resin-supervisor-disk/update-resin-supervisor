@@ -60,11 +60,6 @@ done
 # A temporary file used until next reboot
 UPDATECONF=/tmp/update-supervisor.conf
 
-if [ -z "$API_ENDPOINT" ]; then
-    echo "Environment variable API_ENDPOINT must be set."
-    exit 1
-fi
-
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
 if [ -z "$_device_api_key" ]; then
@@ -73,6 +68,7 @@ if [ -z "$_device_api_key" ]; then
 fi
 
 error_handler() {
+    # shellcheck disable=SC2181
     [ $? -eq 0 ] && exit 0
 
     # If docker pull fails, start the old supervisor again and exit
@@ -99,7 +95,7 @@ fi
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and tag..."
-if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v3/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/id%20eq%20$DEVICE_ID)&apikey=$_device_api_key" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
+if [ -n "$API_ENDPOINT" ] && [ -n "$DEVICE_ID" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v3/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/id%20eq%20$DEVICE_ID)&apikey=$_device_api_key" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
     echo "Supervisor configuration found from API."
 
     if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
@@ -119,7 +115,7 @@ if data=$(curl --silent --header "User-Agent:" --compressed "$API_ENDPOINT/v3/su
         error_handler "no tag received"
     fi
 else
-    echo "No supervisor configuration found from API. Using arguments for image and tag."
+    echo "No supervisor configuration found from API or required variables not set. Using arguments for image and tag."
     # shellcheck disable=SC1091
     . /etc/resin-supervisor/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
