@@ -6,6 +6,21 @@
 SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG")
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
+# If self-signed root CA exists, add the CA for the specified registry
+if [ -n "$BALENA_ROOT_CA" ]; then
+    BALENA_DECODED_ROOT_CA="$(echo "${BALENA_ROOT_CA}" | base64 -d -w0)"
+    NODE_EXTRA_CA_CERTS="/etc/ssl/certs/balenaRootCA.pem"
+    CERT_DIR="/mnt/state/root-overlay/etc/docker/certs.d/${REGISTRY_ENDPOINT}"
+    CERT_FILE="${CERT_DIR}/ca.crt"
+    CERT_CONTENTS=$(if [ -e "$CERT_FILE" ]; then echo $(cat "$CERT_FILE"); fi)
+
+    # Ensure that the contents is correct, install otherwise
+    if [ "$BALENA_DECODED_ROOT_CA" != "$CERT_CONTENTS" ]; then
+        mkdir -p "$CERT_DIR"
+        echo "$BALENA_DECODED_ROOT_CA" > "$CERT_FILE"
+    fi
+fi
+
 runSupervisor() {
     balena rm --force resin_supervisor || true
     balena run --privileged --name resin_supervisor \
@@ -29,6 +44,8 @@ runSupervisor() {
         -e "LED_FILE=${LED_FILE}" \
         -e "LISTEN_PORT=$LISTEN_PORT" \
         -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" \
+        -e "BALENA_ROOT_CA=$BALENA_DECODED_ROOT_CA" \
+        -e "NODE_EXTRA_CA_CERTS=$NODE_EXTRA_CA_CERTS" \
         "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}"
 }
 
