@@ -22,8 +22,29 @@ fi
 REDSOCKSCONF=${RESIN_BOOT_MOUNTPOINT}/system-proxy/redsocks.conf
 NOPROXYFILE=${RESIN_BOOT_MOUNTPOINT}/system-proxy/no_proxy
 
+# README!
+# The entire following configuration depends on the redsocks configuration.
+# Currently the values used here are forced with a patch on redsocks. If these
+# change, you need to refresh the redsocks patch as well.
+
+# Setup a bridge interface for redsocks
+DNS_INTERFACE_NAME="resin-redsocks"
+DNS_INTERFACE_IP="10.114.103.1"
+if [ ! -d "/sys/class/net/${DNS_INTERFACE_NAME}" ]; then
+	ip link add name ${DNS_INTERFACE_NAME} type bridge
+fi
+if [ "$(cat /sys/class/net/${DNS_INTERFACE_NAME}/operstate)" = "down" ]; then
+	ip link set ${DNS_INTERFACE_NAME} up
+fi
+if [ "$(ip addr show ${DNS_INTERFACE_NAME} | grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | grep -o "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*")" != "${DNS_INTERFACE_IP}" ]; then
+	ip address add ${DNS_INTERFACE_IP}/24 dev ${DNS_INTERFACE_NAME}
+fi
+
 # Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
 iptables -t nat -D OUTPUT -p tcp -j REDSOCKS || true
+iptables -t nat -D PREROUTING -p tcp ! -i redsocks -j REDSOCKS || true
+iptables -t nat -D OUTPUT -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
+iptables -t nat -D PREROUTING -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
 iptables -t nat -F REDSOCKS || true
 iptables -t nat -X REDSOCKS || true
 
@@ -38,9 +59,6 @@ id -u redsocks > /dev/null 2>&1 || (echo "ERROR: redsocks user doesn't exist" &&
 # Set up iptables chain for redsocks
 iptables -t nat -N REDSOCKS
 
-# Traffic coming from redsocks should not go back to redsocks...
-iptables -t nat -A REDSOCKS -m owner --uid-owner redsocks -j RETURN
-
 # Use every line in the no_proxy file as an IP/subnet to not redirect through redsocks
 if [ -f "$NOPROXYFILE" ]; then
 	while IFS= read -r line || [ -n "${line}" ]; do
@@ -48,6 +66,7 @@ if [ -f "$NOPROXYFILE" ]; then
 	done < "$NOPROXYFILE"
 fi
 
+# Setup a new user chain for redsocks
 iptables -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN
 iptables -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN
 iptables -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN
@@ -56,5 +75,15 @@ iptables -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN
 iptables -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
-iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 12345
+iptables -t nat -A REDSOCKS -p tcp -j DNAT --to 10.114.103.1:12345
+
+# Redirect TCP connections to redsocks
 iptables -t nat -A OUTPUT -p tcp -j REDSOCKS
+iptables -t nat -A PREROUTING -p tcp ! -i redsocks -j REDSOCKS
+
+if $(cat /mnt/boot/system-proxy/redsocks.conf | grep ^dnsu2t > /dev/null 2>&1); then
+	# If dnsu2t module is enabled in redsocks, redirect any DNS UDP packets to
+	# REDSOCKS to force DNS over TCP
+	iptables -t nat -A OUTPUT -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313
+	iptables -t nat -A PREROUTING -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313
+fi
