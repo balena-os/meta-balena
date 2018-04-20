@@ -9,6 +9,7 @@ SRC_URI = " \
 	git://github.com/darkk/redsocks.git \
 	file://0001-using-libevent-2_1_x.patch \
 	file://0002-Add-dnsu2t-module-to-convert-DNS-UDP-to-DNS-TCP.patch \
+	file://0003-Add-OS-dependent-default-configuration-values.patch \
 "
 
 DEPENDS = "libevent"
