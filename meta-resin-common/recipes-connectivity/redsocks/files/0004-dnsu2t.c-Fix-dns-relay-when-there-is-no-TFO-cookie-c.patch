@@ -1,0 +1,74 @@
+From 27bec05eb5d2ac7f3a01191c1612a16437e5fe0c Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Wed, 25 Apr 2018 15:25:09 +0100
+Subject: [PATCH] dnsu2t.c: Fix dns relay when there is no TFO cookie cached
+
+The current implementation uses TFO when resending DNS request over TCP.
+This works well when there is a cookie cached as the data will be send
+with the SYN packet.
+
+The problem is at the first connection request. When that happens,
+(first sendto()) the client will send a SYN packet with TFO option being
+it a TFO request but given that we are using a non-blocking socket,
+sendto will not send the data too and return errno EINPROGRESS[1]. It
+assumes that a write is retried after that cookie exchange is done[2].
+
+This looks like an ignorable issue as it theoretically only makes the
+first request fail but it gets bad when the middleware strips TFO
+options. See for example Juniper routers[3]. In this case the client
+will never get a cookie back and will never send data either as every
+sendto will just send a SYN with TFO request which ends up as a simple
+SYN on the server side. The server will just proceed with a classic 3WHS
+but the client will never pass the request afterwards.
+
+This patch saves the DNS request when a cookie request is sent and
+resends the data when the socket becomes writable (in the appropiate
+callback function).
+
+[1] https://www.spinics.net/lists/netdev/msg205324.html
+[2] https://www.spinics.net/lists/linux-man/msg11329.html
+[3] https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/tfo-configuring.html#jd0e18
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+---
+ dnsu2t.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/dnsu2t.c b/dnsu2t.c
+index a072bd4..3fa5949 100644
+--- a/dnsu2t.c
++++ b/dnsu2t.c
+@@ -147,6 +147,15 @@ static void dnsu2t_pkt_from_client(int srvfd, short what, void *_arg)
+ 		sent = write(event_get_fd(&self->relay_rd), &in, pktlen);
+ 	}
+ 
++	if (sent == -1 && errno == EINPROGRESS) {
++		// Writing with MSG_FASTOPEN fails with EINPROGRESS on a non-blocking
++		// socket. When that happens, client needs to write the data again. We
++		// save the data here and write it in the call back function when the
++		// socket becomes writable.
++		self->pkt = in;
++		self->pkt_size = pktlen;
++	}
++
+ 	if (sent == pktlen || (sent == -1 && errno == EINPROGRESS)) {
+ 		self->request_count++;
+ 		self->inflight_count++;
+@@ -227,6 +236,14 @@ static void dnsu2t_close_relay(dnsu2t_instance *self)
+ void dnsu2t_relay_writable(int fd, short what, void *_arg)
+ {
+ 	dnsu2t_instance *self = _arg;
++
++	if (self->pkt_size != 0) {
++		// Resend saved packet as the first sendto didn't have an available TFO
++		// cookie.
++		write(event_get_fd(&self->relay_rd), &self->pkt, self->pkt_size);
++		self->pkt_size = 0;
++	}
++
+ 	assert(event_get_fd(&self->relay_wr) == fd);
+ 	if ((what & EV_WRITE) && self->inflight_count < self->config.inflight_max && !self->reqstream_broken) {
+ 		if (event_add(&self->listener, NULL) != 0)
+-- 
+2.17.0
+
