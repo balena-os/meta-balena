@@ -17,6 +17,7 @@ RDEPENDS_${PN} += " \
     dosfstools \
     hostapp-update \
     hostapp-update-hooks \
+    load-timestamp \
     resin-filesystem-expand \
     resin-persistent-logs \
     resin-info \
