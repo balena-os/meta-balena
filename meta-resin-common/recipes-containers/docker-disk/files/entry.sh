@@ -27,12 +27,11 @@ echo "Starting docker daemon with $BALENA_STORAGE storage driver."
 docker daemon -g $DATA_VOLUME/docker -s "$BALENA_STORAGE" &
 echo "Waiting for docker to become ready.."
 STARTTIME="$(date +%s)"
-ENDTIME="$(date +%s)"
+ENDTIME="$STARTTIME"
 while [ ! -S /var/run/docker.sock ]
 do
     if [ $((ENDTIME - STARTTIME)) -le $DOCKER_TIMEOUT ]; then
-        sleep 1
-        ENDTIME=$(date +%s)
+        sleep 1 && ENDTIME=$((ENDTIME + 1))
     else
         echo "Timeout while waiting for docker to come up."
         exit 1
