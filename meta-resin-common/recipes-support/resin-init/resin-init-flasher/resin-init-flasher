@@ -211,13 +211,12 @@ fi
 
 # Give a chance for the device to register
 STARTTIME=$(date +%s)
-ENDTIME=$(date +%s)
+ENDTIME="$STARTTIME"
 TIMEOUT=10
 while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
 do
     if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1
-        ENDTIME=$(date +%s)
+        sleep 1 && ENDTIME=$((ENDTIME + 1))
     else
         inform "Timeout while waiting for register to finish. No network?"
         break

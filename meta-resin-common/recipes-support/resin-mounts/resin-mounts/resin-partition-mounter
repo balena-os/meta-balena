@@ -77,14 +77,13 @@ fi
 
 # Waiting for the filesystem label
 start="$(date +%s)"
-end="$(date +%s)"
+end="$start"
 while [ ! -L "$label_path" ]; do
 	if [ $((end - start)) -le "$LABEL_TIMEOUT" ]; then
-		sleep 1
-		end="$(date +%s)"
+		sleep 1 && end=$((end + 1))
 	else
 		echo "ERROR: Timeout while waiting for filesystem label to appear."
-		return 1
+		exit 1
 	fi
 done
 

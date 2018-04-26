@@ -8,11 +8,10 @@ machineid_enabled() {
     fi
 
     start="$(date +%s)"
-    end="$(date +%s)"
+    end="$start"
     while [ ! -L "/dev/disk/by-label/resin-state" ]; do
         if [ $((end - start)) -le 30 ]; then
-            sleep 1
-            end="$(date +%s)"
+            sleep 1 && end=$((end + 1))
         else
             echo "[ERROR] Timeout while waiting for resin-state label to appear."
             echo "[ERROR] Not able to mount resin-state, machine-id will not be persistent"
