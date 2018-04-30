@@ -1,6 +1,23 @@
 Change log
 -----------
 
+# v2.12.6
+## (2018-04-30)
+
+* Initialize system clock using the build time [Andrei Gherzan]
+* Fix typo in resin-mounts [Mans Zigher]
+* Update supervisor to v7.4.3 [Pablo Carranza Velez]
+* Update supervisor to v7.4.2 [Akis Kesoglou]
+* Move to Supervisor v7.4.1. [Heds Simons]
+* Pass self-signed CA data to the Supervisor and for Docker registry trust. [Heds Simons]
+* Extract `balenaRootCA` property from `config.json` to allow interoperation with a self-signed service. [Heds Simons]
+* Split resin specific changes in dnsmasq in a separate bbappend [Andrei Gherzan]
+* Allow not existing supervisor.conf file [Bruno Binet]
+* Remove remnants of 1.x updater, which is not needed anymore [Gergely Imreh]
+* Allow update resin spervisor when API endpoint is not available [Andrei Gherzan]
+* Apply upstream patch for redsocks to fix http-config regression [Gergely Imreh]
+* Update supervisor to v7.1.20 [Akis Kesoglou]
+
 # v2.12.5
 ## (2018-03-22)
 
