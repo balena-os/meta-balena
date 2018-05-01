@@ -10,6 +10,7 @@ RDEPENDS_${PN} = " \
     ${RESIN_INIT_PACKAGE} \
     ${RESIN_MOUNTS} \
     ${RESIN_REGISTER} \
+    resin-extra-udev-rules \
     rsync \
     kernel-modules \
     os-release \
