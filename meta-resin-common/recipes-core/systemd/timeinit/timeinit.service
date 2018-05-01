@@ -13,14 +13,14 @@
 # limitations under the License.
 
 [Unit]
-Description=Load /etc/timestamp as system clock
+Description=Initialize system clock
 DefaultDependencies=no
 Before=balena.service timesyncd.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/sh /usr/bin/load-timestamp.sh
+ExecStart=/bin/sh /usr/bin/timeinit.sh
 
 [Install]
 WantedBy=multi-user.target

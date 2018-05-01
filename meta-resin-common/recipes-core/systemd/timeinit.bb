@@ -12,23 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-DESCRIPTION = "Load /etc/timestamp at boot"
+DESCRIPTION = "Initialize system clock at boot"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = " \
-    file://load-timestamp.sh \
-    file://load-timestamp.service \
+    file://timeinit.sh \
+    file://timeinit.service \
     "
 S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = "load-timestamp.service"
+SYSTEMD_SERVICE_${PN} = "timeinit.service"
 
 do_install() {
     install -d ${D}${bindir}
     install -d ${D}${systemd_unitdir}/system
-    install -m 0775 ${WORKDIR}/load-timestamp.sh ${D}${bindir}
-    install -c -m 0644 ${WORKDIR}/load-timestamp.service ${D}${systemd_unitdir}/system
+    install -m 0775 ${WORKDIR}/timeinit.sh ${D}${bindir}
+    install -c -m 0644 ${WORKDIR}/timeinit.service ${D}${systemd_unitdir}/system
 }
