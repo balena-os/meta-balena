@@ -13,14 +13,17 @@
 # limitations under the License.
 
 [Unit]
-Description=Initialize system clock
+Description=Initialize system clock from RTC
+ConditionVirtualization=!docker
+ConditionPathExists=/dev/rtc
 DefaultDependencies=no
-Before=balena.service timesyncd.service
+After=systemd-udev-settle.service
+Before=systemd-timesyncd.service timeinit-timestamp.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/sh /usr/bin/timeinit.sh
+ExecStart=/sbin/hwclock --hctosys
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=time-sync.target

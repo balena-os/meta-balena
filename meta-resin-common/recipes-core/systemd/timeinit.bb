@@ -17,18 +17,23 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = " \
-    file://timeinit.sh \
-    file://timeinit.service \
+    file://timeinit-rtc.service \
+    file://timeinit-timestamp.service \
+    file://timeinit-timestamp.sh \
     "
 S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = "timeinit.service"
+SYSTEMD_SERVICE_${PN} = " \
+	timeinit-rtc.service \
+	timeinit-timestamp.service \
+	"
 
 do_install() {
     install -d ${D}${bindir}
     install -d ${D}${systemd_unitdir}/system
-    install -m 0775 ${WORKDIR}/timeinit.sh ${D}${bindir}
-    install -c -m 0644 ${WORKDIR}/timeinit.service ${D}${systemd_unitdir}/system
+    install -m 0775 ${WORKDIR}/timeinit-timestamp.sh ${D}${bindir}
+    install -c -m 0644 ${WORKDIR}/timeinit-timestamp.service ${D}${systemd_unitdir}/system
+    install -c -m 0644 ${WORKDIR}/timeinit-rtc.service ${D}${systemd_unitdir}/system
 }
