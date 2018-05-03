@@ -15,7 +15,7 @@
 [Unit]
 Description=Initialize system clock from build timestamp
 DefaultDependencies=no
-Before=balena.service timesyncd.service
+Before=systemd-timesyncd.service
 
 [Service]
 Type=oneshot
