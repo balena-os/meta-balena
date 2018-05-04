@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.12.7
+## (2018-05-04)
+
+* Fix typo in timeinit-timestamp service [Andrei Gherzan]
+* Use system clock at boot based on RTC when available [Andrei Gherzan]
+* Update Network Manager to version 1.10.2 [Florin Sarbu]
+* Adds Teensy udev rules [Henry Miskin]
+
 # v2.12.6
 ## (2018-04-30)
 
