@@ -210,6 +210,10 @@ String. A space-separated list of preferred DNS servers to use for name resoluti
 ## Yocto version support
 
 The following Yocto versions are supported:
+ * Rocko (2.4)
+  * **TESTED**
+ * Pyro (2.3)
+  * **TESTED**
  * Morty (2.2)
   * **TESTED**
  * Krogoth (2.1)
