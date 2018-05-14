@@ -1,4 +1,4 @@
-From a05247037a5d7be34d6df83411df08fe0f176210 Mon Sep 17 00:00:00 2001
+From 6e10a35b07b7af00d579f9df693e2d4444f62a51 Mon Sep 17 00:00:00 2001
 From: Andrei Gherzan <andrei@resin.io>
 Date: Fri, 20 Apr 2018 13:06:14 +0100
 Subject: [PATCH] Add OS dependent default configuration values
@@ -10,9 +10,9 @@ Signed-off-by: Andrei Gherzan <andrei@resin.io>
 Upstream-Status: Inappropiate [Configuration]
 ---
  base.c     |  6 ++++++
- dnsu2t.c   | 13 +++++++++++--
+ dnsu2t.c   | 20 +++++++++++++++++---
  redsocks.c | 13 ++++++++++++-
- 3 files changed, 29 insertions(+), 3 deletions(-)
+ 3 files changed, 35 insertions(+), 4 deletions(-)
 
 diff --git a/base.c b/base.c
 index 210ddb5..9acf365 100644
@@ -32,10 +32,10 @@ index 210ddb5..9acf365 100644
  		parser_error(section->context, "`max_accept_backoff` must be positive, 0 ms is too low");
  		return -1;
 diff --git a/dnsu2t.c b/dnsu2t.c
-index c4bd066..5b5f9e4 100644
+index bae4a45..6b02d1c 100644
 --- a/dnsu2t.c
 +++ b/dnsu2t.c
-@@ -343,8 +343,8 @@ static int dnsu2t_onenter(parser_section *section)
+@@ -336,10 +336,10 @@ static int dnsu2t_onenter(parser_section *section)
 
  	INIT_LIST_HEAD(&instance->list);
  	instance->config.bindaddr.sin_family = AF_INET;
@@ -44,26 +44,34 @@ index c4bd066..5b5f9e4 100644
 +	instance->config.bindaddr.sin_addr.s_addr = inet_addr("10.114.103.1");
 +	instance->config.bindaddr.sin_port = 5313;
  	instance->config.relayaddr.sin_family = AF_INET;
- 	instance->config.relayaddr.sin_port = htons(53);
+-	instance->config.relayaddr.sin_port = htons(53);
++	instance->config.relayaddr.sin_port = 53;
  	instance->config.relay_timeout = 30;
-@@ -368,6 +368,15 @@ static int dnsu2t_onenter(parser_section *section)
- static int dnsu2t_onexit(parser_section *section)
- {
- 	dnsu2t_instance *instance = section->data;
-+	//Force some values that the OS depends on
+ 	instance->config.inflight_max = 16;
+
+@@ -367,6 +367,20 @@ static int dnsu2t_onexit(parser_section *section)
+ 	instance->config.bindaddr.sin_port = htons(instance->config.bindaddr.sin_port);
+ 	instance->config.relayaddr.sin_port = htons(instance->config.relayaddr.sin_port);
+
++	// Force some values that the OS depends on
 +	if (instance->config.bindaddr.sin_addr.s_addr != inet_addr("10.114.103.1")) {
 +		log_error(LOG_WARNING, "Overwriting `dnsu2t:local_ip` entry: it needs to match OS' iptables configuration.\n");
 +		instance->config.bindaddr.sin_addr.s_addr = inet_addr("10.114.103.1");
 +	}
-+	if (instance->config.bindaddr.sin_port != 5313) {
++	if (instance->config.bindaddr.sin_port != htons(5313)) {
 +		log_error(LOG_WARNING, "Overwriting `dnsu2t:local_port` entry: it needs to match OS' iptables configuration.\n");
-+		instance->config.bindaddr.sin_port = 5313;
++		instance->config.bindaddr.sin_port = htons(5313);
 +	}
++	if (instance->config.relayaddr.sin_port != htons(53)) {
++		log_error(LOG_WARNING, "Overwriting `dnsu2t:remote_port` entry: it needs to match OS' iptables configuration.\n");
++		instance->config.relayaddr.sin_port = htons(53);
++	}
++
+ 	list_add(&instance->list, &instances);
 
- 	section->data = NULL;
- 	for (parser_entry *entry = &section->entries[0]; entry->key; entry++)
+ 	return 0;
 diff --git a/redsocks.c b/redsocks.c
-index 9d56f42..0c2ad06 100644
+index 9d56f42..38c8f14 100644
 --- a/redsocks.c
 +++ b/redsocks.c
 @@ -127,7 +127,8 @@ static int redsocks_onenter(parser_section *section)
@@ -76,23 +84,23 @@ index 9d56f42..0c2ad06 100644
  	instance->config.relayaddr.sin_family = AF_INET;
  	instance->config.relayaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
  	/* Default value can be checked in run-time, but I doubt anyone needs that.
-@@ -164,6 +165,16 @@ static int redsocks_onexit(parser_section *section)
- 	 */
- 	redsocks_instance *instance = section->data;
+@@ -171,6 +172,16 @@ static int redsocks_onexit(parser_section *section)
+ 	instance->config.bindaddr.sin_port = htons(instance->config.bindaddr.sin_port);
+ 	instance->config.relayaddr.sin_port = htons(instance->config.relayaddr.sin_port);
 
-+	//Force some values that the OS depends on
++	// Force some values that the OS depends on
 +	if (instance->config.bindaddr.sin_addr.s_addr != inet_addr("10.114.103.1")) {
 +		log_error(LOG_WARNING, "Overwriting `redsocks:local_ip` entry: it needs to match OS' iptables configuration.\n");
 +		instance->config.bindaddr.sin_addr.s_addr = inet_addr("10.114.103.1");
 +	}
-+	if (instance->config.bindaddr.sin_port != 12345) {
++	if (instance->config.bindaddr.sin_port != htons(12345)) {
 +		log_error(LOG_WARNING, "Overwriting `redsocks:local_port` entry: it needs to match OS' iptables configuration.\n");
-+		instance->config.bindaddr.sin_port = 12345;
++		instance->config.bindaddr.sin_port = htons(12345);
 +	}
 +
- 	section->data = NULL;
- 	for (parser_entry *entry = &section->entries[0]; entry->key; entry++)
- 		entry->addr = NULL;
+ 	if (instance->config.type) {
+ 		relay_subsys **ss;
+ 		FOREACH(ss, relay_subsystems) {
 --
 2.7.4
 
