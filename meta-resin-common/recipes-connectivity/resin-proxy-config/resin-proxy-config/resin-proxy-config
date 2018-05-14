@@ -41,10 +41,11 @@ if [ "$(ip addr show ${DNS_INTERFACE_NAME} | grep -o "inet [0-9]*\.[0-9]*\.[0-9]
 fi
 
 # Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
-iptables -t nat -D OUTPUT -p tcp -j REDSOCKS || true
-iptables -t nat -D PREROUTING -p tcp ! -i redsocks -j REDSOCKS || true
-iptables -t nat -D OUTPUT -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
+iptables -t nat -D OUTPUT -p udp -m owner ! --uid-owner redsocks -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
 iptables -t nat -D PREROUTING -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
+iptables -t nat -D OUTPUT -m owner --uid-owner redsocks -p tcp --dport 53 -j REDSOCKS || true
+iptables -t nat -D OUTPUT -m owner ! --uid-owner redsocks -p tcp -j REDSOCKS || true
+iptables -t nat -D PREROUTING -p tcp -j REDSOCKS || true
 iptables -t nat -F REDSOCKS || true
 iptables -t nat -X REDSOCKS || true
 
@@ -77,13 +78,14 @@ iptables -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
 iptables -t nat -A REDSOCKS -p tcp -j DNAT --to 10.114.103.1:12345
 
-# Redirect TCP connections to redsocks
-iptables -t nat -A OUTPUT -p tcp -j REDSOCKS
-iptables -t nat -A PREROUTING -p tcp ! -i redsocks -j REDSOCKS
-
 if $(cat /mnt/boot/system-proxy/redsocks.conf | grep ^dnsu2t > /dev/null 2>&1); then
 	# If dnsu2t module is enabled in redsocks, redirect any DNS UDP packets to
 	# REDSOCKS to force DNS over TCP
-	iptables -t nat -A OUTPUT -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313
+	iptables -t nat -A OUTPUT -p udp -m owner ! --uid-owner redsocks -j DNAT --dport 53 --to-destination 10.114.103.1:5313
 	iptables -t nat -A PREROUTING -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313
 fi
+
+# Redirect TCP connections to redsocks
+iptables -t nat -A OUTPUT -m owner --uid-owner redsocks -p tcp --dport 53 -j REDSOCKS
+iptables -t nat -A OUTPUT -m owner ! --uid-owner redsocks -p tcp -j REDSOCKS
+iptables -t nat -A PREROUTING -p tcp -j REDSOCKS
