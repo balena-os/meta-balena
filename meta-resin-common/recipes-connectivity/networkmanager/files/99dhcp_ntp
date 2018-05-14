@@ -1,0 +1,16 @@
+#!/bin/sh
+
+case "$2" in
+	dhcp4-change|up)
+	if [ -z "$DHCP4_NTP_SEVERS" ]; then
+		echo '[Time]' > /etc/systemd/timesyncd.conf
+		echo "NTP=$DHCP4_NTP_SERVERS" >> /etc/systemd/timesyncd.conf
+		echo 'FallbackNTP=0.resinio.pool.ntp.org 1.resinio.pool.ntp.org 2.resinio.pool.ntp.org 3.resinio.pool.ntp.org ' >> /etc/systemd/timesyncd.conf
+		systemctl daemon-reload
+		systemctl restart systemd-timesyncd
+	fi
+	;;
+	*)
+	;;
+esac
+
