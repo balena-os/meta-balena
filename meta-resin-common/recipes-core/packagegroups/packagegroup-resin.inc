@@ -10,6 +10,8 @@ RDEPENDS_${PN} = " \
     ${RESIN_INIT_PACKAGE} \
     ${RESIN_MOUNTS} \
     ${RESIN_REGISTER} \
+    chrony \
+    chronyc \
     resin-extra-udev-rules \
     rsync \
     kernel-modules \
