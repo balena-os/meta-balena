@@ -15,10 +15,7 @@ else
 fi
 
 if [ ! -z "$NTP_SERVERS" ]; then
-	cat >/etc/systemd/timesyncd.conf <<EOF
-[Time]
-NTP=$NTP_SERVERS
-EOF
+	/usr/bin/chronyc add server $NTP_SERVERS
 fi
 
 exit 0
