@@ -18,7 +18,7 @@ ConditionVirtualization=!docker
 ConditionPathExists=/dev/rtc
 DefaultDependencies=no
 After=systemd-udev-settle.service
-Before=systemd-timesyncd.service timeinit-timestamp.service
+Before=chronyd.service timeinit-timestamp.service
 
 [Service]
 Type=oneshot

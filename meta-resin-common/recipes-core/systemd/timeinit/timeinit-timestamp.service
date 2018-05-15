@@ -15,7 +15,7 @@
 [Unit]
 Description=Initialize system clock from build timestamp
 DefaultDependencies=no
-Before=systemd-timesyncd.service
+Before=chronyd.service
 
 [Service]
 Type=oneshot

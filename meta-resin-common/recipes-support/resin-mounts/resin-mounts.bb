@@ -31,7 +31,6 @@ BINDMOUNTS += " \
 	/etc/docker \
 	/etc/resin-supervisor \
 	/etc/systemd/system/resin.target.wants \
-	/etc/systemd/timesyncd.conf \
 	/home/root/.docker \
 	/var/log/journal \
 	/var/lib/systemd \
