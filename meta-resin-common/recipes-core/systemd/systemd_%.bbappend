@@ -82,13 +82,8 @@ FILES_udev += "${rootlibexecdir}/udev/resin_update_state_probe"
 
 RDEPENDS_${PN}_append = " resin-ntp-config util-linux"
 
-# add pool.ntp.org as default ntp server
-# PACKAGECONFIG[ntp] is defined in meta-resin sublayers
-
-PACKAGECONFIG_append = " ntp"
-
-# Network configuration is managed by NetworkManager
-PACKAGECONFIG_remove = "resolved networkd"
+# Network configuration is managed by NetworkManager. ntp is managed by chronyd
+PACKAGECONFIG_remove = "resolved networkd timesyncd"
 
 # Add missing users/groups defined in /usr/lib/sysusers.d/*
 # In this time we avoid creating these at first boot
