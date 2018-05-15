@@ -5,7 +5,8 @@ python() {
 	packageVersion = d.getVar('PV', True)
 	srcURI = d.getVar('SRC_URI', True)
 	packages = d.getVar('PACKAGES', True)
-	if StrictVersion(packageVersion) >= StrictVersion('2.28'):
+	if StrictVersion(packageVersion) >= StrictVersion('2.28') and StrictVersion(packageVersion) < StrictVersion('2.31'):
+		# This patch was included in 2.31 so only apply it when needed
 		d.setVar('SRC_URI', srcURI + ' ' + 'file://0001-libblkid-don-t-check-for-size-on-UBI-char-dev.patch')
 
 	if StrictVersion(packageVersion) < StrictVersion('2.29.1'):
