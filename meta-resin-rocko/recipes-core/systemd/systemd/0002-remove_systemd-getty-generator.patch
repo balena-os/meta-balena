@@ -1,0 +1,18 @@
+We do not need the getty generator to spawn getty on serial consoles in non-development builds.
+
+Upstream-Status: Inappropriate [configuration specific]
+
+Signed-off-by: Florin Sarbu <florin@resin.io>
+
+Index: git/Makefile.am
+===================================================================
+--- git.orig/Makefile.am
++++ git/Makefile.am
+@@ -410,7 +410,6 @@ rootlibexec_PROGRAMS += \
+ endif
+ 
+ systemgenerator_PROGRAMS = \
+-	systemd-getty-generator \
+ 	systemd-fstab-generator \
+ 	systemd-system-update-generator \
+ 	systemd-debug-generator
