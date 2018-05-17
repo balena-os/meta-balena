@@ -1,0 +1,52 @@
+From e3b65ab43d2e2d097a4cd2ee5aa1e1606a8a0663 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@gherzan.com>
+Date: Fri, 24 Mar 2017 16:39:08 +0100
+Subject: [PATCH 1/2] switch_root: don't bail out when console doesn't exist
+
+Busybox is very often used in initramfs at the end of which usually
+there is a switch_root to the actual rootfs. There are many cases where
+the console kernel argument is either just a placeholder (for example
+RaspberryPi uses serial0 and serial1) or configured as null to avoid any
+console messages - usually you would see such of a setup in production
+environments.
+
+Currently busybox bails out if can't open the console argument. If this
+happenes in initramfs and if the console=null for example, you get in a
+blind kernel panic. Avoid this by only warning instead of dying.
+
+function                                             old     new   delta
+switch_root_main                                     371     368      -3
+
+Signed-off-by: Andrei Gherzan <andrei@gherzan.com>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+
+Upstream-Status: Backport
+
+---
+ util-linux/switch_root.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/util-linux/switch_root.c b/util-linux/switch_root.c
+index 6034485d7..aaee35a3e 100644
+--- a/util-linux/switch_root.c
++++ b/util-linux/switch_root.c
+@@ -141,10 +141,12 @@ int switch_root_main(int argc UNUSED_PARAM, char **argv)
+ 
+ 	// If a new console specified, redirect stdin/stdout/stderr to it
+ 	if (console) {
+-		close(0);
+-		xopen(console, O_RDWR);
+-		xdup2(0, 1);
+-		xdup2(0, 2);
++		int fd = open_or_warn(console, O_RDWR);
++		if (fd >= 0) {
++			xmove_fd(fd, 0);
++			xdup2(0, 1);
++			xdup2(0, 2);
++		}
+ 	}
+ 
+ 	// Exec real init
+-- 
+2.12.0
+
