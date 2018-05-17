@@ -1,0 +1,38 @@
+From c95c995a38536478113cf5d0e05ab6a2948caa70 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@gherzan.com>
+Date: Thu, 23 Mar 2017 23:44:05 +0000
+Subject: [PATCH 2/2] switch_root: Fix undefined fd and minor tweak
+
+Signed-off-by: Andrei Gherzan <andrei@gherzan.com>
+
+Upstream-Status: Backport
+
+---
+ util-linux/switch_root.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/util-linux/switch_root.c b/util-linux/switch_root.c
+index aaee35a3e..cae61d5ac 100644
+--- a/util-linux/switch_root.c
++++ b/util-linux/switch_root.c
+@@ -96,6 +96,7 @@ int switch_root_main(int argc UNUSED_PARAM, char **argv)
+ 	struct stat st;
+ 	struct statfs stfs;
+ 	dev_t rootdev;
++	int fd;
+ 
+ 	// Parse args (-c console)
+ 	opt_complementary = "-2"; // minimum 2 params
+@@ -141,8 +142,7 @@ int switch_root_main(int argc UNUSED_PARAM, char **argv)
+ 
+ 	// If a new console specified, redirect stdin/stdout/stderr to it
+ 	if (console) {
+-		int fd = open_or_warn(console, O_RDWR);
+-		if (fd >= 0) {
++		if ((fd = open_or_warn(console, O_RDWR)) >= 0) {
+ 			xmove_fd(fd, 0);
+ 			xdup2(0, 1);
+ 			xdup2(0, 2);
+-- 
+2.12.0
+
