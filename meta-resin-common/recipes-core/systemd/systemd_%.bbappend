@@ -83,7 +83,7 @@ FILES_udev += "${rootlibexecdir}/udev/resin_update_state_probe"
 RDEPENDS_${PN}_append = " resin-ntp-config util-linux"
 
 # add pool.ntp.org as default ntp server
-PACKAGECONFIG[ntp] = "--with-ntp-servers='0.resinio.pool.ntp.org 1.resinio.pool.ntp.org 2.resinio.pool.ntp.org 3.resinio.pool.ntp.org',,,"
+# PACKAGECONFIG[ntp] is defined in meta-resin sublayers
 
 PACKAGECONFIG_append = " ntp"
 
