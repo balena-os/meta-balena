@@ -524,6 +524,7 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         ('4.11.7+', '41f475192a81ca011d000c985d7122ea3e6998cd'),
         ('4.12', 'f10d5231965a149c965f4f384e8506a182049ec5'),
         ('4.13', '28589f833b433a1a7d3cb8302328f0596f6354ad'),
+        ('4.14', 'b6d4fac971fb30f8f1cc8e5bc350c895ff127003'),
     ])
 
 
