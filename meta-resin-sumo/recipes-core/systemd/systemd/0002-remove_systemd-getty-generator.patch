@@ -1,0 +1,38 @@
+From 8ac9ddf53f4260079bbe7e32fa2c5099eb42da9f Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Thu, 17 May 2018 09:25:32 +0100
+Subject: [PATCH] Don't build systemd-getty-generator
+
+In resinOS we deactivate this generator as we don't want to have getty spawed
+on the kernel console by default. We are handling that manually when needed
+(for example in development images).
+
+Upstream-status: Inappropriate (configuration)
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+---
+ meson.build | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 36a62d2..0215f49 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1483,14 +1483,6 @@ exe = executable('journalctl',
+                  install_dir : rootbindir)
+ public_programs += [exe]
+ 
+-executable('systemd-getty-generator',
+-           'src/getty-generator/getty-generator.c',
+-           include_directories : includes,
+-           link_with : [libshared],
+-           install_rpath : rootlibexecdir,
+-           install : true,
+-           install_dir : systemgeneratordir)
+-
+ executable('systemd-debug-generator',
+            'src/debug-generator/debug-generator.c',
+            include_directories : includes,
+-- 
+2.7.4
+
