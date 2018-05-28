@@ -31,10 +31,6 @@ do_install_append() {
     mkdir -p ${D}${datadir}/plymouth/themes/resin
     install -m 644 ${WORKDIR}/resin.script ${D}${datadir}/plymouth/themes/resin/
     install -m 644 ${WORKDIR}/resin.plymouth ${D}${datadir}/plymouth/themes/resin/
-
-    # Don't stop splash at boot
-    rm ${D}${systemd_unitdir}/system/multi-user.target.wants/plymouth-quit.service
-    rm ${D}${systemd_unitdir}/system/multi-user.target.wants/plymouth-quit-wait.service
 }
 
 do_deploy() {
