@@ -55,4 +55,7 @@ pkg_postinst_${PN}_append () {
 	fi
 	systemctl $OPTS mask systemd-ask-password-plymouth.service
 	systemctl $OPTS mask systemd-ask-password-plymouth.path
+
+	# We start plymouth in the initramfs so mask the service
+	systemctl $OPTS mask plymouth-start.service
 }
