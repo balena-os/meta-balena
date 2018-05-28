@@ -1,0 +1,14 @@
+#!/bin/sh
+
+plymouth_enabled() {
+  return 0
+}
+
+plymouth_run() {
+    mkdir /mnt/boot
+    mount /dev/disk/by-label/resin-boot /mnt/boot/
+    plymouthd --tty=tty1 --pid-file=/run/plymouth/pid --kernel-command-line='plymouth.ignore-serial-consoles splash'
+    plymouth --show-splash
+    plymouth quit
+    # we leave /mnt/boot mounted
+}

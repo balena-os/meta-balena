@@ -11,14 +11,16 @@ PACKAGE_INSTALL = " \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
+    initramfs-module-plymouth \
     initramfs-module-udev \
     initramfs-framework-base \
     udev \
+    plymouth \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
     "
 
 # Do not pollute the initrd image with rootfs features
-IMAGE_FEATURES = ""
+IMAGE_FEATURES = "splash"
 
 export IMAGE_BASENAME = "resin-image-initramfs"
 IMAGE_LINGUAS = ""

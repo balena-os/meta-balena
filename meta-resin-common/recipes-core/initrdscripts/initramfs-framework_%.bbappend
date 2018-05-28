@@ -6,6 +6,7 @@ SRC_URI_append = " \
     file://resindataexpander \
     file://rorootfs \
     file://rootfs \
+    file://plymouth \
     file://finish \
     "
 
@@ -17,6 +18,8 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
+
+    install -m 0755 ${WORKDIR}/plymouth ${D}/init.d/92-plymouth
 }
 
 PACKAGES_append = " \
@@ -24,6 +27,7 @@ PACKAGES_append = " \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
+    initramfs-module-plymouth \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -47,3 +51,7 @@ FILES_initramfs-module-rorootfs = "/init.d/89-rorootfs"
 SUMMARY_initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
 RDEPENDS_initramfs-module-rootfs = "${PN}-base"
 FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
+
+SUMMARY_initramfs-module-plymouth = "display boot splash screen"
+RDEPENDS_initramfs-module-plymouth = "${PN}-base"
+FILES_initramfs-module-plymouth = "/init.d/92-plymouth"
