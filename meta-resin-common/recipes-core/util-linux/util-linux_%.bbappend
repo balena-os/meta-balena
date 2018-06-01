@@ -21,3 +21,9 @@ python() {
 		if packages:
 			d.setVar('PACKAGES', 'util-linux-lsblk' + ' ' + packages)
 }
+
+ALTERNATIVE_${PN} += "fallocate fsfreese nsenter unshare"
+ALTERNATIVE_LINK_NAME[fallocate] = "${bindir}/fallocate"
+ALTERNATIVE_LINK_NAME[fsfreese] = "${sbindir}/fsfreeze"
+ALTERNATIVE_LINK_NAME[nsenter] = "${bindir}/nsenter"
+ALTERNATIVE_LINK_NAME[unshare] = "${bindir}/unshare"
