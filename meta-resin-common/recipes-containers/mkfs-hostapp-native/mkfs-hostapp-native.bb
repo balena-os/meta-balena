@@ -28,15 +28,16 @@ python __anonymous() {
 S = "${WORKDIR}"
 
 do_compile () {
+    DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
     rm -rf ${B}/work
     mkdir -p ${B}/work
 
     cp Dockerfile create mkfs.hostapp-ext4 ${B}/work/
     sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${B}/work/create
 
-    IMAGE_ID=$(DOCKER_API_VERSION=1.22 docker build ${B}/work | grep -o -E '[a-z0-9]{12}' | tail -n1)
-    DOCKER_API_VERSION=1.22 docker save "$IMAGE_ID" > ${B}/work/mkfs-hostapp-ext4-image.tar
-    DOCKER_API_VERSION=1.22 docker rmi "$IMAGE_ID"
+    IMAGE_ID=$(DOCKER_API_VERSION=1.22 $DOCKER build ${B}/work | grep -o -E '[a-z0-9]{12}' | tail -n1)
+    DOCKER_API_VERSION=1.22 $DOCKER save "$IMAGE_ID" > ${B}/work/mkfs-hostapp-ext4-image.tar
+    DOCKER_API_VERSION=1.22 $DOCKER rmi "$IMAGE_ID"
 
     sed -i "s/@IMAGE@/${IMAGE_ID}/" ${B}/work/mkfs.hostapp-ext4
 }
