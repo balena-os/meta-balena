@@ -52,7 +52,7 @@ do_compile () {
         -e PRIVATE_REGISTRY_PASSWORD="${PRIVATE_REGISTRY_PASSWORD}" \
         -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}/resin-data:/resin-data \
         --name ${_container_name} ${_image_name}
-    docker rmi ${_image_name}
+    $DOCKER rmi ${_image_name}
 }
 
 fakeroot do_create_resin_data_partition() {
