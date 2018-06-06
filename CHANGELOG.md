@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.13.0
+## (2018-06-06)
+
+* Update resin-supervisor to 7.10.0 [Cameron Diver]
+* Add support for yocto sumo [Andrei Gherzan]
+* Update Readme.md with more yocto versions [Zubair Lutfullah Kakakhel]
+* Docker-resin-supverisor-disk: Update supervisor to version 7.9.0 [Akis Kesoglou]
+* Docker-resin-supverisor-disk: Update supervisor to version 7.5.6 [Cameron Diver]
+
 # v2.12.7
 ## (2018-05-04)
 
