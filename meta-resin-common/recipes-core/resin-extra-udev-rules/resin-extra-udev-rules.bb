@@ -6,9 +6,13 @@ inherit allarch
 
 SRC_URI = " \
 	file://49-teensy.rules \
+	file://99-misc.rules \
 	"
 
 do_install_append() {
 	# Rules to prevent ModemManager attempting to use Teensy boards as a modem
 	install -D -m 0644 ${WORKDIR}/49-teensy.rules ${D}/lib/udev/rules.d/49-teensy.rules
+
+	# Install miscellaneous rules file
+	install -D -m 0644 ${WORKDIR}/99-misc.rules ${D}/lib/udev/rules.d/99-misc.rules
 }
