@@ -1,9 +1,8 @@
 [Unit]
 Description=Resin NTP configuration service
 DefaultDependencies=no
-Requires=resin-boot.service bind-etc-systemd-timesyncd.conf.service
-After=resin-boot.service bind-etc-systemd-timesyncd.conf.service
-Before=systemd-timesyncd.service
+Requires=resin-boot.service chronyd.service
+After=resin-boot.service chronyd.service
 
 [Service]
 ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-ntp-config
