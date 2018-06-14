@@ -1,7 +1,7 @@
 [Unit]
 Description=OpenVPN
 Requires=prepare-openvpn.service
-After=syslog.target network.target prepare-openvpn.service
+After=syslog.target network.target prepare-openvpn.service time-sync.target
 
 [Service]
 PrivateTmp=true
