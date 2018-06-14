@@ -101,7 +101,7 @@ do_compile() {
 
   # Compile mobynit
   cd .gopath/src/"${DOCKER_PKG}"/cmd/mobynit
-  go build -ldflags '-extldflags "-static"' .
+  go build -ldflags '-extldflags "-static -no-pie"' .
   cd -
 }
 
