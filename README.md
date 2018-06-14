@@ -220,7 +220,3 @@ The following Yocto versions are supported:
   * **TESTED**
  * Krogoth (2.1)
   * **TESTED**
- * Jethro (2.0)
-  * **TESTED**
- * Fido (1.8)
-  * **UNTESTED**
