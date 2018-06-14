@@ -13,7 +13,7 @@ SRC_URI_append = " \
     file://nm-tmpfiles.conf \
     "
 
-RDEPENDS_${PN}_append = " resin-net-config resolvconf"
+RDEPENDS_${PN}_append = " resin-net-config resolvconf chrony chronyc"
 FILES_${PN}_append = "${sysconfdir}/*"
 EXTRA_OECONF += " \
     --with-resolvconf=/sbin/resolvconf \

@@ -1,6 +1,6 @@
 [Unit]
-Wants=resin-net-config.service bind-var-lib-NetworkManager.service
-After=resin-net-config.service bind-var-lib-NetworkManager.service
+Wants=resin-net-config.service bind-var-lib-NetworkManager.service chronyd.service
+After=resin-net-config.service bind-var-lib-NetworkManager.service chronyd.service
 
 [Service]
 OOMScoreAdjust=-1000
