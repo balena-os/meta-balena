@@ -14,6 +14,8 @@ inherit allarch systemd
 
 SYSTEMD_SERVICE_${PN} = "resin-ntp-config.service"
 
+RDEPENDS_${PN} = "chrony chronyc"
+
 do_install() {
     install -d ${D}${bindir}
     install -m 0775 ${WORKDIR}/resin-ntp-config ${D}${bindir}/resin-ntp-config
