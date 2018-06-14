@@ -44,6 +44,9 @@ inherit systemd go pkgconfig
 DEPENDS_remove_class-native = "go-cross-native"
 DEPENDS_append_class-native = " go-native"
 
+# By default no extra LDFLAGS needed when compiling mobynit
+MOBYNIT_EXTRA_LDFLAGS ??= ""
+
 do_configure() {
 }
 
@@ -101,7 +104,7 @@ do_compile() {
 
   # Compile mobynit
   cd .gopath/src/"${DOCKER_PKG}"/cmd/mobynit
-  go build -ldflags '-extldflags "-static"' .
+  go build -ldflags '-extldflags "-static ${MOBYNIT_EXTRA_LDFLAGS}"' .
   cd -
 }
 
