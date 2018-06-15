@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v2.13.1
+## (2018-06-15)
+
+* Fix mobynit runtime crash when compiled with gcc 7.3.0 with static PIE support enabled [Florin Sarbu]
+* Fix typo in balena systemd service [Andrei Gherzan]
+* Various fixes for issues introduced by the switch to chrony [Andrei Gherzan]
+* Fsck all partitions if resin-data isn't seen [Zubair Lutfullah Kakakhel]
+* Remove jethro and fido yocto versions support [Andrei Gherzan]
+* Update resin-supervisor to 7.11.0 [Cameron Diver]
+* Replace systemd-timesyncd with chrony [Zubair Lutfullah Kakakhel]
+* Set ModemManager to ignore STM32F407 devices [Andrei Gherzan]
+
 # v2.13.0
 ## (2018-06-06)
 
