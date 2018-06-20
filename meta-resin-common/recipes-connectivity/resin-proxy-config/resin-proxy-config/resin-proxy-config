@@ -62,8 +62,10 @@ iptables -t nat -N REDSOCKS
 
 # Use every line in the no_proxy file as an IP/subnet to not redirect through redsocks
 if [ -f "$NOPROXYFILE" ]; then
+	echo "Noproxy configuration found in $NOPROXYFILE ..."
 	while IFS= read -r line || [ -n "${line}" ]; do
-		iptables -t nat -A REDSOCKS -d "$line" -j RETURN		
+		echo "Setting no proxy for $line ..."
+		iptables -t nat -A REDSOCKS -d "$line" -j RETURN
 	done < "$NOPROXYFILE"
 fi
 
