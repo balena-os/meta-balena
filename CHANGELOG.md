@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.13.2
+## (2018-06-28)
+
+* Update balena to fix boot lag [Andrei Gherzan]
+* Set DHCP timeout to infinity for IPv4 [Florin Sarbu]
+* Add aufs support for kernels 4.15, 4.16 and 4.17 [Florin Sarbu]
+
 # v2.13.1
 ## (2018-06-15)
 
