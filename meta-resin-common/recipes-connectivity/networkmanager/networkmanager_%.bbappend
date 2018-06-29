@@ -2,7 +2,7 @@ inherit deploy bash-completion
 
 DEPENDS += "curl"
 
-FILESEXTRAPATHS_append := ":${THISDIR}/files"
+FILESEXTRAPATHS_append := ":${THISDIR}/resin-files"
 
 SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
