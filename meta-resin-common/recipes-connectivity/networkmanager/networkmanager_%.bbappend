@@ -1,6 +1,4 @@
-inherit deploy bash-completion
-
-DEPENDS += "curl"
+inherit deploy
 
 FILESEXTRAPATHS_append := ":${THISDIR}/resin-files"
 
@@ -13,18 +11,18 @@ SRC_URI_append = " \
     file://nm-tmpfiles.conf \
     "
 
-RDEPENDS_${PN}_append = " resin-net-config resolvconf chrony chronyc"
-FILES_${PN}_append = "${sysconfdir}/*"
+RDEPENDS_${PN}_append = " \
+    chrony \
+    chronyc \
+    resin-net-config \
+    resolvconf \
+    "
+FILES_${PN}_append = " ${sysconfdir}/*"
 EXTRA_OECONF += " \
     --with-resolvconf=/sbin/resolvconf \
     --disable-ovs \
     "
-PACKAGECONFIG_append = " systemd modemmanager ppp"
-
-# we disable introspection as we do not use it and it also fails to compile (on poky krogoth/morty) if we don't disable it or if we don't inherit gobject-introspection
-# (we don't want to inherit gobject-introspection for compatibility reasons with regards to older poky versions which do not have the gobject-introspection.bbclass)
-PACKAGECONFIG[introspection] = "--enable-introspection=no,,,"
-PACKAGECONFIG_append = " introspection"
+PACKAGECONFIG_append = " modemmanager ppp"
 
 do_install_append() {
     install -d ${D}${sysconfdir}/tmpfiles.d
@@ -51,5 +49,4 @@ do_deploy() {
     install -m 0600 "${WORKDIR}/resin-sample.ignore" "${DEPLOYDIR}/system-connections/"
     install -m 0600 "${WORKDIR}/README.ignore" "${DEPLOYDIR}/system-connections/"
 }
-
 addtask deploy before do_package after do_install
