@@ -5,7 +5,7 @@ SECTION = "net/misc"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cbbffd568227ada506640fe950a4823b \
                     file://libnm-util/COPYING;md5=1c4fa765d6eb3cd2fbd84344a1b816cd \
-                    file://docs/api/html/license.html;md5=77b9e362690c149da196aefe7712db30 \
+                    file://docs/api/html/license.html;md5=ac20f1edc24f72480a1106871e9fbe9a \
 "
 
 DEPENDS = " \
@@ -31,22 +31,14 @@ SRC_URI = " \
     file://0001-sd-lldp.h-Remove-net-ethernet.h-seems-to-be-over-spe.patch \
     file://0002-Fixed-configure.ac-Fix-pkgconfig-sysroot-locations.patch \
     file://0003-Do-not-create-settings-settings-property-documentati.patch \
-    file://musl/0001-musl-basic.patch \
-    file://musl/0002-musl-dlopen-configure-ac.patch \
-    file://musl/0003-musl-network-support.patch \
-    file://musl/0004-musl-process-util.patch \
-    file://musl/0005-musl-avoid-further-conflicts-by-including-net-ethern.patch \
-    file://musl/0006-Add-a-strndupa-replacement-for-musl.patch \
 "
-SRC_URI[md5sum] = "de3c7147a693da6f80eb22f126086a14"
-SRC_URI[sha256sum] = "6af0b1e856a3725f88791f55c4fbb04105dc0b20dbf182aaec8aad16481fac76"
+SRC_URI[md5sum] = "f728a42310c85b53386b172b15d7fc20"
+SRC_URI[sha256sum] = "38feb97ded3e68047508ea1b1de0b7ee077f8c220ab609cb2d5c1fe5f2947f95"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
 EXTRA_OECONF = " \
     --disable-ifcfg-rh \
-    --disable-ifnet \
-    --disable-ifcfg-suse \
     --disable-more-warnings \
     --with-iptables=${sbindir}/iptables \
     --with-tests \
@@ -105,7 +97,7 @@ FILES_${PN}-adsl = "${libdir}/NetworkManager/libnm-device-plugin-adsl.so"
 FILES_${PN} += " \
     ${libexecdir} \
     ${libdir}/pppd/*/nm-pppd-plugin.so \
-    ${libdir}/NetworkManager/*.so \
+    ${libdir}/NetworkManager/${PV}/*.so \
     ${libdir}/NetworkManager/VPN \
     ${libdir}/NetworkManager/conf.d \
     ${datadir}/polkit-1 \
@@ -122,7 +114,7 @@ RCONFLICTS_${PN} = "connman"
 FILES_${PN}-dev += " \
     ${datadir}/NetworkManager/gdb-cmd \
     ${libdir}/pppd/*/*.la \
-    ${libdir}/NetworkManager/*.la \
+    ${libdir}/NetworkManager/${PV}/*.la \
 "
 
 FILES_${PN}-nmtui = " \
