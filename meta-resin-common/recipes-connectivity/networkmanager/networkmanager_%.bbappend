@@ -24,6 +24,14 @@ EXTRA_OECONF += " \
     "
 PACKAGECONFIG_append = " modemmanager ppp"
 
+# The external DHCP client doesn't work well with our `ipv4.dhcp-timeout`
+# configuration. Switch to the internal one.
+PACKAGECONFIG_remove = "dhclient"
+EXTRA_OECONF += " \
+	--with-config-dhcp-default=internal \
+	--with-dhclient=no \
+	"
+
 do_install_append() {
     install -d ${D}${sysconfdir}/tmpfiles.d
     install -m 0644 ${WORKDIR}/nm-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
