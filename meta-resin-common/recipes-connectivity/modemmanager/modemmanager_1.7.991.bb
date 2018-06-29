@@ -7,25 +7,27 @@ LIC_FILES_CHKSUM = " \
     file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
 "
 
-inherit gnomebase gettext systemd vala bash-completion
+inherit gnomebase gettext systemd vala gobject-introspection bash-completion
 
-DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native libxslt-native"
+DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native"
 
 SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
-"
-SRC_URI[md5sum] = "b050387fdee6ca3530282de338ab94e4"
-SRC_URI[sha256sum] = "d465094fc6fc173354f5a00d212049056829cc245d60a9083f3c53f86a8f90ec"
+           file://0001-Add-configure-check-for-canonicalize_file_name-befor.patch \
+           "
+
+SRC_URI[md5sum] = "4efe6a240cef212bf8855c95424e7c7f"
+SRC_URI[sha256sum] = "4e366243bd4983f2e6efe35cb901cf5da51939307b5d6299fe622a9fcf411745"
 
 S = "${WORKDIR}/ModemManager-${PV}"
 
 PACKAGECONFIG ??= "mbim qmi polkit \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
 "
 
 PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_unitdir}/system/,,"
 PACKAGECONFIG[polkit] = "--with-polkit=yes,--with-polkit=no,polkit"
 # Support WWAN modems and devices which speak the Mobile Interface Broadband Model (MBIM) protocol.
-PACKAGECONFIG[mbim] = "--with-mbim,--enable-mbim=no,libmbim"
+PACKAGECONFIG[mbim] = "--with-mbim,--with-mbim=no,libmbim"
 # Support WWAN modems and devices which speak the Qualcomm MSM Interface (QMI) protocol.
 PACKAGECONFIG[qmi] = "--with-qmi,--without-qmi,libqmi"
 
@@ -48,8 +50,3 @@ FILES_${PN}-staticdev += " \
 FILES_${PN}-dbg += "${libdir}/ModemManager/.debug"
 
 SYSTEMD_SERVICE_${PN} = "ModemManager.service"
-
-# XXX
-# Introspection is not available in all yocto versions. We don't take advantage of
-# it in resin so disabling it for the time being. To be revised.
-EXTRA_OECONF_prepend = "--disable-introspection "
