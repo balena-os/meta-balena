@@ -20,7 +20,7 @@ SRC_URI[sha256sum] = "18abe34421aa3b52ff47d4ba93aa282f8f8944717dd644a5c0c81eeeac
 S = "${WORKDIR}/ModemManager-${PV}"
 
 PACKAGECONFIG ??= "mbim qmi polkit \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
 "
 
 PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_unitdir}/system/,,"
