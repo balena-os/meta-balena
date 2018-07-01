@@ -1,0 +1,42 @@
+From 06928bcc9b31a35529fae053b5cb1968c13363c9 Mon Sep 17 00:00:00 2001
+From: Zubair Lutfullah Kakakhel <zubair@resin.io>
+Date: Tue, 12 Jun 2018 16:48:51 +0100
+Subject: [PATCH] Integrate machine independent resin environment configuration
+
+This patch integrates resin default environment configuration in u-boot
+
+Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+
+Upstream-Status: Inappropriate [configuration]
+
+%% original patch: resin-specific-env-integration-2018-05.patch
+---
+ include/env_default.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/env_default.h b/include/env_default.h
+index 54d8124..e67172b 100644
+--- a/include/env_default.h
++++ b/include/env_default.h
+@@ -9,6 +9,8 @@
+ 
+ #include <env_callback.h>
+ 
++#include <env_resin.h>
++
+ #ifdef DEFAULT_ENV_INSTANCE_EMBEDDED
+ env_t environment __UBOOT_ENV_SECTION__(environment) = {
+ 	ENV_CRC,	/* CRC Sum */
+@@ -104,6 +106,9 @@ const uchar default_environment[] = {
+ 	"soc="		CONFIG_SYS_SOC			"\0"
+ #endif
+ #endif
++
++	RESIN_ENV
++
+ #ifdef	CONFIG_EXTRA_ENV_SETTINGS
+ 	CONFIG_EXTRA_ENV_SETTINGS
+ #endif
+-- 
+2.7.4
+

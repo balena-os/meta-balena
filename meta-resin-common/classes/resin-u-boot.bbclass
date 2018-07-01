@@ -4,9 +4,19 @@ INTEGRATION_KCONFIG_PATCH = "file://resin-specific-env-integration-kconfig.patch
 INTEGRATION_NON_KCONFIG_PATCH = "file://resin-specific-env-integration-non-kconfig.patch"
 
 # Machine independent patches
+python() {
+        from distutils.version import StrictVersion
+        packageVersion = d.getVar('PV', True)
+        srcURI = d.getVar('SRC_URI', True)
+
+        if StrictVersion(packageVersion) == StrictVersion('2018.05'):
+            d.setVar('SRC_URI', srcURI + ' ' + "file://resin-specific-env-integration-2018-05.patch")
+        else:
+            d.setVar('SRC_URI', srcURI + ' ' + "${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', '${INTEGRATION_KCONFIG_PATCH}', '${INTEGRATION_NON_KCONFIG_PATCH}', d)}")
+}
+
 SRC_URI_append = " \
     file://resin-specific-env-configuration.patch \
-    ${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', '${INTEGRATION_KCONFIG_PATCH}', '${INTEGRATION_NON_KCONFIG_PATCH}', d)} \
     "
 
 python __anonymous() {
