@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.13.3
+## (2018-07-05)
+
+* Update ModemManager to 1.8.0 [Andrei Gherzan]
+* Switch NetworkManager to using the internal DHCP client [Andrei Gherzan]
+* Update NetworkManager to 1.12.0 [Andrei Gherzan]
+* Update resin-supervisor to 7.13.1 [Cameron Diver]
+
 # v2.13.2
 ## (2018-06-28)
 
