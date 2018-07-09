@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.13.4
+## (2018-07-09)
+
+* Avoid overwriting SECURITY_CFLAGS for tini recipe [Andrei Gherzan]
+* Fix tini segfault after sumo update [Andrei Gherzan]
+
 # v2.13.3
 ## (2018-07-05)
 
