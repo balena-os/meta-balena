@@ -49,7 +49,7 @@ generate_hostos_version () {
 
 DEPENDS += "jq-native"
 
-IMAGE_PREPROCESS_COMMAND += " generate_rootfs_fingerprints ; "
+IMAGE_PREPROCESS_COMMAND_append = " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
 RESIN_BOOT_PARTITION_FILES_append = " \
