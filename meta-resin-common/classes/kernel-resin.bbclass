@@ -364,6 +364,7 @@ RESIN_CONFIGS[qmi] = " \
 # various other configurations
 RESIN_CONFIGS[misc] = " \
     CONFIG_NF_NAT_REDIRECT=m \
+    CONFIG_PANIC_TIMEOUT=1 \
     "
 
 # configs needed for our usage of redsocks
