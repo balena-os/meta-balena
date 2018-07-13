@@ -31,7 +31,7 @@ setup_cargo_environment () {
 # don't want to use this for the host/build.
 def llvm_features_from_tune(d):
     f = []
-    feat = d.getVar('TUNE_FEATURES')
+    feat = d.getVar('TUNE_FEATURES', True)
     if not feat:
         return ""
     feat = frozenset(feat.split())
@@ -61,7 +61,7 @@ def llvm_features_from_tune(d):
     if 'dsp' in feat:
         f.append("+dsp")
 
-    if d.getVar('ARM_THUMB_OPT') is "thumb":
+    if d.getVar('ARM_THUMB_OPT', True) is "thumb":
         if not feat.isdisjoint(v7):
             f.append("+thumb2")
         f.append("+thumb-mode")
@@ -89,7 +89,7 @@ def llvm_features_from_tune(d):
 # stable (1.9.0?)
 def llvm_features_from_cc_arch(d):
     f = []
-    feat = d.getVar('TARGET_CC_ARCH')
+    feat = d.getVar('TARGET_CC_ARCH', True)
     if not feat:
         return ""
     feat = frozenset(feat.split())
@@ -154,13 +154,13 @@ TARGET_POINTER_WIDTH[i586] = "32"
 MAX_ATOMIC_WIDTH[i586] = "64"
 
 def arch_for(d, thing):
-    return d.getVar('{}_ARCH'.format(thing))
+    return d.getVar('{}_ARCH'.format(thing), True)
 
 def sys_for(d, thing):
-    return d.getVar('{}_SYS'.format(thing))
+    return d.getVar('{}_SYS'.format(thing), True)
 
 def prefix_for(d, thing):
-    return d.getVar('{}_PREFIX'.format(thing))
+    return d.getVar('{}_PREFIX'.format(thing), True)
 
 # Convert a normal arch (HOST_ARCH, TARGET_ARCH, BUILD_ARCH, etc) to something
 # rust's internals won't choke on.
@@ -172,8 +172,8 @@ def arch_to_rust_target_arch(arch):
 
 # generates our target CPU value
 def llvm_cpu(d):
-    cpu = d.getVar('PACKAGE_ARCH')
-    target = d.getVar('TRANSLATED_TARGET_ARCH')
+    cpu = d.getVar('PACKAGE_ARCH', True)
+    target = d.getVar('TRANSLATED_TARGET_ARCH', True)
 
     trans = {}
     trans['corei7-64'] = "corei7"
@@ -204,24 +204,24 @@ def rust_gen_target(d, thing, wd):
     features = ""
     cpu = "generic"
     if thing is "TARGET":
-        features = d.getVar('TARGET_LLVM_FEATURES') or ""
-        cpu = d.getVar('TARGET_LLVM_CPU')
-    features = features or d.getVarFlag('FEATURES', arch) or ""
+        features = d.getVar('TARGET_LLVM_FEATURES', True) or ""
+        cpu = d.getVar('TARGET_LLVM_CPU', True)
+    features = features or d.getVarFlag('FEATURES', arch, True) or ""
     features = features.strip()
 
     # build tspec
     tspec = {}
-    tspec['llvm-target'] = d.getVarFlag('LLVM_TARGET', arch)
-    tspec['data-layout'] = d.getVarFlag('DATA_LAYOUT', arch)
-    tspec['max-atomic-width'] = d.getVarFlag('MAX_ATOMIC_WIDTH', arch)
-    tspec['target-pointer-width'] = d.getVarFlag('TARGET_POINTER_WIDTH', arch)
-    tspec['target-endian'] = d.getVarFlag('TARGET_ENDIAN', arch)
+    tspec['llvm-target'] = d.getVarFlag('LLVM_TARGET', arch, True)
+    tspec['data-layout'] = d.getVarFlag('DATA_LAYOUT', arch, True)
+    tspec['max-atomic-width'] = d.getVarFlag('MAX_ATOMIC_WIDTH', arch, True)
+    tspec['target-pointer-width'] = d.getVarFlag('TARGET_POINTER_WIDTH', arch, True)
+    tspec['target-endian'] = d.getVarFlag('TARGET_ENDIAN', arch, True)
     tspec['arch'] = arch_to_rust_target_arch(arch)
     tspec['os'] = "linux"
     tspec['env'] = "gnu"
     tspec['vendor'] = "unknown"
     tspec['target-family'] = "unix"
-    tspec['linker'] = "{}{}gcc".format(d.getVar('CCACHE'), prefix)
+    tspec['linker'] = "{}{}gcc".format(d.getVar('CCACHE', True), prefix)
     tspec['ar'] = "{}ar".format(prefix)
     tspec['cpu'] = cpu
     if features is not "":
@@ -237,7 +237,7 @@ def rust_gen_target(d, thing, wd):
     # Don't use jemalloc as it doesn't work for many targets.
     # https://github.com/rust-lang/rust/pull/37392
     # From 1.20.0 and forward, system allocator is the default.
-    if LooseVersion(d.getVar("PV")) < LooseVersion("1.20.0"):
+    if LooseVersion(d.getVar("PV", True)) < LooseVersion("1.20.0"):
         tspec['exe-allocation-crate'] = "alloc_system"
         tspec['lib-allocation-crate'] = "alloc_system"
 
@@ -247,7 +247,7 @@ def rust_gen_target(d, thing, wd):
 
 
 python do_rust_gen_targets () {
-    wd = d.getVar('WORKDIR') + '/targets/'
+    wd = d.getVar('WORKDIR', True) + '/targets/'
     # It is important 'TARGET' is last here so that it overrides our less
     # informed choices for BUILD & HOST if TARGET happens to be the same as
     # either of them.
