@@ -16,8 +16,8 @@ trap finish EXIT
 
 # Create user
 echo "[INFO] Creating and setting $USER_ID:$USER_GID."
-groupadd -g "$USER_GID" docker-disk-group
-useradd -u "$USER_ID" -g "$USER_GID" -p "" docker-disk-user
+groupadd -g "$USER_GID" docker-disk-group || true
+useradd -u "$USER_ID" -g "$USER_GID" -p "" docker-disk-user || true
 
 mkdir -p $DATA_VOLUME/docker
 mkdir -p $DATA_VOLUME/resin-data
