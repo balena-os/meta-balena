@@ -67,3 +67,20 @@ FILES_${PN}-llvmhello = "${libdir}/LLVMHello.so"
 FILES_${PN}-liblto = "${libdir}/libLTO.so"
 
 BBCLASSEXTEND = "native"
+
+# Backport a fix from poky:
+# commit 3b3aab0e8d2937505a15d273f3620a5c5c09165c
+# Author: Kyle Russell <bkylerussell@gmail.com>
+# Date:   Tue Apr 18 11:36:05 2017 -0400
+#    cmake.bbclass: Set CMAKE_CROSSCOMPILING correctly
+do_fix_generate_toolchain_file() {
+	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
+		cmake_crosscompiling="set( CMAKE_CROSSCOMPILING FALSE )"
+		if ! grep -q "$cmake_crosscompiling" ${WORKDIR}/toolchain.cmake; then
+			cat >> ${WORKDIR}/toolchain.cmake <<EOF
+$cmake_crosscompiling
+EOF
+		fi
+	fi
+}
+addtask fix_generate_toolchain_file after do_generate_toolchain_file before do_configure
