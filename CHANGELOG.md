@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.13.6
+## (2018-07-13)
+
+* Update resin-supervisor v 7.14.0 [Cameron Diver]
+* Fix rootfs fingerprints on poky rocko or newer [Andrei Gherzan]
+* Reboot device if there is a kernel panic [Zubair Lutfullah Kakakhel]
+
 # v2.13.5
 ## (2018-07-09)
 
