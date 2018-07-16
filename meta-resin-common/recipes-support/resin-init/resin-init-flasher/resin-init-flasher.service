@@ -1,12 +1,8 @@
 [Unit]
 Description=Resin init flasher service
-Requires=\
-    mnt-boot.mount \
-    mnt-bootorig-config.json.mount
+Requires=mnt-boot.mount
 Wants=resin-device-register.service
-After=\
-    mnt-boot.mount \
-    mnt-bootorig-config.json.mount
+After=mnt-boot.mount
 
 [Service]
 Type=oneshot
