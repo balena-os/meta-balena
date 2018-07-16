@@ -14,8 +14,13 @@ else
 	echo "resin-proxy-config: Found config.json in $CONFIG_PATH ."
 fi
 
-REDSOCKSCONF=${CONFIG_PATH%/*}/system-proxy/redsocks.conf
-NOPROXYFILE=${CONFIG_PATH%/*}/system-proxy/no_proxy
+if [ ! -d "$RESIN_BOOT_MOUNTPOINT" ]; then
+	echo "resin-proxy-config: $RESIN_BOOT_MOUNTPOINT does not exist."
+	exit 1
+fi
+
+REDSOCKSCONF=${RESIN_BOOT_MOUNTPOINT}/system-proxy/redsocks.conf
+NOPROXYFILE=${RESIN_BOOT_MOUNTPOINT}/system-proxy/no_proxy
 
 # Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
 iptables -t nat -D OUTPUT -p tcp -j REDSOCKS || true
