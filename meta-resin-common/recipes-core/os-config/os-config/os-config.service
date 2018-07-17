@@ -1,0 +1,14 @@
+[Unit]
+Description=OS configuration update service
+Requires=resin-boot.service
+Wants=os-config-devicekey.service NetworkManager.service
+After=os-config-devicekey.service resin-boot.service NetworkManager.service
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=10
+ExecStart=/usr/bin/os-config update
+
+[Install]
+WantedBy=multi-user.target

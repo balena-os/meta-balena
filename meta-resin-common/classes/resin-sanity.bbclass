@@ -15,6 +15,8 @@ def resinos_build_configuration():
 	if d.getVar('BALENA_STORAGE', True) not in ['aufs', 'overlay2']:
 		bb.error("ResinOS supports only aufs and overlay2 as balena storage drivers.")
 		success = False
+	if d.getVar('RESIN_CONNECTABLE', True) or d.getVar('RESIN_CONNECTABLE_SERVICES', True) or d.getVar('RESIN_CONNECTABLE_ENABLE_SERVICES', True):
+		bb.warn("Your build configuration uses RESIN_CONNECTABLE* variables. These variables are no longer used. There is only one type of resinOS image type which is unconnected by default. The os-config tool is used to configure the resinOS image for connectivity to a resin instance.")
 	return success
 
 python resinos_sanity_handler() {

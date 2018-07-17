@@ -2,8 +2,6 @@ FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 SRC_URI_append = " \
     file://coredump.conf \
-    file://multi-user.conf \
-    file://resin.target \
     file://watchdog.conf \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
@@ -62,15 +60,6 @@ do_install_append() {
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
     ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
-
-    # Install our custom resin target
-    install -d ${D}${systemd_unitdir}/system/resin.target.wants
-    install -d ${D}${sysconfdir}/systemd/system/resin.target.wants
-    install -c -m 0644 ${WORKDIR}/resin.target ${D}${systemd_unitdir}/system/
-
-    # multi-user will trigger resin-target
-    install -d ${D}${sysconfdir}/systemd/system/multi-user.target.d/
-    install -c -m 0644 ${WORKDIR}/multi-user.conf ${D}${sysconfdir}/systemd/system/multi-user.target.d/
 
     # We take care of journald flush ourselves
     rm ${D}/lib/systemd/system/sysinit.target.wants/systemd-journal-flush.service

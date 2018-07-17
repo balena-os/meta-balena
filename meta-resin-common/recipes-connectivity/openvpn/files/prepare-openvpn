@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -e
+
+. /usr/sbin/resin-vars
+
+generate_vpn_authfile() {
+	local _user
+	local _pass
+	local _vpn_auth_file="$1"
+	local _vpn_auth_file_newext=".new"
+
+	if [ -z "$VPN_AUTH_USER" ] || [ -z "$VPN_AUTH_PASSWORD" ]; then
+		echo "prepare-openvpn: [INFO] Resin.io VPN authentication."
+		# If the user api key exists we use it instead of the deviceApiKey as it
+		# means we haven't done the key exchange yet
+		_user="$UUID"
+		_pass=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
+		if [ -z "$_user" ] || [ -z "$_pass" ]; then
+			echo "prepare-openvpn: [ERROR] UUID or API/device key missing."
+			exit 1
+		fi
+	else
+		echo "prepare-openvpn: [INFO] Custom VPN server authentication."
+		_user="$VPN_AUTH_USER"
+		_pass="$VPN_AUTH_PASSWORD"
+	fi
+
+	echo "$_user" > "${_vpn_auth_file}${_vpn_auth_file_newext}"
+	echo "$_pass" >> "${_vpn_auth_file}${_vpn_auth_file_newext}"
+	mv "${_vpn_auth_file}${_vpn_auth_file_newext}" "$_vpn_auth_file"
+}
+
+generate_vpn_authfile /var/volatile/vpn-auth

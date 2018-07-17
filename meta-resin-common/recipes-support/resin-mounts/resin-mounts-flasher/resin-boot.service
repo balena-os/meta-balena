@@ -1,8 +1,8 @@
 [Unit]
 Description=Resin boot partition mount compatibility service
 DefaultDependencies=no
-Requires=mnt-boot.mount
-After=mnt-boot.mount
+Requires=mnt-boot.mount temp-conf.service
+After=mnt-boot.mount temp-conf.service
 
 [Service]
 Type=oneshot

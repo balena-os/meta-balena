@@ -30,7 +30,6 @@ FILES_${PN} += " \
 BINDMOUNTS += " \
 	/etc/docker \
 	/etc/resin-supervisor \
-	/etc/systemd/system/resin.target.wants \
 	/home/root/.docker \
 	/var/log/journal \
 	/var/lib/systemd \

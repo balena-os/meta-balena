@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 SRC_URI = " \
     file://resin-unique-key \
     file://resin-device-uuid.service \
-    file://resin-device-api-key.service \
     "
 S = "${WORKDIR}"
 
@@ -19,7 +18,7 @@ RDEPENDS_${PN} = " \
     openssl \
     "
 
-SYSTEMD_SERVICE_${PN} = "resin-device-uuid.service resin-device-api-key.service"
+SYSTEMD_SERVICE_${PN} = "resin-device-uuid.service"
 
 FILES_${PN} += "/home/root/.rnd"
 
@@ -36,7 +35,6 @@ do_install() {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/resin-device-uuid.service ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/resin-device-api-key.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \

@@ -1,0 +1,9 @@
+[Unit]
+Description=Prepare OpenVPN
+Requires=resin-boot.service resin-device-uuid.service os-config-devicekey.service var-volatile.mount
+After=resin-boot.service resin-device-uuid.service os-config-devicekey.service var-volatile.mount
+ConditionFileNotEmpty=/etc/openvpn/openvpn.conf
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/prepare-openvpn

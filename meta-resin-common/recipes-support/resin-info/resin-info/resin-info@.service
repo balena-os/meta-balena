@@ -9,4 +9,4 @@ RemainAfterExit=yes
 ExecStart=@BASE_BINDIR@/bash @SBINDIR@/resin-info %I
 
 [Install]
-WantedBy=resin.target
+WantedBy=multi-user.target

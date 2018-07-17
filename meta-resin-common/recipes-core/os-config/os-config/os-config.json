@@ -1,0 +1,51 @@
+{
+	"services": [
+		{
+			"id": "openvpn",
+			"files": {
+				"config": {
+					"path": "/etc/openvpn/openvpn.conf",
+					"perm": ""
+				},
+				"ca": {
+					"path": "/etc/openvpn/ca.crt",
+					"perm": ""
+				}
+			},
+			"systemd_services": ["prepare-openvpn.service", "openvpn.service"]
+		},
+		{
+			"id": "ssh",
+			"files": {
+				"authorized_keys": {
+					"path": "/home/root/.ssh/authorized_keys",
+					"perm": ""
+				}
+			},
+			"systemd_services": []
+		}
+	],
+	"keys": [
+		"applicationName",
+		"applicationId",
+		"deviceType",
+		"userId",
+		"username",
+		"appUpdatePollInterval",
+		"listenPort",
+		"vpnPort",
+		"apiEndpoint",
+		"vpnEndpoint",
+		"registryEndpoint",
+		"deltaEndpoint",
+		"pubnubSubscribeKey",
+		"pubnubPublishKey",
+		"mixpanelToken",
+		"apiKey",
+		"version",
+		"deviceApiKey",
+		"registered_at",
+		"deviceId"
+	],
+	"schema_version": "1.0.0"
+}
