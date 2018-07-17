@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.14.0
+## (2018-07-17)
+
+* Allow re-run of useradd commands in docker-disk's entry.sh [Andrei Gherzan]
+* Update rust to 1.20 and cargo to 0.21.0 in Morty [Andrei Gherzan]
+* Update rust to 1.20 and cargo to 0.21.0 in Krogoth [Andrei Gherzan]
+* Unify managed and unmanaged images and introduce os-config [Andrei Gherzan]
+
 # v2.13.6
 ## (2018-07-13)
 
