@@ -34,6 +34,7 @@ IMAGE_INSTALL = " \
     packagegroup-resin-debugtools \
     packagegroup-resin-connectivity \
     packagegroup-resin \
+    kernel-image-initramfs \
     "
 
 generate_rootfs_fingerprints () {
