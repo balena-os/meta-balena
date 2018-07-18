@@ -92,6 +92,17 @@ We currently tested and provide explicit support for the following WiFi adapters
 * bcm43143 based adapters
     * Example: Official RPI WiFi adapter [link](http://thepihut.com/collections/new-products/products/official-raspberry-pi-wifi-adapter)
 
+### Modems
+
+We currently test as part of our release process and provide explicit support for the following modems:
+
+* USB modems (tested on Raspberry Pi 3, Balena Fin, Intel NUC and Nvidia TX2)
+  * Huawei MS2131i-8
+  * Huawei MS2372
+* mPCI modems (tested on Balena Fin and Nvidia TX2 Spacely carrier)
+  * Quectel EC20
+  * SIM7100E
+
 ## Contributing
 
 To contribute send github pull requests targeting [this](https://github.com/resin-os/meta-resin) repository.
