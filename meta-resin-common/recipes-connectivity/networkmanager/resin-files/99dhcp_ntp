@@ -7,6 +7,9 @@ action=$2
 
 case "$action" in
 	dhcp4-change|up|connectivity-change)
+	# Run resin-ntp-config to update chronyc from ntp servers in config.json
+	/usr/bin/resin-ntp-config
+
 	if [[ -n $DHCP4_NTP_SERVERS ]]; then
 		# Tell chronyd to use this server
 		for ntp in ${DHCP4_NTP_SERVERS}; do
