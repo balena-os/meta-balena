@@ -35,6 +35,7 @@ RDEPENDS_${PN} = " \
 	balena \
 	coreutils \
 	curl \
+	docker-disk \
 	healthdog \
 	resin-unique-key \
 	resin-vars \
