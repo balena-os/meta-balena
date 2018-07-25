@@ -15,7 +15,7 @@ export GOMIPS = "${TARGET_GOMIPS}"
 export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
 export GOROOT_FINAL = "${libdir}/go"
 export GOCACHE = "off"
-CC = "${@d.getVar('BUILD_CC').strip()}"
+CC = "${@d.getVar('BUILD_CC', True).strip()}"
 
 do_configure[noexec] = "1"
 

@@ -10,7 +10,7 @@ SRC_URI[bootstrap.sha256sum] = "f4ff5b5eb3a3cae1c993723f3eab519c5bae18866b5e5f96
 
 export GOOS = "${BUILD_GOOS}"
 export GOARCH = "${BUILD_GOARCH}"
-CC = "${@d.getVar('BUILD_CC').strip()}"
+CC = "${@d.getVar('BUILD_CC', True).strip()}"
 
 GOMAKEARGS ?= "--no-banner"
 
