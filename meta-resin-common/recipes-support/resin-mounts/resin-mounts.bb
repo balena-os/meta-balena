@@ -33,6 +33,7 @@ BINDMOUNTS += " \
 	/home/root/.docker \
 	/var/log/journal \
 	/var/lib/systemd \
+	/var/lib/chrony \
 	"
 
 do_install_prepend () {
