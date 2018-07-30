@@ -59,6 +59,8 @@
 #       a) [optional] Define RESIN_DEFCONFIG_NAME. Default: "resin-defconfig"
 #       b) Add RESIN_DEFCONFIG_NAME to SRC_URI.
 
+inherit kernel-resin-noimage
+
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
 RESIN_CONFIGS ?= " \
@@ -715,11 +717,3 @@ do_deploy_append () {
     install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
     install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
 }
-
-# Don't trigger in the kernel image without initramfs
-# Boards should:
-# a) use kernel-image-initramfs and deploy in in the rootfs (ex bbb)
-# b) use boot deployment using RESIN_BOOT_PARTITION_FILES mechanism to deploy
-#    the initramfs bundled kernel image
-KERNEL_PACKAGE_NAME ??= "kernel"
-RDEPENDS_${KERNEL_PACKAGE_NAME}-base = ""
