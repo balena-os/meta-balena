@@ -15,7 +15,9 @@ else
 fi
 
 if [ ! -z "$NTP_SERVERS" ]; then
-	/usr/bin/chronyc add server $NTP_SERVERS
+	for ntp in ${NTP_SERVERS}; do
+		/usr/bin/chronyc add server $ntp || true
+	done
 fi
 
 exit 0

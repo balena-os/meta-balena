@@ -1,3 +1,10 @@
 [Unit]
 Before=time-sync.target
-Wants=time-sync.target
+Wants=time-sync.target var-volatile-lib.service
+After=var-volatile-lib.service
+
+[Service]
+Restart=always
+RestartSec=10s
+ExecStart=
+ExecStart=/usr/sbin/chronyd -s

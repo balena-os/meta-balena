@@ -7,10 +7,13 @@ action=$2
 
 case "$action" in
 	dhcp4-change|up|connectivity-change)
+	# Run resin-ntp-config to update chronyc from ntp servers in config.json
+	/usr/bin/resin-ntp-config
+
 	if [[ -n $DHCP4_NTP_SERVERS ]]; then
 		# Tell chronyd to use this server
 		for ntp in ${DHCP4_NTP_SERVERS}; do
-			/usr/bin/chronyc add server $ntp
+			/usr/bin/chronyc add server $ntp || true
 		done
 		# Save the ntp server we received and interface information to a file
 		echo "resin_$interface=\""""$DHCP4_NTP_SERVERS""\" >> $added_servers_file
@@ -28,7 +31,7 @@ case "$action" in
 		for ntp in ${ntp_connection}; do
 			# Only delete the server if it isn't being added by some other interface
 			if ! grep -q "$ntp" $added_servers_file; then
-					/usr/bin/chronyc delete $ntp
+				/usr/bin/chronyc delete $ntp || true
 			fi
 
 		done
