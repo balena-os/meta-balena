@@ -70,7 +70,8 @@ fi
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
 
-curl -s -X PATCH "$API_ENDPOINT/v1/device($DEVICE_ID)?apikey=$_device_api_key" \
+curl -s -X PATCH "$API_ENDPOINT/v4/device($DEVICE_ID)" \
+     --header "Authorization: Bearer $_device_api_key" \
      -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
      --data-urlencode "provisioning_progress=$PERCENTAGE" \
      --data-urlencode "provisioning_state=$STATE" \
