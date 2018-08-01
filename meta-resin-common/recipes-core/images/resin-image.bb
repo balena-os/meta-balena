@@ -64,7 +64,7 @@ RESIN_BOOT_PARTITION_FILES_append = " \
 "
 
 # add the generated <machine-name>.json to the resin-boot partition, renamed as device-type.json
-RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-type.json"
+RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " \
