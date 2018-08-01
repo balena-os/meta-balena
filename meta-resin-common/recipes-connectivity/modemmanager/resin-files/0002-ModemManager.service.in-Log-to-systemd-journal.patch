@@ -1,0 +1,27 @@
+From 69cd80a46a55389c40ad3fccfecc78c5b92c2d0a Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Wed, 1 Aug 2018 14:34:45 +0100
+Subject: [PATCH] ModemManager.service.in: Log to systemd journal
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Upstream-status: Inappropriate [configuration]
+---
+ data/ModemManager.service.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/ModemManager.service.in b/data/ModemManager.service.in
+index 4786776..1e78237 100644
+--- a/data/ModemManager.service.in
++++ b/data/ModemManager.service.in
+@@ -4,7 +4,7 @@ Description=Modem Manager
+ [Service]
+ Type=dbus
+ BusName=org.freedesktop.ModemManager1
+-ExecStart=@sbindir@/ModemManager
++ExecStart=@sbindir@/ModemManager --log-journal
+ StandardError=null
+ Restart=on-abort
+ CapabilityBoundingSet=CAP_SYS_ADMIN
+--
+2.7.4
+
