@@ -1,6 +1,30 @@
 Change log
 -----------
 
+# v2.14.1
+## (2018-08-02)
+
+* Fix ModemManager journald logs [Andrei Gherzan]
+* Fix openvpn journald logs [Andrei Gherzan]
+* Set maximum openvpn reconnect timeout to 2 minutes [Andrei Gherzan]
+* Resin-image: Handle absolute paths in RESIN_BOOT_PARTITION_FILES [Andrei Gherzan]
+* Exclude writable files from image's fingerprints file [Andrei Gherzan]
+* Update resin-supervisor to v7.16.2 [Andrei Gherzan]
+* Use v4 API calls, move auth token into the request header [Gergely Imreh]
+* Fix no-pie variable name in tini rocko [Andrei Gherzan]
+* Fix alternative builds warnings in busybox [Andrei Gherzan]
+* Don't compile mobynit in rocko with PIE [Andrei Gherzan]
+* Fix key replace build warnings [Andrei Gherzan]
+* Update go in krogoth to v1.9.4 [Andrei Gherzan]
+* Update go in morty to v1.9.4 [Andrei Gherzan]
+* Update go in pyro to v1.9.4 [Andrei Gherzan]
+* Update balena to version 17.12 [Andrei Gherzan]
+* Fix when ntp servers passed via config.json and dhcp [Zubair Lutfullah Kakakhel]
+* Disable PIE for the aufs-util package for Rocko boards [Andrei Gherzan]
+* Disable PIE for the aufs-util package for Sumo boards [Florin Sarbu]
+* Update resin supervisor to v7.16.0 [Andrei Gherzan]
+* Document supported modems [Andrei Gherzan]
+
 # v2.14.0
 ## (2018-07-17)
 
