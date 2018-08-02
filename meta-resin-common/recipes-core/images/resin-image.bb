@@ -37,8 +37,14 @@ IMAGE_INSTALL = " \
     "
 
 generate_rootfs_fingerprints () {
+    # Generate fingerprints file for root filesystem
+    # We exclude some entries that are bind mounted to state partition
+    # and modified at runtime.
     find ${IMAGE_ROOTFS} -xdev -type f \
         -not -name ${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT} \
+        -not -name hostname \
+        -not -name machine-id \
+        -not -name .rnd \
         -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | \
         sort -k2 > ${IMAGE_ROOTFS}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
 }
@@ -58,7 +64,7 @@ RESIN_BOOT_PARTITION_FILES_append = " \
 "
 
 # add the generated <machine-name>.json to the resin-boot partition, renamed as device-type.json
-RESIN_BOOT_PARTITION_FILES_append = " ../../../../../${MACHINE}.json:/device-type.json"
+RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
 # example NetworkManager config file
 RESIN_BOOT_PARTITION_FILES_append = " \

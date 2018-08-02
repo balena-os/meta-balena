@@ -50,8 +50,7 @@ init_config_json() {
    echo $(cat ${1}/config.json | jq -S ".persistentLogging=false") > ${1}/config.json
 
    # Find board json and extract slug
-   common_path=$(echo "${BBLAYERS}" | grep -o -E '[^ ]+meta-resin-common')
-   json_path=${common_path}/../../../${MACHINE}.json
+   json_path=${RESIN_COREBASE}/../../../${MACHINE}.json
    slug=$(jq .slug $json_path)
 
    # Set deviceType for supervisor
@@ -138,7 +137,15 @@ resin_boot_dirgen_and_deploy () {
         if [ -z "${dst}" ]; then
             dst="/${src}" # dst was omitted
         fi
-        src="${DEPLOY_DIR_IMAGE}/$src" # src is relative to deploy dir
+        case $src in
+            /* )
+                # Use absolute src paths as they are
+                ;;
+            *)
+                # Relative src paths are considered relative to deploy dir
+                src="${DEPLOY_DIR_IMAGE}/$src"
+                ;;
+        esac
 
         # Check that dst is an absolute path and assess if it should be a directory
         case $dst in
