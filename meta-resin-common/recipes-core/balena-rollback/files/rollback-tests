@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# Copyright 2018 Resinio Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -o errexit
+
+. /usr/sbin/resin-vars
+
+echo "Rollback: Running tests"
+
+# VPN health check
+if [ -f /mnt/state/rollback-health-variables ]; then
+	. /mnt/state/rollback-health-variables
+	if [ -f /run/openvpn/vpn_status/active ]; then
+		echo "Rollback: VPN is back online in new OS."
+	elif [ $BALENAOS_ROLLBACK_VPNONLINE == 1 ]; then
+		echo "Rollback: ERROR: VPN used to be ok but has not connected!"
+		exit 1
+	elif [ $BALENAOS_ROLLBACK_VPNONLINE == 0 ]; then
+		echo "Rollback: VPN used to be offline before HUP. Not using VPN healthcheck for rollback"
+	fi
+fi
+
+# Balena health check
+if /usr/lib/balena/balena-healthcheck ; then
+	echo "Rollback: Balena looks healthy"
+else
+	echo "Rollback: ERROR: Balena is not healthy!"
+	exit 1
+fi
