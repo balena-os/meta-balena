@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.14.2
+## (2018-08-13)
+
+* Update usb-modeswitch to version 2.5.0 [Florin Sarbu]
+* Fix kernel-modules-headers compile missing bio.h [Florin Sarbu]
+* Enable kernel config CONFIG_USB_SERIAL_CP210X as module [Andrei Gherzan]
+* Update resin supervisor to v7.16.4 [Cameron Diver]
+
 # v2.14.1
 ## (2018-08-02)
 
