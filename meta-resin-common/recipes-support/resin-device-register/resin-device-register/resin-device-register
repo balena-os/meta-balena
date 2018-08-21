@@ -1,6 +1,9 @@
 #!/bin/bash
 
-LOG_FILE=/var/log/register-device-curl.log
+REGISTER_LOG_FILE=/var/log/register-device-curl.log
+PIN_LOG_FILE=/var/log/pinning-device-curl.log
+
+PINNING_CONF=/etc/resin-device-pinning.conf
 
 help () {
     cat << EOF
@@ -49,28 +52,48 @@ while true; do
     then
         if [ -n "${REGISTERED_AT}" ]; then
             echo "[INFO] resin-device-register : Device already registered."
-            exit 0
+        else 
+            status_code=$(curl -s -X POST -w "%{http_code}" \
+                        --header "Authorization: Bearer $PROVISIONING_API_KEY" \
+                        --output $REGISTER_LOG_FILE \
+                        --data-urlencode "user=$USER_ID" \
+                        --data-urlencode "application=$APPLICATION_ID" \
+                        --data-urlencode "device_type=$DEVICE_TYPE" \
+                        --data-urlencode "uuid=$UUID" \
+                        --data-urlencode "api_key=$DEVICE_API_KEY" \
+                        "$API_ENDPOINT/device/register")
+
+            if [ "$status_code" -eq 201 ]; then
+                device_id=$(jq -r '.id' $REGISTER_LOG_FILE)
+                config_json=$(cat "$CONFIG_PATH")
+                echo "$config_json" | jq -S ".registered_at=\"$(date +%s)\"|.deviceId=\"$device_id\"|del(.apiKey)" > "$CONFIG_PATH"
+                echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $UUID."
+            else
+                echo "[ERROR] resin-device-register : Failed to register device. Status code: $status_code"
+            fi
+
         fi
 
-        status_code=$(curl -s -X POST -w "%{http_code}" \
-                    --header "Authorization: Bearer $PROVISIONING_API_KEY" \
-                    --output $LOG_FILE \
-                    --data-urlencode "user=$USER_ID" \
-                    --data-urlencode "application=$APPLICATION_ID" \
-                    --data-urlencode "device_type=$DEVICE_TYPE" \
-                    --data-urlencode "uuid=$UUID" \
-                    --data-urlencode "api_key=$DEVICE_API_KEY" \
-                    "$API_ENDPOINT/device/register")
+        if [ -f ${PINNING_CONF} ]; then
+            source "${PINNING_CONF}"
+            [[ -z $DEVICE_ID ]] && DEVICE_ID=$device_id
 
-        if [ "$status_code" -eq 201 ]; then
-            device_id=$(jq -r '.id' $LOG_FILE)
-            config_json=$(cat "$CONFIG_PATH")
-            echo "$config_json" | jq -S ".registered_at=\"$(date +%s)\"|.deviceId=\"$device_id\"|del(.apiKey)" > "$CONFIG_PATH"
-            echo "[INFO] resin-device-register : Registered device with ID: $device_id and UUID: $UUID."
-            exit 0
+            status_code=$(curl -s -X PATCH -w "%{http_code}" \
+                --header "Authorization: Bearer $DEVICE_API_KEY" \
+                --output $PIN_LOG_FILE \
+                --data-urlencode "should_be_running__release=$RELEASE_ID" \
+                "$API_ENDPOINT/v4/device($DEVICE_ID)")
+
+            if [ "$status_code" -eq 200 ]; then
+                echo "[INFO] resin-device-pinning: Pinned device ${UUID} to release ${RELEASE_ID}"
+                exit 0
+            else
+                echo "[ERROR] resin-device-pinning : Failed to pin device release. Status code: $status_code"
+                exit 0
+            fi
         else
-            echo "[ERROR] resin-device-register : Failed to register device. Status code: $status_code"
-            exit 1
+            echo "[INFO] resin-device-pinning : Pinning information missing. Skipping."
+            exit 0
         fi
     else
         echo  "[WARNING] resin-device-register: Not connected. Trying again..."
