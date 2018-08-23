@@ -32,8 +32,8 @@ SRC_URI = " \
     file://0002-Fixed-configure.ac-Fix-pkgconfig-sysroot-locations.patch \
     file://0003-Do-not-create-settings-settings-property-documentati.patch \
 "
-SRC_URI[md5sum] = "f728a42310c85b53386b172b15d7fc20"
-SRC_URI[sha256sum] = "38feb97ded3e68047508ea1b1de0b7ee077f8c220ab609cb2d5c1fe5f2947f95"
+SRC_URI[md5sum] = "94d02b80b120f166927e6ef242b29a9b"
+SRC_URI[sha256sum] = "6be06ff93a05f3ee4da9e58e4a0d974eef245c08b6f02b00a9e44154c9801a26"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
