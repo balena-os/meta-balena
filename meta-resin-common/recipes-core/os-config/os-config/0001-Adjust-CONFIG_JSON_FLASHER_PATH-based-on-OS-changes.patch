@@ -1,0 +1,27 @@
+From 8e6b394c3e8abcce98f9d701abb75a3b98e1bdbf Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Thu, 23 Aug 2018 11:22:12 +0100
+Subject: [PATCH] Adjust CONFIG_JSON_FLASHER_PATH based on OS changes
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Upstream-status: Pending
+---
+ src/args.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/args.rs b/src/args.rs
+index 90f031e..8cf2f5b 100644
+--- a/src/args.rs
++++ b/src/args.rs
+@@ -10,7 +10,7 @@ pub const SUPERVISOR_SERVICE: &str = "resin-supervisor.service";
+ const CONFIG_ROUTE: &str = "/os/v1/config";
+ const OS_CONFIG_PATH: &str = "/etc/os-config.json";
+ const CONFIG_JSON_PATH: &str = "/mnt/boot/config.json";
+-const CONFIG_JSON_FLASHER_PATH: &str = "/tmp/config.json";
++const CONFIG_JSON_FLASHER_PATH: &str = "/mnt/boottmp/config.json";
+ const FLASHER_FLAG_PATH: &str = "/mnt/boot/resin-image-flasher";
+
+ const CONFIG_ROUTE_REDEFINE: &str = "CONFIG_ROUTE_REDEFINE";
+--
+2.7.4
+
