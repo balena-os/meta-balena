@@ -42,7 +42,7 @@ FLASHER_FILEFLAG="$BOOT_MOUNTPOINT/resin-image-flasher"
 if [ -z "$CONFIG_PATH" ]; then
     if [ -f "$FLASHER_FILEFLAG" ]; then
         # Flasher stores a volatile file in tmpfs
-        CONFIG_PATH=/tmp/config.json
+        CONFIG_PATH=/mnt/boottmp/config.json
     else
         CONFIG_PATH=$BOOT_MOUNTPOINT/config.json
     fi
