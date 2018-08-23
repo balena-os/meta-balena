@@ -101,6 +101,20 @@ if [ ! -d "$RESIN_BOOT_MOUNTPOINT" ]; then
 	fail "$RESIN_BOOT_MOUNTPOINT : No such directory."
 fi
 
+# Give a chance to openvpn to come alive
+STARTTIME=$(date +%s)
+ENDTIME="$STARTTIME"
+TIMEOUT=15
+while [ "$(systemctl is-active openvpn)" != "active" ]
+do
+    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+        sleep 1 && ENDTIME=$((ENDTIME + 1))
+    else
+        inform "Timeout while waiting for openvpn to come alive. No network?"
+        break
+    fi
+done
+
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
 internal_dev=""
