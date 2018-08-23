@@ -3,6 +3,7 @@ Wants=resin-net-config.service
 After=resin-net-config.service
 
 [Service]
+Type=simple
 OOMScoreAdjust=-1000
 ExecStart=
-ExecStart=/usr/bin/dnsmasq -x /run/dnsmasq.pid -a "127.0.0.2,10.114.102.1" -7 /etc/dnsmasq.d/ -r /etc/resolv.dnsmasq -z --servers-file=/run/dnsmasq.servers
+ExecStart=/usr/bin/dnsmasq -x /run/dnsmasq.pid -a "127.0.0.2,10.114.102.1" -7 /etc/dnsmasq.d/ -r /etc/resolv.dnsmasq -z --servers-file=/run/dnsmasq.servers -k --log-facility=-
