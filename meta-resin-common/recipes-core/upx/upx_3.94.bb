@@ -9,7 +9,7 @@ SRC_URI[sha256sum] = "81ef72cdac7d8ccda66c2c1ab14f4cd54225e9e7b10cd40dd54be348db
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=353753597aa110e0ded3508408c6374a"
 
-DEPENDS = "zlib ucl-native"
+DEPENDS = "zlib ucl"
 
 S = "${WORKDIR}/${BPN}-${PV}-src"
 
