@@ -4,7 +4,8 @@ Wants=time-sync.target var-volatile-lib.service
 After=var-volatile-lib.service
 
 [Service]
+Type=simple
 Restart=always
 RestartSec=10s
 ExecStart=
-ExecStart=/usr/sbin/chronyd -s
+ExecStart=/usr/sbin/chronyd -s -d

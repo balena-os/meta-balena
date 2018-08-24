@@ -1,0 +1,14 @@
+[Unit]
+Description=Flasher boot partition tmpfs mountpoint
+DefaultDependencies=no
+Before=umount.target
+Conflicts=umount.target
+
+[Mount]
+What=/tmpfs
+Where=/mnt/boottmp
+Type=tmpfs
+Options=mode=1777,strictatime,nosuid,nodev,size=5m
+
+[Install]
+WantedBy=multi-user.target

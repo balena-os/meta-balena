@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device uuid
 Requires=resin-boot.service home-root-.rnd.mount
-After=resin-boot.service home-root-.rnd.mount
+After=resin-boot.service home-root-.rnd.mount os-config-devicekey.service
 
 [Service]
 Type=oneshot
@@ -10,4 +10,4 @@ Environment="HOME=/home/root"
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-unique-key uuid
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=basic.target

@@ -8,6 +8,7 @@ SRC_URI += " \
 	file://os-config.json \
 	file://os-config.service \
 	file://os-config-devicekey.service \
+	file://0001-Adjust-CONFIG_JSON_FLASHER_PATH-based-on-OS-changes.patch \
 	"
 
 SYSTEMD_SERVICE_${PN} = " \
