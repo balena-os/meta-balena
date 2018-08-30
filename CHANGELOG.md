@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.15.1
+## (2018-08-30)
+
+* Disable PIE for go [Zubair Lutfullah Kakakhel]
+* Disable PIE for balena [Zubair Lutfullah Kakakhel]
+
 # v2.15.0
 ## (2018-08-28)
 
