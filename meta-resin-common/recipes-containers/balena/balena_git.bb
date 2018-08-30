@@ -27,6 +27,9 @@ S = "${WORKDIR}/git"
 
 PV = "${BALENA_VERSION}+git${SRCREV}"
 
+SECURITY_CFLAGS = "${SECURITY_NOPIE_CFLAGS}"
+SECURITY_LDFLAGS = ""
+
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "balena.service balena-host.service var-lib-docker.mount"
 FILES_COMPRESS = "/boot/init"
