@@ -1,0 +1,53 @@
+From 4d870472eaa5df7eedff35c16a04c2ccb6095c91 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Thu, 30 Aug 2018 12:33:08 +0100
+Subject: [PATCH] Secure configuration options
+
+We deactivate various configuration knobs which have security concerns:
+
+* DROPBEAR_X11FWD - no need to run X over ssh
+* DROPBEAR_SHA1_96_HMAC - HMAC 96 is known to be a weak algorithm. It is
+	reported by OpenVAS as a low severity security issue.
+* DROPBEAR_ENABLE_CBC_MODE - As reported by OpenVAS, CBC mode can allow
+	an attacker to obtain plaintext from a block of cyphertext.
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Upstream-status: Inappropriate [configuration]
+---
+ options.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/options.h b/options.h
+index 94261f6..926952a 100644
+--- a/options.h
++++ b/options.h
+@@ -55,7 +55,7 @@ much traffic. */
+ #define DROPBEAR_SMALL_CODE
+
+ /* Enable X11 Forwarding - server only */
+-#define ENABLE_X11FWD
++/* #define ENABLE_X11FWD */
+
+ /* Enable TCP Fowarding */
+ /* 'Local' is "-L" style (client listening port forwarded via server)
+@@ -100,7 +100,7 @@ much traffic. */
+
+ /* Enable CBC mode for ciphers. This has security issues though
+  * is the most compatible with older SSH implementations */
+-#define DROPBEAR_ENABLE_CBC_MODE
++/* #define DROPBEAR_ENABLE_CBC_MODE */
+
+ /* Enable "Counter Mode" for ciphers. This is more secure than normal
+  * CBC mode against certain attacks. It is recommended for security
+@@ -131,7 +131,7 @@ If you test it please contact the Dropbear author */
+  * If you disable MD5, Dropbear will fall back to SHA1 fingerprints,
+  * which are not the standard form. */
+ #define DROPBEAR_SHA1_HMAC
+-#define DROPBEAR_SHA1_96_HMAC
++/* #define DROPBEAR_SHA1_96_HMAC */
+ #define DROPBEAR_SHA2_256_HMAC
+ #define DROPBEAR_SHA2_512_HMAC
+ #define DROPBEAR_MD5_HMAC
+--
+2.7.4
+
