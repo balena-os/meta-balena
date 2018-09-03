@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.16.0
+## (2018-08-31)
+
+* Os-config: UPX is broken on aarch64 [Theodor Gherzan]
+* Allow flasher types to pin preloaded devices [Theodor Gherzan]
+* Disable PIE for go [Zubair Lutfullah Kakakhel]
+* Disable PIE for balena [Zubair Lutfullah Kakakhel]
+
 # v2.15.0
 ## (2018-08-28)
 
