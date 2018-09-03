@@ -15,11 +15,11 @@ else
 fi
 
 new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT)
-new_part_label=$(blkid "$new_part" | awk '{print $2}')
+new_part_label=$(blkid "$new_part" | awk '{print $2}' | cut -d'"' -f 2)
 
 printf "[INFO] Switching root partition to %s..." "$new_part_label..."
 grub_cfg=$(find /mnt/boot/ -name grub.cfg)
-sed "s/root=[^ ]* /"root=$new_part_label" /" "$grub_cfg" > "$grub_cfg".new
+sed "s/resin-root./"$new_part_label"/" "$grub_cfg" > "$grub_cfg".new
 
 sync -f $(dirname "$grub_cfg")
 mv "$grub_cfg".new "$grub_cfg"
