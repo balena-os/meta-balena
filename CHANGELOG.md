@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.17.0
+## (2018-09-03)
+
+* Resin-proxy-config: The no_proxy file fails to parse when missing EOL [Rich Bayliss]
+
 # v2.16.0
 ## (2018-08-31)
 
