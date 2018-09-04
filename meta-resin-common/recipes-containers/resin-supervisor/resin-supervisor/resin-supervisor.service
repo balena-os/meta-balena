@@ -1,7 +1,6 @@
 [Unit]
 Description=Resin supervisor
 Requires=\
-    balena.service \
     resin\x2ddata.mount \
     resin-device-uuid.service \
     os-config-devicekey.service \
@@ -14,6 +13,7 @@ After=\
     bind-etc-systemd-system-resin.target.wants.service \
     bind-etc-resin-supervisor.service \
     chronyd.service
+Wants=balena.service
 
 [Service]
 Type=simple
@@ -23,6 +23,7 @@ WatchdogSec=60
 EnvironmentFile=/etc/resin-supervisor/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
 ExecStartPre=-@BINDIR@/balena stop resin_supervisor
+ExecStartPre=/bin/systemctl is-active balena.service
 ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/resin-supervisor/resin-supervisor-healthcheck @BINDIR@/start-resin-supervisor
 ExecStop=-@BINDIR@/balena stop resin_supervisor
 
