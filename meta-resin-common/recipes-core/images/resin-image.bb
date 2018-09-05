@@ -19,7 +19,7 @@ IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
 # Generated resinhup-tar based on RESINHUP variable
 IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"
 
-inherit core-image image-resin distro_features_check
+inherit core-image balena-image distro_features_check
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
