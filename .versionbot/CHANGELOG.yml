@@ -1,0 +1,1070 @@
+- version: v2.18.0
+  date: 2018-09-12T00:00:00.000Z
+  commits:
+    - subject: >-
+        Update grub hooks to prepare to load kernel from root [Zubair Lutfullah
+        Kakakhel]
+    - subject: 'Update resin-supervisor to v7.19.4 [Cameron Diver]'
+    - subject: >-
+        Kernel-resin.bbclass: Enable CONFIG_IP_NF_TARGET_LOG as a module [John
+        (Jack) Brown]
+    - subject: 'Balena: Update to current HEAD of 17.12-resin [Andrei Gherzan]'
+    - subject: 'Compress os-config with UPX on arm64 too [Andrei Gherzan]'
+    - subject: 'Update upx to 3.95 [Andrei Gherzan]'
+    - subject: >-
+        Add support to skip flasher detection in env_resin.h [Zubair Lutfullah
+        Kakakhel]
+    - subject: 'Add the kernel to the rootfs [Zubair Lutfullah Kakakhel]'
+    - subject: 'Rework resin-supervisor systemd dependency on balena [Florin Sarbu]'
+    - subject: 'Enhanced security options for dropbear - sumo [Andrei Gherzan]'
+    - subject: 'Enhanced security options for dropbear - rocko [Andrei Gherzan]'
+    - subject: 'Enhanced security options for dropbear - pyro [Andrei Gherzan]'
+    - subject: 'Enhanced security options for dropbear - morty [Andrei Gherzan]'
+    - subject: 'Enhanced security options for dropbear - krogoth [Andrei Gherzan]'
+- commits:
+    - subject: >-
+        Resin-proxy-config: The no_proxy file fails to parse when missing EOL
+        [Rich Bayliss]
+  date: 2018-09-03T00:00:00.000Z
+  version: 2.17.0
+- commits:
+    - subject: 'Os-config: UPX is broken on aarch64 [Theodor Gherzan]'
+    - subject: 'Allow flasher types to pin preloaded devices [Theodor Gherzan]'
+    - subject: 'Disable PIE for go [Zubair Lutfullah Kakakhel]'
+    - subject: 'Disable PIE for balena [Zubair Lutfullah Kakakhel]'
+  date: 2018-08-31T00:00:00.000Z
+  version: 2.16.0
+- commits:
+    - subject: 'Bump balena version to latest 17.12-resin [Zubair Lutfullah Kakakhel]'
+    - subject: 'Update NetworkManager to 1.12.2 [Andrei Gherzan]'
+    - subject: 'Avoid os-config-devicekey / uuid service race [Andrei Gherzan]'
+    - subject: 'Move the rw copy of config.json out of /tmp for flasher [Andrei Gherzan]'
+    - subject: 'Fix dashboard feedback on fast flashing devices [Andrei Gherzan]'
+    - subject: 'Fix ucl dependency in upx [Andrei Gherzan]'
+    - subject: 'Update kernel-modules-headers to v0.0.11 [Andrei Gherzan]'
+  date: 2018-08-28T00:00:00.000Z
+  version: 2.15.0
+- commits:
+    - subject: 'Update resin supervisor to v7.16.6 [Cameron Diver]'
+  date: 2018-08-13T00:00:00.000Z
+  version: 2.14.3
+- commits:
+    - subject: 'Update usb-modeswitch to version 2.5.0 [Florin Sarbu]'
+    - subject: 'Fix kernel-modules-headers compile missing bio.h [Florin Sarbu]'
+    - subject: 'Enable kernel config CONFIG_USB_SERIAL_CP210X as module [Andrei Gherzan]'
+    - subject: 'Update resin supervisor to v7.16.4 [Cameron Diver]'
+  date: 2018-08-13T00:00:00.000Z
+  version: 2.14.2
+- commits:
+    - subject: 'Fix ModemManager journald logs [Andrei Gherzan]'
+    - subject: 'Fix openvpn journald logs [Andrei Gherzan]'
+    - subject: 'Set maximum openvpn reconnect timeout to 2 minutes [Andrei Gherzan]'
+    - subject: >-
+        Resin-image: Handle absolute paths in RESIN_BOOT_PARTITION_FILES [Andrei
+        Gherzan]
+    - subject: 'Exclude writable files from image''s fingerprints file [Andrei Gherzan]'
+    - subject: 'Update resin-supervisor to v7.16.2 [Andrei Gherzan]'
+    - subject: >-
+        Use v4 API calls, move auth token into the request header [Gergely
+        Imreh]
+    - subject: 'Fix no-pie variable name in tini rocko [Andrei Gherzan]'
+    - subject: 'Fix alternative builds warnings in busybox [Andrei Gherzan]'
+    - subject: 'Don''t compile mobynit in rocko with PIE [Andrei Gherzan]'
+    - subject: 'Fix key replace build warnings [Andrei Gherzan]'
+    - subject: 'Update go in krogoth to v1.9.4 [Andrei Gherzan]'
+    - subject: 'Update go in morty to v1.9.4 [Andrei Gherzan]'
+    - subject: 'Update go in pyro to v1.9.4 [Andrei Gherzan]'
+    - subject: 'Update balena to version 17.12 [Andrei Gherzan]'
+    - subject: >-
+        Fix when ntp servers passed via config.json and dhcp [Zubair Lutfullah
+        Kakakhel]
+    - subject: 'Disable PIE for the aufs-util package for Rocko boards [Andrei Gherzan]'
+    - subject: 'Disable PIE for the aufs-util package for Sumo boards [Florin Sarbu]'
+    - subject: 'Update resin supervisor to v7.16.0 [Andrei Gherzan]'
+    - subject: 'Document supported modems [Andrei Gherzan]'
+  date: 2018-08-02T00:00:00.000Z
+  version: 2.14.1
+- commits:
+    - subject: >-
+        Allow re-run of useradd commands in docker-disk's entry.sh [Andrei
+        Gherzan]
+    - subject: 'Update rust to 1.20 and cargo to 0.21.0 in Morty [Andrei Gherzan]'
+    - subject: 'Update rust to 1.20 and cargo to 0.21.0 in Krogoth [Andrei Gherzan]'
+    - subject: >-
+        Unify managed and unmanaged images and introduce os-config [Andrei
+        Gherzan]
+  date: 2018-07-17T00:00:00.000Z
+  version: 2.14.0
+- commits:
+    - subject: 'Update resin-supervisor v 7.14.0 [Cameron Diver]'
+    - subject: 'Fix rootfs fingerprints on poky rocko or newer [Andrei Gherzan]'
+    - subject: 'Reboot device if there is a kernel panic [Zubair Lutfullah Kakakhel]'
+  date: 2018-07-13T00:00:00.000Z
+  version: 2.13.6
+- commits:
+    - subject: 'Update resin-supervisor to v7.13.2 [Cameron Diver]'
+  date: 2018-07-09T00:00:00.000Z
+  version: 2.13.5
+- commits:
+    - subject: 'Avoid overwriting SECURITY_CFLAGS for tini recipe [Andrei Gherzan]'
+    - subject: 'Fix tini segfault after sumo update [Andrei Gherzan]'
+  date: 2018-07-09T00:00:00.000Z
+  version: 2.13.4
+- commits:
+    - subject: 'Update ModemManager to 1.8.0 [Andrei Gherzan]'
+    - subject: 'Switch NetworkManager to using the internal DHCP client [Andrei Gherzan]'
+    - subject: 'Update NetworkManager to 1.12.0 [Andrei Gherzan]'
+    - subject: 'Update resin-supervisor to 7.13.1 [Cameron Diver]'
+  date: 2018-07-05T00:00:00.000Z
+  version: 2.13.3
+- commits:
+    - subject: 'Update balena to fix boot lag [Andrei Gherzan]'
+    - subject: 'Set DHCP timeout to infinity for IPv4 [Florin Sarbu]'
+    - subject: 'Add aufs support for kernels 4.15, 4.16 and 4.17 [Florin Sarbu]'
+  date: 2018-06-28T00:00:00.000Z
+  version: 2.13.2
+- commits:
+    - subject: >-
+        Fix mobynit runtime crash when compiled with gcc 7.3.0 with static PIE
+        support enabled [Florin Sarbu]
+    - subject: 'Fix typo in balena systemd service [Andrei Gherzan]'
+    - subject: >-
+        Various fixes for issues introduced by the switch to chrony [Andrei
+        Gherzan]
+    - subject: 'Fsck all partitions if resin-data isn''t seen [Zubair Lutfullah Kakakhel]'
+    - subject: 'Remove jethro and fido yocto versions support [Andrei Gherzan]'
+    - subject: 'Update resin-supervisor to 7.11.0 [Cameron Diver]'
+    - subject: 'Replace systemd-timesyncd with chrony [Zubair Lutfullah Kakakhel]'
+    - subject: 'Set ModemManager to ignore STM32F407 devices [Andrei Gherzan]'
+  date: 2018-06-15T00:00:00.000Z
+  version: 2.13.1
+- commits:
+    - subject: 'Update resin-supervisor to 7.10.0 [Cameron Diver]'
+    - subject: 'Add support for yocto sumo [Andrei Gherzan]'
+    - subject: 'Update Readme.md with more yocto versions [Zubair Lutfullah Kakakhel]'
+    - subject: >-
+        Docker-resin-supverisor-disk: Update supervisor to version 7.9.0 [Akis
+        Kesoglou]
+    - subject: >-
+        Docker-resin-supverisor-disk: Update supervisor to version 7.5.6
+        [Cameron Diver]
+  date: 2018-06-06T00:00:00.000Z
+  version: 2.13.0
+- commits:
+    - subject: 'Fix typo in timeinit-timestamp service [Andrei Gherzan]'
+    - subject: 'Use system clock at boot based on RTC when available [Andrei Gherzan]'
+    - subject: 'Update Network Manager to version 1.10.2 [Florin Sarbu]'
+    - subject: 'Adds Teensy udev rules [Henry Miskin]'
+  date: 2018-05-04T00:00:00.000Z
+  version: 2.12.7
+- commits:
+    - subject: 'Initialize system clock using the build time [Andrei Gherzan]'
+    - subject: 'Fix typo in resin-mounts [Mans Zigher]'
+    - subject: 'Update supervisor to v7.4.3 [Pablo Carranza Velez]'
+    - subject: 'Update supervisor to v7.4.2 [Akis Kesoglou]'
+    - subject: 'Move to Supervisor v7.4.1. [Heds Simons]'
+    - subject: >-
+        Pass self-signed CA data to the Supervisor and for Docker registry
+        trust. [Heds Simons]
+    - subject: >-
+        Extract `balenaRootCA` property from `config.json` to allow
+        interoperation with a self-signed service. [Heds Simons]
+    - subject: >-
+        Split resin specific changes in dnsmasq in a separate bbappend [Andrei
+        Gherzan]
+    - subject: 'Allow not existing supervisor.conf file [Bruno Binet]'
+    - subject: >-
+        Remove remnants of 1.x updater, which is not needed anymore [Gergely
+        Imreh]
+    - subject: >-
+        Allow update resin spervisor when API endpoint is not available [Andrei
+        Gherzan]
+    - subject: >-
+        Apply upstream patch for redsocks to fix http-config regression [Gergely
+        Imreh]
+    - subject: 'Update supervisor to v7.1.20 [Akis Kesoglou]'
+  date: 2018-04-30T00:00:00.000Z
+  version: 2.12.6
+- commits:
+    - subject: 'Fig slang configure build warning [Andrei Gherzan]'
+    - subject: 'Fix racing issue of state label existance in initramfs [Andrei Gherzan]'
+    - subject: 'Stop dependending on udev settle at boot [Andrei Gherzan]'
+  date: 2018-03-22T00:00:00.000Z
+  version: 2.12.5
+- commits:
+    - subject: 'Fix persistent logging [Andrei Gherzan]'
+    - subject: 'USB Modem (CDC ACM) support enabled as kernel module [Andrei Gherzan]'
+    - subject: 'Update supervisor to v7.1.18 [Pablo Carranza Velez]'
+    - subject: >-
+        Add support for persistent NetworkManager state directory [Andrei
+        Gherzan]
+  date: 2018-03-20T00:00:00.000Z
+  version: 2.12.4
+- commits:
+    - subject: 'Update supervisor to v7.1.14 [Florin Sarbu]'
+  date: 2018-03-15T00:00:00.000Z
+  version: 2.12.3
+- commits:
+    - subject: 'Update supervisor to v7.1.11 [Akis Kesoglou]'
+    - subject: 'Balena: Update package to include deadlock fix [Andrei Gherzan]'
+    - subject: 'Remove bashisms in resin-init-flasher recipe [Andrei Gherzan]'
+  date: 2018-03-14T00:00:00.000Z
+  version: 2.12.2
+- commits:
+    - subject: 'Disable openvpn time-based tls key renegotiation [Will Boyce]'
+  date: 2018-03-12T00:00:00.000Z
+  version: 2.12.1
+- commits:
+    - subject: 'Update supervisor to v7.1.7 [Theodor Gherzan]'
+  date: 2018-03-09T00:00:00.000Z
+  version: 2.12.0
+- commits:
+    - subject: 'Update supervisor to v7.1.3 [Andrei Gherzan]'
+  date: 2018-03-09T00:00:00.000Z
+  version: 2.11.2
+- commits:
+    - subject: >-
+        Resin-vars: Assume VPN port 443 if 1723 is provided in config.json
+        [Andrei Gherzan]
+    - subject: 'Make update-resin-supervisor POSIX compliant [Andrei Gherzan]'
+    - subject: 'Add resin-openvpn.service alias for openvpn.service [Andrei Gherzan]'
+  date: 2018-03-08T00:00:00.000Z
+  version: 2.11.1
+- commits:
+    - subject: >-
+        Fix docker-disk when docker build fails to not leave root files behind
+        [Andrei Gherzan]
+    - subject: 'Update supervisor to v7.1.0 [Pablo Carranza Velez]'
+    - subject: 'Fix connectivity in flasher images [Andrei Gherzan]'
+    - subject: 'Add missing kernel config dependency for leds-gpio [Andrei Gherzan]'
+  date: 2018-03-08T00:00:00.000Z
+  version: 2.11.0
+- commits:
+    - subject: 'Fix docker-disk when not including any docker image [Florin Sarbu]'
+  date: 2018-02-28T00:00:00.000Z
+  version: 2.10.1
+- commits:
+    - subject: >-
+        Make sure rocko update doesn't add packages resinOS doesn't depend on
+        [Andrei Gherzan]
+    - subject: 'Run bluetoothd with --experimental flag [Andrei Gherzan]'
+    - subject: 'Resin-image-flasher fixes for rocko support [Andrei Gherzan]'
+    - subject: >-
+        Use the correct, full yocto CC/CXX variables when using go [Andrei
+        Gherzan]
+    - subject: 'Fix 8000c in PACKAGES [Andrei Gherzan]'
+    - subject: >-
+        Always have /lib/modules directory in rootfs as supervisor requires it
+        [Andrei Gherzan]
+    - subject: >-
+        Fix console output when running resinOS with systemd >= 232 [Andrei
+        Gherzan]
+    - subject: >-
+        Bring back the package which includes firmware for wilwifi 8000c [Andrei
+        Gherzan]
+    - subject: 'Update OpenVPN to 2.4.3 [Andrei Gherzan]'
+    - subject: >-
+        Replace deprecated variable IMAGE_DEPENDS from image_types_resin.bbclass
+        [Florin Sarbu]
+    - subject: >-
+        Replace deprecated variable IMAGE_DEPENDS from resin-image-flasher.bb
+        [Florin Sarbu]
+    - subject: >-
+        Adapt sysroot services/units to be used with resinOS in container
+        [Andrei Gherzan]
+    - subject: 'Remove deprecated firmware: 8000c [Andrei Gherzan]'
+    - subject: >-
+        Resin-state-reset: This service now only removes the root-overlay
+        [Andrei Gherzan]
+    - subject: 'Fix resin-provisioner 1.0.4 compile error on Poky Rocko [Florin Sarbu]'
+    - subject: >-
+        Make resin-provisioner only package the resulted go binary [Florin
+        Sarbu]
+    - subject: 'Prepare the balena recipe for Poky Rocko [Florin Sarbu]'
+    - subject: >-
+        Use update-alternatives for deploying resolv.conf through dnsmasq
+        [Florin Sarbu]
+    - subject: >-
+        Make ModemManager depend on libxslt-native at build-time for Poky Rocko
+        [Florin Sarbu]
+    - subject: 'Add initial structure for supporting Poky Rocko [Florin Sarbu]'
+    - subject: >-
+        Do not apply the use_atomic_key_generation_in_all_cases patch for
+        dropbear 2017.75 or newer [Florin Sarbu]
+    - subject: 'Make image-resin.bbclass depend on jq-native at buildtime [Florin Sarbu]'
+    - subject: >-
+        Fix ucl-native ACC conformance test configure error on gcc6 [Florin
+        Sarbu]
+    - subject: 'Update ModemManager to version 1.7.990 [Florin Sarbu]'
+    - subject: >-
+        Rename partition mount services to <label>.service and handle stopping
+        services [Andrei Gherzan]
+    - subject: 'Rename openvpn-resin service to openvpn [Andrei Gherzan]'
+    - subject: >-
+        Kernel-resin: Fix warnings about CONFIG_DEVPTS_MULTIPLE_INSTANCES
+        [Andrei Gherzan]
+    - subject: 'Update supervisor to v6.6.3 [Pablo Carranza Velez]'
+    - subject: 'Let systemd handle openvpn run directory [Andrei Gherzan]'
+    - subject: 'Add support for running resinOS in a docker container [Andrei Gherzan]'
+    - subject: 'Add fs check for boot partition in initramfs [Andrei Gherzan]'
+    - subject: 'Fix kernel-modules-headers when building from sstate [Andrei Gherzan]'
+    - subject: >-
+        Avoid mount warnings when using systemd mount units on files [Andrei
+        Gherzan]
+    - subject: 'Add support for private docker registry [Bruno Binet]'
+    - subject: 'Docker-disk: Various improvements [Andrei Gherzan]'
+    - subject: 'Networkmanager: Use bash-completion bbclass [Andrei Gherzan]'
+    - subject: 'Use VPN port from config.json (defaulting it to 443) [Andrei Gherzan]'
+    - subject: 'Housekeeping: adding PR template [Gergely Imreh]'
+    - subject: 'Replace busybox less by GNU less [Andrei Gherzan]'
+    - subject: >-
+        Fix BALENA_STORAGE when machine specific definition is used [Andrei
+        Gherzan]
+    - subject: 'Coreutils: Set uptime to use procfs for accurate uptime [Andrei Gherzan]'
+  date: 2018-02-27T00:00:00.000Z
+  version: 2.10.0
+- commits:
+    - subject: 'Install os-release file in the boot partition [Andrei Gherzan]'
+    - subject: 'Update balena to include locks fix [Andrei Gherzan]'
+    - subject: 'Healthdog: Fix RPATH on newer meta-rust [Andrei Gherzan]'
+    - subject: 'Update supervisor to v6.6.0 [Pablo Carranza Velez]'
+  date: 2018-01-26T00:00:00.000Z
+  version: 2.9.7
+- commits:
+    - subject: 'Update supervisor to v6.5.9 [Pablo Carranza Velez]'
+  date: 2018-01-12T00:00:00.000Z
+  version: 2.9.6
+- commits:
+    - subject: 'Update supervisor to v6.5.8 [Pablo Carranza Velez]'
+  date: 2018-01-11T00:00:00.000Z
+  version: 2.9.5
+- commits:
+    - subject: >-
+        Systemd: Backport patch to fix Remote DOS of systemd-resolve service
+        [Andrei Gherzan]
+    - subject: >-
+        Hostapp-update: Bind mount /dev from host so we can resolv labels
+        [Andrei Gherzan]
+    - subject: >-
+        NetworkManager: Allow managing non-balena bridge interfaces [Andrei
+        Gherzan]
+  date: 2018-01-10T00:00:00.000Z
+  version: 2.9.4
+- commits:
+    - subject: 'Add lsof package [Florin Sarbu]'
+    - subject: 'Bring back resin-device-progress in resin-image [Andrei Gherzan]'
+    - subject: 'Update supervisor to v6.5.7 [Pablo Carranza Velez]'
+    - subject: 'Make hostapp-update-hooks rollback on failure optional [Gergely Imreh]'
+  date: 2018-01-09T00:00:00.000Z
+  version: 2.9.3
+- commits:
+    - subject: 'Activate memory/swap cgroups in kernel [Andrei Gherzan]'
+    - subject: >-
+        Make the grub hostapp update hook also work with non-EFI grub configs
+        [Florin Sarbu]
+  date: 2017-12-18T00:00:00.000Z
+  version: 2.9.2
+- commits:
+    - subject: 'Update supervisor to v6.5.3 [Pablo Carranza Velez]'
+    - subject: >-
+        Pass /mnt/root/var/lib/docker as DOCKER_ROOT to the supervisor [Florin
+        Sarbu]
+  date: 2017-12-12T00:00:00.000Z
+  version: 2.9.1
+- commits:
+    - subject: 'Update supervisor to v6.5.1 [Pablo Carranza Velez]'
+    - subject: >-
+        Use healthcheck with systemd and healthdog for supervisor [Andrei
+        Gherzan]
+    - subject: 'Update supervisor to v6.5.0 [Pablo Carranza Velez]'
+    - subject: >-
+        Fix openvpn reporting when connectivity goes out, due to a filesystem
+        permissions issue [Pablo Carranza Velez]
+    - subject: 'Update balena cu include healthcheck support [Andrei Gherzan]'
+    - subject: 'Add healthdog monitoring of balena [Andrei Gherzan]'
+    - subject: 'Run the update container as privileged [Florin Sarbu]'
+    - subject: 'Fix 0-bootfiles when running hooks [Andrei Gherzan]'
+    - subject: 'Add the lsblk binary to the flasher rootfs [Florin Sarbu]'
+    - subject: >-
+        Add boot partition space check for 0-bootfiles hostapp-update hook
+        [Andrei Gherzan]
+    - subject: >-
+        Fix hostapp-update to run the hooks for the OS we update to [Andrei
+        Gherzan]
+    - subject: 'Switch to balena [Andrei Gherzan]'
+  date: 2017-12-11T00:00:00.000Z
+  version: 2.9.0
+- commits:
+    - subject: 'Kernel-modules-headers: Include aarch64 fix [Theodor Gherzan]'
+  date: 2017-12-01T00:00:00.000Z
+  version: 2.8.1
+- commits:
+    - subject: 'Support for legacy bootloaders [Theodor Gherzan]'
+    - subject: 'Update NetworkManager to version 1.10.0 [Florin Sarbu]'
+    - subject: 'Update aufs for kernel versions from 4.4 to 4.13 [Florin Sarbu]'
+  date: 2017-11-30T00:00:00.000Z
+  version: 2.8.0
+- commits:
+    - subject: >-
+        Do our best to ensure we copy to internal media the config.json after
+        resin-device-register was able to register the board [Florin Sarbu]
+  date: 2017-11-17T00:00:00.000Z
+  version: 2.7.8
+- commits:
+    - subject: >-
+        Delete the provisioning key after registering, to fix VPN authentication
+        in flasher images [Pablo Carranza Velez]
+    - subject: >-
+        Resin-image-initramfs: Include ext4 filesystem check module in our
+        initramfs [Florin Sarbu]
+    - subject: 'Hostapp-update-hooks: fix typos in hook [Gergely Imreh]'
+    - subject: >-
+        Image-resin.bbclass: Add build time dependency on coreutils-native
+        [Florin Sarbu]
+    - subject: >-
+        Hostapp-update-hooks: Use boot files list from the 'next' OS [Andrei
+        Gherzan]
+    - subject: >-
+        Add required kernel config dependency for being able to use redsocks
+        [Florin Sarbu]
+    - subject: >-
+        Check for enough space in boot partition to support atomic copy
+        operations [Andrei Gherzan]
+    - subject: 'Update libmbim to version 1.14.2 [Florin Sarbu]'
+    - subject: 'Update libqmi to version 1.18.0 [Florin Sarbu]'
+  date: 2017-11-17T00:00:00.000Z
+  version: 2.7.7
+- commits:
+    - subject: 'Add supervisor for the intel-quark family [Theodor Gherzan]'
+    - subject: 'Update ModemManager to version 1.6.10 [Florin Sarbu]'
+    - subject: 'Update supervisor to v6.4.2 [Pablo Carranza Velez]'
+  date: 2017-11-06T00:00:00.000Z
+  version: 2.7.6
+- commits:
+    - subject: 'Ensure OpenVPN is restarted when config.json changes [Will Newton]'
+    - subject: 'Support grub boards with hostapp-update-hooks [Theodor Gherzan]'
+  date: 2017-10-30T00:00:00.000Z
+  version: 2.7.5
+- commits:
+    - subject: 'Update supervisor to v6.3.6 [Pablo Carranza Velez]'
+  date: 2017-10-24T00:00:00.000Z
+  version: 2.7.4
+- commits:
+    - subject: 'Update API call in update-resin-supervisor for pine 5 [Gergely Imreh]'
+    - subject: >-
+        Fix start-resin-supervisor to start even when no supervisor image
+        present [Gergely Imreh]
+    - subject: 'Update supervisor to v6.3.5 [Akis Kesoglou]'
+    - subject: 'Fix fsck of boot partition with dosfstools [Will Newton]'
+    - subject: 'Backport ModemManager flow control patches [Will Newton]'
+    - subject: 'Update dnsmasq to 2.78 [Will Newton]'
+  date: 2017-10-20T00:00:00.000Z
+  version: 2.7.3
+- commits:
+    - subject: 'Fix mkfs.hostapp-ext4 with pyro [Andrei Gherzan]'
+    - subject: 'Fix a syntax error in image_types_resin [Andrei Gherzan]'
+    - subject: 'Add a fixed goarch.bbclass for pyro [Will Newton]'
+    - subject: 'Docker: Improved pull progress reporting [Akis Kesoglou]'
+    - subject: 'Update supervisor to v6.3.1 [Akis Kesoglou]'
+  date: 2017-10-05T00:00:00.000Z
+  version: 2.7.2
+- commits:
+    - subject: 'Update docker [Theodor Gherzan]'
+    - subject: 'Ensure docker links with systemd in pyro [Will Newton]'
+  date: 2017-10-04T00:00:00.000Z
+  version: 2.7.1
+- commits:
+    - subject: 'Add support for overaly2 in mobynit [Theodor Gherzan]'
+    - subject: 'GPT support [Theodor Gherzan]'
+    - subject: >-
+        Update-resin-supervisor: device API key is substituted incorrectly
+        [Gergely Imreh]
+    - subject: 'Support kernel 4.13 [Will Newton]'
+    - subject: 'Update supervisor to v6.3.0 [Akis Kesoglou]'
+  date: 2017-10-04T00:00:00.000Z
+  version: 2.7.0
+- commits:
+    - subject: 'Fixes for Pyro-based flasher images [Will Newton]'
+    - subject: 'Sort config.json keys [Will Newton]'
+  date: 2017-09-27T00:00:00.000Z
+  version: 2.6.1
+- commits:
+    - subject: 'Provide generic hostapp update hooks [Andrei Gherzan]'
+    - subject: 'Deploy a list of boot files in root partition [Andrei Gherzan]'
+    - subject: 'Update supervisor to v6.2.9 [Pablo Carranza Velez]'
+    - subject: 'Add usbutils package [Will Newton]'
+    - subject: 'Switch docker to inherit from Go class [Will Newton]'
+    - subject: 'Enable zram kernel module by default [Will Newton]'
+    - subject: >-
+        Make sure hci bluetooth interfaces are activated once booted [Florin
+        Sarbu]
+    - subject: 'Enable kernel stack protection [Will Newton]'
+    - subject: 'Enable Yocto security flags on all builds [Will Newton]'
+    - subject: >-
+        Update gnutls to 3.5.9 in morty because of blocking NetworkManager
+        [Robert Fritzsche]
+  date: 2017-09-20T00:00:00.000Z
+  version: 2.6.0
+- commits:
+    - subject: >-
+        Force use of host's docker daemon for the docker-disk recipe [Florin
+        Sarbu]
+    - subject: 'Remove unused plymouth files to reduce size [Michal Mazurek]'
+  date: 2017-09-13T00:00:00.000Z
+  version: 2.5.1
+- commits:
+    - subject: 'Remove obsolete Go recipes [Will Newton]'
+    - subject: 'Dynamically link docker [Petros Angelatos]'
+    - subject: 'Include connectivity firmwares in Pyro [Will Newton]'
+    - subject: 'Add glib-2.0-native dependencies for Pyro [Will Newton]'
+    - subject: 'Switch to hostapp enabled rootfs [Petros Angelatos]'
+    - subject: 'Update docker to 17.06 [Petros Angelatos]'
+    - subject: 'Update modem manager to 1.6.8 [Andrei Gherzan]'
+    - subject: 'Use poky go recipes for Pyro and above [Will Newton]'
+    - subject: 'Patch mtools directory creation [Will Newton]'
+    - subject: 'Enable building Docker on Yocto Pyro [Will Newton]'
+    - subject: 'Enable fsck for resin-state partition [Will Newton]'
+    - subject: 'Add host tool dependencies for Yocto Pyro [Will Newton]'
+    - subject: 'Move systemd sanity check to image recipes [Will Newton]'
+    - subject: 'Disable rarely used kernel configs for size [Will Newton]'
+  date: 2017-09-12T00:00:00.000Z
+  version: 2.5.0
+- commits:
+    - subject: 'Update NetworkManager to 1.8.2 [Andrei Gherzan]'
+    - subject: 'Only install systemd-analyze in development images [Will Newton]'
+    - subject: >-
+        Avoid removing the supervisor container when the supervisor exits [Pablo
+        Carranza Velez]
+    - subject: 'Update supervisor to v6.2.5 [Pablo Carranza Velez]'
+  date: 2017-08-31T00:00:00.000Z
+  version: 2.4.2
+- commits:
+    - subject: >-
+        Fix variable referencing in default variable substitution inside
+        prepare-openvpn script [Florin Sarbu]
+  date: 2017-08-24T00:00:00.000Z
+  version: 2.4.1
+- commits:
+    - subject: 'Use separate line for version in changelog file [Andrei Gherzan]'
+    - subject: 'Run OpenVPN service as openvpn user [Andreas Fitzek]'
+    - subject: 'Update supervisor to v6.2.1 [Akis Kesoglou]'
+    - subject: 'Watch for VPN config changes in config.json [Pagan Gazzard]'
+  date: 2017-08-23T00:00:00.000Z
+  version: 2.4.0
+- commits:
+    - subject: >-
+        Resize the splash logo to full screen instead of half screen [Gergely
+        Imreh]
+    - subject: 'Set docker bridge subnet to 10.114.101.1/24 [Petros Angelatos]'
+    - subject: 'Re-enable UPX compression on AArch64 [Will Newton]'
+    - subject: 'Resin-device-progress: fix typos that broke script [Gergely Imreh]'
+    - subject: 'Upgrade upx to 3.94 [Will Newton]'
+    - subject: 'Set deviceType in config.json [Will Newton]'
+    - subject: 'Update supervisor to v6.1.3 [Pablo Carranza Velez]'
+    - subject: 'Fix typo in resin-persistent-logs [Will Newton]'
+    - subject: 'Use BBCLASSEXTEND rather than inherit native [Florin Sarbu]'
+  date: 2017-08-16T00:00:00.000Z
+  version: 2.3.0
+- commits:
+    - subject: 'Update supervisor to v6.1.2 [Pablo Carranza Velez]'
+    - subject: 'Support building with Yocto Pyro [Will Newton]'
+    - subject: 'Disable resin-sample NetworkManager connection [Will Newton]'
+    - subject: 'Remove support for Yocto Daisy [Will Newton]'
+  date: 2017-07-28T00:00:00.000Z
+  version: 2.2.0
+- commits:
+    - subject: 'Update supervisor to v6.0.1 [Pablo Carranza Velez]'
+    - subject: 'Add support for overlay2 as docker storage driver [Andrei Gherzan]'
+    - subject: >-
+        Detect filesystem type automatically in resin mount systemd services
+        [Michal Mazurek]
+    - subject: 'Fix util-linux to work with ubifs [Michal Mazurek]'
+    - subject: 'Allow setting DNS servers in config.json [Will Newton]'
+    - subject: >-
+        Make sure resin-state-reset doesn't end up in an inconsistent state
+        [Andrei Gherzan]
+    - subject: 'Remove latest supervisor tag as it is not used anymore [Andrei Gherzan]'
+    - subject: 'Add NTP configuration service [Will Newton]'
+    - subject: 'Use full list of resin NTP servers [Will Newton]'
+    - subject: 'Document config.json keys in README.md [Will Newton]'
+    - subject: >-
+        Document Change-type and Changelog-entry git commit footers [Andrei
+        Gherzan]
+    - subject: 'Add systemd as a required distro feature [Will Newton]'
+  date: 2017-07-19T00:00:00.000Z
+  version: 2.1.0
+- commits:
+    - subject: 'Fix splash image migration in flasher images [Andrei Gherzan]'
+    - subject: 'Add missing netfilter configs for our redsocks usage [Florin Sarbu]'
+  date: 2017-07-06T00:00:00.000Z
+  version: 2.0.9
+- commits:
+    - subject: 'Resin-vars: Fetch all the vars in resin-vars [Pagan Gazzard]'
+    - subject: 'Add comment in supervisor.conf for clarity [Petros Angelatos]'
+    - subject: 'Prevent supervisor from killing itself [Pablo Carranza Velez]'
+    - subject: >-
+        Store both image and tag in the temporary supervisor.conf [Pablo
+        Carranza Velez]
+    - subject: 'Use current changelog format with versionist [Andrei Gherzan]'
+    - subject: >-
+        Update supervisor to v5.1.0 and use aarch64-supervisor for aarch64
+        [Pablo Carranza Velez]
+    - subject: 'Validate docker config from disk to avoid panicing [Petros Angelatos]'
+    - subject: 'Versionist: add support for full versionist use [Gergely Imreh]'
+  date: 2017-07-04T00:00:00.000Z
+  version: 2.0.8
+- commits:
+    - subject: 'Add support for transparent proxy redirection using redsocks [Pablo]'
+    - subject: 'Add prerequisites for ipk packages in resinOS images [Andrei]'
+    - subject: 'Update supervisor to v5.0.0 [Pablo]'
+    - subject: 'Allow downloading a missing supervisor [Will]'
+    - subject: 'Add busybox patch to fix tar unpacking [Will]'
+    - subject: 'Include support for the RT5572 wireless chipset [Theodor]'
+    - subject: 'Add a quirk for /etc/mtab [Will]'
+    - subject: 'Switch to resin.io ntp pool [petrosagg]'
+    - subject: 'Undefine backwards compatibilty variable, INITRAMFS_TASK [Theodor]'
+    - subject: 'Enable CONFIG_KEYS, docker 17 requirment [Theodor]'
+    - subject: 'Update NetworkManager to 1.8.0 [Andrei]'
+    - subject: 'Update supervisor to v4.3.1 [Andrei]'
+    - subject: 'Set NetworkManager connection attempts to infinity [petrosagg]'
+    - subject: 'Update Docker to 17.03.1 [Theodor]'
+    - subject: 'Include fsck.vfat in resinOS [Andrei]'
+  date: 2017-06-28T00:00:00.000Z
+  version: 2.0.7
+- commits:
+    - subject: 'Update supervisor to v4.2.4 [Pablo]'
+  date: 2017-06-06T00:00:00.000Z
+  version: 2.0.6
+- commits:
+    - subject: 'Fix dependencies for mount service in /var/lib [Andrei]'
+    - subject: 'Various build fixes when using other package formats like ipk [Andrei]'
+    - subject: >-
+        Define IMAGE_NAME_SUFFIX, needed for resinhup, for Yocto versions older
+        than Morty [Florin]
+    - subject: >-
+        Add support for modifying the regulatory domain for wifi interfaces
+        [Michal]
+    - subject: 'Add support for qmi and mbim cell modems [Joshua]'
+    - subject: >-
+        Disable all password logins on production images, rather than just root
+        logins - this gets rid of the password prompt dialog that users have
+        seen. [Page]
+  date: 2017-06-02T00:00:00.000Z
+  version: 2.0.5
+- commits:
+    - subject: >-
+        Enable the resin-uboot implementation to also boot flasher images from
+        USB media [Florin]
+    - subject: 'Use supervisor tag as supervisor recipe PV [Andrei]'
+  date: 2017-05-16T00:00:00.000Z
+  version: 2.0.4
+- commits:
+    - subject: 'Copy resinOS_uEnv.txt from external to internal media [Theodor]'
+    - subject: 'Fix resin-state-conf copying mechanism [Theodor]'
+    - subject: 'Don''t fingerprint config.json [Andrei]'
+    - subject: 'Prevent resin-unique-key from running concurrently [Michal]'
+    - subject: 'Add iwlwifi 8265 firmware [Florin]'
+    - subject: 'Disable coredumps [Jon]'
+    - subject: 'Add bind mounts for systemd persistent data [Jon]'
+    - subject: 'Update supervisor to v4.2.2 [Page]'
+    - subject: 'Explicitly set CONFIG_HIDRAW=y [Michal]'
+    - subject: 'Fix symlink creation in resinhup_backwards_compatible_link() [Michal]'
+  date: 2017-05-10T00:00:00.000Z
+  version: 2.0.3
+- commits:
+    - subject: 'Fix build of kernel-modules-headers on kernel 4.8+ [Andrei]'
+    - subject: 'Use ondemand as default governor [Andrei]'
+    - subject: 'Do not force fsck on the data partition [Theodor]'
+    - subject: >-
+        Switch to the new device register endpoint which exchanges the
+        provisioning key for a device api key [Page]
+    - subject: >-
+        Switch to using a device api key for api calls and vpn authentication if
+        it is present [Page]
+  date: 2017-04-24T00:00:00.000Z
+  version: 2.0.2
+- commits:
+    - subject: 'Don''t use getty generator even for development images [Andrei]'
+    - subject: 'Fix resinos-img image compression [Theodor]'
+    - subject: 'Revert 05288ce19781f9ab3b8c528f49537516b58db050 [Theodor]'
+    - subject: 'Update NetworkManager to version 1.6.2 [Florin]'
+    - subject: 'Update supervisor to v4.1.2 [Pablo]'
+    - subject: 'Add aufs hashes for more kernel versions [fboudra]'
+    - subject: 'Calculate IMAGE_ROOTFS_MAXSIZE dynamically [fboudra]'
+    - subject: 'Don''t attempt UPX compression on aarch64 [fboudra]'
+    - subject: 'Tidy arch detection in kernel-modules-headers [fboudra]'
+  date: 2017-04-19T00:00:00.000Z
+  version: 2.0.1
+- date: 2017-03-31T00:00:00.000Z
+  version: 2.0.0
+- commits:
+    - subject: 'Update supervisor to v4.1.1 [Pablo]'
+    - subject: >-
+        Replace echo with info in the resindataexpander initramfs script
+        [Florin]
+    - subject: 'Don''t stop plymouth at boot [Andrei]'
+  date: 2017-03-31T00:00:00.000Z
+  version: 2.0.0-rc6
+- commits:
+    - subject: 'Fix busybox switch_root when console=null [Andrei]'
+    - subject: 'Make the initrams framework also parse root=LABEL= params [Florin]'
+    - subject: 'Fix audit disable dependencies [Theodor]'
+    - subject: 'Properly implement the ro_rootfs script [Theodor]'
+    - subject: 'Make rootfs identical to resinhup packages [Andrei]'
+  date: 2017-03-24T00:00:00.000Z
+  version: 2.0.0-rc5
+- commits:
+    - subject: >-
+        Enable by-partuuid symlinks for our DOS partition scheme also for Poky
+        Jethro and Poky Krogoth based boards [Florin]
+    - subject: 'Ship with e2fsprogs-tune2fs [Michal]'
+  date: 2017-03-17T00:00:00.000Z
+  version: 2.0.0-rc4
+- commits:
+    - subject: 'Fix flasher detection in initramfs scripts [Andrei]'
+    - subject: 'Fix initramfs-framework build on morty [Andrei]'
+  date: 2017-03-14T00:00:00.000Z
+  version: 2.0.0-rc3
+- commits:
+    - subject: 'Fix initramfs-framework for non-morty boards [Theodor]'
+    - subject: 'Fix flasher when it might corrupt the internal device [Andrei]'
+  date: 2017-03-14T00:00:00.000Z
+  version: 2.0.0-rc2
+- commits:
+    - subject: 'Use stateless flasher partitions [Andrei]'
+    - subject: 'Refactor persistent logging [Theodor]'
+    - subject: 'Add support for RDT promote [Andrei]'
+    - subject: 'Fix image flag files on non uboot boards [Andrei]'
+    - subject: 'Update supervisor to v4.0.0 [Pablo]'
+    - subject: >-
+        Change "test -z" with "test -n" in the U-Boot MMC scanning procedure
+        [Florin]
+    - subject: 'Implement MMC scanning for U-Boot [Andrei]'
+    - subject: 'Resin-info should not be present in our production images [Theodor]'
+    - subject: 'Implement resin-uboot based on v2.0 specification [Andrei]'
+  date: 2017-03-10T00:00:00.000Z
+  version: 2.0.0-rc1
+- commits:
+    - subject: 'Fix a compile error on krogoth boards [Andrei]'
+  date: 2017-02-27T00:00:00.000Z
+  version: 2.0.0-beta13
+- commits:
+    - subject: 'Disable audit subsystem [Theodor]'
+    - subject: 'Run openvpn on flasher too [Andrei]'
+    - subject: 'Add VARIANT/VARIANT_ID in os-release [Andrei]'
+    - subject: >-
+        Modify partitions label, define entire resinOS space used to 700MiB and
+        other minor changes [Andrei]
+    - subject: 'Update supervisor to v3.0.1 [Pablo]'
+    - subject: 'Configure an armv7ve repository for the Resin Supervisor [Michal]'
+    - subject: >-
+        Fix the location where to create the resinhup bundles when using poky
+        morty [Florin]
+    - subject: >-
+        Introduce debug tools package group add mkfs.ext4 in resin-image
+        [Andrei]
+    - subject: 'Halve the UUID length to 16 bytes [Michal]'
+  date: 2017-02-27T00:00:00.000Z
+  version: 2.0.0-beta12
+- commits:
+    - subject: 'Fix sectors per track for targets smaller than 512 MB [Andrei]'
+  date: 2017-02-15T00:00:00.000Z
+  version: 2.0.0-beta11
+- commits:
+    - subject: 'Introduce new host OS versioning scheme [Andrei]'
+    - subject: 'Add jethro support [Andrei]'
+    - subject: 'Fix missing quotes when testing for IMGDEPLOYDIR [Florin]'
+  date: 2017-02-13T00:00:00.000Z
+  version: 2.0.0-beta10
+- commits:
+    - subject: 'Use static resolv.conf [Andrei]'
+    - subject: 'Switch rootfs to ext4 [Andrei]'
+    - subject: 'Adapt resinhup for poky morty migration [Florin]'
+    - subject: 'Add support for multiple entries in INTERNAL_DEVICE_KERNEL [Andrei]'
+    - subject: 'Fix bug with the .docker mountpoint [Theodor]'
+    - subject: 'Remove the supervisor container in the update script [Pablo]'
+    - subject: 'Do not remove the supervisor container in every start [Pablo]'
+    - subject: 'Update supervisor to v3.0.0 [Pablo]'
+  date: 2017-02-07T00:00:00.000Z
+  version: 2.0.0-beta.9
+- commits:
+    - subject: 'Add xt_set kernel module for all of our devices [Theodor]'
+    - subject: 'Make /home/root/.docker writable [Theodor]'
+    - subject: >-
+        Prevent docker from thrashing the page cache using posix_fadvise
+        [petrosagg]
+    - subject: 'Introduce meta-resin-morty for using meta-resin with poky morty [Florin]'
+    - subject: 'Add resinhup machine independent support in U-Boot [Andrei]'
+    - subject: 'Remove BTRFS support from the kernel [Michal]'
+    - subject: 'Backport dropbear atomic hostkey generation patch [Florin]'
+    - subject: 'Update supervisor to v2.9.0 [Pablo]'
+    - subject: 'Rewrite prepare-openvpn (style) and make it fail on error [Michal]'
+    - subject: 'Ensure prepare-openvpn.service starts after var-volatile.mount [Michal]'
+  date: 2017-01-27T00:00:00.000Z
+  version: 2.0.0-beta.8
+- commits:
+    - subject: 'Fix supervisor.conf''s SUPERVISOR_TAG variable [Florin]'
+  date: 2016-12-05T00:00:00.000Z
+  version: 2.0.0-beta.7
+- commits:
+    - subject: >-
+        Deactivate CONFIG_WATCHDOG_NOWAYOUT to make sure we can shutdown
+        [Andrei]
+  date: 2016-12-05T00:00:00.000Z
+  version: 2.0.0-beta.6
+- commits:
+    - subject: >-
+        Add inode tuning (1 inode for 8192 bytes ) in mkfs.ext4 for the
+        resin-data partition [Praneeth]
+    - subject: 'Fix missing [Manager] section for systemd watchdog setting [Florin]'
+    - subject: 'Add missing dependency for the resin-supervisor.service [Theodor]'
+    - subject: 'Specify the supervisor tag with a local variable [Theodor]'
+    - subject: 'Update supervisor to v2.8.3 [Pablo]'
+    - subject: >-
+        Activate kernel configs for supporting iptables REJECT, MASQUERADE
+        targets [Florin]
+    - subject: 'systemd: enable watchdog at 10 seconds [Florin]'
+    - subject: >-
+        Allow resin-init-flasher to also flash both MLO and regular u-boot at
+        the same time [Florin]
+    - subject: 'Fix page size detection in go for arm64 boards [Andrei]'
+  date: 2016-11-30T00:00:00.000Z
+  version: 2.0.0-beta.5
+- commits:
+    - subject: 'Update supervisor to v2.8.2 [Pablo]'
+  date: 2016-11-09T00:00:00.000Z
+  version: 2.0.0-beta.4
+- commits:
+    - subject: >-
+        Generate SUPERVISOR_REPOSITORY dynamically so no need to define it in
+        `resin-<board>` anymore [Andrei]
+    - subject: 'Fix container name conflict when creating a docker container [petrosagg]'
+    - subject: 'Don''t compress docker binary anymore with UPX [Andrei]'
+    - subject: 'Fix /var/lib/docker corruption after power cut [petrosagg]'
+    - subject: 'Truncate hostname to 7 characters [Michal]'
+    - subject: 'Fix aufs patching on non git kernel sources [Andrei]'
+    - subject: 'Update supervisor to v2.8.1 [Pablo]'
+  date: 2016-11-04T00:00:00.000Z
+  version: 2.0.0-beta.3
+- commits:
+    - subject: 'Update supervisor to v2.7.1 [Pablo]'
+    - subject: 'Move supervisor.conf from /etc to /etc/resin-supervisor [Theodor]'
+    - subject: 'Update supervisor to v2.7.0 [Pablo]'
+    - subject: 'Add guide for new board adoption [Florin]'
+    - subject: 'Update supervisor to v2.6.2 [Pablo]'
+  date: 2016-10-25T00:00:00.000Z
+  version: 2.0.0-beta.2
+- commits:
+    - subject: 'Configure kernel with CONFIG_SECCOMP [Andrei]'
+    - subject: 'Update kernel-module-headers to v0.0.7 [Lorenzo]'
+    - subject: 'Implement persistent logging functionality [Andrei]'
+    - subject: 'Increase the root filesystem size to 300M [Andrei]'
+    - subject: 'Bump supervisor to 2.5.2 [Andrei]'
+    - subject: 'Added a warning when skipping pulling the supervisor [Page]'
+    - subject: 'Achieve read-only root filesystem [Theodor]'
+    - subject: >-
+        Implement aufs fetch and unpack functionality in kernel-resin.bbclass
+        [Florin]
+    - subject: >-
+        Use aufs as docker storage driver with ext4 as backing filesystem
+        instead of btrfs [Florin]
+    - subject: 'Replace connman with NetworkManager [Michal]'
+    - subject: 'Generate config.json from the build system [Theodor]'
+    - subject: 'Add usb-modeswitch [Michal]'
+    - subject: 'Allow hostname to be defined through config.json [Theodor]'
+    - subject: 'Expose docker socket over TCP on development images [Andrei]'
+    - subject: 'Integrate and configure avahi [Andrei]'
+    - subject: 'Start using gzip archives for kernel module headers [Andrei]'
+    - subject: 'Replace DEBUG_IMAGE with DEVELOPMENT_IMAGE [Theodor]'
+    - subject: 'Update supervisor to v2.5.0 [Pablo]'
+  date: 2016-10-11T00:00:00.000Z
+  version: 2.0.0-beta.1
+- commits:
+    - subject: 'Update supervisor to v2.3.0 [Pablo]'
+  date: 2016-09-27T00:00:00.000Z
+  version: 1.16.0
+- commits:
+    - subject: 'Update supervisor to v2.2.1 [petrosagg]'
+  date: 2016-09-24T00:00:00.000Z
+  version: 1.15.0
+- commits:
+    - subject: 'Update supervisor to v2.2.0 [Kostas]'
+  date: 2016-09-23T00:00:00.000Z
+  version: 1.14.0
+- date: 2016-09-23T00:00:00.000Z
+  version: 1.13.0
+- commits:
+    - subject: 'Update supervisor to v2.1.1 [Pablo]'
+    - subject: 'Add device-type.json file to the boot partitions of our images [Florin]'
+    - subject: >-
+        Enable kernel modules ip6table_nat, nf_nat_ipv6 and subset of ip_set
+        [Florin]
+    - subject: 'Change openvpn to use config file from /run [Florin]'
+    - subject: 'Change partition type of resin-conf from vfat to ext4 [Theodor]'
+    - subject: 'Move config.json to resin-boot partition [Theodor]'
+    - subject: 'Change resin-boot mount point from /boot to /mnt/boot [Theodor]'
+    - subject: 'Make dropbear host key generation atomic [Michal]'
+    - subject: >-
+        Change the TUN device used by OpenVPN to resin-vpn to minimize conflict
+        with user applications using tun0 [Praneeth]
+    - subject: 'Update supervisor to v2.1.0 [Pablo]'
+    - subject: 'Use FHS structure in the root of resinhup packages [Andrei]'
+  date: 2016-09-21T00:00:00.000Z
+  version: 1.12.0
+- commits:
+    - subject: 'Backport STOPSIGNAL fix for docker [petrosagg]'
+    - subject: 'Make Docker log to journald [Michal]'
+  date: 2016-08-31T00:00:00.000Z
+  version: 1.11.0
+- date: 2016-08-24T00:00:00.000Z
+  version: 1.1.0
+- commits:
+    - subject: 'Provide custom splash logo for our flasher type [Theodor]'
+    - subject: 'Update supervisor to v1.14.0 [Pablo]'
+    - subject: >-
+        Set the default supervisor tag in /etc/supervisor.conf to the bundled
+        supervisor tag. [Page]
+    - subject: 'Update firmware: iwlwifi-7265D-10 -> iwlwifi-7265D-13 [Michal]'
+  date: 2016-08-24T00:00:00.000Z
+  version: 1.9.0
+- commits:
+    - subject: 'Fix plymouth output to tty1 [Theodor]'
+    - subject: 'Use FAT16 filesystems as we do for partitions [Andrei]'
+    - subject: >-
+        Fix boltdb alignment issue for armv5 in docker, fixes docker 1.10.3 on
+        armv5 devices [Lorenzo]
+    - subject: >-
+        Include firmware for iwlwifi-8000C-13 - 6th generation Intel NUC
+        [Andrei]
+    - subject: 'Disable DHCP server functionality from dnsmasq [Florin]'
+    - subject: 'Update supervisor to v1.13.0 [Andrei]'
+    - subject: >-
+        Start dropbearkey.service at boot and don't wait for first connection
+        [Andrei]
+    - subject: >-
+        Both remove systemd-serialgetty symlinks and disable
+        systemd-getty-generator for non-debug builds [Florin]
+    - subject: >-
+        Disable ntp from connman and rely only on systemd-timesyncd with
+        selected timeservers [Florin]
+  date: 2016-08-02T00:00:00.000Z
+  version: 1.8.0
+- commits:
+    - subject: 'Various meta-resin layer tweaks [Andrei]'
+    - subject: 'Add support for resinhup when running kernel modules operations [Andrei]'
+    - subject: 'Update supervisor to 1.12.1 [Pablo]'
+  date: 2016-07-14T00:00:00.000Z
+  version: 1.7.0
+- date: 2016-07-06T00:00:00.000Z
+  version: 1.6.0
+- commits:
+    - subject: 'Update resin supervisor to v1.11.6 [Florin]'
+    - subject: 'Refactor openvpn dependencies [Florin]'
+  date: 2016-07-04T00:00:00.000Z
+  version: 1.5.0
+- commits:
+    - subject: 'Replace STAGING_BUILD by DEBUG_IMAGE and various refactorings [Andrei]'
+    - subject: 'Update to latest kernel-modules-headers [Florin]'
+  date: 2016-06-27T00:00:00.000Z
+  version: 1.4.0
+- commits:
+    - subject: 'Implement mechanism for compressed kernel modules [Andrei]'
+    - subject: 'Fix connman multiple IP over DHCP [Andrei]'
+    - subject: >-
+        Have the ability to inject custom docker images for connectable builds
+        [Andrei]
+    - subject: 'Integrate resin-provisioner [Andrei]'
+    - subject: 'Include slug and machine in os-release [Andrei]'
+    - subject: 'Define and implement resin connectable builds [Andrei]'
+    - subject: >-
+        Split the registration and uuid generation, of a device, into separate
+        packages [Theodor]
+    - subject: 'Sanitize target arch for x86 machines [Florin]'
+    - subject: >-
+        Ensure kernel build artefacts are present for kernel-modules-headers
+        [Florin]
+    - subject: 'Add "set -e" to resin-init-flasher [Florin]'
+    - subject: 'Add recipe for deploying an archive with kernel modules headers [Florin]'
+    - subject: >-
+        Have the ability at build time to configure the preloaded docker image
+        in the BTRFS partition [Andrei]
+  date: 2016-06-24T00:00:00.000Z
+  version: 1.3.0
+- commits:
+    - subject: 'Remove board specific bootloader handling from the flasher [Florin]'
+    - subject: 'Provide script to inject board specific flashing procedures [Theodor]'
+    - subject: 'Implement and document host OS new versioning scheme [Andrei]'
+    - subject: 'Set PreferredTechnologies to "wifi,ethernet" [Florin]'
+    - subject: 'Do not add nameserver routes in the kernel IP routing table [Florin]'
+    - subject: 'Add support for migration to docker engine 1.10 in resinhup [Andrei]'
+    - subject: >-
+        Move resin-image sdcard file in the rootfs instead of the boot partition
+        [Florin]
+    - subject: 'Add compression mechanism for binaries, using upx [Theodor]'
+    - subject: 'Switch to docker 1.10.3 [Theodor]'
+    - subject: 'Remove deprecated mmcroot from flasher init script [Andrei]'
+    - subject: 'Deploy license.manifest [Andrei]'
+  date: 2016-06-08T00:00:00.000Z
+  version: 1.2.0
+- commits:
+    - subject: 'Add build information in the target rootfs [Florin]'
+    - subject: 'Don''t bind mount /etc/resolv.conf anymore [Florin]'
+    - subject: 'Have dnsmasq listen on 127.0.0.2 instead of 127.0.0.1 [Florin]'
+  date: 2016-04-20T00:00:00.000Z
+  version: 1.1.4
+- commits:
+    - subject: >-
+        Add resin-init-board as a runtime dependency to resin-init-flasher
+        [Florin]
+  date: 2016-04-13T00:00:00.000Z
+  version: 1.1.3
+- commits:
+    - subject: 'Execute resin-init-board from the flasher also [Florin]'
+    - subject: 'Use realpath from coreutils-native for generating SD images [Andrei]'
+    - subject: 'Add rsync to our image [Theodor]'
+    - subject: 'Add p2p to NetworkInterfaceBlacklist in connman main.conf file [Florin]'
+    - subject: >-
+        Add dnsmasq and do changes to connman so dnsmasq is used according to
+        our platform needs [Florin]
+    - subject: 'Define "rce" as a provider for the docker package [Florin]'
+  date: 2016-04-13T00:00:00.000Z
+  version: 1.1.2
+- commits:
+    - subject: >-
+        Make resin-supervisor-disk's PV variable not contain the ':' character
+        [Florin]
+    - subject: >-
+        Workaround for "docker images behavior" -
+        https://bugzilla.redhat.com/show_bug.cgi?id=1312934 [Florin]
+    - subject: >-
+        Have device registration provided by supervisor in resin-image and
+        resin-device-register in resin-image-flasher [Andrei]
+    - subject: 'Include crda in resin images [Andrei]'
+    - subject: 'Add support for hid-multitouch - available as kernel module [Andrei]'
+    - subject: 'Simplify os-release version and add some resin specific info [Andrei]'
+    - subject: 'Set IMAGE_ROOTFS_SIZE to zero as default [Florin]'
+    - subject: 'Update layer with the ability to use jethro [Theodor]'
+  date: 2016-03-03T00:00:00.000Z
+  version: 1.1.1
+- commits:
+    - subject: 'Migrate repositories to github [Florin]'
+    - subject: 'Add resinhup package for running hostOS updates [Andrei]'
+    - subject: 'Export deltaEndpoint as DELTA_ENDPOINT [Andrei]'
+  date: 2016-02-16T00:00:00.000Z
+  version: 1.1.0
+- commits:
+    - subject: >-
+        Upgrade systemd to version 216 and add volatile-binds dependency
+        [Florin]
+    - subject: 'Fix racing issue on edison [Andrei]'
+    - subject: 'Add support ts7700 [Theodor]'
+    - subject: 'Remove obsolete pseudo patch. This patch is now in poky [Florin]'
+    - subject: 'Remove obsolete bash patches. These patches are now in poky [Florin]'
+    - subject: 'Ensure connman systemd service is enabled on boot [Florin]'
+    - subject: 'Change OOM Adjust Score of RCE to -900 [Praneeth]'
+    - subject: 'Change OOM Adjust Score of Connman to -1000 [Praneeth]'
+    - subject: 'Change OOM Adjust Score of OpenVPN to -1000 [Praneeth]'
+  date: 2016-02-03T00:00:00.000Z
+  version: 1.0.6
+- date: 2016-01-20T00:00:00.000Z
+  version: 1.0.5
