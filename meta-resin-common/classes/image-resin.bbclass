@@ -2,7 +2,7 @@
 # Resin images customizations
 #
 
-inherit image_types_resin
+inherit balenaos-image-types
 
 # When building a Resin OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build

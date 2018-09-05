@@ -43,7 +43,7 @@ PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
 
 SPLASH = "plymouth"
 
-IMAGE_CLASSES += "image_types_resin"
+IMAGE_CLASSES += "balena-image-types"
 
 # Define the URL where resin exposes source or prebuilt packages
 AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
