@@ -49,7 +49,7 @@ IMAGE_CLASSES += "image_types_resin"
 AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
 
 # have build information available on the target under /etc/build
-INHERIT += "image-buildinfo resin-sanity"
+INHERIT += "image-buildinfo balena-sanity"
 
 # Identification file flags
 RESIN_IMAGE_FLAG_FILE = "resin-image"
