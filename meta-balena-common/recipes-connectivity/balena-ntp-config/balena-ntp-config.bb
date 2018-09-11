@@ -1,10 +1,10 @@
-DESCRIPTION = "resin NTP configuration"
+DESCRIPTION = "Balena NTP configuration"
 SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = " \
-    file://resin-ntp-config \
+    file://balena-ntp-config \
     "
 
 S = "${WORKDIR}"
@@ -15,5 +15,5 @@ RDEPENDS_${PN} = "chrony chronyc"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/resin-ntp-config ${D}${bindir}/resin-ntp-config
+    install -m 0775 ${WORKDIR}/balena-ntp-config ${D}${bindir}/balena-ntp-config
 }
