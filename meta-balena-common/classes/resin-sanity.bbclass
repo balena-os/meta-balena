@@ -6,6 +6,10 @@
 #
 # Licensed under the Apache-2.0 license, see COPYING.Apache-2.0 for details
 
+BALENA_DEPRECATED_COLLECTIONS = " \
+	resin-common:balena-common \
+	"
+
 def resinos_build_configuration():
 	success = True
 	if d.getVar('PACKAGE_CLASSES', True) != "package_ipk":
@@ -19,6 +23,11 @@ def resinos_build_configuration():
 		bb.warn("Your build configuration uses RESIN_CONNECTABLE* variables. These variables are no longer used. There is only one type of resinOS image type which is unconnected by default. The os-config tool is used to configure the resinOS image for connectivity to a resin instance.")
 	if d.getVar('BALENA_DEPRECATED_YOCTO_LAYER', True) == "1":
 		bb.warn("Your build configuration is using a poky layer that has been deprecated by meta-balena. Please update and use a newer poky version.")
+	for deprecation in d.getVar('BALENA_DEPRECATED_COLLECTIONS').split():
+		deprecated_collection = deprecation.split(':')[0]
+		new_collection = deprecation.split(':')[1] if len(deprecation.split(':')) == 2 else ''
+		if deprecated_collection in d.getVar('BBFILE_COLLECTIONS'):
+			bb.warn("meta-%s is a deprecated layer. Please replace it in your bblayers.conf by meta-%s." % (deprecated_collection, new_collection if new_collection else 'the respective new balena layer'))
 	return success
 
 python resinos_sanity_handler() {
