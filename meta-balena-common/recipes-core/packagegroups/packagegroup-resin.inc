@@ -12,7 +12,7 @@ RDEPENDS_${PN} = " \
     ${RESIN_REGISTER} \
     chrony \
     chronyc \
-    resin-extra-udev-rules \
+    balena-extra-udev-rules \
     rsync \
     kernel-modules \
     os-config \
