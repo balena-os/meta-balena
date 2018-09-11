@@ -1,6 +1,6 @@
 inherit deploy
 
-FILESEXTRAPATHS_append := ":${THISDIR}/resin-files"
+FILESEXTRAPATHS_append := ":${THISDIR}/balena-files"
 
 SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
