@@ -48,7 +48,7 @@ RESIN_DATA_FS_LABEL = "flash-data"
 RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"
 
 # add the generated <machine-name>.json to the flash-boot partition, renamed as device-type.json
-RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json:/device-type.json"
+RESIN_BOOT_PARTITION_FILES_append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
 # Put resin-image in the flasher rootfs
 add_resin_image_to_flasher_rootfs() {

@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := ":${RESIN_COREBASE}/recipes-bsp/u-boot/patches"
+FILESEXTRAPATHS_append := ":${BALENA_COREBASE}/recipes-bsp/u-boot/patches"
 
 INTEGRATION_KCONFIG_PATCH = "file://resin-specific-env-integration-kconfig.patch"
 INTEGRATION_NON_KCONFIG_PATCH = "file://resin-specific-env-integration-non-kconfig.patch"

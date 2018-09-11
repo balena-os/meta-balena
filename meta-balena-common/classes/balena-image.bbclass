@@ -50,7 +50,7 @@ init_config_json() {
    echo $(cat ${1}/config.json | jq -S ".persistentLogging=false") > ${1}/config.json
 
    # Find board json and extract slug
-   json_path=${RESIN_COREBASE}/../../../${MACHINE}.json
+   json_path=${BALENA_COREBASE}/../../../${MACHINE}.json
    slug=$(jq .slug $json_path)
 
    # Set deviceType for supervisor
