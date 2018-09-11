@@ -1,4 +1,4 @@
-SUMMARY = "Resin Package Group"
+SUMMARY = "Balena Package Group"
 LICENSE = "Apache-2.0"
 
 PR = "r1"
@@ -10,7 +10,7 @@ RESIN_MOUNTS ?= "resin-mounts"
 RESIN_REGISTER ?= "resin-supervisor"
 RESIN_SUPERVISOR ?= "resin-supervisor"
 
-include packagegroup-resin.inc
+include packagegroup-balena.inc
 
 # Additional packages
 RDEPENDS_${PN} += " \

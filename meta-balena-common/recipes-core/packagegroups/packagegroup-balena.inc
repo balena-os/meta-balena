@@ -1,4 +1,4 @@
-SUMMARY = "Resin Package Group"
+SUMMARY = "Balena Package Group"
 LICENSE = "Apache-2.0"
 
 PR = "r1"

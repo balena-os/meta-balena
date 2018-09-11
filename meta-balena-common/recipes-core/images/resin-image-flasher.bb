@@ -27,7 +27,7 @@ IMAGE_INSTALL = " \
     packagegroup-core-boot \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     packagegroup-resin-connectivity \
-    packagegroup-resin-flasher \
+    packagegroup-balena-flasher \
     "
 
 # Avoid useless space - no data or state on flasher

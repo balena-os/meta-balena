@@ -1,4 +1,4 @@
-SUMMARY = "Resin Debug Tools Package Group"
+SUMMARY = "Balena Debug Tools Package Group"
 LICENSE = "Apache-2.0"
 
 PR = "r0"

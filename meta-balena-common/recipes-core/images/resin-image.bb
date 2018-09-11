@@ -31,9 +31,9 @@ IMAGE_FEATURES_append = " \
 IMAGE_INSTALL = " \
     packagegroup-core-boot \
     ${CORE_IMAGE_EXTRA_INSTALL} \
-    packagegroup-resin-debugtools \
+    packagegroup-balena-debugtools \
     packagegroup-resin-connectivity \
-    packagegroup-resin \
+    packagegroup-balena \
     kernel-image-initramfs \
     "
 
