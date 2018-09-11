@@ -3,7 +3,7 @@
 #
 # Script to deploy the boot files from rootfs to the boot partition
 #
-# This hook is meant to run in the `next` resinOS container
+# This hook is meant to run in the `next` balena OS container
 #
 
 set -o errexit
