@@ -6,6 +6,6 @@ do_install_append () {
 	fi
 
 	# Supervisor depends on the existance of /lib/modules even if we don't
-	# deploy any kernel modules (ex.: resinOS in container)
+	# deploy any kernel modules (ex.: balena OS in container)
 	install -d -m 755 ${D}/lib/modules
 }
