@@ -14,7 +14,7 @@ SRC_URI_append = " \
 RDEPENDS_${PN}_append = " \
     chrony \
     chronyc \
-    resin-net-config \
+    balena-net-config \
     resolvconf \
     "
 FILES_${PN}_append = " ${sysconfdir}/*"

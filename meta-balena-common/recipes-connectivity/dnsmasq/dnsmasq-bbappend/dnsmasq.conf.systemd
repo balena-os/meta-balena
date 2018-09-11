@@ -1,6 +1,6 @@
 [Unit]
-Wants=resin-net-config.service
-After=resin-net-config.service
+Wants=balena-net-config.service
+After=balena-net-config.service
 
 [Service]
 Type=simple
