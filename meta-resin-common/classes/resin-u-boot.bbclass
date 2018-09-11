@@ -5,7 +5,7 @@ INTEGRATION_NON_KCONFIG_PATCH = "file://resin-specific-env-integration-non-kconf
 
 # Machine independent patches
 SRC_URI_append = " \
-    file://resin-specific-env-configuration.patch \
+    file://env_resin.h \
     ${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', '${INTEGRATION_KCONFIG_PATCH}', '${INTEGRATION_NON_KCONFIG_PATCH}', d)} \
     "
 
@@ -30,5 +30,7 @@ do_generate_resin_uboot_configuration () {
 #define RESIN_FLASHER_FLAG_FILE ${RESIN_FLASHER_FLAG_FILE}
 #define RESIN_ENV_FILE ${RESIN_ENV_FILE}
 EOF
+
+    cp ${WORKDIR}/env_resin.h ${S}/include/env_resin.h
 }
 addtask do_generate_resin_uboot_configuration after do_patch before do_configure

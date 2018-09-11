@@ -276,11 +276,18 @@ add_image_flag_file () {
     echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_FLAG_FILE}
 }
 
+python resin_boot_sanity_handler() {
+  kernel_file = d.getVar('KERNEL_IMAGETYPE', True) + d.getVar('KERNEL_INITRAMFS', True) + d.getVar('MACHINE', True) + '.bin'
+  if kernel_file in d.getVar('RESIN_BOOT_PARTITION_FILES', True):
+    bb.warn("ResinOS only supports having the kernel in the root partition in rootfs/boot/KERNEL_IMAGETYPE. Please remove it from RESIN_BOOT_PARTITION_FILES. This will become a fatal warning in a few releases.")
+}
+
 ROOTFS_POSTPROCESS_COMMAND += " \
     generate_compressed_kernel_module_deps ; \
     add_image_flag_file ; \
     resin_boot_dirgen_and_deploy ; \
     resin_root_quirks ; \
+    resin_boot_sanity_handler ; \
     "
 IMAGE_POSTPROCESS_COMMAND =+ " \
     deploy_image_license_manifest ; \
