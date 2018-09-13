@@ -1,9 +1,9 @@
-DESCRIPTION = "Resin Configuration Recipe"
+DESCRIPTION = "Balena Configuration Recipe"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = " \
-    file://resin-vars \
+    file://balena-vars \
     file://config-json.path \
     file://config-json.service \
     "
@@ -24,7 +24,7 @@ SYSTEMD_SERVICE_${PN} = "config-json.path config-json.service"
 
 do_install() {
     install -d ${D}${sbindir}
-    install -m 0755 ${WORKDIR}/resin-vars ${D}${sbindir}/
+    install -m 0755 ${WORKDIR}/balena-vars ${D}${sbindir}/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
