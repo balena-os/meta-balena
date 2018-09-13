@@ -6,7 +6,7 @@ After=resin-boot.service resin-device-uuid.service bind-etc-hostname.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BINDIR@/resin-hostname
+ExecStart=@BINDIR@/balena-hostname
 
 [Install]
 WantedBy=multi-user.target
