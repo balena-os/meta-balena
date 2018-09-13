@@ -17,7 +17,7 @@ RDEPENDS_${PN} += " \
     dosfstools \
     hostapp-update \
     hostapp-update-hooks \
-    resin-filesystem-expand \
+    balena-filesystem-expand \
     resin-persistent-logs \
     balena-info \
     balena-hostname \
