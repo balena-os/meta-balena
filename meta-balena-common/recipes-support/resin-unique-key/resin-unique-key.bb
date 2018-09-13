@@ -14,7 +14,7 @@ inherit allarch systemd
 RDEPENDS_${PN} = " \
     bash \
     jq \
-    resin-vars \
+    balena-vars \
     openssl \
     "
 

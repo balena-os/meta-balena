@@ -37,7 +37,7 @@ RDEPENDS_${PN} = " \
 	curl \
 	healthdog \
 	resin-unique-key \
-	resin-vars \
+	balena-vars \
 	systemd \
 	"
 

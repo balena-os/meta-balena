@@ -5,7 +5,7 @@
 
 set -e
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-vars
 
 if [ ! -f "$CONFIG_PATH" ]; then
 	echo "resin-proxy-config: $CONFIG_PATH does not exist."

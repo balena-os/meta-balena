@@ -2,7 +2,7 @@
 
 set -e
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-vars
 
 generate_vpn_authfile() {
 	local _user

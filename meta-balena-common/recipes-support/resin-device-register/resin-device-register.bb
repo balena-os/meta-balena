@@ -17,7 +17,7 @@ RDEPENDS_${PN} = " \
     bash \
     curl \
     jq \
-    resin-vars \
+    balena-vars \
     resin-unique-key \
     "
 
