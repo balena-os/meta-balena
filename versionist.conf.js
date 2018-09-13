@@ -29,9 +29,9 @@ const isIncrementalCommit = (changeType) => {
   return Boolean(changeType) && changeType.trim().toLowerCase() !== 'none';
 };
 
-// Update verison info in `meta-resin-common/conf/distro/include/balenaos.inc`
+// Update verison info in `meta-balena-common/conf/distro/include/balenaos.inc`
 const metaUpdate = (cwd, version, callback) => {
-  return exec(`sed -i 's/^DISTRO_VERSION = ".*"/DISTRO_VERSION = "${version}"/g' meta-resin-common/conf/distro/include/balena-os.inc`, {
+  return exec(`sed -i 's/^DISTRO_VERSION = ".*"/DISTRO_VERSION = "${version}"/g' meta-balena-common/conf/distro/include/balena-os.inc`, {
     encoding: 'utf8',
   }, callback);
 };
