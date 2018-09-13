@@ -9,7 +9,7 @@ ConditionVirtualization=!docker
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-filesystem-expand
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/balena-filesystem-expand
 
 [Install]
 WantedBy=multi-user.target
