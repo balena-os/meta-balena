@@ -8,6 +8,10 @@
 
 BALENA_DEPRECATED_COLLECTIONS = " \
 	resin-common:balena-common \
+	resin-krogoth:balena-krogoth \
+	resin-morty:balena-morty \
+	resin-rocko:balena-rocko \
+	resin-sumo:balena-sumo \
 	"
 
 def resinos_build_configuration():
