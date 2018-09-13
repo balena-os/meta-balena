@@ -21,7 +21,7 @@ RDEPENDS_${PN} += " \
     resin-persistent-logs \
     balena-info \
     balena-hostname \
-    resin-state-reset \
+    balena-state-reset \
     resin-device-progress \
     timeinit \
     ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util', '', d)} \
