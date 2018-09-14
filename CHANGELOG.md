@@ -1,6 +1,24 @@
 Change log
 -----------
 
+# v2.18.0
+## (2018-09-12)
+
+* Update grub hooks to prepare to load kernel from root [Zubair Lutfullah Kakakhel]
+* Update resin-supervisor to v7.19.4 [Cameron Diver]
+* Kernel-resin.bbclass: Enable CONFIG_IP_NF_TARGET_LOG as a module [John (Jack) Brown]
+* Balena: Update to current HEAD of 17.12-resin [Andrei Gherzan]
+* Compress os-config with UPX on arm64 too [Andrei Gherzan]
+* Update upx to 3.95 [Andrei Gherzan]
+* Add support to skip flasher detection in env_resin.h [Zubair Lutfullah Kakakhel]
+* Add the kernel to the rootfs [Zubair Lutfullah Kakakhel]
+* Rework resin-supervisor systemd dependency on balena [Florin Sarbu]
+* Enhanced security options for dropbear - sumo [Andrei Gherzan]
+* Enhanced security options for dropbear - rocko [Andrei Gherzan]
+* Enhanced security options for dropbear - pyro [Andrei Gherzan]
+* Enhanced security options for dropbear - morty [Andrei Gherzan]
+* Enhanced security options for dropbear - krogoth [Andrei Gherzan]
+
 # v2.17.0
 ## (2018-09-03)
 
