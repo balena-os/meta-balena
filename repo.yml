@@ -1,0 +1,5 @@
+type: 'yocto layer'
+reviewers: 1
+upstream:
+  repo: 'resin-supervisor'
+  url: 'https://github.com/resin-io/resin-supervisor'
