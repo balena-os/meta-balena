@@ -17,4 +17,4 @@ SUPERVISOR_REPOSITORY_x86-64 = "resin/amd64-supervisor"
 SUPERVISOR_REPOSITORY_intel-quark = "resin/i386-nlp-supervisor"
 
 # Resin supervisor default tag
-SUPERVISOR_TAG ?= "v7.19.4"
+SUPERVISOR_TAG ?= "v7.19.7"
