@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.18.1
+## (2018-09-14)
+
+* Add a parsable representation of the changelog [Giovanni Garufi]
+
 # v2.18.0
 ## (2018-09-12)
 

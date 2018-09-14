@@ -1,3 +1,21 @@
+- commits:
+    - subject: Add a parsable representation of the changelog
+      hash: f6c58c1e4da805e5e53da0af08128b7fb4adb87e
+      body: |
+        This file allows other components to uniquely parse the information that
+        is contained in the changelog. It will be automatically managed by
+        versionist by appending the new commits on top. This is needed to
+        provide nested-changelogs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Giovanni Garufi <giovanni@resin.io>
+        signed-off-by: Giovanni Garufi <giovanni@resin.io>
+        Changelog-entry: Add a parsable representation of the changelog
+        changelog-entry: Add a parsable representation of the changelog
+      author: Giovanni Garufi
+  version: 2.18.1
+  date: 2018-09-14T12:50:23.575Z
 - version: v2.18.0
   date: 2018-09-12T00:00:00.000Z
   commits:
