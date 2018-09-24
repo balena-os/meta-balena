@@ -1,4 +1,109 @@
 - commits:
+    - subject: Update Balena to fix tty console hanging in some cases
+      hash: 06ae0837d2823587858437d5eb41b8fc5be8e7c6
+      body: |
+        https://github.com/resin-os/balena/pull/101
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update Balena to fix tty console hanging in some cases
+        changelog-entry: Update Balena to fix tty console hanging in some cases
+        Signed-off-by: Petros Angelatos <petrosagg@gmail.com>
+        signed-off-by: Petros Angelatos <petrosagg@gmail.com>
+      author: Petros Angelatos
+    - subject: >-
+        Pin down cargo deps (using Cargo.lock) to versions known working with
+        rust 1.24.1 (for sumo)
+      hash: ef3e76f2d343e8cd367214b4b5ce52b3b97be262
+      body: |
+        With Sumo 19.0.1, when building cargo 0.25.0 we get:
+        | error[E0425]: cannot find function `read_to_string` in module `fs`
+        |   --> /yocto/resin-board/build/tmp/work/x86_64-linux/cargo-native/
+        0.25.0-r0/cargo_home/registry/src/github.com-1ecc6299db9ec823/
+        libssh2-sys-0.2.11/build.rs:99:26
+        let config = fs::read_to_string("libssh2/src/libssh2_config_cmake.h.in")
+        ^^^^^^^^^^^^^^ did you mean `read_string`?
+
+        This is just one example of a package that fails like this. There are
+        multiple packages in the cargo source tree that fail with this error.
+
+        The cargo bbclass does a:
+        cargo build -v --target x86_64-linux --release
+
+        This has the following effect:
+        NOTE:- cargo build -v --target x86_64-linux --release.
+        Updating registry `https://github.com/rust-lang/crates.io-index`
+
+        Updating the registry will result in using the versions pinned upstream.
+        In our case, it will be using newer versions of packages that require a
+        newer rust version (read_to_string was added in rust 1.26.0). But at the
+        same time, the meta-rust layer which we use has an older rust version.
+        (currently meta-rust on sumo branch has rust at version 1.24.1)
+
+        The fix for such a case would be to use a Cargo.lock file which pins
+        the packages to versions which are known to work with rust 1.24.1,
+        the version we use in sumo.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Pin down cargo deps (using Cargo.lock) to versions known working with
+          rust 1.24.1 (for sumo)
+        changelog-entry: >-
+          Pin down cargo deps (using Cargo.lock) to versions known working with
+          rust 1.24.1 (for sumo)
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+    - subject: Remove duplicate packaging of bcm43143
+      hash: cef8864000507af337a52e47722274921ccb5982
+      body: |
+        Yocto Sumo 19.0.1 already packages this firmware separately so let's
+        remove the duplication we do here.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Remove duplicate packaging of bcm43143
+        changelog-entry: Remove duplicate packaging of bcm43143
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+    - subject: Set ModemManager to ignore Inca Roads Serial Device
+      hash: 107ab6747db748201742bf495a1c0f41fb28f1fe
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Set ModemManager to ignore Inca Roads Serial Device
+        changelog-entry: Set ModemManager to ignore Inca Roads Serial Device
+        Signed-off-by: Petros Angelatos <petrosagg@gmail.com>
+        signed-off-by: Petros Angelatos <petrosagg@gmail.com>
+      author: Petros Angelatos
+    - subject: Add support for aufs 4.14.56+
+      hash: 28746ab0d4d14c0def56382b1c1747c009362107
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add support for aufs 4.14.56+
+        changelog-entry: Add support for aufs 4.14.56+
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+    - subject: Update resin-supervisor to v7.19.7
+      hash: 9e595a0cab47b044d445d8aeab23e27a6cff58cc
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v7.19.7
+        changelog-entry: Update resin-supervisor to v7.19.7
+        Signed-off-by: Cameron Diver <cameron@resin.io>
+        signed-off-by: Cameron Diver <cameron@resin.io>
+      author: Cameron Diver
+  version: 2.19.0
+  date: 2018-09-23T15:05:11.877Z
+- commits:
     - subject: Add a parsable representation of the changelog
       hash: f6c58c1e4da805e5e53da0af08128b7fb4adb87e
       body: |

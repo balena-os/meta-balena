@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.19.0
+## (2018-09-23)
+
+* Update Balena to fix tty console hanging in some cases [Petros Angelatos]
+* Pin down cargo deps (using Cargo.lock) to versions known working with rust 1.24.1 (for sumo) [Florin Sarbu]
+* Remove duplicate packaging of bcm43143 [Florin Sarbu]
+* Set ModemManager to ignore Inca Roads Serial Device [Petros Angelatos]
+* Add support for aufs 4.14.56+ [Florin Sarbu]
+* Update resin-supervisor to v7.19.7 [Cameron Diver]
+
 # v2.18.1
 ## (2018-09-14)
 
