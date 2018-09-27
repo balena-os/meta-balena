@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/sbin/resin-vars
+
+NETDATA_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$NETDATA_IMAGE:$NETDATA_TAG")
+NETDATA_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_netdata || echo "")
+
+# If self-signed root CA exists, add the CA for the specified registry
+if [ -n "$BALENA_ROOT_CA" ]; then
+    BALENA_DECODED_ROOT_CA="$(echo "${BALENA_ROOT_CA}" | base64 -d -w0)"
+    NODE_EXTRA_CA_CERTS="/etc/ssl/certs/balenaRootCA.pem"
+    CERT_DIR="/mnt/state/root-overlay/etc/docker/certs.d/${REGISTRY_ENDPOINT}"
+    CERT_FILE="${CERT_DIR}/ca.crt"
+    CERT_CONTENTS=$(if [ -e "$CERT_FILE" ]; then echo $(cat "$CERT_FILE"); fi)
+
+    # Ensure that the contents is correct, install otherwise
+    if [ "$BALENA_DECODED_ROOT_CA" != "$CERT_CONTENTS" ]; then
+        mkdir -p "$CERT_DIR"
+        echo "$BALENA_DECODED_ROOT_CA" > "$CERT_FILE"
+    fi
+fi
+
+runNetdata() {
+    balena rm --force netdata || true
+    balena run -d --privileged --name netdata \
+        --net=host \
+        -p 80:19999 \
+        -v /var/run/balena.sock:/var/run/balena.sock \
+        -v /sys:/host/sys:ro \
+        -v /proc:/host/proc:ro \
+        -e DOCKER_SOCKET=/var/run/balena.sock \
+        --cap-add SYS_PTRACE \
+        -e PGID=$(grep balena /etc/group | cut -d ':' -f 3) \
+        --security-opt apparmor=unconfined \
+        "${NETDATA_IMAGE}:${NETDATA_TAG}"
+}
+
+# No netdata container exists or there's a different netdata image to run
+runNetdata

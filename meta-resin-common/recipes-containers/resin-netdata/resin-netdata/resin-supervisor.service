@@ -1,0 +1,21 @@
+[Unit]
+Description=Resin netdata
+Requires=\
+    resin-device-uuid.service \
+After=\
+    balena.service \
+    resin-device-uuid.service \
+Wants=balena.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10s
+WatchdogSec=60
+ExecStartPre=-@BINDIR@/balena stop resin_netdata
+ExecStartPre=/bin/systemctl is-active balena.service
+ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/resin-netdata/resin-netdata-healthcheck @BINDIR@/start-resin-netdata
+ExecStop=-@BINDIR@/balena stop resin_netdata
+
+[Install]
+WantedBy=multi-user.target
