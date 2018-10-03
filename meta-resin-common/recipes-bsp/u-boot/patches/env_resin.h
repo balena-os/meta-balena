@@ -81,9 +81,24 @@
                        "run resin_import_env_file;" \
                "fi;\0" \
        \
+       "resin_check_altroot=" \
+              "setexpr resin_roota ${resin_boot_part} + 1; " \
+              "setexpr resin_rootb ${resin_boot_part} + 2; " \
+              "if test -n ${bootlimit}; then " \
+                      "if test ${bootcount} -gt ${bootlimit}; then " \
+                               "echo WARNING! BOOTLIMIT EXCEEDED. SWITCHING TO PREVIOUS ROOTFS; " \
+                               "if test ${resin_root_part} -eq ${resin_roota}; then "\
+                                       "env set resin_root_part ${resin_rootb}; " \
+                                "else; "\
+                                       "env set resin_root_part ${resin_roota}; " \
+                                "fi;" \
+                      "fi;" \
+              "fi;\0" \
+       \
        "resin_set_kernel_root=" \
                "run resin_set_dev_index;" \
                "run resin_inject_env_file;" \
+               "run resin_check_altroot;" \
                "run resin_find_root_part_uuid;" \
                "setenv resin_kernel_root root=PARTUUID=${resin_root_part_uuid}\0"
 
