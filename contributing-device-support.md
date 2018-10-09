@@ -16,21 +16,30 @@ The following documentations walks you through the steps of creating such a Yoct
 
 The resin-`<board-family>` repositories use [git submodules](https://git-scm.com/docs/git-submodule) for including required Yocto layers from the relevant sub-projects.
 
-The root directory shall contain 2 directory entries:
+The root directory contains:
 
-* a `layers` directory
-* [resin-yocto-scripts][resin-yocto-scripts] git submodule.
+|Directories|
+|:-----------------:|
+|  `layers` |
+| [resin-yocto-scripts][resin-yocto-scripts] (git submodule)|
+
+and
+
+|Files|
+|:-----------------:|
+| `CHANGELOG.md`|
+|`LICENSE`|
+|`README.md`|
+|`VERSION`|
+|`repo.yml`|
+|`<board-name>.svg`|
+|`coffee file(s)`|
 
 _Note: you add submodules by `git submodule add <url> <directory>`, see the git documentation for more details._
 
-The root directory generally also includes the following files:
+### About coffee file(s)
 
-* `CHANGELOG.md`
-* `LICENSE`
-* `README.md`
-* `VERSION`
-
-and one or more files named `<board-name>.coffee`, where `<board-name>` is equal to the corresponding `yocto-machine-name`. Should add one for each of the boards that the repository adds support for (eg. [`raspberry-pi3.coffee`](https://github.com/resin-os/resin-raspberrypi/blob/master/raspberrypi3.coffee) for Raspberry Pi 3 in `resin-raspberrypi`). This file contains information on the Yocto build for the specific board, in [CoffeeScript](http://coffeescript.org/) format. A minimal version of this file, using [Raspberry Pi 3 as the example](https://github.com/resin-os/resin-raspberrypi/), would be:
+One or more files named `<board-name>.coffee`, where `<board-name>` is equal to the corresponding `yocto-machine-name`. Should add one for each of the boards that the repository adds support for (eg. [`raspberry-pi3.coffee`](https://github.com/resin-os/resin-raspberrypi/blob/master/raspberrypi3.coffee) for Raspberry Pi 3 in `resin-raspberrypi`). This file contains information on the Yocto build for the specific board, in [CoffeeScript](http://coffeescript.org/) format. A minimal version of this file, using [Raspberry Pi 3 as the example](https://github.com/resin-os/resin-raspberrypi/), would be:
 
 ```
 module.exports =
@@ -43,24 +52,18 @@ module.exports =
     compressed: true
 ```
 
-The `layers` directory contains the git submodules of the yocto layers used in the build process. This normally means the following components are present:
+### Layers directory breakdout
 
-- [poky][poky]  at the version/revision required by the board BSP
-- [meta-openembedded][meta-openembedded] at the revision poky uses
-- [meta-resin][meta-resin] using the master branch
-- [oe-meta-go][oe-meta-go] using the master branch (there were no branches corresponding to the Yocto releases at the time this howto was written)
-- Yocto BSP layer for the board (for example, the BSP layer for Raspberry Pi is [meta-raspberrypi](https://github.com/agherzan/meta-raspberrypi))
-- any additional Yocto layers required by the board BSP (check the Yocto BSP layer of the respective board for instructions on how to build the BSP and what are the Yocto dependencies of that particular BSP layer)
-
-In addition to the above git submodules, the `layers` directory requires a meta-resin-`<board-family>` directory (please note this directory is _not_ a git submodule). This directory contains the required customization for making a board resin.io enabled. For example, the [resin-raspberrypi](https://github.com/resin-os/resin-raspberrypi) repository contains the directory `layers/meta-resin-raspberrypi` to supplement the BSP from `layers/meta-raspberrypi` git submodule, with any changes that might be required by resinOS.
-
-The layout so far looks as follows:
+The layout for the `layers` directory:
 
 ```
 ├── CHANGELOG.md
 ├── LICENSE
 ├── README.md
 ├── VERSION
+├── repo.yml
+├── <board-name-1>.svg
+├── <board-name-2>.svg
 ├── layers
 │   ├── meta-openembedded
 │   ├── meta-<vendor>
@@ -74,47 +77,74 @@ The layout so far looks as follows:
 └── resin-yocto-scripts
 ```
 
+The `layers` directory contains the git submodules of the yocto layers used in the build process. This normally means the following components are present:
+
+- [poky][poky]  at the version/revision required by the board BSP
+- [meta-openembedded][meta-openembedded] at the revision poky uses
+- [meta-resin][meta-resin] using the master branch
+- [meta-rust][meta-rust] at the revision poky uses
+- Yocto BSP layer for the board (for example, the BSP layer for Raspberry Pi is [meta-raspberrypi](https://github.com/agherzan/meta-raspberrypi))
+- any additional Yocto layers required by the board BSP (check the Yocto BSP layer of the respective board for instructions on how to build the BSP and what are the Yocto dependencies of that particular BSP layer)
+
+In addition to the above git submodules, the `layers` directory requires a meta-resin-`<board-family>` directory (please note this directory is _not_ a git submodule). This directory contains the required customization for making a board resin.io enabled. For example, the [resin-raspberrypi](https://github.com/resin-os/resin-raspberrypi) repository contains the directory `layers/meta-resin-raspberrypi` to supplement the BSP from `layers/meta-raspberrypi` git submodule, with any changes that might be required by resinOS.
+
 ## meta-resin-`<board-family>` breakout
 
-This directory contains:
+This directory contains optional and mandatory directories:
 
-* `COPYING.Apache-2.0` file with the [Apache Version 2.0 license](http://www.apache.org/licenses/LICENSE-2.0),
-* `README.md` file specifying the supported boards
-
-and a number of directories out of which the mandatory ones are:
-
-- `conf` directory - contains the following files:
-    - `layer.conf`, see the [layer.conf](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/layer.conf) from `meta-resin-raspberrypi` for an example, and see [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#bsp-filelayout-layer)
-    - `samples/bblayers.conf.sample` file in which all the required Yocto layers are listed, see this [bblayers.conf.sample](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/samples/bblayers.conf.sample) from `meta-resin-raspberrypi` for an example, and see the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#var-BBLAYERS)
-    - `samples/local.conf.sample` file which defines part of the build configuration (see the meta-resin [README.md][meta-resin-readme] for an overview of some of the variables use in the `local.conf.sample` file). An existing file can be used (e.g. [local.conf.sample](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/samples/local.conf.sample)) but making sure the "Supported machines" area lists the appropriate machines this repository is used for. See also the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#structure-build-conf-local.conf).
+|Mandatory                                                  |Optional (as needed)|
+|:------------------------------------------------------:|:---------------------------------:|
+|    `conf`                                                         | `recipes-containers/docker-disk` |
+|    `recipes-core/images`                     | |
+|    `recipes-kernel/linux directory` | |
+|    `recipes-support/resin-init`          | |
 
 
-- `recipes-core/images` directory, which contains at least a `resin-image.bbappend` file. Depending on the type of board you are adding support for, you should have your device support either just `resin-image` or both `resin-image-flasher` and `resin-image`. Generally, `resin-image` is for boards that boot directly
-from external storage (these boards do not have internal storage to install resin.io on). `resin-image-flasher` is used when the targeted board has internal storage so this flasher image is burned onto an SD card or USB stick that is used for the initial boot. When booted, this flasher image will automatically install resin.io on internal storage.
+###  `conf` directory - contains the following files:
+
+  1. `layer.conf`, see the [layer.conf](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/layer.conf) from `meta-resin-raspberrypi` for an example, and see [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#bsp-filelayout-layer)
+   2. `samples/bblayers.conf.sample` file in which all the required Yocto layers are listed, see this [bblayers.conf.sample](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/samples/bblayers.conf.sample) from `meta-resin-raspberrypi` for an example, and see the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#var-BBLAYERS)
+   3. `samples/local.conf.sample` file which defines part of the build configuration (see the meta-resin [README.md][meta-resin-readme] for an overview of some of the variables use in the `local.conf.sample` file). An existing file can be used (e.g. [local.conf.sample](https://github.com/resin-os/resin-raspberrypi/blob/master/layers/meta-resin-raspberrypi/conf/samples/local.conf.sample)) but making sure the "Supported machines" area lists the appropriate machines this repository is used for. See also the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#structure-build-conf-local.conf).
+
+
+### `recipes-core/images` directory
+
+Which contains at least a `resin-image.bbappend` file. Depending on the type of board you are adding support for, you should have your device support either just `resin-image` or both `resin-image-flasher` and `resin-image`. Generally, `resin-image` is for boards that boot directly from external storage (these boards do not have internal storage to install resin.io on). `resin-image-flasher` is used when the targeted board has internal storage so this flasher image is burned onto an SD card or USB stick that is used for the initial boot. When booted, this flasher image will automatically install resin.io on internal storage.
 
   The `resin-image.bbappend` file shall define the following variables:
 
-    - `IMAGE_FSTYPES_<yocto-machine-name>`: this variable is used to declare the type of the produced image. It can be ext3, ext4, resinos-img etc. The usual type for a board that can boot from SD card, USB, is "resinos-img".
+***
+- `IMAGE_FSTYPES_<yocto-machine-name>`: this variable is used to declare the type of the produced image. It can be ext3, ext4, resinos-img etc. The usual type for a board that can boot from SD card, USB, is "resinos-img".
 
-    - `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>`: this allows adding files from the build's deploy directory into the vfat formatted resin-boot partition (can be used to add bootloader config files, first stage bootloader, initramfs or anything else needed for the booting process to take place for your particular board). If the board uses different bootloader configuration files when booting from either external media (USB thumb drive, SD card etc.) or from internal media (mSATA, eMMC etc) then you would want to make use of this variable to make sure the different bootloader configuration files get copied over and further manipulated as needed (see `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>` and `INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_<yocto-machine-name>` below). Please note that you only reference these files here, it is the responsibility of a `.bb` or `.bbappend` to provide and deploy them (for bootloader config files this is done with an append typically in `recipes-bsp/<your board's bootloader>/<your board's bootloader>.bbappend`, see [resin-intel grub bbappend][resin-intel grub append] for an example).
+- `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>`: this allows adding files from the build's deploy directory into the vfat formatted resin-boot partition (can be used to add bootloader config files, first stage bootloader, initramfs or anything else needed for the booting process to take place for your particular board). If the board uses different bootloader configuration files when booting from either external media (USB thumb drive, SD card etc.) or from internal media (mSATA, eMMC etc) then you would want to make use of this variable to make sure the different bootloader configuration files get copied over and further manipulated as needed (see `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>` and `INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_<yocto-machine-name>` below). Please note that you only reference these files here, it is the responsibility of a `.bb` or `.bbappend` to provide and deploy them (for bootloader config files this is done with an append typically in `recipes-bsp/<your board's bootloader>/<your board's bootloader>.bbappend`, see [resin-intel grub bbappend][resin-intel grub append] for an example).
 
-    It is a space separated list of items with the following format: *FilenameRelativeToDeployDir:FilenameOnTheTarget*. If *FilenameOnTheTarget* is omitted then the *FilenameRelativeToDeployDir* will be used.
+ It is a space separated list of items with the following format: *FilenameRelativeToDeployDir:FilenameOnTheTarget*. If *FilenameOnTheTarget* is omitted then the *FilenameRelativeToDeployDir* will be used.
 
-    For example to have the Intel NUC `bzImage-intel-corei7-64.bin` copied from deploy directory over to the boot partition, renamed to `vmlinuz`:
+  For example to have the Intel NUC `bzImage-intel-corei7-64.bin` copied from deploy directory over to the boot partition, renamed to `vmlinuz`:
 
-    ```sh
-    RESIN_BOOT_PARTITION_FILES_nuc =  "bzImage-intel-corei7-64.bin:vmlinuz"
-    ```
+    ```sh   RESIN_BOOT_PARTITION_FILES_nuc =  "bzImage-intel-corei7-64.bin:vmlinuz"    ```
+***
 
   The `resin-image-flasher.bbappend` file shall define the following variables:
 
-    - `IMAGE_FSTYPES_<yocto-machine-name>` (see above)
-    - `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` (see above). For example, if the board uses different bootloader configuration files for booting from SD/USB and internal storage (see below the use of `INTERNAL_DEVICE_BOOTLOADER_CONFIG` variable), then make sure these files end up in the boot partition (i.e. they should be listed in this `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` variable)
+***
+- `IMAGE_FSTYPES_<yocto-machine-name>` (see above)
+- `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` (see above). For example, if the board uses different bootloader configuration files for booting from SD/USB and internal storage (see below the use of `INTERNAL_DEVICE_BOOTLOADER_CONFIG` variable), then make sure these files end up in the boot partition (i.e. they should be listed in this `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` variable)
 
-- `recipes-kernel/linux directory`: shall contain a `.bbappend` to the kernel recipe used by the respective board. This kernel `.bbappend` must "inherit kernel-resin" in order to add the necessary kernel configs for using with resin.io
+***
 
-- `recipes-support/resin-init` directory - shall contain a `resin-init-flasher.bbappend` file if you intend to install resin.io to internal storage and hence use the flasher image. This shall define the following variables:
+### `recipes-kernel/linux directory`
 
+ Shall contain a `.bbappend` to the kernel recipe used by the respective board. This kernel `.bbappend` must "inherit kernel-resin" in order to add the necessary kernel configs for using with resin.io
+
+### `recipes-support/resin-init` directory
+
+Shall contain a `resin-init-flasher.bbappend` file if you intend to install resin.io to internal storage and hence use the flasher image.
+
+
+`resin-init-flasher.bbappend` should define the following variables:
+
+***
   - `INTERNAL_DEVICE_KERNEL_<yocto-machine-name>`: used to identify the internal storage where resin.io will be written to.
 
   - `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>`: used to specify the filename of the bootloader configuration file used by your board when booting from internal media. Must be the same as the *FilenameOnTheTarget* parameter of the bootloader internal config file used in the `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` variable from `recipes-core/images/resin-image-flasher.bbappend`.
@@ -123,13 +153,9 @@ from external storage (these boards do not have internal storage to install resi
 
     For example, setting
 
-    ```sh
-    INTERNAL_DEVICE_BOOTLOADER_CONFIG_intel-corei7-64 = "grub.cfg_internal"
-    ````
+    ```sh    INTERNAL_DEVICE_BOOTLOADER_CONFIG_intel-corei7-64 = "grub.cfg_internal"    ````
     and
-    ```sh
-    INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_intel-corei7-64 = "/EFI/BOOT/grub.cfg"
-    ```
+    ```sh    INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_intel-corei7-64 = "/EFI/BOOT/grub.cfg"    ```
     will result that after flashing the file `grub.cfg`_internal is copied with the name `grub.cfg` to the /EFI/BOOT/ directory on the resin-boot partition.
 
 
@@ -147,30 +173,29 @@ from external storage (these boards do not have internal storage to install resi
 
     For example, setting
 
-    ```sh
-    BOOTLOADER_FLASH_DEVICE = "mtdblock0"
-    ````
-    ```sh
-    BOOTLOADER_IMAGE = "u-boot.imx"
-    ```
-    ```sh
-    BOOTLOADER_BLOCK_SIZE_OFFSET = "1024"
-    ```
+    ```sh    BOOTLOADER_FLASH_DEVICE = "mtdblock0"    ```
+    ```sh    BOOTLOADER_IMAGE = "u-boot.imx"    ```
+    ```sh    BOOTLOADER_BLOCK_SIZE_OFFSET = "1024"    ```
     and
-    ```sh
-    BOOTLOADER_SKIP_OUTPUT_BLOCKS = "3"
-    ```
+    ```sh    BOOTLOADER_SKIP_OUTPUT_BLOCKS = "3"    ```
+
     will result that the file u-boot.imx from the resin-boot partition is written to /dev/mtdblock0 with a block size of 1024 bytes and after the first 3 * 1024 bytes of /dev/mtdblock0.
+
+***
 
 and the optional ones are:
 
-- `recipes-containers/docker-disk` directory, which contains docker-resin-supervisor-disk.bbappend that can define the following variable(s):
-    - `LED_FILE_<yocto-machine-name>`: this variable should point to the [Linux sysfs path of an unused LED](https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-led) if available for that particular board. This allows the unused LED to be flashed for quick visual device identification purposes. If no such unused LED exists, this variable shall not be used.
+### `recipes-containers/docker-disk` directory
+
+Which contains `docker-resin-supervisor-disk.bbappend` that can define the following variable(s):
+
+***
+- `LED_FILE_<yocto-machine-name>`: this variable should point to the [Linux sysfs path of an unused LED](https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-led) if available for that particular board. This allows the unused LED to be flashed for quick visual device identification purposes. If no such unused LED exists, this variable shall not be used.
+
+***
 
 The directory structure then looks similar to this:
 ```
-├── COPYING.Apache-2.0
-├── README.md
 ├── conf
 │   ├── layer.conf
 │   └── samples
@@ -237,7 +262,7 @@ For specific examples on how board support is provided for existing devices, see
 [poky]: http://git.yoctoproject.org/cgit/cgit.cgi/poky
 [meta-openembedded]: https://github.com/openembedded/meta-openembedded
 [meta-resin]: https://github.com/resin-os/meta-resin
-[oe-meta-go]: https://github.com/mem/oe-meta-go
+[meta-rust]: https://github.com/meta-rust/meta-rust
 [layer.conf intel]: https://github.com/resin-os/resin-intel/blob/master/layers/meta-resin-intel/conf/layer.conf
 [meta-resin-readme]: https://github.com/resin-os/meta-resin/blob/master/README.md
 [local.conf.sample intel]: https://github.com/resin-os/resin-intel/blob/master/layers/meta-resin-intel/conf/samples/local.conf.sample
