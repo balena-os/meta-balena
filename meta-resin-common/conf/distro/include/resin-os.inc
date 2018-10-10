@@ -80,3 +80,9 @@ RESIN_FINGERPRINT_FILENAME ?= "resinos"
 hostname_pn-base-files = ""
 
 BAD_RECOMMENDATIONS += "shared-mime-info"
+
+# ARM data -> instruction cache consistency bug in latest UPX
+# Downgrade to avoid this bug
+# https://github.com/upx/upx/issues/225
+PREFERRED_VERSION_upx_arm = "3.94"
+PREFERRED_VERSION_upx-native_arm = "3.94"
