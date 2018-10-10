@@ -282,12 +282,20 @@ python resin_boot_sanity_handler() {
     bb.warn("ResinOS only supports having the kernel in the root partition in rootfs/boot/KERNEL_IMAGETYPE. Please remove it from RESIN_BOOT_PARTITION_FILES. This will become a fatal warning in a few releases.")
 }
 
+python balena_udev_rules_sanity_handler() {
+    etc_udev_rules = d.getVar('IMAGE_ROOTFS', True) + '/etc/udev/rules.d/'
+    if os.listdir(etc_udev_rules):
+        bb.warn("udev rules from /etc/udev/rules.d/*.rules will not be used. Please install them in /lib/udev/rules.d/. /etc/udev/rules.d will be bind mounted for os-udevrules")
+        bb.warn("Found the following rules in /etc/udev/rules.d/: " + str(os.listdir(etc_udev_rules)))
+}
+
 ROOTFS_POSTPROCESS_COMMAND += " \
     generate_compressed_kernel_module_deps ; \
     add_image_flag_file ; \
     resin_boot_dirgen_and_deploy ; \
     resin_root_quirks ; \
     resin_boot_sanity_handler ; \
+    balena_udev_rules_sanity_handler ; \
     "
 IMAGE_POSTPROCESS_COMMAND =+ " \
     deploy_image_license_manifest ; \
