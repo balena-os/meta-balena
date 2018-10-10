@@ -20,6 +20,7 @@ BINDMOUNTS += " \
 	/etc/hostname \
 	/etc/openvpn \
 	/etc/NetworkManager/system-connections \
+	/etc/udev/rules.d \
 	/home/root/.rnd \
 	/var/lib/NetworkManager \
 	/home/root/.ssh \
@@ -52,6 +53,9 @@ do_compile () {
 			# This bind mount is only invoked manually in persistent logs
 			# service. No need to run it with default target.
 			sed -i -e "/^WantedBy=/ d" $servicefile
+		elif [ "$bindmount" = "/etc/udev/rules.d" ]; then
+			# This bind mount needs to be running before the udev service starts for os-udevrules
+			sed -i -e "/^Before=/s/\$/ systemd-udevd.service/" $servicefile
 		fi
 	done
 }
