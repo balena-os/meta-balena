@@ -7,7 +7,7 @@ FILES_COMPRESS ?= ""
 DEPENDS_append = " upx-native"
 
 UPX ?= "${STAGING_BINDIR_NATIVE}/upx"
-UPX_ARGS ?= "--best -q"
+UPX_ARGS ?= "--lzma --best -q"
 
 find_and_compress() {
     # Sanity check
