@@ -354,11 +354,21 @@ RESIN_CONFIGS_DEPS[governor] ?= " \
     "
 
 # support for mbim cell modems
+RESIN_CONFIGS_DEPS[mbim] = " \
+    CONFIG_USB_NET_DRIVERS=m \
+    CONFIG_USB_USBNET=m \
+"
+
 RESIN_CONFIGS[mbim] = " \
     CONFIG_USB_NET_CDC_MBIM=m \
     "
 
 # support for qmi cell modems
+RESIN_CONFIGS_DEPS[qmi] = " \
+    CONFIG_USB_NET_DRIVERS=m \
+    CONFIG_USB_USBNET=m \
+"
+
 RESIN_CONFIGS[qmi] = " \
     CONFIG_USB_NET_QMI_WWAN=m \
     "
