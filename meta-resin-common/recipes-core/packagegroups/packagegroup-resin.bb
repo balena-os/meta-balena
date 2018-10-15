@@ -25,6 +25,6 @@ RDEPENDS_${PN} += " \
     resin-device-progress \
     balena-rollback \
     timeinit \
-    ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util', '', d)} \
+    ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util-auplink', '', d)} \
     ${RESIN_SUPERVISOR} \
     "
