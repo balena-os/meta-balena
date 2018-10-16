@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+# Copyright 2018 Resinio Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -e
+
+tool=$(basename "$0")
+custom_ssh_public_keys=".os.sshKeys"
+authorized_keys_path=/home/root/.ssh/authorized_keys_local
+authorized_keys_perm="600"
+
+log () {
+	echo "$tool: $1"
+}
+
+# shellcheck disable=SC2153
+if [ -n "$AUTHORIZED_KEYS_PATH" ]; then
+	authorized_keys_path="$AUTHORIZED_KEYS_PATH"
+fi
+
+if [ -z "$CONFIG_PATH" ]; then
+	. /usr/sbin/resin-vars
+	[ -z "$CONFIG_PATH" ] && { log "No config.json found."; exit 1; }
+fi
+
+ssh_keys=$(jq -r "select(${custom_ssh_public_keys} != null) | \
+	${custom_ssh_public_keys}[] //empty" "$CONFIG_PATH")
+
+if [ -n "$ssh_keys" ]; then
+	log "Setting up custom SSH public keys..."
+	authorized_keys=""
+	IFS="
+"
+
+	for key in $ssh_keys; do
+		if [ -z "$authorized_keys" ]; then
+			authorized_keys="$(printf '%s' "${key}")"
+		else
+			authorized_keys="$(printf '%s\n%s' "${authorized_keys}" \
+				"${key}")"
+		fi
+	done
+	unset IFS
+
+	if [ ! -f "$authorized_keys_path" ] || [ "$(cat \
+		"$authorized_keys_path")" != "$authorized_keys" ]; then
+		echo "${authorized_keys}" > "$authorized_keys_path"
+		chmod "$authorized_keys_perm" "$authorized_keys_path"
+		log "Done."
+	else
+		log "Custom SSH public keys already in place."
+	fi
+else
+	log "No custom SSH public keys configured."
+	[ ! -f "$authorized_keys_path" ] || rm -f "$authorized_keys_path"
+fi
