@@ -193,6 +193,21 @@ An example config.json snippet with 2 rules:
 This will create `/etc/udev/rules.d/99.rules` and `/etc/udev/rules.d/60.rules`
 The first time rules are added/modified, these rules will be added and udevd will be asked to reload rules and re-trigger.
 
+#### sshKeys
+
+Array of strings. Holds a list of public SSH keys that will be used by the SSH server for authentication.
+
+Example:
+```
+  "os": {
+    "sshKeys": [
+      "KEY1",
+      "KEY2"
+    ]
+  }
+
+```
+
 ## Yocto version support
 
 The following Yocto versions are supported:
