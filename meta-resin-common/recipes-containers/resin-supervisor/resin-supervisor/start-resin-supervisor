@@ -25,7 +25,7 @@ runSupervisor() {
     balena rm --force resin_supervisor || true
     balena run --privileged --name resin_supervisor \
         --net=host \
-        -v /var/run/balena.sock:/var/run/balena.sock \
+        -v /var/run/balena-engine.sock:/var/run/balena-engine.sock \
         -v "$CONFIG_PATH:/boot/config.json"  \
         -v /mnt/data/apps.json:/boot/apps.json \
         -v /resin-data/resin-supervisor:/data \
@@ -33,7 +33,7 @@ runSupervisor() {
         -v /var/log/supervisor-log:/var/log \
         -v /:/mnt/root \
         -e DOCKER_ROOT=/mnt/root/var/lib/docker \
-        -e DOCKER_SOCKET=/var/run/balena.sock \
+        -e DOCKER_SOCKET=/var/run/balena-engine.sock \
         -e "BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT" \
         -e "REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT" \
         -e "PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY" \
