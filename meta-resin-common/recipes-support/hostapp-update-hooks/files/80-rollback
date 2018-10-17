@@ -23,12 +23,14 @@ if [ "$DURING_UPDATE" = 1 ]; then
         touch /mnt/state/rollback-altboot-breadcrumb
         rm -f /mnt/state/rollback-health-triggered || true
         rm -f /mnt/state/rollback-altboot-triggered || true
+        rm -f /mnt/state/rollback-health-failed || true
 else
         rm -f /mnt/state/rollback-health-variables || true
         rm -f /mnt/state/rollback-altboot-breadcrumb || true
         rm -f /mnt/state/rollback-health-breadcrumb || true
         rm -f /mnt/state/rollback-health-triggered || true
         rm -f /mnt/state/rollback-altboot-triggered || true
+        rm -f /mnt/state/rollback-health-failed || true
 fi
 
 sync -f /mnt/state
