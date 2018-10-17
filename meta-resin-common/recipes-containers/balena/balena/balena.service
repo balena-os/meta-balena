@@ -2,8 +2,8 @@
 Description=Balena Application Container Engine
 Documentation=https://www.balena.io/docs/getting-started
 Wants=dnsmasq.service
-Requires=balena.socket var-lib-docker.mount bind-etc-docker.service bind-home-root-.docker.service
-After=network.target balena.socket var-lib-docker.mount bind-etc-docker.service bind-home-root-.docker.service dnsmasq.service rollback-altboot.service
+Requires=balena-engine.socket var-lib-docker.mount bind-etc-docker.service bind-home-root-.docker.service
+After=network.target balena-engine.socket var-lib-docker.mount bind-etc-docker.service bind-home-root-.docker.service dnsmasq.service rollback-altboot.service
 
 [Service]
 Type=notify
@@ -19,4 +19,5 @@ WatchdogSec=180
 Restart=always
 
 [Install]
+Alias=balena-engine.service
 WantedBy=multi-user.target

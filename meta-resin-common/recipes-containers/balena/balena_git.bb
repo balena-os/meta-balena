@@ -14,7 +14,7 @@ inherit systemd go pkgconfig binary-compress useradd
 BALENA_VERSION = "17.12.0-dev"
 BALENA_BRANCH= "17.12-resin"
 
-SRCREV = "cc262b8c80e7b9bc61fdf8bf7dd227df404d6339"
+SRCREV = "3fdfd0d968bda6d720dc01448f92d28de39280e6"
 SRC_URI = "\
 	git://github.com/resin-os/balena.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
@@ -35,7 +35,7 @@ SYSTEMD_SERVICE_${PN} = "balena.service balena-host.service var-lib-docker.mount
 FILES_COMPRESS = "/boot/init"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "-r balena"
+GROUPADD_PARAM_${PN} = "-r balena-engine"
 
 DEPENDS_append_class-target = " systemd"
 RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd healthdog"
@@ -119,20 +119,28 @@ do_compile() {
 
 do_install() {
 	mkdir -p ${D}/${bindir}
-	install -m 0755 ${S}/src/import/bundles/dynbinary-balena/balena ${D}/${bindir}/balena
+	install -m 0755 ${S}/src/import/bundles/dynbinary-balena/balena-engine ${D}/${bindir}/balena-engine
 	install -d ${D}/boot
 	install -m 0755 ${S}/src/import/cmd/mobynit/mobynit ${D}/boot/init
 	echo ${BALENA_STORAGE} > ${D}/boot/storage-driver
 
-	ln -sf balena ${D}/${bindir}/balenad
-	ln -sf balena ${D}/${bindir}/balena-containerd
-	ln -sf balena ${D}/${bindir}/balena-containerd-shim
-	ln -sf balena ${D}/${bindir}/balena-containerd-ctr
-	ln -sf balena ${D}/${bindir}/balena-runc
-	ln -sf balena ${D}/${bindir}/balena-proxy
+	ln -sf balena-engine ${D}/${bindir}/balena
+	ln -sf balena-engine ${D}/${bindir}/balenad
+	ln -sf balena-engine ${D}/${bindir}/balena-containerd
+	ln -sf balena-engine ${D}/${bindir}/balena-containerd-shim
+	ln -sf balena-engine ${D}/${bindir}/balena-containerd-ctr
+	ln -sf balena-engine ${D}/${bindir}/balena-runc
+	ln -sf balena-engine ${D}/${bindir}/balena-proxy
+
+	ln -sf balena-engine ${D}/${bindir}/balena-engine-daemon
+	ln -sf balena-engine ${D}/${bindir}/balena-engine-containerd
+	ln -sf balena-engine ${D}/${bindir}/balena-engine-containerd-shim
+	ln -sf balena-engine ${D}/${bindir}/balena-engine-containerd-ctr
+	ln -sf balena-engine ${D}/${bindir}/balena-engine-runc
+	ln -sf balena-engine ${D}/${bindir}/balena-engine-proxy
 
 	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${S}/src/import/contrib/init/systemd/balena.* ${D}/${systemd_unitdir}/system
+	install -m 0644 ${S}/src/import/contrib/init/systemd/balena-engine.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
 	sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
@@ -153,9 +161,11 @@ do_install() {
 
 	install -d ${D}/home/root/.docker
 	ln -sf .docker ${D}/home/root/.balena
+	ln -sf .docker ${D}/home/root/.balena-engine
 
 	install -d ${D}${localstatedir}/lib/docker
 	ln -sf docker ${D}${localstatedir}/lib/balena
+	ln -sf docker ${D}${localstatedir}/lib/balena-engine
 }
 
 BBCLASSEXTEND = " native"
