@@ -31,6 +31,7 @@ SRC_URI = " \
     file://0001-sd-lldp.h-Remove-net-ethernet.h-seems-to-be-over-spe.patch \
     file://0002-Fixed-configure.ac-Fix-pkgconfig-sysroot-locations.patch \
     file://0003-Do-not-create-settings-settings-property-documentati.patch \
+    file://balena-client-id.patch \
 "
 SRC_URI[md5sum] = "94d02b80b120f166927e6ef242b29a9b"
 SRC_URI[sha256sum] = "6be06ff93a05f3ee4da9e58e4a0d974eef245c08b6f02b00a9e44154c9801a26"
