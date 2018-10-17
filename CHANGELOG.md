@@ -1,6 +1,28 @@
 Change log
 -----------
 
+# v2.20.0
+## (2018-10-17)
+
+* Resin-vars: Implement custom ssh keys service [Andrei Gherzan]
+* Warn if rules are found in /etc/udev/rules.d [Zubair Lutfullah Kakakhel]
+* Add support to load custom udev rules from config.json [Zubair Lutfullah Kakakhel]
+* Aufs-util: Package auplink separately [Florin Sarbu]
+* Enable kernel config dependencies for MBIM and QMI [Florin Sarbu]
+* Set UPX to use LZMA compression by default [Andrei Gherzan]
+* Downgrade UPX to 3.94 for ARM [Andrei Gherzan]
+* Balena update for rollbacks. mobynit can now mount rootfs from sysroot. [Zubair Lutfullah Kakakhel]
+* Fix proxy when using containers over bridge network [Andrei Gherzan]
+* Add support for aufs 4.9.9+, 4.9.94+, 4.18 [Florin Sarbu]
+* Add rollback-altboot service before balena service [Zubair Lutfullah Kakakhel]
+* Add Automated Rollback recipe [Zubair Lutfullah Kakakhel]
+* Add Automated Rollback support in u-boot env_resin.h [Zubair Lutfullah Kakakhel]
+* Add a hook to support Automated Rollbacks [Zubair Lutfullah Kakakhel]
+* Update HUP grub hook to support Automated Rollbacks [Zubair Lutfullah Kakakhel]
+* Update HUP u-boot hook to support Automated Rollbacks [Zubair Lutfullah Kakakhel]
+* Move kernel-image-initramfs from resin-image recipe to packagegroup-resin.inc [Zubair Lutfullah Kakakhel]
+* Have 99-resin-grub hostapp-update-hook decide which grub to use [Florin Sarbu]
+
 # v2.19.0
 ## (2018-09-23)
 
