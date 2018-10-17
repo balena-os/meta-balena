@@ -24,6 +24,7 @@ echo "Rollback: Setting upgrade_available to 0 and removing breadcrumbs"
 rm -f /mnt/state/rollback-health-variables || true
 rm -f /mnt/state/rollback-altboot-breadcrumb || true
 rm -f /mnt/state/rollback-health-breadcrumb || true
+rm -f /mnt/state/rollback-health-failed || true
 rm -f "${RESIN_BOOT_MOUNTPOINT}/bootcount.env" || true
 grub_env=$(find "${RESIN_BOOT_MOUNTPOINT}" -name grubenv)
 if [ -f "${grub_env}" ]; then
