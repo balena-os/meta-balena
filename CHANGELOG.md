@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.19.1
+## (2018-10-17)
+
+* Replace NM's DHCP request option "Client indentifier" with udhcpc style option [Sebastian Panceac]
+
 # v2.19.0
 ## (2018-09-23)
 

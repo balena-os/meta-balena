@@ -1,4 +1,34 @@
 - commits:
+    - subject: >-
+        Replace NM's DHCP request option "Client indentifier" with udhcpc style
+        option
+      hash: 600d8d1f6be72b4a623d730234dfa85877893ae3
+      body: |
+        This patch replaces the "Client identifier" option from
+        DHCP packets sent by NM to resemble the way udhcpc does it.
+
+        The reason is that the Cisco RV325 router with fw older than
+        v1.2.1.14 doesn't reply to DHCP requests or discovery packages
+        if the "Client identifier" option is formatted in NM's style.
+
+        Even though this is a bug in the router's fw, we are going to
+        fix it here because we encountered clients that couldn't get
+        an IP address on these routers and we want to avoid that
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Replace NM's DHCP request option "Client indentifier" with udhcpc
+          style option
+        changelog-entry: >-
+          Replace NM's DHCP request option "Client indentifier" with udhcpc
+          style option
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+  version: 2.19.1
+  date: 2018-10-17T14:03:38.611Z
+- commits:
     - subject: Update Balena to fix tty console hanging in some cases
       hash: 06ae0837d2823587858437d5eb41b8fc5be8e7c6
       body: |
