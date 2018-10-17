@@ -65,6 +65,9 @@ do_install_append() {
     rm ${D}/lib/systemd/system/sysinit.target.wants/systemd-journal-flush.service
 
     install -m 0755 ${WORKDIR}/resin_update_state_probe ${D}/lib/udev/resin_update_state_probe
+
+    # Move udev rules into /lib as /etc/udev/rules.d is bind mounted for custom rules
+    mv ${D}/etc/udev/rules.d/*.rules ${D}/lib/udev/rules.d/
 }
 
 FILES_udev += "${rootlibexecdir}/udev/resin_update_state_probe"
