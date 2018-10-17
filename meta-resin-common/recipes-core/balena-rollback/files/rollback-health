@@ -59,10 +59,14 @@ if [ $resin_root_part -eq $current_part_idx ]; then
 			counter=$((counter + 1))
 			if [ $counter -ge $COUNT ]; then
 				echo "Rollback: Looks like we failed some health check. Rolling back"
-				run_hooks_from_inactive
-				touch /mnt/state/rollback-health-triggered
+				if run_hooks_from_inactive; then
+					touch /mnt/state/rollback-health-triggered
+					echo "Rollback: Failed heathchecks. Rebooting to previous rootfs"
+				else
+					touch /mnt/state/rollback-health-failed
+					echo "Rollback: Failed to run previous hooks. Rebooting to recover system"
+				fi
 				rollback-stop || true
-				echo "Rollback: Failed heathchecks. Rebooting to previous rootfs"
 				sleep 10
 				reboot
 			fi
