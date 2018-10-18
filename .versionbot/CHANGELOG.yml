@@ -1,4 +1,474 @@
 - commits:
+    - subject: Avoid expander on flasher based on root kernel argument
+      hash: c155f8edfa543d29c7efafe2fb6c80d633b82dc1
+      body: |
+        The current implementation checks for the existance of the `flash-boot`
+        label. This breaks when after flashing the flashing device is left
+        plugged. Change this with a check based on the root kernel argument.
+
+        Fixes #1210
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Avoid expander on flasher based on root kernel argument
+        changelog-entry: Avoid expander on flasher based on root kernel argument
+        Signed-off-by: Andrei Gherzan <andrei@resin.io>
+        signed-off-by: Andrei Gherzan <andrei@resin.io>
+      author: Andrei Gherzan
+    - subject: 'resin-vars: Implement custom ssh keys service'
+      hash: 6d2e43d4693208c8df9436ea1f96c844b4faeb75
+      body: >
+        This patch adds support for translating SSH public keys from config.json
+
+        to an authorize_keys file. We use `authorize_keys_local` file as the
+
+        destination file of this translation so we can differentiate in between
+        keys
+
+        brought locally from config.json and keys brought from the balena
+        backend
+
+        through os-config an avoid racing issues with this tool (os-config). The
+        final
+
+        `authorize_keys` file will be merged at every ssh connection in the
+        dropbear
+
+        service.
+
+
+        These SSH custom public keys in config.json are assumed to be provided
+
+        as an array in `.os.sshKeys`. Example:
+
+        {
+          [...]
+          "os": {
+            "sshKeys": [
+              "ssh-rsa ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+              "ssh-rsa 0123456789"
+            ]
+          },
+          [...]
+        }
+
+
+        Fixes #608
+      footer:
+        Change-type: minor
+        change-type: minor
+        Change-log-entry: Add support for custom SSH public keys in config.json
+        change-log-entry: Add support for custom SSH public keys in config.json
+        Signed-off-by: Andrei Gherzan <andrei@resin.io>
+        signed-off-by: Andrei Gherzan <andrei@resin.io>
+      author: Andrei Gherzan
+    - subject: Fix redsocks interface creation when no proxy configured
+      hash: 4d278e425a5624863ff62771c8db9b4c9bcf6821
+      body: |
+        When we have no redsocks configuration don't create the redsocks
+        interface.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix redsocks interface creation when no proxy configured
+        changelog-entry: Fix redsocks interface creation when no proxy configured
+        Signed-off-by: Andrei Gherzan <andrei@resin.io>
+        signed-off-by: Andrei Gherzan <andrei@resin.io>
+      author: Andrei Gherzan
+    - subject: >-
+        Replace NM's DHCP request option "Client indentifier" with udhcpc style
+        option
+      hash: 99b4e423003442a67f1fb45b1f4ae8d201c73b99
+      body: |
+        This patch replaces the "Client identifier" option from
+        DHCP packets sent by NM to resemble the way udhcpc does it.
+
+        The reason is that the Cisco RV325 router with fw older than
+        v1.2.1.14 doesn't reply to DHCP requests or discovery packages
+        if the "Client identifier" option is formatted in NM's style.
+
+        Even though this is a bug in the router's fw, we are going to
+        fix it here because we encountered clients that couldn't get
+        an IP address on these routers and we want to avoid that
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Replace NM's DHCP request option "Client indentifier" with udhcpc
+          style option
+        changelog-entry: >-
+          Replace NM's DHCP request option "Client indentifier" with udhcpc
+          style option
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+    - subject: Fix for rollbacks in case of old balenaOS version
+      hash: 814c39fb750104f1aef748a083a3384e5a594d9c
+      body: |
+        In some cases, the previous rootfs hooks are not functional (which can
+        be the case when the hooks don't exist in older versions of balenaOS).
+
+        With this patch, rollbacks will be stopped and a reboot will happen
+        preventing further attempts by rollback-health to keep retrying and
+        rolling back
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Fix for rollbacks in case of old balenaOS version
+        changelog-entry: Fix for rollbacks in case of old balenaOS version
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update resin-supervisor to v7.21.4
+      hash: 4c1f5c7cdaf889b67098832b36ccd0cc39c58b0e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v7.21.4
+        changelog-entry: Update resin-supervisor to v7.21.4
+        Signed-off-by: Cameron Diver <cameron@resin.io>
+        signed-off-by: Cameron Diver <cameron@resin.io>
+      author: Cameron Diver
+    - subject: Warn if rules are found in /etc/udev/rules.d
+      hash: f228de23f388859d7cf3847fc608863bab2c6857
+      body: |
+        The /etc/udev/rules.d folder is now used by os-udevrules. We warn if
+        there are rules in /etc/udev/rules.d installed by recipes in other
+        layers
+
+        This warning will become an error in a few releases.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Warn if rules are found in /etc/udev/rules.d
+        changelog-entry: Warn if rules are found in /etc/udev/rules.d
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Add support to load custom udev rules from config.json
+      hash: f127232b8c7009c954f8467c32776c5fceee8c12
+      body: |
+        os-udevrules will parse config.json for any udev rules and copy the
+        rules in /etc/udev/rules.d/key.rules
+
+        udev rules can be passed via config.json in the following format
+
+          "settings": {
+            "udevrules": {
+              "60": "single line. Remember to escape the double quotes",
+              "99": "multi line \n2nd line"
+           }
+         }
+
+        The above snippet will appear as /etc/udev/rules.d/60.rules
+        and /etc/udev/rules.d/99.rules
+
+        The first time rules are added/modified, these rules will be added and
+        udevd will be asked to reload rules and re-trigger.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add support to load custom udev rules from config.json
+        changelog-entry: Add support to load custom udev rules from config.json
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'aufs-util: Package auplink separately'
+      hash: f8d0ae01bae540dcf52ebbbdc6315c86f7efa684
+      body: |
+        From the aufs-util package only the auplink binary is needed and that
+        dependency is from balena. So we package auplink in a separate package
+        and just install that package into the rootfs.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Chanelog-entry: Only add auplink binary into the rootfs to decrease rootfs size
+        chanelog-entry: Only add auplink binary into the rootfs to decrease rootfs size
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+    - subject: Enable kernel config dependencies for MBIM and QMI
+      hash: fd7c661209532296b8e6f7ce74328ffbc5ab8053
+      body: |
+        MBIM and QMI support needs USB_NET_DRIVERS and USB_USBNET enabled.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Enable kernel config dependencies for MBIM and QMI
+        changelog-entry: Enable kernel config dependencies for MBIM and QMI
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+    - subject: Set UPX to use LZMA compression by default
+      hash: 69bc7e1c6c8382d69b57b662518909c4f7824644
+      body: |
+        In my testing lzma offers at least 30-40% better compression and it is
+        introduced from v3.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Set UPX to use LZMA compression by default
+        changelog-entry: Set UPX to use LZMA compression by default
+        Signed-off-by: Andrei Gherzan <andrei@resin.io>
+        signed-off-by: Andrei Gherzan <andrei@resin.io>
+      author: Andrei Gherzan
+    - subject: Downgrade UPX to 3.94 for ARM
+      hash: 23423b875f2d892ce136c9a3e2f56692592c873d
+      body: |
+        3.95 introduced a data/instruction cache inconsistency bug:
+        https://github.com/upx/upx/issues/225. As this only afects this version,
+        we downgrade it for the affected architecture.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Downgrade UPX to 3.94 for ARM
+        changelog-entry: Downgrade UPX to 3.94 for ARM
+        Signed-off-by: Andrei Gherzan <andrei@resin.io>
+        signed-off-by: Andrei Gherzan <andrei@resin.io>
+      author: Andrei Gherzan
+    - subject: Balena update for rollbacks. mobynit can now mount rootfs from sysroot.
+      hash: 008608db1b67dd9de0445ef6e1920bb0302f618e
+      body: |
+        This patch bumps the balena version in meta-resin.
+
+        The update in balena adds support to pass an argument to mobynit which
+        allows mobynit to mount a rootfs from a custom path.
+
+        The command ./mobynit -sysroot /mnt/sysroot/inactive will mount the
+        rootfs partition from /mnt/sysroot/inactive and return the destination
+        path in stdout.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Balena update for rollbacks. mobynit can now mount rootfs from
+          sysroot.
+        changelog-entry: >-
+          Balena update for rollbacks. mobynit can now mount rootfs from
+          sysroot.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Fix proxy when using containers over bridge network
+      hash: 3df6e1906e1138a8cd10d15ac3008685b90f75f8
+      body: |
+        Before multicontainer support in resin, the user container was running
+        over the host's network stack which means that all the packets were
+        treated as locally emitted ones. In this case, the communication was
+        redirected as per the OUTPUT iptable rule only.
+        In the "multicontainer world" the user containers run on top of bridge
+        network which makes the host act as a socksifying router. In this case,
+        the packets won't go through the OUTPUT chain and the redirection to
+        redsocks needs to happen at PREROUTING chain.
+        This change adds a redirect rule at PREROUTING for TCP packets to
+        redsocks to redirect packets from the containers to redsocks too.
+
+        As well, this adds support for redirecting DNS UDP packets to redsocks.
+        This is implemented as iptables rules which are only added if the
+        redsocks configuration has a `dnsu2t` section.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Fix proxy when using containers over bridge network
+        changelog-entry: Fix proxy when using containers over bridge network
+        Signed-off-by: Andrei Gherzan <andrei@resin.io>
+        signed-off-by: Andrei Gherzan <andrei@resin.io>
+      author: Andrei Gherzan
+    - subject: 'Add support for aufs 4.9.9+, 4.9.94+, 4.18'
+      hash: bc91ca07f0a44aaffb68720fc10f3e524491d92d
+      body: |
+        Also, update 4.9, 4.10, 4.11.7+, 4.12, 4.13, 4.14, 4.14.56+, 4.15,
+        4.16, 4.17.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: 'Add support for aufs 4.9.9+, 4.9.94+, 4.18'
+        changelog-entry: 'Add support for aufs 4.9.9+, 4.9.94+, 4.18'
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+    - subject: Add rollback-altboot service before balena service
+      hash: 9c35e9c8b418b9253d53df48b783babc9d116006
+      body: |
+        We would like resin-altboot service to run before balena starts
+        resin-altboot checks if the boot configuration is set to run
+        resinOS from rootA(B) but we are actually running rootB(A) due to
+        something.
+
+        If rollback-altboot triggers, it will run hooks to refresh boot files
+        and reboot. There is no point starting balena in such a device state
+        as that will only slow down the hooks from running.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add rollback-altboot service before balena service
+        changelog-entry: Add rollback-altboot service before balena service
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Add Automated Rollback recipe
+      hash: fdfc451d1a8a95b1c9b9ee2d0fc8f736c094251b
+      body: |
+        This recipe adds a few systemd services and scripts that handle
+        automated OS rollback functionality.
+
+        The rollback-altboot.service checks if we are running in altboot mode
+        i.e. resinOS_uEnv.txt says we should boot resin_root_part=3. But we are
+        actually running resinOS from resin_root_part=2. This can happen if
+        a reboot happened without clearing upgrade_available in resinOS_uEnv
+        txt file. A kernel panic happened etc.
+
+        The rollback-altboot script runs hostapp-update hooks to change the
+        bootfiles.
+
+        The rollback-health.service runs rollback-health which checks if vpn is
+        online and balena is healthy after a hostapp-update.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add Automated Rollback recipe
+        changelog-entry: Add Automated Rollback recipe
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Add Automated Rollback support in u-boot env_resin.h
+      hash: c6145d1f535098ef46f44d44d061b04fd7174f77
+      body: |
+        This patch adds a simple check in env_resin.h.
+
+        If bootcount is found to be greater than bootlimit, switch the
+        partitions. Both bootcount and bootlimit are standard u-boot env
+        variables.
+
+        To enable rollback in devices, devices have to do the following in
+        their u-boot
+
+        Enable CONFIG_CMD_SETEXPR, CONFIG_BOOTCOUNT_LIMIT and depending on the
+        device, save the bootcount in some persistant location whether that
+        is an area in the SoC or an ext partition etc.
+
+        If you are using the CONFIG_BOOTCOUNT_EXT driver, use only the boot
+        partition and use the filename "bootcount.env"
+
+        E.g. for rpi3
+        CONFIG_CMD_SETEXPR=y
+        CONFIG_BOOTCOUNT_LIMIT=y
+        CONFIG_SYS_BOOTCOUNT_ADDR=0x02300000
+        CONFIG_BOOTCOUNT_EXT=y
+        CONFIG_SYS_BOOTCOUNT_EXT_DEVPART=0:1
+        CONFIG_SYS_BOOTCOUNT_EXT_NAME="bootcount.env"
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add Automated Rollback support in u-boot env_resin.h
+        changelog-entry: Add Automated Rollback support in u-boot env_resin.h
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Add a hook to support Automated Rollbacks
+      hash: b93b655e9cad7ad439a603ddedc9a965a909c037
+      body: |
+        This hook leaves breadcrumbs for the rollback-altboot and
+        rollback-health service after a HUP.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add a hook to support Automated Rollbacks
+        changelog-entry: Add a hook to support Automated Rollbacks
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update HUP grub hook to support Automated Rollbacks
+      hash: 620d7a4466dd2aea0c3c5e4ffc95ac22e7f7651c
+      body: |
+        Devices that support automated os rollbacks will have two extra
+        variables upgrade_available and resin_root_part in their grub.cfg
+        files.
+
+        Check for the presense of those variables and update them if they
+        exist.
+
+        Otherwise stick to the previous way of updating grub.cfg
+
+        For devices using grub 2.0, devices will have to mirror the pattern
+        that exists in u-boot.
+        i.e.
+         Add a variable upgrade_available to grub.cfg (HUP hooks update this)
+         Add a variable bootcount to grubenv that increments if
+         upgrade_available is set
+         Add logic in grub.cfg to boot the alternate rootB/A if bootcount
+         reaches 2.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update HUP grub hook to support Automated Rollbacks
+        changelog-entry: Update HUP grub hook to support Automated Rollbacks
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update HUP u-boot hook to support Automated Rollbacks
+      hash: 76e103304264d88178b4948c020acf1f27246f85
+      body: |
+        u-boot uses an upgrade_avaiable flag to update bootcount to reduce
+        writes to sd card.
+
+        If upgrade_available=0, u-boot won't bother updating the bootcount
+        variable. During HUP, we'll set upgrade_available=1 so that u-boot
+        starts counting.
+
+        It'll be the job of the new OS and the rollback services to set
+        upgrade_available=0
+
+        For some devices, u-boot will save the bootcount in the boot partition
+        in /mnt/boot/bootcount.env. Remove that counter when running hooks
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update HUP u-boot hook to support Automated Rollbacks
+        changelog-entry: Update HUP u-boot hook to support Automated Rollbacks
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Move kernel-image-initramfs from resin-image recipe to
+        packagegroup-resin.inc
+      hash: bfa0cc20d3bb1b6a26d87507b196b54ab6d672aa
+      body: |
+        We add the package here as this file is included in the flasher image
+        recipe as well
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Move kernel-image-initramfs from resin-image recipe to
+          packagegroup-resin.inc
+        changelog-entry: >-
+          Move kernel-image-initramfs from resin-image recipe to
+          packagegroup-resin.inc
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@resin.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Have 99-resin-grub hostapp-update-hook decide which grub to use
+      hash: ec0c373a8fa9dfd7ae989615646c76a4ab87f531
+      body: |
+        We move the decision of using either grub legacy or grub EFI from the
+        board specific layer to here so that all boards can benefit from these
+        changes.
+
+        Additionally, we make it so that this hostapp-update-hook also deletes
+        the unnecessary grub.cfg file.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Have 99-resin-grub hostapp-update-hook decide which grub to use
+        changelog-entry: Have 99-resin-grub hostapp-update-hook decide which grub to use
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+  version: 2.20.0
+  date: 2018-10-18T08:16:00.360Z
+- commits:
     - subject: Update Balena to fix tty console hanging in some cases
       hash: 06ae0837d2823587858437d5eb41b8fc5be8e7c6
       body: |
