@@ -13,11 +13,11 @@
 # limitations under the License.
 
 [Unit]
-Description=Ballena rollback checks altboot
+Description=Balena rollback checks altboot
 DefaultDependencies=no
-Requires=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service
+Requires=resin-boot.service
 Before=balena-host.service balena.service
-After=mnt-sysroot-active.service mnt-sysroot-inactive.service resin-boot.service
+After=resin-boot.service
 ConditionPathExists=/mnt/state/rollback-altboot-breadcrumb
 
 [Service]

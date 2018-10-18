@@ -13,10 +13,11 @@
 # limitations under the License.
 
 [Unit]
-Description=Ballena rollback checks health
+Description=Balena rollback checks health
 DefaultDependencies=no
-Requires=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service resin-supervisor.service
-After=mnt-sysroot-active.service mnt-sysroot-inactive.service resin-boot.service balena-host.service balena.service resin-supervisor.service
+Requires=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service
+Wants=openvpn.service balena.service
+After=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service openvpn.service balena.service
 ConditionPathExists=/mnt/state/rollback-health-breadcrumb
 
 [Service]
