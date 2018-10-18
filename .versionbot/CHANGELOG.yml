@@ -1,4 +1,29 @@
 - commits:
+    - subject: Improve systemd service ordering in rollbacks
+      hash: 1d729dec436d0cb2eeb8a6799a8b978aceba8f8d
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Improve systemd service ordering in rollbacks
+        changelog-entry: Improve systemd service ordering in rollbacks
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update resin-supervisor to v7.24.1
+      hash: e5a882a75ca49828cabcba227c4972d9e4d753d9
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v7.24.1
+        changelog-entry: Update resin-supervisor to v7.24.1
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.21.0
+  date: 2018-10-18T17:23:01.640Z
+- commits:
     - subject: Avoid expander on flasher based on root kernel argument
       hash: c155f8edfa543d29c7efafe2fb6c80d633b82dc1
       body: |
