@@ -3,6 +3,7 @@ SRC_URI += " \
     file://dropbear.socket \
     file://ssh.service \
     file://dropbearkey.conf \
+    file://dropbear_keys_merger \
     "
 
 # In dropbear versions 2016.73 and 2016.74 the code indentation has been fixed thus making our current patch (use_atomic_key_generation_in_all_cases.patch) not work anymore
@@ -31,6 +32,9 @@ do_install_append() {
 
     install -d ${D}${sysconfdir}/default
     echo 'DROPBEAR_PORT="22222"' >> ${D}/etc/default/dropbear # Change default dropbear port to 22222
+
+    install -d ${D}${sbindir}
+    install -m 0755 ${WORKDIR}/dropbear_keys_merger ${D}${sbindir}
 
     # Advertise SSH service using an avahi service file
     mkdir -p ${D}/etc/avahi/services/

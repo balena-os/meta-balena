@@ -18,8 +18,8 @@
 			"id": "ssh",
 			"files": {
 				"authorized_keys": {
-					"path": "/home/root/.ssh/authorized_keys",
-					"perm": ""
+					"path": "/home/root/.ssh/authorized_keys_remote",
+					"perm": "600"
 				}
 			},
 			"systemd_services": []

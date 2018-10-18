@@ -161,6 +161,53 @@ String. A space-separated list of NTP servers to use for time synchronization. D
 
 String. A space-separated list of preferred DNS servers to use for name resolution. Falls back to DHCP provided servers and Google DNS.
 
+### os
+
+Multiple settings that customize the OS at runtime are nested under here.
+
+#### udevRules
+
+String. Custom udev rules can be passed via config.json.
+
+To turn a rule into the format that can be easily added to config.json, use
+
+`cat rulefilename | jq -sR .`
+e.g.
+```
+root@resin:/etc/udev/rules.d# cat 64.rules | jq -sR .
+"ACTION!=\"add|change\", GOTO=\"modeswitch_rules_end\"\nKERNEL==\"ttyACM*\", ATTRS{idVendor}==\"1546\", ATTRS{idProduct}==\"1146\", TAG+=\"systemd\", ENV{SYSTEMD_WANTS}=\"u-blox-switch@'%E{DEVNAME}'.service\"\nLBEL=\"modeswitch_rules_end\"\n"
+root@resin:/etc/udev/rules.d#
+```
+
+An example config.json snippet with 2 rules:
+
+```
+  "os": {
+    "udevRules": {
+      "56": "ENV{ID_FS_LABEL_ENC}==\"resin-root*\", IMPORT{program}=\"resin_update_state_probe $devnode\", SYMLINK+=\"disk/by-state/$env{RESIN_UPDATE_STATE}\"",
+      "64" : "ACTION!=\"add|change\", GOTO=\"modeswitch_rules_end\"\nKERNEL==\"ttyACM*\", ATTRS{idVendor}==\"1546\", ATTRS{idProduct}==\"1146\", TAG+=\"systemd\", ENV{SYSTEMD_WANTS}=\"u-blox-switch@'%E{DEVNAME}'.service\"\nLBEL=\"modeswitch_rules_end\"\n"
+   }
+ }
+```
+
+This will create `/etc/udev/rules.d/99.rules` and `/etc/udev/rules.d/60.rules`
+The first time rules are added/modified, these rules will be added and udevd will be asked to reload rules and re-trigger.
+
+#### sshKeys
+
+Array of strings. Holds a list of public SSH keys that will be used by the SSH server for authentication.
+
+Example:
+```
+  "os": {
+    "sshKeys": [
+      "KEY1",
+      "KEY2"
+    ]
+  }
+
+```
+
 ## Yocto version support
 
 The following Yocto versions are supported:

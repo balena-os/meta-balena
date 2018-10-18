@@ -6,9 +6,22 @@ datadev=$(lsblk $datapart -n -o PKNAME)
 
 resindataexpander_enabled() {
     # On flasher avoid expanding partition
-    if [ -h /dev/disk/by-label/flash-boot ]; then
-        echo "[INFO] Flasher detected. Avoiding expand partition mechanism."
-        return 1
+	if [ -h /dev/disk/by-label/flash-rootA ]; then
+		flash_root=$(readlink -f "/dev/disk/by-label/flash-rootA")
+		if [ "`echo ${bootparam_root} | cut -c1-5`" = "UUID=" ]; then
+			root_uuid=`echo $bootparam_root | cut -c6-`
+			root_link="/dev/disk/by-uuid/$root_uuid"
+		elif [ "`echo ${bootparam_root} | cut -c1-9`" = "PARTUUID=" ]; then
+			root_puuid=`echo $bootparam_root | cut -c10-`
+			root_link="/dev/disk/by-partuuid/$root_puuid"
+		elif [ "`echo ${bootparam_root} | cut -c1-6`" = "LABEL=" ]; then
+			root_label=`echo $bootparam_root | cut -c7-`
+			root_link="/dev/disk/by-label/$root_link"
+		fi
+		if [ "$(readlink -f "$root_link")" == "$flash-root" ]; then
+			echo "[INFO] Flasher detected. Avoiding expand partition mechanism."
+			return 1
+		fi
     fi
 
     for freespace in $(parted -m /dev/$datadev unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do

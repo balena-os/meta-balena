@@ -1,0 +1,12 @@
+[Unit]
+Description=udev rules configuration from config.json
+Requires=resin-boot.service systemd-udev-settle.service bind-etc-udev-rules.d.service
+After=resin-boot.service systemd-udev-settle.service bind-etc-udev-rules.d.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@SBINDIR@/os-udevrules
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# Copyright 2018 Resinio Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -o errexit
+
+. /usr/sbin/resin-vars
+. /usr/bin/rollback-parse-bootloader
+
+TIMEOUT=60
+COUNT=15
+REBOOT_TIMEOUT=900
+
+DURING_UPDATE=${DURING_UPDATE:-0}
+
+run_hooks_from_inactive () {
+	echo "Rollback: Running hooks from previous rootfs"
+	old_rootfs=$(/mnt/sysroot/active/current/boot/init -sysroot /mnt/sysroot/inactive)
+	mount -t proc proc "${old_rootfs}/proc/"
+	mount -o bind /dev "${old_rootfs}/dev"
+	mount --bind /mnt/boot/ "${old_rootfs}/mnt/boot/"
+	mount --bind /mnt/state/ "${old_rootfs}/mnt/state/"
+	mount --bind /mnt/sysroot/ "${old_rootfs}/mnt/sysroot/"
+	mount --bind /mnt/sysroot/active/ "${old_rootfs}/mnt/sysroot/active/"
+	mount --bind /mnt/sysroot/inactive/ "${old_rootfs}/mnt/sysroot/inactive/"
+	mount -t sysfs sysfs "${old_rootfs}/sys/"
+
+	# DURING_UPDATE tells hooks to use the boot files from inactive
+	# which are the good set of files in ROLLBACK_ALTBOOT mode
+	# also tells the bootloaders to switch roots
+	cat << EOF | chroot "${old_rootfs}"
+	DURING_UPDATE=1 /usr/bin/hostapp-update-hooks
+EOF
+}
+
+echo "Rollback: Health sanity check"
+
+if [ $resin_root_part -eq $current_part_idx ]; then
+	if [ $upgrade_available -eq 1 ]; then
+		echo "Rollback: HUP detected. Running healthchecks after $TIMEOUT seconds"
+		sleep $TIMEOUT
+		echo "Rollback: Running healthchecks to see if new system is stable"
+		counter=0
+		while ! rollback-tests ; do
+			echo "Trying healthcheck again $counter of $COUNT attempts"
+			sleep $TIMEOUT
+			counter=$((counter + 1))
+			if [ $counter -ge $COUNT ]; then
+				echo "Rollback: Looks like we failed some health check. Rolling back"
+				if run_hooks_from_inactive; then
+					touch /mnt/state/rollback-health-triggered
+					echo "Rollback: Failed heathchecks. Rebooting to previous rootfs"
+				else
+					touch /mnt/state/rollback-health-failed
+					echo "Rollback: Failed to run previous hooks. Rebooting to recover system"
+				fi
+				rollback-stop || true
+				sleep 10
+				reboot
+			fi
+		done
+	    echo "Rollback: new OS seems stable. Preventing further rollbacks"
+	    rollback-stop || true
+
+	else
+		echo "Rollback: Nothing to do. Looks like we are in ROLLBACK_HEALTHY state. Why is script running?"
+		rollback-stop || true
+	fi
+else
+	echo "Rollback: Looks like we are running in altboot mode. rollback-altboot.services should reboot the system in a while."
+	echo "Rollback: Sleeping for $REBOOT_TIMEOUT seconds"
+	sleep $REBOOT_TIMEOUT
+	echo "Rollback: Looks like something bad happened to rollback-altboot.service. Lets force a reboot"
+	rollback-stop || true
+	systemctl --force reboot
+fi

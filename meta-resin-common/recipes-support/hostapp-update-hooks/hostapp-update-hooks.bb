@@ -7,7 +7,7 @@ S = "${WORKDIR}"
 
 inherit allarch
 
-HOSTAPP_HOOKS = "0-bootfiles"
+HOSTAPP_HOOKS = "0-bootfiles 80-rollback"
 RESIN_BOOT_FINGERPRINT = "${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
 
 python __anonymous() {

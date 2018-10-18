@@ -27,6 +27,16 @@ fi
 export DOCKER_HOST="unix:///var/run/balena-host.sock"
 SYSROOT="/mnt/sysroot/inactive"
 
+if [ -d /mnt/state ]; then
+	# Save VPN state for rollbacks
+	if [ -e /var/run/openvpn/vpn_status/active ]; then
+		echo "BALENAOS_ROLLBACK_VPNONLINE=1" > /mnt/state/rollback-health-variables ;
+	else
+		echo "BALENAOS_ROLLBACK_VPNONLINE=0" > /mnt/state/rollback-health-variables ;
+	fi
+	sync -f /mnt/state
+fi
+
 # Initialize sysroot
 mkdir -p /mnt/sysroot
 for dir in 'dev' 'etc' 'balena' 'hostapps' 'mnt/state' 'proc' 'sbin' 'sys' 'tmp'; do

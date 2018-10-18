@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Copyright 2018 Resinio Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -e
+
+AUTH_KEYS_BASE="/home/root/.ssh"
+AUTH_KEYS="$AUTH_KEYS_BASE/authorized_keys"
+AUTH_KEYS_REMOTE="$AUTH_KEYS_BASE/authorized_keys_remote"
+AUTH_KEYS_LOCAL="$AUTH_KEYS_BASE/authorized_keys_local"
+AUTH_KEYS_PERM="600"
+
+all_keys=""
+
+for file in $AUTH_KEYS_REMOTE $AUTH_KEYS_LOCAL; do
+	if [ -f "$file" ]; then
+		all_keys="$(printf '%s\n# From %s\n%s' "$all_keys" "$file" "$(cat $file)")"
+	fi
+done
+
+if [ ! -f "$AUTH_KEYS" ] || [ "$(cat "$AUTH_KEYS")" != "$all_keys" ]; then
+	printf '%s\n' "$all_keys" > "${AUTH_KEYS}.tmp"
+	chmod "$AUTH_KEYS_PERM" "${AUTH_KEYS}.tmp"
+	sync ${AUTH_KEYS}.tmp
+	mv ${AUTH_KEYS}.tmp ${AUTH_KEYS}
+fi

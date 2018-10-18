@@ -6,22 +6,72 @@
 
 set -o errexit
 
+. /usr/sbin/resin-vars
+
+verifyMd5sum() {
+  if [ "$1" = "$3" ] ; then return 1; fi
+}
+
+getSize() {
+  echo $(du -sb "$1" | awk '{print $1}')
+}
+
 DURING_UPDATE=${DURING_UPDATE:-0}
 
 if [ "$DURING_UPDATE" = "1" ]; then
-	SYSROOT="/mnt/sysroot/inactive"
+    SYSROOT="/mnt/sysroot/inactive"
 else
-	SYSROOT="/mnt/sysroot/active"
+    SYSROOT="/mnt/sysroot/active"
 fi
 
 new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT)
+blockdev=$(basename "$new_part")
+new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 new_part_label=$(blkid "$new_part" | awk '{print $2}' | cut -d'"' -f 2)
 
-printf "[INFO] Switching root partition to %s..." "$new_part_label..."
-grub_cfg=$(find /mnt/boot/ -name grub.cfg)
-sed "s/resin-root./"$new_part_label"/" "$grub_cfg" > "$grub_cfg".new
+printf "[INFO] Switching root partition to %s...\n" "$new_part_label..."
+
+# flash legacy grub only if we do not support UEFI
+if [ ! -d /sys/firmware/efi ] ; then
+    # Remove EFI
+    rm -rf "$RESIN_BOOT_MOUNTPOINT/EFI" || true
+
+    MBR=512
+    reservedMBR=66
+    sourcePath="/resin-boot/grub/"
+    device="/dev/$(findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active | xargs lsblk -no pkname)"
+
+    firstBootloader=boot.img
+    secondBootloader=core.img
+
+    md5sum_diskFirstBootloader=$(dd if=$device bs=1 count=$(getSize "$sourcePath$firstBootloader") | md5sum)
+    md5sum_diskSecondBootloader=$(dd if=$device skip=$MBR bs=1 count=$(getSize "$sourcePath$secondBootloader") | md5sum)
+
+    if verifyMd5sum $(md5sum $sourcePath$firstBootloader) $md5sum_diskFirstBootloader; then
+        dd if="$sourcePath$firstBootloader" of="$device" conv=fdatasync bs=1 count=$(expr $MBR - $reservedMBR)
+    fi
+    if verifyMd5sum $(md5sum $sourcePath$secondBootloader) $md5sum_diskSecondBootloader; then
+        dd if="$sourcePath$secondBootloader" of="$device" conv=fdatasync bs=1 seek=$MBR
+    fi
+else
+    # Remove legacy grub
+    rm -rf "$RESIN_BOOT_MOUNTPOINT/grub" || true
+fi
+
+grub_cfg=$(find $RESIN_BOOT_MOUNTPOINT -name grub.cfg)
+grub_env=$(find $RESIN_BOOT_MOUNTPOINT -name grubenv)
+
+if  grep -q upgrade_available "$grub_cfg" ; then
+    printf "[INFO] Automated Rollback support in grub.cfg detected \n"
+    sed "s#resin_root_part=.*#resin_root_part="$new_part_idx"#g" "$grub_cfg" > "$grub_cfg".new
+    sed -i "s#upgrade_available=.*#upgrade_available="$DURING_UPDATE"#g" "$grub_cfg".new
+    sed -i "s#bootcount=.*#bootcount=0 #g" "$grub_env"
+else
+    printf "[INFO] Automated Rollback is not supported by grub config file for this device \n"
+    sed "s/resin-root./"$new_part_label"/" "$grub_cfg" > "$grub_cfg".new
+fi
 
 sync -f $(dirname "$grub_cfg")
 mv "$grub_cfg".new "$grub_cfg"
 sync -f $(dirname "$grub_cfg")
-printf " done.\n"
+printf "[INFO] Switch root done.\n"
