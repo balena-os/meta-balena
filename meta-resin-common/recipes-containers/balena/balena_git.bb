@@ -22,6 +22,7 @@ SRC_URI = "\
 	file://balena-healthcheck \
 	file://var-lib-docker.mount \
 	file://balena.conf.systemd \
+	file://balena-tmpfiles.conf \
 	"
 S = "${WORKDIR}/git"
 
@@ -166,6 +167,9 @@ do_install() {
 	install -d ${D}${localstatedir}/lib/docker
 	ln -sf docker ${D}${localstatedir}/lib/balena
 	ln -sf docker ${D}${localstatedir}/lib/balena-engine
+
+	install -d ${D}${sysconfdir}/tmpfiles.d
+	install -m 0644 ${WORKDIR}/balena-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
 }
 
 BBCLASSEXTEND = " native"
