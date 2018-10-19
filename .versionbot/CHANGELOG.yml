@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update to ModemManager v1.8.2
+      hash: 9724fad538360cd2291889608dfab1c8c42939c6
+      body: |
+        Fixes #1209
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update to ModemManager v1.8.2
+        changelog-entry: Update to ModemManager v1.8.2
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.22.0
+  date: 2018-10-19T09:29:39.419Z
+- commits:
     - subject: Improve systemd service ordering in rollbacks
       hash: 1d729dec436d0cb2eeb8a6799a8b978aceba8f8d
       body: ''

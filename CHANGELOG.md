@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.22.0
+## (2018-10-19)
+
+* Update to ModemManager v1.8.2 [Andrei Gherzan]
+
 # v2.21.0
 ## (2018-10-18)
 
