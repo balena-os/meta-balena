@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.22.0
+## (2018-10-19)
+
+* Update resin-supervisor to v7.25.1 [Andrei Gherzan]
+* Include a CONTRIBUTING.md file [Andrei Gherzan]
+* Update to ModemManager v1.8.2 [Andrei Gherzan]
+* Updates on contributing-device-support.md [Vicentiu Galanopulo]
+
 # v2.21.0
 ## (2018-10-18)
 

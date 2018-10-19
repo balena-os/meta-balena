@@ -1,4 +1,53 @@
 - commits:
+    - subject: Update resin-supervisor to v7.25.1
+      hash: 4df59542ffbbf71359d19412ed4cf9fd5f28a81f
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v7.25.1
+        changelog-entry: Update resin-supervisor to v7.25.1
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Include a CONTRIBUTING.md file
+      hash: dc52652d23f3b221d988e78e889427a0e7d56491
+      body: |
+        Fixes #422
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Include a CONTRIBUTING.md file
+        changelog-entry: Include a CONTRIBUTING.md file
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update to ModemManager v1.8.2
+      hash: 9724fad538360cd2291889608dfab1c8c42939c6
+      body: |
+        Fixes #1209
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update to ModemManager v1.8.2
+        changelog-entry: Update to ModemManager v1.8.2
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Updates on contributing-device-support.md
+      hash: 6dd80432032e91b65bf08a8f8fcaaf1d552cf206
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Updates on contributing-device-support.md
+        changelog-entry: Updates on contributing-device-support.md
+        Signed-off-by: Vicentiu Galanopulo <vicentiu@resin.io>
+        signed-off-by: Vicentiu Galanopulo <vicentiu@resin.io>
+      author: Vicentiu Galanopulo
+  version: 2.22.0
+  date: 2018-10-19T15:15:37.621Z
+- commits:
     - subject: Improve systemd service ordering in rollbacks
       hash: 1d729dec436d0cb2eeb8a6799a8b978aceba8f8d
       body: ''
