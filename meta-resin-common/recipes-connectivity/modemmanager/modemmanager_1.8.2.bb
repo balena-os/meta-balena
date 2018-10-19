@@ -14,8 +14,8 @@ DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native"
 SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
            file://0001-Add-configure-check-for-canonicalize_file_name-befor.patch \
            "
-SRC_URI[md5sum] = "89d9d6b230bbdd5e54a7c44f423cf34c"
-SRC_URI[sha256sum] = "18abe34421aa3b52ff47d4ba93aa282f8f8944717dd644a5c0c81eeeac9c7eb1"
+SRC_URI[md5sum] = "a49c9f73e46c7b89e5efedda250d22c0"
+SRC_URI[sha256sum] = "96f2a5f0ed15532b4c4c185b756fdc0326e7c2027cea26a1264f91e098260f80"
 
 S = "${WORKDIR}/ModemManager-${PV}"
 
