@@ -15,7 +15,7 @@ MountFlags=slave
 LimitNOFILE=1048576
 LimitNPROC=1048576
 LimitCORE=infinity
-WatchdogSec=60
+WatchdogSec=180
 Restart=always
 
 [Install]
