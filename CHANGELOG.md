@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.23.0
+## (2018-10-22)
+
+* Update resin-supervisor to v7.25.5 [Cameron Diver]
+* Recipes-containers: Increase healthcheck timeout to 180s [Gergely Imreh]
+* .gitignore: add node_modules and package-lock files [Giovanni Garufi]
+
 # v2.22.1
 ## (2018-10-20)
 
