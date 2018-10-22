@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.22.2
+## (2018-10-22)
+
+* .gitignore: add node_modules and package-lock files [Giovanni Garufi]
+
 # v2.22.1
 ## (2018-10-20)
 
