@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.22.2
+## (2018-10-22)
+
+* Recipes-containers: Increase healthcheck timeout to 180s [Gergely Imreh]
+
 # v2.22.1
 ## (2018-10-20)
 

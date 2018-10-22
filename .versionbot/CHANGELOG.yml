@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'recipes-containers: Increase healthcheck timeout to 180s'
+      hash: 8eb9b7bbd6fd84c5cc852d8c5e040bd4f0ba2367
+      body: |
+        The original 60s might be slow for some devices where balena
+        is busy with a task and the hardware is slow for various
+        reasons (ie. Pi1/Zero). In those cases even if the device
+        is functioning correctly, the healthcheck will assess the
+        device as unhealthy and restart balena and/or the supervisor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Gergely Imreh <gergely@balena.io>
+        signed-off-by: Gergely Imreh <gergely@balena.io>
+      author: Gergely Imreh
+  version: 2.22.2
+  date: 2018-10-22T16:47:01.558Z
+- commits:
     - subject: Update resin-supervisor to v7.25.3
       hash: dd4966235420be328f6280fa170d17f5570dbfa2
       body: ''
