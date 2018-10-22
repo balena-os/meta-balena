@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.23.0
+## (2018-10-22)
+
+* Update resin-supervisor to v7.25.5 [Cameron Diver]
+
 # v2.22.1
 ## (2018-10-20)
 

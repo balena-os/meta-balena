@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update resin-supervisor to v7.25.5
+      hash: a8880257d8098b6f592a491e253829f849d4ab5e
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v7.25.5
+        changelog-entry: Update resin-supervisor to v7.25.5
+        Signed-off-by: Cameron Diver <cameron@resin.io>
+        signed-off-by: Cameron Diver <cameron@resin.io>
+      author: Cameron Diver
+  version: 2.23.0
+  date: 2018-10-22T14:15:25.609Z
+- commits:
     - subject: Update resin-supervisor to v7.25.3
       hash: dd4966235420be328f6280fa170d17f5570dbfa2
       body: ''
