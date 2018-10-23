@@ -2,8 +2,8 @@
 require conf/distro/poky.conf
 require conf/distro/include/security_flags.inc
 
-DISTRO = "resin-os"
-DISTRO_NAME = "Resin OS"
+DISTRO = "balena-os"
+DISTRO_NAME = "balenaOS"
 DISTRO_VERSION = "2.23.0"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
@@ -25,7 +25,7 @@ python () {
         return
 }
 
-MAINTAINER = "Resin <hello@resin.io>"
+MAINTAINER = "Balena <hello@balena.io>"
 
 # Strip down unneeded features
 POKY_DEFAULT_DISTRO_FEATURES_remove = "ptest"
