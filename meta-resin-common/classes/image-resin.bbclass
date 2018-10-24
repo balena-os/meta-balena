@@ -57,7 +57,7 @@ init_config_json() {
    echo $(cat ${1}/config.json | jq -S ".deviceType=$slug") > ${1}/config.json
 
    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
-       echo $(cat ${1}/config.json | jq -S ".hostname=\"resin\"") > ${1}/config.json
+       echo $(cat ${1}/config.json | jq -S ".hostname=\"balena\"") > ${1}/config.json
    fi
 }
 
