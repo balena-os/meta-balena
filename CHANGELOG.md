@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.24.0
+## (2018-10-24)
+
+* Resin-info: Small tweak for balenaCloud product [Andrei Gherzan]
+* Update resin-supervisor to v7.25.8 [Pablo Carranza Velez]
+* Rename resinOS to balenaOS [Andrei Gherzan]
+
 # v2.23.0
 ## (2018-10-22)
 

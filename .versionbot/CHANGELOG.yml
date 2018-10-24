@@ -1,4 +1,41 @@
 - commits:
+    - subject: 'resin-info: Small tweak for balenaCloud product'
+      hash: 74f795dc2251266622f44f0a32162adfbbc432e3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@resin.io>
+        signed-off-by: Andrei Gherzan <andrei@resin.io>
+      author: Andrei Gherzan
+    - subject: Update resin-supervisor to v7.25.8
+      hash: 4806e3340d75cb76437311bd44a93e40360f90ed
+      body: ''
+      footer:
+        Changelog-entry: Update resin-supervisor to v7.25.8
+        changelog-entry: Update resin-supervisor to v7.25.8
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+        signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+      author: Pablo Carranza Velez
+    - subject: Rename resinOS to balenaOS
+      hash: d2a7e648b2ccefe46f67fb02c0f382c958aad5e5
+      body: |
+        As part of resin rename to balena, we rename the distro file including
+        the OS name which is part of the distro name. This ends up in the
+        dashboard as part of the OS version.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Rename resinOS to balenaOS
+        changelog-entry: Rename resinOS to balenaOS
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.24.0
+  date: 2018-10-24T01:06:11.405Z
+- commits:
     - subject: Update resin-supervisor to v7.25.5
       hash: 21d97fc5d73e2a97760b9328d099ea8b7daaee39
       body: ''
