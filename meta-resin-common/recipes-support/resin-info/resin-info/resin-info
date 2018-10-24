@@ -9,4 +9,4 @@ echo '
  | |_) | (_) || ||  ___/| | | || (_) | | |__| | ____) |
  |_.__/ \__,_||_| \____/|_| |_| \__,_|  \____/ |_____/
  -----------------------------------------------------' > /dev/"$1"
-echo "Booted - Check your balena.io dashboard." > /dev/"$1"
+echo "Booted - Check your balenaCloud dashboard." > /dev/"$1"
