@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update resin-supervisor to v7.25.8
+      hash: 0129c709a15069681ab103de36d782211bc4fce9
+      body: ''
+      footer:
+        Changelog-entry: Update resin-supervisor to v7.25.8
+        changelog-entry: Update resin-supervisor to v7.25.8
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+        signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+      author: Pablo Carranza Velez
+  version: 2.23.1
+  date: 2018-10-25T11:13:25.927Z
+- commits:
     - subject: Update resin-supervisor to v7.25.5
       hash: 21d97fc5d73e2a97760b9328d099ea8b7daaee39
       body: ''
