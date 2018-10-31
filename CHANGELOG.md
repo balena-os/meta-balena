@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.25.0
+## (2018-10-31)
+
+* [WIP] Compile kernel with eBPF tracing subsystem support enabled [Matthew McGinn]
+
 # v2.24.0
 ## (2018-10-24)
 

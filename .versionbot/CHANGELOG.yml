@@ -1,4 +1,16 @@
 - commits:
+    - subject: '[WIP] Compile kernel with eBPF tracing subsystem support enabled'
+      hash: c5aa298bd03bc7731aa05f9929071550751b5190
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew McGinn <mamcgi@gmail.com>
+        signed-off-by: Matthew McGinn <mamcgi@gmail.com>
+      author: Matthew McGinn
+  version: 2.25.0
+  date: 2018-10-31T15:56:56.644Z
+- commits:
     - subject: 'resin-info: Small tweak for balenaCloud product'
       hash: 74f795dc2251266622f44f0a32162adfbbc432e3
       body: ''
