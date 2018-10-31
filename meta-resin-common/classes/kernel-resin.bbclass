@@ -84,6 +84,7 @@ RESIN_CONFIGS ?= " \
     mbim \
     qmi \
     misc \
+    ebpf \
     redsocks \
     reduce-size \
     security \
@@ -379,6 +380,15 @@ RESIN_CONFIGS[misc] = " \
     CONFIG_NF_NAT_REDIRECT=m \
     CONFIG_IP_NF_TARGET_LOG=m \
     CONFIG_PANIC_TIMEOUT=1 \
+    "
+
+# support for eBPF tracing subsystem
+RESIN_CONFIGS[ebpf] = " \
+    CONFIG_BPF=y \
+    CONFIG_BPF_SYSCALL=y \
+    CONFIG_BPF_JIT=y \
+    CONFIG_HAVE_EBPF_JIT=y \
+    CONFIG_BPF_EVENTS=y \
     "
 
 # configs needed for our usage of redsocks
