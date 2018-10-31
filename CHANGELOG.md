@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.13.0
+## (2018-10-31)
+
+* Fix extraneous space in kernel-resin.bbclass config [Florin Sarbu]
+* Update supervisor to v7.1.20 [Akis Kesoglou]
+
 # v2.12.5
 ## (2018-03-22)
 
