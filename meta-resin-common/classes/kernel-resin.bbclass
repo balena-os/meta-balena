@@ -676,7 +676,7 @@ do_kernel_resin_injectconfig[dirs] += "${WORKDIR} ${B}"
 # Reconfigure kernel after we inject resin configs
 #
 do_kernel_resin_reconfigure() {
-    eval ${KERNEL_CONFIG_COMMAND}
+    ${KERNEL_CONFIG_COMMAND}
 }
 addtask kernel_resin_reconfigure after do_kernel_resin_injectconfig before do_compile
 do_kernel_resin_reconfigure[vardeps] += "RESIN_CONFIGS RESIN_CONFIGS_DEPS"
