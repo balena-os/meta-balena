@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.25.0
+## (2018-11-01)
+
+* Systemd: Add SYSLOG_IDENTIFIER to healthdog processes for clarity [Matthew McGinn]
+
 # v2.24.0
 ## (2018-10-24)
 

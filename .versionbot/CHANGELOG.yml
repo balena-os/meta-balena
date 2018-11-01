@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'systemd: Add SYSLOG_IDENTIFIER to healthdog processes for clarity'
+      hash: b54143eed928e4786990865c7b2af7a46935ecdc
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew McGinn <mamcgi@gmail.com>
+        signed-off-by: Matthew McGinn <mamcgi@gmail.com>
+      author: Matthew McGinn
+  version: 2.25.0
+  date: 2018-11-01T12:28:22.352Z
+- commits:
     - subject: 'resin-info: Small tweak for balenaCloud product'
       hash: 74f795dc2251266622f44f0a32162adfbbc432e3
       body: ''
