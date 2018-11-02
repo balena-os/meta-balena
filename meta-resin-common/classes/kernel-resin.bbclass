@@ -103,7 +103,7 @@ RESIN_CONFIGS_DEPS[balena] ?= " \
     CONFIG_NF_CONNTRACK=y \
     CONFIG_NF_CONNTRACK_IPV4=y \
     CONFIG_NETFILTER=y \
-    CONFIG_DEVPTS_MULTIPLE_INSTANCES =y \
+    CONFIG_DEVPTS_MULTIPLE_INSTANCES=y \
     "
 RESIN_CONFIGS[balena] ?= " \
     CONFIG_ADVISE_SYSCALLS=y \
@@ -676,7 +676,7 @@ do_kernel_resin_injectconfig[dirs] += "${WORKDIR} ${B}"
 # Reconfigure kernel after we inject resin configs
 #
 do_kernel_resin_reconfigure() {
-    eval ${KERNEL_CONFIG_COMMAND}
+    ${KERNEL_CONFIG_COMMAND}
 }
 addtask kernel_resin_reconfigure after do_kernel_resin_injectconfig before do_compile
 do_kernel_resin_reconfigure[vardeps] += "RESIN_CONFIGS RESIN_CONFIGS_DEPS"
