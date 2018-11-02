@@ -1,4 +1,58 @@
 - commits:
+    - subject: Generate ssh host key at first boot (not at first connection)
+      hash: aea0382c5e6c26933767a931f3a0df45e3cde233
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Generate ssh host key at first boot (not at first connection)
+        changelog-entry: Generate ssh host key at first boot (not at first connection)
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Fix extraneous space in kernel-resin.bbclass config
+      hash: bf3124d468dfce8e9b4909965dfea05752835b33
+      body: |
+        This extra space leads to kernel config check error
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Fix extraneous space in kernel-resin.bbclass config
+        changelog-entry: Fix extraneous space in kernel-resin.bbclass config
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Drop obsolete eval from kernel-resin's do_kernel_resin_reconfigure
+      hash: 1b882e69d125c4cd84a8ebd8298eb294d52d5574
+      body: |
+        This is not needed as bitbake already expands KERNEL_CONFIG_COMMAND
+        See Poky commit 95909bc788bef1baabead94231dffb3b7f59fb00 for details
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Drop obsolete eval from kernel-resin's do_kernel_resin_reconfigure
+        changelog-entry: Drop obsolete eval from kernel-resin's do_kernel_resin_reconfigure
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Add SyslogIdentifier for balena and resin-supervisor healthdog services
+      hash: 23fadcc59cc2b353b68264220e35fa1c06b97444
+      body: ''
+      footer:
+        Changelog-entry: >-
+          Add SyslogIdentifier for balena and resin-supervisor healthdog
+          services
+        changelog-entry: >-
+          Add SyslogIdentifier for balena and resin-supervisor healthdog
+          services
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Matthew McGinn <mamcgi@gmail.com>
+        signed-off-by: Matthew McGinn <mamcgi@gmail.com>
+      author: Matthew McGinn
+  version: 2.25.0
+  date: 2018-11-02T15:58:49.876Z
+- commits:
     - subject: Update resin-supervisor to v8.0.0
       hash: 01511f5902e83f80e93a37b5e5cffd59654e5c04
       body: ''
