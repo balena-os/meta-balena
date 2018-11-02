@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update resin-supervisor to v8.0.0
+      hash: 01511f5902e83f80e93a37b5e5cffd59654e5c04
+      body: ''
+      footer:
+        Changelog-entry: Update resin-supervisor to v8.0.0
+        changelog-entry: Update resin-supervisor to v8.0.0
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+        signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+      author: Pablo Carranza Velez
+  version: 2.24.1
+  date: 2018-11-01T16:25:19.386Z
+- commits:
     - subject: 'resin-info: Small tweak for balenaCloud product'
       hash: 74f795dc2251266622f44f0a32162adfbbc432e3
       body: ''
