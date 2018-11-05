@@ -15,7 +15,7 @@ SYSTEMD_SERVICE_${PN} = "resin-hostname.service"
 RDEPENDS_${PN} = " \
     coreutils \
     jq \
-    resin-unique-key \
+    balena-unique-key \
     "
 
 do_install() {

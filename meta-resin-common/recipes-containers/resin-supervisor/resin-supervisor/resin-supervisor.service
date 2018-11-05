@@ -2,13 +2,13 @@
 Description=Resin supervisor
 Requires=\
     resin\x2ddata.mount \
-    resin-device-uuid.service \
+    balena-device-uuid.service \
     os-config-devicekey.service \
     bind-etc-resin-supervisor.service
 After=\
     balena.service \
     resin\x2ddata.mount \
-    resin-device-uuid.service \
+    balena-device-uuid.service \
     os-config-devicekey.service \
     bind-etc-systemd-system-resin.target.wants.service \
     bind-etc-resin-supervisor.service \
