@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.26.0
+## (2018-11-05)
+
+* Rename resin-unique-key to balena-unique-key [Andrei Gherzan]
+* Don't let resin-unique-key rewrite config.json [Andrei Gherzan]
+
 # v2.25.0
 ## (2018-11-02)
 

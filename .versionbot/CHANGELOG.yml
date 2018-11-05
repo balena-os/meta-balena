@@ -1,4 +1,30 @@
 - commits:
+    - subject: Rename resin-unique-key to balena-unique-key
+      hash: da871aeb64dffcb84c2fad75b299f661cab40c3d
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Rename resin-unique-key to balena-unique-key
+        changelog-entry: Rename resin-unique-key to balena-unique-key
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Don't let resin-unique-key rewrite config.json
+      hash: 58685dd3accb19b159adc933d3b203c615675343
+      body: |
+        Fixes #1262
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Don't let resin-unique-key rewrite config.json
+        changelog-entry: Don't let resin-unique-key rewrite config.json
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.26.0
+  date: 2018-11-05T15:22:47.685Z
+- commits:
     - subject: Generate ssh host key at first boot (not at first connection)
       hash: aea0382c5e6c26933767a931f3a0df45e3cde233
       body: ''
