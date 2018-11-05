@@ -100,8 +100,9 @@ We currently test as part of our release process and provide explicit support fo
   * Huawei MS2131i-8
   * Huawei MS2372
 * mPCI modems (tested on Balena Fin and Nvidia TX2 Spacely carrier)
+  * Huawei ME909s-120
   * Quectel EC20
-  * SIM7100E
+  * SIM7600E
 
 ## How to fix various build errors
 
