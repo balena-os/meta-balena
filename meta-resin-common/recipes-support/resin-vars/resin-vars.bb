@@ -6,6 +6,8 @@ SRC_URI = " \
     file://resin-vars \
     file://config-json.path \
     file://config-json.service \
+    file://os-networkmanager \
+    file://os-networkmanager.service \
     file://os-udevrules \
     file://os-udevrules.service \
     file://os-sshkeys \
@@ -27,6 +29,7 @@ do_build[noexec] = "1"
 SYSTEMD_SERVICE_${PN} = " \
     config-json.path \
     config-json.service \
+    os-networkmanager.service \
     os-udevrules.service \
     os-sshkeys.service \
     "
@@ -34,6 +37,7 @@ SYSTEMD_SERVICE_${PN} = " \
 do_install() {
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/resin-vars ${D}${sbindir}/
+    install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/
 
@@ -41,6 +45,7 @@ do_install() {
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/config-json.path ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/config-json.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/os-networkmanager.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/os-udevrules.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/os-sshkeys.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
