@@ -168,7 +168,7 @@ An example config.json snippet with 2 rules:
  }
 ```
 
-This will create `/etc/udev/rules.d/99.rules` and `/etc/udev/rules.d/60.rules`
+This will create `/etc/udev/rules.d/56.rules` and `/etc/udev/rules.d/64.rules`
 The first time rules are added/modified, these rules will be added and udevd will be asked to reload rules and re-trigger.
 
 #### sshKeys
