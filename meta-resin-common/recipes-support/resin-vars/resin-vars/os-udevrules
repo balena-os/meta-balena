@@ -50,4 +50,7 @@ if [ ! -z "$keys" ]; then
 	fi
 else
 	echo "$base: No custom udev rules found in $CONFIG_PATH"
+	if [ "$(ls -A /etc/udev/rules.d -I README)" ]; then
+		rm /etc/udev/rules.d/* || true
+	fi
 fi
