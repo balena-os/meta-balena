@@ -143,6 +143,35 @@ String. A space-separated list of preferred DNS servers to use for name resoluti
 
 Multiple settings that customize the OS at runtime are nested under here.
 
+#### networkManager
+
+String. Custom config fragments can be passed to NetworkManager via config.json.
+
+To turn a config fragment into the format that can be easily added to config.json, use
+
+`cat conf_filename | jq -sR .`
+e.g.
+```
+root@balena:~# cat /etc/NetworkManager/conf.d/20.conf | jq -sR .
+"[connectivity]\nuri=http://www.archlinux.org/check_network_status.txt\ninterval=10\n"
+root@balena:~# cat /etc/NetworkManager/conf.d/21.conf | jq -sR .
+"[logging]\nlevel=DEBUG\ndomains=CONCHECK\n"
+root@balena:~#
+```
+
+An example config.json snippet with 2 rules:
+```
+"os": {
+  "networkManager" : {
+   "20" : "[connectivity]\nuri=http://www.archlinux.org/check_network_status.txt\ninterval=10\n",
+   "21" : "[logging]\nlevel=DEBUG\ndomains=CONCHECK\n"
+  }
+}
+```
+
+This will create `/etc/NetworkManager/conf.d/20.conf` and `/etc/NetworkManager/conf.d/21.conf`
+These conf fragments will be added before NetworkManager is started by systemd.
+
 #### udevRules
 
 String. Custom udev rules can be passed via config.json.
