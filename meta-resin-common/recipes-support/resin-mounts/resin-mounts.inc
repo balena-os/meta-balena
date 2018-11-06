@@ -19,6 +19,7 @@ BINDMOUNTS += " \
 	/etc/dropbear \
 	/etc/hostname \
 	/etc/openvpn \
+	/etc/NetworkManager/conf.d \
 	/etc/NetworkManager/system-connections \
 	/etc/udev/rules.d \
 	/home/root/.rnd \
@@ -53,6 +54,9 @@ do_compile () {
 			# This bind mount is only invoked manually in persistent logs
 			# service. No need to run it with default target.
 			sed -i -e "/^WantedBy=/ d" $servicefile
+		elif [ "$bindmount" = "/etc/NetworkManager/conf.d" ]; then
+			# This bind mount needs to be running before the NetworkManager service starts for os-networkmanager
+			sed -i -e "/^Before=/s/\$/ NetworkManager.service/" $servicefile
 		elif [ "$bindmount" = "/etc/udev/rules.d" ]; then
 			# This bind mount needs to be running before the udev service starts for os-udevrules
 			sed -i -e "/^Before=/s/\$/ systemd-udevd.service/" $servicefile
