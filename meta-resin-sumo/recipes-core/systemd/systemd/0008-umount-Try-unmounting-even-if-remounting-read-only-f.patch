@@ -1,0 +1,45 @@
+From 8645ffd12b3cc7b0292acd9e1d691c4fab4cf409 Mon Sep 17 00:00:00 2001
+From: Jan Janssen <medhefgo@web.de>
+Date: Thu, 8 Mar 2018 18:46:58 +0100
+Subject: [PATCH] umount: Try unmounting even if remounting read-only failed
+
+In the case of some api filesystems remounting read-only fails
+while unmounting succeeds.
+
+Upstream-Status: Backport
+Signed-off-by: Florin Sarbu <florin@balena.io>
+---
+ src/core/umount.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/src/core/umount.c b/src/core/umount.c
+index 9770bdb..40153de 100644
+--- a/src/core/umount.c
++++ b/src/core/umount.c
+@@ -519,16 +519,19 @@ static int mount_points_list_umount(MountPoint **head, bool *changed) {
+                          * somehwere else via a bind mount. If we
+                          * explicitly remount the super block of that
+                          * alias read-only we hence should be
+-                         * relatively safe regarding keeping dirty an fs
++                         * relatively safe regarding keeping a dirty fs
+                          * we cannot otherwise see.
+                          *
+                          * Since the remount can hang in the instance of
+                          * remote filesystems, we remount asynchronously
+-                         * and skip the subsequent umount if it fails */
++                         * and skip the subsequent umount if it fails. */
+                         if (remount_with_timeout(m) < 0) {
+-                                if (nonunmountable_path(m->path))
++                                /* Remount failed, but try unmounting anyway,
++                                 * unless this is a mount point we want to skip. */
++                                if (nonunmountable_path(m->path)) {
+                                         n_failed++;
+-                                continue;
++                                        continue;
++                                }
+                         }
+                 }
+ 
+-- 
+2.7.4
+
