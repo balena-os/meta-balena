@@ -1,0 +1,135 @@
+From 9e7f941acb0d8fe7a31eec7826ff2c9c6af7044f Mon Sep 17 00:00:00 2001
+From: Yu Watanabe <watanabe.yu+github@gmail.com>
+Date: Thu, 15 Feb 2018 09:32:04 +0900
+Subject: [PATCH] mount-util: add mount_option_mangle()
+
+This is used in the later commits.
+
+Upstream-Status: Backport
+Signed-off-by: Florin Sarbu <florin@balena.io>
+---
+ src/basic/meson.build  |  1 +
+ src/basic/mount-util.c | 74 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ src/basic/mount-util.h |  6 ++++
+ 3 files changed, 81 insertions(+)
+
+diff --git a/src/basic/meson.build b/src/basic/meson.build
+index 44cd31e..d0e499d 100644
+--- a/src/basic/meson.build
++++ b/src/basic/meson.build
+@@ -317,6 +317,7 @@ libbasic = static_library(
+         dependencies : [threads,
+                         libcap,
+                         libblkid,
++                        libmount,
+                         libselinux],
+         c_args : ['-fvisibility=default'],
+         install : false)
+diff --git a/src/basic/mount-util.c b/src/basic/mount-util.c
+index b124345..83465b5 100644
+--- a/src/basic/mount-util.c
++++ b/src/basic/mount-util.c
+@@ -27,8 +27,12 @@
+ #include <sys/statvfs.h>
+ #include <unistd.h>
+ 
++/* Include later */
++#include <libmount.h>
++
+ #include "alloc-util.h"
+ #include "escape.h"
++#include "extract-word.h"
+ #include "fd-util.h"
+ #include "fileio.h"
+ #include "fs-util.h"
+@@ -874,3 +878,73 @@ int mount_propagation_flags_from_string(const char *name, unsigned long *ret) {
+                 return -EINVAL;
+         return 0;
+ }
++
++int mount_option_mangle(
++                const char *options,
++                unsigned long mount_flags,
++                unsigned long *ret_mount_flags,
++                char **ret_remaining_options) {
++
++        const struct libmnt_optmap *map;
++        _cleanup_free_ char *ret = NULL;
++        const char *p;
++        int r;
++
++        /* This extracts mount flags from the mount options, and store
++         * non-mount-flag options to '*ret_remaining_options'.
++         * E.g.,
++         * "rw,nosuid,nodev,relatime,size=1630748k,mode=700,uid=1000,gid=1000"
++         * is split to MS_NOSUID|MS_NODEV|MS_RELATIME and
++         * "size=1630748k,mode=700,uid=1000,gid=1000".
++         * See more examples in test-mount-utils.c.
++         *
++         * Note that if 'options' does not contain any non-mount-flag options,
++         * then '*ret_remaining_options' is set to NULL instread of empty string.
++         * Note that this does not check validity of options stored in
++         * '*ret_remaining_options'.
++         * Note that if 'options' is NULL, then this just copies 'mount_flags'
++         * to '*ret_mount_flags'. */
++
++        assert(ret_mount_flags);
++        assert(ret_remaining_options);
++
++        map = mnt_get_builtin_optmap(MNT_LINUX_MAP);
++        if (!map)
++                return -EINVAL;
++
++        p = options;
++        for (;;) {
++                _cleanup_free_ char *word = NULL;
++                const struct libmnt_optmap *ent;
++
++                r = extract_first_word(&p, &word, ",", EXTRACT_QUOTES);
++                if (r < 0)
++                        return r;
++                if (r == 0)
++                        break;
++
++                for (ent = map; ent->name; ent++) {
++                        /* All entries in MNT_LINUX_MAP do not take any argument.
++                         * Thus, ent->name does not contain "=" or "[=]". */
++                        if (!streq(word, ent->name))
++                                continue;
++
++                        if (!(ent->mask & MNT_INVERT))
++                                mount_flags |= ent->id;
++                        else if (mount_flags & ent->id)
++                                mount_flags ^= ent->id;
++
++                        break;
++                }
++
++                /* If 'word' is not a mount flag, then store it in '*ret_remaining_options'. */
++                if (!ent->name && !strextend_with_separator(&ret, ",", word, NULL))
++                        return -ENOMEM;
++        }
++
++        *ret_mount_flags = mount_flags;
++        *ret_remaining_options = ret;
++        ret = NULL;
++
++        return 0;
++}
+diff --git a/src/basic/mount-util.h b/src/basic/mount-util.h
+index a81d019..fea3e93 100644
+--- a/src/basic/mount-util.h
++++ b/src/basic/mount-util.h
+@@ -67,3 +67,9 @@ int umount_verbose(const char *where);
+ 
+ const char *mount_propagation_flags_to_string(unsigned long flags);
+ int mount_propagation_flags_from_string(const char *name, unsigned long *ret);
++
++int mount_option_mangle(
++                const char *options,
++                unsigned long mount_flags,
++                unsigned long *ret_mount_flags,
++                char **ret_remaining_options);
+-- 
+2.7.4
+
