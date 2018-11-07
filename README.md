@@ -69,7 +69,11 @@ By the default the build system will set all the bits needed for the docker to b
 
 ## The OS
 
-## Time in the OS
+### SSH and Avahi services
+
+The OS runs SSH (dropbear) on port 22222. Running this service takes advantage of the socket activation systemd feature so dropbear will only run when there is a SSH connection to the device saving idle resources in this way. In order to connect to a device, one can use it's IP when known or resolve the hostname over mDNS as its hostname is advertised over network using an avahi service. When the latter is used, configuration of the client is needed (see for example https://wiki.archlinux.org/index.php/Avahi#Hostname_resolution). 
+
+### Time in the OS
 
 We currently have three time sources:
 
