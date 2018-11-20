@@ -10,6 +10,9 @@ case "$action" in
 	# Run resin-ntp-config to update chronyc from ntp servers in config.json
 	/usr/bin/resin-ntp-config
 
+	# Inform chrony we are online
+	/usr/bin/chronyc online
+
 	if [[ -n $DHCP4_NTP_SERVERS ]]; then
 		# Tell chronyd to use this server
 		for ntp in ${DHCP4_NTP_SERVERS}; do
