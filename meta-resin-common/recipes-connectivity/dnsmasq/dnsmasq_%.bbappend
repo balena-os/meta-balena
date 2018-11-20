@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/${PN}-bbappend"
+FILESEXTRAPATHS_prepend := "${THISDIR}/balena-files:"
 
 SRC_URI += " \
 	file://dnsmasq.conf.systemd \
