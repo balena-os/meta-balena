@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/files"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
     file://chrony.conf \
