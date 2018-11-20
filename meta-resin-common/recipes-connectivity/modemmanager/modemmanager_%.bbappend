@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/resin-files"
+FILESEXTRAPATHS_append := ":${THISDIR}/balena-files"
 SYSTEMD_AUTO_ENABLE = "enable"
 
 SRC_URI_append = " \
