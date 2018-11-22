@@ -1,4 +1,250 @@
 - commits:
+    - subject: Expose randomMacAddressScan config.json knob
+      hash: 6cffaf8b3196c2a783faa345b796941daf5832a0
+      body: |
+        For now only allow `wifi.scan-rand-mac-address` configurable from
+        config.json using `randomMacAddressScan` as the json key.
+
+        config.json snippet example:
+
+        "os": {
+          "network" : {
+            "wifi": {
+              "randomMacAddressScan": false
+            }
+          }
+        }
+
+        Fixes #1294
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Expose randomMacAddressScan config.json knob
+        changelog-entry: Expose randomMacAddressScan config.json knob
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Move modemmanager udev rules in /lib/udev/rules.d
+      hash: 3e33fb132b9f0a2238692e11c25a69b405ff27c5
+      body: |
+        The path where the udev rules are currently installed (etc) will be
+        shadowned at runtime because the etc udev rules path is bindmounted for
+        use with custom configuration from `config.json`.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Move modemmanager udev rules in /lib/udev/rules.d
+        changelog-entry: Move modemmanager udev rules in /lib/udev/rules.d
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Fix modemmanager bbappend files
+      hash: c725a1d994afbef19f43de59a92a19fe4479e305
+      body: |
+        The bbappend uses a local `resin-files` directory for additional file
+        entries but some of these files ended up in `files`. This works well if
+        the recipe used is the one in the same directory as the `files`
+        subdirectory will be used by default. The problem shows when the recipe
+        is not in the same directoy as bitbake will not be able to find needed
+        bbappended files.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Fix modemmanager bbappend files
+        changelog-entry: Fix modemmanager bbappend files
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'dnsmasq: Define 8.8.8.8 as a fallback nameserver'
+      hash: 80c2a2cb5a28bbc0d98f004e45103b6d4c863f73
+      body: |
+        Fixes #1293
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changel-log-entry: Restore 8.8.8.8 as fallback DNS server
+        changel-log-entry: Restore 8.8.8.8 as fallback DNS server
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Increase timeout for filesystem label
+      hash: 026506ba7ba3c3f98ea4c8b017c15f1df5d5539b
+      body: |
+        The label is actually a udev symlink, but we're keeping
+        this naming to be consistent across the file.
+
+        The error seen is that the balena-host service wasn't
+        able to start because of a mnt-sysroot-active.service dependency:
+        resin-partition-mounter[440]: ERROR: Timeout while waiting
+        for filesystem label to appear
+
+        By increasing this timeout, the filesystem symlink should
+        already exist, at the time the mnt-sysroot-active service is
+        looking for this dependency.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Increase timeout for filesystem label
+        changelog-entry: Increase timeout for filesystem label
+        Signed-off-by: Vicentiu Galanopulo <vicentiu@resin.io>
+        signed-off-by: Vicentiu Galanopulo <vicentiu@resin.io>
+      author: Vicentiu Galanopulo
+    - subject: Add support for Huawei ME936 modem in MBIM mode
+      hash: e7a4216d9974cada8bd0f19206eba224fa711548
+      body: |
+        Add udev rule and helper script to switch this modem to MBIM mode
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add support for Huawei ME936 modem in MBIM mode
+        changelog-entry: Add support for Huawei ME936 modem in MBIM mode
+        Signed-off-by: Florin Sarbu <florin@resin.io>
+        signed-off-by: Florin Sarbu <florin@resin.io>
+      author: Florin Sarbu
+    - subject: Backport systemd sd-shutdown improvements for sumo versions
+      hash: 56791ac315318340f119d5a438e65252314fcfab
+      body: |
+        OS 2.26.0+rev1 reports the following at reboot:
+        systemd-shutdown[1]: Failed to wait for process: Protocol error
+        systemd-shutdown[1]: Failed to wait for process: Protocol error
+
+        As per systemd/systemd#8155 (comment), systemd/systemd#8429
+        needs to be backported.
+
+        We currently backport these patches for sumo only
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Backport systemd sd-shutdown improvements for sumo versions
+        changelog-entry: Backport systemd sd-shutdown improvements for sumo versions
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Include avahi d-bus introspection files in rootfs
+      hash: 551734e4ecb32625a07e4e6aafce901b268a121a
+      body: >
+        Poky removes the dbus introspection description documents for avahi.
+
+        See:
+
+        http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=59a08907eafffde664079b9a2068f47131dd3f5d
+
+
+        dbus-native node module requires this data to be available to allow
+
+        access to interfaces.
+
+
+        Fixes #1140
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Include avahi d-bus introspection files in rootfs
+        changelog-entry: Include avahi d-bus introspection files in rootfs
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Fix custom udev rules when rule is removed from config.json
+      hash: b9f53cbb90a152924eeb317f0a9ff196eeb0f25e
+      body: |
+        Fixes #1271
+        When os.udevRules is completely removed from config.json, any previous
+        rules are left there. Remove them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix custom udev rules when rule is removed from config.json
+        changelog-entry: Fix custom udev rules when rule is removed from config.json
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'resin-mounts: Add NetworkManager conf.d bind mounts'
+      hash: e6d58b6fb8f15fbab20b48aa3949d051ba5fd4e2
+      body: |
+        This bind mount is used for passing custom config options to
+        NetworkManager via config.json
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Add support to pass custom configuration to NetworkManager
+      hash: 888dee4e554fd590d49811802f41bdc5c3a77955
+      body: |
+        This allows extra config fragments to be passed to NetworkManager
+        via config.json
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add support to pass custom configuration to NetworkManager
+        changelog-entry: Add support to pass custom configuration to NetworkManager
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'README.md: Add info about SSH and Avahi services'
+      hash: 9e8beb25da684eeaf933baf707922fd2cabb7d7e
+      body: |
+        Fixes #1274
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Avoid xtables lock in resin-proxy-config
+      hash: ec086c401e52fc009dd3bac98baa98413ec69a32
+      body: |
+        There are other components setting up iptables rules - for example
+        balena. In order to avoid a lock race, run iptables commands with a 10
+        seconds wait flag.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Avoid xtables lock in resin-proxy-config
+        changelog-entry: Avoid xtables lock in resin-proxy-config
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Migrate the supervisor to balena repositories
+      hash: 745688ddb0754fddec010e752310a57462aa26cb
+      body: |
+        This has changed from "resin" to "balena" due to the rename
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Migrate the supervisor to balena repositories
+        changelog-entry: Migrate the supervisor to balena repositories
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Update balena-supervisor to v8.3.5
+      hash: 5dc764f59f0cf2988cf7edb229c3ef59293cfbf8
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-supervisor to v8.3.5
+        changelog-entry: Update balena-supervisor to v8.3.5
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Update supported modems list
+      hash: d741247a00dd05d666c24eff721fe61996058e6c
+      body: |
+        We remove SIM7100E in favour of SIM7600E and
+        also add Huawei ME909s-120.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update supported modems list
+        changelog-entry: Update supported modems list
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+  version: 2.27.0
+  date: 2018-11-22T14:37:33.184Z
+- commits:
     - subject: Rename resin-unique-key to balena-unique-key
       hash: da871aeb64dffcb84c2fad75b299f661cab40c3d
       body: ''

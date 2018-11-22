@@ -4,7 +4,7 @@ require conf/distro/include/security_flags.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
-DISTRO_VERSION = "2.26.0"
+DISTRO_VERSION = "2.27.0"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''
