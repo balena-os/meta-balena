@@ -2,7 +2,7 @@
 
 set -e
 
-LABEL_TIMEOUT=30
+LABEL_TIMEOUT=190
 
 help () {
 	cat << EOF

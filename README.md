@@ -69,7 +69,11 @@ By the default the build system will set all the bits needed for the docker to b
 
 ## The OS
 
-## Time in the OS
+### SSH and Avahi services
+
+The OS runs SSH (dropbear) on port 22222. Running this service takes advantage of the socket activation systemd feature so dropbear will only run when there is a SSH connection to the device saving idle resources in this way. In order to connect to a device, one can use it's IP when known or resolve the hostname over mDNS as its hostname is advertised over network using an avahi service. When the latter is used, configuration of the client is needed (see for example https://wiki.archlinux.org/index.php/Avahi#Hostname_resolution). 
+
+### Time in the OS
 
 We currently have three time sources:
 
@@ -100,8 +104,9 @@ We currently test as part of our release process and provide explicit support fo
   * Huawei MS2131i-8
   * Huawei MS2372
 * mPCI modems (tested on Balena Fin and Nvidia TX2 Spacely carrier)
+  * Huawei ME909s-120
   * Quectel EC20
-  * SIM7100E
+  * SIM7600E
 
 ## How to fix various build errors
 
@@ -142,6 +147,25 @@ String. A space-separated list of preferred DNS servers to use for name resoluti
 
 Multiple settings that customize the OS at runtime are nested under here.
 
+#### network
+
+##### wifi
+
+This object defines configuration related to Wi-Fi as it follows:
+   * "randomMacAddressScan" string key where the value is a boolean
+      * Configures MAC address randomization of a Wi-Fi device during scanning.
+
+See below an example of a config.json snippet which disables MAC address randomization of Wi-Fi device during scanning:
+```
+"os": {
+  "network" : {
+    "wifi": {
+      "randomMacAddressScan": false
+    }
+  }
+}
+```
+
 #### udevRules
 
 String. Custom udev rules can be passed via config.json.
@@ -167,7 +191,7 @@ An example config.json snippet with 2 rules:
  }
 ```
 
-This will create `/etc/udev/rules.d/99.rules` and `/etc/udev/rules.d/60.rules`
+This will create `/etc/udev/rules.d/56.rules` and `/etc/udev/rules.d/64.rules`
 The first time rules are added/modified, these rules will be added and udevd will be asked to reload rules and re-trigger.
 
 #### sshKeys

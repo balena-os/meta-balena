@@ -1,8 +1,9 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/${PN}-bbappend"
+FILESEXTRAPATHS_prepend := "${THISDIR}/balena-files:"
 
 SRC_URI += " \
 	file://dnsmasq.conf.systemd \
 	file://resolv-conf.dnsmasq \
+	file://balena.conf \
 "
 
 inherit update-alternatives
@@ -13,6 +14,7 @@ do_install_append () {
 		install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
 		install -c -m 0644 ${WORKDIR}/resolv-conf.dnsmasq ${D}${sysconfdir}
 	fi
+	install -m 0644 ${WORKDIR}/balena.conf ${D}${sysconfdir}/dnsmasq.d
 }
 
 ALTERNATIVE_${PN} = "resolv-conf"

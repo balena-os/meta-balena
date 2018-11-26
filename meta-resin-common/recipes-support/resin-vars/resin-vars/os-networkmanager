@@ -1,0 +1,103 @@
+#!/bin/bash
+#
+# Copyright 2018 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -e
+
+tool="$(basename "$0")"
+nm_conf_fragment=/etc/NetworkManager/conf.d/os-networkmanager.conf
+
+# This defines config.json to NetworkManager values
+value_map='true=yes false=no'
+
+# Returnes the value of a key in a map variable
+# The map needs to be a space separated set of entries. Each key/value pair separated by '='
+# Returns:
+# 	If key exists in map: the value in 'value' variable.
+# 	If key not found: returns the key in 'value' variable.
+getValueInMap() {
+        local key="$1"
+        local map="$2"
+	# shellcheck disable=SC2001
+        value="$(echo "$map" | sed -e "s/.*${key}=\([^ ]*\).*/\1/")"
+	if [ "$value" = "$map" ]; then
+		value="$key"
+	fi
+}
+
+# Very simple logging function
+log() {
+	local level=$1
+	local msg=$2
+	echo "$tool: <$level> $msg"
+	if [ "$level" = "error" ]; then
+		echo "$tool: <$level> Exit due to fatal error."
+		exit 1
+	fi
+}
+
+#
+# MAIN
+#
+
+if [ ! -f "$CONFIG_PATH" ]; then
+	# shellcheck disable=SC1091
+	if [ -f /usr/sbin/resin-vars ]; then
+		. /usr/sbin/resin-vars
+	else
+		log "error" "Couldn't find /usr/sbin/resin-vars."
+	fi
+	if [ ! -f "$CONFIG_PATH" ]; then
+	       log "error" "No config.json found."
+	fi
+fi
+log "info" "Using $CONFIG_PATH config.json."
+
+# shellcheck disable=SC2153
+if [ -n "$NM_CONF_FRAGMENT" ]; then
+        nm_conf_fragment="$NM_CONF_FRAGMENT"
+fi
+log "info" "Using NetworkManager configuration fragment file in $NM_CONF_FRAGMENT."
+
+nm_config="# This file is generated based on os.networkManager configuration in config.json."
+
+# [Device]
+section="Device"
+s=0
+if ! config_json_value="$(jq -r " .os.network.wifi.randomMacAddressScan" "$CONFIG_PATH")"; then
+	log "error" "Error parsing $CONFIG_PATH."
+	exit 1
+fi
+if [ "$config_json_value" != "null" ]; then
+	log "info" "Found randomMacAddressScan configuration."
+	getValueInMap "$config_json_value" "$value_map"
+	if [ "$s" -eq 0 ]; then
+		nm_config="$(printf "%s\n[%s]" "$nm_config" "$section")"
+		s=1
+	fi
+	nm_config="$(printf "%s\nwifi.scan-rand-mac-address=%s" "$nm_config" "$value")"
+fi
+
+# Write final NM configuation fragment
+if [ ! -f "$nm_conf_fragment" ] || [ "$(cat \
+	"$nm_conf_fragment")" != "$nm_config" ]; then
+	log "info" "Writing/initialiazing custom NM configuration."
+	echo "$nm_config" > "$nm_conf_fragment.tmp"
+	sync -f "$nm_conf_fragment.tmp"
+	mv "$nm_conf_fragment.tmp" "$nm_conf_fragment"
+else
+	log "info" "NM custom configuration fragment already in place."
+fi
