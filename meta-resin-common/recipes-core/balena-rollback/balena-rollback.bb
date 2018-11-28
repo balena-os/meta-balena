@@ -18,8 +18,10 @@ LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99
 
 SRC_URI = " \
     file://rollback-altboot.service \
+    file://rollback-clear-bootcount.service \
     file://rollback-health.service \
     file://rollback-altboot \
+    file://rollback-clear-bootcount \
     file://rollback-health \
     file://rollback-stop \
     file://rollback-tests \
@@ -32,16 +34,19 @@ inherit allarch systemd
 SYSTEMD_SERVICE_${PN} = " \
 	rollback-altboot.service \
 	rollback-health.service \
+	rollback-clear-bootcount.service \
 	"
 
 do_install() {
     install -d ${D}${bindir}
     install -d ${D}${systemd_unitdir}/system
     install -m 0775 ${S}/rollback-altboot ${D}${bindir}
+    install -m 0775 ${S}/rollback-clear-bootcount ${D}${bindir}
     install -m 0775 ${S}/rollback-health ${D}${bindir}
     install -m 0775 ${S}/rollback-stop ${D}${bindir}
     install -m 0775 ${S}/rollback-tests ${D}${bindir}
     install -m 0775 ${S}/rollback-parse-bootloader ${D}${bindir}
     install -c -m 0644 ${S}/rollback-altboot.service ${D}${systemd_unitdir}/system
+    install -c -m 0644 ${S}/rollback-clear-bootcount.service ${D}${systemd_unitdir}/system
     install -c -m 0644 ${S}/rollback-health.service ${D}${systemd_unitdir}/system
 }
