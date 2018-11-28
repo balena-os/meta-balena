@@ -12,11 +12,15 @@ DEPENDS = " \
     bc-native \
     openssl \
     openssl-native \
+    util-linux-native \
+    elfutils-native \
+    util-linux \
+    elfutils \
     "
 
 SRC_URI = "git://github.com/resin-os/module-headers.git;protocol=https"
 
-SRCREV = "v0.0.11"
+SRCREV = "v0.0.12"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}"
@@ -29,7 +33,7 @@ do_configure[noexec] = "1"
 
 do_compile() {
     mkdir -p kernel_modules_headers
-    ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${ARCH} ${TARGET_PREFIX} "${HOSTCC}"
+    ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${ARCH} ${TARGET_PREFIX} "${CC}" "${HOSTCC}"
     tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
     rm -rf kernel_modules_headers
 }
