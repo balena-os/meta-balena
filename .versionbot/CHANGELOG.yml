@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'image-resin.bbclass: Fix config.json pretty format'
+      hash: 6c5eeadf215f2743684e470ff163046a110e38e3
+      body: |
+        Fixes #1300
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.27.1
+  date: 2018-11-29T14:56:13.797Z
+- commits:
     - subject: Expose randomMacAddressScan config.json knob
       hash: 69d2340ccf5691085bebeb92478475cd3278bbb9
       body: |

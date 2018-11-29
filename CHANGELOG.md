@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.27.1
+## (2018-11-29)
+
+* image-resin.bbclass: Fix config.json pretty format [Andrei Gherzan]
+
 # v2.27.0
 ## (2018-11-23)
 
