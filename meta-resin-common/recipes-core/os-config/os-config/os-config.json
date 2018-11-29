@@ -45,7 +45,8 @@
 		"version",
 		"deviceApiKey",
 		"registered_at",
-		"deviceId"
+		"deviceId",
+		"balenaRootCA"
 	],
 	"schema_version": "1.0.0"
 }
