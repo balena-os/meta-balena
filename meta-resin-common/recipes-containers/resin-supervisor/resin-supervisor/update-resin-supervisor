@@ -62,10 +62,6 @@ UPDATECONF=/tmp/update-supervisor.conf
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
-if [ -z "$_device_api_key" ]; then
-    echo "PROVISIONING_API_KEY or DEVICE_API_KEY variables must be set."
-    exit 1
-fi
 
 error_handler() {
     # shellcheck disable=SC2181
