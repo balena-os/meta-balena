@@ -34,6 +34,17 @@ do_configure[noexec] = "1"
 do_compile() {
     mkdir -p kernel_modules_headers
     ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${ARCH} ${TARGET_PREFIX} "${CC}" "${HOSTCC}"
+
+    # Sanity test
+    test_arch=$(find kernel_modules_headers/  | xargs file | grep ELF | xargs -I a bash -c 'if ! echo "a" | grep -Fiq "${ARCH}" ; then echo "Did not find ${ARCH}"; fi')
+    if [ ! -z "$test_arch" ]; then
+        bberror "Wrong arch found in ELF files"
+    fi
+    test_interpreter=$(find kernel_modules_headers/  | xargs file | grep ELF | xargs -I a bash -c 'if echo "a" | grep -Fiq "sysroot" ; then echo "Found sysroot in interpreter" ; fi')
+    if [ ! -z "$test_interpreter" ]; then
+        bberror "Sysroot keyword found in interpreter ELF files"
+    fi
+
     tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
     rm -rf kernel_modules_headers
 }
