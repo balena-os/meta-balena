@@ -1,4 +1,110 @@
 - commits:
+    - subject: Update os-config to 1.0.0
+      hash: e9a428ae474c9a9e4573ae1071978b19e332f0b8
+      body: |
+        The main feature this brings is support for custom certificates base64
+        encoded in config.json.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update os-config to 1.0.0
+        changelog-entry: Update os-config to 1.0.0
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update libqmi to version 1.20.2
+      hash: 19bb5410ac28a89db7193490001ea358bbb37912
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libqmi to version 1.20.2
+        changelog-entry: Update libqmi to version 1.20.2
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Update libmbim to version 1.16.2
+      hash: 7e8d7520288c916f694fe6cdf1d43fa0d0a275e3
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libmbim to version 1.16.2
+        changelog-entry: Update libmbim to version 1.16.2
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: 'kernel-modules-headers: Add basic sanity test'
+      hash: 51ff1d707273a27369e91b6cf99257633f0b9e21
+      body: |
+        Test if the ELFs inside the kernel module header tarball are the
+        correct architecture and don't have the sysroot as the interpreter
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Fix kernel module header generation
+      hash: 706829bc46c593048909686a67faef064adf6232
+      body: |
+        63baa421 introduced a bug where the tools in the header tarballs were
+        compiled with the incorrect HOSTCC parameter. As a result the tools
+        inside the tarball were compiled for x86-64 instead of the native
+        device architecture. And they had the incorrect ld interpreter path
+        as well.
+
+        Update to v0.0.12 to fix that.
+        This release also adds objtool support needed by the intel nuc image.
+
+        Fixes #1302
+        Fixes #1303
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Fix kernel module header generation
+        changelog-entry: Fix kernel module header generation
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'image-resin.bbclass: Fix config.json pretty format'
+      hash: 889d989a3d9059825d7d346fbf0e728be9869994
+      body: |
+        Fixes #1300
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Allow supervisor update on unmanaged devices
+      hash: b8705936f0a081a2f33f3fb590a90e4805547e9d
+      body: |
+        When the device hasn't joined a backend, there is no API key available
+        and the update supervisor tool currently just bails out. This blocks
+        switching the supervisor version on an unmanaged device.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Allow supervisor update on unmanaged devices
+        changelog-entry: Allow supervisor update on unmanaged devices
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update resin-supervisor to v8.6.3
+      hash: 1f0a1b16102847412e0165ff01125a4d50ab4c81
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v8.6.3
+        changelog-entry: Update resin-supervisor to v8.6.3
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+  version: 2.28.0
+  date: 2018-12-05T15:21:33.157Z
+- commits:
     - subject: Expose randomMacAddressScan config.json knob
       hash: 69d2340ccf5691085bebeb92478475cd3278bbb9
       body: |

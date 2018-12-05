@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v2.28.0
+## (2018-12-05)
+
+* Update os-config to 1.0.0 [Zahari Petkov]
+* Update libqmi to version 1.20.2 [Florin Sarbu]
+* Update libmbim to version 1.16.2 [Florin Sarbu]
+* kernel-modules-headers: Add basic sanity test [Zubair Lutfullah Kakakhel]
+* Fix kernel module header generation [Zubair Lutfullah Kakakhel]
+* image-resin.bbclass: Fix config.json pretty format [Andrei Gherzan]
+* Allow supervisor update on unmanaged devices [Andrei Gherzan]
+* Update resin-supervisor to v8.6.3 [Cameron Diver]
+
 # v2.27.0
 ## (2018-11-23)
 
