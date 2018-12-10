@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update resin-supervisor to v8.6.8
+      hash: a9cf9b06e9775612f2397c7abaca507428558722
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v8.6.8
+        changelog-entry: Update resin-supervisor to v8.6.8
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.29.0
+  date: 2018-12-10T11:57:11.631Z
+- commits:
     - subject: Update os-config to 1.0.0
       hash: e9a428ae474c9a9e4573ae1071978b19e332f0b8
       body: |

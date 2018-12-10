@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.29.0
+## (2018-12-10)
+
+* Update resin-supervisor to v8.6.8 [Zubair Lutfullah Kakakhel]
+
 # v2.28.0
 ## (2018-12-05)
 
