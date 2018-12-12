@@ -19,6 +19,8 @@ RDEPENDS_${PN}_append = " \
     resolvconf \
     "
 FILES_${PN}_append = " ${sysconfdir}/*"
+FILES_${PN}_append = " ${libdir}/pppd/* "
+
 EXTRA_OECONF += " \
     --with-resolvconf=/sbin/resolvconf \
     --disable-ovs \
