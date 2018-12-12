@@ -1,14 +1,14 @@
-From f5b61dc2f26a188b710c3feb3a3cc5d400a41356 Mon Sep 17 00:00:00 2001
+From 583f0448fb7e9aba2b410c06eec6f420b41a6a0c Mon Sep 17 00:00:00 2001
 From: Pablo Saavedra <psaavedra@igalia.com>
 Date: Tue, 13 Mar 2018 17:36:20 +0100
-Subject: [PATCH 2/3] Fixed configure.ac: Fix pkgconfig sysroot locations
+Subject: [PATCH] Fixed configure.ac: Fix pkgconfig sysroot locations
 
 ---
  configure.ac | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 97fe1b7..a7b9207 100644
+index 51e5eb6..c9d3e56 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -572,7 +572,7 @@ if test "$have_jansson" = "yes"; then
@@ -21,5 +21,5 @@ index 97fe1b7..a7b9207 100644
  
  	if test "$JANSSON_SONAME" = ""; then
 -- 
-2.17.1
+2.14.1
 
