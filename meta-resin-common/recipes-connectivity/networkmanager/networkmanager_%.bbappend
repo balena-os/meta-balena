@@ -9,6 +9,7 @@ SRC_URI_append = " \
     file://README.ignore \
     file://resin-sample.ignore \
     file://nm-tmpfiles.conf \
+    file://balena-client-id.patch \
     "
 
 RDEPENDS_${PN}_append = " \
