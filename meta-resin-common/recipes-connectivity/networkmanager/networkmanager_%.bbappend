@@ -9,6 +9,7 @@ SRC_URI_append = " \
     file://README.ignore \
     file://resin-sample.ignore \
     file://nm-tmpfiles.conf \
+    file://balena-client-id.patch \
     "
 
 RDEPENDS_${PN}_append = " \
@@ -18,6 +19,8 @@ RDEPENDS_${PN}_append = " \
     resolvconf \
     "
 FILES_${PN}_append = " ${sysconfdir}/*"
+FILES_${PN}_append = " ${libdir}/pppd/* "
+
 EXTRA_OECONF += " \
     --with-resolvconf=/sbin/resolvconf \
     --disable-ovs \

@@ -1,8 +1,7 @@
-From 45b4b3918df568a55584dbd9082128181f986610 Mon Sep 17 00:00:00 2001
+From 18f71c1b48730b8602826517f2b5b088283ae948 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 31 Mar 2017 16:48:00 -0700
-Subject: [PATCH 1/3] sd-lldp.h: Remove net/ethernet.h seems to be over
- specified
+Subject: [PATCH] sd-lldp.h: Remove net/ethernet.h seems to be over specified
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
@@ -11,10 +10,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/systemd/src/libsystemd-network/sd-lldp.c b/src/systemd/src/libsystemd-network/sd-lldp.c
-index ea1dda4..c5d16dc 100644
+index 31e2448..7721cc2 100644
 --- a/src/systemd/src/libsystemd-network/sd-lldp.c
 +++ b/src/systemd/src/libsystemd-network/sd-lldp.c
-@@ -7,6 +7,7 @@
+@@ -3,6 +3,7 @@
  #include "nm-sd-adapt.h"
  
  #include <arpa/inet.h>
@@ -23,10 +22,10 @@ index ea1dda4..c5d16dc 100644
  
  #include "sd-lldp.h"
 diff --git a/src/systemd/src/systemd/sd-lldp.h b/src/systemd/src/systemd/sd-lldp.h
-index 11a2119..d21e915 100644
+index 3f35eeb..61b0e45 100644
 --- a/src/systemd/src/systemd/sd-lldp.h
 +++ b/src/systemd/src/systemd/sd-lldp.h
-@@ -21,7 +21,7 @@
+@@ -18,7 +18,7 @@
  ***/
  
  #include <inttypes.h>
@@ -36,5 +35,5 @@ index 11a2119..d21e915 100644
  
  #include "sd-event.h"
 -- 
-2.17.1
+2.14.1
 
