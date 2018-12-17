@@ -136,6 +136,9 @@ resin_boot_dirgen_and_deploy () {
 
         # Compute src and dst
         src="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}')"
+        if [ -z "${src}" ]; then
+            bbfatal "An entry in RESIN_BOOT_PARTITION_FILES has no source. Entries need to be in the \"src:dst\" format where only \"dst\" is optional. Failed entry: \"$RESIN_BOOT_PARTITION_FILE\"."
+        fi
         dst="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}')"
         if [ -z "${dst}" ]; then
             dst="/${src}" # dst was omitted
