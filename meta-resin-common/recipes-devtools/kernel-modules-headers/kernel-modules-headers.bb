@@ -46,7 +46,7 @@ do_compile() {
         fi
     done
 
-    tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
+    tar -czf ${B}/kernel_modules_headers.tar.gz kernel_modules_headers
 }
 
 do_install() {
@@ -56,8 +56,8 @@ do_install() {
 }
 
 do_deploy() {
-    cp kernel_modules_headers.tar.gz ${DEPLOYDIR}
-    rm -rf kernel_modules_headers
+    cp ${B}/kernel_modules_headers.tar.gz ${DEPLOYDIR}
+    rm -rf ${B}/kernel_modules_headers
 }
 
 do_compile[depends] += "virtual/kernel:do_deploy virtual/kernel:do_patch"
