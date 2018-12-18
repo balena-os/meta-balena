@@ -3,6 +3,19 @@
 # shellcheck disable=SC1091
 . /usr/sbin/resin-vars
 
+# Handle apps.json existence
+# Keep this before computing SUPERVISOR_CONTAINER_IMAGE_ID
+APPSJSON=/mnt/data/apps.json
+if [ ! -f "$APPSJSON" ]; then
+    if [ -d "$APPSJSON" ]; then
+        rm -rf "$APPSJSON"
+        balena rm -f resin_supervisor || true
+        echo '{}' > "$APPSJSON"
+    elif [ ! -e "$APPSJSON" ]; then
+        echo '{}' > "$APPSJSON"
+    fi
+fi
+
 SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG")
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
