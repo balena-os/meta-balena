@@ -87,6 +87,7 @@ RESIN_CONFIGS ?= " \
     redsocks \
     reduce-size \
     security \
+    usb-serial \
     zram \
     ${BALENA_STORAGE} \
     "
@@ -418,6 +419,15 @@ RESIN_CONFIGS[zram] = " \
 # USB Modem (CDC ACM) support
 RESIN_CONFIGS[cdc-acm] = " \
     CONFIG_USB_ACM=m \
+    "
+
+# USB serial device drivers
+RESIN_CONFIGS_DEPS[usb-serial] = " \
+    CONFIG_USB_SERIAL_WWAN=m \
+    "
+RESIN_CONFIGS[usb-serial] = " \
+    CONFIG_USB_SERIAL_OPTION=m \
+    CONFIG_USB_SERIAL_QUALCOMM=m \
     "
 
 ###########

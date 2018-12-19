@@ -36,24 +36,36 @@ do_compile() {
     ${S}/gen_mod_headers ./kernel_modules_headers ${STAGING_KERNEL_DIR} ${DEPLOY_DIR_IMAGE} ${ARCH} ${TARGET_PREFIX} "${CC}" "${HOSTCC}"
 
     # Sanity test
-    test_arch=$(find kernel_modules_headers/  | xargs file | grep ELF | xargs -I a bash -c 'if ! echo "a" | grep -Fiq "${ARCH}" ; then echo "Did not find ${ARCH}"; fi')
-    if [ ! -z "$test_arch" ]; then
-        bberror "Wrong arch found in ELF files"
-    fi
-    test_interpreter=$(find kernel_modules_headers/  | xargs file | grep ELF | xargs -I a bash -c 'if echo "a" | grep -Fiq "sysroot" ; then echo "Found sysroot in interpreter" ; fi')
-    if [ ! -z "$test_interpreter" ]; then
-        bberror "Sysroot keyword found in interpreter ELF files"
-    fi
+
+    file_output=$(find kernel_modules_headers/  | xargs file | grep ELF)
+    echo "$file_output" | while read -r a; do
+        if echo "$a" | grep -Fiq "sysroot" ; then
+            bbwarn "$a"
+            bbwarn "Sysroot keyword found in interpreter ELF files"
+            exit 1
+        fi
+    done
 
     tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
-    rm -rf kernel_modules_headers
+}
+
+do_install() {
+    install -d ${D}/usr/src/kernel-hdrs
+    cd kernel_modules_headers
+    find . -type f -exec install -D "{}" "${D}/usr/src/kernel-hdrs/{}" \;
 }
 
 do_deploy() {
     cp kernel_modules_headers.tar.gz ${DEPLOYDIR}
+    rm -rf kernel_modules_headers
 }
 
 do_compile[depends] += "virtual/kernel:do_deploy virtual/kernel:do_patch"
 addtask deploy before do_package after do_install
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+FILES_${PN} += "/usr/src/*"
+
+# Tools inside the headers package are slightly special.
+# Skip some QA checks. We are interested in the arch check only.
+INSANE_SKIP_${PN} = "file-rdeps ldflags staticdev already-stripped"

@@ -25,7 +25,7 @@ This recipe produces two binary packages: 'chrony' which contains chronyd, \
 the configuration file and the init script, and 'chronyc' which contains \
 the client program only."
 
-HOMEPAGE = "http://chrony.tuxfamily.org/"
+HOMEPAGE = "https://chrony.tuxfamily.org/"
 SECTION = "net"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
@@ -35,8 +35,8 @@ SRC_URI = "https://download.tuxfamily.org/chrony/chrony-${PV}.tar.gz \
     file://chronyd \
     file://arm_eabi.patch \
 "
-SRC_URI[md5sum] = "d0598aa8a9be8faccef9386f6fc0d5f2"
-SRC_URI[sha256sum] = "8d04e7cda2333289c2104b731d39c3c1db94816e43bae35d7ee4e7ae8af6391f"
+SRC_URI[md5sum] = "f4c4eb0dc92f35ee4bb7d3dcd8029ecb"
+SRC_URI[sha256sum] = "329f6718dd8c3ece3eee78be1f4821cbbeb62608e7d23f25da293cfa433c4116"
 
 DEPENDS = "pps-tools"
 
@@ -59,6 +59,9 @@ inherit update-rc.d systemd
 #     chrony.conf and init script.
 #   - 'scfilter' enables support for system call filtering, but requires the
 #     kernel to have CONFIG_SECCOMP enabled.
+PACKAGECONFIG ??= "editline \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
+"
 PACKAGECONFIG[readline] = "--without-editline,--without-readline,readline"
 PACKAGECONFIG[editline] = ",--without-editline,libedit"
 PACKAGECONFIG[sechash] = "--without-tomcrypt,--disable-sechash,nss"
