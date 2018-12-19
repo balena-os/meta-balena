@@ -1,4 +1,283 @@
 - commits:
+    - subject: OS will default apps.json to an empty json file
+      hash: c935fcfd72dfefa5188d90edc48cd1b01dbadec2
+      body: |
+        Currently, because we bind mount apps.json unconditionally, when this
+        file doesn't exist, balena engine will create a directory on the data
+        filesystem. This breaks when we add an apps.json file after the
+        supervisor container was already created.
+
+        Fixes #1325
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: OS will default apps.json to an empty json file
+        changelog-entry: OS will default apps.json to an empty json file
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update balena-engine to include low entropy fixes
+      hash: 32726b55b9e4b0a33e6357bfbe4b0169bcf253a7
+      body: |
+        This includes changes which target fixing hanging on low entropy
+        situation.
+
+        Fixes #1208
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-engine to include low entropy fixes
+        changelog-entry: Update balena-engine to include low entropy fixes
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Move an NM patch to the right place to reduce a warning
+      hash: f823ee173d52519113bb9513972aa9eaf3816355
+      body: |
+        We get a warning that the file was not found when other versions of NM
+        are parsed.
+
+        Warning networkmanager_1.10.6.bb: Unable to get checksum for
+        networkmanager SRC_URI entry balena-client-id.patch: file could not
+        be found
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Move an NM patch to the right place to reduce a warning
+        changelog-entry: Move an NM patch to the right place to reduce a warning
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v9.0.1
+      hash: 73a8bf6d0b45b052f05403ad6bf84504be2d918d
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-supervisor to v9.0.1
+        changelog-entry: Update balena-supervisor to v9.0.1
+        Signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+        signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+      author: Pablo Carranza Velez
+    - subject: Fix cases where RESIN_BOOT_PARTITION_FILES includes invalid entries
+      hash: c10653eb0b17e3997fb77182cf62b9cdc143f25c
+      body: |
+        Fixes #1330
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix cases where RESIN_BOOT_PARTITION_FILES includes invalid entries
+        changelog-entry: Fix cases where RESIN_BOOT_PARTITION_FILES includes invalid entries
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Enable some common linux kernel serial device drivers
+      hash: 1fa8c951327d1356410152f944003f98a9b68112
+      body: |
+        Fixes #1327
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Enable some common linux kernel serial device drivers
+        changelog-entry: Enable some common linux kernel serial device drivers
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: >-
+        Configure NetworkManager to only ignore our vpn interface but manage
+        other tun devices
+      hash: 2a5415c4a9a1b9c1e3da8a340be4ba307174c42d
+      body: |
+        Under the current configuration we instruct NetworkManager through its
+        configuration to completely ignore all the tun devices. This was
+        enforced as an extra precation as we run an openvpn client which
+        connects to the balena-cloud backend. This client creates, on the host,
+        the interface `resin-tun` currently (rename pending). We want to loosen
+        up this restriction to only unmanage this specific device - `resin-tun`
+        - so that users can take advantage of NetworkManager managing other tun
+        devices.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Configure NetworkManager to only ignore our vpn interface but manage
+          other tun devices
+        changelog-entry: >-
+          Configure NetworkManager to only ignore our vpn interface but manage
+          other tun devices
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'networkmanager: Add pppd to FILES'
+      hash: b05bc683b6517318a3ebef56010d671ae07804c1
+      body: >
+        Without this, we get a QA error
+
+
+        ERROR networkmanager-1.14.4-r0 do_package QA Issue networkmanager
+
+        Files/directories were installed but not shipped in any package
+          ... nm-pppd-plugin.so
+        Please set FILES such that these items are packaged. Alternatively
+
+        if they are unneeded, avoid installing them or delete them within
+        do_install.
+
+        networkmanager 1 installed and not shipped files. [installed-vs-shipped]
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'networkmanager: Add balena-client-id.patch in bbappend'
+      hash: 35c4822bbff164a4a4f3a769f0d1fabbda61f33b
+      body: |
+        Move this in bbappend. The 1.12 recipe was bumped to 1.14.
+        We'd like to keep our edits in bbappend
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Bump network manager from v1.12.2 to v1.14.4
+      hash: 0b8be376090d9bff4f41a362e4bcc250e0c664e9
+      body: >
+        Update recipe from upstream meta-openembedded
+
+        http://cgit.openembedded.org/meta-openembedded/commit/meta-networking/recipes-connectivity/networkmanager?id=331b717b862e3599b99942acb64c1d6b03806042
+
+
+        Difference in size ~ +400K
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Bump network manager from v1.12.2 to v1.14.4
+        changelog-entry: Bump network manager from v1.12.2 to v1.14.4
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v8.7.0
+      hash: ff552b96370e06a357db69d57cbbad5db08433db
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v8.7.0
+        changelog-entry: Update balena-supervisor to v8.7.0
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+        signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+      author: Pablo Carranza Velez
+    - subject: Fix test cases for kernel module header compilation
+      hash: 53793e1e591f2e0d4534c38fcb0585ace2d0d181
+      body: |
+        For some reason, using xargs -I a produced spurious difficult to trace
+        errors. Rework test case using a loop. Do the arch check using Yoctos
+        QA framework that runs on all packages. Otherwise, we'd have to manually
+        map various compatible arches e.g. aarch64 - arm8, 80386 - x86
+
+        bberror does not exit the do_compile task. Add exit 1 to make sure that
+        if an error is found, the task is marked as failed. Otherwise the
+        error becomes a heisenbug as bitbake proceeds after do_compile.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix test cases for kernel module header compilation
+        changelog-entry: Fix test cases for kernel module header compilation
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Add chrony v3.2 recipe in various layers to keep minimum chrony version
+        on devices above v3.2
+      hash: 898ce1a6c0a18c91478f704f4014ec2fcd1fedce
+      body: >
+        We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
+
+        That option is supported in newer versions of chrony.
+
+
+        Add chrony 3.2 recipe from meta-openembedded sumo
+
+        http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Add chrony v3.2 recipe in various layers to keep minimum chrony
+          version on devices above v3.2
+        changelog-entry: >-
+          Add chrony v3.2 recipe in various layers to keep minimum chrony
+          version on devices above v3.2
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'chrony/pyro: Add v3.2 recipe'
+      hash: c3fbd6fe368ae1ca2472f15414d319f802e2989c
+      body: >
+        We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
+
+        That option is supported in newer versions of chrony.
+
+
+        Add chrony 3.2 recipe from meta-openembedded sumo
+
+        http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'chrony/morty: Add v3.2 recipe'
+      hash: 75f44470da8e5bf99bdf4cd4ea45cbb798909604
+      body: >
+        We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
+
+        That option is supported in newer versions of chrony.
+
+
+        Add chrony 3.2 recipe from meta-openembedded sumo
+
+        http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'chrony/krogoth: Bump recipe version to v3.2'
+      hash: 59ac08ea58e59e2d61cc53cadea1b835eb5b4e31
+      body: >
+        We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
+
+        That option is supported in newer versions of chrony.
+
+
+        Add chrony 3.2 recipe from meta-openembedded sumo
+
+        http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update resin-supervisor to v8.6.8
+      hash: a9cf9b06e9775612f2397c7abaca507428558722
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v8.6.8
+        changelog-entry: Update resin-supervisor to v8.6.8
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.29.0
+  date: 2018-12-19T06:20:13.246Z
+- commits:
     - subject: Update os-config to 1.0.0
       hash: e9a428ae474c9a9e4573ae1071978b19e332f0b8
       body: |
