@@ -19,3 +19,18 @@ We take advantage of a change log file to keep track of what was changed in a sp
 In the common case where each PR addresses one specific task (issue, bug, feature etc.) the PR will contain a commit which will include `Change-type` and `Changelog-entry` in its commit log. Usually, but not necessary, this commit is the last one in the branch.
 
 `Change-type` is mandatory and, because meta-resin follows semver, can take one of the following values: patch, minor or major. `Changelog-entry` defaults to the subject line.
+
+## Updating balena-supervisor
+
+When the supervisor is updated in meta-balena, versionist will attempt to pull in the relevant slice of changelog from the supervisor and add it to the changelog of meta-balena. For this to happen, the commit that updates the supervisor must follow a specific format: the first line of the BODY must contain `Update balena-supervisor from x.y.z to x'.y'.z'` The title and footers can be filled in as normal.
+
+N.B. just `Update balena-supervisor from x.y.z to x'.y'.z'` will not be valid as the first line of the commit is the title (please refer to [balena-commit-lint](https://github.com/balena-io/resin-commit-lint) to learn more about how commits should be structured), a valid commit would be:
+
+```
+balena-supervisor: Update to v9.0.1
+
+Update balena-supervisor from 9.0.0 to 9.0.1
+
+Change-type: patch
+Signed-off-by: Joe Developer <joe.developer@example.com>
+```
