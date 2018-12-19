@@ -1,0 +1,184 @@
+---
+title: BalenaOS configuration schema
+version: 1
+mapping:
+        targets:
+                config-json:
+                        type: file
+                        format: json
+                        location:
+                                partition: resin-boot
+                                path: /config.json
+                logo:
+                        type: file
+                        format: binary
+                        location:
+                                partition: resin-boot
+                                path: /splash/resin-logo.png
+                system-connections:
+                        type: fileset
+                        format: ini
+                        location:
+                                partition: resin-boot
+                                path: /system-connections
+                system-proxy-coonfiguration:
+                        type: file
+                        format: redsocks-config # TODO see below for format
+                        location:
+                                partition: resin-boot
+                                path: /system-proxy/redsocks.conf
+                system-proxy-whitelist:
+                        type: file
+                        format: # TODO This is a list of items one per line
+                        location:
+                                partition: resin-boot
+                                path: /system-proxy/no_proxy
+
+properties:
+        - advanced:
+                properties:
+                        - appUpdatePollInterval:
+                                type: integer
+                                default: 10
+                                min: 10
+                        - hostname:
+                                type: hostname
+                                default: balena
+                                mapping:
+                                        path: hostname
+                        - persistentLogging:
+                                type: boolean
+                                default: false
+                                mapping:
+                                        path: persistentLogging
+                        - country:
+                                type: string
+                                mapping:
+                                        path: country
+                        - dnsServers:
+                                type: string
+                                mapping:
+                                        path: dnsServers
+                        - ntpServers:
+                                type: string
+                                mapping:
+                                        path: ntpServers
+                        - randomMacAddressScan:
+                                type: boolean
+                                mapping:
+                                        path: randomMacAddressScan
+                        - udevRules:
+                                type: array # TODO needs to be an object {} (-> no, array in the UI, mapping should handle array -> object)
+                                uniqueItems:
+                                        - priority
+                                items: 
+                                        properties:
+                                                - priority:
+                                                        type: integer
+                                                - rule:
+                                                        type: string
+                                mapping:
+                                        TODO: Needs to be mapped to an object
+                        - sshKeys:
+                                type: array
+                                items:
+                                        type: string
+                                mapping:
+                                        path: sshKeys
+                mapping:
+                        target: config-json
+        - blobs:
+                properties:
+                        - logo:
+                                type: binary
+                                mapping:
+                                        target: logo
+                        - dtb:
+                                # TODO
+                                # Where does it end up ?
+                                # What is the target filename?
+                                # Would this overwrite files? How is hup going to work with that?
+        - network:
+                type: array
+                items:
+                        properties:
+                                - id:
+                                        type: string
+                                        readOnly: true
+                                        default:
+                                                eval: super.ssid | slugify
+                                        mapping: 
+                                                path: connection.id
+                                - ssid:
+                                        type: string
+                                        mapping:
+                                                path: wifi.ssid
+                                - password:
+                                        type: password
+                                        mapping:
+                                                path: wifi-security.psk
+                        mapping:
+                                target: system-connections
+                                filename:
+                                        eval: this.id
+                                template:
+                                        connection:
+                                                type: wifi
+                                        wifi:
+                                                hidden: true
+                                                mode: infrastructure
+                                        wifi-security:
+                                                auth-alg: open
+                                                key-mgmt: wpa-psk
+                                        ipv4:
+                                                method: auto
+                                        ipv6:
+                                                addr-gen-mode: stable-privacy
+                                                method: auto
+        - proxy:
+                # Example:
+                # base {
+                #log_debug = off;
+                #log_info = on;
+                #log = "syslog:local7";
+                #redirector = iptables;
+                #}
+                #
+                #redsocks {
+                #type = socks5;
+                #ip = <SERVER IP>;
+                #port = 8123;
+                #}
+                type: array
+                properties:
+                        - proxyWhitelistIPs: # TODO this needs support
+                                type: array
+                                items:
+                                        properties:
+                                                - ip:
+                                                        type: ipv4
+                                mapping:
+                                        target: system-proxy-whitelist
+                        - proxyType:
+                                type: string
+                                enum:
+                                        - socks5
+                                        - http-connect
+                                mapping:
+                                        path: redsocks.type
+                        - server:
+                                type: ipv4
+                                mapping: 
+                                        path: redsocks.ip
+                        - port:
+                                type: port
+                                mapping:
+                                        path: redoscks.port
+                mapping:
+                        target: system-proxy-configuration
+                        template:
+                                base:
+                                        log_debug: off
+                                        log_info: on
+                                        log: stderr
+                                        redirector: iptables
