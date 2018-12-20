@@ -21,15 +21,15 @@ mapping:
                         location:
                                 partition: resin-boot
                                 path: /system-connections
-                system-proxy-coonfiguration:
+                system-proxy-configuration:
                         type: file
-                        format: redsocks-config # TODO see below for format
+                        format: redsocks-config
                         location:
                                 partition: resin-boot
                                 path: /system-proxy/redsocks.conf
                 system-proxy-whitelist:
                         type: file
-                        format: # TODO This is a list of items one per line
+                        format:
                         location:
                                 partition: resin-boot
                                 path: /system-proxy/no_proxy
@@ -42,7 +42,7 @@ properties:
                                 default: 10
                                 min: 10
                         - hostname:
-                                type: hostname
+                                type: hostname?
                                 default: balena
                                 mapping:
                                         path: hostname
@@ -52,23 +52,35 @@ properties:
                                 mapping:
                                         path: persistentLogging
                         - country:
-                                type: string
+                                type: string?
                                 mapping:
                                         path: country
                         - dnsServers:
-                                type: string
+                                type: array?
+                                items:
+                                        - type: [ipv4, ipv6]
                                 mapping:
                                         path: dnsServers
+                                        map:
+                                                - - identity
+                                                  - eval:
+                                                        this | join(separator=' ')
                         - ntpServers:
-                                type: string
+                                type: array?
+                                items:
+                                        - type: [ipv4, ipv6]
                                 mapping:
                                         path: ntpServers
+                                        map:
+                                                - - identity
+                                                  - eval:
+                                                        this | join(separator=' ')
                         - randomMacAddressScan:
-                                type: boolean
+                                type: boolean?
                                 mapping:
                                         path: randomMacAddressScan
                         - udevRules:
-                                type: array # TODO needs to be an object {} (-> no, array in the UI, mapping should handle array -> object)
+                                type: array?
                                 uniqueItems:
                                         - priority
                                 items: 
@@ -78,9 +90,15 @@ properties:
                                                 - rule:
                                                         type: string
                                 mapping:
-                                        TODO: Needs to be mapped to an object
+                                        path: os.udevRules
+                                        map:
+                                                - - identity
+                                                  - dictionary:
+                                                          key: priority
+                                                          value: rule
+
                         - sshKeys:
-                                type: array
+                                type: array?
                                 items:
                                         type: string
                                 mapping:
@@ -90,7 +108,7 @@ properties:
         - blobs:
                 properties:
                         - logo:
-                                type: binary
+                                type: binary?
                                 mapping:
                                         target: logo
                         - dtb:
@@ -99,7 +117,7 @@ properties:
                                 # What is the target filename?
                                 # Would this overwrite files? How is hup going to work with that?
         - network:
-                type: array
+                type: array?
                 items:
                         properties:
                                 - id:
@@ -136,20 +154,7 @@ properties:
                                                 addr-gen-mode: stable-privacy
                                                 method: auto
         - proxy:
-                # Example:
-                # base {
-                #log_debug = off;
-                #log_info = on;
-                #log = "syslog:local7";
-                #redirector = iptables;
-                #}
-                #
-                #redsocks {
-                #type = socks5;
-                #ip = <SERVER IP>;
-                #port = 8123;
-                #}
-                type: array
+                type: array?
                 properties:
                         - proxyWhitelistIPs: # TODO this needs support
                                 type: array
