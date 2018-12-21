@@ -1,0 +1,7 @@
+--2018-12-20 14:50:48--  https://fd-files-production.s3.amazonaws.com/182944/UE5F28TSB6uAC0l9_a4-AQ?X-Amz-Expires=300
+Loaded CA certificate '/etc/ssl/certs/ca-certificates.crt'
+Resolving fd-files-production.s3.amazonaws.com (fd-files-production.s3.amazonaws.com)... 54.231.113.227
+Connecting to fd-files-production.s3.amazonaws.com (fd-files-production.s3.amazonaws.com)|54.231.113.227|:443... connected.
+HTTP request sent, awaiting response... 403 Forbidden
+2018-12-20 14:50:49 ERROR 403: Forbidden.
+

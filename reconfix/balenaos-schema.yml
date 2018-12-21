@@ -23,13 +23,13 @@ mapping:
                                 path: /system-connections
                 system-proxy-configuration:
                         type: file
-                        format: redsocks-config
+                        format: redsocks-config # TODO - Zrzka - unsupported / special format
                         location:
                                 partition: resin-boot
                                 path: /system-proxy/redsocks.conf
                 system-proxy-whitelist:
                         type: file
-                        format:
+                        format: TODO # TODO - Zrzka - unsupported / special format
                         location:
                                 partition: resin-boot
                                 path: /system-proxy/no_proxy
@@ -41,6 +41,8 @@ properties:
                                 type: integer
                                 default: 10
                                 min: 10
+                                mapping:
+                                        path: appUpdatePollInterval
                         - hostname:
                                 type: hostname?
                                 default: balena
@@ -61,7 +63,7 @@ properties:
                                         - type: [ipv4, ipv6]
                                 mapping:
                                         path: dnsServers
-                                        map:
+                                        map: # TODO - Zrzka - this needs to be changed, won't work for config -> wet path
                                                 - - identity
                                                   - eval:
                                                         this | join(separator=' ')
@@ -71,7 +73,7 @@ properties:
                                         - type: [ipv4, ipv6]
                                 mapping:
                                         path: ntpServers
-                                        map:
+                                        map: # TODO - Zrzka - this needs to be changed, won't work for config -> wet path
                                                 - - identity
                                                   - eval:
                                                         this | join(separator=' ')
@@ -111,8 +113,7 @@ properties:
                                 type: binary?
                                 mapping:
                                         target: logo
-                        - dtb:
-                                # TODO
+#                       - dtb: TODO
                                 # Where does it end up ?
                                 # What is the target filename?
                                 # Would this overwrite files? How is hup going to work with that?
@@ -156,7 +157,7 @@ properties:
         - proxy:
                 type: array?
                 properties:
-                        - proxyWhitelistIPs: # TODO this needs support
+                        - proxyWhitelistIPs: # TODO - Zrzka - this needs support, see mappings TODO
                                 type: array
                                 items:
                                         properties:
