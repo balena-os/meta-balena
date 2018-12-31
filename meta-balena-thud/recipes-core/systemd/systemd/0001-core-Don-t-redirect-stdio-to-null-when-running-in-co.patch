@@ -1,28 +1,28 @@
-From 79ad9002612611a4aabfffe6d9c8bca5c7253e4a Mon Sep 17 00:00:00 2001
-From: Andrei Gherzan <andrei@resin.io>
-Date: Mon, 19 Feb 2018 14:06:06 +0000
+From 38a8c7769af794e65569ffd63c7f5eebb5461bc2 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@balena.io>
+Date: Mon, 31 Dec 2018 14:39:56 +0000
 Subject: [PATCH] core: Don't redirect stdio to null when running in container
 
 Upstream-status: Rejected [https://github.com/systemd/systemd/pull/8220]
-Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Signed-off-by: Andrei Gherzan <andrei@balena.io>
 ---
  src/core/main.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/core/main.c b/src/core/main.c
-index 9460261..f4d6410 100644
+index 44dd8348be..b7914503e6 100644
 --- a/src/core/main.c
 +++ b/src/core/main.c
-@@ -1531,7 +1531,8 @@ int main(int argc, char *argv[]) {
-                  * need to do that for user instances since they never log
-                  * into the console. */
+@@ -2276,7 +2276,8 @@ int main(int argc, char *argv[]) {
+                  * they never log into the console. */
                  log_show_color(colors_enabled());
+ 
 -                r = make_null_stdio();
 +                if (detect_container() <= 0)
 +                        r = make_null_stdio();
                  if (r < 0)
-                         log_warning_errno(r, "Failed to redirect standard streams to /dev/null: %m");
+                         log_warning_errno(r, "Failed to redirect standard streams to /dev/null, ignoring: %m");
          }
---
-2.7.4
+-- 
+2.17.1
 
