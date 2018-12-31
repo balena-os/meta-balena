@@ -1,0 +1,27 @@
+From c228a3ada71311c5174a4190dfe77c61ce0c6673 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Fri, 1 Jun 2018 15:09:01 +0100
+Subject: [PATCH] Install link in /usr/bin to match other providers
+
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Upstream-status: Inappropiate [Configuration]
+---
+ coreutils/link.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/coreutils/link.c b/coreutils/link.c
+index ac3ef85..b3d73e5 100644
+--- a/coreutils/link.c
++++ b/coreutils/link.c
+@@ -11,7 +11,7 @@
+ //config:	help
+ //config:	  link creates hard links between files.
+
+-//applet:IF_LINK(APPLET_NOFORK(link, link, BB_DIR_BIN, BB_SUID_DROP, link))
++//applet:IF_LINK(APPLET_NOFORK(link, link, BB_DIR_USR_BIN, BB_SUID_DROP, link))
+
+ //kbuild:lib-$(CONFIG_LINK) += link.o
+
+--
+2.7.4
+
