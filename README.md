@@ -87,6 +87,10 @@ The first one is `timeinit-rtc`. This service, when a RTC is available (`/etc/rt
 
 The order of the services is as stated above and provides a robust time initialization at boot in both cases where RTC is or not available.
 
+### Rollback framework
+
+Check [docs/rollbacks.md](docs/rollbacks.md) for the rollback documentation
+
 ## Devices support
 
 ### WiFi Adapters
