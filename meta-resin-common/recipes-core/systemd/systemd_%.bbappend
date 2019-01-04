@@ -7,7 +7,6 @@ SRC_URI_append = " \
     file://watchdog.conf \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
-    file://0002-core-Avoid-empty-directory-warning-when-we-are-bind-.patch \
     "
 
 python() {
