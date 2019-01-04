@@ -5,8 +5,8 @@ echo "Board specific initialization..."
 /usr/bin/resin-init-board
 
 echo "Disable power management on wlan0..."
-if ! iwconfig wlan0 power off; then
-    echo "Failed to disable power management on wlan0."
+if ! iw dev wlan0 set power_save on; then
+    echo "Failed to disable power save on wlan0."
 fi
 
 exit 0

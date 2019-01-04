@@ -18,7 +18,7 @@ SYSTEMD_SERVICE_${PN} = "resin-init.service"
 RDEPENDS_${PN} = " \
     bash \
     resin-init-board \
-    wireless-tools \
+    iw \
     "
 
 do_install() {
