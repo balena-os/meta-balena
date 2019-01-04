@@ -1,11 +1,11 @@
 From 9f991dc5f74172d5b12753ea8d35425c6935be9f Mon Sep 17 00:00:00 2001
-From: Andrei Gherzan <andrei@resin.io>
+From: Andrei Gherzan <andrei@balena.io>
 Date: Thu, 1 Feb 2018 15:54:41 +0000
 Subject: [PATCH] core: Avoid empty directory warning when we are bind-mounting
  a file
 
-Upstream-Status: Submitted [https://github.com/systemd/systemd/pull/8069]
-Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Upstream-Status: Backported
+Signed-off-by: Andrei Gherzan <andrei@balena.io>
 
 ---
  src/core/unit.c | 2 +-
