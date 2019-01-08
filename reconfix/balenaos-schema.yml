@@ -1,6 +1,9 @@
 ---
 title: BalenaOS configuration schema
 version: 1
+#
+# Configuration files (aka targets)
+#
 mapping:
         targets:
                 config-json:
@@ -23,93 +26,106 @@ mapping:
                                 path: /system-connections
                 system-proxy-configuration:
                         type: file
-                        format: redsocks-config # TODO - Zrzka - unsupported / special format
+                        format: redsocks  # NEW - not in a spec
                         location:
                                 partition: resin-boot
                                 path: /system-proxy/redsocks.conf
                 system-proxy-whitelist:
                         type: file
-                        format: TODO # TODO - Zrzka - unsupported / special format
+                        format: text  # NEW - not in a spec
                         location:
                                 partition: resin-boot
                                 path: /system-proxy/no_proxy
-
 properties:
+        #
+        # Advanced section
+        #
         - advanced:
+                mapping:
+                        # All advanced.properties.* inherits this target, no need to repeat it
+                        target: config-json
                 properties:
                         - appUpdatePollInterval:
+                                title: Check for updates every X minutes
                                 type: integer
                                 default: 10
                                 min: 10
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: appUpdatePollInterval
                         - hostname:
+                                title: Device hostname
                                 type: hostname?
                                 default: balena
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: hostname
                         - persistentLogging:
+                                title: Do you want to enable persistent logging?
                                 type: boolean
                                 default: false
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: persistentLogging
                         - country:
+                                title: Country
                                 type: string?
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: country
                         - dnsServers:
-                                type: array?
+                                title: DNS servers
+                                type: stringlist  # NEW - not in a spec
+                                separator: " "    # NEW - not in a spec
                                 items:
-                                        - type: [ipv4, ipv6]
+                                        type: dnsmasq-address  # NEW - not in a spec
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: dnsServers
-                                        map: # TODO - Zrzka - this needs to be changed, won't work for config -> wet path
-                                                - - identity
-                                                  - eval:
-                                                        this | join(separator=' ')
                         - ntpServers:
-                                type: array?
+                                type: stringlist  # NEW - not in a spec
+                                separator: " "    # NEW - not in a spec
                                 items:
-                                        - type: [ipv4, ipv6]
+                                        type: chrony-address  # NEW - not in a spec
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: ntpServers
-                                        map: # TODO - Zrzka - this needs to be changed, won't work for config -> wet path
-                                                - - identity
-                                                  - eval:
-                                                        this | join(separator=' ')
                         - randomMacAddressScan:
+                                title: Randomize MAC address?
                                 type: boolean?
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: randomMacAddressScan
                         - udevRules:
-                                type: array?
-                                uniqueItems:
-                                        - priority
-                                items: 
-                                        properties:
-                                                - priority:
-                                                        type: integer
-                                                - rule:
-                                                        type: string
-                                mapping:
-                                        path: os.udevRules
-                                        map:
-                                                - - identity
-                                                  - dictionary:
-                                                          key: priority
-                                                          value: rule
-
-                        - sshKeys:
-                                type: array?
-                                items:
+                                title: udev rules
+                                type: object
+                                keys:  # NEW - not in a spec
+                                        title: Priority
+                                        type: string
+                                        pattern: "^\d+$"
+                                items:  # NEW - not in a spec for type: object (it's there for type: array)
+                                        title: Rule
                                         type: string
                                 mapping:
+                                        # target inherited from properties.advanced.mapping.target
+                                        path: os.udevRules
+
+                        - sshKeys:
+                                title: SSH keys
+                                type: array?
+                                items:
+                                        title: SSH key
+                                        type: string
+                                mapping:
+                                        # target inherited from properties.advanced.mapping.target
                                         path: sshKeys
-                mapping:
-                        target: config-json
+        #
+        # Binary blobs
+        #
         - blobs:
                 properties:
                         - logo:
+                                title: Boot logo
                                 type: binary?
                                 mapping:
                                         target: logo
@@ -117,22 +133,32 @@ properties:
                                 # Where does it end up ?
                                 # What is the target filename?
                                 # Would this overwrite files? How is hup going to work with that?
+        #
+        # WiFi networks
+        #
         - network:
+                title: Networking
                 type: array?
                 items:
+                        uniqueItems:
+                                - id
+                                - ssid
                         properties:
-                                - id:
+                                - id: # Hidden property, just for /system-connections/*:connection.id computation
+                                      # Do we want to make this visible to the user? Probably not, it's not useful.
                                         type: string
-                                        readOnly: true
+                                        hidden: true
                                         default:
                                                 eval: super.ssid | slugify
-                                        mapping: 
+                                        mapping:
                                                 path: connection.id
                                 - ssid:
+                                        title: WiFi SSID
                                         type: string
                                         mapping:
                                                 path: wifi.ssid
                                 - password:
+                                        title: WiFi Passphrase
                                         type: password
                                         mapping:
                                                 path: wifi-security.psk
@@ -154,37 +180,43 @@ properties:
                                         ipv6:
                                                 addr-gen-mode: stable-privacy
                                                 method: auto
+        #
+        # Proxy configuration
+        #
         - proxy:
-                type: array?
+                title: Proxy configuration
                 properties:
-                        - proxyWhitelistIPs: # TODO - Zrzka - this needs support, see mappings TODO
-                                type: array
-                                items:
-                                        properties:
-                                                - ip:
-                                                        type: ipv4
+                        - proxyWhitelistIPs:
+                                title: Whitelist IP addresses
+                                help: List of IP addresses / ranges that are not routed through proxy
+                                type: iptables-address  # NEW - not in a spec
                                 mapping:
                                         target: system-proxy-whitelist
-                        - proxyType:
-                                type: string
-                                enum:
-                                        - socks5
-                                        - http-connect
+                        - redsocks:
+                                properties:
+                                        - proxyType:
+                                                type: string
+                                                enum:
+                                                        - socks5
+                                                        - http-connect
+                                                mapping:
+                                                        # target inherited from properties.proxy.properties.redsocks.mapping.target
+                                                        path: redsocks.type
+                                        - server:
+                                                type: ipv4
+                                                mapping:
+                                                        # target inherited from properties.proxy.properties.redsocks.mapping.target
+                                                        path: redsocks.ip
+                                        - port:
+                                                type: port
+                                                mapping:
+                                                        # target inherited from properties.proxy.properties.redsocks.mapping.target
+                                                        path: redoscks.port
                                 mapping:
-                                        path: redsocks.type
-                        - server:
-                                type: ipv4
-                                mapping: 
-                                        path: redsocks.ip
-                        - port:
-                                type: port
-                                mapping:
-                                        path: redoscks.port
-                mapping:
-                        target: system-proxy-configuration
-                        template:
-                                base:
-                                        log_debug: off
-                                        log_info: on
-                                        log: stderr
-                                        redirector: iptables
+                                        target: system-proxy-configuration
+                                        template:
+                                                base:
+                                                        log_debug: off
+                                                        log_info: on
+                                                        log: stderr
+                                                        redirector: iptables
