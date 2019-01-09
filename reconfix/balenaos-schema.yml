@@ -189,7 +189,10 @@ properties:
                         - proxyWhitelistIPs:
                                 title: Whitelist IP addresses
                                 help: List of IP addresses / ranges that are not routed through proxy
-                                type: iptables-address  # NEW - not in a spec
+                                type: stringlist
+                                separator: \n  # TODO - Check that this will be read as a newline
+                                items:
+                                        type: iptables-address  # NEW - not in a spec (iptables -d $VALUE)
                                 mapping:
                                         target: system-proxy-whitelist
                         - redsocks:
