@@ -47,7 +47,7 @@ EOF
 
 echo "Rollback: Health sanity check"
 
-if [ $resin_root_part -eq $current_part_idx ]; then
+if [ "$resin_root_part" = "$current_part_idx" ]; then
 	if [ $upgrade_available -eq 1 ]; then
 		echo "Rollback: HUP detected. Running healthchecks after $TIMEOUT seconds"
 		sleep $TIMEOUT
