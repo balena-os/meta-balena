@@ -102,7 +102,7 @@ properties:
                                 keys:  # NEW - not in a spec
                                         title: Priority
                                         type: string
-                                        pattern: "^\d+$"
+                                        pattern: ^\d+$
                                 items:  # NEW - not in a spec for type: object (it's there for type: array)
                                         title: Rule
                                         type: string
@@ -126,7 +126,7 @@ properties:
                 properties:
                         - logo:
                                 title: Boot logo
-                                type: binary?
+                                type: file?
                                 mapping:
                                         target: logo
 #                       - dtb: TODO
@@ -211,7 +211,7 @@ properties:
                                                 type: port
                                                 mapping:
                                                         # target inherited from properties.proxy.properties.redsocks.mapping.target
-                                                        path: redoscks.port
+                                                        path: redsocks.port
                                 mapping:
                                         target: system-proxy-configuration
                                         template:
