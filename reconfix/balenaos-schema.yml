@@ -73,7 +73,7 @@ properties:
                                 mapping:
                                         # target inherited from properties.advanced.mapping.target
                                         path: country
-                        - dnsServers:
+                        - dnsServers: # https://github.com/balena-os/meta-balena/blob/6ee964485327b8d12ea57773100194de80c89de0/meta-resin-common/recipes-connectivity/resin-net-config/resin-net-config/resin-net-config#L28-L32
                                 title: DNS servers
                                 type: stringlist  # NEW - not in a spec
                                 separator: " "    # NEW - not in a spec
@@ -82,7 +82,7 @@ properties:
                                 mapping:
                                         # target inherited from properties.advanced.mapping.target
                                         path: dnsServers
-                        - ntpServers:
+                        - ntpServers: # chronyc add server $VALUE
                                 type: stringlist  # NEW - not in a spec
                                 separator: " "    # NEW - not in a spec
                                 items:
