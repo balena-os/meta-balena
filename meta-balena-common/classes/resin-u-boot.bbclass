@@ -25,6 +25,9 @@ RESIN_UBOOT_DEVICE_TYPES ?= "mmc"
 # OS_KERNEL_CMDLINE is a distro wide variable intended to be used in all the
 # supported bootloaders
 BASE_OS_CMDLINE ?= "${OS_KERNEL_CMDLINE}"
+OS_BOOTCOUNT_FILE ?= "bootcount.env"
+OS_BOOTCOUNT_SKIP ?= "0"
+OS_BOOTCOUNT_LIMIT ?= "1"
 
 UBOOT_VARS = "RESIN_UBOOT_DEVICES \
               RESIN_UBOOT_DEVICE_TYPES \
@@ -32,7 +35,10 @@ UBOOT_VARS = "RESIN_UBOOT_DEVICES \
               RESIN_IMAGE_FLAG_FILE \
               RESIN_FLASHER_FLAG_FILE \
               RESIN_ENV_FILE \
-              BASE_OS_CMDLINE"
+              BASE_OS_CMDLINE \
+              OS_BOOTCOUNT_FILE \
+              OS_BOOTCOUNT_SKIP \
+              OS_BOOTCOUNT_LIMIT "
 
 python do_generate_resin_uboot_configuration () {
     vars = d.getVar('UBOOT_VARS').split()
