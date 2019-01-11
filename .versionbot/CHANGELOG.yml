@@ -1,4 +1,21 @@
 - commits:
+    - subject: Have boot partition type configurable as FAT32
+      hash: 81ae693833c9de0647be7f989fb757886d2b0b10
+      body: |
+        When BALENA_BOOT_FAT32 is 1, it will instruct the raw image generator to
+        create the filesystem using 32 as file allocation tables type and, as
+        well, create the boot partition as fat32 type.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Have boot partition type configurable as FAT32
+        changelog-entry: Have boot partition type configurable as FAT32
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.29.1
+  date: 2019-01-11T13:45:09.469Z
+- commits:
     - subject: OS will default apps.json to an empty json file
       hash: c935fcfd72dfefa5188d90edc48cd1b01dbadec2
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.29.1
+## (2019-01-11)
+
+* Have boot partition type configurable as FAT32 [Andrei Gherzan]
+
 # v2.29.0
 ## (2018-12-19)
 
