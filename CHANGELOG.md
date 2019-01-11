@@ -4,6 +4,10 @@ Change log
 # v2.29.0
 ## (2018-12-19)
 
+## 2.29.1 - 2019-01-11
+
+* Have boot partition type configurable as FAT32 [Andrei Gherzan]
+
 * OS will default apps.json to an empty json file [Andrei Gherzan]
 * Update balena-engine to include low entropy fixes [Andrei Gherzan]
 * Move an NM patch to the right place to reduce a warning [Zubair Lutfullah Kakakhel]
