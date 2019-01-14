@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.29.1
+## (2019-01-14)
+
+* ucl: Compile with -fPIC flag to make upx-native work on Ubuntu 18.04 [Sebastian Panceac]
+
 # v2.29.0
 ## (2018-12-19)
 

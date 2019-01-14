@@ -1,4 +1,26 @@
 - commits:
+    - subject: 'ucl: Compile with -fPIC flag to make upx-native work on Ubuntu 18.04'
+      hash: b145f10d45ff369f02c6fa5bdf2e7da6fd758f76
+      body: |
+        We compile ucl with -fPIC flag to fix upx-native compilation
+        on Ubuntu 18.04
+
+        If -fPIC flag is missing this error shows up when linking
+        upx-native with libucl:
+
+        "libucl.a(ucl_util.o): relocation R_X86_64_32 against `.rodata' can
+        not be used when making a PIE object; recompile with -fPIC"
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'ucl: Compile with -fPIC flag to make upx-native work on Ubuntu 18.04'
+        changelog-entry: 'ucl: Compile with -fPIC flag to make upx-native work on Ubuntu 18.04'
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+  version: 2.29.1
+  date: 2019-01-14T15:02:31.672Z
+- commits:
     - subject: OS will default apps.json to an empty json file
       hash: c935fcfd72dfefa5188d90edc48cd1b01dbadec2
       body: |
