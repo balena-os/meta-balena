@@ -14,7 +14,7 @@ inherit systemd go pkgconfig binary-compress useradd
 BALENA_VERSION = "17.12.0-dev"
 BALENA_BRANCH= "17.12-resin"
 
-SRCREV = "60400e2cd0eb10b72f3c1bc12befb6e358d1cb1f"
+SRCREV = "dceb2fc48071b78a8a828e0468a15a479515385f"
 SRC_URI = "\
 	git://github.com/resin-os/balena.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
