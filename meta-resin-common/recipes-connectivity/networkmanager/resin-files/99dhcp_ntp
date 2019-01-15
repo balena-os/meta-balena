@@ -11,7 +11,8 @@ case "$action" in
 	/usr/bin/resin-ntp-config
 
 	# Inform chrony we are online
-	/usr/bin/chronyc online
+	# We add a timeout as we have noticed this command being stuck in a loop eating cpu. Bug possibly resolved upstream. https://github.com/mlichvar/chrony/commit/6863e43269fe27ce2744eb643295f31c00ec176d#diff-50898f0cb35139d87132f4732a029213
+	/usr/bin/timeout 10 /usr/bin/chronyc online || true
 
 	if [[ -n $DHCP4_NTP_SERVERS ]]; then
 		# Tell chronyd to use this server
