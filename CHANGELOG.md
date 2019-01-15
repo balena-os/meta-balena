@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.29.2
+## (2019-01-15)
+
+* Use the new revision for balena source code [Florin Sarbu]
+* Add a workaround for a bug where the chronyc online command in network manager hook would get stuck and eat cpu cycles [Zubair Lutfullah Kakakhel]
+
 # v2.29.1
 ## (2019-01-11)
 

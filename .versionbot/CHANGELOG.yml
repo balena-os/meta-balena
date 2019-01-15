@@ -1,4 +1,50 @@
 - commits:
+    - subject: Use the new revision for balena source code
+      hash: 8d9d2985be4eab3215bdd9a6251b3a7dda1567b8
+      body: |
+        The 17.12-resin branch was modified and the old revision is not
+        there anymore.
+        cherry picked from commit a52207c03253fcc0cc219a4e1a100b46ea44e226
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Use the new revision for balena source code
+        changelog-entry: Use the new revision for balena source code
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: >-
+        Add a workaround for a bug where the chronyc online command in network
+        manager hook would get stuck and eat cpu cycles
+      hash: fa40ec7a450a860abff7007ac919a5b0e53f1b93
+      body: >
+        We have noticed devices in support that show high cpu usage because
+
+        the process chronyc online seems to be eating up 50% cpu.
+
+
+        This is probably fixed upstream
+        https://github.com/mlichvar/chrony/commit/6863e43269fe27ce2744eb643295f31c00ec176d#diff-50898f0cb35139d87132f4732a029213
+
+
+        Add a timeout in any case as its a lower risk option
+
+        cherry picked from commit 6fe830882bf8ee62dc6db09b5a8a6f099d64fe41
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Add a workaround for a bug where the chronyc online command in network
+          manager hook would get stuck and eat cpu cycles
+        changelog-entry: >-
+          Add a workaround for a bug where the chronyc online command in network
+          manager hook would get stuck and eat cpu cycles
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.29.2
+  date: 2019-01-15T14:45:57.686Z
+- commits:
     - subject: Have boot partition type configurable as FAT32
       hash: 81ae693833c9de0647be7f989fb757886d2b0b10
       body: |
