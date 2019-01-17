@@ -73,11 +73,12 @@ properties:
                                 mapping:
                                         # target inherited from properties.advanced.mapping.target
                                         path: country
-                        - dnsServers: # https://github.com/balena-os/meta-balena/blob/6ee964485327b8d12ea57773100194de80c89de0/meta-resin-common/recipes-connectivity/resin-net-config/resin-net-config/resin-net-config#L28-L32
+                        - dnsServers:
                                 title: DNS servers
                                 type: stringlist  # NEW - not in a spec
                                 separator: " "    # NEW - not in a spec
                                 items:
+                                        # https://github.com/balena-os/meta-balena/blob/master/meta-resin-common/recipes-connectivity/resin-net-config/resin-net-config/resin-net-config#L34-L39
                                         type: dnsmasq-address  # NEW - not in a spec
                                 mapping:
                                         # target inherited from properties.advanced.mapping.target
@@ -86,6 +87,7 @@ properties:
                                 type: stringlist  # NEW - not in a spec
                                 separator: " "    # NEW - not in a spec
                                 items:
+                                        # https://github.com/balena-os/meta-balena/blob/master/meta-resin-common/recipes-connectivity/resin-ntp-config/resin-ntp-config/resin-ntp-config#L19
                                         type: chrony-address  # NEW - not in a spec
                                 mapping:
                                         # target inherited from properties.advanced.mapping.target
@@ -191,7 +193,8 @@ properties:
                                 type: stringlist
                                 separator: \n  # TODO - Check that this will be read as a newline
                                 items:
-                                        type: iptables-address  # NEW - not in a spec (iptables -d $VALUE)
+                                        # https://github.com/balena-os/meta-balena/blob/master/meta-resin-common/recipes-connectivity/resin-proxy-config/resin-proxy-config/resin-proxy-config#L66-L73
+                                        type: iptables-address  # NEW - not in a spec
                                 mapping:
                                         target: system-proxy-whitelist
                         - redsocks:
