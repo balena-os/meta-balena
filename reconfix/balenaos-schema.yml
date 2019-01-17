@@ -103,7 +103,7 @@ properties:
                                         title: Priority
                                         type: string
                                         pattern: ^\d+$
-                                items:  # NEW - not in a spec for type: object (it's there for type: array)
+                                values:  # NEW - not in a spec
                                         title: Rule
                                         type: string
                                 mapping:
