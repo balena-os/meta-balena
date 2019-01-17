@@ -148,8 +148,7 @@ properties:
                                       # Do we want to make this visible to the user? Probably not, it's not useful.
                                         type: string
                                         hidden: true
-                                        default:
-                                                eval: super.ssid | slugify
+                                        formula: super.ssid | slugify
                                         mapping:
                                                 path: connection.id
                                 - ssid:
@@ -165,7 +164,7 @@ properties:
                         mapping:
                                 target: system-connections
                                 filename:
-                                        eval: this.id
+                                        formula: this.id
                                 template:
                                         connection:
                                                 type: wifi
