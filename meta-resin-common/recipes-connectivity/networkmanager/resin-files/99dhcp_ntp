@@ -25,20 +25,22 @@ case "$action" in
 	;;
 	down)
 		# Read ntp server information from file into env variables
-		. $added_servers_file
-		eval ntp_connection=\$"resin_$interface"
+		if [ -f $added_servers_file ]; then
+			. $added_servers_file
+			eval ntp_connection=\$"resin_$interface"
 
-		# Delete the ntp server for that interface from file
-		sed -i "/resin_$interface/d" $added_servers_file
+			# Delete the ntp server for that interface from file
+			sed -i "/resin_$interface/d" $added_servers_file
 
-		# Tell chronyd to remove this server
-		for ntp in ${ntp_connection}; do
-			# Only delete the server if it isn't being added by some other interface
-			if ! grep -q "$ntp" $added_servers_file; then
-				/usr/bin/chronyc delete $ntp || true
-			fi
+			# Tell chronyd to remove this server
+			for ntp in ${ntp_connection}; do
+				# Only delete the server if it isn't being added by some other interface
+				if ! grep -q "$ntp" $added_servers_file; then
+					/usr/bin/chronyc delete $ntp || true
+				fi
 
-		done
+			done
+		fi
 
 	;;
 	*)
