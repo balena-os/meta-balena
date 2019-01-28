@@ -1,4 +1,23 @@
 - commits:
+    - subject: Fixed "Can't have overlapping partitions." error in flasher
+      hash: 299e2c7974c408a0a2ff762bc263f266c69d5a98
+      body: |
+        Fixed typo that caused flashing process to block
+        on some corrupted eMMCs due to parted command failure.
+
+        Flashing process hanged during boot with this log:
+        - Error: Can't have overlapping partitions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fixed "Can't have overlapping partitions." error in flasher
+        changelog-entry: Fixed "Can't have overlapping partitions." error in flasher
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+  version: 2.29.1
+  date: 2019-01-28T15:39:54.417Z
+- commits:
     - subject: OS will default apps.json to an empty json file
       hash: c935fcfd72dfefa5188d90edc48cd1b01dbadec2
       body: |

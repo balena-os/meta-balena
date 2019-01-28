@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.29.1
+## (2019-01-28)
+
+* Fixed "Can't have overlapping partitions." error in flasher [Alexandru Costache]
+
 # v2.29.0
 ## (2018-12-19)
 
