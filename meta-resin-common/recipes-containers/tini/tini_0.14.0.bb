@@ -21,5 +21,5 @@ inherit cmake
 
 do_install() {
   mkdir -p ${D}/${bindir}
-  install -m 0755 ${B}/tini-static ${D}/${bindir}/balena-init
+  install -m 0755 ${B}/tini-static ${D}/${bindir}/balena-engine-init
 }
