@@ -16,13 +16,13 @@ resindataexpander_enabled() {
 			root_link="/dev/disk/by-partuuid/$root_puuid"
 		elif [ "`echo ${bootparam_root} | cut -c1-6`" = "LABEL=" ]; then
 			root_label=`echo $bootparam_root | cut -c7-`
-			root_link="/dev/disk/by-label/$root_link"
+			root_link="/dev/disk/by-label/$root_label"
 		fi
-		if [ "$(readlink -f "$root_link")" == "$flash-root" ]; then
+		if [ "$(readlink -f "$root_link")" == "$flash_root" ]; then
 			echo "[INFO] Flasher detected. Avoiding expand partition mechanism."
 			return 1
 		fi
-    fi
+	fi
 
     for freespace in $(parted -m /dev/$datadev unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
         if [ $(echo $freespace \> $FREESPACE_LIMIT | bc -l) == "1" ]; then
