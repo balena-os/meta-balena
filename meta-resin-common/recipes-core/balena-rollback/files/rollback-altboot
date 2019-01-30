@@ -19,6 +19,10 @@ set -o errexit
 . /usr/sbin/resin-vars
 . /usr/bin/rollback-parse-bootloader
 
+if ! rollback-check-version; then
+	exit 1
+fi
+
 if [ "$resin_root_part" != "$current_part_idx" ]; then
 	echo "Rollback: Looks like we are running in atlboot mode. Running hooks to recover bootfiles"
 	DURING_UPDATE=0 /usr/bin/hostapp-update-hooks

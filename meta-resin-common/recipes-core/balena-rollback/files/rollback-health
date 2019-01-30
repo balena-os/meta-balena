@@ -19,6 +19,11 @@ set -o errexit
 . /usr/sbin/resin-vars
 . /usr/bin/rollback-parse-bootloader
 
+if ! rollback-check-version; then
+	rollback-stop || true;
+	exit 1
+fi
+
 TIMEOUT=60
 COUNT=15
 REBOOT_TIMEOUT=900
