@@ -18,6 +18,7 @@ case "$action" in
 		# Tell chronyd to use this server
 		for ntp in ${DHCP4_NTP_SERVERS}; do
 			/usr/bin/chronyc add server $ntp || true
+			/usr/bin/chronyc burst 4/10 "$ntp" || true
 		done
 		# Save the ntp server we received and interface information to a file
 		echo "resin_$interface=\""""$DHCP4_NTP_SERVERS""\" >> $added_servers_file
