@@ -7,3 +7,6 @@ balena info > /dev/null 2>&1
 
 # Check that we can read containers from disk
 balena ps > /dev/null
+
+# Check that we can start a new container
+balena run --rm hello-world > /dev/null
