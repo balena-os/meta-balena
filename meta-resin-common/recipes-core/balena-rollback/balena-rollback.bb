@@ -20,6 +20,7 @@ SRC_URI = " \
     file://rollback-altboot.service \
     file://rollback-health.service \
     file://rollback-altboot \
+    file://rollback-check-version \
     file://rollback-health \
     file://rollback-stop \
     file://rollback-tests \
@@ -38,6 +39,7 @@ do_install() {
     install -d ${D}${bindir}
     install -d ${D}${systemd_unitdir}/system
     install -m 0775 ${S}/rollback-altboot ${D}${bindir}
+    install -m 0775 ${S}/rollback-check-version ${D}${bindir}
     install -m 0775 ${S}/rollback-health ${D}${bindir}
     install -m 0775 ${S}/rollback-stop ${D}${bindir}
     install -m 0775 ${S}/rollback-tests ${D}${bindir}

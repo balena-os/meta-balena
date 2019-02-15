@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Test if a version is greater than another
+function version_gt() {
+    test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"
+}
+
+MIN_HOSTOS_VERSION=2.30.0
+
+old_os_release=$(find /mnt/sysroot/inactive/ | grep "etc/os-release")
+. "$old_os_release"
+
+if version_gt $VERSION $MIN_HOSTOS_VERSION; then
+	echo "rollbacks: Previous Host OS version $VERSION OK for rollbacks."
+else
+	echo "rollbacks: Can't rollback before $MIN_HOSTOS_VERSION"
+	exit 1
+fi
