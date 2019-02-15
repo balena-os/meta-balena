@@ -68,6 +68,7 @@ RESIN_CONFIGS ?= " \
     brcmfmac \
     cdc-acm \
     ralink \
+    rtl8192cu \
     r8188eu \
     systemd \
     leds-gpio \
