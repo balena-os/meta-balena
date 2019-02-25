@@ -1,0 +1,12 @@
+[Unit]
+Description=Docker Socket for the API
+
+[Socket]
+ListenStream=/var/run/balena-host.sock
+SocketMode=0660
+SocketUser=root
+SocketGroup=balena-engine
+
+[Install]
+WantedBy=sockets.target
+
