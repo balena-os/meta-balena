@@ -2,7 +2,7 @@
 
 set -e
 
-LABEL_TIMEOUT=190
+LABEL_TIMEOUT=1900
 
 help () {
 	cat << EOF
@@ -80,7 +80,7 @@ start="$(date +%s)"
 end="$start"
 while [ ! -L "$label_path" ]; do
 	if [ $((end - start)) -le "$LABEL_TIMEOUT" ]; then
-		sleep 1 && end=$((end + 1))
+		sleep 0.1 && end=$((end + 1))
 	else
 		echo "ERROR: Timeout while waiting for filesystem label to appear."
 		exit 1
