@@ -1,14 +1,14 @@
 #!/bin/sh
 
 DATA_PARTITION=/dev/disk/by-label/resin-data
-LABEL_TIMEOUT=30
+LABEL_TIMEOUT=300
 
 # Waiting for the filesystem label
 start="$(date +%s)"
 end="$start"
 while [ ! -L "$DATA_PARTITION" ]; do
 	if [ $((end - start)) -le "$LABEL_TIMEOUT" ]; then
-		sleep 1 && end=$((end + 1))
+		sleep 0.1 && end=$((end + 1))
 	else
 		echo "[ERROR] Timeout while waiting for filesystem label to appear."
 		if [ ! -f /mnt/boot/resin_attempting_fsck_recovery ]; then
