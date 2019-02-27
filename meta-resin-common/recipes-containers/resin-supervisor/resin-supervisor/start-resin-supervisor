@@ -34,6 +34,38 @@ if [ -n "$BALENA_ROOT_CA" ]; then
     fi
 fi
 
+hasValueChanged() {
+    KEY="$1"
+    NEW_VALUE="$2"
+    COLLECTION="$3"
+    CURRENT_VALUE=$(echo "$COLLECTION" | jq -r ".$KEY")
+
+    if [ "$CURRENT_VALUE" != "$NEW_VALUE" ];then
+        echo "$KEY has changed!" | systemd-cat -t "start-resin-supervisor" -p info
+        return 1
+    fi
+}
+
+configIsUnchanged() {
+    echo "Container config check..." | systemd-cat -t "start-resin-supervisor" -p info
+        
+    SUPERVISOR_CONTAINER_ENV_JSON="$(balena inspect resin_supervisor | jq '.[0].Config.Env | map(.| { (.[0:index("=")]): .[index("=")+1:] }) | add')"
+
+    hasValueChanged "BOOT_MOUNTPOINT"       "$BOOT_MOUNTPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "REGISTRY_ENDPOINT"     "$REGISTRY_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "PUBNUB_SUBSCRIBE_KEY"  "$PUBNUB_SUBSCRIBE_KEY" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "PUBNUB_PUBLISH_KEY"    "$PUBNUB_PUBLISH_KEY" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "MIXPANEL_TOKEN"        "$MIXPANEL_TOKEN" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "DELTA_ENDPOINT"        "$DELTA_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "LED_FILE"              "${LED_FILE}" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "LISTEN_PORT"           "$LISTEN_PORT" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "BALENA_ROOT_CA"        "$BALENA_DECODED_ROOT_CA" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    hasValueChanged "NODE_EXTRA_CA_CERTS"   "$NODE_EXTRA_CA_CERTS" "$SUPERVISOR_CONTAINER_ENV_JSON" && \
+    echo "Container config has not changed." | systemd-cat -t "start-resin-supervisor" -p info && return || \
+    echo "Container config has changed!" | systemd-cat -t "start-resin-supervisor" -p info && return 1
+}
+
 runSupervisor() {
     balena rm --force resin_supervisor || true
     balena run --privileged --name resin_supervisor \
@@ -64,7 +96,7 @@ runSupervisor() {
 if [ -z "$SUPERVISOR_IMAGE_ID" ]; then
     # No supervisor image exists on the device, try to pull it
     systemctl start update-resin-supervisor
-elif [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
+elif configIsUnchanged && [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
     # Supervisor image exists, and the current supervisor container is created from
     balena start --attach resin_supervisor
 else
