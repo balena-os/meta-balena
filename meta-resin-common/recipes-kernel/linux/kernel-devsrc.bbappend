@@ -1,5 +1,5 @@
 do_install_append() {
-   tar -czf ${B}/kernel_source.tar.gz -C "$kerneldir/../" .
+   tar -czf ${B}/kernel_source.tar.gz -C "$kerneldir/../" kernel
 }
 
 do_deploy() {
