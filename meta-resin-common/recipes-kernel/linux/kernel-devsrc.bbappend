@@ -1,10 +1,10 @@
 do_install_append() {
-   tar -czf ${B}/kernel_source.tar.gz -C "$kerneldir/../" .
+   tar -czf ${WORKDIR}/kernel_source.tar.gz -C "$kerneldir/../" .
 }
 
 do_deploy() {
-    cp ${B}/kernel_source.tar.gz ${DEPLOYDIR}/
-    rm ${B}/kernel_source.tar.gz
+    cp ${WORKDIR}/kernel_source.tar.gz ${DEPLOYDIR}/
+    rm ${WORKDIR}/kernel_source.tar.gz
 }
 inherit deploy
 addtask do_deploy before do_package after do_install
