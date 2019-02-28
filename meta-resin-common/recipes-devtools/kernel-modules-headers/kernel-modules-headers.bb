@@ -7,9 +7,10 @@ SECTION = "devel/kernel"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-DEPENDS = " \
+DEPENDS += " \
     virtual/kernel \
     bc-native \
+    bison-native \
     openssl \
     openssl-native \
     util-linux-native \
@@ -20,7 +21,7 @@ DEPENDS = " \
 
 SRC_URI = "git://github.com/resin-os/module-headers.git;protocol=https"
 
-SRCREV = "v0.0.12"
+SRCREV = "v0.0.14"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}"
@@ -46,7 +47,7 @@ do_compile() {
         fi
     done
 
-    tar -czf kernel_modules_headers.tar.gz kernel_modules_headers
+    tar -czf ${B}/kernel_modules_headers.tar.gz kernel_modules_headers
 }
 
 do_install() {
@@ -56,8 +57,8 @@ do_install() {
 }
 
 do_deploy() {
-    cp kernel_modules_headers.tar.gz ${DEPLOYDIR}
-    rm -rf kernel_modules_headers
+    cp ${B}/kernel_modules_headers.tar.gz ${DEPLOYDIR}
+    rm -rf ${B}/kernel_modules_headers
 }
 
 do_compile[depends] += "virtual/kernel:do_deploy virtual/kernel:do_patch"

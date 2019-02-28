@@ -2,6 +2,8 @@ FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
 
 SRC_URI_append = " \
     file://coredump.conf \
+    file://reboot.target.conf \
+    file://poweroff.target.conf \
     file://watchdog.conf \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
@@ -50,6 +52,12 @@ do_install_append() {
 
     install -d -m 0755 ${D}/srv
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
+
+    # shorten reboot/poweroff timeouts
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/reboot.target.d
+    install -m 0644 ${WORKDIR}/reboot.target.conf ${D}/${sysconfdir}/systemd/system/reboot.target.d/
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/poweroff.target.d
+    install -m 0644 ${WORKDIR}/poweroff.target.conf ${D}/${sysconfdir}/systemd/system/poweroff.target.d/
 
     # enable watchdog
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d

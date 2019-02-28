@@ -68,6 +68,7 @@ RESIN_CONFIGS ?= " \
     brcmfmac \
     cdc-acm \
     ralink \
+    rtl8192cu \
     r8188eu \
     systemd \
     leds-gpio \
@@ -551,12 +552,18 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         ('4.11.7+', '017c55ba5613570d44f63c99cfd39c01867dc826'),
         ('4.12', '31266c01bd88e0053f53f4580adcca03175947b2'),
         ('4.13', '78cbc7ffc120b21092a984808865f226764eed3b'),
-        ('4.14', '4340a36fe7ea4b87eaee44898567955f299bb0f6'),
-        ('4.14.56+', '5371a2d104057b2209c78dd8a13531d6b0145feb'),
-        ('4.15', '7eb6552aa2e683ba03684dbc5e8851e7a6a5bdff'),
-        ('4.16', '275a263ca77a817a2a5dbae7bbcd1715ad04a209'),
-        ('4.17', 'bb1c365e0ea004821c3caa8cc7e71cc16448bd50'),
-        ('4.18', 'e21af551ad489135fd21a28c7c964665f7d0924f'),
+        ('4.14', '4c216b1d3bbf21036bc6e411dbaddc5ee8796e0f'),
+        ('4.14.56+', 'afd6e70189fae85fe979cb545c0521aa9e1089d3'),
+        ('4.14.73+', '8023d982d4cda2d013bac2198fedf5d6b725e293'),
+        ('4.15', '131620712a70671a8785fd286134732a7d625efe'),
+        ('4.16', '3b2c02d1fbab48b88a32b5727663570987e55072'),
+        ('4.17', '3816135ec95c99eecbbf24b1763447effbdd6c46'),
+        ('4.18', '49d3207c61c0d666281def82223a962934154205'),
+        ('4.18.11+', 'd0ca3f45ce8ef07678011638172a34ace1cdb8a1'),
+        ('4.19', 'fed453019cc702a1cacb2322584686610ea927ab'),
+        ('4.19.17+', '07f8ca2b7140807f61e0a3fdc666e8748c7a34b7'),
+        ('4.20', 'caa38687d80a9aad141882d2a9f1db8cd2612d2d'),
+        ('4.20.4+', 'a55d8ab0451105ffc86078e4ea1bf2df2c0a4f12'),
     ])
 
 

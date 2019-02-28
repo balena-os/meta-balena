@@ -18,6 +18,9 @@ new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT)
 blockdev=$(basename "$new_part")
 new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 
+# Convert to hex as u-boot expects hex partition numbers. Especially needed for jetson devices
+new_part_idx=$(printf "%x" $new_part_idx)
+
 printf "[INFO] Switching uboot root partition index to %s..." "$new_part_idx..."
 echo "resin_root_part=$new_part_idx" > /mnt/boot/resinOS_uEnv.txt.new
 echo "upgrade_available=$DURING_UPDATE" >> /mnt/boot/resinOS_uEnv.txt.new

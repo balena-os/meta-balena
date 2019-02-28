@@ -14,11 +14,12 @@ inherit systemd go pkgconfig binary-compress useradd
 BALENA_VERSION = "17.12.0-dev"
 BALENA_BRANCH= "17.12-resin"
 
-SRCREV = "60400e2cd0eb10b72f3c1bc12befb6e358d1cb1f"
+SRCREV = "fe78e2c9a69313007c53c83fff4b5525fbc2ba45"
 SRC_URI = "\
 	git://github.com/resin-os/balena.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
 	file://balena-host.service \
+	file://balena-host.socket \
 	file://balena-healthcheck \
 	file://var-lib-docker.mount \
 	file://balena.conf.systemd \
@@ -32,7 +33,7 @@ SECURITY_CFLAGS = "${SECURITY_NOPIE_CFLAGS}"
 SECURITY_LDFLAGS = ""
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "balena.service balena-host.service var-lib-docker.mount"
+SYSTEMD_SERVICE_${PN} = "balena.service balena-host.socket var-lib-docker.mount"
 FILES_COMPRESS = "/boot/init"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
@@ -148,6 +149,7 @@ do_install() {
 
 	install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
 	sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena-host.service
+	install -m 0644 ${WORKDIR}/balena-host.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
 

@@ -52,3 +52,6 @@ fi
 current_part=$(findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active)
 blockdev=$(basename "$current_part")
 current_part_idx=$(cat "/sys/class/block/$blockdev/partition")
+
+# Partition numbers are in hex.
+current_part_idx=$(printf "%x" $current_part_idx)

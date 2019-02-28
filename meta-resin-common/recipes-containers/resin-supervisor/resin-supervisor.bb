@@ -16,6 +16,7 @@ SRC_URI += " \
 	file://update-resin-supervisor.service \
 	file://update-resin-supervisor.timer \
 	file://resin-supervisor-healthcheck \
+	file://tmpfiles-supervisor.conf \
 	"
 
 SYSTEMD_SERVICE_${PN} = " \
@@ -81,6 +82,10 @@ do_install () {
 
 	install -d ${D}/usr/lib/resin-supervisor
 	install -m 0755 ${WORKDIR}/resin-supervisor-healthcheck ${D}/usr/lib/resin-supervisor/resin-supervisor-healthcheck
+
+	# systemd tmpfiles configuration for supervisor
+	mkdir -p ${D}${sysconfdir}/tmpfiles.d
+	install -m 0644 ${WORKDIR}/tmpfiles-supervisor.conf ${D}${sysconfdir}/tmpfiles.d/supervisor.conf
 }
 
 do_deploy () {
