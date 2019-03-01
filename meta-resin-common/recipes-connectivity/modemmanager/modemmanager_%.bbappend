@@ -8,6 +8,8 @@ SRC_URI_append = " \
     file://mm-huawei-configuration-switch.sh \
 "
 
+PACKAGECONFIG_remove = "polkit"
+
 do_install_append() {
     install -d ${D}/lib/udev/rules.d/
     install -m 0644 ${WORKDIR}/77-mm-huawei-configuration.rules ${D}/lib/udev/rules.d/
