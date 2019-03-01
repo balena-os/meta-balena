@@ -1,4 +1,603 @@
 - commits:
+    - subject: Cleanup old versions of iwlwifi firmware files
+      hash: 38c91fbe6af7c106401f51c715528f3ff3eb5eb2
+      body: |
+        The minimum API set for the versions were checked to be supported in the
+        RPi and Intel NUC kernel. We do this cleanup to same space on the
+        rootfs.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Cleanup old versions of iwlwifi firmware files
+        changelog-entry: Cleanup old versions of iwlwifi firmware files
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Remove polkit dependency in balenaOS
+      hash: 514ac6e4aa146fea082a9ff3898085cd401590f5
+      body: |
+        Fixes #1404
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Remove polkit dependency in balenaOS
+        changelog-entry: Remove polkit dependency in balenaOS
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'resin-supervisor: Recreate on start if config has changed'
+      hash: 3ce04f93b1894f86be5d838bcc24335aaa161233
+      body: |
+        When starting the supervisor container, check that the values being
+        passed into the environment match the ones held in the config.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Rich Bayliss <rich@balena.io>
+        signed-off-by: Rich Bayliss <rich@balena.io>
+      author: Rich Bayliss
+    - subject: >-
+        Generate the temporary kernel-devsrc compressed archive in WORKDIR
+        instead of B
+      hash: ed5fe09c9dfb4f5dd07bae691b277b9d2f38f718
+      body: |
+        It is best to not create anything in ${B} even if just temporary because
+        it alters the directory in ways which can break other parts of the build
+        system. For example, if there is a leftover kernel_source.tar.gz in B,
+        then the current kernel-devsrc will create a hardlink of this file in
+        the kernel source tree and then the command:
+        tar -czf ${B}/kernel_source.tar.gz -C "$kerneldir/../" .
+
+        will fail like:
+        tar: ./kernel/kernel_source.tar.gz: file changed as we read it
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Generate the temporary kernel-devsrc compressed archive in WORKDIR
+          instead of B
+        changelog-entry: >-
+          Generate the temporary kernel-devsrc compressed archive in WORKDIR
+          instead of B
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: 'balena-engine: Update to include fix for signal SIGRTMIN+3'
+      hash: 0e19efb71526097cad4037336f7a410782189fa0
+      body: |
+        See https://github.com/opencontainers/runc/issues/1766.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Reduce sleeps while trying to mount partition to speed up boot
+      hash: 73b69ae792330741603e0a4fc7878b2ec9ed0462
+      body: |
+        There is no need to wait 1 second if a label hasn't appeared. Other
+        services depend on these partitions to be mounted. Reduce sleep to 0.1
+        second.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Reduce sleeps while trying to mount partition to speed up boot
+        changelog-entry: Reduce sleeps while trying to mount partition to speed up boot
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'resin-expand: Reduce sleep duration to speed up boot'
+      hash: 6c69d676d36ed6a94ca094037515dd5ee4a5697a
+      body: |
+        There is no need to sleep for 1 second if a label isn't visible.
+        Other services depend on the partitons mounted. Reduce sleep to 0.1
+        second.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'initrdscripts: Reduce sleep to speed up boot'
+      hash: 4a6cb8ae75e275de389dc3ef9dfbd52c3bdd72f1
+      body: |
+        There is no need to sleep for 1 second if the label hasn't been found.
+        There is nothing else running on the device in the initramfs.
+        Check every 0.05 seconds.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Make balena-host daemon socket activated to reduce baseline cpu/memory
+        usage
+      hash: 0d0cb22118e08d710640697561853a1227b64b92
+      body: |
+        Fixes #1405
+
+        We'd like the balena-host daemon to be socket activated so that it does
+        not consume any cpu/memory resource until used.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Make balena-host daemon socket activated to reduce baseline cpu/memory
+          usage
+        changelog-entry: >-
+          Make balena-host daemon socket activated to reduce baseline cpu/memory
+          usage
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update resin-supervisor to v9.8.6
+      hash: 3124067996edded74e52cf9b87ec5dc9ee95c730
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v9.8.6
+        changelog-entry: Update resin-supervisor to v9.8.6
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: >-
+        Add support for aufs 4.18.11+, 4.19, 4.20 variants and update 4.14,
+        4.14.56+, 4.15, 4.16, 4.17, 4.18
+      hash: 9c8b60cf92aa7a25f424532956439b518ec96201
+      body: |
+        We add support for 4.18.11+, 4.19, 4.19.17+, 4.20, 4.20.4+.
+        Also, update 4.14, 4.14.56+, 4.15, 4.16, 4.17, 4.18.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Add support for aufs 4.18.11+, 4.19, 4.20 variants and update 4.14,
+          4.14.56+, 4.15, 4.16, 4.17, 4.18
+        changelog-entry: >-
+          Add support for aufs 4.18.11+, 4.19, 4.20 variants and update 4.14,
+          4.14.56+, 4.15, 4.16, 4.17, 4.18
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: 'balena-engine: Bump to include runc patch'
+      hash: f56f08136e9c855637ff28880fb593dba53d452b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Improve kernel-module-headers for v4.18+ kernels
+      hash: 0931b97b76ef2d04697468f027b53247803b51d4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Improve kernel-module-headers for v4.18+ kernels
+        changelog-entry: Improve kernel-module-headers for v4.18+ kernels
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v9.8.3
+      hash: 76a72c58095d0d1b45a552f62b75bb5ec18813c6
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-supervisor to v9.8.3
+        changelog-entry: Update balena-supervisor to v9.8.3
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: >-
+        Ask chrony to quickly take measurements from custom NTP servers when
+        they are added
+      hash: 8cb1664a2650b1a60849efaf009b205e8e796816
+      body: |
+        By default, chrony will slowly and gracefully take measurements from
+        the new ntp server. The burst 4/10 command will make chrony take 4 good
+        measurements within 2 seconds each. It will try up to 10 times.
+        Fixes #1385
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Ask chrony to quickly take measurements from custom NTP servers when
+          they are added
+        changelog-entry: >-
+          Ask chrony to quickly take measurements from custom NTP servers when
+          they are added
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Disable in-tree rtl8192cu driver
+      hash: 95a5c13ee40cc958b142b00e19a4349d66a8b808
+      body: |
+        We will only have the out of tree module which allegedly
+        is more stable:
+        https://github.com/raspberrypi/linux/issues/1866
+
+        The configs for disabling it were added but apparently
+        they were never applied.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Disable in-tree rtl8192cu driver
+        changelog-entry: Disable in-tree rtl8192cu driver
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Prevent rollbacks from running if the previous OS is before v2.30.0
+      hash: fee00ba8b841d3e8634960c37c3e96c994c18567
+      body: |
+        v2.30.0 is a more mature version for rollbacks. Prevent rollbacks
+        from running on OS
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Prevent rollbacks from running if the previous OS is before v2.30.0
+        changelog-entry: Prevent rollbacks from running if the previous OS is before v2.30.0
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Change rollbacks to accept hex partition numbers for jetsons
+      hash: 11b540777b76163493564407c9bdd7be98215f02
+      body: |
+        The partition numbers are hex and not integers. This is obvious when
+        using the jetson family of devices as their partition numbering starts
+        at 0xc.
+
+        - Change integer comparisons to string comparisons.
+        - Convert current_part_idx to hex for a valid string comparison
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Change rollbacks to accept hex partition numbers for jetsons
+        changelog-entry: Change rollbacks to accept hex partition numbers for jetsons
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Convert partition numbers to hex in u-boot hook. Shouldn't affect any
+        device.
+      hash: 6c646e5c275f881c255e49d206a15d6fbbba3276
+      body: |
+        From u-boot docs:
+        "Almost all U-Boot commands expect numbers to be entered in hexadecimal
+        input format"
+
+        We only hit this in the jetson family as the boot partition there is
+        0xc. Add a simple conversion to hex. This should not affect any devices
+        that use <9 partition numbers. And allow us to use the same hook
+        from meta-balena accross all devices. Currently the jetson family has
+        its own custom hook with this one-liner.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Convert partition numbers to hex in u-boot hook. Shouldn't affect any
+          device.
+        changelog-entry: >-
+          Convert partition numbers to hex in u-boot hook. Shouldn't affect any
+          device.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Reduce default reboot/poweroff timeouts from 30 minutes to 10 minutes
+      hash: 59c923777e6145288df5b6e77ca33a21323b68e3
+      body: >
+        The default timeout for poweroff/reboot targets is 30 minutes. That is
+
+        too long. Reduce it to 10 minutes.
+
+
+        We might start hitting this when the supervisor starts rebooting devices
+
+        more gracefully after
+        https://github.com/balena-io/balena-supervisor/issues/861
+
+        is resolved.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Reduce default reboot/poweroff timeouts from 30 minutes to 10 minutes
+        changelog-entry: Reduce default reboot/poweroff timeouts from 30 minutes to 10 minutes
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Configure systemd tmpfiles to ignore supervisor tmp directories
+      hash: ebb0a930c7c8f8ec348858009a0ff3fd0c58b70b
+      body: |
+        There are tmp directories supervisor assumes nobody touches in which
+        things like update lock files are stored. This patch configures systemd
+        tmpfiles to ignore these tmp paths.
+
+        Fixes #1377
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Configure systemd tmpfiles to ignore supervisor tmp directories
+        changelog-entry: Configure systemd tmpfiles to ignore supervisor tmp directories
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Fixed "Can't have overlapping partitions." error in flasher
+      hash: 299e2c7974c408a0a2ff762bc263f266c69d5a98
+      body: |
+        Fixed typo that caused flashing process to block
+        on some corrupted eMMCs due to parted command failure.
+
+        Flashing process hanged during boot with this log:
+        - Error: Can't have overlapping partitions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fixed "Can't have overlapping partitions." error in flasher
+        changelog-entry: Fixed "Can't have overlapping partitions." error in flasher
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+    - subject: Define default DNS servers behaviour with and without google DNS
+      hash: fa3de6987e3bc82ab6d85038c637f1871e5269cb
+      body: |
+        This implements a default logic for `dnsServers` attribute in
+        `config.json` as it follows:
+
+        * when dnsServers is not defined, or empty, the default value of it will
+        be considered google DNS (8.8.8.8)
+        * when dnsServers is "null", the system will not alter dnsServers to the
+        default server as stated above
+        * when dnsServers is defined and not "null" it will be considered as
+        such without any additional servers servers
+
+        Fixes ##1348
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Define default DNS servers behaviour with and without google DNS
+        changelog-entry: Define default DNS servers behaviour with and without google DNS
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update balena-supervisor to v9.4.2
+      hash: 4d66971c840b6142c7e22c5538b5c34356b9f880
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-supervisor to v9.4.2
+        changelog-entry: Update balena-supervisor to v9.4.2
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Fix for some warnings
+      hash: 1d92f8c3bcc21a7c0b21b12f65f1051616f04b78
+      body: >
+        From
+        http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-kernel/linux/kernel-devsrc.bb?h=thud&id=fd74848c3c06901a77057ca03f7c01aff08ee34a
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix for some warnings
+        changelog-entry: Fix for some warnings
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Fix tini filename after balena-engine rename
+      hash: 47980f05d3fa7c8a46b297431e0398b2da03e22e
+      body: |
+        Since balena-engine rename, the daemon is looking for
+        `balena-engine-init` when running containers with `--init`. Fix the tini
+        filename to comply with this.
+
+        Fixes #1368
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix tini filename after balena-engine rename
+        changelog-entry: Fix tini filename after balena-engine rename
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: >-
+        Fix nm dispatcher hook when there are no custom ntp servers in
+        config.json
+      hash: 0b75ee48cee005d78e08d8c68722cc2374567123
+      body: |
+        If there are no custom ntp servers, the added_server_file doesn't exist
+        Add a check and avoid running the script if the file does not exist
+
+        Fixes #1362
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fix nm dispatcher hook when there are no custom ntp servers in
+          config.json
+        changelog-entry: >-
+          Fix nm dispatcher hook when there are no custom ntp servers in
+          config.json
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Improve persistent logging systemd service dependencies
+      hash: 0ce1d8576b7e33083784cb3123d2ad2c53091513
+      body: |
+        We need the state partition and boot partition ready before we try
+        to run the persistent logging service.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Improve persistent logging systemd service dependencies
+        changelog-entry: Improve persistent logging systemd service dependencies
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v9.3.0
+      hash: dc5ed342a39c32d2efa00197e4ce7578e8de20f9
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-supervisor to v9.3.0
+        changelog-entry: Update balena-supervisor to v9.3.0
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Use the new revision for balena source code
+      hash: a52207c03253fcc0cc219a4e1a100b46ea44e226
+      body: |
+        The 17.12-resin branch was modified and the old revision is not
+        there anymore.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Use the new revision for balena source code
+        changelog-entry: Use the new revision for balena source code
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: >-
+        Add a workaround for a bug where the chronyc online command in network
+        manager hook would get stuck and eat cpu cycles
+      hash: 6fe830882bf8ee62dc6db09b5a8a6f099d64fe41
+      body: >
+        We have noticed devices in support that show high cpu usage because
+
+        the process chronyc online seems to be eating up 50% cpu.
+
+
+        This is probably fixed upstream
+        https://github.com/mlichvar/chrony/commit/6863e43269fe27ce2744eb643295f31c00ec176d#diff-50898f0cb35139d87132f4732a029213
+
+
+        Add a timeout in any case as its a lower risk option
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Add a workaround for a bug where the chronyc online command in network
+          manager hook would get stuck and eat cpu cycles
+        changelog-entry: >-
+          Add a workaround for a bug where the chronyc online command in network
+          manager hook would get stuck and eat cpu cycles
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Fix img to rootfs dependency when img is invalidated
+      hash: 3050840935541c14ded2f9a6a1517d73dfc5ec18
+      body: |
+        There can be cases where a image type gets invalidated (due to a
+        variable change or so) and the dependency of it not. For example the img
+        type can get invalidated while the hostapp ext3 type doesn't. The img
+        generatiton script consumes/uses the rootfs generated by the hostapp
+        type but, it references the artifact based on IMAGE_NAME variable which
+        includes a time stamp. See bitbake.conf:
+
+        IMAGE_NAME = "${IMAGE_BASENAME}-${MACHINE}-${DATETIME}"
+
+        When that happens, the new timestamp will change and img will fail to
+        find the old artifact of hostapp. Change this behaviour by using the
+        symlink reference IMAGE_LINK_NAME which doesn't include a timestamp.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix img to rootfs dependency when img is invalidated
+        changelog-entry: Fix img to rootfs dependency when img is invalidated
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Have boot partition type configurable as FAT32
+      hash: a582d10ca72ff0d865783252b87160f03b2045bb
+      body: |
+        When BALENA_BOOT_FAT32 is 1, it will instruct the raw image generator to
+        create the filesystem using 32 as file allocation tables type and, as
+        well, create the boot partition as fat32 type.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Have boot partition type configurable as FAT32
+        changelog-entry: Have boot partition type configurable as FAT32
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Deprecate morty and krogoth
+      hash: 9d311fd13ad2af4b17a7a9a512e2f667e4ff9f58
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Deprecate morty and krogoth
+        changelog-entry: Deprecate morty and krogoth
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Deploy kernel source as a build artifact as well for external module
+        compilation
+      hash: bfc7a67cb6b6f38617bb810f2b5c1e051ebf6a4a
+      body: |
+        We want to build the kernel-devsrc recipe so that we can package the
+        kernel source tarball. This tarball will allow users to use the source
+        package and compile or cross compile kernel modules
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Deploy kernel source as a build artifact as well for external module
+          compilation
+        changelog-entry: >-
+          Deploy kernel source as a build artifact as well for external module
+          compilation
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'kernel-devsrc: Tarball up the kernel source and deploy it.'
+      hash: 4da9fdc90001f64f2bd8852cd4cf8a8de3b02cbb
+      body: |
+        The kernel-devsrc recipe only builds a package by default. We'd like
+        to tarball the source and share it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'kernel-modules-headers: Use the build directory for artifacts'
+      hash: 3e09d127d86729a94cd9a600a6f4f7568b4d6315
+      body: |
+        Otherwise the module header tarball appears in the kernel source
+        directory and is tarballed again by the kernel-devsrc recipe
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'docs: Add documentation on nested changelogs'
+      hash: d02c8f877914b8173af4f4fd051d4e5626a2aeae
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Giovanni Garufi <giovanni@balena.io>
+        signed-off-by: Giovanni Garufi <giovanni@balena.io>
+      author: Giovanni Garufi
+    - subject: 'VersionBot: update upstream name and url'
+      hash: 203ddc055b3ea63bfa953a8917fdcd2a4961c012
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Giovanni Garufi <giovanni@balena.io>
+        signed-off-by: Giovanni Garufi <giovanni@balena.io>
+      author: Giovanni Garufi
+  version: 2.30.0
+  date: 2019-03-01T17:08:35.842Z
+- commits:
     - subject: OS will default apps.json to an empty json file
       hash: c935fcfd72dfefa5188d90edc48cd1b01dbadec2
       body: |
