@@ -401,6 +401,7 @@ RESIN_CONFIGS[reduce-size] = " \
     CONFIG_HFSPLUS_FS=n \
     CONFIG_UDF_FS=n \
     CONFIG_BLK_DEV_DRBD=n \
+    CONFIG_XFS_FS=n \
     "
 
 # security features
