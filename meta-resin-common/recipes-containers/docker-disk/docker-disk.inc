@@ -18,18 +18,7 @@ def connected(d):
 
 # Check if docker is running and usable for current user
 def usable_docker(d):
-    import os, subprocess
-
-    # Check docker is running
-    pid_file = d.getVar('DOCKER_PID_FILE', True)
-    try:
-        f = open(pid_file, 'r')
-    except:
-        return "no"
-    pid = f.read()
-    f.close()
-    if not os.path.exists("/proc/%s" % pid):
-        return "no"
+    import subprocess
 
     # Test docker execute permission
     cmd = "docker images > /dev/null 2>&1"
