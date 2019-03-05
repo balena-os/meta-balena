@@ -1,6 +1,48 @@
 Change log
 -----------
 
+# v2.30.0
+## (2019-03-05)
+
+* resin-init: update resin.io reference to balenaOS [Matthew McGinn]
+* resin-supervisor: Recreate on start if config has changed [Rich Bayliss]
+* Generate the temporary kernel-devsrc compressed archive in WORKDIR instead of B [Florin Sarbu]
+* balena-engine: Update to include fix for signal SIGRTMIN+3 [Andrei Gherzan]
+* Reduce sleeps while trying to mount partition to speed up boot [Zubair Lutfullah Kakakhel]
+* resin-expand: Reduce sleep duration to speed up boot [Zubair Lutfullah Kakakhel]
+* initrdscripts: Reduce sleep to speed up boot [Zubair Lutfullah Kakakhel]
+* Make balena-host daemon socket activated to reduce baseline cpu/memory usage [Zubair Lutfullah Kakakhel]
+* Update resin-supervisor to v9.8.6 [Cameron Diver]
+* Add support for aufs 4.18.11+, 4.19, 4.20 variants and update 4.14, 4.14.56+, 4.15, 4.16, 4.17, 4.18 [Florin Sarbu]
+* balena-engine: Bump to include runc patch [Andrei Gherzan]
+* Improve kernel-module-headers for v4.18+ kernels [Zubair Lutfullah Kakakhel]
+* Update balena-supervisor to v9.8.3 [Cameron Diver]
+* Ask chrony to quickly take measurements from custom NTP servers when they are added [Zubair Lutfullah Kakakhel]
+* Disable in-tree rtl8192cu driver [Florin Sarbu]
+* Prevent rollbacks from running if the previous OS is before v2.30.0 [Zubair Lutfullah Kakakhel]
+* Change rollbacks to accept hex partition numbers for jetsons [Zubair Lutfullah Kakakhel]
+* Convert partition numbers to hex in u-boot hook. Shouldn't affect any device. [Zubair Lutfullah Kakakhel]
+* Reduce default reboot/poweroff timeouts from 30 minutes to 10 minutes [Zubair Lutfullah Kakakhel]
+* Configure systemd tmpfiles to ignore supervisor tmp directories [Andrei Gherzan]
+* Fixed "Can't have overlapping partitions." error in flasher [Alexandru Costache]
+* Define default DNS servers behaviour with and without google DNS [Andrei Gherzan]
+* Update balena-supervisor to v9.4.2 [Cameron Diver]
+* Fix for some warnings [Zubair Lutfullah Kakakhel]
+* Fix tini filename after balena-engine rename [Andrei Gherzan]
+* Fix nm dispatcher hook when there are no custom ntp servers in config.json [Zubair Lutfullah Kakakhel]
+* Improve persistent logging systemd service dependencies [Zubair Lutfullah Kakakhel]
+* Update balena-supervisor to v9.3.0 [Cameron Diver]
+* Use the new revision for balena source code [Florin Sarbu]
+* Add a workaround for a bug where the chronyc online command in network manager hook would get stuck and eat cpu cycles [Zubair Lutfullah Kakakhel]
+* Fix img to rootfs dependency when img is invalidated [Andrei Gherzan]
+* Have boot partition type configurable as FAT32 [Andrei Gherzan]
+* Deprecate morty and krogoth [Zubair Lutfullah Kakakhel]
+* Deploy kernel source as a build artifact as well for external module compilation [Zubair Lutfullah Kakakhel]
+* kernel-devsrc: Tarball up the kernel source and deploy it. [Zubair Lutfullah Kakakhel]
+* kernel-modules-headers: Use the build directory for artifacts [Zubair Lutfullah Kakakhel]
+* docs: Add documentation on nested changelogs [Giovanni Garufi]
+* VersionBot: update upstream name and url [Giovanni Garufi]
+
 # v2.29.0
 ## (2018-12-19)
 
