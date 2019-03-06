@@ -141,7 +141,7 @@ fi
 
 IMAGE_FILE_SIZE=$(wc -c /opt/"$RESIN_IMAGE" | awk '{print $1}')
 
-resin-device-progress --percentage 0 --state "Starting flashing resin.io on internal media" || true
+resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
 
 while kill -USR1 $DD_PID 2>/dev/null; do
     sleep 3
@@ -150,7 +150,7 @@ while kill -USR1 $DD_PID 2>/dev/null; do
     fi
     IMAGE_WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
     let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE || true
-    resin-device-progress --percentage $RATIO --state "Flashing resin.io on internal media" || true
+    resin-device-progress --percentage $RATIO --state "Flashing balenaOS on internal media" || true
     truncate -s 0 /tmp/dd_progress_log
 done
 
