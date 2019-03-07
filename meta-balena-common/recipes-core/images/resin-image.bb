@@ -24,7 +24,7 @@ inherit core-image image-resin distro_features_check
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
     splash \
-    ssh-server-dropbear \
+    ssh-server-openssh \
     read-only-rootfs \
     "
 
