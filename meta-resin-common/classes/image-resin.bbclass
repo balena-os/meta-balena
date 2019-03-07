@@ -116,9 +116,13 @@ remove_backup_files () {
     done
 }
 
-# We generate the host keys in /etc/dropbear
+# We generate the host keys in the state partition
 read_only_rootfs_hook_append () {
-    sed -i -e "s:^DROPBEAR_RSAKEY_DIR=.*$:DROPBEAR_RSAKEY_DIR=/etc/dropbear:" ${IMAGE_ROOTFS}/etc/default/dropbear
+    # Yocto sets this to a volatile mount but we want the host keys persistent
+    # in the state partition
+    sed -i -e \
+	's#^SYSCONFDIR.*$#SYSCONFDIR=\${SYSCONFDIR:-/etc/ssh/hostkeys}#' \
+        ${IMAGE_ROOTFS}/etc/default/ssh
 }
 
 # Generate the boot partition directory and deploy it to rootfs
