@@ -22,7 +22,6 @@ FILES_${PN} += " \
 	"
 
 BINDMOUNTS += " \
-	/etc/dropbear \
 	/etc/hostname \
 	/etc/NetworkManager/system-connections \
 	/home/root/.rnd \
