@@ -16,7 +16,6 @@ FILES_${PN} += " \
 	"
 
 BINDMOUNTS += " \
-	/etc/dropbear \
 	/etc/hostname \
 	/etc/openvpn \
 	/etc/NetworkManager/conf.d \
