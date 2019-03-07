@@ -295,9 +295,60 @@ python balena_udev_rules_sanity_handler() {
         bb.warn("Found the following rules in /etc/udev/rules.d/: " + str(os.listdir(etc_udev_rules)))
 }
 
+def get_rev(path):
+    import subprocess
+    cmd = 'git log -n1 --format=format:%h '
+    rev = subprocess.Popen('cd ' + path + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
+    if sys.version_info.major >= 3 :
+        rev = rev.decode()
+    return rev
+
+def get_rel_path_rev(layer, rel, d):
+    targetrev = "unknown"
+    targetpath = get_rel_path(layer, rel, d)
+    targetrev = get_rev(targetpath)
+    return targetrev
+
+def get_rel_path(layer, rel, d):
+    bblayers = d.getVar("BBLAYERS", True)
+    layerpath = filter(lambda x: x.endswith(layer), bblayers.split())
+    if sys.version_info.major >= 3 :
+         layerpath = list(layerpath)
+    return os.path.join(layerpath[0], rel)
+
+def get_slug(d):
+    import json
+    slug = "unknown"
+    machine = d.getVar("MACHINE", True)
+    resinboardpath = get_rel_path('meta-resin-common', '../../../', d)
+    jsonfile = os.path.normpath(os.path.join(resinboardpath, machine + ".json"))
+    try:
+        with open(jsonfile, 'r') as fd:
+            machinejson = json.load(fd)
+        slug = machinejson['slug']
+    except Exception as e:
+        bb.warn("os-release: Can't get the machine json so os-release won't include this information.")
+    return slug
+
+# Sets os specific revisions in os-release
+python os_release_extra_data() {
+    resin_board_rev = get_rel_path_rev('meta-resin-common', '../../../', d)
+    meta_resin_rev = get_rel_path_rev('meta-resin-common', '../', d)
+    slug = get_slug(d)
+    extra_data = [
+        'RESIN_BOARD_REV="{0}"\n'.format(resin_board_rev),
+        'META_RESIN_REV="{0}"\n'.format(meta_resin_rev),
+        'SLUG="{0}"\n'.format(slug),
+    ]
+    os_release_file = os.path.join(d.getVar('IMAGE_ROOTFS', True), "etc/os-release")
+    with open(os_release_file, 'a') as f:
+        f.writelines(extra_data)
+}
+
 ROOTFS_POSTPROCESS_COMMAND += " \
     generate_compressed_kernel_module_deps ; \
     add_image_flag_file ; \
+    os_release_extra_data ; \
     resin_boot_dirgen_and_deploy ; \
     resin_root_quirks ; \
     resin_boot_sanity_handler ; \
