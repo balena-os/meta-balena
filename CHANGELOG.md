@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.30.1
+## (2019-03-08)
+
+* README:md: Document dnsServers behaviour [Alexis Svinartchouk]
+
 # v2.30.0
 ## (2019-02-28)
 

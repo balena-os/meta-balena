@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'README:md: Document dnsServers behaviour'
+      hash: e3e574faa5b474ad86d0b72a9739cedddaef8f42
+      body: |
+        Taken from fa3de6987e3bc82ab6d85038c637f1871e5269cb commit message
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexis Svinartchouk <alexis@balena.io>
+        signed-off-by: Alexis Svinartchouk <alexis@balena.io>
+      author: Alexis Svinartchouk
+  version: 2.30.1
+  date: 2019-03-08T11:30:27.390Z
+- commits:
     - subject: 'resin-supervisor: Recreate on start if config has changed'
       hash: 3ce04f93b1894f86be5d838bcc24335aaa161233
       body: |
