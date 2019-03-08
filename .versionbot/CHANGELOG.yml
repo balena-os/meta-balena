@@ -1,4 +1,79 @@
 - commits:
+    - subject: 'README:md: Document dnsServers behaviour'
+      hash: ad441b8367d65fe780beef35b20f8d4898bdd339
+      body: |
+        Taken from fa3de6987e3bc82ab6d85038c637f1871e5269cb commit message
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexis Svinartchouk <alexis@balena.io>
+        signed-off-by: Alexis Svinartchouk <alexis@balena.io>
+      author: Alexis Svinartchouk
+    - subject: Update resin-supervisor to v9.9.0
+      hash: 133dde58bde7c4d54ad157374bb3e7062a599e31
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update resin-supervisor to v9.9.0
+        changelog-entry: Update resin-supervisor to v9.9.0
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Cleanup old versions of iwlwifi firmware files in Yocto sumo
+      hash: 5db4441e50b2d47cd7658845c12508b50808d5ee
+      body: |
+        This is done so we can save considerable amount of space on the root
+        partition.
+
+        See #810
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Cleanup old versions of iwlwifi firmware files in Yocto sumo
+        changelog-entry: Cleanup old versions of iwlwifi firmware files in Yocto sumo
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Remove polkit dependency in balenaOS
+      hash: 4fddf1a54ac13ed4acd3f65096afccf6a5f7a5ef
+      body: |
+        Fixes #1404
+        See #810
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Remove polkit dependency in balenaOS
+        changelog-entry: Remove polkit dependency in balenaOS
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Remove support for XFS file system
+      hash: bbf5675973da6adf8fa8f8b671606fbffaef834e
+      body: |
+        This is done so we can save space on the root file system.
+
+        See #810
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Remove support for XFS file system
+        changelog-entry: Remove support for XFS file system
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'resin-init: update resin.io reference to balenaOS'
+      hash: 593fcb558b1afe3892560fdd7e0c315c9459466f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+  version: 2.31.0
+  date: 2019-03-08T14:31:27.986Z
+- commits:
     - subject: 'resin-supervisor: Recreate on start if config has changed'
       hash: 3ce04f93b1894f86be5d838bcc24335aaa161233
       body: |
