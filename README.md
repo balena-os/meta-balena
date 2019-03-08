@@ -141,7 +141,10 @@ String. A space-separated list of NTP servers to use for time synchronization. D
 
 ### dnsServers
 
-String. A space-separated list of preferred DNS servers to use for name resolution. Falls back to DHCP provided servers and Google DNS.
+String. A space-separated list of preferred DNS servers to use for name resolution:
+  * when `dnsServers` is not defined, or empty, the default value of it will be considered google DNS (8.8.8.8);
+  * when `dnsServers` is `"null"` (a string), the system will not alter dnsServers to the default server as stated above;
+  * when `dnsServers` is defined and not `"null"` it will be considered as such without any additional servers servers.
 
 ### os
 

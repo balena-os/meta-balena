@@ -85,6 +85,8 @@ RDEPENDS_${PN}_append = " resin-ntp-config util-linux"
 # Network configuration is managed by NetworkManager. ntp is managed by chronyd
 PACKAGECONFIG_remove = "resolved networkd timesyncd"
 
+PACKAGECONFIG_remove = "polkit"
+
 # Add missing users/groups defined in /usr/lib/sysusers.d/*
 # In this time we avoid creating these at first boot
 USERADD_PARAM_${PN} += "; --system systemd-bus-proxy; --system -d / -M --shell /bin/nologin -u 65534 nobody;"
