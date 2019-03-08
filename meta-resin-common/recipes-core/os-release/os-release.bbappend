@@ -9,50 +9,6 @@ VERSION = "${HOSTOS_VERSION}"
 VARIANT = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','Development','Production',d)}"
 VARIANT_ID = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','dev','prod',d)}"
 
-python __anonymous () {
-    import subprocess
-    import json
-
-    # Generate RESIN_BOARD_REV and META_RESIN_REV
-    version = d.getVar("VERSION", True)
-    bblayers = d.getVar("BBLAYERS", True)
-
-    # Detect the path of meta-resin-common
-    metaresincommonpath = filter(lambda x: x.endswith('meta-resin-common'), bblayers.split())
-    if sys.version_info.major >= 3 :
-         metaresincommonpath = list(metaresincommonpath)
-
-    if metaresincommonpath:
-        resinboardpath = os.path.join(metaresincommonpath[0], '../../')
-        metaresinpath = os.path.join(metaresincommonpath[0], '../')
-
-        cmd = 'git log -n1 --format=format:%h '
-        resinboardrev = subprocess.Popen('cd ' + resinboardpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
-        if sys.version_info.major >= 3 :
-            resinboardrev = resinboardrev.decode()
-        metaresinrev = subprocess.Popen('cd ' + metaresinpath + ' ; ' + cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
-        if sys.version_info.major >= 3 :
-            metaresinrev = metaresinrev.decode()
-
-        if resinboardrev:
-            d.setVar('RESIN_BOARD_REV', resinboardrev)
-        if metaresinrev:
-            d.setVar('META_RESIN_REV', metaresinrev)
-    else:
-        bb.warn("Cannot get the revisions of your repositories.")
-
-    # Generate SLUG to be included in os-release
-    machine = d.getVar("MACHINE", True)
-    jsonfile = os.path.normpath(os.path.join(resinboardpath, '..', machine + ".json"))
-    try:
-        with open(jsonfile, 'r') as fd:
-            machinejson = json.load(fd)
-        slug = machinejson['slug']
-        d.setVar('SLUG', slug)
-    except Exception as e:
-        bb.warn("os-release: Can't get the machine json so os-release won't include this information.")
-}
-
 #
 # Add quotes around values not matching [A-Za-z0-9]*
 # Failing to do so will confuse the container engine
