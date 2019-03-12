@@ -91,3 +91,9 @@ PACKAGECONFIG_remove = "polkit"
 # In this time we avoid creating these at first boot
 USERADD_PARAM_${PN} += "; --system systemd-bus-proxy; --system -d / -M --shell /bin/nologin -u 65534 nobody;"
 GROUPADD_PARAM_${PN} += "; -r wheel; -r nobody;"
+
+# Clean up udev hardware database source files
+pkg_postinst_udev-hwdb_append () {
+    # These files have already been used to generate /etc/udev/hwdb.bin which is the only file used at runtime
+    rm $D/lib/udev/hwdb.d/*
+}
