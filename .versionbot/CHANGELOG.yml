@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update resin-supervisor to v9.11.0
+      hash: 8b1380bce8a664ef228b054c2b065521acbb48aa
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update resin-supervisor to v9.11.0
+        changelog-entry: Update resin-supervisor to v9.11.0
+        Signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+        signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+      author: Pablo Carranza Velez
+  version: 2.31.1
+  date: 2019-03-18T19:21:24.218Z
+- commits:
     - subject: 'README:md: Document dnsServers behaviour'
       hash: ad441b8367d65fe780beef35b20f8d4898bdd339
       body: |
