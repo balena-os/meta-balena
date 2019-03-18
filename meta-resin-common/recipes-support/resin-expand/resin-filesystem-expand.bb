@@ -15,6 +15,7 @@ SYSTEMD_SERVICE_${PN} = "resin-filesystem-expand.service"
 RDEPENDS_${PN} = " \
     coreutils \
     e2fsprogs-resize2fs \
+    e2fsprogs-e2fsck \
     util-linux \
     "
 
