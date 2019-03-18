@@ -22,6 +22,7 @@
        "resin_flasher_flag_file=" __stringify(RESIN_FLASHER_FLAG_FILE) "\0" \
        "resin_image_flag_file=" __stringify(RESIN_IMAGE_FLAG_FILE) "\0" \
        "resin_uboot_devices=" __stringify(RESIN_UBOOT_DEVICES) "\0" \
+       "resin_uboot_device_types=" __stringify(RESIN_UBOOT_DEVICE_TYPES) "\0" \
        "resin_boot_part=" __stringify(RESIN_BOOT_PART) "\0" \
        "resin_root_part=" __stringify(RESIN_DEFAULT_ROOT_PART) "\0" \
        "resin_flasher_skip=0 \0" \
@@ -38,14 +39,20 @@
                "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
        \
        "resin_flasher_detect=" \
+               "if test \"${resin_scan_dev_type}\" = usb ; then " \
+	               "usb start ; " \
+               "fi; " \
                "fatload ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_flasher_flag_file};\0" \
        \
        "resin_image_detect=" \
+               "if test \"${resin_scan_dev_type}\" = usb ; then " \
+                       "usb start ; " \
+               "fi; " \
                "fatload ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_image_flag_file};\0" \
        \
        "resin_scan_devs=" \
-               "echo Scanning MMC and USB devices ${resin_uboot_devices}; " \
-               "for resin_scan_dev_type in mmc usb; do " \
+               "echo Scanning ${resin_uboot_device_types} devices ${resin_uboot_devices}; " \
+               "for resin_scan_dev_type in ${resin_uboot_device_types}; do " \
                        "for resin_scan_dev_index in ${resin_uboot_devices}; do " \
                                "if test ${resin_flasher_skip} = 0 && run resin_flasher_detect; then " \
                                        "setenv resin_flasher_dev_index ${resin_scan_dev_index}; " \
