@@ -11,8 +11,8 @@ LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=9740d093a080530b5c5c6573df9af4
 
 inherit systemd go pkgconfig useradd
 
-BALENA_VERSION = "17.12.0-dev"
-BALENA_BRANCH= "17.12-resin"
+BALENA_VERSION = "17.13.3-dev"
+BALENA_BRANCH= "master"
 
 SRCREV = "fe78e2c9a69313007c53c83fff4b5525fbc2ba45"
 SRC_URI = "\
