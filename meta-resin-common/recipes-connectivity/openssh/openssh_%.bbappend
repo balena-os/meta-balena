@@ -3,15 +3,22 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/balena-files:"
 SRC_URI_append = " \
     file://ssh_keys_merger \
     file://ssh.service \
+    file://sshd_migrate_keys \
 "
 
 SYSTEMD_SERVICE_${PN}-sshd += "sshdgenkeys.service"
 
 FILES_${PN}-sshd += " \
+    ${libexecdir}/${BPN}/sshd_migrate_keys \
     ${sysconfdir}/avahi/services/ssh.service \
     ${sysconfdir}/systemd/system/sshdgenkeys.service.d/sshgenkeys.conf \
     ${sbindir}/ssh_keys_merger \
 "
+
+# The `ssh_keys_merger` script needs dropbear tools
+RDEPENDS_${PN}-sshd += "dropbear"
+RCONFLICTS_${PN} = ""
+RCONFLICTS_${PN}-sshd = ""
 
 do_install_append () {
     # Advertise SSH service using an avahi service file                                                                                                                                                                                                                                                                                                                   
@@ -30,4 +37,6 @@ do_install_append () {
     echo "HostKey /etc/ssh/hostkeys/ssh_host_dsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
     echo "HostKey /etc/ssh/hostkeys/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
     echo "HostKey /etc/ssh/hostkeys/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+
+    install -D -m 0755 ${WORKDIR}/sshd_migrate_keys ${D}${libexecdir}/${BPN}/sshd_migrate_keys
 }

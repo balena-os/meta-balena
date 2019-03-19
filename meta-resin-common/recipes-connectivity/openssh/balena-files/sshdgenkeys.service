@@ -5,6 +5,7 @@ Requires=resin-state.service bind-etc-ssh-hostkeys.service
 After=resin-state.service bind-etc-ssh-hostkeys.service
 
 [Service]
+ExecStartPre=-@LIBEXECDIR@/sshd_migrate_keys
 ExecStart=@LIBEXECDIR@/sshd_check_keys
 Type=oneshot
 RemainAfterExit=yes
