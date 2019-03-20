@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update resin-supervisor to v9.11.2
+      hash: abb864096b5b473893aa7011a685ed8df97a28ee
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update resin-supervisor to v9.11.2
+        changelog-entry: Update resin-supervisor to v9.11.2
+        Signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+        signed-off-by: Pablo Carranza Velez <pablo@balena.io>
+      author: Pablo Carranza Velez
+  version: 2.31.3
+  date: 2019-03-20T20:18:02.522Z
+- commits:
     - subject: Update resin-supervisor to v9.11.1
       hash: 0993710382367b865ce81113dbe5566e5814da10
       body: ''
