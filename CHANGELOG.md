@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.31.5
+## (2019-03-21)
+
+* Update resin-supervisor to v9.11.3 [Andrei Gherzan]
+
 # v2.31.4
 ## (2019-03-20)
 

@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update resin-supervisor to v9.11.3
+      hash: 7ad04ea5594fc1cf5f378b9cab3c75b2ee6f0e6e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update resin-supervisor to v9.11.3
+        changelog-entry: Update resin-supervisor to v9.11.3
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.31.5
+  date: 2019-03-21T14:43:57.016Z
+- commits:
     - subject: 'resin-supervisor: Recreate on start if config has changed'
       hash: 20032211302d25300c09310e169cafa01375e35e
       body: >
