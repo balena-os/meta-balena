@@ -1,5 +1,11 @@
 #!/bin/sh
 
+tmpcachefile=/tmp/os-vars
+
+if [ -f "$tmpcachefile" ]; then
+    . "$tmpcachefile"
+fi
+
 help () {
     cat << EOF
 Script for setting resin shell environment
@@ -95,3 +101,32 @@ if [ -f $CONFIG_PATH ]; then
 else
     echo "[WARNING] $0 : '$CONFIG_PATH' not found."
 fi
+
+# Save environment variables in a cache
+echo "BOOT_MOUNTPOINT=\""""$BOOT_MOUNTPOINT""\" > $tmpcachefile
+echo "FLASHER_FILEFLAG=\""""$FLASHER_FILEFLAG""\" >> $tmpcachefile
+echo "CONFIG_PATH=\""""$CONFIG_PATH""\" >> $tmpcachefile
+echo "RESIN_BOOT_MOUNTPOINT=\""""$RESIN_BOOT_MOUNTPOINT""\" >> $tmpcachefile
+echo "API_ENDPOINT=\""""$API_ENDPOINT""\" >> $tmpcachefile
+echo "LISTEN_PORT=\""""$LISTEN_PORT""\" >> $tmpcachefile
+echo "MIXPANEL_TOKEN=\""""$MIXPANEL_TOKEN""\" >> $tmpcachefile
+echo "PUBNUB_PUBLISH_KEY=\""""$PUBNUB_PUBLISH_KEY""\" >> $tmpcachefile
+echo "PUBNUB_SUBSCRIBE_KEY=\""""$PUBNUB_SUBSCRIBE_KEY""\" >> $tmpcachefile
+echo "REGISTRY_ENDPOINT=\""""$REGISTRY_ENDPOINT""\" >> $tmpcachefile
+echo "VPN_ENDPOINT=\""""$VPN_ENDPOINT""\" >> $tmpcachefile
+echo "VPN_PORT=\""""$VPN_PORT""\" >> $tmpcachefile
+echo "DELTA_ENDPOINT=\""""$DELTA_ENDPOINT""\" >> $tmpcachefile
+echo "CONFIG_HOSTNAME=\""""$CONFIG_HOSTNAME""\" >> $tmpcachefile
+echo "PERSISTENT_LOGGING=\""""$PERSISTENT_LOGGING""\" >> $tmpcachefile
+echo "COUNTRY=\""""$COUNTRY""\" >> $tmpcachefile
+echo "UUID=\""""$UUID""\" >> $tmpcachefile
+echo "PROVISIONING_API_KEY=\""""$PROVISIONING_API_KEY""\" >> $tmpcachefile
+echo "DEVICE_API_KEY=\""""$DEVICE_API_KEY""\" >> $tmpcachefile
+echo "DEVICE_ID=\""""$DEVICE_ID""\" >> $tmpcachefile
+echo "USER_ID=\""""$USER_ID""\" >> $tmpcachefile
+echo "APPLICATION_ID=\""""$APPLICATION_ID""\" >> $tmpcachefile
+echo "DEVICE_TYPE=\""""$DEVICE_TYPE""\" >> $tmpcachefile
+echo "REGISTERED_AT=\""""$REGISTERED_AT""\" >> $tmpcachefile
+echo "NTP_SERVERS=\""""$NTP_SERVERS""\" >> $tmpcachefile
+echo "DNS_SERVERS=\""""$DNS_SERVERS""\" >> $tmpcachefile
+echo "BALENA_ROOT_CA=\""""$BALENA_ROOT_CA""\" >> $tmpcachefile

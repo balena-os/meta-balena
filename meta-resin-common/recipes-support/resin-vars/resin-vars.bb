@@ -17,12 +17,15 @@ SRC_URI = " \
     file://os-udevrules.service \
     file://os-sshkeys \
     file://os-sshkeys.service \
+    file://resin-vars-tmpfiles.conf \
     "
 S = "${WORKDIR}"
 
 inherit allarch systemd
 
-FILES_${PN} = "${sbindir}"
+FILES_${PN} = "${sbindir} \
+               ${sysconfdir} \
+	       "
 
 DEPENDS = "bash-native jq-native coreutils-native"
 RDEPENDS_${PN} = "bash jq udev coreutils"
@@ -46,6 +49,9 @@ do_install() {
     install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/
+
+    install -d ${D}${sysconfdir}/tmpfiles.d
+    install -m 0644 ${WORKDIR}/resin-vars-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
