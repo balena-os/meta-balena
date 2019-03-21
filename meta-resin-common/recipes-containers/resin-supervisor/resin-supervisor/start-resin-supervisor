@@ -100,7 +100,7 @@ runSupervisor() {
 if [ -z "$SUPERVISOR_IMAGE_ID" ]; then
     # No supervisor image exists on the device, try to pull it
     systemctl start update-resin-supervisor
-elif configIsUnchanged && [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ]; then
+elif [ "$SUPERVISOR_IMAGE_ID" = "$SUPERVISOR_CONTAINER_IMAGE_ID" ] && configIsUnchanged; then
     # Supervisor image exists, and the current supervisor container is created from
     balena start --attach resin_supervisor
 else
