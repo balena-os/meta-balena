@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.31.4
+## (2019-03-20)
+
+* resin-supervisor: Recreate on start if config has changed [Rich Bayliss]
+
 # v2.31.3
 ## (2019-03-20)
 

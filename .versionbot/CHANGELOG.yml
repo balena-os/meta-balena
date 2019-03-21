@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'resin-supervisor: Recreate on start if config has changed'
+      hash: 20032211302d25300c09310e169cafa01375e35e
+      body: >
+        Fix the ordering of the conditional check when starting the supervisor
+        container;
+
+        only check that the values being passed into the environment match the
+        ones held
+
+        in the config IF the container already exists.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Rich Bayliss <rich@balena.io>
+        signed-off-by: Rich Bayliss <rich@balena.io>
+      author: Rich Bayliss
+  version: 2.31.4
+  date: 2019-03-20T23:25:52.136Z
+- commits:
     - subject: Update resin-supervisor to v9.11.2
       hash: abb864096b5b473893aa7011a685ed8df97a28ee
       body: ''
