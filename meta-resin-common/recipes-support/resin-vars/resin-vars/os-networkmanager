@@ -74,8 +74,8 @@ log "info" "Using NetworkManager configuration fragment file in $NM_CONF_FRAGMEN
 
 nm_config="# This file is generated based on os.networkManager configuration in config.json."
 
-# [Device]
-section="Device"
+# [device]
+section="device"
 s=0
 if ! config_json_value="$(jq -r " .os.network.wifi.randomMacAddressScan" "$CONFIG_PATH")"; then
 	log "error" "Error parsing $CONFIG_PATH."

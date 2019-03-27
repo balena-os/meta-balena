@@ -95,14 +95,14 @@ runtest() {
 do_runtests() {
 	bbnote "Running os-networkmanager tests..."
 	runtest os-networkmanager.testconfig1.json 0 '# This file is generated based on os.networkManager configuration in config.json.
-[Device]
+[device]
 wifi.scan-rand-mac-address=yes'
 	runtest os-networkmanager.testconfig2.json 0 '# This file is generated based on os.networkManager configuration in config.json.
-[Device]
+[device]
 wifi.scan-rand-mac-address=no'
 	runtest os-networkmanager.testconfig3.json 0 '# This file is generated based on os.networkManager configuration in config.json.'
 	runtest os-networkmanager.testconfig4.json 0 '# This file is generated based on os.networkManager configuration in config.json.
-[Device]
+[device]
 wifi.scan-rand-mac-address=foo'
 	runtest os-networkmanager.testconfig5.json 1 'NO FILE'
 }
