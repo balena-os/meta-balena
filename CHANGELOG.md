@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.31.6
+## (2019-03-28)
+
+* readme: Replace resin with balena where appropriate [Roman Mazur]
+
 # v2.31.5
 ## (2019-03-21)
 

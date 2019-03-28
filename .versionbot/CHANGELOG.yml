@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'readme: Replace resin with balena where appropriate'
+      hash: d3d3df107babbb175f53a518f36908ad694e50fd
+      body: |
+        To be more consistent in naming.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Roman Mazur <mazur.roman@gmail.com>
+        signed-off-by: Roman Mazur <mazur.roman@gmail.com>
+      author: Roman Mazur
+  version: 2.31.6
+  date: 2019-03-28T18:24:27.004Z
+- commits:
     - subject: Update resin-supervisor to v9.11.3
       hash: 7ad04ea5594fc1cf5f378b9cab3c75b2ee6f0e6e
       body: ''
