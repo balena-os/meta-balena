@@ -6,6 +6,12 @@ fsck_enabled() {
         echo "[INFO] Flasher detected. We don't run fsck on the partitions when provisioning."
         return 1
     fi
+
+    cat > "/etc/e2fsck.conf" <<EOF
+[options]
+broken_system_clock=1
+EOF
+
     return 0
 }
 
