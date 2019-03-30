@@ -24,7 +24,7 @@ mkdir -p $DATA_VOLUME/resin-data
 
 # Start docker
 echo "Starting docker daemon with $BALENA_STORAGE storage driver."
-dockerd -g $DATA_VOLUME/docker -s "$BALENA_STORAGE" &
+dockerd -g $DATA_VOLUME/docker -s "$BALENA_STORAGE" -b none &
 echo "Waiting for docker to become ready.."
 STARTTIME="$(date +%s)"
 ENDTIME="$STARTTIME"
