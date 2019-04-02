@@ -1,7 +1,7 @@
 [Unit]
 Description=OpenVPN
 Requires=prepare-openvpn.service bind-etc-openvpn.service
-After=syslog.target network.target prepare-openvpn.service bind-etc-openvpn.service time-sync.target
+After=syslog.target network.target prepare-openvpn.service bind-etc-openvpn.service time-sync.target multi-user.target
 ConditionFileNotEmpty=/etc/openvpn/openvpn.conf
 
 [Service]
@@ -15,4 +15,4 @@ ExecStart=/usr/sbin/openvpn --writepid /var/run/openvpn/openvpn.pid --cd /etc/op
 
 [Install]
 Alias=openvpn-resin.service
-WantedBy=multi-user.target
+WantedBy=os-late-init.target

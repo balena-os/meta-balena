@@ -1,6 +1,6 @@
 [Unit]
 Description=OpenVPN Robust And Highly Flexible Tunneling Application On %I
-After=syslog.target network.target
+After=syslog.target network.target multi-user.target
 
 [Service]
 PrivateTmp=true
@@ -9,4 +9,4 @@ PIDFile=/var/run/openvpn/%i.pid
 ExecStart=/usr/sbin/openvpn --daemon --writepid /var/run/openvpn/%i.pid --cd /etc/openvpn/ --config %i.conf
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=os-late-init.target
