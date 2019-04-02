@@ -1,7 +1,7 @@
-# Resin.io layers for Yocto
+# Balena.io layers for Yocto
 
 ## Description
-This repository enables building resin.io for various devices.
+This repository enables building balenaOS for various devices.
 
 ## Layers Structure
 * meta-resin-common : layer which contains common recipes for all our supported platforms.
@@ -47,25 +47,25 @@ To make it short:
 
 ### Generation of host OS update bundles
 
-In order to generate update resin host OS bundles, edit the build's local.conf adding:
+In order to generate update balena host OS bundles, edit the build's local.conf adding:
 
 RESINHUP = "yes"
 
 ### Configure custom network manager
 
-By default resin uses NetworkManager on host OS to provide connectivity. If you want to change and use other providers, list your packages using NETWORK_MANAGER_PACKAGES. You can add this variable to local.conf. Here is an example:
+By default balena uses NetworkManager on host OS to provide connectivity. If you want to change and use other providers, list your packages using NETWORK_MANAGER_PACKAGES. You can add this variable to local.conf. Here is an example:
 
 NETWORK_MANAGER_PACKAGES = "mynetworkmanager mynetworkmanager-client"
 
 ### Customizing splash
 
-We configure all of our initial images to produce a resin logo at boot, shutdown or reboot. But we encourage any user to go and replace that logo with their own.
-All you have to do is replace the splash/resin-logo.png file that you will find in the first partition of our images (boot partition) with your own image.
-NOTE: As it currently stands plymouth expects the image to be named resin-logo.png.
+We configure all of our initial images to produce a balena logo at boot, shutdown or reboot. But we encourage any user to go and replace that logo with their own.
+All you have to do is replace the `splash/resin-logo.png` file that you will find in the first partition of our images (boot partition) with your own image.
+NOTE: As it currently stands plymouth expects the image to be named `resin-logo.png`.
 
 ### Docker storage driver
 
-By the default the build system will set all the bits needed for the docker to be able to use the `aufs` storage driver. This can be changed by defining `BALENA_STORAGE` in your local.conf. It supports `aufs` and `overlay2`.
+By default the build system will set all the bits needed for the docker to be able to use the `aufs` storage driver. This can be changed by defining `BALENA_STORAGE` in your local.conf. It supports `aufs` and `overlay2`.
 
 ## The OS
 
@@ -121,7 +121,7 @@ More info: http://stackoverflow.com/questions/29546388/getting-an-operation-not-
 
 ## config.json
 
-The behaviour of resinOS can be configured by setting the following keys in the config.json file in the boot partition. This configuration file is also used by the supervisor.
+The behaviour of balenaOS can be configured by setting the following keys in the config.json file in the boot partition. This configuration file is also used by the supervisor.
 
 ### hostname
 
