@@ -2,6 +2,7 @@
 Description=Resin inactive root partition mount service
 DefaultDependencies=no
 Before=umount.target
+After=multi-user.target
 Conflicts=umount.target
 ConditionVirtualization=!docker
 
@@ -10,3 +11,6 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/bin/resin-partition-mounter --sysroot --mount inactive
 ExecStop=/usr/bin/resin-partition-mounter --sysroot --umount inactive
+
+[Install]
+Wantedby=os-late-init.target
