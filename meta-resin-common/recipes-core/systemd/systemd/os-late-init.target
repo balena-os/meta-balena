@@ -1,0 +1,6 @@
+# This file is part of the os
+
+[Unit]
+Description=A target after multi-user.target for non-critical systemd services
+Requires=multi-user.target
+After=multi-user.target

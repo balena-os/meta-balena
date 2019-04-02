@@ -8,6 +8,7 @@ SRC_URI_append = " \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
     file://0002-core-Avoid-empty-directory-warning-when-we-are-bind-.patch \
+    file://os-late-init.target \
     "
 
 python() {
@@ -58,6 +59,13 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/reboot.target.conf ${D}/${sysconfdir}/systemd/system/reboot.target.d/
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/poweroff.target.d
     install -m 0644 ${WORKDIR}/poweroff.target.conf ${D}/${sysconfdir}/systemd/system/poweroff.target.d/
+
+    # Install os-late-init target
+    install -d ${D}${systemd_unitdir}/system/os-late-init.target.wants
+    install -d ${D}${sysconfdir}/systemd/system/os-late-init.target.wants
+    install -m 0644 ${WORKDIR}/os-late-init.target ${D}${systemd_unitdir}/system/os-late-init.target
+    ln -srf ${D}${systemd_unitdir}/system/os-late-init.target ${D}${sysconfdir}/systemd/system/default.target
+    ln -srf ${D}${systemd_unitdir}/system/os-late-init.target ${D}/lib/systemd/system/default.target
 
     # enable watchdog
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
