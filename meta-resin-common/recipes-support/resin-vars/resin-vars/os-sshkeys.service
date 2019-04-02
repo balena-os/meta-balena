@@ -1,7 +1,7 @@
 [Unit]
 Description=OS SSH keys
 Requires=resin-boot.service bind-home-root-.ssh.service
-After=resin-boot.service bind-home-root-.ssh.service
+After=resin-boot.service bind-home-root-.ssh.service multi-user.target
 
 [Service]
 Type=oneshot
@@ -9,4 +9,4 @@ RemainAfterExit=yes
 ExecStart=@SBINDIR@/os-sshkeys
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=os-late-init.target
