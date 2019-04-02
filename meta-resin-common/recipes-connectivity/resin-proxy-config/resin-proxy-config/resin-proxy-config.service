@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin proxy configuration service
 Requires=resin-boot.service
-After=resin-boot.service dnsmasq.service
+After=resin-boot.service dnsmasq.service multi-user.target
 
 [Service]
 Type=oneshot
@@ -9,4 +9,4 @@ ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-proxy-config
 RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=os-late-init.target
