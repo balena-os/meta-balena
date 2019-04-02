@@ -17,7 +17,7 @@ Description=Balena rollback checks health
 DefaultDependencies=no
 Requires=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service
 Wants=openvpn.service balena.service
-After=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service openvpn.service balena.service
+After=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service openvpn.service balena.service multi-user.target
 ConditionPathExists=/mnt/state/rollback-health-breadcrumb
 
 [Service]
@@ -26,4 +26,4 @@ RemainAfterExit=yes
 ExecStart=/bin/sh /usr/bin/rollback-health
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=os-late-init.target
