@@ -14,5 +14,5 @@ inherit autotools pkgconfig bash-completion
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BPN}-${PV}.tar.xz \
            file://clang.patch \
 "
-SRC_URI[md5sum] = "5a70d0f8ee4b7b1530400f8db3e195b6"
-SRC_URI[sha256sum] = "eb494fee2c200daf4f5cc8a40061d24a3dfafe8c59151c95c6a826fd96dcb262"
+SRC_URI[md5sum] = "840cd133bc0f715a7ee4797dd9ac5562"
+SRC_URI[sha256sum] = "6cf40128d83d087946a7d8577e735526202e034d52f90047735329609097b282"
