@@ -1,5 +1,6 @@
 [Unit]
 Description=Docker Socket for the API
+After=multi-user.target
 
 [Socket]
 ListenStream=/var/run/balena-host.sock
@@ -8,5 +9,5 @@ SocketUser=root
 SocketGroup=balena-engine
 
 [Install]
-WantedBy=sockets.target
+WantedBy=os-late-init.target
 
