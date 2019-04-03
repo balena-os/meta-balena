@@ -1,6 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
+    file://prepare \
     file://fsck \
     file://machineid \
     file://resindataexpander \
@@ -10,6 +11,7 @@ SRC_URI_append = " \
     "
 
 do_install_append() {
+    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
@@ -24,6 +26,7 @@ PACKAGES_append = " \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
+    initramfs-module-prepare \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -47,3 +50,7 @@ FILES_initramfs-module-rorootfs = "/init.d/89-rorootfs"
 SUMMARY_initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
 RDEPENDS_initramfs-module-rootfs = "${PN}-base"
 FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
+
+SUMMARY_initramfs-module-prepare = "Prepare initramfs console"
+RDEPENDS_initramfs-module-prepare = "${PN}-base"
+FILES_initramfs-module-prepare = "/init.d/70-prepare"

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+prepare_enabled() {
+    # Do not run when shell is passed in kernel cmdline
+    if [ "$bootparam_shell" = "true" ]; then
+        return 1
+    fi
+
+    return 0
+}
+
+prepare_run() {
+    # We would like the output of stdout/stderr in kernel messages to
+    # read them from userspace for debugging purposes.
+    exec >/dev/kmsg 2>&1
+}
