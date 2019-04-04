@@ -55,6 +55,9 @@ INHERIT += "image-buildinfo resin-sanity"
 RESIN_IMAGE_FLAG_FILE = "resin-image"
 RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
 
+# Kernel command line
+OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','','console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
+
 # Initramfs
 INITRAMFS_IMAGE = "resin-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
