@@ -1,7 +1,7 @@
 #
 # Resin supervisor bbclass
 #
-# Copyright (C) 2017 resin.io
+# Copyright (C) 2019 balenaLtd
 # Author: Andrei Gherzan <andrei@resin.io>
 #
 # Licensed under the Apache-2.0 license, see COPYING.Apache-2.0 for details
@@ -17,4 +17,4 @@ SUPERVISOR_REPOSITORY_x86-64 = "balena/amd64-supervisor"
 SUPERVISOR_REPOSITORY_intel-quark = "balena/i386-nlp-supervisor"
 
 # Resin supervisor default tag
-SUPERVISOR_TAG ?= "v9.11.3"
+SUPERVISOR_TAG ?= "v9.14.0"
