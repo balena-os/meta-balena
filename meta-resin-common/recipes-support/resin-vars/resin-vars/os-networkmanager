@@ -70,7 +70,7 @@ log "info" "Using $CONFIG_PATH config.json."
 if [ -n "$NM_CONF_FRAGMENT" ]; then
         nm_conf_fragment="$NM_CONF_FRAGMENT"
 fi
-log "info" "Using NetworkManager configuration fragment file in $NM_CONF_FRAGMENT."
+log "info" "Using NetworkManager configuration fragment file in $nm_conf_fragment."
 
 nm_config="# This file is generated based on os.networkManager configuration in config.json."
 
@@ -89,6 +89,49 @@ if [ "$config_json_value" != "null" ]; then
 		s=1
 	fi
 	nm_config="$(printf "%s\nwifi.scan-rand-mac-address=%s" "$nm_config" "$value")"
+fi
+
+# [connectivity]
+section="connectivity"
+DEFAULT_INTERVAL=3600
+DEFAULT_RESPONSE=""
+config_json_uri="$(jq -r " .os.network.connectivity.uri" "$CONFIG_PATH")"
+disable_connectvity_check=0
+
+if [ "$config_json_uri" = "null" ] ; then
+	log "info" ".os.network.connectivity.uri not defined. Trying default"
+	if [ -n "$API_ENDPOINT" ]; then
+		config_json_uri="$API_ENDPOINT/connectivity-check"
+		log "info" "Using default os.network.connectivity.uri configuration : $config_json_uri"
+	else
+		disable_connectvity_check=1
+		log "info" "API_ENDPOINT not found in config.json. Disabling connectivity check"
+	fi
+else
+	log "info" "Found os.network.connectivity.uri configuration : $config_json_uri"
+fi
+
+if [ "$disable_connectvity_check" -eq 0 ]; then
+	config_json_interval="$(jq -r " .os.network.connectivity.interval" "$CONFIG_PATH")"
+	if [ "$config_json_interval" = null ] ; then
+		config_json_interval=$DEFAULT_INTERVAL
+		log "info" "Using default os.network.connectivity.interval : $config_json_interval"
+	else
+		log "info" "Found os.network.connectivity.interval : $config_json_interval"
+	fi
+
+	config_json_response="$(jq -r " .os.network.connectivity.response" "$CONFIG_PATH")"
+	if [ "$config_json_response" = null ] ; then
+		config_json_response=$DEFAULT_RESPONSE
+		log "info" "Using default os.network.connectivity.response : \"\""
+	else
+		log "info" "Found os.network.connectivity.response : $config_json_response"
+	fi
+
+	nm_config="$(printf "%s\n[%s]" "$nm_config" "$section")"
+	nm_config="$(printf "%s\nuri=%s" "$nm_config" "$config_json_uri")"
+	nm_config="$(printf "%s\ninterval=%s" "$nm_config" "$config_json_interval")"
+	nm_config="$(printf "%s\nresponse=%s" "$nm_config" "$config_json_response")"
 fi
 
 # Write final NM configuation fragment
