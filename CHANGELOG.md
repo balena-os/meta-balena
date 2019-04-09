@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.32.0
+## (2019-04-08)
+
+* balena-supervisor: Update to v9.14.0 [Cameron Diver]
+* readme: Replace resin with balena where appropriate [Roman Mazur]
+* Add systemd-analyze to production images as well [Zubair Lutfullah Kakakhel]
+* Enable dbus interface for dnsmasq [Zubair Lutfullah Kakakhel]
+* Disable docker bridge while pulling the supervisor container to remove runtime balena-engine warnings [Zubair Lutfullah Kakakhel]
+* Fix typo in os-networkmanager that prevented it from working [Zubair Lutfullah Kakakhel]
+* Fix bug where fsck was run on the data partition on every boot even if it wasn't needed due to old system time. [Zubair Lutfullah Kakakhel]
+* Fix the balena version string reported by balena-engine info [Zubair Lutfullah Kakakhel]
+* Only check mmc devices for flasher image presence by default. [Zubair Lutfullah Kakakhel]
+* Remove an extra redundant copy of udev rules database [Zubair Lutfullah Kakakhel]
+* Un-upx mobynit and os-config to speed them up a bit. Approx 1 second boost to boot time. [Zubair Lutfullah Kakakhel]
+
 # v2.31.5
 ## (2019-03-21)
 
