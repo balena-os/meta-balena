@@ -9,10 +9,10 @@ pulling."
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
 
-inherit systemd go pkgconfig binary-compress useradd
+inherit systemd go pkgconfig useradd
 
-BALENA_VERSION = "17.12.0-dev"
-BALENA_BRANCH= "17.12-resin"
+BALENA_VERSION = "17.13.3-dev"
+BALENA_BRANCH= "master"
 
 SRCREV = "fe78e2c9a69313007c53c83fff4b5525fbc2ba45"
 SRC_URI = "\
@@ -34,7 +34,6 @@ SECURITY_LDFLAGS = ""
 
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "balena.service balena-host.socket var-lib-docker.mount"
-FILES_COMPRESS = "/boot/init"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r balena-engine"
