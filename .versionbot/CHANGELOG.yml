@@ -1,4 +1,41 @@
 - commits:
+    - subject: Update libmbim to version 1.18.0
+      hash: 97bae6a6657119785bc3c85f4798e95345bda3e3
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libmbim to version 1.18.0
+        changelog-entry: Update libmbim to version 1.18.0
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update libqmi to version 1.22.2
+      hash: 8047b6b9ec42ef4aab9798e516e4ded54a62a252
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libqmi to version 1.22.2
+        changelog-entry: Update libqmi to version 1.22.2
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update to ModemManager v1.10.0
+      hash: 774b270a7f963740b4c209efc6c66085a7d7c906
+      body: |
+        Fixes #1457
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update to ModemManager v1.10.0
+        changelog-entry: Update to ModemManager v1.10.0
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+  version: 2.33.0
+  date: 2019-04-15T09:03:44.953Z
+- commits:
     - subject: 'balena-supervisor: Update to v9.14.0'
       hash: 215ba6f6e03ac7a9575046ebdf054cd6091cd8f4
       body: ''

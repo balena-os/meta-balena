@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.33.0
+## (2019-04-15)
+
+* Update libmbim to version 1.18.0 [Zahari Petkov]
+* Update libqmi to version 1.22.2 [Zahari Petkov]
+* Update to ModemManager v1.10.0 [Zahari Petkov]
+
 # v2.32.0
 ## (2019-04-08)
 
