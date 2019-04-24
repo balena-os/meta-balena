@@ -1,3 +1,8 @@
+From a5a83490a162ebadee06814338215e001197a70b Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Fri, 1 Sep 2017 17:01:15 +0100
+Subject: [PATCH] libqmi: Update to 1.16.0
+
 Check for clang compiler since we need to disable
 unused-function warning for clang, at same time
 pass werror when checking for compiler options if
@@ -8,10 +13,14 @@ compiler are accepted.
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Upstream-Status: Pending
 
-Index: libmbim-1.14.0/m4/compiler-warnings.m4
-===================================================================
---- libmbim-1.14.0.orig/m4/compiler-warnings.m4
-+++ libmbim-1.14.0/m4/compiler-warnings.m4
+---
+ m4/compiler-warnings.m4 | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/m4/compiler-warnings.m4 b/m4/compiler-warnings.m4
+index 77b79c5..b132a29 100644
+--- a/m4/compiler-warnings.m4
++++ b/m4/compiler-warnings.m4
 @@ -2,10 +2,30 @@ AC_DEFUN([LIBMBIM_COMPILER_WARNINGS],
  [AC_ARG_ENABLE(more-warnings,
  	AS_HELP_STRING([--enable-more-warnings], [Possible values: no/yes/error]),
@@ -43,9 +52,9 @@ Index: libmbim-1.14.0/m4/compiler-warnings.m4
  
  	for option in -Wmissing-declarations -Wmissing-prototypes \
  		      -Wdeclaration-after-statement -Wstrict-prototypes \
-@@ -17,22 +37,23 @@ if test "$GCC" = "yes" -a "$set_more_war
+@@ -17,22 +37,23 @@ if test "$GCC" = "yes" -a "$set_more_warnings" != "no"; then
  		      -Wmissing-include-dirs -Waggregate-return \
- 		      -Wformat-security; do
+ 		      -Wformat-security -Wtype-limits; do
  		SAVE_CFLAGS="$CFLAGS"
 -		CFLAGS="$CFLAGS $option"
 +		CFLAGS="$CFLAGS $option $WERROR"
