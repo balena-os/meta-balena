@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'docker-disk: Disable unnecessary docker pid check'
+      hash: fa9189f0b96d5bc2d7a0021f3fcd6e43b31ab65f
+      body: |
+        By checking for a pid you are prevented from building Balena inside
+        of a privileged container with a bind mount on /var/run/docker.sock
+
+        The "Test docker execute permission" stanza is adequate for testing
+        if docker is operational.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changlog-entry: Disable unnecessary docker pid check
+        changlog-entry: Disable unnecessary docker pid check
+        Signed-off-by: Armin Schlegel <armin.schlegel@gmx.de>
+        signed-off-by: Armin Schlegel <armin.schlegel@gmx.de>
+      author: Armin Schlegel
+  version: 2.33.0
+  date: 2019-04-25T07:13:48.993Z
+- commits:
     - subject: 'balena-supervisor: Update to v9.14.0'
       hash: 215ba6f6e03ac7a9575046ebdf054cd6091cd8f4
       body: ''

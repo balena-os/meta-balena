@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.33.0
+## (2019-04-25)
+
+* docker-disk: Disable unnecessary docker pid check [Armin Schlegel]
+
 # v2.32.0
 ## (2019-04-08)
 
