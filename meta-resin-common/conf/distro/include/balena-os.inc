@@ -89,3 +89,6 @@ BAD_RECOMMENDATIONS += "shared-mime-info"
 # https://github.com/upx/upx/issues/225
 PREFERRED_VERSION_upx_arm = "3.94"
 PREFERRED_VERSION_upx-native_arm = "3.94"
+
+# balena-engine go version requirement
+GOVERSION = "1.10.8"
