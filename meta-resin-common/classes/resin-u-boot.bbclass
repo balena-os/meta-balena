@@ -22,17 +22,24 @@ RESIN_ENV_FILE = "resinOS_uEnv.txt"
 RESIN_UBOOT_DEVICES ?= "0 1 2"
 RESIN_UBOOT_DEVICE_TYPES ?= "mmc"
 
-do_generate_resin_uboot_configuration () {
-    cat > ${S}/include/config_resin.h <<EOF
-#define RESIN_UBOOT_DEVICES ${RESIN_UBOOT_DEVICES}
-#define RESIN_UBOOT_DEVICE_TYPES ${RESIN_UBOOT_DEVICE_TYPES}
-#define RESIN_BOOT_PART ${RESIN_BOOT_PART}
-#define RESIN_DEFAULT_ROOT_PART ${RESIN_DEFAULT_ROOT_PART}
-#define RESIN_IMAGE_FLAG_FILE ${RESIN_IMAGE_FLAG_FILE}
-#define RESIN_FLASHER_FLAG_FILE ${RESIN_FLASHER_FLAG_FILE}
-#define RESIN_ENV_FILE ${RESIN_ENV_FILE}
-EOF
+python do_generate_resin_uboot_configuration () {
+    vars = [
+        'RESIN_UBOOT_DEVICES',
+        'RESIN_UBOOT_DEVICE_TYPES',
+        'RESIN_BOOT_PART',
+        'RESIN_DEFAULT_ROOT_PART',
+        'RESIN_IMAGE_FLAG_FILE',
+        'RESIN_FLASHER_FLAG_FILE',
+        'RESIN_ENV_FILE',
+    ]
+    with open(os.path.join(d.getVar('S'), 'include', 'config_resin.h'), 'w') as f:
+        for v in vars:
+            f.write("#define %s %s\n" % (v, d.getVar(v)))
 
-    cp ${WORKDIR}/env_resin.h ${S}/include/env_resin.h
+    src = bb.utils.which(d.getVar('FILESPATH'), 'env_resin.h')
+    if not src:
+        raise Exception('env_resin.h not found')
+    dst = os.path.join(d.getVar('S'), 'include', 'env_resin.h')
+    bb.utils.copyfile(src, dst)
 }
 addtask do_generate_resin_uboot_configuration after do_patch before do_configure
