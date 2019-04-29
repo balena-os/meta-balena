@@ -1,0 +1,1 @@
+require fix-goarch.inc
