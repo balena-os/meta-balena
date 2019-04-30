@@ -1,6 +1,6 @@
 # Poky based distro file
 require conf/distro/poky.conf
-require conf/distro/include/security_flags.inc
+include conf/distro/include/balena-os-yocto-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
