@@ -24,7 +24,7 @@ CONNECTIVITY_PACKAGES = " \
     openvpn \
     resin-proxy-config \
     usb-modeswitch \
-    wireless-tools \
+    iw \
     "
 
 RDEPENDS_${PN} = " \
