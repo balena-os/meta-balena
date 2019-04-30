@@ -1,4 +1,4 @@
-From 07f1eda630517816bfa900e811963745a149e57c Mon Sep 17 00:00:00 2001
+From 444566ea6cfd2b8c0cbc49682f610b9d176d8ab9 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 8 Jun 2018 20:38:30 -0700
 Subject: [PATCH] Add configure check for canonicalize_file_name() before use
@@ -7,17 +7,17 @@ Define canonicalize_file_name API if not provided by system C library
 musl e.g. does not provide this API
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
 Upstream-Status: Pending
 
+---
  configure.ac                                |  2 ++
- src/kerneldevice/mm-kernel-device-generic.c | 18 ++++++++++++++++++
- 2 files changed, 20 insertions(+)
+ src/kerneldevice/mm-kernel-device-generic.c | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-Index: ModemManager-1.7.991/configure.ac
-===================================================================
---- ModemManager-1.7.991.orig/configure.ac
-+++ ModemManager-1.7.991/configure.ac
+diff --git a/configure.ac b/configure.ac
+index 94140df..cb58b95 100644
+--- a/configure.ac
++++ b/configure.ac
 @@ -72,6 +72,8 @@ AC_SUBST(MM_GLIB_LT_CURRENT)
  AC_SUBST(MM_GLIB_LT_REVISION)
  AC_SUBST(MM_GLIB_LT_AGE)
@@ -27,19 +27,19 @@ Index: ModemManager-1.7.991/configure.ac
  dnl-----------------------------------------------------------------------------
  dnl Documentation
  dnl
-Index: ModemManager-1.7.991/src/kerneldevice/mm-kernel-device-generic.c
-===================================================================
---- ModemManager-1.7.991.orig/src/kerneldevice/mm-kernel-device-generic.c
-+++ ModemManager-1.7.991/src/kerneldevice/mm-kernel-device-generic.c
-@@ -21,6 +21,7 @@
- #define _LIBMM_INSIDE_MM
- #include <libmm-glib.h>
+diff --git a/src/kerneldevice/mm-kernel-device-generic.c b/src/kerneldevice/mm-kernel-device-generic.c
+index 53cd737..db08352 100644
+--- a/src/kerneldevice/mm-kernel-device-generic.c
++++ b/src/kerneldevice/mm-kernel-device-generic.c
+@@ -23,6 +23,7 @@
+ 
+ #include <ModemManager-tags.h>
  
 +#include "config.h"
  #include "mm-kernel-device-generic.h"
  #include "mm-kernel-device-generic-rules.h"
  #include "mm-log.h"
-@@ -100,6 +101,24 @@ read_sysfs_property_as_string (const gch
+@@ -103,6 +104,24 @@ read_sysfs_property_as_string (const gchar *path,
      return contents;
  }
  
