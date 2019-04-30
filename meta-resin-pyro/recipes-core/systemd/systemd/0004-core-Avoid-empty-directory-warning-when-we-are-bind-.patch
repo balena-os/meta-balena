@@ -1,0 +1,29 @@
+From 9f991dc5f74172d5b12753ea8d35425c6935be9f Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@balena.io>
+Date: Thu, 1 Feb 2018 15:54:41 +0000
+Subject: [PATCH] core: Avoid empty directory warning when we are bind-mounting
+ a file
+
+Upstream-Status: Backported
+Signed-off-by: Andrei Gherzan <andrei@balena.io>
+
+---
+ src/core/unit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core/unit.c b/src/core/unit.c
+index e664e23..6dfdb2f 100644
+--- a/src/core/unit.c
++++ b/src/core/unit.c
+@@ -4012,7 +4012,7 @@ void unit_warn_if_dir_nonempty(Unit *u, const char* where) {
+         assert(where);
+
+         r = dir_is_empty(where);
+-        if (r > 0)
++        if (r > 0 || r == -ENOTDIR)
+                 return;
+         if (r < 0) {
+                 log_unit_warning_errno(u, r, "Failed to check directory %s: %m", where);
+--
+2.7.4
+
