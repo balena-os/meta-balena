@@ -5,6 +5,8 @@ datapart=$(readlink -f /dev/disk/by-label/resin-data)
 datadev=$(lsblk $datapart -n -o PKNAME)
 
 resindataexpander_enabled() {
+    udevadm trigger --action=add
+    udevadm settle
     # On flasher avoid expanding partition
 	if [ -h /dev/disk/by-label/flash-rootA ]; then
 		flash_root=$(readlink -f "/dev/disk/by-label/flash-rootA")

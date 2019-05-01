@@ -1,6 +1,8 @@
 #!/bin/sh
 
 fsck_enabled() {
+    udevadm trigger --action=add
+    udevadm settle
     # On flasher we don't run fsck
     if [ -h /dev/disk/by-label/flash-boot ]; then
         echo "[INFO] Flasher detected. We don't run fsck on the partitions when provisioning."
