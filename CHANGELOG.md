@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.33.0
+## (2019-05-02)
+
+* Fixes for sysroot symlinks creation [Andrei Gherzan]
+* libmbim: Refresh patches after last update to avoid build warnings [Andrei Gherzan]
+* modemmanager: Refresh patches after last update to avoid build warnings [Andrei Gherzan]
+* Make security flags inclusion yocto version specific [Andrei Gherzan]
+* systemd: Make directory warning patch yocto version specific [Andrei Gherzan]
+* Replace wireless tools by iw [Andrei Gherzan]
+* systemd: Use a conf.d file for journald configuration [Andrei Gherzan]
+* Set go verison to 1.10.8 to match balena-engine requirements [Andrei Gherzan]
+* Update balena-engine to 18.09.3 [Andrei Gherzan]
+* Update balena-supervisor to v9.14.6 [Cameron Diver]
+* resin-u-boot: make devtool-compatible [Sven Schwermer]
+* docker-disk: Disable unnecessary docker pid check [Armin Schlegel]
+* Update libmbim to version 1.18.0 [Zahari Petkov]
+* Update libqmi to version 1.22.2 [Zahari Petkov]
+* Update to ModemManager v1.10.0 [Zahari Petkov]
+* Add a OS_KERNEL_CMDLINE parameter that allows BSPs to easily add extra kernel cmdline args to production images [Zubair Lutfullah Kakakhel]
+
 # v2.32.0
 ## (2019-04-08)
 

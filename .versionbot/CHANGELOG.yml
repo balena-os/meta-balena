@@ -1,4 +1,265 @@
 - commits:
+    - subject: Fixes for sysroot symlinks creation
+      hash: b7a6412e6368d3d562ff1ca2fb06be92a24a8548
+      body: |
+        When we set the udev rule we use IMPORT{program} to know what symlinks
+        to create in the sysroot directory. The problem is that we don't use
+        absolute paths and from the documentation udev uses /usr/lib/udev as the
+        default path while we install the invoked script in /lib/udev.
+
+        ```
+          Execute an external program specified as the assigned value. If no
+          absolute path is given, the program is expected to live in
+          /usr/lib/udev; otherwise, the absolute path must be specified.
+        ```
+
+        This PR changes the udev rule to use an absolute path for the
+        resin_update_state_probe script. Also it fixes some typos in the script
+        itself.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fixes for sysroot symlinks creation
+        changelog-entry: Fixes for sysroot symlinks creation
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'libmbim: Refresh patches after last update to avoid build warnings'
+      hash: 3b3bfcd8c74070797b55ab2a6e7079cc320581a6
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'modemmanager: Refresh patches after last update to avoid build warnings'
+      hash: 83ccf2a4a131b8a116ab90e6272734ac67d73781
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Make security flags inclusion yocto version specific
+      hash: 9571c572e4abcd1ea5951fa408b1543bc40db8c9
+      body: >
+        Since thud, poky distro file on which balena OS is based, already
+
+        includes security_flags.inc. Because of this change, this version throws
+
+        a build warning similar to:
+
+
+        WARNING Duplicate inclusion for
+        /build/../layers/poky/meta/conf/distro/include/security_flags.inc
+
+        in
+        /build/../layers/meta-resin/meta-balena-thud/conf/distro/include/balena-os-yocto-version.inc
+
+
+        This happens because again, we import `poky` and `security_flags` but
+
+        since thud, poky includes security_flags by default. In order to avoid
+
+        this warning we import it (security_flags) now using an .inc file at the
+
+        level of the yocto version meta-balena layer. There is as well a small
+
+        additional wrinkle here. We switch the include statement from `require`
+
+        to `include` so new layers (like thud) don't have to carry this hack in
+
+        the future.
+
+
+        This commit prepares meta-balena for thud support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Make security flags inclusion yocto version specific
+        changelog-entry: Make security flags inclusion yocto version specific
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'systemd: Make directory warning patch yocto version specific'
+      hash: 7bedeb98520b6b1bc995b4484f6b61d347a0befe
+      body: |
+        We used to have this patch applied for all the supported yocto versions.
+        Since thud, this patch is included by default so this change backports
+        it on all the rest of the supported mate-balena yocto version specific
+        layers.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Replace wireless tools by iw
+      hash: 81839342bebec4ca915f091607bb3977dc02d675
+      body: |
+        From yocto thud, wireless-tools recipe was removed and the iw can be
+        used as a replacement. We switch as well in preparation for thud
+        support.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Replace wireless tools by iw
+        changelog-entry: Replace wireless tools by iw
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'systemd: Use a conf.d file for journald configuration'
+      hash: 9a8f1f1b744248964d4d1b2eb2c8dd732a753980
+      body: |
+        Since yocto thud systemd main configuration files are part of another
+        recipe - systemd-conf. See poky commit:
+        28c2f0dfe3ae06d87772b2a88fcace5a03e09143
+
+        This commit prepares meta-balena for thud support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Set go verison to 1.10.8 to match balena-engine requirements
+      hash: 1f92a80e4a768bdff4646ccd31cc5c815a114be6
+      body: |
+        The reason for including this version is that balena-engine requires
+        newer go compiler and also we want to unify it across our supported
+        yocto versions to avoid eventual possible runtime issues.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Set go verison to 1.10.8 to match balena-engine requirements
+        changelog-entry: Set go verison to 1.10.8 to match balena-engine requirements
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update balena-engine to 18.09.3
+      hash: 53ce14708251cda410f2e870b6ec9342e7e4e1e4
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        CHangelog-entry: Update balena-engine to 18.09.3
+        changelog-entry: Update balena-engine to 18.09.3
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update balena-supervisor to v9.14.6
+      hash: 0ec51a88d9389b9f71a4bb4b2e33fda9464cde8c
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.14.6
+        changelog-entry: Update balena-supervisor to v9.14.6
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: 'resin-u-boot: make devtool-compatible'
+      hash: fb727b680fbfad8db39c2b491e49f1568c111436
+      body: >
+        devtool moves the files from the WORKDIR into ${S}/oe-local-files which
+        makes
+
+        copying of env_resin.h fail if the u-boot source is being modified using
+
+        devtool. Since devtool also alters FILESPATH to include said
+        oe-local-files
+
+        directory, we can iterate over those paths instead of relying on
+        WORKDIR.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+        signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+      author: Sven Schwermer
+    - subject: 'docker-disk: Disable unnecessary docker pid check'
+      hash: d7583f3373de1188240e65a8e30def281657e0d0
+      body: |
+        By checking for a pid you are prevented from building Balena inside
+        of a privileged container with a bind mount on /var/run/docker.sock
+
+        The "Test docker execute permission" stanza is adequate for testing
+        if docker is operational.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changlog-entry: Disable unnecessary docker pid check
+        changlog-entry: Disable unnecessary docker pid check
+        Signed-off-by: Armin Schlegel <armin.schlegel@gmx.de>
+        signed-off-by: Armin Schlegel <armin.schlegel@gmx.de>
+      author: Armin Schlegel
+    - subject: Update libmbim to version 1.18.0
+      hash: 677159770b7cfa0eb0a6611094ea7673f67883d3
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libmbim to version 1.18.0
+        changelog-entry: Update libmbim to version 1.18.0
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update libqmi to version 1.22.2
+      hash: 8047b6b9ec42ef4aab9798e516e4ded54a62a252
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libqmi to version 1.22.2
+        changelog-entry: Update libqmi to version 1.22.2
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update to ModemManager v1.10.0
+      hash: 774b270a7f963740b4c209efc6c66085a7d7c906
+      body: |
+        Fixes #1457
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update to ModemManager v1.10.0
+        changelog-entry: Update to ModemManager v1.10.0
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: >-
+        Add a OS_KERNEL_CMDLINE parameter that allows BSPs to easily add extra
+        kernel cmdline args to production images
+      hash: 4b607b32495737f6f83f12e891188ab008b0de47
+      body: |
+        balenaOS comes in two flavours, production/development. production
+        images have various options passed to the kernel cmdline.
+        Currently some devices BSPs have those options passed and some dont.
+        It'll be hard to keep the common options consistent.
+        e.g. consoleblank=0 is passed for some devices and not for others.
+
+        We'd like the extra options we pass to be in one place. All BSPs can
+        then append this variable in their respective recipe/bootloader config
+        etc.
+
+        Fixes #1464
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Add a OS_KERNEL_CMDLINE parameter that allows BSPs to easily add extra
+          kernel cmdline args to production images
+        changelog-entry: >-
+          Add a OS_KERNEL_CMDLINE parameter that allows BSPs to easily add extra
+          kernel cmdline args to production images
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.33.0
+  date: 2019-05-02T13:26:16.845Z
+- commits:
     - subject: 'balena-supervisor: Update to v9.14.0'
       hash: 215ba6f6e03ac7a9575046ebdf054cd6091cd8f4
       body: ''
