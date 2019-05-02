@@ -1,6 +1,6 @@
 # Poky based distro file
 require conf/distro/poky.conf
-require conf/distro/include/security_flags.inc
+include conf/distro/include/balena-os-yocto-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
@@ -55,6 +55,9 @@ INHERIT += "image-buildinfo resin-sanity"
 RESIN_IMAGE_FLAG_FILE = "resin-image"
 RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
 
+# Kernel command line
+OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','','console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
+
 # Initramfs
 INITRAMFS_IMAGE = "resin-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
@@ -86,3 +89,6 @@ BAD_RECOMMENDATIONS += "shared-mime-info"
 # https://github.com/upx/upx/issues/225
 PREFERRED_VERSION_upx_arm = "3.94"
 PREFERRED_VERSION_upx-native_arm = "3.94"
+
+# balena-engine go version requirement
+GOVERSION = "1.10.8"

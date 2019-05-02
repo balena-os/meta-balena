@@ -4,10 +4,10 @@ SRC_URI_append = " \
     file://coredump.conf \
     file://reboot.target.conf \
     file://poweroff.target.conf \
+    file://journald-balena-os.conf \
     file://watchdog.conf \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
-    file://0002-core-Avoid-empty-directory-warning-when-we-are-bind-.patch \
     "
 
 python() {
@@ -35,23 +35,10 @@ FILES_${PN} += " \
     "
 
 do_install_append() {
-    # we disable forwarding to syslog; in the future we will have rsyslog which can read the journal
-    # independently of this forwarding
-    sed -i -e 's/.*ForwardToSyslog.*/#ForwardToSyslog=yes/' ${D}${sysconfdir}/systemd/journald.conf
-    sed -i -e 's/.*RuntimeMaxUse.*/RuntimeMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
-    sed -i -e 's/.*SystemMaxUse.*/SystemMaxUse=8M/' ${D}${sysconfdir}/systemd/journald.conf
-    sed -i -e 's/.*Storage.*/Storage=auto/' ${D}${sysconfdir}/systemd/journald.conf
-
-    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
-        # Non-development image
-        if $(readlink autovt@.service) == "getty@*.service"; then
-            rm ${D}/lib/systemd/system/autovt@.service
-        fi
-        find ${D} -name "getty@*.service" -delete
-    fi
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
+    install -m 06444 ${WORKDIR}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
 
     install -d -m 0755 ${D}/srv
-    install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
 
     # shorten reboot/poweroff timeouts
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/reboot.target.d
