@@ -215,6 +215,8 @@ Example:
 ## Yocto version support
 
 The following Yocto versions are supported:
+ * Thud (2.6)
+  * **TESTED**
  * Sumo (2.5)
   * **TESTED**
  * Rocko (2.4)

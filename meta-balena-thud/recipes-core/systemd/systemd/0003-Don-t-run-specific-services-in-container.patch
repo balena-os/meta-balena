@@ -1,0 +1,58 @@
+From b80f5e157963fd24643fbb92e10b0ba808d442af Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@resin.io>
+Date: Thu, 11 Jan 2018 19:28:32 +0000
+Subject: [PATCH] Don't run specific services in container
+
+Upstream-status; Inappropriate [configuration]
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+---
+ units/getty@.service.m4         | 3 +++
+ units/serial-getty@.service.m4  | 3 +++
+ units/systemd-logind.service.in | 3 +++
+ 3 files changed, 9 insertions(+)
+
+diff --git a/units/getty@.service.m4 b/units/getty@.service.m4
+index 80e793b..02103ea 100644
+--- a/units/getty@.service.m4
++++ b/units/getty@.service.m4
+@@ -33,6 +33,9 @@ Before=rescue.service
+ # unit.
+ ConditionPathExists=/dev/tty0
+
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Service]
+ # the VT is cleared by TTYVTDisallocate
+ # The '-o' option value tells agetty to replace 'login' arguments with an
+diff --git a/units/serial-getty@.service.m4 b/units/serial-getty@.service.m4
+index 757b86a..c2b94d5 100644
+--- a/units/serial-getty@.service.m4
++++ b/units/serial-getty@.service.m4
+@@ -29,6 +29,9 @@ IgnoreOnIsolate=yes
+ Conflicts=rescue.service
+ Before=rescue.service
+
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Service]
+ # The '-o' option value tells agetty to replace 'login' arguments with an
+ # option to preserve environment (-p), followed by '--' for safety, and then
+diff --git a/units/systemd-logind.service.in b/units/systemd-logind.service.in
+index 968b92a..d01ed5d 100644
+--- a/units/systemd-logind.service.in
++++ b/units/systemd-logind.service.in
+@@ -19,6 +19,9 @@ After=nss-user-lookup.target user.slice
+ Wants=dbus.socket
+ After=dbus.socket
+
++# Ignore this service when ran in a docker container
++ConditionVirtualization=!docker
++
+ [Service]
+ ExecStart=@rootlibexecdir@/systemd-logind
+ Restart=always
+--
+2.7.4
+
