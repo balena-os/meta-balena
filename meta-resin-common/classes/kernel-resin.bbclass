@@ -91,6 +91,7 @@ RESIN_CONFIGS ?= " \
     usb-serial \
     zram \
     ${BALENA_STORAGE} \
+    fatfs \
     "
 
 #
@@ -430,6 +431,13 @@ RESIN_CONFIGS_DEPS[usb-serial] = " \
 RESIN_CONFIGS[usb-serial] = " \
     CONFIG_USB_SERIAL_OPTION=m \
     CONFIG_USB_SERIAL_QUALCOMM=m \
+    "
+
+RESIN_CONFIGS[fatfs] = " \
+    CONFIG_MSDOS_FS=m \
+    CONFIG_VFAT_FS=m \
+    CONFIG_NLS_ASCII=m \
+    CONFIG_NLS_CODEPAGE_437=m \
     "
 
 ###########
