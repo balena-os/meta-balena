@@ -13,6 +13,7 @@ SRC_URI = " \
     file://os-networkmanager.testconfig3.json \
     file://os-networkmanager.testconfig4.json \
     file://os-networkmanager.testconfig5.json \
+    file://os-networkmanager.testconfig6.json \
     file://os-udevrules \
     file://os-udevrules.service \
     file://os-sshkeys \
@@ -92,6 +93,7 @@ runtest() {
 	fi
 }
 
+# Build time sanity tests checking various config.json fragments.
 do_runtests() {
 	bbnote "Running os-networkmanager tests..."
 	runtest os-networkmanager.testconfig1.json 0 '# This file is generated based on os.networkManager configuration in config.json.
@@ -105,5 +107,11 @@ wifi.scan-rand-mac-address=no'
 [device]
 wifi.scan-rand-mac-address=foo'
 	runtest os-networkmanager.testconfig5.json 1 'NO FILE'
+	runtest os-networkmanager.testconfig6.json 0 '# This file is generated based on os.networkManager configuration in config.json.
+[connectivity]
+uri=http://www.example.com/connectivity-check
+interval=7200
+response=Am I online'
+
 }
 addtask runtests before do_package after do_install
