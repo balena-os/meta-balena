@@ -7,7 +7,8 @@ SRC_URI += " \
 	file://resin-data.service \
 	file://resin-state.service \
 	file://mnt-sysroot-active.service \
-	file://mnt-sysroot-inactive.service \
+	file://mnt-sysroot-inactive.automount \
+	file://mnt-sysroot-inactive.mount \
 	file://resin-partition-mounter \
 	"
 
@@ -16,7 +17,8 @@ SYSTEMD_SERVICE_${PN} += " \
 	resin-data.service \
 	resin-state.service \
 	mnt-sysroot-active.service \
-	mnt-sysroot-inactive.service \
+	mnt-sysroot-inactive.automount \
+	mnt-sysroot-inactive.mount \
 	"
 
 FILES_${PN} += " \
