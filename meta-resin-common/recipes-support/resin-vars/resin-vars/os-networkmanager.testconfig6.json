@@ -1,0 +1,11 @@
+{
+  "os": {
+    "network": {
+        "connectivity": {
+            "uri": "http://www.example.com/connectivity-check",
+            "interval": "7200",
+            "response": "Am I online"
+    	}
+    }
+  }
+}

@@ -169,6 +169,32 @@ See below an example of a config.json snippet which disables MAC address randomi
 }
 ```
 
+##### connectivity
+
+This object defines configuration related to networking connectivity checks:
+   * "uri" string where the value is the url to query for connectivity checks
+   * "interval" string where the value is the interval between connectivity checks in seconds.
+   * "response" string. If set, controls what body content is checked for when requesting the URI for connectivity. If it is an empty value, the HTTP server is expected to answer with status code 204 or send no data.
+
+The default values are
+```
+uri=$API_ENDPOINT/connectivity-check
+interval=3600
+response=
+```
+
+See below an example of a config.json snippet which configures the connectivity check by passing the balena cloud connectivity endpoint with a 5 minute interval.
+```
+"os": {
+  "network" : {
+    "connectivity": {
+        "uri" : "https://api.balena-cloud.com/connectivity-check",
+        "interval" : "300"
+      }
+  }
+}
+```
+
 #### udevRules
 
 String. Custom udev rules can be passed via config.json.
