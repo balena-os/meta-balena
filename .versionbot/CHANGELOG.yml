@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update balena-supervisor to v9.14.10
+      hash: 1ba07d1d7cad499d0fb3d2e8060d3299e9a065f0
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.14.10
+        changelog-entry: Update balena-supervisor to v9.14.10
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
     - subject: >-
         Add support to update a connectivity section in NetworkManager via
         config.json
@@ -132,7 +143,7 @@
         signed-off-by: Andrei Gherzan <andrei@balena.io>
       author: Andrei Gherzan
   version: 2.34.0
-  date: 2019-05-10T10:24:10.994Z
+  date: 2019-05-10T11:33:40.523Z
 - commits:
     - subject: Fixes for sysroot symlinks creation
       hash: b7a6412e6368d3d562ff1ca2fb06be92a24a8548

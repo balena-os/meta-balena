@@ -4,6 +4,7 @@ Change log
 # v2.34.0
 ## (2019-05-10)
 
+* Update balena-supervisor to v9.14.10 [Cameron Diver]
 * Add support to update a connectivity section in NetworkManager via config.json [Zubair Lutfullah Kakakhel]
 * systemd: Fix journald configuration file [Andrei Gherzan]
 * Add --max-download-attempts=10 to balenaEngine service to improve performance on shaky networks [Zubair Lutfullah Kakakhel]
