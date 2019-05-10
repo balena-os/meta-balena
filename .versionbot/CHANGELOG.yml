@@ -1,4 +1,139 @@
 - commits:
+    - subject: >-
+        Add support to update a connectivity section in NetworkManager via
+        config.json
+      hash: 2585af4a34abcd6ced3dcd0c70913ef1cdfe019d
+      body: |
+        We'd like connectivity checking so that Network Manager can update
+        route metrics for devices that have multiple network interfaces.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Add support to update a connectivity section in NetworkManager via
+          config.json
+        changelog-entry: >-
+          Add support to update a connectivity section in NetworkManager via
+          config.json
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'systemd: Fix journald configuration file'
+      hash: b1cc7829758969112aae599ea0b986624596b8c6
+      body: |
+        9a8f1f1b744248964d4d1b2eb2c8dd732a753980 switched to a config file
+        fragment but when doing so the section was missed. This patch fixes
+        that.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: >-
+        Add --max-download-attempts=10 to balenaEngine service to improve
+        performance on shaky networks
+      hash: c699d5c13cea6a525c9d6a54152c781bd3885ecc
+      body: |
+        This should improve performance on flaky connections.
+
+        Fixes #1493
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Add --max-download-attempts=10 to balenaEngine service to improve
+          performance on shaky networks
+        changelog-entry: >-
+          Add --max-download-attempts=10 to balenaEngine service to improve
+          performance on shaky networks
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-engine to 18.09.5
+      hash: 0894326a372e14056fede8c7acda67fa83e39284
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-engine to 18.09.5
+        changelog-entry: Update balena-engine to 18.09.5
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Log initramfs messages to kernel dmesg to capture fsck, partition expand
+        etc. command output
+      hash: 580a6fb37f5c077d3c80957db02d7cfd3376fdc5
+      body: |
+        We run some operations in the initramfs. fsck, expand partitions etc.
+        Any error messages or warnings printed here are invisible in production
+        images. This line from debian initramfs-tools configures the initramfs
+        shell to log all output in /dev/kmsg so the dmesg shows the output of
+        initramfs commands as well.
+        Fixes #1459
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Log initramfs messages to kernel dmesg to capture fsck, partition
+          expand etc. command output
+        changelog-entry: >-
+          Log initramfs messages to kernel dmesg to capture fsck, partition
+          expand etc. command output
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'kernel-resin: Add FAT fs specific configs to RESIN_CONFIGS'
+      hash: a09550d9633eaba9b55ce2c98d9a43a5b52dfe6f
+      body: |
+        Add FAT fs specific configs, necessary to mount the
+        boot partition
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changlog-entry: Add FAT fs specific configs to RESIN_CONFIGS
+        changlog-entry: Add FAT fs specific configs to RESIN_CONFIGS
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+    - subject: Update balena-supervisor to v9.14.9
+      hash: 167164b41957981b67c90dd78a19073a2b231878
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.14.9
+        changelog-entry: Update balena-supervisor to v9.14.9
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Introduce meta-balena yocto thud support
+      hash: b2fea323b337bd6868f3f41b70f8bdb688b11bb8
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Introduce meta-balena yocto thud support
+        changelog-entry: Introduce meta-balena yocto thud support
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update os-config to 1.1.0
+      hash: 0ff476e2724525b96e3d72fc00d22423af2d6cb4
+      body: |
+        This version includes rust 1.33 support which we use in balenaOS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update os-config to 1.1.0
+        changelog-entry: Update os-config to 1.1.0
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.34.0
+  date: 2019-05-10T10:24:10.994Z
+- commits:
     - subject: Fixes for sysroot symlinks creation
       hash: b7a6412e6368d3d562ff1ca2fb06be92a24a8548
       body: |

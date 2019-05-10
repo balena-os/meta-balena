@@ -1,6 +1,19 @@
 Change log
 -----------
 
+# v2.34.0
+## (2019-05-10)
+
+* Add support to update a connectivity section in NetworkManager via config.json [Zubair Lutfullah Kakakhel]
+* systemd: Fix journald configuration file [Andrei Gherzan]
+* Add --max-download-attempts=10 to balenaEngine service to improve performance on shaky networks [Zubair Lutfullah Kakakhel]
+* Update balena-engine to 18.09.5 [Zubair Lutfullah Kakakhel]
+* Log initramfs messages to kernel dmesg to capture fsck, partition expand etc. command output [Zubair Lutfullah Kakakhel]
+* kernel-resin: Add FAT fs specific configs to RESIN_CONFIGS [Sebastian Panceac]
+* Update balena-supervisor to v9.14.9 [Cameron Diver]
+* Introduce meta-balena yocto thud support [Andrei Gherzan]
+* Update os-config to 1.1.0 [Andrei Gherzan]
+
 # v2.33.0
 ## (2019-05-02)
 
