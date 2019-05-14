@@ -1,0 +1,8 @@
+[Unit]
+Description=mnt-sysroot-inactive partition
+
+[Automount]
+Where=/mnt/sysroot/inactive
+
+[Install]
+WantedBy=multi-user.target

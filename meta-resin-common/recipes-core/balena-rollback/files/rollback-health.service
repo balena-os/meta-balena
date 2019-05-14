@@ -15,9 +15,9 @@
 [Unit]
 Description=Balena rollback checks health
 DefaultDependencies=no
-Requires=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service
+Requires=resin-boot.service mnt-sysroot-active.service
 Wants=openvpn.service balena.service
-After=resin-boot.service mnt-sysroot-active.service mnt-sysroot-inactive.service openvpn.service balena.service
+After=resin-boot.service mnt-sysroot-active.service openvpn.service balena.service
 ConditionPathExists=/mnt/state/rollback-health-breadcrumb
 
 [Service]
