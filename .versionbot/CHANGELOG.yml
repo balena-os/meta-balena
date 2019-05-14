@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update balena-supervisor to v9.14.10
+      hash: 70b9acb15806f0a276f80ab18e9f7ad4aa02d83b
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.14.10
+        changelog-entry: Update balena-supervisor to v9.14.10
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+  version: 2.34.1
+  date: 2019-05-14T10:20:59.175Z
+- commits:
     - subject: >-
         Add support to update a connectivity section in NetworkManager via
         config.json
