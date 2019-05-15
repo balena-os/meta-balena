@@ -10,6 +10,15 @@
  * Defines:
  *     resin_set_kernel_root  - needs to be integrated with board
  *                              specific configuration
+ *     set_os_cmdline         - Sets cmdline parameters as required by the OS
+ *                              in os_cmdline env variable.
+ *                              Needs to be integrated with board specific
+ *                              configuration so that os_cmdline is part of the
+ *                              final cmdline/bootargs passed to the kernel.
+ *                              This needs to run after resin_set_kernel_root
+ *                              as it can use the device scan which is
+ *                              performed in resin_set_kernel_root. Otherwise
+ *                              an additional scan is needed.
  *     resin_kernel_root      - the root kernel argument
  *     resin_dev_type         - device type from where we boot (e.g. mmc, usb etc.)
  *     resin_dev_index        - device index to be used at boot
@@ -25,6 +34,7 @@
        "resin_uboot_device_types=" __stringify(RESIN_UBOOT_DEVICE_TYPES) "\0" \
        "resin_boot_part=" __stringify(RESIN_BOOT_PART) "\0" \
        "resin_root_part=" __stringify(RESIN_DEFAULT_ROOT_PART) "\0" \
+       "base_os_cmdline=" __stringify(BASE_OS_CMDLINE) "\0" \
        "resin_flasher_skip=0 \0" \
        \
        "resin_find_root_part_uuid=" \
@@ -73,6 +83,7 @@
                "run resin_scan_devs; " \
                "if test -n ${resin_flasher_dev_index}; then " \
                        "echo Found resin flasher on ${resin_dev_type} ${resin_flasher_dev_index}; "\
+                       "setenv bootparam_flasher flasher; "\
                        "setenv resin_dev_index ${resin_flasher_dev_index}; "\
                "else; "\
                        "if test -n \"${resin_image_dev_index}\"; then " \
@@ -102,6 +113,8 @@
                       "fi;" \
               "fi;\0" \
        \
+       "set_os_cmdline=" \
+               "setenv os_cmdline ${base_os_cmdline} ${bootparam_flasher};\0" \
        "resin_set_kernel_root=" \
                "run resin_set_dev_index;" \
                "run resin_inject_env_file;" \
