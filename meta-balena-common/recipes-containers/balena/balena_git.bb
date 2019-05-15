@@ -12,9 +12,9 @@ LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=9740d093a080530b5c5c6573df9af4
 inherit systemd go pkgconfig useradd
 
 BALENA_VERSION = "18.09.10-dev"
-BALENA_BRANCH= "master"
+BALENA_BRANCH= "a2o-migrate"
 
-SRCREV = "7cb464a406748016f2df0c31a9851d20456a3d31"
+SRCREV = "c6eb51b76d2a825b013b46d59fcb92eff035012e"
 SRC_URI = "\
 	git://github.com/resin-os/balena.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
@@ -133,6 +133,7 @@ do_install() {
 	ln -sf balena-engine ${D}/${bindir}/balena-containerd-ctr
 	ln -sf balena-engine ${D}/${bindir}/balena-runc
 	ln -sf balena-engine ${D}/${bindir}/balena-proxy
+	ln -sf balena-engine ${D}/${bindir}/a2o-migrate
 
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-daemon
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-containerd
