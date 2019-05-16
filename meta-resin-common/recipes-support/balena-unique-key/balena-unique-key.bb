@@ -11,11 +11,16 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
+# Since yocto thud openssl binary is provided by openssl-bin but use weak
+# assignment so older yocto versions can overwrite this to the old openssl
+# package
+OPENSSL_PKG ?= "openssl-bin"
+
 RDEPENDS_${PN} = " \
     bash \
     jq \
     resin-vars \
-    openssl \
+    ${OPENSSL_PKG} \
     "
 
 SYSTEMD_SERVICE_${PN} = "balena-device-uuid.service"
