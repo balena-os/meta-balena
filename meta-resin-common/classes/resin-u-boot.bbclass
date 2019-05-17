@@ -22,6 +22,10 @@ RESIN_ENV_FILE = "resinOS_uEnv.txt"
 RESIN_UBOOT_DEVICES ?= "0 1 2"
 RESIN_UBOOT_DEVICE_TYPES ?= "mmc"
 
+# OS_KERNEL_CMDLINE is a distro wide variable intended to be used in all the
+# supported bootloaders
+BASE_OS_CMDLINE ?= "${OS_KERNEL_CMDLINE}"
+
 python do_generate_resin_uboot_configuration () {
     vars = [
         'RESIN_UBOOT_DEVICES',
@@ -31,6 +35,7 @@ python do_generate_resin_uboot_configuration () {
         'RESIN_IMAGE_FLAG_FILE',
         'RESIN_FLASHER_FLAG_FILE',
         'RESIN_ENV_FILE',
+        'BASE_OS_CMDLINE',
     ]
     with open(os.path.join(d.getVar('S'), 'include', 'config_resin.h'), 'w') as f:
         for v in vars:

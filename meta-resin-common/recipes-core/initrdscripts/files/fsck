@@ -2,7 +2,7 @@
 
 fsck_enabled() {
     # On flasher we don't run fsck
-    if [ -h /dev/disk/by-label/flash-boot ]; then
+    if [ "$bootparam_flasher" = "true" ]; then
         echo "[INFO] Flasher detected. We don't run fsck on the partitions when provisioning."
         return 1
     fi
