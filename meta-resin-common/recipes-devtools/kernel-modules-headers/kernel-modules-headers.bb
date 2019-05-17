@@ -21,7 +21,7 @@ DEPENDS += " \
 
 SRC_URI = "git://github.com/resin-os/module-headers.git;protocol=https"
 
-SRCREV = "v0.0.14"
+SRCREV = "562c5ab818b528f7770823e5c90992b015020938"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}"
