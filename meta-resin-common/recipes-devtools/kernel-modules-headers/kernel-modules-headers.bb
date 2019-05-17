@@ -19,9 +19,9 @@ DEPENDS += " \
     elfutils \
     "
 
-SRC_URI = "git://github.com/resin-os/module-headers.git;protocol=https"
+SRC_URI = "git://github.com/resin-os/module-headers.git;protocol=https;branch=compile_fixdep_for_target"
 
-SRCREV = "v0.0.14"
+SRCREV = "6bdd547ad1bc301cc48ae6427195e84e275c8299"
 
 S = "${WORKDIR}/git"
 B = "${WORKDIR}"
