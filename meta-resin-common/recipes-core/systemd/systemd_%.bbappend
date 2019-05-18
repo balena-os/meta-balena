@@ -35,6 +35,14 @@ FILES_${PN} += " \
     "
 
 do_install_append() {
+    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
+	# Non-development image
+	if $(readlink autovt@.service) == "getty@*.service"; then
+            rm ${D}/lib/systemd/system/autovt@.service
+        fi
+        find ${D} -name "getty@*.service" -delete
+    fi
+
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
     install -m 06444 ${WORKDIR}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
 

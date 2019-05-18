@@ -2,8 +2,8 @@
 Description=Balena Application Container Engine (host)
 Documentation=https://www.balena.io/docs/getting-started
 Wants=dnsmasq.service
-Requires=balena-host.socket mnt-sysroot-active.service mnt-sysroot-inactive.service
-After=network.target mnt-sysroot-active.service mnt-sysroot-inactive.service dnsmasq.service rollback-altboot.service balena-host.socket
+Requires=balena-host.socket mnt-sysroot-active.service
+After=network.target mnt-sysroot-active.service dnsmasq.service rollback-altboot.service balena-host.socket
 ConditionVirtualization=!docker
 
 [Service]
