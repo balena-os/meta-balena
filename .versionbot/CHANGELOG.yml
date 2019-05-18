@@ -1,4 +1,104 @@
 - commits:
+    - subject: Update kernel-module-headers to version v0.0.16
+      hash: 410311755dec70ba4040fcfbcb5ace59884b4644
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update kernel-module-headers to version v0.0.16
+        changelog-entry: Update kernel-module-headers to version v0.0.16
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Add uboot support for unified kernel cmdline arguments
+      hash: 35046288e2878f85e4bc33a0cb993e32d4d5aa9a
+      body: |
+        This adds set_os_cmdline which defines os_cmdline so that BSPs can
+        import it in their bootargs and pass it to kernel accordingly. Also, as
+        part of os_cmdline, there is an argument added when the booted image is
+        a flasher. This can be used in the OS for various flasher specific
+        checks.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add uboot support for unified kernel cmdline arguments
+        changelog-entry: Add uboot support for unified kernel cmdline arguments
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Switch flasher detection in initramfs to flasher boot parameter
+      hash: 93e3c7286c52c6f91bf4252338955f6d7fd97fc2
+      body: |
+        Fixes #1488
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Switch flasher detection in initramfs to flasher boot parameter
+        changelog-entry: Switch flasher detection in initramfs to flasher boot parameter
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update balena-supervisor to v9.15.0
+      hash: b99419662683f44c09f4369424f450b90f9d0a5a
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.15.0
+        changelog-entry: Update balena-supervisor to v9.15.0
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Improve boot speed by only mounting the inactive partition when needed
+      hash: 28fc12ef94bc8e9a083bc5b1e8052fdb685453c2
+      body: |
+        The inactive partition is only needed for HUP or rollbacks. This commit
+        changes the mnt-sysroot-inactive.service unit to an automount so that
+        the partition is only mounted when used. This improves boot time.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Improve boot speed by only mounting the inactive partition when needed
+        changelog-entry: Improve boot speed by only mounting the inactive partition when needed
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Fix openssl dependency of balena-unique-key
+      hash: 2159c397b0560d03441806573e14bfbcf52a7e7b
+      body: |
+        Since yocto thud, and more specifically since poky switched to
+        openssl 1.1 line, the openssl binary is provided by 'openssl-bin'. On
+        that version, 'openssl' doesn't provide this binary making the uuid
+        generation script fail.
+
+        This patch makes 'openssl-bin' the default dependency but does that in a
+        way that older yocto versions can overwrite it back to the old provider
+        (openssl package).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix openssl dependency of balena-unique-key
+        changelog-entry: Fix openssl dependency of balena-unique-key
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Do not spawn getty in production images
+      hash: 93b3298cbb343f3ebf3a03725f6f0298974bed8f
+      body: |
+        This code was deleted by commit
+        9a8f1f1b744248964d4d1b2eb2c8dd732a753980 by mistake so let's
+        add it back.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Do not spawn getty in production images
+        changelog-entry: Do not spawn getty in production images
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+  version: 2.35.0
+  date: 2019-05-18T22:39:09.735Z
+- commits:
     - subject: Update balena-supervisor to v9.14.10
       hash: 70b9acb15806f0a276f80ab18e9f7ad4aa02d83b
       body: ''

@@ -1,6 +1,17 @@
 Change log
 -----------
 
+# v2.35.0
+## (2019-05-18)
+
+* Update kernel-module-headers to version v0.0.16 [Florin Sarbu]
+* Add uboot support for unified kernel cmdline arguments [Andrei Gherzan]
+* Switch flasher detection in initramfs to flasher boot parameter [Andrei Gherzan]
+* Update balena-supervisor to v9.15.0 [Cameron Diver]
+* Improve boot speed by only mounting the inactive partition when needed [Zubair Lutfullah Kakakhel]
+* Fix openssl dependency of balena-unique-key [Andrei Gherzan]
+* Do not spawn getty in production images [Florin Sarbu]
+
 # v2.34.1
 ## (2019-05-14)
 
