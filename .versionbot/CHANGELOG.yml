@@ -1,4 +1,22 @@
 - commits:
+    - subject: Cleanup old versions of iwlwifi firmware files in Yocto Thud
+      hash: 65122b0689d75d49b338595ec6813b1acad59223
+      body: |
+        This is done so we can save considerable amount of space on the root
+        partition.
+
+        See #810
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Cleanup old versions of iwlwifi firmware files in Yocto Thud
+        changelog-entry: Cleanup old versions of iwlwifi firmware files in Yocto Thud
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+  version: 2.36.0
+  date: 2019-05-20T13:07:11.168Z
+- commits:
     - subject: Update kernel-module-headers to version v0.0.16
       hash: 410311755dec70ba4040fcfbcb5ace59884b4644
       body: ''

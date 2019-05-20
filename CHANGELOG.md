@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.36.0
+## (2019-05-20)
+
+* Cleanup old versions of iwlwifi firmware files in Yocto Thud [Florin Sarbu]
+
 # v2.35.0
 ## (2019-05-18)
 
