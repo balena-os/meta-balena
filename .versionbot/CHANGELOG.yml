@@ -1,4 +1,38 @@
 - commits:
+    - subject: Sync ModemManager recipe with upstream
+      hash: e0be8f152c88a5635b5d18249c5f882caf9e31c5
+      body: >
+        We also pushed the latest update we did in BalenaOS to upstream:
+
+        http://lists.openembedded.org/pipermail/openembedded-devel/2019-May/199743.html
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Sync ModemManager recipe with upstream
+        changelog-entry: Sync ModemManager recipe with upstream
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update NetworkManager to 1.18.0
+      hash: 808f6f1790357b4f282a15cbb72c603ee77f63d3
+      body: >
+        Fixes #1492
+
+
+        Pushed to upstream as well:
+
+        http://lists.openembedded.org/pipermail/openembedded-devel/2019-May/199742.html
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update NetworkManager to 1.18.0
+        changelog-entry: Update NetworkManager to 1.18.0
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.37.0
+  date: 2019-05-22T14:59:18.091Z
+- commits:
     - subject: Cleanup old versions of iwlwifi firmware files in Yocto Thud
       hash: 65122b0689d75d49b338595ec6813b1acad59223
       body: |

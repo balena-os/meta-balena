@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.37.0
+## (2019-05-22)
+
+* Sync ModemManager recipe with upstream [Andrei Gherzan]
+* Update NetworkManager to 1.18.0 [Andrei Gherzan]
+
 # v2.36.0
 ## (2019-05-20)
 
