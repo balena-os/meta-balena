@@ -1,0 +1,138 @@
+When resinOS is ran as privileged container, avoid messing with tty1 as it will
+interfere with the host.
+
+Upstream-status: Innappropiate [Configuration]
+Signed-off-by: Andrei Gherzan <andrei@resin.io>
+
+Index: plymouth-0.9.2/systemd-units/plymouth-halt.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-halt.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-halt.service.in
+@@ -5,6 +5,7 @@ Before=systemd-halt.service
+ PartOf=resin-boot.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
++ConditionVirtualization=!docker
+
+ [Service]
+ Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
+Index: plymouth-0.9.2/systemd-units/plymouth-kexec.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-kexec.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-kexec.service.in
+@@ -5,6 +5,7 @@ Before=systemd-kexec.service
+ PartOf=resin-boot.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
++ConditionVirtualization=!docker
+
+ [Service]
+ Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
+Index: plymouth-0.9.2/systemd-units/plymouth-poweroff.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-poweroff.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-poweroff.service.in
+@@ -5,6 +5,7 @@ Before=systemd-poweroff.service
+ PartOf=resin-boot.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
++ConditionVirtualization=!docker
+
+ [Service]
+ Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
+Index: plymouth-0.9.2/systemd-units/plymouth-quit-wait.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-quit-wait.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-quit-wait.service.in
+@@ -1,6 +1,7 @@
+ [Unit]
+ Description=Hold until boot process finishes up
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
++ConditionVirtualization=!docker
+
+ [Service]
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth --wait
+Index: plymouth-0.9.2/systemd-units/plymouth-quit.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-quit.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-quit.service.in
+@@ -1,6 +1,7 @@
+ [Unit]
+ Description=Terminate Plymouth Boot Screen
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
++ConditionVirtualization=!docker
+
+ [Service]
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
+Index: plymouth-0.9.2/systemd-units/plymouth-read-write.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-read-write.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-read-write.service.in
+@@ -4,6 +4,7 @@ DefaultDependencies=no
+ After=local-fs.target
+ Before=sysinit.target
+ ConditionPathExists=!/etc/initrd-release
++ConditionVirtualization=!docker
+
+ [Service]
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth update-root-fs --read-write
+Index: plymouth-0.9.2/systemd-units/plymouth-reboot.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-reboot.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-reboot.service.in
+@@ -5,6 +5,7 @@ Before=systemd-reboot.service
+ PartOf=resin-boot.service
+ DefaultDependencies=no
+ ConditionKernelCommandLine=!plymouth.enable=0
++ConditionVirtualization=!docker
+
+ [Service]
+ Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
+Index: plymouth-0.9.2/systemd-units/plymouth-start.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-start.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-start.service.in
+@@ -6,6 +6,7 @@ After=systemd-vconsole-setup.service sys
+ Before=systemd-ask-password-plymouth.service
+ Requires=resin-boot.service
+ ConditionKernelCommandLine=!plymouth.enable=0
++ConditionVirtualization=!docker
+
+ [Service]
+ Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
+Index: plymouth-0.9.2/systemd-units/plymouth-switch-root.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/plymouth-switch-root.service.in
++++ plymouth-0.9.2/systemd-units/plymouth-switch-root.service.in
+@@ -3,6 +3,7 @@ Description=Plymouth switch root service
+ DefaultDependencies=no
+ ConditionPathExists=/etc/initrd-release
+ Before=initrd-switch-root.service
++ConditionVirtualization=!docker
+
+ [Service]
+ Type=oneshot
+Index: plymouth-0.9.2/systemd-units/systemd-ask-password-plymouth.path.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/systemd-ask-password-plymouth.path.in
++++ plymouth-0.9.2/systemd-units/systemd-ask-password-plymouth.path.in
+@@ -7,6 +7,7 @@ After=plymouth-start.service
+ Before=basic.target shutdown.target
+ ConditionKernelCommandLine=!plymouth.enable=0
+ ConditionPathExists=/run/plymouth/pid
++ConditionVirtualization=!docker
+
+ [Path]
+ DirectoryNotEmpty=/run/systemd/ask-password
+Index: plymouth-0.9.2/systemd-units/systemd-ask-password-plymouth.service.in
+===================================================================
+--- plymouth-0.9.2.orig/systemd-units/systemd-ask-password-plymouth.service.in
++++ plymouth-0.9.2/systemd-units/systemd-ask-password-plymouth.service.in
+@@ -7,6 +7,7 @@ After=plymouth-start.service
+ Before=shutdown.target
+ ConditionKernelCommandLine=!plymouth.enable=0
+ ConditionPathExists=/run/plymouth/pid
++ConditionVirtualization=!docker
+
+ [Service]
+ ExecStart=@SYSTEMD_ASK_PASSWORD_AGENT@ --watch --plymouth
