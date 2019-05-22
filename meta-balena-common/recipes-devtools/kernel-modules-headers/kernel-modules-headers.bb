@@ -70,3 +70,9 @@ FILES_${PN} += "/usr/src/*"
 # Tools inside the headers package are slightly special.
 # Skip some QA checks. We are interested in the arch check only.
 INSANE_SKIP_${PN} = "file-rdeps ldflags staticdev already-stripped"
+
+# gen_mod_headers uses host tools on the build machine while running
+# make modules_prepare. gcc on the build host might not support the
+# -fmacro-prefix-map option which is quite recent and introduced in
+# Yocto since warrior. Remove it for this recipe
+DEBUG_PREFIX_MAP_remove = "-fmacro-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
