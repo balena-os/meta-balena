@@ -1,9 +1,9 @@
 From 69cd80a46a55389c40ad3fccfecc78c5b92c2d0a Mon Sep 17 00:00:00 2001
-From: Andrei Gherzan <andrei@resin.io>
+From: Andrei Gherzan <andrei@balena.io>
 Date: Wed, 1 Aug 2018 14:34:45 +0100
 Subject: [PATCH] ModemManager.service.in: Log to systemd journal
 
-Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Signed-off-by: Andrei Gherzan <andrei@balena.io>
 Upstream-status: Inappropriate [configuration]
 ---
  data/ModemManager.service.in | 2 +-

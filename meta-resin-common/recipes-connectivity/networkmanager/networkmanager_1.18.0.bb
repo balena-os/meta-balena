@@ -5,7 +5,7 @@ SECTION = "net/misc"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cbbffd568227ada506640fe950a4823b \
                     file://libnm-util/COPYING;md5=1c4fa765d6eb3cd2fbd84344a1b816cd \
-                    file://docs/api/html/license.html;md5=2d56a1b0c42e388aa86aef59b154e8c3 \
+                    file://docs/api/html/license.html;md5=233931303ef80eded167add1f60a50c1 \
 "
 
 DEPENDS = " \
@@ -16,7 +16,6 @@ DEPENDS = " \
     util-linux \
     libndp \
     libnewt \
-    polkit \
     jansson \
     curl \
 "
@@ -25,21 +24,17 @@ inherit gnomebase gettext systemd bluetooth bash-completion vala gobject-introsp
 
 SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
-    file://0001-sd-lldp.h-Remove-net-ethernet.h-seems-to-be-over-spe.patch \
-    file://0002-Fixed-configure.ac-Fix-pkgconfig-sysroot-locations.patch \
-    file://0003-Do-not-create-settings-settings-property-documentati.patch \
-    file://0001-Do-not-include-net-ethernet.h-and-linux-if_ether.h.patch \
-    file://musl/0001-musl-basic.patch \
-    file://musl/0002-musl-dlopen-configure-ac.patch \
-    file://musl/0003-musl-network-support.patch \
-    file://musl/0004-musl-process-util.patch \
-    file://musl/0005-musl-avoid-further-conflicts-by-including-net-ethern.patch \
-    file://musl/0006-Add-a-strndupa-replacement-for-musl.patch \
+    file://0001-Fixed-configure.ac-Fix-pkgconfig-sysroot-locations.patch \
+    file://0002-Do-not-create-settings-settings-property-documentati.patch \
 "
-SRC_URI[md5sum] = "54ce62f0aa18ef6c5e754eaac47494ac"
-SRC_URI[sha256sum] = "35a3ede4c7d12d6212033c9e44cb82b7692f38063b53a067567f02f5937c8c18"
+SRC_URI_append_libc-musl = " \
+    file://musl/0001-Fix-build-with-musl-systemd-specific.patch \
+    file://musl/0002-Fix-build-with-musl.patch \
+"
+SRC_URI[md5sum] = "c8c27116a8083bab5d5fcca0d03e988a"
+SRC_URI[sha256sum] = "c6e8df25e5a3c7309bc17664be8971689314884cdd08afdd6b0847d29d2a8ba6"
 
-UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/1.10/"
+UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/1.16/"
 UPSTREAM_CHECK_REGEX = "NetworkManager\-(?P<pver>1\.10(\.\d+)+).tar.xz"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
@@ -53,13 +48,20 @@ EXTRA_OECONF = " \
     --with-udev-dir=${nonarch_base_libdir}/udev \
 "
 
-# gobject-introspection related
-GI_DATA_ENABLED_libc-musl = "False"
-
-# stolen from https://github.com/voidlinux/void-packages/blob/master/srcpkgs/NetworkManager/template
-CFLAGS_libc-musl_append = " \
-    -DHAVE_SECURE_GETENV -Dsecure_getenv=getenv \
-    -D__USE_POSIX199309 -DRTLD_DEEPBIND=0 \
+# stolen from https://github.com/void-linux/void-packages/blob/master/srcpkgs/NetworkManager/template
+# avoids:
+# | ../NetworkManager-1.16.0/libnm-core/nm-json.c:106:50: error: 'RTLD_DEEPBIND' undeclared (first use in this function); did you mean 'RTLD_DEFAULT'?
+#
+# and
+#
+# | In file included from ../NetworkManager-1.16.0/src/systemd/nm-sd-utils-core.c:25:
+# | ../NetworkManager-1.16.0/src/systemd/sd-adapt-core/nm-sd-adapt-core.h:68:6: error: #error neither secure_getenv nor __secure_getenv is available
+# |  #    error neither secure_getenv nor __secure_getenv is available
+# |       ^~~~~
+CFLAGS_append_libc-musl = " \
+    -DRTLD_DEEPBIND=0 \
+    -DHAVE_SECURE_GETENV \
+    -Dsecure_getenv=getenv \
 "
 
 do_compile_prepend() {
@@ -69,13 +71,13 @@ do_compile_prepend() {
 PACKAGECONFIG ??= "nss ifupdown dhclient dnsmasq \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', bb.utils.contains('DISTRO_FEATURES', 'x11', 'consolekit', '', d), d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', '${BLUEZ}', '', d)} \
-    ${@bb.utils.filter('DISTRO_FEATURES', 'wifi', d)} \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'wifi polkit', d)} \
 "
 PACKAGECONFIG[systemd] = " \
-    --with-systemdsystemunitdir=${systemd_unitdir}/system --with-session-tracking=systemd --enable-polkit, \
+    --with-systemdsystemunitdir=${systemd_unitdir}/system --with-session-tracking=systemd, \
     --without-systemdsystemunitdir, \
-    polkit \
 "
+PACKAGECONFIG[polkit] = "--enable-polkit --enable-polkit-agent,--disable-polkit --disable-polkit-agent,polkit"
 PACKAGECONFIG[bluez5] = "--enable-bluez5-dun,--disable-bluez5-dun,bluez5"
 # consolekit is not picked by shlibs, so add it to RDEPENDS too
 PACKAGECONFIG[consolekit] = "--with-session-tracking=consolekit,,consolekit,consolekit"
@@ -111,6 +113,7 @@ FILES_${PN} += " \
     ${datadir}/dbus-1 \
     ${noarch_base_libdir}/udev/* \
     ${systemd_unitdir}/system \
+    ${libdir}/pppd \
 "
 
 RRECOMMENDS_${PN} += "iptables \
@@ -136,7 +139,7 @@ FILES_${PN}-nmtui-doc = " \
     ${mandir}/man1/nmtui* \
 "
 
-SYSTEMD_SERVICE_${PN} = "NetworkManager.service NetworkManager-dispatcher.service"
+SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'NetworkManager.service NetworkManager-dispatcher.service', '', d)}"
 
 do_install_append() {
     rm -rf ${D}/run ${D}${localstatedir}/run

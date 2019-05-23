@@ -9,26 +9,31 @@ LIC_FILES_CHKSUM = " \
 
 inherit gnomebase gettext systemd vala gobject-introspection bash-completion
 
-DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native"
+DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native libxslt-native"
 
 SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
-           file://0001-Add-configure-check-for-canonicalize_file_name-befor.patch \
+           file://0001-Do-not-set-Wno-unused-but-set-variable.patch \
            "
 SRC_URI[md5sum] = "92d25176d0cc9d588ca29700b33c7d98"
 SRC_URI[sha256sum] = "fd0f39996025dac96995daea8a58ec7dd571582f7563a8ae0d5f65b571b76ee2"
 
 S = "${WORKDIR}/ModemManager-${PV}"
 
-PACKAGECONFIG ??= "mbim qmi polkit \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)} \
+PACKAGECONFIG ??= "mbim qmi \
+    ${@bb.utils.filter('DISTRO_FEATURES', 'systemd polkit', d)} \
 "
 
 PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_unitdir}/system/,,"
 PACKAGECONFIG[polkit] = "--with-polkit=yes,--with-polkit=no,polkit"
 # Support WWAN modems and devices which speak the Mobile Interface Broadband Model (MBIM) protocol.
-PACKAGECONFIG[mbim] = "--with-mbim,--with-mbim=no,libmbim"
+PACKAGECONFIG[mbim] = "--with-mbim,--without-mbim,libmbim"
 # Support WWAN modems and devices which speak the Qualcomm MSM Interface (QMI) protocol.
 PACKAGECONFIG[qmi] = "--with-qmi,--without-qmi,libqmi"
+
+EXTRA_OECONF = " \
+    --with-udev-base-dir=${nonarch_base_libdir}/udev \
+"
+CFLAGS_append_toolchain-gcc = " -Wno-unused-but-set-variable"
 
 FILES_${PN} += " \
     ${datadir}/icons \
