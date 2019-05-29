@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v2.37.0
+## (2019-05-29)
+
+* Update balena-supervisor to v9.15.8 [Cameron Diver]
+* kernel-modules-headers: Update to v0.0.18 [Andrei Gherzan]
+* os-config: Update to v1.1.1 to fix mDNS [Andrei Gherzan]
+* Fix busybox nslookup mdns lookups [Andrei Gherzan]
+* Update balena-supervisor to v9.15.4 [Cameron Diver]
+* Improve logging and version comparison in linux-firmware cleanup class [Andrei Gherzan]
+* Sync ModemManager recipe with upstream [Andrei Gherzan]
+* Update NetworkManager to 1.18.0 [Andrei Gherzan]
+
 # v2.36.0
 ## (2019-05-20)
 

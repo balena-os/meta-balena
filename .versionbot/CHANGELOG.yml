@@ -1,4 +1,132 @@
 - commits:
+    - subject: Update balena-supervisor to v9.15.8
+      hash: 4fcdf63860d17612ef10ff9c721b9f58c8b8c023
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.15.8
+        changelog-entry: Update balena-supervisor to v9.15.8
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: 'kernel-modules-headers: Update to v0.0.18'
+      hash: 9c1fb61a96351c112b98544117b90c4986445516
+      body: |
+        This update includes an arch64 fix (module.lds) and one for passing the
+        correct LD flags.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: 'os-config: Update to v1.1.1 to fix mDNS'
+      hash: 8d44decba7a252bfb4399622898d18e28367c4fa
+      body: |
+        os-config has a dependency on reqwest which broke mdns on 9.6. The new
+        os-config updated this version to one that restored this functionality.
+
+        Partially fixes: #1531
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Fix busybox nslookup mdns lookups
+      hash: 157a06ad295a1f03635f8291dfc4dfe3358caa9c
+      body: |
+        Since 1.29, busybox switched to an internal implementation of the
+        resolver based on a feature config, NSLOOKUP_BIG. This is enabled by
+        default and it's meant to be musl compatible. In BalenaOS we use glibc
+        and we rely on it for being able to resolve names using NSS modules
+        (libmdns).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix busybox nslookup mdns lookups
+        changelog-entry: Fix busybox nslookup mdns lookups
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update balena-supervisor to v9.15.4
+      hash: a6e1c40853e4bad20de9172f688eb074f8d24b86
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.15.4
+        changelog-entry: Update balena-supervisor to v9.15.4
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Improve logging and version comparison in linux-firmware cleanup class
+      hash: 6500c7f020133833b820f9152c22b8e45794542c
+      body: |
+        This adds an easier to debug logging that shows both removed and kept
+        firmwares. For example:
+
+         Cleaning iwlwifi firmware version 8000C to minimum API version 34.
+           Removing iwlwifi-8000C-13.ucode.
+           Removing iwlwifi-8000C-22.ucode.
+           Removing iwlwifi-8000C-21.ucode.
+           Removing iwlwifi-8000C-31.ucode.
+           Removing iwlwifi-8000C-16.ucode.
+           Removing iwlwifi-8000C-27.ucode.
+           Leaving iwlwifi-8000C-34.ucode in place.
+           Leaving iwlwifi-8000C-36.ucode in place.
+
+        Also, this commit improves the version comparison which was comparing
+        strings and not integers. Now we try integer comparison and fallback to
+        string when parse fails.
+
+        Finally, the task's vardeps expands varflags to correctly retrigger on
+        change.
+
+        Fixes #1527
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Improve logging and version comparison in linux-firmware cleanup class
+        changelog-entry: Improve logging and version comparison in linux-firmware cleanup class
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Sync ModemManager recipe with upstream
+      hash: e0be8f152c88a5635b5d18249c5f882caf9e31c5
+      body: >
+        We also pushed the latest update we did in BalenaOS to upstream:
+
+        http://lists.openembedded.org/pipermail/openembedded-devel/2019-May/199743.html
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Sync ModemManager recipe with upstream
+        changelog-entry: Sync ModemManager recipe with upstream
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update NetworkManager to 1.18.0
+      hash: 808f6f1790357b4f282a15cbb72c603ee77f63d3
+      body: >
+        Fixes #1492
+
+
+        Pushed to upstream as well:
+
+        http://lists.openembedded.org/pipermail/openembedded-devel/2019-May/199742.html
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update NetworkManager to 1.18.0
+        changelog-entry: Update NetworkManager to 1.18.0
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.37.0
+  date: 2019-05-29T14:57:13.320Z
+- commits:
     - subject: Cleanup old versions of iwlwifi firmware files in Yocto Thud
       hash: 65122b0689d75d49b338595ec6813b1acad59223
       body: |
