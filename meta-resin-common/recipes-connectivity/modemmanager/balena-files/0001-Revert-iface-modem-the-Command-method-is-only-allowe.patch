@@ -1,12 +1,13 @@
 From 4ed3427eb3da4e1e7bf52443247e1303a4555ba7 Mon Sep 17 00:00:00 2001
-From: Andrei Gherzan <andrei@resin.io>
+From: Andrei Gherzan <andrei@balena.io>
 Date: Thu, 17 May 2018 13:21:28 +0100
 Subject: [PATCH] Revert "iface-modem: the Command() method is only allowed
  when running in debug mode"
 
 This reverts commit 64f49c0c7261d7de2eae03477cd69cf540184041.
 
-Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Upstream-status: Inappropriate [distro-specific]
+Signed-off-by: Andrei Gherzan <andrei@balena.io>
 ---
  introspection/org.freedesktop.ModemManager1.Modem.xml |  9 +++------
  src/mm-iface-modem.c                                  | 12 ------------

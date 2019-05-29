@@ -19,12 +19,8 @@ RDEPENDS_${PN}_append = " \
     resolvconf \
     "
 FILES_${PN}_append = " ${sysconfdir}/*"
-FILES_${PN}_append = " ${libdir}/pppd/* "
-
-DEPENDS_remove = "polkit"
 
 EXTRA_OECONF += " \
-    --enable-polkit=no \
     --with-resolvconf=/sbin/resolvconf \
     --disable-ovs \
     "

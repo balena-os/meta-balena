@@ -13,15 +13,15 @@ Upstream-Status: Inappropriate [OE specific]
 
 Signed-off-by: Andreas Müller <schnitzeltony@gmail.com>
 ---
- Makefile.am  | 20 --------------------
+ Makefile.am  | 11 -----------
  configure.ac |  5 -----
- 2 files changed, 25 deletions(-)
+ 2 files changed, 16 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 1e100f6..d31e3c1 100644
+index b180466..1ab4658 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1115,9 +1115,7 @@ EXTRA_DIST += \
+@@ -1298,9 +1298,7 @@ EXTRA_DIST += \
  if HAVE_INTROSPECTION
  
  libnm_noinst_data = \
@@ -31,7 +31,7 @@ index 1e100f6..d31e3c1 100644
  	libnm/nm-settings-keyfile-docs.xml \
  	libnm/nm-settings-ifcfg-rh-docs.xml
  
-@@ -3692,27 +3690,9 @@ $(clients_common_libnmc_base_la_OBJECTS): $(libnm_lib_h_pub_mkenums)
+@@ -3930,18 +3928,9 @@ $(clients_common_libnmc_base_la_OBJECTS): $(libnm_lib_h_pub_mkenums)
  $(clients_common_libnmc_base_la_OBJECTS): clients/common/.dirstamp
  
  clients_common_settings_doc_h = clients/common/settings-docs.h
@@ -40,16 +40,7 @@ index 1e100f6..d31e3c1 100644
 -	$(AM_V_GEN) $(XSLTPROC) --output $@ $< $(word 2,$^)
 -DISTCLEANFILES += $(clients_common_settings_doc_h)
 -check-local-settings-docs: $(clients_common_settings_doc_h)
--	@if test -z "$$NMTST_NO_CHECK_SETTINGS_DOCS" ; then \
--		if ! cmp -s "$(srcdir)/$(clients_common_settings_doc_h).in" "$(builddir)/$(clients_common_settings_doc_h)" ; then \
--			if test "$$NM_TEST_REGENERATE" == 1 ; then \
--				cp -f "$(builddir)/$(clients_common_settings_doc_h)" "$(srcdir)/$(clients_common_settings_doc_h).in"; \
--			else \
--				echo "The generated file \"$(builddir)/$(clients_common_settings_doc_h)\" differs from the source file \"$(srcdir)/$(clients_common_settings_doc_h).in\". You probably should copy the generated file over to the source file. You can skip this test by setting \$$NMTST_NO_CHECK_SETTINGS_DOCS=yes". You can also automatically copy the file by rerunning the test with \$$NM_TEST_REGENERATE=1 ; \
--				false; \
--			fi; \
--		fi;\
--	fi
+-	$(srcdir)/tools/check-settings-docs.sh "$(srcdir)" "$(builddir)" "$(clients_common_settings_doc_h)"
 -check_local += check-local-settings-docs
 -else
  $(clients_common_settings_doc_h): $(clients_common_settings_doc_h).in clients/common/.dirstamp
@@ -60,10 +51,10 @@ index 1e100f6..d31e3c1 100644
  	$(clients_common_settings_doc_h) \
  	$(clients_common_settings_doc_h).in
 diff --git a/configure.ac b/configure.ac
-index 79dc3b9..23d14a6 100644
+index b914219..872c292 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1195,11 +1195,6 @@ GTK_DOC_CHECK(1.0)
+@@ -1215,11 +1215,6 @@ GTK_DOC_CHECK(1.0)
  # check if we can build setting property documentation
  build_docs=no
  if test -n "$INTROSPECTION_MAKEFILE"; then
@@ -76,5 +67,5 @@ index 79dc3b9..23d14a6 100644
  	if test -z "$PERL"; then
  		AC_MSG_ERROR([--enable-introspection requires perl])
 -- 
-2.14.5
+2.20.1
 

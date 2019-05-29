@@ -20,4 +20,3 @@ FILES_${PN} += " \
     /lib/udev/rules.d/77-mm-huawei-configuration.rules \
     /lib/udev/mm-huawei-configuration-switch.sh \
     "
-DEPENDS_append = " libxslt-native"
