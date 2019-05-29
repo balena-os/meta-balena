@@ -22,16 +22,38 @@ python do_iwlwifi_firmware_clean() {
         return
     for version in versions.split():
         if version in minapi_all:
-            bb.note("Cleaning iwlwifi firmware version %s." %version)
             minapi = minapi_all[version]
+            if not minapi:
+                bb.fatal("There is no minimum API version set for %s." %version)
+            bb.note("Cleaning iwlwifi firmware version %s to minimum API version %s." %(version, minapi))
+            left_fw = []
             for filename in os.listdir(path):
                 m = re.match(regex, filename)
-                if m:
-                    if m.group(1) == version and m.group(2) < minapi:
-                        filepath = os.path.join(path, filename)
-                        bb.note("Removing %s." %filepath)
-                        os.remove(filepath)
+                if m and m.group(1) and m.group(2):
+                    try:
+                        parsed_minapi = int(minapi)
+                        parsed_matched_version = int(m.group(2))
+                    except:
+                        parsed_minapi = minapi
+                        parsed_matched_version = m.group(2)
+                    if m.group(1) == version:
+                        if parsed_matched_version < parsed_minapi:
+                            filepath = os.path.join(path, filename)
+                            bb.note("  Removing %s." %filename)
+                            os.remove(filepath)
+                        else:
+                            left_fw.append(filename)
+            for filename in left_fw:
+                bb.note("  Leaving %s in place." %filename)
         else:
             bb.warn("IWLWIFI_FW_TOCLEAN activates %s but no corresponding IWLWIFI_FW_MIN_API was defined." %version)
 }
+
+python __anonymous() {
+    vars = [ "IWLWIFI_FW_MIN_API" ]
+    for v in vars:
+        for flag in sorted((d.getVarFlags(v) or {}).keys()):
+            d.appendVar('%s_VARDEPS' % (v), ' %s:%s' % (flag, d.getVarFlag(v, flag, False)))
+}
+do_iwlwifi_firmware_clean[vardeps] += "IWLWIFI_FW_MIN_API_VARDEPS"
 addtask iwlwifi_firmware_clean after do_install before do_package
