@@ -31,3 +31,7 @@ do_install_append () {
     echo "HostKey /etc/ssh/hostkeys/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
     echo "HostKey /etc/ssh/hostkeys/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 }
+
+# We need dropbear to be able to migrate host keys in the update hooks
+RCONFLICTS_${PN} = ""
+RCONFLICTS_${PN}-sshd = ""
