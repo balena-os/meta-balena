@@ -14,6 +14,7 @@ CONNECTIVITY_FIRMWARES ?= " \
     linux-firmware-ath9k \
     linux-firmware-ralink \
     linux-firmware-rtl8192cu \
+    linux-firmware-rtl8192su \
     "
 
 CONNECTIVITY_PACKAGES = " \
