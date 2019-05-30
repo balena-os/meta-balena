@@ -7,7 +7,11 @@ S = "${WORKDIR}"
 
 inherit allarch
 
-HOSTAPP_HOOKS = "0-bootfiles 80-rollback"
+HOSTAPP_HOOKS = " \
+    0-bootfiles \
+    70-sshd_migrate_keys \
+    80-rollback \
+    "
 RESIN_BOOT_FINGERPRINT = "${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
 
 python __anonymous() {
@@ -25,9 +29,11 @@ FILES_${PN} += " \
 	"
 
 RDEPENDS_${PN} = " \
-	util-linux \
-	balena \
-	"
+    balena \
+    dropbear \
+    openssh-keygen \
+    util-linux \
+    "
 
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/
