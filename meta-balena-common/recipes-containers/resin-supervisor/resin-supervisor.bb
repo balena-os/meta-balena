@@ -43,9 +43,9 @@ RDEPENDS_${PN} = " \
 	"
 
 python () {
-	supervisor_repository = d.getVar('SUPERVISOR_REPOSITORY', True)
-	if not supervisor_repository:
-		bb.fatal("resin-supervisor-disk: There is no support for this architecture.")
+    supervisor_repository = d.getVar('SUPERVISOR_REPOSITORY', True)
+    if not supervisor_repository:
+        bb.fatal("resin-supervisor-disk: There is no support for this architecture.")
 }
 
 S = "${WORKDIR}"
