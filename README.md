@@ -4,7 +4,7 @@
 This repository enables building balenaOS for various devices.
 
 ## Layers Structure
-* meta-resin-common : layer which contains common recipes for all our supported platforms.
+* meta-balena-common : layer which contains common recipes for all our supported platforms.
 * meta-resin-* : layers which contain recipes specific to yocto versions.
 * other files : README, COPYING, etc.
 
