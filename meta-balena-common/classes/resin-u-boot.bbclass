@@ -26,17 +26,16 @@ RESIN_UBOOT_DEVICE_TYPES ?= "mmc"
 # supported bootloaders
 BASE_OS_CMDLINE ?= "${OS_KERNEL_CMDLINE}"
 
+UBOOT_VARS = "RESIN_UBOOT_DEVICES \
+              RESIN_UBOOT_DEVICE_TYPES \
+              RESIN_BOOT_PART RESIN_DEFAULT_ROOT_PART \
+              RESIN_IMAGE_FLAG_FILE \
+              RESIN_FLASHER_FLAG_FILE \
+              RESIN_ENV_FILE \
+              BASE_OS_CMDLINE"
+
 python do_generate_resin_uboot_configuration () {
-    vars = [
-        'RESIN_UBOOT_DEVICES',
-        'RESIN_UBOOT_DEVICE_TYPES',
-        'RESIN_BOOT_PART',
-        'RESIN_DEFAULT_ROOT_PART',
-        'RESIN_IMAGE_FLAG_FILE',
-        'RESIN_FLASHER_FLAG_FILE',
-        'RESIN_ENV_FILE',
-        'BASE_OS_CMDLINE',
-    ]
+    vars = d.getVar('UBOOT_VARS').split()
     with open(os.path.join(d.getVar('S'), 'include', 'config_resin.h'), 'w') as f:
         for v in vars:
             f.write("#define %s %s\n" % (v, d.getVar(v)))
@@ -48,3 +47,6 @@ python do_generate_resin_uboot_configuration () {
     bb.utils.copyfile(src, dst)
 }
 addtask do_generate_resin_uboot_configuration after do_patch before do_configure
+
+# Regenerate env_resin.h if any of these variables change.
+do_generate_resin_uboot_configuration[vardeps] += "${UBOOT_VARS}"
