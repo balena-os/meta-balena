@@ -1,0 +1,26 @@
+From d10f52577c6ee65bc414f260ca6cf05a3bf6f18c Mon Sep 17 00:00:00 2001
+From: Theodor Gherzan <theodor@resin.io>
+Date: Thu, 17 Dec 2015 04:19:58 +0100
+Subject: [PATCH 3/5] plymouth: Default theme is resin
+
+Signed-off-by: Theodor Gherzan <theodor@resin.io>
+---
+ src/plymouthd.defaults | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/plymouthd.defaults b/src/plymouthd.defaults
+index 4d3b6d4..75b6925 100644
+--- a/src/plymouthd.defaults
++++ b/src/plymouthd.defaults
+@@ -1,6 +1,6 @@
+ # Distribution defaults. Changes to this file will get overwritten during
+ # upgrades.
+ [Daemon]
+-Theme=spinner
+-ShowDelay=5
++Theme=resin
++ShowDelay=0
+ DeviceTimeout=5
+-- 
+2.7.4
+

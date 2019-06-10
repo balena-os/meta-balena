@@ -15,13 +15,13 @@ HOSTAPP_HOOKS = " \
 RESIN_BOOT_FINGERPRINT = "${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
 
 python __anonymous() {
-	# Generate SRC_URI based on HOSTAPP_HOOKS
-	hooks=d.getVar("HOSTAPP_HOOKS", True)
-	srcuri=d.getVar("SRC_URI", True)
-	new_srcuri=srcuri
-	for h in hooks.split():
-		new_srcuri = new_srcuri + " file://" + h
-	d.setVar("SRC_URI", new_srcuri)
+    # Generate SRC_URI based on HOSTAPP_HOOKS
+    hooks=d.getVar("HOSTAPP_HOOKS", True)
+    srcuri=d.getVar("SRC_URI", True)
+    new_srcuri=srcuri
+    for h in hooks.split():
+        new_srcuri = new_srcuri + " file://" + h
+    d.setVar("SRC_URI", new_srcuri)
 }
 
 FILES_${PN} += " \

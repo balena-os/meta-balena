@@ -21,11 +21,11 @@ TARGET_TAG ?= "${SUPERVISOR_TAG}"
 PARTITION_SIZE ?= "1024"
 
 python () {
-	import re
-	repo = d.getVar("TARGET_REPOSITORY", True)
-	tag = d.getVar("TARGET_TAG", True)
-	pv = re.sub(r"[^a-z0-9A-Z_.-]", "_", "%s-%s" % (repo,tag))
-	d.setVar('PV', pv)
+    import re
+    repo = d.getVar("TARGET_REPOSITORY", True)
+    tag = d.getVar("TARGET_TAG", True)
+    pv = re.sub(r"[^a-z0-9A-Z_.-]", "_", "%s-%s" % (repo,tag))
+    d.setVar('PV', pv)
 }
 
 PV = "${TARGET_TAG}"
