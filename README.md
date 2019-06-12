@@ -249,7 +249,3 @@ The following Yocto versions are supported:
   * **TESTED**
  * Pyro (2.3)
   * **TESTED**
- * Morty (2.2)
-  * **DEPRECATED**
- * Krogoth (2.1)
-  * **DEPRECATED**
