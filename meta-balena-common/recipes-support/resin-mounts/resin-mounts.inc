@@ -23,6 +23,7 @@ BINDMOUNTS += " \
 	/etc/NetworkManager/system-connections \
 	/etc/udev/rules.d \
 	/home/root/.rnd \
+	/var/lib/bluetooth \
 	/var/lib/NetworkManager \
 	/home/root/.ssh \
 	"
