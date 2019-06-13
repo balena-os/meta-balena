@@ -1,0 +1,44 @@
+From 94bd201993ad05ecca5ce2b8220d662db783fef8 Mon Sep 17 00:00:00 2001
+From: Lubomir Rintel <lkundrak@v3.sk>
+Date: Wed, 28 Nov 2018 11:44:20 +0100
+Subject: [PATCH] sysctl.d: switch net.ipv4.conf.all.rp_filter from 1 to 2
+
+This switches the RFC3704 Reverse Path filtering from Strict mode to Loose
+mode. The Strict mode breaks some pretty common and reasonable use cases,
+such as keeping connections via one default route alive after another one
+appears (e.g. plugging an Ethernet cable when connected via Wi-Fi).
+
+The strict filter also makes it impossible for NetworkManager to do
+connectivity check on a newly arriving default route (it starts with a
+higher metric and is bumped lower if there's connectivity).
+
+Kernel's default is 0 (no filter), but a Loose filter is good enough. The
+few use cases where a Strict mode could make sense can easily override
+this.
+
+The distributions that don't care about the client use cases and prefer a
+strict filter could just ship a custom configuration in
+/usr/lib/sysctl.d/ to override this.
+
+Upstream-status: Backport [https://github.com/systemd/systemd/pull/10971/commits/6caa14f763c11630f28d587b3caa5f0e6dc96165]
+Signed-by: Andrei Gherzan <andrei@balena.io>
+---
+ sysctl.d/50-default.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sysctl.d/50-default.conf b/sysctl.d/50-default.conf
+index f08f32e849..83ad7a65ff 100644
+--- a/sysctl.d/50-default.conf
++++ b/sysctl.d/50-default.conf
+@@ -22,7 +22,7 @@ kernel.core_uses_pid = 1
+ 
+ # Source route verification
+ net.ipv4.conf.default.rp_filter = 1
+-net.ipv4.conf.all.rp_filter = 1
++net.ipv4.conf.all.rp_filter = 2
+ 
+ # Do not accept source routing
+ net.ipv4.conf.default.accept_source_route = 0
+-- 
+2.17.1
+
