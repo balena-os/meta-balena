@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -o errexit
+
+USER_APP_STORAGE="/mnt/data/docker"
+HOST_APP_STORAGE="/mnt/sysroot/inactive/balena"
+
+printf "[INFO] balena_migrate_storage: Cleanup failed userapp storage migration... \n"
+env BALENA_A2O_STORAGE_ROOT=$USER_APP_STORAGE a2o-migrate -debug -fail-cleanup
+
+printf "[INFO] balena_migrate_storage: Cleanup failed hostapp storage migration... \n"
+env BALENA_A2O_STORAGE_ROOT=$HOST_APP_STORAGE a2o-migrate -debug -fail-cleanup
+
+sync -f /mnt/data
+sync -f /mnt/sysroot/inactive

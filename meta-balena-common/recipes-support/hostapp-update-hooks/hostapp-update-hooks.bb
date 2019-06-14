@@ -11,8 +11,13 @@ HOSTAPP_HOOKS = " \
     0-bootfiles \
     70-sshd_migrate_keys \
     80-rollback \
+    60-balena_migrate_storage/forward \
+    60-balena_migrate_storage/fwd_cleanup \
+    60-balena_migrate_storage/fwd_commit \
     "
-HOSTAPP_HOOKS_DIRS = ""
+HOSTAPP_HOOKS_DIRS = " \
+    60-balena_migrate_storage \
+    "
 
 RESIN_BOOT_FINGERPRINT = "${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
 
