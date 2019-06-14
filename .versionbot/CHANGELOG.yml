@@ -1,4 +1,224 @@
 - commits:
+    - subject: Fix VERSION_ID os-release to be semver complient
+      hash: fecb50757c10e392d46dec6fd24360f778a87a43
+      body: |
+        Poky, following os-release(5), sanitizes VERSION_ID accordingly but in
+        doing so it produces a nonisemver compliant version. For example:
+
+            VERSION="2.37.0+rev1"
+            VERSION_ID="2.37.0-rev1"
+
+        This patch reverts that to make sure rev is a build tag.
+
+        Fixes #1560
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix VERSION_ID os-release to be semver complient
+        changelog-entry: Fix VERSION_ID os-release to be semver complient
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Introduce META_BALENA_VERSION in os-release
+      hash: b0e0c77a26f3fad51e2923ab416fdd2af2a5a033
+      body: >
+        Since #1550, os-release doesn't reference meta-balena distro version
+        anymore. Restore
+
+        that by providing this information in a new variable called
+        META_BALENA_VERSION.
+
+
+        Fixes #1558
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Introduce META_BALENA_VERSION in os-release
+        changelog-entry: Introduce META_BALENA_VERSION in os-release
+      author: Andrei Gherzan
+    - subject: >-
+        Fix a case where changes to u-boot were not regenerating the config file
+        at build time and using stale values.
+      hash: b40271867c3249566775cfb870a6176bc47d503f
+      body: |
+        Currently once config_resin.h is generated, a change in these variables
+        doesn't regenerate the file. Add vardeps so that bitbake can regenerate
+        config_resin.h in case these variables are changed.
+
+        Fixes #1530
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fix a case where changes to u-boot were not regenerating the config
+          file at build time and using stale values.
+        changelog-entry: >-
+          Fix a case where changes to u-boot were not regenerating the config
+          file at build time and using stale values.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Use all.rp_filter=2 as the default value in balenaOS
+      hash: 2fe90f3316a9394db0a060ec976d23fa97d4f00a
+      body: >
+        This change backports a PR[1] that is already in systemd and will come
+
+        included by default from the version in Yocto warrior.
+
+
+        In summary, with this change we fix newer NM which stopped handling
+
+        rp_filter when connected to multiple interfaces. See "device: disable
+
+        rp_filter handling" commit from NM. Without this change, only the
+
+        default route will me usable and binding to a specific interface will
+
+        break connectivity if that interface is not also the default route for
+
+        the target IP.
+
+
+        [1]https://github.com/systemd/systemd/pull/10971/commits/6caa14f763c11630f28d587b3caa5f0e6dc96165
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Use all.rp_filter=2 as the default value in balenaOS
+        changelog-entry: Use all.rp_filter=2 as the default value in balenaOS
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Persist bluetooth storage data over reboots
+      hash: 3815e42f24167c0ce84a39cf0653434bacb0bd88
+      body: |
+        Currently, bluez's storage data is set to /var/lib/bluetooth which
+        in turn is a tmpfs location. We want this location persistent so we can
+        save paired devices over reboot. We do that by adding the corresponding
+        bind mount to the state partition and setting bluez to depend on this
+        mount unit.
+
+        Fixes #1544
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Persist bluetooth storage data over reboots
+        changelog-entry: Persist bluetooth storage data over reboots
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Drop support for morty and krogoth Yocto versions
+      hash: 85c1eda1eeade2e5d5a1153d9c737225de0b3ee2
+      body: |
+        We have been deprecating these layers since v2.30.0. It's time to drop
+        this support completely.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Drop support for morty and krogoth Yocto versions
+        changelog-entry: Drop support for morty and krogoth Yocto versions
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Add Yocto Warrior support
+      hash: b86ee8945ba71ccdae9d7d0d52b2822db39d4c6a
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add Yocto Warrior support
+        changelog-entry: Add Yocto Warrior support
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Set both VERSION_ID and VERSION in os-release to host OS version
+      hash: 40347f618b3b70ccc5f40e924990197ae9fa7e6b
+      body: >
+        VERSION and VERSION_ID had a slightly different semantics in balenaOS.
+
+        VERSION was referring to the BalenaOS (host OS) version (which is coming
+        from
+
+        device repositories) while VERSION_ID was set to the DISTRO_VERSION.
+
+        This brings confusion so we change it to adhere to
+
+        https://www.freedesktop.org/software/systemd/man/os-release.html.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Set both VERSION_ID and VERSION in os-release to host OS version
+        changelog-entry: Set both VERSION_ID and VERSION in os-release to host OS version
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Bump balena-engine to 18.9.6
+      hash: 3af08fe6d30b5f0f8148c6820cda1cca3076bf00
+      body: |
+        In preparation for warrior. Bumps containerd which works with the newer
+        systemd in warrior.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Bump balena-engine to 18.9.6
+        changelog-entry: Bump balena-engine to 18.9.6
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Downgrade balena-supervisor to v9.15.7
+      hash: c3616e19967e30726048018161fd4763d3d45773
+      body: |
+        This is done because a feature (RESIN_SUPERVISOR_MIXPANEL_REPORT) needs
+        more work before releasing in production.
+      footer:
+        Changelog-entry: Downgrade balena-supervisor to v9.15.7
+        changelog-entry: Downgrade balena-supervisor to v9.15.7
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Switch from dropbear to openSSH
+      hash: ef33f21cdb7283c6f62590b1fe3d37c7fbd4df99
+      body: |
+        This is done for the "AuthorizedKeysCommand" in openSSH which in turn is
+        used by the balena backend.
+
+        Fixes #1388
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Switch from dropbear to openSSH
+        changelog-entry: Switch from dropbear to openSSH
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Rename meta-resin-common to meta-balena-common
+      hash: db96dfc3864399a5029fa8e78bc7fe518f3ae63a
+      body: |
+        Follow the resin to balena rename on the common yocto layer.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Rename meta-resin-common to meta-balena-common
+        changelog-entry: Rename meta-resin-common to meta-balena-common
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Add wifi firmware for rtl8192su
+      hash: 875bd033eb400b6338c7c70417fcd78586a184cf
+      body: |
+        Fixes #1511
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add wifi firmware for rtl8192su
+        changelog-entry: Add wifi firmware for rtl8192su
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.38.0
+  date: 2019-06-14T15:11:59.348Z
+- commits:
     - subject: Update balena-supervisor to v9.15.8
       hash: 4fcdf63860d17612ef10ff9c721b9f58c8b8c023
       body: ''
