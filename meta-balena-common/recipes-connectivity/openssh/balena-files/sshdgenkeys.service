@@ -1,0 +1,13 @@
+[Unit]
+Description=OpenSSH Key Generation
+RequiresMountsFor=/var /run
+Requires=resin-state.service bind-etc-ssh-hostkeys.service
+After=resin-state.service bind-etc-ssh-hostkeys.service
+
+[Service]
+ExecStart=@LIBEXECDIR@/sshd_check_keys
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]                                                                                                                                                                                                                                                                                                                                                                                
+WantedBy=multi-user.target

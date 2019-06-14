@@ -13,4 +13,5 @@ SRC_URI_append = " \
 	file://0009-umount-Don-t-bother-remounting-api-and-ro-filesystem.patch \
 	file://0010-shutdown-Reduce-log-level-of-unmounts.patch \
 	file://0011-core-Avoid-empty-directory-warning-when-we-are-bind-.patch \
+	file://backport-6caa14f763c11630f28d587b3caa5f0e6dc96165.patch \
 	"

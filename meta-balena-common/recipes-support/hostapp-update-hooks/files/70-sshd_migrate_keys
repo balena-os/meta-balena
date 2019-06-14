@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Copyright 2019 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Migrates host keys from dropbear to openssh
+#
+
+set -e
+
+DROPBEAR_RSA_KEY="/mnt/state/root-overlay/etc/dropbear/dropbear_rsa_host_key"
+OPENSSH_RSA_KEY="/mnt/state/root-overlay/etc/ssh/hostkeys/ssh_host_rsa_key"
+
+fatal() {
+	echo "sshd_migrate_keys: $1"
+	exit 1
+}
+
+#
+# MAIN
+#
+
+if [ ! -f "$OPENSSH_RSA_KEY" ] && [ -f "$DROPBEAR_RSA_KEY" ]; then
+	echo "[INFO] sshd_migrate_keys: Converting dropbear host key..."
+	mkdir -p "$(dirname $OPENSSH_RSA_KEY)"
+	dropbearconvert dropbear openssh "$DROPBEAR_RSA_KEY" "$OPENSSH_RSA_KEY" \
+		|| fatal "Failed to convert dropbear host private key."
+	ssh-keygen -f "$OPENSSH_RSA_KEY" -y > "$OPENSSH_RSA_KEY.pub" \
+		|| fatal "Failed to generate the openssh public key."
+	echo "[INFO] sshd_migrate_keys: Migrated dropbear host RSA key to openssh."
+fi

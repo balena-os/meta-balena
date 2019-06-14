@@ -1,0 +1,23 @@
+From b86ccf335450aedb61f800b6c741c805ed726b9f Mon Sep 17 00:00:00 2001
+From: Theodor Gherzan <theodor@resin.io>
+Date: Thu, 17 Dec 2015 04:19:58 +0100
+Subject: plymouth: Default theme is resin
+
+Signed-off-by: Theodor Gherzan <theodor@resin.io>
+---
+ src/plymouthd.defaults | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/src/plymouthd.defaults
++++ b/src/plymouthd.defaults
+@@ -1,5 +1,5 @@
+ # Distribution defaults. Changes to this file will get overwritten during
+ # upgrades.
+ [Daemon]
+-Theme=spinner
+-ShowDelay=5
++Theme=resin
++ShowDelay=0
+--
+2.1.4
+

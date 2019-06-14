@@ -4,7 +4,7 @@
 This repository enables building balenaOS for various devices.
 
 ## Layers Structure
-* meta-resin-common : layer which contains common recipes for all our supported platforms.
+* meta-balena-common : layer which contains common recipes for all our supported platforms.
 * meta-resin-* : layers which contain recipes specific to yocto versions.
 * other files : README, COPYING, etc.
 
@@ -71,7 +71,7 @@ By default the build system will set all the bits needed for the docker to be ab
 
 ### SSH and Avahi services
 
-The OS runs SSH (dropbear) on port 22222. Running this service takes advantage of the socket activation systemd feature so dropbear will only run when there is a SSH connection to the device saving idle resources in this way. In order to connect to a device, one can use it's IP when known or resolve the hostname over mDNS as its hostname is advertised over network using an avahi service. When the latter is used, configuration of the client is needed (see for example https://wiki.archlinux.org/index.php/Avahi#Hostname_resolution). 
+The OS runs SSH (openSSH) on port 22222. Running this service takes advantage of the socket activation systemd feature so the SSH daemon will only run when there is a SSH connection to the device saving idle resources in this way. In order to connect to a device, one can use it's IP when known or resolve the hostname over mDNS as its hostname is advertised over network using an avahi service. When the latter is used, configuration of the client is needed (see for example https://wiki.archlinux.org/index.php/Avahi#Hostname_resolution).
 
 ### Time in the OS
 
@@ -249,7 +249,3 @@ The following Yocto versions are supported:
   * **TESTED**
  * Pyro (2.3)
   * **TESTED**
- * Morty (2.2)
-  * **DEPRECATED**
- * Krogoth (2.1)
-  * **DEPRECATED**
