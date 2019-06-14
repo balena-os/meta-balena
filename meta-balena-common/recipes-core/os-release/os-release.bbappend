@@ -1,7 +1,7 @@
 inherit deploy
 
 # Add custom resin fields
-OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE VARIANT VARIANT_ID"
+OS_RELEASE_FIELDS_append = " RESIN_BOARD_REV META_RESIN_REV SLUG MACHINE VARIANT VARIANT_ID META_BALENA_VERSION"
 
 # Simplify VERSION output
 VERSION = "${HOSTOS_VERSION}"
@@ -9,6 +9,7 @@ VERSION_ID = "${HOSTOS_VERSION}"
 
 VARIANT = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','Development','Production',d)}"
 VARIANT_ID = "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','dev','prod',d)}"
+META_BALENA_VERSION = "${DISTRO_VERSION}"
 
 #
 # Add quotes around values not matching [A-Za-z0-9]*
