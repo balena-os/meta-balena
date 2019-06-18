@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.38.1
+## (2019-06-18)
+
+* Fix kernel-devsrc on thud when kernel version < 4.10 [Andrei Gherzan]
+
 # v2.38.0
 ## (2019-06-14)
 

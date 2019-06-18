@@ -1,4 +1,27 @@
 - commits:
+    - subject: Fix kernel-devsrc on thud when kernel version < 4.10
+      hash: c4cd6307ac3ae86a8d34b91d9dc82b6d3310db9b
+      body: >
+        Thud breaks when building against kernel version < 4.10. This is a known
+
+        issue which is fixed in poky warrior[1]. This patch includes a
+
+        workaround for thud.
+
+
+        [1]
+        http://lists.openembedded.org/pipermail/openembedded-core/2019-February/278695.html
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix kernel-devsrc on thud when kernel version < 4.10
+        changelog-entry: Fix kernel-devsrc on thud when kernel version < 4.10
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.38.1
+  date: 2019-06-18T12:25:09.510Z
+- commits:
     - subject: Fix VERSION_ID os-release to be semver complient
       hash: fecb50757c10e392d46dec6fd24360f778a87a43
       body: |
