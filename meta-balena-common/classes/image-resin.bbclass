@@ -310,35 +310,50 @@ def get_rev(path):
 def get_rel_path_rev(layer, rel, d):
     targetrev = "unknown"
     targetpath = get_rel_path(layer, rel, d)
-    targetrev = get_rev(targetpath)
+    if targetpath:
+        targetrev = get_rev(targetpath)
     return targetrev
 
-def get_rel_path(layer, rel, d):
+# Returns a path computed by joining 'rel' to the first layer in 'layers' found
+# in BBLAYERS
+def get_rel_path(layers, rel, d):
     bblayers = d.getVar("BBLAYERS", True)
-    layerpath = filter(lambda x: x.endswith(layer), bblayers.split())
-    if sys.version_info.major >= 3 :
-         layerpath = list(layerpath)
-    return os.path.join(layerpath[0], rel)
+    for layer in layers:
+        layerpath = filter(lambda x: x.endswith(layer), bblayers.split())
+        if sys.version_info.major >= 3 :
+            layerpath = list(layerpath)
+        if layerpath:
+            return os.path.join(layerpath[0], rel)
+    return ''
 
 def get_slug(d):
     import json
     slug = "unknown"
     machine = d.getVar("MACHINE", True)
-    resinboardpath = get_rel_path('meta-resin-common', '../../../', d)
+    resinboardpath = get_rel_path(['meta-resin-common','meta-balena-common'], '../../../', d)
+    if not resinboardpath:
+        return slug
     jsonfile = os.path.normpath(os.path.join(resinboardpath, machine + ".json"))
     try:
         with open(jsonfile, 'r') as fd:
             machinejson = json.load(fd)
         slug = machinejson['slug']
-    except Exception as e:
-        bb.warn("os-release: Can't get the machine json so os-release won't include this information.")
+    except:
+        pass
     return slug
 
 # Sets os specific revisions in os-release
 python os_release_extra_data() {
-    resin_board_rev = get_rel_path_rev('meta-resin-common', '../../../', d)
-    meta_resin_rev = get_rel_path_rev('meta-resin-common', '../', d)
+    extra_data = []
+    resin_board_rev = get_rel_path_rev(['meta-resin-common', 'meta-balena-common'], '../../../', d)
+    if resin_board_rev == "unknown":
+        bb.warn("Can't find board repository revision. This information will not be available in os-release.")
+    meta_resin_rev = get_rel_path_rev(['meta-resin-common', 'meta-balena-common'], '../', d)
+    if meta_resin_rev == "unknown":
+        bb.warn("Can't find meta-balena repository revision. This information will not be available in os-release.")
     slug = get_slug(d)
+    if slug == "unknown":
+        bb.warn("Can't detect the slug. This information will not be available in os-release.")
     extra_data = [
         'RESIN_BOARD_REV="{0}"\n'.format(resin_board_rev),
         'META_RESIN_REV="{0}"\n'.format(meta_resin_rev),
