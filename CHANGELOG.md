@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.38.1
+## (2019-06-20)
+
+* Add warrior to compatible layers for meta-balena-common [Florin Sarbu]
+* Fix image-resin.bbclass to be able to use deprecated layers [Andrei Gherzan]
+* Fix kernel-devsrc on thud when kernel version < 4.10 [Andrei Gherzan]
+
 # v2.38.0
 ## (2019-06-14)
 

@@ -1,4 +1,60 @@
 - commits:
+    - subject: Add warrior to compatible layers for meta-balena-common
+      hash: 0ba0bc35ceeb78e03baebf79b738885d532734fc
+      body: |
+        In addition we delete krogoth and morty from the supported list
+        as we also removed the actual layers from the repository.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add warrior to compatible layers for meta-balena-common
+        changelog-entry: Add warrior to compatible layers for meta-balena-common
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Fix image-resin.bbclass to be able to use deprecated layers
+      hash: 9e8fed3a7170040d4ba887bfd8fc018b97de5d12
+      body: |
+        Fixes #1564
+
+        This bbclass uses the common layer path advertised by BBLAYERS to find
+        the paths to different resources in board repository. For example
+        machine json - to get the slug and advertise it in os-release. After
+        renaming the common layer (resin to balena) and because we support old
+        references to the old common layer name (by including a dummy
+        deprecation layer), we need to make sure this class can cope now with
+        both cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix image-resin.bbclass to be able to use deprecated layers
+        changelog-entry: Fix image-resin.bbclass to be able to use deprecated layers
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Fix kernel-devsrc on thud when kernel version < 4.10
+      hash: c4cd6307ac3ae86a8d34b91d9dc82b6d3310db9b
+      body: >
+        Thud breaks when building against kernel version < 4.10. This is a known
+
+        issue which is fixed in poky warrior[1]. This patch includes a
+
+        workaround for thud.
+
+
+        [1]
+        http://lists.openembedded.org/pipermail/openembedded-core/2019-February/278695.html
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix kernel-devsrc on thud when kernel version < 4.10
+        changelog-entry: Fix kernel-devsrc on thud when kernel version < 4.10
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.38.1
+  date: 2019-06-20T12:30:28.452Z
+- commits:
     - subject: Fix VERSION_ID os-release to be semver complient
       hash: fecb50757c10e392d46dec6fd24360f778a87a43
       body: |
