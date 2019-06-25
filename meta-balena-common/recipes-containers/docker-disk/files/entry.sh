@@ -1,12 +1,18 @@
 #!/bin/sh
 
 set -o errexit
-set -o nounset
 
 DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
 DATA_VOLUME=/resin-data
 BUILD=/build
 PARTITION_SIZE=${PARTITION_SIZE:-1024}
+
+if ! [ -z "$BUILD_DOCKER_SHARED_VOLUME_MOUNT_PATH" ] && ! [ -z "$BUILD_DOCKER_SHARED_VOLUME_BUILD_PATH" ]; then
+  echo "Build result will be written to a shared Docker volume. Making a sym link."
+  ln -s ${BUILD_DOCKER_SHARED_VOLUME_BUILD_PATH} ${BUILD}
+fi
+
+set -o nounset
 
 finish() {
 	# Make all files owned by the build system
