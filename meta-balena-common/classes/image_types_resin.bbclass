@@ -69,15 +69,14 @@ python() {
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR
     # instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
     if d.getVar('IMGDEPLOYDIR', True):
-        d.setVar('RESIN_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
-        d.setVar('RESIN_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resinos-img')
-        d.setVar('RESIN_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
-        d.setVar('RESIN_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
+        d.setVar('RESIN_IMAGE_DEPLOY_DIR', '${IMGDEPLOYDIR}')
     else:
-        d.setVar('RESIN_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
-        d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-img')
-        d.setVar('RESIN_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
-        d.setVar('RESIN_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
+        d.setVar('RESIN_IMAGE_DEPLOY_DIR', '${DEPLOY_DIR_IMAGE}')
+
+    d.setVar('RESIN_ROOT_FS', '${RESIN_IMAGE_DEPLOY_DIR}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
+    d.setVar('RESIN_RAW_IMG', '${RESIN_IMAGE_DEPLOY_DIR}/${IMAGE_NAME}.rootfs.resinos-img')
+    d.setVar('RESIN_DOCKER_IMG', '${RESIN_IMAGE_DEPLOY_DIR}/${IMAGE_NAME}.rootfs.docker')
+    d.setVar('RESIN_HOSTAPP_IMG', '${RESIN_IMAGE_DEPLOY_DIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
 
     d.setVar('RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("RESIN_IMAGE_BOOTLOADER", True).split()))
 }

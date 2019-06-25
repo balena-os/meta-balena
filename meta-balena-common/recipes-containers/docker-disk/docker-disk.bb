@@ -54,6 +54,16 @@ do_compile () {
 	# mismatches
 	DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
 
+	MOUNT_OPTIONS="-v ${B}:/build"
+	if ! [ -z "${BUILD_DOCKER_SHARED_VOLUME}" ] && ! [ -z "${BUILD_DOCKER_SHARED_VOLUME_MOUNT_PATH}" ]; then
+		if ($DOCKER volume inspect ${BUILD_DOCKER_SHARED_VOLUME} > /dev/null 2>/dev/null); then
+			echo "docker-disk: Shared Docker volume option detected."
+			MOUNT_OPTIONS="-v ${BUILD_DOCKER_SHARED_VOLUME}:${BUILD_DOCKER_SHARED_VOLUME_MOUNT_PATH}"
+			MOUNT_OPTIONS="${MOUNT_OPTIONS} -e BUILD_DOCKER_SHARED_VOLUME_MOUNT_PATH=${BUILD_DOCKER_SHARED_VOLUME_MOUNT_PATH}"
+			MOUNT_OPTIONS="${MOUNT_OPTIONS} -e BUILD_DOCKER_SHARED_VOLUME_BUILD_PATH=${B}"
+		fi
+	fi
+
 	# Generate the data filesystem
 	RANDOM=$$
 	_image_name="docker-disk-$RANDOM"
@@ -71,7 +81,7 @@ do_compile () {
 		-e PRIVATE_REGISTRY_USER="${PRIVATE_REGISTRY_USER}" \
 		-e PRIVATE_REGISTRY_PASSWORD="${PRIVATE_REGISTRY_PASSWORD}" \
 		-e PARTITION_SIZE="${PARTITION_SIZE}" \
-		-v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/build \
+		-v /sys/fs/cgroup:/sys/fs/cgroup:ro ${MOUNT_OPTIONS} \
 		--name ${_container_name} ${_image_name}
 	$DOCKER rmi ${_image_name}
 }
