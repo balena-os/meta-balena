@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.38.2
+## (2019-06-27)
+
+* Update to kernel-modules-headers v0.0.20 to fix missing target modpost binary on kernel 5.0.3 [Florin Sarbu]
+* Update to kernel-modules-headers v0.0.19 to fix target objtool compile issue on kernel 5.0.3 [Florin Sarbu]
+
 # v2.38.1
 ## (2019-06-20)
 

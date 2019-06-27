@@ -1,4 +1,46 @@
 - commits:
+    - subject: >-
+        Update to kernel-modules-headers v0.0.20 to fix missing target modpost
+        binary on kernel 5.0.3
+      hash: 13bea65dd8201e91b65121ffc2d7bce5d41eedab
+      body: |
+        This version fixes the missing target modpost binary
+        on kernel version 5.0.3.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Update to kernel-modules-headers v0.0.20 to fix missing target modpost
+          binary on kernel 5.0.3
+        changelog-entry: >-
+          Update to kernel-modules-headers v0.0.20 to fix missing target modpost
+          binary on kernel 5.0.3
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: >-
+        Update to kernel-modules-headers v0.0.19 to fix target objtool compile
+        issue on kernel 5.0.3
+      hash: 10846e50674185b7c3126e45ad42f3927c822415
+      body: |
+        This version fixes the use of wrong fixdep binary (the bug makes it use
+        target fixdep binary instead of cross fixdep binary) used for compiling
+        the target objtool binary on kernel version 5.0.3.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Update to kernel-modules-headers v0.0.19 to fix target objtool compile
+          issue on kernel 5.0.3
+        changelog-entry: >-
+          Update to kernel-modules-headers v0.0.19 to fix target objtool compile
+          issue on kernel 5.0.3
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+  version: 2.38.2
+  date: 2019-06-27T12:37:01.764Z
+- commits:
     - subject: Add warrior to compatible layers for meta-balena-common
       hash: 0ba0bc35ceeb78e03baebf79b738885d532734fc
       body: |
