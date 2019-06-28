@@ -70,7 +70,7 @@
                      "env set os_bc_inced 1;" \
                      "echo bootcount=${bootcount} now;" \
                      "env export -t ${resin_kernel_load_addr} bootcount;" \
-                     "fatwrite ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${os_bc_file} ${os_bc_wr_sz};" \
+                     "if fatwrite ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${os_bc_file} ${os_bc_wr_sz}; then; else; echo FATWRITE FAILED ; fi;" \
                      "echo bootcount=${bootcount} written to ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${os_bc_file};" \
               "fi;\0" \
        \
