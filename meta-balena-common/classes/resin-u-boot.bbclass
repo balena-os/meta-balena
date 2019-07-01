@@ -29,6 +29,10 @@ OS_BOOTCOUNT_FILE ?= "bootcount.env"
 OS_BOOTCOUNT_SKIP ?= "0"
 OS_BOOTCOUNT_LIMIT ?= "1"
 
+# These options go into the device headerfile via config_resin.h
+CONFIG_RESET_TO_RETRY ?= "1"
+CONFIG_BOOT_RETRY_TIME ?= "${@bb.utils.contains('DISTRO_FEATURES', 'development-image', '-1', '15', d)}"
+
 UBOOT_VARS = "RESIN_UBOOT_DEVICES \
               RESIN_UBOOT_DEVICE_TYPES \
               RESIN_BOOT_PART RESIN_DEFAULT_ROOT_PART \
@@ -38,7 +42,9 @@ UBOOT_VARS = "RESIN_UBOOT_DEVICES \
               BASE_OS_CMDLINE \
               OS_BOOTCOUNT_FILE \
               OS_BOOTCOUNT_SKIP \
-              OS_BOOTCOUNT_LIMIT "
+              OS_BOOTCOUNT_LIMIT \
+              CONFIG_RESET_TO_RETRY \
+              CONFIG_BOOT_RETRY_TIME "
 
 python do_generate_resin_uboot_configuration () {
     vars = d.getVar('UBOOT_VARS').split()
@@ -56,3 +62,14 @@ addtask do_generate_resin_uboot_configuration after do_patch before do_configure
 
 # Regenerate env_resin.h if any of these variables change.
 do_generate_resin_uboot_configuration[vardeps] += "${UBOOT_VARS}"
+
+# u-boot has config options in two places. In the devices config header
+# and once via the devices defconfig file. We'd like to be able to
+# inject config options in both places. We include config_resin in
+# config_default to be able to inject config options that aren't
+# changeable via Kconfig and config fragments.
+do_inject_config_resin () {
+    sed -i '/^#endif.*/i #include <config_resin.h>' ${S}/include/config_defaults.h
+}
+addtask do_inject_config_resin after do_configure before do_compile
+do_inject_config_resin[vardeps] += "${UBOOT_VARS}"
