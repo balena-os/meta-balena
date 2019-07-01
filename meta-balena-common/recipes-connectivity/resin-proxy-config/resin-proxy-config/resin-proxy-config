@@ -75,6 +75,7 @@ fi
 # Setup a new user chain for redsocks
 $IPTABLES -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN
 $IPTABLES -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN
+$IPTABLES -t nat -A REDSOCKS -d 100.64.0.0/10 -j RETURN
 $IPTABLES -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN
 $IPTABLES -t nat -A REDSOCKS -d 169.254.0.0/16 -j RETURN
 $IPTABLES -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN
