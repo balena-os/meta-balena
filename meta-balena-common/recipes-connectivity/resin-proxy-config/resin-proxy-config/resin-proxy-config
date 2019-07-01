@@ -83,7 +83,7 @@ $IPTABLES -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN
 $IPTABLES -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
 $IPTABLES -t nat -A REDSOCKS -p tcp -j DNAT --to 10.114.103.1:12345
 
-if $(cat /mnt/boot/system-proxy/redsocks.conf | grep ^dnsu2t > /dev/null 2>&1); then
+if grep ^dnsu2t /mnt/boot/system-proxy/redsocks.conf > /dev/null 2>&1; then
 	# If dnsu2t module is enabled in redsocks, redirect any DNS UDP packets to
 	# REDSOCKS to force DNS over TCP
 	$IPTABLES -t nat -A OUTPUT -p udp -m owner ! --uid-owner redsocks -j DNAT --dport 53 --to-destination 10.114.103.1:5313
