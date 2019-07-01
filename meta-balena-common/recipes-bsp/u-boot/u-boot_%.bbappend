@@ -3,6 +3,8 @@ FILESEXTRAPATHS_append := ":${THISDIR}/files"
 # We require these uboot config options to be enabled for env_resin.h
 SRC_URI += "file://balenaos_uboot.cfg"
 
+SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'file://balenaos_uboot_dev.cfg', 'file://balenaos_uboot_prod.cfg', d)}"
+
 # Since 11278e3b2c75be80645b9841763a97dbb35daadc u-boot.inc has support
 # for ammending the bsp uboot with config fragments. We copy that
 # over in meta-balena-common to apply to pre-warrior layers.
