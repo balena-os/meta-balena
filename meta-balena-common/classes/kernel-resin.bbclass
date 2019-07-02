@@ -431,6 +431,7 @@ RESIN_CONFIGS_DEPS[usb-serial] = " \
 RESIN_CONFIGS[usb-serial] = " \
     CONFIG_USB_SERIAL_OPTION=m \
     CONFIG_USB_SERIAL_QUALCOMM=m \
+    CONFIG_USB_SERIAL_CH341=m \
     "
 
 RESIN_CONFIGS[fatfs] = " \
