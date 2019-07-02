@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'resin-proxy-config: add missing reserved ip ranges to default noproxy'
+      hash: 042a9b7b3d43a34978df12a19145bdbc03ab403e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+  version: 2.38.3
+  date: 2019-07-02T08:43:38.987Z
+- commits:
     - subject: >-
         Update to kernel-modules-headers v0.0.20 to fix missing target modpost
         binary on kernel 5.0.3

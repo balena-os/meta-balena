@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.38.3
+## (2019-07-02)
+
+* resin-proxy-config: add missing reserved ip ranges to default noproxy [Will Boyce]
+
 # v2.38.2
 ## (2019-06-27)
 
