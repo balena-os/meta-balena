@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.38.3
+## (2019-07-02)
+
+* kernel-resin: Add support for CH340 family of usb-serial adapters [Sebastian Panceac]
+
 # v2.38.2
 ## (2019-06-27)
 

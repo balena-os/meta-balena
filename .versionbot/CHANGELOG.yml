@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'kernel-resin: Add support for CH340 family of usb-serial adapters'
+      hash: 416200a2e49a146d8de20791a782e91b94aa49cd
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'kernel-resin: Add support for CH340 family of usb-serial adapters'
+        changelog-entry: 'kernel-resin: Add support for CH340 family of usb-serial adapters'
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+  version: 2.38.3
+  date: 2019-07-02T13:09:23.744Z
+- commits:
     - subject: >-
         Update to kernel-modules-headers v0.0.20 to fix missing target modpost
         binary on kernel 5.0.3
