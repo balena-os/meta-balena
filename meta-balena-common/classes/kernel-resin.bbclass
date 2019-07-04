@@ -447,10 +447,10 @@ RESIN_CONFIGS[usb-serial] = " \
     "
 
 RESIN_CONFIGS[fatfs] = " \
-    CONFIG_MSDOS_FS=m \
-    CONFIG_VFAT_FS=m \
-    CONFIG_NLS_ASCII=m \
-    CONFIG_NLS_CODEPAGE_437=m \
+    CONFIG_MSDOS_FS=y \
+    CONFIG_VFAT_FS=y \
+    CONFIG_NLS_ASCII=y \
+    CONFIG_NLS_CODEPAGE_437=y \
     "
 
 RESIN_CONFIGS[nf_tables] = " \
