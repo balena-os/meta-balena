@@ -8,6 +8,7 @@ SRC_URI_append = " \
     file://rorootfs \
     file://rootfs \
     file://finish \
+    file://migrator \
     "
 
 do_install_append() {
@@ -19,6 +20,8 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
+
+    install -m 0755 ${WORKDIR}/migrator ${D}/init.d/85-migrator
 }
 
 PACKAGES_append = " \
@@ -27,6 +30,7 @@ PACKAGES_append = " \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
+    initramfs-module-migrator \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -54,3 +58,7 @@ FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
 SUMMARY_initramfs-module-prepare = "Prepare initramfs console"
 RDEPENDS_initramfs-module-prepare = "${PN}-base"
 FILES_initramfs-module-prepare = "/init.d/70-prepare"
+
+SUMMARY_initramfs-module-migrator = "Run balena migrate"
+RDEPENDS_initramfs-module-migrator = "${PN}-base util-linux-sfdisk e2fsprogs-badblocks e2fsprogs-mke2fs dosfstools"
+FILES_initramfs-module-migrator = "/init.d/85-migrator"

@@ -1,0 +1,11 @@
+#!/bin/sh
+# Copyright (C) 2011 O.S. Systems Software LTDA.
+# Licensed on MIT
+
+migrator_enabled() {
+    return 0
+}
+
+rootfs_run() {
+    echo "RUNNING BALENA MIGRATE"
+}
