@@ -59,7 +59,7 @@ RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
 OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','','console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
 
 # Initramfs
-INITRAMFS_IMAGE = "resin-image-initramfs"
+INITRAMFS_IMAGE ?= "resin-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
