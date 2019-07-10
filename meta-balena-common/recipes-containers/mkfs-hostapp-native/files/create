@@ -2,15 +2,22 @@
 
 set -ex
 
+if [ -z "$BUILD_INPUT" ]; then
+  BUILD_INPUT="/input"
+fi
+if [ -z "$BUILD_OUTPUT" ]; then
+  BUILD_OUTPUT="/output"
+fi
+
 SYSROOT="/mnt/sysroot/inactive"
 
 balenad -s=@BALENA_STORAGE@ --data-root="$SYSROOT/balena" -H unix:///var/run/balena-host.sock &
 pid=$!
 sleep 5
 
-hostapp-update -f /input -n
+hostapp-update -f ${BUILD_INPUT} -n
 
 kill $pid
 wait $pid
 
-mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -d "$SYSROOT" /output
+mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -d "$SYSROOT" ${BUILD_OUTPUT}
