@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.38.3
+## (2019-07-10)
+
+* resin-proxy-config: fix up incorrect bash subshell command [Matthew McGinn]
+
 # v2.38.2
 ## (2019-06-27)
 
