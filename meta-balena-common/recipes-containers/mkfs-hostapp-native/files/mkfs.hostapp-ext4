@@ -10,13 +10,17 @@ DOCKER=$(PATH="$HOST_PATH" which docker)
 
 sysroot="/"
 tmpdir=""
+shared_volume=""
+shared_volume_path=""
 
-while getopts 'i:o:s:t:' flag; do
+while getopts 'i:o:s:t:v:p:' flag; do
 	case "${flag}" in
         i) input=$(realpath "${OPTARG}") ;;
         o) output=$(realpath "${OPTARG}") ;;
         s) sysroot=$(realpath "${OPTARG}") ;;
         t) tmpdir=$(realpath "${OPTARG}") ;;
+        v) shared_volume=${OPTARG} ;;
+        p) shared_volume_path=$(realpath "${OPTARG}") ;;
         *) error "Unexpected option ${flag}" ;;
 	esac
 done
@@ -43,8 +47,15 @@ cleanup_docker() {
 $DOCKER load -i "$sysroot/usr/share/mkfs-hostapp-ext4-image.tar"
 trap cleanup_docker EXIT
 
-echo "PATH=$PATH"
-echo "tmpdir=$tmpdir"
-echo "input=$input"
-echo "output=$output"
-$DOCKER run --privileged --rm -v "$input:/input:ro" -v "$tmpdir:$tmpdir:ro" -v "$output:/output" -e "PATH=$PATH:$HOST_PATH" @IMAGE@
+mount_options="-v $input:/input:ro -v $tmpdir:$tmpdir:ro -v $output:/output"
+if ! [ -z "${shared_volume}" ] && ! [ -z "${shared_volume_path}" ]; then
+	if ($DOCKER volume inspect ${shared_volume} > /dev/null 2>/dev/null); then
+		echo "mkfs.hostapp-ext4: Shared Docker volume option detected."
+
+		mount_options="-v ${shared_volume}:${shared_volume_path}"
+		mount_options="${mount_options} -e BUILD_INPUT=${input}"
+		mount_options="${mount_options} -e BUILD_OUTPUT=${output}"
+	fi
+fi
+
+$DOCKER run --privileged --rm ${mount_options} -e "PATH=$PATH:$HOST_PATH" @IMAGE@

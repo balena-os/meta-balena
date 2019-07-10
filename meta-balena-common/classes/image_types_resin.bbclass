@@ -360,5 +360,13 @@ do_image_hostapp_ext4[depends] = " \
 
 IMAGE_CMD_hostapp-ext4 () {
     dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
-    mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
+
+    shared_volume_options=""
+    if ! [ -z "${BUILD_DOCKER_SHARED_VOLUME}" ] && ! [ -z "${BUILD_DOCKER_SHARED_VOLUME_MOUNT_PATH}" ]; then
+        if (docker volume inspect ${BUILD_DOCKER_SHARED_VOLUME} > /dev/null 2>/dev/null); then
+            shared_volume_options="-v ${BUILD_DOCKER_SHARED_VOLUME} -p ${BUILD_DOCKER_SHARED_VOLUME_MOUNT_PATH}"
+        fi
+    fi
+
+    mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG} ${shared_volume_options}
 }
