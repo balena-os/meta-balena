@@ -18,7 +18,7 @@ require recipes-containers/resin-supervisor/resin-supervisor.inc
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
 TARGET_TAG ?= "${SUPERVISOR_TAG}"
 
-PARTITION_SIZE ?= "1024"
+PARTITION_SIZE ?= "192"
 
 python () {
     import re
