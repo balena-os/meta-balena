@@ -226,7 +226,7 @@ resin_boot_dirgen_and_deploy () {
 	DIR_BYTES=$(expr $(find ${RESIN_BOOT_WORKDIR} | tail -n +2 | wc -l) \* 32)
 	DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${RESIN_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 32))
 	FAT_BYTES=$(expr $DATA_SECTORS \* 4)
-	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${RESIN_BOOT_WOKDIR} -type d | tail -n +2 | wc -l) \* 4))
+	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${RESIN_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 4))
 	DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
 	FAT_SECTORS=$(expr $(expr $FAT_BYTES + 511) / 512 \* 2)
 	FAT_OVERHEAD_SECTORS=$(expr $DIR_SECTORS + $FAT_SECTORS)
