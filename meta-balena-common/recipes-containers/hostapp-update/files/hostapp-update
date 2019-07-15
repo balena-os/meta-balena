@@ -24,10 +24,11 @@ if [ "$local_image" =  "" ] && [ "$remote_image" = "" ]; then
 	exit 1
 fi
 
-export DOCKER_HOST="unix:///var/run/balena-host.sock"
-SYSROOT="/mnt/sysroot/inactive"
-
+# These run on device only and not during build time
 if [ -d /mnt/state ]; then
+	# Pull hello-world for balena health-checking in new OS
+	balena pull hello-world
+
 	# Save VPN state for rollbacks
 	if [ -e /var/run/openvpn/vpn_status/active ]; then
 		echo "BALENAOS_ROLLBACK_VPNONLINE=1" > /mnt/state/rollback-health-variables ;
@@ -36,6 +37,9 @@ if [ -d /mnt/state ]; then
 	fi
 	sync -f /mnt/state
 fi
+
+export DOCKER_HOST="unix:///var/run/balena-host.sock"
+SYSROOT="/mnt/sysroot/inactive"
 
 # Initialize sysroot
 mkdir -p /mnt/sysroot
