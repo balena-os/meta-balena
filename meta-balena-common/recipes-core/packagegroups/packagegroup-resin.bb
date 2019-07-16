@@ -15,6 +15,7 @@ include packagegroup-resin.inc
 # Additional packages
 RDEPENDS_${PN} += " \
     dosfstools \
+    docker-disk \
     hostapp-update \
     hostapp-update-hooks \
     resin-filesystem-expand \
