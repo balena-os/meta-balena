@@ -52,6 +52,7 @@ echo "Pulling ${HELLO_REPOSITORY}:latest..."
 docker pull --platform "${HELLO_PLATFORM}" "${HELLO_REPOSITORY}"
 docker tag "${HELLO_REPOSITORY}" hello-world
 docker rmi "${HELLO_REPOSITORY}"
+docker save hello-world > ${BUILD}/hello-world.tar
 
 echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"
