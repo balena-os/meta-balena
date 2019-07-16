@@ -10,6 +10,8 @@ Type=notify
 Restart=always
 SyslogIdentifier=balenad
 ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/balena/balena-healthcheck /usr/bin/balenad --experimental --log-driver=journald -s @BALENA_STORAGE@ -H fd:// -H unix:///var/run/balena.sock -H unix:///var/run/balena-engine.sock --dns 10.114.102.1 --bip 10.114.101.1/24 --fixed-cidr=10.114.101.0/25 --max-download-attempts=10
+ExecStartPost=/bin/sleep 15
+ExecStartPost=/usr/bin/balena-engine load -i /usr/lib/balena/hello-world.tar
 #Adjust OOMscore to -900 to make killing unlikely
 OOMScoreAdjust=-900
 MountFlags=slave
