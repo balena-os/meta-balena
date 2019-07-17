@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'supervisor-start: Expose container ID'
+      hash: 299093d9a76c3f5274753e60020f46b93b4802a8
+      body: >
+        In some usecases, it's very helpful for supervisor to know its container
+        ID.
+
+        This way seems to be the most reliable to expose it to the application.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Roman Mazur <roman@balena.io>
+        signed-off-by: Roman Mazur <roman@balena.io>
+      author: Roman Mazur
+  version: 2.39.0
+  date: 2019-07-17T08:26:26.502Z
+- commits:
     - subject: 'resin-proxy-config: fix up incorrect bash subshell command'
       hash: 0c8de756c22f635b2ef499848b724f1350f555b0
       body: ''

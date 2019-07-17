@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.39.0
+## (2019-07-17)
+
+* supervisor-start: Expose container ID [Roman Mazur]
+
 # v2.38.3
 ## (2019-07-10)
 
