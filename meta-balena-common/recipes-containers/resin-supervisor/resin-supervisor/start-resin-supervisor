@@ -71,13 +71,18 @@ configIsUnchanged() {
 }
 
 runSupervisor() {
+    local host_data_dir=/resin-data/resin-supervisor
+    local cid_filename=container-id
+
     balena rm --force resin_supervisor || true
     balena run --privileged --name resin_supervisor \
         --net=host \
+        --cidfile="$host_data_dir/$cid_filename" \
+        -e "CONTAINER_ID_FILE_PATH=/data/$cid_filename" \
         -v /var/run/balena-engine.sock:/var/run/balena-engine.sock \
         -v "$CONFIG_PATH:/boot/config.json"  \
         -v /mnt/data/apps.json:/boot/apps.json \
-        -v /resin-data/resin-supervisor:/data \
+        -v "$host_data_dir:/data" \
         -v /proc/net/fib_trie:/mnt/fib_trie \
         -v /var/log/supervisor-log:/var/log \
         -v /:/mnt/root \
