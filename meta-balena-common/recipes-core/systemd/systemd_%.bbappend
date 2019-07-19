@@ -8,6 +8,7 @@ SRC_URI_append = " \
     file://watchdog.conf \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
+    file://balena-os-sysctl.conf \
     "
 
 python() {
@@ -71,6 +72,9 @@ do_install_append() {
 
     # Move udev rules into /lib as /etc/udev/rules.d is bind mounted for custom rules
     mv ${D}/etc/udev/rules.d/*.rules ${D}/lib/udev/rules.d/
+
+    install -d -m 0755 ${D}/usr/lib/sysctl.d/
+    install -m 0644 ${WORKDIR}/balena-os-sysctl.conf ${D}/usr/lib/sysctl.d/
 }
 
 FILES_udev += "${rootlibexecdir}/udev/resin_update_state_probe"
