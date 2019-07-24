@@ -10,6 +10,7 @@ SRC_URI_append = " \
     file://resin-sample.ignore \
     file://nm-tmpfiles.conf \
     file://balena-client-id.patch \
+    file://remove-https-warning.patch \
     "
 
 RDEPENDS_${PN}_append = " \
