@@ -6,7 +6,7 @@ inherit image_types_resin
 
 # When building a Resin OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build
-DEPENDS += "coreutils-native jq-native kernel-modules-headers kernel-devsrc"
+DEPENDS += "coreutils-native jq-native kernel-modules-headers kernel-devsrc kernel-headers-test"
 
 # Deploy the license.manifest of the current image we baked
 deploy_image_license_manifest () {
