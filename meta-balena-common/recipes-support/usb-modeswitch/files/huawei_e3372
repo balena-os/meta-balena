@@ -1,0 +1,4 @@
+# Huawei E353 (3.se) and others
+TargetVendor=0x12d1
+TargetProductList="14db,14dc"
+MessageContent="55534243123456780000000000000011063000000100010000000000000000"
