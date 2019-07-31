@@ -18,7 +18,7 @@ require recipes-containers/resin-supervisor/resin-supervisor.inc
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
 TARGET_TAG ?= "${SUPERVISOR_TAG}"
 
-PARTITION_SIZE ?= "1024"
+PARTITION_SIZE ?= "192"
 
 python () {
     import re
@@ -65,6 +65,8 @@ do_compile () {
 		-e USER_ID=$(id -u) -e USER_GID=$(id -u) \
 		-e TARGET_REPOSITORY="${TARGET_REPOSITORY}" \
 		-e TARGET_TAG="${TARGET_TAG}" \
+		-e HELLO_REPOSITORY="${HELLO_REPOSITORY}" \
+		-e HELLO_PLATFORM="${HELLO_PLATFORM}" \
 		-e PRIVATE_REGISTRY="${PRIVATE_REGISTRY}" \
 		-e PRIVATE_REGISTRY_USER="${PRIVATE_REGISTRY_USER}" \
 		-e PRIVATE_REGISTRY_PASSWORD="${PRIVATE_REGISTRY_PASSWORD}" \
@@ -73,6 +75,13 @@ do_compile () {
 		--name ${_container_name} ${_image_name}
 	$DOCKER rmi ${_image_name}
 }
+
+FILES_${PN} = "/usr/lib/balena/hello-world.tar"
+do_install () {
+	mkdir -p ${D}/usr/lib/balena
+	install -m 644 ${B}/hello-world.tar ${D}/usr/lib/balena/hello-world.tar
+}
+
 do_deploy () {
 	install -m 644 ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
 }

@@ -24,7 +24,7 @@ mkdir -p $DATA_VOLUME/resin-data
 
 # Start docker
 echo "Starting docker daemon with $BALENA_STORAGE storage driver."
-dockerd -g $DATA_VOLUME/docker -s "$BALENA_STORAGE" -b none &
+dockerd -g $DATA_VOLUME/docker -s "$BALENA_STORAGE" -b none --experimental &
 echo "Waiting for docker to become ready.."
 STARTTIME="$(date +%s)"
 ENDTIME="$STARTTIME"
@@ -47,6 +47,12 @@ fi
 # Pull in the image
 echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}..."
 docker pull "${TARGET_REPOSITORY}:${TARGET_TAG}"
+# Pull in arch specific hello-world image and tag it hello-world
+echo "Pulling ${HELLO_REPOSITORY}:latest..."
+docker pull --platform "${HELLO_PLATFORM}" "${HELLO_REPOSITORY}"
+docker tag "${HELLO_REPOSITORY}" hello-world
+docker rmi "${HELLO_REPOSITORY}"
+docker save hello-world > ${BUILD}/hello-world.tar
 
 echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"
