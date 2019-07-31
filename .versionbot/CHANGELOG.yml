@@ -1,4 +1,321 @@
 - commits:
+    - subject: 'usb-modeswitch-data: Switch Huawei E3372 12d1:1f01 to mbim mode'
+      hash: bb672725f4460402af64ecb7d74d33526f5ed7c1
+      body: |
+        Customer reported Huawei E3372 not working
+        anymore starting with balenaOS v2.32.
+        The fix for this appears to be switching the modem with
+        vid and pid 12d1:1f01 from the cdc_ether legacy mode to
+        the faster mbim mode and setting mtu=1460 in the modem
+        connection file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+    - subject: >-
+        Fix rollback altboots to prevent good reboots by supervisor triggering
+        rollback.
+      hash: 7e5843d6542d13d278d2a42da2f787ada8bfa229
+      body: |
+        After a HUP, until rollbacks clears its state, the supervisor(or user)
+        can trigger good reboots. These reboots might be seen by the bootloader
+        as bad reboots.
+
+        To prevent this from happening, add a service that clears the bootcount
+        upon good reboots. This only runs if the rollback services have not
+        cleared their flag files in the state partition.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Fix rollback altboots to prevent good reboots by supervisor triggering
+          rollback.
+        changelog-entry: >-
+          Fix rollback altboots to prevent good reboots by supervisor triggering
+          rollback.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Devices using u-boot. Remove any BOOTDELAY for production images. Add a
+        2 seconds delay for development images
+      hash: f50952f6e91541f4c07ef14612a71174b9417124
+      body: |
+        We'd like to split dev and prod uboot config fragments. Dev images can
+        have a 2 second u-boot delay to facilitate debugging. While prod images
+        shouldn't really pause at this stage of the boot.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Devices using u-boot. Remove any BOOTDELAY for production images. Add
+          a 2 seconds delay for development images
+        changelog-entry: >-
+          Devices using u-boot. Remove any BOOTDELAY for production images. Add
+          a 2 seconds delay for development images
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Devices using u-boot. Enable CONFIG_CMD_SETEXPR for all devices.
+        Required for rollbacks to work
+      hash: 7051a1bda83d53e08148eea953ee2653fd915743
+      body: |
+        We'd like to enable some config options for all devices via meta-balena
+
+        The support is mainline since warrior. Lets copy it in meta-balena
+        to get it in the previous layers as well.
+
+        We need CMD_SETEXPR to be enabled for rollbacks to work. So enable it
+        via the config fragment
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Devices using u-boot. Enable CONFIG_CMD_SETEXPR for all devices.
+          Required for rollbacks to work
+        changelog-entry: >-
+          Devices using u-boot. Enable CONFIG_CMD_SETEXPR for all devices.
+          Required for rollbacks to work
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Devices using u-boot. Enable rollback-altboot by handling bootcount via
+        meta-balena.
+      hash: aa0a389ea92a71123813f291833fea61f4965164
+      body: |
+        U-boot has its own bootcount framework. However, that will require
+        handling in each device type. We will use u-boot shell commands
+        env import -t, env export -t, fatload, fatwrite
+        to read/write/increment bootcount in env_resin.h.
+
+        This will allow us to scale to lots of devices.
+
+        A flag os_bootcount_skip is left for devices that are unable to support
+        fatwrite in u-boot (in some rare cases). This will allow a device to
+        not support rollback-altboot and still function.
+
+        This patch requires that CMD_SETEXPR be enabled in u-boot config
+        options.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Devices using u-boot. Enable rollback-altboot by handling bootcount
+          via meta-balena.
+        changelog-entry: >-
+          Devices using u-boot. Enable rollback-altboot by handling bootcount
+          via meta-balena.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Production Devices using u-boot. Enable CONFIG_RESET_TO_RETRY to reset a
+        device in case it drops into a u-boot shell
+      hash: 1f7ead33c284f4dc8e2a3d78b2a922a9b778e05c
+      body: |
+        We'd like to enable some options in all boards header files via
+        meta-balena. This patch adds a task to include config_resin.h into
+        config_default.h (which is included in all board header files).
+        We can then add a config option via meta-balena that will be enabled for
+        all devices.
+
+        This patch enables CONFIG_RESET_TO_RETRY. If for whatever strange reason
+        (accidental fs issue in u-boot etc), this will trigger a u-boot reset
+        command the device in 15 seconds.
+
+        Note This requires that the device's u-boot supports the reset command
+        which it probably should.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Production Devices using u-boot. Enable CONFIG_RESET_TO_RETRY to reset
+          a device in case it drops into a u-boot shell
+        changelog-entry: >-
+          Production Devices using u-boot. Enable CONFIG_RESET_TO_RETRY to reset
+          a device in case it drops into a u-boot shell
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Remove confusing networkmanager https connectivity warning
+      hash: fbdf643988e4aea76507139b2fc59ef7ad0132af
+      body: |
+        Fixes #1597
+
+        The warning doesn't apply for our use case and confuses customers
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Remove confusing networkmanager https connectivity warning
+        changelog-entry: Remove confusing networkmanager https connectivity warning
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Increase fs.inotify.max_user_instances to 512
+      hash: a4f6c8591af9793935a9981a0f0c25fb7b957312
+      body: |
+        This defaults to 128. BoB hit the limit. Increase to 512
+        Fixes #1592
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Increase fs.inotify.max_user_instances to 512
+        changelog-entry: Increase fs.inotify.max_user_instances to 512
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v10.0.3
+      hash: ad9bdc7236600eb4399761643b772eadd95df662
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v10.0.3
+        changelog-entry: Update balena-supervisor to v10.0.3
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Fix balena hello-world healthcheck
+      hash: e0826741f9a829f2af34afbc9bc1f9920f8ae4e6
+      body: |
+        We load the hello-world image after starting the balena daemon.
+        ExecStartPost should run after the daemon is initialized but chaining a
+        15 second sleep for good measure.
+
+        We load the hello-world image here so that devices out in the field and
+        on prem devices don't need to pull from dockerhub which would require
+        external internet connectivity.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix balena hello-world healthcheck
+        changelog-entry: Fix balena hello-world healthcheck
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Add nf_table kernel modules
+      hash: 9bca94f29b29098c7177231ee3a9251f1d48dd32
+      body: |
+        Fixes #1589
+        Also, debian buster defaults to requiring nf_tables
+        rootfs size impact ~+310K
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add nf_table kernel modules
+        changelog-entry: Add nf_table kernel modules
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'hostapp-update-hooks: Use correct source for inactive sysroot'
+      hash: f13c837cdc9b1a106ea711785178fc397035ada7
+      body: |
+        Use ext4 FSTYPE to filter out automount with SOURCE
+        "systemd-1" when determining the new parition label
+        in the grub update hook.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+    - subject: >-
+        Add extra healthcheck to balena service. It will spin up a hello-world
+        container as well
+      hash: 15169084fe9355e6be997712a614e383a71555c9
+      body: |
+        Occasionally balena ps and balena info work but the balena daemon is
+        unable to start a new container. This is usually when something in runc
+        or containerd is not functioning correctly.
+
+        Add a healthcheck to spin up a simple hello-world container as well.
+
+        The trade-off here is that there will be a few extra writes to disk
+        every healthcheck timeout. But there will be a benefit that if runc
+        or containerd is in a bad state, the healthcheck will fail and systemd
+        will restart the balena daemon to recover the application container
+
+        Fixes #1391
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Add extra healthcheck to balena service. It will spin up a hello-world
+          container as well
+        changelog-entry: >-
+          Add extra healthcheck to balena service. It will spin up a hello-world
+          container as well
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v9.18.8
+      hash: 41af8ba6ef5b234b819aa0181b7e14e476f68c43
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.18.8
+        changelog-entry: Update balena-supervisor to v9.18.8
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: 'image-resin.bbclass: fixed a typo'
+      hash: 64a4fc9a7cff18a6dced9f352317761ced7dc563
+      body: |
+        Fixing a typo in the image size sanity check to ensure the
+        correct calculation of FAT overhead sectors.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kylemharding@gmail.com>
+        signed-off-by: Kyle Harding <kylemharding@gmail.com>
+      author: Kyle Harding
+    - subject: 'kernel-resin: Add support for CH340 family of usb-serial adapters'
+      hash: 941aef5490cf4a120f74cb243c3fbbd8911bcc49
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'kernel-resin: Add support for CH340 family of usb-serial adapters'
+        changelog-entry: 'kernel-resin: Add support for CH340 family of usb-serial adapters'
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+    - subject: 'resin-proxy-config: add missing reserved ip ranges to default noproxy'
+      hash: 49ed2ea12d495defe033be6f2a9e155ff2fc7875
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: Reduce data partition size from 1G to 192M
+      hash: 2270940edfd32a4dd3a3670aa1fb62eb2557f706
+      body: |
+        The data partition contains the supervisor which is only about 61M on
+        the pi3. We compress the data partition later on so don't notice these
+        zeros. But lets reduce the size of the data partition to eat less
+        space whenever an uncompressed image is used anywhere. e.g. when
+        extracting the zip to dd or using balena-migrate etc.
+
+        The partition expands on first boot to fill the rest of the disk
+        anyways.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Reduce data partition size from 1G to 192M
+        changelog-entry: Reduce data partition size from 1G to 192M
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.39.0
+  date: 2019-07-31T10:56:32.370Z
+- commits:
     - subject: 'resin-proxy-config: fix up incorrect bash subshell command'
       hash: 0c8de756c22f635b2ef499848b724f1350f555b0
       body: ''

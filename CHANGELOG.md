@@ -1,6 +1,28 @@
 Change log
 -----------
 
+# v2.39.0
+## (2019-07-31)
+
+* usb-modeswitch-data: Switch Huawei E3372 12d1:1f01 to mbim mode [Alexandru Costache]
+* Fix rollback altboots to prevent good reboots by supervisor triggering rollback. [Zubair Lutfullah Kakakhel]
+* Devices using u-boot. Remove any BOOTDELAY for production images. Add a 2 seconds delay for development images [Zubair Lutfullah Kakakhel]
+* Devices using u-boot. Enable CONFIG_CMD_SETEXPR for all devices. Required for rollbacks to work [Zubair Lutfullah Kakakhel]
+* Devices using u-boot. Enable rollback-altboot by handling bootcount via meta-balena. [Zubair Lutfullah Kakakhel]
+* Production Devices using u-boot. Enable CONFIG_RESET_TO_RETRY to reset a device in case it drops into a u-boot shell [Zubair Lutfullah Kakakhel]
+* Remove confusing networkmanager https connectivity warning [Zubair Lutfullah Kakakhel]
+* Increase fs.inotify.max_user_instances to 512 [Zubair Lutfullah Kakakhel]
+* Update balena-supervisor to v10.0.3 [Cameron Diver]
+* Fix balena hello-world healthcheck [Zubair Lutfullah Kakakhel]
+* Add nf_table kernel modules [Zubair Lutfullah Kakakhel]
+* hostapp-update-hooks: Use correct source for inactive sysroot [Alexandru Costache]
+* Add extra healthcheck to balena service. It will spin up a hello-world container as well [Zubair Lutfullah Kakakhel]
+* Update balena-supervisor to v9.18.8 [Cameron Diver]
+* image-resin.bbclass: fixed a typo [Kyle Harding]
+* kernel-resin: Add support for CH340 family of usb-serial adapters [Sebastian Panceac]
+* resin-proxy-config: add missing reserved ip ranges to default noproxy [Will Boyce]
+* Reduce data partition size from 1G to 192M [Zubair Lutfullah Kakakhel]
+
 # v2.38.3
 ## (2019-07-10)
 
