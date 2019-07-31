@@ -65,7 +65,7 @@ if  grep -q upgrade_available "$grub_cfg" ; then
     printf "[INFO] Automated Rollback support in grub.cfg detected \n"
     sed "s#resin_root_part=.*#resin_root_part="$new_part_idx"#g" "$grub_cfg" > "$grub_cfg".new
     sed -i "s#upgrade_available=.*#upgrade_available="$DURING_UPDATE"#g" "$grub_cfg".new
-    sed -i "s#bootcount=.*#bootcount=0 #g" "$grub_env"
+    sed -i "s#bootcount=.*#bootcount=0#g" "$grub_env"
 else
     printf "[INFO] Automated Rollback is not supported by grub config file for this device \n"
     sed "s/resin-root./"$new_part_label"/" "$grub_cfg" > "$grub_cfg".new
