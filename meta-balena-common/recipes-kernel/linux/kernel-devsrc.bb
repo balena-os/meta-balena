@@ -104,7 +104,9 @@ do_install() {
 	fi
 
 	if [ "${ARCH}" = "arm64" ]; then
-	    cp -a --parents arch/arm64/kernel/vdso/vdso.lds $kerneldir/build/
+	    if [ -f "arch/arm64/kernel/vdso/vdso.lds" ]; then
+	        cp -a --parents arch/arm64/kernel/vdso/vdso.lds $kerneldir/build/
+	    fi
 	fi
 
 	cp -a include $kerneldir/build/include
@@ -140,13 +142,17 @@ do_install() {
 	    cp -a --parents arch/arm/include/asm/xen $kerneldir/build/
 	    # arch/arm64/include/asm/opcodes.h references arch/arm
 	    cp -a --parents arch/arm/include/asm/opcodes.h $kerneldir/build/
+	    # include a few files for 'make prepare'
+	    cp -a --parents arch/arm/tools/gen-mach-types $kerneldir/build/
+	    cp -a --parents arch/arm/tools/mach-types $kerneldir/build/
 
             cp -a --parents arch/arm64/kernel/vdso/*gettimeofday.* $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/sigreturn.S $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/note.S $kerneldir/build/
             cp -a --parents arch/arm64/kernel/vdso/gen_vdso_offsets.sh $kerneldir/build/
-
-            cp -a --parents arch/arm64/kernel/module.lds $kerneldir/build/
+	    if [ -f "arch/arm64/kernel/module.lds" ]; then
+	        cp -a --parents arch/arm64/kernel/module.lds $kerneldir/build/
+	    fi
 	fi
 
 	if [ "${ARCH}" = "powerpc" ]; then
@@ -169,8 +175,9 @@ do_install() {
             if [ -n "$SYSCALL_TOOLS" ] ; then
 	        cp -a --parents $SYSCALL_TOOLS $kerneldir/build/
             fi
-
-            cp -a --parents arch/arm/kernel/module.lds $kerneldir/build/
+	    if [ -f "arch/arm/kernel/module.lds" ]; then
+                cp -a --parents arch/arm/kernel/module.lds $kerneldir/build/
+	    fi
 	fi
 
 	if [ -d arch/${ARCH}/include ]; then
@@ -185,7 +192,11 @@ do_install() {
 	cp -a --parents tools/include/tools/be_byteshift.h $kerneldir/build/
 
 	# required for generate missing syscalls prepare phase
-	cp -a --parents arch/x86/entry/syscalls/syscall_32.tbl $kerneldir/build
+	if [ -d "arch/x86/entry" ]; then
+	    cp -a --parents arch/x86/entry/syscalls/syscall_32.tbl $kerneldir/build
+	else
+	    cp -a --parents arch/x86/syscalls/syscall_32.tbl $kerneldir/build
+	fi
 
 	if [ "${ARCH}" = "x86" ]; then
 	    # files for 'make prepare' to succeed with kernel-devel
