@@ -1,4 +1,4 @@
-FROM docker:18.06-dind
+FROM docker:18.09.8-dind
 RUN apk add --update util-linux shadow e2fsprogs && rm -rf /var/cache/apk/*
 ADD entry.sh /entry.sh
 RUN chmod a+x /entry.sh
