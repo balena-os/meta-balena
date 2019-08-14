@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.40.0
+## (2019-08-14)
+
+* Update balena-supervisor to v10.2.2 [Cameron Diver]
+* Workaround for a cornercase bug in PersistentLogging where journalctl filled the state partition. Vacuum the journal on boot. [Zubair Lutfullah Kakakhel]
+
 # v2.39.0
 ## (2019-07-31)
 

@@ -1,4 +1,40 @@
 - commits:
+    - subject: Update balena-supervisor to v10.2.2
+      hash: 3afbe138f115fa15611cb823caa6664dbb093a8b
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v10.2.2
+        changelog-entry: Update balena-supervisor to v10.2.2
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: >-
+        Workaround for a cornercase bug in PersistentLogging where journalctl
+        filled the state partition. Vacuum the journal on boot.
+      hash: 8284da08f245ed6da8308d558bb8dfcc66de9691
+      body: |
+        We have found a rare corner case bug where the journal bloats beyond
+        its limit and fills the state partition. Triggering a vacuum on reboot
+        helps a bit in case the device is restarted to recover its function.
+
+        Fixes #1423
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Workaround for a cornercase bug in PersistentLogging where journalctl
+          filled the state partition. Vacuum the journal on boot.
+        changelog-entry: >-
+          Workaround for a cornercase bug in PersistentLogging where journalctl
+          filled the state partition. Vacuum the journal on boot.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.40.0
+  date: 2019-08-14T09:40:49.562Z
+- commits:
     - subject: 'usb-modeswitch-data: Switch Huawei E3372 12d1:1f01 to mbim mode'
       hash: bb672725f4460402af64ecb7d74d33526f5ed7c1
       body: |
