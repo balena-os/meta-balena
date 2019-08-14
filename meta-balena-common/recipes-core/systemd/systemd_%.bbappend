@@ -5,6 +5,7 @@ SRC_URI_append = " \
     file://reboot.target.conf \
     file://poweroff.target.conf \
     file://journald-balena-os.conf \
+    file://vacuum.conf \
     file://watchdog.conf \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
@@ -67,6 +68,10 @@ do_install_append() {
 
     # We take care of journald flush ourselves
     rm ${D}/lib/systemd/system/sysinit.target.wants/systemd-journal-flush.service
+
+    # Vacuum the journal to catch a corner case bug where the log bloats above limit
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/
+    install -m 0644 ${WORKDIR}/vacuum.conf ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/vacuum.conf
 
     install -m 0755 ${WORKDIR}/resin_update_state_probe ${D}/lib/udev/resin_update_state_probe
 
