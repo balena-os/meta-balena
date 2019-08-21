@@ -1,4 +1,23 @@
 - commits:
+    - subject: Avoid overlayfs mounts in poky's volatile-binds
+      hash: 95a26b4e1bba3fd502baefb7283f91ee8761dbac
+      body: |
+        Our root filesystem is overlayfs or aufs. When latter, the system
+        crashes wheneding a lower directory file. We avoid this by always
+        falling back to copy and mount (as if overlayfs is not available).
+
+        Fixes #1618
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Avoid overlayfs mounts in poky's volatile-binds
+        changelog-entry: Avoid overlayfs mounts in poky's volatile-binds
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.40.1
+  date: 2019-08-21T15:30:44.115Z
+- commits:
     - subject: Update balena-supervisor to v10.2.2
       hash: 3afbe138f115fa15611cb823caa6664dbb093a8b
       body: ''

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.40.1
+## (2019-08-21)
+
+* Avoid overlayfs mounts in poky's volatile-binds [Andrei Gherzan]
+
 # v2.40.0
 ## (2019-08-14)
 
