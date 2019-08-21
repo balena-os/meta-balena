@@ -39,14 +39,17 @@ if [ -d "$mountpoint" ]; then
 
     # Try to mount using overlay, which is must faster than copying files.
     # If that fails, fall back to slower copy.
-    if ! mount -t overlay overlay -olowerdir="$mountpoint",upperdir="$spec",workdir="$overlay_workdir" "$mountpoint" > /dev/null 2>&1; then
+    # FIXME:
+    # Avoid overlayfs mounts as the rootfs is a aufs on some devices which
+    # might break when reading files from lower directory.
+    #if ! mount -t overlay overlay -olowerdir="$mountpoint",upperdir="$spec",workdir="$overlay_workdir" "$mountpoint" > /dev/null 2>&1; then
 
         if [ "$specdir_existed" != "yes" ]; then
             cp -pPR "$mountpoint"/. "$spec/"
         fi
 
         mount -o "bind$options" "$spec" "$mountpoint"
-    fi
+    #fi
 elif [ -f "$mountpoint" ]; then
     if [ ! -f "$spec" ]; then
         cp -pP "$mountpoint" "$spec"
