@@ -1,0 +1,13 @@
+#!/bin/sh
+
+console_null_workaround_enabled() {
+	return 0
+}
+
+console_null_workaround_run() {
+	if [ "$bootparam_console" = "null" ] ; then
+		exec 0> /dev/null
+		exec 1> /dev/null
+		exec 2> /dev/null
+	fi
+}
