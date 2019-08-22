@@ -1,4 +1,52 @@
 - commits:
+    - subject: Fix a hang in initramfs for warrior production images
+      hash: 4c44265a7dd13760a89c235068500bf6f315f651
+      body: |
+        When `console=null` is passed in the kernel cmdline for production
+        images, the system doesn't boot. Traced to initramfs not starting any
+        process such as udev with the right file descripters for 0,1,2
+
+        Add workaround for that issue. This got exposed with a systemd bump.
+        More details here https://github.com/systemd/systemd/issues/13332
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix a hang in initramfs for warrior production images
+        changelog-entry: Fix a hang in initramfs for warrior production images
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-engine to 18.09.8
+      hash: 9bcd0ffcc7d6efde45f2bc1eaeaafe1092374c40
+      body: |
+        Includes improvements and fixes to the journald logdriver
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-engine to 18.09.8
+        changelog-entry: Update balena-engine to 18.09.8
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+    - subject: Avoid overlayfs mounts in poky's volatile-binds
+      hash: b7b6163d955a3bf76a1759b60ed82ccc5fcce6d0
+      body: |
+        Our root filesystem is overlayfs or aufs. When latter, the system
+        crashes when reading a lower directory file. We avoid this by always
+        falling back to copy and mount (as if overlayfs is not available).
+
+        Fixes #1618
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Avoid overlayfs mounts in poky's volatile-binds
+        changelog-entry: Avoid overlayfs mounts in poky's volatile-binds
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.41.0
+  date: 2019-08-22T14:25:04.139Z
+- commits:
     - subject: Update balena-supervisor to v10.2.2
       hash: 3afbe138f115fa15611cb823caa6664dbb093a8b
       body: ''
