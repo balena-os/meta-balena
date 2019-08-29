@@ -17,7 +17,7 @@ Description=Balena rollback checks altboot
 DefaultDependencies=no
 Requires=resin-boot.service
 Before=balena-host.service balena.service
-After=resin-boot.service
+After=resin-boot.service systemd-udev-settle.service
 ConditionPathExists=/mnt/state/rollback-altboot-breadcrumb
 
 [Service]
