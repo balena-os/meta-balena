@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.41.1
+## (2019-08-29)
+
+* kernel-resin: Enable FTDI USB-serial convertors driver [Sebastian Panceac]
+
 # v2.41.0
 ## (2019-08-22)
 

@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'kernel-resin: Enable FTDI USB-serial convertors driver'
+      hash: 40616a274cd7f055397b5acda0fdd6540e797410
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+  version: 2.41.1
+  date: 2019-08-29T10:06:07.753Z
+- commits:
     - subject: Fix a hang in initramfs for warrior production images
       hash: 4c44265a7dd13760a89c235068500bf6f315f651
       body: |
