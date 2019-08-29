@@ -238,7 +238,10 @@ if [[ -n "$prefix" ]]; then
 	echo Building script binaries for target arch...
 	make HOSTCC="$hostcc" HOSTLD="$LD" $build_opts scripts
 	# for kernel 5.0.3 the following also builds scripts/mod which was removed from "make scripts" (see https://patchwork.kernel.org/patch/10690901/)
+	# (The following make alters utsrelease.h at least on some machines - Variscite mx8m - let's make a backup and restore it after)
+	cp include/generated/utsrelease.h include/generated/utsrelease.h.bkp
 	make HOSTCC="$hostcc" HOSTLD="$LD" $build_opts prepare0
+	mv include/generated/utsrelease.h.bkp include/generated/utsrelease.h
 
 	if [[ -e xtools/objtool/fixdep ]]; then
 	    if [[ -e tools/build/Makefile ]]; then
