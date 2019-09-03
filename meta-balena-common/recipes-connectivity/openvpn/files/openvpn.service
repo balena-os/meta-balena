@@ -10,8 +10,8 @@ Restart=always
 RestartSec=10s
 #Adjust OOMscore to -1000 to disable OOM killing for openvpn
 OOMScoreAdjust=-1000
-PIDFile=/var/run/openvpn/openvpn.pid
-ExecStart=/usr/sbin/openvpn --writepid /var/run/openvpn/openvpn.pid --cd /etc/openvpn/ --config /etc/openvpn/openvpn.conf --connect-retry 5 120
+PIDFile=/run/openvpn/openvpn.pid
+ExecStart=/usr/sbin/openvpn --writepid /run/openvpn/openvpn.pid --cd /etc/openvpn/ --config /etc/openvpn/openvpn.conf --connect-retry 5 120
 
 [Install]
 Alias=openvpn-resin.service
