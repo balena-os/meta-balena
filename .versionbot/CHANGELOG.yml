@@ -1,4 +1,72 @@
 - commits:
+    - subject: Update ModemManager to version 1.10.4
+      hash: 6f300a3fc01521ceadd3f8a50c9157d070525dde
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update ModemManager to version 1.10.4
+        changelog-entry: Update ModemManager to version 1.10.4
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Fix for some innocous systemd tmpfile warnings /var/run -> /run ones
+      hash: 25bb6364dfff2a65d7f53f71a35ef74f24f7d7a9
+      body: >
+        Otherwise systemd complains:
+
+        localhost systemd-tmpfiles[525]:
+        [/etc/tmpfiles.d/balena-tmpfiles.conf:1] Line references path below
+        legacy directory /var/run/, updating /var/run/docker.pid →
+        /run/docker.pid; please update the tmpfiles.d/ drop-in file accordingly.
+
+        localhost systemd-tmpfiles[525]:
+        [/etc/tmpfiles.d/balena-tmpfiles.conf:2] Line references path below
+        legacy directory /var/run/, updating /var/run/balena.pid →
+        /run/balena.pid; please update the tmpfiles.d/ drop-in file accordingly.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix for some innocous systemd tmpfile warnings /var/run -> /run ones
+        changelog-entry: Fix for some innocous systemd tmpfile warnings /var/run -> /run ones
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Fix for rollbacks where the inactive partition mount was unavailable
+        when altboot triggered
+      hash: 856a3d1ad8dbf3b7a87689bbedac23c9148b3d79
+      body: |
+        PR #1441 changed mnt-sysroot-inactive to an automount. But there is no
+        way to easily add a udev dependency to the automount. As a result,
+        when rollbacks tries to access the inactive partition, it fails.
+        Let's add systemd-udev-settle.service to the rollback services.
+
+        This will only delay the first boot after a HUP which is reasonable.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fix for rollbacks where the inactive partition mount was unavailable
+          when altboot triggered
+        changelog-entry: >-
+          Fix for rollbacks where the inactive partition mount was unavailable
+          when altboot triggered
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'kernel-resin: Enable FTDI USB-serial convertors driver'
+      hash: 40616a274cd7f055397b5acda0fdd6540e797410
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+  version: 2.41.1
+  date: 2019-09-03T13:27:47.892Z
+- commits:
     - subject: Fix a hang in initramfs for warrior production images
       hash: 4c44265a7dd13760a89c235068500bf6f315f651
       body: |

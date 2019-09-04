@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.41.1
+## (2019-09-03)
+
+* Update ModemManager to version 1.10.4 [Florin Sarbu]
+* Fix for some innocous systemd tmpfile warnings /var/run -> /run ones [Zubair Lutfullah Kakakhel]
+* Fix for rollbacks where the inactive partition mount was unavailable when altboot triggered [Zubair Lutfullah Kakakhel]
+* kernel-resin: Enable FTDI USB-serial convertors driver [Sebastian Panceac]
+
 # v2.41.0
 ## (2019-08-22)
 
