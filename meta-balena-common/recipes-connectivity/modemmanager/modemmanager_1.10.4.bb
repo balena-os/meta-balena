@@ -14,8 +14,8 @@ DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native libxslt-native"
 SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
            file://0001-Do-not-set-Wno-unused-but-set-variable.patch \
            "
-SRC_URI[md5sum] = "92d25176d0cc9d588ca29700b33c7d98"
-SRC_URI[sha256sum] = "fd0f39996025dac96995daea8a58ec7dd571582f7563a8ae0d5f65b571b76ee2"
+SRC_URI[md5sum] = "f82d82b4b19482f8112fcfa60566721b"
+SRC_URI[sha256sum] = "fa556bb4ba1f1478e709b71151b4de8f7d136d80e51c64e887fc1fd8926cdc70"
 
 S = "${WORKDIR}/ModemManager-${PV}"
 
@@ -39,6 +39,7 @@ FILES_${PN} += " \
     ${datadir}/icons \
     ${datadir}/polkit-1 \
     ${datadir}/dbus-1 \
+    ${datadir}/ModemManager \
     ${libdir}/ModemManager \
     ${systemd_unitdir}/system \
 "
