@@ -9,7 +9,7 @@ ConditionVirtualization=!docker
 [Service]
 Type=notify
 Restart=always
-ExecStart=/usr/bin/balenad --delta-data-root=/mnt/sysroot/active/balena --delta-storage-driver=@BALENA_STORAGE@ --log-driver=journald -s @BALENA_STORAGE@ --data-root=/mnt/sysroot/inactive/balena -H fd:// --pidfile=/var/run/balena-host.pid --exec-root=/var/run/balena-host --bip 10.114.101.1/24 --fixed-cidr=10.114.101.128/25 --iptables=false --max-download-attempts=10
+ExecStart=/usr/bin/balenad --delta-data-root=/mnt/sysroot/active/balena --delta-storage-driver=@BALENA_STORAGE@ --log-driver=journald -s @BALENA_STORAGE@ --data-root=/mnt/sysroot/inactive/balena -H fd:// --pidfile=/var/run/balena-host.pid --exec-root=/var/run/balena-host --bip 10.114.101.1/24 --fixed-cidr=10.114.101.128/25 --iptables=false --max-download-attempts=10 --exec-opt native.cgroupdriver=systemd
 #Adjust OOMscore to -900 to make killing unlikely
 OOMScoreAdjust=-900
 MountFlags=slave
