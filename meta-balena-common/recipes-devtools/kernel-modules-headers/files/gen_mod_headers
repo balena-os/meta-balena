@@ -1,0 +1,295 @@
+#!/bin/bash
+set -e; set -o pipefail
+
+# Heavily based on PKGBUILD from
+# https://www.archlinux.org/packages/core/x86_64/linux/
+
+function error()
+{
+	echo $(basename $0): $@ >&2
+}
+
+function fatal()
+{
+	error $@
+	exit 1
+}
+
+function usage()
+{
+	echo "usage: $(basename $0) [target dir] [linux source dir] [objects dir] <arch> <x-compile-prefix> <customcc>">&2
+
+	exit 1
+}
+
+# See http://stackoverflow.com/a/4774063
+function get_full_path()
+{
+	echo "$( cd "$1" ; pwd -P )"
+}
+
+function push()
+{
+	pushd $@ >/dev/null
+}
+
+function push_linux()
+{
+	push $linux_dir
+}
+
+function pop()
+{
+	popd >/dev/null
+}
+
+function copy_dir()
+{
+	from="$1"
+	to="$2"
+
+	if [[ -d "$from" ]]; then
+		cp -a "$from" "$to"
+	fi
+}
+
+function copy_mkdir()
+{
+	local target_dir="$1"
+	local rel_path="$2"
+
+	mkdir -p "$target_dir/$(dirname $rel_path)"
+	cp "$rel_path" "$target_dir/$rel_path"
+}
+
+[[ $# -ge 3 ]] || usage
+
+# Generate target dir if doesn't exist.
+install -dm755 $1
+
+target_dir=$(get_full_path $1)
+linux_dir=$(get_full_path $2)
+# The directory containing .config and Module.symvers.
+obj_dir=$(get_full_path $3)
+karch=${4:-x86}
+prefix=$5
+hostcc="${6:-${prefix}gcc}"
+hostcc_native="${7:-${prefix}gcc}"
+
+# FIXME: We assume host arch == x86.
+if [[ "$karch" != "x86" ]]; then
+	[[ -n $prefix ]] || fatal "Non-x86 arch but no prefix specified."
+fi
+
+build_opts=""
+# Regardless of target arch, if a prefix is specified we are cross-compiling.
+[[ -z "$prefix" ]] || build_opts="ARCH=$karch CROSS_COMPILE=$prefix"
+
+karch_dir="arch/$karch"
+target_karch_dir="$target_dir/$karch_dir"
+
+[[ -f "${obj_dir}/.config" ]] || fatal "Missing kernel configuration."
+[[ -f "${obj_dir}/Module.symvers" ]] || fatal "Missing Module.symvers."
+
+# Copy in .config and Module.symvers so we can specify O=$target_dir.
+cp "${obj_dir}/.config" "${obj_dir}/Module.symvers" "$target_dir"
+
+extra_header_dirs="drivers/md net/mac80211 drivers/media/dvb-core include/config/dvb \
+drivers/media/dvb-frontends drivers/media/usb/dvb-usb drivers/media/tuners"
+
+push_linux
+trap pop EXIT
+
+[[ -d "$karch_dir" ]] || fatal "Unrecognised karch: $karch"
+
+echo Running modules_prepare...
+make HOSTCC="$hostcc_native" O="$target_dir" $build_opts modules_prepare
+
+echo Copying required files...
+
+if [[ -n "$prefix" ]]; then
+	# Move host arch script binaries so we can fix them up later. We don't want to
+	# keep host binaries in place when we copy in source, we'll compile target arch
+	# versions later.
+	mv "$target_dir"/scripts "$target_dir"/xscripts
+	if [ -d "$target_dir/tools" ]; then
+		mv "$target_dir"/tools "$target_dir"/xtools
+	fi
+fi
+
+for f in Makefile kernel/Makefile Documentation/DocBook/Makefile; do
+	# DocBook support is removed in 4.13
+	if [ -f "$f" ]; then
+		install -D -m644 "$f" "$target_dir/$f"
+	fi
+done
+
+# Arch Linux copies only specific directories, however the difference is 31M
+# vs. 37M (~168k compressed) so for future-proofing I think it's not much more
+# of a cost to just copy everything.
+find include -mindepth 1 -maxdepth 1 -type d | \
+    xargs -I {} cp -a "{}" "$target_dir/include"
+
+for d in include $extra_header_dirs; do
+	[ -d "$d" ] && mkdir -p "$target_dir/$d"
+done
+
+# Configure arch/<arch> directory.
+mkdir -p "$target_karch_dir"
+copy_dir "$karch_dir/include" "$target_karch_dir"
+copy_dir "$karch_dir/tools" "$target_karch_dir"
+for f in $(find $karch_dir -iname '*.h' -o -name 'Makefile' -o -iname '*.tbl' -o -iname '*.sh'); do
+	copy_mkdir "$target_dir" "$f"
+done
+
+for f in $(find security -iname '*.h'); do
+	copy_mkdir "$target_dir" "$f"
+done
+
+# Copy over tools include as some builds require this.
+mkdir -p "$target_dir/tools"
+copy_dir tools/include "$target_dir/tools"
+copy_dir tools/objtool "$target_dir/tools"
+copy_dir tools/lib "$target_dir/tools"
+copy_dir tools/scripts "$target_dir/tools"
+copy_dir tools/build "$target_dir/tools"
+cp tools/Makefile "$target_dir/tools"
+
+copy_dir scripts "$target_dir"
+# Don't strip binaries as only makes 200kb difference...
+
+mkdir -p "$target_karch_dir/kernel"
+cp "$karch_dir/Makefile" "$target_karch_dir"
+
+# May as well always copy these if available.
+for f in Makefile_32.cpu kernel/asm-offsets.s; do
+	p="$karch_dir/$f"
+	[ -f $p ] && cp "$p" "$target_karch_dir/$f"
+done
+
+# Address sources with this kind of hacks
+# https://github.com/raspberrypi/linux/commit/a66649dab35033bd67988670fa60c268b0444cda
+mkdir -p "$target_karch_dir/kernel/vdso"
+for f in gettimeofday.S note.S sigreturn.S; do
+	p="$karch_dir//kernel/vdso/$f"
+	[ -f $p ] && cp "$p" "$target_karch_dir/kernel/vdso/$f"
+done
+
+# Copy in extra headers. Directories already created above.
+for d in $extra_header_dirs; do
+	[ -d "$d" ] && (cp $d/*.h "$target_dir/$d" || true)
+done
+
+# Specific required files.
+
+if [[ -e drivers/media/i2c/msp3400-driver.h ]]; then
+	mkdir -p "$target_dir/drivers/media/i2c/"
+	cp drivers/media/i2c/msp3400-driver.h "$target_dir/drivers/media/i2c/"
+fi
+
+# Copy in Kconfig files.
+for f in $(find . -name "Kconfig*"); do
+	copy_mkdir "$target_dir" "$f"
+done
+
+# Fix arm64 file reference
+if [ "$karch" = "arm64" ] && [ -f "$karch_dir/include/asm/opcodes.h" ]; then
+	copy_mkdir "$target_dir" "./arch/arm/include/asm/opcodes.h"
+fi
+
+# copy module.lds and vdso.lds if they exist
+if [ "$karch" = "arm64" ]; then
+	if [ -f "arch/arm64/kernel/module.lds" ]; then
+		copy_mkdir "$target_dir" "./arch/arm64/kernel/module.lds"
+	fi
+	if [ -f "arch/arm64/kernel/vdso/vdso.lds" ]; then
+		copy_mkdir "$target_dir" "./arch/arm64/kernel/vdso/vdso.lds"
+	fi
+fi
+
+# copy module.lds if it exists
+if [ "$karch" = "arm" ] && [ -f "arch/arm/kernel/module.lds" ]; then
+	copy_mkdir "$target_dir" "./arch/arm/kernel/module.lds"
+fi
+
+if [[ -n "$prefix" ]]; then
+	echo Fixing up script binaries...
+
+	push "$target_dir"
+
+	# Make some backups so we can restore sanity after we're done.
+	cp scripts/basic/Makefile .backup.basic.Makefile
+	cp scripts/Kbuild.include .backup.kbuild.Makefile.include
+	cp scripts/Makefile.build .backup.Makefile.build
+	cp scripts/mod/Makefile .backup.mod.Makefile
+	cp scripts/kconfig/Makefile .backup.kconfig.Makefile
+	if [[ -e tools/build/Makefile ]]; then
+		cp tools/build/Makefile .backup.tools.build.Makefile
+	fi
+
+	# Fixup Makefile's so they reference our host arch binaries in xscripts.
+	# We only need a few fixups since we're only building scripts here.
+	sed -i 's|$(obj)/fixdep|x$(obj)/fixdep|' scripts/basic/Makefile
+	sed -i 's|scripts/basic/fixdep|xscripts/basic/fixdep|' scripts/Kbuild.include
+	sed -i 's|scripts/basic/fixdep|xscripts/basic/fixdep|' scripts/Makefile.build
+	sed -i 's|$(obj)/mk_elfconfig|x$(obj)/mk_elfconfig|' scripts/mod/Makefile
+	sed -i 's|$(obj)/conf|x$(obj)/conf|' scripts/kconfig/Makefile
+
+	echo Building script binaries for target arch...
+	make HOSTCC="$hostcc" HOSTLD="$LD" $build_opts scripts
+	# for kernel 5.0.3 the following also builds scripts/mod which was removed from "make scripts" (see https://patchwork.kernel.org/patch/10690901/)
+	# (The following make alters utsrelease.h at least on some machines - Variscite mx8m - let's make a backup and restore it after)
+	cp include/generated/utsrelease.h include/generated/utsrelease.h.bkp
+	make HOSTCC="$hostcc" HOSTLD="$LD" $build_opts prepare0
+	mv include/generated/utsrelease.h.bkp include/generated/utsrelease.h
+
+	if [[ -e xtools/objtool/fixdep ]]; then
+	    if [[ -e tools/build/Makefile ]]; then
+		# let's use the native fixdep for the target objtool compilation
+		cp xtools/objtool/fixdep tools/objtool/
+
+		# let's make sure that objtool compilation won't overwrite the native fixdep we just copied so we rename it to fixdep_temp
+		sed -i 's|$(QUIET_LINK)$(HOSTCC) $(LDFLAGS) -o $@ $<|$(QUIET_LINK)$(HOSTCC) $(LDFLAGS) -o fixdep_temp $<|' tools/build/Makefile
+
+		# trying to apply the previous sed in context of 4.18 kernel
+		sed -i 's|$(QUIET_LINK)$(HOSTCC) $(HOSTLDFLAGS) -o $@ $<|$(QUIET_LINK)$(HOSTCC) $(HOSTLDFLAGS) -o fixdep_temp $<|' tools/build/Makefile
+		# trying to apply the previous sed in context of 5.0.3 kernel
+		sed -i 's|$(QUIET_LINK)$(HOSTCC) $(KBUILD_HOSTLDFLAGS) -o $@ $<|$(QUIET_LINK)$(HOSTCC) $(KBUILD_HOSTLDFLAGS) -o fixdep_temp $<|' tools/build/Makefile
+	    fi
+
+	    echo Building objtool for target
+	    make -C tools/objtool HOSTCC="$hostcc" HOSTLD="$LD" $build_opts
+	    rm -rf tools/objtool/fixdep tools/objtool/fixdep_temp
+	    mv .backup.tools.build.Makefile tools/build/Makefile
+
+            if [[ -e tools/build/Makefile ]]; then
+	        echo Building fixdep for target
+	        make -C tools/build HOSTCC="$hostcc" HOSTLD="$LD" $build_opts
+
+    	        # move the target fixdep to the expected location
+    	        mv tools/build/fixdep tools/objtool/
+    	    fi
+	fi
+
+	echo Cleaning up directory...
+
+	# Reinstate pristine Makefile's.
+	mv .backup.basic.Makefile scripts/basic/Makefile
+	mv .backup.kbuild.Makefile.include scripts/Kbuild.include
+	mv .backup.Makefile.build scripts/Makefile.build
+	mv .backup.mod.Makefile scripts/mod/Makefile
+	mv .backup.kconfig.Makefile scripts/kconfig/Makefile
+
+	# Clean up host script bins.
+	rm -rf xscripts
+	if [ -d xtools ]; then
+		rm -rf xtools
+	fi
+
+	# Remove unneeded binary and object files
+	rm -rf arch/x86/tools/relocs arch/x86/tools/relocs*.o
+
+	pop
+fi
+
+echo Done!
