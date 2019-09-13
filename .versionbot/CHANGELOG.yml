@@ -1,4 +1,86 @@
 - commits:
+    - subject: >-
+        A small fix in initramfs when /dev/console is invalid due to whatever
+        reason
+      hash: b5574aeb86ea6b6763f1c25c4b53a45d3e207eb5
+      body: |
+        We would just check for the existence of console=null in kernel cmdline
+
+        A better way would be to check the presence of a valid symlink for fd0,
+        fd1 and fd2. And assign them to /dev/null if unavailable.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          A small fix in initramfs when /dev/console is invalid due to whatever
+          reason
+        changelog-entry: >-
+          A small fix in initramfs when /dev/console is invalid due to whatever
+          reason
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Add automated testing for external kernel module header tarballs
+      hash: aef272d20b471308790bfa63426f73a3ce334884
+      body: |
+        We'd like to run a simple hello-world external module build test using
+        the headers we have generated. This recipe does that in a docker
+        container
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add automated testing for external kernel module header tarballs
+        changelog-entry: Add automated testing for external kernel module header tarballs
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Make sure correct utsrelease.h is packaged
+      hash: 5f9717081524d475009f5bf9277b30bf29c1c371
+      body: |
+        It was observed that on some machines (Variscite mx8m) the
+        utsrelease.h header is regenerated with incomplete content when
+        running "make prepare0" (utsrelease.h will not contain the short
+        git revision although the kernel's abiversion includes it and
+        as such the external modules built using this utsrelease.h header
+        will fail to load because of this mismatch).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Make sure correct utsrelease.h is packaged
+        changelog-entry: Make sure correct utsrelease.h is packaged
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Fix a bug where application containers with new systemd versions were
+        failing to start in cases. Switch to systemd cgroup driver in
+        balenaEngine
+      hash: a79f18a3e094721d1fc134afbae7a4773b697414
+      body: |
+        The default driver is cgroupfs. We switch to systemd so that there is
+        one cgroup manager in our OS.
+
+        Otherwise, systemd will have its own cgroup manager and cgroupfs will
+        be another cgroup manager via balenaEngine daemon.
+
+        Fixes #1645 which contains more information
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Fix a bug where application containers with new systemd versions were
+          failing to start in cases. Switch to systemd cgroup driver in
+          balenaEngine
+        changelog-entry: >-
+          Fix a bug where application containers with new systemd versions were
+          failing to start in cases. Switch to systemd cgroup driver in
+          balenaEngine
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.42.0
+  date: 2019-09-13T08:06:05.129Z
+- commits:
     - subject: Update ModemManager to version 1.10.4
       hash: 6f300a3fc01521ceadd3f8a50c9157d070525dde
       body: ''
