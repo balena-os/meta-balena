@@ -14,8 +14,8 @@ DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native libxslt-native"
 SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
            file://0001-Do-not-set-Wno-unused-but-set-variable.patch \
            "
-SRC_URI[md5sum] = "f82d82b4b19482f8112fcfa60566721b"
-SRC_URI[sha256sum] = "fa556bb4ba1f1478e709b71151b4de8f7d136d80e51c64e887fc1fd8926cdc70"
+SRC_URI[md5sum] = "7452a94f0d1ca361ae51ff1d287c53f5"
+SRC_URI[sha256sum] = "3c2ca73782215664141042422759899ca9846440fc26d6223c7cf7ea4dd3c996"
 
 S = "${WORKDIR}/ModemManager-${PV}"
 

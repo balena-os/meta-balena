@@ -4,8 +4,7 @@ SECTION = "net/misc"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cbbffd568227ada506640fe950a4823b \
-                    file://libnm-util/COPYING;md5=1c4fa765d6eb3cd2fbd84344a1b816cd \
-                    file://docs/api/html/license.html;md5=233931303ef80eded167add1f60a50c1 \
+                    file://docs/api/html/license.html;md5=2d56a1b0c42e388aa86aef59b154e8c3 \
 "
 
 DEPENDS = " \
@@ -31,8 +30,8 @@ SRC_URI_append_libc-musl = " \
     file://musl/0001-Fix-build-with-musl-systemd-specific.patch \
     file://musl/0002-Fix-build-with-musl.patch \
 "
-SRC_URI[md5sum] = "c8c27116a8083bab5d5fcca0d03e988a"
-SRC_URI[sha256sum] = "c6e8df25e5a3c7309bc17664be8971689314884cdd08afdd6b0847d29d2a8ba6"
+SRC_URI[md5sum] = "81d688e9d5d81ae9da37663c1d74d010"
+SRC_URI[sha256sum] = "514e373f2c46536cacca644af859fb535c7a9ac4988a54d861d76f44c87fac84"
 
 UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/1.16/"
 UPSTREAM_CHECK_REGEX = "NetworkManager\-(?P<pver>1\.10(\.\d+)+).tar.xz"
@@ -106,6 +105,8 @@ FILES_${PN}-adsl = "${libdir}/NetworkManager/libnm-device-plugin-adsl.so"
 
 FILES_${PN} += " \
     ${libexecdir} \
+    ${libdir}/NetworkManager/dispatcher.d \
+    ${libdir}/NetworkManager/system-connections \
     ${libdir}/NetworkManager/${PV}/*.so \
     ${nonarch_libdir}/NetworkManager/VPN \
     ${nonarch_libdir}/NetworkManager/conf.d \
