@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update NetworkManager to 1.20.2
+      hash: bcb6d85cc3b75d2f41a64fc9a6e0e15b428040f1
+      body: |
+        Fixes #1660
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update NetworkManager to 1.20.2
+        changelog-entry: Update NetworkManager to 1.20.2
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update ModemManager to 1.10.6
+      hash: f6c82203c1a8f0613a900ce9d8ce749087fab99d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update ModemManager to 1.10.6
+        changelog-entry: Update ModemManager to 1.10.6
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+  version: 2.43.0
+  date: 2019-09-13T15:33:28.973Z
+- commits:
     - subject: >-
         A small fix in initramfs when /dev/console is invalid due to whatever
         reason

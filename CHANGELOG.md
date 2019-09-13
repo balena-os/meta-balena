@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.43.0
+## (2019-09-13)
+
+* Update NetworkManager to 1.20.2 [Andrei Gherzan]
+* Update ModemManager to 1.10.6 [Andrei Gherzan]
+
 # v2.42.0
 ## (2019-09-13)
 
