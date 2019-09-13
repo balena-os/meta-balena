@@ -5,9 +5,13 @@ console_null_workaround_enabled() {
 }
 
 console_null_workaround_run() {
-	if [ "$bootparam_console" = "null" ] ; then
-		exec 0> /dev/null
-		exec 1> /dev/null
-		exec 2> /dev/null
-	fi
+       if [ ! -h /proc/self/fd/0 ] ; then
+               exec 0> /dev/null
+       fi
+       if [ ! -h /proc/self/fd/1 ] ; then
+               exec 1> /dev/null
+       fi
+       if [ ! -h /proc/self/fd/2 ] ; then
+               exec 2> /dev/null
+       fi
 }
