@@ -32,7 +32,7 @@ PACKAGES_append = " \
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
 
 SUMMARY_initramfs-module-fsck = "Filesystem check for partitions"
-RDEPENDS_initramfs-module-fsck = "${PN}-base e2fsprogs-e2fsck dosfstools-fsck"
+RDEPENDS_initramfs-module-fsck = "${PN}-base e2fsprogs-e2fsck dosfstools-fsck util-linux-lsblk gptfdisk"
 FILES_initramfs-module-fsck = "/init.d/87-fsck"
 
 SUMMARY_initramfs-module-machineid = "Bind mount machine-id to rootfs"
@@ -40,7 +40,7 @@ RDEPENDS_initramfs-module-machineid = "${PN}-base initramfs-module-udev"
 FILES_initramfs-module-machineid = "/init.d/91-machineid"
 
 SUMMARY_initramfs-module-resindataexpander = "Expand the data partition to the end of device"
-RDEPENDS_initramfs-module-resindataexpander = "${PN}-base initramfs-module-udev busybox parted util-linux-lsblk"
+RDEPENDS_initramfs-module-resindataexpander = "${PN}-base initramfs-module-udev busybox parted util-linux-lsblk util-linux-blkid"
 FILES_initramfs-module-resindataexpander = "/init.d/88-resindataexpander"
 
 SUMMARY_initramfs-module-rorootfs = "Mount our rootfs"

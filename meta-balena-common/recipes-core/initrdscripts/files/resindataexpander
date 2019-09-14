@@ -3,6 +3,8 @@
 FREESPACE_LIMIT=10
 datapart=$(readlink -f /dev/disk/by-label/resin-data)
 datadev=$(lsblk $datapart -n -o PKNAME)
+# Parted print is slow. Use Parted print only once to reduce boot time.
+parted_print=$(parted -m /dev/$datadev -s unit MiB print free)
 
 resindataexpander_enabled() {
     # On flasher avoid expanding partition
@@ -11,7 +13,7 @@ resindataexpander_enabled() {
         return 1
     fi
 
-    for freespace in $(parted -m /dev/$datadev unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
+    for freespace in $(echo "$parted_print" | grep free | tail -1 | cut -d: -f4 | sed 's/MiB//g'); do
         if [ $(echo $freespace \> $FREESPACE_LIMIT | bc -l) == "1" ]; then
             return 0
         fi
@@ -20,11 +22,26 @@ resindataexpander_enabled() {
 }
 
 resindataexpander_run() {
-    info "resindataexpander: Expand extended partition... "
-    parted -s /dev/$datadev -- resizepart 4 -1s
-    info "resindataexpander: Finished expanding extended partition."
+    case "$(blkid -o value -s PTTYPE /dev/$datadev)" in
+        dos)
+            extpart_num=$(echo "$parted_print"  | grep ":::lba" | tail -1 | cut -d: -f1)
+            datapart_num=$(expr $extpart_num \+ 2)
+            ;;
+        gpt)
+            datapart_num=$(echo "$parted_print"  | grep "resin-data" | tail -1 | cut -d: -f1)
+            ;;
+        *)
+            fatal "Unrecognized partition table type."
+            ;;
+    esac
+
+    if [ -n "$extpart_num" ]; then
+        info "resindataexpander: Expand extended partition... "
+        parted -s /dev/$datadev -- resizepart $extpart_num 100%
+        info "resindataexpander: Finished expanding extended partition."
+    fi
     info "resindataexpander: Expand data partition... "
-    parted -s /dev/$datadev -- resizepart 6 -1s
+    parted -s /dev/$datadev -- resizepart $datapart_num 100%
     info "resindataexpander: Finished expanding data partition."
 
     partprobe

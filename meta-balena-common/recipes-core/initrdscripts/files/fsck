@@ -24,4 +24,14 @@ fsck_run() {
     fsck.ext4 -p /dev/disk/by-label/resin-rootA
     fsck.ext4 -p /dev/disk/by-label/resin-rootB
     fsck.ext4 -p /dev/disk/by-label/resin-state
+
+    # Correct GPT secondary header
+    datapart=$(readlink -f /dev/disk/by-label/resin-data)
+    datadev=$(lsblk $datapart -n -o PKNAME)
+    if [ "gpt" = "$(blkid -o value -s PTTYPE /dev/$datadev)" ] &&
+            ( sgdisk --verify /dev/$datadev | grep -q "[T|t]he secondary header" ) ; then
+        msg "Moving secondary GPT header to the end of the disk."
+        sgdisk --move-second-header /dev/$datadev
+        partprobe
+    fi
 }
