@@ -2,7 +2,7 @@
 
 prepare_enabled() {
     # Do not run when shell is passed in kernel cmdline
-    if [ "$bootparam_shell" = "true" ]; then
+    if [ -n "$bootparam_shell" ] || [ -n "$bootparam_shell_debug" ]; then
         return 1
     fi
 
