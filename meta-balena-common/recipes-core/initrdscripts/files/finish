@@ -19,6 +19,9 @@ finish_run() {
         mount --move /proc $ROOTFS_DIR/proc
         mount --move /sys $ROOTFS_DIR/sys
 
+        # Kill watchdog before running systemd. This variable is exported from watchdog module
+        [ -n "$INITRAMFS_WATCHDOG_PID" ] && kill "$INITRAMFS_WATCHDOG_PID" || true
+
         cd $ROOTFS_DIR
         exec switch_root -c /dev/console $ROOTFS_DIR ${bootparam_init:-/sbin/init}
     else

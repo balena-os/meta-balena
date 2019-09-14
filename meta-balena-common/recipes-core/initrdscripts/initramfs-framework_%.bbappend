@@ -2,6 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
     file://prepare \
+    file://watchdog \
     file://fsck \
     file://machineid \
     file://resindataexpander \
@@ -11,6 +12,7 @@ SRC_URI_append = " \
     "
 
 do_install_append() {
+    install -m 0755 ${WORKDIR}/watchdog ${D}/init.d/69-watchdog
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
@@ -27,6 +29,7 @@ PACKAGES_append = " \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
+    initramfs-module-watchdog \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -54,3 +57,7 @@ FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
 SUMMARY_initramfs-module-prepare = "Prepare initramfs console"
 RDEPENDS_initramfs-module-prepare = "${PN}-base"
 FILES_initramfs-module-prepare = "/init.d/70-prepare"
+
+SUMMARY_initramfs-module-watchdog = "initramfs watchdog"
+RDEPENDS_initramfs-module-watchdog = "${PN}-base busybox"
+FILES_initramfs-module-watchdog = "/init.d/69-watchdog"

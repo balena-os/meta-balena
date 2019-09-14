@@ -1,0 +1,10 @@
+#!/bin/sh
+
+watchdog_enabled() {
+    [ -c /dev/watchdog ] && return 0 || return 1
+}
+
+watchdog_run() {
+    watchdog -t 10 -T 60 -F /dev/watchdog &
+    export INITRAMFS_WATCHDOG_PID="$!"
+}
