@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'initramfs-framework: add watchdog module'
+      hash: 0c3e8a8a08cef5bb37db85d1805acc6ede378b16
+      body: |
+        In my board's default BSP enables Watchdog and its timer is 32 seconds
+        by default. I found that initramfs scripts takes more time than that
+        at initial state (mainly due to slow GNU parted operations) so that
+        Watchdog is triggered before entering systemd, causing infinite
+        rebooting.
+
+        This watchdog module will prevent unexpected rebooting by the watchdog
+        timer. The watchdog process should be killed before entering systemd
+        as systemd has own watchdogd. I use variable export approach to get
+        its pid than using ps command becuase ps command prints nothing because
+        /proc is just moved before.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Bumsik Kim k.bumsik@gmail.com
+        signed-off-by: Bumsik Kim k.bumsik@gmail.com
+      author: Bumsik Kim
+  version: 2.39.1
+  date: 2019-09-16T12:07:18.010Z
+- commits:
     - subject: 'usb-modeswitch-data: Switch Huawei E3372 12d1:1f01 to mbim mode'
       hash: bb672725f4460402af64ecb7d74d33526f5ed7c1
       body: |
