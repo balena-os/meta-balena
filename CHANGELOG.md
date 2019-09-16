@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.39.1
+## (2019-09-16)
+
+* initramfs: add support for GPT on SD Card and flexible partition numbers [Bumsik Kim]
+
 # v2.39.0
 ## (2019-07-31)
 

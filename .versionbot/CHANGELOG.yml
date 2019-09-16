@@ -1,4 +1,40 @@
 - commits:
+    - subject: 'initramfs: add support for GPT on SD Card and flexible partition numbers'
+      hash: af1f40ac4983e38ddee84809891c0e6938d51c33
+      body: |
+        STM32MP157C-DK2 requires special partition configurations on a SD card
+        that it must be GPT formatted and it must have two extra partitions for
+        U-Boot FSBL and SSBL. The current resindataexpander script has some
+        problems with this configurations:
+
+          1. The board is stucked at "parted print free" command in
+        resindataexpander_enabled(), printing the following and requiring the
+        user to type "Fix" in interactive mode:
+
+        > Warning: Not all of the space available to /dev/mmcblk0 appears to be
+        used, you can fix the GPT to use all of the space (an extra 60694528
+        blocks) or continue with the current setting? Fix/Ignore?
+
+        To solve this issue, commands to fix the backup GPT header are added in
+        fsck script and "-s" flag is added to prevent prompts for user
+        intervention.
+
+          2. Hardcoded partition numbers for extended partition and resin-data
+        should be fixed because there is no extended partition on GPT and the
+        SD card for this board has two extra partitions. resindataexpander is
+        fixed to get the partition numbers in a more flexible way.
+
+          3. "-1s" in parted command doesn't work with GPT because of the backup
+        GPT header located at the end of the disk. Use "100%" instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Bumsik Kim k.bumsik@gmail.com
+        signed-off-by: Bumsik Kim k.bumsik@gmail.com
+      author: Bumsik Kim
+  version: 2.39.1
+  date: 2019-09-16T12:09:43.204Z
+- commits:
     - subject: 'usb-modeswitch-data: Switch Huawei E3372 12d1:1f01 to mbim mode'
       hash: bb672725f4460402af64ecb7d74d33526f5ed7c1
       body: |
