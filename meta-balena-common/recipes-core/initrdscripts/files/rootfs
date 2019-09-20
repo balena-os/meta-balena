@@ -23,7 +23,12 @@ rootfs_run() {
 
             if [ "`echo ${bootparam_root} | cut -c1-5`" = "UUID=" ]; then
                 root_uuid=`echo $bootparam_root | cut -c6-`
-                bootparam_root="/dev/disk/by-uuid/$root_uuid"
+                # If the UUIDs have been regenerated there is no by-uuid link
+                if [ -L "/dev/disk/by-uuid/$root_uuid" ];then
+                    bootparam_root="/dev/disk/by-uuid/$root_uuid"
+                else
+                    bootparam_root="/dev/disk/by-state/active"
+                fi
             fi
 
             if [ "`echo ${bootparam_root} | cut -c1-9`" = "PARTUUID=" ]; then
@@ -32,8 +37,12 @@ rootfs_run() {
             fi
 
             if [ "`echo ${bootparam_root} | cut -c1-6`" = "LABEL=" ]; then
-                root_uuid=`echo $bootparam_root | cut -c7-`
-                bootparam_root="/dev/disk/by-label/$root_uuid"
+                root_label=`echo $bootparam_root | cut -c7-`
+                bootparam_root="$(get_state_path_from_label "$root_label")"
+		if [ "${bootparam_flasher}" = "true" ] && [ ! -L ${bootparam_root} ]; then
+                    bootparam_root="/dev/disk/by-label/$root_label"
+	        fi
+                info "Using bootparam_root $bootparam_root for $root_label"
             fi
 
             if [ -e "$bootparam_root" ]; then
@@ -50,6 +59,7 @@ rootfs_run() {
                 if [ -n "$bootparam_rootfstype" ]; then
                     flags="$flags -t$bootparam_rootfstype"
                 fi
+                info "Using $bootparam_root as root filesystem."
                 mount $flags $bootparam_root $ROOTFS_DIR
                 if [ -d $ROOTFS_DIR/dev ]; then
                     break
@@ -64,4 +74,7 @@ rootfs_run() {
         sleep $delay
         C=$(( $C + 1 ))
     done
+
+    # Move the /run mountpoint to the rootfs mountpoint
+    mount -n -o move /run "${ROOTFS_DIR}/run"
 }
