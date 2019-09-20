@@ -1,21 +1,57 @@
 #!/bin/sh
 
+# Copyright 2019 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# shellcheck disable=SC2039
 set -o errexit
 set -o pipefail
 
-dev=$1
+[ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] && exit 1
 
-# Only when root is mounted we can differenciate
-ROOT_MOUNTED=$(findmnt --output LABEL | grep resin-root | wc -l)
-if [ "$ROOT_MOUNTED" -eq 0 ]; then
-	exit 1
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
+part=$1
+label=$2
+parent=$3
+
+# If the UUIDs have been regenerated in this boot, the root UUID is stored
+# on a temporary file, otherwise fetch from the kernel command line
+new_root="/run/initramfs/bootparam_root"
+if [ -f "${new_root}" ]; then
+	ruuid=$(cat "${new_root}" | cut -c6-)
+else
+	ruuid=$(get_cmdline_root_uuid)
 fi
-
-for mountpoint in $(findmnt --noheadings --output TARGET "$dev"); do
-    if [ "$mountpoint" = "/" ] || [ "$mountpoint" = "/mnt/sysroot/active" ]; then
-        echo 'RESIN_UPDATE_STATE=active'
-        exit 0
-    fi
-done
-
-echo 'RESIN_UPDATE_STATE=inactive'
+# Determine if the partition is on the same drive as root
+rpdev=$(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1) || true
+if [ "${rpdev}" = "${parent}" ]; then
+	echo "RESIN_FS_USE=${label}"
+	# Determine if its the active or inactive partition. The active one's
+	# UUID is passed by the bootloader in the kernel command line
+	case $label in
+		resin-root*)
+			rdev=$(lsblk -nlo name,uuid | grep "${ruuid}" | cut -d " " -f1)
+			if [ "/dev/${rdev}" == "${part}" ]; then
+				echo "RESIN_UPDATE_STATE=active"
+			else
+				echo "RESIN_UPDATE_STATE=inactive"
+			fi
+			;;
+		*) ;;
+	esac
+	exit 0
+fi
+exit 0
