@@ -1,32 +1,63 @@
 #!/bin/sh
 
 FREESPACE_LIMIT=10
-datapart=$(readlink -f /dev/disk/by-label/resin-data)
-datadev=$(lsblk $datapart -n -o PKNAME)
+datapart=$(get_state_path_from_label "resin-data")
+datapartdev=$(basename $(readlink -f "${datapart}"))
+datadev=$(lsblk "$(readlink -f "$datapart")" -n -o PKNAME)
+
+get_part_table_type() {
+    parted -s "$1" print | grep "Partition Table" | tr -d " " |cut -d ":" -f2
+}
+
+pttype=$(get_part_table_type "/dev/${datadev}")
 
 resindataexpander_enabled() {
     # On flasher avoid expanding partition
+    # shellcheck disable=SC2154
     if [ "$bootparam_flasher" = "true" ]; then
-        echo "[INFO] Flasher detected. Avoiding expand partition mechanism."
+        info "Flasher detected. Avoiding expand partition mechanism."
         return 1
     fi
 
-    for freespace in $(parted -m /dev/$datadev unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
-        if [ $(echo $freespace \> $FREESPACE_LIMIT | bc -l) == "1" ]; then
-            return 0
-        fi
-    done
-    return 1
+    if ! wait4file "$datapart" "300"; then
+	    error "Timeout while waiting for data partition to be detected. Data partition expansion will not be tried."
+	    return 1
+    fi
+
+    # If the secondary GPT is not the end of the disk, parted will ask
+    # to fix it. If GPT is already fixed, nothing else happens.
+    # This currently only works in interactive mode
+    if [ "${pttype}" = "gpt" ]; then
+	    echo "Fix" | parted  ---pretend-input-tty /dev/${datadev} print 2>&1 > /dev/null
+	    partprobe
+	    sync
+    fi
+
+    return 0
 }
 
 resindataexpander_run() {
-    info "resindataexpander: Expand extended partition... "
-    parted -s /dev/$datadev -- resizepart 4 -1s
-    info "resindataexpander: Finished expanding extended partition."
-    info "resindataexpander: Expand data partition... "
-    parted -s /dev/$datadev -- resizepart 6 -1s
-    info "resindataexpander: Finished expanding data partition."
+    part_number=$(cat /sys/class/block/"${datapartdev}"/partition)
 
-    partprobe
-    sync
+    # lsblk works on block devices only
+    for freespace in $(parted -m "/dev/$datadev" unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
+        if [ "$(echo "$freespace" \> $FREESPACE_LIMIT | bc -l)" = "1" ]; then
+		# msdos partition types with more than 4 partitions need to
+		# convert the 4th in an extended partition
+		if [ "${pttype}" = "msdos" ] && [ "${part_number}" -gt 4 ]; then
+	            info "resindataexpander: Expand extended partition... "
+	            parted -s "/dev/$datadev" -- resizepart 4 -1s
+	            info "resindataexpander: Finished expanding extended partition."
+	        fi
+	        info "resindataexpander: Expand data partition... "
+	        parted -s "/dev/$datadev" -- resizepart "${part_number}" 100%
+	        info "resindataexpander: Finished expanding data partition."
+	        partprobe
+	        sync
+                # We return when we've done the expansion
+		info "Data partition at $datapart expanded."
+                return
+        fi
+    done
+    info "No data partition expanding needed."
 }
