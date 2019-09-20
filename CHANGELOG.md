@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.44.0
+## (2019-09-20)
+
+* os-internals.md: Document file-system labels vs `UUIDs` [Andrei Gherzan]
+* Store initramfs logs in /run/initramfs [Andrei Gherzan]
+* Fix initramfs fsck warnings for the boot partition [Andrei Gherzan]
+* Switch to built-in FAT kernel configs [Andrei Gherzan]
+* Add option to disable kernel headers from being built. [Zubair Lutfullah Kakakhel]
+
 # v2.43.0
 ## (2019-09-13)
 

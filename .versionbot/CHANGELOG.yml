@@ -1,4 +1,75 @@
 - commits:
+    - subject: 'os-internals.md: Document file-system labels vs `UUIDs`'
+      hash: ad1e4008786b9e4fd5c500a4814549eb406a35c2
+      body: |
+        Fixes #1092
+      footer:
+        Change-type: minor
+        change-type: minor
+        Chnagelog-entry: Add support for using file-system UUIDs in balenaOS
+        chnagelog-entry: Add support for using file-system UUIDs in balenaOS
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Store initramfs logs in /run/initramfs
+      hash: b7251b99d133567c931d07eb1e7d0c2def2643bf
+      body: |
+        Also, we include shared scripts functionality by sourcing the relevant
+        files.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Store initramfs logs in /run/initramfs
+        changelog-entry: Store initramfs logs in /run/initramfs
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Fix initramfs fsck warnings for the boot partition
+      hash: 1e0f42204869df86a4988df0c22c761769c04b7e
+      body: |
+        When running fsck, the tool will complain when needed gconv modules are
+        missing. Include them in the initramfs where we fsck the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix initramfs fsck warnings for the boot partition
+        changelog-entry: Fix initramfs fsck warnings for the boot partition
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Switch to built-in FAT kernel configs
+      hash: 74905999eeaa3933c8e6fcfc7934aea629ed6c4e
+      body: |
+        balenaOS uses FAT as a fs type for the boot/first partition. This is
+        currently hardcoded so let's have the related kernel configs built in
+        the kernel image. In this way we don't have to handle kernel modules in
+        the initramfs (when needed).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Switch to built-in FAT kernel configs
+        changelog-entry: Switch to built-in FAT kernel configs
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Add option to disable kernel headers from being built.
+      hash: 1f5940898a654c770858f802ea978ddb986082f4
+      body: |
+        These can take quite a bit of build time. Add an option to disable
+        the recipes from being built.
+
+        Fixes #1659
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add option to disable kernel headers from being built.
+        changelog-entry: Add option to disable kernel headers from being built.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.44.0
+  date: 2019-09-20T12:00:37.873Z
+- commits:
     - subject: Update NetworkManager to 1.20.2
       hash: bcb6d85cc3b75d2f41a64fc9a6e0e15b428040f1
       body: |
