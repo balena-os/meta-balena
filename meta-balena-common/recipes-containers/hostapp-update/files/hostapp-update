@@ -39,7 +39,7 @@ fi
 
 # Initialize sysroot
 mkdir -p /mnt/sysroot
-for dir in 'dev' 'etc' 'balena' 'hostapps' 'mnt/state' 'proc' 'sbin' 'sys' 'tmp'; do
+for dir in 'dev' 'etc' 'balena' 'hostapps' 'mnt/state' 'proc' 'run' 'sbin' 'sys' 'tmp'; do
 	mkdir -p "$SYSROOT/$dir"
 done
 if [ ! -f "$SYSROOT/etc/machine-id" ]; then
