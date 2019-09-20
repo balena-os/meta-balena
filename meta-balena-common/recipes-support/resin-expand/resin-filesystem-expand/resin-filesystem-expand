@@ -1,6 +1,9 @@
 #!/bin/sh
 
-DATA_PARTITION=/dev/disk/by-label/resin-data
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
+DATA_PARTITION="$(get_cmdline_uuid_label_path "resin-data")"
 LABEL_TIMEOUT=300
 
 # Waiting for the filesystem label
