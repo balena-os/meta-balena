@@ -1,16 +1,24 @@
 #!/bin/sh
 
-prepare_enabled() {
-    # Do not run when shell is passed in kernel cmdline
-    if [ "$bootparam_shell" = "true" ]; then
-        return 1
-    fi
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
 
+prepare_enabled() {
     return 0
 }
 
 prepare_run() {
-    # We would like the output of stdout/stderr in kernel messages to
-    # read them from userspace for debugging purposes.
-    exec >/dev/kmsg 2>&1
+    # Mount /run here so we can store logs and other data from initramfs
+    if ! mount -t tmpfs -o "nosuid,nodev,strictatime,mode=0755" tmpfs /run; then
+        warn "Couldn't mount /run so initramfs logs will not be persistent."
+    fi
+    mkdir -m 0755 /run/initramfs
+
+    # shellcheck disable=SC2154
+    if [ "$bootparam_shell" != "true" ]; then
+        # Export stdout and stderr to file
+        exec >/run/initramfs/initramfs.debug 2>&1
+    fi
 }
