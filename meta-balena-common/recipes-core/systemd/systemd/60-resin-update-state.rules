@@ -1,1 +1,3 @@
-ENV{ID_FS_LABEL_ENC}=="resin-root*", IMPORT{program}="/lib/udev/resin_update_state_probe $devnode", SYMLINK+="disk/by-state/$env{RESIN_UPDATE_STATE}"
+ENV{ID_FS_LABEL_ENC}=="resin-root*", IMPORT{program}="/lib/udev/resin_update_state_probe $devnode $env{ID_FS_UUID_ENC}"
+ENV{ID_FS_LABEL_ENC}=="resin-root*", ENV{RESIN_UPDATE_STATE}=="active", SYMLINK+="disk/by-state/active"
+ENV{ID_FS_LABEL_ENC}=="resin-root*", ENV{RESIN_UPDATE_STATE}=="inactive", SYMLINK+="disk/by-state/inactive"

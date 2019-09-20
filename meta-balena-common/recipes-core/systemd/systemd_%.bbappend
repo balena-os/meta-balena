@@ -84,7 +84,7 @@ do_install_append() {
 
 FILES_udev += "${rootlibexecdir}/udev/resin_update_state_probe"
 
-RDEPENDS_${PN}_append = " resin-ntp-config util-linux"
+RDEPENDS_${PN}_append = " os-helpers-fs resin-ntp-config util-linux"
 
 # Network configuration is managed by NetworkManager. ntp is managed by chronyd
 PACKAGECONFIG_remove = "resolved networkd timesyncd"
