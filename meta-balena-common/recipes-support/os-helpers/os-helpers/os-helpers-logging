@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# Copyright 2019 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Simple logging functionality for OS scripts
+#
+
+ME=$(basename "$0")
+
+log () {
+    _level="$1"
+    _message="$2"
+    printf "[%s][%s] %s\n" "$ME" "$_level" "$_message"
+}
+
+fail () {
+    error "$1"
+    exit 1
+}
+
+error () {
+    log "ERROR" "$1"
+}
+
+warn () {
+    log "WARN" "$1"
+}
+
+info () {
+    log "INFO" "$1"
+}
