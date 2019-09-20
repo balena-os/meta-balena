@@ -2,6 +2,8 @@ SUMMARY = "Resin systemd mount services"
 
 include resin-mounts.inc
 
+RDEPENDS_${PN} += "os-helpers-fs"
+
 SRC_URI += " \
 	file://resin-boot.service \
 	file://resin-data.service \

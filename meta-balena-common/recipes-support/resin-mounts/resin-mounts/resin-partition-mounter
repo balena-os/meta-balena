@@ -1,121 +1,139 @@
 #!/bin/sh
 
+# Copyright 2019 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Tool for mounting a balenaOS partition
+#
+
 set -e
 
-LABEL_TIMEOUT=1900
+TIMEOUT_LOOPS=300 # ~ 100ms/loop * 300loops = 30000ms = 30s
 
+#
+# Help message
+#
 help () {
-	cat << EOF
-Mount a resin partition label
+    cat << EOF
+Tool for mounting a balenaOS partition
 $0 <ARGUMENTS>
 
 ARGUMENTS:
-	-h, --help
-		Print this message.
-	--mount <LABEL>
-		Action: Mount label
-	--umount <LABEL>
-		Action: Unmount label
+    -h, --help
+        Print this message
+    --mount <LABEL>
+        Action: Mount label
+    --umount <LABEL>
+        Action: Unmount label
+    --sysroot
+        Request the action on a sysroot label
 EOF
 }
 
 # Parse arguments
 while [ "$#" -ge 1 ]; do
-	i="$1"
-	case $i in
-		-h|--help)
-			help
-			exit 0
-			;;
-		--mount)
-			if [ -z "$2" ]; then
-				echo "ERROR: $1 argument needs a value."
-			fi
-			part_label="$2"
-			action="mount"
-			shift
-			;;
-		--umount)
-			if [ -z "$2" ]; then
-				echo "ERROR: $1 argument needs a value."
-			fi
-			part_label="$2"
-			action="umount"
-			shift
-			;;
-		--sysroot)
-			sysroot="yes"
-			;;
-		*)
-			echo "ERROR: Unrecognized option $1."
-			help
-			exit 1
-			;;
-	esac
-	shift
+    i="$1"
+    case $i in
+        -h|--help)
+            help
+            exit 0
+            ;;
+        --mount)
+            if [ -z "$2" ]; then
+                echo "ERROR: $1 argument needs a value."
+            fi
+            target="$2"
+            action="mount"
+            shift
+            ;;
+        --umount)
+            if [ -z "$2" ]; then
+                echo "ERROR: $1 argument needs a value."
+            fi
+            target="$2"
+            action="umount"
+            shift
+            ;;
+        --sysroot)
+            sysroot="yes"
+            ;;
+        *)
+            echo "ERROR: Unrecognized option $1."
+            help
+            exit 1
+            ;;
+    esac
+    shift
 done
 
 if [ -z "$action" ]; then
-	echo "ERROR: Required arguments not provided."
-	help
-	exit 1
+    echo "ERROR: Required arguments not provided."
+    help
+    exit 1
 fi
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
+# Figure out what (target_path) and where (target_mountpoint)
 if [ -z "$sysroot" ]; then
-	part_mountpoint="/mnt/${part_label#resin-}"
-	label_path="/dev/disk/by-label/$part_label"
+    target_mountpoint="/mnt/${target#resin-}"
+    target_path="$(get_state_path_from_label "$target")"
 else
-	part_mountpoint="/mnt/sysroot/$part_label"
-	label_path="/dev/disk/by-state/$part_label"
+    target_mountpoint="/mnt/sysroot/$target"
+    target_path="/dev/disk/by-state/$target"
 fi
 
-if [ ! -d "$part_mountpoint" ]; then
-	echo "ERROR: Target mountpoint $part_mountpoint not found."
-	exit 1
+if [ ! -d "$target_mountpoint" ]; then
+    echo "ERROR: Target mountpoint $target_mountpoint not found."
+    exit 1
+fi
+if ! wait4file "$target_path" "$TIMEOUT_LOOPS"; then
+    echo "ERROR: Timeout while waiting for $target_path to come up."
+    exit 1
 fi
 
-
-# Waiting for the filesystem label
-start="$(date +%s)"
-end="$start"
-while [ ! -L "$label_path" ]; do
-	if [ $((end - start)) -le "$LABEL_TIMEOUT" ]; then
-		sleep 0.1 && end=$((end + 1))
-	else
-		echo "ERROR: Timeout while waiting for filesystem label to appear."
-		exit 1
-	fi
-done
-
+# Carry out requested operation on target_path and/or target_mountpoint
 mounted=false
-for m in $(findmnt --output TARGET --canonicalize --noheading "$label_path"); do
-	if [ "$m" = "$part_mountpoint" ]; then
-		mounted=true
-		break
-	fi
+for m in $(findmnt --output TARGET --canonicalize --noheading "$target_path"); do
+    if [ "$m" = "$target_mountpoint" ]; then
+        mounted=true
+        break
+    fi
 done
-
 case $action in
-	mount)
-		if [ "$mounted" = true ]; then
-			echo "INFO: $label_path already mounted in $part_mountpoint."
-			exit 0
-		else
-			echo "INFO: Mounting $label_path in $part_mountpoint."
-			mount "$label_path" "$part_mountpoint"
-		fi
-		;;
-	umount)
-		if [ "$mounted" = false ]; then
-			echo "INFO: $part_mountpoint already unmounted."
-			exit 0
-		else
-			echo "INFO: Unmounting $label_path."
-			umount "$part_mountpoint"
-		fi
-		;;
-	*)
-		echo "ERROR: Unknown action to carry on."
-		exit 1
-		;;
+    mount)
+        if [ "$mounted" = true ]; then
+            echo "INFO: $target_path ($target) already mounted in $target_mountpoint."
+            exit 0
+        else
+            echo "INFO: Mounting $target_path ($target) in $target_mountpoint."
+            mount "$target_path" "$target_mountpoint"
+        fi
+        ;;
+    umount)
+        if [ "$mounted" = false ]; then
+            echo "INFO: $target_mountpoint already unmounted."
+            exit 0
+        else
+                echo "INFO: Unmounting $target_path ($target)."
+            umount "$target_mountpoint"
+        fi
+        ;;
+    *)
+        echo "ERROR: Unknown action to carry on."
+        exit 1
+        ;;
 esac
