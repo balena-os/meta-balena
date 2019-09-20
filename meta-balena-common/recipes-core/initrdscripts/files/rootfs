@@ -32,8 +32,8 @@ rootfs_run() {
             fi
 
             if [ "`echo ${bootparam_root} | cut -c1-6`" = "LABEL=" ]; then
-                root_uuid=`echo $bootparam_root | cut -c7-`
-                bootparam_root="/dev/disk/by-label/$root_uuid"
+                root_label=`echo $bootparam_root | cut -c7-`
+                bootparam_root="$(get_cmdline_uuid_label_path "$root_label")"
             fi
 
             if [ -e "$bootparam_root" ]; then
@@ -50,6 +50,7 @@ rootfs_run() {
                 if [ -n "$bootparam_rootfstype" ]; then
                     flags="$flags -t$bootparam_rootfstype"
                 fi
+                info "Using $bootparam_root as root filesystem."
                 mount $flags $bootparam_root $ROOTFS_DIR
                 if [ -d $ROOTFS_DIR/dev ]; then
                     break
@@ -64,4 +65,7 @@ rootfs_run() {
         sleep $delay
         C=$(( $C + 1 ))
     done
+
+    # Move the /run mountpoint to the rootfs mountpoint
+    mount -n -o move /run "${ROOTFS_DIR}/run"
 }
