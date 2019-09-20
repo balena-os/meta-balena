@@ -2,26 +2,35 @@
 
 fsck_enabled() {
     # On flasher we don't run fsck
+    # shellcheck disable=SC2154
     if [ "$bootparam_flasher" = "true" ]; then
         echo "[INFO] Flasher detected. We don't run fsck on the partitions when provisioning."
         return 1
     fi
+    return 0
+}
 
+fsck_run() {
     cat > "/etc/e2fsck.conf" <<EOF
 [options]
 broken_system_clock=1
 EOF
 
-    return 0
-}
-
-fsck_run() {
     # fsck uses mtab to see if a device is mounted
     if [ ! -e "/etc/mtab" ]; then
         ln -sf /proc/mounts /etc/mtab
     fi
-    fsck.vfat -a -w /dev/disk/by-label/resin-boot
-    fsck.ext4 -p /dev/disk/by-label/resin-rootA
-    fsck.ext4 -p /dev/disk/by-label/resin-rootB
-    fsck.ext4 -p /dev/disk/by-label/resin-state
+
+    disk="$(get_state_path_from_label "resin-boot")"
+    info "Running filesystem checks on partition resin-boot ($disk)"
+    fsck.vfat -a -w "${disk}"
+    disk="$(get_state_path_from_label "resin-rootA")"
+    info "Running filesystem checks on partition resin-rootA ($disk)"
+    fsck.ext4 -p "${disk}"
+    disk="$(get_state_path_from_label "resin-rootB")"
+    info "Running filesystem checks on partition resin-rootB ($disk)"
+    fsck.ext4 -p "${disk}"
+    disk="$(get_state_path_from_label "resin-state")"
+    info "Running filesystem checks on partition resin-state ($disk)"
+    fsck.ext4 -p "${disk}"
 }
