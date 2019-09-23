@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.43.1
+## (2019-09-23)
+
+* resin-supervisor: Expose container ID via env variable [Roman Mazur]
+
 # v2.43.0
 ## (2019-09-13)
 

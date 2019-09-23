@@ -1,4 +1,16 @@
 - commits:
+    - subject: 'resin-supervisor: Expose container ID via env variable'
+      hash: 95638f75a84422ab429ac27b7ca1209ff0da1d5d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Roman Mazur <roman@balena.io>
+        signed-off-by: Roman Mazur <roman@balena.io>
+      author: Roman Mazur
+  version: 2.43.1
+  date: 2019-09-23T13:54:28.118Z
+- commits:
     - subject: Update NetworkManager to 1.20.2
       hash: bcb6d85cc3b75d2f41a64fc9a6e0e15b428040f1
       body: |
