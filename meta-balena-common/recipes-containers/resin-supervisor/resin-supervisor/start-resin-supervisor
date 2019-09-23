@@ -74,6 +74,7 @@ runSupervisor() {
     balena rm --force resin_supervisor || true
     balena run --privileged --name resin_supervisor \
         --net=host \
+        --cidenv=SUPERVISOR_CONTAINER_ID \
         -v /var/run/balena-engine.sock:/var/run/balena-engine.sock \
         -v "$CONFIG_PATH:/boot/config.json"  \
         -v /mnt/data/apps.json:/boot/apps.json \
