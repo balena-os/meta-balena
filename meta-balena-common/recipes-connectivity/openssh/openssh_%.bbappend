@@ -1,13 +1,18 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/balena-files:"
 
 SRC_URI_append = " \
+    file://cloud-public-sshkeys \
     file://ssh_keys_merger \
     file://ssh.service \
 "
 
 SYSTEMD_SERVICE_${PN}-sshd += "sshdgenkeys.service"
 
+# Have a dedicated user for running AuthorizedKeysCommand
+USERADD_PARAM_${PN}-sshd_append = "; --system --no-create-home --home-dir / --shell /bin/false --user-group sshd-authcommands"
+
 FILES_${PN}-sshd += " \
+    ${libexecdir}/${BPN}/cloud-public-sshkeys \
     ${sysconfdir}/avahi/services/ssh.service \
     ${sysconfdir}/systemd/system/sshdgenkeys.service.d/sshgenkeys.conf \
     ${sbindir}/ssh_keys_merger \
@@ -30,6 +35,12 @@ do_install_append () {
     echo "HostKey /etc/ssh/hostkeys/ssh_host_dsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
     echo "HostKey /etc/ssh/hostkeys/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
     echo "HostKey /etc/ssh/hostkeys/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+
+    echo "# Get public SSH keys from the API when available" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+    echo "AuthorizedKeysCommand ${libexecdir}/${BPN}/cloud-public-sshkeys %u" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+    echo "AuthorizedKeysCommandUser sshd-authcommands" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+
+    install -D -m 0755 ${WORKDIR}/cloud-public-sshkeys ${D}${libexecdir}/${BPN}/cloud-public-sshkeys
 }
 
 # We need dropbear to be able to migrate host keys in the update hooks

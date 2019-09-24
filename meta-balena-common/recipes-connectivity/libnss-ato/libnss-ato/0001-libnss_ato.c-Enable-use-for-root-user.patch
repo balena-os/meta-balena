@@ -1,0 +1,28 @@
+From aad1c867e60ab328aad3f15c682b37eadf223218 Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@balena.io>
+Date: Fri, 10 May 2019 17:25:57 +0100
+Subject: [PATCH] libnss_ato.c: Enable use for root user
+
+Upstream-status: Inappropriate [configuration]
+Signed-off-by: Andrei Gherzan <andrei@balena.io>
+---
+ libnss_ato.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libnss_ato.c b/libnss_ato.c
+index bfd02b2..8e51b80 100644
+--- a/libnss_ato.c
++++ b/libnss_ato.c
+@@ -28,8 +28,8 @@
+ #include <stdio.h>
+
+ /* for security reasons */
+-#define MIN_UID_NUMBER   500
+-#define MIN_GID_NUMBER   500
++#define MIN_UID_NUMBER   0
++#define MIN_GID_NUMBER   0
+ #define CONF_FILE "/etc/libnss-ato.conf"
+
+ /*
+--
+2.17.1
