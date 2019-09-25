@@ -37,7 +37,7 @@ do_compile() {
     cp "${WORKDIR}"/Dockerfile ${B}/work/
     cp -r "${WORKDIR}"/example_module ${B}/work/
 
-    IMAGE_ID=$(DOCKER_API_VERSION=1.22 docker build --build-arg kernel_arch=${ARCH} --build-arg cross_compile_prefix=${DEBIAN_TUPLE} ${B}/work)
+    IMAGE_ID=$(DOCKER_API_VERSION=1.22 docker build --no-cache --build-arg kernel_arch=${ARCH} --build-arg cross_compile_prefix=${DEBIAN_TUPLE} ${B}/work)
     # We don't pipe in previous line so that we can catch errors.
     IMAGE_ID=$(echo "$IMAGE_ID" | grep -o -E '[a-z0-9]{12}' | tail -n1)
     DOCKER_API_VERSION=1.22 docker rmi "$IMAGE_ID"
@@ -46,3 +46,6 @@ do_compile() {
 # Explicitly depend on the do_deploy step as we use the deployed artefacts. DEPENDS doesn't cover that
 do_compile[depends] += "kernel-devsrc:do_deploy"
 do_compile[depends] += "kernel-modules-headers:do_deploy"
+
+# Run test on every build
+do_compile[nostamp] = "1"
