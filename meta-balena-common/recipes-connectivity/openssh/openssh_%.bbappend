@@ -19,8 +19,8 @@ FILES_${PN}-sshd += " \
 "
 
 do_install_append () {
-    # Advertise SSH service using an avahi service file                                                                                                                                                                                                                                                                                                                   
-    mkdir -p ${D}/etc/avahi/services/                                                                                                                                                                                                                                                                                                                                                    
+    # Advertise SSH service using an avahi service file
+    mkdir -p ${D}/etc/avahi/services/
     install -m 0644 ${WORKDIR}/ssh.service ${D}/etc/avahi/services
 
     # SSH keys merger tool for custom SSH keys
@@ -41,6 +41,11 @@ do_install_append () {
     echo "AuthorizedKeysCommandUser sshd-authcommands" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 
     install -D -m 0755 ${WORKDIR}/cloud-public-sshkeys ${D}${libexecdir}/${BPN}/cloud-public-sshkeys
+
+    # Disable PasswordAuthentication for production builds.
+    if ${@bb.utils.contains('DISTRO_FEATURES','development-image','false','true',d)}; then
+        sed -i 's/^[#[:space:]]*PasswordAuthentication yes*/PasswordAuthentication no/' ${D}${sysconfdir}/ssh/sshd_config_readonly
+    fi
 }
 
 # We need dropbear to be able to migrate host keys in the update hooks
