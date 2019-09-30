@@ -2,6 +2,6 @@
 
 set -o errexit
 
-if [ "$(balena inspect --format '{{.State.Health.Status}}' resin_supervisor)" = "unhealthy" ]; then
+if [ "$(balena images -q $SUPERVISOR_IMAGE 2> /dev/null" = "" ]; then
     exit 1
 fi
