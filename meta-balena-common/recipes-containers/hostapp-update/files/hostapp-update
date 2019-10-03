@@ -2,6 +2,20 @@
 
 set -eu
 
+run_current_hooks_and_recover () {
+	if [ "$hooks_rollback" = 1 ]; then
+		# Run the current ones to cleanup the system.
+		echo "Failed to run the new hooks. Running current hooks... "
+		DURING_UPDATE=0 hostapp-update-hooks || true
+	else
+		echo "Failed to run the new hooks... "
+	fi
+	# unmount if we have mounted the new rootfs
+	umount $new_rootfs || true
+	echo "Update failed."
+	exit 1
+}
+
 local_image=""
 remote_image=""
 reboot=0
@@ -82,29 +96,42 @@ sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
 
-if [ "$hooks" = 1 ]; then
-	# Run the defined hooks in the host OS we update to
-	if balena run --privileged --rm -v /dev:/dev -v /mnt:/mnt -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
-		echo "New hooks ran successfully."
-	else
-		# Something went wrong with the new hooks.
-		if [ "$hooks_rollback" = 1 ]; then
-			# Run the current ones to cleanup the system.
-			echo "Failed to run the new hooks. Running current hooks... "
-			hostapp-update-hooks || true
-		else
-			echo "Failed to run the new hooks... "
-		fi
-		echo "Update failed."
-		exit 1
-	fi
-fi
-
 # Mark it as current hostapp
 ln -srf "$SYSROOT/hostapps/$CONTAINER_ID" "$SYSROOT/current.new"
 sync -f "$SYSROOT"
 mv -T "$SYSROOT/current.new" "$SYSROOT/current"
 sync -f "$SYSROOT"
+
+if [ "$hooks" = 1 ]; then
+	# Run before from the new OS we are updating to in existing OS environment
+	new_rootfs=$($SYSROOT/current/boot/init -sysroot $SYSROOT)
+	if [ -f "$new_rootfs/usr/bin/hostapp-update-hooks-v2" ]; then
+		if DURING_UPDATE=1 $new_rootfs/usr/bin/hostapp-update-hooks-v2 --before --dir "$new_rootfs/etc/hostapp-update-hooks.d/" ; then
+			echo "Before hooks (old os) ran successfully"
+		else
+			run_current_hooks_and_recover
+		fi
+	fi
+	umount $new_rootfs
+
+	# Run the defined hooks in the host OS we update to in new OS environment
+	if balena run --privileged --rm -v /dev:/dev -v /mnt:/mnt -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
+		echo "New/Forward hooks (new os container) ran successfully."
+	else
+		run_current_hooks_and_recover
+	fi
+
+	# Run after from the new OS we are updating to in existing OS environment
+	new_rootfs=$($SYSROOT/current/boot/init -sysroot $SYSROOT)
+	if [ -f "$new_rootfs/usr/bin/hostapp-update-hooks-v2" ]; then
+		if DURING_UPDATE=1 $new_rootfs/usr/bin/hostapp-update-hooks-v2 --after --dir "$new_rootfs/etc/hostapp-update-hooks.d/"; then
+			echo "After hooks (old os) ran successfully"
+		else
+			run_current_hooks_and_recover
+		fi
+	fi
+	umount $new_rootfs
+fi
 
 # Mark it as current partition
 cur_counter=0

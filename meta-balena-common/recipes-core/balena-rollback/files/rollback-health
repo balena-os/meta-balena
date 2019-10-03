@@ -78,7 +78,8 @@ if [ "$resin_root_part" = "$current_part_idx" ]; then
 		done
 	    echo "Rollback: new OS seems stable. Preventing further rollbacks"
 	    rollback-stop || true
-
+	    echo "Rollback: Running commit hooks"
+	    hostapp-update-hooks-v2 --commit || true
 	else
 		echo "Rollback: Nothing to do. Looks like we are in ROLLBACK_HEALTHY state. Why is script running?"
 		rollback-stop || true

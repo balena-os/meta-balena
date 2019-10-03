@@ -1,3 +1,5 @@
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
 do_install_append () {
 	# Systemd provides mtab so if activated, don't let base-files provide it too
 	# We avoid errors at do_rootfs in this way when using opkg

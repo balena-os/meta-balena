@@ -7,6 +7,7 @@ SRC_URI_append = " \
     file://journald-balena-os.conf \
     file://vacuum.conf \
     file://watchdog.conf \
+    file://os.conf \
     file://60-resin-update-state.rules \
     file://resin_update_state_probe \
     file://balena-os-sysctl.conf \
@@ -59,6 +60,10 @@ do_install_append() {
     # enable watchdog
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
     install -m 0644 ${WORKDIR}/watchdog.conf ${D}/${sysconfdir}/systemd/system.conf.d
+
+    # Add os specific conf
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
+    install -m 0644 ${WORKDIR}/os.conf ${D}/${sysconfdir}/systemd/system.conf.d
 
     install -d -m 0755 ${D}/${sysconfdir}/systemd/coredump.conf.d
     install -m 0644 ${WORKDIR}/coredump.conf ${D}/${sysconfdir}/systemd/coredump.conf.d

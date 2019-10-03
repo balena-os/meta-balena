@@ -12,11 +12,14 @@ HOSTAPP_HOOKS = " \
     70-sshd_migrate_keys \
     80-rollback \
     "
+HOSTAPP_HOOKS_DIRS = ""
+
 RESIN_BOOT_FINGERPRINT = "${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
 
 python __anonymous() {
     # Generate SRC_URI based on HOSTAPP_HOOKS
     hooks=d.getVar("HOSTAPP_HOOKS", True)
+    hooks = hooks + " " + d.getVar("HOSTAPP_HOOKS_DIRS", True)
     srcuri=d.getVar("SRC_URI", True)
     new_srcuri=srcuri
     for h in hooks.split():
@@ -37,11 +40,15 @@ RDEPENDS_${PN} = " \
 
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/
+	for hdir in ${HOSTAPP_HOOKS_DIRS}; do
+		mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/$hdir
+	done
 	for h in ${HOSTAPP_HOOKS}; do
-		install -m 0755 $h ${D}${sysconfdir}/hostapp-update-hooks.d
+		install -m 0755 $h ${D}${sysconfdir}/hostapp-update-hooks.d/"$h"
 	done
 	mkdir -p ${D}${bindir}
-	install -m 0755 hostapp-update-hooks ${D}${bindir}
+	install -m 0755 hostapp-update-hooks ${D}${bindir}/hostapp-update-hooks-v2
+	ln -s -r ${D}${bindir}/hostapp-update-hooks-v2 ${D}${bindir}/hostapp-update-hooks
 
 	sed -i -e 's:@RESIN_BOOT_FINGERPRINT@:${RESIN_BOOT_FINGERPRINT}:g;' \
 	 	${D}${sysconfdir}/hostapp-update-hooks.d/0-bootfiles
