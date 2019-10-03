@@ -1,4 +1,211 @@
 - commits:
+    - subject: >-
+        Make uboot dev images autoboot delay build time configurable. Default is
+        no delay
+      hash: ff9e5c26ce7caa694725d7009943db0713655be6
+      body: |
+        Customers usually don't need this delay during u-boot. Also in some
+        cases, hardware attached on the uart pins might pause uboot preventing
+        customers from using dev images easily.
+
+        But we do need this delay during our development work on bsps etc.
+
+        Lets make this autoboot delay build time configurable
+
+        Also make the BOOTDELAY -2 which is better than 0 as that completely
+        prevents any char on serial from interrupting boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Make uboot dev images autoboot delay build time configurable. Default
+          is no delay
+        changelog-entry: >-
+          Make uboot dev images autoboot delay build time configurable. Default
+          is no delay
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Reduce systemd logging level from info to notice
+      hash: 9e8f949c561b4e904f2e492e0267923b73782c4c
+      body: |
+        Reduces redundant logs.
+
+        Fixes #1691
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Reduce systemd logging level from info to notice
+        changelog-entry: Reduce systemd logging level from info to notice
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'resin-supervisor: Expose container ID via env variable'
+      hash: 27d76cd9441ad427342f53b7e5b865129dd05557
+      body: >
+        The supervisor needs to know its container ID on the context of
+        different
+
+        engine objects cleanup tasks, so it can understand what objects are
+
+        related to itself.
+
+
+        Depends on gh-1679
+
+        See also
+
+        - balena-io/balena-supervisor#1038
+
+        - balena-os/balena-engine#174
+
+        - balena-os/balena-engine-cli#8
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Roman Mazur <roman@balena.io>
+        signed-off-by: Roman Mazur <roman@balena.io>
+      author: Roman Mazur
+    - subject: 'kernel-devsrc: Copy vdso.lds.S file in source archive if available'
+      hash: 70bb9f53e5a50703050c45411c3a63906c17bf42
+      body: |
+        Necessary to avoid error:
+        "No rule to make target 'arch/arm64/kernel/vdso/vdso.lds', needed
+        by 'arch/arm64/kernel/vdso/vdso.so.dbg'"
+        when doing "make  modules_prepare"
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'kernel-devsrc: Copy vdso.lds.S file in source archive if available'
+        changelog-entry: 'kernel-devsrc: Copy vdso.lds.S file in source archive if available'
+        Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+        signed-off-by: Sebastian Panceac <sebastian@balena.io>
+      author: Sebastian Panceac
+    - subject: >-
+        Disable PasswordAuthentication in sshd in production images as an extra
+        precautionary measure.
+      hash: 67bff0700e921a8adbceb4a3b77af2ed39415fa8
+      body: |
+        PasswordAuthentication defaults to yes. Make it no for production
+        images.
+
+        Fixes #1678
+
+        Also some whitespace fixes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Disable PasswordAuthentication in sshd in production images as an
+          extra precautionary measure.
+        changelog-entry: >-
+          Disable PasswordAuthentication in sshd in production images as an
+          extra precautionary measure.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-engine to 18.9.10
+      hash: 9fa56fef4b2b34671951a09e241bb2623dd6d96c
+      body: |
+        Includes feature to populate container environment with container id
+        variable and bug fix for tagging deltas on the fly.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-engine to 18.9.10
+        changelog-entry: Update balena-engine to 18.9.10
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+    - subject: 'hostapp-update-hooks: Filter out automount for inactive sysroot'
+      hash: 894a3b1e2ae705efe9267bab226886c58ad646a7
+      body: |
+        'findmnt' returns both systemd-1 and the correct TARGET.
+        No failure is currently observed because this two line output
+        is filtered trough 'basename'.
+
+        Use ext4 FSTYPE to filter out the automount with SOURCE
+        "systemd-1" when determining the new parition label
+        in the u-boot update hook, just like we do for grub.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+    - subject: >-
+        Add support for hooks 2.0 enabling finer granularity during HostOS
+        updates.
+      hash: 0d33e5a82cab1fa58729d9a9ce7ea37be05cacc3
+      body: |
+        Add support for hooks 2.0
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: >-
+          Add support for hooks 2.0 enabling finer granularity during HostOS
+          updates.
+        changelog-entry: >-
+          Add support for hooks 2.0 enabling finer granularity during HostOS
+          updates.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v10.3.7
+      hash: 4562d35527c1b0087c7e55af30de8ab6eb1aa990
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v10.3.7
+        changelog-entry: Update balena-supervisor to v10.3.7
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Add support for balena cloud SSH public keys
+      hash: 76e774ff132d7cf23a729c3d587c9fd1354a969f
+      body: |
+        When we have an API endpoint and key, we can query the API to get the
+        user public keys and use them to try to authenticate over SSH.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add support for balena cloud SSH public keys
+        changelog-entry: Add support for balena cloud SSH public keys
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Map any user to root using libnss-ato
+      hash: 55ba5767199205ee945a5e69152a28e023e35397
+      body: |
+        This module was included to be able to map any user to root. This
+        is required by the balena-cloud backend.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Map any user to root using libnss-ato
+        changelog-entry: Map any user to root using libnss-ato
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Add option to disable kernel headers from being built.
+      hash: 1f5940898a654c770858f802ea978ddb986082f4
+      body: |
+        These can take quite a bit of build time. Add an option to disable
+        the recipes from being built.
+
+        Fixes #1659
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add option to disable kernel headers from being built.
+        changelog-entry: Add option to disable kernel headers from being built.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.44.0
+  date: 2019-10-03T06:28:45.031Z
+- commits:
     - subject: Update NetworkManager to 1.20.2
       hash: bcb6d85cc3b75d2f41a64fc9a6e0e15b428040f1
       body: |
