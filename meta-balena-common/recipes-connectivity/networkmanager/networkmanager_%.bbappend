@@ -14,6 +14,7 @@ SRC_URI_append = " \
     "
 
 RDEPENDS_${PN}_append = " \
+    bash \
     chrony \
     chronyc \
     resin-net-config \
