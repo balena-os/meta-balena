@@ -22,7 +22,9 @@ CONNECTIVITY_PACKAGES = " \
     avahi-daemon \
     crda \
     dnsmasq \
+    dropbear \
     openvpn \
+    openssh \
     resin-proxy-config \
     usb-modeswitch \
     iw \
