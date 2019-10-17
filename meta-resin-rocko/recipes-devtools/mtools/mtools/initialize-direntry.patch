@@ -1,0 +1,19 @@
+
+Ensure all fields of the direntry structure are initialized. This avoids
+potentially creating directory entries with invalid flags set.
+
+https://lists.gnu.org/archive/html/info-mtools/2014-08/msg00000.html
+
+Signed-off-by: Ronny Nilsson
+Upstream-Status: Submitted
+diff -rup mtools-4.0.18.orig/direntry.c mtools-4.0.18/direntry.c
+--- mtools-4.0.18.orig/direntry.c	2010-10-11 21:18:53.000000000 +0000
++++ mtools-4.0.18/direntry.c	2014-08-27 16:44:32.984959149 +0000
+@@ -24,6 +24,7 @@
+ 
+ void initializeDirentry(direntry_t *entry, Stream_t *Dir)
+ {
++	memset(entry, 0, sizeof(direntry_t));
+ 	entry->entry = -1;
+ /*	entry->parent = getDirentry(Dir);*/
+ 	entry->Dir = Dir;
