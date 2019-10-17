@@ -21,7 +21,9 @@ CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
     avahi-daemon \
     dnsmasq \
+    dropbear \
     openvpn \
+    openssh \
     resin-proxy-config \
     usb-modeswitch \
     iw \
