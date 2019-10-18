@@ -12,6 +12,7 @@ SRC_URI = "http://www.thekelleys.org.uk/dnsmasq/${@['archive/', ''][float(d.getV
            file://dnsmasq.conf \
            file://dnsmasq-resolvconf.service \
            file://dnsmasq-noresolvconf.service \
+           file://dot-local.conf \
 "
 
 inherit pkgconfig update-rc.d systemd
@@ -50,6 +51,7 @@ do_install () {
     install -d ${D}${sysconfdir}/ ${D}${sysconfdir}/init.d ${D}${sysconfdir}/dnsmasq.d
     install -m 644 ${WORKDIR}/dnsmasq.conf ${D}${sysconfdir}/
     install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/dnsmasq
+    install -m 644 ${WORKDIR}/dot-local.conf ${D}${sysconfdir}/dnsmasq.d
 
     install -d ${D}${systemd_unitdir}/system
 

@@ -1,6 +1,7 @@
 [Unit]
 Description=DNS forwarder and DHCP server
 After=network.target
+Wants=socat-mdns.service
 
 [Service]
 Type=forking

@@ -1,0 +1,10 @@
+[Unit]
+Description=mDNS singlecast to multicast helper service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=@BINDIR@/socat UDP-RECVFROM:25353,fork UDP-DATAGRAM:224.0.0.251:5353
+
+[Install]
+WantedBy=multi-user.target
