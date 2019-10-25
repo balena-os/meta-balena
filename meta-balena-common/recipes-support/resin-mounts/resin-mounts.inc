@@ -40,9 +40,8 @@ def bindmounts_systemd_services(d):
 
 do_compile () {
 	for bindmount in ${BINDMOUNTS}; do
-		servicefile="bind-${bindmount#/}"
-		servicefile="$(echo "$servicefile" | tr / -).service"
-		sed -e "s#@target@#$bindmount#g" bind-path.service.in > $servicefile
+		servicefile="bind$(echo "$bindmount" | tr / -).service"
+		sed -e "s#@target@#$bindmount#g" bind-path.service.in > "$servicefile"
 
 		# Service specific changes
 		if [ "$bindmount" = "/var/lib/systemd" ]; then
@@ -50,29 +49,29 @@ do_compile () {
 			# that is mounted.
 			sed -i -e "/^Before=/s/\$/ systemd-random-seed.service systemd-rfkill.service/" \
 			-e "/^WantedBy=/s/\$/ systemd-random-seed.service systemd-rfkill.service/" \
-			$servicefile
+			"$servicefile"
 		elif [ "$bindmount" = "/var/log/journal" ]; then
 			# This bind mount is only invoked manually in persistent logs
 			# service. No need to run it with default target.
-			sed -i -e "/^WantedBy=/ d" $servicefile
+			sed -i -e "/^WantedBy=/ d" "$servicefile"
 			# Mount persistent logs on data partition
-			sed -i -e 's/resin-state.service resin-state-reset.service/resin-data.service/g' $servicefile
-			sed -i -e 's#/mnt/state#/mnt/data#g' $servicefile
+			sed -i -e 's/resin-state.service resin-state-reset.service/resin-data.service/g' "$servicefile"
+			sed -i -e 's#/mnt/state#/mnt/data#g' "$servicefile"
 		elif [ "$bindmount" = "/etc/NetworkManager/conf.d" ]; then
 			# This bind mount needs to be running before the NetworkManager service starts for os-networkmanager
-			sed -i -e "/^Before=/s/\$/ NetworkManager.service/" $servicefile
+			sed -i -e "/^Before=/s/\$/ NetworkManager.service/" "$servicefile"
 		elif [ "$bindmount" = "/etc/udev/rules.d" ]; then
 			# This bind mount needs to be running before the udev service starts for os-udevrules
-			sed -i -e "/^Before=/s/\$/ systemd-udevd.service/" $servicefile
+			sed -i -e "/^Before=/s/\$/ systemd-udevd.service/" "$servicefile"
 		fi
 	done
 }
 do_compile[dirs] = "${WORKDIR}"
 
 do_install () {
-	install -d ${D}${sysconfdir}
-	touch ${D}/${sysconfdir}/hostname
-	install -d ${D}${sysconfdir}/openvpn
-	install -d ${D}/home/root/.ssh
-	install -d ${D}/${sysconfdir}/ssh/hostkeys
+	install -d "${D}${sysconfdir}"
+	touch "${D}/${sysconfdir}/hostname"
+	install -d "${D}${sysconfdir}/openvpn"
+	install -d "${D}/home/root/.ssh"
+	install -d "${D}/${sysconfdir}/ssh/hostkeys"
 }
