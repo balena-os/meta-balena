@@ -1,0 +1,16 @@
+# Ignore build directory
+build*/
+
+# Ignore shared directories
+shared-*/
+
+# Some log files from scripts
+*.log
+
+# device type manifest stuff
+/node_modules
+*.json
+!package.json
+
+# dynamically created by the build script
+conf-notes.txt

@@ -1,0 +1,2 @@
+set root=hd0,msdos1
+set prefix=($root)/grub

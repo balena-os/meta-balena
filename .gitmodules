@@ -1,0 +1,15 @@
+[submodule "meta-balena-reference/balena-yocto-scripts"]
+	path = meta-balena-reference/balena-yocto-scripts
+	url = git@github.com:balena-os/balena-yocto-scripts.git
+[submodule "meta-balena-reference/layers/meta-openembedded"]
+	path = meta-balena-reference/layers/meta-openembedded
+	url = https://github.com/openembedded/meta-openembedded.git
+[submodule "meta-balena-reference/layers/poky"]
+	path = meta-balena-reference/layers/poky
+	url = https://github.com/balena-os/poky
+[submodule "meta-balena-reference/layers/meta-rust"]
+	path = meta-balena-reference/layers/meta-rust
+	url = https://github.com/meta-rust/meta-rust.git
+[submodule "meta-balena-reference/tests/autohat"]
+	path = meta-balena-reference/tests/autohat
+	url = https://github.com/resin-io/autohat.git

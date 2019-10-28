@@ -1,0 +1,71 @@
+# Supported machines
+#MACHINE ?= "qemux86"
+#MACHINE ?= "qemux86-64"
+
+# We use the overlayfs docker storage driver on the QEMU machines
+BALENA_STORAGE = "overlay2"
+
+# More info meta-resin/README.md
+#TARGET_REPOSITORY ?= ""
+#TARGET_TAG ?= ""
+
+# Set this to 1 if development image is desired
+#DEVELOPMENT_IMAGE = "1"
+
+# Set this to make build system generate resinhup bundles
+#RESINHUP ?= "yes"
+
+# Set this to change the supervisor tag used
+#SUPERVISOR_TAG ?= "master"
+
+# Compress final raw image
+#RESIN_RAW_IMG_COMPRESSION ?= "xz"
+
+# Parallelism Options
+BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
+PARALLEL_MAKE ?= "-j ${@oe.utils.cpu_count()}"
+
+# Resin specific distros
+DISTRO ?= "resin-systemd"
+
+# Custom downloads directory
+#DL_DIR ?= "${TOPDIR}/downloads"
+
+# Custom sstate directory
+#SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
+
+# Inheriting this class has shown to speed up builds due to significantly lower
+# amounts of data stored in the data cache as well as on disk.
+# http://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#ref-classes-rm-work
+#INHERIT += "rm_work"
+
+# Remove the old image before the new one is generated to save disk space when RM_OLD_IMAGE is set to 1, this is an easy way to keep the DEPLOY_DIR_IMAGE clean.
+RM_OLD_IMAGE = "1"
+
+# Additional image features
+USER_CLASSES ?= "buildstats image-mklibs image-prelink"
+
+# By default disable interactive patch resolution (tasks will just fail instead):
+PATCHRESOLVE = "noop"
+
+# Disk Space Monitoring during the build
+BB_DISKMON_DIRS = "\
+    STOPTASKS,${TMPDIR},1G,100K \
+    STOPTASKS,${DL_DIR},1G,100K \
+    STOPTASKS,${SSTATE_DIR},1G,100K \
+    ABORT,${TMPDIR},100M,1K \
+    ABORT,${DL_DIR},100M,1K \
+    ABORT,${SSTATE_DIR},100M,1K"
+
+#
+# Qemu configuration
+#
+# By default qemu will build with a builtin VNC server where graphical output can be
+# seen. The two lines below enable the SDL backend too. This assumes there is a
+# libsdl library available on your build system.
+PACKAGECONFIG_append_pn-qemu-native = " sdl"
+PACKAGECONFIG_append_pn-nativesdk-qemu = " sdl"
+
+CONF_VERSION = "1"
+
+HOSTTOOLS += "docker iptables"

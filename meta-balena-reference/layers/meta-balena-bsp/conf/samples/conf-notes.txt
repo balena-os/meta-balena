@@ -1,0 +1,16 @@
+
+  _____           _        _____   ____  
+ |  __ \         (_)      /  _  \ / ___| 
+ | |__) |___  ___ _ _ __  | | | || (___  
+ |  _  // _ \/ __| | '_ \ | | | | \___ \ 
+ | | \ \  __/\__ \ | | | || |_| |  ___) |
+ |_|  \_\___||___/_|_| |_|\_____/ |____/ 
+                                         
+ ---------------------------------------- 
+
+Resin specific images available:
+	resin-image
+
+QEMU X86 64bit (EXPERIMENTAL)            : $ MACHINE=qemux86-64 bitbake resin-image
+QEMU X86 32bit (EXPERIMENTAL)            : $ MACHINE=qemux86 bitbake resin-image
+
