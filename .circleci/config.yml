@@ -1,0 +1,16 @@
+---
+version: 2
+jobs:
+  shellcheck:
+    docker:
+      image: koalaman/shellcheck
+    steps:
+      - checkout
+      - setup_remote_docker:
+        docker_layer_caching: true
+      - run:
+          name: Lint
+          command: |
+            shell_scripts=($(grep -rIlz '^#!.*sh' meta-balena-*))
+            shell_scripts+=($(find meta-balena-* -name '*.sh'))
+            shellcheck -a "${shell_scripts[@]}"
