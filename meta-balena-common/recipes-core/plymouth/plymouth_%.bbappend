@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_append := "${THISDIR}/os-files"
 
 inherit deploy
 
@@ -6,6 +6,10 @@ SRC_URI_append = " \
     file://resin-logo.png \
     file://resin.script \
     file://resin.plymouth \
+    file://0002-plymouth-systemd-append.patch \
+    file://0003-plymouth-Default-theme-is-resin.patch \
+    file://0004-Avoid-depending-on-systemd-ask-password-path-unit.patch \
+    file://0005-dont-start-services-in-container.patch \
     "
 
 # install our theme, and remove some extra files to save a significant
