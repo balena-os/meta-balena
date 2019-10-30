@@ -1,5 +1,9 @@
 Change log
 -----------
+# v2019.10.0
+## (2019-10-31)
+
+* Declare ESR next [Giovanni Garufi]
 
 # v2.44.0
 ## (2019-10-03)
