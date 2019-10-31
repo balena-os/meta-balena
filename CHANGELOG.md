@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.45.0
+## (2019-10-30)
+
+* Increase persistent journal size to 32M [Will Boyce]
+* Move persistent logs from state to data partition [Will Boyce]
+* Add wpa-supplicant recipe and update to v2.9 [Will Boyce]
+* Improve robustness by making variou services restart if they stop for some reason [Zubair Lutfullah Kakakhel]
+* Build net/dummy as module [Alexandru Costache]
+
 # v2.44.0
 ## (2019-10-03)
 

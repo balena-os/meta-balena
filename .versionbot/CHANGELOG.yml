@@ -1,4 +1,86 @@
 - commits:
+    - subject: Increase persistent journal size to 32M
+      hash: ad77ca2402f41fec5b730d556006ef5e86bdacd5
+      body: ''
+      footer:
+        Connects-to: '#1646'
+        connects-to: '#1646'
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Increase persistent journal size to 32M
+        changelog-entry: Increase persistent journal size to 32M
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: Move persistent logs from state to data partition
+      hash: f69ff379ffac39dffcc126ac374b50533dcdef31
+      body: ''
+      footer:
+        Connects-to: '#1646'
+        connects-to: '#1646'
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Move persistent logs from state to data partition
+        changelog-entry: Move persistent logs from state to data partition
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: Add wpa-supplicant recipe and update to v2.9
+      hash: 139f76b73918e12aa8082896a7a017d2ad5df739
+      body: >
+        Fetched from
+        http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-connectivity/wpa-supplicant?id=95507898ad6a7b88c83ef376c1cb8b3b3a685c96
+      footer:
+        Connects-to: '#1711'
+        connects-to: '#1711'
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add wpa-supplicant recipe and update to v2.9
+        changelog-entry: Add wpa-supplicant recipe and update to v2.9
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: >-
+        Improve robustness by making variou services restart if they stop for
+        some reason
+      hash: 074f42aeaf98d2ede68a29d7f7d97cd17dc61f15
+      body: |
+        The default behaviour is Restart=on-abort inherited from upstream.
+        Lets make it Restart=always
+
+        Fixes #1702
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Improve robustness by making variou services restart if they stop for
+          some reason
+        changelog-entry: >-
+          Improve robustness by making variou services restart if they stop for
+          some reason
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Build net/dummy as module
+      hash: ffd5bd2183ca1ea4d3f62bae118b7269b8280002
+      body: |
+        Add dummy net driver support, which is used to
+        check if a container is privileged during
+        udev initialization.
+
+        Building it as module ensures that dummy
+        devices are not needlessly created during boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Build net/dummy as module
+        changelog-entry: Build net/dummy as module
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+  version: 2.45.0
+  date: 2019-10-30T14:34:36.798Z
+- commits:
     - subject: >-
         Make uboot dev images autoboot delay build time configurable. Default is
         no delay
