@@ -17,6 +17,7 @@ DEPENDS += " \
     elfutils-native \
     util-linux \
     elfutils \
+    libyaml \
     "
 
 SRC_URI = "file://gen_mod_headers"
