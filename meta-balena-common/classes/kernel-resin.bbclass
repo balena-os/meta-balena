@@ -93,6 +93,7 @@ RESIN_CONFIGS ?= " \
     ${BALENA_STORAGE} \
     fatfs \
     nf_tables \
+    dummy \
     "
 
 #
@@ -488,6 +489,12 @@ RESIN_CONFIGS[nf_tables] = " \
     CONFIG_NFT_DUP_IPV6=m \
     CONFIG_NFT_FIB_IPV6=m \
     CONFIG_NF_DUP_IPV6=m \
+    "
+
+# This adds support for creating
+# dummy net devices
+RESIN_CONFIGS[dummy] = " \
+    CONFIG_DUMMY=m \
     "
 
 ###########

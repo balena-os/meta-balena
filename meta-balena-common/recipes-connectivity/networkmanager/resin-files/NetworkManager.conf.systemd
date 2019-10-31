@@ -4,3 +4,5 @@ After=resin-net-config.service bind-var-lib-NetworkManager.service chronyd.servi
 
 [Service]
 OOMScoreAdjust=-1000
+Restart=always
+RestartSec=10s
