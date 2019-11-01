@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.38.4
+## (2019-10-31)
+
+* Declare ESR current [Giovanni Garufi]
+
 # v2.38.3
 ## (2019-07-10)
 

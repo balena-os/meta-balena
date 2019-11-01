@@ -1,5 +1,8 @@
 type: 'yocto layer'
 reviewers: 1
+esr:
+  line: current
+  version: 2.38
 upstream:
   repo: 'balena-supervisor'
   url: 'https://github.com/balena-io/balena-supervisor'
