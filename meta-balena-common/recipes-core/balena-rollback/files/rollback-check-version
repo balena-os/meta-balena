@@ -10,9 +10,15 @@ MIN_HOSTOS_VERSION=2.30.0
 old_os_release=$(find /mnt/sysroot/inactive/ | grep "etc/os-release")
 . "$old_os_release"
 
-if version_gt $VERSION $MIN_HOSTOS_VERSION; then
-	echo "rollbacks: Previous Host OS version $VERSION OK for rollbacks."
+if [ -n "$META_BALENA_VERSION" ]; then
+	VERSION_TO_CHECK="$META_BALENA_VERSION"
 else
-	echo "rollbacks: Can't rollback before $MIN_HOSTOS_VERSION"
+	VERSION_TO_CHECK="$VERSION"
+fi
+
+if version_gt "$VERSION_TO_CHECK" "$MIN_HOSTOS_VERSION"; then
+	echo "rollbacks: Previous Host OS META_BALENA_VERSION:$VERSION_TO_CHECK OK for rollbacks."
+else
+	echo "rollbacks: Can't rollback before $MIN_HOSTOS_VERSION. Previous OS version is $VERSION_TO_CHECK"
 	exit 1
 fi
