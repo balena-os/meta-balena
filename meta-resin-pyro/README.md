@@ -1,7 +1,7 @@
-# Resin.io layer for pyro supported boards
+# Balena.io layer for pyro supported boards
 
 ## Description
-This repository enables building resin.io for pyro supported machines.
+This repository enables building balena.io for pyro supported machines.
 
 ## Layer dependencies
 

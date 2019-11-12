@@ -5,7 +5,7 @@ set -o pipefail
 # Help function
 update_resin_supervisor_help() {
     cat << EOF
-Wrapper to run supervisor agent updates on resin distributions.
+Wrapper to run supervisor agent updates on balena distributions.
 $0 <OPTION>
 
 Options:
