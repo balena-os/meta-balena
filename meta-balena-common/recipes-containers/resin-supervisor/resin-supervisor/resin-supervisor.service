@@ -1,5 +1,5 @@
 [Unit]
-Description=Resin supervisor
+Description=Balena supervisor
 Requires=\
     resin\x2ddata.mount \
     balena-device-uuid.service \

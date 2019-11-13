@@ -1,5 +1,5 @@
 [Unit]
-Description=Resin supervisor updater timer
+Description=Balena supervisor updater timer
 
 [Timer]
 OnBootSec=15min

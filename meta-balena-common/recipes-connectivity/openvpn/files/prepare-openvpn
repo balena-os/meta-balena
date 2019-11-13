@@ -11,7 +11,7 @@ generate_vpn_authfile() {
 	local _vpn_auth_file_newext=".new"
 
 	if [ -z "$VPN_AUTH_USER" ] || [ -z "$VPN_AUTH_PASSWORD" ]; then
-		echo "prepare-openvpn: [INFO] Resin.io VPN authentication."
+		echo "prepare-openvpn: [INFO] Balena.io VPN authentication."
 		# If the user api key exists we use it instead of the deviceApiKey as it
 		# means we haven't done the key exchange yet
 		_user="$UUID"
