@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.38.5
+## (2019-11-06)
+
+* No user impact, subtle fix in rollback version checks [Zubair Lutfullah Kakakhel]
+
 # v2.38.4
 ## (2019-10-31)
 

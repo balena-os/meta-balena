@@ -1,4 +1,26 @@
 - commits:
+    - subject: 'No user impact, subtle fix in rollback version checks'
+      hash: a2780468fe934e36157154751feb30dd9c652405
+      body: |
+        ESR releases have the VERSION string in /etc/os-release in a date
+        format. 2019.10.0 etc.
+        We added META_BALENA_VERSION in os-release from v2.38.0 via
+        b0e0c77a26f3fad51e2923ab416fdd2af2a5a033
+
+        Lets use META_BALENA_VERSION if available for our os version checks.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'No user impact, subtle fix in rollback version checks'
+        changelog-entry: 'No user impact, subtle fix in rollback version checks'
+        Backport-to: current
+        backport-to: current
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.38.5
+  date: 2019-11-06T09:54:05.162Z
+- commits:
     - subject: 'resin-proxy-config: fix up incorrect bash subshell command'
       hash: 0c8de756c22f635b2ef499848b724f1350f555b0
       body: ''
