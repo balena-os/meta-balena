@@ -1,7 +1,7 @@
 type: 'yocto layer'
 reviewers: 1
 esr:
-  line: current
+  bsp-branch-pattern: 2019.07.x
   version: 2.38
 upstream:
   repo: 'balena-supervisor'
