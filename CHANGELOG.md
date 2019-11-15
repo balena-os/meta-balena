@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.38.6
+## (2019-11-15)
+
+* Update balena-supervisor to v9.15.11 [Zubair Lutfullah Kakakhel]
+
 # v2.38.5
 ## (2019-11-06)
 

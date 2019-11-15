@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update balena-supervisor to v9.15.11
+      hash: a09ab815f2c78c57f0d91a9fd7416ebdda25aa4e
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.15.11
+        changelog-entry: Update balena-supervisor to v9.15.11
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.38.6
+  date: 2019-11-15T10:44:15.873Z
+- commits:
     - subject: 'No user impact, subtle fix in rollback version checks'
       hash: a2780468fe934e36157154751feb30dd9c652405
       body: |
