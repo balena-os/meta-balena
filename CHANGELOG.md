@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.45.1
+## (2019-11-21)
+
+* Fix for a race condition where occasionally the supervisor might not be able to come up during boot. Also can be caused by using io.balena.features.balena-socket and app container restart always policy. Affects meta-balena 2.44.0 and 2.45.0. To be fixed in 2.44.1 and 2.46.0 [Zubair Lutfullah Kakakhel]
+* Rename resin to balena where possible [Pagan Gazzard]
+* Add leading new line for PACKAGE_INSTALL variable [Vicentiu Galanopulo]
+* Set `net.ipv4.ip_local_port_range` to recommended range (49152-65535) [Will Boyce]
+* No user impact, subtle fix in rollback version checks [Zubair Lutfullah Kakakhel]
+
 # v2.45.0
 ## (2019-10-30)
 

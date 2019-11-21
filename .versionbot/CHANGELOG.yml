@@ -1,4 +1,89 @@
 - commits:
+    - subject: >-
+        Fix for a race condition where occasionally the supervisor might not be
+        able to come up during boot. Also can be caused by using
+        io.balena.features.balena-socket and app container restart always
+        policy. Affects meta-balena 2.44.0 and 2.45.0. To be fixed in 2.44.1 and
+        2.46.0
+      hash: 7cf43d9f939b1d960cb677c48ca9f91b668d2dc3
+      body: |
+        Fixes #1748
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fix for a race condition where occasionally the supervisor might not
+          be able to come up during boot. Also can be caused by using
+          io.balena.features.balena-socket and app container restart always
+          policy. Affects meta-balena 2.44.0 and 2.45.0. To be fixed in 2.44.1
+          and 2.46.0
+        changelog-entry: >-
+          Fix for a race condition where occasionally the supervisor might not
+          be able to come up during boot. Also can be caused by using
+          io.balena.features.balena-socket and app container restart always
+          policy. Affects meta-balena 2.44.0 and 2.45.0. To be fixed in 2.44.1
+          and 2.46.0
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Rename resin to balena where possible
+      hash: 02a932405705ce28fca6137cfae16fab5bc952fb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+    - subject: Add leading new line for PACKAGE_INSTALL variable
+      hash: e79c470b3eaa8d6e763103fa20858fbed61ff292
+      body: |
+        Without the leading space, the last package name
+        of the PACKAGE_INSTALL variable from other recipes,
+        is concatenated with the one added in this recipe resulting
+        in the following error
+        opkg_prepare_url_for_install
+        Couldn't find anything to satisfy
+        'kernel-module-sdhci-pciinitramfs-module-console-null-workaround'
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add leading new line for PACKAGE_INSTALL variable
+        changelog-entry: Add leading new line for PACKAGE_INSTALL variable
+        Signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+        signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+      author: Vicentiu Galanopulo
+    - subject: Set `net.ipv4.ip_local_port_range` to recommended range (49152-65535)
+      hash: 8ef6a5b56a2b7ba43081a0f30f99d6f736015533
+      body: ''
+      footer:
+        Connects-to: '#1726'
+        connects-to: '#1726'
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Set `net.ipv4.ip_local_port_range` to recommended range (49152-65535)
+        changelog-entry: Set `net.ipv4.ip_local_port_range` to recommended range (49152-65535)
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: 'No user impact, subtle fix in rollback version checks'
+      hash: 38717507b93962d199e07d9093382b8db4ec5d81
+      body: |
+        ESR releases have the VERSION string in /etc/os-release in a date
+        format. 2019.10.0 etc.
+        We added META_BALENA_VERSION in os-release from v2.38.0 via
+        b0e0c77a26f3fad51e2923ab416fdd2af2a5a033
+
+        Lets use META_BALENA_VERSION if available for our os version checks.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'No user impact, subtle fix in rollback version checks'
+        changelog-entry: 'No user impact, subtle fix in rollback version checks'
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.45.1
+  date: 2019-11-21T16:48:38.743Z
+- commits:
     - subject: Increase persistent journal size to 32M
       hash: ad77ca2402f41fec5b730d556006ef5e86bdacd5
       body: ''
