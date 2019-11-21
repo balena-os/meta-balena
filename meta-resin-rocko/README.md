@@ -1,7 +1,7 @@
-# Resin.io layer for Poky Rocko supported boards
+# Balena.io layer for Poky Rocko supported boards
 
 ## Description
-This repository enables building resin.io for rocko supported machines.
+This repository enables building balena.io for rocko supported machines.
 
 ## Layer dependencies
 

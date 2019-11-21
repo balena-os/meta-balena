@@ -1,5 +1,5 @@
 [Unit]
-Description=Resin supervisor updater
+Description=Balena supervisor updater
 Requires=\
     balena.service \
     bind-etc-resin-supervisor.service \

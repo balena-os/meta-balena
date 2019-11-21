@@ -1,7 +1,7 @@
-# Resin.io layer for Poky Warrior supported boards
+# Balena.io layer for Poky Warrior supported boards
 
 ## Description
-This repository enables building resin.io for sumo supported machines.
+This repository enables building balena.io for sumo supported machines.
 
 ## Layer dependencies
 

@@ -1,6 +1,6 @@
 # Contributing
 
-To contribute send github pull requests targeting [this](https://github.com/resin-os/meta-resin) repository.
+To contribute send github pull requests targeting [this](https://github.com/balena-os/meta-balena) repository.
 
 Please refer to: [Yocto Contribution Guidelines](https://wiki.yoctoproject.org/wiki/Contribution_Guidelines#General_Information) and try to use the commit log format as stated there. Example:
 ```
@@ -18,7 +18,7 @@ We take advantage of a change log file to keep track of what was changed in a sp
 
 In the common case where each PR addresses one specific task (issue, bug, feature etc.) the PR will contain a commit which will include `Change-type` and `Changelog-entry` in its commit log. Usually, but not necessary, this commit is the last one in the branch.
 
-`Change-type` is mandatory and, because meta-resin follows semver, can take one of the following values: patch, minor or major. `Changelog-entry` defaults to the subject line.
+`Change-type` is mandatory and, because meta-balena follows semver, can take one of the following values: patch, minor or major. `Changelog-entry` defaults to the subject line.
 
 ## Updating balena-supervisor
 
