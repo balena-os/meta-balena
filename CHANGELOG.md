@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.38.7
+## (2019-11-25)
+
+* Fix for rollbacks where the inactive partition mount was unavailable when altboot triggered [Zubair Lutfullah Kakakhel]
+* Update balena-supervisor to v9.15.12 [Zubair Lutfullah Kakakhel]
+
 # v2.38.6
 ## (2019-11-15)
 

@@ -1,4 +1,44 @@
 - commits:
+    - subject: >-
+        Fix for rollbacks where the inactive partition mount was unavailable
+        when altboot triggered
+      hash: 65b6a1316ea334f9efe1255076b9d05386b12be6
+      body: |
+        PR #1441 changed mnt-sysroot-inactive to an automount. But there is no
+        way to easily add a udev dependency to the automount. As a result,
+        when rollbacks tries to access the inactive partition, it fails.
+        Let's add systemd-udev-settle.service to the rollback services.
+
+        This will only delay the first boot after a HUP which is reasonable.
+        cherry picked from commit 856a3d1ad8dbf3b7a87689bbedac23c9148b3d79
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fix for rollbacks where the inactive partition mount was unavailable
+          when altboot triggered
+        changelog-entry: >-
+          Fix for rollbacks where the inactive partition mount was unavailable
+          when altboot triggered
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v9.15.12
+      hash: f4de3a1cff9ceddc5dd61fb04dbf528616f215d8
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v9.15.12
+        changelog-entry: Update balena-supervisor to v9.15.12
+        Change-type: patch
+        change-type: patch
+        Backport-to: current
+        backport-to: current
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.38.7
+  date: 2019-11-25T09:22:13.191Z
+- commits:
     - subject: Update balena-supervisor to v9.15.11
       hash: a09ab815f2c78c57f0d91a9fd7416ebdda25aa4e
       body: ''
