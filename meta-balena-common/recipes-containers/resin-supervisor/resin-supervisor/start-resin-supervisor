@@ -76,7 +76,7 @@ runSupervisor() {
         --restart=always \
         --net=host \
         --cidenv=SUPERVISOR_CONTAINER_ID \
-        -v /var/run/balena-engine.sock:/var/run/balena-engine.sock \
+        --mount type=bind,source=/var/run/balena-engine.sock,target=/var/run/balena-engine.sock \
         -v "$CONFIG_PATH:/boot/config.json"  \
         -v /mnt/data/apps.json:/boot/apps.json \
         -v /resin-data/resin-supervisor:/data \
