@@ -1,4 +1,85 @@
 - commits:
+    - subject: Add leading new line for PACKAGE_INSTALL variable
+      hash: d503956401333e46de81a209e14bad50003563d5
+      body: |
+        Without the leading space, the last package name
+        of the PACKAGE_INSTALL variable from other recipes,
+        is concatenated with the one added in this recipe resulting
+        in the following error
+        opkg_prepare_url_for_install
+        Couldn't find anything to satisfy
+        'kernel-module-sdhci-pciinitramfs-module-console-null-workaround'
+        cherry picked from commit e79c470b3eaa8d6e763103fa20858fbed61ff292
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add leading new line for PACKAGE_INSTALL variable
+        changelog-entry: Add leading new line for PACKAGE_INSTALL variable
+        Signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+        signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+      author: Vicentiu Galanopulo
+    - subject: Set `net.ipv4.ip_local_port_range` to recommended range (49152-65535)
+      hash: f85c9d864e8236dc08827b47bca2b2b62ba3e232
+      body: |
+        cherry picked from commit 8ef6a5b56a2b7ba43081a0f30f99d6f736015533
+      footer:
+        Connects-to: '#1726'
+        connects-to: '#1726'
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Set `net.ipv4.ip_local_port_range` to recommended range (49152-65535)
+        changelog-entry: Set `net.ipv4.ip_local_port_range` to recommended range (49152-65535)
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: 'No user impact, subtle fix in rollback version checks'
+      hash: 313124e9d9ee98fad3016d840983f654744840cc
+      body: |
+        ESR releases have the VERSION string in /etc/os-release in a date
+        format. 2019.10.0 etc.
+        We added META_BALENA_VERSION in os-release from v2.38.0 via
+        b0e0c77a26f3fad51e2923ab416fdd2af2a5a033
+
+        Lets use META_BALENA_VERSION if available for our os version checks.
+        cherry picked from commit 38717507b93962d199e07d9093382b8db4ec5d81
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'No user impact, subtle fix in rollback version checks'
+        changelog-entry: 'No user impact, subtle fix in rollback version checks'
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Fix for a race condition where occasionally the supervisor might not be
+        able to come up during boot. Also can be caused by using
+        io.balena.features.balena-socket and app container restart always
+        policy. Affects meta-balena 2.44.0 and 2.45.0.
+      hash: 38fa0f07e761cb2014f83b25b930c24435291cc2
+      body: |
+        Fixes #1748
+        cherry picked from commit 7cf43d9f939b1d960cb677c48ca9f91b668d2dc3
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fix for a race condition where occasionally the supervisor might not
+          be able to come up during boot. Also can be caused by using
+          io.balena.features.balena-socket and app container restart always
+          policy. Affects meta-balena 2.44.0 and 2.45.0.
+        changelog-entry: >-
+          Fix for a race condition where occasionally the supervisor might not
+          be able to come up during boot. Also can be caused by using
+          io.balena.features.balena-socket and app container restart always
+          policy. Affects meta-balena 2.44.0 and 2.45.0.
+        Backport-to: next
+        backport-to: next
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.44.2
+  date: 2019-11-27T12:55:58.963Z
+- commits:
     - subject: >-
         Make uboot dev images autoboot delay build time configurable. Default is
         no delay
