@@ -17,4 +17,4 @@ SUPERVISOR_REPOSITORY_x86-64 = "balena/amd64-supervisor"
 SUPERVISOR_REPOSITORY_intel-quark = "balena/i386-nlp-supervisor"
 
 # Balena supervisor default tag
-SUPERVISOR_TAG ?= "v10.3.7"
+SUPERVISOR_TAG ?= "v10.6.13"
