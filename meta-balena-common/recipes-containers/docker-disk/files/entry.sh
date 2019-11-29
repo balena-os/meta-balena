@@ -47,12 +47,12 @@ fi
 # Pull in the image
 echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}..."
 docker pull "${TARGET_REPOSITORY}:${TARGET_TAG}"
-# Pull in arch specific hello-world image and tag it hello-world
+# Pull in arch specific hello-world image and tag it balena-healthcheck-image
 echo "Pulling ${HELLO_REPOSITORY}:latest..."
 docker pull --platform "${HELLO_PLATFORM}" "${HELLO_REPOSITORY}"
-docker tag "${HELLO_REPOSITORY}" hello-world
+docker tag "${HELLO_REPOSITORY}" balena-healthcheck-image
 docker rmi "${HELLO_REPOSITORY}"
-docker save hello-world > ${BUILD}/hello-world.tar
+docker save balena-healthcheck-image > ${BUILD}/balena-healthcheck-image.tar
 
 echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"

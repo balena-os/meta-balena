@@ -76,10 +76,10 @@ do_compile () {
 	$DOCKER rmi ${_image_name}
 }
 
-FILES_${PN} = "/usr/lib/balena/hello-world.tar"
+FILES_${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
 do_install () {
 	mkdir -p ${D}/usr/lib/balena
-	install -m 644 ${B}/hello-world.tar ${D}/usr/lib/balena/hello-world.tar
+	install -m 644 ${B}/balena-healthcheck-image.tar ${D}/usr/lib/balena/balena-healthcheck-image.tar
 }
 
 do_deploy () {
