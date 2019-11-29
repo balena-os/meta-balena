@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -o errexit
+
+until $(systemctl is-active --quiet balena.service) ; do
+        sleep 1
+done
+
+balena load -i /usr/lib/balena/balena-healthcheck-image.tar
+
+# The healthcheck image was previously called hello-world.
+# Clean it up
+balena rmi hello-world 2> /dev/null || true
