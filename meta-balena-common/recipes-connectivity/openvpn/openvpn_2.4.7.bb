@@ -1,22 +1,26 @@
 SUMMARY = "A full-featured SSL VPN solution via tun device."
-HOMEPAGE = "http://openvpn.sourceforge.net"
+HOMEPAGE = "https://openvpn.net/"
 SECTION = "net"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=e9b64491ec98eb6c6493ac5e4118f107"
+LIC_FILES_CHKSUM = "file://COPYING;md5=7aee596ed2deefe3e8a861e24292abba"
 DEPENDS = "lzo openssl iproute2 ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'libpam', '', d)}"
 
-inherit autotools systemd
+inherit autotools systemd update-rc.d
 
 SRC_URI = "http://swupdate.openvpn.org/community/releases/${BP}.tar.gz \
            file://openvpn \
            file://openvpn@.service \
            file://openvpn-volatile.conf"
 
-SRC_URI[md5sum] = "e1929f82aff40f3d105e5f72aacff9c1"
-SRC_URI[sha256sum] = "cee3d3ca462960a50a67c0ebd186e01b6d13db70275205663695152c9aca8579"
+SRC_URI[md5sum] = "9d67cabc9b0441062ebd4e12bb7dfedb"
+SRC_URI[sha256sum] = "73dce542ed3d6f0553674f49025dfbdff18348eb8a25e6215135d686b165423c"
 
 SYSTEMD_SERVICE_${PN} += "openvpn@loopback-server.service openvpn@loopback-client.service"
 SYSTEMD_AUTO_ENABLE = "disable"
+
+INITSCRIPT_PACKAGES = "${PN}"
+INITSCRIPT_NAME_${PN} = "openvpn"
+INITSCRIPT_PARAMS_${PN} = "start 10 2 3 4 5 . stop 70 0 1 6 ."
 
 CFLAGS += "-fno-inline"
 
