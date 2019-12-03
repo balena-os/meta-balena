@@ -92,6 +92,7 @@ RESIN_CONFIGS ?= " \
     zram \
     ${BALENA_STORAGE} \
     fatfs \
+    apple_hfs \
     nf_tables \
     dummy \
     "
@@ -157,6 +158,11 @@ RESIN_CONFIGS[aufs] = " \
 
 RESIN_CONFIGS[overlay2] = " \
     CONFIG_OVERLAY_FS=y \
+    "
+
+RESIN_CONFIGS[apple_hfs] = " \
+    CONFIG_HFS_FS=m \
+    CONFIG_HFSPLUS_FS=m \
     "
 
 #
@@ -431,10 +437,13 @@ RESIN_CONFIGS_DEPS[usb-serial] = " \
     CONFIG_USB_SERIAL_WWAN=m \
     "
 RESIN_CONFIGS[usb-serial] = " \
+    CONFIG_USB_SERIAL=m \
+    CONFIG_USB_SERIAL_GENERIC=m \
     CONFIG_USB_SERIAL_OPTION=m \
     CONFIG_USB_SERIAL_QUALCOMM=m \
     CONFIG_USB_SERIAL_CH341=m \
     CONFIG_USB_SERIAL_FTDI_SIO=m \
+    CONFIG_USB_SERIAL_PL2303=m \
     "
 
 RESIN_CONFIGS[fatfs] = " \
