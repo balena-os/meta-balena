@@ -1,7 +1,7 @@
-From dfe53c829e24f1240a2ac8ef8819b506c7d22cfc Mon Sep 17 00:00:00 2001
 From: Sebastian Panceac <sebastian@resin.io>
 Date: Wed, 17 Oct 2018 14:36:56 +0200
-Subject: Replace NM's DHCP request option "Client indentifier" with udhcpc style option
+Subject: [PATCH] Replace NM's DHCP request option "Client indentifier" with
+ udhcpc style option
 
 Signed-off-by: Sebastian Panceac <sebastian@balena.io>
 
@@ -11,10 +11,10 @@ Upstream-Status: Pending
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/src/systemd/src/libsystemd-network/sd-dhcp-client.c b/src/systemd/src/libsystemd-network/sd-dhcp-client.c
-index c2f81e1..16962db 100644
+index 2f531bc7b29f..13d73fdc21a5 100644
 --- a/src/systemd/src/libsystemd-network/sd-dhcp-client.c
 +++ b/src/systemd/src/libsystemd-network/sd-dhcp-client.c
-@@ -627,13 +627,17 @@ static int client_message_init(
+@@ -678,13 +678,17 @@ static int client_message_init(
                  client->client_id_len = sizeof(client->client_id.type) + sizeof(client->client_id.ns.iaid) + duid_len;
          }
  
@@ -34,6 +34,3 @@ index c2f81e1..16962db 100644
                  if (r < 0)
                          return r;
          }
--- 
-2.7.4
-
