@@ -11,11 +11,9 @@ inherit gnomebase gettext systemd vala gobject-introspection bash-completion
 
 DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native libxslt-native"
 
-SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
-           file://0001-Do-not-set-Wno-unused-but-set-variable.patch \
-           "
-SRC_URI[md5sum] = "7452a94f0d1ca361ae51ff1d287c53f5"
-SRC_URI[sha256sum] = "3c2ca73782215664141042422759899ca9846440fc26d6223c7cf7ea4dd3c996"
+SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz"
+SRC_URI[md5sum] = "d723c22b0da7fa570d66bc7ad0f59cd6"
+SRC_URI[sha256sum] = "4f76d2bdd0ed6780837cdde886eaf535f9770f9daa1ff92e63658d06aa5d25ea"
 
 S = "${WORKDIR}/ModemManager-${PV}"
 
@@ -32,8 +30,10 @@ PACKAGECONFIG[qmi] = "--with-qmi,--without-qmi,libqmi"
 
 EXTRA_OECONF = " \
     --with-udev-base-dir=${nonarch_base_libdir}/udev \
+    --with-at-command-via-dbus=yes \
 "
-CFLAGS_append_toolchain-gcc = " -Wno-unused-but-set-variable"
+
+EXTRA_OECONF_append_toolchain-clang = " --enable-more-warnings=no"
 
 FILES_${PN} += " \
     ${datadir}/icons \
