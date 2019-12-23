@@ -28,6 +28,7 @@ deploy_image_license_manifest () {
     cp -f ${IMAGE_LICENSE_MANIFEST} ${DEPLOY_IMAGE_LICENSE_MANIFEST}
     ln -sf ${IMAGE_NAME}.rootfs.license.manifest ${DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST}
 }
+do_populate_lic_deploy[nostamp] = "1"
 
 # _remove_old_symlinks removes the hddimg symlink
 # Recreate it after image is created

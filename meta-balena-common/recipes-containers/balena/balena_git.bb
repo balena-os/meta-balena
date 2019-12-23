@@ -21,6 +21,7 @@ SRC_URI = "\
 	file://balena-host.service \
 	file://balena-host.socket \
 	file://balena-healthcheck \
+	file://balena-healthcheck-image-load \
 	file://var-lib-docker.mount \
 	file://balena.conf.systemd \
 	file://balena-tmpfiles.conf \
@@ -39,7 +40,7 @@ USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r balena-engine"
 
 DEPENDS_append_class-target = " systemd"
-RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd healthdog"
+RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd healthdog bash"
 RRECOMMENDS_${PN} += "kernel-module-nf-nat"
 
 # oe-meta-go recipes try to build go-cross-native
@@ -154,6 +155,7 @@ do_install() {
 
 	mkdir -p ${D}/usr/lib/balena
 	install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
+	install -m 0755 ${WORKDIR}/balena-healthcheck-image-load ${D}/usr/lib/balena/balena-healthcheck-image-load
 
 	if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
 		install -d ${D}${sysconfdir}/systemd/system/balena.service.d

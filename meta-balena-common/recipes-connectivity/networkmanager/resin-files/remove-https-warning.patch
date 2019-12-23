@@ -1,4 +1,3 @@
-From d4501fa7aaff9f70d9bba86cbc9651480f8d37c6 Mon Sep 17 00:00:00 2001
 From: Zubair Lutfullah Kakakhel <zubair@balena.io>
 Date: Wed, 24 Jul 2019 11:35:19 +0000
 Subject: [PATCH] nm-connectivity: Remove redundant https warning
@@ -13,10 +12,10 @@ Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
  1 file changed, 1 deletion(-)
 
 diff --git a/src/nm-connectivity.c b/src/nm-connectivity.c
-index 2816e76..e420e94 100644
+index 694733f6a512..dfb26714692d 100644
 --- a/src/nm-connectivity.c
 +++ b/src/nm-connectivity.c
-@@ -1019,7 +1019,6 @@ update_config (NMConnectivity *self, NMConfigData *config_data)
+@@ -1101,7 +1101,6 @@ update_config (NMConnectivity *self, NMConfigData *config_data)
  				_LOGE ("invalid URI '%s' for connectivity check.", new_uri);
  				new_uri_valid = FALSE;
  			} else if (g_ascii_strcasecmp (scheme, "https") == 0) {
@@ -24,6 +23,3 @@ index 2816e76..e420e94 100644
  				is_https = TRUE;
  			} else if (g_ascii_strcasecmp (scheme, "http") != 0) {
  				_LOGE ("scheme of '%s' uri doesn't use a scheme that is allowed for connectivity check.", new_uri);
--- 
-2.7.4
-

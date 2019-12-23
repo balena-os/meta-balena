@@ -2,7 +2,6 @@ FILESEXTRAPATHS_append := ":${THISDIR}/balena-files"
 SYSTEMD_AUTO_ENABLE = "enable"
 
 SRC_URI_append = " \
-    file://0001-Revert-iface-modem-the-Command-method-is-only-allowe.patch \
     file://77-mm-huawei-configuration.rules \
     file://mm-huawei-configuration-switch.sh \
     file://ModemManager.conf.systemd \
