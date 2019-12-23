@@ -1,4 +1,220 @@
 - commits:
+    - subject: Update to ModemManager v1.12.2
+      hash: 2c4d223d90701b7dbe7ed42f2b5bdaab396db4d3
+      body: |
+        Fixes #1775
+
+        Removed the two patches we included in favor of corresponding
+        configure arguments since they had to be updated anyway.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update to ModemManager v1.12.2
+        changelog-entry: Update to ModemManager v1.12.2
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update libmbim to version 1.20.2
+      hash: 01a15a047156c2491081e31a12c0a2a278a015d8
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libmbim to version 1.20.2
+        changelog-entry: Update libmbim to version 1.20.2
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update libqmi to version 1.24.2
+      hash: dad937f2a5ec8c894518f683e636c17a23a20869
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libqmi to version 1.24.2
+        changelog-entry: Update libqmi to version 1.24.2
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+    - subject: Update balena-supervisor to v10.6.27
+      hash: 426dd85c0396f713e8f2571334bbd547b5a22642
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v10.6.27
+        changelog-entry: Update balena-supervisor to v10.6.27
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: >-
+        Tweak how the flasher asserts that internal media is valid for being
+        installed balena OS on
+      hash: 4b50d967db309366865b791e39f84ab00c0e9330
+      body: |
+        It is better to use fdisk to check that an internal media
+        is a suitable block device rather than using the shell
+        internal block testing feature. This is because there is
+        at least a case when the kernel lists an ASMT 2115 controller
+        as /dev/sda but that is not an actual drive so it cannot be
+        written to and the flashing procedure will error out.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Tweak how the flasher asserts that internal media is valid for being
+          installed balena OS on
+        changelog-entry: >-
+          Tweak how the flasher asserts that internal media is valid for being
+          installed balena OS on
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Remove networkmanager stale temporary files at startup
+      hash: 1234b29d7a4b007fd25247d38d9027e4f6e9e709
+      body: >
+        Reports indicate that NetworkManager can leave stale temporary files on
+
+        the state partition that over time can affect the device's operability.
+
+
+        This commit removes the timestamps.XXXXXX and seen-bssids.XXXXXX files
+        on
+
+        startup to avoid this situation.
+
+
+        Fixes #1747
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Remove networkmanager stale temporary files at startup
+        changelog-entry: Remove networkmanager stale temporary files at startup
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'networkmanager: Rework patches to remove fuzzing'
+      hash: fbe8c83e8234c842d83c344243d2fe782c8ebb0a
+      body: |
+        This commit removes the build warning when applying patches.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Update openvpn to v2.4.7
+      hash: 5c7d3ae1296636dae7b0de67a9c0f8c66d996d1c
+      body: >
+        Fetched from:
+
+        *
+        https://git.openembedded.org/meta-openembedded/commit/meta-networking/recipes-support/openvpn/openvpn_2.4.7.bb?id=c1c8895609ae70a1b735e8625c19046c25184ee4
+
+        *
+        https://git.openembedded.org/meta-openembedded/commit/meta-networking/recipes-support/openvpn/openvpn/openvpn?id=910891d722085c56c474ac72788898b94c5ed193
+      footer:
+        Connects-to: '#1740'
+        connects-to: '#1740'
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update openvpn to v2.4.7
+        changelog-entry: Update openvpn to v2.4.7
+        Signed-off-by: Will Boyce <will@balena.io>
+        signed-off-by: Will Boyce <will@balena.io>
+      author: Will Boyce
+    - subject: >-
+        Enable kernel configs for USB_SERIAL, USB_SERIAL_PL2303 and HFS for all
+        devices
+      hash: 03b95db4e073969718f0a60d8b0e80db4ce0680b
+      body: |
+        Fixes #1770
+        Fixes #1761
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Enable kernel configs for USB_SERIAL, USB_SERIAL_PL2303 and HFS for
+          all devices
+        changelog-entry: >-
+          Enable kernel configs for USB_SERIAL, USB_SERIAL_PL2303 and HFS for
+          all devices
+      author: Zubair Lutfullah Kakakhel
+    - subject: 'image-resin.bbclass: Mark do_populate_lic_deploy with nostamp'
+      hash: 3004762e71383e6ed8134de526966c6dd660fca2
+      body: |
+        We inherit do_populate_lic_deploy from poky. It uses IMAGE_NAME
+        which includes DATETIME
+
+        DATETIME changes between runs so we can sometimes get into a state
+        where the do_populate_lic_deploy task has its stamp file set.
+
+        But when our subsequent deploy_image_license_manifest task runs, the
+        DATETIME is different. Hence we get into a state where we have to
+        run cleanall on the resin-image-flasher recipe to clean up directories.
+
+        Lets mark do_populate_lic_deploy with nostamp. This should make it
+        run every time we need to run deploy_image_license_manifest with the
+        most up to date DATETIME variable to prevent any hiccups
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Namespace the hello-world healthcheck image
+      hash: 4ec47419b97cf5ca6fe15436a32348e1dc7b5d9d
+      body: |
+        Fixes #1630
+
+        Need to make the script go in the background in ExecStartPost=.
+        Otherwise, the service status never gets to active/running resulting
+        it in remaining stuck in an endless loop.
+
+        If the health-check load fails for whatever reason, the subsequent
+        engine healthcheck will fail retriggering the healthcheck load.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Namespace the hello-world healthcheck image
+        changelog-entry: Namespace the hello-world healthcheck image
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Update balena-supervisor to v10.6.17
+      hash: 72100a55f62820b0cb8a48307a70d01633744e70
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v10.6.17
+        changelog-entry: Update balena-supervisor to v10.6.17
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Update balena-supervisor to v10.6.13
+      hash: 7ac91f9557f90417dc152c5621d4cff6d53c17e1
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor to v10.6.13
+        changelog-entry: Update balena-supervisor to v10.6.13
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Update CODEOWNERS
+      hash: bb8ac081d50893d9d0881b0f08c68cbb626c3590
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.46.0
+  date: 2019-12-23T17:06:33.086Z
+- commits:
     - subject: >-
         Fix for a race condition where occasionally the supervisor might not be
         able to come up during boot. Also can be caused by using
