@@ -1,6 +1,24 @@
 Change log
 -----------
 
+# v2.46.0
+## (2019-12-23)
+
+* Update to ModemManager v1.12.2 [Zahari Petkov]
+* Update libmbim to version 1.20.2 [Zahari Petkov]
+* Update libqmi to version 1.24.2 [Zahari Petkov]
+* Update balena-supervisor to v10.6.27 [Cameron Diver]
+* Tweak how the flasher asserts that internal media is valid for being installed balena OS on [Florin Sarbu]
+* Remove networkmanager stale temporary files at startup [Alex Gonzalez]
+* networkmanager: Rework patches to remove fuzzing [Alex Gonzalez]
+* Update openvpn to v2.4.7 [Will Boyce]
+* Enable kernel configs for USB_SERIAL, USB_SERIAL_PL2303 and HFS for all devices [Zubair Lutfullah Kakakhel]
+* image-resin.bbclass: Mark do_populate_lic_deploy with nostamp [Zubair Lutfullah Kakakhel]
+* Namespace the hello-world healthcheck image [Zubair Lutfullah Kakakhel]
+* Update balena-supervisor to v10.6.17 [Cameron Diver]
+* Update balena-supervisor to v10.6.13 [Cameron Diver]
+* Update CODEOWNERS [Zubair Lutfullah Kakakhel]
+
 # v2.45.1
 ## (2019-11-21)
 
