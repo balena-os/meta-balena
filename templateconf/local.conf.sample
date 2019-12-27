@@ -1,0 +1,114 @@
+# Machine Selection
+#MACHINE ?= "qemuarm"
+#MACHINE ?= "qemuarm64"
+#MACHINE ?= "qemumips"
+#MACHINE ?= "qemumips64"
+#MACHINE ?= "qemuppc"
+#MACHINE ?= "qemux86"
+#MACHINE ?= "qemux86-64"
+#
+# There are also the following hardware board target machines included for 
+# demonstration purposes:
+#
+#MACHINE ?= "beaglebone-yocto"
+#MACHINE ?= "genericx86"
+#MACHINE ?= "genericx86-64"
+#MACHINE ?= "mpc8315e-rdb"
+#MACHINE ?= "edgerouter"
+#
+# This sets the default machine to be qemux86 if no other machine is selected:
+MACHINE ??= "qemux86"
+
+#
+# Where to place downloads
+#
+#DL_DIR ?= "${TOPDIR}/downloads"
+
+#
+# Where to place shared-state files
+#
+#SSTATE_DIR ?= "${TOPDIR}/sstate-cache"
+
+#
+# Where to place the build output
+#
+#TMPDIR = "${TOPDIR}/tmp"
+
+#
+# Default policy config
+#
+DISTRO ?= "resin-systemd"
+
+#
+# SDK target architecture
+#
+#SDKMACHINE ?= "i686"
+
+# Set this to 1 if development image is desired
+DEVELOPMENT_IMAGE = "1"
+
+#
+# Additional image features
+#
+USER_CLASSES ?= "buildstats image-mklibs image-prelink"
+
+#
+# Runtime testing of images
+#
+#IMAGE_CLASSES += "testimage testsdk"
+#TESTIMAGE_AUTO_qemuall = "1"
+
+#
+# Interactive shell configuration
+#
+#OE_TERMINAL = "auto"
+
+# Inheriting this class has shown to speed up builds due to significantly lower
+# amounts of data stored in the data cache as well as on disk.
+# http://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#ref-classes-rm-work
+INHERIT += "rm_work"
+
+# Remove the old image before the new one is generated to save disk space when RM_OLD_IMAGE is set to 1, this is an easy way to keep the DEPLOY_DIR_IMAGE clean.
+RM_OLD_IMAGE = "1"
+
+# By default disable interactive patch resolution (tasks will just fail instead):
+PATCHRESOLVE = "noop"
+
+#
+# Disk Space Monitoring during the build
+#
+BB_DISKMON_DIRS ??= "\
+    STOPTASKS,${TMPDIR},1G,100K \
+    STOPTASKS,${DL_DIR},1G,100K \
+    STOPTASKS,${SSTATE_DIR},1G,100K \
+    STOPTASKS,/tmp,100M,100K \
+    ABORT,${TMPDIR},100M,1K \
+    ABORT,${DL_DIR},100M,1K \
+    ABORT,${SSTATE_DIR},100M,1K \
+    ABORT,/tmp,10M,1K"
+
+#
+# Shared-state files from other locations
+#
+#SSTATE_MIRRORS ?= "\
+#file://.* http://someserver.tld/share/sstate/PATH;downloadfilename=PATH \n \
+#file://.* file:///some/local/dir/sstate/PATH"
+
+#
+# Yocto Project SState Mirror
+#
+#SSTATE_MIRRORS ?= "file://.* http://sstate.yoctoproject.org/2.5/PATH;downloadfilename=PATH"
+
+#
+# Qemu configuration
+#
+PACKAGECONFIG_append_pn-qemu-native = " sdl"
+PACKAGECONFIG_append_pn-nativesdk-qemu = " sdl"
+#ASSUME_PROVIDED += "libsdl2-native"
+
+# CONF_VERSION is increased each time build/conf/ changes incompatibly and is used to
+# track the version of this file when it was generated. This can safely be ignored if
+# this doesn't mean anything to you.
+CONF_VERSION = "1"
+
+HOSTTOOLS += "docker iptables"
