@@ -1,4 +1,69 @@
 - commits:
+    - subject: >-
+        Disable by default the option to stop u-boot autoboot by pressing CTRL+C
+        in all OS versions
+      hash: 621037371b3c272ecb6bfd50cfbdad4eca0a02ea
+      body: |
+        We do not want by default that any OS variants allow for stopping the
+        autoboot in any way and letting users enter the u-boot shell. This can
+        be overwritten by setting OS_DEV_UBOOT_DELAY to 1.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Disable by default the option to stop u-boot autoboot by pressing
+          CTRL+C in all OS versions
+        changelog-entry: >-
+          Disable by default the option to stop u-boot autoboot by pressing
+          CTRL+C in all OS versions
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Increase NTP polling time to around 4.5 hours.
+      hash: 4a47b9297b37277a9aece0ea322e706dbe473f12
+      body: |
+        This commit increases the default NTP poll rate to around 4.5 hours.
+
+        BalenaOS uses chronyd for time synchronization, and it allows to specify
+        a minpoll and maxpoll values per server with a power of two number of
+        seconds for the minimum and maximum polling time respectively.
+
+        With those constraints, the change set both limits to 2^14s (4.55h) for
+        all servers.
+
+        An architectural decision has been made not to make this configurable.
+
+        Fixes #1780.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Increase NTP polling time to around 4.5 hours.
+        changelog-entry: Increase NTP polling time to around 4.5 hours.
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: >-
+        Disable the option to stop u-boot autoboot by pressing CTRL+C in
+        production OS version
+      hash: 2abb791f0df7c4936f0c6814b27291281dc922e0
+      body: |
+        We do not want that production OS variants allow for stopping
+        the autoboot in any way and letting users enter the u-boot shell.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Disable the option to stop u-boot autoboot by pressing CTRL+C in
+          production OS version
+        changelog-entry: >-
+          Disable the option to stop u-boot autoboot by pressing CTRL+C in
+          production OS version
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+  version: 2.46.1
+  date: 2020-01-01T03:50:49.765Z
+- commits:
     - subject: Update to ModemManager v1.12.2
       hash: 2c4d223d90701b7dbe7ed42f2b5bdaab396db4d3
       body: |

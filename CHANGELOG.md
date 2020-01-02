@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.46.1
+## (2020-01-01)
+
+* Disable by default the option to stop u-boot autoboot by pressing CTRL+C in all OS versions [Florin Sarbu]
+* Increase NTP polling time to around 4.5 hours. [Alex Gonzalez]
+* Disable the option to stop u-boot autoboot by pressing CTRL+C in production OS version [Florin Sarbu]
+
 # v2.46.0
 ## (2019-12-23)
 
