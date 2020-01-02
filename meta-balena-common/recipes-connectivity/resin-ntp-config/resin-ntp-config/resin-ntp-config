@@ -16,7 +16,7 @@ fi
 
 if [ ! -z "$NTP_SERVERS" ]; then
 	for ntp in ${NTP_SERVERS}; do
-		/usr/bin/chronyc add server $ntp || true
+		/usr/bin/chronyc add server $ntp minpoll 14 maxpoll 14 || true
 		/usr/bin/chronyc burst 4/10 "$ntp" || true
 	done
 fi
