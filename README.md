@@ -112,6 +112,13 @@ We currently test as part of our release process and provide explicit support fo
   * Quectel EC20
   * SIM7600E
 
+### Recommended WiFi USB dongle
+
+* Panda N600 Dual-Band (2.4 GHz + 5 GHz) Wireless-N USB Adapter
+This USB dongle is based on the Ralink RT5572 chipset and is supported by the generic rt2800usb driver.
+Tests have been done on the PAU09 model of the Panda N600 Dual-Band USB Adapter and having the
+firmware version 0.36 from firmware file rt2870.bin
+
 ## How to fix various build errors
 
 * Supervisor fails with a log similar to:
