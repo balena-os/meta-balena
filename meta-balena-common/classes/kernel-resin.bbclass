@@ -95,6 +95,7 @@ RESIN_CONFIGS ?= " \
     apple_hfs \
     nf_tables \
     dummy \
+    uinput \
     "
 
 #
@@ -504,6 +505,11 @@ RESIN_CONFIGS[nf_tables] = " \
 # dummy net devices
 RESIN_CONFIGS[dummy] = " \
     CONFIG_DUMMY=m \
+    "
+
+# enable uinput kernel module
+RESIN_CONFIGS[uinput] = " \
+    CONFIG_INPUT_UINPUT=m \
     "
 
 ###########
