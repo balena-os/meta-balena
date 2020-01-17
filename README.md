@@ -129,117 +129,117 @@ The behavior of balenaOS can be configured by setting the following keys in the 
 
 ### hostname
 
-String. The configured hostname of this device, otherwise the UUID is used.
+(string) The configured hostname of the device, otherwise the device UUID is used.
 
 ### persistentLogging
 
-Boolean. Enable or disable persistent logging on this device.
+(boolean) Enable or disable persistent logging on the device - defaults to false.
 
 ### country
 
-String. The country in which the device is operating. This is used for setting with WiFi regulatory domain.
+(string) [Two-letter country code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) for the country in which the device is operating. This is used for setting the WiFi regulatory domain, and you should check the WiFi device driver for a list of supported country codes.
 
 ### ntpServers
 
-String. A space-separated list of NTP servers to use for time synchronization. Defaults to resinio.pool.ntp.org servers.
+(string) A space-separated list of NTP servers to use for time synchronization. Defaults to `resinio.pool.ntp.org` servers:
+
+- `0.resinio.pool.ntp.org`
+- `1.resinio.pool.ntp.org`
+- `2.resinio.pool.ntp.org`
+- `3.resinio.pool.ntp.org`
 
 ### dnsServers
 
-String. A space-separated list of preferred DNS servers to use for name resolution:
-  * when `dnsServers` is not defined, or empty, the default value of it will be considered google DNS (8.8.8.8);
-  * when `dnsServers` is `"null"` (a string), the system will not alter dnsServers to the default server as stated above;
-  * when `dnsServers` is defined and not `"null"` it will be considered as such without any additional servers servers.
+(string) A space-separated list of preferred DNS servers to use for name resolution.
+
+- When `dnsServers` is not defined, or empty, Google's DNS server (8.8.8.8) is added to the list of DNS servers obtained via DHCP or statically configured in a NetworkManager connection profile.
+- When `dnsServers` is "null" (a string), Google's DNS server (8.8.8.8) will NOT be added as described above.
+- When `dnsServers` is defined and not "null", the listed servers will be added to the list of servers obtained via DCHP or statically configured via a NetworkManager connection profile.
 
 ### os
 
-Multiple settings that customize the OS at runtime are nested under here.
+An object containing settings that customize the host OS at runtime.
 
 #### network
 
 ##### wifi
 
-This object defines configuration related to Wi-Fi as it follows:
-   * "randomMacAddressScan" string key where the value is a boolean
-      * Configures MAC address randomization of a Wi-Fi device during scanning.
+An object that defines the configuration related to Wi-Fi.
 
-See below an example of a config.json snippet which disables MAC address randomization of Wi-Fi device during scanning:
-```
+- "randomMacAddressScan" (boolean) Configures MAC address randomization of a Wi-Fi device during scanning
+
+The following example disables MAC address randomization of Wi-Fi device during scanning:
+
+```json
 "os": {
-  "network" : {
-    "wifi": {
-      "randomMacAddressScan": false
-    }
+ "network" : {
+  "wifi": {
+    "randomMacAddressScan": false
   }
+ }
 }
 ```
 
 ##### connectivity
 
-This object defines configuration related to networking connectivity checks:
-   * "uri" string where the value is the url to query for connectivity checks
-   * "interval" string where the value is the interval between connectivity checks in seconds.
-   * "response" string. If set, controls what body content is checked for when requesting the URI for connectivity. If it is an empty value, the HTTP server is expected to answer with status code 204 or send no data.
+An object that defines configuration related to networking connectivity checks. This feature builds on NetworkManager's connectivity check, which is further documented in the connectivity section [here](https://developer.gnome.org/NetworkManager/stable/NetworkManager.conf.html).
 
-The default values are
-```
-uri=$API_ENDPOINT/connectivity-check
-interval=3600
-response=
-```
+- "uri" (string) Value of the url to query for connectivity checks. Defaults to `$API_ENDPOINT/connectivity-check`.
+- "interval" (string) Interval between connectivity checks in seconds. Defaults to 3600.
+- "response" (string). If set controls what body content is checked for when requesting the URI. If it is an empty value, the HTTP server is expected to answer with status code 204 or send no data.
 
-See below an example of a config.json snippet which configures the connectivity check by passing the balena cloud connectivity endpoint with a 5 minute interval.
-```
+The following example configures the connectivity check by passing the balenaCloud connectivity endpoint with a 5-minute interval.
+
+```json
 "os": {
-  "network" : {
-    "connectivity": {
-        "uri" : "https://api.balena-cloud.com/connectivity-check",
-        "interval" : "300"
-      }
+ "network" : {
+  "connectivity": {
+    "uri" : "https://api.balena-cloud.com/connectivity-check",
+    "interval" : "300"
   }
+ }
 }
 ```
 
 #### udevRules
 
-String. Custom udev rules can be passed via config.json.
+An object containing one or more custom udev rules as `key:value` pairs.
 
-To turn a rule into the format that can be easily added to config.json, use
+To turn a rule into a format that can be easily added to `config.json`, use the following command:
 
-`cat rulefilename | jq -sR .`
-e.g.
+```shell
+cat rulefilename | jq -sR .
 ```
+
+For example:
+
+```shell
 root@resin:/etc/udev/rules.d# cat 64.rules | jq -sR .
 "ACTION!=\"add|change\", GOTO=\"modeswitch_rules_end\"\nKERNEL==\"ttyACM*\", ATTRS{idVendor}==\"1546\", ATTRS{idProduct}==\"1146\", TAG+=\"systemd\", ENV{SYSTEMD_WANTS}=\"u-blox-switch@'%E{DEVNAME}'.service\"\nLBEL=\"modeswitch_rules_end\"\n"
-root@resin:/etc/udev/rules.d#
 ```
 
-An example config.json snippet with 2 rules:
+The following example contains two custom udev rules that will create `/etc/udev/rules.d/56.rules` and `/etc/udev/rules.d/64.rules`. The first time rules are added, or when they are modified, udevd will reload the rules and re-trigger.
 
-```
-  "os": {
-    "udevRules": {
-      "56": "ENV{ID_FS_LABEL_ENC}==\"resin-root*\", IMPORT{program}=\"resin_update_state_probe $devnode\", SYMLINK+=\"disk/by-state/$env{RESIN_UPDATE_STATE}\"",
-      "64" : "ACTION!=\"add|change\", GOTO=\"modeswitch_rules_end\"\nKERNEL==\"ttyACM*\", ATTRS{idVendor}==\"1546\", ATTRS{idProduct}==\"1146\", TAG+=\"systemd\", ENV{SYSTEMD_WANTS}=\"u-blox-switch@'%E{DEVNAME}'.service\"\nLBEL=\"modeswitch_rules_end\"\n"
-   }
+```json
+"os": {
+ "udevRules": {
+  "56": "ENV{ID_FS_LABEL_ENC}==\"resin-root*\", IMPORT{program}=\"resin_update_state_probe $devnode\", SYMLINK+=\"disk/by-state/$env{RESIN_UPDATE_STATE}\"",
+  "64" : "ACTION!=\"add|change\", GOTO=\"modeswitch_rules_end\"\nKERNEL==\"ttyACM*\", ATTRS{idVendor}==\"1546\", ATTRS{idProduct}==\"1146\", TAG+=\"systemd\", ENV{SYSTEMD_WANTS}=\"u-blox-switch@'%E{DEVNAME}'.service\"\nLBEL=\"modeswitch_rules_end\"\n"
  }
+}
 ```
-
-This will create `/etc/udev/rules.d/56.rules` and `/etc/udev/rules.d/64.rules`
-The first time rules are added/modified, these rules will be added and udevd will be asked to reload rules and re-trigger.
 
 #### sshKeys
 
-Array of strings. Holds a list of public SSH keys that will be used by the SSH server for authentication.
+(Array) An array of strings containing a list of public SSH keys that will be used by the SSH server for authentication.
 
-Example:
-```
-  "os": {
-    "sshKeys": [
-      "KEY1",
-      "KEY2"
-    ]
-  }
-
+```json
+"os": {
+ "sshKeys": [
+  "ssh-rsa AAAAB3Nza...M2JB balena@macbook-pro",
+  "ssh-rsa AAAAB3Nza...nFTQ balena@zenbook"
+ ]
+}
 ```
 
 ## Yocto version support
