@@ -11,6 +11,8 @@ Type=oneshot
 RemainAfterExit=Yes
 ExecStart=/usr/bin/bindmount --target @target@ --bind-root /mnt/state/root-overlay --command mount
 ExecStop=/usr/bin/bindmount --target @target@ --bind-root /mnt/state/root-overlay --command unmount
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=multi-user.target

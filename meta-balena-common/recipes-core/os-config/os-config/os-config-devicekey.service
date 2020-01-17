@@ -8,6 +8,8 @@ After=resin-boot.service
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/bin/os-config generate-api-key
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=basic.target

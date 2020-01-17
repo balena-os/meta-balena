@@ -10,6 +10,8 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/bin/resin-partition-mounter --mount resin-state
 ExecStop=/usr/bin/resin-partition-mounter --umount resin-state
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=multi-user.target
