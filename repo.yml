@@ -1,5 +1,7 @@
 type: 'yocto layer'
 reviewers: 1
 upstream:
-  repo: 'balena-supervisor'
-  url: 'https://github.com/balena-io/balena-supervisor'
+  - repo: 'balena-supervisor'
+    url: 'https://github.com/balena-io/balena-supervisor'
+  - repo: 'healthdog'
+    url: 'https://github.com/balena-os/healthdog-rs'
