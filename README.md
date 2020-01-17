@@ -125,7 +125,7 @@ More info: http://stackoverflow.com/questions/29546388/getting-an-operation-not-
 
 ## config.json
 
-The behaviour of balenaOS can be configured by setting the following keys in the config.json file in the boot partition. This configuration file is also used by the supervisor.
+The behavior of balenaOS can be configured by setting the following keys in the config.json file in the boot partition. This configuration file is also used by the supervisor.
 
 ### hostname
 
