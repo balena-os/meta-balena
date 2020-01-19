@@ -14,3 +14,5 @@ do_install_append() {
 
     install -d ${D}/var/lib/bluetooth
 }
+
+PACKAGECONFIG_append = " sixaxis"
