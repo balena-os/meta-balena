@@ -1,0 +1,5 @@
+[Unit]
+After=systemd-journald.service
+
+[Service]
+ExecStart=/bin/journalctl --vacuum-size=32M
