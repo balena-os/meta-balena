@@ -4,7 +4,7 @@ the linux kernel source. The headers are needed for OOT module building \
 and are taking up less space than the entire linux kernel source tree. \
 "
 SECTION = "devel/kernel"
-LICENSE = "Apache-2.0"
+LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 DEPENDS += " \

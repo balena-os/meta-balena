@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel headers test"
 DESCRIPTION = "This recipe tests generated kernel headers by running a simple hello-world compile test"
 SECTION = "devel/kernel"
-LICENSE = "Apache-2.0"
+LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 SRC_URI = "file://example_module/hello.c \
