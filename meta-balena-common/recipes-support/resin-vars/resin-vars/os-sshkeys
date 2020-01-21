@@ -21,6 +21,8 @@ tool=$(basename "$0")
 custom_ssh_public_keys=".os.sshKeys"
 authorized_keys_path=/home/root/.ssh/authorized_keys_local
 authorized_keys_perm="600"
+sshd_env_path=/home/root/.ssh/sshd.env
+sshd_env_perm="644"
 
 log () {
 	echo "$tool: $1"
@@ -59,6 +61,8 @@ if [ -n "$ssh_keys" ]; then
 		"$authorized_keys_path")" != "$authorized_keys" ]; then
 		echo "${authorized_keys}" > "$authorized_keys_path"
 		chmod "$authorized_keys_perm" "$authorized_keys_path"
+		echo 'SSHD_EXTRA_OPTS=-o PasswordAuthentication=no' > "$sshd_env_path"
+		chmod "$sshd_env_perm" "$sshd_env_path"
 		log "Done."
 	else
 		log "Custom SSH public keys already in place."
@@ -66,4 +70,5 @@ if [ -n "$ssh_keys" ]; then
 else
 	log "No custom SSH public keys configured."
 	[ ! -f "$authorized_keys_path" ] || rm -f "$authorized_keys_path"
+	[ ! -f "$sshd_env_path" ] || rm -f "$sshd_env_path"
 fi
