@@ -1,0 +1,63 @@
+From 424f196cafc65ed708324ac97e654acdfc9c2116 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Robert=20G=C3=BCnzler?= <r@gnzler.io>
+Date: Fri, 24 Jan 2020 12:47:16 +0100
+Subject: [PATCH] seccomp: allow compiling without libseccomp
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Imitate runc behavior and fail if seccomp configs are used but we were
+compiled without support for it.
+
+Signed-off-by: Robert Günzler <robertg@balena.io>
+---
+ src/libcrun/seccomp.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/src/libcrun/seccomp.c b/src/libcrun/seccomp.c
+index 92daceb..58dde3e 100644
+--- a/src/libcrun/seccomp.c
++++ b/src/libcrun/seccomp.c
+@@ -35,7 +35,9 @@
+ #include <sys/sysmacros.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#ifdef HAVE_SECCOMP
+ #include <seccomp.h>
++#endif
+ #include <linux/seccomp.h>
+ #include <linux/filter.h>
+ #include <sys/prctl.h>
+@@ -49,6 +51,7 @@
+ # define SECCOMP_FILTER_FLAG_SPEC_ALLOW	(1UL << 2)
+ #endif
+ 
++#ifdef HAVE_SECCOMP
+ static int
+ syscall_seccomp (unsigned int operation, unsigned int flags, void *args)
+ {
+@@ -283,3 +286,21 @@ libcrun_generate_seccomp (libcrun_container_t *container, int outfd, unsigned in
+ 
+   return 0;
+ }
++
++#else
++
++int
++libcrun_apply_seccomp (int infd, char **seccomp_flags, size_t seccomp_flags_len, libcrun_error_t *err)
++{
++  if (seccomp_flags == NULL)
++    return 0;
++
++  return crun_make_error (err, 0, "seccomp: config provided but seccomp not supported");
++}
++
++int
++libcrun_generate_seccomp (libcrun_container_t *container, int outfd, unsigned int options, libcrun_error_t *err)
++{
++  return crun_make_error (err, 0, "seccomp: not supported");
++}
++#endif
+-- 
+2.24.1
+
