@@ -1,7 +1,7 @@
 require go-common.inc
 
-GO_BASEVERSION = "1.10"
-GO_MINOR = ".8"
+GO_BASEVERSION = "1.12"
+GO_MINOR = ".12"
 PV .= "${GO_MINOR}"
 FILESEXTRAPATHS_prepend := "${FILE_DIRNAME}/go-${GO_BASEVERSION}:"
 
@@ -15,9 +15,9 @@ SRC_URI += "\
     file://0005-make.bash-override-CC-when-building-dist-and-go_boot.patch \
     file://0006-cmd-dist-separate-host-and-target-builds.patch \
     file://0007-cmd-go-make-GOROOT-precious-by-default.patch \
+    file://0008-use-GOBUILDMODE-to-set-buildmode.patch \
 "
-
 SRC_URI_append_libc-musl = " file://0009-ld-replace-glibc-dynamic-linker-with-musl.patch"
 
-SRC_URI[main.md5sum] = "1a5f93f2aa6e894dbd4bed2cf88f71f2"
-SRC_URI[main.sha256sum] = "6faf74046b5e24c2c0b46e78571cca4d65e1b89819da1089e53ea57539c63491"
+SRC_URI[main.md5sum] = "7524b954f00d8eaf34c5c08772c7944b"
+SRC_URI[main.sha256sum] = "fcb33b5290fa9bcc52be3211501540df7483d7276b031fc77528672a3c705b99"
