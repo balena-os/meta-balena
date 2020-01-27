@@ -94,4 +94,4 @@ PREFERRED_VERSION_upx-native_arm = "3.94"
 PREFERRED_VERSION_linux-firmware = "20190815"
 
 # balena-engine go version requirement
-GOVERSION = "1.10.8"
+GOVERSION = "1.12.12"
