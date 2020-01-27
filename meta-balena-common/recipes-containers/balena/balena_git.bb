@@ -7,14 +7,14 @@ bandwidth usage, has 3.5x smaller binaries, uses RAM and storage more \
 conservatively, and focuses on atomicity and durability of container \
 pulling."
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
+LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f28"
 
 inherit systemd go pkgconfig useradd
 
-BALENA_VERSION = "18.09.10-dev"
-BALENA_BRANCH= "master"
+BALENA_VERSION = "19.03.8-dev"
+BALENA_BRANCH= "19.03-balena"
 
-SRCREV = "7cb464a406748016f2df0c31a9851d20456a3d31"
+SRCREV = "1f864a53975db2ec3cd349a9d66cac6375f638a6"
 SRC_URI = "\
 	git://github.com/resin-os/balena.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
@@ -110,7 +110,7 @@ do_compile() {
 	export CGO_LDFLAGS="${LDFLAGS}  --sysroot=${STAGING_DIR_TARGET}"
 
 	export DOCKER_GITCOMMIT="${SRCREV}"
-	export DOCKER_BUILDTAGS='exclude_graphdriver_btrfs exclude_graphdirver_zfs exclude_graphdriver_devicemapper no_btrfs'
+	export DOCKER_BUILDTAGS="no_buildkit no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs"
 
 	VERSION=${BALENA_VERSION} ./hack/make.sh dynbinary-balena
 
