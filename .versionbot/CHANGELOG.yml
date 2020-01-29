@@ -1,4 +1,16 @@
 - commits:
+    - subject: Americanize the README.md
+      hash: 13b5397eb127f8626a45041b84be7aed9b149709
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+  version: 2.46.2
+  date: 2020-01-17T19:05:59.781Z
+- commits:
     - subject: >-
         Disable by default the option to stop u-boot autoboot by pressing CTRL+C
         in all OS versions

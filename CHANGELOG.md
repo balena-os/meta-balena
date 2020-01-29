@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.46.2
+## (2020-01-17)
+
+* Americanize the README.md [Matthew McGinn]
+
 # v2.46.1
 ## (2020-01-01)
 
