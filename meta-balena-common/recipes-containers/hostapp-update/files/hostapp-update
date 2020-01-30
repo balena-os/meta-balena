@@ -56,6 +56,10 @@ mkdir -p /mnt/sysroot
 for dir in 'dev' 'etc' 'balena' 'hostapps' 'mnt/state' 'proc' 'sbin' 'sys' 'tmp'; do
 	mkdir -p "$SYSROOT/$dir"
 done
+if [ -d "/mnt/data/docker/tmp" ] && [ ! -L "$SYSROOT/balena/tmp" ]; then
+	rm -fr "$SYSROOT/balena/tmp"
+	ln -s /mnt/data/docker/tmp/ "$SYSROOT/balena/tmp"
+fi
 if [ ! -f "$SYSROOT/etc/machine-id" ]; then
 	touch "$SYSROOT/etc/machine-id"
 fi
