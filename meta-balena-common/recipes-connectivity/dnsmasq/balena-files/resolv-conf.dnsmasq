@@ -1,2 +1,3 @@
 # we use dnsmasq at 127.0.0.2 so that user containers can run their own dns cache and forwarder and not conflict with dnsmasq on the host
 nameserver 127.0.0.2
+options timeout:15

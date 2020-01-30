@@ -7,12 +7,10 @@ LIC_FILES_CHKSUM = " \
     file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
 "
 
-DEPENDS = "glib-2.0 glib-2.0-native libgudev"
+DEPENDS = "glib-2.0 glib-2.0-native libgudev autoconf-archive-native"
 
 inherit autotools pkgconfig bash-completion
 
-SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BPN}-${PV}.tar.xz \
-           file://clang.patch \
-"
-SRC_URI[md5sum] = "988a6a7fd4a2f4e08c098992180e5b02"
-SRC_URI[sha256sum] = "550fb69e5e57f7646f8eb9ed8d24e44ea869ad846be9c162893f12e43528059b"
+SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BPN}-${PV}.tar.xz"
+SRC_URI[md5sum] = "87060e8957013177e4140edc6f64f5bd"
+SRC_URI[sha256sum] = "5c0778eb1cd12c3604523134e55183f5147b0cae71150e875b583768f7aa1f38"
