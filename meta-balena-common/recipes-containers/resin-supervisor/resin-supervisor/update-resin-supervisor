@@ -17,6 +17,9 @@ Options:
 
   -t <SUPERVISOR TAG>, --supervisor-tag <SUPERVISOR TAG>
         Set supervisor tag to update to.
+
+  -f <FILE>, --file <FILE>
+        Update supervisor from docker image file.
 EOF
 }
 
@@ -43,6 +46,18 @@ while [ $# -gt 0 ]; do
                 exit 1
             fi
             UPDATER_SUPERVISOR_TAG=$2
+            shift
+            ;;
+        -f|--file)
+            if [ -z "$2" ]; then
+                echo "ERROR: \"$1\" argument needs a value."
+                exit 1
+            fi
+            if [ ! -s "$2" ]; then
+                echo "ERROR: \"$2\" file is invalid."
+                exit 1
+            fi
+            UPDATER_FILE=$2
             shift
             ;;
         *)
@@ -91,7 +106,16 @@ fi
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and tag..."
-if [ -n "$API_ENDPOINT" ] && [ -n "$DEVICE_ID" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "Authorization: Bearer $_device_api_key" --header "User-Agent:" --compressed "$API_ENDPOINT/v4/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/id%20eq%20$DEVICE_ID)" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
+if [ -f "$UPDATER_FILE" ]; then
+    echo "Loading supervisor image from file: $UPDATER_FILE."
+    loaded_image=$(balena load --quiet -i "$UPDATER_FILE" | cut -d: -f1 --complement | tr -d ' ')
+    image_name=${loaded_image%:*}
+    tag=${loaded_image##*:}
+    if [ -z "$tag" ] || [ -z "$image_name" ]; then
+        echo "ERROR: Failure in loading supervisor image from file."
+        error_handler "failure in loading supervisor image from file"
+    fi
+elif [ -n "$API_ENDPOINT" ] && [ -n "$DEVICE_ID" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "Authorization: Bearer $_device_api_key" --header "User-Agent:" --compressed "$API_ENDPOINT/v4/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/id%20eq%20$DEVICE_ID)" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
     echo "Supervisor configuration found from API."
 
     if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
@@ -131,22 +155,21 @@ else
     tag=$UPDATER_SUPERVISOR_TAG
 fi
 
+# Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
+echo "Stop supervisor..."
+systemctl stop resin-supervisor
+
 # Get image id of tag. This will be non-empty only in case it's already downloaded.
 echo "Getting image id..."
 imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 if [ -n "$imageid" ]; then
     echo "Supervisor $image_name:$tag already downloaded."
-    exit 0
+else
+    # Pull target version.
+    echo "Pulling supervisor $image_name:$tag..."
+    $DOCKER pull "$image_name:$tag"
 fi
-
-# Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
-echo "Stop supervisor..."
-systemctl stop resin-supervisor
-
-# Pull target version.
-echo "Pulling supervisor $image_name:$tag..."
-$DOCKER pull "$image_name:$tag"
 
 $DOCKER rm --force resin_supervisor || true
 
