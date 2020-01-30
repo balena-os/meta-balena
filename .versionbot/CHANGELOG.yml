@@ -1,4 +1,251 @@
 - commits:
+    - subject: Update usb-modeswitch-data to version 20191128
+      hash: d0c007e5b77cff3e3b78b7a5b91747b1c8662b4d
+      body: |
+        We also delete the patch that switched the 12d1:1f01 modems to
+        NCM mode with that specific MessageContent because that made
+        other Huawei modems that used the same vid:pid combination
+        unusable in that mode. So now these modems will work in the old
+        Hilink mode using cdc_ether instead.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update usb-modeswitch-data to version 20191128
+        changelog-entry: Update usb-modeswitch-data to version 20191128
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Update usb-modeswitch to version 2.5.2
+      hash: f74a51dc5cf969b4aab1ae3eff36e512cf78d1f0
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update usb-modeswitch to version 2.5.2
+        changelog-entry: Update usb-modeswitch to version 2.5.2
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Update to ModemManager v1.12.4
+      hash: fd45ee88dfa87b6e3b39dc8bf16acbb36c64328a
+      body: |
+        Fixes #1805
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update to ModemManager v1.12.4
+        changelog-entry: Update to ModemManager v1.12.4
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Update libmbim to version 1.22.0
+      hash: f765a2e2c586f29f7c18813947f860e19dc354e9
+      body: |
+        We also stop applying the clang.patch since we do not
+        use clang at the moment but we keep it here for future
+        reference in case we ever switch from gcc
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libmbim to version 1.22.0
+        changelog-entry: Update libmbim to version 1.22.0
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Update libqmi to version 1.24.4
+      hash: 755c7cd7d5106e99256adc291a7c95db711b0ae8
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update libqmi to version 1.24.4
+        changelog-entry: Update libqmi to version 1.24.4
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Add periodic vacuuming of journald log files
+      hash: e45761e1e3b57a1f42075924741063ac94fc788c
+      body: |
+        Daily vacuuming of log files to avoid the partition filling up if
+        corrupted files appear.
+
+        Fixes #1792
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add periodic vacuuming of journald log files
+        changelog-entry: Add periodic vacuuming of journald log files
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: >-
+        No user impact. Increase limit for maximum initramfs size from 12MB to
+        32MB. This helps reduce unnecessary overrides in integration layers.
+      hash: ea2fdb68801d62f8126bb15e8e67d0a14709dd4a
+      body: |
+        Some devices have special tools in the initramfs that bloat it.
+        e.g. Jetson family have tegra-firmware-xusb etc.
+
+        IMAGE_ROOTFS_MAXSIZE triggers an error if the rootfs goes beyond this
+        limit. This does not force the rootfs to an empty fixed size.
+
+        We can comfortably increase the max size to 32MB to reduce unnecessary
+        patches in the device integration layers.
+
+        We'll still be covered by the full resin-rootA size limit.
+        Fixes #1790
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          No user impact. Increase limit for maximum initramfs size from 12MB to
+          32MB. This helps reduce unnecessary overrides in integration layers.
+        changelog-entry: >-
+          No user impact. Increase limit for maximum initramfs size from 12MB to
+          32MB. This helps reduce unnecessary overrides in integration layers.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Match licenses with license files.
+      hash: d53ba3570daf05c8592220b2949a441f6e06e662
+      body: |
+        Apache 2.0 and MIT, though similar, are not the same license.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Enable sixaxis support in bluez5
+      hash: 74be7b20bf3a9eb71bf5318a96248e087b7ce441
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Enable sixaxis support in bluez5
+        changelog-entry: Enable sixaxis support in bluez5
+        Signed-off-by: Alexis Svinartchouk <alexis@balena.io>
+        signed-off-by: Alexis Svinartchouk <alexis@balena.io>
+      author: Alexis Svinartchouk
+    - subject: Addressing review comments
+      hash: 57047830db238a127c09f283870ecf3d0992578b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Gareth Davies <gareth@balena.io>
+        signed-off-by: Gareth Davies <gareth@balena.io>
+      author: Gareth Davies
+    - subject: Update config.json documentation
+      hash: f294336c3c8d9d8c08075a299b6bb377eb95f922
+      body: ''
+      footer:
+        Changelog-entry: Update config.json documentation
+        changelog-entry: Update config.json documentation
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Gareth Davies <gareth@balena.io>
+        signed-off-by: Gareth Davies <gareth@balena.io>
+      author: Gareth Davies
+    - subject: Increase DNS clients timeout to 15 seconds
+      hash: b4122eeea971dfc9325885cc7c896c733cf60920
+      body: >
+        The DNS clients (applications) resolver libraries use the timeout value
+        in
+
+        /etc/resolv.conf to set the time between DNS attempts. The default is 5
+
+        secs which for slow networks like cellular mean lots of DNS requests on
+
+        a bandwidth sensitive channel.
+
+
+        This change modifies the default to 15 secs. This timeout only applies
+
+        when DNS servers are unresponsive so it will not affect the normal
+
+        functionality.
+
+
+        Fixes #1800
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Increase DNS clients timeout to 15 seconds
+        changelog-entry: Increase DNS clients timeout to 15 seconds
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Fix supervisor nested changelogs
+      hash: 6bbe46404f36ae9b2719750d9bfc9daf5b12c88c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix supervisor nested changelogs
+        changelog-entry: Fix supervisor nested changelogs
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Enable memory overcommit
+      hash: 20d9e3114dc28683ea2c15cecfcae6ff93d22bec
+      body: |
+        Move the memory overcommit settings from the Raspberry Pi integration
+        layer to meta-balena so it applies to all device types.
+
+        Fixes #1791
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Enable memory overcommit
+        changelog-entry: Enable memory overcommit
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Add uinput kernel module
+      hash: 7ec6b796787fc0afb2234e8ddb654f1b4a761708
+      body: |
+        Add uinput user level driver support directly from meta-balena
+        as this will benefit all our customers.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add uinput kernel module
+        changelog-entry: Add uinput kernel module
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Make sure to add in rootfs the wifi firmware for wl18xx
+      hash: 37b9f59d4c7521805883ef3bf8e0bbc21d26622e
+      body: |
+        Since poky thud, the linux-firmware recipe in poky is packaging
+        the wl18xx firmware in its own package rather than add it in the
+        linux-firmware-wl12xx package.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Make sure to add in rootfs the wifi firmware for wl18xx
+        changelog-entry: Make sure to add in rootfs the wifi firmware for wl18xx
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Add supported USB WiFi dongle
+      hash: b82982940548da60daa3d7a854316de96ec82e45
+      body: |
+        The RT5572 chipset based Panda PAU09 N600 was
+        added as a supported dongle across all the
+        Balena supported devices
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add supported USB WiFi dongle
+        changelog-entry: Add supported USB WiFi dongle
+        Signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+        signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+      author: Vicentiu Galanopulo
+  version: 2.47.0
+  date: 2020-01-29T17:30:33.484Z
+- commits:
     - subject: Americanize the README.md
       hash: 13b5397eb127f8626a45041b84be7aed9b149709
       body: ''
