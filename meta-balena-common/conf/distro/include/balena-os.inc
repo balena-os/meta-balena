@@ -90,5 +90,12 @@ BAD_RECOMMENDATIONS += "shared-mime-info"
 PREFERRED_VERSION_upx_arm = "3.94"
 PREFERRED_VERSION_upx-native_arm = "3.94"
 
+# Preferred rust version
+PREFERRED_VERSION_rust-native = "1.36.0"
+PREFERRED_VERSION_rust-cross-arm = "1.36.0"
+PREFERRED_VERSION_rust-llvm-native = "1.36.0"
+PREFERRED_VERSION_cargo-native = "1.36.0"
+PREFERRED_VERSION_libstd-rs = "1.36.0"
+
 # balena-engine go version requirement
 GOVERSION = "1.10.8"
