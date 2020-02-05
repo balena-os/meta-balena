@@ -61,8 +61,6 @@ if [ -n "$ssh_keys" ]; then
 		"$authorized_keys_path")" != "$authorized_keys" ]; then
 		echo "${authorized_keys}" > "$authorized_keys_path"
 		chmod "$authorized_keys_perm" "$authorized_keys_path"
-		echo 'SSHD_EXTRA_OPTS=-o PasswordAuthentication=no' > "$sshd_env_path"
-		chmod "$sshd_env_perm" "$sshd_env_path"
 		log "Done."
 	else
 		log "Custom SSH public keys already in place."
@@ -70,5 +68,15 @@ if [ -n "$ssh_keys" ]; then
 else
 	log "No custom SSH public keys configured."
 	[ ! -f "$authorized_keys_path" ] || rm -f "$authorized_keys_path"
+fi
+
+ssh_without_password="$(jq -r ".os.sshWithoutPassword" "$CONFIG_PATH")"
+
+if [ "$ssh_without_password" = "false" ]; then
+	log "Disabling SSH Password(less) Authentication..."
+	echo 'SSHD_EXTRA_OPTS=-o PasswordAuthentication=no' > "$sshd_env_path"
+	chmod "$sshd_env_perm" "$sshd_env_path"
+	log "Done."
+else
 	[ ! -f "$sshd_env_path" ] || rm -f "$sshd_env_path"
 fi
