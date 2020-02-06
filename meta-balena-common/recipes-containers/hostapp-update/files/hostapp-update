@@ -16,21 +16,100 @@ run_current_hooks_and_recover () {
 	exit 1
 }
 
+# Help function
+hostapp_update_help() {
+    cat << EOF
+Process host OS update.
+$0 <OPTION>
+
+Options:
+  -h, --help
+        Display this help and exit.
+
+  -f <FILE>, --file <FILE>
+        Update host OS from local docker image file.
+
+  -i <IMAGE>, --image <IMAGE>
+	Update host OS from remote docker image.
+
+  --tmp-dir-symlink <DIR>
+	Path to directory that would be symlinked to be used as balena tmp dir
+	(so that the initial untar of the offline hostos image won't fill up
+	the /mnt/sysroot/inactive partition).
+
+  -r, --reboot
+        Reboot after update.
+
+  -n, --no-hooks
+        Don't process hooks.
+
+  -x, --no-rollback-hooks
+        Don't process rollback hooks.
+EOF
+}
+
 local_image=""
 remote_image=""
 reboot=0
 hooks=1
 hooks_rollback=1
 
-while getopts 'f:i:rnx' flag; do
-	case "${flag}" in
-	f) local_image=$(realpath "${OPTARG}") ;;
-	i) remote_image="${OPTARG}" ;;
-	r) reboot=1 ;;
-	n) hooks=0 ;;
-	x) hooks_rollback=0 ;;
-	*) error "Unexpected option ${flag}" ;;
-	esac
+# Parse arguments
+while [ $# -gt 0 ]; do
+    arg="$1"
+
+    case $arg in
+        -h|--help)
+            hostapp_update_help
+            exit 0
+            ;;
+        -f|--file)
+            if [ -z "$2" ]; then
+                echo "ERROR: \"$1\" argument needs a value."
+                exit 1
+            fi
+            if [ ! -s "$2" ]; then
+                echo "ERROR: \"$2\" file is invalid."
+                exit 1
+            fi
+	    local_image=$(realpath "$2")
+            shift
+            ;;
+        -i|--image)
+            if [ -z "$2" ]; then
+                echo "ERROR: \"$1\" argument needs a value."
+                exit 1
+            fi
+            remote_image="$2"
+            shift
+            ;;
+        --tmp-dir-symlink)
+            if [ -z "$2" ]; then
+                echo "ERROR: \"$1\" argument needs a value."
+                exit 1
+            fi
+	    if [ ! -d "$2" ]; then
+                echo "ERROR: \"$2\" is not a directory."
+                exit 1
+            fi
+            tmp_dir_symlink="$2"
+            shift
+            ;;
+        -r|--reboot)
+            reboot=1
+            ;;
+        -n|--no-hooks)
+            hooks=0
+            ;;
+        -x|--no-rollback-hooks)
+            hooks_rollback=0
+            ;;
+        *)
+            echo "ERROR: Unrecognized option $1."
+            exit 1
+            ;;
+    esac
+    shift
 done
 
 if [ "$local_image" =  "" ] && [ "$remote_image" = "" ]; then
@@ -56,9 +135,12 @@ mkdir -p /mnt/sysroot
 for dir in 'dev' 'etc' 'balena' 'hostapps' 'mnt/state' 'proc' 'sbin' 'sys' 'tmp'; do
 	mkdir -p "$SYSROOT/$dir"
 done
-if [ -d "/mnt/data/docker/tmp" ] && [ ! -L "$SYSROOT/balena/tmp" ]; then
+if [ -d "$tmp_dir_symlink" ]; then
 	rm -fr "$SYSROOT/balena/tmp"
-	ln -s /mnt/data/docker/tmp/ "$SYSROOT/balena/tmp"
+	ln -s "$tmp_dir_symlink" "$SYSROOT/balena/tmp"
+elif [ -L "$SYSROOT/balena/tmp" ]; then
+	rm "$SYSROOT/balena/tmp"
+	mkdir "$SYSROOT/balena/tmp"
 fi
 if [ ! -f "$SYSROOT/etc/machine-id" ]; then
 	touch "$SYSROOT/etc/machine-id"
