@@ -1,4 +1,29 @@
 - commits:
+    - subject: >-
+        Affects 2.45+ on all devices. Fix dangling sshd services on failed
+        connections that would grow and cause cpu load to keep rising. See issue
+        1837 in meta-balena for more detail.
+      hash: 0759f60bda559377bfb10361167222d4e0de6d01
+      body: |
+        This reverts commit 6d5de094c3f0d9f2f06a1c58abc5eb9dc256cf79.
+        Fixes #1837
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Affects 2.45+ on all devices. Fix dangling sshd services on failed
+          connections that would grow and cause cpu load to keep rising. See
+          issue 1837 in meta-balena for more detail.
+        changelog-entry: >-
+          Affects 2.45+ on all devices. Fix dangling sshd services on failed
+          connections that would grow and cause cpu load to keep rising. See
+          issue 1837 in meta-balena for more detail.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.47.1
+  date: 2020-02-13T11:54:53.438Z
+- commits:
     - subject: Update usb-modeswitch-data to version 20191128
       hash: d0c007e5b77cff3e3b78b7a5b91747b1c8662b4d
       body: |

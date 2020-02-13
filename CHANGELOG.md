@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.47.1
+## (2020-02-13)
+
+* Affects 2.45+ on all devices. Fix dangling sshd services on failed connections that would grow and cause cpu load to keep rising. See issue 1837 in meta-balena for more detail. [Zubair Lutfullah Kakakhel]
+
 # v2.47.0
 ## (2020-01-29)
 
