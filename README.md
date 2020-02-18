@@ -192,7 +192,7 @@ The following example disables MAC address randomization of Wi-Fi device during 
 An object that defines configuration related to networking connectivity checks. This feature builds on NetworkManager's connectivity check, which is further documented in the connectivity section [here](https://developer.gnome.org/NetworkManager/stable/NetworkManager.conf.html).
 
 - "uri" (string) Value of the url to query for connectivity checks. Defaults to `$API_ENDPOINT/connectivity-check`.
-- "interval" (string) Interval between connectivity checks in seconds. Defaults to 3600.
+- "interval" (string) Interval between connectivity checks in seconds. Defaults to 3600. To disable the connectivity checks set the interval to "0".
 - "response" (string). If set controls what body content is checked for when requesting the URI. If it is an empty value, the HTTP server is expected to answer with status code 204 or send no data.
 
 The following example configures the connectivity check by passing the balenaCloud connectivity endpoint with a 5-minute interval.
