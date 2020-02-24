@@ -25,6 +25,7 @@ SRC_URI = "\
 	file://var-lib-docker.mount \
 	file://balena.conf.systemd \
 	file://balena-tmpfiles.conf \
+	file://0001-imporve-hardcoded-CC-on-cross-compile-docker-ce.patch \
 	"
 S = "${WORKDIR}/git"
 
