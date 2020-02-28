@@ -52,5 +52,5 @@ RDEPENDS_initramfs-module-rootfs = "${PN}-base"
 FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY_initramfs-module-prepare = "Prepare initramfs console"
-RDEPENDS_initramfs-module-prepare = "${PN}-base"
+RDEPENDS_initramfs-module-prepare = "${PN}-base os-helpers-logging os-helpers-fs"
 FILES_initramfs-module-prepare = "/init.d/70-prepare"
