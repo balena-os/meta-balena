@@ -65,6 +65,7 @@ do_configure[noexec] = "1"
 do_compile() {
 	export PATH=${STAGING_BINDIR_NATIVE}/${HOST_SYS}:$PATH
 
+	export GOCACHE="${B}/.cache"
 	export GOHOSTOS="linux"
 	export GOOS="linux"
 	case "${TARGET_ARCH}" in
