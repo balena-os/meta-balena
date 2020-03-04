@@ -50,6 +50,7 @@ EOF
 
 local_image=""
 remote_image=""
+tmp_dir_symlink=""
 reboot=0
 hooks=1
 hooks_rollback=1
