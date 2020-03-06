@@ -3,6 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 SRC_URI_append = " \
     file://prepare \
     file://fsck \
+    file://fsuuidsinit \
     file://machineid \
     file://resindataexpander \
     file://rorootfs \
@@ -12,6 +13,7 @@ SRC_URI_append = " \
 
 do_install_append() {
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
+    install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
@@ -27,6 +29,7 @@ PACKAGES_append = " \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
+    initramfs-module-fsuuidsinit \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -54,3 +57,7 @@ FILES_initramfs-module-rootfs = "/init.d/90-rootfs"
 SUMMARY_initramfs-module-prepare = "Prepare initramfs console"
 RDEPENDS_initramfs-module-prepare = "${PN}-base os-helpers-logging os-helpers-fs"
 FILES_initramfs-module-prepare = "/init.d/70-prepare"
+
+SUMMARY_initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
+RDEPENDS_initramfs-module-fsuuidsinit = "${PN}-base"
+FILES_initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
