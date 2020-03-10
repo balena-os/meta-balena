@@ -19,6 +19,7 @@ LimitNPROC=1048576
 LimitCORE=infinity
 WatchdogSec=360
 Restart=always
+TasksMax=infinity
 
 [Install]
 Alias=balena-engine.service
