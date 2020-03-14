@@ -20,7 +20,6 @@ CONNECTIVITY_FIRMWARES ?= " \
 CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
     avahi-daemon \
-    crda \
     dnsmasq \
     openvpn \
     resin-proxy-config \
