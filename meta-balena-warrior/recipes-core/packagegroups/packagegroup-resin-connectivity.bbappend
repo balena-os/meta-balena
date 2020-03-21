@@ -19,4 +19,5 @@ CONNECTIVITY_FIRMWARES_append = " \
     linux-firmware-rtl8188eu \
     linux-firmware-wl12xx \
     linux-firmware-wl18xx \
+    wireless-regdb-static \
     "

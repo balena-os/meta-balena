@@ -90,5 +90,8 @@ BAD_RECOMMENDATIONS += "shared-mime-info"
 PREFERRED_VERSION_upx_arm = "3.94"
 PREFERRED_VERSION_upx-native_arm = "3.94"
 
+# let's pin linux-firmware to the version we imported from Poky zeus-22.0.1 release
+PREFERRED_VERSION_linux-firmware = "20190815"
+
 # balena-engine go version requirement
 GOVERSION = "1.10.8"

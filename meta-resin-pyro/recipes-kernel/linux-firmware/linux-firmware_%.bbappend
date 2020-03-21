@@ -11,9 +11,3 @@ python __anonymous() {
 	d.setVar("PACKAGES", "linux-firmware-iwlwifi-8000c " + packages)
 }
 FILES_${PN}-iwlwifi-8000c = "${nonarch_base_libdir}/firmware/iwlwifi-8000C-*.ucode"
-
-PACKAGES =+ "${PN}-bcm43143"
-
-FILES_${PN}-bcm43143 = " \
-    /lib/firmware/brcm/brcmfmac43143*.bin \
-    "
