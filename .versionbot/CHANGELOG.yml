@@ -1,5 +1,149 @@
 - commits:
     - subject: >-
+        Add the linux-firmware recipe from the Poky zeus-22.0.1 release and
+        package various iwlwifi firmware separately
+      hash: bd9aff4b3bdfdfe9b5c8dd1bbee397154d6144fd
+      body: |
+        We also package separately the firmware for Intel Wireless-AC 9260
+        cards and also package separetely the wifi and bluetooth firmware for
+        Intel Wireless-AX MAC which is found in the Intel NUC10I7FNH.
+      footer:
+        Changelog-entry: >-
+          Add the linux-firmware recipe from the Poky zeus-22.0.1 release and
+          package various iwlwifi firmware separately
+        changelog-entry: >-
+          Add the linux-firmware recipe from the Poky zeus-22.0.1 release and
+          package various iwlwifi firmware separately
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: >-
+        Add regulatory.db (Wireless Central Regulatory Domain Database) to
+        rootfs so kernel versions >= v4.15 can load it (for Poky Thud and
+        Warrior based board)
+      hash: da7a018e680f24be5dcce92f04eac4804493cad8
+      body: |
+        This package adds to rootfs the regulatory database into
+        /lib/firmware/regulatory.db which can be loaded by kernel versions
+        >= v4.15 for Poky Thud and Warrior based boards.
+      footer:
+        Changelog-entry: >-
+          Add regulatory.db (Wireless Central Regulatory Domain Database) to
+          rootfs so kernel versions >= v4.15 can load it (for Poky Thud and
+          Warrior based board)
+        changelog-entry: >-
+          Add regulatory.db (Wireless Central Regulatory Domain Database) to
+          rootfs so kernel versions >= v4.15 can load it (for Poky Thud and
+          Warrior based board)
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: >-
+        Do not send SIGKILL directly to user containers (set KillMode=process in
+        balena.service)
+      hash: f4df857f8fb2b811d9e23b0419c99894eaa5bb32
+      body: |
+        We need to allow user containers to do some clean-up if they wish to on
+        reboot / shutdown through systemctl so let's add KillMode set to process
+        so that systemd won't directly kill the user containers first.
+
+        For reference see also upstream moby:
+        https://github.com/moby/moby/pull/23636/commits/
+        db435f526ac5703276ad1add28188c0c8c6e4c2a
+      footer:
+        Changelog-entry: >-
+          Do not send SIGKILL directly to user containers (set KillMode=process
+          in balena.service)
+        changelog-entry: >-
+          Do not send SIGKILL directly to user containers (set KillMode=process
+          in balena.service)
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: Update balena-supervisor from  to v10.8.0
+      hash: 9df958be8693140f0358cc1527a2f3058df940f2
+      body: |
+        Update balena-supervisor from  to v10.8.0
+      footer:
+        Changelog-entry: Update balena-supervisor from  to v10.8.0
+        changelog-entry: Update balena-supervisor from  to v10.8.0
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+    - subject: Update config.json documentation for disabling NM connectivity checks
+      hash: 527d322eaaa3e9184d4b57c2aeb76337ec233457
+      body: ''
+      footer:
+        Changelog-entry: Update config.json documentation for disabling NM connectivity checks
+        changelog-entry: Update config.json documentation for disabling NM connectivity checks
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Gareth Davies gareth@balena.io
+        signed-off-by: Gareth Davies gareth@balena.io
+      author: Gareth Davies
+    - subject: Fix a typo in a NetworkManager plugin path
+      hash: ebd97f14fbbb71663e24590e9f1a3c1b9d42d8bd
+      body: |
+        ppp version is 2.4.7. Without defining the right path, the path defaults
+        to v2.4.5 in NM configure scripts.
+
+        Lets pass it here to keep it correct.
+
+        Should not have any actual affect. NM plugin was built with reference
+        to the 2.4.7 headers. Just the directoy path would say 2.4.5 misleading
+        some debug effort
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix a typo in a NetworkManager plugin path
+        changelog-entry: Fix a typo in a NetworkManager plugin path
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Remove unnecessary openvpn v2.4.4 recipe in meta-resin-pyro.
+      hash: bf3bacb6d44863687365129e1c282d36003ceaa9
+      body: |
+        This is an old version of openvpn. Devices still on pyro should be using
+        the openvpn version from meta-balena-common and not this one. Removing
+        this to prevent any accidents even and some cleanup.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Remove unnecessary openvpn v2.4.4 recipe in meta-resin-pyro.
+        changelog-entry: Remove unnecessary openvpn v2.4.4 recipe in meta-resin-pyro.
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: >-
+        Use a weak default assignment in a recipe for customer trying to
+        override a variable in his layer
+      hash: 9c9a30845702cbda314a58efa2ff9349199cfcc6
+      body: |
+        Fixes #1828
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Use a weak default assignment in a recipe for customer trying to
+          override a variable in his layer
+        changelog-entry: >-
+          Use a weak default assignment in a recipe for customer trying to
+          override a variable in his layer
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+  version: 2.48.0
+  date: 2020-03-20T09:20:53.311Z
+- commits:
+    - subject: >-
         Affects 2.45+ on all devices. Fix dangling sshd services on failed
         connections that would grow and cause cpu load to keep rising. See issue
         1837 in meta-balena for more detail.

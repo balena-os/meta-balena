@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v2.48.0
+## (2020-03-20)
+
+* Add the linux-firmware recipe from the Poky zeus-22.0.1 release and package various iwlwifi firmware separately [Florin Sarbu]
+* Add regulatory.db (Wireless Central Regulatory Domain Database) to rootfs so kernel versions >= v4.15 can load it (for Poky Thud and Warrior based board) [Florin Sarbu]
+* Do not send SIGKILL directly to user containers (set KillMode=process in balena.service) [Florin Sarbu]
+* Update balena-supervisor from  to v10.8.0 [Cameron Diver]
+* Update config.json documentation for disabling NM connectivity checks [Gareth Davies]
+* Fix a typo in a NetworkManager plugin path [Zubair Lutfullah Kakakhel]
+* Remove unnecessary openvpn v2.4.4 recipe in meta-resin-pyro. [Zubair Lutfullah Kakakhel]
+* Use a weak default assignment in a recipe for customer trying to override a variable in his layer [Zubair Lutfullah Kakakhel]
+
 # v2.47.1
 ## (2020-02-13)
 
