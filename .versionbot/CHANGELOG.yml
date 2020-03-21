@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'initramfs-module-prepare: disable also when shell-debug is set'
+      hash: a17afbfbef342aa8e754a88753838d829bc8d294
+      body: |
+        shell-debug cmdline is useful when debugging initramfs scripts.
+        However, this effect is hidden by prepare module.
+
+        Also, disable prepare module in various shell cmdline parameters such as
+        shell=after:prepare. See debug module in initramfs-framework.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Bumsik Kim <k.bumsik@gmail.com>
+        signed-off-by: Bumsik Kim <k.bumsik@gmail.com>
+      author: Bumsik Kim
+  version: 2.39.1
+  date: 2020-03-21T16:16:52.583Z
+- commits:
     - subject: 'usb-modeswitch-data: Switch Huawei E3372 12d1:1f01 to mbim mode'
       hash: bb672725f4460402af64ecb7d74d33526f5ed7c1
       body: |
