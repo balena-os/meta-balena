@@ -360,6 +360,20 @@ do_image_hostapp_ext4[depends] = " \
     "
 
 IMAGE_CMD_hostapp-ext4 () {
+    # look at the sizes
+    img_size=$(du -s "${RESIN_DOCKER_IMG}" | cut -f1)
+    img_perc=$(awk "BEGIN {printf(\"%.2f\", (100/${ROOTFS_SIZE})*${img_size});}")
+    printf "!!! checking sizes...\n"
+    printf "!!! max-size-rootfs:\t%s\n" "${ROOTFS_SIZE}"
+    printf "!!! size-rootfs:\t%s\n" "${img_size}"
+    printf "!!! %s%% of space used.\n"  "${img_perc}"
+
+    if awk "BEGIN {if (${img_perc} > 100) exit 0; else exit 1;}"; then
+        printf "!!! out of space\n"
+        return 1
+    fi
+
     dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
+
     mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
 }
