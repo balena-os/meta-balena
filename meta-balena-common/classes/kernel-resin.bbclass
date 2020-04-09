@@ -150,6 +150,7 @@ RESIN_CONFIGS[balena] ?= " \
     CONFIG_KEYS=y \
     CONFIG_MEMCG=y \
     CONFIG_MEMCG_SWAP=y \
+    CONFIG_IOSCHED_BFQ=y \
     "
 
 RESIN_CONFIGS[aufs] = " \
