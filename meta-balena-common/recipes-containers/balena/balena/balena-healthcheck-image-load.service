@@ -1,0 +1,11 @@
+[Unit]
+Description=Load balena healthcheck image
+After=balena.service
+Requires=balena.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '/usr/lib/balena/balena-healthcheck-image-load'
+
+[Install]
+WantedBy=multi-user.target
