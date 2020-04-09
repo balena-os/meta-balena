@@ -12,9 +12,9 @@ LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f
 inherit systemd go pkgconfig useradd
 
 BALENA_VERSION = "19.03.8-dev"
-BALENA_BRANCH= "19.03-balena"
+BALENA_BRANCH= "adjust_ioprio"
 
-SRCREV = "1f864a53975db2ec3cd349a9d66cac6375f638a6"
+SRCREV = "793d20423fe92a326aad461b70f78f95eef200d9"
 SRC_URI = "\
 	git://github.com/resin-os/balena.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
