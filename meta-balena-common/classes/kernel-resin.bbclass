@@ -96,6 +96,7 @@ RESIN_CONFIGS ?= " \
     nf_tables \
     dummy \
     uinput \
+    no-debug-info \
     "
 
 #
@@ -287,6 +288,12 @@ RESIN_CONFIGS[no-logo] ?= " \
 RESIN_CONFIGS[compress-kmodules] ?= " \
     CONFIG_MODULE_COMPRESS=y \
     CONFIG_MODULE_COMPRESS_GZIP=y \
+    "
+
+#
+# Do not include debugging info in kernel and modules
+#
+RESIN_CONFIGS[no-debug-info] ?= " \
     CONFIG_DEBUG_INFO=n \
     "
 
