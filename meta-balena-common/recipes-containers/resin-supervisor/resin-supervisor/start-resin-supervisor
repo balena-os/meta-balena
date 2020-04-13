@@ -48,13 +48,11 @@ hasValueChanged() {
 }
 
 configIsUnchanged() {
-        
+
     SUPERVISOR_CONTAINER_ENV_JSON="$(balena inspect resin_supervisor | jq '.[0].Config.Env | map(.| { (.[0:index("=")]): .[index("=")+1:] }) | add')"
 
     if hasValueChanged "BOOT_MOUNTPOINT"       "$BOOT_MOUNTPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "REGISTRY_ENDPOINT"     "$REGISTRY_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "PUBNUB_SUBSCRIBE_KEY"  "$PUBNUB_SUBSCRIBE_KEY" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "PUBNUB_PUBLISH_KEY"    "$PUBNUB_PUBLISH_KEY" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "MIXPANEL_TOKEN"        "$MIXPANEL_TOKEN" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "DELTA_ENDPOINT"        "$DELTA_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LED_FILE"              "${LED_FILE}" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
@@ -89,9 +87,6 @@ runSupervisor() {
         -e DOCKER_ROOT=/mnt/root/var/lib/docker \
         -e DOCKER_SOCKET=/var/run/balena-engine.sock \
         -e "BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT" \
-        -e "REGISTRY_ENDPOINT=$REGISTRY_ENDPOINT" \
-        -e "PUBNUB_SUBSCRIBE_KEY=$PUBNUB_SUBSCRIBE_KEY" \
-        -e "PUBNUB_PUBLISH_KEY=$PUBNUB_PUBLISH_KEY" \
         -e "MIXPANEL_TOKEN=$MIXPANEL_TOKEN" \
         -e "DELTA_ENDPOINT=$DELTA_ENDPOINT" \
         -e "LED_FILE=${LED_FILE}" \

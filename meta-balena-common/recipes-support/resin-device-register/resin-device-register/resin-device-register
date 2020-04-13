@@ -56,7 +56,6 @@ while true; do
             status_code=$(curl -s -X POST -w "%{http_code}" \
                         --header "Authorization: Bearer $PROVISIONING_API_KEY" \
                         --output $REGISTER_LOG_FILE \
-                        --data-urlencode "user=$USER_ID" \
                         --data-urlencode "application=$APPLICATION_ID" \
                         --data-urlencode "device_type=$DEVICE_TYPE" \
                         --data-urlencode "uuid=$UUID" \

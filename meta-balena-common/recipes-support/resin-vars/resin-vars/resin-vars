@@ -57,11 +57,6 @@ if [ -f $CONFIG_PATH ]; then
          API_ENDPOINT=\(.apiEndpoint // "")
          LISTEN_PORT=\(.listenPort // "")
          MIXPANEL_TOKEN=\(.mixpanelToken // "")
-         PUBNUB_PUBLISH_KEY=\(.pubnubPublishKey // "")
-         PUBNUB_SUBSCRIBE_KEY=\(.pubnubSubscribeKey // "")
-         REGISTRY_ENDPOINT=\(.registryEndpoint // "")
-         VPN_ENDPOINT=\(.vpnEndpoint // "")
-         VPN_PORT=\(.vpnPort // "")
          DELTA_ENDPOINT=\(.deltaEndpoint // "")
          CONFIG_HOSTNAME=\(.hostname // "")
          PERSISTENT_LOGGING=\(.persistentLogging // "")
@@ -70,7 +65,6 @@ if [ -f $CONFIG_PATH ]; then
          PROVISIONING_API_KEY=\(.apiKey // "")
          DEVICE_API_KEY=\(.deviceApiKey // "")
          DEVICE_ID=\(.deviceId // "")
-         USER_ID=\(.userId // "")
          APPLICATION_ID=\(.applicationId // "")
          DEVICE_TYPE=\(.deviceType // "")
          REGISTERED_AT=\(.registered_at // "")
@@ -81,12 +75,6 @@ if [ -f $CONFIG_PATH ]; then
 
     # Various default values
     PERSISTENT_LOGGING=${PERSISTENT_LOGGING:-false}
-    VPN_PORT=${VPN_PORT:-443}
-    if [ "$VPN_PORT" = "1723" ]; then
-        # There is a bug in the cli which defaults VPN port to this port.
-        # If this was found in the config assume default 443.
-        VPN_PORT=443
-    fi
     DNS_SERVERS=${DNS_SERVERS:-8.8.8.8}
     # Don't propagate the `null` value further to dnsmasq configuration
     if [ "$DNS_SERVERS" = "null" ]; then
