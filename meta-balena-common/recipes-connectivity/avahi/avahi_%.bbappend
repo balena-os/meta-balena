@@ -1,6 +1,9 @@
 FILESEXTRAPATHS_append := ":${THISDIR}/files"
 
-SRC_URI_append = " file://avahi-daemon.conf"
+SRC_URI_append = " \
+    file://avahi-daemon.conf \
+    file://0001-Do-not-cache-responses-generated-locally.patch \
+"
 
 FILES_avahi-daemon += " \
     ${sysconfdir}/systemd/system/avahi-daemon.service.d/avahi-daemon.conf \
