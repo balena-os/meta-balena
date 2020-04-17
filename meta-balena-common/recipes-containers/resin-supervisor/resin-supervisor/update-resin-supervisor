@@ -137,7 +137,6 @@ imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 if [ -n "$imageid" ]; then
     echo "Supervisor $image_name:$tag already downloaded."
-    exit 0
 fi
 
 # Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
