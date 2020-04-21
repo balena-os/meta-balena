@@ -21,6 +21,8 @@ IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"
 
 inherit core-image image-resin distro_features_check
 
+SPLASH += "plymouth-balena-theme"
+
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
     splash \
