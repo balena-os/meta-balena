@@ -4,8 +4,6 @@ inherit deploy
 
 SRC_URI_append = " \
     file://resin-logo.png \
-    file://resin.script \
-    file://resin.plymouth \
     "
 
 # install our theme, and remove some extra files to save a significant
@@ -23,10 +21,9 @@ do_install_append() {
     rm ${D}${nonarch_libdir}/plymouth/tribar.*
     rm ${D}${nonarch_libdir}/plymouth/two-step.*
 
+    # Themes are installed separately
     rm -r ${D}${datadir}/plymouth/themes
-    mkdir -p ${D}${datadir}/plymouth/themes/resin
-    install -m 644 ${WORKDIR}/resin.script ${D}${datadir}/plymouth/themes/resin/
-    install -m 644 ${WORKDIR}/resin.plymouth ${D}${datadir}/plymouth/themes/resin/
+    rm ${D}/${datadir}/plymouth/plymouthd.defaults
 
     # Don't stop splash at boot
     rm ${D}${systemd_unitdir}/system/multi-user.target.wants/plymouth-quit.service
