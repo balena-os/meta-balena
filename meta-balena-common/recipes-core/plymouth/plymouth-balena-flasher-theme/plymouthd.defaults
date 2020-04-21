@@ -1,0 +1,6 @@
+# Distribution defaults. Changes to this file will get overwritten during
+# upgrades.
+[Daemon]
+Theme=balena-flasher
+ShowDelay=0
+DeviceTimeout=5
