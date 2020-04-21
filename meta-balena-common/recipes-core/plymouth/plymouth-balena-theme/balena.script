@@ -1,0 +1,22 @@
+# Set our background to plain White
+Window.SetBackgroundTopColor(1, 1, 1);
+Window.SetBackgroundBottomColor(1, 1, 1);
+# only PNG is supported
+pi_image = Image("special://logo");
+
+screen_ratio = Window.GetHeight() / Window.GetWidth();
+pi_image_ratio = pi_image.GetHeight() / pi_image.GetWidth();
+
+if (screen_ratio > pi_image_ratio)
+{
+     scale_factor =  Window.GetWidth() / pi_image.GetWidth();
+} else {
+     scale_factor =  Window.GetHeight() / pi_image.GetHeight();
+}
+
+scaled_pi_image = pi_image.Scale(pi_image.GetWidth()  * scale_factor, pi_image.GetHeight() * scale_factor);
+pi_sprite = Sprite(scaled_pi_image);
+
+# Place in the centre
+pi_sprite.SetX(Window.GetWidth()  / 2 - scaled_pi_image.GetWidth () / 2);
+pi_sprite.SetY(Window.GetHeight() / 2 - scaled_pi_image.GetHeight() / 2);
