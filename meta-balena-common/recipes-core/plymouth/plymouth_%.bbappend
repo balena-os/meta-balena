@@ -38,7 +38,7 @@ do_deploy() {
 LOGO = "/mnt/boot/splash/resin-logo.png"
 
 PACKAGES_remove = "${PN}-initrd"
-PACKAGECONFIG = ""
+PACKAGECONFIG_remove = "initrd"
 RDEPENDS_${PN} = "bash"
 
 addtask deploy before do_package after do_install
