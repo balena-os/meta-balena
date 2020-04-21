@@ -16,6 +16,8 @@ RESIN_ROOT_FSTYPE = "ext4"
 # Make sure you have the resin image ready
 do_image_resinos_img[depends] += "resin-image:do_rootfs"
 
+SPLASH += "plymouth-balena-flasher-theme"
+
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
     splash \
