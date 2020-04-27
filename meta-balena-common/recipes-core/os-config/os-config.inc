@@ -1,6 +1,8 @@
-inherit systemd cargo-dyn
+inherit systemd cargo-dyn binary-compress
 
 DEPENDS += "dbus openssl"
+
+FILES_COMPRESS = "/usr/bin/os-config"
 
 SRC_URI += " \
 	file://os-config.json \
