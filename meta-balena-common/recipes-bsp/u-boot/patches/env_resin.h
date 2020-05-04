@@ -47,7 +47,7 @@
        "resin_flasher_skip=0 \0" \
        \
        "resin_find_root_part_uuid=" \
-               "part uuid ${resin_dev_type} ${resin_dev_index}:${resin_root_part} resin_root_part_uuid\0" \
+               "fsuuid ${resin_dev_type} ${resin_dev_index}:${resin_root_part} resin_root_part_uuid\0" \
        \
        "resin_load_env_file=" \
                "echo Loading ${resin_env_file} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_boot_part};" \
@@ -155,7 +155,7 @@
                "run resin_inject_env_file;" \
                "run resin_check_altroot;" \
                "run resin_find_root_part_uuid;" \
-               "setenv resin_kernel_root root=PARTUUID=${resin_root_part_uuid}\0"
+               "setenv resin_kernel_root root=UUID=${resin_root_part_uuid}\0"
 
 #endif /* HEADER_ENV_RESIN_H */
 

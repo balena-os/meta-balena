@@ -6,7 +6,11 @@ with some key operations."
 PACKAGE_INSTALL = " \
     base-passwd \
     busybox \
+    glibc-gconv \
+    glibc-gconv-ibm437 \
+    glibc-gconv-ibm850 \
     initramfs-module-debug \
+    initramfs-module-fsuuidsinit \
     initramfs-module-prepare \
     initramfs-module-fsck \
     initramfs-module-machineid \

@@ -1,0 +1,149 @@
+#!/bin/sh
+
+# Copyright 2019 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Wait for a file to appear with loop count limit.
+# Use-case example: wait for udev to create a filesystem symlink.
+# Arguments:
+#   1 - target path
+#   2 - number of loops (each loop sleeps for 100ms)
+wait4file() {
+	_lpath="$1"
+	_lloops="$2"
+
+	while [ ! -e "$_lpath" ]; do
+		if [ "$_lloops" -gt 0 ]; then
+			sleep 0.1
+			_lloops=$((_lloops-1))
+		else
+			return 1
+		fi
+	done
+	return 0
+}
+
+# Returns the UUID set in cmdline for root
+# Returns:
+#   0 - root UUID found in cmdline (prints the matching uuid to stdout)
+#   1 - root uuid is not present in cmdline
+get_cmdline_root_uuid() {
+	CMDLINE="/proc/cmdline"
+	# shellcheck disable=SC2013
+	for p in $(cat "$CMDLINE"); do
+		opt="$(echo "$p" | cut -d'=' -f1)"
+		if [ "$opt" = "root" ]; then
+			opt="$(echo "$p" | cut -d'=' -f2)"
+			if [ "$opt" = "UUID" ]; then
+				echo "$p" | cut -d'=' -f3
+				return 0
+			fi
+		fi
+	done
+	return 1
+}
+
+# Returns the udev symlink path for a label.
+# Argument:
+#  1 - label
+# Returns:
+#  by-state symlink udev path
+get_state_path_from_label() {
+	[ -z "$1" ] && return 1
+	echo "/dev/disk/by-state/${1}"
+}
+
+# Output the UUID for the specified block device.
+# Arguments:
+#   1 - Target block device
+get_dev_uuid() {
+	lsblk -nlo uuid "${1}"
+}
+
+# Output the filesystem type for the specified block device.
+# Arguments:
+#   1 - Target block device
+get_dev_fstype() {
+	lsblk -nlo fstype "${1}"
+}
+
+# Output the label for the specified block device
+# Arguments
+#  1 - Target block device
+get_dev_label() {
+	lsblk -nlo label "${1}"
+}
+
+# Mount/unmount device to update mount time
+# Arguments
+#  1 - Target device
+update_mounttime() {
+    mkdir -p /run
+    tmpdir=$(mktemp -d -p /run)
+    mount "$1" "${tmpdir}"
+    umount "${tmpdir}"
+}
+
+# Set a Balena filesystem UUID to the specified device.
+# Arguments:
+#   1 - Target block device
+#   2 - Filesystem type
+# Returns:
+#   0 - Success, new UUID in stdout
+#   1 - Failure
+regenerate_uuid() {
+    dev=$1
+    # Filesystem type specific quirks
+    fstype=$2
+    old_uuid="$(get_dev_uuid "$dev")"
+    case $fstype in
+        vfat)
+            # mlabel doesn't work on file directly. It needs a drive to file
+            # mapping in its configuration.
+            drive=a:
+	    echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
+            new_uuid="BDEF$(hexdump -n 2 -e '"%02X" 1 "\n"' /dev/urandom)"
+            cmd="mlabel -s -N ${new_uuid}"
+            if ! eval "${cmd}" "${drive}"; then
+                return 1
+            fi
+            ;;
+        ext*)
+            # tune2fs refuses to work when the filesystem was not
+            # freshly checked.
+            # Remount to update lastmount time to current time
+            # Otherwise in systems with no RTC lastmount could be in the future
+            # and e2fsck does not update the last filesystem check time
+            if [ -e /etc/e2fsck.conf ] && grep broken_system_clock /etc/e2fsck.conf > /dev/null; then
+                broken_system_clock=$(grep broken_system_clock /etc/e2fsck.conf | cut -d "=" -f2)
+                    if [ "${broken_system_clock}" = "1" ]; then
+                        update_mounttime "$dev"
+                    fi
+            fi
+            if ! e2fsck -fp "$dev"; then
+		return 1
+            fi
+	    new_uuid=$(cat /proc/sys/kernel/random/uuid | sed 's/^[^-]*/ba1eadef/')
+            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
+            if ! eval "${cmd}" "${dev}"; then
+                return 1
+            fi
+            ;;
+        *) ;;
+        esac
+
+    new_uuid="$(get_dev_uuid "$dev")"
+    echo $new_uuid
+    return 0
+}

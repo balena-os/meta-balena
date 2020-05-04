@@ -33,6 +33,8 @@ OS_BOOTCOUNT_LIMIT ?= "1"
 CONFIG_RESET_TO_RETRY ?= "1"
 CONFIG_BOOT_RETRY_TIME ?= "${@bb.utils.contains('DISTRO_FEATURES', 'development-image', '-1', '15', d)}"
 
+CONFIG_CMD_FS_UUID = "1"
+
 UBOOT_VARS = "RESIN_UBOOT_DEVICES \
               RESIN_UBOOT_DEVICE_TYPES \
               RESIN_BOOT_PART RESIN_DEFAULT_ROOT_PART \
@@ -44,7 +46,8 @@ UBOOT_VARS = "RESIN_UBOOT_DEVICES \
               OS_BOOTCOUNT_SKIP \
               OS_BOOTCOUNT_LIMIT \
               CONFIG_RESET_TO_RETRY \
-              CONFIG_BOOT_RETRY_TIME "
+              CONFIG_BOOT_RETRY_TIME \
+              CONFIG_CMD_FS_UUID "
 
 python do_generate_resin_uboot_configuration () {
     vars = d.getVar('UBOOT_VARS').split()

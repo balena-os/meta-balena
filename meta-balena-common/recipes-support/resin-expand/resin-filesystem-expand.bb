@@ -16,6 +16,7 @@ RDEPENDS_${PN} = " \
     coreutils \
     e2fsprogs-resize2fs \
     e2fsprogs-e2fsck \
+    os-helpers-fs \
     util-linux \
     "
 
