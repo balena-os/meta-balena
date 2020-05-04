@@ -1,6 +1,133 @@
 Change log
 -----------
 
+# v2.49.0
+## (2020-05-01)
+
+* balena-host: Ignore environment file if it does not exist [Alex Gonzalez]
+* Bump balena-engine to 18.09.17 [Robert Günzler]
+* networkmanager: Use absolute path in drop-in [Sven Schwermer]
+* Update ModemManager to v1.12.8 [Michal Toman]
+* Update balena-engine to 18.09.16 [Robert Günzler]
+* Add support for using udev by-state links in balenaOS [Alex Gonzalez]
+* Add initramfs module to regenerate default filesystem UUIDs [Alex Gonzalez]
+* Create udev state symlinks for all partitions [Alex Gonzalez]
+* initramfs-framework: Add os-helpers to module prepare [Alex Gonzalez]
+* Fix initramfs fsck warnings for the boot partition [Andrei Gherzan]
+* Switch to built-in FAT kernel configs [Andrei Gherzan]
+
+<details>
+<summary> Update balena-supervisor from v10.8.0 to v10.11.0 [Cameron Diver] </summary>
+
+> ## balena-supervisor-10.11.0
+> ### (2020-03-30)
+> 
+> * Add BALENA_DEVICE_ARCH environment variable for containers [Cameron Diver]
+
+> ## balena-supervisor-10.10.15
+> ### (2020-03-30)
+> 
+> * Don't throw an error when getting an unhealthy state [Cameron Diver]
+
+> ## balena-supervisor-10.10.14
+> ### (2020-03-28)
+> 
+> * Convert src/device-api/common.coffee to javascript [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.13
+> ### (2020-03-27)
+> 
+> * Switch to mz for the proxyvisor [Pagan Gazzard]
+> * Convert proxyvisor to javascript [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.12
+> ### (2020-03-26)
+> 
+> * Remove unnecessary code from application-manager [Pagan Gazzard]
+> * Switch to a named export for application-manager [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.11
+> ### (2020-03-25)
+> 
+> * Convert device-api/v1 to javascript [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.10
+> ### (2020-03-24)
+> 
+> * Update livepush [Cameron Diver]
+
+> ## balena-supervisor-10.10.9
+> ### (2020-03-24)
+> 
+> * Add type checking for javascript files [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.8
+> ### (2020-03-24)
+> 
+> * Pin resin-cli-visuals to avoid build error of lzma-native [Cameron Diver]
+> * Update dependencies [Cameron Diver]
+
+> ## balena-supervisor-10.10.7
+> ### (2020-03-24)
+> 
+> * Avoid any transpilation of node_modules [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.6
+> ### (2020-03-24)
+> 
+> * Add transpilation for javascript files to ease node 6 compatibility [Pagan Gazzard]
+> * Add a precheck that linting/tests work on node 10 [Pagan Gazzard]
+> * Update to balena-lint and enable javascript linting [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.5
+> ### (2020-03-23)
+> 
+> * Tests: Add missing await [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.4
+> ### (2020-03-16)
+> 
+> * docs: Clarify update locks for multicontainer applications [Gareth Davies]
+
+> ## balena-supervisor-10.10.3
+> ### (2020-03-16)
+> 
+> * logging: fix up some typos [Matthew McGinn]
+
+> ## balena-supervisor-10.10.2
+> ### (2020-03-16)
+> 
+> * Bump acorn from 5.7.3 to 5.7.4 [dependabot[bot]]
+
+> ## balena-supervisor-10.10.1
+> ### (2020-03-13)
+> 
+> * Update dependencies [Pagan Gazzard]
+
+> ## balena-supervisor-10.10.0
+> ### (2020-03-06)
+> 
+> * Allow semver comparison on l4t versions in contracts [Cameron Diver]
+> * Allow l4t versions with three numbers as well as two [Cameron Diver]
+
+> ## balena-supervisor-10.9.2
+> ### (2020-03-05)
+> 
+> * config: Support loading SSDT via ConfigFS [Rich Bayliss]
+
+> ## balena-supervisor-10.9.1
+> ### (2020-02-25)
+> 
+> * Convert device-state module to typescript [Cameron Diver]
+> * Improve application-manager typings [Cameron Diver]
+> * Improve and extend internal typings [Cameron Diver]
+
+> ## balena-supervisor-10.9.0
+> ### (2020-02-24)
+> 
+> * Add a containerId request parameter for journal-logs api endpoint, and pass it along to journalctl process options. [Ivan]
+</details>
+
 # v2.48.0
 ## (2020-03-20)
 
