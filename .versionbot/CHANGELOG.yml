@@ -1,4 +1,489 @@
 - commits:
+    - subject: 'balena-host: Ignore environment file if it does not exist'
+      hash: 692a06a70536b9fcda79d5a0b28b23f384b9bb78
+      body: >
+        Instruct the service to ignore the environment file if it does not
+        exist.
+
+        This avoids the service failing if the file does not exist.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Bump balena-engine to 18.09.17
+      hash: ab54fcc710e8a7ef1857dae40710f6d2972e2ef7
+      body: |
+        Fixes the bug in mobynit caused by the recent work on the graphdriver
+        system
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+    - subject: 'networkmanager: Use absolute path in drop-in'
+      hash: 27f6f9467853b8308b5f27121878c61fc0d8dbf4
+      body: |
+        systemd requires executable paths to be absolute. This causes an error
+        in the system journal.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+        signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+      author: Sven Schwermer
+    - subject: Update ModemManager to v1.12.8
+      hash: 64685fe79eebc7b59ec4e11b32d9491085928334
+      body: |
+        Fixes #1859
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update ModemManager to v1.12.8
+        changelog-entry: Update ModemManager to v1.12.8
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+    - subject: Update balena-engine to 18.09.16
+      hash: 2d0d1b7f8f4ef93d0778ed3ab9c3c2d87d978113
+      body: |
+        which includes Roman's work to fix the layer leaking bugs
+        Also switch to 18.09-balena branch to prepare for the release of
+        balena-engine 19.03
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-engine to 18.09.16
+        changelog-entry: Update balena-engine to 18.09.16
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+    - subject: Add support for using udev by-state links in balenaOS
+      hash: d1a351cc574655be3079844263dbeeb62190d028
+      body: |
+        Fixes #1092
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add support for using udev by-state links in balenaOS
+        changelog-entry: Add support for using udev by-state links in balenaOS
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Add initramfs module to regenerate default filesystem UUIDs
+      hash: b802528c7427f50e96b88665f53071f1408b0baa
+      body: |
+        This module is launched at early boot and regenerates filesystem UUIDs
+        if required.
+
+        This commit is a re-work of previous work by Andrei Gherzan.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add initramfs module to regenerate default filesystem UUIDs
+        changelog-entry: Add initramfs module to regenerate default filesystem UUIDs
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Create udev state symlinks for all partitions
+      hash: b7f63b18bcebf663d4d4d366dc78abe08c15925d
+      body: >
+        When a partition filesystem label is detected, udev checks whether the
+
+        device belongs to the same disk as the root partitition passed in the
+
+        kernel command line by the bootloader. Only if it does, it creates a
+        by-state
+
+        link to it.
+
+
+        By using this by-state links we avoid filesystem label clashes as the
+
+        system will always use partitions in the same drive as root (as
+
+        instructed by the bootloader who is the source of truth).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Create udev state symlinks for all partitions
+        changelog-entry: Create udev state symlinks for all partitions
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'initramfs-framework: Add os-helpers to module prepare'
+      hash: 291930ecd3fc7d02ae0b0f6a4012c34f0e697c10
+      body: |
+        The different initramfs modules make use of os-helpers so let the
+        prepare module source them.
+
+        Also, Store initramfs logs to a tmpfs location /run/initramfs
+
+        This commit is a re-work of previous work by Andrei Gherzan.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Fix initramfs fsck warnings for the boot partition
+      hash: 67a59e09c3ae628b4a44828b9152050b9374c2c3
+      body: |
+        When running fsck, the tool will complain when needed gconv modules are
+        missing. Include them in the initramfs where we fsck the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix initramfs fsck warnings for the boot partition
+        changelog-entry: Fix initramfs fsck warnings for the boot partition
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Switch to built-in FAT kernel configs
+      hash: d892362e92f8af709aa000dfb328f2931aedfb85
+      body: |
+        balenaOS uses FAT as a fs type for the boot/first partition. This is
+        currently hardcoded so let's have the related kernel configs built in
+        the kernel image. In this way we don't have to handle kernel modules in
+        the initramfs (when needed).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Switch to built-in FAT kernel configs
+        changelog-entry: Switch to built-in FAT kernel configs
+        Signed-off-by: Andrei Gherzan <andrei@balena.io>
+        signed-off-by: Andrei Gherzan <andrei@balena.io>
+      author: Andrei Gherzan
+    - subject: Update balena-supervisor from v10.8.0 to v10.11.0
+      hash: 284f5198d7a6a2fba656af35dd7afb8e0091290f
+      body: |
+        Update balena-supervisor from v10.8.0 to v10.11.0
+      footer:
+        Changelog-entry: Update balena-supervisor from v10.8.0 to v10.11.0
+        changelog-entry: Update balena-supervisor from v10.8.0 to v10.11.0
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: Add BALENA_DEVICE_ARCH environment variable for containers
+              hash: 3af89cd13fce04f43332c1d4502e2edf07a22141
+              body: ''
+              footer:
+                Closes: '#1232'
+                closes: '#1232'
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.11.0
+          date: 2020-03-30T15:42:53.398Z
+        - commits:
+            - subject: Don't throw an error when getting an unhealthy state
+              hash: 6b827a3f57f242e36e2a008632a28199ba569f63
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.10.15
+          date: 2020-03-30T09:10:59.937Z
+        - commits:
+            - subject: Convert src/device-api/common.coffee to javascript
+              hash: 15fca80d2ddb16b368f0d2c34fb56b5b9bb6217f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.14
+          date: 2020-03-28T13:43:13.705Z
+        - commits:
+            - subject: Switch to mz for the proxyvisor
+              hash: 6ab69e1a69cf839538812aff3b9dc72c5a7937ef
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Convert proxyvisor to javascript
+              hash: c1e5b98ae562851be61f74583743298803bf5195
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.13
+          date: 2020-03-27T17:53:13.782Z
+        - commits:
+            - subject: Remove unnecessary code from application-manager
+              hash: 686f72ecf78d3f7a1b93102fd161cca8c562bfb7
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Switch to a named export for application-manager
+              hash: 968e2ba0fb1dc99b826e8f32a23d10945697f340
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.12
+          date: 2020-03-26T23:53:03.757Z
+        - commits:
+            - subject: Convert device-api/v1 to javascript
+              hash: 56c13fb96346e9100a60f1da881f6cf670c2793f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.11
+          date: 2020-03-25T12:19:20.194Z
+        - commits:
+            - subject: Update livepush
+              hash: 2ff8fccb5e71a851634f8bd668f63526f48ea4c4
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.10.10
+          date: 2020-03-24T18:10:13.063Z
+        - commits:
+            - subject: Add type checking for javascript files
+              hash: 9c3295c91248f125e20ccfb10a064f2a2def0431
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.9
+          date: 2020-03-24T16:40:43.161Z
+        - commits:
+            - subject: Pin resin-cli-visuals to avoid build error of lzma-native
+              hash: 35e73941c57ff63164cf0876fbb9509107e5e3f2
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Update dependencies
+              hash: f2c606e1f9d37b6fefc345e42659b9ed364cba40
+              body: |
+                We also pin livepush in place while
+                https://github.com/balena-io-modules/livepush/issues/67
+                is fixed.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.10.8
+          date: 2020-03-24T14:54:44.950Z
+        - commits:
+            - subject: Avoid any transpilation of node_modules
+              hash: 8fccc4a107fa965dfd60a861ba5e831c12632631
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.7
+          date: 2020-03-24T12:46:30.864Z
+        - commits:
+            - subject: >-
+                Add transpilation for javascript files to ease node 6
+                compatibility
+              hash: 8fc11df95912c6fd15d05c1cdc9fcdba854b2727
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Add a precheck that linting/tests work on node 10
+              hash: 7945bb5a77f29775233dea2695e1c20d79545f57
+              body: |
+                This allows us to avoid re-linting for every arch
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Update to balena-lint and enable javascript linting
+              hash: 81966446d97b3989e65be22b7d2dec379d3bcb32
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.6
+          date: 2020-03-24T09:31:13.247Z
+        - commits:
+            - subject: 'Tests: Add missing await'
+              hash: 7e6d32516de84dbaed222651e48895dc0136b2e7
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.5
+          date: 2020-03-23T19:05:23.280Z
+        - commits:
+            - subject: 'docs: Clarify update locks for multicontainer applications'
+              hash: a6b0c50d8effc9c63fe92d68cb4efbe397a1e05f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Gareth Davies <gareth@balena.io>
+                signed-off-by: Gareth Davies <gareth@balena.io>
+              author: Gareth Davies
+          version: balena-supervisor-10.10.4
+          date: 2020-03-16T21:12:52.849Z
+        - commits:
+            - subject: 'logging: fix up some typos'
+              hash: ab7e8b55140cc3169e9337f8c29a77468b13be7c
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Matthew McGinn <matthew@balena.io>
+                signed-off-by: Matthew McGinn <matthew@balena.io>
+              author: Matthew McGinn
+          version: balena-supervisor-10.10.3
+          date: 2020-03-16T19:31:23.505Z
+        - commits:
+            - subject: Bump acorn from 5.7.3 to 5.7.4
+              hash: f8363fc72b21386cc3561be576d8f21ec0463c89
+              body: >
+                Bumps [acorn](https://github.com/acornjs/acorn) from 5.7.3 to
+                5.7.4.
+
+                - [Release notes](https://github.com/acornjs/acorn/releases)
+
+                -
+                [Commits](https://github.com/acornjs/acorn/compare/5.7.3...5.7.4)
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 'dependabot[bot] <support@github.com>'
+                signed-off-by: 'dependabot[bot] <support@github.com>'
+              author: 'dependabot[bot]'
+          version: balena-supervisor-10.10.2
+          date: 2020-03-16T15:05:54.513Z
+        - commits:
+            - subject: Update dependencies
+              hash: 6e3db3bd602d30ae3d377a1526c9b904c90a6cf3
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.10.1
+          date: 2020-03-13T17:21:22.854Z
+        - commits:
+            - subject: Allow semver comparison on l4t versions in contracts
+              hash: 5c50f656c33954de6f4c07f8b6c892b4bf9953cf
+              body: >
+                We add an implicit .0 to the end of l4t versions which do not
+                fulfill
+
+                semver, which allows us to always match using comparison
+                operators, such
+
+                as < and <=.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Allow l4t versions with three numbers as well as two
+              hash: 7d47661928288160c0a636cb630cb0ccc2292d91
+              body: ''
+              footer:
+                Closes: '#1210'
+                closes: '#1210'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.10.0
+          date: 2020-03-06T15:56:42.924Z
+        - commits:
+            - subject: 'config: Support loading SSDT via ConfigFS'
+              hash: e0d2bdfaa98fe8c8d56fe981e530e6c96aef92a6
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+          version: balena-supervisor-10.9.2
+          date: 2020-03-05T13:33:03.818Z
+        - commits:
+            - subject: Convert device-state module to typescript
+              hash: c21da8f3dbafe965ad0fae12b027066208debd12
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Improve application-manager typings
+              hash: 23094425555f0d1ef9c04c2bc500c19f62984503
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Improve and extend internal typings
+              hash: e161888516e7f234154245cfc8c9f82b6e2b656b
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.9.1
+          date: 2020-02-25T07:53:23.189Z
+        - commits:
+            - subject: >-
+                Add a containerId request parameter for journal-logs api
+                endpoint, and pass it along to journalctl process options.
+              hash: b5772740ae3685fceceeda513fca4ff86a183d14
+              body: ''
+              footer:
+                Change-Type: minor
+                change-type: minor
+                Signed-off-by: Ivan <ivanign04.alt@gmail.com>
+                signed-off-by: Ivan <ivanign04.alt@gmail.com>
+              author: Ivan
+          version: balena-supervisor-10.9.0
+          date: 2020-02-24T00:17:42.799Z
+  version: 2.49.0
+  date: 2020-05-01T11:04:38.074Z
+- commits:
     - subject: >-
         Add the linux-firmware recipe from the Poky zeus-22.0.1 release and
         package various iwlwifi firmware separately
