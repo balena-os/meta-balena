@@ -6,6 +6,7 @@ inherit allarch
 
 SRC_URI = " \
 	file://49-teensy.rules \
+	file://79-wlan-power.rules \
 	file://99-misc.rules \
 	"
 
@@ -15,4 +16,7 @@ do_install_append() {
 
 	# Install miscellaneous rules file
 	install -D -m 0644 ${WORKDIR}/99-misc.rules ${D}/lib/udev/rules.d/99-misc.rules
+
+	# Install wlan rules file
+	install -D -m 0644 ${WORKDIR}/79-wlan-power.rules ${D}/lib/udev/rules.d/79-wlan-power.rules
 }
