@@ -3,9 +3,9 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 inherit deploy
 
 SRC_URI_append = " \
-    file://resin-logo.png \
-    file://resin.script \
-    file://resin.plymouth \
+    file://balena-logo.png \
+    file://balena.script \
+    file://balena.plymouth \
     "
 
 # install our theme, and remove some extra files to save a significant
@@ -13,7 +13,7 @@ SRC_URI_append = " \
 do_install_append() {
     rm -r ${D}${sysconfdir}/plymouth # we use /usr/share/plymouth, not /etc/plymouth
 
-    # remove all libs except script.so (used by the resin theme) and the
+    # remove all libs except script.so (used by the balena theme) and the
     # renderers/ directory
     rm ${D}${nonarch_libdir}/plymouth/details.*
     rm ${D}${nonarch_libdir}/plymouth/fade-throbber.*
@@ -24,9 +24,9 @@ do_install_append() {
     rm ${D}${nonarch_libdir}/plymouth/two-step.*
 
     rm -r ${D}${datadir}/plymouth/themes
-    mkdir -p ${D}${datadir}/plymouth/themes/resin
-    install -m 644 ${WORKDIR}/resin.script ${D}${datadir}/plymouth/themes/resin/
-    install -m 644 ${WORKDIR}/resin.plymouth ${D}${datadir}/plymouth/themes/resin/
+    mkdir -p ${D}${datadir}/plymouth/themes/balena
+    install -m 644 ${WORKDIR}/balena.script ${D}${datadir}/plymouth/themes/balena/
+    install -m 644 ${WORKDIR}/balena.plymouth ${D}${datadir}/plymouth/themes/balena/
 
     # Don't stop splash at boot
     rm ${D}${systemd_unitdir}/system/multi-user.target.wants/plymouth-quit.service
@@ -34,11 +34,11 @@ do_install_append() {
 }
 
 do_deploy() {
-    install ${WORKDIR}/resin-logo.png ${DEPLOYDIR}/resin-logo.png
+    install ${WORKDIR}/balena-logo.png ${DEPLOYDIR}/balena-logo.png
 }
 
 # by setting a logo we avoid installing the default one
-LOGO = "/mnt/boot/splash/resin-logo.png"
+LOGO = "/mnt/boot/splash/balena-logo.png"
 
 PACKAGES_remove = "${PN}-initrd"
 PACKAGECONFIG = ""

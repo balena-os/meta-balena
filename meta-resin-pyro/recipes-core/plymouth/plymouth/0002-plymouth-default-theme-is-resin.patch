@@ -1,7 +1,7 @@
 From b86ccf335450aedb61f800b6c741c805ed726b9f Mon Sep 17 00:00:00 2001
 From: Theodor Gherzan <theodor@resin.io>
 Date: Thu, 17 Dec 2015 04:19:58 +0100
-Subject: plymouth: Default theme is resin
+Subject: plymouth: Default theme is balena
 
 Signed-off-by: Theodor Gherzan <theodor@resin.io>
 ---
@@ -16,7 +16,7 @@ Signed-off-by: Theodor Gherzan <theodor@resin.io>
  [Daemon]
 -Theme=spinner
 -ShowDelay=5
-+Theme=resin
++Theme=balena
 +ShowDelay=0
 --
 2.1.4

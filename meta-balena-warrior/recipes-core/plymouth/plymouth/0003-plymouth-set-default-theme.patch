@@ -1,7 +1,7 @@
 From d10f52577c6ee65bc414f260ca6cf05a3bf6f18c Mon Sep 17 00:00:00 2001
 From: Theodor Gherzan <theodor@resin.io>
 Date: Thu, 17 Dec 2015 04:19:58 +0100
-Subject: [PATCH 3/5] plymouth: Default theme is resin
+Subject: [PATCH 3/5] plymouth: Default theme is balena
 
 Signed-off-by: Theodor Gherzan <theodor@resin.io>
 ---
@@ -18,7 +18,7 @@ index 4d3b6d4..75b6925 100644
  [Daemon]
 -Theme=spinner
 -ShowDelay=5
-+Theme=resin
++Theme=balena
 +ShowDelay=0
  DeviceTimeout=5
 -- 
