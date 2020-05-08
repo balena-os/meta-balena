@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 inherit deploy
 
 SRC_URI_append = " \
-    file://resin-logo.png \
+    file://balena-logo.png \
     "
 
 # install our theme, and remove some extra files to save a significant
@@ -31,11 +31,11 @@ do_install_append() {
 }
 
 do_deploy() {
-    install ${WORKDIR}/resin-logo.png ${DEPLOYDIR}/resin-logo.png
+    install ${WORKDIR}/balena-logo.png ${DEPLOYDIR}/balena-logo.png
 }
 
 # by setting a logo we avoid installing the default one
-LOGO = "/mnt/boot/splash/resin-logo.png"
+LOGO = "/mnt/boot/splash/balena-logo.png"
 
 PACKAGES_remove = "${PN}-initrd"
 PACKAGECONFIG = ""
