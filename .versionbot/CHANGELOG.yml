@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update balena-supervisor from v10.8.0 to v10.8.1
+      hash: e096248688f792ef0aefa58e5acb8c04e65ffd65
+      body: |
+        Update balena-supervisor from v10.8.0 to v10.8.1
+      footer:
+        Changelog-entry: Update balena-supervisor from v10.8.0 to v10.8.1
+        changelog-entry: Update balena-supervisor from v10.8.0 to v10.8.1
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested: []
+  version: 2.48.1
+  date: 2020-05-08T12:48:19.517Z
+- commits:
     - subject: >-
         Add the linux-firmware recipe from the Poky zeus-22.0.1 release and
         package various iwlwifi firmware separately

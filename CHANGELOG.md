@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.48.1
+## (2020-05-08)
+
+* Update balena-supervisor from v10.8.0 to v10.8.1 [Cameron Diver]
+
 # v2.48.0
 ## (2020-03-20)
 
