@@ -82,6 +82,24 @@ deploy() {
 	local _file="$1"
 	printf "[INFO] Deploying %s%s..." "${boot_mountpoint}" "${_file}"
 	if isBlacklisted "$_file"; then
+		if [ "$_file" = "/splash/balena-logo.png" ]; then
+			if [ -f "$boot_mountpoint/splash/resin-logo.png" ]; then
+				if isModified "/splash/resin-logo.png"; then
+					# Keep custom logo
+					printf "renaming resin-logo to balena-logo..."
+					sync -f $boot_mountpoint
+					mv $boot_mountpoint/splash/resin-logo.png $boot_mountpoint/splash/balena-logo.png
+					sync -f $boot_mountpoint
+				else
+					# This rebrands from old resin logo
+					printf "replacing resin-logo with balena-logo..."
+					copyBootFile "$_file"
+					rm "$boot_mountpoint/splash/resin-logo.png"
+				fi
+				printf " done.\n"
+				return
+			fi
+		fi
 		printf "file blacklisted. Ignoring.\n"
 	else
 		if [ -f "$boot_mountpoint/$_file" ]; then
@@ -132,8 +150,12 @@ for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 done
 echo "success."
 
-# Deploy all files in the bootfiles list
+# Deploy all files in the bootfiles list except fingerprint
 new_deployed_files=""
 for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
-	deploy "$filepath"
+	if [ "$filepath" != "/$boot_fingerprint" ]; then
+		deploy "$filepath"
+	fi
 done
+# Deploy fingerprint last
+deploy "/$boot_fingerprint"
