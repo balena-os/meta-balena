@@ -76,5 +76,7 @@ rootfs_run() {
     done
 
     # Move the /run mountpoint to the rootfs mountpoint
-    mount -n -o move /run "${ROOTFS_DIR}/run"
+    # For backwards compatibility we need to use /tmp instead of /run which is
+    # not available in older releases
+    mount -n -o move /run "${ROOTFS_DIR}/tmp"
 }
