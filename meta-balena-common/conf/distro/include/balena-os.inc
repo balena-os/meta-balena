@@ -93,5 +93,12 @@ PREFERRED_VERSION_upx-native_arm = "3.94"
 # let's pin linux-firmware to the version we imported from Poky zeus-22.0.1 release
 PREFERRED_VERSION_linux-firmware = "20190815"
 
+# Preferred rust version
+PREFERRED_VERSION_rust-native = "1.36.0"
+PREFERRED_VERSION_rust-cross-arm = "1.36.0"
+PREFERRED_VERSION_rust-llvm-native = "1.36.0"
+PREFERRED_VERSION_cargo-native = "1.36.0"
+PREFERRED_VERSION_libstd-rs = "1.36.0"
+
 # balena-engine go version requirement
 GOVERSION = "1.10.8"
