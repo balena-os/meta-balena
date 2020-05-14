@@ -1,6 +1,269 @@
 Change log
 -----------
 
+# v2.50.0
+## (2020-05-13)
+
+* Use /tmp as bootparam_root storage [Alex Gonzalez]
+* Update to libqmi v1.24.10 [Michal Toman]
+* Set rust 1.36 as the preferred rust version from meta-balena-common [Zubair Lutfullah Kakakhel]
+* Turn off wlan0 power save [Michal Toman]
+
+<details>
+<summary> Update os-config from 1.1.3 to 1.1.4 [Alex Gonzalez] </summary>
+
+> ## os-config-1.1.4
+> ### (2020-05-13)
+> 
+> * versionbot: Add changelog yml file [Alex Gonzalez]
+</details>
+
+
+
+<details>
+<summary> Update balena-supervisor from v11.3.0 to v11.4.1 [Cameron Diver] </summary>
+
+> ## balena-supervisor-11.4.1
+> ### (2020-05-12)
+> 
+> * Correctly check if value is a valid Integer [Miguel Casqueira]
+
+> ## balena-supervisor-11.4.0
+> ### (2020-05-12)
+> 
+> * Added endpoint to check if VPN is connected [Miguel Casqueira]
+
+> ## balena-supervisor-11.3.11
+> ### (2020-05-11)
+> 
+> * Fixed stubs for test suite [Miguel Casqueira]
+
+> ## balena-supervisor-11.3.10
+> ### (2020-05-11)
+> 
+> * Added more documentation to help new contributors start developing [Miguel Casqueira]
+
+> ## balena-supervisor-11.3.9
+> ### (2020-05-11)
+> 
+> * Fix dindctl script and update balenaos-in-container [Cameron Diver]
+
+> ## balena-supervisor-11.3.8
+> ### (2020-05-08)
+> 
+> * Remove unnecessary config.json keys [Pagan Gazzard]
+
+> ## balena-supervisor-11.3.7
+> ### (2020-05-08)
+> 
+> * CI: Use node 12 for tests to match runtime version [Pagan Gazzard]
+> * CI: Use docker 18 client to match remote [Pagan Gazzard]
+
+> ## balena-supervisor-11.3.6
+> ### (2020-05-07)
+> 
+> * Move SupervisorAPI state change logs to appropriate functions [Miguel Casqueira]
+
+> ## balena-supervisor-11.3.5
+> ### (2020-05-07)
+> 
+> * Add 20k-ultra to codeowners [Miguel Casqueira]
+
+> ## balena-supervisor-11.3.4
+> ### (2020-05-06)
+> 
+> * Don't use the openvpn alias to check VPN status [Cameron Diver]
+
+> ## balena-supervisor-11.3.3
+> ### (2020-05-06)
+> 
+> * Use lstat rather than stat to avoid error with symlinks in sync [Cameron Diver]
+
+> ## balena-supervisor-11.3.2
+> ### (2020-05-05)
+> 
+> * Move build files into build-conf and rename to build-utils [Cameron Diver]
+> * Fix knex migration require translation [Cameron Diver]
+
+> ## balena-supervisor-11.3.1
+> ### (2020-05-05)
+> 
+> * Remove legacy fallback to DROP rule in iptables [Cameron Diver]
+> * Add an ESTABLISHED flag to API iptables rules [Cameron Diver]
+> * Add ESR information to repo.yml [Cameron Diver]
+</details>
+
+
+
+<details>
+<summary> Update balena-supervisor from v10.11.0 to v11.3.0 [Cameron Diver] </summary>
+
+> ## balena-supervisor-11.3.0
+> ### (2020-05-04)
+> 
+> * Added Bearer Authorization spec [Miguel Casqueira]
+
+> ## balena-supervisor-11.2.0
+> ### (2020-04-30)
+> 
+> * Added explanation README for running specific tests [Miguel Casqueira]
+
+> ## balena-supervisor-11.1.11
+> ### (2020-04-28)
+> 
+> * Remove coverage running and modules [Cameron Diver]
+
+> ## balena-supervisor-11.1.10
+> ### (2020-04-27)
+> 
+> * Update balena-register-device to fix provisioning [Cameron Diver]
+
+> ## balena-supervisor-11.1.9
+> ### (2020-04-22)
+> 
+> * Added protocol to semver.org link [Miguel Casqueira]
+
+> ## balena-supervisor-11.1.8
+> ### (2020-04-21)
+> 
+> * Actually remove dbus-native dependency [Cameron Diver]
+
+> ## balena-supervisor-11.1.7
+> ### (2020-04-21)
+> 
+> * Fix livepush predicate for POSIX sh in entry.sh [Cameron Diver]
+
+> ## balena-supervisor-11.1.6
+> ### (2020-04-21)
+> 
+> * Remove double printing of API status error [Cameron Diver]
+
+> ## balena-supervisor-11.1.5
+> ### (2020-04-15)
+> 
+> * ⤴️ Upgrade migrations to work with knex [Cameron Diver]
+> * 📄 Upgrade knex to avoid CVE-2019-10757 [Cameron Diver]
+
+> ## balena-supervisor-11.1.4
+> ### (2020-04-14)
+> 
+> * 🔎 Also watch js files during livepush [Cameron Diver]
+> * Clear changed files after successful livepush invocation [Cameron Diver]
+> * Use livepush commands for copying and running dev specific steps [Cameron Diver]
+
+> ## balena-supervisor-11.1.3
+> ### (2020-04-13)
+> 
+> * 🚀 Update supervisor to node12 [Cameron Diver]
+
+> ## balena-supervisor-11.1.2
+> ### (2020-04-13)
+> 
+> * Move from dbus-native to dbus [Cameron Diver]
+
+> ## balena-supervisor-11.1.1
+> ### (2020-04-10)
+> 
+> * Update copy-webpack-plugin [Pagan Gazzard]
+> * Update ts-loader to 6.x [Pagan Gazzard]
+> * Update fork-ts-checker-webpack-plugin to 4.x [Pagan Gazzard]
+
+> ## balena-supervisor-11.1.0
+> ### (2020-04-09)
+> 
+> * Support matching on device type within contracts [Cameron Diver]
+
+> ## balena-supervisor-11.0.9
+> ### (2020-04-08)
+> 
+> * Workaround a circular dependency [Pagan Gazzard]
+
+> ## balena-supervisor-11.0.8
+> ### (2020-04-08)
+> 
+> * Link sqlite with a system sqlite for quicker builds [Cameron Diver]
+
+> ## balena-supervisor-11.0.7
+> ### (2020-04-08)
+> 
+> * Convert application-manager.coffee to javascript [Pagan Gazzard]
+
+> ## balena-supervisor-11.0.6
+> ### (2020-04-08)
+> 
+> * Don't sync test files with livepush [Cameron Diver]
+
+> ## balena-supervisor-11.0.5
+> ### (2020-04-07)
+> 
+> * Add newTargetState event and use it for backup loading [Cameron Diver]
+
+> ## balena-supervisor-11.0.4
+> ### (2020-04-07)
+> 
+> * Don't wrap UpdatesLockedErrors with a detailed error [Cameron Diver]
+
+> ## balena-supervisor-11.0.3
+> ### (2020-04-07)
+> 
+> * Allow spaces in volume definitions [Cameron Diver]
+
+> ## balena-supervisor-11.0.2
+> ### (2020-04-06)
+> 
+> * Update to balena-register-device 6.0.1 [Pagan Gazzard]
+
+> ## balena-supervisor-11.0.1
+> ### (2020-04-06)
+> 
+> * Don't mangle names when minimising with webpack [Cameron Diver]
+
+> ## balena-supervisor-11.0.0
+> ### (2020-04-06)
+> 
+> * ⚡ Update synchronisation scripts for supervisor development [Cameron Diver]
+> * 🔧 Move to an alpine base image and drop i386-nlp support [Cameron Diver]
+
+> ## balena-supervisor-10.11.3
+> ### (2020-04-02)
+> 
+> * Convert test/18-startup.coffee to typescript [Pagan Gazzard]
+> * Convert test/19-compose-utils.coffee to javascript [Pagan Gazzard]
+> * Convert test/18-compose-network.coffee to javascript [Pagan Gazzard]
+> * Convert test/17-config-utils.spec.coffee to javascript [Pagan Gazzard]
+> * Convert test/16-ports.spec.coffee to typescript [Pagan Gazzard]
+> * Convert test/15-conversions.spec.coffee to javascript [Pagan Gazzard]
+> * Convert test/12-logger.spec.coffee to javascript [Pagan Gazzard]
+
+> ## balena-supervisor-10.11.2
+> ### (2020-03-31)
+> 
+> * Pass in deviceId when fetching device tags [Cameron Diver]
+
+> ## balena-supervisor-10.11.1
+> ### (2020-03-30)
+> 
+> * 🔧 Update resin-lint -> balena-lint in lintstaged [Cameron Diver]
+</details>
+
+
+
+<details>
+<summary> Update os-config from 1.1.1 to 1.1.3 [Zubair Lutfullah Kakakhel] </summary>
+
+> ## os-config-1.1.3
+> ### (2020-03-24)
+> 
+> * Reorder module dependencies [Zahari Petkov]
+> * Pin serde version to v1.0.94 [Zahari Petkov]
+
+> ## os-config-1.1.2
+> ### (2020-02-04)
+> 
+> * Block on random until success [Zahari Petkov]
+> * Use parse_filters instead of parse [Zubair Lutfullah Kakakhel]
+</details>
+
 # v2.49.0
 ## (2020-05-01)
 

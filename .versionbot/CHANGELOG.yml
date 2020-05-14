@@ -1,4 +1,869 @@
 - commits:
+    - subject: Use /tmp as bootparam_root storage
+      hash: bab3cd7f50022127bfef50fde9cd445b6b55a7b2
+      body: >
+        From v2.49, the hostapp-update utility creates the /run directory in the
+
+        root filesystem, however when huping from previous versions /run is not
+        there.
+
+
+        This commit switches to use /tmp to store the new UUID for the root
+        partition on
+
+        first boot after generating new UUIDs.
+      footer:
+        Changelog-entry: Use /tmp as bootparam_root storage
+        changelog-entry: Use /tmp as bootparam_root storage
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Update to libqmi v1.24.10
+      hash: c287550b2b2ca78c515b2d3336c5622af0c28303
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update to libqmi v1.24.10
+        changelog-entry: Update to libqmi v1.24.10
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+    - subject: Set rust 1.36 as the preferred rust version from meta-balena-common
+      hash: f0217237cd3c56dcada8909af1ba871356aaff8a
+      body: |
+        rust is used for various utilities in the OS.
+        e.g. os-config, healthdog, bindmount, some others maybe
+
+        At the moment, we haven't syncronized on one rust version and device
+        integration layers can pick any meta-rust version. Which probably uses
+        the latest rust version in the layer.
+
+        Lets sync on 1.36 and move in steps when needed.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Set rust 1.36 as the preferred rust version from meta-balena-common
+        changelog-entry: Set rust 1.36 as the preferred rust version from meta-balena-common
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+    - subject: Turn off wlan0 power save
+      hash: 6aec8dc1e97d3a7cdbf494909c1696a4ebd1eb04
+      body: |
+        The power save has been switched from 'off' to 'on' in adf69fb
+        with no apparent motivation, we consider it an oversight
+        and the desired state is 'off'.
+
+        Fixes #1850
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Turn off wlan0 power save
+        changelog-entry: Turn off wlan0 power save
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+    - subject: Update os-config from 1.1.3 to 1.1.4
+      hash: d5b311daccb6c4b3152562ab67d6ed3e4df608e1
+      body: |
+        Fixes versionbot's nested changelogs.
+
+        Update os-config from 1.1.3 to 1.1.4
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update os-config from 1.1.3 to 1.1.4
+        changelog-entry: Update os-config from 1.1.3 to 1.1.4
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested:
+        - commits:
+            - subject: 'versionbot: Add changelog yml file'
+              hash: 9b35f5e9cb6b27b92f7dc578a92532ade36c7a36
+              body: >
+                This file allows other components to uniquely parse the
+                information that
+
+                is contained in the changelog. It will be automatically managed
+                by
+
+                versionist by appending the new commits on top. This is needed
+                to
+
+                provide nested-changelogs.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+          version: os-config-1.1.4
+          date: 2020-05-13T11:32:03.684Z
+    - subject: Update balena-supervisor from v11.3.0 to v11.4.1
+      hash: 4aafd0dc1991f34a64a2336876f95c71cf121178
+      body: |
+        Update balena-supervisor from v11.3.0 to v11.4.1
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.3.0 to v11.4.1
+        changelog-entry: Update balena-supervisor from v11.3.0 to v11.4.1
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: Correctly check if value is a valid Integer
+              hash: 838c1ebba4c3d4cba31f5ef233f09020fa3d03f7
+              body: ''
+              footer:
+                Closes: '#1180'
+                closes: '#1180'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.4.1
+          date: 2020-05-12T16:50:20.376Z
+        - commits:
+            - subject: Added endpoint to check if VPN is connected
+              hash: 8295858b328d885782c6f0cead44248b1f17fd50
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.4.0
+          date: 2020-05-12T01:24:43.749Z
+        - commits:
+            - subject: Fixed stubs for test suite
+              hash: f6aa4dd015e8bd07c795f6c1e70adf99a6ffec94
+              body: ''
+              footer:
+                Closes: '#1280'
+                closes: '#1280'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.3.11
+          date: 2020-05-11T22:19:04.161Z
+        - commits:
+            - subject: >-
+                Added more documentation to help new contributors start
+                developing
+              hash: 856e7cba2cc767ded0eeb5186a1cce19ea447735
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.3.10
+          date: 2020-05-11T19:32:42.867Z
+        - commits:
+            - subject: Fix dindctl script and update balenaos-in-container
+              hash: c317b02aef0bd2496f39ab245fa7c670e806f2e3
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1306'
+                closes: '#1306'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.3.9
+          date: 2020-05-11T13:16:55.781Z
+        - commits:
+            - subject: Remove unnecessary config.json keys
+              hash: 913418bb37aafe1e66dcc9cd6e1f84e89dee4712
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.3.8
+          date: 2020-05-08T11:59:18.907Z
+        - commits:
+            - subject: 'CI: Use node 12 for tests to match runtime version'
+              hash: 095f67c83011b60a06d75c5f0432937b93049ad5
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: 'CI: Use docker 18 client to match remote'
+              hash: 8c1838fd5ea0d36787857d7040f8359d9618c061
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.3.7
+          date: 2020-05-08T11:43:11.578Z
+        - commits:
+            - subject: Move SupervisorAPI state change logs to appropriate functions
+              hash: 60c07fc2fc2c352091995c2e599752fb12c05148
+              body: ''
+              footer:
+                Closes: '#1277'
+                closes: '#1277'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.3.6
+          date: 2020-05-07T17:53:21.140Z
+        - commits:
+            - subject: Add 20k-ultra to codeowners
+              hash: 74d012dc7f972ad30896007e78386a9c03224a05
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.3.5
+          date: 2020-05-07T16:11:47.494Z
+        - commits:
+            - subject: Don't use the openvpn alias to check VPN status
+              hash: 8f09022d1fd85f63d760017e19150b0f23a2884a
+              body: ''
+              footer:
+                Closes: '#1293'
+                closes: '#1293'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.3.4
+          date: 2020-05-06T16:19:09.090Z
+        - commits:
+            - subject: Use lstat rather than stat to avoid error with symlinks in sync
+              hash: a7399fd78b914e6dccacd2935cd98f77176d65d8
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1301'
+                closes: '#1301'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.3.3
+          date: 2020-05-06T12:51:38.623Z
+        - commits:
+            - subject: Move build files into build-conf and rename to build-utils
+              hash: 02d088d351327ee5cab46029efb3ca7dce067fd6
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Fix knex migration require translation
+              hash: 585bd803134db999425fae322fd4e7259caaa27a
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1274'
+                closes: '#1274'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.3.2
+          date: 2020-05-05T16:58:04.403Z
+        - commits:
+            - subject: Remove legacy fallback to DROP rule in iptables
+              hash: 31957566e5f5b21910988319472721ce2a931a38
+              body: >
+                This has not been necessary for a long time, and wwe can now
+                remove it.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Add an ESTABLISHED flag to API iptables rules
+              hash: 7b1f03ced509cdbdbea950e079ba2fab5c3699bb
+              body: >
+                This allows a response to an input with dport=`supevisor api
+                port` and
+
+                is required when the host OS is doing stateful firewalling.
+
+
+                This should not affect things when stateful firewalling is not
+                in
+
+                effect, as the standard OUTPUT chain policy is ACCEPT, so we're
+                just
+
+                being explicit about it.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Backport-to: 'next, current, sunset'
+                backport-to: 'next, current, sunset'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Add ESR information to repo.yml
+              hash: 7f5395da885146ccf707fa52f0916afa7c832eeb
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.3.1
+          date: 2020-05-05T11:18:20.667Z
+    - subject: Update balena-supervisor from v10.11.0 to v11.3.0
+      hash: 02dfac89f28dbf94f5069a68613147674f6c6c8b
+      body: |
+        Update balena-supervisor from v10.11.0 to v11.3.0
+      footer:
+        Changelog-entry: Update balena-supervisor from v10.11.0 to v11.3.0
+        changelog-entry: Update balena-supervisor from v10.11.0 to v11.3.0
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: Added Bearer Authorization spec
+              hash: 2007a98940ea93f8064b045fce52133a4b48bac0
+              body: ''
+              footer:
+                Closes: '#1249'
+                closes: '#1249'
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.3.0
+          date: 2020-05-04T17:26:19.216Z
+        - commits:
+            - subject: Added explanation README for running specific tests
+              hash: a8ac3d0bc9344653d68c43fe3298171b379823d7
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.2.0
+          date: 2020-04-30T19:05:08.820Z
+        - commits:
+            - subject: Remove coverage running and modules
+              hash: 6c360c2273ad2ab66ed254a1172f138d4c1430d8
+              body: >
+                The coverage no longer works with es2020, and nobody really pays
+                any
+
+                attention to the coverage as it is.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.11
+          date: 2020-04-28T12:56:50.014Z
+        - commits:
+            - subject: Update balena-register-device to fix provisioning
+              hash: 7c27a561a8401054304fb967d5805b446e0cb3a1
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.10
+          date: 2020-04-27T17:48:09.624Z
+        - commits:
+            - subject: Added protocol to semver.org link
+              hash: f9d7951cc5c1b20e989d04471a73d491118b3dfe
+              body: ''
+              footer:
+                Closes: '#1256'
+                closes: '#1256'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.1.9
+          date: 2020-04-22T21:42:29.017Z
+        - commits:
+            - subject: Actually remove dbus-native dependency
+              hash: 508708aa32a56f23cc3a8df9e8071d340879a936
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.8
+          date: 2020-04-21T13:30:10.250Z
+        - commits:
+            - subject: Fix livepush predicate for POSIX sh in entry.sh
+              hash: e2eba6280d19e5d74c9e3bb7bbfeea797378b08d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.7
+          date: 2020-04-21T11:59:25.840Z
+        - commits:
+            - subject: Remove double printing of API status error
+              hash: f599799950c9182cf97ef40dd894feb25c833e67
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.6
+          date: 2020-04-21T08:57:07.074Z
+        - commits:
+            - subject: ⤴️ Upgrade migrations to work with knex
+              hash: f79142482921bf925e8bbf879b04ea533b5e01cd
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: "\U0001F4C4 Upgrade knex to avoid CVE-2019-10757"
+              hash: a43d71d1ac6d6d09b3fb6375a5ad97690fd979c1
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.5
+          date: 2020-04-15T12:40:19.254Z
+        - commits:
+            - subject: "\U0001F50E Also watch js files during livepush"
+              hash: aa46be93d43540793245c0f6c2e895f32fb44e1e
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Clear changed files after successful livepush invocation
+              hash: 4f2a534075ae2c6037070ef90f38a3066d08c53e
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Use livepush commands for copying and running dev specific steps
+              hash: 67c3055fd4be341248a213828550b2b04ccc2677
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.4
+          date: 2020-04-14T09:53:51.068Z
+        - commits:
+            - subject: "\U0001F680 Update supervisor to node12"
+              hash: 826eec2e4fe29860d23cf6c2276390b5c7f26a09
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.3
+          date: 2020-04-13T13:40:05.787Z
+        - commits:
+            - subject: Move from dbus-native to dbus
+              hash: 37feb7e325ccf8639680e9a1f274b5755e5d35a2
+              body: ''
+              footer:
+                Closes: '#1049'
+                closes: '#1049'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.2
+          date: 2020-04-13T09:36:34.724Z
+        - commits:
+            - subject: Update copy-webpack-plugin
+              hash: e5f1a6b6ed7473ebfaa9f67ec0d258e9edef38b7
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Update ts-loader to 6.x
+              hash: 59f300df629422284665b19b5cf9d931bfc30fcf
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Update fork-ts-checker-webpack-plugin to 4.x
+              hash: 9ed36ec00651199dc92afee1a41e6ef5bb8534c7
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.1.1
+          date: 2020-04-10T11:51:52.777Z
+        - commits:
+            - subject: Support matching on device type within contracts
+              hash: c9c0e650cb0f6655ac5a6c545e6b009c6fe6fa1c
+              body: ''
+              footer:
+                Closes: '#1191'
+                closes: '#1191'
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.1.0
+          date: 2020-04-09T09:47:30.853Z
+        - commits:
+            - subject: Workaround a circular dependency
+              hash: a59af6abe894000cd9cdc43d6963bdfc572e2f2b
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.0.9
+          date: 2020-04-08T16:43:14.411Z
+        - commits:
+            - subject: Link sqlite with a system sqlite for quicker builds
+              hash: b6dde69c4f8b52fa4928242d5b04d9c203f64c65
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.0.8
+          date: 2020-04-08T13:06:43.833Z
+        - commits:
+            - subject: Convert application-manager.coffee to javascript
+              hash: a2ec35456b8bc23641144fb0f7136d1d364f1fce
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.0.7
+          date: 2020-04-08T11:18:00.532Z
+        - commits:
+            - subject: Don't sync test files with livepush
+              hash: 6dda0efa1fc54765450aac235393883f293b9bc5
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.0.6
+          date: 2020-04-08T07:44:13.444Z
+        - commits:
+            - subject: Add newTargetState event and use it for backup loading
+              hash: 0a429f60a5dc93a428e5e88932e7d2bbcdb81b36
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.0.5
+          date: 2020-04-07T13:53:23.726Z
+        - commits:
+            - subject: Don't wrap UpdatesLockedErrors with a detailed error
+              hash: dda627021991f45818ce723e0ee83c085b2c785d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.0.4
+          date: 2020-04-07T12:15:24.426Z
+        - commits:
+            - subject: Allow spaces in volume definitions
+              hash: 0950b66c52f2af10fcd44cb60f1b18007dd8aef0
+              body: ''
+              footer:
+                Closes: '#1247'
+                closes: '#1247'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.0.3
+          date: 2020-04-07T09:38:43.764Z
+        - commits:
+            - subject: Update to balena-register-device 6.0.1
+              hash: 81927d78612aa5944aab8a1322735e32c311d927
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.0.2
+          date: 2020-04-06T16:47:10.397Z
+        - commits:
+            - subject: Don't mangle names when minimising with webpack
+              hash: 6fe3bfa4f2668fd364a977ccf4830e91b07fd47a
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.0.1
+          date: 2020-04-06T12:39:03.990Z
+        - commits:
+            - subject: ⚡ Update synchronisation scripts for supervisor development
+              hash: 8ab63656bd483645fe0238fee2a1824158f3f453
+              body: >
+                We move the old sync.js script to tools/, and delete the
+                now-broken
+
+                sync-debug.js.
+
+
+                We add a command `npm run sync`, which starts a livepush process
+
+                with the supervisor on a device.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: "\U0001F527 Move to an alpine base image and drop i386-nlp support"
+              hash: 3690acbd70df726030b648a1c32a9b2b21015232
+              body: >
+                We also remove the Makefile to go to a simpler build system, as
+                long with
+
+                the retry_docker_push.sh file. We remove the rest of the
+                automation tools
+
+                as they're no longer used and update the circle.yml file.
+
+
+                We also remove debug builds, as these aren't needed moving
+                forward, and were
+
+                only to enable livepush builds.
+              footer:
+                Change-type: major
+                change-type: major
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.0.0
+          date: 2020-04-06T12:07:51.757Z
+        - commits:
+            - subject: Convert test/18-startup.coffee to typescript
+              hash: d3221ca235aa0bd22191516f3eeebcabdf32e94b
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Convert test/19-compose-utils.coffee to javascript
+              hash: 70b07055513f8948bf4c9867718ed4df3df61bc1
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Convert test/18-compose-network.coffee to javascript
+              hash: 98e956831a4f8dc9e7e08bc98b21c0f8dd89e263
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Convert test/17-config-utils.spec.coffee to javascript
+              hash: d3cf650ac48e94a1f7040b72b497e11945671015
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Convert test/16-ports.spec.coffee to typescript
+              hash: dcb01cb8632c6a438e3989e6cbcdf2639d0367ba
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Convert test/15-conversions.spec.coffee to javascript
+              hash: 515fb059f409ba33b0537c778e7d8191bf387a48
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+            - subject: Convert test/12-logger.spec.coffee to javascript
+              hash: fd4cec31e7473d53ffa6a8650b341e7dec49a2cf
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-10.11.3
+          date: 2020-04-02T13:29:44.498Z
+        - commits:
+            - subject: Pass in deviceId when fetching device tags
+              hash: 3c59944ce126570cc814626f20a9d67d6e67ff4d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1237'
+                closes: '#1237'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.11.2
+          date: 2020-03-31T11:48:13.361Z
+        - commits:
+            - subject: "\U0001F527 Update resin-lint -> balena-lint in lintstaged"
+              hash: 2433f9a343d26233fff3d5bed14a548feded23ad
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-10.11.1
+          date: 2020-03-30T17:41:43.882Z
+    - subject: Update os-config from 1.1.1 to 1.1.3
+      hash: 6119e57e24ecf30077da00d47057b688940e43ae
+      body: |
+        Updates for rust 1.36 and improvements related to getrandom on devices
+        with lower entropy.
+
+        Update os-config from 1.1.1 to 1.1.3
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update os-config from 1.1.1 to 1.1.3
+        changelog-entry: Update os-config from 1.1.1 to 1.1.3
+        Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+        signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+      author: Zubair Lutfullah Kakakhel
+      nested:
+        - version: os-config-1.1.3
+          date: 2020-03-24T17:32:02.000Z
+          commits:
+            - hash: ae2daf2a2005c5706ac65e0c6dd67283d35b0f2b
+              author: Zahari Petkov
+              footers:
+                change-type: patch
+                signed-off-by: Zahari Petkov <zahari@balena.io>
+              subject: Reorder module dependencies
+              body: null
+            - hash: b5947fea2b08a5daf87695b9347ad104e0e9160c
+              author: Zahari Petkov
+              footers:
+                change-type: patch
+                signed-off-by: Zahari Petkov <zahari@balena.io>
+              subject: Pin serde version to v1.0.94
+              body: |-
+                Needed since meta-rust is not configuring the i686-poky-linux
+                target correctly for 64-bit atomics support.
+        - version: os-config-1.1.2
+          date: 2020-02-04T12:37:15.000Z
+          commits:
+            - hash: 73593533237275c346987d6f70b776445e901829
+              author: Zahari Petkov
+              footers:
+                change-type: patch
+                signed-off-by: Zahari Petkov <zahari@balena.io>
+              subject: Block on random until success
+              body: >-
+                On Raspberry Pi Zero W sometimes getrandom is not ready yet at
+                the moment of
+
+                os-config launch:
+
+                ```
+
+                could not initialize thread_rng: All entropy sources failed
+                (permanently unavailable);
+
+                cause: getrandom not ready (not ready yet);
+
+                cause: Resource temporarily unavailable;
+
+                ```
+
+                This change makes sure we are cycling until a random sequence is
+                populated successfully.
+            - hash: 14a19bf24e258c01a294bd7adfa808fddee59096
+              author: Zubair Lutfullah Kakakhel
+              footers:
+                signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+              subject: Use parse_filters instead of parse
+              body: parse_filters is deprecated
+  version: 2.50.0
+  date: 2020-05-13T16:49:21.997Z
+- commits:
     - subject: 'balena-host: Ignore environment file if it does not exist'
       hash: 692a06a70536b9fcda79d5a0b28b23f384b9bb78
       body: >
