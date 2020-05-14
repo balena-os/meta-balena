@@ -34,6 +34,7 @@ FILES_${PN} += " \
 
 RDEPENDS_${PN} = " \
 	balena \
+	bash \
 	coreutils \
 	curl \
 	healthdog \
