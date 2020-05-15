@@ -11,6 +11,7 @@ SRC_URI_append = " \
     file://nm-tmpfiles.conf \
     file://balena-client-id.patch \
     file://remove-https-warning.patch \
+    file://0001-wwan-Set-MTU-based-on-what-ModemManager-exposes.patch \
     "
 
 RDEPENDS_${PN}_append = " \
