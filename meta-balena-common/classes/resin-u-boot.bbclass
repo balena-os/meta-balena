@@ -16,6 +16,19 @@ python __anonymous() {
         bb.error("UBOOT_KCONFIG_SUPPORT not defined or wrong value. Should be 0 or 1.")
 }
 
+## TODO: Switch first 'true' to false if all boards build fine
+do_configure_append() {
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'true', 'true', d)}; then
+        if grep -qP "void puts\(const char \*s\)" ${S}/common/console.c ; then
+            line=$(grep -nP "void puts\(const char \*s\)" ${S}/common/console.c | cut -f1 -d:)
+            sed -i "$(expr ${line} \+ 2) i return;" ${S}/common/console.c
+        else
+            bbfatal "Failed to patch u-boot for silencing console in production"
+	fi;
+    fi;
+}
+
+
 RESIN_BOOT_PART = "1"
 RESIN_DEFAULT_ROOT_PART = "2"
 RESIN_ENV_FILE = "resinOS_uEnv.txt"
