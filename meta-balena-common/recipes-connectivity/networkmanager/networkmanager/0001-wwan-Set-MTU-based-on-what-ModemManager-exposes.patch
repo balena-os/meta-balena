@@ -1,0 +1,38 @@
+From 03d8a98f7054bff544f1270f89d4a0ee97e1a591 Mon Sep 17 00:00:00 2001
+From: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+Date: Fri, 8 May 2020 08:49:49 +0200
+Subject: [PATCH] wwan: Set MTU based on what ModemManager exposes
+
+Signed-off-by: Sven Schwermer <sven.schwermer@disruptive-technologies.com>
+Upstream-Status: Accepted [99efe69f685534c7f9d22245d145543b7e970ca3]
+---
+ src/devices/wwan/nm-modem-broadband.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/devices/wwan/nm-modem-broadband.c b/src/devices/wwan/nm-modem-broadband.c
+index 216fedf..3a65a70 100644
+--- a/src/devices/wwan/nm-modem-broadband.c
++++ b/src/devices/wwan/nm-modem-broadband.c
+@@ -875,6 +875,7 @@ static_stage3_ip4_done (NMModemBroadband *self)
+ 	guint i;
+ 	guint32 ip4_route_table, ip4_route_metric;
+ 	NMPlatformIP4Route *r;
++	guint32 mtu_n;
+ 
+ 	g_assert (self->_priv.ipv4_config);
+ 	g_assert (self->_priv.bearer);
+@@ -946,6 +947,14 @@ static_stage3_ip4_done (NMModemBroadband *self)
+ 		}
+ 	}
+ 
++#if MM_CHECK_VERSION(1, 4, 0)
++	mtu_n = mm_bearer_ip_config_get_mtu (self->_priv.ipv4_config);
++	if (mtu_n) {
++		nm_ip4_config_set_mtu (config, mtu_n, NM_IP_CONFIG_SOURCE_WWAN);
++		_LOGI ("  MTU %u", mtu_n);
++	}
++#endif
++
+ out:
+ 	g_signal_emit_by_name (self, NM_MODEM_IP4_CONFIG_RESULT, config, error);
+ 	g_clear_error (&error);
