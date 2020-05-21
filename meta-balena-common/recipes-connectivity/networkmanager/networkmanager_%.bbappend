@@ -1,6 +1,6 @@
 inherit deploy
 
-FILESEXTRAPATHS_append := ":${THISDIR}/resin-files"
+FILESEXTRAPATHS_append := ":${THISDIR}/resin-files:${THISDIR}/${BPN}"
 
 SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
