@@ -1,4 +1,193 @@
 - commits:
+    - subject: 'networkmanager: Remove build warning'
+      hash: 5e5aa5c01e3f47a26ae055bb7b4fe44202a9b2f1
+      body: |
+        Include BPN in the generic bbappends extra path to avoid the
+        following warning:
+
+            WARNING: networkmanager_1.16.0.bb: Unable to get checksum for networkmanager SRC_URI entry 0001-wwan-Set-MTU-based-on-what-ModemManager-exposes.patch: file could not be found
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Remove busybox-syslog to use only systemd's journald
+      hash: 9a1cedd66bbf298385c0a8460b3f9c3bb2da2f9e
+      body: |
+        All logging is handled by journald so remove the default dependency on
+        busybox-syslog. It is still available to be explicitely included in
+        images that might need it like initramfs images.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Remove busybox-syslog to use only systemd's journald
+        changelog-entry: Remove busybox-syslog to use only systemd's journald
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Update CODEOWNERS
+      hash: 272d16d3d12c4dc8f02a62d3edbe2eee6a1fca75
+      body: |
+        Update codeowners. @ZubairLK thanks for all the fish.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Backport NM patch for setting modem MTU correctly
+      hash: fe7f8a33b1298f971b6dbc636bd06f86157196ce
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Backport NM patch for setting modem MTU correctly
+        changelog-entry: Backport NM patch for setting modem MTU correctly
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+    - subject: 'update-resin-supervisor: short circuit if remote image cannot be fetched'
+      hash: 859d4cba74bbbcdfbdcdc4ab8c7c8e7471d8c676
+      body: ''
+      footer:
+        Changelog-entry: >-
+          update-resin-supervisor: short circuit if remote image cannot be
+          fetched
+        changelog-entry: >-
+          update-resin-supervisor: short circuit if remote image cannot be
+          fetched
+        HQ: 'https://github.com/balena-io/balena/issues/2108'
+        hq: 'https://github.com/balena-io/balena/issues/2108'
+        Connects-to: '#1869'
+        connects-to: '#1869'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+    - subject: Update balena-supervisor from v11.4.1 to v11.4.10
+      hash: 98c7f8fae159151bea3c475747b7838d4b4a4174
+      body: |
+        Update balena-supervisor from v11.4.1 to v11.4.10
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.4.1 to v11.4.10
+        changelog-entry: Update balena-supervisor from v11.4.1 to v11.4.10
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: Fix leftover spurious return from typescript conversion
+              hash: 6972dcd92d36576517681685a129e89a8a06f722
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.10
+          date: 2020-05-18T14:23:19.048Z
+        - commits:
+            - subject: >-
+                Catch errors in the target state poll so polling will always
+                continue
+              hash: dc187f0036875345ab489d14889c488eead24dc2
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.4.9
+          date: 2020-05-18T13:17:23.537Z
+        - commits:
+            - subject: Avoid querying `instantUpdates` on every state poll
+              hash: afae5d15d49a75168ebe6d4f8911e96918d0da5e
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.4.8
+          date: 2020-05-18T12:25:53.833Z
+        - commits:
+            - subject: Fix default request options
+              hash: b05d597ade83fcb1a58021ade0c11f70d232a39f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.4.7
+          date: 2020-05-16T13:08:14.505Z
+        - commits:
+            - subject: Remove CoffeeScript tests and all CoffeeScript tools
+              hash: 466c7999dbbe19acf7bfc2dff260778d229b5524
+              body: ''
+              footer:
+                Closes: '#1318'
+                closes: '#1318'
+                Change-Type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.4.6
+          date: 2020-05-15T17:04:23.719Z
+        - commits:
+            - subject: Update to @balena/lint 5.x
+              hash: 758f3caa48a53c00dd3230fe97e2f704968c4eb6
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.4.5
+          date: 2020-05-15T11:11:04.464Z
+        - commits:
+            - subject: Add a random offset to the poll interval with each poll
+              hash: 58c6a69e5a6045e898ce5748089f4dcad7d12bc3
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1242'
+                closes: '#1242'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.4
+          date: 2020-05-15T09:36:33.693Z
+        - commits:
+            - subject: Cache service names in local log backend
+              hash: 0bceffffb61a5970db0293a8f6d83fe8015163ef
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.3
+          date: 2020-05-14T08:43:43.453Z
+        - commits:
+            - subject: Update engine information in package.json
+              hash: bbfd87d3257dec064f62dc05ee7d523593e8f415
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.2
+          date: 2020-05-13T08:49:32.854Z
+  version: 2.50.1
+  date: 2020-05-21T13:40:07.611Z
+- commits:
     - subject: Use /tmp as bootparam_root storage
       hash: bab3cd7f50022127bfef50fde9cd445b6b55a7b2
       body: >

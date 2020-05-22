@@ -1,6 +1,64 @@
 Change log
 -----------
 
+# v2.50.1
+## (2020-05-21)
+
+* networkmanager: Remove build warning [Alex Gonzalez]
+* Remove busybox-syslog to use only systemd's journald [Alex Gonzalez]
+* Update CODEOWNERS [Alex Gonzalez]
+* Backport NM patch for setting modem MTU correctly [Florin Sarbu]
+* update-resin-supervisor: short circuit if remote image cannot be fetched [Matthew McGinn]
+
+<details>
+<summary> Update balena-supervisor from v11.4.1 to v11.4.10 [Cameron Diver] </summary>
+
+> ## balena-supervisor-11.4.10
+> ### (2020-05-18)
+> 
+> * Fix leftover spurious return from typescript conversion [Cameron Diver]
+
+> ## balena-supervisor-11.4.9
+> ### (2020-05-18)
+> 
+> * Catch errors in the target state poll so polling will always continue [Pagan Gazzard]
+
+> ## balena-supervisor-11.4.8
+> ### (2020-05-18)
+> 
+> * Avoid querying `instantUpdates` on every state poll [Pagan Gazzard]
+
+> ## balena-supervisor-11.4.7
+> ### (2020-05-16)
+> 
+> * Fix default request options [Pagan Gazzard]
+
+> ## balena-supervisor-11.4.6
+> ### (2020-05-15)
+> 
+> * Remove CoffeeScript tests and all CoffeeScript tools [Miguel Casqueira]
+
+> ## balena-supervisor-11.4.5
+> ### (2020-05-15)
+> 
+> * Update to @balena/lint 5.x [Pagan Gazzard]
+
+> ## balena-supervisor-11.4.4
+> ### (2020-05-15)
+> 
+> * Add a random offset to the poll interval with each poll [Cameron Diver]
+
+> ## balena-supervisor-11.4.3
+> ### (2020-05-14)
+> 
+> * Cache service names in local log backend [Cameron Diver]
+
+> ## balena-supervisor-11.4.2
+> ### (2020-05-13)
+> 
+> * Update engine information in package.json [Cameron Diver]
+</details>
+
 # v2.50.0
 ## (2020-05-13)
 
