@@ -1,0 +1,94 @@
+#!/bin/sh
+
+distro_name="balenaos"
+sdcard_partition="not-set-in-machine.conf"
+system_partition="not-set-in-machine.conf"
+rootfs_type="ext4"
+
+#Override log functions
+msg() {
+	[ -n "$bootparm_adb" ] && echo "$@" >/dev/kmsg
+	echo "$@" >/dev/console
+}
+
+info() {
+	[ -n "$bootparam_adb" ] && [ -n "$bootparam_verbose" ] && echo "$@" >/dev/kmsg
+	[ -n "$bootparam_verbose" ] && echo "$@" >/dev/console
+}
+
+debug() {
+	[ -n "$bootparam_adb" ] && [ -n "$bootparam_debug" ] && echo "DEBUG: $@" >/dev/kmsg
+	[ -n "$bootparam_debug" ] && echo "DEBUG: $@" >/dev/console
+}
+
+fatal() {
+    echo $1 >/dev/console
+    echo $1 >/dev/kmsg
+    echo >/dev/console
+
+    if [ -n "$bootparam_init_fatal_sh" ]; then
+        if [ -n "$bootparam_adb" ]; then
+            /usr/bin/adbd
+        else
+            sh
+        fi
+    else
+        while [ "true" ]; do
+           sleep 3600
+        done
+    fi
+}
+
+halium_enabled() {
+    if [ "$bootparam_flasher" = "true" ]; then
+        info "[INFO] Flasher detected. We don't run Halium when provisioning."
+        return 1
+    fi
+
+    test -c $1/dev/fd || ln -sf /proc/self/fd $1/dev/fd
+    test -c $1/dev/stdin || ln -sf fd/0 $1/dev/stdin
+    test -c $1/dev/stdout || ln -sf fd/1 $1/dev/stdout
+    test -c $1/dev/stderr || ln -sf fd/2 $1/dev/stderr
+    test -c $1/dev/socket || mkdir -m 0755 $1/dev/socket
+    test -e $1/dev/pts || mkdir -m 0755 -p $1/dev/pts
+    test -e $1/dev/pts/0 || mount -t devpts devpts $1/dev/pts
+
+    # Check whether we need to boot recovery
+    cat /proc/cmdline | grep skip_initramfs
+    if [ $? -eq 1 ] && [ -f /recovery/init ] ; then
+       info "skip_initramfs not found in cmdline. Booting into recovery."
+
+       # mount --bind trick doesn't seem to work with switch_root, using tmpfs
+       mount -t tmpfs -o size=40M tmpfs ${rootmnt}
+       cp -rf /recovery/* ${ROOTFS_DIR}/
+       exec switch_root ${ROOFS_DIR} /init "$@"
+    fi
+
+    return 0
+}
+
+halium_run() {
+    cat /proc/cmdline | grep adb
+    if [ $? = 1 ] ; then
+        return 0
+    fi
+
+    msg "==== BalenaOS ADB starting...===="
+
+    #system partition is needed for accessing build.prop by android-gadget-setup
+    if [ -e /dev/$system_partition ]; then
+        /sbin/fsck.ext4 -p /dev/$system_partition
+        mkdir -p /system
+        mount -t auto -o rw,noatime,nodiratime,nodelalloc /dev/$system_partition /system
+    fi
+
+    #below are now needed in order to use FunctionFS for ADB, tested to work with 3.4+ kernels
+    mkdir -p /dev/usb-ffs/adb
+    mount -t functionfs adb /dev/usb-ffs/adb > /dev/kmsg
+    #android-gadget-setup doesn't provide below 2 and without them it won't work, so we provide them here.
+    echo adb > /sys/class/android_usb/android0/f_ffs/aliases
+    echo ffs > /sys/class/android_usb/android0/functions
+
+    /usr/bin/android-gadget-setup adb
+    /usr/bin/adbd &
+}

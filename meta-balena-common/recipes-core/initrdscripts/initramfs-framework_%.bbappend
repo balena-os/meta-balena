@@ -1,5 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
+RPROVIDES_${PN}_append_halium = " virtual/android-initramfs-scripts"
+
 SRC_URI_append = " \
     file://prepare \
     file://fsck \
@@ -9,6 +11,10 @@ SRC_URI_append = " \
     file://rorootfs \
     file://rootfs \
     file://finish \
+    "
+
+SRC_URI_append_halium += " \
+    file://halium \
     "
 
 do_install_append() {
@@ -23,6 +29,10 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
 }
 
+do_install_append_halium() {
+    install -m 0755 ${WORKDIR}/halium ${D}/init.d/71-halium
+}
+
 PACKAGES_append = " \
     initramfs-module-fsck \
     initramfs-module-machineid \
@@ -30,6 +40,10 @@ PACKAGES_append = " \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
     initramfs-module-fsuuidsinit \
+    "
+
+PACKAGES_append_halium += " \
+    initramfs-module-halium \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -61,3 +75,7 @@ FILES_initramfs-module-prepare = "/init.d/70-prepare"
 SUMMARY_initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
 RDEPENDS_initramfs-module-fsuuidsinit = "${PN}-base"
 FILES_initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
+
+SUMMARY_initramfs-module-halium = "Halium's init script"
+RDEPENDS_initramfs-module-halium = "${PN}-base initramfs-module-prepare initramfs-module-udev android-tools"
+FILES_initramfs-module-halium = "/init.d/71-halium"
