@@ -21,3 +21,5 @@ RDEPENDS_${PN} = " \
     os-release \
     less \
     "
+
+RDEPENDS_${PN}_remove_halium = "kernel-image-initramfs"
