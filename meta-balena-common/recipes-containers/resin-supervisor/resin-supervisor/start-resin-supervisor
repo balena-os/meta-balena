@@ -77,12 +77,12 @@ runSupervisor() {
         --net=host \
         --cidenv=SUPERVISOR_CONTAINER_ID \
         --mount type=bind,source=/var/run/balena-engine.sock,target=/var/run/balena-engine.sock \
-        -v "$CONFIG_PATH:/boot/config.json"  \
-        -v /mnt/data/apps.json:/boot/apps.json \
-        -v /resin-data/resin-supervisor:/data \
-        -v /proc/net/fib_trie:/mnt/fib_trie \
-        -v /var/log/supervisor-log:/var/log \
-        -v /:/mnt/root \
+        --mount type=bind,source="$CONFIG_PATH",target=/boot/config.json \
+        --mount type=bind,source=/mnt/data/apps.json,target=/boot/apps.json \
+        --mount type=bind,source=/resin-data/resin-supervisor,target=/data \
+        --mount type=bind,source=/proc/net/fib_trie,target=/mnt/fib_trie \
+        --mount type=bind,source=/var/log/supervisor-log,target=/var/log \
+        --mount type=bind,source=/,target=/mnt/root \
         -e DOCKER_ROOT=/mnt/root/var/lib/docker \
         -e DOCKER_SOCKET=/var/run/balena-engine.sock \
         -e "BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT" \
