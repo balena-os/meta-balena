@@ -36,7 +36,7 @@ else
 	ruuid=$(get_cmdline_root_uuid)
 fi
 # Determine if the partition is on the same drive as root
-rpdev=$(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1) || true
+rpdev=$(lsblk -nlo pkname,uuid | grep -m 1 "${ruuid}" | cut -d " " -f1) || true
 if [ "${rpdev}" = "${parent}" ]; then
 	echo "RESIN_FS_USE=${label}"
 	# Determine if its the active or inactive partition. The active one's
