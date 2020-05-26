@@ -61,7 +61,10 @@ get_cmdline_root_uuid() {
 #  by-state symlink udev path
 get_state_path_from_label() {
 	[ -z "$1" ] && return 1
-	echo "/dev/disk/by-state/${1}"
+	[ -L "/dev/disk/by-state/${1}" ] && echo "/dev/disk/by-state/${1}" && return 0
+	[ -L "/dev/disk/by-label/${1}" ] && echo "/dev/disk/by-label/${1}" && return 0
+	[ -L "/dev/disk/by-partlabel/${1}" ] && echo "/dev/disk/by-partlabel/${1}" && return 0
+	return 1
 }
 
 # Output the UUID for the specified block device.
