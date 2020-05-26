@@ -17,7 +17,7 @@ prepare_run() {
     mkdir -m 0755 /run/initramfs
 
     # shellcheck disable=SC2154
-    if [ -z "$bootparam_shell" ] && [ -z "${bootparam_shell_debug}" ]; then
+    if [ -z "$bootparam_shell" ] && [ -z "${bootparam_shell_debug}" ] && [ -z "${bootparam_adb}" ]; then
         # Export stdout and stderr to file
         exec >/run/initramfs/initramfs.debug 2>&1
     fi
