@@ -34,6 +34,28 @@ wait4file() {
 	return 0
 }
 
+# Output the UUID for the specified block device.
+# Arguments:
+#   1 - Target block device
+get_dev_uuid() {
+	lsblk -nlo uuid "${1}"
+}
+
+# Output the filesystem label for the specified block device.
+# Arguments:
+#   1 - Target block device
+get_dev_label() {
+	lsblk -nlo label "${1}"
+}
+
+# Output the device name for the specified file system label.
+# Arguments:
+#   1 - Filesystem label
+get_dev_path_from_label() {
+	dev=$(lsblk -nlo name,label | grep "$1" | cut -d ' ' -f1)
+	echo "/dev/$dev"
+}
+
 # Returns the UUID set in cmdline for root
 # Returns:
 #   0 - root UUID found in cmdline (prints the matching uuid to stdout)
@@ -47,6 +69,10 @@ get_cmdline_root_uuid() {
 			opt="$(echo "$p" | cut -d'=' -f2)"
 			if [ "$opt" = "UUID" ]; then
 				echo "$p" | cut -d'=' -f3
+				return 0
+			elif [ "$opt" = "LABEL" ]; then
+				label=$(echo "$p" | cut -d'=' -f3)
+				get_dev_uuid "$(get_dev_path_from_label "${label}")"
 				return 0
 			fi
 		fi
@@ -67,25 +93,11 @@ get_state_path_from_label() {
 	return 1
 }
 
-# Output the UUID for the specified block device.
-# Arguments:
-#   1 - Target block device
-get_dev_uuid() {
-	lsblk -nlo uuid "${1}"
-}
-
 # Output the filesystem type for the specified block device.
 # Arguments:
 #   1 - Target block device
 get_dev_fstype() {
 	lsblk -nlo fstype "${1}"
-}
-
-# Output the label for the specified block device
-# Arguments
-#  1 - Target block device
-get_dev_label() {
-	lsblk -nlo label "${1}"
 }
 
 # Mount/unmount device to update mount time
