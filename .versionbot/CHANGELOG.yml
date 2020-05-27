@@ -1,4 +1,19 @@
 - commits:
+    - subject: Enable the Analog Devices AD5446 kernel driver
+      hash: 0231d9c4b33cd3fed9e4f552e3a9b916184e9b9f
+      body: |
+        At customer request we enable this driver.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Enable the Analog Devices AD5446 kernel driver
+        changelog-entry: Enable the Analog Devices AD5446 kernel driver
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+  version: 2.50.2
+  date: 2020-05-27T11:16:26.872Z
+- commits:
     - subject: 'networkmanager: Remove build warning'
       hash: 5e5aa5c01e3f47a26ae055bb7b4fe44202a9b2f1
       body: |

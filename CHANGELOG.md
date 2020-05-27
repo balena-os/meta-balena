@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.50.2
+## (2020-05-27)
+
+* Enable the Analog Devices AD5446 kernel driver [Florin Sarbu]
+
 # v2.50.1
 ## (2020-05-21)
 
