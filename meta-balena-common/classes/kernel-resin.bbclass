@@ -64,6 +64,7 @@ inherit kernel-resin-noimage
 RESIN_DEFCONFIG_NAME ?= "resin-defconfig"
 
 RESIN_CONFIGS ?= " \
+    ad5446 \
     balena \
     brcmfmac \
     cdc-acm \
@@ -518,6 +519,11 @@ RESIN_CONFIGS[dummy] = " \
 RESIN_CONFIGS[uinput] = " \
     CONFIG_INPUT_UINPUT=m \
     "
+
+# enable Analog Devices AD5446 and similar single channel DACs driver
+RESIN_CONFIGS[ad5446] = " \
+    CONFIG_AD5446=m \
+"
 
 ###########
 # HELPERS #
