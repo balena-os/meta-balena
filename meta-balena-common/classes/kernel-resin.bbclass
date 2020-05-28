@@ -718,7 +718,11 @@ apply_aufs_patches () {
         exit
     fi
     cp -r ${WORKDIR}/aufs_standalone/Documentation ${WORKDIR}/aufs_standalone/fs ${S}
-    cp ${WORKDIR}/aufs_standalone/include/uapi/linux/aufs_type.h ${S}/include/uapi/linux/
+    if [ -f ${WORKDIR}/aufs_standalone/include/uapi/linux/aufs_type.h ]; then
+        cp ${WORKDIR}/aufs_standalone/include/uapi/linux/aufs_type.h ${S}/include/uapi/linux/
+    elif [ -f ${WORKDIR}/aufs_standalone/include/linux/aufs_type.h ]; then
+        cp ${WORKDIR}/aufs_standalone/include/linux/aufs_type.h ${S}/include/linux/
+    fi
     cd ${S}
     if [ -d "${S}/.git" ]; then
         PATCH_CMD="git apply -3"
