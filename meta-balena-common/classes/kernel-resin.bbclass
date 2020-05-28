@@ -729,6 +729,8 @@ apply_aufs_patches () {
     else
         PATCH_CMD="patch -p1"
     fi
+    # Start with a clean working tree
+    git add -A
     $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-kbuild.patch'`
     $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-base.patch'`
     $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-mmap.patch'`
