@@ -155,6 +155,7 @@ RESIN_CONFIGS[balena] ?= " \
     "
 
 RESIN_CONFIGS[aufs] = " \
+    CONFIG_MISC_FILESYSTEMS=y \
     CONFIG_AUFS_FS=y \
     CONFIG_AUFS_XATTR=y \
     "
