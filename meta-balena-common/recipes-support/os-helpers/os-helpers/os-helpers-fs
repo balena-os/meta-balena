@@ -121,7 +121,6 @@ regenerate_uuid() {
     dev=$1
     # Filesystem type specific quirks
     fstype=$2
-    old_uuid="$(get_dev_uuid "$dev")"
     case $fstype in
         vfat)
             # mlabel doesn't work on file directly. It needs a drive to file
@@ -149,7 +148,7 @@ regenerate_uuid() {
             if ! e2fsck -fp "$dev"; then
 		return 1
             fi
-	    new_uuid=$(cat /proc/sys/kernel/random/uuid | sed 's/^[^-]*/ba1eadef/')
+	    new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
             cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
             if ! eval "${cmd}" "${dev}"; then
                 return 1
@@ -159,6 +158,6 @@ regenerate_uuid() {
         esac
 
     new_uuid="$(get_dev_uuid "$dev")"
-    echo $new_uuid
+    echo "${new_uuid}"
     return 0
 }
