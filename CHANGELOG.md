@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.50.4
+## (2020-06-02)
+
+* Use correct SRC_URI for bindmount [Florin Sarbu]
+
 # v2.50.3
 ## (2020-06-01)
 

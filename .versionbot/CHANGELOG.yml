@@ -1,4 +1,19 @@
 - commits:
+    - subject: Use correct SRC_URI for bindmount
+      hash: 38b1761db39bdd566396d0a2bbad1eda9273bf5d
+      body: |
+        The repo has changed and we need to accomodate for that change.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Use correct SRC_URI for bindmount
+        changelog-entry: Use correct SRC_URI for bindmount
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+  version: 2.50.4
+  date: 2020-06-02T12:50:09.159Z
+- commits:
     - subject: 'os-helpers-fs: Fix shellcheck warnings'
       hash: 746cabdd234e9b94aeb6bd71289ac87d996301be
       body: |
