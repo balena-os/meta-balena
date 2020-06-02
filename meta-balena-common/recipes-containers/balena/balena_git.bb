@@ -16,7 +16,7 @@ BALENA_BRANCH= "18.09-balena"
 
 SRCREV = "2ab17e0536b6a4528b33c75e8f350447e9882af0"
 SRC_URI = "\
-	git://github.com/resin-os/balena.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
+	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
 	file://balena-host.service \
 	file://balena-host.socket \
