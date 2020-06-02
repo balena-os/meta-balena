@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.50.3
+## (2020-06-01)
+
+* os-helpers-fs: Fix shellcheck warnings [Alex Gonzalez]
+* Fallback to label root device matching to support devices with closed source bootloaders [Alex Gonzalez]
+* Fallback to labels and partlabels for devices with custom HUPs [Alex Gonzalez]
+
 # v2.50.2
 ## (2020-05-27)
 

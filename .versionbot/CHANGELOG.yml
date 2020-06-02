@@ -1,4 +1,62 @@
 - commits:
+    - subject: 'os-helpers-fs: Fix shellcheck warnings'
+      hash: 746cabdd234e9b94aeb6bd71289ac87d996301be
+      body: |
+        Fix all warnings from the shellcheck linter.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: >-
+        Fallback to label root device matching to support devices with closed
+        source bootloaders
+      hash: f41735550c6e29ecd520e58f84c2281e4daf6c9f
+      body: >
+        Devices with closed source bootloaders that cannot be made to pass the
+        UUID
+
+        of the booting device (like smartphones, Jetson NX and Xabier), need to
+
+        fallback to passing a label in the kernel command line.
+
+
+        Fixes #1905
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fallback to label root device matching to support devices with closed
+          source bootloaders
+        changelog-entry: >-
+          Fallback to label root device matching to support devices with closed
+          source bootloaders
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Fallback to labels and partlabels for devices with custom HUPs
+      hash: e267e1dd2fcd4a841b09ba204bee6a58403a316c
+      body: >
+        Devices with custom HUPs, like Jetson devices that run BSP partition
+        update
+
+        scripts, do not have state symlinks when updating from legacy pre state
+
+        symlinks OS versions, so they need to fallback to legacy label/partname
+
+        resolution.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fallback to labels and partlabels for devices with custom HUPs
+        changelog-entry: Fallback to labels and partlabels for devices with custom HUPs
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.50.3
+  date: 2020-06-01T12:36:08.312Z
+- commits:
     - subject: Enable the Analog Devices AD5446 kernel driver
       hash: 0231d9c4b33cd3fed9e4f552e3a9b916184e9b9f
       body: |
