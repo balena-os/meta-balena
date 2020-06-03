@@ -7,14 +7,14 @@ bandwidth usage, has 3.5x smaller binaries, uses RAM and storage more \
 conservatively, and focuses on atomicity and durability of container \
 pulling."
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
+LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f28"
 
 inherit systemd go pkgconfig useradd
 
-BALENA_VERSION = "18.09.17-dev"
-BALENA_BRANCH= "18.09-balena"
+BALENA_VERSION = "19.03.13-dev"
+BALENA_BRANCH= "master"
 
-SRCREV = "2ab17e0536b6a4528b33c75e8f350447e9882af0"
+SRCREV = "074a481789174b4b6fd2d706086e8ffceb72e924"
 SRC_URI = "\
 	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
@@ -25,6 +25,7 @@ SRC_URI = "\
 	file://var-lib-docker.mount \
 	file://balena.conf.systemd \
 	file://balena-tmpfiles.conf \
+	file://0001-imporve-hardcoded-CC-on-cross-compile-docker-ce.patch \
 	"
 S = "${WORKDIR}/git"
 
@@ -47,6 +48,8 @@ RRECOMMENDS_${PN} += "kernel-module-nf-nat"
 DEPENDS_remove_class-native = "go-cross-native"
 DEPENDS_append_class-native = " go-native"
 
+INSANE_SKIP_${PN} += "already-stripped"
+
 FILES_${PN} += " \
 	/lib/systemd/system/* \
 	/home/root \
@@ -65,6 +68,7 @@ do_configure[noexec] = "1"
 do_compile() {
 	export PATH=${STAGING_BINDIR_NATIVE}/${HOST_SYS}:$PATH
 
+	export GOCACHE="${B}/.cache"
 	export GOHOSTOS="linux"
 	export GOOS="linux"
 	case "${TARGET_ARCH}" in
@@ -109,7 +113,8 @@ do_compile() {
 	export CGO_LDFLAGS="${LDFLAGS}  --sysroot=${STAGING_DIR_TARGET}"
 
 	export DOCKER_GITCOMMIT="${SRCREV}"
-	export DOCKER_BUILDTAGS='exclude_graphdriver_btrfs exclude_graphdirver_zfs exclude_graphdriver_devicemapper no_btrfs'
+	export DOCKER_BUILDTAGS="no_buildkit no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs"
+	export DOCKER_LDFLAGS="-s"
 
 	VERSION=${BALENA_VERSION} ./hack/make.sh dynbinary-balena
 
