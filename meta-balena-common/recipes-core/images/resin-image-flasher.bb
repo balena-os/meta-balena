@@ -45,7 +45,7 @@ RESIN_STATE_FS_LABEL = "flash-state"
 RESIN_DATA_FS_LABEL = "flash-data"
 
 # Put the resin logo, uEnv.txt files inside the boot partition
-RESIN_BOOT_PARTITION_FILES_append = " resin-logo.png:/splash/resin-logo.png"
+RESIN_BOOT_PARTITION_FILES_append = " balena-logo.png:/splash/balena-logo.png"
 
 # add the generated <machine-name>.json to the flash-boot partition, renamed as device-type.json
 RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json:/device-type.json"

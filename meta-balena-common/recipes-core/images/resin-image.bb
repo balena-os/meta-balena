@@ -21,6 +21,8 @@ IMAGE_FSTYPES = "${@bb.utils.contains('RESINHUP', 'yes', 'tar', '', d)}"
 
 inherit core-image image-resin distro_features_check
 
+SPLASH += "plymouth-balena-theme"
+
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
     splash \
@@ -59,7 +61,7 @@ IMAGE_PREPROCESS_COMMAND_append = " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
 RESIN_BOOT_PARTITION_FILES_append = " \
-    resin-logo.png:/splash/resin-logo.png \
+    balena-logo.png:/splash/balena-logo.png \
     os-release:/os-release \
 "
 
