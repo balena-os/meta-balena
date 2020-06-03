@@ -1,4 +1,51 @@
 - commits:
+    - subject: 'Revert "docs: Add Hooks documentation"'
+      hash: 9fed94aff47d4f51eb955284862e8581aa6baf07
+      body: |
+        This reverts commit 8275c260ed2f0f3ddb10502b3b8932dca6abee7e.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'Revert "balena-rollback: Update for hooks 2.0"'
+      hash: e7ba5ac1eb3a1539f4dd8e075395d0f4f56999a9
+      body: |
+        This reverts commit ccc82042f3170eae9370116da2f8c013e34e88b2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'Revert "hostapp-update: Update for hooks 2.0"'
+      hash: e3b75be45ca6466f5a084ae90d9a88f5e224bf0b
+      body: |
+        This reverts commit 918c3954fa88f39bbae0ae8b81e0fe12152363d3.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: Remove the unused hooks v2.0 implementation
+      hash: cf276aa87dfd9c6765b0c1eb661f288a552ad3af
+      body: |
+        This reverts commit 0d33e5a82cab1fa58729d9a9ce7ea37be05cacc3.
+
+        Fixes #1894
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Remove the unused hooks v2.0 implementation
+        changelog-entry: Remove the unused hooks v2.0 implementation
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.50.5
+  date: 2020-06-03T10:09:36.273Z
+- commits:
     - subject: Use correct SRC_URI for bindmount
       hash: 38b1761db39bdd566396d0a2bbad1eda9273bf5d
       body: |

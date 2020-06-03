@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.50.5
+## (2020-06-03)
+
+* Revert "docs: Add Hooks documentation" [Alex Gonzalez]
+* Revert "balena-rollback: Update for hooks 2.0" [Alex Gonzalez]
+* Revert "hostapp-update: Update for hooks 2.0" [Alex Gonzalez]
+* Remove the unused hooks v2.0 implementation [Alex Gonzalez]
+
 # v2.50.4
 ## (2020-06-02)
 
