@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.0
+## (2020-06-03)
+
+* balena-engine: Update to 19.03.13 [Robert Günzler]
+
 # v2.50.4
 ## (2020-06-02)
 

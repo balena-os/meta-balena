@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'balena-engine: Update to 19.03.13'
+      hash: 6c08852dfad1bd4d62b4e86ce90602d0610e75b0
+      body: |
+        We also strip the binary using go's built-in mechanism instead
+        of relying on yocto for it.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+  version: 2.51.0
+  date: 2020-06-03T09:11:52.603Z
+- commits:
     - subject: Use correct SRC_URI for bindmount
       hash: 38b1761db39bdd566396d0a2bbad1eda9273bf5d
       body: |
