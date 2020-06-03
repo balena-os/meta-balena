@@ -123,6 +123,8 @@ do_image_resinos_img[depends] = " \
     ${RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
 
+do_image_resinos_img[depends] += "${@ ' virtual/bootloader:do_deploy ' if d.getVar('UBOOT_CONFIG') else ''}"
+
 device_specific_configuration() {
     echo "No device specific configuration"
 }
