@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.1
+## (2020-06-04)
+
+* openvpn: Add runtime dependency on bash [Willem Remie]
+
 # v2.51.0
 ## (2020-06-03)
 

@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'openvpn: Add runtime dependency on bash'
+      hash: f84dcfdd4493ee23c84940348dbbffff9ced48a2
+      body: >
+        The dependency is introduced by the upstream.sh and downstream.sh
+        scripts.
+
+        Bash is also a dependency not only for internal packages but for
+        external
+
+        scripts too.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Willem Remie
+  version: 2.51.1
+  date: 2020-06-04T10:21:31.775Z
+- commits:
     - subject: 'balena-engine: Update to 19.03.13'
       hash: 6c08852dfad1bd4d62b4e86ce90602d0610e75b0
       body: |
