@@ -66,6 +66,11 @@ done
 
 # A temporary file used until next reboot
 UPDATECONF=/tmp/update-supervisor.conf
+DELTA_VERSION=3
+API_VERSION=v6
+ARCH=$(jq -r '.arch' < /mnt/boot/device-type.json)
+minimum_balena_target_version=2.9.0
+. /etc/os-release
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
@@ -96,11 +101,125 @@ else
     error_handler "no container engine detected"
 fi
 
+CURRENT_SUPERVISOR_VERSION=$($DOCKER inspect -f '{{.Config.Image}}' "resin_supervisor" | awk -F: '{print $2}')
+
+# Test if a version is greater than another
+function version_gt() {
+    test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"
+}
+
+#######################################
+# Find a delta in the registry between two supervisor app versions using the API
+# Globals:
+#   _device_api_key
+#   DELTA_ENDPOINT
+#   DELTA_VERSION
+#   VERSION
+# Arguments:
+#   target_image: the desired supervisor version's balenaCloud image
+# Returns:
+#   Location of delta image
+#######################################
+function find_delta() {
+    local target_image=${1}
+    local src_image=${2}
+    # shellcheck disable=SC2153
+    if [ -z "${src_image}" ]; then
+        return
+    else
+        # TODO: should we retry this more extensively? deltas may take a while to generate..
+        delta_token=$(get_delta_token "${src_image}" "${target_image}")
+        delta=$(curl --retry 10 --silent -X GET \
+            "${DELTA_ENDPOINT}/api/v${DELTA_VERSION}/delta?src=${src_image}&dest=${target_image}" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${delta_token}" | jq -r '.name')
+        if [ -n "${delta}" ]; then
+            echo "${delta}"
+        fi
+    fi
+}
+
+#######################################
+# Query public apps for a matching app name
+# Globals:
+#   _device_api_key
+#   API_ENDPOINT
+# Arguments:
+#   target_image: the targeted supervisor image
+# Returns:
+#   the public app used for the target supervisor
+#######################################
+function get_app_name() {
+    local target_image=${1}
+    # TODO: could improve the quality of the API call here
+    image=$(curl --retry 10 --silent -X GET \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer ${_device_api_key}" \
+        "${API_ENDPOINT}/${API_VERSION}/release?\$expand=belongs_to__application,contains__image/image" | jq "[.d[] | select(.contains__image[].image[].is_stored_at__image_location == \"${target_image}\") | .belongs_to__application[].app_name]")
+    if echo "${image}" | jq -e '. | length == 1' > /dev/null; then
+        echo "${image}" | jq -r '.[0]'
+    else
+        # we should only get one result, something is wrong
+        echo
+    fi
+}
+
+#######################################
+# Query public apps for a matching image
+# Globals:
+#   _device_api_key
+#   API_ENDPOINT
+# Arguments:
+#   version: the supervisor version to look for
+#   app: the app used for supervisors of this arch
+# Returns:
+#   Registry URL for desired image
+#######################################
+function get_image_location() {
+    local version=${1}
+    local app=${2}
+    # TODO: could improve the quality of the API call here
+    image=$(curl --retry 10 --silent -X GET \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer ${_device_api_key}" \
+        "${API_ENDPOINT}/${API_VERSION}/release?\$expand=release_tag,belongs_to__application,contains__image/image&\$filter=(belongs_to__application/any(a:a/app_name%20eq%20'${app}'))%20and%20(release_tag/any(rt:(rt/tag_key%20eq%20'version')%20and%20(rt/value%20eq%20'${version}')))" \
+        | jq -r "[.d[] | .contains__image[0].image[0] | [.is_stored_at__image_location, .content_hash] | \"\(.[0])@\(.[1])\"]")
+    if echo "${image}" | jq -e '. | length == 1' > /dev/null; then
+        echo "${image}" | jq -r '.[0]'
+    else
+        # we should only get one result, something is wrong
+        echo
+    fi
+}
+
+#######################################
+# Get a delta token
+# Globals:
+#   _device_api_key
+#   API_ENDPOINT
+#   REGISTRY_ENDPOINT
+#   UUID
+# Arguments:
+#   src: the source OS version location {registry}/{repo}:{hash}
+#   dst: the target OS version location {registry}/{repo}:{hash}
+# Returns:
+#   JWT scoped to access desired delta image
+#######################################
+function get_delta_token() {
+    src=$(echo "${1}" | awk -F@ '{print $1}' | sed -e 's/.*\/v2/v2/g')
+    dst=$(echo "${2}" | awk -F@ '{print $1}' | sed -e 's/.*\/v2/v2/g')
+    curl --retry 10 --silent -X GET \
+        -u "d_${UUID}:${_device_api_key}" \
+        -H "Content-Type: application/json" \
+        "${API_ENDPOINT}/auth/v1/token?service=${REGISTRY_ENDPOINT}&scope=repository:${dst}:pull&scope=repository:${src}:pull" \
+        | jq -r '.token'
+}
+
 # Get target supervisor tag from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and tag..."
-if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "Authorization: Bearer $_device_api_key" --header "User-Agent:" --compressed "${API_ENDPOINT}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${UUID}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
+if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "Authorization: Bearer $_device_api_key" --header "User-Agent:" --compressed "${API_ENDPOINT}/${API_VERSION}/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${UUID}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
     echo "Supervisor configuration found from API."
 
     if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
@@ -153,6 +272,36 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     # Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
     echo "Stop supervisor..."
     systemctl stop resin-supervisor
+fi
+
+# starting with the balena engine, we can use native deltas
+if version_gt "${VERSION_ID}" "${minimum_balena_target_version}"; then
+    echo "Attempting supervisor update using deltas"
+    if echo "${image_name}" | grep -q "registry2."; then
+        target_image="${image_name}:${tag}"
+    else
+        app="${image_name#*/}"
+        target_image=$(get_image_location "${tag}" "${app}")
+    fi
+    if [ -z "${target_image}" ]; then
+        error_handler "Zero or multiple matching target supervisor releases found, update attempt has failed..."
+    fi
+
+    app=$(get_app_name "${image_name}")
+    src_image=$(get_image_location "${CURRENT_SUPERVISOR_VERSION}" "${ARCH}-supervisor")
+    delta_image=$(find_delta "${target_image}" "${src_image}")
+else
+    echo "Device not delta capable, skipping"
+fi
+if [ -n "${delta_image}" ]; then
+    delta_size=$(curl -H "Authorization: Bearer ${_device_api_key}" --silent --retry 10 \
+    "${API_ENDPOINT}/${API_VERSION}/delta?\$filter=((status%20eq%20'success')%20and%20(version%20eq%20'${DELTA_VERSION}')%20and%20(is_stored_at__location%20eq%20'${delta_image}'))" 2>/dev/null \
+    | jq -r '.d[0].size|tonumber / (1024.0 * 1024.0) | floor' 2>/dev/null || /bin/true)
+    echo "Found delta image: ${delta_image}, size: ${delta_size:-unknown} MB"
+    image_name=$(echo "${delta_image}" | awk -F: '{print $1}')
+    tag=$(echo "${delta_image}" | awk -F: '{print $2}')
+else
+    echo "No delta found, falling back to regular pull"
 fi
 
 # Pull target version.
