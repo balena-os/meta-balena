@@ -131,24 +131,25 @@ else
     tag=$UPDATER_SUPERVISOR_TAG
 fi
 
-# Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
-echo "Stop supervisor..."
-systemctl stop resin-supervisor
-
 # Get image id of tag. This will be non-empty only in case it's already downloaded.
 echo "Getting image id..."
 imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 if [ -n "$imageid" ]; then
     echo "Supervisor $image_name:$tag already downloaded."
+    exit 0
+fi
+
+# Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
+echo "Stop supervisor..."
+systemctl stop resin-supervisor
+
+# Pull target version.
+echo "Pulling supervisor $image_name:$tag..."
+if $DOCKER pull "$image_name:$tag"; then
+    $DOCKER rm --force resin_supervisor || true
 else
-    # Pull target version.
-    echo "Pulling supervisor $image_name:$tag..."
-    if $DOCKER pull "$image_name:$tag"; then
-        $DOCKER rm --force resin_supervisor || true
-    else
-        error_handler "supervisor pull failed"
-    fi
+    error_handler "supervisor pull failed"
 fi
 
 # Store the tagged image string so resin-supervisor.service can pick it up
