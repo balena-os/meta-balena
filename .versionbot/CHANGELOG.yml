@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'Disable u-boot console, silence u-boot in production builds'
+      hash: 908590c49f7f4f89bfd1c2f8fdcaf8a0f3f3eceb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'Disable u-boot console, silence u-boot in production builds'
+        changelog-entry: 'Disable u-boot console, silence u-boot in production builds'
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Florin Sarbu
+  version: 2.51.2
+  date: 2020-06-08T15:34:26.850Z
+- commits:
     - subject: 'openvpn: Add runtime dependency on bash'
       hash: f84dcfdd4493ee23c84940348dbbffff9ced48a2
       body: >
