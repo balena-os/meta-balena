@@ -1,0 +1,1 @@
+KERNEL=="zram0", SUBSYSTEM=="block", ACTION=="add", RUN+="/lib/udev/zram-swap-init $env{DEVNAME}"

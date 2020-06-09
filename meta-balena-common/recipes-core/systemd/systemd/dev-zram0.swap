@@ -1,0 +1,9 @@
+[Unit]
+Description=Enable compressed swap in memory using zram
+After=systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service
+
+[Swap]
+What=/dev/zram0
+
+[Install]
+WantedBy=swap.target
