@@ -73,11 +73,13 @@ python() {
         d.setVar('RESIN_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resinos-img')
         d.setVar('RESIN_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
         d.setVar('RESIN_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
+        d.setVar('RESIN_DEPLOY_DIR', '${IMGDEPLOYDIR}')
     else:
         d.setVar('RESIN_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
         d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-img')
         d.setVar('RESIN_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
         d.setVar('RESIN_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
+        d.setVar('RESIN_DEPLOY_DIR', '${DEPLOY_DIR_IMAGE}')
 
     d.setVar('RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("RESIN_IMAGE_BOOTLOADER", True).split()))
 }
@@ -287,6 +289,9 @@ IMAGE_CMD_resinos-img () {
     else
         bbwarn "Boot partition was detected empty."
     fi
+
+    # Copy to deploy directory
+    cp ${RESIN_BOOT_FS} "${RESIN_DEPLOY_DIR}/${RESIN_BOOT_FS_LABEL}.img"
 
     # resin-rootB
     RESIN_ROOTB_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | grep -E "^(| )${RESIN_ROOTB_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
