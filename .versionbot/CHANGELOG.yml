@@ -1,4 +1,29 @@
 - commits:
+    - subject: Revert allowing local resin-supervisor image updates
+      hash: 1f689dbd57faf558dedf245462ed7c869a1aeb1a
+      body: >
+        The change this commit reverts allowed to update with a locally
+
+        available image - but it also has the side effect of restarting the
+
+        supervisor even if no update is required and that has unintentional
+
+        consequences as
+        https://github.com/balena-io/balena-supervisor/issues/1358
+
+
+        This commit reverts 646e4ae809375f4abf35c55cd580e2c62a8812e2
+      footer:
+        Changelog-entry: Revert allowing local resin-supervisor image updates
+        changelog-entry: Revert allowing local resin-supervisor image updates
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.51.3
+  date: 2020-06-10T10:22:46.347Z
+- commits:
     - subject: 'Disable u-boot console, silence u-boot in production builds'
       hash: 908590c49f7f4f89bfd1c2f8fdcaf8a0f3f3eceb
       body: ''

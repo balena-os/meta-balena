@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.3
+## (2020-06-10)
+
+* Revert allowing local resin-supervisor image updates [Alex Gonzalez]
+
 # v2.51.2
 ## (2020-06-08)
 
