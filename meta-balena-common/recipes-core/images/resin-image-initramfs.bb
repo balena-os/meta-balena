@@ -22,7 +22,10 @@ PACKAGE_INSTALL = " \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
     "
 
-PACKAGE_INSTALL_append_halium = " initramfs-module-halium"
+PACKAGE_INSTALL_append_halium = " \
+    initramfs-module-halium \
+    initramfs-module-fslabels \
+    "
 
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = ""
