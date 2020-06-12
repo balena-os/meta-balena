@@ -14,6 +14,7 @@ SRC_URI_append = " \
     "
 
 SRC_URI_append_halium += " \
+    file://fslabels \
     file://halium \
     "
 
@@ -31,6 +32,7 @@ do_install_append() {
 
 do_install_append_halium() {
     install -m 0755 ${WORKDIR}/halium ${D}/init.d/71-halium
+    install -m 0755 ${WORKDIR}/fslabels ${D}/init.d/73-fslabels
 }
 
 PACKAGES_append = " \
@@ -43,6 +45,7 @@ PACKAGES_append = " \
     "
 
 PACKAGES_append_halium += " \
+    initramfs-module-fslabels \
     initramfs-module-halium \
     "
 
@@ -77,5 +80,9 @@ RDEPENDS_initramfs-module-fsuuidsinit = "${PN}-base"
 FILES_initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
 
 SUMMARY_initramfs-module-halium = "Halium's init script"
-RDEPENDS_initramfs-module-halium = "${PN}-base initramfs-module-prepare initramfs-module-udev android-tools"
+RDEPENDS_initramfs-module-halium = "${PN}-base android-tools udev-extraconf"
 FILES_initramfs-module-halium = "/init.d/71-halium"
+
+SUMMARY_initramfs-module-fslabels = "Filesystem labelling"
+RDEPENDS_initramfs-module-fslabels = "${PN}-base e2fsprogs-mke2fs"
+FILES_initramfs-module-fslabels = "/init.d/73-fslabels"

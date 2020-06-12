@@ -1,0 +1,39 @@
+#!/bin/sh
+
+fslabels_enabled() {
+	if [ "$bootparam_flasher" = "true" ]; then
+		info "[INFO] Flasher detected. We don't relabel when provisioning."
+		return 1
+	fi
+
+	lboot=$(lsblk -n -o label /dev/disk/by-partlabel/laf)
+	lroota=$(lsblk -n -o label /dev/disk/by-partlabel/system)
+	lrootb=$(lsblk -n -o label /dev/disk/by-partlabel/cache)
+	lstate=$(lsblk -n -o label /dev/disk/by-partlabel/recovery)
+	ldata=$(lsblk -n -o label /dev/disk/by-partlabel/userdata)
+	[ "${lboot}" = "resin-boot" ] &&
+	[ "${lroota}" = "resin-rootA" ] &&
+	[ "${lrootb}" = "resin-rootB" ] &&
+	[ "${lstate}" = "resin-state" ] &&
+	[ "${ldata}" = "resin-data" ] &&
+		return 1
+
+	return 0
+}
+
+fslabels_run() {
+	for part in /dev/disk/by-partlabel/*
+	do
+		case $part in
+			*/laf) if [ "${lboot}" != "resin-boot" ]; then relabel $part "resin-boot"; fi ;;
+			*/system) if [ "${lroota}" != "resin-rootA" ]; then relabel $part "resin-rootA"; fi ;;
+			*/cache) if [ "${lrootb}" != "resin-rootB" ]; then relabel $part "resin-rootB"; fi ;;
+			# recovery partition cannot be formatted with fastboot and does not contain a fs by default
+			*/recovery) if [ "${lstate}" != "resin-state" ]; then reformat $part "resin-state"; fi ;;
+			*/userdata|*/USERDATA|*/UDA|*/DATAFS) if [ "${ldata}" != "resin-data" ]; then relabel $part "resin-data"; fi ;;
+			*) ;;
+		esac
+	done
+	udevadm trigger --action=add
+	udevadm settle
+}
