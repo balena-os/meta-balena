@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.48.2
+## (2020-06-15)
+
+* Disable u-boot console, silence u-boot in production builds [Florin Sarbu]
+* Remove busybox-syslog to use only systemd's journald [Alex Gonzalez]
+
 # v2.48.1
 ## (2020-05-08)
 

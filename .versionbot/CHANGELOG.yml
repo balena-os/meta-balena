@@ -1,4 +1,35 @@
 - commits:
+    - subject: 'Disable u-boot console, silence u-boot in production builds'
+      hash: 140d80685553b82653b73c6912bc5894ff21d1ed
+      body: |
+        cherry picked from commit 908590c49f7f4f89bfd1c2f8fdcaf8a0f3f3eceb
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'Disable u-boot console, silence u-boot in production builds'
+        changelog-entry: 'Disable u-boot console, silence u-boot in production builds'
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Florin Sarbu
+    - subject: Remove busybox-syslog to use only systemd's journald
+      hash: e942fde955f17cc6d4d3ba672e3f286806e9fa14
+      body: |
+        All logging is handled by journald so remove the default dependency on
+        busybox-syslog. It is still available to be explicitely included in
+        images that might need it like initramfs images.
+
+        cherry picked from commit 9a1cedd66bbf298385c0a8460b3f9c3bb2da2f9e
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Remove busybox-syslog to use only systemd's journald
+        changelog-entry: Remove busybox-syslog to use only systemd's journald
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.48.2
+  date: 2020-06-15T10:22:46.670Z
+- commits:
     - subject: Update balena-supervisor from v10.8.0 to v10.8.1
       hash: e096248688f792ef0aefa58e5acb8c04e65ffd65
       body: |
