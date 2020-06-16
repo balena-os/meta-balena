@@ -25,6 +25,7 @@ PACKAGE_INSTALL = " \
 PACKAGE_INSTALL_append_halium = " \
     initramfs-module-halium \
     initramfs-module-fslabels \
+    initramfs-module-fscompat \
     "
 
 # Do not pollute the initrd image with rootfs features
