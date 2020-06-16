@@ -36,6 +36,10 @@ IMAGE_INSTALL = " \
     packagegroup-resin \
     "
 
+IMAGE_INSTALL_append_halium = " \
+    android-system \
+"
+
 generate_rootfs_fingerprints () {
     # Generate fingerprints file for root filesystem
     # We exclude some entries that are bind mounted to state partition
