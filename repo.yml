@@ -7,3 +7,5 @@ upstream:
     url: 'https://github.com/balena-os/healthdog-rs'
   - repo: 'os-config'
     url: 'https://github.com/balena-os/os-config'
+  - repo: 'balena-engine'
+    url: 'https://github.com/balena-os/balena-engine'
