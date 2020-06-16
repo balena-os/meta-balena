@@ -15,6 +15,7 @@ SRC_URI_append = " \
 
 SRC_URI_append_halium += " \
     file://fslabels \
+    file://fscompat \
     file://halium \
     "
 
@@ -33,6 +34,7 @@ do_install_append() {
 do_install_append_halium() {
     install -m 0755 ${WORKDIR}/halium ${D}/init.d/71-halium
     install -m 0755 ${WORKDIR}/fslabels ${D}/init.d/73-fslabels
+    install -m 0755 ${WORKDIR}/fscompat ${D}/init.d/74-fscompat
 }
 
 PACKAGES_append = " \
@@ -46,6 +48,7 @@ PACKAGES_append = " \
 
 PACKAGES_append_halium += " \
     initramfs-module-fslabels \
+    initramfs-module-fscompat \
     initramfs-module-halium \
     "
 
@@ -86,3 +89,7 @@ FILES_initramfs-module-halium = "/init.d/71-halium"
 SUMMARY_initramfs-module-fslabels = "Filesystem labelling"
 RDEPENDS_initramfs-module-fslabels = "${PN}-base e2fsprogs-mke2fs"
 FILES_initramfs-module-fslabels = "/init.d/73-fslabels"
+
+SUMMARY_initramfs-module-fscompat = "Filesystem features compatibility"
+RDEPENDS_initramfs-module-fscompat = "${PN}-base e2fsprogs-tune2fs"
+FILES_initramfs-module-fscompat = "/init.d/74-fscompat"

@@ -1,0 +1,39 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
+fscompat_enabled() {
+	# shellcheck disable=SC2154
+	if [ "$bootparam_flasher" = "true" ]; then
+		info "[INFO] Flasher detected, bailing out."
+		return 1
+	fi
+
+	# Check if kernel supports metadata checksumming in ext4 filesystems
+	if ls /sys/fs/ext4/features/metadata_csum* > /dev/null 2&>1 ; then
+		return 1
+	fi
+
+	# Check that all ext4 filesystems don't support metadata checksumming
+	for part in /dev/disk/by-state/resin-*
+	do
+		fstype=$(get_dev_fstype "${part}")
+		if [ "${fstype}" != "ext4" ]; then
+			continue
+		fi
+		if EXT2FS_NO_MTAB_OK=1 tune2fs -l "${part}" | grep -q "Checksum"; then
+			return 0
+		fi
+	done
+
+	return 1
+}
+
+fscompat_run() {
+	for part in /dev/disk/by-state/resin-*
+	do
+		extfs_compat "${part}"
+	done
+	return 0
+}
