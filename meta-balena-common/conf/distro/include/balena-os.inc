@@ -35,6 +35,7 @@ DISTRO_FEATURES_DEFAULT_remove = "x11"
 # Development image mode
 DEVELOPMENT_IMAGE ?= "0"
 DISTRO_FEATURES_append = " ${@bb.utils.contains('DEVELOPMENT_IMAGE','1','development-image','',d)}"
+DISTRO_FEATURES_append_halium = " virtualization"
 
 # Providers
 PREFERRED_PROVIDER_docker ?= "docker"
