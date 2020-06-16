@@ -1,0 +1,15 @@
+[Unit]
+Description=Balena android image mount service
+DefaultDependencies=no
+Before=umount.target
+After=resin-data.service
+Conflicts=umount.target
+ConditionVirtualization=!docker
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/android-image-mounter
+
+[Install]
+WantedBy=multi-user.target

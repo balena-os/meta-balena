@@ -1,0 +1,63 @@
+#!/bin/sh
+
+. /usr/libexec/os-helpers-logging
+
+mount_android_partitions() {
+	fstab=$1
+	mount_root=$2
+
+	info "checking fstab $fstab for additional mount points"
+
+	cat ${fstab} | while read line; do
+		set -- $line
+
+		# stop processing if we hit the "#endhalium" comment in the file
+		echo $1 | egrep -q "^#endhalium" && break
+
+		# Skip any unwanted entry
+		echo $1 | egrep -q "^#" && continue
+		([ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]) && continue
+		([ "$2" = "/system" ] || [ "$2" = "/data" ] || [ "$2" = "/" ]) && continue
+
+		label=$(echo $1 | awk -F/ '{print $NF}')
+		[ -z "$label" ] && continue
+
+		info "checking mount label $label"
+
+		# In case fstab provides /dev/mmcblk0p* lines
+		path="/dev/$label"
+		if [ -L "/dev/disk/by-state/$label" ]; then
+			path="/dev/disk/by-state/$label"
+		fi
+
+		[ ! -e "$path" ] && continue
+
+		info "mounting $path as ${mount_root}$2"
+		mount $path ${mount_root}/$2 -t $3 -o $4
+	done
+}
+
+mount_opts=$1
+
+[ -z "${mount_opts}" ] && mount_opts="ro"
+
+info  "mounting android system image ${mount_opts}"
+mount -o loop,$MOUNT "/var/lib/lxc/android/system.img" /android/system
+
+[ $? -eq 0 ] || fail "Failed to mount Android system image."
+
+destdir="/var/lib/lxc/android/rootfs"
+info "mounting android ramdisk to ${destdir}"
+mount -n -t tmpfs tmpfs "${destdir}"
+pushd "${destdir}"
+cat /android/system/boot/android-ramdisk.img | gzip -d | cpio -i
+popd
+
+mkdir -p /resin-data/android-data
+
+fstab=$(ls ${destdir}/fstab*)
+if [ -f "${fstab}" ]; then
+	mount_android_partitions "${fstab}" /android
+else
+	error "${fstab}: file not found"
+fi
