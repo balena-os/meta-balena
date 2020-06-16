@@ -111,10 +111,38 @@ get_dev_fstype() {
 # Arguments
 #  1 - Target device
 update_mounttime() {
-    mkdir -p /run
-    tmpdir=$(mktemp -d -p /run)
-    mount "$1" "${tmpdir}"
-    umount "${tmpdir}"
+	mkdir -p /run
+	tmpdir=$(mktemp -d -p /run)
+	mount "$1" "${tmpdir}"
+	umount "${tmpdir}"
+}
+
+# Prepare an ext filesystem to run tune2fs
+# Arguments:
+#   1 - Target block device
+# Returns:
+#   0 - Success
+#   1 - Failure
+extfs_prepare () {
+	dev=$1
+	fstype=$(get_dev_fstype "${dev}")
+	[ "${fstype}" != "ext4" ] && return 1
+
+	# tune2fs refuses to work when the filesystem was not
+	# freshly checked.
+	# Remount to update lastmount time to current time
+	# Otherwise in systems with no RTC lastmount could be in the future
+	# and e2fsck does not update the last filesystem check time
+	if [ -e /etc/e2fsck.conf ] && grep broken_system_clock /etc/e2fsck.conf > /dev/null; then
+		broken_system_clock=$(grep broken_system_clock /etc/e2fsck.conf | cut -d "=" -f2)
+		if [ "${broken_system_clock}" = "1" ]; then
+			update_mounttime "$dev"
+		fi
+	fi
+	if ! e2fsck -fp "$dev" > /dev/null ; then
+		return 1
+	fi
+	return 0
 }
 
 # Set a Balena filesystem UUID to the specified device.
@@ -125,48 +153,35 @@ update_mounttime() {
 #   0 - Success, new UUID in stdout
 #   1 - Failure
 regenerate_uuid() {
-    dev=$1
-    # Filesystem type specific quirks
-    fstype=$2
-    case $fstype in
-        vfat)
-            # mlabel doesn't work on file directly. It needs a drive to file
-            # mapping in its configuration.
-            drive=a:
-	    echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
-            new_uuid="BDEF$(hexdump -n 2 -e '"%02X" 1 "\n"' /dev/urandom)"
-            cmd="mlabel -s -N ${new_uuid}"
-            if ! eval "${cmd}" "${drive}"; then
-                return 1
-            fi
-            ;;
-        ext*)
-            # tune2fs refuses to work when the filesystem was not
-            # freshly checked.
-            # Remount to update lastmount time to current time
-            # Otherwise in systems with no RTC lastmount could be in the future
-            # and e2fsck does not update the last filesystem check time
-            if [ -e /etc/e2fsck.conf ] && grep broken_system_clock /etc/e2fsck.conf > /dev/null; then
-                broken_system_clock=$(grep broken_system_clock /etc/e2fsck.conf | cut -d "=" -f2)
-                    if [ "${broken_system_clock}" = "1" ]; then
-                        update_mounttime "$dev"
-                    fi
-            fi
-            if ! e2fsck -fp "$dev"; then
-		return 1
-            fi
-	    new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
-            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
-            if ! eval "${cmd}" "${dev}"; then
-                return 1
-            fi
-            ;;
-        *) ;;
-        esac
+	dev=$1
+	# Filesystem type specific quirks
+	fstype=$2
+	case $fstype in
+		vfat)
+			# mlabel doesn't work on file directly. It needs a drive to file
+			# mapping in its configuration.
+			drive=a:
+			echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
+			new_uuid="BDEF$(hexdump -n 2 -e '"%02X" 1 "\n"' /dev/urandom)"
+			cmd="mlabel -s -N ${new_uuid}"
+			if ! eval "${cmd}" "${drive}"; then
+				return 1
+			fi
+			;;
+		ext*)
+			if ! extfs_prepare "${dev}"; then return 1; fi
+			new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
+			cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
+			if ! eval "${cmd}" "${dev}"; then
+				return 1
+			fi
+			;;
+		*) ;;
+	esac
 
-    new_uuid="$(get_dev_uuid "$dev")"
-    echo "${new_uuid}"
-    return 0
+	new_uuid="$(get_dev_uuid "$dev")"
+	echo "${new_uuid}"
+	return 0
 }
 
 # Format the specified partition with a new filesystem of the same type,
@@ -192,6 +207,7 @@ reformat() {
 	return 0
 }
 
+
 # Set a Balena filesystem label to the specified device.
 # Arguments:
 #   1 - Target block device
@@ -200,50 +216,55 @@ reformat() {
 #   0 - Success, new label in stdout
 #   1 - Failure
 relabel() {
-    dev=$1
-    label=$2
-    fstype=$(get_dev_fstype $dev)
+	dev=$1
+	label=$2
+	fstype=$(get_dev_fstype "${dev}")
 
-    # Filesystem type specific quirks
-    case $fstype in
-        vfat)
-            # mlabel doesn't work on file directly. It needs a drive to file
-            # mapping in its configuration.
-            drive=a:
-	    echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
-            cmd="mlabel -s"
-            if ! eval "${cmd}" "${drive}:${label}"; then
-                return 1
-            fi
-            ;;
-        ext*)
-            # tune2fs refuses to work when the filesystem was not
-            # freshly checked.
-            # Remount to update lastmount time to current time
-            # Otherwise in systems with no RTC lastmount could be in the future
-            # and e2fsck does not update the last filesystem check time
-            if [ -e /etc/e2fsck.conf ] && grep broken_system_clock /etc/e2fsck.conf > /dev/null; then
-                broken_system_clock=$(grep broken_system_clock /etc/e2fsck.conf | cut -d "=" -f2)
-                    if [ "${broken_system_clock}" = "1" ]; then
-                        update_mounttime "$dev"
-                    fi
-            fi
-            if ! e2fsck -fp "$dev"; then
+	# Filesystem type specific quirks
+	case $fstype in
+		vfat)
+			# mlabel doesn't work on file directly. It needs a drive to file
+			# mapping in its configuration.
+			drive=a:
+			echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
+			cmd="mlabel -s"
+			if ! eval "${cmd}" "${drive}:${label}"; then
+				return 1
+			fi
+			;;
+		ext*)
+			if ! extfs_prepare "${dev}"; then return 1; fi
+			cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -L ${label}"
+			if ! eval "${cmd}" "${dev}"; then
+				return 1
+			fi
+			;;
+		*) ;;
+	esac
+
+	new_label="$(get_dev_label "$dev")"
+	echo "${new_label}"
+	return 0
+}
+
+# Remove incompatible filesystem features.
+# Arguments:
+#   1 - Target block device
+# Returns:
+#   0 - Success
+#   1 - Failure
+extfs_compat () {
+	dev=$1
+	fstype=$(get_dev_fstype "${dev}")
+	if [ "${fstype}" != "ext4" ]; then
 		return 1
-            fi
-            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -O ^64bit,^metadata_csum"
-            if ! eval "${cmd}" "${dev}"; then
-                return 1
-            fi
-            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -L ${label}"
-            if ! eval "${cmd}" "${dev}"; then
-                return 1
-            fi
-            ;;
-        *) ;;
-        esac
-
-    new_label="$(get_dev_label "$dev")"
-    echo $new_label
-    return 0
+	fi
+	if EXT2FS_NO_MTAB_OK=1 tune2fs -l "${dev}" | grep -q "Checksum"; then
+		if ! extfs_prepare "${dev}"; then return 1; fi
+		cmd="echo y | EXT2FS_NO_MTAB_OK=1 tune2fs -O ^metadata_csum"
+		if ! eval "${cmd}" "${dev}"; then
+			return 1
+		fi
+	fi
+	return 0
 }
