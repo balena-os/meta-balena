@@ -1,4 +1,16 @@
 - commits:
+    - subject: Generate nested changelogs for balena-engine
+      hash: 16b4760bfe6958bacf67b00100ac5f8fc37fe6bd
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+  version: 2.51.4
+  date: 2020-06-15T15:27:55.173Z
+- commits:
     - subject: Revert allowing local resin-supervisor image updates
       hash: 1f689dbd57faf558dedf245462ed7c869a1aeb1a
       body: >

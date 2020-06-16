@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.4
+## (2020-06-15)
+
+* Generate nested changelogs for balena-engine [Robert Günzler]
+
 # v2.51.3
 ## (2020-06-10)
 
