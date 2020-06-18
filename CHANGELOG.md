@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.5
+## (2020-06-18)
+
+* Set chrony default servers as pools [Matthew McGinn]
+
 # v2.51.4
 ## (2020-06-15)
 

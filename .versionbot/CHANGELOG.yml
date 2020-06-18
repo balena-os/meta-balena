@@ -1,4 +1,29 @@
 - commits:
+    - subject: Set chrony default servers as pools
+      hash: 881e217ac1b1818237afb20312fd593259f44e2a
+      body: >
+        the `maxsources` directive is simply to maintain the current behavior of
+
+        resolving four servers for synchronization. as noted in chrony's docs:
+
+
+        > When a pool source is unreachable, marked as a falseticker, or has a
+        distance larger than the limit set by the maxdistance directive, chronyd
+        will try to replace the source with a newly resolved address from the
+        pool.
+      footer:
+        Connects-to: '#1852'
+        connects-to: '#1852'
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Set chrony default servers as pools
+        changelog-entry: Set chrony default servers as pools
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+  version: 2.51.5
+  date: 2020-06-18T14:02:47.372Z
+- commits:
     - subject: Generate nested changelogs for balena-engine
       hash: 16b4760bfe6958bacf67b00100ac5f8fc37fe6bd
       body: ''
