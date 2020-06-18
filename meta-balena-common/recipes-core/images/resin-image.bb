@@ -53,10 +53,15 @@ generate_hostos_version () {
     echo "${HOSTOS_VERSION}" > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
 }
 
+rm_boot_directory () {
+    rm -rf ${DEPLOY_DIR_IMAGE}/boot
+}
+
 DEPENDS += "jq-native"
 
 IMAGE_PREPROCESS_COMMAND_append = " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
+IMAGE_POSTPROCESS_COMMAND += " rm_boot_directory ; "
 
 RESIN_BOOT_PARTITION_FILES_append = " \
     resin-logo.png:/splash/resin-logo.png \
