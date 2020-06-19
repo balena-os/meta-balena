@@ -289,7 +289,7 @@ RESIN_CONFIGS[no-logo] ?= " \
 #
 RESIN_CONFIGS[compress-kmodules] ?= " \
     CONFIG_MODULE_COMPRESS=y \
-    CONFIG_MODULE_COMPRESS_GZIP=y \
+    CONFIG_MODULE_COMPRESS_XZ=y \
     "
 
 #
