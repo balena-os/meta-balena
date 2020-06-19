@@ -98,6 +98,7 @@ RESIN_CONFIGS ?= " \
     dummy \
     uinput \
     no-debug-info \
+    compress-kmodules \
     "
 
 #
