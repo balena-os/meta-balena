@@ -6,12 +6,29 @@ REQUIRED_DISTRO_FEATURES += " systemd"
 
 RESIN_FLAG_FILE = "${RESIN_IMAGE_FLAG_FILE}"
 
+def disk_aligned(d, rootfs_size, rfs_alignment):
+    saved_rootfs_size = rootfs_size
+    rootfs_size += rfs_alignment - 1
+    rootfs_size -= rootfs_size % rfs_alignment
+    bb.debug(1, 'requested rootfs size %d, aligned %d' % (saved_rootfs_size, rootfs_size) )
+    return rootfs_size
+
+# The rootfs size is calculated by substracting the size of all other partitions
+# except the data partition, dividing by 2, and substracting filesystem metadata
+# and reserved allocations
+def balena_rootfs_size(d):
+    boot_part_size = int(d.getVar("RESIN_BOOT_SIZE"))
+    state_part_size = int(d.getVar("RESIN_STATE_SIZE"))
+    rfs_alignment = int(d.getVar("IMAGE_ROOTFS_ALIGNMENT"))
+    balena_rootfs_size = int((700000 - boot_part_size - state_part_size) / 2)
+    return int(disk_aligned(d, balena_rootfs_size, rfs_alignment))
+
 #
 # The default root filesystem partition size is set in such a way that the
 # entire space taken by resinOS would not exceed 700 MiB. This  can be
 # overwritten by board specific layers.
-#
-IMAGE_ROOTFS_SIZE = "319488"
+
+IMAGE_ROOTFS_SIZE = "${@balena_rootfs_size(d)}"
 IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
