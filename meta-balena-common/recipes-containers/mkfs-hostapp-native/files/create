@@ -13,4 +13,4 @@ hostapp-update -f /input -n
 kill $pid
 wait $pid
 
-mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -d "$SYSROOT" /output
+mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0 -J size=8 -i 8192 -d "$SYSROOT" /output
