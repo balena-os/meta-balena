@@ -1,4 +1,20 @@
 - commits:
+    - subject: Use UUID rather than ID when communicating with API
+      hash: 9363bf9a0a634a5982b21870de08bc208d6e5f1f
+      body: ''
+      footer:
+        Changelog-entry: Use UUID rather than ID when communicating with API
+        changelog-entry: Use UUID rather than ID when communicating with API
+        HQ: 'https://github.com/balena-io/balena-io/issues/2227'
+        hq: 'https://github.com/balena-io/balena-io/issues/2227'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+  version: 2.51.6
+  date: 2020-06-23T19:10:54.069Z
+- commits:
     - subject: Set chrony default servers as pools
       hash: 881e217ac1b1818237afb20312fd593259f44e2a
       body: >
