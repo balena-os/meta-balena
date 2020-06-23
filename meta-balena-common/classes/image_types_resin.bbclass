@@ -362,6 +362,15 @@ do_image_hostapp_ext4[depends] = " \
     "
 
 IMAGE_CMD_hostapp-ext4 () {
+    image_size_bytes=$(stat -c %s ${RESIN_DOCKER_IMG})
+    image_size=$(expr ${image_size_bytes} / 1024)
+    # Available space substracts alignment, 5% default ext4 reserved blocks and journal size
+    available_space=$(expr $(expr ${ROOTFS_SIZE} - $(expr ${ROOTFS_SIZE} \* 5 / 100)) - ${IMAGE_ROOTFS_ALIGNMENT} - 8 \* 1024)
+    # Reserve an extra empirical 5% for the update process
+    available_space=$(expr ${available_space} - $(expr ${ROOTFS_SIZE} \* 5 / 100))
+    if [ "${image_size}" -gt "${available_space}" ]; then
+        bbfatal "Not enough space for root filesystem (required ${image_size}, available ${available_space})";
+    fi
     dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
     mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
 }
