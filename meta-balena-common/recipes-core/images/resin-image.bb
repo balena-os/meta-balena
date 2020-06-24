@@ -70,7 +70,9 @@ RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json
 RESIN_BOOT_PARTITION_FILES_append = " \
     system-connections/resin-sample.ignore:/system-connections/resin-sample.ignore \
     system-connections/README.ignore:/system-connections/README.ignore \
-    "
+"
+
+RESIN_BOOT_PARTITION_FILES_append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') else ''}"
 
 # Resin image flag file
 RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_IMAGE_FLAG_FILE}:/${RESIN_IMAGE_FLAG_FILE}"
