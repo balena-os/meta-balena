@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.51.6
+## (2020-06-25)
+
+* initrdscripts: rootfs: Fix comparison to account for empty variable [Alex Gonzalez]
+* Use UUID rather than ID when communicating with API [Matthew McGinn]
+
 # v2.51.5
 ## (2020-06-18)
 
