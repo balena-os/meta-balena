@@ -1,4 +1,27 @@
 - commits:
+    - subject: >-
+        Fallback to partuuid/partlabel root device matching to support devices
+        with closed source bootloaders
+      hash: 21e54d887f83e138dfda0db5475721d321dea83a
+      body: |
+        Not all devices can fallback to specifying a booting root partition by
+        label, for example the beeaglebone green, so extend it to partuuid and
+        partlabel.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Fallback to partuuid/partlabel root device matching to support devices
+          with closed source bootloaders
+        changelog-entry: >-
+          Fallback to partuuid/partlabel root device matching to support devices
+          with closed source bootloaders
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.51.2
+  date: 2020-06-28T19:08:04.428Z
+- commits:
     - subject: 'openvpn: Add runtime dependency on bash'
       hash: f84dcfdd4493ee23c84940348dbbffff9ced48a2
       body: >

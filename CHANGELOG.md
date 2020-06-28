@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.2
+## (2020-06-28)
+
+* Fallback to partuuid/partlabel root device matching to support devices with closed source bootloaders [Alex Gonzalez]
+
 # v2.51.1
 ## (2020-06-04)
 
