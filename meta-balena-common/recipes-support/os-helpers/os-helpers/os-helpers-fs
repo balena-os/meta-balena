@@ -48,11 +48,12 @@ get_dev_label() {
 	lsblk -nlo label "${1}"
 }
 
-# Output the device name for the specified file system label.
+# Output the device path for the specified root filesystem id.
 # Arguments:
-#   1 - Filesystem label
-get_dev_path_from_label() {
-	dev=$(lsblk -nlo name,label | grep "$1" | cut -d ' ' -f1)
+#   1 - Filesystem id (label, partlabel, uuid, partuuid)
+#   2 - Filesystem id value
+get_dev_path() {
+	dev=$(lsblk -nlo name,"$1" | grep "$2" | cut -d ' ' -f1)
 	echo "/dev/$dev"
 }
 
@@ -70,9 +71,11 @@ get_cmdline_root_uuid() {
 			if [ "$opt" = "UUID" ]; then
 				echo "$p" | cut -d'=' -f3
 				return 0
-			elif [ "$opt" = "LABEL" ]; then
-				label=$(echo "$p" | cut -d'=' -f3)
-				get_dev_uuid "$(get_dev_path_from_label "${label}")"
+			elif [ "$opt" = "LABEL" ] ||
+			     [ "$opt" = "PARTUUID" ] ||
+			      [ "$opt" = "PARTLABEL" ] ; then
+				id=$(echo "$p" | cut -d'=' -f3)
+				get_dev_uuid "$(get_dev_path "${opt}" "${id}")"
 				return 0
 			fi
 		fi
