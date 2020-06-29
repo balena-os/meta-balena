@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'resin-image: Install extra_uEnv.txt in boot partition'
+      hash: e323d312f518d1ad50382a72182cb3bcb2afbd1a
+      body: |
+        Do so only for devices that use u-boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+  version: 2.51.7
+  date: 2020-06-25T11:34:26.632Z
+- commits:
     - subject: 'initrdscripts: rootfs: Fix comparison to account for empty variable'
       hash: 63b3fac98b09f2a98ca44223f98cbc7c419197e3
       body: |

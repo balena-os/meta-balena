@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.7
+## (2020-06-25)
+
+* resin-image: Install extra_uEnv.txt in boot partition [Alexandru Costache]
+
 # v2.51.6
 ## (2020-06-25)
 
