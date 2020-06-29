@@ -33,6 +33,7 @@ do_configure_append() {
 RESIN_BOOT_PART = "1"
 RESIN_DEFAULT_ROOT_PART = "2"
 RESIN_ENV_FILE = "resinOS_uEnv.txt"
+BALENA_EXTRA_ENV_FILE = "extra_uEnv.txt"
 RESIN_UBOOT_DEVICES ?= "0 1 2"
 RESIN_UBOOT_DEVICE_TYPES ?= "mmc"
 
@@ -55,6 +56,7 @@ UBOOT_VARS = "RESIN_UBOOT_DEVICES \
               RESIN_IMAGE_FLAG_FILE \
               RESIN_FLASHER_FLAG_FILE \
               RESIN_ENV_FILE \
+              BALENA_EXTRA_ENV_FILE \
               BASE_OS_CMDLINE \
               OS_BOOTCOUNT_FILE \
               OS_BOOTCOUNT_SKIP \
@@ -88,5 +90,10 @@ do_generate_resin_uboot_configuration[vardeps] += "${UBOOT_VARS}"
 do_inject_config_resin () {
     sed -i '/^#endif.*/i #include <config_resin.h>' ${S}/include/config_defaults.h
 }
+
+do_deploy_append() {
+    touch ${DEPLOYDIR}/extra_uEnv.txt
+}
+
 addtask do_inject_config_resin after do_configure before do_compile
 do_inject_config_resin[vardeps] += "${UBOOT_VARS}"

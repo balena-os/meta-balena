@@ -31,6 +31,7 @@
 
 #define RESIN_ENV \
        "resin_env_file=" __stringify(RESIN_ENV_FILE) "\0" \
+       "balena_extra_env_file=" __stringify(BALENA_EXTRA_ENV_FILE) "\0" \
        "os_bc_file=" __stringify(OS_BOOTCOUNT_FILE) "\0" \
        "os_bc_skip=" __stringify(OS_BOOTCOUNT_SKIP) "\0" \
        "os_bc_inced=0 \0" \
@@ -52,12 +53,19 @@
        "resin_load_env_file=" \
                "echo Loading ${resin_env_file} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_boot_part};" \
                "fatload ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${resin_env_file};\0" \
+       "balena_load_extra_env_file=" \
+               "echo Loading ${balena_extra_env_file} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_boot_part};" \
+               "fatload ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${balena_extra_env_file};\0" \
        "os_load_bootcount_file=" \
                "echo Loading ${os_bc_file} from ${resin_dev_type} device ${resin_dev_index} partition ${resin_boot_part};" \
                "fatload ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${os_bc_file};\0" \
        \
        "resin_import_env_file=" \
                "echo Import ${resin_env_file} in environment;" \
+               "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
+       \
+       "balena_import_extra_env_file=" \
+               "echo Import ${balena_extra_env_file} in environment;" \
                "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
        \
        "os_import_bootcount_file=" \
@@ -124,6 +132,9 @@
                "if run resin_load_env_file; then " \
                        "run resin_import_env_file;" \
                "fi;" \
+               "if run balena_load_extra_env_file; then " \
+                       "run balena_import_extra_env_file;" \
+               "fi;" \
                "if run os_load_bootcount_file; then " \
                        "run os_import_bootcount_file;" \
                "else; " \
@@ -149,7 +160,7 @@
               "fi;\0" \
        \
        "set_os_cmdline=" \
-               "setenv os_cmdline ${base_os_cmdline} ${bootparam_flasher};\0" \
+               "setenv os_cmdline ${base_os_cmdline} ${bootparam_flasher} ${extra_os_cmdline};\0" \
        "resin_set_kernel_root=" \
                "run resin_set_dev_index;" \
                "run resin_inject_env_file;" \
