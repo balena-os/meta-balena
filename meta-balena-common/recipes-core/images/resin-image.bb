@@ -38,6 +38,7 @@ IMAGE_INSTALL = " \
 
 IMAGE_INSTALL_append_halium = " \
     android-system \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'android-tools android-tools-conf', '', d)} \
 "
 
 generate_rootfs_fingerprints () {
