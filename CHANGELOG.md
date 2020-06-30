@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.51.8
+## (2020-06-30)
+
+* resin-ntp-config: merge 'burst' command with 'add server' line [Mark Corbin]
+
 # v2.51.7
 ## (2020-06-25)
 
