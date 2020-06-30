@@ -61,17 +61,19 @@ fi
 grub_cfg=$(find $RESIN_BOOT_MOUNTPOINT -name grub.cfg)
 grub_env=$(find $RESIN_BOOT_MOUNTPOINT -name grubenv)
 
-if  grep -q upgrade_available "$grub_cfg" ; then
+if  grep -q upgrade_available "$grub_env" ; then
     printf "[INFO] Automated Rollback support in grub.cfg detected \n"
-    sed "s#resin_root_part=.*#resin_root_part="$new_part_idx"#g" "$grub_cfg" > "$grub_cfg".new
-    sed -i "s#upgrade_available=.*#upgrade_available="$DURING_UPDATE"#g" "$grub_cfg".new
-    sed -i "s#bootcount=.*#bootcount=0#g" "$grub_env"
+    sed "s#resin_root_part=.*#resin_root_part="$new_part_idx"#g" "$grub_env" > "$grub_env".new
+    sed -i "s#upgrade_available=.*#upgrade_available="$DURING_UPDATE"#g" "$grub_env".new
+    sed -i "s#bootcount=.*#bootcount=0#g" "$grub_env".new
+    sync_file="$grub_env"
 else
     printf "[INFO] Automated Rollback is not supported by grub config file for this device \n"
     sed "s/resin-root./"$new_part_label"/" "$grub_cfg" > "$grub_cfg".new
+    sync_file="$grub_cfg"
 fi
 
-sync -f $(dirname "$grub_cfg")
-mv "$grub_cfg".new "$grub_cfg"
-sync -f $(dirname "$grub_cfg")
+sync -f $(dirname "$sync_file")
+mv "$sync_file".new "$sync_file"
+sync -f $(dirname "$sync_file")
 printf "[INFO] Switch root done.\n"

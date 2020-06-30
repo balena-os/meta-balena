@@ -29,9 +29,9 @@ fi
 if [ -f "${RESIN_BOOT_MOUNTPOINT}/resinOS_uEnv.txt" ]; then
 	BOOTLOADER_FILE="${RESIN_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
 else
-	grub_cfg=$(find "${RESIN_BOOT_MOUNTPOINT}" -name grub.cfg)
-	if [ -f "${grub_cfg}" ]; then
-		BOOTLOADER_FILE="${grub_cfg}"
+	grub_env=$(find "${RESIN_BOOT_MOUNTPOINT}" -name grubenv)
+	if [ -f "${grub_env}" ]; then
+		BOOTLOADER_FILE="${grub_env}"
 	fi
 fi
 
