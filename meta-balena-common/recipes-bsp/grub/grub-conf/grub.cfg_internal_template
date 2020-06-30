@@ -9,10 +9,8 @@ insmod regexp
 insmod probe
 insmod configfile
 timeout=@@TIMEOUT@@
-resin_root_part=2
-upgrade_available=0
 
-load_env
+load_env --skip-sig bootcount resin_root_part upgrade_available
 source /grub/grub_extraenv
 
 if [ ${upgrade_available} = 1 ] ; then
