@@ -5,3 +5,5 @@ SRC_URI_append = " \
     "
 
 RDEPENDS_${PN}_append = " openssl"
+
+ALTERNATIVE_PRIORITY[hwclock] = "100"
