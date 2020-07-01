@@ -1,0 +1,14 @@
+[Unit]
+Description=Balena hostapps mounter
+Requires=resin-data.service
+After=resin-data.service balena.service
+ConditionVirtualization=!docker
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/hostapp-mount.sh --mount
+ExecStop=@BASE_BINDIR@/sh @BINDIR@/hostapp-mount.sh --umount
+
+[Install]
+WantedBy=multi-user.target
