@@ -1,4 +1,56 @@
 - commits:
+    - subject: Add compressed memory swap support
+      hash: 157794a7ae5958b27152c642437c5c7fbe838364
+      body: |
+        Enable compressed swap using zram by default.
+
+        Fixes #1908
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add compressed memory swap support
+        changelog-entry: Add compressed memory swap support
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'systemd-zram-swap: Add compressed memory swap support'
+      hash: 4c5156543852a6c2d963bf33f4e4307a7cb303cb
+      body: |
+        This enables a compressed RAM swap of 25% of total system memory or 1GB,
+        whichever smallest.
+
+        Upstream Yocto has a zram implementation that's broken in warrior, and a
+        new implementation introduced in Zeus that does not work in BalenaOS as
+        we run two udevs, one in the initramfs and one in the main OS. The
+        mkswap needs to happen in the initramfs udev otherwise the udev database
+        is not updated with the swap device and the zram0 device is not detected
+        by systemd.
+
+        This implementation is simpler than the one upstream and common to all
+        the supported Yocto versions. It uses a udev rule in the initramfs that
+        creates the swap drive, and a swap unit in the main OS that enables it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'kernel-resin: Built-in zram configuration'
+      hash: 2fcf092e08349bc66a2a90172668024e8a589d22
+      body: >
+        In preparation to using zram swap drives make this configuration
+        built-in
+
+        so it is available in the initramfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.52.0
+  date: 2020-06-30T15:06:27.072Z
+- commits:
     - subject: 'resin-ntp-config: merge ''burst'' command with ''add server'' line'
       hash: 034ff61a58f30a980514157412c0455b52ddf744
       body: |
