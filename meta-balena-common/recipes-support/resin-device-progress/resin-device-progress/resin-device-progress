@@ -62,7 +62,7 @@ if [ -z "$REGISTERED_AT" ]; then
     exit 1
 fi
 
-if [ -z "${DEVICE_UUID}" ]; then
+if [ -z "${UUID}" ]; then
     echo "[ERROR] resin-device-progress : Device UUID missing from config file, provisioning progress cannot be reported."
     exit 1
 fi
@@ -70,7 +70,7 @@ fi
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
 
-curl -s -X PATCH "${API_ENDPOINT}/v4/device?\$filter=uuid%20eq%20'${DEVICE_UUID}'" \
+curl -s -X PATCH "${API_ENDPOINT}/v4/device?\$filter=uuid%20eq%20'${UUID}'" \
      --header "Authorization: Bearer $_device_api_key" \
      -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
      --data-urlencode "provisioning_progress=$PERCENTAGE" \
