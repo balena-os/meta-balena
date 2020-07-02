@@ -1,4 +1,20 @@
 - commits:
+    - subject: Fix up UUID variable when communicating with API
+      hash: 270c13c678d6dd67b5163063c8e8d9148c9a22e0
+      body: ''
+      footer:
+        HQ: 'https://github.com/balena-io/balena-io/issues/2227'
+        hq: 'https://github.com/balena-io/balena-io/issues/2227'
+        Changelog-entry: Fix up UUID variable when communicating with API
+        changelog-entry: Fix up UUID variable when communicating with API
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+  version: 2.52.1
+  date: 2020-07-02T14:30:47.139Z
+- commits:
     - subject: Add compressed memory swap support
       hash: 157794a7ae5958b27152c642437c5c7fbe838364
       body: |

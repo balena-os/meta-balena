@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.52.1
+## (2020-07-02)
+
+* Fix up UUID variable when communicating with API [Matthew McGinn]
+
 # v2.52.0
 ## (2020-06-30)
 
