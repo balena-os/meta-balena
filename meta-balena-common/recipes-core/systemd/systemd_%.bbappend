@@ -9,6 +9,9 @@ SRC_URI_append = " \
     file://watchdog.conf \
     file://os.conf \
     file://60-resin-update-state.rules \
+    file://10-zram.rules \
+    file://zram-swap-init \
+    file://dev-zram0.swap \
     file://resin_update_state_probe \
     file://balena-os-sysctl.conf \
     "
@@ -79,15 +82,31 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/vacuum.conf ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/vacuum.conf
 
     install -m 0755 ${WORKDIR}/resin_update_state_probe ${D}/lib/udev/resin_update_state_probe
+    install -m 0755 ${WORKDIR}/zram-swap-init ${D}/lib/udev/zram-swap-init
 
     # Move udev rules into /lib as /etc/udev/rules.d is bind mounted for custom rules
     mv ${D}/etc/udev/rules.d/*.rules ${D}/lib/udev/rules.d/
 
     install -d -m 0755 ${D}/usr/lib/sysctl.d/
     install -m 0644 ${WORKDIR}/balena-os-sysctl.conf ${D}/usr/lib/sysctl.d/
+
+    install -d ${D}${systemd_unitdir}/system
+    install -m 0644 ${WORKDIR}/dev-zram0.swap ${D}${systemd_unitdir}/system/dev-zram0.swap
 }
 
-FILES_udev += "${rootlibexecdir}/udev/resin_update_state_probe"
+PACKAGES =+ "${PN}-zram-swap"
+SUMMARY_${PN}-zram-swap = "Enable compressed memory swap"
+DESCRIPTION_${PN}-zram-swap = "Enable a already created ZRAM swap memory device."
+SYSTEMD_PACKAGES += "${PN}-zram-swap"
+FILES_${PN}-zram-swap = "\
+    ${systemd_unitdir}/system/dev-zram0.swap \
+"
+SYSTEMD_SERVICE_${PN}-zram-swap += "dev-zram0.swap"
+
+FILES_udev += "\
+    ${rootlibexecdir}/udev/resin_update_state_probe \
+    ${rootlibexecdir}/udev/zram-swap-init           \
+"
 
 RDEPENDS_${PN}_append = " os-helpers-fs resin-ntp-config util-linux periodic-vacuum-logs"
 

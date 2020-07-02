@@ -430,10 +430,10 @@ RESIN_CONFIGS[security] = " \
 
 # zram provides a compressed in-memory swap device
 RESIN_CONFIGS[zram] = " \
-    CONFIG_ZSMALLOC=m \
-    CONFIG_ZRAM=m \
+    CONFIG_ZSMALLOC=y \
+    CONFIG_ZRAM=y \
     CONFIG_CRYPTO=y \
-    CONFIG_CRYPTO_LZO=m \
+    CONFIG_CRYPTO_LZ4=y \
     "
 
 # USB Modem (CDC ACM) support

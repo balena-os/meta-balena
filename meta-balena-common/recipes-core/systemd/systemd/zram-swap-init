@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+device=$1
+if [ "$device" = "" ]; then
+    echo "Usage: zram-swap-init <device>"
+    exit 1
+fi
+
+# Allocate zram to be 25% of all system memory or 1GB whichever smallest
+# Note: zram is only allocated when used. When swapped pages compress with a
+# a 2:1 ratio zram will require 50% of system memory (while allowing to use
+# 150% memory).
+ZRAM_SIZE_PERCENT=25
+ZRAM_ALGORITHM=lz4
+
+# shellcheck disable=SC2015
+[ -f /etc/default/zram ] && ./etc/default/zram || true
+
+memtotal=$(grep MemTotal /proc/meminfo | awk ' { print $2 } ')
+memzram=$((memtotal*ZRAM_SIZE_PERCENT/100))
+if [ "${memzram}" -gt "1024000" ]; then
+	memzram=1024000
+fi
+
+echo ${ZRAM_ALGORITHM} > /sys/block/"${device##/dev/}"/comp_algorithm
+echo ${memzram}K > /sys/block/"${device##/dev/}"/disksize
+/sbin/mkswap -L "zram-swap" "${device}"
