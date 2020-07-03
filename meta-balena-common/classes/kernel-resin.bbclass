@@ -403,10 +403,16 @@ RESIN_CONFIGS[qmi] = " \
 # various other configurations
 RESIN_CONFIGS[misc] = " \
     CONFIG_USB_SERIAL_CP210X=m \
-    CONFIG_NF_NAT_REDIRECT=m \
-    CONFIG_IP_NF_TARGET_LOG=m \
     CONFIG_PANIC_TIMEOUT=1 \
     "
+
+# IP_NF_TARGET_LOG is replaced by NETFILTER_XT_TARGET_LOG from v3.10 (see sha1 6939c33a757bd006c5e0b8b5fd429fc587a4d0f4)
+# NF_NAT_REDIRECT is a dependency for other modules so it is selected automatically
+RESIN_CONFIGS_DEPS[misc] = " \
+    CONFIG_IP_NF_TARGET_LOG=m \
+    CONFIG_NETFILTER_XT_TARGET_LOG=m \
+    CONFIG_NF_NAT_REDIRECT=m \
+"
 
 # configs needed for our usage of redsocks
 RESIN_CONFIGS[redsocks] = " \
@@ -430,7 +436,8 @@ RESIN_CONFIGS[reduce-size] = " \
     "
 
 # security features
-RESIN_CONFIGS[security] = " \
+# From v4.18 these are renamed and are automatically selected with the architecture (sha1 d148eac0e70f06485dbd4cce6ed01cb07c650cec)
+RESIN_CONFIGS_DEPS[security] = " \
     CONFIG_CC_STACKPROTECTOR=y \
     CONFIG_CC_STACKPROTECTOR_STRONG=y \
     "
