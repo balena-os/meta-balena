@@ -103,7 +103,12 @@ RESIN_CONFIGS ?= " \
 #
 # Balena specific kernel configuration
 # Keep these updated with
-# https://raw.githubusercontent.com/resin-os/balena/master/contrib/check-config.sh
+# https://raw.githubusercontent.com/balena-os/balena-engine/master/contrib/check-config.sh
+#
+# False negatives:
+#
+# CONFIG_NF_NAT_NEEDED was removed in v5.2 (sha1 f319ca6557c10a711facc4dd60197470796d3ec1)
+# CONFIG_NF_NAT_IPV4 was merged with NF_NAT in v5.1 (sha1 3bf195ae6037e310d693ff3313401cfaf1261b71)
 #
 RESIN_CONFIGS_DEPS[balena] ?= " \
     CONFIG_IP_NF_NAT=y \
@@ -112,7 +117,11 @@ RESIN_CONFIGS_DEPS[balena] ?= " \
     CONFIG_NF_CONNTRACK=y \
     CONFIG_NF_CONNTRACK_IPV4=y \
     CONFIG_NETFILTER=y \
+    CONFIG_IP_VS=y \
+    CONFIG_NETFILTER_XT_MATCH_IPVS=y \
+    CONFIG_NF_NAT_NEEDED=y \
     CONFIG_DEVPTS_MULTIPLE_INSTANCES=y \
+    CONFIG_NF_NAT_IPV4=y \
     "
 RESIN_CONFIGS[balena] ?= " \
     CONFIG_ADVISE_SYSCALLS=y \
@@ -131,7 +140,6 @@ RESIN_CONFIGS[balena] ?= " \
     CONFIG_MACVLAN=y \
     CONFIG_VETH=y \
     CONFIG_BRIDGE=y \
-    CONFIG_NF_NAT_IPV4=y \
     CONFIG_IP_NF_FILTER=y \
     CONFIG_IP6_NF_FILTER=m \
     CONFIG_IP_NF_TARGET_REJECT=m \
@@ -141,7 +149,6 @@ RESIN_CONFIGS[balena] ?= " \
     CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y \
     CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y \
     CONFIG_NF_NAT=y \
-    CONFIG_NF_NAT_NEEDED=y \
     CONFIG_POSIX_MQUEUE=y \
     CONFIG_TUN=y \
     CONFIG_BTRFS_FS=n \
