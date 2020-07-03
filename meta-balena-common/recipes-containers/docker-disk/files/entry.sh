@@ -45,7 +45,7 @@ if [ -n "${PRIVATE_REGISTRY}" ] && [ -n "${PRIVATE_REGISTRY_USER}" ] && [ -n "${
 	docker login -u "${PRIVATE_REGISTRY_USER}" -p "${PRIVATE_REGISTRY_PASSWORD}" "${PRIVATE_REGISTRY}"
 fi
 
-# Pull in the image
+# Pull in the images
 echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}..."
 docker pull "${TARGET_REPOSITORY}:${TARGET_TAG}"
 # Pull in arch specific hello-world image and tag it balena-healthcheck-image
@@ -54,6 +54,16 @@ docker pull --platform "${HOSTAPP_PLATFORM}" "${HELLO_REPOSITORY}"
 docker tag "${HELLO_REPOSITORY}" balena-healthcheck-image
 docker rmi "${HELLO_REPOSITORY}"
 docker save balena-healthcheck-image > ${BUILD}/balena-healthcheck-image.tar
+# Pull in host extension images
+BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
+for image_name in ${HOSTEXT_IMAGES}; do
+	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
+		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${image_name}" none
+	else
+		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
+		exit 1
+	fi
+done
 
 echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"
