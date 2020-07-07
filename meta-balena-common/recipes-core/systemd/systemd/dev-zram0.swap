@@ -1,6 +1,7 @@
 [Unit]
 Description=Enable compressed swap in memory using zram
-After=systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service
+After=systemd-udev-settle.service
+DefaultDependencies=no
 
 [Swap]
 What=/dev/zram0
