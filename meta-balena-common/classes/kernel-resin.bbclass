@@ -100,6 +100,8 @@ RESIN_CONFIGS ?= " \
     no-debug-info \
     "
 
+RESIN_CONFIGS_append_halium = " android"
+
 #
 # Balena specific kernel configuration
 # Keep these updated with
@@ -201,6 +203,17 @@ RESIN_CONFIGS[systemd] ?= " \
     CONFIG_CGROUP_SCHED=y \
     CONFIG_FAIR_GROUP_SCHED=y \
     CONFIG_CFS_BANDWIDTH=y"
+
+RESIN_CONFIGS[android] = " \
+    CONFIG_ASHMEM=y \
+    CONFIG_ANDROID=y \
+    CONFIG_ANDROID_BINDERFS=y \
+    CONFIG_ANDROID_BINDER_IPC=y \
+    CONFIG_AUDIT=y \
+    CONFIG_PM_SLEEP=y \
+    CONFIG_PM_WAKELOCKS=y \
+    CONFIG_USB_FUNCTIONFS=y \
+"
 
 #
 # We use an out-of-tree kernel module for RTL8192CU WiFi devices
