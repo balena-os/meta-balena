@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.52.2
+## (2020-07-06)
+
+* kernel-resin: Make USB_SERIAL and USB_SERIAL_GENERIC built-ins [Alex Gonzalez]
+* kernel-resin: Fix configuration warnings from newer kernels [Alex Gonzalez]
+* kernel-resin: Update balena kernel configuration for updated engine [Alex Gonzalez]
+
 # v2.52.1
 ## (2020-07-02)
 

@@ -1,4 +1,41 @@
 - commits:
+    - subject: 'kernel-resin: Make USB_SERIAL and USB_SERIAL_GENERIC built-ins'
+      hash: 32c3f173fa4b8dc69f5ce8dc404d36585ab94c5b
+      body: |
+        These variables are defined as a bool and not tristate so they cannot be
+        configured as a module.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'kernel-resin: Fix configuration warnings from newer kernels'
+      hash: 819b7276aaa7ac4b4492fb9800ea074085c1ca82
+      body: |
+        Also, make the security section not checked by the builder as these
+        configurations have disappeared from kernels > v4.8
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+    - subject: 'kernel-resin: Update balena kernel configuration for updated engine'
+      hash: f57846a1246e8fff506c95ee22c3347d83a5ec2e
+      body: |
+        Also, move configuration that will not be present in newer kernels to
+        RESIN_CONFIGS_DEP so the kernel check task does not complain when not
+        present.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.52.2
+  date: 2020-07-06T09:57:46.257Z
+- commits:
     - subject: Fix up UUID variable when communicating with API
       hash: 270c13c678d6dd67b5163063c8e8d9148c9a22e0
       body: ''
