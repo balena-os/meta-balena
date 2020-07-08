@@ -55,6 +55,20 @@ popd
 
 mkdir -p /resin-data/android-data
 
+# from v5.4 the /dev/binder node is no longer automatically generated
+# See sha1 ca2864c6e8965c37df97f11e6f99e83e09806b1c
+if [ ! -e "/dev/binder" ]; then
+	mkdir /dev/binderfs
+	mount -t binder binder /dev/binderfs
+	chmod 0755 /dev/binderfs
+	ln -s /dev/binderfs/binder /dev/binder
+	ln -s /dev/binderfs/hwbinder /dev/hwbinder
+	ln -s /dev/binderfs/vndbinder /dev/vndbinder
+	chmod 0666 /dev/binderfs/hwbinder
+	chmod 0666 /dev/binderfs/binder
+	chmod 0666 /dev/binderfs/vndbinder
+fi
+
 fstab=$(ls ${destdir}/fstab*)
 if [ -f "${fstab}" ]; then
 	mount_android_partitions "${fstab}" /android
