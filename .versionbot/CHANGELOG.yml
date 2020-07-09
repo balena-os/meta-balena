@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'systemd: Simplify zram swap unit dependencies to avoid ordering cycle'
+      hash: 22a529014b649df8a9b4bf94fa9922d6d692e238
+      body: |
+        The default dependency:
+
+        Before=swap.target
+
+        Causes randomly appearing ordering cycles that leave the system in not
+        functioning states.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+  version: 2.52.3
+  date: 2020-07-09T08:03:52.827Z
+- commits:
     - subject: 'kernel-resin: Make USB_SERIAL and USB_SERIAL_GENERIC built-ins'
       hash: 32c3f173fa4b8dc69f5ce8dc404d36585ab94c5b
       body: |

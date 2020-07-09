@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.52.3
+## (2020-07-09)
+
+* systemd: Simplify zram swap unit dependencies to avoid ordering cycle [Alex Gonzalez]
+
 # v2.52.2
 ## (2020-07-06)
 
