@@ -1,4 +1,1099 @@
 - commits:
+    - subject: Update balena-supervisor from v11.4.10 to v11.9.3
+      hash: 16fc81358477615b26b6ee6917dc2b5a36081a57
+      body: |
+        Update balena-supervisor from v11.4.10 to v11.9.3
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.4.10 to v11.9.3
+        changelog-entry: Update balena-supervisor from v11.4.10 to v11.9.3
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: Fix bug where a promise was not resolved in db-format
+              hash: 270f9f854add8db84fadc0a96e127a6035128aef
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Convert deviceConfig module to a singleton
+              hash: 5337c0102cd9bdbaaa41812fb1b8c44796ae9898
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.9.3
+          date: 2020-07-08T11:07:16.427Z
+        - commits:
+            - subject: 'avahi: Control with HOST_DISCOVERABILITY'
+              hash: 03ca0ee9add9872b5577833971b43682ae6cc427
+              body: |
+                The host config variable HOST_DISCOVERABILITY can be set to
+                true or false, controlling the state of the avahi service. This
+                determines if the device advertises it's presence over mDNS.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.9.2
+          date: 2020-07-06T12:04:46.333Z
+        - commits:
+            - subject: 'firewall: Add Host Firewall functionality'
+              hash: 28c5a44e714a3f155fbd528d0ec672dec1d96ef8
+              body: |
+                Controlled by BALENA_HOST_FIREWALL_MODE, the firewall can
+                either be 'on' or 'off'.
+
+                - In the 'off' state, all traffic is allowed.
+                - In the 'on' state, only traffic for the core services provided
+                  by Balena is allowed.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+          version: balena-supervisor-11.9.1
+          date: 2020-07-01T17:45:22.146Z
+        - commits:
+            - subject: Added support for configuring FDT directive in extlinux.conf
+              hash: 59fc589eb23bdf8c79c677734d2792b93380c94c
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.9.0
+          date: 2020-06-23T19:58:27.412Z
+        - commits:
+            - subject: 'state: Report device MAC address to the API'
+              hash: 1b91ef3405d1d2013cbdd6381ed69256c6432d18
+              body: |
+                When reporting device information, send the MAC address of any
+                interfaces on the system. Also expose in the Supervisor API at
+                the route GET /v1/device.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+          version: balena-supervisor-11.8.4
+          date: 2020-06-22T09:43:53.370Z
+        - commits:
+            - subject: Update pinejs-client-request to 7.x
+              hash: c15f77434ba3b957dc55f5df207026eb2028bd57
+              body: |
+                Update pinejs-client-request from 5.2.0 to 7.0.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested:
+                - commits:
+                    - subject: Empty commit to attempt republish
+                      hash: 72c0214672a1e552cb8fa63f9a96aa47b5db19b1
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                    - subject: Switch from bluebird-lru-cache to lru-cache for caching
+                      hash: e69b9cb202140de25f5b6cc9258cccb71854fd6f
+                      body: ''
+                      footer:
+                        Change-type: major
+                        change-type: major
+                      author: Pagan Gazzard
+                    - subject: Update target to es2018
+                      hash: 1c2e8725305219f0c144cca583a1e8225d64c503
+                      body: ''
+                      footer:
+                        Change-type: major
+                        change-type: major
+                      author: Pagan Gazzard
+                    - subject: Remove bluebird dependency
+                      hash: b066e578427c179c9cb7fca6dda2e2e17da01a46
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                    - subject: Convert to async/await
+                      hash: 3ca7a939c2e25861cf3484b1ef31f7ccbec9369a
+                      body: ''
+                      footer:
+                        Change-type: major
+                        change-type: major
+                      author: Pagan Gazzard
+                    - subject: Update to pinejs-client-core 6.x
+                      hash: 33f1f63efbb0a4a1c9fae0f45c4f2e00e59572f2
+                      body: |
+                        Update pinejs-client-core from 5.8.0 to 6.0.0
+                      footer:
+                        Change-type: major
+                        change-type: major
+                      author: Pagan Gazzard
+                      nested:
+                        - commits:
+                            - subject: Increase minimum es version to es2015
+                              hash: 52f3a97dc2b5aba07090a688fcd7afa2d2d789d8
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                            - subject: Convert to async/await
+                              hash: b6c6d1f1dc9e9b05e60964a87e1677b0b4cc74eb
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                            - subject: Remove now unnecessary PinejsClientCoreFactory
+                              hash: 35adea3c7c33a74920652ea547e8d649592e86fc
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                            - subject: Switch to using native promises
+                              hash: d87e4570be580dccb1e511068beaf79878e66d06
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                            - subject: Drop support for deprecated request overrides
+                              hash: 5aa89779bb06b9437382439b324f91d5fa9061b7
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                            - subject: Drop support for deprecated `query` method
+                              hash: 2a0d315b111832c0a15a4cc581cd3f3cb5c32cd7
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Drop support for deprecated string based
+                                requests
+                              hash: 493a2bc970923eb8d79e684e10d4ec433803a20c
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                            - subject: Use `;` for expand options instead of `&`
+                              hash: 62f0f4c406ce87b2ba6d4a7f74c88107ac3144cb
+                              body: ''
+                              footer:
+                                Change-type: major
+                                change-type: major
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.0.0
+                          date: 2020-06-04T12:58:07.304Z
+                  version: pinejs-client-request-7.0.0
+                  date: 2020-06-16T10:57:45.926Z
+                - commits:
+                    - subject: Lazy load bluebird-lru-cache and lodash
+                      hash: a2b6b74600b9ddecc98cb90a5d2d9ca28495b835
+                      body: ''
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                      author: Pagan Gazzard
+                  version: pinejs-client-request-6.2.0
+                  date: 2020-06-08T15:32:03.904Z
+                - commits:
+                    - subject: Convert some lodash usage to native versions
+                      hash: 93aaa1f518859bbe08a5746fbb1668c9fd446ae3
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-request-6.1.4
+                  date: 2020-06-08T11:53:33.697Z
+                - commits:
+                    - subject: Remove unused dependencies
+                      hash: 58a13f0fbe9692be029812db19f22aac7bd6f0f9
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-request-6.1.3
+                  date: 2020-06-04T15:00:55.621Z
+                - commits:
+                    - subject: Update dependencies
+                      hash: 0087b900328f1ba02699fc75664b0d23eb433e67
+                      body: |
+                        Update pinejs-client-core from 5.6.11 to 5.8.0
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                      nested:
+                        - commits:
+                            - subject: >-
+                                Generate optional builds for es2015/es2018 as
+                                well as the default es5
+                              hash: 510682b0e2a9d2a338aa977bd4782ec60fc5b196
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.8.0
+                          date: 2020-05-29T13:12:21.476Z
+                        - commits:
+                            - subject: Update dependencies
+                              hash: 8141a6dfe6edd4c7e432d85c3533e6e02a43e2ff
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.7.1
+                          date: 2020-05-25T16:57:46.154Z
+                        - commits:
+                            - subject: >-
+                                Make transformGetResult a method , to ease
+                                overriding the get method
+                              hash: f267d4bfc006d1aabfb0ed1f79c9234ecb5c7d5f
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                                See: >-
+                                  https://github.com/balena-io/balena-api/pull/2532
+                                see: >-
+                                  https://github.com/balena-io/balena-api/pull/2532
+                              author: Thodoris Greasidis
+                          version: pinejs-client-js-5.7.0
+                          date: 2020-04-15T13:13:28.186Z
+                  version: pinejs-client-request-6.1.2
+                  date: 2020-06-02T15:55:01.003Z
+                - commits:
+                    - subject: Add linting
+                      hash: 988d58f708da1bd1a4389a1a2129fa5d30706065
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-request-6.1.1
+                  date: 2020-03-19T21:47:11.959Z
+                - commits:
+                    - subject: Move require-npm4-to-publish to dev dependencies
+                      hash: 084a19f61c408643d9a9448c1d656bed7791fec5
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                    - subject: Update dependencies
+                      hash: 1b06cd6c26b60a4d043ad1aaaf6e4ab9b822ace2
+                      body: |
+                        Update pinejs-client-core from 5.3.6 to 5.6.11
+                        Update typed-error from 3.1.0 to 3.2.0
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                      author: Pagan Gazzard
+                      nested:
+                        - commits:
+                            - subject: >-
+                                update deps and specify minimum engine
+                                requirements
+                              hash: 22f293afc187e67b88dab280951eb6e2bb504b24
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                                Signed-off-by: Will Boyce <will@balena.io>
+                                signed-off-by: Will Boyce <will@balena.io>
+                              author: Will Boyce
+                          version: typed-error-3.2.0
+                          date: 2019-11-20T09:52:39.017Z
+                        - commits:
+                            - subject: "\U0001F41B: Fix missing `deprecated.getStringParams` function"
+                              hash: 53edb7e7485acd4310e9b04291894f6ab746285a
+                              body: >
+                                The function `deprecated.getStringParams` was
+                                used, but
+
+                                not defined.
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                                Signed-off-by: Andreas Fitzek <andreas@balena.io>
+                                signed-off-by: Andreas Fitzek <andreas@balena.io>
+                              author: Andreas Fitzek
+                          version: pinejs-client-js-5.6.11
+                          date: 2020-02-21T13:35:51.993Z
+                        - commits:
+                            - subject: Update to resin-lint 3.x
+                              hash: f1b415154cc21b9880ad8ee1134ea9340220aba2
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.10
+                          date: 2020-02-14T15:37:12.741Z
+                        - commits:
+                            - subject: >-
+                                CircleCI: Remove deploy job as it's handled by
+                                balenaCI
+                              hash: d6c9a485e0da5f6aa600597b6d076a8dce411df7
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.9
+                          date: 2020-02-14T15:27:02.200Z
+                        - commits:
+                            - subject: Add the missing `method` on the post method
+                              hash: 2f649c3157a50277f6e168a64abb1593ac9d7a4f
+                              body: |
+                                Fixes a regression of v5.6.7.
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                              author: Thodoris Greasidis
+                          version: pinejs-client-js-5.6.8
+                          date: 2020-02-14T14:59:02.633Z
+                        - commits:
+                            - subject: Deprecate request overrides
+                              hash: 84fa00ab60a98bbe56885ee5fabcccfc876a86d6
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                            - subject: Deprecate queries using a string url
+                              hash: 8cd9be6b0642ff5b1cba0596f827a74fd76bbff5
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                            - subject: Deprecate `query` in favor of `get`
+                              hash: ab77d10cad0a57914018b76c9755deddb3e078ef
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.7
+                          date: 2020-02-14T12:52:12.207Z
+                        - commits:
+                            - subject: Allow resource/$count in $filter
+                              hash: 7eac38f1ed6a3bcdf1e6c4be5dde50aca953359e
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.6
+                          date: 2020-02-14T12:35:22.507Z
+                        - commits:
+                            - subject: Remove `defaults` helper in favour of `??`
+                              hash: 806852bceb07a858572511609dc88ea0b748038e
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.5
+                          date: 2020-01-30T17:09:03.006Z
+                        - commits:
+                            - subject: Avoid allocations when destroying a poll
+                              hash: 8f397a83803ae43d19331f4c32952384ba9e7fe6
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.4
+                          date: 2020-01-30T16:25:12.292Z
+                        - commits:
+                            - subject: Improve `RawFilter` typing
+                              hash: 2006d4e7f0fecbb99357b82215da28978194db41
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.3
+                          date: 2020-01-30T12:59:22.535Z
+                        - commits:
+                            - subject: Update dependencies
+                              hash: e7314acbdd029ece267a4568bf15cb5dc333eec1
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.2
+                          date: 2020-01-29T21:12:32.246Z
+                        - commits:
+                            - subject: Switch most CODEOWNERS entries to a team
+                              hash: 3ef7e0db285ae54f96aee3f52319ac8d8c4d61e8
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.6.1
+                          date: 2020-01-22T16:38:22.045Z
+                        - commits:
+                            - subject: >-
+                                Add 'upsert' method supporting natural keys,
+                                requires Pinejs ^10.19.1
+                              hash: c8ebfceec3ecc1cc57ee6942db35730c6d993192
+                              body: >
+                                Detects unique constrain errors by 409
+                                statusCodes.
+
+                                Because of this, the upsert() method is only
+
+                                supported when Pinejs ^10.19.0 is used.
+                              footer:
+                                Resolves: '#77'
+                                resolves: '#77'
+                                Change-type: minor
+                                change-type: minor
+                                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                              author: Thodoris Greasidis
+                          version: pinejs-client-js-5.6.0
+                          date: 2019-07-12T20:46:17.091Z
+                        - commits:
+                            - subject: >-
+                                Remove unnecessary `string` type that is handled
+                                by the `Params` type
+                              hash: 0ab1242860aa8b3ed4162a5ee25081c640297676
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.5.4
+                          date: 2019-06-18T14:46:38.983Z
+                        - commits:
+                            - subject: >-
+                                Use an .npmrc to prevent creating a package-lock
+                                on each install
+                              hash: 993c4ae09c3ba50e1d48e4156e86a7c890e54749
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                              author: Thodoris Greasidis
+                          version: pinejs-client-js-5.5.3
+                          date: 2019-06-18T10:24:38.995Z
+                        - commits:
+                            - subject: >-
+                                Add some type casting so that it compiles on
+                                TypeScript 3.5
+                              hash: 695c053ceab9b146a8b755f9b041eb03e70b5914
+                              body: ''
+                              footer:
+                                Resolves: '#79'
+                                resolves: '#79'
+                                Change-type: patch
+                                change-type: patch
+                                Signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                                signed-off-by: Thodoris Greasidis <thodoris@balena.io>
+                              author: Thodoris Greasidis
+                          version: pinejs-client-js-5.5.2
+                          date: 2019-06-10T10:48:07.772Z
+                        - commits:
+                            - subject: >-
+                                Fix downstream declaration creation errors due
+                                to `Dictionary`
+                              hash: a8a39edff8cc7e1d05fb9b67037718970e94296c
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.5.1
+                          date: 2019-05-15T13:32:13.920Z
+                        - commits:
+                            - subject: >-
+                                Add a prepare method that prepares a query into
+                                a function
+                              hash: eb7eccca7d90c453710575ebdf3adb9ef56835a7
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.5.0
+                          date: 2019-05-15T11:51:46.450Z
+                        - commits:
+                            - subject: Add CODEOWNERS
+                              hash: e01174008f812e0c24ec1036aa1f9ff0bc716e85
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                                Signed-off-by: Gergely Imreh <gergely@balena.io>
+                                signed-off-by: Gergely Imreh <gergely@balena.io>
+                              author: Gergely Imreh
+                          version: pinejs-client-js-5.4.1
+                          date: 2019-05-10T10:14:00.677Z
+                        - commits:
+                            - subject: >-
+                                Add support for parameter aliases in resource
+                                ids
+                              hash: a4e6a640a3ced56bcd3ef7bf22770338e089a90d
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.4.0
+                          date: 2019-05-10T09:57:46.863Z
+                        - commits:
+                            - subject: Deduplicate transformation of GET results
+                              hash: dd856e24072f652684adf63af97408ee0ba7389c
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.3.10
+                          date: 2019-05-10T09:44:09.422Z
+                        - commits:
+                            - subject: >-
+                                Simplify how we expose types, which means
+                                `subscribe` is now exposed
+                              hash: f81e0cc59e75e0f9ffc71d9f122b9cfab9c05165
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.3.9
+                          date: 2019-05-10T08:57:16.276Z
+                        - commits:
+                            - subject: Add automatic formatting via prettier
+                              hash: a345d32f295acfa8ed4e5b815c24e1e7fdb335f2
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.3.8
+                          date: 2019-05-09T17:38:43.260Z
+                        - commits:
+                            - subject: 'Remove node 4 build, add node 12'
+                              hash: 8d549277d80746feadbdd8a6bba37eb076270440
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Add .versionbot/CHANGELOG.yml for downstream
+                                changelogs
+                              hash: 067bedf65e86a902b7334ed6e5f117d6ac41afde
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-5.3.7
+                          date: 2019-05-08T15:41:50.201Z
+                  version: pinejs-client-request-6.1.0
+                  date: 2020-03-19T12:19:09.392Z
+                - commits:
+                    - subject: Add CODEOWNERS
+                      hash: efc40c853d4392b866eb3784839871fad086fccd
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-request-6.0.3
+                  date: 2020-01-22T16:35:52.630Z
+                - commits:
+                    - subject: Add node 12 tests
+                      hash: 624b1efadfbb920d718bd2f54f99e8eef0e5c645
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                    - subject: Add upstream for pinejs-client-core
+                      hash: 33dc1299939483534686f52e903bb27f8a08b543
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-request-6.0.2
+                  date: 2019-05-08T15:57:24.879Z
+                - commits:
+                    - subject: >-
+                        Update target to es2016, part of/fixing the typed-error
+                        bump
+                      hash: 6025bf882f6f2675b321571f327f59a4908da539
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: pinejs-client-request-6.0.1
+                  date: 2019-04-23T20:43:52.266Z
+                - commits:
+                    - subject: 'typed-error: Update to v3.1.0'
+                      hash: 82e50ac9992b3a157360eef5163f43a90fa9feea
+                      body: |
+                        Update typed error from 2.0.0 to 3.1.0
+                      footer:
+                        Change-type: major
+                        change-type: major
+                        Signed-off-by: Will Boyce <will@balena.io>
+                        signed-off-by: Will Boyce <will@balena.io>
+                      author: Will Boyce
+                  version: pinejs-client-request-6.0.0
+                  date: 2019-04-17T15:08:00.745Z
+          version: balena-supervisor-11.8.3
+          date: 2020-06-18T12:26:43.171Z
+        - commits:
+            - subject: Make service-manager module a singleton
+              hash: 0e8d92e08af5f18fce9aa9e3e1e7057c98dee1c3
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Make volume-manager module a singleton
+              hash: adaad786af161a7a3cdf61f2c63926e702fef790
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Make network-manager module a singleton
+              hash: 8fc97b9de89392bb9e6fd562e12d261ced3990cb
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Add supervisor upgrade document
+              hash: 989ec83a27621cab6c53dd026c2407dfe1b1b179
+              body: ''
+              footer:
+                Connects-to: 'https://github.com/balena-io/balena-io/issues/2157'
+                connects-to: 'https://github.com/balena-io/balena-io/issues/2157'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Hugh Brown <hugh@balena.io>
+                signed-off-by: Hugh Brown <hugh@balena.io>
+              author: Hugh Brown
+          version: balena-supervisor-11.8.2
+          date: 2020-06-17T14:59:07.731Z
+        - commits:
+            - subject: Update webpack dependencies
+              hash: e1fb8683f4687aa0844bf73780916db34e3ebd3d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.8.1
+          date: 2020-06-16T12:08:37.495Z
+        - commits:
+            - subject: Use API v6
+              hash: 1dccbaecd8a6cd8bf551e3b56131066e9de9ed35
+              body: ''
+              footer:
+                See: 'https://github.com/balena-io/open-balena/issues/80'
+                see: 'https://github.com/balena-io/open-balena/issues/80'
+                Change-type: minor
+                change-type: minor
+              author: Akis Kesoglou
+          version: balena-supervisor-11.8.0
+          date: 2020-06-16T09:16:47.483Z
+        - commits:
+            - subject: Db-format module code fixups
+              hash: 695d91d4948aa5b89c602135ccc8fba8321fd8bd
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.7.3
+          date: 2020-06-15T09:55:57.277Z
+        - commits:
+            - subject: Add label to expose gpu to container
+              hash: ae646a07ec6a6c96f7cb91f1d37898a94dbab47a
+              body: >
+                In the absence of an upstream implementation of the
+                DeviceRequest API introduced
+
+                as part of Docker API v1.40 we roll our own using a feature
+                label.
+
+
+                As per my comment in the code, we fall back to the default
+                behavior of
+
+                docker cli's `--gpu` and request single device with the `gpu`
+                capabilty.
+
+                The only implementation at the moment is the NVIDIA driver;
+                here:
+
+                https://github.com/balena-os/balena-engine/blob/master/daemon/nvidia_linux.go
+
+
+                Background on the composefile implementation:
+
+                https://github.com/compose-spec/compose-spec/issues/74
+
+                https://github.com/docker/compose/issues/6691
+              footer:
+                Change-type: patch
+                change-type: patch
+                Connects-to: 'https://github.com/balena-os/balena-jetson/pull/75'
+                connects-to: 'https://github.com/balena-os/balena-jetson/pull/75'
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+          version: balena-supervisor-11.7.2
+          date: 2020-06-11T12:11:35.793Z
+        - commits:
+            - subject: Move database app processing out to its own module
+              hash: b31d5007fba001fcb71f5103447823f9a27bbfaa
+              body: >
+                This is part of the work to make the application-manager module
+                much
+
+                less monolithic, in preperation for system apps and more
+                generally
+
+                multi-app.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Make target-state-cache a singleton
+              hash: c0e170c61f05a8fc01dc167276ccb041d6d2d846
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.7.1
+          date: 2020-06-11T10:57:36.941Z
+        - commits:
+            - subject: Respect an initialDeviceName field in the config.json
+              hash: b5918f0d84cea641c7ab9aae58aff99454d10253
+              body: ''
+              footer:
+                Closes: '#909'
+                closes: '#909'
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.7.0
+          date: 2020-06-10T12:30:37.459Z
+        - commits:
+            - subject: Make images module a singleton
+              hash: 2b3dc2fbcef63ae2024fe5fe41f30b0d56357943
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.6.6
+          date: 2020-06-10T10:32:38.006Z
+        - commits:
+            - subject: 'fix: API auth missing on state GET/PATCH'
+              hash: b89425c6079b74c709ef9872c6fc53726ffda6d3
+              body: >
+                When performing a state GET/PATCH the authentication header was
+                being
+
+                missed off.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss
+                signed-off-by: Rich Bayliss
+              author: Rich Bayliss
+          version: balena-supervisor-11.6.5
+          date: 2020-06-09T14:06:37.184Z
+        - commits:
+            - subject: Refactored @ts-ignore to @ts-expect-error in test file
+              hash: ffe814e4479a962979e759dfec8618dbfb53008b
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.6.4
+          date: 2020-06-08T17:28:46.843Z
+        - commits:
+            - subject: Make logger module a singleton
+              hash: 651e48b1bd8e9a9d356b63f8cb05aaeba622840d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+            - subject: Fix exponential backoff for state polling
+              hash: e37b52dd689692eeca818907cf0d7e5876bec0b3
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.6.3
+          date: 2020-06-08T16:21:57.822Z
+        - commits:
+            - subject: Make the event-tracker module a singleton
+              hash: 389e14ec6b63cf4a997f0d25f8bbe6a6a435dd5c
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.6.2
+          date: 2020-06-08T09:15:03.107Z
+        - commits:
+            - subject: Convert all test files to TS and add .spec to all filenames
+              hash: 9fc2e86322249cfbc17db446bcd204f617b0a63e
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+            - subject: 'fix: Pin alpine python version'
+              hash: 846545648bdc98392da7972558390f1ea26bfd24
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+          version: balena-supervisor-11.6.1
+          date: 2020-06-05T22:42:07.292Z
+        - commits:
+            - subject: >-
+                Isolate target state fetching to its own module which emits on
+                update
+              hash: 17a5d8dd4918916c954990cfb9666754434ef527
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+          version: balena-supervisor-11.6.0
+          date: 2020-06-03T21:39:57.630Z
+        - commits:
+            - subject: Make docker module a singleton
+              hash: aad20e2c2f9bf62dfb2e3092d898b100f911ecc5
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.5.3
+          date: 2020-06-02T16:59:27.552Z
+        - commits:
+            - subject: Make the config module a singleton
+              hash: ff4a31a0e6269b823a04eeda2f433665617f583c
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Co-authored-by: Pagan Gazzard <page@balena.io>
+                co-authored-by: Pagan Gazzard <page@balena.io>
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.5.2
+          date: 2020-06-02T13:31:37.056Z
+        - commits:
+            - subject: Remove unused dependencies and dedupe
+              hash: 6290993a79aa2231ac19bbe80a72af72cd8ae72e
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.5.1
+          date: 2020-06-01T08:52:49.304Z
+        - commits:
+            - subject: Refactor device-state healthchecks to log reason for failure
+              hash: 5550a3a330b6a27addd940c185dc7d489cd89464
+              body: ''
+              footer:
+                Closes: '#1292'
+                closes: '#1292'
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.5.0
+          date: 2020-05-29T20:26:07.486Z
+        - commits:
+            - subject: Update dependencies
+              hash: 1decd87c21de6c6b2baf7cb9a93141c8d097b874
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.4.17
+          date: 2020-05-29T18:26:52.490Z
+        - commits:
+            - subject: Make the db module a singleton
+              hash: 1d7381327e3114c0d005316846429d26b01a3e4c
+              body: >
+                We were treating the database class as a singleton, but still
+                having to pass
+
+                around the db instance. Now we can simply require the db module
+                and have
+
+                access to the database handle.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.16
+          date: 2020-05-29T14:03:57.770Z
+        - commits:
+            - subject: Check for ApiError before using it as such
+              hash: 972b896c95daf1305468137aefe1e12ead0d59ee
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.15
+          date: 2020-05-26T13:47:47.339Z
+        - commits:
+            - subject: >-
+                check for 409 status code, rather than string matching uuid
+                conflicts
+              hash: eaaa9c257e750295ab6d464a7e1d2578297df84f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.14
+          date: 2020-05-21T19:01:36.060Z
+        - commits:
+            - subject: Use safeStateClone to avoid call-stack exceeding errors
+              hash: 87278c0d8c56a9c05511db83499f7476efca0edd
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+          version: balena-supervisor-11.4.13
+          date: 2020-05-21T15:49:55.857Z
+        - commits:
+            - subject: Improved handling of invalid appId in V2 state endpoint
+              hash: db7c27037cb3cc1e5f3ef8fbc676e0ee4a2ac0a1
+              body: ''
+              footer:
+                Closes: '#1294'
+                closes: '#1294'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+          version: balena-supervisor-11.4.12
+          date: 2020-05-19T14:58:36.939Z
+        - commits:
+            - subject: >-
+                Switch to balenaApi for the state patch as patching cannot be
+                cached
+              hash: fb90042c3955e9a1a177076a711a12e226e0ab49
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+          version: balena-supervisor-11.4.11
+          date: 2020-05-18T18:20:33.615Z
+  version: 2.52.4
+  date: 2020-07-09T16:05:22.280Z
+- commits:
     - subject: 'systemd: Simplify zram swap unit dependencies to avoid ordering cycle'
       hash: 22a529014b649df8a9b4bf94fa9922d6d692e238
       body: |
