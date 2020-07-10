@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.52.5
+## (2020-07-10)
+
+* netfilter: Support comments in iptables rules [Rich Bayliss]
+
 # v2.52.4
 ## (2020-07-09)
 

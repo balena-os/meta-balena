@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'netfilter: Support comments in iptables rules'
+      hash: 127ff2cdd29f5c988091c7874a23004519e217ac
+      body: |
+        Force the module xt_comment to be apart of all balenaOS releases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Rich Bayliss <rich@balena.io>
+        signed-off-by: Rich Bayliss <rich@balena.io>
+      author: Rich Bayliss
+      nested: []
+  version: 2.52.5
+  date: 2020-07-10T16:15:36.609Z
+- commits:
     - subject: Update balena-supervisor from v11.4.10 to v11.9.3
       hash: 16fc81358477615b26b6ee6917dc2b5a36081a57
       body: |
