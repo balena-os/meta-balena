@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.52.5
+## (2020-07-10)
+
+* Allow comments in iptables ruleset [Alex Gonzalez]
+
 # v2.52.4
 ## (2020-07-09)
 

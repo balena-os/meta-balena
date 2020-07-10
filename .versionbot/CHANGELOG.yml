@@ -1,4 +1,25 @@
 - commits:
+    - subject: Allow comments in iptables ruleset
+      hash: a93ac5695c77cb36e6ec3ee1355b7b9da7b81d39
+      body: >
+        The latest v11.9.3 supervisor includes firewall configuration
+        functionality
+
+        that requires this module to be enabled on all platforms.
+      footer:
+        Connects-to: balena-io/balena-supervisor#1393
+        connects-to: balena-io/balena-supervisor#1393
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Allow comments in iptables ruleset
+        changelog-entry: Allow comments in iptables ruleset
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.52.5
+  date: 2020-07-10T16:11:02.635Z
+- commits:
     - subject: Update balena-supervisor from v11.4.10 to v11.9.3
       hash: 16fc81358477615b26b6ee6917dc2b5a36081a57
       body: |
