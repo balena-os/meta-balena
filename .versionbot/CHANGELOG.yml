@@ -1,4 +1,35 @@
 - commits:
+    - subject: Update balena-supervisor from v11.9.3 to v11.9.4
+      hash: ac5bedaf68a8898d9102c1106d2cf374bbd00628
+      body: |
+        Update balena-supervisor from v11.9.3 to v11.9.4
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.9.3 to v11.9.4
+        changelog-entry: Update balena-supervisor from v11.9.3 to v11.9.4
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Rich Bayliss <rich@balena.io>
+        signed-off-by: Rich Bayliss <rich@balena.io>
+      author: Rich Bayliss
+      nested:
+        - commits:
+            - subject: 'bug: Fix unhandled promise rejection'
+              hash: 898c7e71dae28aa046bdd3e075ecf0d6aa364142
+              body: |
+                When invoking iptables-restore it can fail. This wasn't handled
+                and this makes sure that it fails gracefully.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.9.4
+          date: 2020-07-13T12:07:37.513Z
+  version: 2.52.7
+  date: 2020-07-13T16:25:46.435Z
+- commits:
     - subject: Update to use api v6 and fix a quoting bug
       hash: 1e5bd5d984945a3e97d6b4bf64c5ae6a0e81b0b3
       body: ''

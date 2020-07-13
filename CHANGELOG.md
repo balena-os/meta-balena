@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.52.7
+## (2020-07-13)
+
+
+<details>
+<summary> Update balena-supervisor from v11.9.3 to v11.9.4 [Rich Bayliss] </summary>
+
+> ## balena-supervisor-11.9.4
+> ### (2020-07-13)
+> 
+> * bug: Fix unhandled promise rejection [Rich Bayliss]
+> 
+</details>
+
 # v2.52.6
 ## (2020-07-13)
 
