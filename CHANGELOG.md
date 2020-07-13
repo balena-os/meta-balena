@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.52.6
+## (2020-07-13)
+
+* Update to use api v6 and fix a quoting bug [Pagan Gazzard]
+
 # v2.52.5
 ## (2020-07-10)
 

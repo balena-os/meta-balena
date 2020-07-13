@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update to use api v6 and fix a quoting bug
+      hash: 1e5bd5d984945a3e97d6b4bf64c5ae6a0e81b0b3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 2.52.6
+  date: 2020-07-13T13:35:04.787Z
+- commits:
     - subject: Allow comments in iptables ruleset
       hash: a93ac5695c77cb36e6ec3ee1355b7b9da7b81d39
       body: >
