@@ -33,3 +33,6 @@ lxc.net.0.type = none
 # Make the /dev/binder node available to the container
 lxc.mount.entry = /dev/binder /var/lib/lxc/android/rootfs/dev/binder none bind,create=file  0 0
 lxc.cgroup.devices.allow = c 245:1 rw
+
+lxc.mount.entry = /dev/disk/by-state/rpmb /dev/block/mmcblk0rpmb none,bind,create=file 0 0
+lxc.cgroup.devices.allow = c 247:0 rw
