@@ -1,5 +1,8 @@
 type: 'yocto layer'
 reviewers: 1
+esr:
+  version: 2.50
+  bsp-branch-pattern: 2020.07.x
 upstream:
   - repo: 'balena-supervisor'
     url: 'https://github.com/balena-io/balena-supervisor'
