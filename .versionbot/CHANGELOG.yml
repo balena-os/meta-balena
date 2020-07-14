@@ -1,4 +1,152 @@
 - commits:
+    - subject: 'resin-supervisor: Create required directories before launch'
+      hash: a93bd242d37246da83c1fa4368174d89b5c045f4
+      body: |
+        On commit a4ce26caadabcb1e87d944d78218cc32c579914e the supervisor moved
+        from using --volume to using --mount to avoid the implicit creation of
+        directories instead of files.
+
+        However, in the case where the mount referred to a directory, these have
+        to exist in the rootfs beforehand as --mount will not create them.
+
+        This commit checks for the existence of the /resin-data/resin-supervisor
+        directory and creates it if required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Rebrand custom resin logos
+      hash: dc215462dd5adcb171496be9aef237351d749d71
+      body: |
+        When performing hostOS updates, the resin-logo.png might have
+        been customized by the customer.
+        This commits renames it to the newly branded balena-logo.png
+
+        If the resin-logo.png was unmodified, it will forcefully replace to
+        balena-logo.png to force rebranding of older resin branded release.
+
+        Fixes #1801
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Rebrand custom resin logos
+        changelog-entry: Rebrand custom resin logos
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'plymouth: Remove patch that sets plymouth resin theme'
+      hash: 8ccc9fc6862fdcaf9197bd443549411a3965279d
+      body: |
+        This is now configured as part of the plymouth-theme package.
+      footer:
+        Changelog-type: patch
+        changelog-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'docker-disk: Update dind container to v19.03.10'
+      hash: 6b325f57ff50be11e0c5f1f2420b911211f0ef06
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'docker-disk: Update to still supported dind container'
+      hash: e325ab34b9d7f14ad5a0d85b36b02ee1e2b7fdf8
+      body: >
+        The `docker` Docker Hub repository lists what versions of the image
+
+        are supported and 18.6 is not among them at all. Use the current stable
+
+        line of 18.09 instead, to stay on supported versions. See more info at:
+
+        https://hub.docker.com/_/docker
+
+
+        For more reproducability, we are also including the patch level version
+
+        of the container, which will give us more responsibility to update more
+
+        frequently, but fewer surprises.
+
+
+        Also explicitly set `DOCKER_HOST` for the daemon being started,
+        otherwise
+
+        the base image's setting might silently take over, and modify this.
+
+
+        Replace deprecated `-g` (graph driver) with `--data-root` as well.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Gergely Imreh <gergely@balena.io>
+        signed-off-by: Gergely Imreh <gergely@balena.io>
+      author: Gergely Imreh
+      nested: []
+    - subject: Use udev for setting up wlan power management
+      hash: 7826c8ba9a9b6a97021fbcd352f627518afa8d73
+      body: |
+        resin-init has a hardcoded command to disable power management
+        on wlan0. This commit moves the logic to udev rule as there is
+        no guarantee wlan0 is the only or default wlan adapter in the system.
+
+        There seems to be no better way to identify a wlan device in udev
+        than KERNEL=="wl*" which should match both net.ifnames=0 (wlanX)
+        and net.ifnames=1 (wlpX).
+
+        Fixes #1422
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Use udev for setting up wlan power management
+        changelog-entry: Use udev for setting up wlan power management
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: >-
+        Use --mount instead of --volume for bind mounts to the supervisor
+        container.
+      hash: 0fd442943d6b6c802df2f6e35d334ecde0f748e9
+      body: >
+        This makes sure the source path refers to an existing file/directory on
+
+        the host.
+
+
+        https://docs.docker.com/engine/reference/commandline/service_create/#differences-between---mount-and---volume
+
+
+        This avoids situations where --volume implicitely creates a directory
+        (see #1748)
+
+
+        Fixes #1754
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: >-
+          Use --mount instead of --volume for bind mounts to the supervisor
+          container.
+        changelog-entry: >-
+          Use --mount instead of --volume for bind mounts to the supervisor
+          container.
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.53.0
+  date: 2020-07-14T09:38:34.861Z
+- commits:
     - subject: Update balena-supervisor from v11.9.3 to v11.9.4
       hash: ac5bedaf68a8898d9102c1106d2cf374bbd00628
       body: |

@@ -1,6 +1,17 @@
 Change log
 -----------
 
+# v2.53.0
+## (2020-07-14)
+
+* resin-supervisor: Create required directories before launch [Alex Gonzalez]
+* Rebrand custom resin logos [Alex Gonzalez]
+* plymouth: Remove patch that sets plymouth resin theme [Alex Gonzalez]
+* docker-disk: Update dind container to v19.03.10 [Michal Toman]
+* docker-disk: Update to still supported dind container [Gergely Imreh]
+* Use udev for setting up wlan power management [Michal Toman]
+* Use --mount instead of --volume for bind mounts to the supervisor container. [Robert Günzler]
+
 # v2.52.7
 ## (2020-07-13)
 
