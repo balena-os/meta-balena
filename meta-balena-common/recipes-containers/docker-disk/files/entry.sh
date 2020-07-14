@@ -7,6 +7,7 @@ DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
 DATA_VOLUME=/resin-data
 BUILD=/build
 PARTITION_SIZE=${PARTITION_SIZE:-1024}
+DOCKER_HOST=unix:///var/run/docker.sock
 
 finish() {
 	# Make all files owned by the build system
@@ -24,7 +25,7 @@ mkdir -p $DATA_VOLUME/resin-data
 
 # Start docker
 echo "Starting docker daemon with $BALENA_STORAGE storage driver."
-dockerd -g $DATA_VOLUME/docker -s "$BALENA_STORAGE" -b none --experimental &
+dockerd -H "$DOCKER_HOST" --data-root="$DATA_VOLUME/docker" -s "$BALENA_STORAGE" -b none --experimental &
 echo "Waiting for docker to become ready.."
 STARTTIME="$(date +%s)"
 ENDTIME="$STARTTIME"
