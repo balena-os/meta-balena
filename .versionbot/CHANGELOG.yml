@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove unnecessary config.json keys
+      hash: b3222e619bbeebc0a2bd9e7419a9d8ae12b34dce
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Pagan Gazzard
+      nested: []
+  version: 2.53.1
+  date: 2020-07-14T14:53:06.752Z
+- commits:
     - subject: 'resin-supervisor: Create required directories before launch'
       hash: a93bd242d37246da83c1fa4368174d89b5c045f4
       body: |

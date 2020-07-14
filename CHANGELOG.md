@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.1
+## (2020-07-14)
+
+* Remove unnecessary config.json keys [Pagan Gazzard]
+
 # v2.53.0
 ## (2020-07-14)
 
