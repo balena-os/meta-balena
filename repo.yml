@@ -1,5 +1,11 @@
 type: 'yocto layer'
 reviewers: 1
+
+backports:
+  next: 2.50.x
+  current: 2.48.x
+  sunset: 2.44.x
+
 upstream:
   - repo: 'balena-supervisor'
     url: 'https://github.com/balena-io/balena-supervisor'
