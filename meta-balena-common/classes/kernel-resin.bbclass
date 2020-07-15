@@ -451,6 +451,12 @@ RESIN_CONFIGS[zram] = " \
     CONFIG_CRYPTO_LZ4=y \
     "
 
+# Kernel versions between 4.0 and 4.9
+# need this for lz4 support
+RESIN_CONFIGS_DEPS[zram] = " \
+    CONFIG_ZRAM_LZ4_COMPRESS=y \
+"
+
 # USB Modem (CDC ACM) support
 RESIN_CONFIGS[cdc-acm] = " \
     CONFIG_USB_ACM=m \
