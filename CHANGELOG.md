@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.2
+## (2020-07-16)
+
+* Add LZ4 support config for older kernels [Alexandru Costache]
+
 # v2.53.1
 ## (2020-07-14)
 

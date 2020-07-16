@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add LZ4 support config for older kernels
+      hash: 403fc033b75b2672bf9c8ef9a27879096e7b88b7
+      body: |
+        Kernel versions between 4.0 and 4.9 use
+        CONFIG_ZRAM_LZ4_COMPRESS, whereas newer ones
+        use CONFIG_CRYPTO_LZ4.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.53.2
+  date: 2020-07-16T08:17:26.378Z
+- commits:
     - subject: Remove unnecessary config.json keys
       hash: b3222e619bbeebc0a2bd9e7419a9d8ae12b34dce
       body: ''
