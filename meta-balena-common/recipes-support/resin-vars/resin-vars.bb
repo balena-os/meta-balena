@@ -43,6 +43,7 @@ SYSTEMD_SERVICE_${PN} = " \
 
 do_install() {
     install -d ${D}${sbindir}
+    sed -i "s/%%ARCH%%/${TUNE_PKGARCH}/g" ${WORKDIR}/resin-vars
     install -m 0755 ${WORKDIR}/resin-vars ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
