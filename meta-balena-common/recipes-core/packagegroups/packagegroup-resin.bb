@@ -18,6 +18,7 @@ RDEPENDS_${PN} += " \
     mobynit \
     docker-disk \
     hostapp-update \
+    hostapp-extensions-update \
     hostapp-update-hooks \
     resin-filesystem-expand \
     resin-persistent-logs \
