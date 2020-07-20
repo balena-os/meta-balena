@@ -18,6 +18,7 @@ RDEPENDS_${PN} += " \
     docker-disk \
     hostapp-update \
     hostapp-mount \
+    hostapp-mounts-update \
     hostapp-update-hooks \
     resin-filesystem-expand \
     resin-persistent-logs \
