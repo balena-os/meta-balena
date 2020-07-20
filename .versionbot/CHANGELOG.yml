@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'provisioning: provide base supervisor_version during provision'
+      hash: b791055f3f6ffd6cc5796569a7321c5060129eea
+      body: |
+        In order to get closer to formally requiring a target supervisor release
+        in the model, we should expand our provisioning process to provide the
+        initial supervisor_version metadata. This connects back to tri-app.
+      footer:
+        Depends-on: 'https://github.com/balena-io/open-balena-api/pull/394'
+        depends-on: 'https://github.com/balena-io/open-balena-api/pull/394'
+        HQ: 'https://github.com/balena-io/balena-io/pull/2177'
+        hq: 'https://github.com/balena-io/balena-io/pull/2177'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.53.3
+  date: 2020-07-16T13:48:11.858Z
+- commits:
     - subject: Add LZ4 support config for older kernels
       hash: 403fc033b75b2672bf9c8ef9a27879096e7b88b7
       body: |

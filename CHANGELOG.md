@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.3
+## (2020-07-16)
+
+* provisioning: provide base supervisor_version during provision [Matthew McGinn]
+
 # v2.53.2
 ## (2020-07-16)
 
