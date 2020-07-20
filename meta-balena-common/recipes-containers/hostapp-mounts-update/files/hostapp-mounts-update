@@ -1,0 +1,89 @@
+#!/bin/sh
+
+set -e
+
+while getopts 'rt:' flag; do
+	case "${flag}" in
+	r) reboot=1 ;;
+	t) target_hostapp_images="${OPTARG}" ;;
+	*) error "Unexpected option ${flag}" ;;
+	esac
+done
+
+shift $#
+
+[ -z "${target_hostapp_images}" ] && echo "No target hostapp images to update to" && exit 1
+
+# Don't source before parsing args as resin-vars parses args too
+# shellcheck disable=SC1091
+. /usr/sbin/resin-vars
+
+# config.json keeps the current hostapps names
+# /etc/hostapp-images.conf are the hostapps names corresponding to this BalenaOS release
+# After provisioning, there is no HOSAPP_IMAGE entry in config.json so use defaults
+if [ -z "${HOSTAPP_IMAGES}" ]; then
+	HOSTAPP_IMAGES=$(cat /etc/hostapp-images.conf)
+fi
+
+error_handler() {
+	# shellcheck disable=SC2181
+	[ $? -eq 0 ] && exit 0
+
+	systemctl start hostapp-mount
+	exit 1
+}
+
+trap error_handler EXIT
+
+# Detect containers engine
+if which docker > /dev/null 2>&1; then
+    DOCKER=docker
+elif which rce > /dev/null 2>&1; then
+    DOCKER=rce
+elif which balena > /dev/null 2>&1; then
+    DOCKER=balena
+else
+    echo "ERROR: No container engine detected."
+    error_handler "no container engine detected"
+fi
+
+echo "Removing hostapp mounts overlays"
+systemctl stop hostapp-mount
+
+# Remove previous hostapps
+for image in $(${DOCKER} images --all --quiet --filter=reference=*/*hostapp); do
+	cid=$(${DOCKER} ps --all --quiet --no-trunc --filter ancestor="${image}" | tr '\n' ' ')
+	${DOCKER} rm --force --volumes ${cid} > /dev/null 2&>1 || true
+	${DOCKER} rmi --force "$image" > /dev/null 2&>1 || true
+done
+
+# Load new hostapps
+cp "$CONFIG_PATH" "$CONFIG_PATH.old"
+config_json=$(cat "$CONFIG_PATH")
+echo "$config_json" | jq -S '. |= .+ {"hostappImages"}' > "$CONFIG_PATH"
+current_hostapp_images=""
+echo "Updating hostapp images"
+for hostapp in ${target_hostapp_images}; do
+	if ! ${DOCKER} pull "${hostapp}"; then
+		echo "${hostapp} failed to update"
+		# TODO: Remove all bare containers
+		mv "$CONFIG_PATH.old" "$CONFIG_PATH"
+		break
+	else
+		if [ -z "${current_hostapp_images}" ]; then
+			current_hostapp_images="${hostapp}"
+		else
+			current_hostapp_images="${current_hostapp_images} ${hostapp}"
+		fi
+	fi
+	CONTAINER_ID=$(${DOCKER} create --runtime="bare" "${hostapp}" /bin/fail)
+	echo "$config_json" | jq -S ". |= .+ {\"hostappImages\" : \"${current_hostapp_images}\"}" > "$CONFIG_PATH"
+done
+rm -f "$CONFIG_PATH.old"
+
+echo "Overlaying hostapp mounts"
+systemctl start hostapp-mount
+
+if [ "$reboot" = 1 ]; then
+	reboot
+fi
