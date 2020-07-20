@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.4
+## (2020-07-20)
+
+* Force choosing busybox-hwclock over util-linux-hwclock [Alex Gonzalez]
+
 # v2.53.3
 ## (2020-07-16)
 

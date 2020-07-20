@@ -1,4 +1,31 @@
 - commits:
+    - subject: Force choosing busybox-hwclock over util-linux-hwclock
+      hash: 86dd4c761038ab0214a1fca8dd2839b4dbddfa39
+      body: >
+        Otherwise, as util-linux has a higher default alternative priority, the
+
+        version in util-linux is chosen. It would seem they are exchangeable,
+        but
+
+        the busybox version reportedly works even if the RTC interrupt line is
+        not
+
+        connected.
+
+
+        Fixes #1936
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Force choosing busybox-hwclock over util-linux-hwclock
+        changelog-entry: Force choosing busybox-hwclock over util-linux-hwclock
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.53.4
+  date: 2020-07-20T13:57:23.084Z
+- commits:
     - subject: 'provisioning: provide base supervisor_version during provision'
       hash: b791055f3f6ffd6cc5796569a7321c5060129eea
       body: |
