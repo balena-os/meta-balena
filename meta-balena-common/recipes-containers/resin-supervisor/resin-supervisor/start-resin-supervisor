@@ -72,6 +72,9 @@ runSupervisor() {
     if [ ! -d "/resin-data/resin-supervisor" ]; then
 	    mkdir -p "/resin-data/resin-supervisor"
     fi
+    if [ ! -d "/var/log/supervisor-log" ]; then
+	    mkdir -p "/var/log/supervisor-log"
+    fi
     balena rm --force resin_supervisor || true
     balena run --privileged --name resin_supervisor \
         --restart=always \
