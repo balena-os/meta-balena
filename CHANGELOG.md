@@ -1,6 +1,23 @@
 Change log
 -----------
 
+# v2.50.5
+## (2020-07-17)
+
+* Allow comments in iptables ruleset [Alex Gonzalez]
+* initrdscripts: rootfs: Fix comparison to account for empty variable [Alex Gonzalez]
+* Revert allowing local resin-supervisor image updates [Alex Gonzalez]
+
+<details>
+<summary> Update balena-supervisor from v11.9.3 to v11.9.4 [Rich Bayliss] </summary>
+
+> ## balena-supervisor-11.9.4
+> ### (2020-07-13)
+> 
+> * bug: Fix unhandled promise rejection [Rich Bayliss]
+> 
+</details>
+
 # v2.50.4
 ## (2020-06-02)
 

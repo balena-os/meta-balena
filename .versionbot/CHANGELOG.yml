@@ -1,4 +1,90 @@
 - commits:
+    - subject: Allow comments in iptables ruleset
+      hash: 562a4901b4a154cf36f52dfe6acf1d1a4a50e734
+      body: >
+        The latest v11.9.3 supervisor includes firewall configuration
+        functionality
+
+        that requires this module to be enabled on all platforms.
+      footer:
+        Connects-to: balena-io/balena-supervisor#1393
+        connects-to: balena-io/balena-supervisor#1393
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Allow comments in iptables ruleset
+        changelog-entry: Allow comments in iptables ruleset
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'initrdscripts: rootfs: Fix comparison to account for empty variable'
+      hash: fb0abcbacab6602079471aa3e86088595f2fd5b4
+      body: |
+        Enclosing bootparam_root in between quotes makes the comparison work as
+        expected with an empty argument.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Revert allowing local resin-supervisor image updates
+      hash: 73c254e1ba5912583f5710778ba5bed48d30650a
+      body: >
+        The change this commit reverts allowed to update with a locally
+
+        available image - but it also has the side effect of restarting the
+
+        supervisor even if no update is required and that has unintentional
+
+        consequences as
+        https://github.com/balena-io/balena-supervisor/issues/1358
+
+
+        This commit reverts 646e4ae809375f4abf35c55cd580e2c62a8812e2
+      footer:
+        Changelog-entry: Revert allowing local resin-supervisor image updates
+        changelog-entry: Revert allowing local resin-supervisor image updates
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Update balena-supervisor from v11.9.3 to v11.9.4
+      hash: ae49d432959c59cf19683714fd750b70f4d8a372
+      body: |
+        Update balena-supervisor from v11.9.3 to v11.9.4
+
+        Cherry-picked from ac5bedaf68a8
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.9.3 to v11.9.4
+        changelog-entry: Update balena-supervisor from v11.9.3 to v11.9.4
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Rich Bayliss <rich@balena.io>
+        signed-off-by: Rich Bayliss <rich@balena.io>
+      author: Rich Bayliss
+      nested:
+        - commits:
+            - subject: 'bug: Fix unhandled promise rejection'
+              hash: 898c7e71dae28aa046bdd3e075ecf0d6aa364142
+              body: |
+                When invoking iptables-restore it can fail. This wasn't handled
+                and this makes sure that it fails gracefully.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.9.4
+          date: 2020-07-13T12:07:37.513Z
+  version: 2.50.5
+  date: 2020-07-17T12:40:17.092Z
+- commits:
     - subject: Use correct SRC_URI for bindmount
       hash: 38b1761db39bdd566396d0a2bbad1eda9273bf5d
       body: |
