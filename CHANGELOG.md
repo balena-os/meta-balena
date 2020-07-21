@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.50.6
+## (2020-07-21)
+
+
+<details>
+<summary> balena-supervisor: Update to v11.9.6 [Rich Bayliss] </summary>
+
+> ## balena-supervisor-11.9.6
+> ### (2020-07-20)
+> 
+> * Fix purge and restart invocations by providing instanced apps [Cameron Diver]
+> * Fix purge invocations of new singletons [Cameron Diver]
+> 
+> ## balena-supervisor-11.9.5
+> ### (2020-07-14)
+> 
+> * Update ESR version information [Cameron Diver]
+> 
+</details>
+
 # v2.50.5
 ## (2020-07-17)
 
