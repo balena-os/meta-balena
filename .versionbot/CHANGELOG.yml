@@ -1,4 +1,56 @@
 - commits:
+    - subject: 'balena-supervisor: Update to v11.9.6'
+      hash: 826a68296c1ed3c7ce44753f6b8f85b9f8f87ef3
+      body: |
+        Update balena-supervisor from 11.9.4 to 11.9.6
+      footer:
+        Change-type: patch
+        change-type: patch
+        Backport-to: next
+        backport-to: next
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Rich Bayliss
+      nested:
+        - commits:
+            - subject: Fix purge and restart invocations by providing instanced apps
+              hash: d14d8f31ccee62fa8cec88209cc3674a1b280e34
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+            - subject: Fix purge invocations of new singletons
+              hash: d2a7d3b9653a2afbd8eca009b75871cf54dbf3ac
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-11.9.6
+          date: 2020-07-20T17:25:37.311Z
+        - commits:
+            - subject: Update ESR version information
+              hash: c2b534a51b3863bf3c787db00c7299517224464f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-11.9.5
+          date: 2020-07-14T14:31:17.340Z
+  version: 2.53.5
+  date: 2020-07-21T11:58:00.018Z
+- commits:
     - subject: Add support for aufs5 on kernel 5.x variants
       hash: 6bdf4211aefb1f2c842f0797c50ae537fe2baae5
       body: |
