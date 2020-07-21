@@ -679,6 +679,17 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         ('4.19.17+', '07f8ca2b7140807f61e0a3fdc666e8748c7a34b7'),
         ('4.20', 'caa38687d80a9aad141882d2a9f1db8cd2612d2d'),
         ('4.20.4+', 'a55d8ab0451105ffc86078e4ea1bf2df2c0a4f12'),
+        ('5.0', '25f304c2c8c866b551ba7dc0c26b8fc1bbac95fa'),
+        ('5.1', 'd051ff358d1072d71103b076ca2d7d163a17a3f8'),
+        ('5.2', '45f6f8eb62d2208316ad09bf9cce7d88537270f4'),
+        ('5.2.5+', '40a8029ab232f2e03c7a9939800f2507308f5b38'),
+        ('5.3', '26428f642dce5b1c1455fa73ac77c3b51bafdd85'),
+        ('5.3.16', '28e5d4ec9104b44ae72da47218e60f9d3d5cc11b'),
+        ('5.4', 'caffea77e5b1141c844a8a5fce066bfba42736cd'),
+        ('5.4.3', '646ec02273c72547077e2e19e7a15c0e3a1f4951'),
+        ('5.5', '9ba4e2c61e93f74711fe858f49bd255f5d829fb4'),
+        ('5.6', '2ab5ec25767c8acf116ef7f8d3a896d0c357593e'),
+        ('5.7', 'ac34d21c4044d0232f5ff74e5543e3793071c671'),
     ])
 
 
@@ -720,6 +731,8 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         srcuri = "git://git.code.sf.net/p/aufs/aufs3-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
     elif kernelversion.split('.')[0] is '4':
         srcuri = "git://github.com/sfjro/aufs4-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
+    elif kernelversion.split('.')[0] is '5':
+        srcuri = "git://github.com/sfjro/aufs5-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
 
     d.setVar('SRCREV_aufs', aufsdict[aufsbranch])
     aufsgit = Git()
