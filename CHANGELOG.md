@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.6
+## (2020-07-21)
+
+* recipes-containers/balena: Use separate service for loading healthcheck image [Alexandru Costache]
+
 # v2.53.5
 ## (2020-07-21)
 

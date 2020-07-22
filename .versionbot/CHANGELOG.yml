@@ -1,4 +1,25 @@
 - commits:
+    - subject: >-
+        recipes-containers/balena: Use separate service for loading healthcheck
+        image
+      hash: 94a21624ccc1871d911b12654967b60a76a7e77a
+      body: |
+        In rocko, systemd kills any script started in background,
+        same thing happening to children that get re-parented.
+
+        One solution to this is to use a separate service file for
+        starting the healtcheck image load script, after balena.service
+        was started.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.53.6
+  date: 2020-07-21T13:44:11.006Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.9.6'
       hash: 826a68296c1ed3c7ce44753f6b8f85b9f8f87ef3
       body: |
