@@ -1,4 +1,39 @@
 - commits:
+    - subject: 'resin-supervisor: Create required directories before launch'
+      hash: 4ccfa02e1e551a50d7af5d31fa52170b7ee64524
+      body: |
+        On commit a4ce26caadabcb1e87d944d78218cc32c579914e the supervisor moved
+        from using --volume to using --mount to avoid the implicit creation of
+        directories instead of files.
+
+        However, in the case where the mount referred to a directory, these have
+        to exist in the rootfs beforehand as --mount will not create them.
+
+        This commit checks for the existence of the /resin-data/resin-supervisor
+        directory and creates it if required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-resin: Make balena-engine related configuration built-in'
+      hash: 703bd3dfe98f6d474862d5b7f914291ee6a7e1b0
+      body: |
+        This allows to run balena-engine withouth module loading support. This
+        is required to support mounting a modules directory from an external
+        hostapp.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.53.3
+  date: 2020-07-23T14:24:30.337Z
+- commits:
     - subject: Add LZ4 support config for older kernels
       hash: 403fc033b75b2672bf9c8ef9a27879096e7b88b7
       body: |

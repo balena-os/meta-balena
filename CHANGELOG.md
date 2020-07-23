@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.53.3
+## (2020-07-23)
+
+* resin-supervisor: Create required directories before launch [Alex Gonzalez]
+* kernel-resin: Make balena-engine related configuration built-in [Alex Gonzalez]
+
 # v2.53.2
 ## (2020-07-16)
 
