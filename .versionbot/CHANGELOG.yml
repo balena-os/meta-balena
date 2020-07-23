@@ -1,4 +1,26 @@
 - commits:
+    - subject: 'resin-supervisor: Create required directories before launch'
+      hash: 7be7738c655e37e48c1a98f9e1e0ff2795d66bf8
+      body: |
+        On commit a4ce26caadabcb1e87d944d78218cc32c579914e the supervisor moved
+        from using --volume to using --mount to avoid the implicit creation of
+        directories instead of files.
+
+        However, in the case where the mount referred to a directory, these have
+        to exist in the rootfs beforehand as --mount will not create them.
+
+        This commit checks for the existence of the /var/log/supervisor-log
+        directory and creates it if required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.53.8
+  date: 2020-07-23T04:33:45.808Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.9.8'
       hash: f919017e873062d30efa73d93a99ad0272675d24
       body: |

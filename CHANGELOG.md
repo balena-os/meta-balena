@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.8
+## (2020-07-23)
+
+* resin-supervisor: Create required directories before launch [Alex Gonzalez]
+
 # v2.53.7
 ## (2020-07-23)
 
