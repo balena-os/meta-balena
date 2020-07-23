@@ -63,7 +63,21 @@ fi
 overlay_dir() {
 	overlay_mnt="${1}"
 	dir=${2}
-	mkdir -p "${dir}"
+	if [ ! -d "${dir}" ]; then
+		# Ask to do this on next boot
+		echo "${dir}" >> /mnt/state/hostapp_dirs
+		echo "${dir} not present in filesystem, will be created and overlayed on next boot"
+		# TODO: For a proof-of-concept remount rw
+		# On production, initramfs/mobyinit should read /mnt/state/hostapp_dirs and create the directories
+		# before pivot rooting
+		variant=$(grep "VARIANT=" /etc/os-release | cut -d "=" -f2)
+		if [ "${variant}" = "Development" ];then
+			mount -o remount,rw /
+			mkdir -p "${dir}"
+			mount -o remount,ro /
+		fi
+		return 0
+	fi
 	mount -t overlay overlay -o  lowerdir="${dir}:${overlay_mnt}/${dir}" "${dir}"
 	if [ "$?" ]; then
 		echo "Overlayed ${dir}"
