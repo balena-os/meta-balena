@@ -1,4 +1,35 @@
 - commits:
+    - subject: 'balena-supervisor: Update to v11.9.9'
+      hash: 3de8814300236945255b2a09a39b4cd68fd9f1d0
+      body: |
+        Update balena-supervisor from 11.9.8 to 11.9.9
+      footer:
+        Change-type: patch
+        change-type: patch
+        Backport-to: next
+        backport-to: next
+        Signed-off-by: Rich Bayliss <rich@balena.io>
+        signed-off-by: Rich Bayliss <rich@balena.io>
+      author: Rich Bayliss
+      nested:
+        - commits:
+            - subject: 'common: Fix bug where aliases might be undefined'
+              hash: 60132134deffd770a40d1e6f18fdd87cb2f9f52e
+              body: >
+                Should handle the scenario where the network aliases are
+                undefined.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.9.9
+          date: 2020-07-23T15:45:31.161Z
+  version: 2.50.8
+  date: 2020-07-24T09:05:21.490Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.9.8'
       hash: cc1bc41eb959bec22afddce1ca269b8fd2e50fc6
       body: |
