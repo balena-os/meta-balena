@@ -1,0 +1,11 @@
+[Unit]
+Description=Extract custom CA from config.json
+After=bind-usr-share-ca-certificates-balena.service
+Requires=bind-usr-share-ca-certificates-balena.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/extract-balena-ca
+
+[Install]
+WantedBy=multi-user.target
