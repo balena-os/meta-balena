@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.50.8
+## (2020-07-27)
+
+
+<details>
+<summary> balena-supervisor: Update to v11.9.9 [Rich Bayliss] </summary>
+
+> ## balena-supervisor-11.9.9
+> ### (2020-07-23)
+> 
+> * common: Fix bug where aliases might be undefined [Rich Bayliss]
+> 
+</details>
+
 # v2.50.7
 ## (2020-07-23)
 
