@@ -17,9 +17,13 @@ Options:
 
   -t <SUPERVISOR TAG>, --supervisor-tag <SUPERVISOR TAG>
         Set supervisor tag to update to.
+
+  -n, --no-start-stop-supervisor
+        Do not start/stop the supervisor.
 EOF
 }
 
+START_STOP_SUPERVISOR=1
 # Parse arguments
 while [ $# -gt 0 ]; do
     arg="$1"
@@ -45,9 +49,12 @@ while [ $# -gt 0 ]; do
             UPDATER_SUPERVISOR_TAG=$2
             shift
             ;;
+        -n|--no-start-stop-supervisor)
+            START_STOP_SUPERVISOR=0
+            shift
+            ;;
         *)
             echo "ERROR: Unrecognized option $1."
-            exit 1
             ;;
     esac
     shift
@@ -69,7 +76,9 @@ error_handler() {
 
     # If docker pull fails, start the old supervisor again and exit
     rm -rf $UPDATECONF
-    systemctl start resin-supervisor
+    if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
+        systemctl start resin-supervisor
+    fi
     exit 1
 }
 
@@ -140,9 +149,11 @@ if [ -n "$imageid" ]; then
     exit 0
 fi
 
-# Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
-echo "Stop supervisor..."
-systemctl stop resin-supervisor
+if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
+    # Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
+    echo "Stop supervisor..."
+    systemctl stop resin-supervisor
+fi
 
 # Pull target version.
 echo "Pulling supervisor $image_name:$tag..."
@@ -157,7 +168,9 @@ sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TA
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
-echo "Start supervisor..."
-systemctl start resin-supervisor
+if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
+    echo "Start supervisor..."
+    systemctl start resin-supervisor
+fi
 
 sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf
