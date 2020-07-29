@@ -1,4 +1,31 @@
 - commits:
+    - subject: >-
+        supervisor: allow supervisor updates without controlling the supervisor
+        state
+      hash: 6208f065e59d9c15e10e872bff788c0b80020983
+      body: >
+        Recently the supervisor added a codepath that assumes no files
+        underneath it will change during runtime.
+
+        OS update hooks can trigger a condition whereby the supervisor reboots
+        the device during a HUP,
+
+        which in turn bricks the device.
+
+
+        Additionally, since unknown args cause this update to fail-closed,
+
+        remove that barrier to future-proof more flag expansion.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.53.10
+  date: 2020-07-29T12:42:50.816Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.9.9'
       hash: b991ede01e5140ef04f2e6fe9baa37a8ded95ab5
       body: |

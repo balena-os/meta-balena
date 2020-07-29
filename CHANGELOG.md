@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.10
+## (2020-07-29)
+
+* supervisor: allow supervisor updates without controlling the supervisor state [Matthew McGinn]
+
 # v2.53.9
 ## (2020-07-23)
 
