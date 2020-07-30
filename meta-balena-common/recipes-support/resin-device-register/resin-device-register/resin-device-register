@@ -82,7 +82,7 @@ while true; do
                 --header "Authorization: Bearer $DEVICE_API_KEY" \
                 --output $PIN_LOG_FILE \
                 --data-urlencode "should_be_running__release=$RELEASE_ID" \
-                "$API_ENDPOINT/v6/device?\$filter=uuid%20eq%20'${UUID}'")
+                "$API_ENDPOINT/v6/device(uuid='${UUID}')")
 
             if [ "$status_code" -eq 200 ]; then
                 echo "[INFO] resin-device-pinning: Pinned device ${UUID} to release ${RELEASE_ID}"
