@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.11
+## (2020-07-30)
+
+* Use a named key when querying for device by uuid [Pagan Gazzard]
+
 # v2.53.10
 ## (2020-07-29)
 
