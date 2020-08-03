@@ -54,15 +54,11 @@ INSANE_SKIP_${PN} += "already-stripped"
 FILES_${PN} += " \
 	/lib/systemd/system/* \
 	/home/root \
-	/boot/init \
 	/boot/storage-driver \
 	${localstatedir} \
 	"
 
 DOCKER_PKG="github.com/docker/docker"
-
-# By default no extra LDFLAGS needed when compiling mobynit
-MOBYNIT_EXTRA_LDFLAGS ??= ""
 
 do_configure[noexec] = "1"
 
@@ -118,18 +114,12 @@ do_compile() {
 	export DOCKER_LDFLAGS="-s"
 
 	VERSION=${BALENA_VERSION} ./hack/make.sh dynbinary-balena
-
-	# Compile mobynit
-	cd .gopath/src/"${DOCKER_PKG}"/cmd/mobynit
-	go build -ldflags '-extldflags "-static ${MOBYNIT_EXTRA_LDFLAGS}"' .
-	cd -
 }
 
 do_install() {
 	mkdir -p ${D}/${bindir}
 	install -m 0755 ${S}/src/import/bundles/dynbinary-balena/balena-engine ${D}/${bindir}/balena-engine
 	install -d ${D}/boot
-	install -m 0755 ${S}/src/import/cmd/mobynit/mobynit ${D}/boot/init
 	echo ${BALENA_STORAGE} > ${D}/boot/storage-driver
 
 	ln -sf balena-engine ${D}/${bindir}/balena
