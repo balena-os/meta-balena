@@ -52,12 +52,15 @@ RESIN_BOOT_MOUNTPOINT="/mnt/boot"
 
 # If config.json provides redefinitions for our vars let us rewrite their
 # runtime value
+# `REGISTRY_ENDPOINT` only required for custom certs until system-wide custom certs are supported/implemented, see
+# https://github.com/balena-os/meta-balena/issues/1398
 if [ -f $CONFIG_PATH ]; then
     eval "$(jq -r '@sh "
          API_ENDPOINT=\(.apiEndpoint // "")
          LISTEN_PORT=\(.listenPort // "")
          MIXPANEL_TOKEN=\(.mixpanelToken // "")
          DELTA_ENDPOINT=\(.deltaEndpoint // "")
+         REGISTRY_ENDPOINT=\(.registryEndpoint // "")
          CONFIG_HOSTNAME=\(.hostname // "")
          PERSISTENT_LOGGING=\(.persistentLogging // "")
          COUNTRY=\(.country // "")
