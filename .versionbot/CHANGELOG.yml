@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'systemd: Set net.ipv4.conf.all.rp_filter in balena-os-sysctl'
+      hash: a0573b7df13292aff6c7670246ed780342593376
+      body: |
+        The warrior branch does not backport this configuration
+        like the older branches do. Let's move this setting in the
+        balena-os-sysctl file to avoid issues where some device integration
+        layers set the rp_filter mode to strict and break connectivity.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.53.12
+  date: 2020-08-04T14:01:14.955Z
+- commits:
     - subject: Use a named key when querying for device by uuid
       hash: e2c6614d28fe498853297891eb0feeb4b1577a7b
       body: ''

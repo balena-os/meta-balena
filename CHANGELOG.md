@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.12
+## (2020-08-04)
+
+* systemd: Set net.ipv4.conf.all.rp_filter in balena-os-sysctl [Alexandru Costache]
+
 # v2.53.11
 ## (2020-07-30)
 
