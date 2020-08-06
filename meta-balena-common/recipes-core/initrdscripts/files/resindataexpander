@@ -56,6 +56,10 @@ resindataexpander_run() {
 	        sync
                 # We return when we've done the expansion
 		info "Data partition at $datapart expanded."
+		# Expand filesystem
+		info "resindataexpander: Expand ext4 filesystem on ${datapart}"
+		resize2fs -f "${datapart}"
+		sync
                 return
         fi
     done
