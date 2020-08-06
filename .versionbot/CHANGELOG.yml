@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'flasher-register: if no supervisor information found, report null'
+      hash: dee971c0dbeb6e8363f3e321af582e99627626e9
+      body: |
+        In b791055f3f6ffd6cc5796569a7321c5060129eea I attempted to have flasher
+        images report their preconfigured supervisor version without a good
+        understanding of how flasher images work. As it turns out no supervisor
+        information is maintained in the flasher image itself, so until that is
+        sorted stop reporting a blank string for the supervisor version.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.53.13
+  date: 2020-08-05T20:17:40.378Z
+- commits:
     - subject: 'systemd: Set net.ipv4.conf.all.rp_filter in balena-os-sysctl'
       hash: a0573b7df13292aff6c7670246ed780342593376
       body: |

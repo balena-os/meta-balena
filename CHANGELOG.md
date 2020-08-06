@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.13
+## (2020-08-05)
+
+* flasher-register: if no supervisor information found, report null [Matthew McGinn]
+
 # v2.53.12
 ## (2020-08-04)
 
