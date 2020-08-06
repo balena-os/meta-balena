@@ -2,6 +2,7 @@
 Description=resin-data bind mount
 Requires=resin-data.service
 After=resin-data.service
+DefaultDependencies=no
 
 [Mount]
 What=/mnt/data/resin-data
