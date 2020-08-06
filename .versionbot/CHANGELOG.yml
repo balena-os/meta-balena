@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'balena-unique-key: Ensure config.json is synced after replacing'
+      hash: d0e218929b779b1051e14414b3b378b6d5928969
+      body: |
+        Ensuring changes are flushed to the filesystem at this point
+        helps prevent config.json from becoming corrupt if power is cut.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.53.14
+  date: 2020-08-06T12:48:20.058Z
+- commits:
     - subject: 'flasher-register: if no supervisor information found, report null'
       hash: dee971c0dbeb6e8363f3e321af582e99627626e9
       body: |

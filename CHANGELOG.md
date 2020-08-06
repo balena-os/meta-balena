@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.53.14
+## (2020-08-06)
+
+* balena-unique-key: Ensure config.json is synced after replacing [Alexandru Costache]
+
 # v2.53.13
 ## (2020-08-05)
 
