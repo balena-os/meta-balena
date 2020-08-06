@@ -27,11 +27,14 @@ while [ ! -L "$DATA_PARTITION" ]; do
 	fi
 done
 
-echo "[INFO] Filesystem check on $DATA_PARTITION... "
-e2fsck -y $DATA_PARTITION
-echo "[INFO] Expand ext4 filesystem on $DATA_PARTITION... "
-resize2fs -f $DATA_PARTITION
-sync
+# Do nothing if the partition is mounted already
+if ! cat /proc/mounts | grep $(readlink -f ${DATA_PARTITION}) > /dev/null; then
+	echo "[INFO] Filesystem check on $DATA_PARTITION... "
+	e2fsck -y $DATA_PARTITION
+	echo "[INFO] Expand ext4 filesystem on $DATA_PARTITION... "
+	resize2fs -f $DATA_PARTITION
+	sync
+fi
 
 if [ -f /mnt/boot/resin_attempting_fsck_recovery ]; then
 	echo "[WARN] Looks like there was a successful automated fsck recovery. Please check the integrity of your storage device"
