@@ -58,7 +58,7 @@ fsuuidsinit_run() {
     # Only rename the partitions mounted on the initramfs
     # the rest will be done at runtime mount in parallel with system boot
     # Include both resin-root partitions as the inactive one is access mounted
-    for dev in /dev/disk/by-state/resin-root* /dev/disk/by-state/resin-state; do
+    for dev in /dev/disk/by-state/resin-root* /dev/disk/by-state/resin-state /dev/disk/by-state/resin-data; do
         uuid="$(get_dev_uuid "${dev}")"
         fstype="$(get_dev_fstype "${dev}")"
         if regenerate_uuid "${dev}" "${fstype}"; then
