@@ -56,7 +56,7 @@ if [ -z "$key" ]; then
     generated_json=$(jq ".$key_name=\"$key\"" "$CONFIG_PATH")
     echo "$generated_json" > "$CONFIG_PATH.tmp"
     sync "$CONFIG_PATH.tmp"
-    mv "$CONFIG_PATH.tmp" "$CONFIG_PATH"
+    mv "$CONFIG_PATH.tmp" "$CONFIG_PATH" && sync
 else
     echo "[INFO] balena-unique-key : Device already has $key_name assigned."
 fi
