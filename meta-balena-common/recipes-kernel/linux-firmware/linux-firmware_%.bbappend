@@ -59,3 +59,9 @@ PACKAGES =+ "${PN}-iwlwifi-3160"
 FILES_${PN}-iwlwifi-3160 = " \
     ${nonarch_base_libdir}/firmware/iwlwifi-3160-17.ucode \
 "
+
+PACKAGES =+ "${PN}-iwlwifi-cc-a0"
+
+FILES_${PN}-iwlwifi-cc-a0 = " \
+    ${nonarch_base_libdir}/firmware/iwlwifi-cc-a0-48.ucode \
+"
