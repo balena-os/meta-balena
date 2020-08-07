@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.54.1
+## (2020-08-07)
+
+* Package iwlwifi-cc-a0-48 firmware separately [Florin Sarbu]
+
 # v2.54.0
 ## (2020-08-06)
 

@@ -1,4 +1,21 @@
 - commits:
+    - subject: Package iwlwifi-cc-a0-48 firmware separately
+      hash: 6d92504349952a0bafc13afc1631c09dadf4d257
+      body: |
+        We add this fw on its own package so that boards can add it to
+        rootfs (for Microsoft Surface Go 2 more specifically)
+      footer:
+        Changelog-entry: Package iwlwifi-cc-a0-48 firmware separately
+        changelog-entry: Package iwlwifi-cc-a0-48 firmware separately
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.54.1
+  date: 2020-08-07T07:33:15.659Z
+- commits:
     - subject: Update balena-supervisor from v11.9.9 to v11.12.2
       hash: 9772bf13f7f1a07946138eb713d23b245ffb6dd0
       body: |
