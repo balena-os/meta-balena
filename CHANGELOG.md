@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.54.3
+## (2020-08-12)
+
+* supervisor: fix supervisor startup when custom certs are involved [Matthew McGinn]
+
 # v2.54.2
 ## (2020-08-12)
 

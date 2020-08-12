@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'supervisor: fix supervisor startup when custom certs are involved'
+      hash: 3c975b219c67464dad2fb084391ccf87ec95f6fd
+      body: >
+        In this commit
+
+        https://github.com/balena-os/meta-balena/commit/b3222e619bbeebc0a2bd9e7419a9d8ae12b34dce
+
+        we removed `REGISTRY_ENDPOINT` from our sourced variables. Since this
+
+        value is still used to pass custom certs to the supervisor, we need to
+
+        keep it around for the time being. It can be removed once again as soon
+
+        as https://github.com/balena-os/meta-balena/issues/1398 is addressed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.54.3
+  date: 2020-08-12T19:52:10.340Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.12.4'
       hash: 99d9a4df967535d77f3918d696845ade57aa198e
       body: |
