@@ -48,6 +48,11 @@ if [ -z "$CONFIG_PATH" ]; then
     fi
 fi
 
+. /usr/libexec/os-helpers-fs
+
+# Check integrity and recover if required
+integrity_check "${CONFIG_PATH}"
+
 RESIN_BOOT_MOUNTPOINT="/mnt/boot"
 
 # If config.json provides redefinitions for our vars let us rewrite their
