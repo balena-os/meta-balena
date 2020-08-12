@@ -53,10 +53,10 @@ if [ -z "$key" ]; then
         echo "[ERROR] balena-unique-key : Failed to generate the random key."
 	exit 1
     fi
+    configtmp="$(mktemp)"
     generated_json=$(jq ".$key_name=\"$key\"" "$CONFIG_PATH")
-    echo "$generated_json" > "$CONFIG_PATH.tmp"
-    sync "$CONFIG_PATH.tmp"
-    mv "$CONFIG_PATH.tmp" "$CONFIG_PATH" && sync
+    echo "$generated_json" > "${configtmp}"
+    safe_modify "${configtmp}" "$CONFIG_PATH"
 else
     echo "[INFO] balena-unique-key : Device already has $key_name assigned."
 fi
