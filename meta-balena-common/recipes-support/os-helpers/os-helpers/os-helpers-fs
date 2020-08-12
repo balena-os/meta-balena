@@ -1,4 +1,6 @@
 #!/bin/sh
+# shellcheck disable=SC2039
+# Busybox ash has a local built-in
 
 # Copyright 2019 Balena Ltd.
 #
@@ -160,4 +162,105 @@ regenerate_uuid() {
     new_uuid="$(get_dev_uuid "$dev")"
     echo "${new_uuid}"
     return 0
+}
+
+# Verify the checksum of a given file
+# Arguments:
+#   1 - File to check (e.g config.json)
+#   2 - Target md5 checksum
+# Returns:
+#   0 - Success
+#   1 - Failure
+verify_cksum() {
+	tf=$(readlink -f "${1}")
+	tmd5="${2}"
+
+	[ ! -e "${tf}" ] && return 1
+	md5=$(md5sum "${tf}" | cut -d " " -f1)
+	if [ "${md5}" != "${tmd5}" ]; then
+		return 1
+	fi
+	return 0
+}
+
+# Verify file integrity for given file
+# Used on filesystems with non-atomic renames as FAT
+# Looks for a <filename>.<hash>.md5sum backup file
+# Arguments:
+#   1 - File to check (e.g config.json)
+# Returns:
+#   0 - Success
+integrity_check() { 
+	local target
+	local fname
+	local tdir
+	local md5
+
+	target=$(readlink -f "${1}")
+	fname=$(basename "${target}")
+	tdir=$(dirname "${target}")
+
+	md5=$(find "${tdir}" -name "${fname}.[a-z0-9]*.md5sum" -print0 | xargs -I {} basename {} | awk -F '.' '{print $(NF-1);}')
+	if [ -n "${md5}" ]; then
+		local md5fn="${tdir}/${fname}.${md5}.md5sum"
+		if [ -e "${md5fn}" ]; then
+			# Verify integrity of checksum file
+			if verify_cksum "${md5fn}" "${md5}"; then
+				# Avoid writting the same file
+				if ! verify_cksum "${target}" "${md5}"; then
+					# Make a temporary copy so the source remains intact
+					install "${md5fn}" "${md5fn}.tmp" && sync
+					mv "${md5fn}.tmp" "${target}"
+				fi
+			fi
+		fi
+	fi
+	# Make sure there is no dangling backup file
+	rm -rf "${tdir}"/"${fname}"*md5sum*
+	return 0
+}
+
+# Safe file writes by backing up and checksuming before renaming
+# Used on filesystems with non-atomic renames as FAT
+# Arguments:
+#   1 - Source file (e.g /tmp/config.json)
+#   2 - Target file (e.g /mnt/boot/config.json)
+# Returns:
+#   0 - Success
+#   1 - Failure
+safe_modify() {
+	[ ! -e "${1}" ] && echo "Not found ${1}" && return 1
+	[ ! -e "$(dirname "${2}")" ] && echo "Does not exist $(dirname "${2}")" && return 1
+	local source
+	local target
+	local tname
+	local tdir
+	local md5
+	local md5f
+	source="$(readlink -f "${1}")"
+	target="$(readlink -f "${2}")"
+	tname=$(basename "${target}")
+	tdir=$(dirname "${target}")
+
+	if ! integrity_check "${source}"; then
+		return 1
+	fi
+
+	md5=$(md5sum "${source}" | cut -d ' ' -f1)
+	if [ -n "${md5}" ]; then
+		md5f="${tdir}/${tname}.${md5}.md5sum"
+		install "${source}" "${md5f}" && sync
+		if ! verify_cksum "${md5f}" "${md5}"; then
+			return 1
+		fi
+		# Used only by external test frameworks
+		# shellcheck disable=SC2154
+		[ "${testmode}" = "1" ] && return 0
+		mv "${source}" "${tdir}/${tname}" && sync
+		if verify_cksum "${tdir}/${tname}" "${md5}"; then
+			rm -f "${md5f}" && sync
+			return 0
+		fi
+	fi
+	return 1
 }
