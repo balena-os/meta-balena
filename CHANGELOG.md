@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.54.2
+## (2020-08-12)
+
+
+<details>
+<summary> Update balena-supervisor from v11.12.2 to v11.12.3 [Cameron Diver] </summary>
+
+> ## balena-supervisor-11.12.3
+> ### (2020-08-11)
+> 
+> * bug: Allow DNS through firewall for local containers [Rich Bayliss]
+> 
+</details>
+
 # v2.54.1
 ## (2020-08-07)
 
