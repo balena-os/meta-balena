@@ -1,4 +1,50 @@
 - commits:
+    - subject: 'balena-supervisor: Update to v11.12.4'
+      hash: 99d9a4df967535d77f3918d696845ade57aa198e
+      body: |
+        Update balena-supervisor from v11.12.2 to v11.12.4
+      footer:
+        Change-type: patch
+        change-type: patch
+        Backport-to: next
+        backport-to: next
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested:
+        - commits:
+            - subject: >-
+                bug: Firewall not blocking supervisor access from outside the
+                device
+              hash: 5aecd94e243ee55cffbb9aa47e7adfc437401de3
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.12.4
+          date: 2020-08-12T12:45:26.689Z
+        - commits:
+            - subject: 'bug: Allow DNS through firewall for local containers'
+              hash: e9b536a889542588e2f79247ed7937c709fdf3d2
+              body: |
+                We provide a local DNS server for containers to use and this
+                was not allowed through the firewall when enabled.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.12.3
+          date: 2020-08-11T14:19:40.945Z
+  version: 2.54.2
+  date: 2020-08-12T17:01:50.068Z
+- commits:
     - subject: Package iwlwifi-cc-a0-48 firmware separately
       hash: 6d92504349952a0bafc13afc1631c09dadf4d257
       body: |
