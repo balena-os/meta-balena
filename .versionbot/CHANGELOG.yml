@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'Disable u-boot console, silence u-boot in production builds'
+      hash: 9e4bf1afbbbff9b378454970e916718b1078773c
+      body: |
+        Cherry-picked from 908590c49f7f4f89bfd1c2f8fdcaf8a0f3f3eceb
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'Disable u-boot console, silence u-boot in production builds'
+        changelog-entry: 'Disable u-boot console, silence u-boot in production builds'
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.50.9
+  date: 2020-08-12T17:12:45.677Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.9.9'
       hash: 8efc41a4451792dae2c6a660004b2620264f6b0c
       body: |

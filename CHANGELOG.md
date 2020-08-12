@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.50.9
+## (2020-08-12)
+
+* Disable u-boot console, silence u-boot in production builds [Florin Sarbu]
+
 # v2.50.8
 ## (2020-07-27)
 
