@@ -1,6 +1,311 @@
 Change log
 -----------
 
+# v2.50.10
+## (2020-08-13)
+
+
+<details>
+<summary> balena-supervisor: Update to v11.12.4 [Alex Gonzalez] </summary>
+
+> ## balena-supervisor-11.12.4
+> ### (2020-08-12)
+> 
+> * bug: Firewall not blocking supervisor access from outside the device [Rich Bayliss]
+> 
+> ## balena-supervisor-11.12.3
+> ### (2020-08-11)
+> 
+> * bug: Allow DNS through firewall for local containers [Rich Bayliss]
+> 
+> ## balena-supervisor-11.12.2
+> ### (2020-08-05)
+> 
+> * Fix device-tag fetching function [Cameron Diver]
+> 
+> ## balena-supervisor-11.12.1
+> ### (2020-08-05)
+> 
+> 
+> <details>
+> <summary> Update resumable-request [Pagan Gazzard] </summary>
+> 
+>> ### resumable-request-2.0.1
+>> #### (2020-08-05)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> * Optimize lodash dependency [Pagan Gazzard]
+>> 
+> </details>
+> 
+> 
+> ## balena-supervisor-11.12.0
+> ### (2020-08-05)
+> 
+> 
+> <details>
+> <summary> Update contrato to 0.5 [Pagan Gazzard] </summary>
+> 
+>> ### contrato-0.5.0
+>> #### (2020-08-05)
+>> 
+>> * Remove handlebars-helpers to shrink bundle size [Pagan Gazzard]
+>> 
+>> ### contrato-0.4.0
+>> #### (2020-08-04)
+>> 
+>> 
+>> <details>
+>> <summary> Update skhema to 5.x [Pagan Gazzard] </summary>
+>> 
+>>> #### skhema-5.3.2
+>>> ##### (2020-08-04)
+>>> 
+>>> * Switch to typed-error [Pagan Gazzard]
+>>> 
+>>> #### skhema-5.3.1
+>>> ##### (2020-08-04)
+>>> 
+>>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>>> 
+>>> #### skhema-5.3.0
+>>> ##### (2020-05-05)
+>>> 
+>>> * filter: Throw a custom error if the schema is invalid [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-5.2.9
+>>> ##### (2019-12-12)
+>>> 
+>>> * Add test to show .filter() not working correctly [StefKors]
+>>> * When combining with baseSchema merge enum with AND operator [StefKors]
+>>> 
+>>> #### skhema-5.2.8
+>>> ##### (2019-11-27)
+>>> 
+>>> * Ensure values in "enum" are unique [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-5.2.7
+>>> ##### (2019-11-27)
+>>> 
+>>> * filter: Correctly handle "enum" inside "anyOf" [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-5.2.6
+>>> ##### (2019-11-19)
+>>> 
+>>> * merge: Be explicit about additionalProperties [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-5.2.5
+>>> ##### (2019-05-09)
+>>> 
+>>> * Add a resolver for the const keyword [Lucian]
+>>> 
+>>> #### skhema-5.2.4
+>>> ##### (2019-04-15)
+>>> 
+>>> * Configure AJV instances with an LRU cache [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-5.2.3
+>>> ##### (2019-04-15)
+>>> 
+>>> * Set addUsedSchema to false in all AJV instances [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-5.2.2
+>>> ##### (2019-03-20)
+>>> 
+>>> * Fix bug in scoreMatch when handling arrays [Lucian]
+>>> 
+>>> #### skhema-5.2.1
+>>> ##### (2019-03-19)
+>>> 
+>>> * Fix bad require name and .only in tests [Lucian]
+>>> 
+>>> #### skhema-5.2.10
+>>> ##### (Invalid date)
+>>> 
+>>> * .filter(): Only match if the base schema matches [Lucian Buzzo]
+>>> 
+>>> #### skhema-5.2.0
+>>> ##### (2019-03-19)
+>>> 
+>>> * Add ability to provide custom resolvers to merge() [Lucian]
+>>> 
+>>> #### skhema-5.1.1
+>>> ##### (2019-02-08)
+>>> 
+>>> * Split up and optimize lodash dependencies [Lucian]
+>>> 
+>>> #### skhema-5.1.0
+>>> ##### (2019-01-08)
+>>> 
+>>> * feature: Implement method for restricting a schema by another schema [Lucian Buzzo]
+>>> 
+>>> #### skhema-5.0.0
+>>> ##### (Invalid date)
+>>> 
+>>> * Remove ability to add custom keywords or formats [Lucian]
+>>> 
+>>> #### skhema-4.0.4
+>>> ##### (Invalid date)
+>>> 
+>>> * Improve performance of clone operations [Lucian]
+>>> 
+>>> #### skhema-4.0.3
+>>> ##### (2018-12-10)
+>>> 
+>>> * Don't bust AJV cache [Lucian]
+>>> 
+>>> #### skhema-4.0.2
+>>> ##### (2018-12-10)
+>>> 
+>>> * Add benchmark tests [Giovanni Garufi]
+>>> 
+>>> #### skhema-4.0.1
+>>> ##### (2018-12-04)
+>>> 
+>>> * Recurse through nested `anyOf` statements when filtering [Lucian]
+>>> 
+>>> #### skhema-4.0.0
+>>> ##### (2018-12-03)
+>>> 
+>>> * Treat undefined additionalProperties as true instead of false [Lucian]
+>>> 
+>>> #### skhema-3.0.1
+>>> ##### (Invalid date)
+>>> 
+>>> * stryker: Increase test timeout [Juan Cruz Viotti]
+>>> * test: Configure Stryker for mutative testing [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-3.0.0
+>>> ##### (2018-11-29)
+>>> 
+>>> * Define additionalProperty inheritance in anyOf [Giovanni Garufi]
+>>> * Formalising filtering logic [Lucian]
+>>> * Added failing test case with mutation [Lucian]
+>>> 
+>>> #### skhema-2.5.2
+>>> ##### (2018-11-07)
+>>> 
+>>> * hotfix: Make sure things that should be filtered are filtered [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-2.5.1
+>>> ##### (2018-11-06)
+>>> 
+>>> * filter: Force additionalProperties: true on match schemas [Juan Cruz Viotti]
+>>> 
+>>> #### skhema-2.5.0
+>>> ##### (2018-10-16)
+>>> 
+>>> * Validate against just the schema if `options.schemaOnly` is true [Lucian Buzzo]
+>>> 
+>>> #### skhema-2.4.1
+>>> ##### (2018-10-09)
+>>> 
+>>> * merge: When merging an empty array, return a wildcard schema [Lucian Buzzo]
+>>> 
+>>> #### skhema-2.4.0
+>>> ##### (2018-10-09)
+>>> 
+>>> * validate: Make object optional [Lucian Buzzo]
+>>> 
+>> </details>
+>> 
+>> 
+>> ### contrato-0.3.1
+>> #### (2020-08-04)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> 
+>> ### contrato-0.3.0
+>> #### (2020-07-17)
+>> 
+>> * Add logical operator support in templates [Stevche Radevski]
+>> 
+> </details>
+> 
+> 
+> ## balena-supervisor-11.11.7
+> ### (2020-08-04)
+> 
+> * Bump elliptic from 6.5.2 to 6.5.3 [dependabot[bot]]
+> 
+> <details>
+> <summary> Update pinejs-client-request and make use of a named key [Pagan Gazzard] </summary>
+> 
+>> ### pinejs-client-request-7.1.0
+>> #### (2020-07-28)
+>> 
+>> 
+>> <details>
+>> <summary> Update dependencies [Pagan Gazzard] </summary>
+>> 
+>>> #### pinejs-client-js-6.1.0
+>>> ##### (2020-07-21)
+>>> 
+>>> * Add support for using named ids [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.0.1
+>>> ##### (2020-06-19)
+>>> 
+>>> * Drop unnecessary async from request() [Thodoris Greasidis]
+>>> 
+>> </details>
+>> 
+>> 
+>> ### pinejs-client-request-7.0.1
+>> #### (2020-07-28)
+>> 
+>> * Increase default timeout to 59s [Pagan Gazzard]
+>> 
+> </details>
+> 
+> 
+> ## balena-supervisor-11.11.6
+> ### (2020-07-31)
+> 
+> * Fixes documentation - ping doesn't need apiKey and minor documentation formatting changes. [Nitish Agarwal]
+> 
+> ## balena-supervisor-11.11.5
+> ### (2020-07-31)
+> 
+> * Fixes #1299 v1 start/stop endpoint issue with service access. [Nitish Agarwal]
+> 
+> ## balena-supervisor-11.11.4
+> ### (2020-07-31)
+> 
+> * bug: Fix undefined containerId object [Rich Bayliss]
+> 
+> ## balena-supervisor-11.11.3
+> ### (2020-07-30)
+> 
+> * fix matching extra_uEnv backend with unsupported devices [Miguel Casqueira]
+> 
+> ## balena-supervisor-11.11.2
+> ### (2020-07-30)
+> 
+> * Fix an issue with reporting initial config using a stale target state [Pagan Gazzard]
+> 
+> ## balena-supervisor-11.11.1
+> ### (2020-07-29)
+> 
+> * fix up "atleast" -> "at least" [Matthew McGinn]
+> 
+> ## balena-supervisor-11.11.0
+> ### (2020-07-28)
+> 
+> * Support setting device/fleet configuration in extra_uEnv.txt [Miguel Casqueira]
+> 
+> ## balena-supervisor-11.10.0
+> ### (2020-07-24)
+> 
+> * Extract current state reporting to its own module [Pagan Gazzard]
+> 
+> ## balena-supervisor-11.9.10
+> ### (2020-07-23)
+> 
+> * log detection of changes to VPN status [dt-rush]
+> 
+</details>
+
 # v2.50.9
 ## (2020-08-12)
 
