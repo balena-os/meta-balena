@@ -9,10 +9,11 @@ RDEPENDS_${PN}-fs = "e2fsprogs-tune2fs mtools"
 SRC_URI = " \
     file://os-helpers-fs \
     file://os-helpers-logging \
+    file://safe_modify.bats \
 "
 S = "${WORKDIR}"
 
-inherit allarch
+inherit allarch bats
 
 PACKAGES = "${PN}-fs ${PN}-logging"
 
