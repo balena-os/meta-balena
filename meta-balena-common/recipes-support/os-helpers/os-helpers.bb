@@ -10,6 +10,7 @@ SRC_URI = " \
     file://os-helpers-fs \
     file://os-helpers-logging \
     file://safe_modify.bats \
+    file://verify_cksum.bats \
 "
 S = "${WORKDIR}"
 
