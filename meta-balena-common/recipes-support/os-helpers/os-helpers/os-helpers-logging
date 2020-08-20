@@ -23,7 +23,7 @@ ME=$(basename "$0")
 log () {
     _level="$1"
     _message="$2"
-    printf "[%s][%s] %s\n" "$ME" "$_level" "$_message"
+    printf "[%s][%s] %s\n" "$ME" "$_level" "$_message" >&2
 }
 
 fail () {
