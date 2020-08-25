@@ -197,13 +197,16 @@ if [ "$karch" = "arm64" ] && [ -f "$karch_dir/include/asm/opcodes.h" ]; then
 	copy_mkdir "$target_dir" "./arch/arm/include/asm/opcodes.h"
 fi
 
-# copy module.lds and vdso.lds if they exist
+# copy module.lds, vdso.lds and Makefile if they exist
 if [ "$karch" = "arm64" ]; then
 	if [ -f "arch/arm64/kernel/module.lds" ]; then
 		copy_mkdir "$target_dir" "./arch/arm64/kernel/module.lds"
 	fi
 	if [ -f "arch/arm64/kernel/vdso/vdso.lds" ]; then
 		copy_mkdir "$target_dir" "./arch/arm64/kernel/vdso/vdso.lds"
+	fi
+	if [ -f "lib/vdso/Makefile" ]; then
+		copy_mkdir "$target_dir" "./lib/vdso/Makefile"
 	fi
 fi
 
