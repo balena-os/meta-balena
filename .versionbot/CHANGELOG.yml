@@ -1,4 +1,35 @@
 - commits:
+    - subject: Pack /lib/vdso/Makefile in kernel-modules-headers
+      hash: 37ce34cbb4d1ddb8af5a0eafb40fc16436b6e2b8
+      body: >
+        For the updated 5.4 kernel on RPI4, kernel-headers-test fails with
+
+        arch/arm64/kernel/vdso/Makefile lib/vdso/Makefile No such file or
+        directory
+
+        make[1] *** No rule to make target 'lib/vdso/Makefile'.  Stop.
+
+        make *** [vdso_prepare] Error 2
+
+
+        when doing modules_pepare in the docker build
+
+
+        This patch adds /lib/vdso/Makefile to kernel-modules-headers
+
+        compressed archive
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Pack /lib/vdso/Makefile in kernel-modules-headers
+        changelog-entry: Pack /lib/vdso/Makefile in kernel-modules-headers
+        Signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+        signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+      author: Vicentiu Galanopulo
+      nested: []
+  version: 2.54.3
+  date: 2020-08-25T11:58:10.547Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.12.4'
       hash: 99d9a4df967535d77f3918d696845ade57aa198e
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.54.3
+## (2020-08-25)
+
+* Pack /lib/vdso/Makefile in kernel-modules-headers [Vicentiu Galanopulo]
+
 # v2.54.2
 ## (2020-08-12)
 
