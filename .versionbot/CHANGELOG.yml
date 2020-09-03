@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update balena-supervisor from v11.13.0 to v11.14.0
+      hash: afdfc4ec7d46f74bc2b104a6d899a6587b3596cc
+      body: |
+        Update balena-supervisor from v11.13.0 to v11.14.0
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.13.0 to v11.14.0
+        changelog-entry: Update balena-supervisor from v11.13.0 to v11.14.0
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: Add device system information to state endpoint patch
+              hash: f305a333ba70e90d098decdf81c220bfcbeec899
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-11.14.0
+          date: 2020-09-03T13:43:00.299Z
+  version: 2.56.0
+  date: 2020-09-03T14:43:29.913Z
+- commits:
     - subject: Update balena-supervisor from v11.12.4 to v11.13.0
       hash: e8fb036f3ce51f29dbda1d969bb41e505a22f389
       body: |

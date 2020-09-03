@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.56.0
+## (2020-09-03)
+
+
+<details>
+<summary> Update balena-supervisor from v11.13.0 to v11.14.0 [Cameron Diver] </summary>
+
+> ## balena-supervisor-11.14.0
+> ### (2020-09-03)
+> 
+> * Add device system information to state endpoint patch [Cameron Diver]
+> 
+</details>
+
 # v2.55.0
 ## (2020-09-03)
 
