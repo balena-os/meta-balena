@@ -1,4 +1,630 @@
 - commits:
+    - subject: Update balena-supervisor from v11.12.4 to v11.13.0
+      hash: e8fb036f3ce51f29dbda1d969bb41e505a22f389
+      body: |
+        Update balena-supervisor from v11.12.4 to v11.13.0
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.12.4 to v11.13.0
+        changelog-entry: Update balena-supervisor from v11.12.4 to v11.13.0
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: added support for configuring ODMDATA
+              hash: 662826d3495f551a5451395d0eb6660bfb65b599
+              body: ''
+              footer:
+                Closes: '1206'
+                closes: '1206'
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+          version: balena-supervisor-11.13.0
+          date: 2020-08-29T13:07:31.541Z
+        - commits:
+            - subject: 'bug: Resolve mDNS API URLs'
+              hash: f0c2a3cba7a6879a506d9151c7c0d9ea89544dae
+              body: |
+                Due to switching to Alpine the ability to resolve mDNS
+                hostnames was lost. This patch overrides the lookup and
+                manually resolves the names.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.12.11
+          date: 2020-08-27T10:36:31.040Z
+        - commits:
+            - subject: Preventing removing all configurations if device has no backends
+              hash: 7ea49bf4fb317346badf141e6eea8910e599c837
+              body: ''
+              footer:
+                Closes: '#1437'
+                closes: '#1437'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+          version: balena-supervisor-11.12.10
+          date: 2020-08-24T17:43:41.125Z
+        - commits:
+            - subject: Don't enforce the vc4-fkms-v3d dtoverlay on rpi4
+              hash: de4c1b25385630b6f9fadb7a362d5556c2cc5008
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1404'
+                closes: '#1404'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-11.12.9
+          date: 2020-08-20T09:24:11.110Z
+        - commits:
+            - subject: Update dependencies
+              hash: ea34a2d10a3acd19cfefe4c847eb96579315429a
+              body: |
+                Update docker-delta from 2.2.9 to 2.2.11
+                Update docker-progress from 3.0.5 to 4.0.3
+                Update docker-toolbelt from 3.3.8 to 3.3.10
+                Update livepush from 3.3.0 to 3.5.1
+                Update resin-docker-build from 1.1.4 to 1.1.6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested:
+                - commits:
+                    - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+                      hash: b0f552f9a21d350cb9fdca77d4f7c309f88bf68b
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: node-docker-delta-2.2.11
+                  date: 2020-08-19T11:52:46.348Z
+                - commits:
+                    - author: Pagan Gazzard
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: 70b5359fedc100907c0086f7d25b7ad19cc210ad
+                      subject: Removed unused dependencies
+                    - author: Pagan Gazzard
+                      body: ''
+                      hash: 8670e850ba5d97fbaecc938fc2060ea3b4f157ed
+                      subject: 'circleci: update docker'
+                  date: '2020-08-05T15:20:21Z'
+                  version: node-docker-delta-2.2.10
+                - commits:
+                    - subject: Update to balena-lint 5.x
+                      hash: 9563bf5150c39c6d6f298a9ed24f7969650273f7
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: docker-progress-4.0.3
+                  date: 2020-08-17T12:03:45.249Z
+                - commits:
+                    - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+                      hash: 2cec0f2ef1eb24797b650024873c91c942e74017
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: docker-progress-4.0.2
+                  date: 2020-08-17T11:47:14.543Z
+                - commits:
+                    - author: Pagan Gazzard
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: 9bb049ea3be13fb1362e39b057f78b19d8e3153d
+                      subject: Update dependencies
+                  date: '2020-03-04T14:17:04Z'
+                  version: docker-progress-4.0.1
+                - commits:
+                    - author: Paulo Castro
+                      body: >-
+                        The change type is considered 'major' because, by
+                        default, errors are
+
+                        now thrown for relatively common occurrences such as
+                        authentication
+
+                        failures when pulling from private registries, and
+                        library users may
+
+                        have to adapt.
+                      footers:
+                        change-type: major
+                        signed-off-by: Paulo Castro <paulo@balena.io>
+                      hash: 3eef3685262e6bae8de064b9c50129e5597f4318
+                      subject: Detect error events in push/pull progress streams
+                  date: '2019-03-26T16:03:31Z'
+                  version: docker-progress-4.0.0
+                - commits:
+                    - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+                      hash: ccd1e99c5501257f1304f4cb68dd02383411e0b8
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: docker-toolbelt-3.3.10
+                  date: 2020-08-19T12:10:49.102Z
+                - commits:
+                    - author: Pagan Gazzard
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: e89aedf563c4158894265c885cb86a834b5c9c7f
+                      subject: Update to balena-lint 5.x
+                  date: '2020-08-17T12:49:42Z'
+                  version: docker-toolbelt-3.3.9
+                - commits:
+                    - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+                      hash: 580a4229374fc96fc3f7aeb80e6b5a09aa958d7f
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: livepush-3.5.1
+                  date: 2020-08-19T12:27:19.448Z
+                - commits:
+                    - author: Roman Mazur
+                      body: ''
+                      footers:
+                        change-type: minor
+                        signed-off-by: Roman Mazur <roman@balena.io>
+                      hash: c180b489f3a537468f3347398824ca285354caaa
+                      subject: Allow setting ENV variables in the live image
+                    - author: Roman Mazur
+                      body: ''
+                      footers:
+                        change-type: patch
+                        signed-off-by: Roman Mazur <roman@balena.io>
+                      hash: 7a053dd801ee5bdc8e5b0792044be611d8981a58
+                      subject: Bump dockerode types dependency
+                  date: '2020-07-13T11:46:04Z'
+                  version: livepush-3.5.0
+                - commits:
+                    - author: Cameron Diver
+                      body: ''
+                      footers:
+                        change-type: patch
+                        signed-off-by: Cameron Diver <cameron@balena.io>
+                      hash: 68ebf4a50acb2b451770f79a44e256dc14adbde0
+                      subject: Update README with information about live directives
+                  date: '2020-05-05T10:39:11Z'
+                  version: livepush-3.4.1
+                - commits:
+                    - author: Cameron Diver
+                      body: ''
+                      footers:
+                        change-type: minor
+                        closes: '#76'
+                        signed-off-by: Cameron Diver <cameron@balena.io>
+                      hash: f4caa2052af2a820f8bf86d202b21b2fe6680af9
+                      subject: "\U0001F52D Add a file watcher which can be used by library users"
+                  date: '2020-04-15T10:50:17Z'
+                  version: livepush-3.4.0
+                - commits:
+                    - subject: Add .versionbot/CHANGELOG.yml for nested changelogs
+                      hash: 139561ad61ca4f0e2a6203fe3c5f3345ba32cf83
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: resin-docker-build-1.1.6
+                  date: 2020-08-19T12:14:05.986Z
+                - commits:
+                    - author: CameronDiver
+                      body: ''
+                      footers:
+                        change-type: patch
+                        signed-off-by: Cameron Diver <cameron@balena.io>
+                      hash: 0e84ec3d48268c0ae1a2390a2dad2cf8ec9e0eec
+                      subject: Update README with correct instantiation method
+                  date: '2020-04-02T16:54:05Z'
+                  version: resin-docker-build-1.1.5
+          version: balena-supervisor-11.12.8
+          date: 2020-08-19T12:38:52.114Z
+        - commits:
+            - subject: Update typed-error to 3.x
+              hash: 379730a9e1d6530ea8bc13715a46fe895b0d4ec8
+              body: |
+                Update typed-error from 2.0.0 to 3.2.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested:
+                - commits:
+                    - subject: Update dependencies
+                      hash: dc41949015399154efb4529183daa0dfc9269b52
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                  version: typed-error-3.2.1
+                  date: 2020-08-05T12:34:06.377Z
+                - commits:
+                    - subject: update deps and specify minimum engine requirements
+                      hash: 22f293afc187e67b88dab280951eb6e2bb504b24
+                      body: ''
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                        Signed-off-by: Will Boyce <will@balena.io>
+                        signed-off-by: Will Boyce <will@balena.io>
+                      author: Will Boyce
+                  version: typed-error-3.2.0
+                  date: 2019-11-20T09:52:39.017Z
+                - commits:
+                    - subject: 'dev: Enforce prettier coding standards'
+                      hash: 47c07a641fa39ddb833b41aff7a918accad08289
+                      body: ''
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                        Signed-off-by: Will Boyce <will@balena.io>
+                        signed-off-by: Will Boyce <will@balena.io>
+                      author: Will Boyce
+                    - subject: 'npm: Update dependencies and remove `package-lock.json`'
+                      hash: 067bceb5c8dfd46f7e4ff0f58dead46fd9626167
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Will Boyce <will@balena.io>
+                        signed-off-by: Will Boyce <will@balena.io>
+                      author: Will Boyce
+                    - subject: >-
+                        codeowners: Add top contributors @wrboyce, @Page-, and
+                        @dfunckt
+                      hash: 6acc8757a594f74f264c8d68ea4501c61bda9951
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Will Boyce <will@balena.io>
+                        signed-off-by: Will Boyce <will@balena.io>
+                      author: Will Boyce
+                    - subject: 'versionbot: Add CHANGELOG.yml (for nested changelogs)'
+                      hash: 2b684a0bb0c95a5dbd3b130ba0f184d3464d298f
+                      body: ''
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Will Boyce <will@balena.io>
+                        signed-off-by: Will Boyce <will@balena.io>
+                      author: Will Boyce
+                  version: typed-error-3.1.0
+                  date: 2019-04-01T10:20:01.427Z
+                - commits:
+                    - author: CameronDiver
+                      body: ''
+                      footers:
+                        change-type: patch
+                        signed-off-by: Cameron Diver <cameron@balena.io>
+                      hash: aaa9391dc463c1037f85e845d30f6f9434bb4dc1
+                      subject: Update README with new import style
+                  date: '2018-11-01T12:08:25Z'
+                  version: typed-error-3.0.2
+                - commits:
+                    - author: Pagan Gazzard
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: 627cdd281d7b086df8fe5ed1ccb0e0e0df3df062
+                      subject: Update to typescript 3
+                    - author: Pagan Gazzard
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: 00d182bb2bc29bd82adb4e8ea4527f6bda6c5278
+                      subject: Update dev dependencies
+                    - author: Pagan Gazzard
+                      body: ''
+                      hash: 94adac5d747f16b9228b39e56007ee0126c6f99c
+                      subject: Add node-10 to the circle test suite
+                  date: '2018-10-29T14:05:23Z'
+                  version: typed-error-3.0.1
+                - commits:
+                    - author: Will Boyce
+                      body: >-
+                        * Switch to `export ...` syntax (from `export = ...`)
+
+                        * Fix invalid export of class inheriting non-exported
+                        class
+                      footers:
+                        change-type: major
+                      hash: a6307b8c04d3456ad7d8a6ac19035b5e718c4311
+                      subject: Distribute generated typescript declaration
+                    - author: Will Boyce
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: 37c4b700baadba8cdd6bc0c40df74b30b1a6301c
+                      subject: use circle for build/publish and add package-lock
+                    - author: Will Boyce
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: 83e809281f5172ca1ff71bdf0ee663cd504f1428
+                      subject: add lint scripts/requirements
+                    - author: Will Boyce
+                      body: ''
+                      footers:
+                        change-type: minor
+                      hash: da9431d08e501a0d4d0db3a7fb2c0bd06d76d064
+                      subject: Remove `BaseError` class and  directly subclass `Error`
+                    - author: Will Boyce
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: e46a36b54498b68f513c6cb947e217c11525e160
+                      subject: 'Update dependencies, clean up package/tsconfig'
+                  date: '2018-04-17T08:19:27Z'
+                  version: typed-error-3.0.0
+                - commits:
+                    - author: Akis Kesoglou
+                      body: ''
+                      footers:
+                        change-type: patch
+                      hash: d35c44f1e57f6386c6f769f8cafc28e0886719cc
+                      subject: Add LICENSE
+                  date: '2017-12-15T17:19:00Z'
+                  version: typed-error-2.0.1
+          version: balena-supervisor-11.12.7
+          date: 2020-08-19T09:09:56.021Z
+        - commits:
+            - subject: Update pinejs-client-request to 7.2.1
+              hash: 90fab43022c91bce7cea5ce6cd3b4440a6f707a0
+              body: |
+                Update pinejs-client-request from 7.1.0 to 7.2.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested:
+                - commits:
+                    - subject: Update dependencies
+                      hash: f4502c9364bb5dd3ac4cb7242b8d08dca047b8ee
+                      body: |
+                        Update pinejs-client-core from 6.6.1 to 6.7.1
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                      nested:
+                        - commits:
+                            - subject: Fix prepare $count typings
+                              hash: fe63b2ba648b0ef545afe9fd18d433faca4af6a2
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.7.1
+                          date: 2020-08-12T14:30:20.061Z
+                        - commits:
+                            - subject: >-
+                                Improve typings for
+                                request/post/put/patch/delete
+                              hash: 32c0d5b40c14e44155391099a9051255c38b1c05
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.7.0
+                          date: 2020-08-12T13:42:49.438Z
+                  version: pinejs-client-request-7.2.1
+                  date: 2020-08-18T17:01:01.637Z
+                - commits:
+                    - subject: Update pinejs-client-core to 6.6.1
+                      hash: 8b45f326d07939279b5c4271c74579cdf5da3bb3
+                      body: |
+                        Update pinejs-client-core from 6.1.0 to 6.6.1
+                        Update typed-error from 3.2.0 to 3.2.1
+                      footer:
+                        Change-type: minor
+                        change-type: minor
+                      author: Pagan Gazzard
+                      nested:
+                        - commits:
+                            - subject: Update dependencies
+                              hash: dc41949015399154efb4529183daa0dfc9269b52
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: typed-error-3.2.1
+                          date: 2020-08-05T12:34:06.377Z
+                        - commits:
+                            - subject: >-
+                                Fix typing when id is specified to be `AnyObject
+                                | undefined`
+                              hash: c4802cb748b1552345f036120c3aa6254e6cc946
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.6.1
+                          date: 2020-08-11T17:10:09.498Z
+                        - commits:
+                            - subject: 'Deprecate `$expand: { ''a/$count'': {...} }`'
+                              hash: 8be33ad064905476e3f21978b7e1d760f5e27f4e
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Deprecate `resource: 'a/$count'` and update
+                                typings to reflect it
+                              hash: 779cc424cb6d2562aa9a98a3ff083b68308d9797
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.6.0
+                          date: 2020-08-11T16:18:59.088Z
+                        - commits:
+                            - subject: >-
+                                Add `options: { $count: { ... } }` sugar for top
+                                level $count
+                              hash: 13072f715da6c0ca3eab08584eaa48f39ea985b2
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Add `$expand: { a: { $count: { ... } } }` sugar
+                                for $count in expands
+                              hash: b2afb397c09a31c9ab3c1c370846c1b8762db32d
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.5.0
+                          date: 2020-08-11T10:25:19.860Z
+                        - commits:
+                            - subject: Improve return typing of `subscribe` method
+                              hash: 2311fe03b04f4e6149693a9e5c392f9f0bb2a549
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.4.0
+                          date: 2020-08-11T10:16:40.301Z
+                        - commits:
+                            - subject: Fix Poll.on typings
+                              hash: 315697d9c2c0e59652bcceddb7f36cb498269f64
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Improve return typing when id is passed to GET
+                                methods
+                              hash: 2d174f758314a20c01a171ac5826b71e4f623dcc
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Remove `PromiseResult` type, use
+                                `Promise<PromiseResultTypes>` instead
+                              hash: 905f275731af6ce2560c37f41343052f05365cd1
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Remove `PromiseObj` type, use `Promise<{}>`
+                                instead
+                              hash: 78aa2410aa86bf73cc4831f2149fc85e28a6ea23
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.3.0
+                          date: 2020-08-11T08:57:09.655Z
+                        - commits:
+                            - subject: >-
+                                Add `$filter: { a: { $count: 1 } }` sugar for
+                                $count in filters
+                              hash: f2fef3833f321bf81543c62a9a3db09d7fbc0a4a
+                              body: ''
+                              footer:
+                                Change-type: minor
+                                change-type: minor
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.2.0
+                          date: 2020-08-10T16:44:49.238Z
+                        - commits:
+                            - subject: >-
+                                Remove redundant ParamsObj/SubscribeParamsObj
+                                types
+                              hash: f5fc6762aa8f1918424fb5e1c1a05435f07af285
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.1.2
+                          date: 2020-08-10T16:32:09.666Z
+                        - commits:
+                            - subject: Make use of `mapObj` helper in more places
+                              hash: 2189f9918cb515071d2f6ecb941b0d838ee6c5ea
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                            - subject: >-
+                                Use `Object.keys` in preference to
+                                `hasOwnProperty` where applicable
+                              hash: 2ea0e9549974150ef9e7f82206f25000407e37ba
+                              body: ''
+                              footer:
+                                Change-type: patch
+                                change-type: patch
+                              author: Pagan Gazzard
+                          version: pinejs-client-js-6.1.1
+                          date: 2020-08-10T15:42:09.364Z
+                  version: pinejs-client-request-7.2.0
+                  date: 2020-08-12T07:00:59.754Z
+          version: balena-supervisor-11.12.6
+          date: 2020-08-18T17:30:40.807Z
+        - commits:
+            - subject: Refactor configurable backend class names
+              hash: ff404456b3c3edaf33fe2199387db47d9be03503
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+          version: balena-supervisor-11.12.5
+          date: 2020-08-12T19:06:59.672Z
+  version: 2.55.0
+  date: 2020-09-03T09:07:51.151Z
+- commits:
     - subject: Pack /lib/vdso/Makefile in kernel-modules-headers
       hash: 37ce34cbb4d1ddb8af5a0eafb40fc16436b6e2b8
       body: >

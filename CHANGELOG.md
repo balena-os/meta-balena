@@ -1,6 +1,267 @@
 Change log
 -----------
 
+# v2.55.0
+## (2020-09-03)
+
+
+<details>
+<summary> Update balena-supervisor from v11.12.4 to v11.13.0 [Cameron Diver] </summary>
+
+> ## balena-supervisor-11.13.0
+> ### (2020-08-29)
+> 
+> * added support for configuring ODMDATA [Miguel Casqueira]
+> 
+> ## balena-supervisor-11.12.11
+> ### (2020-08-27)
+> 
+> * bug: Resolve mDNS API URLs [Rich Bayliss]
+> 
+> ## balena-supervisor-11.12.10
+> ### (2020-08-24)
+> 
+> * Preventing removing all configurations if device has no backends [Miguel Casqueira]
+> 
+> ## balena-supervisor-11.12.9
+> ### (2020-08-20)
+> 
+> * Don't enforce the vc4-fkms-v3d dtoverlay on rpi4 [Cameron Diver]
+> 
+> ## balena-supervisor-11.12.8
+> ### (2020-08-19)
+> 
+> 
+> <details>
+> <summary> Update dependencies [Pagan Gazzard] </summary>
+> 
+>> ### node-docker-delta-2.2.11
+>> #### (2020-08-19)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> 
+>> ### node-docker-delta-2.2.10
+>> #### (2020-08-05)
+>> 
+>> * Removed unused dependencies [Pagan Gazzard]
+>> * circleci: update docker [Pagan Gazzard]
+>> 
+>> ### docker-progress-4.0.3
+>> #### (2020-08-17)
+>> 
+>> * Update to balena-lint 5.x [Pagan Gazzard]
+>> 
+>> ### docker-progress-4.0.2
+>> #### (2020-08-17)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> 
+>> ### docker-progress-4.0.1
+>> #### (2020-03-04)
+>> 
+>> * Update dependencies [Pagan Gazzard]
+>> 
+>> ### docker-progress-4.0.0
+>> #### (2019-03-26)
+>> 
+>> * Detect error events in push/pull progress streams [Paulo Castro]
+>> 
+>> ### docker-toolbelt-3.3.10
+>> #### (2020-08-19)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> 
+>> ### docker-toolbelt-3.3.9
+>> #### (2020-08-17)
+>> 
+>> * Update to balena-lint 5.x [Pagan Gazzard]
+>> 
+>> ### livepush-3.5.1
+>> #### (2020-08-19)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> 
+>> ### livepush-3.5.0
+>> #### (2020-07-13)
+>> 
+>> * Allow setting ENV variables in the live image [Roman Mazur]
+>> * Bump dockerode types dependency [Roman Mazur]
+>> 
+>> ### livepush-3.4.1
+>> #### (2020-05-05)
+>> 
+>> * Update README with information about live directives [Cameron Diver]
+>> 
+>> ### livepush-3.4.0
+>> #### (2020-04-15)
+>> 
+>> * 🔭 Add a file watcher which can be used by library users [Cameron Diver]
+>> 
+>> ### resin-docker-build-1.1.6
+>> #### (2020-08-19)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> 
+>> ### resin-docker-build-1.1.5
+>> #### (2020-04-02)
+>> 
+>> * Update README with correct instantiation method [CameronDiver]
+>> 
+> </details>
+> 
+> 
+> ## balena-supervisor-11.12.7
+> ### (2020-08-19)
+> 
+> 
+> <details>
+> <summary> Update typed-error to 3.x [Pagan Gazzard] </summary>
+> 
+>> ### typed-error-3.2.1
+>> #### (2020-08-05)
+>> 
+>> * Update dependencies [Pagan Gazzard]
+>> 
+>> ### typed-error-3.2.0
+>> #### (2019-11-20)
+>> 
+>> * update deps and specify minimum engine requirements [Will Boyce]
+>> 
+>> ### typed-error-3.1.0
+>> #### (2019-04-01)
+>> 
+>> * dev: Enforce prettier coding standards [Will Boyce]
+>> * npm: Update dependencies and remove `package-lock.json` [Will Boyce]
+>> * codeowners: Add top contributors @wrboyce, @Page-, and @dfunckt [Will Boyce]
+>> * versionbot: Add CHANGELOG.yml (for nested changelogs) [Will Boyce]
+>> 
+>> ### typed-error-3.0.2
+>> #### (2018-11-01)
+>> 
+>> * Update README with new import style [CameronDiver]
+>> 
+>> ### typed-error-3.0.1
+>> #### (2018-10-29)
+>> 
+>> * Update to typescript 3 [Pagan Gazzard]
+>> * Update dev dependencies [Pagan Gazzard]
+>> * Add node-10 to the circle test suite [Pagan Gazzard]
+>> 
+>> ### typed-error-3.0.0
+>> #### (2018-04-17)
+>> 
+>> * Distribute generated typescript declaration [Will Boyce]
+>> * use circle for build/publish and add package-lock [Will Boyce]
+>> * add lint scripts/requirements [Will Boyce]
+>> * Remove `BaseError` class and  directly subclass `Error` [Will Boyce]
+>> * Update dependencies, clean up package/tsconfig [Will Boyce]
+>> 
+>> ### typed-error-2.0.1
+>> #### (2017-12-15)
+>> 
+>> * Add LICENSE [Akis Kesoglou]
+>> 
+> </details>
+> 
+> 
+> ## balena-supervisor-11.12.6
+> ### (2020-08-18)
+> 
+> 
+> <details>
+> <summary> Update pinejs-client-request to 7.2.1 [Pagan Gazzard] </summary>
+> 
+>> ### pinejs-client-request-7.2.1
+>> #### (2020-08-18)
+>> 
+>> 
+>> <details>
+>> <summary> Update dependencies [Pagan Gazzard] </summary>
+>> 
+>>> #### pinejs-client-js-6.7.1
+>>> ##### (2020-08-12)
+>>> 
+>>> * Fix prepare $count typings [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.7.0
+>>> ##### (2020-08-12)
+>>> 
+>>> * Improve typings for request/post/put/patch/delete [Pagan Gazzard]
+>>> 
+>> </details>
+>> 
+>> 
+>> ### pinejs-client-request-7.2.0
+>> #### (2020-08-12)
+>> 
+>> 
+>> <details>
+>> <summary> Update pinejs-client-core to 6.6.1 [Pagan Gazzard] </summary>
+>> 
+>>> #### typed-error-3.2.1
+>>> ##### (2020-08-05)
+>>> 
+>>> * Update dependencies [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.6.1
+>>> ##### (2020-08-11)
+>>> 
+>>> * Fix typing when id is specified to be `AnyObject | undefined` [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.6.0
+>>> ##### (2020-08-11)
+>>> 
+>>> * Deprecate `$expand: { 'a/$count': {...} }` [Pagan Gazzard]
+>>> * Deprecate `resource: 'a/$count'` and update typings to reflect it [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.5.0
+>>> ##### (2020-08-11)
+>>> 
+>>> * Add `options: { $count: { ... } }` sugar for top level $count [Pagan Gazzard]
+>>> * Add `$expand: { a: { $count: { ... } } }` sugar for $count in expands [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.4.0
+>>> ##### (2020-08-11)
+>>> 
+>>> * Improve return typing of `subscribe` method [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.3.0
+>>> ##### (2020-08-11)
+>>> 
+>>> * Fix Poll.on typings [Pagan Gazzard]
+>>> * Improve return typing when id is passed to GET methods [Pagan Gazzard]
+>>> * Remove `PromiseResult` type, use `Promise<PromiseResultTypes>` instead [Pagan Gazzard]
+>>> * Remove `PromiseObj` type, use `Promise<{}>` instead [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.2.0
+>>> ##### (2020-08-10)
+>>> 
+>>> * Add `$filter: { a: { $count: 1 } }` sugar for $count in filters [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.1.2
+>>> ##### (2020-08-10)
+>>> 
+>>> * Remove redundant ParamsObj/SubscribeParamsObj types [Pagan Gazzard]
+>>> 
+>>> #### pinejs-client-js-6.1.1
+>>> ##### (2020-08-10)
+>>> 
+>>> * Make use of `mapObj` helper in more places [Pagan Gazzard]
+>>> * Use `Object.keys` in preference to `hasOwnProperty` where applicable [Pagan Gazzard]
+>>> 
+>> </details>
+>> 
+>> 
+> </details>
+> 
+> 
+> ## balena-supervisor-11.12.5
+> ### (2020-08-12)
+> 
+> * Refactor configurable backend class names [Miguel Casqueira]
+> 
+</details>
+
 # v2.54.3
 ## (2020-08-25)
 
