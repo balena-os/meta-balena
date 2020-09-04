@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'os-helpers-logging: Log to stderr rather than stdout'
+      hash: 94c60a30c6147838f4a91449f3960025625ce709
+      body: |
+        This is where the logs and error messages should go by default
+        as they are not part of the tool's output.
+      footer:
+        Change-Type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.57.1
+  date: 2020-09-04T17:13:50.058Z
+- commits:
     - subject: 'Update libmbim to 1.24.2, libqmi to 1.26.0, modemmanager to 1.14.2'
       hash: 1c80d6cc69d687fab6f2385efca5d6564c28370d
       body: |

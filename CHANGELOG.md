@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.57.1
+## (2020-09-04)
+
+* os-helpers-logging: Log to stderr rather than stdout [Michal Toman]
+
 # v2.57.0
 ## (2020-09-04)
 
