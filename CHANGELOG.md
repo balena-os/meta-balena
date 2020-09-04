@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.57.0
+## (2020-09-04)
+
+* Update libmbim to 1.24.2, libqmi to 1.26.0, modemmanager to 1.14.2 [Vicentiu Galanopulo]
+
 # v2.56.0
 ## (2020-09-03)
 

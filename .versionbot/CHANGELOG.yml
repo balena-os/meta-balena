@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'Update libmbim to 1.24.2, libqmi to 1.26.0, modemmanager to 1.14.2'
+      hash: 1c80d6cc69d687fab6f2385efca5d6564c28370d
+      body: |
+        Update libmbim from 1.22.0 to 1.24.2
+        Update libqmi from 1.24.10 to 1.26.0
+        Update modemmanager from 1.12.8 to 1.14.2
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: 'Update libmbim to 1.24.2, libqmi to 1.26.0, modemmanager to 1.14.2'
+        changelog-entry: 'Update libmbim to 1.24.2, libqmi to 1.26.0, modemmanager to 1.14.2'
+        Signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+        signed-off-by: Vicentiu Galanopulo <vicentiu@balena.io>
+      author: Vicentiu Galanopulo
+      nested: []
+  version: 2.57.0
+  date: 2020-09-04T13:54:00.370Z
+- commits:
     - subject: Update balena-supervisor from v11.13.0 to v11.14.0
       hash: afdfc4ec7d46f74bc2b104a6d899a6587b3596cc
       body: |
