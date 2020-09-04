@@ -7,10 +7,11 @@ LIC_FILES_CHKSUM = " \
     file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
 "
 
-DEPENDS = "glib-2.0 glib-2.0-native libgudev autoconf-archive-native"
+DEPENDS = "glib-2.0 glib-2.0-native libgudev autoconf-archive"
 
-inherit autotools pkgconfig bash-completion
+inherit autotools pkgconfig bash-completion gobject-introspection
 
 SRC_URI = "http://www.freedesktop.org/software/${BPN}/${BPN}-${PV}.tar.xz"
-SRC_URI[md5sum] = "87060e8957013177e4140edc6f64f5bd"
-SRC_URI[sha256sum] = "5c0778eb1cd12c3604523134e55183f5147b0cae71150e875b583768f7aa1f38"
+
+SRC_URI[md5sum] = "6c2b490af87773c8446f37536e7411ac"
+SRC_URI[sha256sum] = "32198c099987849c5f442d1cbf4b6e43e645cbdbe9cfdc197b19ddd63c6981e4"
