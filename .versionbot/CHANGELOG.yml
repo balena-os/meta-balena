@@ -1,4 +1,23 @@
 - commits:
+    - subject: Respect balenaRootCA system-wide
+      hash: 2218cb21d1fc813ac59c08b77046c5d014ad9a42
+      body: |
+        We allow the user to specify a custom CA in the .balenaRootCA key
+        of config.json but at this moment each tool has to implement support
+        if it wants to use it. This commit adds it to the system-wide CA bundle
+        so that the CA is respected everywhere.
+
+        Fixes #1398
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.58.0
+  date: 2020-09-05T06:47:40.132Z
+- commits:
     - subject: 'os-helpers-logging: Log to stderr rather than stdout'
       hash: 94c60a30c6147838f4a91449f3960025625ce709
       body: |

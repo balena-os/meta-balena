@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.0
+## (2020-09-05)
+
+* Respect balenaRootCA system-wide [Michal Toman]
+
 # v2.57.1
 ## (2020-09-04)
 
