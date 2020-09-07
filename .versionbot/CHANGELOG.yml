@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'add CONFIG_PSI for PSI subsystem accounting, default to enabled'
+      hash: ac82d0ff1a00b3327a552b9ffd292dbf9fd772eb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.58.1
+  date: 2020-09-07T14:48:20.317Z
+- commits:
     - subject: Respect balenaRootCA system-wide
       hash: 2218cb21d1fc813ac59c08b77046c5d014ad9a42
       body: |

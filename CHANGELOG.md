@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.1
+## (2020-09-07)
+
+* add CONFIG_PSI for PSI subsystem accounting, default to enabled [Matthew McGinn]
+
 # v2.58.0
 ## (2020-09-05)
 
