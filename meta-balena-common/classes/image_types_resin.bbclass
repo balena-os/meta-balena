@@ -120,6 +120,7 @@ do_image_resinos_img[depends] = " \
     mtools-native:do_populate_sysroot \
     parted-native:do_populate_sysroot \
     virtual/kernel:do_deploy \
+    virtual/balena-kboot:do_deploy \
     ${RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
 
