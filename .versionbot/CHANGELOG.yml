@@ -1,4 +1,25 @@
 - commits:
+    - subject: Wait for the root device to come up when necessary
+      hash: 494eeb4a699b4dd5e48547d6e5e45cffb7bf0720
+      body: |
+        If the rootfs is on a slow-to-bring-up device (e.g. RPi4 + USB)
+        the fsuuidsinit_enabled() function may return before the balena symlinks
+        are created. This gets wrongly interpreted as missing UUIDs leading to
+        a chain of failures in the subsequent scripts.
+        This patch moves the symlink waiting loop from fsuuidsinit_run()
+        to fsuuids_enabled() before the first usage of the symlink.
+      footer:
+        Changelog-Entry: Wait for the root device to come up when necessary
+        changelog-entry: Wait for the root device to come up when necessary
+        Change-Type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.58.1
+  date: 2020-09-15T18:24:58.280Z
+- commits:
     - subject: Respect balenaRootCA system-wide
       hash: 2218cb21d1fc813ac59c08b77046c5d014ad9a42
       body: |

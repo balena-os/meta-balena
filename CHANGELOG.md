@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.1
+## (2020-09-15)
+
+* Wait for the root device to come up when necessary [Michal Toman]
+
 # v2.58.0
 ## (2020-09-05)
 
