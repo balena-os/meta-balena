@@ -30,6 +30,16 @@ fsuuidsinit_enabled() {
         return 1
     fi
 
+    # Wait for balena by-state symlinks to come up
+    # We only wait for resin-rootA here as we use it right away
+    # but we in fact assume the other symlinks are created as well
+    # wait4file does $2 loops of 100ms, therefore use 10 * roottimeout
+    timeout=${bootparam_roottimeout:-5}
+    if ! wait4file "/dev/disk/by-state/resin-rootA" "$((timeout * 10))"; then
+        error "Timeout while waiting for resin-root partition to be detected"
+        return 1
+    fi
+
     # Check whether UUIDs have already been regenerated
     uuid_prefix="$(get_dev_uuid "/dev/disk/by-state/resin-rootA" | cut -d "-" -f1)"
     if [ "${uuid_prefix}" = "ba1eadef" ]; then
@@ -44,12 +54,7 @@ fsuuidsinit_run() {
     # Generate new UUIDs only for resin-root filesystems
     # These are passed by the bootloaders, and used to generate the udev
     # by-state symlinks that are then used by everything else.
-    info "Generating new UUIDs for filesystems..."
-    if ! wait4file "/dev/disk/by-state/resin-rootA" "300" ||
-       ! wait4file "/dev/disk/by-state/resin-rootB" "300"; then
-        error "Timeout while waiting for resin-root partitions to be detected"
-        return
-    fi
+
     # Only rename the partitions mounted on the initramfs
     # the rest will be done at runtime mount in parallel with system boot
     # Include both resin-root partitions as the inactive one is access mounted
