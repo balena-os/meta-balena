@@ -4,9 +4,17 @@ BalenaOS initramfs"
 
 PACKAGE_INSTALL = " \
     kexecboot \
-    kexec-tools-klibc \
-    kexecboot-cfg \
+    kexec-tools \
+    base-passwd \
+    busybox \
+    glibc-gconv \
+    glibc-gconv-ibm437 \
+    glibc-gconv-ibm850 \
+    initramfs-module-debug \
+    initramfs-framework-base \
+    udev \
 "
+BAD_RECOMMENDATIONS += "busybox-syslog"
 
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = ""
