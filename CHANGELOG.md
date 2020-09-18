@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.3
+## (2020-09-18)
+
+* Blacklist supervisor configuration backend files during HUP [Alex Gonzalez]
+
 # v2.58.2
 ## (2020-09-17)
 

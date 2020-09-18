@@ -1,4 +1,34 @@
 - commits:
+    - subject: Blacklist supervisor configuration backend files during HUP
+      hash: 43a14fef9875f0d0afc23a833cc8e9dc4ae80536
+      body: >
+        The hostapp update process should not overwrite the supervisor
+        configuration
+
+        backend files to avoid the supervisor being forced to set the target
+        state
+
+        after HUP and reboot the device during the rollback period.
+
+
+        This only applies to the host configuration files which are the only
+        ones
+
+        that force a reboot.
+      footer:
+        Connects-to: 'https://github.com/balena-io/balena-supervisor/issues/1464'
+        connects-to: 'https://github.com/balena-io/balena-supervisor/issues/1464'
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Blacklist supervisor configuration backend files during HUP
+        changelog-entry: Blacklist supervisor configuration backend files during HUP
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.58.3
+  date: 2020-09-18T10:34:55.646Z
+- commits:
     - subject: 'hooks: fix up improperly named variable'
       hash: 2b42bc65dfc32817015d532c0a05d28670956bb7
       body: ''
