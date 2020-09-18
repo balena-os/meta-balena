@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.2
+## (2020-09-17)
+
+* hooks: fix up improperly named variable [Matthew McGinn]
+
 # v2.58.1
 ## (2020-09-15)
 

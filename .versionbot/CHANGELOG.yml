@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'hooks: fix up improperly named variable'
+      hash: 2b42bc65dfc32817015d532c0a05d28670956bb7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.58.2
+  date: 2020-09-17T22:33:04.792Z
+- commits:
     - subject: Wait for the root device to come up when necessary
       hash: 494eeb4a699b4dd5e48547d6e5e45cffb7bf0720
       body: |
