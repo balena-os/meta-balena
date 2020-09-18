@@ -14,6 +14,10 @@ bootfiles_blacklist="\
 	/config.json \
 	/config.txt \
 	/splash/balena-logo.png \
+	/extlinux.conf \
+	/extra_uEnv.txt \
+	/extra_grubEnv.txt \
+	/configfs.json \
 	"
 boot_mountpoint="/mnt/boot"
 DURING_UPDATE=${DURING_UPDATE:-0}
