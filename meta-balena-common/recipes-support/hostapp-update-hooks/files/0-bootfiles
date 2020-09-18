@@ -16,7 +16,7 @@ bootfiles_blacklist="\
 	/splash/balena-logo.png \
 	"
 boot_mountpoint="/mnt/boot"
-DURING_UDPATE=${DURING_UPDATE:-0}
+DURING_UPDATE=${DURING_UPDATE:-0}
 
 # Checks if a file is present in the blacklist
 # Arguments:
