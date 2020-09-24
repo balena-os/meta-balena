@@ -71,6 +71,7 @@ if [ -f $CONFIG_PATH ]; then
          NTP_SERVERS=\(.ntpServers // "")
          DNS_SERVERS=\(.dnsServers // "")
          BALENA_ROOT_CA=\(.balenaRootCA // "")
+         HOSTEXT_IMAGES=\(.hostappExtensions // "")
          "' $CONFIG_PATH)"
 
     # Various default values
