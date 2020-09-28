@@ -1,0 +1,34 @@
+From: Alex Gonzalez <alexg@balena.io>
+Date: Mon, 28 Sep 2020 18:31:32 +0200
+Subject: [PATCH 2/3] kexecboot: Avoid segmentation failt if no item selected
+
+If no menu configuration is found the application would follow a null
+pointer and segfault.
+
+Signed-off-by: Alex Gonzalez <alexg@balena.io>
+---
+ src/kexecboot.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/kexecboot.c b/src/kexecboot.c
+index 40506b2756cf..6a89024083e3 100644
+--- a/src/kexecboot.c
++++ b/src/kexecboot.c
+@@ -303,7 +303,7 @@ void start_kernel(struct params_t *params, int choice)
+ 
+ 
+ 	/* fll '--command-line' option */
+-	if (item->device) {
++	if (item && item->device) {
+ 		/* default device to mount */
+ 		strcpy(mount_dev, item->device);
+ 
+@@ -354,6 +354,8 @@ void start_kernel(struct params_t *params, int choice)
+ 			load_argv[idx] = cmdline_arg;
+ 			++idx;
+ 		}
++	} else {
++		exit(-1);
+ 	}
+ 
+ 	add_cmd_option(load_argv, "--dtb=", item->dtbpath, &idx);

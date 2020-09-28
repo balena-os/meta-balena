@@ -1,0 +1,29 @@
+From 54ebe8f8423d8526043b213057503d8b6a685d66 Mon Sep 17 00:00:00 2001
+From: Alex Gonzalez <alexg@balena.io>
+Date: Wed, 30 Sep 2020 21:28:04 +0200
+Subject: [PATCH] cfgparser: Modify bootcfg path to work with a balena hostapp
+
+The balena hostapp boot directory is a symlink to /current/boot and given
+that the partition is mounted under /mnt the link is broken.
+
+Changing the bootcfg path to current/boot/boot.cfg allow the config file
+to be found.
+
+Signed-off-by: Alex Gonzalez <alexg@balena.io>
+---
+ src/cfgparser.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/cfgparser.h b/src/cfgparser.h
+index cfcc1743d9e7..f25bb3dade1e 100644
+--- a/src/cfgparser.h
++++ b/src/cfgparser.h
+@@ -23,7 +23,7 @@
+ #include "util.h"
+ 
+ #define MOUNTPOINT	"/mnt"
+-#define BOOTCFG_PATH MOUNTPOINT "/boot/boot.cfg"
++#define BOOTCFG_PATH MOUNTPOINT "/current/boot/boot.cfg"
+ 
+ enum ui_type_t { GUI, TEXTUI };
+ 
