@@ -1,0 +1,53 @@
+From: Alex Gonzalez <alexg@balena.io>
+Date: Mon, 28 Sep 2020 19:14:21 +0200
+Subject: [PATCH 3/3] kexecboot: Add a reuse-cmdline configuration option
+
+This enables passing the --reuse-cmdline to kexec so the current kernel
+command line can be reused.
+
+Signed-off-by: Alex Gonzalez <alexg@balena.io>
+---
+ configure.ac    | 6 ++++++
+ src/kexecboot.c | 5 +++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index df6c0b79a9cb..b474efa742b7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -77,6 +77,7 @@ AC_ARG_ENABLE([no-checks],[AS_HELP_STRING([--enable-no-checks],[kexec fast reboo
+ AC_ARG_ENABLE([kexec-file-syscall],[AS_HELP_STRING([--enable-kexec-file-syscall],[Use the new file based syscall for kexec operation @<:@default=no@:>@])],[],[enable_kexec_file_syscall=no])
+ AC_ARG_ENABLE([kexec-syscall],[AS_HELP_STRING([--enable-kexec-syscall],[Use the old kexec_load syscall for compatibility @<:@default=no@:>@])],[],[enable_kexec_syscall=no])
+ AC_ARG_ENABLE([default-boot],[AS_HELP_STRING([--enable-default-boot],[Launch first menu item without displaying menu @<:@default=no@:>@])],[],[enable_default_boot=no])
++AC_ARG_ENABLE([reuse-cmdline],[AS_HELP_STRING([--enable-reuse-cmdline],[Ask kexec to reuse the existing kernel command line @<:@default=no@:>@])],[],[enable_reuse_cmdline=no])
+ 
+ # args for ubiattach
+ AC_ARG_WITH([ubiattach-binary],[AS_HELP_STRING([--with-ubiattach-binary="path"],[look for ubiattach binary at path @<:@default="/usr/sbin/ubiattach"@:>@])],[
+@@ -270,6 +271,11 @@ AS_IF([test "x$enable_default_boot" != "xno"],
+ 		AC_DEFINE([USE_DEFAULT_BOOT], [1], [Define if you want to pass  --default-boot])
+ 		], [])
+ 
++AS_IF([test "x$enable_reuse_cmdline" != "xno"],
++		[
++		AC_DEFINE([REUSE_CMDLINE], [1], [Define if you want to pass  --reuse-cmdline])
++		], [])
++
+ # tests for ubiattach args
+ AS_IF([test "x$with_ubiattach_binary" != "xno"],
+ 		[
+diff --git a/src/kexecboot.c b/src/kexecboot.c
+index 6a89024083e3..e336408bd0e9 100644
+--- a/src/kexecboot.c
++++ b/src/kexecboot.c
+@@ -298,6 +298,11 @@ void start_kernel(struct params_t *params, int choice)
+ 	idx++;
+ #endif
+ 
++#ifdef REUSE_CMDLINE
++	load_argv[idx] = strdup("--reuse-cmdline");
++	idx++;
++#endif
++
+ 	/* size is only known at runtime */
+ 	item = params->bootcfg->list[choice];
+ 
