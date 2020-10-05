@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'docker-disk: Allow expanding data filesystem on 2TB disks'
+      hash: 62b3763b44dcd9397f964d0812b7292885b04f66
+      body: |
+        Switch to 4k block size for the resin-data filesystem
+        so it can be expanded to sizes greater than 1023GiB.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.58.4
+  date: 2020-10-05T12:38:50.221Z
+- commits:
     - subject: Blacklist supervisor configuration backend files during HUP
       hash: 43a14fef9875f0d0afc23a833cc8e9dc4ae80536
       body: >

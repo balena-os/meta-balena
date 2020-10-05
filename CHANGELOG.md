@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.4
+## (2020-10-05)
+
+* docker-disk: Allow expanding data filesystem on 2TB disks [Alexandru Costache]
+
 # v2.58.3
 ## (2020-09-18)
 
