@@ -19,6 +19,7 @@ TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
 TARGET_TAG ?= "${SUPERVISOR_TAG}"
 
 PARTITION_SIZE ?= "192"
+FS_BLOCK_SIZE ?= "4k"
 
 python () {
     import re
@@ -71,6 +72,7 @@ do_compile () {
 		-e PRIVATE_REGISTRY_USER="${PRIVATE_REGISTRY_USER}" \
 		-e PRIVATE_REGISTRY_PASSWORD="${PRIVATE_REGISTRY_PASSWORD}" \
 		-e PARTITION_SIZE="${PARTITION_SIZE}" \
+		-e FS_BLOCK_SIZE="${FS_BLOCK_SIZE}" \
 		-v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/build \
 		--name ${_container_name} ${_image_name}
 	$DOCKER rmi ${_image_name}
