@@ -1,4 +1,17 @@
 - commits:
+    - subject: >-
+        Probes cloud meatdata services for public SSH keys and adds to
+        config.json
+      hash: ca42189e06ea5922aeee46048092e5e62ab61410
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 2.58.5
+  date: 2020-10-06T17:05:28.730Z
+- commits:
     - subject: 'docker-disk: Allow expanding data filesystem on 2TB disks'
       hash: 62b3763b44dcd9397f964d0812b7292885b04f66
       body: |

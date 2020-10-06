@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.5
+## (2020-10-06)
+
+* Probes cloud meatdata services for public SSH keys and adds to config.json [ab77]
+
 # v2.58.4
 ## (2020-10-05)
 
