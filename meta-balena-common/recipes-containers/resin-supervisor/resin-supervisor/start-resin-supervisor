@@ -19,21 +19,6 @@ fi
 SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG")
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
-# If self-signed root CA exists, add the CA for the specified registry
-if [ -n "$BALENA_ROOT_CA" ]; then
-    BALENA_DECODED_ROOT_CA="$(echo "${BALENA_ROOT_CA}" | base64 -d -w0)"
-    NODE_EXTRA_CA_CERTS="/etc/ssl/certs/balenaRootCA.pem"
-    CERT_DIR="/mnt/state/root-overlay/etc/docker/certs.d/${REGISTRY_ENDPOINT}"
-    CERT_FILE="${CERT_DIR}/ca.crt"
-    CERT_CONTENTS=$(if [ -e "$CERT_FILE" ]; then echo $(cat "$CERT_FILE"); fi)
-
-    # Ensure that the contents is correct, install otherwise
-    if [ "$BALENA_DECODED_ROOT_CA" != "$CERT_CONTENTS" ]; then
-        mkdir -p "$CERT_DIR"
-        echo "$BALENA_DECODED_ROOT_CA" > "$CERT_FILE"
-    fi
-fi
-
 hasValueChanged() {
     KEY="$1"
     NEW_VALUE="$2"
@@ -52,14 +37,11 @@ configIsUnchanged() {
     SUPERVISOR_CONTAINER_ENV_JSON="$(balena inspect resin_supervisor | jq '.[0].Config.Env | map(.| { (.[0:index("=")]): .[index("=")+1:] }) | add')"
 
     if hasValueChanged "BOOT_MOUNTPOINT"       "$BOOT_MOUNTPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "REGISTRY_ENDPOINT"     "$REGISTRY_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "MIXPANEL_TOKEN"        "$MIXPANEL_TOKEN" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "DELTA_ENDPOINT"        "$DELTA_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LED_FILE"              "${LED_FILE}" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LISTEN_PORT"           "$LISTEN_PORT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "BALENA_ROOT_CA"        "$BALENA_DECODED_ROOT_CA" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "NODE_EXTRA_CA_CERTS"   "$NODE_EXTRA_CA_CERTS" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
+    hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
         echo "Container config has changed!"
         return 1
     else
@@ -95,8 +77,6 @@ runSupervisor() {
         -e "LED_FILE=${LED_FILE}" \
         -e "LISTEN_PORT=$LISTEN_PORT" \
         -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" \
-        -e "BALENA_ROOT_CA=$BALENA_DECODED_ROOT_CA" \
-        -e "NODE_EXTRA_CA_CERTS=$NODE_EXTRA_CA_CERTS" \
         "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}"
 }
 
