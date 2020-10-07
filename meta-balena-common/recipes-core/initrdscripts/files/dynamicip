@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#
+# Set a dynamic IP address
+#
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+dynamicip_enabled() {
+	# shellcheck disable=SC2154
+	if [ "$bootparam_networkflasher" = "true" ]; then
+		info "Network flasher detected."
+		return 0
+	fi
+	return 1
+}
+
+dynamicip_run() {
+	udhcpc -O serverid
+	# TODO add a script to /etc/udhcpc.d/ to set this option
+	export NETWORK_BOOT_SERVER="192.168.42.1"
+	if ! ifconfig | grep -q "inet addr"; then
+		fail "Unable to get a dynamic IP address"
+		exit 1
+	fi
+	info "IP address set to $(ip -f inet -o addr show | tr -s " " | cut -d " " -f 4)"
+}

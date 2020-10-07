@@ -2,6 +2,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRC_URI_append = " \
     file://prepare \
+    file://dynamicip \
     file://fsck \
     file://fsuuidsinit \
     file://machineid \
@@ -13,6 +14,7 @@ SRC_URI_append = " \
 
 do_install_append() {
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
+    install -m 0755 ${WORKDIR}/dynamicip ${D}/init.d/71-dynamicip
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
@@ -30,6 +32,7 @@ PACKAGES_append = " \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
     initramfs-module-fsuuidsinit \
+    initramfs-module-dynamicip \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -61,3 +64,7 @@ FILES_initramfs-module-prepare = "/init.d/70-prepare"
 SUMMARY_initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
 RDEPENDS_initramfs-module-fsuuidsinit = "${PN}-base"
 FILES_initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
+
+SUMMARY_initramfs-module-dynamicip = "Set a dynamic IP address"
+RDEPENDS_initramfs-module-dynamicip = "${PN}-base"
+FILES_initramfs-module-dynamicip = "/init.d/71-dynamicip"
