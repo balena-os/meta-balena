@@ -1,0 +1,30 @@
+#!/bin/sh
+
+#
+# Fetch balena image from TFTP server
+#
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+imagefetch_enabled() {
+	# shellcheck disable=SC2154
+	if [ "${bootparam_networkflasher}" = "true" ]; then
+		info "Network flasher detected."
+		return 0
+	fi
+	return 1
+}
+
+export BALENA_IMAGE="balena-image.img.gz"
+
+# NETWORK_BOOT_SERVER is set in the dynamicip module
+imagefetch_run() {
+	# Fetch balena image from tftp
+	cd /rootfs || exit 1
+	info "Fetching ${BALENA_IMAGE} from ${NETWORK_BOOT_SERVER}"
+	if ! tftp -g -l "${BALENA_IMAGE}" "${NETWORK_BOOT_SERVER}"; then
+		fail "Failed fetching balena image"
+		exit 1
+	fi
+}
