@@ -4,6 +4,7 @@ SRC_URI_append = " \
     file://prepare \
     file://dynamicip \
     file://imagefetch \
+    file://flasher \
     file://fsck \
     file://fsuuidsinit \
     file://machineid \
@@ -17,6 +18,7 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
     install -m 0755 ${WORKDIR}/dynamicip ${D}/init.d/71-dynamicip
     install -m 0755 ${WORKDIR}/imagefetch ${D}/init.d/72-imagefetch
+    install -m 0755 ${WORKDIR}/flasher ${D}/init.d/73-flasher
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
@@ -36,6 +38,7 @@ PACKAGES_append = " \
     initramfs-module-fsuuidsinit \
     initramfs-module-dynamicip \
     initramfs-module-imagefetch \
+    initramfs-module-flasher \
     "
 
 RRECOMMENDS_${PN}-base += "initramfs-module-rootfs"
@@ -75,3 +78,7 @@ FILES_initramfs-module-dynamicip = "/init.d/71-dynamicip"
 SUMMARY_initramfs-module-imagefetch = "Fetches a Balena image from a TFTP server"
 RDEPENDS_initramfs-module-imagefetch = "${PN}-base"
 FILES_initramfs-module-imagefetch = "/init.d/72-imagefetch"
+
+SUMMARY_initramfs-module-flasher = "Flashes a Balena image to storage"
+RDEPENDS_initramfs-module-flasher = "${PN}-base"
+FILES_initramfs-module-flasher = "/init.d/73-flasher"

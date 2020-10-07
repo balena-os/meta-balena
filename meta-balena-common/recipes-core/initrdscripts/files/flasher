@@ -1,0 +1,59 @@
+#!/bin/sh
+
+#
+# Flashes removable media like an SDcard
+#
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+flasher_enabled() {
+	# shellcheck disable=SC2154
+	if [ "$bootparam_networkflasher" = "true" ]; then
+		info "Network flasher detected."
+		return 0
+	fi
+	return 1
+}
+
+internal_dev="mmcblk0"
+progress_log="/run/initramfs/dd_progress_log"
+
+flasher_run() {
+	if ! fdisk -l | grep -q "${internal_dev}"; then
+		fail "Failed to find ${internal_dev} block device."
+	fi
+	info "${internal_dev} will be used for flashing."
+	file_header=$(head -c 1 "${BALENA_IMAGE}" | xxd -p)
+	# Only gzip compressed files supported
+	# See https://www.ietf.org/rfc/rfc1952.txt 2.3.1 for identification
+	if [ "${file_header}" = "1f" ] || [ "${file_header}" = "8b" ]; then
+		gunzip -c "${BALENA_IMAGE}" | dd of="/dev/${internal_dev}" bs=4M 2> "${progress_log}" & DD_PID=$!
+	else
+		dd if="/opt/${BALENA_IMAGE}" of="/dev/${internal_dev}" bs=4M 2> "${progress_log}" & DD_PID=$!
+	fi
+
+	if ! kill -0 ${DD_PID}; then
+		fail "Failed to flash device ${internal_dev}."
+	fi
+
+	IMAGE_FILE_SIZE=$(wc -c /rootfs/"${BALENA_IMAGE}" | awk '{print $1}')
+
+	while kill -USR1 ${DD_PID} 2>/dev/null; do
+		sleep 3
+		if [ ! -s "${progress_log}" ]; then
+			continue
+		fi
+		IMAGE_WRITTEN_BYTES=$(awk 'END{print $1}' "${progress_log}")
+		RATIO=$("${IMAGE_WRITTEN_BYTES}"*100/"${IMAGE_FILE_SIZE}") || true
+		info "Programmed ${RATIO}%"
+		truncate -s 0 "${progress_log}"
+	done
+
+	sync
+
+	info "Rebooting..."
+	reboot -n -d 1 -f
+	while true; do sleep 1; done
+}
+
