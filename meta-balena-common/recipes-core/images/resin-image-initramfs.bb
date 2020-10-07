@@ -11,6 +11,9 @@ PACKAGE_INSTALL = " \
     glibc-gconv-ibm850 \
     initramfs-module-debug \
     initramfs-module-fsuuidsinit \
+    initramfs-module-dynamicip \
+    initramfs-module-imagefetch \
+    initramfs-module-flasher \
     initramfs-module-prepare \
     initramfs-module-fsck \
     initramfs-module-machineid \
