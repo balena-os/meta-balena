@@ -14,7 +14,7 @@ pttype=$(get_part_table_type "/dev/${datadev}")
 resindataexpander_enabled() {
     # On flasher avoid expanding partition
     # shellcheck disable=SC2154
-    if [ "$bootparam_flasher" = "true" ]; then
+    if [ "$bootparam_flasher" = "true" ] || [ "$bootparam_networkflasher" = "true" ]; then
         info "Flasher detected. Avoiding expand partition mechanism."
         return 1
     fi

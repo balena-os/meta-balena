@@ -3,7 +3,7 @@
 machineid_enabled() {
     # On flasher we don't need persistent machine-id
     # shellcheck disable=SC2154
-    if [ "$bootparam_flasher" = "true" ]; then
+    if [ "$bootparam_flasher" = "true" ] || [ "$bootparam_networkflasher" = "true" ]; then
         echo "[INFO] Flasher detected. Avoiding persistent machine-id."
         return 1
     fi

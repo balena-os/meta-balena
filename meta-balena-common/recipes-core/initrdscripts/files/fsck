@@ -3,7 +3,7 @@
 fsck_enabled() {
     # On flasher we don't run fsck
     # shellcheck disable=SC2154
-    if [ "$bootparam_flasher" = "true" ]; then
+    if [ "$bootparam_flasher" = "true" ] || [ "$bootparam_networkflasher" = "true" ]; then
         echo "[INFO] Flasher detected. We don't run fsck on the partitions when provisioning."
         return 1
     fi

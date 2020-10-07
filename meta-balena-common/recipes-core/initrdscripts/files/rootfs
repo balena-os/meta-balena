@@ -39,7 +39,7 @@ rootfs_run() {
             if [ "`echo ${bootparam_root} | cut -c1-6`" = "LABEL=" ]; then
                 root_label=`echo $bootparam_root | cut -c7-`
                 bootparam_root="$(get_state_path_from_label "$root_label")"
-		if [ "${bootparam_flasher}" = "true" ] && [ ! -L "${bootparam_root}" ]; then
+		if { [ "${bootparam_flasher}" = "true" ] || [ "${bootparam_networkflasher}" = "true" ]; } && [ ! -L "${bootparam_root}" ]; then
                     bootparam_root="/dev/disk/by-label/$root_label"
 	        fi
                 info "Using bootparam_root $bootparam_root for $root_label"
