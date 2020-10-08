@@ -45,7 +45,12 @@ INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
 RESIN_BOOTLOADER_CONFIG=resinOS_uEnv.txt
-CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
+if [ "$networkflasher" = "true" ]
+then
+    CURRENT_ROOT="initrd"
+else
+    CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
+fi
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -101,19 +106,22 @@ if [ ! -d "$RESIN_BOOT_MOUNTPOINT" ]; then
 	fail "$RESIN_BOOT_MOUNTPOINT : No such directory."
 fi
 
-# Give a chance to openvpn to come alive
-STARTTIME=$(date +%s)
-ENDTIME="$STARTTIME"
-TIMEOUT=15
-while [ "$(systemctl is-active openvpn)" != "active" ]
-do
-    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1 && ENDTIME=$((ENDTIME + 1))
-    else
-        inform "Timeout while waiting for openvpn to come alive. No network?"
-        break
-    fi
-done
+if [ "$CURRENT_ROOT" != "initrd" ]
+then
+    # Give a chance to openvpn to come alive
+    STARTTIME=$(date +%s)
+    ENDTIME="$STARTTIME"
+    TIMEOUT=15
+    while [ "$(systemctl is-active openvpn)" != "active" ]
+    do
+        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+            sleep 1 && ENDTIME=$((ENDTIME + 1))
+        else
+            inform "Timeout while waiting for openvpn to come alive. No network?"
+            break
+        fi
+    done
+fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
@@ -133,7 +141,15 @@ if [ -z "$internal_dev" ]; then
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
 inform "$internal_dev will be used for flashing."
-dd if="/opt/$RESIN_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+
+file_header=$(head -c 1 "/opt/${RESIN_IMAGE}" | xxd -p | head -c 2)
+# See https://www.ietf.org/rfc/rfc1952.txt 2.3.1 for identification
+if [ "${file_header}" = "1f" ] || [ "${file_header}" = "8b" ]
+then
+  zcat "/opt/$RESIN_IMAGE" | dd of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+else
+  dd if="/opt/$RESIN_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+fi
 
 if ! kill -0 $DD_PID; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
@@ -192,7 +208,11 @@ if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; 
 fi
 # Copy custom splash dir
 mkdir -p "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME"
-cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME/* $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
+EXTERNAL_SPLASH_DIR="$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME"
+if [ -d "$EXTERNAL_SPLASH_DIR" ]
+then
+  cp -r $EXTERNAL_SPLASH_DIR/* $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
+fi
 # Copy Network Manager connection files
 CONFIG_NM="${RESIN_BOOT_MOUNTPOINT}/system-connections/"
 if [ -d "$CONFIG_NM" ]; then
@@ -228,19 +248,23 @@ if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${RESIN_BOOTLOADER_CONFIG}" ]; 
         cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 fi
 
-# Give a chance for the device to register
-STARTTIME=$(date +%s)
-ENDTIME="$STARTTIME"
-TIMEOUT=10
-while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
-do
-    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1 && ENDTIME=$((ENDTIME + 1))
-    else
-        inform "Timeout while waiting for register to finish. No network?"
-        break
-    fi
-done
+
+if [ "$CURRENT_ROOT" != "initrd" ]
+then
+    # Give a chance for the device to register
+    STARTTIME=$(date +%s)
+    ENDTIME="$STARTTIME"
+    TIMEOUT=10
+    while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
+    do
+        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+            sleep 1 && ENDTIME=$((ENDTIME + 1))
+        else
+            inform "Timeout while waiting for register to finish. No network?"
+            break
+        fi
+    done
+fi
 
 # Copy json configuration file from external (flasher) to the internal (booting) device
 cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
@@ -254,6 +278,12 @@ inform "Board specific flash procedure..."
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 
 inform "Shutting down ..."
-shutdown -h now
+if [ "$CURRENT_ROOT" = "initrd" ]
+then
+    sync
+    poweroff -f
+else
+    shutdown -h now
+fi
 
 exit 0
