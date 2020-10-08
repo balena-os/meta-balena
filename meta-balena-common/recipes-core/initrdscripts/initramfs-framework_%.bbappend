@@ -80,5 +80,5 @@ RDEPENDS_initramfs-module-imagefetch = "${PN}-base"
 FILES_initramfs-module-imagefetch = "/init.d/72-imagefetch"
 
 SUMMARY_initramfs-module-flasher = "Flashes a Balena image to storage"
-RDEPENDS_initramfs-module-flasher = "${PN}-base"
+RDEPENDS_initramfs-module-flasher = "${PN}-base resin-init-flasher"
 FILES_initramfs-module-flasher = "/init.d/73-flasher"
