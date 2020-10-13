@@ -16,7 +16,7 @@ bootfiles_blacklist="\
 	/splash/balena-logo.png \
 	/extlinux.conf \
 	/extra_uEnv.txt \
-	/extra_grubEnv.txt \
+	/grub_extraenv \
 	/configfs.json \
 	"
 boot_mountpoint="/mnt/boot"
