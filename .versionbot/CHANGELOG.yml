@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'readme: DCHP -> DHCP'
+      hash: 9694909d8eb0dea7f775eeb5a92546f00b381909
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.58.6
+  date: 2020-10-15T13:43:08.320Z
+- commits:
     - subject: 'bootfiles: blacklist proper grub configuration backend'
       hash: 1362d9916b0b7b414b9d920296021379e34f00be
       body: ''
