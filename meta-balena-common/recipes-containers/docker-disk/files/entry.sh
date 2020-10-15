@@ -60,7 +60,8 @@ for image_name in ${HOSTEXT_IMAGES}; do
 	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
 		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${image_name}"
 	else
-		echo "Not able to pull ${HOSTAPP_PLATFORM}/${image_name}"
+		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
+		exit 1
 	fi
 done
 
