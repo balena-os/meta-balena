@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.58.5
+## (2020-10-13)
+
+* bootfiles: blacklist proper grub configuration backend [Matthew McGinn]
+
 # v2.58.4
 ## (2020-10-05)
 

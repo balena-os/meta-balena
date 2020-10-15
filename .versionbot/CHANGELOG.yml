@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'bootfiles: blacklist proper grub configuration backend'
+      hash: 1362d9916b0b7b414b9d920296021379e34f00be
+      body: ''
+      footer:
+        Connects-to: '#2022'
+        connects-to: '#2022'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.58.5
+  date: 2020-10-13T14:20:39.972Z
+- commits:
     - subject: 'docker-disk: Allow expanding data filesystem on 2TB disks'
       hash: 62b3763b44dcd9397f964d0812b7292885b04f66
       body: |
