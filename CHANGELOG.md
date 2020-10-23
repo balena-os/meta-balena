@@ -1,6 +1,100 @@
 Change log
 -----------
 
+# v2.59.0
+## (2020-10-23)
+
+
+<details>
+<summary> Update balena-supervisor from v11.14.0 to v12.0.7 [Florin Sarbu] </summary>
+
+> ## balena-supervisor-12.0.7
+> ### (2020-10-19)
+> 
+> * Improved log message when networks do not match [Miguel Casqueira]
+> 
+> ## balena-supervisor-12.0.6
+> ### (2020-10-16)
+> 
+> * Fixes check allowing preloading in local (unmanaged) mode [ab77]
+> * Handle delete of multiple images with same dockerImageId [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.0.5
+> ### (2020-10-14)
+> 
+> * Improve calculation for used system memory [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.0.4
+> ### (2020-10-13)
+> 
+> * Don't require an existing supervisor container to sync [Cameron Diver]
+> 
+> ## balena-supervisor-12.0.3
+> ### (2020-10-12)
+> 
+> * Refactor system information filtering [Cameron Diver]
+> * tests: Clean up and consistify naming scheme [Cameron Diver]
+> 
+> ## balena-supervisor-12.0.2
+> ### (2020-10-12)
+> 
+> * Attempt a state report once every maxReportFrequency [Cameron Diver]
+> * Remove superfluous current state reporting code from api-binder [Cameron Diver]
+> 
+> ## balena-supervisor-12.0.1
+> ### (2020-10-12)
+> 
+> * Add features label `io.balena.features.journal-logs` [Thomas Manning]
+> 
+> ## balena-supervisor-12.0.0
+> ### (2020-09-29)
+> 
+> * version: drop SUPERVISOR_VERSION env var [Matthew McGinn]
+> 
+> ## balena-supervisor-11.14.8
+> ### (2020-09-29)
+> 
+> * Fix supervisor deadlock during migration [Felipe Lalanne]
+> 
+> ## balena-supervisor-11.14.7
+> ### (2020-09-25)
+> 
+> * Correctly evaluate if scheduledApply.delay is not set [Miguel Casqueira]
+> 
+> ## balena-supervisor-11.14.6
+> ### (2020-09-24)
+> 
+> * Fix config checks for ConfigFS backend [Felipe Lalanne]
+> 
+> ## balena-supervisor-11.14.5
+> ### (2020-09-24)
+> 
+> * mixpanel: superisor_version -> supervisor_version [Matthew McGinn]
+> 
+> ## balena-supervisor-11.14.4
+> ### (2020-09-18)
+> 
+> * api: Implement scoped Supervisor API keys [Rich Bayliss]
+> 
+> ## balena-supervisor-11.14.3
+> ### (2020-09-17)
+> 
+> * Clarify docs for toggling update lock override from dashboard [M. Casqueira]
+> 
+> ## balena-supervisor-11.14.2
+> ### (2020-09-15)
+> 
+> * Refactor extra_uEnv backend to match with more devices [Miguel Casqueira]
+> 
+> ## balena-supervisor-11.14.1
+> ### (2020-09-14)
+> 
+> * application-manager: Convert to a singleton [Rich Bayliss]
+> * device-state: Convert to a singleton [Rich Bayliss]
+> * api-binder: Convert to a singleton [Rich Bayliss]
+> 
+</details>
+
 # v2.58.6
 ## (2020-10-15)
 
