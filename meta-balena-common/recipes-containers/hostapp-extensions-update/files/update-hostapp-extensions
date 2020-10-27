@@ -145,7 +145,7 @@ if [ -n "${target_hostext_images}" ]; then
 			error "   - failed to install"
 			break
 		else
-			if ! ${DOCKER} create --runtime="bare" --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${hostext}"  > /dev/null 2>&1; then
+			if ! ${DOCKER} create --runtime="bare" --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${hostext}" none  > /dev/null 2>&1; then
 				error "   - failed to spawn"
 				break
 			fi
