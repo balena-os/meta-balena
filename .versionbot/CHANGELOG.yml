@@ -1,4 +1,212 @@
 - commits:
+    - subject: Add host extensions support
+      hash: 1d33429f0bc925bc97b4b7820aeb812eac9098d2
+      body: |
+        Add a new section that described the host extensions functionality.
+
+        Fixes #1984
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Add host extensions support
+        changelog-entry: Add host extensions support
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'packagegroup-resin: Add hostapp extensions update script'
+      hash: a03e5c9eed5105c5af85c79df29546ec641d873c
+      body: |
+        This commit adds the update-hostapp-extensions utility. It can be run
+        with:
+
+         systemd-run update-hostapp-extensions -r
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'hostapp-extensions-update: Add host extensions update script'
+      hash: 0fe293eb118913e667b52b2f6df032227719efc8
+      body: >
+        This script triggers an installation or update of the hostapp extensions
+
+        in the system.
+
+
+        The list of hostapp extensions to install can either be passed to the
+
+        script or it will use the ones set in config.json or
+        hostapp-extensions.conf
+
+        in that order.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'resin-vars: Parse the HOSTEXT_IMAGES variable from config.json'
+      hash: 761f517f955f829e12b2c7f0a0f88830ded39e13
+      body: |
+        This variable allows the hostapp extensions updater script to update the
+        hostapp extensions in the system.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'docker-disk: Add the host extension images to the data partition'
+      hash: cd44a94cf1646828832070417a2deb9236b0f5ee
+      body: |
+        Host extension images contain extra content that is overlayed over the
+        root filesystem at boot.
+
+        This commits adds the default host extensions to the data partition
+        image, stores their repository tags in the /etc directory, and creates
+        the containers so that mobynit can mount the container filesystems on
+        boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'docker-disk: Generalize hostapp platform variable'
+      hash: 416544bd9c7b7e9080857dc0258668f388a55aa7
+      body: |
+        Rename HELLO_PLATFORM to HOSTAPP_PLATFORM so it can be used with any
+        app type.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'initrdscripts: Busybox switch_root does not support -c argument'
+      hash: a62a8189825de9dbcf52dbb3116d213fc7ceb84f
+      body: |
+        Calling busybox switch_root in this way has always been complaining but
+        the error log did not get to the console.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: >-
+        resin-filesystem-expand: Omit fs check and resize if partition is
+        mounted
+      hash: d70fbd050e5a1f7c695782b99187d583103111e0
+      body: |
+        Now that the data partition will be mounted from the initramfs for host
+        extensions support, this script will only run if something went wrong.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'initrdscripts: Expand the resin-data filesystem'
+      hash: 00cad826c157ac2d5c13137fb1023f1eb7570c58
+      body: |
+        As the resin-data partition will be mounted in the initramfs, its
+        filesystem needs to be expanded before that.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'initrdscripts: Add resin-data to fs UUID generation'
+      hash: d2794dd2d559ca0c55a4cbab9ae5ef3c01ebdcf3
+      body: |
+        The resin-data partition will be mounted in the initramfs for the host
+        extension support so the UUID generation needs to happen before that.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'resin-data.mount: Remove default dependencies'
+      hash: dc6cfa2e90b29b0fdcfc05c1b85e2196de4f950b
+      body: >
+        With the data partition being mounted in the initramfs to support host
+
+        extensions, the runtime systemd-udev no longer sees the resin-data mount
+
+        event and this mount is blocked.
+
+
+        This is resolved by not adding the default dependency on the block
+        device.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'packagegroup-resin: Add independent mobynit package to image'
+      hash: 08e15adb2f21c330b9c92cef527e23770a6fe521
+      body: |
+        The mobynit tool also needs to be in resin-image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'balena-engine: Do not build mobynit'
+      hash: 29844ed3bd936c581e20b72df133a2b6ed498512
+      body: |
+        The mobynit package has now been moved to an independent recipe.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'mobynit: Fix source directory'
+      hash: e6dc1b20c45ffdbcc33f82b2ef78f46715317b06
+      body: |
+        The Go class in mobynit predates Go modules support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'mobynit: Separate recipe from balena-engine'
+      hash: 6be3f1153d56c1c0c21e6d84db7be70be96bcd10
+      body: >
+        This commit adds a new recipe to build mobynit independently from
+        balena-engine.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.59.0
+  date: 2020-10-27T12:04:22.881Z
+- commits:
     - subject: 'readme: DCHP -> DHCP'
       hash: 9694909d8eb0dea7f775eeb5a92546f00b381909
       body: ''
