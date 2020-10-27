@@ -58,7 +58,7 @@ docker save balena-healthcheck-image > ${BUILD}/balena-healthcheck-image.tar
 BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
 for image_name in ${HOSTEXT_IMAGES}; do
 	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
-		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${image_name}"
+		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${image_name}" none
 	else
 		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
 		exit 1
