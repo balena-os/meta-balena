@@ -1,4 +1,4 @@
-# Copyright 2018 Resinio Ltd.
+# Copyright 2020 Balena Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,15 @@
 # limitations under the License.
 
 [Unit]
-Description=Initialize system clock from RTC
-ConditionVirtualization=!docker
-ConditionPathExists=/dev/rtc
+Description=Set the system clock from the build timestamp
 DefaultDependencies=no
-After=systemd-udev-settle.service
-Before=chronyd.service
+ConditionPathExists=/etc/timestamp
+Before=time-set.target fake-hwclock.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/sbin/hwclock --hctosys
+ExecStart=/bin/sh /usr/bin/timeinit-buildtime.sh
 
 [Install]
-WantedBy=time-sync.target
+WantedBy=time-set.target

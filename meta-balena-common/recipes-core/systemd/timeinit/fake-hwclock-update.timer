@@ -1,4 +1,4 @@
-# Copyright 2018 Resinio Ltd.
+# Copyright 2020 Balena Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,14 +13,11 @@
 # limitations under the License.
 
 [Unit]
-Description=Initialize system clock from build timestamp
-DefaultDependencies=no
-Before=chronyd.service
+Description=Periodically update the saved fake-hwclock.
+After=time-sync.target
 
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/bin/sh /usr/bin/timeinit-timestamp.sh
+[Timer]
+OnCalendar=hourly
 
 [Install]
-WantedBy=time-sync.target
+WantedBy=timers.target

@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+# Trivial script to load/save current contents of the kernel clock
+# from/to a file. Helpful as a *bootstrap* clock on machines where
+# there isn't a useful RTC driver (e.g. on development boards). Using
+# NTP is still recommended on these machines to get to real time sync
+# once more of the system is up and running.
+#
+# Copyright 2012-2016 Steve McIntyre <93sam@debian.org>
+# Copyright 2020 Balena Ltd.
+#
+# License: GPLv2, see COPYING
+
+. /usr/libexec/os-helpers-logging
+
+FILE=/etc/fake-hwclock/fake-hwclock.data
+TIMESTAMP=/etc/timestamp
+
+# Build time is used as a sanity check when saving
+if [ ! -f $TIMESTAMP ]; then
+	fail "$TIMESTAMP not found."
+fi
+
+BUILD_TIME=$(cat $TIMESTAMP)
+BUILD_EPOCH_SEC=$(date -d "${BUILD_TIME:0:8} ${BUILD_TIME:8:2}:${BUILD_TIME:10:2}:${BUILD_TIME:12:2}" '+%s')
+
+COMMAND=$1
+if [ "$COMMAND"x = ""x ] ; then
+	COMMAND="save"
+fi
+
+FORCE=false
+if [ "$2"x = "force"x ] ; then
+	FORCE=true
+fi
+
+case $COMMAND in
+	save)
+		if [ -e $FILE ] ; then
+			NOW_SEC=$(date -u '+%s')
+			if $FORCE || [ $NOW_SEC -ge $BUILD_EPOCH_SEC ] ; then
+				info "Saving system time to $FILE."
+				date -u '+%Y-%m-%d %H:%M:%S' > $FILE
+			else
+				info "Time travel detected!"
+				info "fake-hwclock release date is in the future: $(date -u -d@$BUILD_EPOCH_SEC)"
+				info "Current system time: $(date -u '+%Y-%m-%d %H:%M:%S')"
+				info "To force the saved system clock backwards in time anyway, use \"force\""
+			fi
+		else
+			info "Saving system time to $FILE."
+			date -u '+%Y-%m-%d %H:%M:%S' > $FILE
+		fi
+		;;
+	load)
+		if [ -e $FILE ] ; then
+			SAVED="$(cat $FILE)"
+			SAVED_SEC=$(date -u -d "$SAVED" '+%s')
+			NOW_SEC=$(date -u '+%s')
+			if $FORCE || [ $NOW_SEC -le $SAVED_SEC ] ; then
+				info "Setting system time from $FILE."
+				date -u -s "$SAVED"
+			else
+				info "Current system time: $(date -u '+%Y-%m-%d %H:%M:%S')"
+				info "fake-hwclock saved clock information is in the past: $SAVED"
+				info "To set system time to this saved clock anyway, use \"force\""
+			fi
+		else
+			info "Unable to read saved clock information: $FILE does not exist"
+		fi
+		;;
+	*)
+		fail "Unknown command $COMMAND"
+		;;
+esac
