@@ -1,0 +1,7 @@
+[Unit]
+Description=Switch u-blox modem from RNDIS to ECM mode
+Before=ModemManager.service NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/u-blox-switch.sh %I
