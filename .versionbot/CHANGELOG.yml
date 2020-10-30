@@ -1,4 +1,78 @@
 - commits:
+    - subject: 'chrony: don''t restore time from drift file or RTC'
+      hash: 5a4842786f365c9d167f29fd310427b4f0bb61b6
+      body: |
+        Drop the '-s' command line parameter from chronyd as:
+        a) restoring time from the drift file is no longer necessary due to
+        the fake-hwclock service, and
+        b) restoring time from the RTC is already covered by the timeinit-rtc
+        service.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'systemd/timeinit: add fake.hwclock to maintain system time over reboots'
+      hash: 96c2c495819ba6175261a5179e1cdb4673552e6c
+      body: |
+        In order to produce sensible timestamps for journald log messages:
+        a) the system time needs to be maintained correctly over a reboot, and
+        b) the system time needs to be set before journald is started.
+
+        Currently the system time is maintained over reboots on systems
+        without an RTC using the last modified time of the chrony drift file.
+        However there are a couple of issues with this approach:
+
+        a) /var/lib/chrony/ is not mounted early enough in the boot process
+        to be available for setting the time before journald is started.
+        b) there is an issue with the current systemd dependencies that result
+        in the last modified time of the drift file not being updated when the
+        system is shutdown or rebooted (see #1995).
+
+        The Debian fake-hwclock service (as used by Raspberry Pi OS) has been
+        added to overcome these issues.
+
+        The fake-hwclock service will save and restore the system time from
+        the fake-hwclock.data file (in /etc/fake-hwclock/). The system time
+        is loaded from this file at boot and saved to it on shutdown. An
+        additional timer service has been added to update the file on an
+        hourly basis to cater for unexpected shutdown scenarios, e.g. power
+        failure.
+
+        The timeinit-timestamp service has improved logging and has been
+        renamed to timeinit-buildtime for clarity.
+
+        A new time-set.target has been added as per upstream systemd and
+        the fake-hwclock and timeinit-buildtime services have been added
+        to it.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#1367 #1919'
+        connects-to: '#1367 #1919'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'resin-mounts: add bind mount service for /etc/fake-hwclock'
+      hash: 394aa52f77ec222e6fda856a92cd499bd464fa07
+      body: |
+        Add a persistent r/w location (root-overlay/etc/fake-hwclock/) to
+        the resin-state partition for storage of the fake-hwclock.data file.
+        This file is used by the fake-hwclock service to load the system
+        time at boot and save the system time on shutdown.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.60.0
+  date: 2020-10-29T14:25:50.275Z
+- commits:
     - subject: Add host extensions support
       hash: 1d33429f0bc925bc97b4b7820aeb812eac9098d2
       body: |

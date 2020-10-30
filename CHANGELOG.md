@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.60.0
+## (2020-10-29)
+
+* chrony: don't restore time from drift file or RTC [Mark Corbin]
+* systemd/timeinit: add fake.hwclock to maintain system time over reboots [Mark Corbin]
+* resin-mounts: add bind mount service for /etc/fake-hwclock [Mark Corbin]
+
 # v2.59.0
 ## (2020-10-27)
 
