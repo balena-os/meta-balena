@@ -8,4 +8,4 @@ Type=simple
 Restart=always
 RestartSec=10s
 ExecStart=
-ExecStart=/usr/sbin/chronyd -s -d
+ExecStart=/usr/sbin/chronyd -d
