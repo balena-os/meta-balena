@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.60.1
+## (2020-10-30)
+
+* chrony: set the source UDP port for NTP requests to 123 [Mark Corbin]
+
 # v2.60.0
 ## (2020-10-29)
 

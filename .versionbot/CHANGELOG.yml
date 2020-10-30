@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'chrony: set the source UDP port for NTP requests to 123'
+      hash: 6b95bd55f12054d996a412e7a6bc202e518b4e29
+      body: |
+        By default chrony uses a random UDP source port for each NTP request.
+        This can cause problems with particular routers/firewalls (issues have
+        been reported for the Phicomm KE 2P).
+
+        The chrony `acquisitionport` configuration setting has been added
+        to the chrony.conf file to change the UDP source port for NTP requests
+        to 123 (this is the same as the default source port used by both
+        ntpdate and ntpd).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: '#2000'
+        connects-to: '#2000'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.60.1
+  date: 2020-10-30T11:34:35.642Z
+- commits:
     - subject: 'chrony: don''t restore time from drift file or RTC'
       hash: 5a4842786f365c9d167f29fd310427b4f0bb61b6
       body: |
