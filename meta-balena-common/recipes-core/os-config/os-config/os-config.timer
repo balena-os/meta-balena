@@ -1,0 +1,8 @@
+[Unit]
+Description=Periodic check for configuration changes
+
+[Timer]
+OnCalendar=daily
+
+[Install]
+WantedBy=multi-user.target
