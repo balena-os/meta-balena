@@ -98,6 +98,7 @@ RESIN_CONFIGS ?= " \
     dummy \
     uinput \
     no-debug-info \
+    uprobes \
     "
 
 #
@@ -544,6 +545,11 @@ RESIN_CONFIGS[uinput] = " \
 # enable Analog Devices AD5446 and similar single channel DACs driver
 RESIN_CONFIGS[ad5446] = " \
     CONFIG_AD5446=m \
+"
+
+# enable user space probes support
+RESIN_CONFIGS[uprobes] = " \
+    CONFIG_UPROBE_EVENTS=y \
 "
 
 ###########
