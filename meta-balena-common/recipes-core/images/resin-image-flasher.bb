@@ -2,7 +2,7 @@ SUMMARY = "Resin image flasher"
 IMAGE_LINGUAS = " "
 LICENSE = "Apache-2.0"
 
-inherit core-image image-resin distro_features_check
+inherit core-image image-resin features_check
 
 REQUIRED_DISTRO_FEATURES += " systemd"
 
