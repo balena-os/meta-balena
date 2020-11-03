@@ -14,6 +14,12 @@ DEPENDS += "kern-tools-native"
 
 inherit uboot-config uboot-extlinux-config uboot-sign deploy cml1
 
+# disable u-boot-initial-env as we don't need it and it would
+# break do_install without additional changes to do_compile first
+# https://github.com/balena-os/poky/commit/d7b8ae3faa9344f2ada22e0402066c2fff5958c6
+UBOOT_INITIAL_ENV = ""
+ALLOW_EMPTY_${PN}-env = "1"
+
 # returns all the elements from the src uri that are .cfg files
 def find_cfgs(d):
     sources=src_patches(d, True)
