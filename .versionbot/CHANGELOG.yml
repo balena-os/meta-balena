@@ -1,4 +1,463 @@
 - commits:
+    - subject: Update balena-supervisor from v11.14.0 to v12.1.1
+      hash: fd41103bc0538f53ac37bfb2ce6203f712090bc7
+      body: |
+        Update balena-supervisor from v11.14.0 to v12.1.1
+      footer:
+        Changelog-entry: Update balena-supervisor from v11.14.0 to v12.1.1
+        changelog-entry: Update balena-supervisor from v11.14.0 to v12.1.1
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Cameron Diver <cameron@balena.io>
+        signed-off-by: Cameron Diver <cameron@balena.io>
+      author: Cameron Diver
+      nested:
+        - commits:
+            - subject: Use root mount point to find device-type.json
+              hash: 9d19a457017b1f696579f57569ec4cfadab3b385
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-12.1.1
+          date: 2020-10-28T13:03:20.901Z
+        - commits:
+            - subject: Change log source from docker to journalctl
+              hash: 2c83864f22b01e7196f6ed321c96f6cb9f40593b
+              body: ''
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Thomas Manning <thomasm@balena.io>
+                signed-off-by: Thomas Manning <thomasm@balena.io>
+              author: Thomas Manning
+              nested: []
+          version: balena-supervisor-12.1.0
+          date: 2020-10-28T06:12:20.363Z
+        - commits:
+            - subject: Change source of deviceType to device-type.json
+              hash: f5183df35677f091f1374c3f6e86706b141471f3
+              body: |
+                The source of truth for the device-type should be
+                device-type.json instead of config.json
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Felipe Lalanne <felipe@balena.io>
+                signed-off-by: Felipe Lalanne <felipe@balena.io>
+                Connects-to: '#1472'
+                connects-to: '#1472'
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.0.9
+          date: 2020-10-27T12:43:11.383Z
+        - commits:
+            - subject: Fixed evaluating if updates are needed to reach target state
+              hash: 77333f1e110070f17f4bf95c1554075c94a35d63
+              body: ''
+              footer:
+                Closes: '#1476'
+                closes: '#1476'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+          version: balena-supervisor-12.0.8
+          date: 2020-10-26T18:56:16.649Z
+        - commits:
+            - subject: Improved log message when networks do not match
+              hash: edf23871d9a057b9bae8837f3ee39d7401247514
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+          version: balena-supervisor-12.0.7
+          date: 2020-10-19T16:04:51.506Z
+        - commits:
+            - subject: Fixes check allowing preloading in local (unmanaged) mode
+              hash: 0fd9b6376251c73f2adfd37ec80d2145178683d6
+              body: |
+                * adds apiEndpoint empty string check
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: ab77
+              nested: []
+            - subject: Handle delete of multiple images with same dockerImageId
+              hash: 4795c336d055862706be42ebb544caef93d55e35
+              body: >
+                A docker-compose.yml with the following structure
+
+
+                ```
+
+                version: '2.1'
+
+                services:
+                  app_1:
+                    build: ./noisy-1
+                    image: noisy1
+                  app_2:
+                    build: ./noisy-1
+                    image: noisy1
+                  app_3:
+                    build: ./noisy-1
+                    image: noisy1
+                ```
+
+
+                Will lead to the supervisor creating multiple image database
+                entries
+
+                with the same dockerId (this is because of how the engine
+                handles this
+
+                particular case). This case is not handled by the removal
+                process
+
+                leading to image pile up and increased disk usage.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Felipe Lalanne <felipe@balena.io>
+                signed-off-by: Felipe Lalanne <felipe@balena.io>
+                Connects-to: '#1434'
+                connects-to: '#1434'
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.0.6
+          date: 2020-10-16T22:32:07.462Z
+        - commits:
+            - subject: Improve calculation for used system memory
+              hash: dd5f62227a0b0d2024db924e7028c9fec8b2b1d9
+              body: >
+                The memory information reported by the supervisor currently
+
+                estimates the value of used memory as `MemTotal - MemFree`.
+
+                However, linux systems will try to cache and buffer as much
+
+                memory as possible, which will affect the output of `MemFree`
+
+                (from /proc/meminfo) and in consequence the memory usage seen
+
+                by the user on the dashboard, which will appear much greater
+                than
+
+                it is.
+
+
+                The correct calculation should be `MemTotal - MemFree - Buffers
+                - Cached`,
+
+                which the calculation performed by `htop` and the `free`
+                commands.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Felipe Lalanne <felipe@balena.io>
+                signed-off-by: Felipe Lalanne <felipe@balena.io>
+                Connects-to: '#1471'
+                connects-to: '#1471'
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.0.5
+          date: 2020-10-14T16:19:41.551Z
+        - commits:
+            - subject: Don't require an existing supervisor container to sync
+              hash: 629b410e10fb6590806d546ff94101951ec6c9a2
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-12.0.4
+          date: 2020-10-13T09:49:51.370Z
+        - commits:
+            - subject: Refactor system information filtering
+              hash: a2ceb5c93189704beaf8b4f5c8b71c46d8e2a966
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+            - subject: 'tests: Clean up and consistify naming scheme'
+              hash: 9e0c99e797fa379c66b7312b40a17d9d31f5ce79
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-12.0.3
+          date: 2020-10-12T14:46:39.730Z
+        - commits:
+            - subject: Attempt a state report once every maxReportFrequency
+              hash: 0e3c0263922043b9d53a7eb3545622106f10100c
+              body: >
+                With the addition of the system information feature (CPU temp)
+                etc if
+
+                there wasn't any changes in the docker or config state of the
+                device,
+
+                updates in system information would not be sent to the API. Now
+                we
+
+                attempt to send data once every maxReportFrequency (although
+                this does
+
+                not mean that we will be sending data that often, we still only
+                send the
+
+                delta, if one exists)
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1481'
+                closes: '#1481'
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+            - subject: Remove superfluous current state reporting code from api-binder
+              hash: 975129188a9fcb11a081f7ba75a1b8b973499a21
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Cameron Diver
+              nested: []
+          version: balena-supervisor-12.0.2
+          date: 2020-10-12T10:55:40.890Z
+        - commits:
+            - subject: Add features label `io.balena.features.journal-logs`
+              hash: 1eeff698aca56558fa09832b9bcb02c99e275dbe
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Thomas Manning <thomasm@balena.io>
+                signed-off-by: Thomas Manning <thomasm@balena.io>
+              author: Thomas Manning
+              nested: []
+          version: balena-supervisor-12.0.1
+          date: 2020-10-12T05:41:14.895Z
+        - commits:
+            - subject: 'version: drop SUPERVISOR_VERSION env var'
+              hash: 8e65466f2d8540918b1fa8d8af88d0c21fcbf7f8
+              body: >
+                In order to make supervisor upgrades more transparent, lets move
+                away
+
+                from this env var since it requires a container restart any time
+                the supervisor
+
+                is upgraded. We should ultimately move towards providing the
+                supervisors
+
+                set of capabilities, but that can come later
+              footer:
+                Connects-to: '#1447'
+                connects-to: '#1447'
+                Change-type: major
+                change-type: major
+                Signed-off-by: Matthew McGinn <matthew@balena.io>
+                signed-off-by: Matthew McGinn <matthew@balena.io>
+              author: Matthew McGinn
+              nested: []
+          version: balena-supervisor-12.0.0
+          date: 2020-09-29T15:25:15.693Z
+        - commits:
+            - subject: Fix supervisor deadlock during migration
+              hash: adffde932ec28b114a5821b9ae332a42bb330be2
+              body: >
+                Due to the singleton work, when performing migration M00005 and
+                there
+
+                are apps with services created in the database, a deadlock
+                occurs
+
+                during database initialization due to a circular
+
+                dependency for generating scoped keys.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Felipe Lalanne <felipe@balena.io>
+                signed-off-by: Felipe Lalanne <felipe@balena.io>
+                Connects-to: '#1468'
+                connects-to: '#1468'
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-11.14.8
+          date: 2020-09-29T03:00:51.902Z
+        - commits:
+            - subject: Correctly evaluate if scheduledApply.delay is not set
+              hash: 90981a00bed100e1496dc71bf0631bc0ab04ffa7
+              body: ''
+              footer:
+                Closes: '#1428'
+                closes: '#1428'
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+          version: balena-supervisor-11.14.7
+          date: 2020-09-25T17:16:42.247Z
+        - commits:
+            - subject: Fix config checks for ConfigFS backend
+              hash: a5f3002e708c949b6de3c8ba495b2a89c13214fc
+              body: >
+                When trying to apply SSDT overlays in Up Board, the supervisor
+                currently
+
+                gets stuck in a loop trying to apply target state. See #1465
+
+
+                This was due to a bug in parsing the configuration, which lead
+                to
+
+                the method bootConfigChangeRequired returning true when no
+                change was
+
+                needed.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Felipe Lalanne <felipe@balena.io>
+                signed-off-by: Felipe Lalanne <felipe@balena.io>
+                Connects-to: '#1465'
+                connects-to: '#1465'
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-11.14.6
+          date: 2020-09-24T19:51:09.936Z
+        - commits:
+            - subject: 'mixpanel: superisor_version -> supervisor_version'
+              hash: eebadebb53af68d9b63c948e59c1c78fb38302aa
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Matthew McGinn <matthew@balena.io>
+                signed-off-by: Matthew McGinn <matthew@balena.io>
+              author: Matthew McGinn
+              nested: []
+          version: balena-supervisor-11.14.5
+          date: 2020-09-24T14:47:47.663Z
+        - commits:
+            - subject: 'api: Implement scoped Supervisor API keys'
+              hash: c08de8701e49f417d2fc5849d237b9ed69b438e2
+              body: >
+                Each service, when requesting access to the Supervisor API, will
+
+                now get an individual key which can be scoped to specific
+                resources.
+
+                In this iteration the default scope will be to the application
+                that
+
+                the service belongs to.
+
+
+                We also have a `global` scope which is used by the cloud API
+                when in
+
+                managed mode.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Rich Bayliss <rich@balena.io>
+                signed-off-by: Rich Bayliss <rich@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.14.4
+          date: 2020-09-18T13:02:39.469Z
+        - commits:
+            - subject: Clarify docs for toggling update lock override from dashboard
+              hash: 1b51db06c118ab4c60296f394e854436584c6437
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: M. Casqueira
+              nested: []
+          version: balena-supervisor-11.14.3
+          date: 2020-09-17T22:25:21.020Z
+        - commits:
+            - subject: Refactor extra_uEnv backend to match with more devices
+              hash: 07e644d0b69f412fb14aeaba17914b9eacd6477f
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+          version: balena-supervisor-11.14.2
+          date: 2020-09-15T18:25:31.240Z
+        - commits:
+            - subject: 'application-manager: Convert to a singleton'
+              hash: 96c68166a1e1d9b400fca84d33910d526009ecfd
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Rich Bayliss
+              nested: []
+            - subject: 'device-state: Convert to a singleton'
+              hash: e3864915bcf3b8c2865f3c14d2ad85023218db3c
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Rich Bayliss
+              nested: []
+            - subject: 'api-binder: Convert to a singleton'
+              hash: d50f7791e1f89750a35791c1ea3bd4a7472da9a1
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Cameron Diver <cameron@balena.io>
+                signed-off-by: Cameron Diver <cameron@balena.io>
+              author: Rich Bayliss
+              nested: []
+          version: balena-supervisor-11.14.1
+          date: 2020-09-14T10:26:09.557Z
+  version: 2.61.0
+  date: 2020-11-04T13:01:10.938Z
+- commits:
     - subject: 'chrony: set the source UDP port for NTP requests to 123'
       hash: 6b95bd55f12054d996a412e7a6bc202e518b4e29
       body: |
