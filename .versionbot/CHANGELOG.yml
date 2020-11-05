@@ -1,4 +1,21 @@
 - commits:
+    - subject: Enable kernel user space probes support
+      hash: 8af9bc8fbc58096d986d8db7df81a0c9505dc420
+      body: |
+        This is needed to make use of eBPF and all the debugging and extra
+        features it brings.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Enable kernel user space probes support
+        changelog-entry: Enable kernel user space probes support
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.61.1
+  date: 2020-11-04T21:12:06.448Z
+- commits:
     - subject: Update balena-supervisor from v11.14.0 to v12.1.1
       hash: fd41103bc0538f53ac37bfb2ce6203f712090bc7
       body: |

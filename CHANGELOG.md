@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.61.1
+## (2020-11-04)
+
+* Enable kernel user space probes support [Alex Gonzalez]
+
 # v2.61.0
 ## (2020-11-04)
 
