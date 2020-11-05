@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.61.2
+## (2020-11-05)
+
+* Check the API for configuration changes once a day [Michal Toman]
+
 # v2.61.1
 ## (2020-11-04)
 

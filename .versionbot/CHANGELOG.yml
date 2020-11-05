@@ -1,4 +1,21 @@
 - commits:
+    - subject: Check the API for configuration changes once a day
+      hash: 19f6942a9864c6393a36af36aea21d685ddb9819
+      body: ''
+      footer:
+        Connects-to: '#2018'
+        connects-to: '#2018'
+        Changelog-entry: Check the API for configuration changes once a day
+        changelog-entry: Check the API for configuration changes once a day
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.61.2
+  date: 2020-11-05T14:41:20.617Z
+- commits:
     - subject: Enable kernel user space probes support
       hash: 8af9bc8fbc58096d986d8db7df81a0c9505dc420
       body: |
