@@ -1,4 +1,4 @@
-From e0c9b96e078237697cc46f0d025c3f70824fcdc2 Mon Sep 17 00:00:00 2001
+From 860d02c6505e1fd6be32dda7756413ba66aa1128 Mon Sep 17 00:00:00 2001
 From: Andrei Gherzan <andrei@resin.io>
 Date: Thu, 11 Jan 2018 19:28:32 +0000
 Subject: [PATCH] Don't run specific services in container
@@ -13,7 +13,7 @@ Signed-off-by: Andrei Gherzan <andrei@resin.io>
  3 files changed, 9 insertions(+)
 
 diff --git a/units/getty@.service.m4 b/units/getty@.service.m4
-index 80e793b..02103ea 100644
+index 80e793bb73..02103ea039 100644
 --- a/units/getty@.service.m4
 +++ b/units/getty@.service.m4
 @@ -33,6 +33,9 @@ Before=rescue.service
@@ -27,7 +27,7 @@ index 80e793b..02103ea 100644
  # the VT is cleared by TTYVTDisallocate
  # The '-o' option value tells agetty to replace 'login' arguments with an
 diff --git a/units/serial-getty@.service.m4 b/units/serial-getty@.service.m4
-index 757b86a..c2b94d5 100644
+index 757b86ab2f..c2b94d54df 100644
 --- a/units/serial-getty@.service.m4
 +++ b/units/serial-getty@.service.m4
 @@ -29,6 +29,9 @@ IgnoreOnIsolate=yes
@@ -41,7 +41,7 @@ index 757b86a..c2b94d5 100644
  # The '-o' option value tells agetty to replace 'login' arguments with an
  # option to preserve environment (-p), followed by '--' for safety, and then
 diff --git a/units/systemd-logind.service.in b/units/systemd-logind.service.in
-index 38a7f26..43f171e 100644
+index ccbe631586..83ebabc922 100644
 --- a/units/systemd-logind.service.in
 +++ b/units/systemd-logind.service.in
 @@ -19,6 +19,9 @@ After=nss-user-lookup.target user.slice
@@ -53,4 +53,4 @@ index 38a7f26..43f171e 100644
 +
  [Service]
  BusName=org.freedesktop.login1
- CapabilityBoundingSet=CAP_SYS_ADMIN CAP_MAC_ADMIN CAP_AUDIT_CONTROL CAP_CHOWN CAP_KILL CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE CAP_FOWNER CAP_SYS_TTY_CONFIG
+ CapabilityBoundingSet=CAP_SYS_ADMIN CAP_MAC_ADMIN CAP_AUDIT_CONTROL CAP_CHOWN CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE CAP_FOWNER CAP_SYS_TTY_CONFIG CAP_LINUX_IMMUTABLE

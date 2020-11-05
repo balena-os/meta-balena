@@ -1,4 +1,4 @@
-From 8fb27da9846d520358cd3b8ecc8d035b68d74086 Mon Sep 17 00:00:00 2001
+From 0a202ff280f044860f6027c35df096435e511604 Mon Sep 17 00:00:00 2001
 From: Andrei Gherzan <andrei@balena.io>
 Date: Mon, 31 Dec 2018 14:39:56 +0000
 Subject: [PATCH] core: Don't redirect stdio to null when running in container
@@ -11,10 +11,10 @@ Signed-off-by: Andrei Gherzan <andrei@balena.io>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/core/main.c b/src/core/main.c
-index db6f113..209a431 100644
+index c24b696b16..b076d83fd0 100644
 --- a/src/core/main.c
 +++ b/src/core/main.c
-@@ -2479,7 +2479,8 @@ int main(int argc, char *argv[]) {
+@@ -2534,7 +2534,8 @@ int main(int argc, char *argv[]) {
                   * they never log into the console. */
                  log_show_color(colors_enabled());
  
