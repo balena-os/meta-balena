@@ -1,0 +1,5 @@
+ACTION!="add|change", GOTO="modeswitch_rules_end"
+
+KERNEL=="ttyACM*", ATTRS{idVendor}=="1546", ATTRS{idProduct}=="1146", TAG+="systemd", ENV{SYSTEMD_WANTS}="u-blox-switch@'%E{DEVNAME}'.service"
+
+LABEL="modeswitch_rules_end"
