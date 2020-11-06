@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.61.3
+## (2020-11-05)
+
+* modemmanager: add u-blox-modeswitch scripts [Mark Corbin]
+
 # v2.61.2
 ## (2020-11-05)
 
