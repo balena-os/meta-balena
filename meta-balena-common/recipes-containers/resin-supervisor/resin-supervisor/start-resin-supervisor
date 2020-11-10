@@ -16,7 +16,7 @@ if [ ! -f "$APPSJSON" ]; then
     fi
 fi
 
-SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG")
+SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE")
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
 # If custom CA exists populate the NODE_EXTRA_CA_CERTS env variable as node ignores the system-wide CA bundle
@@ -48,7 +48,7 @@ configIsUnchanged() {
     hasValueChanged "LED_FILE"              "${LED_FILE}" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LISTEN_PORT"           "$LISTEN_PORT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "NODE_EXTRA_CA_CERTS"   "$NODE_EXTRA_CA_CERTS" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
+    hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
         echo "Container config has changed!"
         return 1
     else
@@ -80,8 +80,8 @@ runSupervisor() {
         -e "LED_FILE=${LED_FILE}" \
         -e "LISTEN_PORT=$LISTEN_PORT" \
         -e "NODE_EXTRA_CA_CERTS=${NODE_EXTRA_CA_CERTS}" \
-        -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" \
-        "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}"
+        -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}" \
+        "${SUPERVISOR_IMAGE}"
 }
 
 if [ ! -d "/resin-data/resin-supervisor" ]; then

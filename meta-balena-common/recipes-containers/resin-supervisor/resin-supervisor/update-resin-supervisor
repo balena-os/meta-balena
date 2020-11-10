@@ -12,12 +12,6 @@ Options:
   -h, --help
         Display this help and exit.
 
-  -i <SUPERVISOR IMAGE>, --supervisor-image <SUPERVISOR IMAGE>
-        Set supervisor image to update to.
-
-  -t <SUPERVISOR TAG>, --supervisor-tag <SUPERVISOR TAG>
-        Set supervisor tag to update to.
-
   -n, --no-start-stop-supervisor
         Do not start/stop the supervisor.
 EOF
@@ -32,22 +26,6 @@ while [ $# -gt 0 ]; do
         -h|--help)
             update_resin_supervisor_help
             exit 0
-            ;;
-        -i|--supervisor-image)
-            if [ -z "$2" ]; then
-                echo "ERROR: \"$1\" argument needs a value."
-                exit 1
-            fi
-            UPDATER_SUPERVISOR_IMAGE=$2
-            shift
-            ;;
-        -t|--supervisor-tag)
-            if [ -z "$2" ]; then
-                echo "ERROR: \"$1\" argument needs a value."
-                exit 1
-            fi
-            UPDATER_SUPERVISOR_TAG=$2
-            shift
             ;;
         -n|--no-start-stop-supervisor)
             START_STOP_SUPERVISOR=0
@@ -69,6 +47,21 @@ UPDATECONF=/tmp/update-supervisor.conf
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
+
+balena_imageid_from_digest() {
+        local _image="$1"
+        local _digest
+        local _image_name
+        local _imageid
+        local _digest_check
+        _image_name=$(echo "${_image}" | cut -d "@" -f1)
+        _digest=$(echo "${_image}" | cut -d "@" -f2)
+        _imageid=$(balena images --filter=reference="${_image_name}" --format "{{.ID}}")
+        _digest_check=$(balena images --digests --filter=reference="${_image_name}" --format "{{.Digest}}")
+        if [ "${_digest}" == "${_digest_check}" ]; then
+                echo "${_imageid}"
+        fi
+}
 
 error_handler() {
     # shellcheck disable=SC2181
@@ -96,56 +89,52 @@ else
     error_handler "no container engine detected"
 fi
 
-# Get target supervisor tag from API.
+# Get target supervisor details from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
-echo "Getting image name and tag..."
+echo "Getting image name and version..."
 if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "Authorization: Bearer $_device_api_key" --header "User-Agent:" --compressed "${API_ENDPOINT}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${UUID}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
     echo "Supervisor configuration found from API."
 
-    if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
-        echo "WARN: Ignore image/tag arguments as API overrides them."
-    fi
-
-    tag=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $1}')
+    version=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $1}')
     image_name=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $2}')
-    if [ -z "$tag" ] || [ -z "$image_name" ]; then
+    if [ -z "$version" ] || [ -z "$image_name" ]; then
         echo "ERROR: Unexpected API data."
         error_handler "unexpected API data"
     fi
 
-    # Check that we didn't somehow get an empty tag version.
-    if [ -z "$tag" ]; then
-        echo "ERROR: No tag received."
-        error_handler "no tag received"
+    # Check that we didn't somehow get an empty version.
+    if [ -z "$version" ]; then
+        echo "ERROR: No version received."
+        error_handler "no version received"
     fi
 else
-    echo "No supervisor configuration found from API or required variables not set. Using arguments for image and tag."
+    echo "No supervisor configuration found from API or required variables not set. Using preloaded values."
     # shellcheck disable=SC1091
     . /etc/resin-supervisor/supervisor.conf
-    if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
-        # Try to get the tag from supervisor.conf
-        if [ -n "$SUPERVISOR_TAG" ]; then
-            UPDATER_SUPERVISOR_TAG=$SUPERVISOR_TAG
-        else
-            echo "ERROR: No tag argument provided."
-            error_handler "no tag argument provided"
-        fi
+    if [ -n "$SUPERVISOR_VERSION_LABEL" ]; then
+        UPDATER_SUPERVISOR_TAG=$SUPERVISOR_VERSION_LABEL
+    else
+        echo "ERROR: No preloaded version found."
+        error_handler "no preloaded version found"
     fi
-    if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
+    if [ -n "$SUPERVISOR_IMAGE" ]; then
         UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
+    else
+        echo "ERROR: No preloaded image found."
+        error_handler "no preloaded image found."
     fi
-    echo "Set based on arguments image=$UPDATER_SUPERVISOR_IMAGE and tag=$UPDATER_SUPERVISOR_TAG."
+    echo "Set based on preloaded values image=$UPDATER_SUPERVISOR_IMAGE and version=$UPDATER_SUPERVISOR_TAG."
     image_name=$UPDATER_SUPERVISOR_IMAGE
-    tag=$UPDATER_SUPERVISOR_TAG
+    version=$UPDATER_SUPERVISOR_TAG
 fi
 
-# Get image id of tag. This will be non-empty only in case it's already downloaded.
+# Get image id. This will be non-empty only in case it's already downloaded.
 echo "Getting image id..."
-imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name") || imageid=""
 
 if [ -n "$imageid" ]; then
-    echo "Supervisor $image_name:$tag already downloaded."
+    echo "Supervisor $image_name at version $version already downloaded."
     exit 0
 fi
 
@@ -156,15 +145,17 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
 fi
 
 # Pull target version.
-echo "Pulling supervisor $image_name:$tag..."
-if $DOCKER pull "$image_name:$tag"; then
+echo "Pulling supervisor $image_name..."
+if $DOCKER pull "$image_name"; then
+    image_id=$(balena_imageid_from_digest "${image_name}")
+    $DOCKER tag "${image_id}" "${SUPERVISOR_APP}:${SUPERVISOR_VERSION_LABEL}"
     $DOCKER rm --force resin_supervisor || true
 else
     error_handler "supervisor pull failed"
 fi
 
-# Store the tagged image string so resin-supervisor.service can pick it up
-sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf > $UPDATECONF
+# Store the image string so resin-supervisor.service can pick it up
+sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_VERSION_LABEL=.*|SUPERVISOR_VERSION_LABEL=$version|" /etc/resin-supervisor/supervisor.conf > $UPDATECONF
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
@@ -173,4 +164,4 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     systemctl start resin-supervisor
 fi
 
-sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf
+sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_VERSION_LABEL=.*|SUPERVISOR_VERSION_LABEL=$version|" /etc/resin-supervisor/supervisor.conf
