@@ -61,7 +61,6 @@ do_compile () {
 		-e SUPERVISOR_FLEET="${SUPERVISOR_FLEET}" \
 		-e SUPERVISOR_VERSION="${SUPERVISOR_VERSION}" \
 		-e HELLO_REPOSITORY="${HELLO_REPOSITORY}" \
-		-e HOSTEXT_IMAGES="${HOSTEXT_IMAGES}" \
 		-e HOSTAPP_PLATFORM="${HOSTAPP_PLATFORM}" \
 		-e BALENA_API_ENV="${BALENA_API_ENV}" \
 		-e BALENA_API_TOKEN="${_token}" \
@@ -74,15 +73,9 @@ do_compile () {
 
 FILES:${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
 do_install () {
-	install -d ${D}${sysconfdir}
 	mkdir -p ${D}/usr/lib/balena
 	install -m 644 ${B}/balena-healthcheck-image.tar ${D}/usr/lib/balena/balena-healthcheck-image.tar
-	for image in "${HOSTEXT_IMAGES}"; do
-		echo "${image}" >> ${D}${sysconfdir}/hostapp-extensions.conf
-	done
 }
-
-FILES:${PN} += "/etc/hostapp-extensions.conf"
 
 do_deploy () {
 	install -m 644 ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
