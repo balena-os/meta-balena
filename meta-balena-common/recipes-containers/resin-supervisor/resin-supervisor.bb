@@ -32,6 +32,8 @@ FILES_${PN} += " \
 	/usr/lib/resin-supervisor \
 	"
 
+DEPENDS += "jq-native"
+
 RDEPENDS_${PN} = " \
 	balena \
 	bash \
@@ -44,9 +46,9 @@ RDEPENDS_${PN} = " \
 	"
 
 python () {
-    supervisor_repository = d.getVar('SUPERVISOR_REPOSITORY', True)
-    if not supervisor_repository:
-        bb.fatal("resin-supervisor-disk: There is no support for this architecture.")
+    supervisor_app = d.getVar('SUPERVISOR_APP', True)
+    if not supervisor_app:
+        bb.fatal("resin-supervisor: There is no support for this architecture.")
 }
 
 S = "${WORKDIR}"
@@ -55,13 +57,17 @@ do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
+do_install[depends] += "docker-disk:do_deploy"
 do_install () {
+        SUPERVISOR_IMAGE=$(jq --raw-output '.apps | .[] | select(.type=="supervisor") | .services | .[].image' ${DEPLOY_DIR_IMAGE}/apps.json)
+        bbnote "Pre-loaded supervisor image ${SUPERVISOR_IMAGE}"
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/resin-supervisor/
 	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/resin-supervisor/
-	sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
-	sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
-	sed -i -e 's:@SUPERVISOR_TAG@:${SUPERVISOR_TAG}:g' ${D}${sysconfdir}/resin-supervisor/supervisor.conf
+	sed -i -e "s,@LED_FILE@,${LED_FILE},g" ${D}${sysconfdir}/resin-supervisor/supervisor.conf
+	sed -i -e "s,@SUPERVISOR_APP@,${SUPERVISOR_APP},g" ${D}${sysconfdir}/resin-supervisor/supervisor.conf
+	sed -i -e "s,@SUPERVISOR_VERSION_LABEL@,${SUPERVISOR_VERSION_LABEL},g" ${D}${sysconfdir}/resin-supervisor/supervisor.conf
+	sed -i -e "s,@SUPERVISOR_IMAGE@,${SUPERVISOR_IMAGE},g" ${D}${sysconfdir}/resin-supervisor/supervisor.conf
 
 	install -d ${D}/resin-data
 
@@ -90,6 +96,6 @@ do_install () {
 }
 
 do_deploy () {
-	echo ${SUPERVISOR_TAG} > ${DEPLOYDIR}/VERSION
+	echo ${SUPERVISOR_VERSION_LABEL} > ${DEPLOYDIR}/VERSION
 }
 addtask deploy before do_package after do_install

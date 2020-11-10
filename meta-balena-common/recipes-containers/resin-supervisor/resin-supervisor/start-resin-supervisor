@@ -16,7 +16,7 @@ if [ ! -f "$APPSJSON" ]; then
     fi
 fi
 
-SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG")
+SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE")
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
 hasValueChanged() {
@@ -41,7 +41,7 @@ configIsUnchanged() {
     hasValueChanged "DELTA_ENDPOINT"        "$DELTA_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LED_FILE"              "${LED_FILE}" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LISTEN_PORT"           "$LISTEN_PORT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
-    hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
+    hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
         echo "Container config has changed!"
         return 1
     else
@@ -70,8 +70,8 @@ runSupervisor() {
         -e "DELTA_ENDPOINT=$DELTA_ENDPOINT" \
         -e "LED_FILE=${LED_FILE}" \
         -e "LISTEN_PORT=$LISTEN_PORT" \
-        -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" \
-        "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}"
+        -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}" \
+        "${SUPERVISOR_IMAGE}"
 }
 
 if [ ! -d "/resin-data/resin-supervisor" ]; then
