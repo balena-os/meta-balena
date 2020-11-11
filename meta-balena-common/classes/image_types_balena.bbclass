@@ -305,7 +305,12 @@ IMAGE_CMD_balenaos-img () {
     fi
 
     # Label what is not labeled
-    e2label ${BALENA_ROOT_FS} ${BALENA_ROOTA_FS_LABEL}
+    if case "${BALENA_ROOT_FSTYPE}" in *ext4) true;; *) false;; esac; then # can be ext4 or hostapp-ext4
+        e2label ${BALENA_ROOT_FS} ${BALENA_ROOTA_FS_LABEL}
+    else
+        bbfatal "Rootfs labeling for type '${BALENA_ROOT_FSTYPE}' has not been implemented!"
+    fi
+
     if [ -n "${BALENA_DATA_FS}" ]; then
         e2label ${BALENA_DATA_FS} ${BALENA_DATA_FS_LABEL}
     fi
