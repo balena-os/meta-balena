@@ -305,7 +305,12 @@ IMAGE_CMD_resinos-img () {
     fi
 
     # Label what is not labeled
-    e2label ${RESIN_ROOT_FS} ${RESIN_ROOTA_FS_LABEL}
+    if [ "${RESIN_ROOT_FSTYPE}" = "hostapp-ext4" ]; then
+        e2label ${RESIN_ROOT_FS} ${RESIN_ROOTA_FS_LABEL}
+    else
+        bbfatal  "Rootfs labeling for type ${RESIN_ROOT_FSTYPE} has not been implemented!"
+    fi
+
     if [ -n "${RESIN_DATA_FS}" ]; then
         e2label ${RESIN_DATA_FS} ${RESIN_DATA_FS_LABEL}
     fi
