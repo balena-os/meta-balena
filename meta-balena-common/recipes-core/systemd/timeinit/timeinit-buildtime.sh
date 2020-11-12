@@ -17,6 +17,7 @@
 set -e
 
 . /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-time
 
 TIMESTAMP=/etc/timestamp
 
@@ -26,19 +27,13 @@ fi
 
 info "Setting system time from build time."
 
-SYS_TIME=$(date -u "+%4Y%2m%2d%2H%2M%2S")
+SYS_TIME=$(get_system_time_as_timestamp)
 BUILD_TIME=$(cat $TIMESTAMP)
 
-OLD_SYS_TIME=$(date -d "${SYS_TIME:0:8} ${SYS_TIME:8:2}:${SYS_TIME:10:2}:${SYS_TIME:12:2}")
-NEW_SYS_TIME=$(date -d "${BUILD_TIME:0:8} ${BUILD_TIME:8:2}:${BUILD_TIME:10:2}:${BUILD_TIME:12:2}")
-
 if [ "$SYS_TIME" -lt "$BUILD_TIME" ]; then
-	BUILD_DATETIME="$(echo "$BUILD_TIME" | awk '{string=substr($0, 5, 8); print string;}')"
-	BUILD_YEAR="$(echo "$BUILD_TIME" | awk '{string=substr($0, 1, 4); print string;}')"
-	BUILD_SEC="$(echo "$BUILD_TIME" | awk '{string=substr($0, 13, 2); print string;}')"
-	date -u "${BUILD_DATETIME}${BUILD_YEAR}.${BUILD_SEC}" > /dev/null
-	info "Old time: $OLD_SYS_TIME"
-	info "New time: $NEW_SYS_TIME"
+	$(set_system_time_from_timestamp "$BUILD_TIME")
+	info "Old time: $(get_display_time_from_timestamp "$SYS_TIME")"
+	info "New time: $(get_display_time_from_timestamp "$BUILD_TIME")"
 else
 	info "System time already set."
 fi

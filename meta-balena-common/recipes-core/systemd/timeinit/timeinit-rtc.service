@@ -1,4 +1,4 @@
-# Copyright 2018 Resinio Ltd.
+# Copyright 2018-2020 Balena Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,17 +13,17 @@
 # limitations under the License.
 
 [Unit]
-Description=Initialize system clock from RTC
+Description=Set the system clock from RTC
 ConditionVirtualization=!docker
 ConditionPathExists=/dev/rtc
 DefaultDependencies=no
 After=systemd-udev-settle.service
-Before=chronyd.service
+Before=time-set.target
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/sbin/hwclock --hctosys
+ExecStart=/usr/bin/timeinit-rtc.sh
 
 [Install]
-WantedBy=time-sync.target
+WantedBy=time-set.target

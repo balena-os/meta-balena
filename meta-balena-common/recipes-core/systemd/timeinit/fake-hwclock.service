@@ -18,7 +18,7 @@ Documentation=man:fake-hwclock(8)
 DefaultDependencies=no
 Requires=bind-etc-fake-hwclock.service
 After=bind-etc-fake-hwclock.service
-Before=sysinit.target systemd-journald.service systemd-fsck-root.service time-set.target
+Before=sysinit.target systemd-journald.service systemd-fsck-root.service time-set.target timeinit-rtc.service
 Conflicts=shutdown.target
 
 [Service]
