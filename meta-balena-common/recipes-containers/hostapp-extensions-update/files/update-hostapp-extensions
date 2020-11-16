@@ -6,14 +6,13 @@ set -e
 . /usr/libexec/os-helpers-logging
 
 BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
-BALENA_HOSTAPP_EXTENSIONS_DEFAULT="/etc/hostapp-extensions.conf"
 DOCKER_OVERLAY_ROOT="/var/lib/docker/overlay2/"
 
 readonly script_name=$(basename "${0}")
 usage() {
 	cat <<EOF
 Usage: ${script_name} [OPTIONS]
-	-t Space separated list of repository tags for hostapp extension containers
+	-t Space separated list of images for hostapp extension containers
 	-r Reboot after update
 EOF
 	exit 0
@@ -37,7 +36,6 @@ shift $#
 error_handler() {
 	# shellcheck disable=SC2181
 	[ $? -eq 0 ] && exit 0
-
 	exit 1
 }
 
@@ -63,18 +61,18 @@ umount_merged() {
 	fi
 }
 
-# The target hostapp extensions is a space separated list of docker repository
-# tags in the form repo/name:tag, e.g balena/default:v1 balena/extra:v2
+# The target hostapp extensions is a space separated list of Balena
+# releases, e.g  <repository>/<image>@<digest>
 #
 # Select target hostapp extensions in order of preference:
 # Command line argument
-# hostappExtensions entry in config.json
-# Image default from /etc/hostapp-extensions.conf
+# Preloaded images from apps.json
+RESIN_DATA_DIR="/mnt/data"
+APPS_JSON_PATH="${RESIN_DATA_DIR}/apps.jon"
 if [ -z "${target_hostext_images}" ]; then
-	if [ -z "${HOSTEXT_IMAGES}" ]; then
-		target_hostext_images=$(cat ${BALENA_HOSTAPP_EXTENSIONS_DEFAULT})
-	else
-		target_hostext_images="${HOSTEXT_IMAGES}"
+	if [ -f "${APPS_JSON_PATH}" ]; then
+		info "Using preloaded containers from ${APPS_JSON_PATH}"
+		target_hostext_images=$(jq --raw-output '.apps[] | select(.type=="hostapp extension") | .services[].image' ${APPS_JSON_PATH} | tr "\n" " ")
 	fi
 fi
 if [ -n "${target_hostext_images}" ]; then
@@ -93,7 +91,6 @@ elif which balena > /dev/null 2>&1; then
     DOCKER=balena
 else
     error "No container engine detected."
-    error_handler "no container engine detected"
 fi
 
 # Verify targets
@@ -145,31 +142,11 @@ if [ -n "${target_hostext_images}" ]; then
 			error "   - failed to install"
 			break
 		else
-			if ! ${DOCKER} create --runtime="bare" --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${hostext}" none  > /dev/null 2>&1; then
-				error "   - failed to spawn"
-				break
-			fi
 			update_current_host_extensions
 		fi
 		info "   - done"
 	done
 fi
-
-# Update config.json accordingly
-tmpdir=$(mktemp -d)
-tmpfile="${tmpdir}/config.tmp"
-if [ -z "${current_hostext_images}" ]; then
-	# No hostext images, remove entry
-	jq . > "${tmpfile}" < "${CONFIG_PATH}"
-	sed -i "/hostappExtensions/d" "${tmpfile}"
-else
-	# Store the current hostapp extensions into config.json
-	jq -S '. |= .+ {"hostappExtensions"}' > "${tmpfile}" < "${CONFIG_PATH}"
-	content=$(jq -S ". |= .+ {\"hostappExtensions\" : \"${current_hostext_images}\"}" < "${tmpfile}")
-	echo "${content}" > "${tmpfile}"
-fi
-mv "${tmpfile}" "${CONFIG_PATH}" && sync
-rm -rf "${tmpdir}"
 
 if [ -n "${current_hostext_images}" ]; then
 	info "The following hostapp extensions will be available on the next boot:"
