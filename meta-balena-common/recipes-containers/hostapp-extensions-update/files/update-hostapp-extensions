@@ -6,14 +6,13 @@ set -e
 . /usr/libexec/os-helpers-logging
 
 BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
-BALENA_HOSTAPP_EXTENSIONS_DEFAULT="/etc/hostapp-extensions.conf"
 DOCKER_OVERLAY_ROOT="/var/lib/docker/overlay2/"
 
 readonly script_name=$(basename "${0}")
 usage() {
 	cat <<EOF
 Usage: ${script_name} [OPTIONS]
-	-t Space separated list of repository tags for hostapp extension containers
+	-t Space separated list of image digests for hostapp extension containers
 	-r Reboot after update
 EOF
 	exit 0
@@ -24,20 +23,15 @@ while getopts 'hrt:' flag; do
 	r) reboot=1 ;;
 	t) target_hostext_images="${OPTARG}" ;;
 	h) usage ;;
-	*) error "Unexpected option ${flag}" ;;
+	*) error "Unexpected option ${flag}" ; usage ;;
 	esac
 done
 
 shift $#
 
-# Don't source before parsing args as resin-vars parses args too
-# shellcheck disable=SC1091
-. /usr/sbin/resin-vars
-
 error_handler() {
 	# shellcheck disable=SC2181
 	[ $? -eq 0 ] && exit 0
-
 	exit 1
 }
 
@@ -45,10 +39,11 @@ trap error_handler EXIT
 
 current_hostext_images=""
 update_current_host_extensions() {
+	local _hostext="${1}"
 	if [ -z "${current_hostext_images}" ]; then
-		current_hostext_images="${hostext}"
+		current_hostext_images="${_hostext}"
 	else
-		current_hostext_images="${current_hostext_images} ${hostext}"
+		current_hostext_images="${current_hostext_images} ${_hostext}"
 	fi
 }
 
@@ -63,18 +58,18 @@ umount_merged() {
 	fi
 }
 
-# The target hostapp extensions is a space separated list of docker repository
-# tags in the form repo/name:tag, e.g balena/default:v1 balena/extra:v2
+# The target hostapp extensions is a space separated list of Balena
+# releases, e.g  <repository>/<image>@<digest>
 #
 # Select target hostapp extensions in order of preference:
 # Command line argument
-# hostappExtensions entry in config.json
-# Image default from /etc/hostapp-extensions.conf
+# Preloaded images from apps.json
+RESIN_DATA_DIR="/mnt/data"
+APPS_JSON_PATH="${RESIN_DATA_DIR}/apps.json"
 if [ -z "${target_hostext_images}" ]; then
-	if [ -z "${HOSTEXT_IMAGES}" ]; then
-		target_hostext_images=$(cat ${BALENA_HOSTAPP_EXTENSIONS_DEFAULT})
-	else
-		target_hostext_images="${HOSTEXT_IMAGES}"
+	if [ -f "${APPS_JSON_PATH}" ]; then
+		info "Using preloaded containers from ${APPS_JSON_PATH}"
+		target_hostext_images=$(jq --raw-output '.apps[] | select(.type=="hostapp extension") | .services[].image' ${APPS_JSON_PATH} | tr "\n" " ")
 	fi
 fi
 if [ -n "${target_hostext_images}" ]; then
@@ -93,7 +88,6 @@ elif which balena > /dev/null 2>&1; then
     DOCKER=balena
 else
     error "No container engine detected."
-    error_handler "no container engine detected"
 fi
 
 # Verify targets
@@ -104,7 +98,7 @@ for hostext in ${target_hostext_images}; do
 	fi
 
 	if ! DOCKER_CLI_EXPERIMENTAL=enabled ${DOCKER} manifest inspect "${hostext}"  > /dev/null 2>&1; then
-		error "${hostext} not found in repository - bailing out with no action taken."
+		error "Not found in repository - bailing out with no action taken: ${hostext}"
 		exit 1
 	fi
 done
@@ -112,17 +106,26 @@ done
 info "Removing previous hostapp extensions"
 
 for image in $(${DOCKER} images --all --quiet --filter label="${BALENA_HOSTAPP_EXTENSIONS_FEATURE}"); do
-	imagetag=$(${DOCKER} inspect "${image}" --format='{{index .RepoTags 0}}' 2>/dev/null)
+	# Skip tags
+	if [ "${oldimage}" = "${image}" ]; then
+		oldimage="${image}"
+		continue
+	fi
+	oldimage="${image}"
+	# Do not err if there is no repoDigest on images - might have been installed by older supervisor
+	imagetag=$(${DOCKER} inspect "${image}" --format='{{index .RepoDigests 0}}' 2>/dev/null || true)
 	cids=$(${DOCKER} ps --all --quiet --no-trunc --filter ancestor="${image}" | tr '\n' ' ')
-	case "${target_hostext_images}" in
-		*${imagetag}*)
-			# If no container use the image do not preserve it
-			if [ -n "${cids}" ]; then
-				info " - Preserving $imagetag"
-				continue
-			fi
-			;;
-	esac
+	if [ -n "${imagetag}" ]; then
+		case "${target_hostext_images}" in
+			*${imagetag}*)
+				# If no container use the image do not preserve it
+				if [ -n "${cids}" ]; then
+					info " - Preserving $imagetag"
+					continue
+				fi
+				;;
+		esac
+	fi
 	for cid in ${cids}; do
 		umount_merged "${cid}"
 		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
@@ -137,7 +140,7 @@ if [ -n "${target_hostext_images}" ]; then
 		imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
 		if [ -n "${imageid}" ]; then
 			info "   - already installed"
-			update_current_host_extensions
+			update_current_host_extensions "${hostext}"
 			continue
 		fi
 
@@ -149,27 +152,11 @@ if [ -n "${target_hostext_images}" ]; then
 				error "   - failed to spawn"
 				break
 			fi
-			update_current_host_extensions
+			update_current_host_extensions "${hostext}"
 		fi
 		info "   - done"
 	done
 fi
-
-# Update config.json accordingly
-tmpdir=$(mktemp -d)
-tmpfile="${tmpdir}/config.tmp"
-if [ -z "${current_hostext_images}" ]; then
-	# No hostext images, remove entry
-	jq . > "${tmpfile}" < "${CONFIG_PATH}"
-	sed -i "/hostappExtensions/d" "${tmpfile}"
-else
-	# Store the current hostapp extensions into config.json
-	jq -S '. |= .+ {"hostappExtensions"}' > "${tmpfile}" < "${CONFIG_PATH}"
-	content=$(jq -S ". |= .+ {\"hostappExtensions\" : \"${current_hostext_images}\"}" < "${tmpfile}")
-	echo "${content}" > "${tmpfile}"
-fi
-mv "${tmpfile}" "${CONFIG_PATH}" && sync
-rm -rf "${tmpdir}"
 
 if [ -n "${current_hostext_images}" ]; then
 	info "The following hostapp extensions will be available on the next boot:"
