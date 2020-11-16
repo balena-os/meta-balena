@@ -1,0 +1,107 @@
+#!/bin/sh
+
+# Copyright 2020 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# The timestamp format used by balenaOS is YYYYMMDDhhmmss.
+
+
+# Get the system time as a timestamp.
+get_system_time_as_timestamp() {
+	local timestamp=$(date -u "+%4Y%2m%2d%2H%2M%2S")
+	echo "${timestamp}"
+}
+
+# Get the hwclock time as a timestamp.
+get_hwclock_time_as_timestamp() {
+	local rtc_time_str=$(hwclock --show --utc)
+	local timestamp=$(date -u "+%4Y%2m%2d%2H%2M%2S" -d "${rtc_time_str}")
+	echo "${timestamp}"
+}
+
+# Get a 'date' compatible string from a timestamp for display.
+# YYYYMMDDhhmmss -> YYYYMMDD hh:mm:ss
+# Arguments:
+#   1 - timestamp
+get_date_display_string_from_timestamp() {
+	local timestamp=$1
+	local date="$(echo "${timestamp}" | awk '{string=substr($0, 1, 8); print string;}')"
+	local hour="$(echo "${timestamp}" | awk '{string=substr($0, 9, 2); print string;}')"
+	local minute="$(echo "${timestamp}" | awk '{string=substr($0, 11, 2); print string;}')"
+	local sec="$(echo "${timestamp}" | awk '{string=substr($0, 13, 2); print string;}')"
+	echo "${date} ${hour}:${minute}:${sec}"
+}
+
+# Get a 'date' compatible string from a timestamp for setting the time.
+# YYYYMMDDhhmmss -> MMDDhhmmYYYY.ss
+# Arguments:
+#   1 - timestamp
+get_date_set_string_from_timestamp() {
+	local timestamp=$1
+	local datetime="$(echo "${timestamp}" | awk '{string=substr($0, 5, 8); print string;}')"
+	local year="$(echo "${timestamp}" | awk '{string=substr($0, 1, 4); print string;}')"
+	local sec="$(echo "${timestamp}" | awk '{string=substr($0, 13, 2); print string;}')"
+	echo "${datetime}${year}.${sec}"
+}
+
+# Get a human readable string from a timestamp.
+# YYYYMMDDhhmmss -> Day DD Mon HH:MM:SS TZ YYYY
+# Arguments:
+#   1 - timestamp
+get_display_time_from_timestamp() {
+	local timestamp=$1
+	local datestr="$(get_date_display_string_from_timestamp "$timestamp")"
+	echo "$(date -u -d "${datestr}")"
+}
+
+# Get epoch time from a timestamp.
+# Arguments:
+#   1 - timestamp
+get_epoch_time_from_timestamp() {
+	local timestamp=$1
+	local datestr="$(get_date_display_string_from_timestamp "${timestamp}")"
+	echo "$(date -u "+%s" -d "${datestr}")"
+}
+
+# Get the absolute difference between two timestamps.
+# Arguments:
+#   1 - timestamp1
+#   2 - timestamp2
+get_abs_time_diff_from_timestamps() {
+	local time1="$(get_epoch_time_from_timestamp "$1")"
+	local time2="$(get_epoch_time_from_timestamp "$2")"
+	local diff
+	if [ "$time1" -gt "$time2" ]; then
+		diff="$(expr $time1 - $time2)"
+		echo "${diff}"
+		return 0
+	elif [ "$time2" -gt "$time1" ]; then
+		diff="$(expr $time2 - $time1)"
+		echo "${diff}"
+		return 0
+	else
+		diff="0"
+		echo "${diff}"
+		return 0
+	fi
+}
+
+# Set the system time from a timestamp.
+# Arguments:
+#   1 - timestamp
+set_system_time_from_timestamp() {
+	local datestr="$(get_date_set_string_from_timestamp "$1")"
+        date -u "${datestr}" > /dev/null
+}

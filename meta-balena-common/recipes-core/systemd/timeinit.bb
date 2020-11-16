@@ -16,6 +16,8 @@ DESCRIPTION = "Initialize system clock at boot"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
+RDEPENDS_${PN} += "os-helpers-time"
+
 SRC_URI = " \
     file://timeinit-buildtime.service \
     file://timeinit-buildtime.sh \
@@ -24,6 +26,7 @@ SRC_URI = " \
     file://fake-hwclock-update.service \
     file://fake-hwclock-update.timer \
     file://timeinit-rtc.service \
+    file://timeinit-rtc.sh \
     file://time-set.target \
     file://time-sync.conf \
     "
@@ -47,6 +50,7 @@ do_install() {
     install -d ${D}/etc/fake-hwclock
     install -d ${D}${sysconfdir}/systemd/system/time-sync.target.d/
     install -m 0775 ${WORKDIR}/timeinit-buildtime.sh ${D}${bindir}
+    install -m 0775 ${WORKDIR}/timeinit-rtc.sh ${D}${bindir}
     install -m 0775 ${WORKDIR}/fake-hwclock ${D}${base_sbindir}
     install -m 0644 ${WORKDIR}/timeinit-buildtime.service ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/fake-hwclock.service ${D}${systemd_unitdir}/system

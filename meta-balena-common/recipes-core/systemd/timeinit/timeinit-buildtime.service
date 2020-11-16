@@ -21,7 +21,7 @@ Before=time-set.target fake-hwclock.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/sh /usr/bin/timeinit-buildtime.sh
+ExecStart=/usr/bin/timeinit-buildtime.sh
 
 [Install]
 WantedBy=time-set.target
