@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.62.0
+## (2020-11-13)
+
+* systemd/timeinit: improve RTC handling at boot [Mark Corbin]
+* os-helpers: add support functions for system date/time [Mark Corbin]
+
 # v2.61.3
 ## (2020-11-05)
 

@@ -1,4 +1,50 @@
 - commits:
+    - subject: 'systemd/timeinit: improve RTC handling at boot'
+      hash: 1c1374f3c8b5914b7e645f8068ebafc8b4cbbe3a
+      body: |
+        The handling of the RTC at boot time has been improved as follows:
+
+        1) A 'timeinit-rtc.sh' script has been added to improve logging of
+           system time updates from the RTC and to prevent system time
+           being set when RTC time is behind system time. If RTC time is
+           found to be behind system time a warning is issued regarding
+           potential RTC battery failure.
+
+        2) The 'timeinit-rtc.service' has been added to the new systemd
+           'time-set.target'. This allows for better control and
+           co-ordination between the various time source services.
+
+        3) Systemd dependencies have been updated to ensure that the
+           RTC is the final time service before the 'time-set.target'
+           is reached.
+
+        The 'timeinit-buildtime.sh' script has been updated to use the
+        new support functions provided by the 'os-helpers-time' script.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#2048'
+        connects-to: '#2048'
+        Changelog-entry: 'systemd/timeinit: improve RTC handling at boot'
+        changelog-entry: 'systemd/timeinit: improve RTC handling at boot'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'os-helpers: add support functions for system date/time'
+      hash: 66d4d61b4e00f9da99de041d262a1f7b4bf70d37
+      body: |
+        Add helper functions for manipulating system date/time.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.62.0
+  date: 2020-11-13T10:26:52.111Z
+- commits:
     - subject: 'modemmanager: add u-blox-modeswitch scripts'
       hash: a30ab44f40f1c059e64075c567fc388800d960a4
       body: |
