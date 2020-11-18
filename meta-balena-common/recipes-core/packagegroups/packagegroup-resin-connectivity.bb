@@ -10,12 +10,7 @@ NETWORK_MANAGER_PACKAGES ?= "networkmanager"
 
 CONNECTIVITY_MODULES = ""
 
-CONNECTIVITY_FIRMWARES ?= " \
-    linux-firmware-ath9k \
-    linux-firmware-ralink \
-    linux-firmware-rtl8192cu \
-    linux-firmware-rtl8192su \
-    "
+CONNECTIVITY_FIRMWARES ?= ""
 
 CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
