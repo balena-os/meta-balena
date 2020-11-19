@@ -383,5 +383,9 @@ do_image_hostapp_ext4[depends] = " \
 
 IMAGE_CMD:hostapp-ext4 () {
     dd if=/dev/zero of=${BALENA_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
-    mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
+    mkfs.hostapp -f ext4 \
+		 -t "${TMPDIR}" \
+		 -s "${STAGING_DIR_NATIVE}" \
+		 -i ${BALENA_DOCKER_IMG} \
+		 -o ${BALENA_HOSTAPP_IMG}
 }
