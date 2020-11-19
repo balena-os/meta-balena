@@ -5,6 +5,8 @@ SRC_URI += "file://balenaos_uboot.cfg"
 
 SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'development-image', '', 'file://balenaos_uboot_prod.cfg', d)}"
 SRC_URI += "${@bb.utils.contains('OS_DEV_UBOOT_DELAY', '1', 'file://balenaos_uboot_delay.cfg', 'file://balenaos_uboot_nodelay.cfg', d)}"
+# HACK: This should be disabled unless RESIN_ROOT_FSTYPE is hostapp-btrfs
+SRC_URI += "file://balenaos_uboot_btrfs.cfg"
 
 # Since 11278e3b2c75be80645b9841763a97dbb35daadc u-boot.inc has support
 # for ammending the bsp uboot with config fragments. We copy that
