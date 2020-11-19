@@ -368,5 +368,9 @@ do_image_hostapp_ext4[depends] = " \
 
 IMAGE_CMD_hostapp-ext4 () {
     dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
-    mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
+    mkfs.hostapp -f ext4 \
+                 -t "${TMPDIR}" \
+                 -s "${STAGING_DIR_NATIVE}" \
+                 -i ${RESIN_DOCKER_IMG} \
+                 -o ${RESIN_HOSTAPP_IMG}
 }
