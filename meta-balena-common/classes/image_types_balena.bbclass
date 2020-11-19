@@ -309,7 +309,15 @@ IMAGE_CMD:balenaos-img () {
     BALENA_ROOTB_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_ROOTB_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
     rm -rf ${BALENA_ROOTB_FS}
     dd if=/dev/zero of=${BALENA_ROOTB_FS} seek=${BALENA_ROOTB_BLOCKS} count=0 bs=1024
-    mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -F -L "${BALENA_ROOTB_FS_LABEL}" ${BALENA_ROOTB_FS}
+    if [ "${BALENA_ROOT_FSTYPE}" = "ext4" ]; then
+        mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 \
+                  -i 8192 \
+                  -F \
+                  -L "${BALENA_ROOTB_FS_LABEL}" \
+                  ${BALENA_ROOTB_FS}
+    elif [ "${BALENA_ROOT_FSTYPE}" = "hostapp-btrfs" ]; then
+        mkfs.btrfs -L "${BALENA_ROOTB_FS_LABEL}" ${BALENA_ROOTB_FS}
+    fi
 
     # resin-state
     if [ -n "${BALENA_STATE_FS}" ]; then
@@ -322,6 +330,8 @@ IMAGE_CMD:balenaos-img () {
     # Label what is not labeled
     if case "${BALENA_ROOT_FSTYPE}" in *ext4) true;; *) false;; esac; then # can be ext4 or hostapp-ext4
         e2label ${BALENA_ROOT_FS} ${BALENA_ROOTA_FS_LABEL}
+    elif [ "${BALENA_ROOT_FSTYPE}" = "hostapp-btrfs" ]; then
+        btrfs fi label ${BALENA_ROOT_FS} ${BALENA_ROOTA_FS_LABEL}
     else
         bbfatal "Rootfs labeling for type '${BALENA_ROOT_FSTYPE}' has not been implemented!"
     fi
@@ -384,6 +394,22 @@ do_image_hostapp_ext4[depends] = " \
 IMAGE_CMD:hostapp-ext4 () {
     dd if=/dev/zero of=${BALENA_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
     mkfs.hostapp -f ext4 \
+		 -t "${TMPDIR}" \
+		 -s "${STAGING_DIR_NATIVE}" \
+		 -i ${BALENA_DOCKER_IMG} \
+		 -o ${BALENA_HOSTAPP_IMG}
+}
+
+IMAGE_TYPEDEP:hostapp-btrfs = "docker"
+
+do_image_hostapp_btrfs[depends] = " \
+    mkfs-hostapp-native:do_populate_sysroot \
+    btrfs-tools-native:do_populate_sysroot \
+    "
+
+IMAGE_CMD:hostapp-btrfs () {
+    dd if=/dev/zero of=${BALENA_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
+    mkfs.hostapp -f btrfs \
 		 -t "${TMPDIR}" \
 		 -s "${STAGING_DIR_NATIVE}" \
 		 -i ${BALENA_DOCKER_IMG} \
