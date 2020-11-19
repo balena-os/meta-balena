@@ -396,5 +396,9 @@ do_image_hostapp_ext4[depends] = " \
 
 IMAGE_CMD:hostapp-ext4 () {
     truncate -s "$(expr ${ROOTFS_SIZE} \* 1024)" "${BALENA_HOSTAPP_IMG}"
-    mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
+    mkfs.hostapp -f ext4 \
+		 -t "${TMPDIR}" \
+		 -s "${STAGING_DIR_NATIVE}" \
+		 -i ${BALENA_DOCKER_IMG} \
+		 -o ${BALENA_HOSTAPP_IMG}
 }
