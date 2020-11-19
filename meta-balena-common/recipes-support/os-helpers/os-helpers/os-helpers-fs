@@ -154,13 +154,6 @@ regenerate_uuid() {
                 return 1
             fi
             ;;
-	btrfs*)
-	    new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
-	    cmd = "echo y | btrfstune -U ${new_uuid}"
-	    if ! eval "${cmd}" "${dev}"; then
-                return 1
-	    fi
-	    ;;
         *) ;;
         esac
 
