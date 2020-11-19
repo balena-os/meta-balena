@@ -67,6 +67,7 @@ RESIN_CONFIGS ?= " \
     ad5446 \
     balena \
     brcmfmac \
+    btrfs \
     cdc-acm \
     ralink \
     rtl8192cu \
@@ -259,6 +260,14 @@ RESIN_CONFIGS_DEPS[brcmfmac] ?= " \
     "
 RESIN_CONFIGS[brcmfmac] ?= " \
     CONFIG_BRCMFMAC=m \
+    "
+
+#
+# BTRFS support
+#
+RESIN_CONFIGS[btrfs] ?= " \
+    CONFIG_BTRFS_FS=y \
+    CONFIG_BTRFS_FS_POSIX_ACL=y \
     "
 
 #
