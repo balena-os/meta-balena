@@ -43,6 +43,7 @@ BINDMOUNTS += " \
 do_install_prepend () {
 	# These are mountpoints for various mount services/units
 	install -d ${D}/etc/docker
+	install -d ${D}/etc/resin-supervisor
 	ln -sf docker ${D}/etc/balena
 	ln -sf docker ${D}/etc/balena-engine
 	install -d ${D}/mnt/boot
