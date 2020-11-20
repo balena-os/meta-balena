@@ -20,7 +20,8 @@ machineid_run() {
     fi
 
     info "Binding machine-id from ${state_partition_path}"
-    if ! mount -t ext4 "$state_partition_path" "$ROOTFS_DIR"/mnt/state; then
+    bootparam_rootfstype=${bootparam_rootfstype:-ext4}
+    if ! mount -t ${bootparam_rootfstype} "$state_partition_path" "$ROOTFS_DIR"/mnt/state; then
         error "Not able to mount resin-state, machine-id will not be persistent."
         return
     fi
