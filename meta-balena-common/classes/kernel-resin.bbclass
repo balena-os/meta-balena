@@ -99,6 +99,7 @@ RESIN_CONFIGS ?= " \
     uinput \
     no-debug-info \
     uprobes \
+    squashfs \
     "
 
 #
@@ -551,6 +552,10 @@ RESIN_CONFIGS[ad5446] = " \
 RESIN_CONFIGS[uprobes] = " \
     CONFIG_UPROBE_EVENTS=y \
 "
+
+RESIN_CONFIGS[squashfs] = " \
+    CONFIG_SQUASHFS_FS=y \
+    "
 
 ###########
 # HELPERS #
