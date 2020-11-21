@@ -62,7 +62,7 @@ inherit image_types
 #   +-------------------+
 #
 
-RESIN_ROOT_FSTYPE ?= "hostapp-ext4"
+RESIN_ROOT_FSTYPE ?= "hostapp-${BALENA_FSTYPE}"
 PARTITION_TABLE_TYPE ?= "msdos"
 
 python() {
