@@ -54,6 +54,7 @@ INHERIT += "image-buildinfo resin-sanity"
 # Identification file flags
 RESIN_IMAGE_FLAG_FILE = "resin-image"
 RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
+BALENA_FSTYPE ?= "ext4"
 
 # Kernel command line
 OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','','console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
