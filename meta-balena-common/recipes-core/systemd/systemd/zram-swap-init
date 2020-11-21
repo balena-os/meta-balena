@@ -7,11 +7,11 @@ if [ "$device" = "" ]; then
     exit 1
 fi
 
-# Allocate zram to be 25% of all system memory or 1GB whichever smallest
+# Allocate zram to be 50% of all system memory or 4GB whichever smallest
 # Note: zram is only allocated when used. When swapped pages compress with a
 # a 2:1 ratio zram will require 50% of system memory (while allowing to use
 # 150% memory).
-ZRAM_SIZE_PERCENT=25
+ZRAM_SIZE_PERCENT=50
 ZRAM_ALGORITHM=lz4
 
 # shellcheck disable=SC2015
@@ -19,8 +19,8 @@ ZRAM_ALGORITHM=lz4
 
 memtotal=$(grep MemTotal /proc/meminfo | awk ' { print $2 } ')
 memzram=$((memtotal*ZRAM_SIZE_PERCENT/100))
-if [ "${memzram}" -gt "1024000" ]; then
-	memzram=1024000
+if [ "${memzram}" -gt "4096000" ]; then
+	memzram=4096000
 fi
 
 echo ${ZRAM_ALGORITHM} > /sys/block/"${device##/dev/}"/comp_algorithm
