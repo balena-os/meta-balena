@@ -71,7 +71,14 @@ kill -TERM "$(cat /var/run/docker.pid)"
 wait "$(cat /var/run/docker.pid)" || true
 
 # Export the final data filesystem
-dd if=/dev/zero of=${BUILD}/resin-data.img bs=1M count=0 seek="${PARTITION_SIZE}"
 
-# Usage type default, block size 4k defined in recipe. See https://github.com/tytso/e2fsprogs/issues/50
-mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -T default -b ${FS_BLOCK_SIZE}  -i 8192 -d ${DATA_VOLUME} -F ${BUILD}/resin-data.img
+if [ "${FSTYPE}" = "ext4" ]; then
+	dd if=/dev/zero of=${BUILD}/resin-data.img bs=1M count=0 seek="${PARTITION_SIZE}"
+	# Usage type default, block size 4k defined in recipe. See https://github.com/tytso/e2fsprogs/issues/50
+	mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -T default -b ${FS_BLOCK_SIZE}  -i 8192 -d ${DATA_VOLUME} -F ${BUILD}/resin-data.img
+elif [ "${FSTYPE}" = "ubifs" ]; then
+	mkfs.ubifs -r "${DATA_VOLUME}" -o "${BUILD}/resin-data.ubifs" ${MKUBIFS_ARGS}
+else
+	echo "Filesystem type not supported: ${FSTYPE}"
+	exit 1
+fi

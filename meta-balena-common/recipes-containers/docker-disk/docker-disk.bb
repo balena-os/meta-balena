@@ -74,6 +74,8 @@ do_compile () {
 		-e PRIVATE_REGISTRY_PASSWORD="${PRIVATE_REGISTRY_PASSWORD}" \
 		-e PARTITION_SIZE="${PARTITION_SIZE}" \
 		-e FS_BLOCK_SIZE="${FS_BLOCK_SIZE}" \
+		-e FSTYPE="${BALENA_FSTYPE}" \
+                -e MKUBIFS_ARGS="${MKUBIFS_ARGS}" \
 		-v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/build \
 		--name ${_container_name} ${_image_name}
 	$DOCKER rmi ${_image_name}
@@ -92,7 +94,7 @@ do_install () {
 FILES_${PN} += "/etc/hostapp-extensions.conf"
 
 do_deploy () {
-	install -m 644 ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
+	install -m 644 ${B}/resin-data.* ${DEPLOYDIR}/
 }
 addtask deploy before do_package after do_install
 
