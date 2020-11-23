@@ -6,6 +6,9 @@ SRC_URI += "file://balenaos_uboot.cfg"
 SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'development-image', '', 'file://balenaos_uboot_prod.cfg', d)}"
 SRC_URI += "${@bb.utils.contains('OS_DEV_UBOOT_DELAY', '1', 'file://balenaos_uboot_delay.cfg', 'file://balenaos_uboot_nodelay.cfg', d)}"
 
+SRCREV = "cd0d3749afdad4f4fd03bc005fe5efaad0e09417"
+LIC_FILES_CHKSUM = "file://Licenses/README;md5=5a7450c57ffe5ae63fd732446b988025"
+
 # Since 11278e3b2c75be80645b9841763a97dbb35daadc u-boot.inc has support
 # for ammending the bsp uboot with config fragments. We copy that
 # over in meta-balena-common to apply to pre-warrior layers.
