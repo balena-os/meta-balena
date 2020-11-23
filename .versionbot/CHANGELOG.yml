@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'supervisor: remove old/unnecessary balenaRootCA references'
+      hash: 65c7c232082185ddecbedca579327f6c80686bc5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.62.1
+  date: 2020-11-19T20:26:12.667Z
+- commits:
     - subject: 'systemd/timeinit: improve RTC handling at boot'
       hash: 1c1374f3c8b5914b7e645f8068ebafc8b4cbbe3a
       body: |
