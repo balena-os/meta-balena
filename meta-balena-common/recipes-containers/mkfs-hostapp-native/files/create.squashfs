@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -ex
+
+SYSROOT="/mnt/sysroot/inactive"
+COMPRESSION_ALGO="zstd"
+COMPRESSION_OPTS="-Xcompression-level 15"
+
+balenad -s=@BALENA_STORAGE@ --data-root="$SYSROOT/balena" -H unix:///var/run/balena-host.sock &
+pid=$!
+sleep 5
+
+hostapp-update -f /input -n
+kill $pid
+wait $pid
+
+mksquashfs $SYSROOT /output -comp $COMPRESSION_ALGO $COMPRESSION_OPTS -noappend

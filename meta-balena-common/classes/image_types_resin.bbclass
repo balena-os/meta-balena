@@ -370,3 +370,18 @@ IMAGE_CMD_hostapp-ext4 () {
     dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
     mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
 }
+
+IMAGE_TYPEDEP_hostapp-squashfs = "docker"
+
+do_image_hostapp_squashfs[depends] = " \
+    mkfs-hostapp-native:do_populate_sysroot \
+    "
+
+IMAGE_CMD_hostapp-squashfs () {
+    dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
+    mkfs.hostapp -f squashfs \
+                 -t "${TMPDIR}" \
+                 -s "${STAGING_DIR_NATIVE}" \
+                 -i ${RESIN_DOCKER_IMG} \
+                 -o ${RESIN_HOSTAPP_IMG} \
+}
