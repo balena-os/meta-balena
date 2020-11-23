@@ -1,4 +1,43 @@
 - commits:
+    - subject: 'image_types_resin: make rootfs labeling generic'
+      hash: 8a3752f12ccfdaae1f3c0831c429dcef9daf12cc
+      body: ''
+      footer:
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Joseph Kogut
+      nested: []
+    - subject: 'image_types_resin: make agnostic to root fstype'
+      hash: 7a7e0a0a565db96e79e2254d6f10ba6151c8da2a
+      body: |
+        Build RESIN_HOSTAPP_IMG path using RESIN_ROOT_FSTYPE instead of assuming
+        the root is ext4.
+      footer:
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Joseph Kogut
+      nested: []
+    - subject: 'mkfs-hostapp-native: make agnostic to fstype'
+      hash: 8baf97225fb2902ce365322e5add7a6dcc350078
+      body: |
+        Remove assumptions about root fstype. Rename create to create.ext4,
+        mkfs.hostapp-ext4 to mkfs.hostapp, and add an argument to mkfs.hostapp
+        for fstype. Remove CMD from Dockerfile in favor of passing it as an
+        argument to docker run.
+      footer:
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+        Change-type: minor
+        change-type: minor
+      author: Joseph Kogut
+      nested: []
+  version: 2.63.0
+  date: 2020-11-23T19:37:51.330Z
+- commits:
     - subject: 'systemd/timeinit: improve RTC handling at boot'
       hash: 1c1374f3c8b5914b7e645f8068ebafc8b4cbbe3a
       body: |

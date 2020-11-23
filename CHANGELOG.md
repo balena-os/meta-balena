@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.63.0
+## (2020-11-23)
+
+* image_types_resin: make rootfs labeling generic [Joseph Kogut]
+* image_types_resin: make agnostic to root fstype [Joseph Kogut]
+* mkfs-hostapp-native: make agnostic to fstype [Joseph Kogut]
+
 # v2.62.0
 ## (2020-11-13)
 
