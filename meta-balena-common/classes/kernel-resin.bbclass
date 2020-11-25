@@ -101,6 +101,7 @@ RESIN_CONFIGS ?= " \
     uprobes \
     task-accounting \
     ipv6_mroute \
+    overlay2 \
     "
 
 #
