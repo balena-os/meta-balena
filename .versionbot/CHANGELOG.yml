@@ -1,4 +1,30 @@
 - commits:
+    - subject: 'chrony: use a non-privileged UDP source port'
+      hash: 447449808ef08577712db43b1042599ad4d7d23c
+      body: |
+        Change the chrony UDP source port from 123 (privileged) to
+        1234 (non-privileged).
+
+        Previous issues with Phicomm routers had required the use of a fixed
+        UDP source port, so port 123 was chosen as this is used by both ntpd
+        and ntpdate. However recent testing has shown that using a privileged
+        port such as 123 can cause issues on other networks. By changing the
+        port to be non-privileged (i.e. 1234) we can satisfy both network
+        requirements.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: '#2000'
+        connects-to: '#2000'
+        Changelog-entry: 'chrony: use a non-privileged UDP source port'
+        changelog-entry: 'chrony: use a non-privileged UDP source port'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.62.2
+  date: 2020-11-25T13:53:40.649Z
+- commits:
     - subject: 'supervisor: remove old/unnecessary balenaRootCA references'
       hash: 65c7c232082185ddecbedca579327f6c80686bc5
       body: ''

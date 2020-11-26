@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.62.2
+## (2020-11-25)
+
+* chrony: use a non-privileged UDP source port [Mark Corbin]
+
 # v2.62.1
 ## (2020-11-19)
 
