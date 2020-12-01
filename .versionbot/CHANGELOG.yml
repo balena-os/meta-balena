@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'zram-swap-init: adjust default to lesser of 50%/4GB'
+      hash: 155af3386029a0e76b74ee60d58c32ba72073a82
+      body: >
+        Copied from Fedora zram defaults [0]. This may be adjusted later after
+
+        doing our own profiling.
+
+
+        [0]
+        https://fedoraproject.org/wiki/Changes/SwapOnZRAM#Default_zram_device_configuration:
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.63.0
+  date: 2020-11-30T21:37:10.077Z
+- commits:
     - subject: 'chrony: use a non-privileged UDP source port'
       hash: 447449808ef08577712db43b1042599ad4d7d23c
       body: |

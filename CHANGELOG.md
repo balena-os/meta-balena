@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.63.0
+## (2020-11-30)
+
+* zram-swap-init: adjust default to lesser of 50%/4GB [Joseph Kogut]
+
 # v2.62.2
 ## (2020-11-25)
 
