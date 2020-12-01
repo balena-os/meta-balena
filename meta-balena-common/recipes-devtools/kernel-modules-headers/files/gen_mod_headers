@@ -138,6 +138,7 @@ done
 mkdir -p "$target_karch_dir"
 copy_dir "$karch_dir/include" "$target_karch_dir"
 copy_dir "$karch_dir/tools" "$target_karch_dir"
+copy_dir "$karch_dir/lib" "$target_karch_dir"
 for f in $(find $karch_dir -iname '*.h' -o -name 'Makefile' -o -iname '*.tbl' -o -iname '*.sh'); do
 	copy_mkdir "$target_dir" "$f"
 done
@@ -153,6 +154,7 @@ copy_dir tools/objtool "$target_dir/tools"
 copy_dir tools/lib "$target_dir/tools"
 copy_dir tools/scripts "$target_dir/tools"
 copy_dir tools/build "$target_dir/tools"
+copy_dir tools/arch "$target_dir/tools"
 cp tools/Makefile "$target_dir/tools"
 
 copy_dir scripts "$target_dir"
@@ -261,13 +263,13 @@ if [[ -n "$prefix" ]]; then
 	    fi
 
 	    echo Building objtool for target
-	    make -C tools/objtool HOSTCC="$hostcc" HOSTLD="$LD" $build_opts
+	    make -C tools/objtool HOSTCC="$hostcc -O" HOSTLD="$LD" $build_opts
 	    rm -rf tools/objtool/fixdep tools/objtool/fixdep_temp
 	    mv .backup.tools.build.Makefile tools/build/Makefile
 
             if [[ -e tools/build/Makefile ]]; then
 	        echo Building fixdep for target
-	        make -C tools/build HOSTCC="$hostcc" HOSTLD="$LD" $build_opts
+	        make -C tools/build HOSTCC="$hostcc -O" HOSTLD="$LD" $build_opts
 
     	        # move the target fixdep to the expected location
     	        mv tools/build/fixdep tools/objtool/
