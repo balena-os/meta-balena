@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.63.1
+## (2020-12-04)
+
+* start-resin-supervisor: fix directory creation for 'balena start' [Mark Corbin]
+
 # v2.63.0
 ## (2020-11-30)
 

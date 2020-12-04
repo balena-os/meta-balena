@@ -1,4 +1,36 @@
 - commits:
+    - subject: 'start-resin-supervisor: fix directory creation for ''balena start'''
+      hash: ce9e4f211a2356a866edee5ca3dbada3faa27689
+      body: |
+        Ensure that the /var/log/supervisor-log directory exists prior to
+        running 'balena start --attach resin_supervisor' as well as
+        'runSupervisor'.
+
+        Updates to the 'start-resin-supervisor' script in v2.62.1 removed
+        the check for updates to the REGISTRY_ENDPOINT variable. Previously
+        this had been detected as changing every time the script was run
+        due to a comparison between 'null' and ''. This resulted in the
+        'start-resin-supervisor' script always running through the
+        'runSupervisor' path. With this variable check removed, and no config
+        updates being detected, the script was trying to run
+        'balena start --attach resin_supervisor' and failing due to the
+        absence of the /var/log/supervisor-log directory. To fix this problem we
+        unconditionally test for and create this directory (if necessary) so
+        that it is available regardless of the path taken through the script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: '#2064'
+        connects-to: '#2064'
+        Changelog-entry: 'start-resin-supervisor: fix directory creation for ''balena start'''
+        changelog-entry: 'start-resin-supervisor: fix directory creation for ''balena start'''
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.63.1
+  date: 2020-12-04T17:24:10.321Z
+- commits:
     - subject: 'zram-swap-init: adjust default to lesser of 50%/4GB'
       hash: 155af3386029a0e76b74ee60d58c32ba72073a82
       body: >
