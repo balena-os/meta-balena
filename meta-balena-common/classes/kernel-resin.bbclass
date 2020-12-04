@@ -99,6 +99,7 @@ RESIN_CONFIGS ?= " \
     uinput \
     no-debug-info \
     uprobes \
+    task-accounting \
     "
 
 #
