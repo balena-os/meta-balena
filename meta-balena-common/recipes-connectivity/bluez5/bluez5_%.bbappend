@@ -3,7 +3,6 @@ FILESEXTRAPATHS_append := ":${THISDIR}/files"
 SRC_URI += " \
     file://10-local-bt-hci-up.rules \
     file://bluetooth.conf.systemd \
-    file://run-bluetoothd-with-experimental-flag.patch \
     "
 
 do_install_append() {

@@ -1,0 +1,3 @@
+[Unit]
+Requires=bind-var-lib-bluetooth.service
+After=bind-var-lib-bluetooth.service
