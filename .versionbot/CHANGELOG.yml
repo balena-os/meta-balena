@@ -1,4 +1,195 @@
 - commits:
+    - subject: 'rust: remove merged fix for TUNE_FEATURES parsing'
+      hash: 9a4ea159051825461007cff90c7c370ce74d7680
+      body: |
+        https://github.com/meta-rust/meta-rust/issues/240
+        https://github.com/meta-rust/meta-rust/pull/242
+
+        The fix for TUNE_FEATURES parsing has been merged in meta-rust master
+        and should be present when they fork for dunfell.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'systemd: update patches to avoid fuzzy matching'
+      hash: 03d64e57466c66acd710b089c4ae8d777f963554
+      body: >
+        The content applied by the patches has not changed, just the context
+
+        in order to properly inject changes without fuzzy matching since the
+        source
+
+        files have changed upstream.
+
+
+        `devtool modify systemd`
+
+        `devtool finish --force-patch-refresh systemd
+        ../layers/meta-balena/meta-balena-dunfell/`
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'systemd: add missing udev rules'
+      hash: 02b48c9523ff5ed36cc2cfd94225ea4234649371
+      body: >
+        https://github.com/balena-os/poky/commit/e3cd4e584239c207e3c82bdf5d7216d26fd28fc7
+
+
+        add missing udev rules since systemd began including rules explicitly
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'systemd: avoid conflicts with timeinit package'
+      hash: 97d14daa8f1bc8887883fd56c1512bdd51b2e351
+      body: |
+        Both systemd and timeinit attempt to install time-set.target so
+        we will remove the systemd version during install.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'dropbear: prevent conflicts with openssh'
+      hash: 169c1652e46e3a31d4f96bb98cbcf8240f3453ca
+      body: >
+        [https://github.com/balena-os/poky/commit/d365948ebd76625f82ef04e77d35bcfeced42fec]
+
+
+        Dropbear is still required to migrate keys. Avoid the upstream conflict
+        with openssh.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'networkmanager: add bash requirement'
+      hash: 9d380ec203a80afc15b4c902c36da7c25300515d
+      body: |
+        99dhcp_ntp in networkmanager requires bash
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'networkmanager: remove deprecated bluetooth inherit'
+      hash: 1993db9f3027936119248bd193e350456ba035bc
+      body: |
+        In poky dunfell and newer the bluetooth class has been deprecated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'meta-balena-common: replace distro_features_check with features_check'
+      hash: c907611d66aa4d2ff27f9940178cbcdbc2273459
+      body: |
+        Replace distro_features_check that was deprecated upstream in dunfell.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'avahi: remove example services'
+      hash: 317c7a6404195e78a21c76e43f8743a47cf542d1
+      body: |
+        In dunfell the example ssh service files don't exist so avoid failing
+        during do_install for services that we don't use anyway.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'u-boot: disable u-boot-initial-env'
+      hash: 9346f58cdd73924aec4279861ff43611c125ab5d
+      body: >
+        https://github.com/balena-os/poky/commit/d7b8ae3faa9344f2ada22e0402066c2fff5958c6
+
+
+        We have no use for u-boot-initial-env and enabling it would require
+
+        additional changes in do_compile to match the commit linked above.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'dnsmasq: fix build after y2038 changes in glib'
+      hash: fca86497476cf3d275ae3d4f8274d51b6b96a9b8
+      body: >
+        SIOCGSTAMP is defined in linux/sockios.h, not asm/sockios.h
+
+        http://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=commit;h=3052ce208acf602f0163166dcefb7330d537cedb
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'bluez5: replace experimental flag patch with service conf'
+      hash: 8d5a67522eda56acb583c5ab26f6144fef7038a1
+      body: |
+        In dunfell, rather than patching the bluetooth.service.in file,
+        we will just override the ExecStart value via bluetooth.conf.systemd
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'mtools: remove initialize-direntry patch'
+      hash: c35b98165cc698188b978c34c7fb20f58a4c83e1
+      body: |
+        Remove initialize-direntry.patch that has been fixed in mtools 4.0.23
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'meta-balena-dunfell: dunfell compatibility layer support'
+      hash: e8c34101f13d0327ac278207c8d7d500214f5f6f
+      body: |
+        Create meta-balena-dunfell layer base by copying meta-balena-warrior
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: 'meta-balena-dunfell: dunfell compatibility layer support'
+        changelog-entry: 'meta-balena-dunfell: dunfell compatibility layer support'
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.64.0
+  date: 2020-12-07T16:42:10.390Z
+- commits:
     - subject: 'start-resin-supervisor: fix directory creation for ''balena start'''
       hash: ce9e4f211a2356a866edee5ca3dbada3faa27689
       body: |

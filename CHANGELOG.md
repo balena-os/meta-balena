@@ -1,6 +1,24 @@
 Change log
 -----------
 
+# v2.64.0
+## (2020-12-07)
+
+* rust: remove merged fix for TUNE_FEATURES parsing [Kyle Harding]
+* systemd: update patches to avoid fuzzy matching [Kyle Harding]
+* systemd: add missing udev rules [Kyle Harding]
+* systemd: avoid conflicts with timeinit package [Kyle Harding]
+* dropbear: prevent conflicts with openssh [Kyle Harding]
+* networkmanager: add bash requirement [Kyle Harding]
+* networkmanager: remove deprecated bluetooth inherit [Kyle Harding]
+* meta-balena-common: replace distro_features_check with features_check [Kyle Harding]
+* avahi: remove example services [Kyle Harding]
+* u-boot: disable u-boot-initial-env [Kyle Harding]
+* dnsmasq: fix build after y2038 changes in glib [Kyle Harding]
+* bluez5: replace experimental flag patch with service conf [Kyle Harding]
+* mtools: remove initialize-direntry patch [Kyle Harding]
+* meta-balena-dunfell: dunfell compatibility layer support [Kyle Harding]
+
 # v2.63.1
 ## (2020-12-04)
 
