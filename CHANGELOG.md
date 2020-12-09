@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.64.1
+## (2020-12-09)
+
+* Update codeowners [Alex Gonzalez]
+
 # v2.64.0
 ## (2020-12-07)
 

@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update codeowners
+      hash: d18fc8cdfab02a4c5016b29eca23b4f1f73c7e9b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.64.1
+  date: 2020-12-09T08:47:40.115Z
+- commits:
     - subject: 'rust: remove merged fix for TUNE_FEATURES parsing'
       hash: 9a4ea159051825461007cff90c7c370ce74d7680
       body: |
