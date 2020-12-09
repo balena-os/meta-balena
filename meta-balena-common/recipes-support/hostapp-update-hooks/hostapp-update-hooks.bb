@@ -10,9 +10,11 @@ inherit allarch
 HOSTAPP_HOOKS = " \
     0-bootfiles \
     70-sshd_migrate_keys \
+    75-supervisor-db/75-forward_supervisor-db \
+    75-supervisor-db/75-fwd_commit_supervisor-db \
     80-rollback \
     "
-HOSTAPP_HOOKS_DIRS = ""
+HOSTAPP_HOOKS_DIRS = "75-supervisor-db"
 
 RESIN_BOOT_FINGERPRINT = "${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
 
