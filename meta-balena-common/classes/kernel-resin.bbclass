@@ -99,6 +99,7 @@ RESIN_CONFIGS ?= " \
     uinput \
     no-debug-info \
     uprobes \
+    task-accounting \
     "
 
 #
@@ -529,6 +530,12 @@ RESIN_CONFIGS[nf_tables] = " \
     CONFIG_NFT_DUP_IPV6=m \
     CONFIG_NFT_FIB_IPV6=m \
     CONFIG_NF_DUP_IPV6=m \
+    "
+
+RESIN_CONFIGS[task-accounting] = " \
+    CONFIG_TASKSTATS=y \
+    CONFIG_TASK_DELAY_ACCT=y \
+    CONFIG_TASK_IO_ACCOUNTING=y \
     "
 
 # This adds support for creating
