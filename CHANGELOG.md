@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.64.2
+## (2020-12-10)
+
+* meta-balena-common: kernel-resin: enable task-accounting by default [Joseph Kogut]
+* meta-balena-common: kernel-resin: create task-accounting config [Joseph Kogut]
+
 # v2.64.1
 ## (2020-12-09)
 
