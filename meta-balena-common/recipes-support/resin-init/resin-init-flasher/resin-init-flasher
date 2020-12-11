@@ -38,6 +38,8 @@
 
 set -e
 
+. /usr/libexec/os-helpers-fs
+
 # Very long variables :)
 EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/mnt/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
@@ -186,6 +188,15 @@ fi
 
 # Mount internal device boot partition
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+for k in $(cat /proc/cmdline); do
+	if echo $k | grep "rootdelay" > /dev/null; then
+		timeout=$(echo $k | cut -d "=" -f2)
+	fi
+done
+timeout=${timeout:-5}
+if ! wait4file "/dev/disk/by-label/resin-boot" "$((timeout * 10))"; then
+	fail "Timeout while waiting for resin-boot partition to be detected"
+fi
 inform "Mounting internal device boot partition."
 if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
         fail "Failed to mount disk labeled as 'resin-boot'."
