@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# Copyright 2020 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Keep supervisor database when updating from releases between v2.59.0 < r < v2.64.1 upwards
+#
+
+set -e
+
+#
+# MAIN
+#
+
+DATA_MOUNT="/mnt/data"
+SUPERVISOR_DB_DIR_A="${DATA_MOUNT}/resin-data/resin-supervisor"
+SUPERVISOR_DB_DIR_B="${DATA_MOUNT}/resin-supervisor"
+SUPERVISOR_DB_NAME="database.sqlite"
+
+SUPERVISOR_DB_PATH_A="${SUPERVISOR_DB_DIR_A}/${SUPERVISOR_DB_NAME}"
+SUPERVISOR_DB_PATH_B="${SUPERVISOR_DB_DIR_B}/${SUPERVISOR_DB_NAME}"
+
+if [ -f "${SUPERVISOR_DB_PATH_B}" ]; then
+	if [ -f "${SUPERVISOR_DB_PATH_A}" ]; then
+		last_modified_a=$(stat -c %Y "${SUPERVISOR_DB_PATH_A}")
+		last_modified_b=$(stat -c %Y "${SUPERVISOR_DB_PATH_B}")
+		if [ "${last_modified_a}" -gt "${last_modified_b}" ]; then
+			echo "[WARN] forward_supervisor-db: ${SUPERVISOR_DB_PATH_A} is newer - bailing out."
+			exit
+		fi
+	fi
+	if [ ! -d "${SUPERVISOR_DB_DIR_A}" ]; then
+		mkdir -p "${SUPERVISOR_DB_DIR_A}"
+	fi
+	cp "${SUPERVISOR_DB_PATH_B}" "${SUPERVISOR_DB_PATH_A}"
+	echo "[INFO] forward_supervisor-db: Copied ${SUPERVISOR_DB_PATH_B} to ${SUPERVISOR_DB_PATH_A}"
+fi
