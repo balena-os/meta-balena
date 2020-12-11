@@ -1,4 +1,73 @@
 - commits:
+    - subject: 'Revert "resin-data.mount: Remove default dependencies"'
+      hash: 0101e6289b2a05ab688db43f73772ebfeeb97c53
+      body: |
+        This reverts commit dc6cfa2e90b29b0fdcfc05c1b85e2196de4f950b.
+
+        Once the core problem with the resin-data mount has been fixed this
+        commit is no longer needed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'hostapp-update-hooks: Add supervisor database fix'
+      hash: f3e7e164cf095218c1f92f2afecdd186cbbdfadd
+      body: >
+        When adding hostapp extension support to mobynit, in:
+
+        https://github.com/balena-os/meta-balena/commit/6be3f1153d56c1c0c21e6d84db7be70be96bcd10
+
+
+        the supervisor database was relocated by mistake. On this version the
+        database
+
+        returns to its original place, and these hooks copy the old database to
+        the
+
+        new location to avoid data loss.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'resin-supervisor: Make sure the database directory exists'
+      hash: d070fe38a3b2a91fcc7c07d716fa90fdd3e9d078
+      body: |
+        If this directory is removed by mistake, the supervisor will not be
+        able to start.
+
+        This commit checks the directory existence and creates it if required
+        independently of whether the supervisor container is present.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Correct the data partition mountpoint
+      hash: 36dca74acc9e7db23b8980fff735360332927125
+      body: |
+        Correct the mount point for the resin-data directory.
+
+        Fixes https://github.com/balena-os/meta-balena/issues/2070
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Correct the data partition mountpoint
+        changelog-entry: Correct the data partition mountpoint
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.64.3
+  date: 2020-12-11T07:52:52.415Z
+- commits:
     - subject: 'meta-balena-common: kernel-resin: enable task-accounting by default'
       hash: d308c67666e612fad7e6bb7ac88d5bec2bfd8f9e
       body: ''

@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.64.3
+## (2020-12-11)
+
+* Revert "resin-data.mount: Remove default dependencies" [Alex Gonzalez]
+* hostapp-update-hooks: Add supervisor database fix [Alex Gonzalez]
+* resin-supervisor: Make sure the database directory exists [Alex Gonzalez]
+* Correct the data partition mountpoint [Alex Gonzalez]
+
 # v2.64.2
 ## (2020-12-10)
 
