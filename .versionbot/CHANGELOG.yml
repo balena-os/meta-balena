@@ -1,4 +1,22 @@
 - commits:
+    - subject: Add IPV6 multicast routing capability
+      hash: 510bb7a7107f538f56c35a87a7426e7c12a3cdb3
+      body: |
+        Add IPV6 multicast routing capability to the default configuration.
+
+        Fixes #2051
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add IPV6 multicast routing capability
+        changelog-entry: Add IPV6 multicast routing capability
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.64.4
+  date: 2020-12-14T12:36:30.487Z
+- commits:
     - subject: 'Revert "resin-data.mount: Remove default dependencies"'
       hash: 0101e6289b2a05ab688db43f73772ebfeeb97c53
       body: |

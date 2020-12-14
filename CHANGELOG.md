@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.64.4
+## (2020-12-14)
+
+* Add IPV6 multicast routing capability [Alex Gonzalez]
+
 # v2.64.3
 ## (2020-12-11)
 
