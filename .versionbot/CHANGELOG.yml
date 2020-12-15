@@ -1,4 +1,19 @@
 - commits:
+    - subject: Respect custom CA in supervisor
+      hash: f09ab6cdf887e4d4c8ba0d48c038842682276cf6
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Respect custom CA in supervisor
+        changelog-entry: Respect custom CA in supervisor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.64.5
+  date: 2020-12-15T20:35:28.448Z
+- commits:
     - subject: Add IPV6 multicast routing capability
       hash: 510bb7a7107f538f56c35a87a7426e7c12a3cdb3
       body: |
