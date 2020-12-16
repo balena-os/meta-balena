@@ -19,6 +19,12 @@ fi
 SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE:$SUPERVISOR_TAG")
 SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' resin_supervisor || echo "")
 
+# If custom CA exists populate the NODE_EXTRA_CA_CERTS env variable as node ignores the system-wide CA bundle
+BALENA_ROOT_CA_FILE="/usr/share/ca-certificates/balena/balenaRootCA.crt"
+if [ -f "${BALENA_ROOT_CA_FILE}" ]; then
+    NODE_EXTRA_CA_CERTS="/mnt/root/${BALENA_ROOT_CA_FILE}"
+fi
+
 hasValueChanged() {
     KEY="$1"
     NEW_VALUE="$2"
@@ -41,6 +47,7 @@ configIsUnchanged() {
     hasValueChanged "DELTA_ENDPOINT"        "$DELTA_ENDPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LED_FILE"              "${LED_FILE}" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LISTEN_PORT"           "$LISTEN_PORT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
+    hasValueChanged "NODE_EXTRA_CA_CERTS"   "$NODE_EXTRA_CA_CERTS" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
         echo "Container config has changed!"
         return 1
@@ -62,6 +69,8 @@ runSupervisor() {
         --mount type=bind,source=/resin-data/resin-supervisor,target=/data \
         --mount type=bind,source=/proc/net/fib_trie,target=/mnt/fib_trie \
         --mount type=bind,source=/var/log/supervisor-log,target=/var/log \
+        --mount type=bind,source=/etc/ssl/certs,target=/etc/ssl/certs,readonly \
+        --mount type=bind,source=/usr/share/ca-certificates,target=/usr/share/ca-certificates,readonly \
         --mount type=bind,source=/,target=/mnt/root \
         -e DOCKER_ROOT=/mnt/root/var/lib/docker \
         -e DOCKER_SOCKET=/var/run/balena-engine.sock \
@@ -70,6 +79,7 @@ runSupervisor() {
         -e "DELTA_ENDPOINT=$DELTA_ENDPOINT" \
         -e "LED_FILE=${LED_FILE}" \
         -e "LISTEN_PORT=$LISTEN_PORT" \
+        -e "NODE_EXTRA_CA_CERTS=${NODE_EXTRA_CA_CERTS}" \
         -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}" \
         "${SUPERVISOR_IMAGE}:${SUPERVISOR_TAG}"
 }
