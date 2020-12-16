@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.1.1 to v12.2.11
+      hash: 0f301c4bba35737149c6489b4cd6716506496372
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor from v12.1.1 to v12.2.11
+        changelog-entry: Update balena-supervisor from v12.1.1 to v12.2.11
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.65.0
+  date: 2020-12-14T22:04:19.165Z
+- commits:
     - subject: Add IPV6 multicast routing capability
       hash: 510bb7a7107f538f56c35a87a7426e7c12a3cdb3
       body: |
