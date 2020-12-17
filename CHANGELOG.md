@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.65.1
+## (2020-12-17)
+
+* u-boot: Add required configuration for BalenaOS environment [Alex Gonzalez]
+
 # v2.65.0
 ## (2020-12-14)
 

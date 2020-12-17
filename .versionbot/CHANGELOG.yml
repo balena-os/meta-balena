@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'u-boot: Add required configuration for BalenaOS environment'
+      hash: 401345c86a3a017dc548a94c7afa3977d547fc21
+      body: >
+        The BalenaOS u-boot environment patch requires u-boot to support
+        importing
+
+        and exporting of the environment as well as the fsuuid command.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.65.1
+  date: 2020-12-17T10:39:35.947Z
+- commits:
     - subject: Update balena-supervisor from v12.1.1 to v12.2.11
       hash: 0f301c4bba35737149c6489b4cd6716506496372
       body: ''
