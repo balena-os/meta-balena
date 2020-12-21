@@ -1,0 +1,12 @@
+# Automatically created by OE
+serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
+insmod ext2
+insmod configfile
+source /grub/grub_extraenv
+default=boot
+timeout=@@TIMEOUT@@
+
+menuentry 'flash'{
+search --set=root --label flash-rootA
+linux /boot/@@KERNEL_IMAGETYPE@@ root=LABEL=flash-rootA flasher rootwait ${extra_os_cmdline}
+}
