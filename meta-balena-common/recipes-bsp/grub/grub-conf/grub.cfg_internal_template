@@ -1,0 +1,69 @@
+# Automatically created by OE
+serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
+default=boot
+insmod ext2
+insmod gzio
+insmod test
+insmod loadenv
+insmod regexp
+insmod probe
+insmod configfile
+timeout=@@TIMEOUT@@
+resin_root_part=2
+upgrade_available=0
+
+load_env
+source /grub/grub_extraenv
+
+if [ ${upgrade_available} = 1 ] ; then
+ if [ ${bootcount} = 1 ] ; then
+  set bootcount=2
+  save_env bootcount
+ fi
+ if [ ${bootcount} = 0 ] ; then
+  set bootcount=1
+  save_env bootcount
+ fi
+fi
+
+function get_root_uuid {
+ # Extract drive and partition type from boot drive in grub format
+ regexp -s 1:bdrive -s 2:pscheme '^(hd.*),(msdos|gpt).*' $root
+ # Parse boot drive partitions looking for specific label
+ for part in 1 2 3 4 5 6 7 8 9 10; do
+  probe --set rlabel --label (${bdrive},${pscheme}${part})
+  # On label match, extract filesystem UUID and set this partition as new root
+  if test $rlabel == "$1"; then
+   probe --set root_uuid --fs-uuid (${bdrive},${pscheme}${part})
+   search --set root --fs-uuid ${root_uuid}
+   return
+  fi
+ done
+}
+
+menuentry 'boot'{
+if [ ${bootcount} = 2 ] ; then
+ if [ ${resin_root_part} = 2 ] ; then
+  get_root_uuid "resin-rootB"
+ else
+  get_root_uuid "resin-rootA"
+ fi
+else
+ if [ ${resin_root_part} = 2 ] ; then
+  get_root_uuid "resin-rootA"
+ else
+  get_root_uuid "resin-rootB"
+ fi
+fi
+linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+}
+
+menuentry 'manualfallbackA' {
+  get_root_uuid "resin-rootA"
+  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+}
+
+menuentry 'manualfallbackB' {
+  get_root_uuid "resin-rootB"
+  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+}
