@@ -60,8 +60,8 @@ NETWORK_MANAGER_PACKAGES = "mynetworkmanager mynetworkmanager-client"
 ### Customizing splash
 
 We configure all of our initial images to produce a balena logo at boot, shutdown or reboot. But we encourage any user to go and replace that logo with their own.
-All you have to do is replace the `splash/resin-logo.png` file that you will find in the first partition of our images (boot partition) with your own image.
-NOTE: As it currently stands plymouth expects the image to be named `resin-logo.png`.
+All you have to do is replace the `splash/balena-logo.png` file that you will find in the first partition of our images (boot partition) with your own image.
+NOTE: As it currently stands plymouth expects the image to be named `balena-logo.png`. In older releases this file was called `resin-logo.png`.
 
 ### Docker storage driver
 
