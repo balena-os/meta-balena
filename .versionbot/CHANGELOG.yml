@@ -1,4 +1,30 @@
 - commits:
+    - subject: 'chrony: bump to version 4.0'
+      hash: 67e8632a8a6c82dcf382b0204af40b79dd1a279a
+      body: |
+        Update chrony from version 3.4 to version 4.0.
+
+        The new version has enhancements and new features that will
+        help to improve time synchronisation, including:
+
+        - the ability to add server pools via scripts using chronyc.
+        - support for dynamic NTP source files that can be reloaded
+          as necessary (useful for DHCP and config.json sources).
+        - source name options for improved handling of pool addresses.
+        - repeat 'iburst' when a source is changed from offline to
+          online state.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: 'chrony: bump to version 4.0'
+        changelog-entry: 'chrony: bump to version 4.0'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.66.0
+  date: 2020-12-18T11:02:16.858Z
+- commits:
     - subject: 'u-boot: Add required configuration for BalenaOS environment'
       hash: 401345c86a3a017dc548a94c7afa3977d547fc21
       body: >

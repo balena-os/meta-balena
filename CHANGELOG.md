@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.66.0
+## (2020-12-18)
+
+* chrony: bump to version 4.0 [Mark Corbin]
+
 # v2.65.1
 ## (2020-12-17)
 
