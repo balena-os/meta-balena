@@ -62,7 +62,7 @@ inherit image_types
 #   +-------------------+
 #
 
-BALENA_ROOT_FSTYPE ?= "hostapp-ext4"
+BALENA_ROOT_FSTYPE ?= "hostapp-${BALENA_FSTYPE}"
 
 python() {
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR
