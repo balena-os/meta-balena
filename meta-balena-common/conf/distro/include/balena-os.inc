@@ -85,6 +85,15 @@ python () {
         d.setVar('BALENA_STORAGE', docker_storage)
 }
 
+# add support for selected alternate filesystem
+python () {
+    try:
+        _, fstype = d.getVar('BALENA_ROOT_FSTYPE').split('-')
+        d.appendVar('DISTRO_FEATURES', ' ' + fstype)
+    except (ValueError, AttributeError):
+        pass
+}
+
 # Partition fingerprints files
 BALENA_FINGERPRINT_EXT ?= "fingerprint"
 BALENA_FINGERPRINT_FILENAME ?= "balenaos"
