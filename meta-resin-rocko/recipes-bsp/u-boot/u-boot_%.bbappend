@@ -1,3 +1,5 @@
+SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'btrfs', 'file://balenaos_uboot_btrfs.cfg', '', d)}"
+
 # Since 11278e3b2c75be80645b9841763a97dbb35daadc u-boot.inc has support
 # for ammending the bsp uboot with config fragments. We copy that
 # over in meta-balena-common to apply to pre-warrior layers.
