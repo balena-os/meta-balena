@@ -1,4 +1,39 @@
 - commits:
+    - subject: 'kernel-devsrc: use upstream recipe starting with dunfell'
+      hash: 1300a223f5b58dd4584b62e87df41ec72f783961
+      body: |
+        Remove the kernel-devsrc package from meta-balena and
+        use the one from the upstream Poky project instead.
+
+        Initially I hoped thud and warrior could also use the respective
+        upstreams but I see several differences between the meta-balena
+        version and the upstreams so I updated those compat layers
+        as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'gen_mod_headers: add missing arch headers to tools'
+      hash: 5485f1fbc901a04eedbcc3b72cc95fdfb2d03665
+      body: |
+        Upstream changes to the kernel have switched to a shared x86
+        insn decoder required by tools/objtool so we must add those
+        include and lib components to our target dir.
+
+        https://lore.kernel.org/lkml/20190830201021.utzjr6cs5hoxygyi@treble/T/
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.66.1
+  date: 2021-01-04T13:06:56.017Z
+- commits:
     - subject: 'chrony: bump to version 4.0'
       hash: 67e8632a8a6c82dcf382b0204af40b79dd1a279a
       body: |

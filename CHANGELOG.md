@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.66.1
+## (2021-01-04)
+
+* kernel-devsrc: use upstream recipe starting with dunfell [Kyle Harding]
+* gen_mod_headers: add missing arch headers to tools [Kyle Harding]
+
 # v2.66.0
 ## (2020-12-18)
 
