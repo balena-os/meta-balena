@@ -1,25 +1,26 @@
-From: Zubair Lutfullah Kakakhel <zubair@balena.io>
-Date: Wed, 24 Jul 2019 11:35:19 +0000
+From: Zahari Petkov <zahari@balena.io>
+Date: Thu, 7 Jan 2021 13:57:53 +0200
 Subject: [PATCH] nm-connectivity: Remove redundant https warning
 
 This warning doesn't apply to our use-case. See https://github.com/balena-os/meta-balena/issues/1597
 for more detail.
 
 Upstream-Status: Inappropriate [configuration]
-Signed-off-by: Zubair Lutfullah Kakakhel <zubair@balena.io>
+Signed-off-by: Zahari Petkov <zahari@balena.io>
 ---
- src/nm-connectivity.c | 1 -
- 1 file changed, 1 deletion(-)
+ src/nm-connectivity.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/nm-connectivity.c b/src/nm-connectivity.c
-index 694733f6a512..dfb26714692d 100644
+index 3cd1d4b8c..46184c0d1 100644
 --- a/src/nm-connectivity.c
 +++ b/src/nm-connectivity.c
-@@ -1101,7 +1101,6 @@ update_config (NMConnectivity *self, NMConfigData *config_data)
- 				_LOGE ("invalid URI '%s' for connectivity check.", new_uri);
- 				new_uri_valid = FALSE;
- 			} else if (g_ascii_strcasecmp (scheme, "https") == 0) {
--				_LOGW ("use of HTTPS for connectivity checking is not reliable and is discouraged (URI: %s)", new_uri);
- 				is_https = TRUE;
- 			} else if (g_ascii_strcasecmp (scheme, "http") != 0) {
- 				_LOGE ("scheme of '%s' uri doesn't use a scheme that is allowed for connectivity check.", new_uri);
+@@ -1073,7 +1073,7 @@ update_config(NMConnectivity *self, NMConfigData *config_data)
+                 _LOGE("invalid URI '%s' for connectivity check.", new_uri);
+                 new_uri_valid = FALSE;
+             } else if (g_ascii_strcasecmp(scheme, "https") == 0) {
+-                _LOGW("use of HTTPS for connectivity checking is not reliable and is discouraged "
++                _LOGD("use of HTTPS for connectivity checking is not reliable and is discouraged "
+                       "(URI: %s)",
+                       new_uri);
+                 is_https = TRUE;

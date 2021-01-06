@@ -11,7 +11,6 @@ SRC_URI_append = " \
     file://nm-tmpfiles.conf \
     file://balena-client-id.patch \
     file://remove-https-warning.patch \
-    file://0001-wwan-Set-MTU-based-on-what-ModemManager-exposes.patch \
     "
 
 RDEPENDS_${PN}_append = " \
@@ -36,6 +35,11 @@ EXTRA_OECONF += " \
 	--with-config-dhcp-default=internal \
 	--with-dhclient=no \
 	"
+
+EXTRA_OECONF += " \
+    --enable-introspection=no \
+    --enable-firewalld-zone=no \
+    "
 
 do_install_append() {
     install -d ${D}${sysconfdir}/tmpfiles.d
