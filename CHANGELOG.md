@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.66.2
+## (2021-01-11)
+
+* README: Rename resin-logo to balena-logo. [Alex Gonzalez]
+
 # v2.66.1
 ## (2021-01-04)
 

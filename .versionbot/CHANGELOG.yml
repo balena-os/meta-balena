@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'README: Rename resin-logo to balena-logo.'
+      hash: 47a7a0ab9a99ea45b4fcf4e684d973088328eca9
+      body: |
+        The file rename happened in v2.51 but the README has not been updated
+        accordingly.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.66.2
+  date: 2021-01-11T17:30:40.806Z
+- commits:
     - subject: 'kernel-devsrc: use upstream recipe starting with dunfell'
       hash: 1300a223f5b58dd4584b62e87df41ec72f783961
       body: |
