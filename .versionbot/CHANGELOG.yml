@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.2.11 to v12.3.0
+      hash: fc41d16085b331d032a3666fc25af7c43eee5369
+      body: ''
+      footer:
+        Changelog-entry: Update balena-supervisor from v12.2.11 to v12.3.0
+        changelog-entry: Update balena-supervisor from v12.2.11 to v12.3.0
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Felipe Lalanne <felipe@balena.io>
+        signed-off-by: Felipe Lalanne <felipe@balena.io>
+      author: Felipe Lalanne
+      nested: []
+  version: 2.67.0
+  date: 2021-01-12T13:41:49.881Z
+- commits:
     - subject: Respect custom CA in supervisor
       hash: 4cf82392c78d804a18737de80dcfa6f8f34d0494
       body: >
