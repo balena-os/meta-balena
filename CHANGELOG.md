@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.66.3
+## (2021-01-12)
+
+* Respect custom CA in supervisor [Michal Toman]
+
 # v2.66.2
 ## (2021-01-11)
 

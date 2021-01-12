@@ -1,4 +1,29 @@
 - commits:
+    - subject: Respect custom CA in supervisor
+      hash: 4cf82392c78d804a18737de80dcfa6f8f34d0494
+      body: >
+        This is necessary because node has its own built-in CA bundle and
+        ignores
+
+        the system-wide bundle. Bind-mount the system-wide bundle to the
+        supervisor
+
+        container as well to keep the previous behavior. Make it read-only
+        though,
+
+        any modifications should be performed by the host OS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Respect custom CA in supervisor
+        changelog-entry: Respect custom CA in supervisor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.66.3
+  date: 2021-01-12T09:38:46.408Z
+- commits:
     - subject: 'README: Rename resin-logo to balena-logo.'
       hash: 47a7a0ab9a99ea45b4fcf4e684d973088328eca9
       body: |
