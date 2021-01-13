@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'resin-init-flasher: add ability to upgrade OS in place'
+      hash: d9f515c7566661e6b7a6a3bdc472815abdf2a509
+      body: |
+        This allows the flasher script to only overwrite the rootfs partitions,
+        effectively upgrading the OS version while leaving user data and
+        configuration intact, by passing the argument io.balena.upgrade=true on
+        the kernel command line.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.68.0
+  date: 2021-01-13T00:58:39.783Z
+- commits:
     - subject: Update balena-supervisor from v12.2.11 to v12.3.0
       hash: fc41d16085b331d032a3666fc25af7c43eee5369
       body: ''

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.68.0
+## (2021-01-13)
+
+* resin-init-flasher: add ability to upgrade OS in place [Joseph Kogut]
+
 # v2.67.0
 ## (2021-01-12)
 
