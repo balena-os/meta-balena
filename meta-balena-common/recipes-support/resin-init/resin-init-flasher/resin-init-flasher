@@ -28,6 +28,7 @@
 #  BOOTLOADER_BLOCK_SIZE_OFFSET           - offset at which we write u-boot binary
 #  BOOTLOADER_SKIP_OUTPUT_BLOCKS          - number of blocks to skip when writing bootloader
 #                                             * this is the seek param to dd
+#  UPGRADE_PARTITIONS                     - partitions to flash during upgrade
 #
 #  Certain hardware requires that the bootloader is split into MLO and u-boot.img rather than having
 # it all bundled in a u-boot.img binary. To address this requirement, this flashing script will further
@@ -133,26 +134,64 @@ if [ -z "$internal_dev" ]; then
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
 inform "$internal_dev will be used for flashing."
-dd if="/opt/$RESIN_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
 
-if ! kill -0 $DD_PID; then
-    fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
+if [[ $(cat /proc/cmdline) = *"io.balena.upgrade=true"* ]]; then
+    LOOP=$(losetup -f -P --show /opt/$RESIN_IMAGE)
+    ([[ $internal_dev = *"nvme"* ]] || [[ $internal_dev = *"mmcblk"* ]]) \
+        && PART_PREFIX="p" || PART_PREFIX=""
+
+    let TOTAL_BYTES=0; for pnum in ${UPGRADE_PARTITIONS}; do
+        let TOTAL_BYTES+=$(wc -c ${LOOP}p${pnum} | awk '{print $1}');
+    done
+
+    for pnum in ${UPGRADE_PARTITIONS}; do
+        dd if=${LOOP}p${UPGRADE} \
+            of=/dev/$internal_dev${PART_PREFIX}${pnum} \
+            bs=4M 2> /tmp/dd_progress-p${pnum} & DD_PID=$!
+
+        if ! kill -0 $DD_PID; then
+            fail "Failed to flash internal partition $internal_dev${PART_PREFIX}${pnum}."
+        fi
+
+        resin-device-progress --percentage 0 --state "Starting upgrade of balenaOS on internal media" || true
+
+        while kill -USR1 $DD_PID 2>/dev/null; do
+            sleep 3
+            if [ ! -s /tmp/dd_progress-p${pnum} ]; then
+                continue
+            fi
+            WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress-p${pnum})
+            let RATIO=$WRITTEN_BYTES*100/$TOTAL_BYTES || true
+            resin-device-progress --percentage $RATIO \
+                                  --state "Upgrading balenaOS on /dev/$internal_dev${PART_PREFIX}${pnum}" || true
+            truncate -s 0 /tmp/dd_progress-p${pnum}
+        done
+    done
+
+    losetup -d ${LOOP}
+else
+    dd if="/opt/$RESIN_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+
+    if ! kill -0 $DD_PID; then
+        fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
+    fi
+
+    IMAGE_FILE_SIZE=$(wc -c /opt/"$RESIN_IMAGE" | awk '{print $1}')
+
+    resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
+
+    while kill -USR1 $DD_PID 2>/dev/null; do
+        sleep 3
+        if [ ! -s /tmp/dd_progress_log ]; then
+            continue
+        fi
+        IMAGE_WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
+        let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE || true
+        resin-device-progress --percentage $RATIO --state "Flashing balenaOS on internal media" || true
+        truncate -s 0 /tmp/dd_progress_log
+    done
 fi
 
-IMAGE_FILE_SIZE=$(wc -c /opt/"$RESIN_IMAGE" | awk '{print $1}')
-
-resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
-
-while kill -USR1 $DD_PID 2>/dev/null; do
-    sleep 3
-    if [ ! -s /tmp/dd_progress_log ]; then
-        continue
-    fi
-    IMAGE_WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
-    let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE || true
-    resin-device-progress --percentage $RATIO --state "Flashing balenaOS on internal media" || true
-    truncate -s 0 /tmp/dd_progress_log
-done
 
 sync
 

@@ -78,4 +78,5 @@ do_install() {
     echo "BOOTLOADER_IMAGE_1=${BOOTLOADER_IMAGE_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_BLOCK_SIZE_OFFSET_1=${BOOTLOADER_BLOCK_SIZE_OFFSET_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS_1=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "UPGRADE_PARTITIONS=\"2 3\"" >> ${D}/$sysconfdir/resin-init-flasher.conf
 }
