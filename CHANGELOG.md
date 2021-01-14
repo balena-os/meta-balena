@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.67.2
+## (2021-01-14)
+
+* Fix pppd timeout when launched by NetworkManager [Zahari Petkov]
+
 # v2.67.1
 ## (2021-01-13)
 

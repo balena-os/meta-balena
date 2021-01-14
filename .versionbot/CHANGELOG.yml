@@ -1,4 +1,32 @@
 - commits:
+    - subject: Fix pppd timeout when launched by NetworkManager
+      hash: e86c83e9be007bbedf5bad8bb961931c4f4f649c
+      body: |
+        Fixes #1846
+
+        UART modems (RaspberryPi HATs) are not working currently under
+        balenaOS as NetworkManager times out while attempting to establish
+        ppp connection. This is not a balenaOS specific issue.
+
+        This commits adds a `connect ""` declaration to `/etc/ppp/options`
+        to workaround this as the NULL default value causes the timeout.
+
+        The connect option specifies an external script to establish the
+        physical link. When using NetworkManager/ModemManager it is
+        ModemManager that establishes the physical link before passing it
+        to NetworkManager. Thus `connect` should be empty.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix pppd timeout when launched by NetworkManager
+        changelog-entry: Fix pppd timeout when launched by NetworkManager
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.67.2
+  date: 2021-01-14T12:39:10.901Z
+- commits:
     - subject: 'resin-device-register: Fix post provisioning state not reported'
       hash: 62016c3931c08cbc4c4bdb1e4069c6f9d9533b04
       body: |
