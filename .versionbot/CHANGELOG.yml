@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'resin-device-register: Fix post provisioning state not reported'
+      hash: 62016c3931c08cbc4c4bdb1e4069c6f9d9533b04
+      body: |
+        Starting with dee971c0dbeb6e8363f3e321af582e99627626e9, flasher
+        images, which don't contain a supervisor version, try to register
+        in the API using the parameter supervisor_version='null'.
+
+        However, the API expects this parameter to be unset completely if
+        there's no version to be reported during registration, otherwise
+        the call fails and the device doesn't show up in dashboard during
+        flashing or report the post-provisioning state.
+      footer:
+        Change-type: Patch
+        change-type: Patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.67.1
+  date: 2021-01-13T14:55:01.572Z
+- commits:
     - subject: Update balena-supervisor from v12.2.11 to v12.3.0
       hash: fc41d16085b331d032a3666fc25af7c43eee5369
       body: ''

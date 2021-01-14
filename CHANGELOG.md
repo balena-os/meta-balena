@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.67.1
+## (2021-01-13)
+
+* resin-device-register: Fix post provisioning state not reported [Alexandru Costache]
+
 # v2.67.0
 ## (2021-01-12)
 
