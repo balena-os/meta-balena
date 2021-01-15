@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'kernel-headers-test: Install python dependency'
+      hash: 6b648fa36bb8f7b2f90799a9c331210e34d3c438
+      body: |
+        Some makefiles for the kernel modules build, like for
+        instance the one in the kernel for the lec-px30 machine,
+        want python to be available in the environment. Let's add
+        it to the build dependencies.
+      footer:
+        Change-type: Patch
+        change-type: Patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.67.3
+  date: 2021-01-15T11:10:16.824Z
+- commits:
     - subject: Fix pppd timeout when launched by NetworkManager
       hash: e86c83e9be007bbedf5bad8bb961931c4f4f649c
       body: |
