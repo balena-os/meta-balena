@@ -9,10 +9,12 @@ pulling."
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f28"
 
-inherit systemd go pkgconfig useradd
+inherit systemd go pkgconfig useradd binary-compress
 
 BALENA_VERSION = "19.03.13-dev"
 BALENA_BRANCH= "master"
+
+FILES_COMPRESS = "/usr/bin/balena-engine"
 
 SRCREV = "074a481789174b4b6fd2d706086e8ffceb72e924"
 SRC_URI = "\
