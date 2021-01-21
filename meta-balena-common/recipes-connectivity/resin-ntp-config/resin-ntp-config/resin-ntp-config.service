@@ -1,0 +1,11 @@
+[Unit]
+Description=Resin NTP server configure service
+Requires=resin-net-config.service
+After=resin-net-config.service
+
+[Service]
+ExecStart=@BINDIR@/resin-ntp-config
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target
