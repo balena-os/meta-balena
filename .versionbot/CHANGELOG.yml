@@ -1,4 +1,49 @@
 - commits:
+    - subject: 'mobynit: use fast compression on init'
+      hash: b0eede666f85bc122133929c9ac98c295e260578
+      body: |
+        Use fast UPX compression on init, which saves further rootfs space, and
+        should improve boot times on most platforms.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'balena: use fast compression on balena-engine'
+      hash: 13ce715541e3ac7c981c2e682cc95eae5555cfa7
+      body: |
+        Use fast UPX compression on balena-engine, which is a ~40 MB Go
+        executable that compresses quite well. This will save space while
+        improving startup times on most platforms.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'classes: binary-compress: remove lzma flags'
+      hash: aa0eb0c2c687587e7786ac0514463533c0eb3f8f
+      body: |
+        LZMA compression, especially at higher levels, is very slow. This saves
+        space, but tends to cost more in CPU time than we save by reading less
+        from disk.
+
+        Remove these high compression arguments in favor of faster
+        decompression, with a modest but useful compression ratio in almost all
+        cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.68.0
+  date: 2021-01-21T19:40:15.792Z
+- commits:
     - subject: 'kernel-headers-test: Install python dependency'
       hash: 6b648fa36bb8f7b2f90799a9c331210e34d3c438
       body: |

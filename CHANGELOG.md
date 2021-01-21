@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.68.0
+## (2021-01-21)
+
+* mobynit: use fast compression on init [Joseph Kogut]
+* balena: use fast compression on balena-engine [Joseph Kogut]
+* classes: binary-compress: remove lzma flags [Joseph Kogut]
+
 # v2.67.3
 ## (2021-01-15)
 
