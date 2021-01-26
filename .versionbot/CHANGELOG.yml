@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'replace busybox ps with procps [klutchell]'
+      hash: 64867f4e08061c847d55d1c444cd0d7ac23f332e
+      body: |
+        https://github.com/balena-os/balena-engine/issues/236
+
+        Replace busybox ps link with ps.procps without installing
+        any other procps packages. This will avoid regression and bloat
+        from swapping existing busybox links with procps variants.
+
+        By using procps as docker expects we can properly handle ps args
+        such as -e and -o to format output. Busybox is only capable of this
+        when compiled in "desktop" mode.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'replace busybox ps with procps [klutchell]'
+        changelog-entry: 'replace busybox ps with procps [klutchell]'
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.67.4
+  date: 2021-01-26T23:37:19.930Z
+- commits:
     - subject: 'kernel-headers-test: Install python dependency'
       hash: 6b648fa36bb8f7b2f90799a9c331210e34d3c438
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.67.4
+## (2021-01-26)
+
+* replace busybox ps with procps [klutchell] [Kyle Harding]
+
 # v2.67.3
 ## (2021-01-15)
 
