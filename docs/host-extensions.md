@@ -24,6 +24,10 @@ The example Dockerfile above starts with an empty container, then adds the `io.b
 
 Extensions are meant to be managed by the supervisor or as part of a hostOS update. Manually installing, removing or updating hostapp extensions is neither advised nor supported.
 
+To preload hostapp extensions when building the host OS images, add a space or colon separated list of public hostapp extensions application names to your __conf/local.conf__ configuration file. For example, if there is a public app called __linux-firmware__ you would add:
+
+    HOSTEXT_IMAGES = "linux-firmware"
+
 ## Disabling hostapp extension overlays
 
 An incorrect hostapp extension can leave your system in a non-working state. Balena advises against deploying custom made hostapp extensions and recommends to either use the hostapp extensions included as part of BalenaOS releases, or let the supervisor manage the installation, update and removal of production ready hostapp extensions.
