@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.67.4
+## (2021-01-27)
+
+* Update aufs4 and aufs5 kernel patches [Florin Sarbu]
+
 # v2.67.3
 ## (2021-01-15)
 

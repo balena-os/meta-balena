@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update aufs4 and aufs5 kernel patches
+      hash: 62231bee3dd12698522130b224371ff82a3de567
+      body: |
+        We update to the newest patch revisions from upstream
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update aufs4 and aufs5 kernel patches
+        changelog-entry: Update aufs4 and aufs5 kernel patches
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.67.4
+  date: 2021-01-27T11:08:07.030Z
+- commits:
     - subject: 'kernel-headers-test: Install python dependency'
       hash: 6b648fa36bb8f7b2f90799a9c331210e34d3c438
       body: |
