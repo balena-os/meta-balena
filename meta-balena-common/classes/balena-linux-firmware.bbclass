@@ -57,3 +57,4 @@ python __anonymous() {
 }
 do_iwlwifi_firmware_clean[vardeps] += "IWLWIFI_FW_MIN_API_VARDEPS"
 addtask iwlwifi_firmware_clean after do_install before do_package
+addtask iwlwifi_firmware_clean after do_install before do_populate_sysroot
