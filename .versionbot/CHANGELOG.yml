@@ -1,4 +1,48 @@
 - commits:
+    - subject: 'replace busybox ps with procps [klutchell]'
+      hash: 00556af37cf241e2b95d9b719f1ab58cc9bbddb6
+      body: >
+        Replace busybox ps link with ps.procps without installing
+
+        any other procps packages. This will avoid regression and bloat
+
+        from swapping existing busybox links with procps variants.
+
+
+        By using procps as docker expects we can properly handle ps args
+
+        such as -e and -o to format output. Busybox is only capable of this
+
+        when compiled in "desktop" mode.
+
+
+        This upstream commit to poky has already split the ps binary into
+
+        a separate procps package:
+
+
+        -
+        https://git.yoctoproject.org/cgit/cgit.cgi/poky/commit/?id=507a47a4e5077d5f8f76d9629be6b871dfd8eb90
+
+
+        So for now we can copy this recipe at the commit above into compat
+        branches
+
+        and use that version until we pick up a branch newer than gatesgarth.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: 'https://github.com/balena-os/balena-engine/issues/236'
+        connects-to: 'https://github.com/balena-os/balena-engine/issues/236'
+        Changelog-entry: 'replace busybox ps with procps [klutchell]'
+        changelog-entry: 'replace busybox ps with procps [klutchell]'
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.67.5
+  date: 2021-01-27T18:47:18.617Z
+- commits:
     - subject: Update aufs4 and aufs5 kernel patches
       hash: 62231bee3dd12698522130b224371ff82a3de567
       body: |
