@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.68.1
+## (2021-01-29)
+
+* Fix task ordering for the iwlwifi_firmware_clean task [Florin Sarbu]
+
 # v2.68.0
 ## (2021-01-29)
 

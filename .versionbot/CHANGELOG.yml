@@ -1,4 +1,23 @@
 - commits:
+    - subject: Fix task ordering for the iwlwifi_firmware_clean task
+      hash: 5d039b111a964e21a637a5c7806aea6bb510a43e
+      body: |
+        We need to make sure the firmware cleanup function runs before
+        do_populate_sysroot otherwise do_populate_sysroot will race with it and
+        will fail complaining about the missing firmware that
+        iwlwifi_firmware_clean had just deleted at the same time.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix task ordering for the iwlwifi_firmware_clean task
+        changelog-entry: Fix task ordering for the iwlwifi_firmware_clean task
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.68.1
+  date: 2021-01-29T13:02:49.703Z
+- commits:
     - subject: Update NetworkManager to 1.28.0
       hash: 20e9c276f8d79b6051066e24b159c8bd9ffe3bc2
       body: >
