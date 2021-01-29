@@ -163,6 +163,10 @@ The behavior of balenaOS can be configured by setting the following keys in the 
 - When `dnsServers` is "null" (a string), Google's DNS server (8.8.8.8) will NOT be added as described above.
 - When `dnsServers` is defined and not "null", the listed servers will be added to the list of servers obtained via DHCP or statically configured via a NetworkManager connection profile.
 
+### balenaRootCA
+
+(string) A base64-encoded CA certificate if trusted and required for connection.
+
 ### os
 
 An object containing settings that customize the host OS at runtime.
