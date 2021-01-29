@@ -3,8 +3,8 @@ HOMEPAGE = "https://wiki.gnome.org/Projects/NetworkManager"
 SECTION = "net/misc"
 
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=cbbffd568227ada506640fe950a4823b \
-                    file://docs/api/html/license.html;md5=2d56a1b0c42e388aa86aef59b154e8c3 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://docs/api/html/license.html;md5=0660fa481565243be23062c2fd524ccd \
 "
 
 DEPENDS = " \
@@ -24,17 +24,17 @@ inherit gnomebase gettext systemd bash-completion vala gobject-introspection gtk
 SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
     file://0001-Fixed-configure.ac-Fix-pkgconfig-sysroot-locations.patch \
-    file://0002-Do-not-create-settings-settings-property-documentati.patch \
 "
 SRC_URI_append_libc-musl = " \
     file://musl/0001-Fix-build-with-musl-systemd-specific.patch \
     file://musl/0002-Fix-build-with-musl.patch \
 "
-SRC_URI[md5sum] = "81d688e9d5d81ae9da37663c1d74d010"
-SRC_URI[sha256sum] = "514e373f2c46536cacca644af859fb535c7a9ac4988a54d861d76f44c87fac84"
+SRC_URI[md5sum] = "3c4a70764ec3418a796b2c3f2a1f83e0"
+SRC_URI[sha256sum] = "3e170e9045e20598d2630e40c5789b2e2c46b942bfe5cb220f36202299253062"
 
-UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/1.16/"
-UPSTREAM_CHECK_REGEX = "NetworkManager\-(?P<pver>1\.10(\.\d+)+).tar.xz"
+UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/"
+# Stable releases are numbered 1.y.z, with y and z being even numbers.
+UPSTREAM_CHECK_REGEX = "NetworkManager\-(?P<pver>1\.(\d*[02468])+\.(\d*[02468])+)\.tar.xz"
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
@@ -76,7 +76,7 @@ PACKAGECONFIG[systemd] = " \
     --with-systemdsystemunitdir=${systemd_unitdir}/system --with-session-tracking=systemd, \
     --without-systemdsystemunitdir, \
 "
-PACKAGECONFIG[polkit] = "--enable-polkit --enable-polkit-agent,--disable-polkit --disable-polkit-agent,polkit"
+PACKAGECONFIG[polkit] = "--enable-polkit,--disable-polkit,polkit"
 PACKAGECONFIG[bluez5] = "--enable-bluez5-dun,--disable-bluez5-dun,bluez5"
 # consolekit is not picked by shlibs, so add it to RDEPENDS too
 PACKAGECONFIG[consolekit] = "--with-session-tracking=consolekit,,consolekit,consolekit"
