@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'docs: mention balenaRootCA as a config.json parameter'
+      hash: d0be88530c630d68f8582dce99442c6d94ba5455
+      body: ''
+      footer:
+        Connects-to: 'https://github.com/balena-os/meta-balena/issues/2011'
+        connects-to: 'https://github.com/balena-os/meta-balena/issues/2011'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+      author: Matthew McGinn
+      nested: []
+  version: 2.67.6
+  date: 2021-01-28T17:45:30.693Z
+- commits:
     - subject: 'replace busybox ps with procps [klutchell]'
       hash: 00556af37cf241e2b95d9b719f1ab58cc9bbddb6
       body: >

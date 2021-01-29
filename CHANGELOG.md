@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.67.6
+## (2021-01-28)
+
+* docs: mention balenaRootCA as a config.json parameter [Matthew McGinn]
+
 # v2.67.5
 ## (2021-01-27)
 
