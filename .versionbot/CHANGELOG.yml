@@ -1,4 +1,64 @@
 - commits:
+    - subject: Update NetworkManager to 1.28.0
+      hash: 20e9c276f8d79b6051066e24b159c8bd9ffe3bc2
+      body: >
+        Fixes #2075
+
+
+        Needed were a number of various changes to make the package compile
+        properly:
+
+
+        Removed is 0001-wwan-Set-MTU-based-on-what-ModemManager-exposes.patch
+        that is now
+
+        included upstream.
+
+
+        Our patch for removing HTTPS connectivity checking warning is reworked
+        for ease of
+
+        maintainance. It now keeps the log entry, but changes it to debug level.
+
+
+        Fixed are UPSTREAM_CHECK_* definitions as they referenced a wrong
+        version number.
+
+
+        The following additional configuration options were added/removed:
+
+
+        *. Introspection is disabled through `--enable-introspection=no`. Other
+        services do
+
+        not depend on it, so it is safe to remove it. A related patch is no
+        longer needed
+
+        0002-Do-not-create-settings-settings-property-documentati.patch
+
+
+        *. A new option for using firewalld zone for shared mode is disabled as
+        we do not
+
+        use firewalld.
+
+
+        *. The polkit agent option no longer is available, so
+        `--enable-polkit-agent` and
+
+        `--disable-polkit-agent` are no longer defined.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update NetworkManager to 1.28.0
+        changelog-entry: Update NetworkManager to 1.28.0
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.68.0
+  date: 2021-01-29T09:45:01.458Z
+- commits:
     - subject: 'docs: mention balenaRootCA as a config.json parameter'
       hash: d0be88530c630d68f8582dce99442c6d94ba5455
       body: ''
