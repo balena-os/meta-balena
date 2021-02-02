@@ -1,4 +1,110 @@
 - commits:
+    - subject: 'openvpn: remove resin-ntp-config call from upscript.sh'
+      hash: 958cd8f4bfc5d052d29c5d60c43e9ede58e39825
+      body: |
+        Running resin-ntp-config from openvpn upscript.sh is no longer
+        necessary as it is now run automatically when config.json changes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: '#2073'
+        connects-to: '#2073'
+        Changelog-entry: 'openvpn: remove resin-ntp-config call from upscript.sh'
+        changelog-entry: 'openvpn: remove resin-ntp-config call from upscript.sh'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'resin-vars: trigger NTP config script on config.json changes'
+      hash: 8dd222087f58c596bf3d30a956c985fcb0214baa
+      body: |
+        Add resin-ntp-config.service to config-json.service so that the
+        resin-ntp-config script is automatically run on changes to
+        config.json.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#2073'
+        connects-to: '#2073'
+        Changelog-entry: 'resin-vars: trigger NTP config script on config.json changes'
+        changelog-entry: 'resin-vars: trigger NTP config script on config.json changes'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'resin-ntp-config: update script and add systemd service'
+      hash: 7084f736b988706f71fe1d1ec95db6641be8a85e
+      body: |
+        Update the resin-ntp-config script to work with dynamic chrony
+        source configuration. Any NTP sources configured by config.json
+        are added to a chrony sources file. Changes to the sources file
+        are picked up by chrony either when it starts up or at runtime
+        using the chrony-helper script.
+
+        A systemd service has been added to run the resin-ntp-config script
+        once at boot. Previously the script was being run up to 8 times at
+        boot via a NetworkManager dispatcher script.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#2073'
+        connects-to: '#2073'
+        Changelog-entry: 'resin-ntp-config: update script and add systemd service'
+        changelog-entry: 'resin-ntp-config: update script and add systemd service'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'networkmanager: add improved dispatcher scripts for NTP handling'
+      hash: 23e52eaca7f0983ac6da27289fc293e43e7dbebd
+      body: |
+        Update the existing DHCP dispatcher script for adding NTP sources to
+        make use of dynamic chrony source configuration. Any DHCP configured
+        NTP sources for a particular interface are added to a sources file on
+        network 'up' or DHCP lease renewal events. Any DHCP configured NTP
+        sources for a particular interface are deleted on network 'down'
+        events. Changes to the sources file are picked up by chrony either
+        when it starts up or at runtime using the chrony-helper script.
+
+        Add a dispatcher script to trigger the chrony online/offline
+        status on network 'up' and 'down' events. This will make chrony
+        re-run an iburst for sources when the appropriate network interface
+        comes back up.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#2073'
+        connects-to: '#2073'
+        Changelog-entry: 'networkmanager: add improved dispatcher scripts for NTP handling'
+        changelog-entry: 'networkmanager: add improved dispatcher scripts for NTP handling'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'chrony: add sourcedir support and helper script'
+      hash: d6c64b0a08b64593d6684605bd5268f28ff1b1c9
+      body: |
+        Add the 'sourcedir' parameter to the chrony configuration to support
+        dynamic source configuration files. Any NTP source files that are
+        created in 'sourcedir' (/run/chrony) can be used to update the chrony
+        source configuration at runtime.
+
+        Add a helper script to support the dynamic re-loading of chrony
+        sources. This script uses the chrony 'reload sources' feature.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#2073'
+        connects-to: '#2073'
+        Changelog-entry: 'chrony: add sourcedir support and helper script'
+        changelog-entry: 'chrony: add sourcedir support and helper script'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.69.0
+  date: 2021-02-01T09:33:15.826Z
+- commits:
     - subject: Fix task ordering for the iwlwifi_firmware_clean task
       hash: 5d039b111a964e21a637a5c7806aea6bb510a43e
       body: |

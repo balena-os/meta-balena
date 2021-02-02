@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.69.0
+## (2021-02-01)
+
+* openvpn: remove resin-ntp-config call from upscript.sh [Mark Corbin]
+* resin-vars: trigger NTP config script on config.json changes [Mark Corbin]
+* resin-ntp-config: update script and add systemd service [Mark Corbin]
+* networkmanager: add improved dispatcher scripts for NTP handling [Mark Corbin]
+* chrony: add sourcedir support and helper script [Mark Corbin]
+
 # v2.68.1
 ## (2021-01-29)
 
