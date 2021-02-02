@@ -1,11 +1,14 @@
 #!/bin/sh
 #
-# copy over NTP configuration
+# Update NTP sources from config.json
 #
 
 set -e
 
 . /usr/sbin/resin-vars
+
+SERVER_DIR=/run/chrony
+SERVER_FILE=${SERVER_DIR}/added_config.sources
 
 if [ ! -f "$CONFIG_PATH" ]; then
 	echo "resin-ntp-config: $CONFIG_PATH does not exist."
@@ -14,10 +17,24 @@ else
 	echo "resin-ntp-config: Found config.json in $CONFIG_PATH ."
 fi
 
+if [ ! -d "$SERVER_DIR" ]; then
+	mkdir -p $SERVER_DIR
+	chmod 750 $SERVER_DIR
+fi
+
+# Always remove the old server file before we refresh the list.
+if [ -f "$SERVER_FILE" ]; then
+	rm -f $SERVER_FILE
+fi
+
 if [ ! -z "$NTP_SERVERS" ]; then
-	for ntp in ${NTP_SERVERS}; do
-		/usr/bin/chronyc add server $ntp iburst minpoll 14 maxpoll 14 || true
+	echo "Adding NTP sources (config.json)"
+	for server in ${NTP_SERVERS}; do
+		echo "pool $server iburst minpoll 14 maxpoll 14 maxsources 1" >> $SERVER_FILE
 	done
 fi
+
+# Always update the sources as they may have been added or removed.
+/usr/libexec/chrony-helper update-sources || true
 
 exit 0

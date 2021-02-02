@@ -5,7 +5,8 @@ FILESEXTRAPATHS_append := ":${THISDIR}/resin-files:${THISDIR}/${BPN}"
 SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
     file://NetworkManager.conf \
-    file://99dhcp_ntp \
+    file://98dhcp_ntp \
+    file://99onoffline_ntp \
     file://README.ignore \
     file://resin-sample.ignore \
     file://nm-tmpfiles.conf \
@@ -47,7 +48,8 @@ do_install_append() {
 
     install -m 0644 ${WORKDIR}/NetworkManager.conf ${D}${sysconfdir}/NetworkManager/
     mkdir -p "${D}${sysconfdir}/NetworkManager/dispatcher.d/"
-    install -m 0755 ${WORKDIR}/99dhcp_ntp ${D}${sysconfdir}/NetworkManager/dispatcher.d/
+    install -m 0755 ${WORKDIR}/98dhcp_ntp ${D}${sysconfdir}/NetworkManager/dispatcher.d/
+    install -m 0755 ${WORKDIR}/99onoffline_ntp ${D}${sysconfdir}/NetworkManager/dispatcher.d/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system/NetworkManager.service.d

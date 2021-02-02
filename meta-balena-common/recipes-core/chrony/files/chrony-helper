@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Support functions for chrony.
+#
+# This script is *very* loosely based on the version of
+# chrony-helper that was modified for Debian by
+# Vincent Blut <vincent.debian@free.fr>.
+
+CHRONYC=/usr/bin/chronyc
+HELPER_DIR=/run/chrony-helper
+
+prepare_helper_dir() {
+    mkdir -p $HELPER_DIR
+    exec 100> $HELPER_DIR/lock
+    if ! flock -w 20 100; then
+        echo "Failed to lock $HELPER_DIR" >&2
+        return 1
+    fi
+}
+
+chrony_command() {
+    $CHRONYC -n -m "$1"
+}
+
+is_running() {
+    chrony_command "tracking" &> /dev/null
+}
+
+# Force chrony to reload sources.
+#
+# NTP source files are named '*.sources' and are located in the
+# directory defined by 'sourcedir' (/run/chrony) in chrony.conf.
+# Source files are created from DHCP and config.json settings.
+
+update_sources() {
+
+    if ! is_running; then
+        return 0
+    fi
+
+    chrony_command "reload sources" &> /dev/null
+}
+
+print_help() {
+    echo "Usage: $0 COMMAND"
+    echo
+    echo "Commands:"
+    echo "      update-sources"
+}
+
+case "$1" in
+    update-sources)
+        prepare_helper_dir && update_sources
+        ;;
+    *)
+        print_help
+        exit 2
+esac
+
+exit $?

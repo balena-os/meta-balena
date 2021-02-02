@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#
+# Set NTP sources online or offline depending on network status.
+#
+
+INTERFACE=$1
+ACTION=$2
+
+case "$ACTION" in
+	up|down)
+	echo "Setting NTP source on/offline status ($INTERFACE $ACTION)."
+	/usr/bin/chronyc onoffline > /dev/null 2>&1 || true
+	;;
+	*)
+	;;
+esac
