@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.3.0 to v12.3.5
+      hash: 8f8a57760b82a1378adc078c86bb25aeafd7d6e8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.3.0 to v12.3.5
+        changelog-entry: Update balena-supervisor from v12.3.0 to v12.3.5
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.69.1
+  date: 2021-02-03T23:42:05.644Z
+- commits:
     - subject: 'openvpn: remove resin-ntp-config call from upscript.sh'
       hash: 958cd8f4bfc5d052d29c5d60c43e9ede58e39825
       body: |
