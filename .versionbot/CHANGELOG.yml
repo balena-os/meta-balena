@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'docker-disk: force Go net module to use pure go resolver'
+      hash: d79ec6d4123825fd2ed0907d06184ab6854a54eb
+      body: |
+        This prevents TLS handshake timeouts when net falls back to the cgo
+        resolver
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.69.2
+  date: 2021-02-04T18:03:23.006Z
+- commits:
     - subject: Update balena-supervisor from v12.3.0 to v12.3.5
       hash: 8f8a57760b82a1378adc078c86bb25aeafd7d6e8
       body: ''

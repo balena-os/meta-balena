@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.69.2
+## (2021-02-04)
+
+* docker-disk: force Go net module to use pure go resolver [Joseph Kogut]
+
 # v2.69.1
 ## (2021-02-03)
 
