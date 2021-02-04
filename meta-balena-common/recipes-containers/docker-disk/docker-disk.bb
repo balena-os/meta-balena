@@ -55,6 +55,10 @@ do_compile () {
 	# mismatches
 	DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
 
+	# Force Go net module to use pure go resolver
+	# This prevents TLS handshake timeouts when net falls back to the cgo resolver
+	export GODEBUG=netdns=go
+
 	# Generate the data filesystem
 	RANDOM=$$
 	_image_name="docker-disk-$RANDOM"
