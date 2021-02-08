@@ -1,0 +1,20 @@
+{
+	"scripts": {
+		"prettify": "prettier --config ../.prettierrc --write \"{os,release}/**/*.js\"",
+		"lint": "eslint -c ../.eslintrc.* lib tests"
+	},
+	"devDependencies": {
+		"eslint": "^4.19.1",
+		"eslint-config-prettier": "^4.0.0",
+		"eslint-config-standard": "^11.0.0",
+		"eslint-plugin-import": "^2.16.0",
+		"eslint-plugin-jsdoc": "^3.9.1",
+		"eslint-plugin-lodash": "^2.6.1",
+		"eslint-plugin-node": "^6.0.0",
+		"eslint-plugin-prettier": "^3.0.1",
+		"eslint-plugin-promise": "^3.6.0",
+		"eslint-plugin-standard": "^3.0.1",
+		"prettier": "^1.16.4"
+	},
+	"dependencies": {}
+}
