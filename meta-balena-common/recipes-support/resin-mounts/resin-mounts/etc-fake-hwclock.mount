@@ -1,0 +1,11 @@
+[Unit]
+Description=Bind mount for /etc/fake-hwclock
+
+[Mount]
+What=/mnt/state/root-overlay/etc/fake-hwclock
+Where=/etc/fake-hwclock
+Type=none
+Options=bind
+
+[Install]
+WantedBy=multi-user.target
