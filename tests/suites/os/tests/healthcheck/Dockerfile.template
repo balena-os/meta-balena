@@ -1,0 +1,8 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine
+
+HEALTHCHECK --interval=1s --retries=1 \
+    CMD [ -f /tmp/health ] 
+
+RUN touch /tmp/health
+
+CMD ["bash"]
