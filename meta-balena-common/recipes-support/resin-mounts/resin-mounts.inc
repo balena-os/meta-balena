@@ -17,7 +17,6 @@ FILES_${PN} += " \
 
 BINDMOUNTS += " \
 	${sysconfdir}/ssh/hostkeys \
-	/etc/fake-hwclock \
 	/etc/hostname \
 	/etc/openvpn \
 	/etc/NetworkManager/conf.d \
@@ -73,11 +72,6 @@ do_compile () {
 			# sure that is mounted as well
 			sed -i -e "/^Requires=/s/\$/ bind-usr-share-ca-certificates-balena.service/" "$servicefile"
 			sed -i -e "/^After=/s/\$/ bind-usr-share-ca-certificates-balena.service/" "$servicefile"
-		elif [ "$bindmount" = "/etc/fake-hwclock" ]; then
-			# This bind mount needs to be running before the fake-hwclock service starts
-			sed -i -e "s/^\(Requires=\).*/\1resin-state.service resin-state-reset.service/" "$servicefile"
-			sed -i -e "s/^\(After=\).*/\1resin-state.service resin-state-reset.service/" "$servicefile"
-			sed -i -e "/^Before=/s/\$/ fake-hwclock.service/" "$servicefile"
 		fi
 	done
 }

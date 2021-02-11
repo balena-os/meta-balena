@@ -12,6 +12,7 @@ SRC_URI += " \
 	file://mnt-sysroot-inactive.automount \
 	file://mnt-sysroot-inactive.mount \
 	file://resin-partition-mounter \
+	file://etc-fake-hwclock.mount \
 	"
 
 SYSTEMD_SERVICE_${PN} += " \
@@ -58,4 +59,5 @@ do_install_prepend () {
 	for service in ${SYSTEMD_SERVICE_resin-mounts}; do
 		install -m 0644 $service ${D}${systemd_unitdir}/system/
 	done
+	install -m 0644 ${WORKDIR}/etc-fake-hwclock.mount ${D}${systemd_unitdir}/system/etc-fake\\x2dhwclock.mount
 }
