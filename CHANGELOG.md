@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.70.0
+## (2021-02-11)
+
+* systemd/timeinit: use systemd mount unit for /etc/fake-hwclock [Mark Corbin]
+
 # v2.69.1
 ## (2021-02-03)
 

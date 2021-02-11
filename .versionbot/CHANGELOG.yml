@@ -1,4 +1,31 @@
 - commits:
+    - subject: 'systemd/timeinit: use systemd mount unit for /etc/fake-hwclock'
+      hash: 7d6ec3d411af78b9b1f979b90461e9efb059e4e7
+      body: |
+        Replace the 'bind-etc-fake-hwclock.service' with a systemd mount
+        unit (etc-fake\x2dhwclock.mount).
+
+        Using a systemd service to bind mount the /etc/fake-hwclock directory
+        results in systemd generating an internal mount unit for the same
+        directory. This causes problems at shutdown when both methods try to
+        unmount the directory. This frequently leads to the directory being
+        unmounted before the fake-hwclock service has managed to save the
+        system time. This results in an inaccurate fake-hwclock time
+        at next boot and corruption of the journal log.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#1919 #2107'
+        connects-to: '#1919 #2107'
+        Changelog-entry: 'systemd/timeinit: use systemd mount unit for /etc/fake-hwclock'
+        changelog-entry: 'systemd/timeinit: use systemd mount unit for /etc/fake-hwclock'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.70.0
+  date: 2021-02-11T10:02:08.246Z
+- commits:
     - subject: Update balena-supervisor from v12.3.0 to v12.3.5
       hash: 8f8a57760b82a1378adc078c86bb25aeafd7d6e8
       body: ''
