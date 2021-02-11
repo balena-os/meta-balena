@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.70.1
+## (2021-02-11)
+
+* Add leviathan automated OS test suite [Vipul Gupta (@vipulgupta2048)]
+
 # v2.70.0
 ## (2021-02-11)
 
