@@ -3,6 +3,8 @@
 ### Contributor checklist
 <!-- For completed items, change [ ] to [x].  -->
 - [ ] Changes have been tested
+  - [ ] Covered in automated test suite
+  - [ ] Manual test case recorded
 - [ ] `Change-type` present on at least one commit
 - [ ] `Signed-off-by` is present
 - [ ] The PR complies with the [Open Embedded Commit Patch Message Guidelines](http://www.openembedded.org/wiki/Commit_Patch_Message_Guidelines)
