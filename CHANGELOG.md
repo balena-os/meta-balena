@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.70.2
+## (2021-02-12)
+
+* Update PR template to specify test coverage in more detail [Alex Gonzalez]
+* Update codeowners [Alex Gonzalez]
+
 # v2.70.1
 ## (2021-02-11)
 
