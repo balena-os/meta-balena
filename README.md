@@ -31,12 +31,6 @@ Before bitbake-ing with meta-balena support, a few flags can be changed in the c
 Editing of local.conf is to be done after source-ing.
 See below for explanation on such build flags.
 
-### Generation of host OS update bundles
-
-In order to generate update balena host OS bundles, edit the build's local.conf adding:
-
-RESINHUP = "yes"
-
 ### Configure custom network manager
 
 By default balena uses NetworkManager on host OS to provide connectivity. If you want to change and use other providers, list your packages using NETWORK_MANAGER_PACKAGES. You can add this variable to local.conf. Here is an example:
