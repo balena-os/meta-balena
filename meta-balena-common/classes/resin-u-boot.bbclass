@@ -97,6 +97,7 @@ UBOOT_VARS = "BALENA_UBOOT_DEVICES \
               OS_OVERLAP_FILE \
               CONFIG_RESET_TO_RETRY \
               CONFIG_BOOT_RETRY_TIME \
+              CONFIG_CMD_IMPORTENV \
               CONFIG_CMD_FS_UUID \
 "
 
