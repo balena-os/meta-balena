@@ -900,4 +900,8 @@ do_compile[deptask] += "do_kernel_resin_checkconfig"
 do_deploy_append () {
     install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
     install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
+
+    if [ "x${SIGN_API}" != "x" ]; then
+        install -m 0644 ${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs.sig ${DEPLOYDIR}/${KERNEL_IMAGETYPE}.sig
+    fi
 }

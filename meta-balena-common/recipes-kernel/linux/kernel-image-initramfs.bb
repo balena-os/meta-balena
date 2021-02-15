@@ -10,6 +10,10 @@ do_install() {
     mkdir -p ${D}/boot
     for type in ${KERNEL_IMAGETYPE}; do
         install -m 0644 ${DEPLOY_DIR_IMAGE}/${type}-initramfs-${MACHINE}.bin ${D}/boot/${type}
+        # Pull signature if it exists
+        if [ -f "${DEPLOY_DIR_IMAGE}/${type}.sig" ]; then
+            install -m 0644 ${DEPLOY_DIR_IMAGE}/${type}.sig ${D}/boot/
+        fi
     done
 }
 do_install[depends] += "virtual/kernel:do_deploy"
