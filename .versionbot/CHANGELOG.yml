@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'meta-balena-common: add grub-efi support'
+      hash: 3bfbd05d81d59c82fb131117700325416fb152cb
+      body: |
+        Use upstream grub and grub-efi recipes with a new grub-conf recipe
+        employing a config template.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.71.0
+  date: 2021-02-15T17:58:51.450Z
+- commits:
     - subject: Update PR template to specify test coverage in more detail
       hash: ce0bb95e1d045ef32c377d4fc9de959c6ebbfd88
       body: >

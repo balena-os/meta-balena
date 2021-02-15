@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.0
+## (2021-02-15)
+
+* meta-balena-common: add grub-efi support [Joseph Kogut]
+
 # v2.70.2
 ## (2021-02-12)
 
