@@ -1,10 +1,10 @@
 #
-# Resin images customizations
+# Balena images customizations
 #
 
-inherit image_types_resin
+inherit image_types_balena
 
-# When building a Resin OS image, we also generate the kernel modules headers
+# When building a Balena OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build
 DEPENDS += "coreutils-native jq-native ${@bb.utils.contains('BALENA_DISABLE_KERNEL_HEADERS', '1', '', 'kernel-modules-headers kernel-devsrc kernel-headers-test', d)}"
 
@@ -290,7 +290,7 @@ add_image_flag_file () {
 python resin_boot_sanity_handler() {
   kernel_file = d.getVar('KERNEL_IMAGETYPE', True) + d.getVar('KERNEL_INITRAMFS', True) + d.getVar('MACHINE', True) + '.bin'
   if kernel_file in d.getVar('RESIN_BOOT_PARTITION_FILES', True):
-    bb.warn("ResinOS only supports having the kernel in the root partition in rootfs/boot/KERNEL_IMAGETYPE. Please remove it from RESIN_BOOT_PARTITION_FILES. This will become a fatal warning in a few releases.")
+    bb.warn("BalenaOS only supports having the kernel in the root partition in rootfs/boot/KERNEL_IMAGETYPE. Please remove it from RESIN_BOOT_PARTITION_FILES. This will become a fatal warning in a few releases.")
 }
 
 python balena_udev_rules_sanity_handler() {

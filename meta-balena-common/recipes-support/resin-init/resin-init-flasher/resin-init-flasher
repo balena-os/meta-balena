@@ -17,7 +17,7 @@
 #                                               INTERNAL_DEVICE_BOOTLOADER_CONFIG will be copied to
 #  RESIN_IMAGE                            - image to be flashed on internal device
 #                                             * this is defaulted to
-#                                               resin-image-${MACHINE}.resinos-img and should be
+#                                               balena-image-${MACHINE}.balenaos-img and should be
 #                                               just fine
 #  BOOTLOADER_FLASH_DEVICE                - device where bootloader binary will be flashed
 #                                             * this variable should be set together with

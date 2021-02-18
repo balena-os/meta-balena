@@ -70,12 +70,12 @@ python() {
     # instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
     if d.getVar('IMGDEPLOYDIR', True):
         d.setVar('RESIN_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
-        d.setVar('RESIN_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.resinos-img')
+        d.setVar('RESIN_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.balenaos-img')
         d.setVar('RESIN_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
         d.setVar('RESIN_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
     else:
         d.setVar('RESIN_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
-        d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.resinos-img')
+        d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.balenaos-img')
         d.setVar('RESIN_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
         d.setVar('RESIN_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
 
@@ -110,9 +110,9 @@ RESIN_BOOT_FS = "${WORKDIR}/${RESIN_BOOT_FS_LABEL}.img"
 RESIN_ROOTB_FS = "${WORKDIR}/${RESIN_ROOTB_FS_LABEL}.img"
 RESIN_STATE_FS ?= "${WORKDIR}/${RESIN_STATE_FS_LABEL}.img"
 
-# resinos-img depends on the rootfs image
-IMAGE_TYPEDEP_resinos-img = "${RESIN_ROOT_FSTYPE}"
-do_image_resinos_img[depends] = " \
+# balenaos-img depends on the rootfs image
+IMAGE_TYPEDEP_balenaos-img = "${RESIN_ROOT_FSTYPE}"
+do_image_balenaos_img[depends] = " \
     coreutils-native:do_populate_sysroot \
     docker-disk:do_deploy \
     dosfstools-native:do_populate_sysroot \
@@ -123,13 +123,13 @@ do_image_resinos_img[depends] = " \
     ${RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
 
-do_image_resinos_img[depends] += "${@ ' virtual/bootloader:do_deploy ' if d.getVar('UBOOT_CONFIG') else ''}"
+do_image_balenaos_img[depends] += "${@ ' virtual/bootloader:do_deploy ' if d.getVar('UBOOT_CONFIG') else ''}"
 
 device_specific_configuration() {
     echo "No device specific configuration"
 }
 
-IMAGE_CMD_resinos-img () {
+IMAGE_CMD_balenaos-img () {
     #
     # Partition size computation (aligned to RESIN_IMAGE_ALIGNMENT)
     #

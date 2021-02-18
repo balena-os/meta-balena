@@ -10,7 +10,7 @@ BALENA_DEPRECATED_COLLECTIONS = " \
 	resin-common:balena-common \
 	"
 
-def resinos_build_configuration():
+def balenaos_build_configuration():
     success = True
     if d.getVar('PACKAGE_CLASSES', True) != "package_ipk":
         bb.warn("ResinOS distro depends on opkg packages (ipk). Make sure PACKAGE_CLASSES is set on package_ipk.")
@@ -30,13 +30,13 @@ def resinos_build_configuration():
             bb.warn("meta-%s is a deprecated layer. Please replace it in your bblayers.conf by meta-%s." % (deprecated_collection, new_collection if new_collection else 'the respective new balena layer'))
     return success
 
-python resinos_sanity_handler() {
+python balenaos_sanity_handler() {
     if d.getVar('RESINOS_SANITY_SKIP', True) == "1":
         bb.warn('ResinOS specific sanity checks were skipped.')
         return
-    if not resinos_build_configuration():
+    if not balenaos_build_configuration():
         bb.fatal("ResinOS sanity checks failed. See above.")
 }
 
-addhandler resinos_sanity_handler
-resinos_sanity_handler[eventmask] = "bb.event.BuildStarted"
+addhandler balenaos_sanity_handler
+balenaos_sanity_handler[eventmask] = "bb.event.BuildStarted"

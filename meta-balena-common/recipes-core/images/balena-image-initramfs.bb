@@ -25,7 +25,7 @@ PACKAGE_INSTALL = " \
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = ""
 
-export IMAGE_BASENAME = "resin-image-initramfs"
+export IMAGE_BASENAME = "balena-image-initramfs"
 IMAGE_LINGUAS = ""
 
 LICENSE = "MIT"

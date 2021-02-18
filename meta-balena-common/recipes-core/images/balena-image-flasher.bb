@@ -2,7 +2,7 @@ SUMMARY = "Resin image flasher"
 IMAGE_LINGUAS = " "
 LICENSE = "Apache-2.0"
 
-inherit core-image image-resin features_check
+inherit core-image image-balena features_check
 
 REQUIRED_DISTRO_FEATURES += " systemd"
 
@@ -14,7 +14,7 @@ IMAGE_FSTYPES = ""
 RESIN_ROOT_FSTYPE = "ext4"
 
 # Make sure you have the resin image ready
-do_image_resinos_img[depends] += "resin-image:do_rootfs"
+do_image_balenaos_img[depends] += "balena-image:do_rootfs"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
@@ -50,10 +50,10 @@ RESIN_BOOT_PARTITION_FILES_append = " balena-logo.png:/splash/balena-logo.png"
 # add the generated <machine-name>.json to the flash-boot partition, renamed as device-type.json
 RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
-# Put resin-image in the flasher rootfs
+# Put balena-image in the flasher rootfs
 add_resin_image_to_flasher_rootfs() {
     mkdir -p ${WORKDIR}/rootfs/opt
-    cp ${DEPLOY_DIR_IMAGE}/resin-image-${MACHINE}.resinos-img ${WORKDIR}/rootfs/opt
+    cp ${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img ${WORKDIR}/rootfs/opt
 }
 
 IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
