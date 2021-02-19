@@ -99,7 +99,7 @@ module.exports = {
 			});
 		});
 
-		// This variable does not have a RESIN_ equivalent, so we will single it out
+		// This variable does not have a BALENA_ equivalent, so we will single it out
 		test.includes(
 			result,
 			{ BALENA_SERVICE_HANDOVER_COMPLETE_PATH: /.*/ },

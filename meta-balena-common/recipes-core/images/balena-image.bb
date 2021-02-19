@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 
 REQUIRED_DISTRO_FEATURES += " systemd"
 
-RESIN_FLAG_FILE = "${RESIN_IMAGE_FLAG_FILE}"
+BALENA_FLAG_FILE = "${BALENA_IMAGE_FLAG_FILE}"
 
 #
 # The default root filesystem partition size is set in such a way that the
@@ -43,12 +43,12 @@ generate_rootfs_fingerprints () {
     # We exclude some entries that are bind mounted to state partition
     # and modified at runtime.
     find ${IMAGE_ROOTFS} -xdev -type f \
-        -not -name ${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT} \
+        -not -name ${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT} \
         -not -name hostname \
         -not -name machine-id \
         -not -name .rnd \
         -exec md5sum {} \; | sed "s#${IMAGE_ROOTFS}##g" | \
-        sort -k2 > ${IMAGE_ROOTFS}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
+        sort -k2 > ${IMAGE_ROOTFS}/${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}
 }
 
 generate_hostos_version () {
@@ -60,21 +60,21 @@ DEPENDS += "jq-native"
 IMAGE_PREPROCESS_COMMAND_append = " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
-RESIN_BOOT_PARTITION_FILES_append = " \
+BALENA_BOOT_PARTITION_FILES_append = " \
     balena-logo.png:/splash/balena-logo.png \
     os-release:/os-release \
 "
 
 # add the generated <machine-name>.json to the resin-boot partition, renamed as device-type.json
-RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json:/device-type.json"
+BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
 # example NetworkManager config file
-RESIN_BOOT_PARTITION_FILES_append = " \
+BALENA_BOOT_PARTITION_FILES_append = " \
     system-connections/resin-sample.ignore:/system-connections/resin-sample.ignore \
     system-connections/README.ignore:/system-connections/README.ignore \
 "
 
-RESIN_BOOT_PARTITION_FILES_append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') else ''}"
+BALENA_BOOT_PARTITION_FILES_append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') else ''}"
 
 # Resin image flag file
-RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_IMAGE_FLAG_FILE}:/${RESIN_IMAGE_FLAG_FILE}"
+BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE_FLAG_FILE}"

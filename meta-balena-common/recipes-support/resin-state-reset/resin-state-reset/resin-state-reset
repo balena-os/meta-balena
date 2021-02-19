@@ -1,10 +1,10 @@
 #!/bin/sh
 set -e
 
-RESIN_STATE_MP=@RESIN_STATE_MP@
+BALENA_STATE_MP=@BALENA_STATE_MP@
 
 # Purge data
-rm -rf ${RESIN_STATE_MP}/root-overlay
+rm -rf ${BALENA_STATE_MP}/root-overlay
 
 # FIXME
 # For now we need to pre-populate the initial version of supervisor.conf

@@ -34,7 +34,7 @@ printf "[INFO] Switching root partition to %s...\n" "$new_part_label..."
 # flash legacy grub only if we do not support UEFI
 if [ ! -d /sys/firmware/efi ] ; then
     # Remove EFI
-    rm -rf "$RESIN_BOOT_MOUNTPOINT/EFI" || true
+    rm -rf "$BALENA_BOOT_MOUNTPOINT/EFI" || true
 
     MBR=512
     reservedMBR=66
@@ -55,11 +55,11 @@ if [ ! -d /sys/firmware/efi ] ; then
     fi
 else
     # Remove legacy grub
-    rm -rf "$RESIN_BOOT_MOUNTPOINT/grub" || true
+    rm -rf "$BALENA_BOOT_MOUNTPOINT/grub" || true
 fi
 
-grub_cfg=$(find $RESIN_BOOT_MOUNTPOINT -name grub.cfg)
-grub_env=$(find $RESIN_BOOT_MOUNTPOINT -name grubenv)
+grub_cfg=$(find $BALENA_BOOT_MOUNTPOINT -name grub.cfg)
+grub_env=$(find $BALENA_BOOT_MOUNTPOINT -name grubenv)
 
 if  grep -q upgrade_available "$grub_cfg" ; then
     printf "[INFO] Automated Rollback support in grub.cfg detected \n"

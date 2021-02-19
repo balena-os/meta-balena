@@ -15,7 +15,7 @@
 #  INTERNAL_DEVICE_BOOTLOADER_CONFIG      - name of the bootloader config for internal media boot
 #  INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH - relative path to internal boot partition where
 #                                               INTERNAL_DEVICE_BOOTLOADER_CONFIG will be copied to
-#  RESIN_IMAGE                            - image to be flashed on internal device
+#  BALENA_IMAGE                            - image to be flashed on internal device
 #                                             * this is defaulted to
 #                                               balena-image-${MACHINE}.balenaos-img and should be
 #                                               just fine
@@ -44,7 +44,7 @@ INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
-RESIN_BOOTLOADER_CONFIG=resinOS_uEnv.txt
+BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 
 function clean {
@@ -96,9 +96,9 @@ if [ ! -f "$CONFIG_PATH" ]; then
     fail "$CONFIG_PATH : No such file."
 fi
 
-# RESIN_BOOT_MOUNTPOINT should exit
-if [ ! -d "$RESIN_BOOT_MOUNTPOINT" ]; then
-	fail "$RESIN_BOOT_MOUNTPOINT : No such directory."
+# BALENA_BOOT_MOUNTPOINT should exit
+if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
+	fail "$BALENA_BOOT_MOUNTPOINT : No such directory."
 fi
 
 # Give a chance to openvpn to come alive
@@ -133,13 +133,13 @@ if [ -z "$internal_dev" ]; then
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
 inform "$internal_dev will be used for flashing."
-dd if="/opt/$RESIN_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+dd if="/opt/$BALENA_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
 
 if ! kill -0 $DD_PID; then
     fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
 fi
 
-IMAGE_FILE_SIZE=$(wc -c /opt/"$RESIN_IMAGE" | awk '{print $1}')
+IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
 
 resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
 
@@ -194,7 +194,7 @@ fi
 mkdir -p "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME"
 cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME/* $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
 # Copy Network Manager connection files
-CONFIG_NM="${RESIN_BOOT_MOUNTPOINT}/system-connections/"
+CONFIG_NM="${BALENA_BOOT_MOUNTPOINT}/system-connections/"
 if [ -d "$CONFIG_NM" ]; then
     inform "Transferring system connections on the internal device."
     rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-connections/"
@@ -203,7 +203,7 @@ else
     inform "No system connections found to transfer on the internal device."
 fi
 # Copy proxy configuration files
-CONFIG_PROXY="${RESIN_BOOT_MOUNTPOINT}/system-proxy/"
+CONFIG_PROXY="${BALENA_BOOT_MOUNTPOINT}/system-proxy/"
 if [ -d "$CONFIG_PROXY" ]; then
     inform "Transferring proxy configuration on the internal device."
     rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-proxy/"
@@ -224,8 +224,8 @@ if [ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ] && [ -f "${EXTERNAL_DEVICE_BOOT
 fi
 
 # Copy resinOS bootloader config file
-if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${RESIN_BOOTLOADER_CONFIG}" ]; then
-        cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$RESIN_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_BOOTLOADER_CONFIG}" ]; then
+        cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$BALENA_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 fi
 
 # Give a chance for the device to register

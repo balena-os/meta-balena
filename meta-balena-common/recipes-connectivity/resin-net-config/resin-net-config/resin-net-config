@@ -15,12 +15,12 @@ else
 	echo "resin-net-config: Found config.json in $CONFIG_PATH ."
 fi
 
-if [ ! -d "$RESIN_BOOT_MOUNTPOINT" ]; then
-	echo "resin-net-config: $RESIN_BOOT_MOUNTPOINT doesn't exist."
+if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
+	echo "resin-net-config: $BALENA_BOOT_MOUNTPOINT doesn't exist."
 	exit 1
 fi
 
-CONFIG_NM=${RESIN_BOOT_MOUNTPOINT}/system-connections/
+CONFIG_NM=${BALENA_BOOT_MOUNTPOINT}/system-connections/
 if [ -d "$CONFIG_NM" ]; then
 	cp -r "$CONFIG_NM" /etc/NetworkManager/
 	chmod 600 /etc/NetworkManager/system-connections/*

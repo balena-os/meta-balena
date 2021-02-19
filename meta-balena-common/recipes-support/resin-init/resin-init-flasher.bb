@@ -1,7 +1,7 @@
 DESCRIPTION = "Resin custom INIT file - use for flashig internal devices from external ones"
 SECTION = "console/utils"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 PR = "r2"
 
@@ -29,7 +29,7 @@ RDEPENDS_${PN} = " \
     "
 
 # This should be just fine
-RESIN_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
+BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
 
 do_install() {
     if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
@@ -69,7 +69,7 @@ do_install() {
     if [ -n "${INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH}" ]; then
         echo "INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH=${INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     fi
-    echo "RESIN_IMAGE=${RESIN_IMAGE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "BALENA_IMAGE=${BALENA_IMAGE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_FLASH_DEVICE=${BOOTLOADER_FLASH_DEVICE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_IMAGE=${BOOTLOADER_IMAGE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_BLOCK_SIZE_OFFSET=${BOOTLOADER_BLOCK_SIZE_OFFSET}" >> ${D}/${sysconfdir}/resin-init-flasher.conf

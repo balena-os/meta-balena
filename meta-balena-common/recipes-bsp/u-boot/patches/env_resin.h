@@ -1,5 +1,5 @@
-#ifndef HEADER_ENV_RESIN_H
-#define HEADER_ENV_RESIN_H
+#ifndef HEADER_ENV_BALENA_H
+#define HEADER_ENV_BALENA_H
 
 /*
  * Assumes defined:
@@ -29,8 +29,8 @@
 
 #include <config_resin.h>
 
-#define RESIN_ENV \
-       "resin_env_file=" __stringify(RESIN_ENV_FILE) "\0" \
+#define BALENA_ENV \
+       "resin_env_file=" __stringify(BALENA_ENV_FILE) "\0" \
        "balena_extra_env_file=" __stringify(BALENA_EXTRA_ENV_FILE) "\0" \
        "os_bc_file=" __stringify(OS_BOOTCOUNT_FILE) "\0" \
        "os_bc_skip=" __stringify(OS_BOOTCOUNT_SKIP) "\0" \
@@ -38,12 +38,12 @@
        "os_bc_lim=" __stringify(OS_BOOTCOUNT_LIMIT) "\0" \
        "os_bc_wr_sz=0xd \0" \
        "upgrade_available=0 \0" \
-       "resin_flasher_flag_file=" __stringify(RESIN_FLASHER_FLAG_FILE) "\0" \
-       "resin_image_flag_file=" __stringify(RESIN_IMAGE_FLAG_FILE) "\0" \
-       "resin_uboot_devices=" __stringify(RESIN_UBOOT_DEVICES) "\0" \
-       "resin_uboot_device_types=" __stringify(RESIN_UBOOT_DEVICE_TYPES) "\0" \
-       "resin_boot_part=" __stringify(RESIN_BOOT_PART) "\0" \
-       "resin_root_part=" __stringify(RESIN_DEFAULT_ROOT_PART) "\0" \
+       "resin_flasher_flag_file=" __stringify(BALENA_FLASHER_FLAG_FILE) "\0" \
+       "resin_image_flag_file=" __stringify(BALENA_IMAGE_FLAG_FILE) "\0" \
+       "resin_uboot_devices=" __stringify(BALENA_UBOOT_DEVICES) "\0" \
+       "resin_uboot_device_types=" __stringify(BALENA_UBOOT_DEVICE_TYPES) "\0" \
+       "resin_boot_part=" __stringify(BALENA_BOOT_PART) "\0" \
+       "resin_root_part=" __stringify(BALENA_DEFAULT_ROOT_PART) "\0" \
        "base_os_cmdline=" __stringify(BASE_OS_CMDLINE) "\0" \
        "resin_flasher_skip=0 \0" \
        \
@@ -168,5 +168,5 @@
                "run resin_find_root_part_uuid;" \
                "setenv resin_kernel_root root=UUID=${resin_root_part_uuid}\0"
 
-#endif /* HEADER_ENV_RESIN_H */
+#endif /* HEADER_ENV_BALENA_H */
 

@@ -31,7 +31,7 @@ index 253fffb..7975884 100644
  	"soc="		CONFIG_SYS_SOC			"\0"
  #endif
  #endif
-+	RESIN_ENV
++	BALENA_ENV
  #ifdef	CONFIG_EXTRA_ENV_SETTINGS
  	CONFIG_EXTRA_ENV_SETTINGS
  #endif

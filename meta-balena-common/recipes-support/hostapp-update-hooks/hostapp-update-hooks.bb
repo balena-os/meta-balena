@@ -1,6 +1,6 @@
 DESCRIPTION = "Resin hostapp hooks"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://${RESIN_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
+LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = "file://hostapp-update-hooks"
 S = "${WORKDIR}"
@@ -16,7 +16,7 @@ HOSTAPP_HOOKS = " \
     "
 HOSTAPP_HOOKS_DIRS = "75-supervisor-db"
 
-RESIN_BOOT_FINGERPRINT = "${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
+BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
 
 python __anonymous() {
     # Generate SRC_URI based on HOSTAPP_HOOKS
@@ -52,6 +52,6 @@ do_install() {
 	install -m 0755 hostapp-update-hooks ${D}${bindir}/hostapp-update-hooks-v2
 	ln -s -r ${D}${bindir}/hostapp-update-hooks-v2 ${D}${bindir}/hostapp-update-hooks
 
-	sed -i -e 's:@RESIN_BOOT_FINGERPRINT@:${RESIN_BOOT_FINGERPRINT}:g;' \
+	sed -i -e 's:@BALENA_BOOT_FINGERPRINT@:${BALENA_BOOT_FINGERPRINT}:g;' \
 	 	${D}${sysconfdir}/hostapp-update-hooks.d/0-bootfiles
 }

@@ -12,8 +12,8 @@ printf "[INFO] Running rollback hook \n"
 
 DURING_UPDATE=${DURING_UPDATE:-0}
 
-if [ ! -d "$RESIN_BOOT_MOUNTPOINT" ]; then
-        echo "hostapp rollback: $RESIN_BOOT_MOUNTPOINT doesn't exist."
+if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
+        echo "hostapp rollback: $BALENA_BOOT_MOUNTPOINT doesn't exist."
         exit 1
 fi
 

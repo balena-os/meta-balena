@@ -31,7 +31,7 @@ index ea6704a..09cd81a 100644
  #else
  const uchar default_environment[] = {
  #endif
-+    RESIN_ENV
++    BALENA_ENV
  #ifdef	CONFIG_ENV_CALLBACK_LIST_DEFAULT
  	ENV_CALLBACK_VAR "=" CONFIG_ENV_CALLBACK_LIST_DEFAULT "\0"
  #endif

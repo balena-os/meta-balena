@@ -30,7 +30,7 @@ while [ "$#" -gt "0" ]; do
             exit 0
             ;;
         -c|--config-path)
-            RESIN_VARS_ARGS="$RESIN_VARS_ARGS --config-path $2"
+            BALENA_VARS_ARGS="$BALENA_VARS_ARGS --config-path $2"
             shift
             ;;
         -p|--percentage)
@@ -49,7 +49,7 @@ while [ "$#" -gt "0" ]; do
 done
 
 # shellcheck disable=SC2086
-source /usr/sbin/resin-vars $RESIN_VARS_ARGS
+source /usr/sbin/resin-vars $BALENA_VARS_ARGS
 
 echo "-- $0 $PERCENTAGE $STATE $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
 if [ -z "$PERCENTAGE" ] || [ -z "$STATE" ] || [ -z "$API_ENDPOINT" ]; then

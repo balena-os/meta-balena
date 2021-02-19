@@ -3,18 +3,18 @@ inherit image_types
 #
 # Create a raw image that can by written onto a storage device using dd/etcher.
 #
-# RESIN_IMAGE_BOOTLOADER        - bootloader
-# RESIN_BOOT_PARTITION_FILES    - list of items describing files to be deployed
+# BALENA_IMAGE_BOOTLOADER        - bootloader
+# BALENA_BOOT_PARTITION_FILES    - list of items describing files to be deployed
 #                                 on boot partition
 #                               - items need to be in the 'src:dst' format
 #                               - src needs to be relative to DEPLOY_DIR_IMAGE
 #                               - dst needs to be an absolute path
 #                               - if dst is ommited ('src:' format used),
 #                                 absolute path of src will be used as dst
-# RESIN_ROOT_FSTYPE             - rootfs image type to be used for integrating
+# BALENA_ROOT_FSTYPE             - rootfs image type to be used for integrating
 #                                 in the final raw image
-# RESIN_BOOT_SIZE               - size of boot partition in KiB
-# RESIN_RAW_IMG_COMPRESSION     - define this to compress the final raw image
+# BALENA_BOOT_SIZE               - size of boot partition in KiB
+# BALENA_RAW_IMG_COMPRESSION     - define this to compress the final raw image
 #                                 with gzip, xz or bzip2
 # PARTITION_TABLE_TYPE          - defines partition table type to use: gpt or
 #                                 msdos. Defaults to msdos
@@ -27,91 +27,91 @@ inherit image_types
 #
 #   +-------------------+
 #   |                   |  ^
-#   | Reserved          |  |RESIN_IMAGE_ALIGNMENT
+#   | Reserved          |  |BALENA_IMAGE_ALIGNMENT
 #   |                   |  v
 #   +-------------------+
 #   |                   |  ^
-#   | Boot partition    |  |RESIN_BOOT_SIZE
+#   | Boot partition    |  |BALENA_BOOT_SIZE
 #   |                   |  v
 #   +-------------------+
 #   |                   |  ^
-#   | Root partition A  |  |RESIN_ROOTA_SIZE
+#   | Root partition A  |  |BALENA_ROOTA_SIZE
 #   |                   |  v
 #   +-------------------+
 #   |                   |  ^
-#   | Root partition B  |  |RESIN_ROOTB_SIZE
+#   | Root partition B  |  |BALENA_ROOTB_SIZE
 #   |                   |  v
 #   +-------------------+
 #   |-------------------|
 #   ||                 ||  ^
-#   || Reserved        ||  |RESIN_IMAGE_ALIGNMENT
+#   || Reserved        ||  |BALENA_IMAGE_ALIGNMENT
 #   ||                 ||  v
 #   |-------------------|
 #   ||                 ||  ^
-#   || State partition ||  |RESIN_STATE_SIZE
+#   || State partition ||  |BALENA_STATE_SIZE
 #   ||                 ||  v
 #   |-------------------|
 #   ||                 ||  ^
-#   || Reserved        ||  |RESIN_IMAGE_ALIGNMENT
+#   || Reserved        ||  |BALENA_IMAGE_ALIGNMENT
 #   ||                 ||  v
 #   |-------------------|
 #   ||                 ||  ^
-#   || Data partition  ||  |RESIN_DATA_SIZE
+#   || Data partition  ||  |BALENA_DATA_SIZE
 #   ||                 ||  v
 #   |-------------------|
 #   +-------------------+
 #
 
-RESIN_ROOT_FSTYPE ?= "hostapp-ext4"
+BALENA_ROOT_FSTYPE ?= "hostapp-ext4"
 PARTITION_TABLE_TYPE ?= "msdos"
 
 python() {
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR
     # instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
     if d.getVar('IMGDEPLOYDIR', True):
-        d.setVar('RESIN_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
-        d.setVar('RESIN_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.balenaos-img')
-        d.setVar('RESIN_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
-        d.setVar('RESIN_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
+        d.setVar('BALENA_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${BALENA_ROOT_FSTYPE}')
+        d.setVar('BALENA_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.balenaos-img')
+        d.setVar('BALENA_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
+        d.setVar('BALENA_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.hostapp-ext4')
     else:
-        d.setVar('RESIN_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${RESIN_ROOT_FSTYPE}')
-        d.setVar('RESIN_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.balenaos-img')
-        d.setVar('RESIN_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
-        d.setVar('RESIN_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
+        d.setVar('BALENA_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${BALENA_ROOT_FSTYPE}')
+        d.setVar('BALENA_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.balenaos-img')
+        d.setVar('BALENA_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
+        d.setVar('BALENA_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.hostapp-ext4')
 
-    d.setVar('RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("RESIN_IMAGE_BOOTLOADER", True).split()))
+    d.setVar('BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("BALENA_IMAGE_BOOTLOADER", True).split()))
 }
 
 
-RESIN_BOOT_FS_LABEL ?= "resin-boot"
-RESIN_ROOTA_FS_LABEL ?= "resin-rootA"
-RESIN_ROOTB_FS_LABEL ?= "resin-rootB"
-RESIN_STATE_FS_LABEL ?= "resin-state"
-RESIN_DATA_FS_LABEL ?= "resin-data"
+BALENA_BOOT_FS_LABEL ?= "resin-boot"
+BALENA_ROOTA_FS_LABEL ?= "resin-rootA"
+BALENA_ROOTB_FS_LABEL ?= "resin-rootB"
+BALENA_STATE_FS_LABEL ?= "resin-state"
+BALENA_DATA_FS_LABEL ?= "resin-data"
 
 # By default boot partition is a fat16
 BALENA_BOOT_FAT32 ?= "0"
 
 # Sizes in KiB
-RESIN_BOOT_SIZE ?= "40960"
-RESIN_ROOTB_SIZE ?= ""
-RESIN_STATE_SIZE ?= "20480"
-RESIN_IMAGE_ALIGNMENT ?= "4096"
-IMAGE_ROOTFS_ALIGNMENT = "${RESIN_IMAGE_ALIGNMENT}"
-DEVICE_SPECIFIC_SPACE ?= "${RESIN_IMAGE_ALIGNMENT}"
+BALENA_BOOT_SIZE ?= "40960"
+BALENA_ROOTB_SIZE ?= ""
+BALENA_STATE_SIZE ?= "20480"
+BALENA_IMAGE_ALIGNMENT ?= "4096"
+IMAGE_ROOTFS_ALIGNMENT = "${BALENA_IMAGE_ALIGNMENT}"
+DEVICE_SPECIFIC_SPACE ?= "${BALENA_IMAGE_ALIGNMENT}"
 
-RESIN_BOOT_WORKDIR ?= "${WORKDIR}/${RESIN_BOOT_FS_LABEL}"
+BALENA_BOOT_WORKDIR ?= "${WORKDIR}/${BALENA_BOOT_FS_LABEL}"
 
-RESIN_BOOT_FINGERPRINT_PATH ?= "${WORKDIR}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}"
-RESIN_IMAGE_BOOTLOADER ?= "virtual/bootloader"
-RESIN_RAW_IMG_COMPRESSION ?= ""
-RESIN_DATA_FS ?= "${DEPLOY_DIR}/images/${MACHINE}/${RESIN_DATA_FS_LABEL}.img"
-RESIN_BOOT_FS = "${WORKDIR}/${RESIN_BOOT_FS_LABEL}.img"
-RESIN_ROOTB_FS = "${WORKDIR}/${RESIN_ROOTB_FS_LABEL}.img"
-RESIN_STATE_FS ?= "${WORKDIR}/${RESIN_STATE_FS_LABEL}.img"
+BALENA_BOOT_FINGERPRINT_PATH ?= "${WORKDIR}/${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
+BALENA_IMAGE_BOOTLOADER ?= "virtual/bootloader"
+BALENA_RAW_IMG_COMPRESSION ?= ""
+BALENA_DATA_FS ?= "${DEPLOY_DIR}/images/${MACHINE}/${BALENA_DATA_FS_LABEL}.img"
+BALENA_BOOT_FS = "${WORKDIR}/${BALENA_BOOT_FS_LABEL}.img"
+BALENA_ROOTB_FS = "${WORKDIR}/${BALENA_ROOTB_FS_LABEL}.img"
+BALENA_STATE_FS ?= "${WORKDIR}/${BALENA_STATE_FS_LABEL}.img"
 
 # balenaos-img depends on the rootfs image
-IMAGE_TYPEDEP_balenaos-img = "${RESIN_ROOT_FSTYPE}"
+IMAGE_TYPEDEP_balenaos-img = "${BALENA_ROOT_FSTYPE}"
 do_image_balenaos_img[depends] = " \
     coreutils-native:do_populate_sysroot \
     docker-disk:do_deploy \
@@ -120,7 +120,7 @@ do_image_balenaos_img[depends] = " \
     mtools-native:do_populate_sysroot \
     parted-native:do_populate_sysroot \
     virtual/kernel:do_deploy \
-    ${RESIN_IMAGE_BOOTLOADER_DEPLOY_TASK} \
+    ${BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
 
 do_image_balenaos_img[depends] += "${@ ' virtual/bootloader:do_deploy ' if d.getVar('UBOOT_CONFIG') else ''}"
@@ -131,78 +131,78 @@ device_specific_configuration() {
 
 IMAGE_CMD_balenaos-img () {
     #
-    # Partition size computation (aligned to RESIN_IMAGE_ALIGNMENT)
+    # Partition size computation (aligned to BALENA_IMAGE_ALIGNMENT)
     #
 
     # resin-boot
-    RESIN_BOOT_SIZE_ALIGNED=$(expr ${RESIN_BOOT_SIZE} \+ ${RESIN_IMAGE_ALIGNMENT} - 1)
-    RESIN_BOOT_SIZE_ALIGNED=$(expr ${RESIN_BOOT_SIZE_ALIGNED} \- ${RESIN_BOOT_SIZE_ALIGNED} \% ${RESIN_IMAGE_ALIGNMENT})
+    BALENA_BOOT_SIZE_ALIGNED=$(expr ${BALENA_BOOT_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} - 1)
+    BALENA_BOOT_SIZE_ALIGNED=$(expr ${BALENA_BOOT_SIZE_ALIGNED} \- ${BALENA_BOOT_SIZE_ALIGNED} \% ${BALENA_IMAGE_ALIGNMENT})
 
     # resin-rootA
-    RESIN_ROOTA_SIZE=$(du -Lbks ${RESIN_ROOT_FS} | awk '{print $1}')
-    RESIN_ROOTA_SIZE_ALIGNED=$(expr ${RESIN_ROOTA_SIZE} \+ ${RESIN_IMAGE_ALIGNMENT} \- 1)
-    RESIN_ROOTA_SIZE_ALIGNED=$(expr ${RESIN_ROOTA_SIZE_ALIGNED} \- ${RESIN_ROOTA_SIZE_ALIGNED} \% ${RESIN_IMAGE_ALIGNMENT})
+    BALENA_ROOTA_SIZE=$(du -Lbks ${BALENA_ROOT_FS} | awk '{print $1}')
+    BALENA_ROOTA_SIZE_ALIGNED=$(expr ${BALENA_ROOTA_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} \- 1)
+    BALENA_ROOTA_SIZE_ALIGNED=$(expr ${BALENA_ROOTA_SIZE_ALIGNED} \- ${BALENA_ROOTA_SIZE_ALIGNED} \% ${BALENA_IMAGE_ALIGNMENT})
 
     # resin-rootB
-    if [ -n "${RESIN_ROOTB_SIZE}" ]; then
-        RESIN_ROOTB_SIZE_ALIGNED=$(expr ${RESIN_ROOTB_SIZE} \+ ${RESIN_IMAGE_ALIGNMENT} \- 1)
-        RESIN_ROOTB_SIZE_ALIGNED=$(expr ${RESIN_ROOTB_SIZE_ALIGNED} \- ${RESIN_ROOTB_SIZE_ALIGNED} \% ${RESIN_IMAGE_ALIGNMENT})
+    if [ -n "${BALENA_ROOTB_SIZE}" ]; then
+        BALENA_ROOTB_SIZE_ALIGNED=$(expr ${BALENA_ROOTB_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} \- 1)
+        BALENA_ROOTB_SIZE_ALIGNED=$(expr ${BALENA_ROOTB_SIZE_ALIGNED} \- ${BALENA_ROOTB_SIZE_ALIGNED} \% ${BALENA_IMAGE_ALIGNMENT})
     else
-        RESIN_ROOTB_SIZE_ALIGNED=${RESIN_ROOTA_SIZE_ALIGNED}
+        BALENA_ROOTB_SIZE_ALIGNED=${BALENA_ROOTA_SIZE_ALIGNED}
     fi
 
     # resin-state
-    if [ -n "${RESIN_STATE_FS}" ]; then
-        RESIN_STATE_SIZE_ALIGNED=$(expr ${RESIN_STATE_SIZE} \+ ${RESIN_IMAGE_ALIGNMENT} \- 1)
-        RESIN_STATE_SIZE_ALIGNED=$(expr ${RESIN_STATE_SIZE_ALIGNED} \- ${RESIN_STATE_SIZE_ALIGNED} \% ${RESIN_IMAGE_ALIGNMENT})
+    if [ -n "${BALENA_STATE_FS}" ]; then
+        BALENA_STATE_SIZE_ALIGNED=$(expr ${BALENA_STATE_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} \- 1)
+        BALENA_STATE_SIZE_ALIGNED=$(expr ${BALENA_STATE_SIZE_ALIGNED} \- ${BALENA_STATE_SIZE_ALIGNED} \% ${BALENA_IMAGE_ALIGNMENT})
     else
-        RESIN_STATE_SIZE_ALIGNED=${RESIN_IMAGE_ALIGNMENT}
+        BALENA_STATE_SIZE_ALIGNED=${BALENA_IMAGE_ALIGNMENT}
     fi
 
     # resin-data
-    if [ -n "${RESIN_DATA_FS}" ]; then
-        RESIN_DATA_SIZE=`du -bks ${RESIN_DATA_FS} | awk '{print $1}'`
-        RESIN_DATA_SIZE_ALIGNED=$(expr ${RESIN_DATA_SIZE} \+ ${RESIN_IMAGE_ALIGNMENT} \- 1)
-        RESIN_DATA_SIZE_ALIGNED=$(expr ${RESIN_DATA_SIZE_ALIGNED} \- ${RESIN_DATA_SIZE_ALIGNED} \% ${RESIN_IMAGE_ALIGNMENT})
+    if [ -n "${BALENA_DATA_FS}" ]; then
+        BALENA_DATA_SIZE=`du -bks ${BALENA_DATA_FS} | awk '{print $1}'`
+        BALENA_DATA_SIZE_ALIGNED=$(expr ${BALENA_DATA_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} \- 1)
+        BALENA_DATA_SIZE_ALIGNED=$(expr ${BALENA_DATA_SIZE_ALIGNED} \- ${BALENA_DATA_SIZE_ALIGNED} \% ${BALENA_IMAGE_ALIGNMENT})
     else
-        RESIN_DATA_SIZE_ALIGNED=${RESIN_IMAGE_ALIGNMENT}
+        BALENA_DATA_SIZE_ALIGNED=${BALENA_IMAGE_ALIGNMENT}
     fi
 
-    if [ $(expr ${DEVICE_SPECIFIC_SPACE} % ${RESIN_IMAGE_ALIGNMENT}) -ne 0  ]; then
-        bbfatal "The space reserved for your specific device is not aligned to ${RESIN_IMAGE_ALIGNMENT}."
+    if [ $(expr ${DEVICE_SPECIFIC_SPACE} % ${BALENA_IMAGE_ALIGNMENT}) -ne 0  ]; then
+        bbfatal "The space reserved for your specific device is not aligned to ${BALENA_IMAGE_ALIGNMENT}."
     fi
 
-    RESIN_RAW_IMG_SIZE=$(expr \
+    BALENA_RAW_IMG_SIZE=$(expr \
         ${DEVICE_SPECIFIC_SPACE} \+ \
-        ${RESIN_IMAGE_ALIGNMENT} \+ \
-        ${RESIN_BOOT_SIZE_ALIGNED} \+ \
-        ${RESIN_ROOTA_SIZE_ALIGNED} \+ \
-        ${RESIN_ROOTB_SIZE_ALIGNED} \+ \
-        ${RESIN_IMAGE_ALIGNMENT} \+ \
-        ${RESIN_STATE_SIZE_ALIGNED} \+ \
-        ${RESIN_IMAGE_ALIGNMENT} \+ \
-        ${RESIN_DATA_SIZE_ALIGNED} \
+        ${BALENA_IMAGE_ALIGNMENT} \+ \
+        ${BALENA_BOOT_SIZE_ALIGNED} \+ \
+        ${BALENA_ROOTA_SIZE_ALIGNED} \+ \
+        ${BALENA_ROOTB_SIZE_ALIGNED} \+ \
+        ${BALENA_IMAGE_ALIGNMENT} \+ \
+        ${BALENA_STATE_SIZE_ALIGNED} \+ \
+        ${BALENA_IMAGE_ALIGNMENT} \+ \
+        ${BALENA_DATA_SIZE_ALIGNED} \
     )
     echo "Creating raw image as it follow:"
-    echo "  Boot partition ${RESIN_BOOT_SIZE_ALIGNED} KiB [$(expr ${RESIN_BOOT_SIZE_ALIGNED} \/ 1024) MiB]"
-    echo "  Root A partition ${RESIN_ROOTA_SIZE_ALIGNED} KiB [$(expr ${RESIN_ROOTA_SIZE_ALIGNED} \/ 1024) MiB]"
-    echo "  Root B partition ${RESIN_ROOTA_SIZE_ALIGNED} KiB [$(expr ${RESIN_ROOTB_SIZE_ALIGNED} \/ 1024) MiB]"
-    echo "  State partition ${RESIN_STATE_SIZE_ALIGNED} KiB [$(expr ${RESIN_STATE_SIZE_ALIGNED} \/ 1024) MiB]"
-    echo "  Data partition ${RESIN_DATA_SIZE_ALIGNED} KiB [$(expr ${RESIN_DATA_SIZE_ALIGNED} \/ 1024) MiB]"
+    echo "  Boot partition ${BALENA_BOOT_SIZE_ALIGNED} KiB [$(expr ${BALENA_BOOT_SIZE_ALIGNED} \/ 1024) MiB]"
+    echo "  Root A partition ${BALENA_ROOTA_SIZE_ALIGNED} KiB [$(expr ${BALENA_ROOTA_SIZE_ALIGNED} \/ 1024) MiB]"
+    echo "  Root B partition ${BALENA_ROOTA_SIZE_ALIGNED} KiB [$(expr ${BALENA_ROOTB_SIZE_ALIGNED} \/ 1024) MiB]"
+    echo "  State partition ${BALENA_STATE_SIZE_ALIGNED} KiB [$(expr ${BALENA_STATE_SIZE_ALIGNED} \/ 1024) MiB]"
+    echo "  Data partition ${BALENA_DATA_SIZE_ALIGNED} KiB [$(expr ${BALENA_DATA_SIZE_ALIGNED} \/ 1024) MiB]"
     echo "---"
-    echo "Total raw image size ${RESIN_RAW_IMG_SIZE} KiB [$(expr ${RESIN_RAW_IMG_SIZE} \/ 1024) MiB]"
+    echo "Total raw image size ${BALENA_RAW_IMG_SIZE} KiB [$(expr ${BALENA_RAW_IMG_SIZE} \/ 1024) MiB]"
 
     #
     # Generate the raw image with partition table
     #
 
-    dd if=/dev/zero of=${RESIN_RAW_IMG} bs=1024 count=0 seek=${RESIN_RAW_IMG_SIZE}
+    dd if=/dev/zero of=${BALENA_RAW_IMG} bs=1024 count=0 seek=${BALENA_RAW_IMG_SIZE}
 
     if [ "${PARTITION_TABLE_TYPE}" != "msdos" ] && [ "${PARTITION_TABLE_TYPE}" != "gpt" ]; then
         bbfatal "Unrecognized partition table: ${PARTITION_TABLE_TYPE}"
     fi
 
-    parted ${RESIN_RAW_IMG} mklabel ${PARTITION_TABLE_TYPE}
+    parted ${BALENA_RAW_IMG} mklabel ${PARTITION_TABLE_TYPE}
 
     device_specific_configuration
 
@@ -218,10 +218,10 @@ IMAGE_CMD_balenaos-img () {
         OPTS="resin-boot"
     fi
     START=${DEVICE_SPECIFIC_SPACE}
-    END=$(expr ${START} \+ ${RESIN_BOOT_SIZE_ALIGNED})
-    parted -s ${RESIN_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
-    RESIN_BOOT_PN=$(parted -s ${RESIN_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
-    parted -s ${RESIN_RAW_IMG} set ${RESIN_BOOT_PN} boot on
+    END=$(expr ${START} \+ ${BALENA_BOOT_SIZE_ALIGNED})
+    parted -s ${BALENA_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
+    BALENA_BOOT_PN=$(parted -s ${BALENA_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
+    parted -s ${BALENA_RAW_IMG} set ${BALENA_BOOT_PN} boot on
 
     # resin-rootA
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
@@ -230,8 +230,8 @@ IMAGE_CMD_balenaos-img () {
         OPTS="resin-rootA"
     fi
     START=${END}
-    END=$(expr ${START} \+ ${RESIN_ROOTA_SIZE_ALIGNED})
-    parted -s ${RESIN_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
+    END=$(expr ${START} \+ ${BALENA_ROOTA_SIZE_ALIGNED})
+    parted -s ${BALENA_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
 
     # resin-rootB
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
@@ -240,15 +240,15 @@ IMAGE_CMD_balenaos-img () {
         OPTS="resin-rootB"
     fi
     START=${END}
-    END=$(expr ${START} \+ ${RESIN_ROOTB_SIZE_ALIGNED})
-    parted -s ${RESIN_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
-    RESIN_ROOTB_PN=$(parted -s ${RESIN_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
+    END=$(expr ${START} \+ ${BALENA_ROOTB_SIZE_ALIGNED})
+    parted -s ${BALENA_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
+    BALENA_ROOTB_PN=$(parted -s ${BALENA_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
 
     # extended partition
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
         START=${END}
-        END=$(expr ${START} \+ ${RESIN_IMAGE_ALIGNMENT})
-        parted -s ${RESIN_RAW_IMG} -- unit KiB mkpart extended ${START} -1s
+        END=$(expr ${START} \+ ${BALENA_IMAGE_ALIGNMENT})
+        parted -s ${BALENA_RAW_IMG} -- unit KiB mkpart extended ${START} -1s
     fi
 
     # resin-state
@@ -258,101 +258,101 @@ IMAGE_CMD_balenaos-img () {
         OPTS="resin-state"
     fi
     START=${END}
-    END=$(expr ${START} \+ ${RESIN_STATE_SIZE_ALIGNED})
-    parted -s ${RESIN_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
-    RESIN_STATE_PN=$(parted -s ${RESIN_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
+    END=$(expr ${START} \+ ${BALENA_STATE_SIZE_ALIGNED})
+    parted -s ${BALENA_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
+    BALENA_STATE_PN=$(parted -s ${BALENA_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
 
     # resin-data
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
         OPTS="logical"
-        START=$(expr ${END} \+ ${RESIN_IMAGE_ALIGNMENT})
+        START=$(expr ${END} \+ ${BALENA_IMAGE_ALIGNMENT})
     elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
         OPTS="resin-data"
         START=${END}
     fi
-    parted -s ${RESIN_RAW_IMG} -- unit KiB mkpart ${OPTS} ${START} 100%
+    parted -s ${BALENA_RAW_IMG} -- unit KiB mkpart ${OPTS} ${START} 100%
 
     #
     # Generate partitions
     #
 
     # resin-boot
-    RESIN_BOOT_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | grep -E "^(| )${RESIN_BOOT_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
-    rm -rf ${RESIN_BOOT_FS}
-    OPTS="-n ${RESIN_BOOT_FS_LABEL} -S 512 -C"
+    BALENA_BOOT_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_BOOT_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
+    rm -rf ${BALENA_BOOT_FS}
+    OPTS="-n ${BALENA_BOOT_FS_LABEL} -S 512 -C"
     if [ "${BALENA_BOOT_FAT32}" = "1" ]; then
         OPTS="$OPTS -F 32"
     fi
-    eval mkfs.vfat "$OPTS" "${RESIN_BOOT_FS}" "${RESIN_BOOT_BLOCKS}"
-    if [ "$(ls -A ${RESIN_BOOT_WORKDIR})" ]; then
-        mcopy -i ${RESIN_BOOT_FS} -sv ${RESIN_BOOT_WORKDIR}/* ::
+    eval mkfs.vfat "$OPTS" "${BALENA_BOOT_FS}" "${BALENA_BOOT_BLOCKS}"
+    if [ "$(ls -A ${BALENA_BOOT_WORKDIR})" ]; then
+        mcopy -i ${BALENA_BOOT_FS} -sv ${BALENA_BOOT_WORKDIR}/* ::
     else
         bbwarn "Boot partition was detected empty."
     fi
 
     # resin-rootB
-    RESIN_ROOTB_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | grep -E "^(| )${RESIN_ROOTB_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
-    rm -rf ${RESIN_ROOTB_FS}
-    dd if=/dev/zero of=${RESIN_ROOTB_FS} seek=${RESIN_ROOTB_BLOCKS} count=0 bs=1024
-    mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -F -L "${RESIN_ROOTB_FS_LABEL}" ${RESIN_ROOTB_FS}
+    BALENA_ROOTB_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_ROOTB_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
+    rm -rf ${BALENA_ROOTB_FS}
+    dd if=/dev/zero of=${BALENA_ROOTB_FS} seek=${BALENA_ROOTB_BLOCKS} count=0 bs=1024
+    mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -F -L "${BALENA_ROOTB_FS_LABEL}" ${BALENA_ROOTB_FS}
 
     # resin-state
-    if [ -n "${RESIN_STATE_FS}" ]; then
-        RESIN_STATE_BLOCKS=$(LC_ALL=C parted -s ${RESIN_RAW_IMG} unit b print | grep -E "^(| )${RESIN_STATE_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
-        rm -rf ${RESIN_STATE_FS}
-        dd if=/dev/zero of=${RESIN_STATE_FS} count=${RESIN_STATE_BLOCKS} bs=1024
-        mkfs.ext4 -F -L "${RESIN_STATE_FS_LABEL}" ${RESIN_STATE_FS}
+    if [ -n "${BALENA_STATE_FS}" ]; then
+        BALENA_STATE_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_STATE_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
+        rm -rf ${BALENA_STATE_FS}
+        dd if=/dev/zero of=${BALENA_STATE_FS} count=${BALENA_STATE_BLOCKS} bs=1024
+        mkfs.ext4 -F -L "${BALENA_STATE_FS_LABEL}" ${BALENA_STATE_FS}
     fi
 
     # Label what is not labeled
-    e2label ${RESIN_ROOT_FS} ${RESIN_ROOTA_FS_LABEL}
-    if [ -n "${RESIN_DATA_FS}" ]; then
-        e2label ${RESIN_DATA_FS} ${RESIN_DATA_FS_LABEL}
+    e2label ${BALENA_ROOT_FS} ${BALENA_ROOTA_FS_LABEL}
+    if [ -n "${BALENA_DATA_FS}" ]; then
+        e2label ${BALENA_DATA_FS} ${BALENA_DATA_FS_LABEL}
     fi
 
     #
     # Burn partitions
     #
-    dd if=${RESIN_BOOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE})
-    dd if=${RESIN_ROOT_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${RESIN_BOOT_SIZE_ALIGNED}))
-    dd if=${RESIN_ROOTB_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED}))
-    if [ -n "${RESIN_STATE_FS}" ]; then
+    dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE})
+    dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED}))
+    dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED}))
+    if [ -n "${BALENA_STATE_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
-            dd if=${RESIN_STATE_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
+            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            dd if=${RESIN_STATE_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED}))
+            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED}))
         fi
     fi
-    if [ -n "${RESIN_DATA_FS}" ]; then
+    if [ -n "${BALENA_DATA_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
-            dd if=${RESIN_DATA_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT} \+ ${RESIN_STATE_SIZE_ALIGNED} \+ ${RESIN_IMAGE_ALIGNMENT}))
+            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT} \+ ${BALENA_STATE_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            dd if=${RESIN_DATA_FS} of=${RESIN_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${RESIN_BOOT_SIZE_ALIGNED} \+ ${RESIN_ROOTA_SIZE_ALIGNED} \+ ${RESIN_ROOTB_SIZE_ALIGNED} \+ ${RESIN_STATE_SIZE_ALIGNED}))
+            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_STATE_SIZE_ALIGNED}))
         fi
     fi
 
     # Optionally apply compression
-    case "${RESIN_RAW_IMG_COMPRESSION}" in
+    case "${BALENA_RAW_IMG_COMPRESSION}" in
     "gzip")
-        gzip -k9 "${RESIN_RAW_IMG}"
+        gzip -k9 "${BALENA_RAW_IMG}"
         ;;
     "bzip2")
-        bzip2 -k9 "${RESIN_RAW_IMG}"
+        bzip2 -k9 "${BALENA_RAW_IMG}"
         ;;
     "xz")
-        xz -k "${RESIN_RAW_IMG}"
+        xz -k "${BALENA_RAW_IMG}"
         ;;
     esac
 }
 
 # Make sure we regenerate images if we modify the files that go in the boot
 # partition
-do_rootfs[vardeps] += "RESIN_BOOT_PARTITION_FILES"
+do_rootfs[vardeps] += "BALENA_BOOT_PARTITION_FILES"
 
 # XXX(petrosagg): This should be eventually implemented using a docker-native daemon
 IMAGE_CMD_docker () {
     DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=1.22 docker import -)
-    DOCKER_API_VERSION=1.22 docker save ${DOCKER_IMAGE} > ${RESIN_DOCKER_IMG}
+    DOCKER_API_VERSION=1.22 docker save ${DOCKER_IMAGE} > ${BALENA_DOCKER_IMG}
 }
 
 IMAGE_TYPEDEP_hostapp-ext4 = "docker"
@@ -362,6 +362,6 @@ do_image_hostapp_ext4[depends] = " \
     "
 
 IMAGE_CMD_hostapp-ext4 () {
-    dd if=/dev/zero of=${RESIN_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
-    mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${RESIN_DOCKER_IMG} -o ${RESIN_HOSTAPP_IMG}
+    dd if=/dev/zero of=${BALENA_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
+    mkfs.hostapp-ext4 -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
 }

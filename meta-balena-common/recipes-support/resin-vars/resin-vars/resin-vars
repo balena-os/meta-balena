@@ -48,7 +48,7 @@ if [ -z "$CONFIG_PATH" ]; then
     fi
 fi
 
-RESIN_BOOT_MOUNTPOINT="/mnt/boot"
+BALENA_BOOT_MOUNTPOINT="/mnt/boot"
 
 # If config.json provides redefinitions for our vars let us rewrite their
 # runtime value
