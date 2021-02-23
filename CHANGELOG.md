@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.1
+## (2021-02-23)
+
+* recipes-bsp: grub: install only release modules [Joseph Kogut]
+
 # v2.71.0
 ## (2021-02-15)
 

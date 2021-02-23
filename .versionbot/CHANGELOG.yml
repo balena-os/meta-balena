@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'recipes-bsp: grub: install only release modules'
+      hash: 78a8049218d8ce3a9172b7fca6fe00270544e7f1
+      body: |
+        GRUB builds modules with both debug and release variants, with *.module
+        and *.mod extensions respectively.
+
+        Install only the release modules in do_deploy() to avoid balooning the
+        size of the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.71.1
+  date: 2021-02-23T17:59:51.133Z
+- commits:
     - subject: 'meta-balena-common: add grub-efi support'
       hash: 3bfbd05d81d59c82fb131117700325416fb152cb
       body: |
