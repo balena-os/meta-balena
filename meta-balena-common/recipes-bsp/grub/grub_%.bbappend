@@ -6,8 +6,9 @@ DEPENDS_append_class-target = " grub-conf"
 # this removes them for aarch64
 FILES_${PN}-common_remove = "${libdir}/${BPN}"
 
-do_deploy_class-target() {
-    cp -r ${D}${libdir}/grub/ ${DEPLOYDIR}/
+do_deploy_class-target_aarch64() {
+    install -d ${DEPLOYDIR}/grub/arm64-efi
+    cp -r ${D}/${libdir}/grub/arm64-efi/*.mod ${DEPLOYDIR}/grub/arm64-efi/
 }
 
 do_deploy() {
