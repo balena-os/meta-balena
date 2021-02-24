@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.71.2
+## (2021-02-23)
+
+* dnsmasq: enable dbus support [Kyle Harding]
+* dnsmasq: update to 2.84 with dnspooq fix [Kyle Harding]
+
 # v2.71.1
 ## (2021-02-23)
 
