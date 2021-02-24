@@ -36,7 +36,7 @@ done
 
 # Resin-boot mountpoint
 BOOT_MOUNTPOINT="/mnt/boot"
-FLASHER_FILEFLAG="$BOOT_MOUNTPOINT/resin-image-flasher"
+FLASHER_FILEFLAG="$BOOT_MOUNTPOINT/balena-image-flasher"
 
 # Default values
 if [ -z "$CONFIG_PATH" ]; then

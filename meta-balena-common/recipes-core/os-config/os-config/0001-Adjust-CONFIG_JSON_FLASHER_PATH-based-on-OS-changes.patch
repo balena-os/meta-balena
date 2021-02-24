@@ -19,7 +19,7 @@ index 90f031e..8cf2f5b 100644
  const CONFIG_JSON_PATH: &str = "/mnt/boot/config.json";
 -const CONFIG_JSON_FLASHER_PATH: &str = "/tmp/config.json";
 +const CONFIG_JSON_FLASHER_PATH: &str = "/mnt/boottmp/config.json";
- const FLASHER_FLAG_PATH: &str = "/mnt/boot/resin-image-flasher";
+ const FLASHER_FLAG_PATH: &str = "/mnt/boot/balena-image-flasher";
 
  const CONFIG_ROUTE_REDEFINE: &str = "CONFIG_ROUTE_REDEFINE";
 --
