@@ -6,6 +6,7 @@ until $(systemctl is-active --quiet balena.service) ; do
         sleep 1
 done
 
+balena image inspect balena-healthcheck-image >&2 2> /dev/null && exit 0
 balena load -i /usr/lib/balena/balena-healthcheck-image.tar
 
 # The healthcheck image was previously called hello-world.
