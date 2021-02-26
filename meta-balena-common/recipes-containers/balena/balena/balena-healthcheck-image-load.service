@@ -2,6 +2,7 @@
 Description=Load balena healthcheck image
 After=balena.service
 Requires=balena.service
+PartOf=balena.service
 
 [Service]
 Type=oneshot
