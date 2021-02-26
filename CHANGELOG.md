@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.3
+## (2021-02-26)
+
+* balena: Make the healthcheck loading service part of balena.service [Robert Günzler]
+
 # v2.71.2
 ## (2021-02-23)
 

@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'balena: Make the healthcheck loading service part of balena.service'
+      hash: c26f2d203a87d1578d9d52d5bbd8b0b18869916e
+      body: |
+        This prevents issues with the health check when the image is manually
+        removed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: 'https://github.com/balena-os/meta-balena/issues/2010'
+        connects-to: 'https://github.com/balena-os/meta-balena/issues/2010'
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.71.3
+  date: 2021-02-26T12:34:11.073Z
+- commits:
     - subject: 'dnsmasq: enable dbus support'
       hash: 372980ca6aa6bd2793ac856c303c3b3ac4eeffdb
       body: |
