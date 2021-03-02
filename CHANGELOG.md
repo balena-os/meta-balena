@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.4
+## (2021-03-01)
+
+* Update OS test suite [Vipul Gupta (@vipulgupta2048)]
+
 # v2.71.3
 ## (2021-02-26)
 
