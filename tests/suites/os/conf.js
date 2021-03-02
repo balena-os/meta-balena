@@ -44,6 +44,10 @@ module.exports = options => {
 				wired: options.networkWired,
 				wireless: options.networkWireless,
 			},
+			releaseInfo: {
+				version: options.osReleaseVersion,
+				variant: options.osReleaseVariant,
+			},
 		},
 	};
 };

@@ -66,6 +66,8 @@ module.exports = {
 		});
 
 		this.suite.teardown.register(() => {
+			this.log('Removing image');
+			fse.unlinkSync('/data/image'); // Delete the unpacked an modified image from the testbot cache to prevent use in the next suite
 			this.log('Worker teardown');
 			return this.context.get().worker.teardown();
 		});
@@ -77,8 +79,10 @@ module.exports = {
 		await this.context.get().os.fetch({
 			type: this.suite.options.balenaOS.download.type,
 			version: this.suite.options.balenaOS.download.version,
+			releaseInfo: this.suite.options.balenaOS.releaseInfo,
 		});
 		await this.context.get().os.configure();
+		await this.context.get().worker.off(); // Ensure DUT is off before starting tests
 		await this.context.get().worker.flash(this.context.get().os.image.path);
 		await this.context.get().worker.on();
 
