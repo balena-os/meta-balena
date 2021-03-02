@@ -6,9 +6,10 @@ DEPENDS_append_class-target = " grub-conf"
 # this removes them for aarch64
 FILES_${PN}-common_remove = "${libdir}/${BPN}"
 
+# Modules are built into the grub image for speed and simplicity, but DTs still
+# expect the modules directory to exist in ${DEPLOYDIR}, so create it.
 do_deploy_class-target_aarch64() {
     install -d ${DEPLOYDIR}/grub/arm64-efi
-    cp -r ${D}/${libdir}/grub/arm64-efi/*.mod ${DEPLOYDIR}/grub/arm64-efi/
 }
 
 do_deploy() {
