@@ -24,7 +24,9 @@ rootfs_run() {
             if [ "`echo ${bootparam_root} | cut -c1-5`" = "UUID=" ]; then
                 root_uuid=`echo $bootparam_root | cut -c6-`
                 # If the UUIDs have been regenerated there is no by-uuid link
-                if [ -L "/dev/disk/by-uuid/$root_uuid" ];then
+                # Flasher does not use our dynamically generated UUIDs,
+                # we always want to use the by-uuid link for it
+                if [ "${bootparam_flasher}" = "true" ] || [ -L "/dev/disk/by-uuid/$root_uuid" ]; then
                     bootparam_root="/dev/disk/by-uuid/$root_uuid"
                 else
                     bootparam_root="/dev/disk/by-state/active"
