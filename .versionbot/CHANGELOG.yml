@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'initrdscripts: always use by-uuid symlink looking for flasher rootfs'
+      hash: d16ad58f6efe76c9313226735de88648e54d2420
+      body: >
+        If the device with flasher rootfs is slow to bring up and rootfs is
+        defined
+
+        as UUID=xxx the waiting loop in rootfs initrd script would assume UUIDs
+        have
+
+        just been regenerated and wait for a by-state symlink instead. This only
+        works
+
+        for the OS - flasher does not use the dynamically generated UUIDs
+
+        therefore we always want to use the by-uuid link for it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.71.5
+  date: 2021-03-03T19:17:32.016Z
+- commits:
     - subject: Update OS test suite
       hash: 6c82ffb23c05e334ae2157c8e6c0f3e197467d2f
       body: ''

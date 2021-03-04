@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.5
+## (2021-03-03)
+
+* initrdscripts: always use by-uuid symlink looking for flasher rootfs [Michal Toman]
+
 # v2.71.4
 ## (2021-03-01)
 
