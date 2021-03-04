@@ -1,4 +1,17 @@
 - commits:
+    - subject: Test the tests commit
+      hash: 01a5ef2bc64f1bb3e86f4d41b72e55d9c8ab675d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.71.6
+  date: 2021-03-04T14:32:07.368Z
+- commits:
     - subject: 'initrdscripts: always use by-uuid symlink looking for flasher rootfs'
       hash: d16ad58f6efe76c9313226735de88648e54d2420
       body: >

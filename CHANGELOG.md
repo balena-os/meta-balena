@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.6
+## (2021-03-04)
+
+* Test the tests commit [Vipul Gupta (@vipulgupta2048)]
+
 # v2.71.5
 ## (2021-03-03)
 
