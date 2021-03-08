@@ -1,4 +1,34 @@
 - commits:
+    - subject: 'grub-efi: build required modules into grub image'
+      hash: 5e1004d6753025166c40b11af117e008feb875f1
+      body: |
+        grub-efi requires modules to be installed in the boot partition, and
+        resin-image installs them from ${DEPLOYDIR}.
+
+        A normal grub installation installs those modules to ${PREFIX}/${libdir}
+        to allow grub tooling to install them at runtime, but we're building the
+        image with GRUB baked in, so we don't need those in the sysroot.
+
+        The first iteration of this bbappend attempted to solve these
+        constraints by copying the modules from ${D}/${libdir}/grub/ to
+        ${DEPLOYDIR} in do_deploy(), then removing ${D}${prefix}. This had the
+        unfortunate side effect of breaking the build in certain cases, such as
+        clean builds or reexecuting do_deploy() without the other steps of the
+        build.
+
+        Instead, remove the unwanted files in do_install(), and append the
+        required modules to GRUB_BUILDIN to create a standalone grub image
+        without any external modules at all.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.71.6
+  date: 2021-03-05T22:03:28.222Z
+- commits:
     - subject: 'initrdscripts: always use by-uuid symlink looking for flasher rootfs'
       hash: d16ad58f6efe76c9313226735de88648e54d2420
       body: >

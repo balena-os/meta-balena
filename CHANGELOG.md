@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.6
+## (2021-03-05)
+
+* grub-efi: build required modules into grub image [Joseph Kogut]
+
 # v2.71.5
 ## (2021-03-03)
 
