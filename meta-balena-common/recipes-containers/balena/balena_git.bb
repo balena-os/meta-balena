@@ -21,8 +21,6 @@ SRC_URI = "\
 	file://balena-host.service \
 	file://balena-host.socket \
 	file://balena-healthcheck \
-	file://balena-healthcheck-image-load \
-	file://balena-healthcheck-image-load.service \
 	file://var-lib-docker.mount \
 	file://balena.conf.systemd \
 	file://balena-tmpfiles.conf \
@@ -36,7 +34,7 @@ SECURITY_CFLAGS = "${SECURITY_NOPIE_CFLAGS}"
 SECURITY_LDFLAGS = ""
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "balena.service balena-host.socket var-lib-docker.mount balena-healthcheck-image-load.service"
+SYSTEMD_SERVICE_${PN} = "balena.service balena-host.socket var-lib-docker.mount"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM_${PN} = "-r balena-engine"
@@ -141,7 +139,6 @@ do_install() {
 	install -m 0644 ${S}/src/import/contrib/init/systemd/balena-engine.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/balena-healthcheck-image-load.service ${D}/${systemd_unitdir}/system
 	sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
 
 	install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
@@ -152,7 +149,6 @@ do_install() {
 
 	mkdir -p ${D}/usr/lib/balena
 	install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
-	install -m 0755 ${WORKDIR}/balena-healthcheck-image-load ${D}/usr/lib/balena/balena-healthcheck-image-load
 
 	if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
 		install -d ${D}${sysconfdir}/systemd/system/balena.service.d

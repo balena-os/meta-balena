@@ -8,5 +8,13 @@ balena info > /dev/null 2>&1
 # Check that we can read containers from disk
 balena ps > /dev/null
 
+if ! balena image inspect balena-healthcheck-image > /dev/null 2>&1; then
+	balena image load -i /usr/lib/balena/balena-healthcheck-image.tar
+
+	# The healthcheck image was previously called hello-world.
+	# Clean it up
+	balena rmi hello-world 2> /dev/null || true
+fi
+
 # Check that we can start a new container
 balena run --rm --log-driver none --network none balena-healthcheck-image > /dev/null
