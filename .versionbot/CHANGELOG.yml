@@ -1,4 +1,20 @@
 - commits:
+    - subject: Apply aufs patches if aufs is present in kernel config
+      hash: 8094dc7a3a36cfc4f1c0da5be66dc666e29b7dbe
+      body: |
+        Allow installing and patching aufs even if BALENA_STORAGE is overlay2
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Apply aufs patches if aufs is present in kernel config
+        changelog-entry: Apply aufs patches if aufs is present in kernel config
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.71.7
+  date: 2021-03-08T13:49:52.854Z
+- commits:
     - subject: 'grub-efi: build required modules into grub image'
       hash: 5e1004d6753025166c40b11af117e008feb875f1
       body: |

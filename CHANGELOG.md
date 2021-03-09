@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.71.7
+## (2021-03-08)
+
+* Apply aufs patches if aufs is present in kernel config [Kyle Harding]
+
 # v2.71.6
 ## (2021-03-05)
 
