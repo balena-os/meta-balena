@@ -1,4 +1,58 @@
 - commits:
+    - subject: 'os-config: Update os-config from v1.1.4 to v1.2.0'
+      hash: 76bae0c1e32d82b0371d99094965538a05fa3387
+      body: |
+        Update os-config from 1.1.4 to 1.2.0
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested:
+        - commits:
+            - subject: 'os-config: rename flasher flag path'
+              hash: 3622cc8cdf38f42c1f38fb6d5c67dde16631d6f0
+              body: |
+                As part of a full rename away from legacy resin namespaces the
+                following os-config compatibility changes are required to align
+                with meta-balena changes.
+
+                - rename resin-image-flasher to balena-image-flasher
+              footer:
+                Change-type: minor
+                change-type: minor
+                Connects-to: 'https://github.com/balena-os/meta-balena/pull/2118'
+                connects-to: 'https://github.com/balena-os/meta-balena/pull/2118'
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+          version: os-config-1.2.0
+          date: 2021-02-23T20:19:36.114Z
+    - subject: Rename resin image types to balena
+      hash: 057621ad646f1958328c688994ef7f6fb48b9012
+      body: |
+        As part of a full rename away from legacy resin namespaces the
+        following components have been renamed:
+
+        - resinos-img -> balenaos-img
+        - image_types_resin -> image_types_balena
+        - image-resin -> image-balena
+        - resin-image -> balena-image
+        - resin-image-flasher -> balena-image-flasher
+        - resin-image-initramfs -> balena-image-initramfs
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Rename resin image types to balena
+        changelog-entry: Rename resin image types to balena
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.72.0
+  date: 2021-03-10T20:00:01.558Z
+- commits:
     - subject: Apply aufs patches if aufs is present in kernel config
       hash: 8094dc7a3a36cfc4f1c0da5be66dc666e29b7dbe
       body: |
