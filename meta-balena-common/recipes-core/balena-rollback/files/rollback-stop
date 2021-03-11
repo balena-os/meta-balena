@@ -25,21 +25,21 @@ rm -f /mnt/state/rollback-health-variables || true
 rm -f /mnt/state/rollback-altboot-breadcrumb || true
 rm -f /mnt/state/rollback-health-breadcrumb || true
 rm -f /mnt/state/rollback-health-failed || true
-rm -f "${RESIN_BOOT_MOUNTPOINT}/bootcount.env" || true
-grub_env=$(find "${RESIN_BOOT_MOUNTPOINT}" -name grubenv)
+rm -f "${BALENA_BOOT_MOUNTPOINT}/bootcount.env" || true
+grub_env=$(find "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
 if [ -f "${grub_env}" ]; then
 	sed -i "s#bootcount=.*#bootcount=0 #g" "${grub_env}" || true
 fi
 sync -f /mnt/state
-sync -f "${RESIN_BOOT_MOUNTPOINT}"
+sync -f "${BALENA_BOOT_MOUNTPOINT}"
 
 echo "Rollback: Following bootloader file ${BOOTLOADER_FILE} found"
 if [ -f "${BOOTLOADER_FILE}" ]; then
 	cp "${BOOTLOADER_FILE}" "${BOOTLOADER_FILE}.new"
 	sed -i "s#upgrade_available=.*#upgrade_available=0#g" "${BOOTLOADER_FILE}.new"
-	sync -f "${RESIN_BOOT_MOUNTPOINT}"
+	sync -f "${BALENA_BOOT_MOUNTPOINT}"
 	mv "${BOOTLOADER_FILE}.new" "${BOOTLOADER_FILE}"
 fi
 
-sync -f "${RESIN_BOOT_MOUNTPOINT}"
+sync -f "${BALENA_BOOT_MOUNTPOINT}"
 echo "Rollback: Further rollbacks stopped"

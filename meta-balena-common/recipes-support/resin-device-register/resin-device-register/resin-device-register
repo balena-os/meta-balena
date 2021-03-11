@@ -29,7 +29,7 @@ while [ $# -gt 0 ]; do
             exit 0
             ;;
         -c|--config-path)
-            RESIN_VARS_ARGS="$RESIN_VARS_ARGS --config-path $2"
+            BALENA_VARS_ARGS="$BALENA_VARS_ARGS --config-path $2"
             shift
             ;;
         *)
@@ -40,7 +40,7 @@ while [ $# -gt 0 ]; do
 done
 
 # shellcheck disable=SC2086
-source /usr/sbin/resin-vars $RESIN_VARS_ARGS
+source /usr/sbin/resin-vars $BALENA_VARS_ARGS
 source /etc/resin-supervisor/supervisor.conf
 
 if [ -z "$API_ENDPOINT" ] || [ -z "$CONFIG_PATH" ]; then

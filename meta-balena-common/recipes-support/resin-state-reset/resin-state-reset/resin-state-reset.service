@@ -5,13 +5,13 @@ Requires=resin-state.service var-volatile.mount
 After=resin-state.service var-volatile.mount
 Before=umount.target
 Conflicts=umount.target
-ConditionPathExists=!@RESIN_STATE_MP@/remove_me_to_reset
+ConditionPathExists=!@BALENA_STATE_MP@/remove_me_to_reset
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-state-reset
-ExecStartPost=@BASE_BINDIR@/touch @RESIN_STATE_MP@/remove_me_to_reset
+ExecStartPost=@BASE_BINDIR@/touch @BALENA_STATE_MP@/remove_me_to_reset
 
 [Install]
 WantedBy=multi-user.target

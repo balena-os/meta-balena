@@ -38,16 +38,16 @@ fi
 # Determine if the partition is on the same drive as root
 rpdev=$(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1) || true
 if [ "${rpdev}" = "${parent}" ]; then
-	echo "RESIN_FS_USE=${label}"
+	echo "BALENA_FS_USE=${label}"
 	# Determine if its the active or inactive partition. The active one's
 	# UUID is passed by the bootloader in the kernel command line
 	case $label in
 		resin-root*)
 			rdev=$(lsblk -nlo name,uuid | grep "${ruuid}" | cut -d " " -f1)
 			if [ "/dev/${rdev}" == "${part}" ]; then
-				echo "RESIN_UPDATE_STATE=active"
+				echo "BALENA_UPDATE_STATE=active"
 			else
-				echo "RESIN_UPDATE_STATE=inactive"
+				echo "BALENA_UPDATE_STATE=inactive"
 			fi
 			;;
 		*) ;;

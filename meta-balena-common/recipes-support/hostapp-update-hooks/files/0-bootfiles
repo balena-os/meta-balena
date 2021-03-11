@@ -9,7 +9,7 @@
 set -o errexit
 
 # Variables
-boot_fingerprint="@RESIN_BOOT_FINGERPRINT@"
+boot_fingerprint="@BALENA_BOOT_FINGERPRINT@"
 bootfiles_blacklist="\
 	/config.json \
 	/config.txt \

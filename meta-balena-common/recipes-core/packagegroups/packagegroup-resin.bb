@@ -5,10 +5,10 @@ PR = "r1"
 
 inherit packagegroup
 
-RESIN_INIT_PACKAGE ?= "resin-init"
-RESIN_MOUNTS ?= "resin-mounts"
-RESIN_REGISTER ?= "resin-supervisor"
-RESIN_SUPERVISOR ?= "resin-supervisor"
+BALENA_INIT_PACKAGE ?= "resin-init"
+BALENA_MOUNTS ?= "resin-mounts"
+BALENA_REGISTER ?= "resin-supervisor"
+BALENA_SUPERVISOR ?= "resin-supervisor"
 
 include packagegroup-resin.inc
 
@@ -30,5 +30,5 @@ RDEPENDS_${PN} += " \
     timeinit \
     systemd-zram-swap \
     ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util-auplink', '', d)} \
-    ${RESIN_SUPERVISOR} \
+    ${BALENA_SUPERVISOR} \
     "

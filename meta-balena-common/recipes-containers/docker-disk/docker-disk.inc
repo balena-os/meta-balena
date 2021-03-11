@@ -1,11 +1,11 @@
-RESIN_CHECK_CONN_URL ?= "index.docker.io"
+BALENA_CHECK_CONN_URL ?= "index.docker.io"
 
 # Check if host can reach a specific URL
 # Used for connectivity check
 def connected(d):
     import socket
 
-    REMOTE_SERVER = d.getVar('RESIN_CHECK_CONN_URL', True)
+    REMOTE_SERVER = d.getVar('BALENA_CHECK_CONN_URL', True)
     try:
         host = socket.gethostbyname(REMOTE_SERVER)
         testSocket = socket.create_connection((host, 80), 2)

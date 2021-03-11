@@ -17,13 +17,13 @@ else
 	echo "resin-proxy-config: Found config.json in $CONFIG_PATH ."
 fi
 
-if [ ! -d "$RESIN_BOOT_MOUNTPOINT" ]; then
-	echo "resin-proxy-config: $RESIN_BOOT_MOUNTPOINT does not exist."
+if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
+	echo "resin-proxy-config: $BALENA_BOOT_MOUNTPOINT does not exist."
 	exit 1
 fi
 
-REDSOCKSCONF=${RESIN_BOOT_MOUNTPOINT}/system-proxy/redsocks.conf
-NOPROXYFILE=${RESIN_BOOT_MOUNTPOINT}/system-proxy/no_proxy
+REDSOCKSCONF=${BALENA_BOOT_MOUNTPOINT}/system-proxy/redsocks.conf
+NOPROXYFILE=${BALENA_BOOT_MOUNTPOINT}/system-proxy/no_proxy
 
 # README!
 # The entire following configuration depends on the redsocks configuration.

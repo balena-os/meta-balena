@@ -18,14 +18,14 @@ module.exports = {
 	title: 'OS corruption tests',
 	tests: [
 		{
-			title: 'resinos.fingerprint file test',
+			title: 'balenaos.fingerprint file test',
 			run: async function(test) {
 				let error = null;
 				try {
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							'md5sum --quiet -c /resinos.fingerprint',
+							'md5sum --quiet -c /balenaos.fingerprint',
 							this.context.get().link,
 						);
 				} catch (e) {

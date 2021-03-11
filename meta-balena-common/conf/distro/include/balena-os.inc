@@ -43,23 +43,23 @@ PREFERRED_PROVIDER_jpeg-native ?= "jpeg-native"
 
 SPLASH = "plymouth"
 
-IMAGE_CLASSES += "image_types_resin"
+IMAGE_CLASSES += "image_types_balena"
 
 # Define the URL where resin exposes source or prebuilt packages
-AMAZON_RESIN_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
+AMAZON_BALENA_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
 
 # have build information available on the target under /etc/build
 INHERIT += "image-buildinfo resin-sanity"
 
 # Identification file flags
-RESIN_IMAGE_FLAG_FILE = "resin-image"
-RESIN_FLASHER_FLAG_FILE = "resin-image-flasher"
+BALENA_IMAGE_FLAG_FILE = "balena-image"
+BALENA_FLASHER_FLAG_FILE = "balena-image-flasher"
 
 # Kernel command line
 OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','','console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
 
 # Initramfs
-INITRAMFS_IMAGE = "resin-image-initramfs"
+INITRAMFS_IMAGE = "balena-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
@@ -76,8 +76,8 @@ python () {
 }
 
 # Partition fingerprints files
-RESIN_FINGERPRINT_EXT ?= "fingerprint"
-RESIN_FINGERPRINT_FILENAME ?= "resinos"
+BALENA_FINGERPRINT_EXT ?= "fingerprint"
+BALENA_FINGERPRINT_FILENAME ?= "balenaos"
 
 # Hostname is generated at runtime based on config.json
 hostname_pn-base-files = ""

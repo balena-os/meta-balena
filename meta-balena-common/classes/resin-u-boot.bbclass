@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := ":${RESIN_COREBASE}/recipes-bsp/u-boot/patches"
+FILESEXTRAPATHS_append := ":${BALENA_COREBASE}/recipes-bsp/u-boot/patches"
 
 INTEGRATION_KCONFIG_PATCH = "file://resin-specific-env-integration-kconfig.patch"
 INTEGRATION_NON_KCONFIG_PATCH = "file://resin-specific-env-integration-non-kconfig.patch"
@@ -30,12 +30,12 @@ do_configure_append() {
 }
 
 
-RESIN_BOOT_PART = "1"
-RESIN_DEFAULT_ROOT_PART = "2"
-RESIN_ENV_FILE = "resinOS_uEnv.txt"
+BALENA_BOOT_PART = "1"
+BALENA_DEFAULT_ROOT_PART = "2"
+BALENA_ENV_FILE = "resinOS_uEnv.txt"
 BALENA_EXTRA_ENV_FILE = "extra_uEnv.txt"
-RESIN_UBOOT_DEVICES ?= "0 1 2"
-RESIN_UBOOT_DEVICE_TYPES ?= "mmc"
+BALENA_UBOOT_DEVICES ?= "0 1 2"
+BALENA_UBOOT_DEVICE_TYPES ?= "mmc"
 
 # OS_KERNEL_CMDLINE is a distro wide variable intended to be used in all the
 # supported bootloaders
@@ -50,12 +50,12 @@ CONFIG_BOOT_RETRY_TIME ?= "${@bb.utils.contains('DISTRO_FEATURES', 'development-
 
 CONFIG_CMD_FS_UUID = "1"
 
-UBOOT_VARS = "RESIN_UBOOT_DEVICES \
-              RESIN_UBOOT_DEVICE_TYPES \
-              RESIN_BOOT_PART RESIN_DEFAULT_ROOT_PART \
-              RESIN_IMAGE_FLAG_FILE \
-              RESIN_FLASHER_FLAG_FILE \
-              RESIN_ENV_FILE \
+UBOOT_VARS = "BALENA_UBOOT_DEVICES \
+              BALENA_UBOOT_DEVICE_TYPES \
+              BALENA_BOOT_PART BALENA_DEFAULT_ROOT_PART \
+              BALENA_IMAGE_FLAG_FILE \
+              BALENA_FLASHER_FLAG_FILE \
+              BALENA_ENV_FILE \
               BALENA_EXTRA_ENV_FILE \
               BASE_OS_CMDLINE \
               OS_BOOTCOUNT_FILE \

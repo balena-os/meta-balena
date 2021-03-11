@@ -1,10 +1,10 @@
 #
-# Resin images customizations
+# Balena images customizations
 #
 
-inherit image_types_resin
+inherit image_types_balena
 
-# When building a Resin OS image, we also generate the kernel modules headers
+# When building a Balena OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build
 DEPENDS += "coreutils-native jq-native ${@bb.utils.contains('BALENA_DISABLE_KERNEL_HEADERS', '1', '', 'kernel-modules-headers kernel-devsrc kernel-headers-test', d)}"
 
@@ -54,7 +54,7 @@ init_config_json() {
    echo "$(cat ${1}/config.json | jq -S ".localMode=true")" > ${1}/config.json
 
    # Find board json and extract slug
-   json_path=${RESIN_COREBASE}/../../../${MACHINE}.json
+   json_path=${BALENA_COREBASE}/../../../${MACHINE}.json
    slug=$(jq .slug $json_path)
 
    # Set deviceType for supervisor
@@ -129,22 +129,22 @@ read_only_rootfs_hook_append () {
 # Generate the boot partition directory and deploy it to rootfs
 resin_boot_dirgen_and_deploy () {
     echo "Generating work directory for resin-boot partition..."
-    rm -rf ${RESIN_BOOT_WORKDIR}
-    for RESIN_BOOT_PARTITION_FILE in ${RESIN_BOOT_PARTITION_FILES}; do
-        echo "Handling $RESIN_BOOT_PARTITION_FILE ."
+    rm -rf ${BALENA_BOOT_WORKDIR}
+    for BALENA_BOOT_PARTITION_FILE in ${BALENA_BOOT_PARTITION_FILES}; do
+        echo "Handling $BALENA_BOOT_PARTITION_FILE ."
 
         # Check for item format
-        case $RESIN_BOOT_PARTITION_FILE in
+        case $BALENA_BOOT_PARTITION_FILE in
             *:*) ;;
-            *) bbfatal "Some items in RESIN_BOOT_PARTITION_FILES ($RESIN_BOOT_PARTITION_FILE) are not in the 'src:dst' format."
+            *) bbfatal "Some items in BALENA_BOOT_PARTITION_FILES ($BALENA_BOOT_PARTITION_FILE) are not in the 'src:dst' format."
         esac
 
         # Compute src and dst
-        src="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $1}')"
+        src="$(echo ${BALENA_BOOT_PARTITION_FILE} | awk -F: '{print $1}')"
         if [ -z "${src}" ]; then
-            bbfatal "An entry in RESIN_BOOT_PARTITION_FILES has no source. Entries need to be in the \"src:dst\" format where only \"dst\" is optional. Failed entry: \"$RESIN_BOOT_PARTITION_FILE\"."
+            bbfatal "An entry in BALENA_BOOT_PARTITION_FILES has no source. Entries need to be in the \"src:dst\" format where only \"dst\" is optional. Failed entry: \"$BALENA_BOOT_PARTITION_FILE\"."
         fi
-        dst="$(echo ${RESIN_BOOT_PARTITION_FILE} | awk -F: '{print $2}')"
+        dst="$(echo ${BALENA_BOOT_PARTITION_FILE} | awk -F: '{print $2}')"
         if [ -z "${dst}" ]; then
             dst="/${src}" # dst was omitted
         fi
@@ -167,7 +167,7 @@ resin_boot_dirgen_and_deploy () {
                      *) dst_is_dir=false ;;
                 esac
                 ;;
-             *) bbfatal "$dst in RESIN_BOOT_PARTITION_FILES is not an absolute path."
+             *) bbfatal "$dst in BALENA_BOOT_PARTITION_FILES is not an absolute path."
         esac
 
         # Check src type and existence
@@ -179,7 +179,7 @@ resin_boot_dirgen_and_deploy () {
         elif [ -f "$src" ]; then
             sources="$src"
         else
-            bbfatal "$src is an invalid path referenced in RESIN_BOOT_PARTITION_FILES."
+            bbfatal "$src is an invalid path referenced in BALENA_BOOT_PARTITION_FILES."
         fi
 
         # Normalize paths
@@ -193,28 +193,28 @@ resin_boot_dirgen_and_deploy () {
             echo "Copying $src -> $dst ..."
             # Create the directories parent directories in dst
             directory=""
-            for path_segment in $(echo ${RESIN_BOOT_WORKDIR}/${dst} | sed 's|/|\n|g' | head -n -1); do
+            for path_segment in $(echo ${BALENA_BOOT_WORKDIR}/${dst} | sed 's|/|\n|g' | head -n -1); do
                 if [ -z "$path_segment" ]; then
                     continue
                 fi
                 directory=$directory/$path_segment
                 mkdir -p $directory
             done
-            cp -rvfL $src ${RESIN_BOOT_WORKDIR}/$dst
+            cp -rvfL $src ${BALENA_BOOT_WORKDIR}/$dst
         done
     done
-    echo "${IMAGE_NAME}" > ${RESIN_BOOT_WORKDIR}/image-version-info
-    init_config_json ${RESIN_BOOT_WORKDIR}
+    echo "${IMAGE_NAME}" > ${BALENA_BOOT_WORKDIR}/image-version-info
+    init_config_json ${BALENA_BOOT_WORKDIR}
 
     # Keep this after everything is ready in the resin-boot directory
-    find ${RESIN_BOOT_WORKDIR} -xdev -type f \
-        ! -name ${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT} \
+    find ${BALENA_BOOT_WORKDIR} -xdev -type f \
+        ! -name ${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT} \
         ! -name config.json \
-        -exec md5sum {} \; | sed "s#${RESIN_BOOT_WORKDIR}##g" | \
-        sort -k2 > ${RESIN_BOOT_WORKDIR}/${RESIN_FINGERPRINT_FILENAME}.${RESIN_FINGERPRINT_EXT}
+        -exec md5sum {} \; | sed "s#${BALENA_BOOT_WORKDIR}##g" | \
+        sort -k2 > ${BALENA_BOOT_WORKDIR}/${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}
 
     echo "Install resin-boot in the rootfs..."
-    cp -rvf ${RESIN_BOOT_WORKDIR} ${IMAGE_ROOTFS}/${RESIN_BOOT_FS_LABEL}
+    cp -rvf ${BALENA_BOOT_WORKDIR} ${IMAGE_ROOTFS}/${BALENA_BOOT_FS_LABEL}
 
 	# This is a sanity check
 	# When updating the hostOS we are using atomic operations for copying new
@@ -222,20 +222,20 @@ resin_boot_dirgen_and_deploy () {
 	# every copy operation. This means that the boot partition needs to have
 	# available at least free space as much as the largest file deployed.
 	# First Calculate size of the data
-	DATA_SECTORS=$(expr $(du --apparent-size -ks ${RESIN_BOOT_WORKDIR} | cut -f 1) \* 2)
+	DATA_SECTORS=$(expr $(du --apparent-size -ks ${BALENA_BOOT_WORKDIR} | cut -f 1) \* 2)
 	# Calculate fs overhead
-	DIR_BYTES=$(expr $(find ${RESIN_BOOT_WORKDIR} | tail -n +2 | wc -l) \* 32)
-	DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${RESIN_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 32))
+	DIR_BYTES=$(expr $(find ${BALENA_BOOT_WORKDIR} | tail -n +2 | wc -l) \* 32)
+	DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${BALENA_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 32))
 	FAT_BYTES=$(expr $DATA_SECTORS \* 4)
-	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${RESIN_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 4))
+	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${BALENA_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 4))
 	DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
 	FAT_SECTORS=$(expr $(expr $FAT_BYTES + 511) / 512 \* 2)
 	FAT_OVERHEAD_SECTORS=$(expr $DIR_SECTORS + $FAT_SECTORS)
 	# Find the largest file and calculate the size in sectors
-	LARGEST_FILE_SECTORS=$(expr $(find ${RESIN_BOOT_WORKDIR} -type f -exec du --apparent-size -k {} + | sort -n -r | head -n1 | cut -f1) \* 2)
+	LARGEST_FILE_SECTORS=$(expr $(find ${BALENA_BOOT_WORKDIR} -type f -exec du --apparent-size -k {} + | sort -n -r | head -n1 | cut -f1) \* 2)
 	if [ -n "$LARGEST_FILE_SECTORS" ]; then
 		TOTAL_SECTORS=$(expr $DATA_SECTORS \+ $FAT_OVERHEAD_SECTORS \+ $LARGEST_FILE_SECTORS)
-		BOOT_SIZE_SECTORS=$(expr ${RESIN_BOOT_SIZE} \* 2)
+		BOOT_SIZE_SECTORS=$(expr ${BALENA_BOOT_SIZE} \* 2)
 		bbnote "resin-boot: FAT overhead $FAT_OVERHEAD_SECTORS sectors, data $DATA_SECTORS sectors, largest file $LARGEST_FILE_SECTORS sectors, boot size $BOOT_SIZE_SECTORS sectors."
 		if [ $TOTAL_SECTORS -gt $BOOT_SIZE_SECTORS ]; then
 			bbfatal "resin-boot: Not enough space for atomic copy operations."
@@ -272,25 +272,25 @@ resinhup_backwards_compatible_link () {
         # Check if we are running on a poky version which deploys to IMGDEPLOYDIR instead
         # of DEPLOY_DIR_IMAGE (poky morty introduced this change)
         DEPLOY_IMAGE_TAR="${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar"
-        RESIN_HUP_BUNDLE="${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.resinhup-tar"
+        BALENA_HUP_BUNDLE="${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.resinhup-tar"
     else
         IMAGE_NAME_SUFFIX=".rootfs"
         DEPLOY_IMAGE_TAR="${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar"
-        RESIN_HUP_BUNDLE="${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.resinhup-tar"
+        BALENA_HUP_BUNDLE="${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.resinhup-tar"
     fi
     if [ -f ${DEPLOY_IMAGE_TAR} ]; then
-        ln -fsv ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar ${RESIN_HUP_BUNDLE}
+        ln -fsv ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.tar ${BALENA_HUP_BUNDLE}
     fi
 }
 
 add_image_flag_file () {
-    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${RESIN_FLAG_FILE}
+    echo "DO NOT REMOVE THIS FILE" > ${DEPLOY_DIR_IMAGE}/${BALENA_FLAG_FILE}
 }
 
 python resin_boot_sanity_handler() {
   kernel_file = d.getVar('KERNEL_IMAGETYPE', True) + d.getVar('KERNEL_INITRAMFS', True) + d.getVar('MACHINE', True) + '.bin'
-  if kernel_file in d.getVar('RESIN_BOOT_PARTITION_FILES', True):
-    bb.warn("ResinOS only supports having the kernel in the root partition in rootfs/boot/KERNEL_IMAGETYPE. Please remove it from RESIN_BOOT_PARTITION_FILES. This will become a fatal warning in a few releases.")
+  if kernel_file in d.getVar('BALENA_BOOT_PARTITION_FILES', True):
+    bb.warn("BalenaOS only supports having the kernel in the root partition in rootfs/boot/KERNEL_IMAGETYPE. Please remove it from BALENA_BOOT_PARTITION_FILES. This will become a fatal warning in a few releases.")
 }
 
 python balena_udev_rules_sanity_handler() {
@@ -356,8 +356,8 @@ python os_release_extra_data() {
     if slug == "unknown":
         bb.warn("Can't detect the slug. This information will not be available in os-release.")
     extra_data = [
-        'RESIN_BOARD_REV="{0}"\n'.format(resin_board_rev),
-        'META_RESIN_REV="{0}"\n'.format(meta_resin_rev),
+        'BALENA_BOARD_REV="{0}"\n'.format(resin_board_rev),
+        'META_BALENA_REV="{0}"\n'.format(meta_resin_rev),
         'SLUG="{0}"\n'.format(slug),
     ]
     os_release_file = os.path.join(d.getVar('IMAGE_ROOTFS', True), "etc/os-release")

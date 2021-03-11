@@ -45,10 +45,10 @@ One or more files named `<board-name>.coffee`, where `<board-name>` is equal to 
 module.exports =
   yocto:
     machine: 'raspberrypi3'
-    image: 'resin-image'
-    fstype: 'resinos-img'
+    image: 'balena-image'
+    fstype: 'balenaos-img'
     version: 'yocto-jethro'
-    deployArtifact: 'resin-image-raspberrypi3.resinos-img'
+    deployArtifact: 'balena-image-raspberrypi3.balenaos-img'
     compressed: true
 ```
 
@@ -109,27 +109,27 @@ This directory contains optional and mandatory directories:
 
 ### `recipes-core/images` directory
 
-Which contains at least a `resin-image.bbappend` file. Depending on the type of board you are adding support for, you should have your device support either just `resin-image` or both `resin-image-flasher` and `resin-image`. Generally, `resin-image` is for boards that boot directly from external storage (these boards do not have internal storage to install balena.io on). `resin-image-flasher` is used when the targeted board has internal storage so this flasher image is burned onto an SD card or USB stick that is used for the initial boot. When booted, this flasher image will automatically install balena.io on internal storage.
+Which contains at least a `balena-image.bbappend` file. Depending on the type of board you are adding support for, you should have your device support either just `balena-image` or both `balena-image-flasher` and `balena-image`. Generally, `balena-image` is for boards that boot directly from external storage (these boards do not have internal storage to install balena.io on). `balena-image-flasher` is used when the targeted board has internal storage so this flasher image is burned onto an SD card or USB stick that is used for the initial boot. When booted, this flasher image will automatically install balena.io on internal storage.
 
-  The `resin-image.bbappend` file shall define the following variables:
+  The `balena-image.bbappend` file shall define the following variables:
 
 ***
-- `IMAGE_FSTYPES_<yocto-machine-name>`: this variable is used to declare the type of the produced image. It can be ext3, ext4, resinos-img etc. The usual type for a board that can boot from SD card, USB, is "resinos-img".
+- `IMAGE_FSTYPES_<yocto-machine-name>`: this variable is used to declare the type of the produced image. It can be ext3, ext4, balenaos-img etc. The usual type for a board that can boot from SD card, USB, is "balenaos-img".
 
-- `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>`: this allows adding files from the build's deploy directory into the vfat formatted resin-boot partition (can be used to add bootloader config files, first stage bootloader, initramfs or anything else needed for the booting process to take place for your particular board). If the board uses different bootloader configuration files when booting from either external media (USB thumb drive, SD card etc.) or from internal media (mSATA, eMMC etc) then you would want to make use of this variable to make sure the different bootloader configuration files get copied over and further manipulated as needed (see `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>` and `INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_<yocto-machine-name>` below). Please note that you only reference these files here, it is the responsibility of a `.bb` or `.bbappend` to provide and deploy them (for bootloader config files this is done with an append typically in `recipes-bsp/<your board's bootloader>/<your board's bootloader>.bbappend`, see [balena-intel grub bbappend][balena-intel grub append] for an example).
+- `BALENA_BOOT_PARTITION_FILES_<yocto-machine-name>`: this allows adding files from the build's deploy directory into the vfat formatted resin-boot partition (can be used to add bootloader config files, first stage bootloader, initramfs or anything else needed for the booting process to take place for your particular board). If the board uses different bootloader configuration files when booting from either external media (USB thumb drive, SD card etc.) or from internal media (mSATA, eMMC etc) then you would want to make use of this variable to make sure the different bootloader configuration files get copied over and further manipulated as needed (see `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>` and `INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_<yocto-machine-name>` below). Please note that you only reference these files here, it is the responsibility of a `.bb` or `.bbappend` to provide and deploy them (for bootloader config files this is done with an append typically in `recipes-bsp/<your board's bootloader>/<your board's bootloader>.bbappend`, see [balena-intel grub bbappend][balena-intel grub append] for an example).
 
  It is a space separated list of items with the following format: *FilenameRelativeToDeployDir:FilenameOnTheTarget*. If *FilenameOnTheTarget* is omitted then the *FilenameRelativeToDeployDir* will be used.
 
   For example to have the Intel NUC `bzImage-intel-corei7-64.bin` copied from deploy directory over to the boot partition, renamed to `vmlinuz`:
 
-    ```sh   RESIN_BOOT_PARTITION_FILES_nuc =  "bzImage-intel-corei7-64.bin:vmlinuz"    ```
+    ```sh   BALENA_BOOT_PARTITION_FILES_nuc =  "bzImage-intel-corei7-64.bin:vmlinuz"    ```
 ***
 
-  The `resin-image-flasher.bbappend` file shall define the following variables:
+  The `balena-image-flasher.bbappend` file shall define the following variables:
 
 ***
 - `IMAGE_FSTYPES_<yocto-machine-name>` (see above)
-- `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` (see above). For example, if the board uses different bootloader configuration files for booting from SD/USB and internal storage (see below the use of `INTERNAL_DEVICE_BOOTLOADER_CONFIG` variable), then make sure these files end up in the boot partition (i.e. they should be listed in this `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` variable)
+- `BALENA_BOOT_PARTITION_FILES_<yocto-machine-name>` (see above). For example, if the board uses different bootloader configuration files for booting from SD/USB and internal storage (see below the use of `INTERNAL_DEVICE_BOOTLOADER_CONFIG` variable), then make sure these files end up in the boot partition (i.e. they should be listed in this `BALENA_BOOT_PARTITION_FILES_<yocto-machine-name>` variable)
 
 ***
 
@@ -147,7 +147,7 @@ Shall contain a `resin-init-flasher.bbappend` file if you intend to install bale
 ***
   - `INTERNAL_DEVICE_KERNEL_<yocto-machine-name>`: used to identify the internal storage where balena.io will be written to.
 
-  - `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>`: used to specify the filename of the bootloader configuration file used by your board when booting from internal media. Must be the same as the *FilenameOnTheTarget* parameter of the bootloader internal config file used in the `RESIN_BOOT_PARTITION_FILES_<yocto-machine-name>` variable from `recipes-core/images/resin-image-flasher.bbappend`.
+  - `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>`: used to specify the filename of the bootloader configuration file used by your board when booting from internal media. Must be the same as the *FilenameOnTheTarget* parameter of the bootloader internal config file used in the `BALENA_BOOT_PARTITION_FILES_<yocto-machine-name>` variable from `recipes-core/images/balena-image-flasher.bbappend`.
 
   - `INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH_<yocto-machine-name>`: used to specify the relative path, including filename, to the resin-boot partition where `INTERNAL_DEVICE_BOOTLOADER_CONFIG_<yocto-machine-name>` will be copied to.
 
@@ -208,7 +208,7 @@ The directory structure then looks similar to this:
 │       └── docker-resin-supervisor-disk.bbappend
 ├── recipes-core
 │   ├── images
-│   │   └── resin-image.bbappend
+│   │   └── balena-image.bbappend
 ├── recipes-kernel
 │   └── linux
 │       ├── linux-<board-family>-<version>

@@ -2,19 +2,19 @@ SUMMARY = "Resin image flasher"
 IMAGE_LINGUAS = " "
 LICENSE = "Apache-2.0"
 
-inherit core-image image-resin features_check
+inherit core-image image-balena features_check
 
 REQUIRED_DISTRO_FEATURES += " systemd"
 
-RESIN_FLAG_FILE = "${RESIN_FLASHER_FLAG_FILE}"
+BALENA_FLAG_FILE = "${BALENA_FLASHER_FLAG_FILE}"
 
 # Each machine should append this with their specific configuration
 IMAGE_FSTYPES = ""
 
-RESIN_ROOT_FSTYPE = "ext4"
+BALENA_ROOT_FSTYPE = "ext4"
 
 # Make sure you have the resin image ready
-do_image_resinos_img[depends] += "resin-image:do_rootfs"
+do_image_balenaos_img[depends] += "balena-image:do_rootfs"
 
 IMAGE_FEATURES_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'debug-tweaks', '', d)} \
@@ -31,38 +31,38 @@ IMAGE_INSTALL = " \
     "
 
 # Avoid useless space - no data or state on flasher
-RESIN_DATA_FS = ""
-RESIN_STATE_FS = ""
+BALENA_DATA_FS = ""
+BALENA_STATE_FS = ""
 
-# We do not use a second root fs partition for the flasher image, so just default to RESIN_IMAGE_ALIGNMENT
-RESIN_ROOTB_SIZE = "${RESIN_IMAGE_ALIGNMENT}"
+# We do not use a second root fs partition for the flasher image, so just default to BALENA_IMAGE_ALIGNMENT
+BALENA_ROOTB_SIZE = "${BALENA_IMAGE_ALIGNMENT}"
 
 # Avoid naming clash with resin image labels
-RESIN_BOOT_FS_LABEL = "flash-boot"
-RESIN_ROOTA_FS_LABEL = "flash-rootA"
-RESIN_ROOTB_FS_LABEL = "flash-rootB"
-RESIN_STATE_FS_LABEL = "flash-state"
-RESIN_DATA_FS_LABEL = "flash-data"
+BALENA_BOOT_FS_LABEL = "flash-boot"
+BALENA_ROOTA_FS_LABEL = "flash-rootA"
+BALENA_ROOTB_FS_LABEL = "flash-rootB"
+BALENA_STATE_FS_LABEL = "flash-state"
+BALENA_DATA_FS_LABEL = "flash-data"
 
 # Put the resin logo, uEnv.txt files inside the boot partition
-RESIN_BOOT_PARTITION_FILES_append = " balena-logo.png:/splash/balena-logo.png"
+BALENA_BOOT_PARTITION_FILES_append = " balena-logo.png:/splash/balena-logo.png"
 
 # add the generated <machine-name>.json to the flash-boot partition, renamed as device-type.json
-RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_COREBASE}/../../../${MACHINE}.json:/device-type.json"
+BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
-# Put resin-image in the flasher rootfs
+# Put balena-image in the flasher rootfs
 add_resin_image_to_flasher_rootfs() {
     mkdir -p ${WORKDIR}/rootfs/opt
-    cp ${DEPLOY_DIR_IMAGE}/resin-image-${MACHINE}.resinos-img ${WORKDIR}/rootfs/opt
+    cp ${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img ${WORKDIR}/rootfs/opt
 }
 
 IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
 
 # example NetworkManager config file
-RESIN_BOOT_PARTITION_FILES_append = " \
+BALENA_BOOT_PARTITION_FILES_append = " \
     system-connections/resin-sample.ignore:/system-connections/resin-sample.ignore \
     system-connections/README.ignore:/system-connections/README.ignore \
     "
 
 # Resin flasher flag file
-RESIN_BOOT_PARTITION_FILES_append = " ${RESIN_FLASHER_FLAG_FILE}:/${RESIN_FLASHER_FLAG_FILE}"
+BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_FLASHER_FLAG_FILE}:/${BALENA_FLASHER_FLAG_FILE}"
