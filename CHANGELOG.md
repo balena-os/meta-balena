@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.72.1
+## (2021-03-11)
+
+* Fix disablement of userspace firmware loading requests [Pelle van Gils]
+
 # v2.72.0
 ## (2021-03-10)
 

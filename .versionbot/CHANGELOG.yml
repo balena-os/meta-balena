@@ -1,4 +1,22 @@
 - commits:
+    - subject: Fix disablement of userspace firmware loading requests
+      hash: 98fad0bbfd179f16c5985a3281af25b4801af6e9
+      body: |
+        This option depends on FW_LOADER_USER_HELPER which will be enabled if
+        _FALLBACK is set to 'y', which is the default in the arm64 defconfig
+        since Linux 5.4+.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Fix disablement of userspace firmware loading requests
+        changelog-entry: Fix disablement of userspace firmware loading requests
+        Signed-off-by: Pelle van Gils <pelle@vangils.xyz>
+        signed-off-by: Pelle van Gils <pelle@vangils.xyz>
+      author: Pelle van Gils
+      nested: []
+  version: 2.72.1
+  date: 2021-03-11T09:52:01.508Z
+- commits:
     - subject: 'os-config: Update os-config from v1.1.4 to v1.2.0'
       hash: 76bae0c1e32d82b0371d99094965538a05fa3387
       body: |
