@@ -1,4 +1,45 @@
 - commits:
+    - subject: 'image_types_balena: make rootfs labeling generic'
+      hash: 924bb046c94ea9a6db516733f727c18bc47fc0e7
+      body: ''
+      footer:
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Joseph Kogut
+      nested: []
+    - subject: 'image_types_balena: make agnostic to root fstype'
+      hash: 71553d47174d8dc28777b0d0a6723418192ad8e4
+      body: >
+        Build BALENA_HOSTAPP_IMG path using BALENA_ROOT_FSTYPE instead of
+        assuming
+
+        the root is ext4.
+      footer:
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Joseph Kogut
+      nested: []
+    - subject: 'mkfs-hostapp-native: make agnostic to fstype'
+      hash: 295976261f44650bd108eafcb53b3d24f6a28671
+      body: |
+        Remove assumptions about root fstype. Rename create to create.ext4,
+        mkfs.hostapp-ext4 to mkfs.hostapp, and add an argument to mkfs.hostapp
+        for fstype. Remove CMD from Dockerfile in favor of passing it as an
+        argument to docker run.
+      footer:
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+        Change-type: minor
+        change-type: minor
+      author: Joseph Kogut
+      nested: []
+  version: 2.73.0
+  date: 2021-03-15T20:56:51.275Z
+- commits:
     - subject: 'balena: dissolve healthcheck-image-load into healthcheck script'
       hash: 7983e9bfd716aaedad1ef5f1468b2771e1f5a71c
       body: |

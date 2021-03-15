@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.73.0
+## (2021-03-15)
+
+* image_types_balena: make rootfs labeling generic [Joseph Kogut]
+* image_types_balena: make agnostic to root fstype [Joseph Kogut]
+* mkfs-hostapp-native: make agnostic to fstype [Joseph Kogut]
+
 # v2.72.2
 ## (2021-03-15)
 
