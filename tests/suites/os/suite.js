@@ -105,5 +105,6 @@ module.exports = {
 		// The boot splash test is currently disabled because of the excessive time spent on it.
 		// './tests/boot-splash',
 		'./tests/connectivity',
+		'./tests/engine-healthcheck',
 	],
 };
