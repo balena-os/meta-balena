@@ -6,6 +6,6 @@ RUN apt-get update && apt-get install -y \
 	ca-certificates \
 	iptables
 
-COPY create /usr/bin/
+COPY create.* /usr/bin/
 
-CMD [ "/usr/bin/create" ]
+CMD [ "/usr/bin/create.ext4" ]
