@@ -1,4 +1,36 @@
 - commits:
+    - subject: 'balena: dissolve healthcheck-image-load into healthcheck script'
+      hash: 7983e9bfd716aaedad1ef5f1468b2771e1f5a71c
+      body: |
+        Previously we were loading the healthcheck image from it's own service
+        that was previously made `PartOf=` the balena.service.
+        This was done in an attempt to help get the system unstuck when the
+        image is removed (like through manual pruning), which would cause the
+        healthcheck to trigger the engine to reboot until the load service was
+        restarted by hand.
+
+        Further investigation found a race between the first execution of the
+        engine healthcheck script (which needs the image to be loaded) and the
+        loader service itself, which would lead to a similar state, requireing
+        manual intervention.
+
+        This change moves the loading into the healthcheck script itself,
+        allowing us to remove the loader script and service entirely, skipping
+        the whole service ordering issue.
+      footer:
+        Backport-to: next
+        backport-to: next
+        Connects-to: '#2122'
+        connects-to: '#2122'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.72.2
+  date: 2021-03-15T13:36:10.137Z
+- commits:
     - subject: Fix disablement of userspace firmware loading requests
       hash: 98fad0bbfd179f16c5985a3281af25b4801af6e9
       body: |

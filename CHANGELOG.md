@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.72.2
+## (2021-03-15)
+
+* balena: dissolve healthcheck-image-load into healthcheck script [Robert Günzler]
+
 # v2.72.1
 ## (2021-03-11)
 
