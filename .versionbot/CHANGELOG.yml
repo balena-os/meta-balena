@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.3.5 to v12.4.6
+      hash: 8399bdf47ded925e74e48b128b4f7b2452008dd5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.3.5 to v12.4.6
+        changelog-entry: Update balena-supervisor from v12.3.5 to v12.4.6
+        Signed-off-by: Felipe Lalanne <felipe@balena.io>
+        signed-off-by: Felipe Lalanne <felipe@balena.io>
+      author: Felipe Lalanne
+      nested: []
+  version: 2.73.1
+  date: 2021-03-16T13:08:50.984Z
+- commits:
     - subject: 'image_types_balena: make rootfs labeling generic'
       hash: 924bb046c94ea9a6db516733f727c18bc47fc0e7
       body: ''
