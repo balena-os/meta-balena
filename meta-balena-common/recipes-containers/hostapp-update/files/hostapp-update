@@ -60,10 +60,10 @@ if [ ! -f "$SYSROOT/etc/machine-id" ]; then
 	touch "$SYSROOT/etc/machine-id"
 fi
 if [ ! -L "$SYSROOT/sbin/init" ]; then
-	ln -sf /current/boot/init "$SYSROOT/sbin/init"
+	ln -sf ../current/boot/init "$SYSROOT/sbin/init"
 fi
 if [ ! -L "$SYSROOT/boot" ]; then
-	ln -sf /current/boot "$SYSROOT/boot"
+	ln -sf current/boot "$SYSROOT/boot"
 fi
 
 # Remove previous hostapp
