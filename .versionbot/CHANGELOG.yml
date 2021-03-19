@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'hostapp-update: convert absolute symlinks to relative'
+      hash: fa8b5a4d2836510c5257d75c65542d374f628407
+      body: |
+        Symlinks to /boot and /sbin/init are absolute, which breaks them when
+        the sysroot is mounted under another system.
+
+        Convert them to relative links, so they work in all cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.73.2
+  date: 2021-03-17T18:30:51.715Z
+- commits:
     - subject: Update balena-supervisor from v12.3.5 to v12.4.6
       hash: 8399bdf47ded925e74e48b128b4f7b2452008dd5
       body: ''

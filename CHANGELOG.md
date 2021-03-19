@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.2
+## (2021-03-17)
+
+* hostapp-update: convert absolute symlinks to relative [Joseph Kogut]
+
 # v2.73.1
 ## (2021-03-16)
 
