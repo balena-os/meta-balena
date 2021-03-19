@@ -139,7 +139,7 @@ The behavior of balenaOS can be configured by setting the following keys in the 
 
 ### persistentLogging
 
-(boolean) Enable or disable persistent logging on the device - defaults to false.
+(boolean) Enable or disable persistent logging on the device - defaults to false. Once persistent journals are enabled, they end up stored as part of the data partition on the device (either on SD card, eMMC, harddisk, etc.). This is located on-device at `/var/log/journal/<uuid>` where the UUID is variable.
 
 ### country
 
