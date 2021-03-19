@@ -98,7 +98,6 @@ Check [docs/rollbacks.md](docs/rollbacks.md) for the rollback documentation
 We currently tested and provide explicit support for the following WiFi adapters:
 
 * bcm43143 based adapters
-    * Example: Official RPI WiFi adapter [link](http://thepihut.com/collections/new-products/products/official-raspberry-pi-wifi-adapter)
 
 ### Modems
 
