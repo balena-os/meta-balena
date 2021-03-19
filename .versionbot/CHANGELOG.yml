@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'wifi: remove listed example as it''s discontinued'
+      hash: c539b4c6c671fca2cd0fabc7416e2bbd0b20ee44
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Tomás Migone <tomas@balena.io>
+        signed-off-by: Tomás Migone <tomas@balena.io>
+      author: Tomás Migone
+      nested: []
+  version: 2.73.3
+  date: 2021-03-19T19:05:13.959Z
+- commits:
     - subject: 'hostapp-update: convert absolute symlinks to relative'
       hash: fa8b5a4d2836510c5257d75c65542d374f628407
       body: |

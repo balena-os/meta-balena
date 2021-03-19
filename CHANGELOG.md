@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.3
+## (2021-03-19)
+
+* wifi: remove listed example as it's discontinued [Tomás Migone]
+
 # v2.73.2
 ## (2021-03-17)
 
