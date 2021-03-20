@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add to persistent logging defn
+      hash: a763533ee5d589394584e5990bd89ca6d18365c5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Andrew Nhem <andrew@balena.io>
+        signed-off-by: Andrew Nhem <andrew@balena.io>
+      author: Andrew Nhem
+      nested: []
+  version: 2.73.4
+  date: 2021-03-20T00:50:55.294Z
+- commits:
     - subject: 'wifi: remove listed example as it''s discontinued'
       hash: c539b4c6c671fca2cd0fabc7416e2bbd0b20ee44
       body: ''

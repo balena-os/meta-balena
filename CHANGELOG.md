@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.4
+## (2021-03-20)
+
+* Add to persistent logging defn [Andrew Nhem]
+
 # v2.73.3
 ## (2021-03-19)
 
