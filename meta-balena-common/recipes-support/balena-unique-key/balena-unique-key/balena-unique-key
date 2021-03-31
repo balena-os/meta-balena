@@ -11,7 +11,7 @@ Options:
 
     -c, --config-path CONFIG_PATH
         Use a non default config.json file.
-        This argument is passed to resin-vars script.
+        This argument is passed to balena-config-vars script.
 EOF
 }
 
@@ -35,7 +35,7 @@ while [ $# -gt 0 ]; do
 done
 
 # shellcheck disable=SC1091
-source /usr/sbin/resin-vars
+source /usr/sbin/balena-config-vars
 
 if [ -z "$CONFIG_PATH" ]; then
     echo "[ERROR] balena-unique-key : Please set CONFIG_PATH environment variable."

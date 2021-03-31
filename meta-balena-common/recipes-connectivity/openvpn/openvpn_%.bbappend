@@ -12,7 +12,7 @@ inherit useradd
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} += "--system -d / -M --shell /bin/nologin openvpn"
 
-RDEPENDS_${PN} += "resin-vars bash"
+RDEPENDS_${PN} += "balena-config-vars bash"
 
 SYSTEMD_SERVICE_${PN} = "openvpn.service prepare-openvpn.service"
 SYSTEMD_AUTO_ENABLE = "enable"

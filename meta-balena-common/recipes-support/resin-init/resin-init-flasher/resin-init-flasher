@@ -83,13 +83,13 @@ else
 fi
 inform "resin-init-flasher configuration found."
 
-# Resin configuration file
-if [ -f /usr/sbin/resin-vars ]; then
-    source /usr/sbin/resin-vars
+# Balena configuration file
+if [ -f /usr/sbin/balena-config-vars ]; then
+    source /usr/sbin/balena-config-vars
 else
-    fail "No resin configuration found."
+    fail "No balena configuration found."
 fi
-inform "resin configuration found."
+inform "balena configuration found."
 
 # CONFIG_PATH should exist
 if [ ! -f "$CONFIG_PATH" ]; then

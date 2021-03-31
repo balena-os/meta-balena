@@ -14,7 +14,7 @@ FILES_${PN} = "${bindir}"
 
 RDEPENDS_${PN} = " \
     balena \
-    resin-vars \
+    balena-config-vars \
     "
 
 SYSTEMD_SERVICE_${PN} = "update-hostapp-extensions.service"

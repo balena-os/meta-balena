@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # shellcheck disable=SC1091
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 # Handle apps.json existence
 # Keep this before computing SUPERVISOR_CONTAINER_IMAGE_ID

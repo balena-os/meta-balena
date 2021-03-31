@@ -14,7 +14,7 @@ RDEPENDS_${PN} = " \
     bash \
     curl \
     jq \
-    resin-vars \
+    balena-config-vars \
     coreutils \
     "
 

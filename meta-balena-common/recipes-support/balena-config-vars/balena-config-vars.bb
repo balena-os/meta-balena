@@ -1,9 +1,9 @@
-DESCRIPTION = "Resin Configuration Recipe"
+DESCRIPTION = "Balena Configuration Recipe"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = " \
-    file://resin-vars \
+    file://balena-config-vars \
     file://config-json.path \
     file://config-json.service \
     file://os-networkmanager \
@@ -43,7 +43,7 @@ SYSTEMD_SERVICE_${PN} = " \
 
 do_install() {
     install -d ${D}${sbindir}
-    install -m 0755 ${WORKDIR}/resin-vars ${D}${sbindir}/
+    install -m 0755 ${WORKDIR}/balena-config-vars ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/

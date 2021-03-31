@@ -6,7 +6,7 @@
 
 set -o errexit
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 verifyMd5sum() {
   if [ "$1" = "$3" ] ; then return 1; fi

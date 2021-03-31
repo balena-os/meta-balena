@@ -8,7 +8,7 @@ set -e
 IPTABLES_WAIT_SECS="10"
 IPTABLES="iptables -w $IPTABLES_WAIT_SECS"
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 if [ ! -f "$CONFIG_PATH" ]; then
 	echo "resin-proxy-config: $CONFIG_PATH does not exist."

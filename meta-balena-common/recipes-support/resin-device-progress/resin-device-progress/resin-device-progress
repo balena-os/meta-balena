@@ -11,7 +11,7 @@ Options:
 
     -c, --config-path CONFIG_PATH
         Use a non default config.json file.
-        This argument is passed to resin-vars script.
+        This argument is passed to balena-config-vars script.
 
     -p, --percentage PERCENTAGE
         Define progress in percentage
@@ -49,7 +49,7 @@ while [ "$#" -gt "0" ]; do
 done
 
 # shellcheck disable=SC2086
-source /usr/sbin/resin-vars $BALENA_VARS_ARGS
+source /usr/sbin/balena-config-vars $BALENA_VARS_ARGS
 
 echo "-- $0 $PERCENTAGE $STATE $API_ENDPOINT $CONFIG_PATH" >> /var/log/provisioning-progress.log
 if [ -z "$PERCENTAGE" ] || [ -z "$STATE" ] || [ -z "$API_ENDPOINT" ]; then

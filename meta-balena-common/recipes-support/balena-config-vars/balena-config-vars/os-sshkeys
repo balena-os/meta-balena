@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2018 Resinio Ltd.
+# Copyright 2018-2021 Balena Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ if [ -n "$AUTHORIZED_KEYS_PATH" ]; then
 fi
 
 if [ -z "$CONFIG_PATH" ]; then
-	. /usr/sbin/resin-vars
+	. /usr/sbin/balena-config-vars
 	[ -z "$CONFIG_PATH" ] && { log "No config.json found."; exit 1; }
 fi
 

@@ -15,8 +15,8 @@ export HOOKS_DIR
 
 help () {
     cat << EOF
-Script for setting resin shell environment
-resin-vars [options]
+Script for setting balena shell environment
+balena-config-vars [options]
 
 Options:
 	-a, --after

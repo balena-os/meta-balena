@@ -2,7 +2,7 @@
 
 set -e
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 if [ -z "$CONFIG_HOSTNAME" ]; then
     # take just the first 7 characters

@@ -60,9 +60,9 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-# Don't source before parsing args - resin-vars parses args too
+# Don't source before parsing args - balena-config-vars parses args too
 # shellcheck disable=SC1091
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 # A temporary file used until next reboot
 UPDATECONF=/tmp/update-supervisor.conf
