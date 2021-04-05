@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Reactivate persistent logging tests'
+      hash: 3a109bebb1d17225a6bfb5f0ca643aa7cac0919e
+      body: >-
+        With the merge of #2114, we can hopefully reactivate the persistent
+        logging tests.
+      footer: {}
+      author: Vipul Gupta
+      nested: []
+  version: 2.73.5
+  date: 2021-04-05T20:40:11.697Z
+- commits:
     - subject: Add to persistent logging defn
       hash: a763533ee5d589394584e5990bd89ca6d18365c5
       body: ''

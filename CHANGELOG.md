@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.5
+## (2021-04-05)
+
+* patch: Reactivate persistent logging tests [Vipul Gupta]
+
 # v2.73.4
 ## (2021-03-20)
 
