@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.4.6 to v12.5.6
+      hash: 6852b3704575ce5535082e2c02a7f2c6f57e1df4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.4.6 to v12.5.6
+        changelog-entry: Update balena-supervisor from v12.4.6 to v12.5.6
+        Signed-off-by: Christina Wang <christina@balena.io>
+        signed-off-by: Christina Wang <christina@balena.io>
+      author: Christina Wang
+      nested: []
+  version: 2.73.5
+  date: 2021-04-06T02:41:31.071Z
+- commits:
     - subject: Add to persistent logging defn
       hash: a763533ee5d589394584e5990bd89ca6d18365c5
       body: ''
