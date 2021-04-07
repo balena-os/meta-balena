@@ -59,6 +59,7 @@ module.exports = {
 						},
 						// persistentLogging is managed by the supervisor and only read at first boot
 						persistentLogging: true,
+						localMode: true,
 					},
 				},
 				this.getLogger(),
@@ -96,6 +97,12 @@ module.exports = {
 	},
 	tests: [
 		'./tests/fingerprint',
+		'./tests/os-release',
+		'./tests/chrony',
+		'./tests/kernel-overlap',
+		'./tests/bluetooth',
+		'./tests/healthcheck',
+		'./tests/variables',
 		'./tests/led',
 		'./tests/config-json',
 		// The boot splash test is currently disabled because of the excessive time spent on it.

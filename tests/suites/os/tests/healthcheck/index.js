@@ -13,75 +13,54 @@
  * limitations under the License.
  */
 
-'use strict';
+"use strict";
 
-const { delay } = require('bluebird');
-const retry = require('bluebird-retry');
-const rp = require('request-promise');
+const { delay } = require("bluebird");
+const rp = require("request-promise");
+const { worker } = require("cluster");
 
 module.exports = {
-	title: 'Container healthcheck test',
-	os: {
-		type: 'string',
-		required: ['variant'],
-		const: 'development',
-	},
-	run: async function(test) {
-		const ip = await this.context.get().worker.ip(this.context.get().link);
-		await retry(
-			async () => {
-				await this.context.get().balena.cli.push(ip, {
-					source: __dirname,
-				});
-			},
-			{
-				max_tries: 60,
-				interval: 5000,
-			},
-		);
-		await this.context.get().utils.waitUntil(async () => {
-			const state = await rp({
-				method: 'GET',
-				uri: `http://${ip}:48484/v2/containerId`,
-				json: true,
-			});
+  title: "Container healthcheck test",
+  os: {
+    type: "object",
+    required: ["variant"],
+    properties: {
+      variant: {
+        type: "string",
+        const: "Development",
+      },
+    },
+  },
+  run: async function (test) {
+    const ip = await this.context.get().worker.ip(this.context.get().link);
 
-			return state.services.healthcheck != null;
-		});
-		const state = await rp({
-			method: 'GET',
-			uri: `http://${ip}:48484/v2/containerId`,
-			json: true,
-		});
+    const state = await this.context
+      .get()
+      .worker.pushContainerToDUT(ip, __dirname, "healthcheck");
+    const out = await this.context
+      .get()
+      .worker.executeCommandInContainer("rm /tmp/health", "healthcheck", ip);
 
-		// Change health
-		await this.context
-			.get()
-			.worker.executeCommandInHostOS(
-				`balena exec ${state.services.healthcheck} rm /tmp/health`,
-				ip,
-			);
+    await delay(1000 * 10); // may not be long enough to guarantee unhealthy status
 
-		await delay(2000);
+    const events = JSON.parse(
+      await this.context
+        .get()
+        .worker.executeCommandInHostOS(
+          `printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
+          ip
+        )
+    );
 
-		const events = JSON.parse(
-			await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-					`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-					ip,
-				),
-		);
-
-		test.same(
-			events.reduce(function(result, element) {
-				if (element.status != null) {
-					result.push(element.status);
-				}
-				return result;
-			}, []),
-			['health_status: healthy', 'health_status: unhealthy'],
-			'Container should go from healthy to unhealthy',
-		);
-	},
+    test.same(
+      events.reduce(function (result, element) {
+        if (element.status != null) {
+          result.push(element.status);
+        }
+        return result;
+      }, []),
+      ["health_status: healthy", "health_status: unhealthy"],
+      "Container should go from healthy to unhealthy"
+    );
+  },
 };
