@@ -12,28 +12,41 @@
  * limitations under the License.
  */
 
-'use strict';
+"use strict";
 
 module.exports = {
-	title: 'OS corruption tests',
-	tests: [
-		{
-			title: 'balenaos.fingerprint file test',
-			run: async function(test) {
-				let error = null;
-				try {
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'md5sum --quiet -c /balenaos.fingerprint',
-							this.context.get().link,
-						);
-				} catch (e) {
-					error = e;
-				}
+  title: "OS corruption tests",
+  tests: [
+    {
+      title: "resinos.fingerprint file test",
+      run: async function (test) {
+        let error = null;
+        try {
+          await this.context
+            .get()
+            .worker.executeCommandInHostOS(
+              "md5sum --quiet -c /resinos.fingerprint",
+              this.context.get().link
+            );
+        } catch (e) {
+          try {
+            await this.context
+              .get()
+              .worker.executeCommandInHostOS(
+                "md5sum --quiet -c /balenaos.fingerprint",
+                this.context.get().link
+              );
+          } catch (e) {
+            error = e;
+          }
+        }
 
-				test.is(error, null, 'Device rootfs seems to be corrupted');
-			},
-		},
-	],
+        test.is(
+          error,
+          null,
+          "resinos.fingerprint/balenaos.fingerprint file should pass md5sum"
+        );
+      },
+    },
+  ],
 };
