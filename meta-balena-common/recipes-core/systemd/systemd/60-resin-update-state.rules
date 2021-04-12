@@ -1,5 +1,6 @@
-ACTION=="remove", GOTO="resin_update_state_end"
+ACTION!="add|change", GOTO="resin_update_state_end"
 SUBSYSTEM!="block", GOTO="resin_update_state_end"
+KERNEL=="loop*|ram*|zram*", GOTO="resin_update_state_end"
 
 # Identify balena partitions by the resin-* filesystem label
 ENV{ID_FS_LABEL_ENC}=="resin-*", IMPORT{program}="/lib/udev/resin_update_state_probe $devnode $env{ID_FS_LABEL_ENC} $parent"
