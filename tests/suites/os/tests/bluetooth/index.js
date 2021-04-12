@@ -1,4 +1,3 @@
-//bluetooth contract (not currently in contract!
 const Bluebird = require("bluebird");
 const exec = Bluebird.promisify(require("child_process").exec);
 const retry = require("bluebird-retry");
@@ -35,7 +34,7 @@ module.exports = {
         let btName = await exec("bluetoothctl show | grep Name");
         let btNameParsed = /(.*): (.*)/.exec(btName); // the bluetoothctl command returns "Name: <btname>", so extract the <btname here>
 
-        // make testbot bluetoth discoverable
+        // make testbot bluetooth discoverable
         await exec("bluetoothctl discoverable on");
 
         // scan for bluetooth devices on DUT, we retry a couple of times
@@ -54,7 +53,7 @@ module.exports = {
         test.is(
           scan.includes(btNameParsed[2]),
           true,
-          "DUT should be able to see testbot when scanning for bluetooth devs"
+          "DUT should be able to see testbot when scanning for bluetooth devicess"
         );
       },
     },

@@ -44,7 +44,7 @@ module.exports = {
         test.is(
           error,
           null,
-          "resinos.fingerprint/balenaos.fingerprint file should pass md5sum"
+          "resinos.fingerprint/balenaos.fingerprint file passed md5sum, no OS corruption detected."
         );
       },
     },

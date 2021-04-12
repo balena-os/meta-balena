@@ -41,12 +41,7 @@ module.exports = {
             },
           },
           run: async function (test) {
-            let testIface = "";
-            if (adaptor === "wireless") {
-              testIface = "wifi";
-            } else {
-              testIface = "ethernet";
-            }
+            let testIface = (adaptor === "wireless") ? "wifi" : "ethernet";
             const iface = await this.context
               .get()
               .worker.executeCommandInHostOS(
@@ -58,14 +53,14 @@ module.exports = {
               throw new Error(`No ${testIface} interface found.`);
             }
 
-            await this.context
+            let ping = await this.context
               .get()
               .worker.executeCommandInHostOS(
                 `ping -c 10 -I ${iface} ${URL_TEST}`,
                 this.context.get().link
               );
 
-            test.ok(true, `${URL_TEST} responded over ${testIface}`);
+            test.ok(ping.includes("10 packets transmitted, 10 packets received"), `${URL_TEST} responded over ${testIface}`);
           },
         };
       }),

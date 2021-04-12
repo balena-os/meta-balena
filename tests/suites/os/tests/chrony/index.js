@@ -18,8 +18,8 @@ module.exports = {
       title: "Sync test",
       run: async function (test) {
         let result = "";
-        test.comment("checking system clock synchronized...");
         await this.context.get().utils.waitUntil(async () => {
+          test.comment("checking system clock synchronized...");
           result = await this.context
             .get()
             .worker.executeCommandInHostOS(
