@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.73.6
+## (2021-04-12)
+
+* Add automated test checking for udev/resin_update_state_probe warnings [Michal Toman]
+* udev: Silence warnings from resin_update_state_probe [Michal Toman]
+
 # v2.73.5
 ## (2021-04-06)
 

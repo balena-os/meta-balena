@@ -1,4 +1,34 @@
 - commits:
+    - subject: Add automated test checking for udev/resin_update_state_probe warnings
+      hash: e6bcff01fcf520756b140ad3b4352583f4bc825e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'udev: Silence warnings from resin_update_state_probe'
+      hash: 5a0bed933fd9730e507305c6098698c4a1970c6e
+      body: |
+        At this moment resin_update_state_probe is scanning pretty much every
+        block device for rootfs. This include ramdisks, zram and loop devices
+        which, when scanned, even spam warnings in logs. This patch updates
+        the udev rule to skip such devices and only trigger on add or change
+        events.
+      footer:
+        Relates-to: '#1989'
+        relates-to: '#1989'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.73.6
+  date: 2021-04-12T12:17:29.995Z
+- commits:
     - subject: Update balena-supervisor from v12.4.6 to v12.5.6
       hash: 6852b3704575ce5535082e2c02a7f2c6f57e1df4
       body: ''
