@@ -8,7 +8,7 @@ backports:
 
 upstream:
   - repo: 'balena-supervisor'
-    url: 'https://github.com/balena-io/balena-supervisor'
+    url: 'https://github.com/balena-os/balena-supervisor'
   - repo: 'healthdog'
     url: 'https://github.com/balena-os/healthdog-rs'
   - repo: 'os-config'
