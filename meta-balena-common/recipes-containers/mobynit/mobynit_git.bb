@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "util-linux"
 
 GO_IMPORT = "github.com/balena-os/mobynit"
 SRC_URI = "git://${GO_IMPORT};nobranch=1"
-SRCREV="021887a5619405604eb0ef6ef981ea4969c69616"
+SRCREV="0c92cfb74fbd2f3d52f7eb6dbee28a727821e332"
 
 S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
 
