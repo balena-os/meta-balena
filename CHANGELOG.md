@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.73.7
+## (2021-04-13)
+
+* fix udev test indentation [rcooke-warwick]
+* Added comments for easier debugging [rcooke-warwick]
+* Fix old tests + add new tests based on testlodge [rcooke-warwick]
+
 # v2.73.6
 ## (2021-04-12)
 
