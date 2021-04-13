@@ -1,4 +1,38 @@
 - commits:
+    - subject: 'resin-mounts/etc-fake-hwclock: add dependency on resin-state services'
+      hash: 2b07011844a2738aec033d88af29e3f6e0dd28a2
+      body: |
+        Added a dependency on resin-state.service and resin-state-reset.service
+        to etc-fake-hwclock.mount.
+
+        On initial boot after flashing a device the resin-state-reset.service
+        was running after etc-fake-hwclock.mount causing the bind mount point
+        /mnt/state/root-overlay/etc/fake-hwclock to be deleted after it had
+        been mounted. This resulted in a failure to save the date/time at
+        shutdown which caused problems with persistent logging at next boot.
+        Subsequent boots are unaffected as resin-state-reset does not run.
+        Adding a dependency on the resin-state services ensures that the
+        bind mount point is created after the state reset has been performed.
+
+        This issue was noticed when running the testbot unmanaged OS image
+        persistent logging test. When running a managed OS image the device
+        normally reboots fairly immediately after connecting to the
+        balena-cloud host and receiving parameter updates, so this issue is
+        not usually noticeable.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: '#2146 #2143'
+        connects-to: '#2146 #2143'
+        Changelog-entry: 'resin-mounts/etc-fake-hwclock: add dependency on resin-state services'
+        changelog-entry: 'resin-mounts/etc-fake-hwclock: add dependency on resin-state services'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.73.8
+  date: 2021-04-13T14:21:01.455Z
+- commits:
     - subject: fix udev test indentation
       hash: dedfa47ca1fbae4cd8b96eb05cf093ae3f9432d9
       body: ''

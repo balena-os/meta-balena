@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.8
+## (2021-04-13)
+
+* resin-mounts/etc-fake-hwclock: add dependency on resin-state services [Mark Corbin]
+
 # v2.73.7
 ## (2021-04-13)
 
