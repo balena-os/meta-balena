@@ -128,6 +128,6 @@ module.exports = {
     // './tests/boot-splash',
     "./tests/connectivity",
     "./tests/engine-healthcheck",
-	"./tests/udev",
+    "./tests/udev",
   ],
 };
