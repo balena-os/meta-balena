@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.10
+## (2021-04-14)
+
+* repo.yml: Move balena-supervisor reference to balena-os [Alex Gonzalez]
+
 # v2.73.9
 ## (2021-04-14)
 

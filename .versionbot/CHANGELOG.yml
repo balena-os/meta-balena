@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'repo.yml: Move balena-supervisor reference to balena-os'
+      hash: 7d9433e3c41c37ba3d9cea51d894b520be81d899
+      body: |
+        The balena-supervisor repository has been moved to balena-os so the
+        repo.yml file needs to be corrected for nested changelogs to work again.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.73.10
+  date: 2021-04-14T14:10:09.817Z
+- commits:
     - subject: Update balena-supervisor from v12.5.6 to v12.5.10
       hash: 36a1b1e9808db5d2c70f06209f868b24bd8643b1
       body: ''
