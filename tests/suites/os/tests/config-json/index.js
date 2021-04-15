@@ -384,9 +384,8 @@ module.exports = {
               this.context.get().link
             )
         );
-        test.comment(`Device should show previous boot records, showed ${testcount} boots`);
         test.is(
-          testcount > bootCount,
+          testcount === bootCount+2,
           true,
           `Device should show previous boot records, showed ${testcount} boots`
         );
