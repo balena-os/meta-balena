@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.73.11
+## (2021-04-16)
+
+* patch: Add strict bootcount count condition [Vipul Gupta (@vipulgupta2048)]
+* patch: Reactivate Persistent Logging test [Vipul Gupta (@vipulgupta2048)]
+
 # v2.73.10
 ## (2021-04-14)
 

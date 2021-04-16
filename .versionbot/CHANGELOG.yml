@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'patch: Add strict bootcount count condition'
+      hash: a340d4ddd09515eedb125cbc57d39531ade2566a
+      body: ''
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+    - subject: 'patch: Reactivate Persistent Logging test'
+      hash: 572e287bb93deae01786b025ad116d4d78a6b918
+      body: ''
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.73.11
+  date: 2021-04-16T07:39:41.833Z
+- commits:
     - subject: 'repo.yml: Move balena-supervisor reference to balena-os'
       hash: 7d9433e3c41c37ba3d9cea51d894b520be81d899
       body: |
