@@ -359,7 +359,7 @@ module.exports = {
       },
     },
     {
-      title: "[disabled] persistentLogging configuration test",
+      title: "persistentLogging configuration test",
       run: async function (test) {
         const bootCount = parseInt(
           await this.context
@@ -384,12 +384,11 @@ module.exports = {
               this.context.get().link
             )
         );
-        test.comment(`Device should show previous boot records, showed ${testcount} boots`);
-        /*test.is(
-          testcount > bootCount,
+        test.is(
+          testcount === bootCount+2,
           true,
           `Device should show previous boot records, showed ${testcount} boots`
-        );*/
+        );
       },
     },
   ],
