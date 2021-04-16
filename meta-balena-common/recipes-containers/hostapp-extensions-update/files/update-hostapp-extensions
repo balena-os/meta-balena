@@ -30,9 +30,9 @@ done
 
 shift $#
 
-# Don't source before parsing args as resin-vars parses args too
+# Don't source before parsing args as balena-config-vars parses args too
 # shellcheck disable=SC1091
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 error_handler() {
 	# shellcheck disable=SC2181

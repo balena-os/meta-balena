@@ -19,7 +19,7 @@ OPENSSL_PKG ?= "openssl-bin"
 RDEPENDS_${PN} = " \
     bash \
     jq \
-    resin-vars \
+    balena-config-vars \
     ${OPENSSL_PKG} \
     "
 

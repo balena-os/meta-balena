@@ -6,7 +6,7 @@
 
 set -o errexit
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 printf "[INFO] Running rollback hook \n"
 

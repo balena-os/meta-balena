@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 keys=`jq -r 'select(.os != null) | select(.os.udevRules != null) | .os.udevRules | keys[] ' $CONFIG_PATH`
 RELOAD_RULES=0

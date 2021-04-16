@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2018 Balena Ltd.
+# Copyright 2018-2021 Balena Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -55,10 +55,10 @@ log() {
 
 if [ ! -f "$CONFIG_PATH" ]; then
 	# shellcheck disable=SC1091
-	if [ -f /usr/sbin/resin-vars ]; then
-		. /usr/sbin/resin-vars
+	if [ -f /usr/sbin/balena-config-vars ]; then
+		. /usr/sbin/balena-config-vars
 	else
-		log "error" "Couldn't find /usr/sbin/resin-vars."
+		log "error" "Couldn't find /usr/sbin/balena-config-vars."
 	fi
 	if [ ! -f "$CONFIG_PATH" ]; then
 	       log "error" "No config.json found."

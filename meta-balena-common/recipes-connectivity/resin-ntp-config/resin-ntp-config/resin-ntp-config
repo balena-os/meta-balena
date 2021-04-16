@@ -5,7 +5,7 @@
 
 set -e
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 
 SERVER_DIR=/run/chrony
 SERVER_FILE=${SERVER_DIR}/added_config.sources

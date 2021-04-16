@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2018 Resinio Ltd.
+# Copyright 2018-2021 Balena Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 set -o errexit
 
-. /usr/sbin/resin-vars
+. /usr/sbin/balena-config-vars
 . /usr/bin/rollback-parse-bootloader
 
 echo "Rollback: Stopping further rollbacks"
