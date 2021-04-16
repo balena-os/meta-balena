@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.12
+## (2021-04-16)
+
+* meta-balena: rename resin-vars to balena-config-vars [Mark Corbin]
+
 # v2.73.11
 ## (2021-04-16)
 

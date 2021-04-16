@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'meta-balena: rename resin-vars to balena-config-vars'
+      hash: 7d019abde039a469212c59bcf6e1b7a94ed365d6
+      body: |
+        Rename the 'resin-vars' script to 'balena-config-vars' and update all
+        references.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'meta-balena: rename resin-vars to balena-config-vars'
+        changelog-entry: 'meta-balena: rename resin-vars to balena-config-vars'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.73.12
+  date: 2021-04-16T12:31:11.982Z
+- commits:
     - subject: 'patch: Add strict bootcount count condition'
       hash: a340d4ddd09515eedb125cbc57d39531ade2566a
       body: ''
