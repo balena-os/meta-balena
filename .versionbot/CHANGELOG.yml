@@ -1,4 +1,17 @@
 - commits:
+    - subject: add retries to status check
+      hash: 73e7cae10974974eeb180fd18551f6da67432101
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.73.13
+  date: 2021-04-19T10:30:12.192Z
+- commits:
     - subject: 'meta-balena: rename resin-vars to balena-config-vars'
       hash: 7d019abde039a469212c59bcf6e1b7a94ed365d6
       body: |

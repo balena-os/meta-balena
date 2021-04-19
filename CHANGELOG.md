@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.13
+## (2021-04-19)
+
+* add retries to status check [rcooke-warwick]
+
 # v2.73.12
 ## (2021-04-16)
 
