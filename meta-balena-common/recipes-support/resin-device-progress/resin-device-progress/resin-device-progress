@@ -76,5 +76,3 @@ curl -s -X PATCH "${API_ENDPOINT}/v6/device(uuid='${UUID}')" \
      --data-urlencode "provisioning_progress=$PERCENTAGE" \
      --data-urlencode "provisioning_state=$STATE" \
      --data-urlencode "status=configuring"
-
-exit 0
