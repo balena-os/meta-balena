@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.14
+## (2021-04-19)
+
+* device-progress: do not force an exit code [Matthew McGinn]
+
 # v2.73.13
 ## (2021-04-19)
 

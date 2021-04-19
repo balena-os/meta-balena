@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'device-progress: do not force an exit code'
+      hash: f080936299781d121866de112e6930fa2f261fac
+      body: >
+        this script is only used during provisioning and HUP. in provisioning we
+        `|| true` anyway, and
+
+        in HUP we would like to use the exit code for retrying
+      footer:
+        Signed-off-by: Matthew McGinn <matthew@balena.io>
+        signed-off-by: Matthew McGinn <matthew@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Matthew McGinn
+      nested: []
+  version: 2.73.14
+  date: 2021-04-19T14:59:22.521Z
+- commits:
     - subject: add retries to status check
       hash: 73e7cae10974974eeb180fd18551f6da67432101
       body: ''
