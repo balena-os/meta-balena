@@ -16,8 +16,6 @@
 "use strict";
 
 const { delay } = require("bluebird");
-const rp = require("request-promise");
-const { worker } = require("cluster");
 
 module.exports = {
   title: "Container healthcheck test",
@@ -41,25 +39,38 @@ module.exports = {
       .get()
       .worker.executeCommandInContainer("rm /tmp/health", "healthcheck", ip);
 
-    await delay(1000 * 10); // may not be long enough to guarantee unhealthy status
+    // wait for 10s before checking for health status to give
+    await delay(1000 * 5);
 
-    const events = JSON.parse(
-      await this.context
-        .get()
-        .worker.executeCommandInHostOS(
-          `printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-          ip
-        )
-    );
+    let status = [];
+    // Use waitUntil, because sometimes it takes time for the container to report as unhealthy, so we want to be able to re-check
+    await this.context.get().utils.waitUntil(async () => {
+      test.comment("Waiting to container to report as unhealthy...");
+      // retrieve healthcheck events
+      let events = JSON.parse(
+        await this.context
+          .get()
+          .worker.executeCommandInHostOS(
+            `printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
+            ip
+          )
+      );
 
-    test.same(
-      events.reduce(function (result, element) {
+      // extract "health status: X" and add to an array
+      status = events.reduce(function (result, element) {
         if (element.status != null) {
           result.push(element.status);
         }
         return result;
-      }, []),
-      ["health_status: healthy", "health_status: unhealthy"],
+      }, [])
+      test.comment(`Container is currently: "${status[status.length - 1]}"`);
+
+      return status.includes("health_status: unhealthy"); // Exit this block when container goes to "unhealthy"
+    });
+
+    // check that the container went from healthy to unhealthy
+    test.ok(
+      (status.includes("health_status: unhealthy") && status.includes("health_status: healthy")),
       "Container should go from healthy to unhealthy"
     );
   },
