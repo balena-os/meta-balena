@@ -1,4 +1,26 @@
 - commits:
+    - subject: 'modemmanager:u-blox-switch: Rework the u-blox modem switch to ECM mode'
+      hash: 9de54188ea47e121a7f408ae1c65f70f53d3a634
+      body: |
+        We need to make sure the modem is completely initialized before sending
+        the AT commands that do the switch to ECM mode. To achieve this we
+        change the systemd service dependency to depend on ModemManager.service
+        and then we determine the modem state by using mmcli and querying the
+        modem power-state property.
+
+        This procedure will only be done once. After the modem is placed in ECM
+        mode, it will stay in this mode for future reboots so there will be no
+        other delays in bringing up the modem connection.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.73.15
+  date: 2021-04-20T09:21:07.975Z
+- commits:
     - subject: 'device-progress: do not force an exit code'
       hash: f080936299781d121866de112e6930fa2f261fac
       body: >

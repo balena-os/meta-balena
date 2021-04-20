@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.73.15
+## (2021-04-20)
+
+* modemmanager:u-blox-switch: Rework the u-blox modem switch to ECM mode [Florin Sarbu]
+
 # v2.73.14
 ## (2021-04-19)
 
