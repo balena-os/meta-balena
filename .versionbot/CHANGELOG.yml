@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'balena-engine: Update to 19.03.18'
+      hash: 32705abbf93971bdddb980fe0c7a01b40d229560
+      body: |
+        This brings in the aufs-to-overlay migrator. Which won't run until we
+        configure the engine service to include an `BALENA_MIGRATE_OVERLAY=1`
+        env var.
+
+        The other notable change is the fix for
+        https://github.com/balena-os/balena-engine/issues/236 which allows
+        `balena top` to work as expected on balenaOS
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.74.0
+  date: 2021-04-20T20:48:58.556Z
+- commits:
     - subject: 'modemmanager:u-blox-switch: Rework the u-blox modem switch to ECM mode'
       hash: 9de54188ea47e121a7f408ae1c65f70f53d3a634
       body: |
