@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.75.0
+## (2021-04-22)
+
+* Update mobynit to the new multi-container hostOS specification [Alex Gonzalez]
+
 # v2.74.0
 ## (2021-04-20)
 

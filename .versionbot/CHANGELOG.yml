@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update mobynit to the new multi-container hostOS specification
+      hash: 93335381320815dbe7b2d21233106910a200e2f5
+      body: |
+        Update mobynit to use the new multi-container hostOS specification
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update mobynit to the new multi-container hostOS specification
+        changelog-entry: Update mobynit to the new multi-container hostOS specification
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.75.0
+  date: 2021-04-22T12:36:31.239Z
+- commits:
     - subject: 'balena-engine: Update to 19.03.18'
       hash: 32705abbf93971bdddb980fe0c7a01b40d229560
       body: |
