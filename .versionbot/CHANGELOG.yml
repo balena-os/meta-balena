@@ -1,4 +1,26 @@
 - commits:
+    - subject: 'modemmanager:u-blox-switch: Rework the u-blox modem switch to ECM mode'
+      hash: 74d4707527e84b6f8e1ca72bc54646640f4a6f52
+      body: |
+        We need to make sure the modem is completely initialized before sending
+        the AT commands that do the switch to ECM mode. To achieve this we
+        change the systemd service dependency to depend on ModemManager.service
+        and then we determine the modem state by using mmcli and querying the
+        modem power-state property.
+
+        This procedure will only be done once. After the modem is placed in ECM
+        mode, it will stay in this mode for future reboots so there will be no
+        other delays in bringing up the modem connection.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.73.13
+  date: 2021-04-26T09:46:13.115Z
+- commits:
     - subject: 'meta-balena: rename resin-vars to balena-config-vars'
       hash: 7d019abde039a469212c59bcf6e1b7a94ed365d6
       body: |
