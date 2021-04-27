@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.68.2
+## (2021-04-27)
+
+* Fix old tests + add new tests based on testlodge [rcooke-warwick]
+* Add leviathan automated OS test suite [Vipul Gupta (@vipulgupta2048)]
+
 # v2.68.1
 ## (2021-01-29)
 

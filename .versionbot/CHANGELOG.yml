@@ -1,4 +1,28 @@
 - commits:
+    - subject: Fix old tests + add new tests based on testlodge
+      hash: 36a0a2df48ef3df191efc5ea48caecb8b444f7c7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: Add leviathan automated OS test suite
+      hash: 9c68bc13a3007ef23084cef3378d7d8a04328dd3
+      body: |
+        cherry picked from commit 3f6d7588874721c506a70f66603d2b153f9a6fcf
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.68.2
+  date: 2021-04-27T12:36:51.979Z
+- commits:
     - subject: Fix task ordering for the iwlwifi_firmware_clean task
       hash: 5d039b111a964e21a637a5c7806aea6bb510a43e
       body: |
