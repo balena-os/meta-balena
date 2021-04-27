@@ -1,4 +1,36 @@
 - commits:
+    - subject: 'balena: dissolve healthcheck-image-load into healthcheck script'
+      hash: b926b755708f2d637e8b39bd201842487e2f5ad4
+      body: |
+        Previously we were loading the healthcheck image from it's own service
+        that was previously made `PartOf=` the balena.service.
+        This was done in an attempt to help get the system unstuck when the
+        image is removed (like through manual pruning), which would cause the
+        healthcheck to trigger the engine to reboot until the load service was
+        restarted by hand.
+
+        Further investigation found a race between the first execution of the
+        engine healthcheck script (which needs the image to be loaded) and the
+        loader service itself, which would lead to a similar state, requireing
+        manual intervention.
+
+        This change moves the loading into the healthcheck script itself,
+        allowing us to remove the loader script and service entirely, skipping
+        the whole service ordering issue.
+      footer:
+        Backport-to: next
+        backport-to: next
+        Connects-to: '#2122'
+        connects-to: '#2122'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.68.3
+  date: 2021-04-27T14:51:00.236Z
+- commits:
     - subject: Fix old tests + add new tests based on testlodge
       hash: 36a0a2df48ef3df191efc5ea48caecb8b444f7c7
       body: ''
