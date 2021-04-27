@@ -875,7 +875,7 @@ python do_kernel_resin_checkconfig() {
 
             for config in notconfigured:
                 if not config.endswith('=n'):
-                    bb.warn("Checking for %s in the kernel configs failed for %s."
+                    bb.fatal("Checking for %s in the kernel configs failed for %s."
                         % (config, activatedflag))
 
     # Check configs added with resin defconfig
@@ -887,7 +887,7 @@ python do_kernel_resin_checkconfig() {
         notconfigured = wantedConfigs.difference(configured)
         for config in notconfigured:
             if not config.endswith('=n'):
-                bb.warn("Checking for %s in the resin kernel configs failed from %s."
+                bb.fatal("Checking for %s in the resin kernel configs failed from %s."
                     % (config, resinDefconfig))
 }
 addtask kernel_resin_checkconfig after do_kernel_resin_reconfigure before do_compile
