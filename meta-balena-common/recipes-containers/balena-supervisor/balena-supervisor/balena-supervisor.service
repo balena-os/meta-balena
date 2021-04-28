@@ -4,14 +4,14 @@ Requires=\
     resin\x2ddata.mount \
     balena-device-uuid.service \
     os-config-devicekey.service \
-    bind-etc-resin-supervisor.service
+    bind-etc-balena-supervisor.service
 After=\
     balena.service \
     resin\x2ddata.mount \
     balena-device-uuid.service \
     os-config-devicekey.service \
     bind-etc-systemd-system-resin.target.wants.service \
-    bind-etc-resin-supervisor.service \
+    bind-etc-balena-supervisor.service \
     chronyd.service
 Wants=balena.service
 
@@ -20,13 +20,13 @@ Type=simple
 Restart=always
 RestartSec=10s
 WatchdogSec=180
-SyslogIdentifier=resin-supervisor
-EnvironmentFile=/etc/resin-supervisor/supervisor.conf
+SyslogIdentifier=balena-supervisor
+EnvironmentFile=/etc/balena-supervisor/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
-ExecStartPre=-@BINDIR@/balena stop resin_supervisor
+ExecStartPre=-@BINDIR@/balena stop balena_supervisor
 ExecStartPre=/bin/systemctl is-active balena.service
-ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/resin-supervisor/resin-supervisor-healthcheck @BINDIR@/start-resin-supervisor
-ExecStop=-@BINDIR@/balena stop resin_supervisor
+ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/balena-supervisor/balena-supervisor-healthcheck @BINDIR@/start-balena-supervisor
+ExecStop=-@BINDIR@/balena stop balena_supervisor
 
 [Install]
 WantedBy=multi-user.target

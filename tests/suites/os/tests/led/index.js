@@ -49,7 +49,7 @@ module.exports = {
     await this.context
       .get()
       .worker.executeCommandInHostOS(
-        `source /etc/resin-supervisor/supervisor.conf ; systemd-run --unit=${serviceName} bash -c "while true ; do cat $LED_FILE ; done"`,
+        `source /etc/balena-supervisor/supervisor.conf ; systemd-run --unit=${serviceName} bash -c "while true ; do cat $LED_FILE ; done"`,
         this.context.get().link
       );
 

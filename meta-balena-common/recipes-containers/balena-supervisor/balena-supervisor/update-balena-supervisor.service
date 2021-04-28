@@ -2,18 +2,18 @@
 Description=Balena supervisor updater
 Requires=\
     balena.service \
-    bind-etc-resin-supervisor.service \
+    bind-etc-balena-supervisor.service \
     tmp.mount
 Wants=\
     mnt-boot.mount \
-    resin-supervisor.service
+    balena-supervisor.service
 After=\
     balena.service \
     tmp.mount \
     mnt-boot.mount \
-    bind-etc-resin-supervisor.service \
-    resin-supervisor.service
+    bind-etc-balena-supervisor.service \
+    balena-supervisor.service
 
 [Service]
 Type=simple
-ExecStart=@BASE_BINDIR@/sh @BINDIR@/update-resin-supervisor
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/update-balena-supervisor
