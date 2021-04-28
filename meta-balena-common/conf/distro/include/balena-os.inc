@@ -101,4 +101,4 @@ PREFERRED_VERSION_cargo-native = "1.36.0"
 PREFERRED_VERSION_libstd-rs = "1.36.0"
 
 # balena-engine go version requirement
-GOVERSION = "1.12.17"
+GOVERSION = "1.16.2"
