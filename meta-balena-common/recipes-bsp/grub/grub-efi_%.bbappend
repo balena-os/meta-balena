@@ -10,4 +10,4 @@ do_deploy_append_class-target() {
 }
 
 # build in additional required modules
-GRUB_BUILDIN_append = " regexp probe"
+GRUB_BUILDIN_append = " regexp probe gzio"
