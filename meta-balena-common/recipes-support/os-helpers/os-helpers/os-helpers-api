@@ -1,0 +1,23 @@
+#!/bin/sh
+
+BALENA_HOSTOS_APP_UUID="io.balena.app-uuid"
+BALENA_HOSTOS_SERVICE_NAME="io.balena.service-name"
+
+# Prints imageID from digest
+#
+# Inputs:
+# $1: Image location on Balena registry (i.e registry2.balena-staging.com/v2/<id>@sha256:<digest>)
+#
+# Outputs:
+# Target state JSON in stdout
+#
+os_helpers_imageid_from_digest() {
+	_image="$1"
+	_image_name=$(echo "${_image}" | cut -d "@" -f1)
+	_digest=$(echo "${_image}" | cut -d "@" -f2)
+	_imageid=$(balena images --filter=reference="${_image_name}" --format "{{.ID}}")
+	_digest_check=$(balena images --digests --filter=reference="${_image_name}" --format "{{.Digest}}")
+	if [ "${_digest}" = "${_digest_check}" ]; then
+		echo "${_imageid}"
+	fi
+}
