@@ -113,6 +113,8 @@ BALENA_CONFIGS ?= " \
 # CONFIG_NF_NAT_NEEDED was removed in v5.2 (sha1 f319ca6557c10a711facc4dd60197470796d3ec1)
 # CONFIG_NF_NAT_IPV4 was merged with NF_NAT in v5.1 (sha1 3bf195ae6037e310d693ff3313401cfaf1261b71)
 #
+# CONFIG_CPUSETS depends on a SMP capable board. This is a problem on the rpi0
+#
 BALENA_CONFIGS_DEPS[balena] ?= " \
     CONFIG_IP_NF_NAT=y \
     CONFIG_IPV6=y \
@@ -125,6 +127,7 @@ BALENA_CONFIGS_DEPS[balena] ?= " \
     CONFIG_NF_NAT_NEEDED=y \
     CONFIG_DEVPTS_MULTIPLE_INSTANCES=y \
     CONFIG_NF_NAT_IPV4=y \
+    CONFIG_CPUSETS=y \
     "
 BALENA_CONFIGS[balena] ?= " \
     CONFIG_ADVISE_SYSCALLS=y \
@@ -139,7 +142,6 @@ BALENA_CONFIGS[balena] ?= " \
     CONFIG_CGROUP_DEVICE=y \
     CONFIG_CGROUP_FREEZER=y \
     CONFIG_CGROUP_SCHED=y \
-    CONFIG_CPUSETS=y \
     CONFIG_MACVLAN=y \
     CONFIG_VETH=y \
     CONFIG_BRIDGE=y \
