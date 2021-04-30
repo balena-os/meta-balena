@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.75.1
+## (2021-04-29)
+
+* grub: grub-efi: buildin gzio for gz compressed kernels [Joseph Kogut]
+
 # v2.75.0
 ## (2021-04-22)
 

@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'grub: grub-efi: buildin gzio for gz compressed kernels'
+      hash: 6e0dd4407077d66fa9a0ac16b38a83f6cd46e9b2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+        signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+      author: Joseph Kogut
+      nested: []
+  version: 2.75.1
+  date: 2021-04-29T19:31:21.361Z
+- commits:
     - subject: Update mobynit to the new multi-container hostOS specification
       hash: 93335381320815dbe7b2d21233106910a200e2f5
       body: |
