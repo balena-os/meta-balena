@@ -163,15 +163,12 @@ BALENA_CONFIGS[balena] ?= " \
     CONFIG_KEYS=y \
     CONFIG_MEMCG=y \
     CONFIG_MEMCG_SWAP=y \
+    CONFIG_OVERLAY_FS=y \
     "
 
 BALENA_CONFIGS[aufs] = " \
     CONFIG_AUFS_FS=y \
     CONFIG_AUFS_XATTR=y \
-    "
-
-BALENA_CONFIGS[overlay2] = " \
-    CONFIG_OVERLAY_FS=y \
     "
 
 BALENA_CONFIGS[apple_hfs] = " \
