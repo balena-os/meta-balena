@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'kernel: Always include overlayfs support'
+      hash: ddb5dff6b146dfc252aeecede59ad3acc79683f7
+      body: >
+        This is needed in preparation for storage migration from aufs to
+        overlayfs.
+
+        When running hostapp-update, we need to create the target hostapp on
+
+        overlayfs, which implies the OS we update from can support both drivers
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.76.0
+  date: 2021-04-30T16:01:42.415Z
+- commits:
     - subject: 'grub: grub-efi: buildin gzio for gz compressed kernels'
       hash: 6e0dd4407077d66fa9a0ac16b38a83f6cd46e9b2
       body: ''

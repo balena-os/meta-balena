@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.76.0
+## (2021-04-30)
+
+* kernel: Always include overlayfs support [Robert Günzler]
+
 # v2.75.1
 ## (2021-04-29)
 
