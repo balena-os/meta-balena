@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.77.0
+## (2021-05-05)
+
+* grub update hook: move variables from grub.cfg to grubenv [Michal Toman]
+
 # v2.76.0
 ## (2021-04-30)
 

@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'grub update hook: move variables from grub.cfg to grubenv'
+      hash: 76c82dd987215982dbfcbdf950588dafdc4c129e
+      body: |
+        In order to verify GPG signature of grub.cfg it must be immutable.
+        All the variables should be stored in grubenv file. This means
+        bootcount, resin_root_part and upgrade_available variables need
+        to be moved to grubenv.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.77.0
+  date: 2021-05-05T15:18:01.595Z
+- commits:
     - subject: 'kernel: Always include overlayfs support'
       hash: ddb5dff6b146dfc252aeecede59ad3acc79683f7
       body: >
