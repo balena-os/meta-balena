@@ -89,7 +89,7 @@ fi
 
 # Figure out what (target_path) and where (target_mountpoint)
 if [ "$target" = "balena-efi" ]; then
-    target_mountpoint="/mnt/boot/EFI"
+    target_mountpoint="/mnt/efi"
     target_path="$(get_state_path_from_label "$target")"
 elif [ -z "$sysroot" ]; then
     target_mountpoint="/mnt/${target#resin-}"
