@@ -1,4 +1,17 @@
 - commits:
+    - subject: Refactor update-resin-supervisor to ensure target version is ran
+      hash: 58339bb0924621cde8de4e0c0507f55823a65c08
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.77.1
+  date: 2021-05-06T04:04:32.408Z
+- commits:
     - subject: 'grub update hook: move variables from grub.cfg to grubenv'
       hash: 76c82dd987215982dbfcbdf950588dafdc4c129e
       body: |

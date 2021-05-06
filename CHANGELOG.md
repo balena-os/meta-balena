@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.77.1
+## (2021-05-06)
+
+* Refactor update-resin-supervisor to ensure target version is ran [Miguel Casqueira]
+
 # v2.77.0
 ## (2021-05-05)
 
