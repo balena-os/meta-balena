@@ -58,6 +58,8 @@ do_compile[noexec] = "1"
 do_install () {
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/balena-supervisor/
+	# symlink to legacy resin-supervisor sysconfig dir
+	ln -s balena-supervisor ${D}${sysconfdir}/resin-supervisor
 	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/balena-supervisor/
 	sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 	sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
@@ -76,6 +78,10 @@ do_install () {
 	install -c -m 0644 ${WORKDIR}/balena-supervisor.service ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.service ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.timer ${D}${systemd_unitdir}/system
+	# symlinks to legacy resin-supervisor systemd unit files
+	ln -s balena-supervisor.service ${D}${systemd_unitdir}/system/resin-supervisor.service
+	ln -s update-balena-supervisor.service ${D}${systemd_unitdir}/system/update-resin-supervisor.service
+	ln -s update-balena-supervisor.timer ${D}${systemd_unitdir}/system/update-resin-supervisor.timer
 	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 		-e 's,@SBINDIR@,${sbindir},g' \
 		-e 's,@BINDIR@,${bindir},g' \

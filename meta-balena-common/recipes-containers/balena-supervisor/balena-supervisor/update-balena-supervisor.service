@@ -17,3 +17,6 @@ After=\
 [Service]
 Type=simple
 ExecStart=@BASE_BINDIR@/sh @BINDIR@/update-balena-supervisor
+
+[Install]
+Alias=update-resin-supervisor.service

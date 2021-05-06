@@ -30,3 +30,4 @@ ExecStop=-@BINDIR@/balena stop balena_supervisor
 
 [Install]
 WantedBy=multi-user.target
+Alias=resin-supervisor.service
