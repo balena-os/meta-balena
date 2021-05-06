@@ -115,6 +115,7 @@ module.exports = {
     );
   },
   tests: [
+    "./tests/device-tree",
     "./tests/fingerprint",
     "./tests/os-release",
     "./tests/chrony",
