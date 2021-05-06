@@ -146,8 +146,15 @@ imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 if [ -n "$imageid" ]; then
     echo "Supervisor $image_name:$tag already downloaded."
+    # Since target Supervisor version is downloaded ensure the device is configured to use it
+    setSupervisorConfig
     exit 0
 fi
+
+setSupervisorConfig() {
+    # Store the tagged image string so resin-supervisor.service can pick it up
+    sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf > $UPDATECONF
+}
 
 if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     # Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
@@ -163,8 +170,8 @@ else
     error_handler "supervisor pull failed"
 fi
 
-# Store the tagged image string so resin-supervisor.service can pick it up
-sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf > $UPDATECONF
+# Ensure device has newly pulled image as the version to run
+setSupervisorConfig
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
