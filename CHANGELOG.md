@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.77.1
+## (2021-05-07)
+
+* meta-resin-pyro: go-native: include fix-goarch.inc [Joseph Kogut]
+* meta-balena-common: bump go version to 1.14.12 [Joseph Kogut]
+
 # v2.77.0
 ## (2021-05-05)
 

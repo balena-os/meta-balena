@@ -1,4 +1,35 @@
 - commits:
+    - subject: 'meta-resin-pyro: go-native: include fix-goarch.inc'
+      hash: 2ca8fab0f42d5ae8612ed474b3f5708d146581db
+      body: "This fixes the error:\n\n\tInvalid GOMIPS value. Must be hardfloat or softfloat.\n"
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+        signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'meta-balena-common: bump go version to 1.14.12'
+      hash: dc4091a9cd8afbf42bd3684f7840b7185a744eff
+      body: |
+        Bump the GOVERSION from 1.12.17 -> 1.14.12
+
+        Copy the golang recipes from poky commit 861cfcd to meta-balena-common
+        recipes-devtools.
+
+        This shaves off approximately:
+        balena-engine 41M -> 38M
+        init (mobynit) 9.5M -> 9.2M
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+        signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+      author: Joseph Kogut
+      nested: []
+  version: 2.77.1
+  date: 2021-05-07T17:47:10.966Z
+- commits:
     - subject: 'grub update hook: move variables from grub.cfg to grubenv'
       hash: 76c82dd987215982dbfcbdf950588dafdc4c129e
       body: |
