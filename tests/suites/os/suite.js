@@ -115,7 +115,6 @@ module.exports = {
     );
   },
   tests: [
-    "./tests/device-tree",
     "./tests/fingerprint",
     "./tests/os-release",
     "./tests/chrony",
@@ -130,5 +129,6 @@ module.exports = {
     "./tests/connectivity",
     "./tests/engine-healthcheck",
     "./tests/udev",
+    "./tests/device-tree",
   ],
 };
