@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.77.1
+## (2021-05-10)
+
+* Update os-config from v1.2.0 to v1.2.1 [Kyle Harding]
+
 # v2.77.0
 ## (2021-05-05)
 

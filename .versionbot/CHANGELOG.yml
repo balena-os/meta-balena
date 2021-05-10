@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update os-config from v1.2.0 to v1.2.1
+      hash: 028486aa61680bdc09068fdb07f3a61edfb96a5d
+      body: |
+        Includes rename of resin-supervisor to balena-supervisor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.77.1
+  date: 2021-05-10T13:48:11.472Z
+- commits:
     - subject: 'grub update hook: move variables from grub.cfg to grubenv'
       hash: 76c82dd987215982dbfcbdf950588dafdc4c129e
       body: |
