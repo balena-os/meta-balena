@@ -1,6 +1,134 @@
 Change log
 -----------
 
+# v2.77.2
+## (2021-05-10)
+
+
+<details>
+<summary> Update balena-supservisor from v12.5.10 to v12.7.0 [Kyle Harding] </summary>
+
+> ## balena-supervisor-12.7.0
+> ### (2021-05-07)
+> 
+> * Backwards compatility changes for old resin namespaces [Kyle Harding]
+> * Change container name to balena_supervisor [Kyle Harding]
+> * Rename resin-supervisor to balena-supervisor [Kyle Harding]
+> 
+> ## balena-supervisor-12.6.8
+> ### (2021-05-06)
+> 
+> * Show warning instead of exception for invalid network config [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.6.7
+> ### (2021-05-06)
+> 
+> * Patch awaiting response when checking if supervisor0 network exists [Miguel Casqueira]
+> 
+> ## balena-supervisor-12.6.6
+> ### (2021-05-06)
+> 
+> * Fix parsing driver_opts from compose to docker network creation [quentinGllmt]
+> 
+> ## balena-supervisor-12.6.5
+> ### (2021-05-06)
+> 
+> 
+> <details>
+> <summary> Update balena-register-device and send extra info at provision time [Pagan Gazzard] </summary>
+> 
+>> ### balena-register-device-7.2.0
+>> #### (2021-04-29)
+>> 
+>> * Support `supervisorVersion`/`osVersion`/`osVariant`/`macAddress` fields [Pagan Gazzard]
+>> 
+>> ### balena-register-device-7.1.1
+>> #### (2021-04-29)
+>> 
+>> * Update dependencies [Pagan Gazzard]
+>> 
+>> ### balena-register-device-7.1.0
+>> #### (2020-07-13)
+>> 
+>> * Switch from randomstring to uuid for generating device uuids [Pagan Gazzard]
+>> 
+>> ### balena-register-device-7.0.1
+>> #### (2020-07-13)
+>> 
+>> * Add .versionbot/CHANGELOG.yml for nested changelogs [Pagan Gazzard]
+>> 
+>> ### balena-register-device-7.0.0
+>> #### (2020-07-06)
+>> 
+>> * Convert to type checked javascript [Pagan Gazzard]
+>> * Drop callback interface in favor of promise interface [Pagan Gazzard]
+>> * Switch to a named export [Pagan Gazzard]
+>> * Convert to typescript [Pagan Gazzard]
+>> * Update to typed-error 3.x [Pagan Gazzard]
+>> * Switch to returning native promises [Pagan Gazzard]
+>> * Update to balena-request 11.x [Pagan Gazzard]
+>> * Use typescript import helpers [Pagan Gazzard]
+>> 
+> </details>
+> 
+> 
+> ## balena-supervisor-12.6.4
+> ### (2021-05-05)
+> 
+> * Log error responses from API when reporting state [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.6.3
+> ### (2021-05-04)
+> 
+> * Added configurations.md to document all configurable vars [Miguel Casqueira]
+> 
+> ## balena-supervisor-12.6.2
+> ### (2021-04-30)
+> 
+> * Remove version tag from livepush generated image [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.6.1
+> ### (2021-04-27)
+> 
+> * Remove mz, mkdirp, body-parser dependencies [Christina Wang]
+> 
+> ## balena-supervisor-12.6.0
+> ### (2021-04-27)
+> 
+> * Bump dockerode types to 2.5.34 [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.5.16
+> ### (2021-04-27)
+> 
+> * Enable docker layer caching on CircleCI [Miguel Casqueira]
+> 
+> ## balena-supervisor-12.5.15
+> ### (2021-04-26)
+> 
+> * Added clean step to remove previous builds before running tests [Miguel Casqueira]
+> 
+> ## balena-supervisor-12.5.14
+> ### (2021-04-26)
+> 
+> * balena-supervisor: replace references to resin-vars [Mark Corbin]
+> 
+> ## balena-supervisor-12.5.13
+> ### (2021-04-25)
+> 
+> * Update supervisor to typescript 4 [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.5.12
+> ### (2021-04-20)
+> 
+> * Bump ssri from 6.0.1 to 6.0.2 [dependabot[bot]]
+> 
+> ## balena-supervisor-12.5.11
+> ### (2021-04-14)
+> 
+> * Refactor extra_uEnv to not match with intel nuc [Miguel Casqueira]
+> 
+</details>
+
 # v2.77.1
 ## (2021-05-10)
 
