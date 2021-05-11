@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.78.0
+## (2021-05-10)
+
+* Add symlinks and aliases for legacy resin namespaces [Kyle Harding]
+* Rename resin-supervisor to balena-supervisor [Kyle Harding]
+
 # v2.77.2
 ## (2021-05-10)
 

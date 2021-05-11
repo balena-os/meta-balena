@@ -1,4 +1,27 @@
 - commits:
+    - subject: Add symlinks and aliases for legacy resin namespaces
+      hash: 16f5437233e88af276d9cce7bc99dd1230f6f10d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: Rename resin-supervisor to balena-supervisor
+      hash: 8c0b17bc3dbcf0674c7083d5a8dacff64cca48c1
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.78.0
+  date: 2021-05-10T21:41:51.607Z
+- commits:
     - subject: Update balena-supservisor from v12.5.10 to v12.7.0
       hash: d2e3f092a213b8810e4bb922ad3f2a08135129c5
       body: |
