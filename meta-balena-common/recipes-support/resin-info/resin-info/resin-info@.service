@@ -1,6 +1,6 @@
 [Unit]
 Description=Resin info on %I
-After=resin-supervisor.service
+After=balena-supervisor.service
 ConditionVirtualization=!docker
 
 [Service]

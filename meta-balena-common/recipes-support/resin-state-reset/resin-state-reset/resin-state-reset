@@ -10,10 +10,10 @@ rm -rf ${BALENA_STATE_MP}/root-overlay
 # For now we need to pre-populate the initial version of supervisor.conf
 # We need to stop doing this in the future by using cache file in the state
 # partition
-mkdir -p -- "/mnt/state/root-overlay/etc/resin-supervisor/"
-if [ -f "/etc/resin-supervisor/supervisor.conf" ]
+mkdir -p -- "/mnt/state/root-overlay/etc/balena-supervisor/"
+if [ -f "/etc/balena-supervisor/supervisor.conf" ]
 then
-    cp -- "/etc/resin-supervisor/supervisor.conf" "/mnt/state/root-overlay/etc/resin-supervisor/"
+    cp -- "/etc/balena-supervisor/supervisor.conf" "/mnt/state/root-overlay/etc/balena-supervisor/"
 fi
 
 # Make sure everything is on disk otherwise the flag 'remove_me_to_reset'

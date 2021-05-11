@@ -13,7 +13,7 @@ diff --git a/src/args.rs b/src/args.rs
 index 90f031e..8cf2f5b 100644
 --- a/src/args.rs
 +++ b/src/args.rs
-@@ -10,7 +10,7 @@ pub const SUPERVISOR_SERVICE: &str = "resin-supervisor.service";
+@@ -10,7 +10,7 @@ pub const SUPERVISOR_SERVICE: &str = "balena-supervisor.service";
  const CONFIG_ROUTE: &str = "/os/v1/config";
  const OS_CONFIG_PATH: &str = "/etc/os-config.json";
  const CONFIG_JSON_PATH: &str = "/mnt/boot/config.json";

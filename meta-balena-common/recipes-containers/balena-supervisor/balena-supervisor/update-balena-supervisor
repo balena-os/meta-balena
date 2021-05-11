@@ -3,7 +3,7 @@
 set -o pipefail
 
 # Help function
-update_resin_supervisor_help() {
+update_balena_supervisor_help() {
     cat << EOF
 Wrapper to run supervisor agent updates on balena distributions.
 $0 <OPTION>
@@ -30,7 +30,7 @@ while [ $# -gt 0 ]; do
 
     case $arg in
         -h|--help)
-            update_resin_supervisor_help
+            update_balena_supervisor_help
             exit 0
             ;;
         -i|--supervisor-image)
@@ -77,7 +77,7 @@ error_handler() {
     # If docker pull fails, start the old supervisor again and exit
     rm -rf $UPDATECONF
     if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
-        systemctl start resin-supervisor
+        systemctl start balena-supervisor
     fi
     exit 1
 }
@@ -122,7 +122,7 @@ if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ] && da
 else
     echo "No supervisor configuration found from API or required variables not set. Using arguments for image and tag."
     # shellcheck disable=SC1091
-    . /etc/resin-supervisor/supervisor.conf
+    . /etc/balena-supervisor/supervisor.conf
     if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
         # Try to get the tag from supervisor.conf
         if [ -n "$SUPERVISOR_TAG" ]; then
@@ -152,25 +152,25 @@ fi
 if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     # Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
     echo "Stop supervisor..."
-    systemctl stop resin-supervisor
+    systemctl stop balena-supervisor
 fi
 
 # Pull target version.
 echo "Pulling supervisor $image_name:$tag..."
 if $DOCKER pull "$image_name:$tag"; then
-    $DOCKER rm --force resin_supervisor || true
+    $DOCKER rm --force balena_supervisor || true
 else
     error_handler "supervisor pull failed"
 fi
 
-# Store the tagged image string so resin-supervisor.service can pick it up
-sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf > $UPDATECONF
+# Store the tagged image string so balena-supervisor.service can pick it up
+sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/balena-supervisor/supervisor.conf > $UPDATECONF
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
 if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     echo "Start supervisor..."
-    systemctl start resin-supervisor
+    systemctl start balena-supervisor
 fi
 
-sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/resin-supervisor/supervisor.conf
+sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/balena-supervisor/supervisor.conf

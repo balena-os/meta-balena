@@ -12,9 +12,9 @@ B = "${S}/build"
 
 inherit deploy
 require docker-disk.inc
-require recipes-containers/resin-supervisor/resin-supervisor.inc
+require recipes-containers/balena-supervisor/balena-supervisor.inc
 
-# By default pull resin-supervisor
+# By default pull balena-supervisor
 TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
 TARGET_TAG ?= "${SUPERVISOR_TAG}"
 

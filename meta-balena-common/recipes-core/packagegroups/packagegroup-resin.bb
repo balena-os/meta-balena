@@ -7,8 +7,8 @@ inherit packagegroup
 
 BALENA_INIT_PACKAGE ?= "resin-init"
 BALENA_MOUNTS ?= "resin-mounts"
-BALENA_REGISTER ?= "resin-supervisor"
-BALENA_SUPERVISOR ?= "resin-supervisor"
+BALENA_REGISTER ?= "balena-supervisor"
+BALENA_SUPERVISOR ?= "balena-supervisor"
 
 include packagegroup-resin.inc
 

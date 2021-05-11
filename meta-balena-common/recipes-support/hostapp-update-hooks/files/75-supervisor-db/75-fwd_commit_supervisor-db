@@ -25,8 +25,8 @@ set -e
 #
 
 DATA_MOUNT="/mnt/data"
-SUPERVISOR_DB_DIR_A="${DATA_MOUNT}/resin-data/resin-supervisor"
-SUPERVISOR_DB_DIR_B="${DATA_MOUNT}/resin-supervisor"
+SUPERVISOR_DB_DIR_A="${DATA_MOUNT}/resin-data/balena-supervisor"
+SUPERVISOR_DB_DIR_B="${DATA_MOUNT}/balena-supervisor"
 SUPERVISOR_DB_NAME="database.sqlite"
 
 SUPERVISOR_DB_PATH_A="${SUPERVISOR_DB_DIR_A}/${SUPERVISOR_DB_NAME}"

@@ -34,7 +34,7 @@ FILES_${PN} += " \
 
 BINDMOUNTS += " \
 	/etc/docker \
-	/etc/resin-supervisor \
+	/etc/balena-supervisor \
 	/home/root/.docker \
 	/var/log/journal \
 	/var/lib/systemd \
