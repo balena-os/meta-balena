@@ -24,7 +24,7 @@ module.exports = {
 		{
 			title: "DToverlay & DTparam tests",
 			run: async function (test) {
-				const ip = await this.context.get().worker.ip(this.context.get().link);
+				let ip = await this.context.get().worker.ip(this.context.get().link);
 
 				// Wait for supervisor API to start
 				await this.context.get().utils.waitUntil(async () => {
@@ -84,6 +84,9 @@ module.exports = {
 							)) === "pass"
 					);
 				}, false);
+
+				// IP of the device sometimes change after reboots, hence initalising again
+				ip = await this.context.get().worker.ip(this.context.get().link);
 
 				await this.context.get().utils.waitUntil(async () => {
 					test.comment("Waiting for supervisor to be ready after reboot...");
