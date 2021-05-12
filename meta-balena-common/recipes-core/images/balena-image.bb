@@ -34,7 +34,7 @@ IMAGE_INSTALL = " \
     packagegroup-core-boot \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     packagegroup-resin-debugtools \
-    packagegroup-resin-connectivity \
+    packagegroup-balena-connectivity \
     packagegroup-resin \
     "
 

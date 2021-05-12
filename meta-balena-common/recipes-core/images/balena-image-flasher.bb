@@ -26,7 +26,7 @@ IMAGE_FEATURES_append = " \
 IMAGE_INSTALL = " \
     packagegroup-core-boot \
     ${CORE_IMAGE_EXTRA_INSTALL} \
-    packagegroup-resin-connectivity \
+    packagegroup-balena-connectivity \
     packagegroup-resin-flasher \
     "
 
