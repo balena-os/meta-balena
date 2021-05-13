@@ -53,33 +53,43 @@ BALENA_BOOT_MOUNTPOINT="/mnt/boot"
 # If config.json provides redefinitions for our vars let us rewrite their
 # runtime value
 if [ -f $CONFIG_PATH ]; then
-    eval "$(jq -r '@sh "
+    CONFIG_PARAMS=$(jq -r '@sh "
          API_ENDPOINT=\(.apiEndpoint // "")
-         LISTEN_PORT=\(.listenPort // "")
-         MIXPANEL_TOKEN=\(.mixpanelToken // "")
-         DELTA_ENDPOINT=\(.deltaEndpoint // "")
+         APPLICATION_ID=\(.applicationId // "")
+         BALENA_ROOT_CA=\(.balenaRootCA // "")
          CONFIG_HOSTNAME=\(.hostname // "")
-         PERSISTENT_LOGGING=\(.persistentLogging // "")
          COUNTRY=\(.country // "")
-         UUID=\(.uuid // "")
-         PROVISIONING_API_KEY=\(.apiKey // "")
+         DELTA_ENDPOINT=\(.deltaEndpoint // "")
          DEVICE_API_KEY=\(.deviceApiKey // "")
          DEVICE_ID=\(.deviceId // "")
-         APPLICATION_ID=\(.applicationId // "")
          DEVICE_TYPE=\(.deviceType // "")
-         REGISTERED_AT=\(.registered_at // "")
-         NTP_SERVERS=\(.ntpServers // "")
-         DNS_SERVERS=\(.dnsServers // "")
-         BALENA_ROOT_CA=\(.balenaRootCA // "")
+         DNS_SERVERS=\(.dnsServers // "8.8.8.8")
          HOSTEXT_IMAGES=\(.hostappExtensions // "")
-         "' $CONFIG_PATH)"
+         LISTEN_PORT=\(.listenPort // "")
+         MIXPANEL_TOKEN=\(.mixpanelToken // "")
+         NTP_SERVERS=\(.ntpServers // "")
+         OS_NET_CONN_INTERVAL=\(.os.network.connectivity.interval // 3600)
+         OS_NET_CONN_RESPONSE=\(.os.network.connectivity.response // "")
+         OS_NET_CONN_URI=\(.os.network.connectivity.uri // "")
+         OS_NET_WIFI_MACSCAN=\(.os.network.wifi.randomMacAddressScan)
+         PERSISTENT_LOGGING=\(.persistentLogging // false)
+         PROVISIONING_API_KEY=\(.apiKey // "")
+         REGISTERED_AT=\(.registered_at // "")
+         UUID=\(.uuid // "")
+         "' $CONFIG_PATH)
+    RESULT=$?
+    if [ "$RESULT" = "4" ]; then
+        echo "[ERROR] $0: Failed to parse '$CONFIG_PATH'."
+        exit 1
+    else
+        eval "$CONFIG_PARAMS"
+    fi
 
-    # Various default values
-    PERSISTENT_LOGGING=${PERSISTENT_LOGGING:-false}
-    DNS_SERVERS=${DNS_SERVERS:-8.8.8.8}
-    # Don't propagate the `null` value further to dnsmasq configuration
-    if [ "$DNS_SERVERS" = "null" ]; then
-        DNS_SERVERS=""
+    # Set additional default values.
+    if [ -z "$OS_NET_CONN_URI" ]; then
+        if [ -n "$API_ENDPOINT" ]; then
+            OS_NET_CONN_URI="$API_ENDPOINT/connectivity-check"
+        fi
     fi
 else
     echo "[WARNING] $0 : '$CONFIG_PATH' not found."

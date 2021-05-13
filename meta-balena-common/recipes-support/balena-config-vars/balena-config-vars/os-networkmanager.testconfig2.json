@@ -1,9 +1,0 @@
-{
-  "os": {
-    "network": {
-      "wifi": {
-        "randomMacAddressScan": false
-      }
-    }
-  }
-}

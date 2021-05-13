@@ -8,12 +8,6 @@ SRC_URI = " \
     file://config-json.service \
     file://os-networkmanager \
     file://os-networkmanager.service \
-    file://os-networkmanager.testconfig1.json \
-    file://os-networkmanager.testconfig2.json \
-    file://os-networkmanager.testconfig3.json \
-    file://os-networkmanager.testconfig4.json \
-    file://os-networkmanager.testconfig5.json \
-    file://os-networkmanager.testconfig6.json \
     file://os-udevrules \
     file://os-udevrules.service \
     file://os-sshkeys \
@@ -61,57 +55,3 @@ do_install() {
             ${D}${systemd_unitdir}/system/*.service
     fi
 }
-
-runtest() {
-	out=${WORKDIR}/nmconfig.test.tmp
-	config=$1
-	ecode=$2
-	eout=$3
-	failed=0
-	bbnote "Run test for $config..."
-	rm -rf $out 2>&1 > /dev/null
-	CONFIG_PATH=${WORKDIR}/$config NM_CONF_FRAGMENT=$out bash ${D}${sbindir}/os-networkmanager && rc=$? || rc=$? 
-	if [ "$rc" -ne "$ecode" ]; then
-		bbwarn "Unexpected exit code."
-		failed=1
-	fi
-	if [ "$eout" = "NO FILE" ]; then
-		if [ -f "$out" ]; then
-			bbwarn "Expected no output file but one was found."
-			failed=1
-		fi
-	else
-		if [ "$(cat $out)" != "$eout" ]; then
-			bbwarn "Unexpected output."
-			failed=1
-		fi
-	fi		
-	if [ "$failed" -ne 0 ]; then
-		bbfatal "Test for $config failed."
-	else
-		bbnote "Test for $config passed."
-	fi
-}
-
-# Build time sanity tests checking various config.json fragments.
-do_runtests() {
-	bbnote "Running os-networkmanager tests..."
-	runtest os-networkmanager.testconfig1.json 0 '# This file is generated based on os.networkManager configuration in config.json.
-[device]
-wifi.scan-rand-mac-address=yes'
-	runtest os-networkmanager.testconfig2.json 0 '# This file is generated based on os.networkManager configuration in config.json.
-[device]
-wifi.scan-rand-mac-address=no'
-	runtest os-networkmanager.testconfig3.json 0 '# This file is generated based on os.networkManager configuration in config.json.'
-	runtest os-networkmanager.testconfig4.json 0 '# This file is generated based on os.networkManager configuration in config.json.
-[device]
-wifi.scan-rand-mac-address=foo'
-	runtest os-networkmanager.testconfig5.json 1 'NO FILE'
-	runtest os-networkmanager.testconfig6.json 0 '# This file is generated based on os.networkManager configuration in config.json.
-[connectivity]
-uri=http://www.example.com/connectivity-check
-interval=7200
-response=Am I online'
-
-}
-addtask runtests before do_package after do_install

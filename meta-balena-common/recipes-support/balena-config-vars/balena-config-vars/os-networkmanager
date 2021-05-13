@@ -17,35 +17,27 @@
 
 set -e
 
-tool="$(basename "$0")"
+. /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/sbin/balena-config-vars
+
 nm_conf_fragment=/etc/NetworkManager/conf.d/os-networkmanager.conf
 
 # This defines config.json to NetworkManager values
 value_map='true=yes false=no'
 
-# Returnes the value of a key in a map variable
+# Returns the value of a key in a map variable
 # The map needs to be a space separated set of entries. Each key/value pair separated by '='
 # Returns:
 # 	If key exists in map: the value in 'value' variable.
 # 	If key not found: returns the key in 'value' variable.
 getValueInMap() {
-        local key="$1"
-        local map="$2"
+	local key="$1"
+	local map="$2"
 	# shellcheck disable=SC2001
-        value="$(echo "$map" | sed -e "s/.*${key}=\([^ ]*\).*/\1/")"
+	value="$(echo "$map" | sed -e "s/.*${key}=\([^ ]*\).*/\1/")"
 	if [ "$value" = "$map" ]; then
 		value="$key"
-	fi
-}
-
-# Very simple logging function
-log() {
-	local level=$1
-	local msg=$2
-	echo "$tool: <$level> $msg"
-	if [ "$level" = "error" ]; then
-		echo "$tool: <$level> Exit due to fatal error."
-		exit 1
 	fi
 }
 
@@ -54,93 +46,56 @@ log() {
 #
 
 if [ ! -f "$CONFIG_PATH" ]; then
-	# shellcheck disable=SC1091
-	if [ -f /usr/sbin/balena-config-vars ]; then
-		. /usr/sbin/balena-config-vars
-	else
-		log "error" "Couldn't find /usr/sbin/balena-config-vars."
-	fi
-	if [ ! -f "$CONFIG_PATH" ]; then
-	       log "error" "No config.json found."
-	fi
+	fail "$CONFIG_PATH does not exist."
+else
+	info "Found config.json in $CONFIG_PATH ."
 fi
-log "info" "Using $CONFIG_PATH config.json."
 
 # shellcheck disable=SC2153
 if [ -n "$NM_CONF_FRAGMENT" ]; then
-        nm_conf_fragment="$NM_CONF_FRAGMENT"
+	nm_conf_fragment="$NM_CONF_FRAGMENT"
 fi
-log "info" "Using NetworkManager configuration fragment file in $nm_conf_fragment."
+info "Using NetworkManager configuration fragment file in $nm_conf_fragment."
 
 nm_config="# This file is generated based on os.networkManager configuration in config.json."
 
 # [device]
-section="device"
-s=0
-if ! config_json_value="$(jq -r " .os.network.wifi.randomMacAddressScan" "$CONFIG_PATH")"; then
-	log "error" "Error parsing $CONFIG_PATH."
-	exit 1
-fi
-if [ "$config_json_value" != "null" ]; then
-	log "info" "Found randomMacAddressScan configuration."
-	getValueInMap "$config_json_value" "$value_map"
-	if [ "$s" -eq 0 ]; then
-		nm_config="$(printf "%s\n[%s]" "$nm_config" "$section")"
-		s=1
-	fi
-	nm_config="$(printf "%s\nwifi.scan-rand-mac-address=%s" "$nm_config" "$value")"
+if [ "$OS_NET_WIFI_MACSCAN" != "null" ]; then
+	info "Found randomMacAddressScan configuration."
+	getValueInMap "$OS_NET_WIFI_MACSCAN" "$value_map"
+	nm_config+=$(echo -e "\n\n[device]")
+	nm_config+=$(echo -e "\nwifi.scan-rand-mac-address=${value}")
 fi
 
 # [connectivity]
-section="connectivity"
-DEFAULT_INTERVAL=3600
-DEFAULT_RESPONSE=""
-config_json_uri="$(jq -r " .os.network.connectivity.uri" "$CONFIG_PATH")"
 disable_connectvity_check=0
 
-if [ "$config_json_uri" = "null" ] ; then
-	log "info" ".os.network.connectivity.uri not defined. Trying default"
-	if [ -n "$API_ENDPOINT" ]; then
-		config_json_uri="$API_ENDPOINT/connectivity-check"
-		log "info" "Using default os.network.connectivity.uri configuration : $config_json_uri"
-	else
-		disable_connectvity_check=1
-		log "info" "API_ENDPOINT not found in config.json. Disabling connectivity check"
+if [ -n "$OS_NET_CONN_URI" ] ; then
+	if [ "$OS_NET_CONN_URI" = "$API_ENDPOINT/connectivity-check" ]; then
+		info "Connectivity URI not defined. Using default."
 	fi
 else
-	log "info" "Found os.network.connectivity.uri configuration : $config_json_uri"
+	disable_connectvity_check=1
+	info "API_ENDPOINT not defined. Disabling connectivity check."
 fi
 
 if [ "$disable_connectvity_check" -eq 0 ]; then
-	config_json_interval="$(jq -r " .os.network.connectivity.interval" "$CONFIG_PATH")"
-	if [ "$config_json_interval" = null ] ; then
-		config_json_interval=$DEFAULT_INTERVAL
-		log "info" "Using default os.network.connectivity.interval : $config_json_interval"
-	else
-		log "info" "Found os.network.connectivity.interval : $config_json_interval"
-	fi
-
-	config_json_response="$(jq -r " .os.network.connectivity.response" "$CONFIG_PATH")"
-	if [ "$config_json_response" = null ] ; then
-		config_json_response=$DEFAULT_RESPONSE
-		log "info" "Using default os.network.connectivity.response : \"\""
-	else
-		log "info" "Found os.network.connectivity.response : $config_json_response"
-	fi
-
-	nm_config="$(printf "%s\n[%s]" "$nm_config" "$section")"
-	nm_config="$(printf "%s\nuri=%s" "$nm_config" "$config_json_uri")"
-	nm_config="$(printf "%s\ninterval=%s" "$nm_config" "$config_json_interval")"
-	nm_config="$(printf "%s\nresponse=%s" "$nm_config" "$config_json_response")"
+	info "Using connectivity URI      : $OS_NET_CONN_URI"
+	info "Using connectivity interval : $OS_NET_CONN_INTERVAL"
+	info "Using connectivity response : \"${OS_NET_CONN_RESPONSE}\""
+	nm_config+=$(echo -e "\n\n[connectivity]")
+	nm_config+=$(echo -e "\nuri=${OS_NET_CONN_URI}")
+	nm_config+=$(echo -e "\ninterval=${OS_NET_CONN_INTERVAL}")
+	nm_config+=$(echo -e "\nresponse=${OS_NET_CONN_RESPONSE}")
 fi
 
-# Write final NM configuation fragment
+# Write final NM configuration fragment
 if [ ! -f "$nm_conf_fragment" ] || [ "$(cat \
 	"$nm_conf_fragment")" != "$nm_config" ]; then
-	log "info" "Writing/initialiazing custom NM configuration."
+	info "Writing/initialiazing custom NM configuration."
 	echo "$nm_config" > "$nm_conf_fragment.tmp"
 	sync -f "$nm_conf_fragment.tmp"
 	mv "$nm_conf_fragment.tmp" "$nm_conf_fragment"
 else
-	log "info" "NM custom configuration fragment already in place."
+	info "NM custom configuration fragment already in place."
 fi
