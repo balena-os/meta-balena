@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.78.1
+## (2021-05-12)
+
+* Add Device Tree tests [Vipul Gupta (@vipulgupta2048)]
+
 # v2.78.0
 ## (2021-05-10)
 

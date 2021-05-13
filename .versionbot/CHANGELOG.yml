@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add Device Tree tests
+      hash: f59b7e0d54098e000d7fb3ce2b4811fa91351769
+      body: |
+        1. Add DToverlay & DTparam tests
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.78.1
+  date: 2021-05-12T21:38:32.558Z
+- commits:
     - subject: Add symlinks and aliases for legacy resin namespaces
       hash: 16f5437233e88af276d9cce7bc99dd1230f6f10d
       body: ''
