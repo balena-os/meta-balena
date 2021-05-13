@@ -1,4 +1,66 @@
 - commits:
+    - subject: 'balena-engine: build in GOPATH mode'
+      hash: 342a9621b5416d2a1f6aec3948dfdcfe15395d13
+      body: |
+        balena-engine hasn't transitioned to building with modules yet, and Go
+        1.16 enabled them by default. Revert to the old behavior for now to fix
+          the build.
+
+        This option will be removed in Go 1.17, so we'll have to update our
+        build before upgrading further.
+
+        https://blog.golang.org/go116-module-changes
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'recipes-devtools: go: backport get_linuxloader'
+      hash: 283e7d279ed26c2855b4916c24bb502e2d87a189
+      body: |
+        Hardknott introduces get_linuxloader() to linuxloader.bbclass that
+        allows for dynamically choosing between different c libraries, which go
+        recipes depend on.
+
+        Add an include that backports this for older Yocto releases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'meta-resin-pyro: go-native: include fix-goarch.inc'
+      hash: 252521185190ac2730fa8a92a5565a6069104e25
+      body: "This fixes the error:\n\n\tInvalid GOMIPS value. Must be hardfloat or softfloat.\n"
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+        signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'meta-balena-common: upgrade from go 1.12.17 to 1.16.2'
+      hash: a395e1bdaaba8050042d011e6e5fe40311216d58
+      body: |
+        Copy the unmodified golang recipes from poky commit 464472d to
+        meta-balena-common/recipes-devtools.
+
+        This shaves off approximately:
+        balena-engine 41M -> 34M (17%)
+        init (mobynit) 9.5M -> 7.9M (16.8%)
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+        signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+      author: Joseph Kogut
+      nested: []
+  version: 2.79.0
+  date: 2021-05-13T18:25:01.396Z
+- commits:
     - subject: 'balena-config-vars: improve handling of NM config parameters'
       hash: 61280e84e045a4b235a21eec194fc8cf894c310d
       body: |

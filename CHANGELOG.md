@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.79.0
+## (2021-05-13)
+
+* balena-engine: build in GOPATH mode [Joseph Kogut]
+* recipes-devtools: go: backport get_linuxloader [Joseph Kogut]
+* meta-resin-pyro: go-native: include fix-goarch.inc [Joseph Kogut]
+* meta-balena-common: upgrade from go 1.12.17 to 1.16.2 [Joseph Kogut]
+
 # v2.78.2
 ## (2021-05-13)
 
