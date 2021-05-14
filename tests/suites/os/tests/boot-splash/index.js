@@ -16,10 +16,8 @@
 
 'use strict';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 const { decode } = require('jpeg-js');
-const { createGunzip } = require('zlib');
-const tar = require('tar-stream');
 
 const BOOT_SPLASH = `${__dirname}/assets/boot-splash.jpg`;
 
@@ -47,8 +45,26 @@ module.exports = {
 			run: async function(test) {
 				const { hammingDistance, blockhash } = this.require('/common/graphics');
 
+				test.comment(`Calculating reference hash`)
+				// Pull in the reference image
+				const referenceHash = await new Promise((resolve, reject) => {
+					const stream = fs.createReadStream(BOOT_SPLASH);
+					const buffer = [];
+
+					stream.on('error', reject);
+					stream.on('data', data => {
+						buffer.push(data);
+					});
+					stream.on('end', () => {
+						resolve(blockhash(decode(Buffer.concat(buffer))));
+					});
+				});
+				test.comment("Finished calculating reference hash")
+
+				test.comment("Starting capture")
 				await this.context.get().worker.capture('start');
 
+				test.comment("Rebooting")
 				// Start reboot check
 				await this.context
 					.get()
@@ -71,82 +87,54 @@ module.exports = {
 								this.context.get().link,
 							)) === 'pass'
 					);
+				}, false);
+
+				test.comment(`Rebooted, device back online`)
+				test.comment(`Stopping capture...`);
+				const res = this.context.get().worker.capture('stop');
+				res.on('error', error => {
+					throw new Error("Error stopping capture")
 				});
 
-				// Pull in the reference image
-				const referenceHash = await new Promise((resolve, reject) => {
-					const stream = fs.createReadStream(BOOT_SPLASH);
-					const buffer = [];
-
-					stream.on('error', reject);
-					stream.on('data', data => {
-						buffer.push(data);
-					});
-					stream.on('end', () => {
-						resolve(blockhash(decode(Buffer.concat(buffer))));
-					});
+				res.on('ok', () => {
+					test.comment(`Capture Stopped!`)
 				});
 
-				// Collect all decoded images here
-				const imagesHash = [];
-				await new Promise((resolve, reject) => {
-					const extract = tar.extract();
-					extract.on('entry', async (_header, stream, next) => {
+				// captured frames are stored in /data/capture - we probably want a way to remove the need for a hard coded reference here
+				const captured = fs.readdirSync(`/data/capture`)
+			
+				let pass = false
+				test.comment(`Comparing captured images to reference image...`)
+				for(let image of captured.reverse()){
+					const capturedHash = await new Promise((resolve, reject) => {
+						const stream = fs.createReadStream(`/data/capture/` + image);
 						const buffer = [];
-
-						let archiveStream;
-
-						if (_header.type !== 'directory') {
-							archiveStream = await this.archiver.getStream(_header.name);
-						}
-
+	
+						stream.on('error', reject);
 						stream.on('data', data => {
 							buffer.push(data);
-
-							if (archiveStream != null) {
-								archiveStream.write(data);
-							}
 						});
 						stream.on('end', () => {
-							if (buffer.length > 0) {
-								imagesHash.push(blockhash(decode(Buffer.concat(buffer))));
-							}
-
-							next();
+							resolve(blockhash(decode(Buffer.concat(buffer))));
 						});
 					});
 
-					const res = this.context.get().worker.capture('stop');
-					res.on('error', error => {
-						reject(error);
-					});
-					res.on('response', response => {
-						if (response.statusCode === 500) {
-							const buffer = [];
-							res.on('data', data => {
-								buffer.push(data);
-							});
-							res.on('end', () => {
-								reject(new Error(Buffer.concat(buffer).toString()));
-							});
-						} else {
-							res
-								.pipe(createGunzip())
-								.pipe(extract)
-								.on('error', reject)
-								.on('finish', resolve);
-						}
-					});
-				});
+					let testDistance = hammingDistance(referenceHash, capturedHash)
+					if(testDistance < 20){
+						test.comment(`Found match, image ${image}, hamming distance from reference: ${testDistance}`)
+						pass = true
+						break
+					}
+				}
 
-				const count = imagesHash.filter(hash => {
-					return hammingDistance(referenceHash, hash) < 20;
-				}).length;
-
+				test.comment(`Storing captured frames...`)
+				await this.archiver.add(`/data/capture`);
+				test.comment(`Frames stored`)
+				
 				test.true(
-					count > 0,
-					'More than one frame of our boot-splash should have been captured',
-				);
+					pass,
+					'Boot splash screen detected over HDMI interface',
+				);				
 			},
 		},
 	],
