@@ -102,3 +102,4 @@ PREFERRED_VERSION_libstd-rs = "1.36.0"
 
 # balena-engine go version requirement
 GOVERSION = "1.16.2"
+PREFERRED_PROVIDER_go-native = "go-native"
