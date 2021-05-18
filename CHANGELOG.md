@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.1
+## (2021-05-18)
+
+* balena-os: Add preferred provider for Go native [Alex Gonzalez]
+
 # v2.79.0
 ## (2021-05-13)
 

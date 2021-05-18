@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'balena-os: Add preferred provider for Go native'
+      hash: 20dd5fb4384e78f24d3e3304be38666fdcb859a8
+      body: |
+        With Go 1.16 a precompiled go-binary-native that provides go-native was
+        introduced to bootstrap the Go compilation.
+        Specify to use the go-native recipe and not go-binary-native when
+        requiring go-native.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.79.1
+  date: 2021-05-18T08:37:41.159Z
+- commits:
     - subject: 'balena-engine: build in GOPATH mode'
       hash: 342a9621b5416d2a1f6aec3948dfdcfe15395d13
       body: |
