@@ -1,0 +1,13 @@
+[Unit]
+Description=Balena Application Container Engine Socket for the API
+PartOf=balena.service
+
+[Socket]
+ListenStream=/run/balena-engine.sock
+SocketMode=0660
+SocketUser=root
+SocketGroup=balena-engine
+
+[Install]
+Alias=balena-engine.socket
+WantedBy=sockets.target

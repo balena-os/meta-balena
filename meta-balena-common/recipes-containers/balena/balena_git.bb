@@ -18,6 +18,7 @@ SRCREV = "840aacc77b6c600b3b929fe9e4d9356a322b9e5b"
 SRC_URI = "\
 	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
+	file://balena.socket \
 	file://balena-host.service \
 	file://balena-host.socket \
 	file://balena-healthcheck \
@@ -137,10 +138,10 @@ do_install() {
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-proxy
 
 	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${S}/src/import/contrib/init/systemd/balena-engine.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
 	sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
+	install -m 0644 ${WORKDIR}/balena.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
 	sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena-host.service
