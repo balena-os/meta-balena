@@ -1,5 +1,6 @@
 [Unit]
 Description=mnt-sysroot-inactive partition
+ConditionVirtualization=!docker
 
 [Mount]
 What=/dev/disk/by-state/inactive
