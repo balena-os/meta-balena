@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.2
+## (2021-05-19)
+
+* Add boot-splash test to unmanaged suite [rcooke-warwick]
+
 # v2.79.1
 ## (2021-05-18)
 

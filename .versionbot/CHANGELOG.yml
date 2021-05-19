@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add boot-splash test to unmanaged suite
+      hash: a6865f22ba5d5bd60f659daac113cac6ae1aa8f3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.79.2
+  date: 2021-05-19T09:25:55.145Z
+- commits:
     - subject: 'balena-os: Add preferred provider for Go native'
       hash: 20dd5fb4384e78f24d3e3304be38666fdcb859a8
       body: |
