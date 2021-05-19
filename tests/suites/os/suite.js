@@ -124,8 +124,7 @@ module.exports = {
     "./tests/variables",
     "./tests/led",
     "./tests/config-json",
-    // The boot splash test is currently disabled because of the excessive time spent on it.
-    // './tests/boot-splash',
+    "./tests/boot-splash",
     "./tests/connectivity",
     "./tests/engine-healthcheck",
     "./tests/udev",
