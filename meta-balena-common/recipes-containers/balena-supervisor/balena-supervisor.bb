@@ -58,24 +58,9 @@ S = "${WORKDIR}"
 do_patch[noexec] = "1"
 do_compile[noexec] = "1"
 
-api_fetch_supervisor_image() {
-	_version=$1
-	_arch=$(jq --raw-output '.arch' "${TOPDIR}/../${MACHINE}.json")
-	_api_env="${BALENA_API_ENV}"
-	_token="${BALENA_API_TOKEN}"
-	[ -z "${_token}" ] && [ -f "~/.balena/token" ] && _token=$(cat "~/.balena/token") || true
-
-	curl -X GET --silent -k \
-	"https://api.${_api_env}/v6/supervisor_release?\$top=1&\$select=image_name&\$filter=(supervisor_version%20eq%20%27${_version}%27)%20and%20(is_for__device_type/any(ifdt:ifdt/is_of__cpu_architecture/any(ioca:ioca/slug%20eq%20%27${_arch}%27)))" \
-	-H "Content-Type: application/json" \
-	-H "Authorization: Bearer ${_token}" | jq -r '.d[].image_name'
-}
-
 do_install () {
-	SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
-	if [ -z "${SUPERVISOR_IMAGE}" ] || [ "${SUPERVISOR_IMAGE}" = "null" ]; then
-		bbfatal "Could not retrieve supervisor image for version ${SUPERVISOR_VERSION}"
-	fi
+	SUPERVISOR_IMAGE=$(jq --raw-output '.apps | .[] | select(.name=="'"${SUPERVISOR_APP}"'") | .releases[].services | .[].image' ${DEPLOY_DIR_IMAGE}/apps.json)
+	bbnote "Pre-loaded supervisor: image ${SUPERVISOR_IMAGE}"
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/balena-supervisor/
 	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/balena-supervisor/
