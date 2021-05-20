@@ -34,6 +34,8 @@ FILES:${PN} += " \
 	/usr/lib/balena-supervisor \
 	"
 
+DEPENDS += "jq-native curl-native"
+
 RDEPENDS:${PN} = " \
 	balena \
 	bash \
@@ -46,9 +48,9 @@ RDEPENDS:${PN} = " \
 	"
 
 python () {
-    supervisor_repository = d.getVar('SUPERVISOR_REPOSITORY', True)
-    if not supervisor_repository:
-        bb.fatal("balena-supervisor-disk: There is no support for this architecture.")
+    supervisor_app = d.getVar('SUPERVISOR_APP', True)
+    if not supervisor_app:
+        bb.fatal("balena-supervisor: There is no support for this architecture.")
 }
 
 S = "${WORKDIR}"
@@ -57,13 +59,30 @@ do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
+api_fetch_supervisor_image() {
+	_version=$1
+	_slug=$(jq --raw-output '.slug' "${TOPDIR}/../${MACHINE}.json")
+	_api_env="${BALENA_API_ENV}"
+	_token="${BALENAOS_TOKEN:-""}"
+
+	curl -X GET --silent -k \
+	"https://api.balena-cloud.com/v6/supervisor_release?\$select=image_name&\$filter=(is_for__device_type/slug%20eq%20%27${_slug}%27)%20and%20(supervisor_version%20eq%20%27${_version}%27)" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer \'${_token}\'" | jq -r '.d[].image_name'
+}
+
 do_install () {
+	SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
+	if [ -z "${SUPERVISOR_IMAGE}" ]; then
+		bbfatal "Could not retrieve supervisor image for version ${SUPERVISOR_VERSION}"
+	fi
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/balena-supervisor/
 	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/balena-supervisor/
-	sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
-	sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
-	sed -i -e 's:@SUPERVISOR_TAG@:${SUPERVISOR_TAG}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
+	sed -i -e "s,@LED_FILE@,${LED_FILE},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
+	sed -i -e "s,@SUPERVISOR_APP@,${SUPERVISOR_APP},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
+	sed -i -e "s,@SUPERVISOR_VERSION@,${SUPERVISOR_VERSION},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
+	sed -i -e "s,@SUPERVISOR_IMAGE@,${SUPERVISOR_IMAGE},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 
 	install -d ${D}/resin-data
 
@@ -97,6 +116,6 @@ do_install () {
 }
 
 do_deploy () {
-	echo ${SUPERVISOR_TAG} > ${DEPLOYDIR}/VERSION
+	echo ${SUPERVISOR_VERSION} > ${DEPLOYDIR}/VERSION
 }
 addtask deploy before do_package after do_install
