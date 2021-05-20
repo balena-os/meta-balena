@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.3
+## (2021-05-20)
+
+* kernel-resin: disable panic on hung task [Joseph Kogut]
+
 # v2.79.2
 ## (2021-05-19)
 
