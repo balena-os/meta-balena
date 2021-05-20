@@ -101,6 +101,7 @@ BALENA_CONFIGS ?= " \
     uprobes \
     task-accounting \
     ipv6_mroute \
+    disable_hung_panic \
     "
 
 #
@@ -562,6 +563,10 @@ BALENA_CONFIGS[ad5446] = " \
 BALENA_CONFIGS[uprobes] = " \
     CONFIG_UPROBE_EVENTS=y \
 "
+
+BALENA_CONFIGS[disable_hung_panic] = " \
+    CONFIG_BOOTPARAM_HUNG_TASK_PANIC=n \
+    "
 
 ###########
 # HELPERS #
