@@ -48,10 +48,7 @@ PACKAGECONFIG[udev] = "--enable-udev,--disable-udev,udev"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://init \
-           file://run-ptest \
            ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'file://0001-Allow-using-obexd-without-systemd-in-the-user-sessio.patch', d)} \
-           file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
-           file://0001-test-gatt-Fix-hung-issue.patch \
            file://0001-audio-Rename-pause-funciton-to-avoid-shadowing-glibc.patch \
            file://0001-Makefile.am-add-missing-mkdir-for-ell-shared.patch \
            "
@@ -59,10 +56,9 @@ S = "${WORKDIR}/bluez-${PV}"
 
 CVE_PRODUCT = "bluez"
 
-inherit autotools pkgconfig systemd update-rc.d ptest gobject-introspection-data
+inherit autotools pkgconfig systemd update-rc.d gobject-introspection-data
 
 EXTRA_OECONF = "\
-  --enable-test \
   --enable-datafiles \
   --enable-library \
   --without-zsh-completion-dir \
@@ -71,11 +67,9 @@ EXTRA_OECONF = "\
 # bluez5 builds a large number of useful utilities but does not
 # install them.  Specify which ones we want put into ${PN}-noinst-tools.
 NOINST_TOOLS_READLINE ??= ""
-NOINST_TOOLS_TESTING ??= ""
 NOINST_TOOLS_BT ??= ""
 NOINST_TOOLS = " \
     ${@bb.utils.contains('PACKAGECONFIG', 'readline', '${NOINST_TOOLS_READLINE}', '', d)} \
-    ${@bb.utils.contains('PACKAGECONFIG', 'testing', '${NOINST_TOOLS_TESTING}', '', d)} \
     ${@bb.utils.contains('PACKAGECONFIG', 'tools', '${NOINST_TOOLS_BT}', '', d)} \
 "
 
@@ -99,13 +93,9 @@ do_install_append() {
 	for f in ${NOINST_TOOLS} ; do
 		install -m 755 ${B}/$f ${D}/${bindir}
 	done
-
-	# Patch python tools to use Python 3; they should be source compatible, but
-	# still refer to Python 2 in the shebang
-	sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${libdir}/bluez/test/*
 }
 
-PACKAGES =+ "${PN}-testtools ${PN}-obex ${PN}-noinst-tools"
+PACKAGES =+ "${PN}-obex ${PN}-noinst-tools"
 
 FILES_${PN} += " \
     ${libdir}/bluetooth/plugins/*.so \
@@ -125,8 +115,6 @@ FILES_${PN}-obex = "${libexecdir}/bluetooth/obexd \
                    "
 SYSTEMD_SERVICE_${PN}-obex = "obex.service"
 
-FILES_${PN}-testtools = "${libdir}/bluez/test/*"
-
 def get_noinst_tools_paths (d, bb, tools):
     s = list()
     bindir = d.getVar("bindir")
@@ -137,20 +125,6 @@ def get_noinst_tools_paths (d, bb, tools):
 
 FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
 
-RDEPENDS_${PN}-testtools += "python3-core python3-dbus"
-RDEPENDS_${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'python3-pygobject', '', d)}"
-
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluetooth.service', '', d)}"
 INITSCRIPT_PACKAGES = "${PN}"
 INITSCRIPT_NAME_${PN} = "bluetooth"
-
-do_compile_ptest() {
-	oe_runmake buildtests
-}
-
-do_install_ptest() {
-	cp -r ${B}/unit/ ${D}${PTEST_PATH}
-	rm -f ${D}${PTEST_PATH}/unit/*.o
-}
-
-RDEPENDS_${PN}-ptest_append_libc-glibc = " glibc-gconv-utf-16"
