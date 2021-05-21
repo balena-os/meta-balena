@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.4
+## (2021-05-21)
+
+* Skip some services when running under docker [Robert Günzler]
+
 # v2.79.3
 ## (2021-05-20)
 
