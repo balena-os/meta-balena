@@ -1,5 +1,6 @@
 [Unit]
 Description=mnt-sysroot-inactive partition
+ConditionVirtualization=!docker
 
 [Automount]
 Where=/mnt/sysroot/inactive
