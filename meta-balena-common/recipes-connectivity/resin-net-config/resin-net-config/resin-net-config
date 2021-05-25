@@ -24,6 +24,7 @@ CONFIG_NM=${BALENA_BOOT_MOUNTPOINT}/system-connections/
 if [ -d "$CONFIG_NM" ]; then
 	cp -r "$CONFIG_NM" /etc/NetworkManager/
 	chmod 600 /etc/NetworkManager/system-connections/*
+	sync -f "/etc/NetworkManager/"
 fi
 
 # set the wifi regulatory domain; keep the devices default if unset
@@ -36,6 +37,7 @@ DNS_SERVER_FILE=/run/dnsmasq.servers
 echo > $DNS_SERVER_FILE
 for dns in $DNS_SERVERS; do
 	echo "server=$dns" >> $DNS_SERVER_FILE
+	sync -f "$DNS_SERVER_FILE"
 done
 
 # Setup DNS bridge interface
