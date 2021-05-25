@@ -43,5 +43,6 @@ then
 fi
 
 update-ca-certificates
+sync
 
 rm -f "${RAW_DEST_FILE}" "${DEST_FILE}"
