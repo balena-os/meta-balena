@@ -255,6 +255,10 @@ The following example contains two custom udev rules that will create `/etc/udev
 ## Yocto version support
 
 The following Yocto versions are supported:
+ * Dunfell (3.1)
+  * **TESTED**
+ * Warrior (2.7)
+  * **TESTED**
  * Thud (2.6)
   * **TESTED**
  * Sumo (2.5)
