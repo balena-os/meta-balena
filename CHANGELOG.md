@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.5
+## (2021-05-21)
+
+* README: Update supported Yocto versions [Alex Gonzalez]
+
 # v2.79.4
 ## (2021-05-21)
 
