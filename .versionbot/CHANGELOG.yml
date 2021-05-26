@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'bluez5: Use bluez5 recipe from poky master'
+      hash: fe3c870eef75927eac740bbc1e8e15b8ed9c7341
+      body: |
+        This commit brings the bluez5 recipe from poky master as we need
+        to control which bluez5 version is used in meta-balena.
+
+        The code originates from poky's master branch -
+        c887238347295c87dacf8a08e6d703603436d0bc.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.79.6
+  date: 2021-05-26T08:26:16.310Z
+- commits:
     - subject: 'README: Update supported Yocto versions'
       hash: cdbf76ccbaaf6e265f8432eca10d42e55b6969e8
       body: |

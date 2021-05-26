@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.6
+## (2021-05-26)
+
+* bluez5: Use bluez5 recipe from poky master [Zahari Petkov]
+
 # v2.79.5
 ## (2021-05-21)
 
