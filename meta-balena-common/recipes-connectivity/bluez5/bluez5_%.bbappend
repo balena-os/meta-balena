@@ -3,6 +3,7 @@ FILESEXTRAPATHS_append := ":${THISDIR}/files"
 SRC_URI += " \
     file://10-local-bt-hci-up.rules \
     file://bluetooth.conf.systemd \
+    file://main.conf \
     "
 
 do_install_append() {
@@ -13,6 +14,8 @@ do_install_append() {
     sed -i "s,@pkglibexecdir@,${libexecdir},g" ${D}${sysconfdir}/systemd/system/bluetooth.service.d/bluetooth.conf
 
     install -d ${D}/var/lib/bluetooth
+    install -d ${D}${sysconfdir}/bluetooth
+    install -m 0644 ${WORKDIR}/main.conf ${D}${sysconfdir}/bluetooth/main.conf
 }
 
 PACKAGECONFIG_append = " sixaxis"
