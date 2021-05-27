@@ -10,6 +10,7 @@ do_install_append() {
 
     install -d ${D}${sysconfdir}/systemd/system/bluetooth.service.d
     install -m 0644 ${WORKDIR}/bluetooth.conf.systemd ${D}${sysconfdir}/systemd/system/bluetooth.service.d/bluetooth.conf
+    sed -i "s,@pkglibexecdir@,${libexecdir},g" ${D}${sysconfdir}/systemd/system/bluetooth.service.d/bluetooth.conf
 
     install -d ${D}/var/lib/bluetooth
 }
