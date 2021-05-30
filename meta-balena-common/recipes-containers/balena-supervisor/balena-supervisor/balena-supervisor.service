@@ -14,6 +14,7 @@ After=\
     bind-etc-balena-supervisor.service \
     chronyd.service
 Wants=balena.service
+ConditionPathExists=/etc/balena-supervisor/supervisor.conf
 
 [Service]
 Type=simple
@@ -23,6 +24,8 @@ WatchdogSec=180
 SyslogIdentifier=balena-supervisor
 EnvironmentFile=/etc/balena-supervisor/supervisor.conf
 EnvironmentFile=-/tmp/update-supervisor.conf
+ExecStartPre=-@BINDIR@/balena stop resin_supervisor
+ExecStartPre=-@BINDIR@/balena rm --force resin_supervisor
 ExecStartPre=-@BINDIR@/balena stop balena_supervisor
 ExecStartPre=/bin/systemctl is-active balena.service
 ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/balena-supervisor/balena-supervisor-healthcheck @BINDIR@/start-balena-supervisor
