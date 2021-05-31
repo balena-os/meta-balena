@@ -9,6 +9,7 @@ inherit allarch
 
 HOSTAPP_HOOKS = " \
     0-bootfiles \
+    65-migrate-supervisor-state \
     70-sshd_migrate_keys \
     75-supervisor-db/75-forward_supervisor-db \
     75-supervisor-db/75-fwd_commit_supervisor-db \
