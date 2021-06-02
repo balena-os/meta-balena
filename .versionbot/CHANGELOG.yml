@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'meta-balena: rename connectivity packagegroup'
+      hash: 8f54c4137f8bb8a83a05d9963cdb1565778c737b
+      body: |
+        Rename the resin-connectivity packagegroup.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'meta-balena: rename connectivity packagegroup'
+        changelog-entry: 'meta-balena: rename connectivity packagegroup'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.79.7
+  date: 2021-05-26T15:03:08.108Z
+- commits:
     - subject: 'bluez5: Use bluez5 recipe from poky master'
       hash: fe3c870eef75927eac740bbc1e8e15b8ed9c7341
       body: |

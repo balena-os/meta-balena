@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.7
+## (2021-05-26)
+
+* meta-balena: rename connectivity packagegroup [Mark Corbin]
+
 # v2.79.6
 ## (2021-05-26)
 
