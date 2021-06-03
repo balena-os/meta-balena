@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.79.8
+## (2021-06-02)
+
+* bluez: Set policy configuration to AutoEnable [Alex Gonzalez]
+* bluez5: Replace executable path directory in unit file [Alex Gonzalez]
+
 # v2.79.7
 ## (2021-05-26)
 

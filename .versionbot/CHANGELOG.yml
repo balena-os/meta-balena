@@ -1,4 +1,35 @@
 - commits:
+    - subject: 'bluez: Set policy configuration to AutoEnable'
+      hash: 614eaf745b29f6e5f373f9c712a7c533373a6187
+      body: |
+        Since bluez 5.35, the bluetooth daemon has the ability to power on
+        controllers instead of using the unreliable `hciconfig hci0 up`.
+
+        http://www.bluez.org/release-of-bluez-5-35/
+
+        This commit makes this the default for BalenaOS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'bluez5: Replace executable path directory in unit file'
+      hash: 809da983829e97e5cddc424c4ff95054e2404ef0
+      body: |
+        The unit file is left with a placeholder to perform the substitution.
+        Previously this was replaced by autoconf.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.79.8
+  date: 2021-06-02T12:32:03.789Z
+- commits:
     - subject: 'meta-balena: rename connectivity packagegroup'
       hash: 8f54c4137f8bb8a83a05d9963cdb1565778c737b
       body: |
