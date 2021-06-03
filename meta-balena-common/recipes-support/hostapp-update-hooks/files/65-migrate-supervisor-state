@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Copyright 2021 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Copies /etc/resin-supervisor to /etc/balena-supervisor in the state cache
+#
+
+set -e
+
+old_path="/mnt/state/root-overlay/etc/resin-supervisor"
+new_path="/mnt/state/root-overlay/etc/balena-supervisor"
+
+# exit quietly if balena-supervisor already exists in the state cache
+[ -d "${new_path}" ] && exit 0
+
+if [ -d "${old_path}" ]
+then
+    echo "[INFO] Copying /etc/resin-supervisor to /etc/balena-supervisor in the state cache"
+    cp -a "${old_path}" "${new_path}"
+    sync -f /mnt/state
+else
+    echo "[WARN] Directory /etc/resin-supervisor not found in the state cache!"
+fi

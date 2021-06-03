@@ -58,8 +58,6 @@ do_compile[noexec] = "1"
 do_install () {
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/balena-supervisor/
-	# symlink to legacy resin-supervisor sysconfig dir
-	ln -s balena-supervisor ${D}${sysconfdir}/resin-supervisor
 	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/balena-supervisor/
 	sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 	sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
