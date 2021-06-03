@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.79.9
+## (2021-06-03)
+
+* hostapp-update-hooks: Sync to disk when hook is done [Alex Gonzalez]
+* extract-balena-ca: Sync changes to disk in case of power loss [Alex Gonzalez]
+* resin-net-config: Make sure to sync changes to disk in case of power loss [Alex Gonzalez]
+
 # v2.79.8
 ## (2021-06-02)
 

@@ -1,4 +1,46 @@
 - commits:
+    - subject: 'hostapp-update-hooks: Sync to disk when hook is done'
+      hash: 9688de53a3d6ae143b74bb1a7ea446b073755b27
+      body: |
+        This makes sure the hook changes are committed if the power is lost.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'extract-balena-ca: Sync changes to disk in case of power loss'
+      hash: 62302a2149b886b5e44cd2cc93bdc70e55227bb0
+      body: |
+        Sync changes to disk once the certificates have been updated. This
+        minimizes the risk of the custom CA to be committed without having the
+        certificates updated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: >-
+        resin-net-config: Make sure to sync changes to disk in case of power
+        loss
+      hash: e5733363c4ba2a3e31c4613b34e66e072517d1c8
+      body: |
+        Commit disk modifications to minimize data loss in event of power loss.
+
+        Fixes #2141
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.79.9
+  date: 2021-06-03T13:15:41.101Z
+- commits:
     - subject: 'bluez: Set policy configuration to AutoEnable'
       hash: 614eaf745b29f6e5f373f9c712a7c533373a6187
       body: |
