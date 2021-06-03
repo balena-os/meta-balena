@@ -3,4 +3,5 @@ Requires=bind-var-lib-bluetooth.service
 After=bind-var-lib-bluetooth.service
 
 [Service]
-ExecStart=@pkglibexecdir@/bluetoothd --experimental
+ExecStart=
+ExecStart=@pkglibexecdir@/bluetooth/bluetoothd --experimental
