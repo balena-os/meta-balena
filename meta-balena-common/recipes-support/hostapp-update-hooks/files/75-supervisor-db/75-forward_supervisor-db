@@ -46,4 +46,5 @@ if [ -f "${SUPERVISOR_DB_PATH_B}" ]; then
 	fi
 	cp "${SUPERVISOR_DB_PATH_B}" "${SUPERVISOR_DB_PATH_A}"
 	echo "[INFO] forward_supervisor-db: Copied ${SUPERVISOR_DB_PATH_B} to ${SUPERVISOR_DB_PATH_A}"
+	sync -f "${SUPERVISOR_DB_PATH_A}"
 fi
