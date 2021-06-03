@@ -1,4 +1,46 @@
 - commits:
+    - subject: 'supervisor: Remove symlink to legacy resin sysconfig'
+      hash: 2b04b5a776c9e996ded53dd7c405755c6543d7e5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'hostapp-update-hooks: Migrate resin-supervisor to balena-supervisor'
+      hash: 19a9bfc2f172368c8652a448e77a77563a5c32a4
+      body: |
+        After a hostapp-update we need to migrate the supervisor.conf currently
+        mounted from /etc/resin-supervisor in the state cache partition.
+
+        Avoid deleting the old supervisor state cache in case of rollback.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'supervisor: Remove legacy resin supervisor container'
+      hash: d8dd730edd9e4f4c87fcc0f4774097add68f3422
+      body: |
+        Clean up the legacy resin supervisor container if it exists
+        after a hostapp update.
+
+        Also check that supervisor.conf exists before attempting
+        to start the service.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.79.10
+  date: 2021-06-03T16:04:52.063Z
+- commits:
     - subject: 'hostapp-update-hooks: Sync to disk when hook is done'
       hash: 9688de53a3d6ae143b74bb1a7ea446b073755b27
       body: |

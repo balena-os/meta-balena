@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.79.10
+## (2021-06-03)
+
+* supervisor: Remove symlink to legacy resin sysconfig [Kyle Harding]
+* hostapp-update-hooks: Migrate resin-supervisor to balena-supervisor [Kyle Harding]
+* supervisor: Remove legacy resin supervisor container [Kyle Harding]
+
 # v2.79.9
 ## (2021-06-03)
 
