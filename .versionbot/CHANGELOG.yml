@@ -1,4 +1,53 @@
 - commits:
+    - subject: 'kernel-resin: enable CONFIG_KEXEC_CORE for crashkernel support'
+      hash: 599d8983f6b64ec123a73bc526d4b2a76e5e3914
+      body: |
+        Ramoops is a module that allows for logging oopses to  memory, and can
+        be useful for remotely debugging a system that's oopsing or panicking.
+        However, booting another kernel will typically clobber the buffer
+        ramoops dumps to, so typically the output has to be retrieved from the
+        bootloader shell after the panic, before the kernel boots again.
+
+        The kernel allows reserving memory with the crashkernel parameter for
+        the purpose of loading a capture kernel into memory, which is kexec'd
+        after a panic. Once booted, the capture kernel allows dumping an image
+        of the crashed kernel's memory for debugging.
+
+        This parameter restricts the kernel from touching the specified region,
+        so the capture kernel remains intact in memory. It can be abused for
+        other purposes, however, such as reserving a region of memory for
+        ramoops to dump to that will remain intact across boots.
+
+        For example, the following parameters can be added to a kernel:
+            crashkernel=1M@32M ramoops.mem_address=0x2000000 ramoops.mem_size=0x100000
+
+        This reserves a 1M region of memory at a 32M offset, then tells ramoops
+        to use it for recording oopses and panics.
+
+        After rebooting from a panic, the log can be extracted from a file in
+        pstore like so:
+
+            mount -t pstore pstore /mnt
+            cat /mnt/ftrace-ramoops
+
+        This is preferable to the method suggested by the documentation, which
+        uses the ram= parameter to place an upper limit on the amount of memory
+        used by the kernel. Creating a persistent reserved block of memory with
+        the crashkernel= parameter leaves most of the system memory available to
+        the OS and applications.
+
+        Enable CONFIG_KEXEC_CORE by default to allow for reserving blocks of
+        memory with the crashkernel= parameter.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.79.11
+  date: 2021-06-04T19:49:49.665Z
+- commits:
     - subject: 'supervisor: Remove symlink to legacy resin sysconfig'
       hash: 2b04b5a776c9e996ded53dd7c405755c6543d7e5
       body: ''

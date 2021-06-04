@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.11
+## (2021-06-04)
+
+* kernel-resin: enable CONFIG_KEXEC_CORE for crashkernel support [Joseph Kogut]
+
 # v2.79.10
 ## (2021-06-03)
 
