@@ -102,6 +102,7 @@ BALENA_CONFIGS ?= " \
     task-accounting \
     ipv6_mroute \
     disable_hung_panic \
+    kexec \
     "
 
 #
@@ -566,6 +567,11 @@ BALENA_CONFIGS[uprobes] = " \
 
 BALENA_CONFIGS[disable_hung_panic] = " \
     CONFIG_BOOTPARAM_HUNG_TASK_PANIC=n \
+    "
+
+# enable kexec for crashkernel support
+BALENA_CONFIGS[kexec] = " \
+    CONFIG_KEXEC_CORE=y \
     "
 
 ###########
