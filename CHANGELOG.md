@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.0
+## (2021-06-07)
+
+* Revert Go 1.16 recipes [Joseph Kogut]
+
 # v2.79.10
 ## (2021-06-03)
 

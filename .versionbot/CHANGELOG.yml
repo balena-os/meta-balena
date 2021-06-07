@@ -1,4 +1,27 @@
 - commits:
+    - subject: Revert Go 1.16 recipes
+      hash: 4303346ccda6d3e3c4f83cc3782c73a6d1adb494
+      body: |
+        balena-engine requires fixes backported from upstream to support a newer
+        version of Go, and retaining the new recipes while switching back to the
+        supported version of Go using the GOVERSION variable is still a work in
+        process. Revert these changes for now. We can merge the new recipes
+        back in once the build issues are resolved.
+
+        This reverts commit f36dbd96684f9adfc5ce6faa57aa26fc4ba8e34e, reversing
+        changes made to b228aea720fd1536ac6904b1886b2d445a582fc9.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Revert Go 1.16 recipes
+        changelog-entry: Revert Go 1.16 recipes
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.80.0
+  date: 2021-06-07T08:31:41.036Z
+- commits:
     - subject: 'supervisor: Remove symlink to legacy resin sysconfig'
       hash: 2b04b5a776c9e996ded53dd7c405755c6543d7e5
       body: ''
