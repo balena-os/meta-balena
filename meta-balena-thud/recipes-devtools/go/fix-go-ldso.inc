@@ -1,1 +1,0 @@
-../../../meta-balena-dunfell/recipes-devtools/go/fix-go-ldso.inc
