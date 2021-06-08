@@ -91,15 +91,23 @@ module.exports = {
 
 				test.comment(`Rebooted, device back online`)
 				test.comment(`Stopping capture...`);
-				const res = this.context.get().worker.capture('stop');
-				res.on('error', error => {
-					throw new Error("Error stopping capture")
-				});
+				
+				let stopCapture = new Promise((resolve, reject) => {
+					const res = this.context.get().worker.capture('stop');
+					res.on('error', error => {
+						throw new Error("Error stopping capture")
+					});
 
-				res.on('ok', () => {
-					test.comment(`Capture Stopped!`)
+					res.on('response', (response) => {
+						if(response.statusCode === 200){
+							test.comment(`Capture stopped...`)
+							resolve()
+						};
+					});
 				});
-
+				
+				await stopCapture;
+				
 				// captured frames are stored in /data/capture - we probably want a way to remove the need for a hard coded reference here
 				const captured = fs.readdirSync(`/data/capture`)
 			
@@ -107,16 +115,20 @@ module.exports = {
 				test.comment(`Comparing captured images to reference image...`)
 				for(let image of captured.reverse()){
 					const capturedHash = await new Promise((resolve, reject) => {
-						const stream = fs.createReadStream(`/data/capture/` + image);
-						const buffer = [];
-	
-						stream.on('error', reject);
-						stream.on('data', data => {
-							buffer.push(data);
-						});
-						stream.on('end', () => {
-							resolve(blockhash(decode(Buffer.concat(buffer))));
-						});
+						try{
+							const stream = fs.createReadStream(`/data/capture/` + image);
+							const buffer = [];
+		
+							stream.on('error', reject);
+							stream.on('data', data => {
+								buffer.push(data);
+							});
+							stream.on('end', () => {
+								resolve(blockhash(decode(Buffer.concat(buffer))));
+							});
+						} catch (e){
+							test.comment(`Error while comparing images: ${e}`)
+						}
 					});
 
 					let testDistance = hammingDistance(referenceHash, capturedHash)
@@ -133,7 +145,7 @@ module.exports = {
 				
 				test.true(
 					pass,
-					'Boot splash screen detected over HDMI interface',
+					'Boot splash screen should be detected over HDMI interface',
 				);				
 			},
 		},
