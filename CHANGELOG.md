@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.1
+## (2021-06-07)
+
+* bluez5: Disable PnP Device Information service [Zahari Petkov]
+
 # v2.80.0
 ## (2021-06-07)
 

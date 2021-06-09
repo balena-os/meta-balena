@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'bluez5: Disable PnP Device Information service'
+      hash: afb3dc0441e9ed0f2f9a08de5dd2a9cc75f09ac3
+      body: >
+        This reverts to the behavior before v5.56 as it interferes with user
+        defined
+
+        Device Information profiles.
+
+
+        For more information: https://github.com/bluez/bluez/issues/101
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.80.1
+  date: 2021-06-07T12:35:18.823Z
+- commits:
     - subject: Revert Go 1.16 recipes
       hash: 4303346ccda6d3e3c4f83cc3782c73a6d1adb494
       body: |
