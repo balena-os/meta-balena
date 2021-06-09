@@ -1,4 +1,22 @@
 - commits:
+    - subject: >-
+        update-balena-supervisor: Refactor script to ensure target version is
+        ran
+      hash: 0433c666bf4756df30312f0d59ad8a8b94b062ab
+      body: |
+        This is a rebase of PR 2180 by Miguel,
+        which improves stability for the
+        supervisor update.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.80.2
+  date: 2021-06-09T09:54:10.830Z
+- commits:
     - subject: 'bluez5: Disable PnP Device Information service'
       hash: afb3dc0441e9ed0f2f9a08de5dd2a9cc75f09ac3
       body: >

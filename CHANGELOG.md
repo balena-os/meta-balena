@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.2
+## (2021-06-09)
+
+* update-balena-supervisor: Refactor script to ensure target version is ran [Alexandru Costache]
+
 # v2.80.1
 ## (2021-06-07)
 
