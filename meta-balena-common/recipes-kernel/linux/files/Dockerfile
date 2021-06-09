@@ -22,9 +22,9 @@ ARG kernel_arch
 ARG cross_compile_prefix
 # Compile external hello module using header sources
 RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_source/*/build modules_prepare
-RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} KERNEL_TREE_PATH=/usr/src/app/kernel_source/*/build/ MODULE_PATH=/usr/src/app/example_module_headers_src  make -C /usr/src/app/example_module_headers_src
+RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_source/*/build/ M=/usr/src/app/example_module_headers_src
 
 # Compile external hello module using pre-built headers
 # We run modules_prepare again because the tools pre-compiled are actually the target device arch. While we cross-compile for testing.
 RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_modules_headers/ modules_prepare
-RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} KERNEL_TREE_PATH=/usr/src/app/kernel_modules_headers/ MODULE_PATH=/usr/src/app/example_module_headers_built  make -C /usr/src/app/example_module_headers_built
+RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_modules_headers/ M=/usr/src/app/example_module_headers_built
