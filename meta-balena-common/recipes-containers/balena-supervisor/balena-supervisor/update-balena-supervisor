@@ -140,12 +140,21 @@ else
     tag=$UPDATER_SUPERVISOR_TAG
 fi
 
+setSupervisorConfig() {
+    svconfigdir=$(ls /etc/ | grep "supervisor" | head -n 1)
+
+    # Store the tagged image string so resin-supervisor.service can pick it up
+    sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
+}
+
 # Get image id of tag. This will be non-empty only in case it's already downloaded.
 echo "Getting image id..."
 imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
 
 if [ -n "$imageid" ]; then
     echo "Supervisor $image_name:$tag already downloaded."
+    # Since target Supervisor version is downloaded ensure the device is configured to use it
+    setSupervisorConfig
     exit 0
 fi
 
@@ -163,8 +172,8 @@ else
     error_handler "supervisor pull failed"
 fi
 
-# Store the tagged image string so balena-supervisor.service can pick it up
-sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/balena-supervisor/supervisor.conf > $UPDATECONF
+# Ensure device has newly pulled image as the version to run
+setSupervisorConfig
 
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
