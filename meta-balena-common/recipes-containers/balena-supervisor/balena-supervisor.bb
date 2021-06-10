@@ -17,12 +17,14 @@ SRC_URI += " \
 	file://update-balena-supervisor.timer \
 	file://balena-supervisor-healthcheck \
 	file://tmpfiles-supervisor.conf \
+	file://migrate-supervisor-state.service \
 	"
 
 SYSTEMD_SERVICE_${PN} = " \
 	balena-supervisor.service \
 	update-balena-supervisor.service \
 	update-balena-supervisor.timer \
+	migrate-supervisor-state.service \
 	"
 
 FILES_${PN} += " \
@@ -76,6 +78,7 @@ do_install () {
 	install -c -m 0644 ${WORKDIR}/balena-supervisor.service ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.service ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.timer ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${WORKDIR}/migrate-supervisor-state.service ${D}${systemd_unitdir}/system
 	# symlinks to legacy resin-supervisor systemd unit files
 	ln -s balena-supervisor.service ${D}${systemd_unitdir}/system/resin-supervisor.service
 	ln -s update-balena-supervisor.service ${D}${systemd_unitdir}/system/update-resin-supervisor.service

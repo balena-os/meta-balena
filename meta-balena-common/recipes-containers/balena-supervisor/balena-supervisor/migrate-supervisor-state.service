@@ -1,0 +1,13 @@
+[Unit]
+Description=Balena supervisor state migrator
+Requires=resin-state.service
+After=resin-state.service
+ConditionPathExists=/mnt/state/root-overlay/etc/resin-supervisor/supervisor.conf
+ConditionPathExists=!/mnt/state/root-overlay/etc/balena-supervisor/supervisor.conf
+
+[Service]
+Type=oneshot
+Environment=RESIN_CONF_PATH=/mnt/state/root-overlay/etc/resin-supervisor/supervisor.conf
+Environment=BALENA_CONF_PATH=/mnt/state/root-overlay/etc/balena-supervisor/supervisor.conf
+ExecStart=@BASE_BINDIR@/cp -av $RESIN_CONF_PATH $BALENA_CONF_PATH
+ExecStart=@BASE_BINDIR@/sync -f /mnt/state
