@@ -1,4 +1,24 @@
 - commits:
+    - subject: Add oneshot service to migrate supervisor state config
+      hash: d965d23fe60db6254eaabd81a0d48b5718e01a3a
+      body: |
+        The hostapp-update hooks would run before the supervisor update step
+        when using balenahup via the dashboard. This resulted in the balena
+        supervisor state conf file being out-of-date.
+
+        This commit removes the hostapp-update hook and instead uses a
+        oneshot service to ensure the conf is migrated if it does not exist
+        in the new path before starting the supervisor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.80.3
+  date: 2021-06-10T13:47:28.925Z
+- commits:
     - subject: >-
         update-balena-supervisor: Refactor script to ensure target version is
         ran

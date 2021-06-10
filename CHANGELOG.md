@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.3
+## (2021-06-10)
+
+* Add oneshot service to migrate supervisor state config [Kyle Harding]
+
 # v2.80.2
 ## (2021-06-09)
 
