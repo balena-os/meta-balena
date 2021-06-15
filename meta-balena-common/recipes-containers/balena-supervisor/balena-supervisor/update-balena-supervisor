@@ -141,7 +141,7 @@ else
 fi
 
 setSupervisorConfig() {
-    svconfigdir=$(ls /etc/ | grep "supervisor" | head -n 1)
+    svconfigdir=$(basename "$(ls -d /etc/*-supervisor)")
 
     # Store the tagged image string so resin-supervisor.service can pick it up
     sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
