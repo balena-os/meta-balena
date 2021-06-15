@@ -22,7 +22,7 @@ RDEPENDS_${PN} += " \
     hostapp-update-hooks \
     resin-filesystem-expand \
     balena-persistent-logs \
-    resin-info \
+    balena-info \
     balena-hostname \
     resin-state-reset \
     resin-device-progress \
