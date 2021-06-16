@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.7.0 to v12.8.7
+      hash: b935b594c12a2cdd54871bfb064d5cc843442e53
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.7.0 to v12.8.7
+        changelog-entry: Update balena-supervisor from v12.7.0 to v12.8.7
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.80.5
+  date: 2021-06-16T15:37:21.521Z
+- commits:
     - subject: 'kernel-headers-test: simplify example module Makefile'
       hash: 88df9d672d45b7d0bf59d4656654091c3bbfd56b
       body: |
