@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'kernel-headers-test: simplify example module Makefile'
+      hash: 88df9d672d45b7d0bf59d4656654091c3bbfd56b
+      body: |
+        The example kernel module has some unnecessary variables and targets.
+        Simplify this makefile by passing the kernel source directory to make,
+        and using the M variable to build the module.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'kernel-headers-test: simplify example module Makefile'
+        changelog-entry: 'kernel-headers-test: simplify example module Makefile'
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.80.4
+  date: 2021-06-14T21:02:06.713Z
+- commits:
     - subject: Add oneshot service to migrate supervisor state config
       hash: d965d23fe60db6254eaabd81a0d48b5718e01a3a
       body: |

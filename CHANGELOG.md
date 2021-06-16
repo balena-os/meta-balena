@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.4
+## (2021-06-14)
+
+* kernel-headers-test: simplify example module Makefile [Joseph Kogut]
+
 # v2.80.3
 ## (2021-06-10)
 
