@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.6
+## (2021-06-17)
+
+* catch error if image path is corrupted [rcooke-warwick]
+
 # v2.80.5
 ## (2021-06-17)
 
