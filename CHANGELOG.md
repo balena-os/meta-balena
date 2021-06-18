@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.7
+## (2021-06-18)
+
+* prevent failed teardown from making test hang [rcooke-warwick]
+
 # v2.80.6
 ## (2021-06-17)
 

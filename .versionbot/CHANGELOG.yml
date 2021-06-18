@@ -1,4 +1,17 @@
 - commits:
+    - subject: prevent failed teardown from making test hang
+      hash: 47b439dfd12a66171ced7b710502dc143fedb686
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.80.7
+  date: 2021-06-18T10:03:31.173Z
+- commits:
     - subject: catch error if image path is corrupted
       hash: 883fb0e8ac2570763d5857e1a3f2e3cc8b6fc8b2
       body: ''
