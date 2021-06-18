@@ -76,7 +76,9 @@ module.exports = {
     // Register a teardown function execute at the end of the test, regardless of a pass or fail
     this.suite.teardown.register(() => {
       this.log("Removing image");
-      fse.unlinkSync("/data/image"); // Delete the unpacked an modified image from the testbot cache to prevent use in the next suite
+      if (fse.existsSync("/data/image")) {
+        fse.unlinkSync("/data/image"); // Delete the unpacked an modified image from the testbot cache to prevent use in the next suite
+      }
       this.log("Worker teardown");
       return this.context.get().worker.teardown();
     });
