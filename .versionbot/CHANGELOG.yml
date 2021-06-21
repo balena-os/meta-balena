@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.8.7 to v12.8.8
+      hash: 713342af1f30442613a3f8cdf38552d10294a1d5
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.8.7 to v12.8.8
+        changelog-entry: Update balena-supervisor from v12.8.7 to v12.8.8
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.80.8
+  date: 2021-06-21T08:24:21.670Z
+- commits:
     - subject: prevent failed teardown from making test hang
       hash: 47b439dfd12a66171ced7b710502dc143fedb686
       body: ''
