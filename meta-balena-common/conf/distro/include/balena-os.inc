@@ -4,7 +4,7 @@ include conf/distro/include/balena-os-yocto-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
-DISTRO_VERSION = "2.80.0"
+DISTRO_VERSION = "2.79.7"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''
@@ -101,5 +101,5 @@ PREFERRED_VERSION_cargo-native = "1.36.0"
 PREFERRED_VERSION_libstd-rs = "1.36.0"
 
 # balena-engine go version requirement
-GOVERSION = "1.12.17"
+GOVERSION = "1.16.2"
 PREFERRED_PROVIDER_go-native = "go-native"

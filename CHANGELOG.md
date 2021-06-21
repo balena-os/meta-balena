@@ -1,35 +1,10 @@
 Change log
 -----------
 
-# v2.80.0
-## (2021-06-07)
-
-* Revert Go 1.16 recipes [Joseph Kogut]
-
-# v2.79.10
-## (2021-06-03)
-
-* supervisor: Remove symlink to legacy resin sysconfig [Kyle Harding]
-* hostapp-update-hooks: Migrate resin-supervisor to balena-supervisor [Kyle Harding]
-* supervisor: Remove legacy resin supervisor container [Kyle Harding]
-
-# v2.79.9
-## (2021-06-03)
-
-* hostapp-update-hooks: Sync to disk when hook is done [Alex Gonzalez]
-* extract-balena-ca: Sync changes to disk in case of power loss [Alex Gonzalez]
-* resin-net-config: Make sure to sync changes to disk in case of power loss [Alex Gonzalez]
-
-# v2.79.8
-## (2021-06-02)
-
-* bluez: Set policy configuration to AutoEnable [Alex Gonzalez]
-* bluez5: Replace executable path directory in unit file [Alex Gonzalez]
-
 # v2.79.7
-## (2021-05-26)
+## (2021-06-21)
 
-* meta-balena: rename connectivity packagegroup [Mark Corbin]
+* docker-disk: fix building with cgroups v2 [Joseph Kogut]
 
 # v2.79.6
 ## (2021-05-26)

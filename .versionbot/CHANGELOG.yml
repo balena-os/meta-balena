@@ -1,157 +1,23 @@
 - commits:
-    - subject: Revert Go 1.16 recipes
-      hash: 4303346ccda6d3e3c4f83cc3782c73a6d1adb494
+    - subject: 'docker-disk: fix building with cgroups v2'
+      hash: 8ec699cf55e88e7e7d45d577839836a80f86a401
       body: |
-        balena-engine requires fixes backported from upstream to support a newer
-        version of Go, and retaining the new recipes while switching back to the
-        supported version of Go using the GOVERSION variable is still a work in
-        process. Revert these changes for now. We can merge the new recipes
-        back in once the build issues are resolved.
+        Bump docker-disk base image from docker:19.03.10-dind to
+        docker:20.10.06-dind.
 
-        This reverts commit f36dbd96684f9adfc5ce6faa57aa26fc4ba8e34e, reversing
-        changes made to b228aea720fd1536ac6904b1886b2d445a582fc9.
+        This fixes building on distros that default to cgroups v2, as support
+        was added to Docker 20.10.
       footer:
-        Change-type: minor
-        change-type: minor
-        Changelog-entry: Revert Go 1.16 recipes
-        changelog-entry: Revert Go 1.16 recipes
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'docker-disk: fix building with cgroups v2'
+        changelog-entry: 'docker-disk: fix building with cgroups v2'
         Signed-off-by: Joseph Kogut <joseph@balena.io>
         signed-off-by: Joseph Kogut <joseph@balena.io>
       author: Joseph Kogut
       nested: []
-  version: 2.80.0
-  date: 2021-06-07T08:31:41.036Z
-- commits:
-    - subject: 'supervisor: Remove symlink to legacy resin sysconfig'
-      hash: 2b04b5a776c9e996ded53dd7c405755c6543d7e5
-      body: ''
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Kyle Harding <kyle@balena.io>
-        signed-off-by: Kyle Harding <kyle@balena.io>
-      author: Kyle Harding
-      nested: []
-    - subject: 'hostapp-update-hooks: Migrate resin-supervisor to balena-supervisor'
-      hash: 19a9bfc2f172368c8652a448e77a77563a5c32a4
-      body: |
-        After a hostapp-update we need to migrate the supervisor.conf currently
-        mounted from /etc/resin-supervisor in the state cache partition.
-
-        Avoid deleting the old supervisor state cache in case of rollback.
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Kyle Harding <kyle@balena.io>
-        signed-off-by: Kyle Harding <kyle@balena.io>
-      author: Kyle Harding
-      nested: []
-    - subject: 'supervisor: Remove legacy resin supervisor container'
-      hash: d8dd730edd9e4f4c87fcc0f4774097add68f3422
-      body: |
-        Clean up the legacy resin supervisor container if it exists
-        after a hostapp update.
-
-        Also check that supervisor.conf exists before attempting
-        to start the service.
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Kyle Harding <kyle@balena.io>
-        signed-off-by: Kyle Harding <kyle@balena.io>
-      author: Kyle Harding
-      nested: []
-  version: 2.79.10
-  date: 2021-06-03T16:04:52.063Z
-- commits:
-    - subject: 'hostapp-update-hooks: Sync to disk when hook is done'
-      hash: 9688de53a3d6ae143b74bb1a7ea446b073755b27
-      body: |
-        This makes sure the hook changes are committed if the power is lost.
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Alex Gonzalez <alexg@balena.io>
-        signed-off-by: Alex Gonzalez <alexg@balena.io>
-      author: Alex Gonzalez
-      nested: []
-    - subject: 'extract-balena-ca: Sync changes to disk in case of power loss'
-      hash: 62302a2149b886b5e44cd2cc93bdc70e55227bb0
-      body: |
-        Sync changes to disk once the certificates have been updated. This
-        minimizes the risk of the custom CA to be committed without having the
-        certificates updated.
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Alex Gonzalez <alexg@balena.io>
-        signed-off-by: Alex Gonzalez <alexg@balena.io>
-      author: Alex Gonzalez
-      nested: []
-    - subject: >-
-        resin-net-config: Make sure to sync changes to disk in case of power
-        loss
-      hash: e5733363c4ba2a3e31c4613b34e66e072517d1c8
-      body: |
-        Commit disk modifications to minimize data loss in event of power loss.
-
-        Fixes #2141
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Alex Gonzalez <alexg@balena.io>
-        signed-off-by: Alex Gonzalez <alexg@balena.io>
-      author: Alex Gonzalez
-      nested: []
-  version: 2.79.9
-  date: 2021-06-03T13:15:41.101Z
-- commits:
-    - subject: 'bluez: Set policy configuration to AutoEnable'
-      hash: 614eaf745b29f6e5f373f9c712a7c533373a6187
-      body: |
-        Since bluez 5.35, the bluetooth daemon has the ability to power on
-        controllers instead of using the unreliable `hciconfig hci0 up`.
-
-        http://www.bluez.org/release-of-bluez-5-35/
-
-        This commit makes this the default for BalenaOS.
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Alex Gonzalez <alexg@balena.io>
-        signed-off-by: Alex Gonzalez <alexg@balena.io>
-      author: Alex Gonzalez
-      nested: []
-    - subject: 'bluez5: Replace executable path directory in unit file'
-      hash: 809da983829e97e5cddc424c4ff95054e2404ef0
-      body: |
-        The unit file is left with a placeholder to perform the substitution.
-        Previously this was replaced by autoconf.
-      footer:
-        Change-type: patch
-        change-type: patch
-        Signed-off-by: Alex Gonzalez <alexg@balena.io>
-        signed-off-by: Alex Gonzalez <alexg@balena.io>
-      author: Alex Gonzalez
-      nested: []
-  version: 2.79.8
-  date: 2021-06-02T12:32:03.789Z
-- commits:
-    - subject: 'meta-balena: rename connectivity packagegroup'
-      hash: 8f54c4137f8bb8a83a05d9963cdb1565778c737b
-      body: |
-        Rename the resin-connectivity packagegroup.
-      footer:
-        Change-type: patch
-        change-type: patch
-        Changelog-entry: 'meta-balena: rename connectivity packagegroup'
-        changelog-entry: 'meta-balena: rename connectivity packagegroup'
-        Signed-off-by: Mark Corbin <mark@balena.io>
-        signed-off-by: Mark Corbin <mark@balena.io>
-      author: Mark Corbin
-      nested: []
   version: 2.79.7
-  date: 2021-05-26T15:03:08.108Z
+  date: 2021-06-21T08:09:24.974Z
 - commits:
     - subject: 'bluez5: Use bluez5 recipe from poky master'
       hash: fe3c870eef75927eac740bbc1e8e15b8ed9c7341
