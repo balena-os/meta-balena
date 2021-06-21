@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.79.7
+## (2021-06-21)
+
+* docker-disk: fix building with cgroups v2 [Joseph Kogut]
+
 # v2.79.6
 ## (2021-05-26)
 

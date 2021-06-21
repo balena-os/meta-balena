@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'docker-disk: fix building with cgroups v2'
+      hash: 8ec699cf55e88e7e7d45d577839836a80f86a401
+      body: |
+        Bump docker-disk base image from docker:19.03.10-dind to
+        docker:20.10.06-dind.
+
+        This fixes building on distros that default to cgroups v2, as support
+        was added to Docker 20.10.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'docker-disk: fix building with cgroups v2'
+        changelog-entry: 'docker-disk: fix building with cgroups v2'
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.79.7
+  date: 2021-06-21T08:11:07.300Z
+- commits:
     - subject: 'bluez5: Use bluez5 recipe from poky master'
       hash: fe3c870eef75927eac740bbc1e8e15b8ed9c7341
       body: |
