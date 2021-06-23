@@ -1,4 +1,35 @@
 - commits:
+    - subject: 'balena-engine: refactor systemd service'
+      hash: 8227a61f6bef6d93cc6a5acd0ef93a2012079964
+      body: >
+        This makes it easier to overwrite the arguments passed in the engine
+
+        unit from drop-in overwrites. See the development image drop-in unit for
+
+        reference.
+
+
+        Using `systemctl edit --runtime balena.service`, which puts those
+
+        overwrites into `/run/systemd/system/balena.service.d/`, it would be
+
+        possible to modify the runtime behavior of the engine without remounting
+
+        the rootfs to be writeable.
+
+
+        See
+        https://www.freedesktop.org/software/systemd/man/systemd.unit.html#System%20Unit%20Search%20Path
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.80.9
+  date: 2021-06-21T14:04:07.493Z
+- commits:
     - subject: Update balena-supervisor from v12.8.7 to v12.8.8
       hash: 713342af1f30442613a3f8cdf38552d10294a1d5
       body: ''
