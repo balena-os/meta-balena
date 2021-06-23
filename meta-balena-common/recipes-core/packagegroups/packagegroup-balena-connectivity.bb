@@ -1,11 +1,11 @@
-SUMMARY = "Resin Connectivity Package Group"
+SUMMARY = "Balena Connectivity Package Group"
 LICENSE = "Apache-2.0"
 
 PR = "r0"
 
 inherit packagegroup
 
-# By default resin uses networkmanager
+# By default balena uses networkmanager
 NETWORK_MANAGER_PACKAGES ?= "networkmanager"
 
 CONNECTIVITY_MODULES = ""
@@ -20,6 +20,7 @@ CONNECTIVITY_FIRMWARES ?= " \
 CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
     avahi-daemon \
+    balena-net-connectivity-wait \
     dnsmasq \
     dropbear \
     openvpn \
