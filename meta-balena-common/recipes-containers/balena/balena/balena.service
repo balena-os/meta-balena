@@ -9,7 +9,25 @@ After=network.target balena-engine.socket var-lib-docker.mount bind-etc-docker.s
 Type=notify
 Restart=always
 SyslogIdentifier=balenad
-ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/balena/balena-healthcheck /usr/bin/balenad --experimental --log-driver=journald -s @BALENA_STORAGE@ -H fd:// -H unix:///var/run/balena.sock -H unix:///var/run/balena-engine.sock --dns 10.114.102.1 --bip 10.114.101.1/24 --fixed-cidr=10.114.101.0/25 --max-download-attempts=10 --exec-opt native.cgroupdriver=systemd
+Environment=BALENAD_HEALTHDOG_HEALTHCHECK=/usr/lib/balena/balena-healthcheck
+Environment=BALENAD_EXPERIMENTAL=--experimental
+Environment=BALENAD_DEBUG=
+Environment=BALENAD_LOGDRIVER=--log-driver=journald
+Environment=BALENAD_STORAGEDRIVER=--storage-driver=@BALENA_STORAGE@
+Environment=BALENAD_CGROUPDRIVER=--exec-opt=native.cgroupdriver=systemd
+Environment=BALENAD_DELTA_STORAGEDRIVER=
+Environment=BALENAD_DELTA_DATA_ROOT=
+Environment=BALENAD_DATA_ROOT=
+Environment=BALENAD_PIDFILE=
+Environment=BALENAD_EXEC_ROOT=--exec-root=/var/run/balena-host
+Environment=BALENAD_HOST="-H fd:// -H unix:///var/run/balena.sock -H unix:///var/run/balena-engine.sock"
+Environment=BALENAD_DNS=--dns=10.114.102.1
+Environment=BALENAD_BIP=--bip=10.114.101.1/24
+Environment=BALENAD_CIDR=--fixed-cidr=10.114.101.0/25
+Environment=BALENAD_IPTABLES=
+Environment=BALENAD_MAX_DL_ATTEMPTS=--max-download-attempts=10
+Environment=BALENAD_EXTRA_ARGS=
+ExecStart=/usr/bin/healthdog --healthcheck=$BALENAD_HEALTHDOG_HEALTHCHECK /usr/bin/balenad $BALENAD_EXPERIMENTAL $BALENAD_DEBUG $BALENAD_LOGDRIVER $BALENAD_STORAGEDRIVER $BALENAD_HOST $BALENAD_DATA_ROOT $BALENAD_DELTA_STORAGEDRIVER $BALENAD_DELTA_DATA_ROOT $BALENAD_EXEC_ROOT $BALENAD_PIDFILE $BALENAD_DNS $BALENAD_BIP $BALENAD_CIDR $BALENAD_CIDR $BALENAD_IPTABLES $BALENAD_MAX_DL_ATTEMPTS $BALENAD_CGROUPDRIVER $BALENAD_EXTRA_ARGS
 #Adjust OOMscore to -900 to make killing unlikely
 OOMScoreAdjust=-900
 MountFlags=slave
