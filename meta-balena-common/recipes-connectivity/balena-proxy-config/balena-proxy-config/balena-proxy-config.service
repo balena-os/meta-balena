@@ -5,7 +5,7 @@ After=resin-boot.service dnsmasq.service
 
 [Service]
 Type=oneshot
-ExecStart=@BASE_BINDIR@/sh @BINDIR@/resin-proxy-config
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/balena-proxy-config
 RemainAfterExit=yes
 
 [Install]

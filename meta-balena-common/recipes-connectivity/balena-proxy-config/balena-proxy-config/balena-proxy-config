@@ -11,14 +11,14 @@ IPTABLES="iptables -w $IPTABLES_WAIT_SECS"
 . /usr/sbin/balena-config-vars
 
 if [ ! -f "$CONFIG_PATH" ]; then
-	echo "resin-proxy-config: $CONFIG_PATH does not exist."
+	echo "balena-proxy-config: $CONFIG_PATH does not exist."
 	exit 1
 else
-	echo "resin-proxy-config: Found config.json in $CONFIG_PATH ."
+	echo "balena-proxy-config: Found config.json in $CONFIG_PATH ."
 fi
 
 if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
-	echo "resin-proxy-config: $BALENA_BOOT_MOUNTPOINT does not exist."
+	echo "balena-proxy-config: $BALENA_BOOT_MOUNTPOINT does not exist."
 	exit 1
 fi
 
@@ -40,7 +40,7 @@ $IPTABLES -t nat -F REDSOCKS || true
 $IPTABLES -t nat -X REDSOCKS || true
 
 if [ ! -f "$REDSOCKSCONF" ]; then
-	echo "resin-proxy-config: No proxy configuration found, skipping."
+	echo "balena-proxy-config: No proxy configuration found, skipping."
 	exit 0
 fi
 

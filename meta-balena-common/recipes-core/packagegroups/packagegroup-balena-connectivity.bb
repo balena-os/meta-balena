@@ -25,7 +25,7 @@ CONNECTIVITY_PACKAGES = " \
     dropbear \
     openvpn \
     openssh \
-    resin-proxy-config \
+    balena-proxy-config \
     usb-modeswitch \
     iw \
     "

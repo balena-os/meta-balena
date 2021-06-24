@@ -3,7 +3,7 @@ From: Andrei Gherzan <andrei@resin.io>
 Date: Fri, 20 Apr 2018 13:06:14 +0100
 Subject: [PATCH] Add OS dependent default configuration values
 
-Make sure this patch matches the resin-proxy-config script which sets up the
+Make sure this patch matches the balena-proxy-config script which sets up the
 iptables rules.
 
 Signed-off-by: Andrei Gherzan <andrei@resin.io>
