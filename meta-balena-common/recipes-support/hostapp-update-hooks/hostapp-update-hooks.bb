@@ -12,9 +12,11 @@ HOSTAPP_HOOKS = " \
     70-sshd_migrate_keys \
     75-supervisor-db/75-forward_supervisor-db \
     75-supervisor-db/75-fwd_commit_supervisor-db \
+    76-supervisor-db/76-forward_supervisor-db \
+    76-supervisor-db/76-fwd_commit_supervisor-db \
     80-rollback \
     "
-HOSTAPP_HOOKS_DIRS = "75-supervisor-db"
+HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
 
 BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
 
