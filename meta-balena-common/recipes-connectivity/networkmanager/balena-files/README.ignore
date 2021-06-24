@@ -1,7 +1,7 @@
 
 # Sample NetworkManager connection files
 
-The resin-sample.ignore file contains a sample NetworkManager connection
+The balena-sample.ignore file contains a sample NetworkManager connection
 configuration. If you wish to enable this connection then remove the
 .ignore suffix.
 
