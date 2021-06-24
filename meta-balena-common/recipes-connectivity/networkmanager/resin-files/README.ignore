@@ -6,4 +6,4 @@ configuration. If you wish to enable this connection then remove the
 .ignore suffix.
 
 These files are copied into the filesystem from the boot partition by the
-resin-net-config script.
+balena-net-config script.

@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin NTP server configure service
-Requires=resin-net-config.service
-After=resin-net-config.service
+Requires=balena-net-config.service
+After=balena-net-config.service
 
 [Service]
 ExecStart=@BINDIR@/resin-ntp-config
