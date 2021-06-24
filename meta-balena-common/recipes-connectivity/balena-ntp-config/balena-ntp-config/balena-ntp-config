@@ -11,10 +11,10 @@ SERVER_DIR=/run/chrony
 SERVER_FILE=${SERVER_DIR}/added_config.sources
 
 if [ ! -f "$CONFIG_PATH" ]; then
-	echo "resin-ntp-config: $CONFIG_PATH does not exist."
+	echo "balena-ntp-config: $CONFIG_PATH does not exist."
 	exit 1
 else
-	echo "resin-ntp-config: Found config.json in $CONFIG_PATH ."
+	echo "balena-ntp-config: Found config.json in $CONFIG_PATH ."
 fi
 
 if [ ! -d "$SERVER_DIR" ]; then
