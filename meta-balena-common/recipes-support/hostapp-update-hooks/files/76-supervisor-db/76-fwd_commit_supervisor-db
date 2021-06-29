@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2020 Balena Ltd.
+# Copyright 2021 Balena Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 # limitations under the License.
 
 #
-# Keep supervisor database when updating from releases between v2.59.0 < r < v2.64.1 upwards
+# Keep supervisor database when updating from releases between v2.80.0 > r < v2.80.10 upwards
 #
 
 set -e
@@ -25,8 +25,8 @@ set -e
 #
 
 DATA_MOUNT="/mnt/data"
-SUPERVISOR_DB_DIR_A="${DATA_MOUNT}/resin-data/resin-supervisor"
-SUPERVISOR_DB_DIR_B="${DATA_MOUNT}/resin-supervisor"
+SUPERVISOR_DB_DIR_A="${DATA_MOUNT}/resin-data/balena-supervisor"
+SUPERVISOR_DB_DIR_B="${DATA_MOUNT}/resin-data/resin-supervisor"
 SUPERVISOR_DB_NAME="database.sqlite"
 
 SUPERVISOR_DB_PATH_A="${SUPERVISOR_DB_DIR_A}/${SUPERVISOR_DB_NAME}"
@@ -37,14 +37,11 @@ if [ -f "${SUPERVISOR_DB_PATH_B}" ]; then
 		last_modified_a=$(stat -c %Y "${SUPERVISOR_DB_PATH_A}")
 		last_modified_b=$(stat -c %Y "${SUPERVISOR_DB_PATH_B}")
 		if [ "${last_modified_a}" -gt "${last_modified_b}" ]; then
-			echo "[WARN] forward_supervisor-db: ${SUPERVISOR_DB_PATH_A} is newer - bailing out."
+			echo "[INFO] fwd_commit_supervisor-db: Removed unused ${SUPERVISOR_DB_DIR_B}"
+			rm -rf "${SUPERVISOR_DB_DIR_B}"
 			exit
+		else
+			echo "[WARN]: fwd_commit_supervisor-db: ${SUPERVISOR_DB_PATH_B} is newer than ${SUPERVISOR_DB_PATH_A} - bailing out"
 		fi
 	fi
-	if [ ! -d "${SUPERVISOR_DB_DIR_A}" ]; then
-		mkdir -p "${SUPERVISOR_DB_DIR_A}"
-	fi
-	cp "${SUPERVISOR_DB_PATH_B}" "${SUPERVISOR_DB_PATH_A}"
-	echo "[INFO] forward_supervisor-db: Copied ${SUPERVISOR_DB_PATH_B} to ${SUPERVISOR_DB_PATH_A}"
-	sync -f "${SUPERVISOR_DB_PATH_A}"
 fi
