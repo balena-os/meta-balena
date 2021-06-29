@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.80.10
+## (2021-06-24)
+
+* hostapp-update-hooks: Migrate supervisor database [Kyle Harding]
+* hostapp-update-hooks: Revert sv database path used by previous hooks [Kyle Harding]
+
 # v2.80.9
 ## (2021-06-21)
 
