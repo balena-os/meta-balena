@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove CODEOWNERS file
+      hash: c6a50ba3a065d4641a5cc24e462579633cd6916a
+      body: |
+        This is not to be used to manage Balena repositories.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.80.11
+  date: 2021-06-30T16:46:05.358Z
+- commits:
     - subject: 'hostapp-update-hooks: Migrate supervisor database'
       hash: cad3e4cc49c4fbc275a5448c38e2da550e596573
       body: |

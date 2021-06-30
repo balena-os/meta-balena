@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.11
+## (2021-06-30)
+
+* Remove CODEOWNERS file [Alex Gonzalez]
+
 # v2.80.10
 ## (2021-06-24)
 
