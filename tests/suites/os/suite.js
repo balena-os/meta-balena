@@ -11,9 +11,28 @@ const fse = require("fs-extra");
 const { join } = require("path");
 const { homedir } = require("os");
 
+
+async function getJournalLogs(that){
+  // there may be quite a lot in the persistant logs, so we want to check if there's any persistant logs first in /var/logs/journal
+  let logs = ""
+  try{
+    logs = await that.context.get().worker.executeCommandInHostOS(
+    `journalctl -a --no-pager`,
+    that.context.get().link
+    )
+  }catch(e){
+    that.log(`Couldn't retrieve journal logs with error ${e}`)
+  }
+
+  const logPath = "/tmp/journal.log";
+  fse.writeFileSync(logPath, logs);
+  await that.archiver.add(logPath);
+} 
+
+
 module.exports = {
   title: "Unmanaged BalenaOS release suite",
-  run: async function () {
+  run: async function (test) {
     // The worker class contains methods to interact with the DUT, such as flashing, or executing a command on the device
     const Worker = this.require("common/worker");
 
@@ -83,6 +102,12 @@ module.exports = {
       return this.context.get().worker.teardown();
     });
     this.log("Setting up worker");
+
+
+    this.suite.teardown.register(async() => {
+      this.log("Retreiving journal logs...");
+      await getJournalLogs(this)
+    })
 
     // Create network AP on testbot
     await this.context
