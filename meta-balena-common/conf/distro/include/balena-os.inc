@@ -56,7 +56,7 @@ BALENA_IMAGE_FLAG_FILE = "balena-image"
 BALENA_FLASHER_FLAG_FILE = "balena-image-flasher"
 
 # Kernel command line
-OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','','console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
+OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('DEVELOPMENT_IMAGE','1','ignore_loglevel log_buf_len=8M','console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
 
 # Initramfs
 INITRAMFS_IMAGE = "balena-image-initramfs"

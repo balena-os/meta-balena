@@ -26,7 +26,6 @@ RDEPENDS_${PN} += " \
     resin-hostname \
     resin-state-reset \
     resin-device-progress \
-    balena-rollback \
     timeinit \
     systemd-zram-swap \
     ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util-auplink', '', d)} \
