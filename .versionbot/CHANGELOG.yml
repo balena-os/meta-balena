@@ -1,4 +1,17 @@
 - commits:
+    - subject: get journal logs at the end of the suite
+      hash: 5d6089c3c8210db34ed0e23864b0ec25579d43e4
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.80.11
+  date: 2021-07-01T11:51:12.849Z
+- commits:
     - subject: 'hostapp-update-hooks: Migrate supervisor database'
       hash: cad3e4cc49c4fbc275a5448c38e2da550e596573
       body: |
