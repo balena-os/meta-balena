@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.80.12
+## (2021-07-05)
+
+* Remove CODEOWNERS [Michal Toman]
+
 # v2.80.11
 ## (2021-07-01)
 

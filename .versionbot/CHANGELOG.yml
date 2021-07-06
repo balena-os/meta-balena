@@ -1,4 +1,17 @@
 - commits:
+    - subject: Remove CODEOWNERS
+      hash: da8bfafc94a3815ad62658846d46ec0b4a3edb9b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.80.12
+  date: 2021-07-05T12:26:53.005Z
+- commits:
     - subject: get journal logs at the end of the suite
       hash: 5d6089c3c8210db34ed0e23864b0ec25579d43e4
       body: ''
