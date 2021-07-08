@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Copyright 2021 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+
+info "Waiting for full network connectivity."
+
+# See https://developer.gnome.org/NetworkManager/stable/nm-dbus-types.html#NMState
+# for details of connectivity states.
+NM_STATE_CONNECTED_GLOBAL=70
+
+# Check the status first so that we don't wait for an event that
+# will never come.
+# This test is for standalone script operation as normally we start
+# this at boot before NetworkManager is running to ensure that we
+# don't miss any StateChanged events.
+while read -r line; do
+	STATUS=$(echo $line | grep uint32 | cut -d' ' -f3)
+	if [ "$STATUS" == "$NM_STATE_CONNECTED_GLOBAL" ]; then
+		info "Full network connectivity detected."
+		exit 0
+	fi
+done < <(dbus-send --system --dest=org.freedesktop.NetworkManager --print-reply /org/freedesktop/NetworkManager \
+org.freedesktop.DBus.Properties.Get string:"org.freedesktop.NetworkManager" string:"State" 2>&1)
+
+# Wait for a status change event.
+while read -r line; do
+	STATUS=$(echo $line | grep uint32 | cut -d' ' -f2)
+	if [ "$STATUS" == "$NM_STATE_CONNECTED_GLOBAL" ]; then
+		info "Full network connectivity detected."
+		exit 0
+	fi
+done < <(dbus-monitor --system "type='signal',sender='org.freedesktop.NetworkManager', \
+path='/org/freedesktop/NetworkManager',interface='org.freedesktop.NetworkManager',member='StateChanged'")
+
+# In normal circumstances we don't expect the script to reach this point.
+fail "Unexpected error occurred."
