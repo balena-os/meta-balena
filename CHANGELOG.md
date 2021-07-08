@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.81.0
+## (2021-07-06)
+
+* recipes-core: add a 'network connectivity wait' service [Mark Corbin]
+
 # v2.80.12
 ## (2021-07-05)
 

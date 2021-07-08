@@ -1,4 +1,41 @@
 - commits:
+    - subject: 'recipes-core: add a ''network connectivity wait'' service'
+      hash: a6781d54c6edced457ad916cac3fec9c70d25a0a
+      body: |
+        Add a new systemd service to check for full network connectivity.
+        This service is required because the default NetworkManager (NM)
+        connectivity checker doesn't differentiate between the
+        CONNECTED_LOCAL, CONNECTED_SITE and CONNECTED_GLOBAL states. This
+        service checks for the CONNECTED_GLOBAL state only and can be used
+        to delay the start of other services which require full network
+        access to be available. This can help to avoid startup problems on
+        networks with slow DNS access or that utilise a captive portal.
+
+        The script does an initial oneshot check of the NM state to make sure
+        that we don't wait for an event that doesn't come. This check is
+        redundant at boot time due to the fact that the service is started
+        before NM to ensure that no NM DBus events are missed. The initial
+        check is useful in circumstances where you want to run the script
+        standalone or post-boot.
+
+        Other services that wish to make use of this service and wait for
+        full network connectivity should add the following entries to their
+        systemd unit definition:
+
+        Requires=balena-net-connectivity-wait.target
+        After=balena-net-connectivity-wait.target
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: 'recipes-core: add a ''network connectivity wait'' service'
+        changelog-entry: 'recipes-core: add a ''network connectivity wait'' service'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.81.0
+  date: 2021-07-06T09:28:12.840Z
+- commits:
     - subject: Remove CODEOWNERS
       hash: da8bfafc94a3815ad62658846d46ec0b4a3edb9b
       body: ''
