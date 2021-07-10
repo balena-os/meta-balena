@@ -1,6 +1,6 @@
 inherit deploy
 
-FILESEXTRAPATHS_append := ":${THISDIR}/resin-files:${THISDIR}/${BPN}"
+FILESEXTRAPATHS_append := ":${THISDIR}/balena-files:${THISDIR}/${BPN}"
 
 SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
@@ -8,7 +8,7 @@ SRC_URI_append = " \
     file://98dhcp_ntp \
     file://99onoffline_ntp \
     file://README.ignore \
-    file://resin-sample.ignore \
+    file://balena-sample.ignore \
     file://nm-tmpfiles.conf \
     file://balena-client-id.patch \
     file://remove-https-warning.patch \
@@ -18,7 +18,7 @@ RDEPENDS_${PN}_append = " \
     bash \
     chrony \
     chronyc \
-    resin-net-config \
+    balena-net-config \
     resolvconf \
     "
 FILES_${PN}_append = " ${sysconfdir}/*"
@@ -65,7 +65,7 @@ do_install_append() {
 
 do_deploy() {
     mkdir -p "${DEPLOYDIR}/system-connections/"
-    install -m 0600 "${WORKDIR}/resin-sample.ignore" "${DEPLOYDIR}/system-connections/"
+    install -m 0600 "${WORKDIR}/balena-sample.ignore" "${DEPLOYDIR}/system-connections/"
     install -m 0600 "${WORKDIR}/README.ignore" "${DEPLOYDIR}/system-connections/"
 }
 addtask deploy before do_package after do_install

@@ -1,0 +1,9 @@
+[Unit]
+Wants=balena-net-config.service bind-var-lib-NetworkManager.service chronyd.service
+After=balena-net-config.service bind-var-lib-NetworkManager.service chronyd.service
+
+[Service]
+ExecStartPre=/bin/systemd-tmpfiles --remove /etc/tmpfiles.d/nm-tmpfiles.conf
+OOMScoreAdjust=-1000
+Restart=always
+RestartSec=10s

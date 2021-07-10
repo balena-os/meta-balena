@@ -70,7 +70,7 @@ BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_COREBASE}/../../../${MACHINE}.js
 
 # example NetworkManager config file
 BALENA_BOOT_PARTITION_FILES_append = " \
-    system-connections/resin-sample.ignore:/system-connections/resin-sample.ignore \
+    system-connections/balena-sample.ignore:/system-connections/balena-sample.ignore \
     system-connections/README.ignore:/system-connections/README.ignore \
 "
 

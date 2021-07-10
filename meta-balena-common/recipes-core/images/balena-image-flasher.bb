@@ -60,7 +60,7 @@ IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
 
 # example NetworkManager config file
 BALENA_BOOT_PARTITION_FILES_append = " \
-    system-connections/resin-sample.ignore:/system-connections/resin-sample.ignore \
+    system-connections/balena-sample.ignore:/system-connections/balena-sample.ignore \
     system-connections/README.ignore:/system-connections/README.ignore \
     "
 

@@ -108,7 +108,7 @@ FILES_udev += "\
     ${rootlibexecdir}/udev/zram-swap-init           \
 "
 
-RDEPENDS_${PN}_append = " os-helpers-fs resin-ntp-config util-linux periodic-vacuum-logs"
+RDEPENDS_${PN}_append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"
 
 # Network configuration is managed by NetworkManager. ntp is managed by chronyd
 PACKAGECONFIG_remove = "resolved networkd timesyncd"

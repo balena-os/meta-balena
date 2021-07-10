@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 PR = "r1.1"
 
 SRC_URI = " \
-    file://resin-net-config \
-    file://resin-net-config.service \
+    file://balena-net-config \
+    file://balena-net-config.service \
     "
 S = "${WORKDIR}"
 
@@ -15,18 +15,18 @@ inherit allarch systemd
 
 PACKAGES = "${PN} ${PN}-flasher"
 
-SYSTEMD_SERVICE_${PN} = "resin-net-config.service"
+SYSTEMD_SERVICE_${PN} = "balena-net-config.service"
 RDEPENDS_${PN} = "bash jq iw"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/resin-net-config ${D}${bindir}/resin-net-config
+    install -m 0775 ${WORKDIR}/balena-net-config ${D}${bindir}/balena-net-config
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/resin-net-config.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/balena-net-config.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
         -e 's,@BINDIR@,${bindir},g' \
-            ${D}${systemd_unitdir}/system/resin-net-config.service
+            ${D}${systemd_unitdir}/system/balena-net-config.service
     fi
 }
