@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.8.8 to v12.8.10
+      hash: b3584891171aaab2ceb6581284e412d4f1216c1c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.8.8 to v12.8.10
+        changelog-entry: Update balena-supervisor from v12.8.8 to v12.8.10
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.81.2
+  date: 2021-07-10T02:20:06.469Z
+- commits:
     - subject: 'balena-engine: Restore previous systemd service settings'
       hash: 0b7dac9461193e6c1afbc046337aeb74ca20e84c
       body: |
