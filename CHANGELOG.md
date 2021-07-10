@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.82.0
+## (2021-07-10)
+
+* networkmanager: Rename references to resin [Kyle Harding]
+* resin-proxy-config: Rename to balena-proxy-config [Kyle Harding]
+* resin-ntp-config: Rename to balena-ntp-config [Kyle Harding]
+* resin-net-config: Rename to balena-net-config [Kyle Harding]
+
 # v2.81.1
 ## (2021-07-09)
 
