@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'balena-engine: Restore previous systemd service settings'
+      hash: 0b7dac9461193e6c1afbc046337aeb74ca20e84c
+      body: |
+        - remove exec-root path from balena engine
+        - restore unique fixed-cidr for balena-host engine
+        - remove duplicate fixed-cidr flags from both
+        - remove experimental from balena-host
+        - fix healthdog command substitution
+
+        These were changed by mistake in the previous refactor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.81.1
+  date: 2021-07-09T23:25:52.084Z
+- commits:
     - subject: 'recipes-core: add a ''network connectivity wait'' service'
       hash: a6781d54c6edced457ad916cac3fec9c70d25a0a
       body: |

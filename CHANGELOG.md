@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.81.1
+## (2021-07-09)
+
+* balena-engine: Restore previous systemd service settings [Kyle Harding]
+
 # v2.81.0
 ## (2021-07-06)
 
