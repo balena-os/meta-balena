@@ -1,4 +1,34 @@
 - commits:
+    - subject: 'balena-hostname: add comments and improve logging'
+      hash: a7a2bb057e22e2ac4fc4cafaf6ba3b533ca5f464
+      body: |
+        Add some comments and improve the logging.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'balena-hostname: add comments and improve logging'
+        changelog-entry: 'balena-hostname: add comments and improve logging'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'meta-balena: rename resin-hostname to balena-hostname'
+      hash: 55baa1687ca3c576077b26a31591304911be2581
+      body: |
+        Rename 'resin-hostname' to 'balena-hostname' and update all
+        references.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'meta-balena: rename resin-hostname to balena-hostname'
+        changelog-entry: 'meta-balena: rename resin-hostname to balena-hostname'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.82.1
+  date: 2021-07-12T13:01:41.540Z
+- commits:
     - subject: 'networkmanager: Rename references to resin'
       hash: c857ecc07325e643c39d30f68621c2807664e36e
       body: ''

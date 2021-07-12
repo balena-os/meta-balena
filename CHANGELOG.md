@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.82.1
+## (2021-07-12)
+
+* balena-hostname: add comments and improve logging [Mark Corbin]
+* meta-balena: rename resin-hostname to balena-hostname [Mark Corbin]
+
 # v2.82.0
 ## (2021-07-10)
 
