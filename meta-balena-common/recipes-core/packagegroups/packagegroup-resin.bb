@@ -23,7 +23,7 @@ RDEPENDS_${PN} += " \
     resin-filesystem-expand \
     resin-persistent-logs \
     resin-info \
-    resin-hostname \
+    balena-hostname \
     resin-state-reset \
     resin-device-progress \
     balena-rollback \
