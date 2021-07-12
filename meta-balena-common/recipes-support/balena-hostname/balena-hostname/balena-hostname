@@ -1,22 +1,30 @@
 #!/bin/sh
+#
+# Set the system hostname.
+#
 
 set -e
 
+. /usr/libexec/os-helpers-logging
 . /usr/sbin/balena-config-vars
+
+info "Setting hostname."
 
 if [ -z "$CONFIG_HOSTNAME" ]; then
     # take just the first 7 characters
+    info "Generating default based on short UUID."
     CONFIG_HOSTNAME=$(echo "$UUID" | sed -e 's/\(.......\).*/\1/')
 fi
 
 if [ -z "$CONFIG_HOSTNAME" ]; then
-    echo "[ERROR]: Unexpected uuid missing from config.json."
-    exit 1
+    fail "UUID missing from config.json."
 fi
 
-# Set hostname temporary hostname
+# Set the transient hostname.
 hostname "$CONFIG_HOSTNAME"
-# Commit hostname
+# Set the static hostname.
 echo "$CONFIG_HOSTNAME" > /etc/hostname
+
+info "Hostname set to $CONFIG_HOSTNAME"
 
 exit 0

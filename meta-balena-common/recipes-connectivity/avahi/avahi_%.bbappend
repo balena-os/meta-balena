@@ -7,7 +7,7 @@ FILES_avahi-daemon += " \
     ${datadir}/dbus-1/interfaces \
 "
 
-RDEPENDS_avahi-daemon += "resin-hostname"
+RDEPENDS_avahi-daemon += "balena-hostname"
 
 do_install_append() {
     # remove example services as we don't want to advertise example services

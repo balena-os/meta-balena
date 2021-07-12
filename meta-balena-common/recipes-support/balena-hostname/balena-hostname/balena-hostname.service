@@ -1,12 +1,12 @@
 [Unit]
-Description=Resin Hostname Configuration
+Description=Balena Hostname Configuration
 Requires=resin-boot.service balena-device-uuid.service bind-etc-hostname.service
 After=resin-boot.service balena-device-uuid.service bind-etc-hostname.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BINDIR@/resin-hostname
+ExecStart=@BINDIR@/balena-hostname
 
 [Install]
 WantedBy=multi-user.target
