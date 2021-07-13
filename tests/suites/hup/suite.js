@@ -338,7 +338,7 @@ module.exports = {
     await this.context.get().hup.runRegistry(this, this.context.get().hupOs.image.path);
   },
   tests: [
-    "./tests/smoke",
+    // "./tests/smoke",
     "./tests/rollback-health",
     "./tests/rollback-altboot",
     // "./tests/self-serve-dashboard",
