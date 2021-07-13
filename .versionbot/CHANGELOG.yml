@@ -1,4 +1,81 @@
 - commits:
+    - subject: Check that the hostapp image fits the inactive partion on HUP
+      hash: a0803fcfff0e908f4ed358d0568c4872bbcecade
+      body: >
+        Currently it is possible to build a docker image that will then fail to
+
+        hup due to a lack of space on the inactive partition.
+
+
+        Add a task to check the docker image space against the available space
+        on
+
+        the root filesystem partition and fail the build if it's too big.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Check that the hostapp image fits the inactive partion on HUP
+        changelog-entry: Check that the hostapp image fits the inactive partion on HUP
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'image-balena: Add check for docker image size'
+      hash: 9a75a872dfcf0c3d71d4d5584241b65d07bd7103
+      body: >
+        Currently it is possible to build a docker image that will then fail to
+
+        hup due to a lack of space on the inactive partition.
+
+
+        Add a task to check the docker image space against the available space
+        on
+
+        the root filesystem partition and fail the build if it's too big.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'balena-image: Break down the rootfs image size calculation'
+      hash: 8a2b704bd5103ba6419328d0f9cc3d6b667ab5f5
+      body: |
+        Replace the IMAGE_ROOTFS_SIZE magic number with a calculation based on
+        the partition sizes on the balena image classes.
+
+        The rootfs size is calculated with the assumption of a total BalenaOS
+        size of 700M. This includes boot, state, rootA and rootB partitions. The
+        data partition will then grow to occupy the rest of the storage media.
+
+        Device integration layers can override this value if needed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'image_types_balena: Add rootfs size calculation function'
+      hash: a4ede069d1ab7cbd2b6830574eb891f8c76a92a9
+      body: >
+        Instead of hardcoding the requested root filesystem value, let's explain
+
+        how the calculation is made with a python function that will adjust
+        based
+
+        on the sizes of other partitions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.82.3
+  date: 2021-07-13T11:18:32.393Z
+- commits:
     - subject: Update balena-supervisor from v12.8.8 to v12.9.3
       hash: 7903a929e48af889b8df14754d84a8e6b0655752
       body: ''

@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.82.3
+## (2021-07-13)
+
+* Check that the hostapp image fits the inactive partion on HUP [Alex Gonzalez]
+* image-balena: Add check for docker image size [Alex Gonzalez]
+* balena-image: Break down the rootfs image size calculation [Alex Gonzalez]
+* image_types_balena: Add rootfs size calculation function [Alex Gonzalez]
+
 # v2.82.2
 ## (2021-07-13)
 
