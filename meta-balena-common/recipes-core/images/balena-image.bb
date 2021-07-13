@@ -11,7 +11,7 @@ BALENA_FLAG_FILE = "${BALENA_IMAGE_FLAG_FILE}"
 # entire space taken by resinOS would not exceed 700 MiB. This  can be
 # overwritten by board specific layers.
 #
-IMAGE_ROOTFS_SIZE = "319488"
+IMAGE_ROOTFS_SIZE = "${@balena_rootfs_size(d)}"
 IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
@@ -78,3 +78,5 @@ BALENA_BOOT_PARTITION_FILES_append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if 
 
 # Resin image flag file
 BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE_FLAG_FILE}"
+
+addtask image_size_check after do_image_balenaos_img before do_image_complete

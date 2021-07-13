@@ -82,6 +82,22 @@ python() {
     d.setVar('BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("BALENA_IMAGE_BOOTLOADER", True).split()))
 }
 
+def disk_aligned(d, rootfs_size):
+    saved_rootfs_size = rootfs_size
+    rfs_alignment = int(d.getVar("IMAGE_ROOTFS_ALIGNMENT"))
+    rootfs_size += rfs_alignment - 1
+    rootfs_size -= rootfs_size % rfs_alignment
+    bb.debug(1, 'requested rootfs size %d, aligned %d' % (saved_rootfs_size, rootfs_size) )
+    return rootfs_size
+
+# The rootfs size is calculated by substracting from the maximum BalenaOS image
+# 700 MiB size, the size  of all other partitions except the data partition,
+# dividing by 2, and substracting filesystem metadata and reserved allocations
+def balena_rootfs_size(d):
+    boot_part_size = int(d.getVar("BALENA_BOOT_SIZE"))
+    state_part_size = int(d.getVar("BALENA_STATE_SIZE"))
+    balena_rootfs_size = int(((700 * 1024) - boot_part_size - state_part_size) / 2)
+    return int(disk_aligned(d, balena_rootfs_size))
 
 BALENA_BOOT_FS_LABEL ?= "resin-boot"
 BALENA_ROOTA_FS_LABEL ?= "resin-rootA"

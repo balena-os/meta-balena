@@ -380,3 +380,50 @@ IMAGE_POSTPROCESS_COMMAND =+ " \
     resinhup_backwards_compatible_link ; \
     "
 IMAGE_PREPROCESS_COMMAND += "remove_backup_files ; "
+
+# Extract the ext4 image properties
+# This is doing:
+# tune2fs -l ${image} | grep ${attribute} | cut -d ":" -f2 | tr -d [:blank:]
+# or
+# dumpe2fs ${image} | grep ${attribute} | cut -d ":" -f2 | tr -d [:blank:]
+def image_dump(image, attribute):
+     import subprocess
+     if attribute == "Journal length":
+        cmd1 = subprocess.Popen(["dumpe2fs", image], stdout=subprocess.PIPE)
+     else:
+        cmd1 = subprocess.Popen(["tune2fs", "-l", image], stdout=subprocess.PIPE)
+     cmd2 = subprocess.Popen(["grep", attribute], stdin=cmd1.stdout, stdout=subprocess.PIPE)
+     cmd1.stdout.close()
+     cmd3 = subprocess.Popen(["cut", "-d", ":",  "-f2"], stdin=cmd2.stdout, stdout=subprocess.PIPE)
+     cmd2.stdout.close()
+     cmd4 = subprocess.Popen(["tr", "-d", "[:blank:]"], stdin=cmd3.stdout, stdout=subprocess.PIPE)
+     cmd3.stdout.close()
+     rout,rerr = cmd4.communicate()
+     return int(rout)
+
+# Calculate the available space in KiB on the provided ext4 image file
+# Input sizes are in bytes
+def available_space(img):
+     inode_size = image_dump(img, "Inode size")
+     inode_count = image_dump(img, "Inode count")
+     free_blk_count = image_dump(img, "Free blocks")
+     blk_size = image_dump(img, "Block size")
+     reserved_blks = image_dump(img, "Reserved block count")
+     reserved_gdt_blks = image_dump(img, "Reserved GDT blocks")
+     journal_blks = image_dump(img, "Journal length")
+     bb.debug(1, 'free_blk_cnt %d blk_sz %d inode_count %d inode_size %d reserved_blks %d reserved_gdt_blks %d journal_blks %d' % (free_blk_count,blk_size,inode_count,inode_size,reserved_blks,reserved_gdt_blks,journal_blks) )
+     available_space = free_blk_count - reserved_blks - reserved_gdt_blks - journal_blks - (inode_count * inode_size / blk_size)
+     return int(available_space * blk_size / 1024)
+
+# Check that the generated docker image can be updated to the rootfs partition
+python do_image_size_check() {
+    imgfile = d.getVar("BALENA_DOCKER_IMG")
+    ext4file = d.getVar("BALENA_ROOTB_FS")
+    rfs_alignment = d.getVar("IMAGE_ROOTFS_ALIGNMENT")
+    rfs_size = int(get_rootfs_size(d))
+    image_size_aligned = int(disk_aligned(d, os.stat(imgfile).st_size / 1024))
+    available = int(disk_aligned(d, available_space(ext4file)))
+    if image_size_aligned > available:
+        bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
+    bb.debug(1, 'requested %d, available %d' % (image_size_aligned, available) )
+}
