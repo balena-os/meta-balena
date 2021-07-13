@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from v12.8.8 to v12.9.3
+      hash: 7903a929e48af889b8df14754d84a8e6b0655752
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.8.8 to v12.9.3
+        changelog-entry: Update balena-supervisor from v12.8.8 to v12.9.3
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.82.2
+  date: 2021-07-13T01:37:11.482Z
+- commits:
     - subject: 'balena-hostname: add comments and improve logging'
       hash: a7a2bb057e22e2ac4fc4cafaf6ba3b533ca5f464
       body: |
