@@ -10,7 +10,8 @@ module.exports = {
   title: 'Rollback altboot (broken init) test',
   run: async function(test) {
     await this.context.get().hup.initDUT(
-      this, test, this.context.get().link);
+      this, test, this.context.get().link
+    );
 
     await this.context.get().hup.doHUP(this, test, 'image', this.context.get().hup.payload, this.context.get().link);
 
@@ -30,15 +31,17 @@ module.exports = {
       "There should be a breadcrumb file in the state partition",
     );
 
-    test.comment(`Waiting for rollback-health`);
+    // This service runs on every boot, we just need to wait until it's running before
+    // continuing with the actual tests for breadcrumbs
+    test.comment(`Waiting for rollback-health service to start...`);
     await this.context.get().utils.waitUntil(async () => {
       return (
         (await this.context.get().worker.executeCommandInHostOS(
-          `systemctl status rollback-health.service`,
+          `systemctl is-active rollback-health.service`,
           this.context.get().link,
-        )) !== 'active'
+        )) === 'active'
       );
-    }, true);
+    }, false);
 
     test.is(
       await this.context.get().worker.executeCommandInHostOS(

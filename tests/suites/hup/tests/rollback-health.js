@@ -13,19 +13,20 @@ module.exports = {
       title: 'Broken balena-engine',
       run: async function(test) {
         await this.context.get().hup.initDUT(
-          this, test, this.context.get().link);
+          this, test, this.context.get().link
+        );
 
         await this.context.get().hup.doHUP(this, test, 'image', this.context.get().hup.payload, this.context.get().link);
 
         // reduce number of failures needed to trigger rollback
         await this.context.get().worker.executeCommandInHostOS(
-          `sed -i -e "s/COUNT=.*/COUNT=1/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
+          `sed -i -e "s/COUNT=.*/COUNT=2/g" -e "s/TIMEOUT=.*/TIMEOUT=30/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
           this.context.get().link,
         );
 
         // break balena-engine
         await this.context.get().worker.executeCommandInHostOS(
-          `cp /bin/bash $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine")`,
+          `cp /bin/bash $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$")`,
           this.context.get().link,
         );
 
@@ -39,15 +40,17 @@ module.exports = {
           "There should be a breadcrumb file in the state partition",
         );
 
-        test.comment(`Waiting for rollback-health...`);
+        // This service runs on every boot, we just need to wait until it's running before
+        // continuing with the actual tests for breadcrumbs
+        test.comment(`Waiting for rollback-health service to start...`);
         await this.context.get().utils.waitUntil(async () => {
           return (
             (await this.context.get().worker.executeCommandInHostOS(
-              `systemctl status rollback-health.service`,
+              `systemctl is-active rollback-health.service`,
               this.context.get().link,
-            )) !== 'active'
+            )) === 'active'
           );
-        }, true);
+        }, false);
 
         test.is(
           await this.context.get().worker.executeCommandInHostOS(
@@ -62,19 +65,20 @@ module.exports = {
       title: 'Broken VPN',
       run: async function(test) {
         await this.context.get().hup.initDUT(
-          this, test, this.context.get().link);
+          this, test, this.context.get().link
+        );
 
         await this.context.get().hup.doHUP(this, test, 'image', this.context.get().hup.payload, this.context.get().link);
 
         // reduce number of failures needed to trigger rollback
         await this.context.get().worker.executeCommandInHostOS(
-          `sed -i -e "s/COUNT=.*/COUNT=1/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
+          `sed -i -e "s/COUNT=.*/COUNT=2/g" -e "s/TIMEOUT=.*/TIMEOUT=30/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
           this.context.get().link,
         );
 
         // break openvpn
         await this.context.get().worker.executeCommandInHostOS(
-          `cp /bin/bash $(find /mnt/sysroot/inactive/ | grep "bin/openvpn")`,
+          `cp /bin/bash $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$")`,
           this.context.get().link,
         );
 
@@ -88,15 +92,15 @@ module.exports = {
           "There should be a breadcrumb file in the state partition",
         );
 
-        test.comment(`Waiting for rollback-health`);
+        test.comment(`Waiting for rollback-health service to start...`);
         await this.context.get().utils.waitUntil(async () => {
           return (
             (await this.context.get().worker.executeCommandInHostOS(
-              `systemctl status rollback-health.service`,
+              `systemctl is-active rollback-health.service`,
               this.context.get().link,
-            )) !== 'active'
+            )) === 'active'
           );
-        }, true);
+        }, false);
 
         test.is(
           await this.context.get().worker.executeCommandInHostOS(
