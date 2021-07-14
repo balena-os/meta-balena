@@ -2,6 +2,7 @@
 Description=Resin NTP server configure service
 Requires=balena-net-config.service
 After=balena-net-config.service
+PartOf=config-json.target
 
 [Service]
 ExecStart=@BINDIR@/balena-ntp-config
