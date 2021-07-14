@@ -1,4 +1,17 @@
 - commits:
+    - subject: make container healthcheck test more consistant
+      hash: 47cb1479630db73f072624fd0368ee2a52940b16
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.82.4
+  date: 2021-07-14T08:41:19.706Z
+- commits:
     - subject: Check that the hostapp image fits the inactive partion on HUP
       hash: a0803fcfff0e908f4ed358d0568c4872bbcecade
       body: >
