@@ -1,4 +1,21 @@
 - commits:
+    - subject: Package iwlwifi-QuZ-a0-hr-b0 firmware separately
+      hash: 6686d76cb4a1eed5adc366e2a57f8c750202b538
+      body: |
+        We add this fw on its own package so that boards can add it to
+        rootfs (for Intel NUC 11th generation more specifically)
+      footer:
+        Changelog-entry: Package iwlwifi-QuZ-a0-hr-b0 firmware separately
+        changelog-entry: Package iwlwifi-QuZ-a0-hr-b0 firmware separately
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.82.4
+  date: 2021-07-14T15:13:35.794Z
+- commits:
     - subject: Check that the hostapp image fits the inactive partion on HUP
       hash: a0803fcfff0e908f4ed358d0568c4872bbcecade
       body: >
