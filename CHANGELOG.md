@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.82.4
+## (2021-07-14)
+
+* balena-os: pin linux-firmware to 20210511 from hardknott [Joseph Kogut]
+* linux-firmware: upgrade 20190815 -> 20210511 [Joseph Kogut]
+
 # v2.82.3
 ## (2021-07-13)
 
