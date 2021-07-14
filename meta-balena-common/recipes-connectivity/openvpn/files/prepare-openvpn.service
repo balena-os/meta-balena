@@ -3,6 +3,7 @@ Description=Prepare OpenVPN
 Requires=resin-boot.service balena-device-uuid.service os-config-devicekey.service var-volatile.mount
 After=resin-boot.service balena-device-uuid.service os-config-devicekey.service var-volatile.mount
 ConditionFileNotEmpty=/etc/openvpn/openvpn.conf
+PartOf=config-json.target
 
 [Service]
 Type=oneshot
