@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.82.4
+## (2021-07-14)
+
+* Package iwlwifi-QuZ-a0-hr-b0 firmware separately [Florin Sarbu]
+
 # v2.82.3
 ## (2021-07-13)
 
