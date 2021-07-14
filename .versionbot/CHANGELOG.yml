@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'tests: Add hup test suite'
+      hash: 7223cf082fb40e9c707730c19f640d64187516a7
+      body: |
+        Add smoke test
+
+        Resolve `latest` to dev variant
+
+        If we want the serial logs of the DUT the image that is flashed needs to
+        be the development variant. The `latest` shortcut however always
+        resolves to the production image. We manually resolve the version to fix
+        this.
+
+        Change image name for consistent docker image pulls
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.82.4
+  date: 2021-07-14T15:51:22.288Z
+- commits:
     - subject: Check that the hostapp image fits the inactive partion on HUP
       hash: a0803fcfff0e908f4ed358d0568c4872bbcecade
       body: >
