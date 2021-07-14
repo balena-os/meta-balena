@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'kernel-headers-test: Update base image to buster'
+      hash: f2bf5810a3c011a0939315990be8b51d9b59b7c3
+      body: |
+        Since we don't have devices using older 3.x kernels we update to a newer
+        base image so that we don't have problems compiling this test kernel
+        module on newer kernels.
+        This avoids a compile error on kernel 5.10.31 on arm64
+        raspberrypicm4-ioboard for example where it would complain _mcount is
+        undefined because the older gcc in the intel-nuc-debian:stretch-20190717
+        base image would not create the _mcount symbol when compiling against
+        the newer 5.10.31 kernel.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.82.4
+  date: 2021-07-14T14:24:51.252Z
+- commits:
     - subject: Check that the hostapp image fits the inactive partion on HUP
       hash: a0803fcfff0e908f4ed358d0568c4872bbcecade
       body: >
