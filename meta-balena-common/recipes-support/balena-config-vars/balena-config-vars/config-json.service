@@ -1,7 +1,7 @@
 [Unit]
 Description=Config.json watcher service
-Wants=prepare-openvpn.service balena-ntp-config.service
 
 [Service]
 Type=oneshot
 ExecStart=/bin/echo 'config.json changed'
+ExecStart=/bin/systemctl restart config-json.target
