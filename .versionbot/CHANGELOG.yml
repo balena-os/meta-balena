@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'balena-os: pin linux-firmware to 20210511 from hardknott'
+      hash: 34995721e7b7438c01e7e67cf91dd7f603e3c36a
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'linux-firmware: upgrade 20190815 -> 20210511'
+      hash: 2b0d83975d4653284b8acc20f47370f81f51c503
+      body: |
+        Add recipe from poky hardknott, revision 74dbb08
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.82.4
+  date: 2021-07-14T07:48:20.688Z
+- commits:
     - subject: Check that the hostapp image fits the inactive partion on HUP
       hash: a0803fcfff0e908f4ed358d0568c4872bbcecade
       body: >
