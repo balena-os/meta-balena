@@ -1,5 +1,4 @@
-# Use stretch as we have devices with old 3.10 kernel that won't build with gcc8 in buster
-FROM balenalib/intel-nuc-debian:stretch-20190717
+FROM balenalib/intel-nuc-debian:buster-20210705
 
 # Install dependencies
 RUN apt-get update && apt-get install -y curl wget build-essential libelf-dev bc flex libssl-dev bison gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu python-minimal
