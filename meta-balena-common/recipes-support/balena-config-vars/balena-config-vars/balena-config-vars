@@ -85,6 +85,12 @@ if [ -f $CONFIG_PATH ]; then
         eval "$CONFIG_PARAMS"
     fi
 
+    # "null" is a valid setting in config.json that should write
+    # an empty string for dns servers rather than the defaults
+    if [ "$DNS_SERVERS" = "null" ]; then
+        DNS_SERVERS=""
+    fi
+
     # Set additional default values.
     if [ -z "$OS_NET_CONN_URI" ]; then
         if [ -n "$API_ENDPOINT" ]; then
