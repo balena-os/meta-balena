@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.82.5
+## (2021-07-15)
+
+* kernel-headers-test: Update base image to buster [Florin Sarbu]
+
 # v2.82.4
 ## (2021-07-14)
 
