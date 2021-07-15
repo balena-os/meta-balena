@@ -1,4 +1,62 @@
 - commits:
+    - subject: 'dnsmasq: Restart when config.json changes'
+      hash: 76964657321934e2953c02ee8fdba4d22a9fbcdc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'balena-config-vars: Restart target when config.json changes'
+      hash: 51005c7a3178bdc73dcff5f790a693aa70936d06
+      body: |
+        The config.json watcher service will restart the config.json target
+        when the file changes. Any services that are PartOf config.json
+        target will be restarted as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'balena-config-vars: Add config-json.target service'
+      hash: cacb87d1b088ab1ab42b24b698e4c03d3803855e
+      body: |
+        This target service can be used to restart other services
+        that have explicitly set themselves as PartOf this target.
+
+        So a service that should be restarted when config.json changes
+        can use PartOf=config-json.target to be triggered automatically.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'balena-config-vars: Restore null as valid for dnsServers'
+      hash: 22602e4c2fafc0f309add8313c14464ba8cd8d4b
+      body: |
+        "null" is a valid setting in config.json that should write
+        an empty string for dns servers rather than the default 8.8.8.8
+
+        If "servers=null" is written to /run/dnsmasq.servers by
+        balena-net-config then dnsmasq will report the following error:
+
+        dnsmasq[4483]: bad address at line 2 of /run/dnsmasq.servers
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.82.6
+  date: 2021-07-15T11:17:28.470Z
+- commits:
     - subject: 'kernel-headers-test: Update base image to buster'
       hash: 57f6aee369e8ec4ab8b20ae82a03f8b8fd7aebe4
       body: |

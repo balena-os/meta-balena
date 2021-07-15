@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.82.6
+## (2021-07-15)
+
+* dnsmasq: Restart when config.json changes [Kyle Harding]
+* balena-config-vars: Restart target when config.json changes [Kyle Harding]
+* balena-config-vars: Add config-json.target service [Kyle Harding]
+* balena-config-vars: Restore null as valid for dnsServers [Kyle Harding]
+
 # v2.82.5
 ## (2021-07-15)
 
