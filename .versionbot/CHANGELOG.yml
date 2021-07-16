@@ -1,4 +1,156 @@
 - commits:
+    - subject: Update balena-engine to v19.03.23
+      hash: 5d882694102ce32706de08df3ab435bb0cec176c
+      body: |
+        Update balena-engine from 19.03.18 to 19.03.23
+
+        Which brings more resilient layer download (allows proper resuming after
+        network failures).
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Changelog-entry: Update balena-engine to v19.03.23
+        changelog-entry: Update balena-engine to v19.03.23
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested:
+        - commits:
+            - subject: Make layer download resuming more resilient
+              hash: 582487f832c59c2f734a780ab0492833f29002c9
+              body: >
+                This commit changes the way we retry layer downloads after
+                failures with
+
+                the goal of making it more resilient, especially for cases
+                involving
+
+                large layers and unreliable network connections.
+
+
+                These are the changes:
+
+
+                * Make sure we also retry after failures in
+                `v2LayerDescriptor.reset()`.
+                  This method creates a new HTTP request to resume a failed download,
+                  and therefore depends on a working network to succeed.
+                * Wait exponentially longer times between retries (instead of
+                retrying
+                  immediately as before). This shall increase of success in case of
+                  network issues that take longer to get resolved.
+                * Increase the number of retries to 10.
+
+                * Reset retry count whenever we successfully download anything
+                at all.
+                  The idea is that we want to give up downloading only after a long
+                  continuous period of failures. Combined with the exponential back-off
+                  strategy and increased number of retries described above, a layer pull
+                  will fail only after about 17 minutes.
+                * Add a bit more logging to help with troubleshooting.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-19.03.23
+          date: 2021-07-12T13:21:18.693Z
+        - commits:
+            - subject: Drop CODEOWNERS
+              hash: e70e1a9fe622563719993626e834c85efc17905c
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.22
+          date: 2021-06-30T16:13:18.248Z
+        - commits:
+            - subject: Lock destination layers while delta is being processed
+              hash: 0ad4281e11e4d3ef263010787aecd244c0ce333d
+              body: >
+                During fingerpinting of the source image the destination layers
+                are not
+
+                exepmt from being released (e.g. when `balena image rm <iid>`)
+                is run
+
+                simultaneously.
+
+                Similarly when processing the destination layers to generate
+                deltas we
+
+                only hold one reference at a time, leaving the subsequent layers
+
+                vulnerable to the same issues.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.21
+          date: 2021-06-25T12:17:21.340Z
+        - commits:
+            - subject: >-
+                pkg/storagemigration: poperly handle errors during state
+                creation
+              hash: b8170db554ac1d1abb3adcfe1f6265701e9147c5
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.20
+          date: 2021-06-17T12:37:04.408Z
+        - commits:
+            - subject: 'pkg/storagemigration: allow writing logs to separate file'
+              hash: 77536d3866ac706f049a02d2eed44a7df1cb779c
+              body: >
+                This can be used to keep a record of failed migrations.
+
+                Only runs if BALENA_MIGRATE_OVERLAY_LOGFILE is set to a path on
+                disk.
+
+                The log file will be deleted if there are no errors.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: 'storagemigration: defer commit to next start'
+              hash: bd1628e67136b78ca7e7c83c5569666207d28a84
+              body: >
+                With this change the aufs data is kept around until the next
+                time we
+
+                start. If we find both an aufs AND an overlay2 storage root, we
+                cleanup
+
+                the aufs data.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.19
+          date: 2021-06-10T15:42:25.482Z
+  version: 2.82.7
+  date: 2021-07-15T19:58:41.996Z
+- commits:
     - subject: 'dnsmasq: Restart when config.json changes'
       hash: 76964657321934e2953c02ee8fdba4d22a9fbcdc
       body: ''

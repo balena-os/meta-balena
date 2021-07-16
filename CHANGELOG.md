@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v2.82.7
+## (2021-07-15)
+
+
+<details>
+<summary> Update balena-engine to v19.03.23 [Leandro Motta Barros] </summary>
+
+> ## balena-engine-19.03.23
+> ### (2021-07-12)
+> 
+> * Make layer download resuming more resilient [Leandro Motta Barros]
+> 
+> ## balena-engine-19.03.22
+> ### (2021-06-30)
+> 
+> * Drop CODEOWNERS [Robert Günzler]
+> 
+> ## balena-engine-19.03.21
+> ### (2021-06-25)
+> 
+> * Lock destination layers while delta is being processed [Robert Günzler]
+> 
+> ## balena-engine-19.03.20
+> ### (2021-06-17)
+> 
+> * pkg/storagemigration: poperly handle errors during state creation [Robert Günzler]
+> 
+> ## balena-engine-19.03.19
+> ### (2021-06-10)
+> 
+> * pkg/storagemigration: allow writing logs to separate file [Robert Günzler]
+> * storagemigration: defer commit to next start [Robert Günzler]
+> 
+</details>
+
 # v2.82.6
 ## (2021-07-15)
 
