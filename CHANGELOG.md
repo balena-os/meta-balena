@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.82.8
+## (2021-07-16)
+
+* kernel-devsrc: Add upstream recipe from hardknott-3.3.1 for dunfell [Florin Sarbu]
+
 # v2.82.7
 ## (2021-07-15)
 

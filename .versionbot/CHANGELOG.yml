@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'kernel-devsrc: Add upstream recipe from hardknott-3.3.1 for dunfell'
+      hash: f1d45613abfb3f0178868a2d09c22368e2f705fb
+      body: |
+        In recent kernels (i.e. 5.10.31 for Raspberry Pi) the
+        arch/arm/kernel/module.lds file got moved. See
+        https://github.com/torvalds/linux/commit/
+        596b0474d3d9b1242eab713f84d8873f9887d980 for details.
+
+        Hence we use in meta-balena-dunfell the upstream kernel-devsrc from the
+        hardknott-3.3.1 Poky release which handles this module.lds move.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.82.8
+  date: 2021-07-16T13:13:11.566Z
+- commits:
     - subject: Update balena-engine to v19.03.23
       hash: 5d882694102ce32706de08df3ab435bb0cec176c
       body: |
