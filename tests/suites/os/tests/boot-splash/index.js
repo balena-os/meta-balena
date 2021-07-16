@@ -45,7 +45,7 @@ module.exports = {
 			run: async function(test) {
 				const { hammingDistance, blockhash } = this.require('/common/graphics');
 
-				test.comment(`Calculating reference hash`)
+				test.comment(`Calculating reference hash`);
 				// Pull in the reference image
 				const referenceHash = await new Promise((resolve, reject) => {
 					const stream = fs.createReadStream(BOOT_SPLASH);
@@ -59,66 +59,42 @@ module.exports = {
 						resolve(blockhash(decode(Buffer.concat(buffer))));
 					});
 				});
-				test.comment("Finished calculating reference hash")
+				test.comment('Finished calculating reference hash');
 
-				test.comment("Starting capture")
+				test.comment('Starting capture');
 				await this.context.get().worker.capture('start');
 
-				test.comment("Rebooting")
-				// Start reboot check
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'touch /tmp/reboot-check',
-						this.context.get().link,
-					);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'systemd-run --on-active=2 /sbin/reboot',
-						this.context.get().link,
-					);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								'[[ ! -f /tmp/reboot-check ]] && echo "pass"',
-								this.context.get().link,
-							)) === 'pass'
-					);
-				}, false);
-
-				test.comment(`Rebooted, device back online`)
+				// Rebooting the DUT
+				await this.context.get().worker.rebootDut(this.context.get().link);
 				test.comment(`Stopping capture...`);
-				
+
 				let stopCapture = new Promise((resolve, reject) => {
 					const res = this.context.get().worker.capture('stop');
 					res.on('error', error => {
-						throw new Error("Error stopping capture")
+						throw new Error(`Error stopping capture: ${error}`);
 					});
 
-					res.on('response', (response) => {
-						if(response.statusCode === 200){
-							test.comment(`Capture stopped...`)
-							resolve()
-						};
+					res.on('response', response => {
+						if (response.statusCode === 200) {
+							test.comment(`Capture stopped...`);
+							resolve();
+						}
 					});
 				});
-				
+
 				await stopCapture;
-				
+
 				// captured frames are stored in /data/capture - we probably want a way to remove the need for a hard coded reference here
-				const captured = fs.readdirSync(`/data/capture`)
-			
-				let pass = false
-				test.comment(`Comparing captured images to reference image...`)
-				for(let image of captured.reverse()){
+				const captured = fs.readdirSync(`/data/capture`);
+
+				let pass = false;
+				test.comment(`Comparing captured images to reference image...`);
+				for (let image of captured.reverse()) {
 					const capturedHash = await new Promise((resolve, reject) => {
-						try{
+						try {
 							const stream = fs.createReadStream(`/data/capture/` + image);
 							const buffer = [];
-		
+
 							stream.on('error', reject);
 							stream.on('data', data => {
 								buffer.push(data);
@@ -126,27 +102,29 @@ module.exports = {
 							stream.on('end', () => {
 								resolve(blockhash(decode(Buffer.concat(buffer))));
 							});
-						} catch (e){
-							test.comment(`Error while comparing images: ${e}`)
+						} catch (e) {
+							test.comment(`Error while comparing images: ${e}`);
 						}
 					});
 
-					let testDistance = hammingDistance(referenceHash, capturedHash)
-					if(testDistance < 20){
-						test.comment(`Found match, image ${image}, hamming distance from reference: ${testDistance}`)
-						pass = true
-						break
+					let testDistance = hammingDistance(referenceHash, capturedHash);
+					if (testDistance < 20) {
+						test.comment(
+							`Found match, image ${image}, hamming distance from reference: ${testDistance}`,
+						);
+						pass = true;
+						break;
 					}
 				}
 
-				test.comment(`Storing captured frames...`)
+				test.comment(`Storing captured frames...`);
 				await this.archiver.add(`/data/capture`);
-				test.comment(`Frames stored`)
-				
+				test.comment(`Frames stored`);
+
 				test.true(
 					pass,
 					'Boot splash screen should be detected over HDMI interface',
-				);				
+				);
 			},
 		},
 	],

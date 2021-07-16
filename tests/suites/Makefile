@@ -3,4 +3,4 @@ lint:
 	docker build --target=lint .
 
 prettify:
-	docker build --target=prettify .
+	DOCKER_BUILDKIT=1 docker build --target=prettify .

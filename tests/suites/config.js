@@ -4,7 +4,6 @@ module.exports = [{
 	config: {
 		networkWired: false,
 		networkWireless: true,
-		downloadType: 'local',
 		interactiveTests: false, // redundant
 		balenaApiKey: process.env.BALENA_CLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
@@ -23,7 +22,6 @@ module.exports = [{
 		networkWired: false,
 		networkWireless: true,
 		downloadVersion: 'latest',
-		downloadType: 'gunzip',
 		interactiveTests: false, // redundant
 		balenaApiKey: process.env.BALENA_CLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
