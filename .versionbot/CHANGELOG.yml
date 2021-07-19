@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Make OS test suite compatible with current helpers'
+      hash: 5a7dd196686836bd35a95f3f2c5dadf138b2590f
+      body: ''
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.82.9
+  date: 2021-07-16T22:29:01.729Z
+- commits:
     - subject: 'kernel-devsrc: Add upstream recipe from hardknott-3.3.1 for dunfell'
       hash: f1d45613abfb3f0178868a2d09c22368e2f705fb
       body: |

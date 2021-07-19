@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.82.9
+## (2021-07-16)
+
+* patch: Make OS test suite compatible with current helpers [Vipul Gupta (@vipulgupta2048)]
+
 # v2.82.8
 ## (2021-07-16)
 
