@@ -38,8 +38,8 @@ module.exports = {
 							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 && echo "pass"`,
 							this.context.get().link,
 						),
-					"pass",
-					"balena-healthcheck should pass."
+					'pass',
+					'balena-healthcheck should pass.',
 				);
 			},
 		},
@@ -56,7 +56,7 @@ module.exports = {
 							)) === 'pass'
 					);
 				});
-			
+
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
@@ -71,8 +71,8 @@ module.exports = {
 							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 && echo "pass"`,
 							this.context.get().link,
 						),
-					"pass",
-					"balena-healthcheck should pass."
+					'pass',
+					'balena-healthcheck should pass.',
 				);
 			},
 		},

@@ -12,46 +12,47 @@
  * limitations under the License.
  */
 
-"use strict";
+'use strict';
 
-const request = require("request-promise");
+const request = require('request-promise');
 const SUPERVISOR_PORT = 48484;
 const fs = require('fs');
 
 module.exports = {
-	title: "Device Tree tests",
+	title: 'Device Tree tests',
 	tests: [
 		{
-			title: "DToverlay & DTparam tests",
-			run: async function (test) {
+			title: 'DToverlay & DTparam tests',
+			run: async function(test) {
 				let ip = await this.context.get().worker.ip(this.context.get().link);
 
 				// Wait for supervisor API to start
 				await this.context.get().utils.waitUntil(async () => {
 					return (
 						(await request({
-							method: "GET",
+							method: 'GET',
 							uri: `http://${ip}:${SUPERVISOR_PORT}/ping`,
-						})) === "OK"
+						})) === 'OK'
 					);
 				}, false);
 
 				const targetState = {
-					"local": {
-						"name": "local",
-						"config": {
-							"HOST_CONFIG_dtoverlay": "\"vc4-fkms-v3d\",\"i2c0\",\"i2c1\",\"i2c3\"",
-							"HOST_CONFIG_dtparam": "\"i2c_arm=on\",\"spi=on\",\"audio=on\",\"foo=bar\",\"level=42\"",
-							"SUPERVISOR_PERSISTENT_LOGGING": "true",
-							"SUPERVISOR_LOCAL_MODE": "true"
+					local: {
+						name: 'local',
+						config: {
+							HOST_CONFIG_dtoverlay: '"vc4-fkms-v3d","i2c0","i2c1","i2c3"',
+							HOST_CONFIG_dtparam:
+								'"i2c_arm=on","spi=on","audio=on","foo=bar","level=42"',
+							SUPERVISOR_PERSISTENT_LOGGING: 'true',
+							SUPERVISOR_LOCAL_MODE: 'true',
 						},
-						"apps": {}
+						apps: {},
 					},
-					"dependent": {
-						"apps": [],
-						"devices": []
-					}
-				}
+					dependent: {
+						apps: [],
+						devices: [],
+					},
+				};
 
 				await this.context
 					.get()
@@ -60,9 +61,10 @@ module.exports = {
 						this.context.get().link,
 					);
 
-				// Setting the device tree variables using Supervisor API 
+				// Setting the device tree variables using Supervisor API
+				// This request reboots the DUT
 				const setTargetState = await request({
-					method: "POST",
+					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 					},
@@ -71,17 +73,21 @@ module.exports = {
 					uri: `http://${ip}:${SUPERVISOR_PORT}/v2/local/target-state`,
 				});
 
-				test.same(setTargetState, { status: "success", message: "OK" }, "DToverlay & DTparam configured successfully through Supervisor API");
+				test.same(
+					setTargetState,
+					{ status: 'success', message: 'OK' },
+					'DToverlay & DTparam configured successfully through Supervisor API',
+				);
 
 				await this.context.get().utils.waitUntil(async () => {
-					test.comment("Waiting for DUT to come back online after reboot...");
+					test.comment('Waiting for DUT to come back online after reboot...');
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								'[[ ! -f /tmp/reboot-check ]] && echo "pass"',
-								this.context.get().link
-							)) === "pass"
+								this.context.get().link,
+							)) === 'pass'
 					);
 				}, false);
 
@@ -89,43 +95,61 @@ module.exports = {
 				ip = await this.context.get().worker.ip(this.context.get().link);
 
 				await this.context.get().utils.waitUntil(async () => {
-					test.comment("Waiting for supervisor to be ready after reboot...");
+					test.comment('Waiting for supervisor to be ready after reboot...');
 					return (
 						(await request({
-							method: "GET",
+							method: 'GET',
 							uri: `http://${ip}:${SUPERVISOR_PORT}/ping`,
-						})) === "OK"
+						})) === 'OK'
 					);
 				}, false);
 
 				// Get the current target state of device
 				const currentState = await request({
-					method: "GET",
+					method: 'GET',
 					uri: `http://${ip}:${SUPERVISOR_PORT}/v2/local/target-state`,
-					json: true
+					json: true,
 				});
 
-				test.equal(currentState.state.local.config.HOST_CONFIG_dtoverlay, targetState.local.config.HOST_CONFIG_dtoverlay, "DToverlay successfully set in target state")
-				test.equal(currentState.state.local.config.HOST_CONFIG_dtparam, targetState.local.config.HOST_CONFIG_dtparam, "DTparam successfully set in target state")
+				test.equal(
+					currentState.state.local.config.HOST_CONFIG_dtoverlay,
+					targetState.local.config.HOST_CONFIG_dtoverlay,
+					'DToverlay successfully set in target state',
+				);
+				test.equal(
+					currentState.state.local.config.HOST_CONFIG_dtparam,
+					targetState.local.config.HOST_CONFIG_dtparam,
+					'DTparam successfully set in target state',
+				);
 
-				const dtoverlay = fs.readFileSync(`${__dirname}/dtoverlay.sh`).toString();
+				const dtoverlay = fs
+					.readFileSync(`${__dirname}/dtoverlay.sh`)
+					.toString();
 				const dtparam = fs.readFileSync(`${__dirname}/dtparam.sh`).toString();
 
 				const overlayConfigTxt = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`cd /tmp && ${dtoverlay}`,
-						this.context.get().link
+						this.context.get().link,
 					);
 
-				test.equal(overlayConfigTxt, targetState.local.config.HOST_CONFIG_dtoverlay, "DToverlay successfully configured in the config.txt")
+				test.equal(
+					overlayConfigTxt,
+					targetState.local.config.HOST_CONFIG_dtoverlay,
+					'DToverlay successfully configured in the config.txt',
+				);
 				const paramConfigTxt = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`cd /tmp && ${dtparam}`,
-						this.context.get().link
+						this.context.get().link,
 					);
-				test.equal(paramConfigTxt, targetState.local.config.HOST_CONFIG_dtparam, "DTparam successfully configured in the config.txt")
+				test.equal(
+					paramConfigTxt,
+					targetState.local.config.HOST_CONFIG_dtparam,
+					'DTparam successfully configured in the config.txt',
+				);
 			},
 		},
 	],
