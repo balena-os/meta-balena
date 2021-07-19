@@ -140,57 +140,121 @@ module.exports = {
 			},
 		},
 		{
-			title: 'dnsServer test',
+			title: 'dnsServers test',
 			run: async function(test) {
-				const dnsServer = '8.8.4.4';
+				const defaultDns = '8.8.8.8';
+				const exampleDns = '1.1.1.1';
 
-				const serverFile = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						"systemctl show dnsmasq  | grep ExecStart= | sed -n 's/.*--servers-file=\\([^ ]*\\)\\s.*$/\\1/p'",
-						this.context.get().link,
-					);
-
-				test.is(
-					(
-						await this.context
+				test.comment(
+					`Waiting for dnsmasq to be active and using ${defaultDns}...`,
+				);
+				await this.context.get().utils.waitUntil(async () => {
+					return (
+						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
-								`cat ${serverFile}`,
+								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${defaultDns} ; echo $?`,
 								this.context.get().link,
-							)
-					).trim(),
-					'server=8.8.8.8',
-				);
+							)) === '0'
+					);
+				}, false);
 
+				test.comment(`Setting dnsServers="${exampleDns}" in config.json...`);
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.dnsServers="${dnsServer}"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
+						`tmp=$(mktemp) && jq '.dnsServers="${exampleDns}"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
 						this.context.get().link,
 					);
 
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				test.is(
-					(
-						await this.context
+				test.comment(
+					`Waiting for dnsmasq to be active and using ${exampleDns}...`,
+				);
+				await this.context.get().utils.waitUntil(async () => {
+					return (
+						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
-								`cat ${serverFile}`,
+								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${exampleDns} ; echo $?`,
 								this.context.get().link,
-							)
-					).trim(),
-					`server=${dnsServer}`,
-				);
+							)) === '0'
+					);
+				}, false);
 
+				test.comment(`Setting dnsServers="null" in config.json...`);
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
-						'tmp=$(mktemp)&&cat /mnt/boot/config.json | jq "del(.dnsServers)" > $tmp&&mv "$tmp" /mnt/boot/config.json',
+						`tmp=$(mktemp) && jq '.dnsServers="null"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
 						this.context.get().link,
 					);
+
+				test.comment(`Waiting for dnsmasq service to be active...`);
+				await this.context.get().utils.waitUntil(async () => {
+					return (
+						(await this.context
+							.get()
+							.worker.executeCommandInHostOS(
+								`systemctl is-active dnsmasq.service`,
+								this.context.get().link,
+							)) === 'active'
+					);
+				}, false);
+
+				test.is(
+					await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${defaultDns} ; echo $?`,
+							this.context.get().link,
+						),
+					'1',
+					`Active dnsmasq service should not be using ${defaultDns}.`,
+				);
+
+				test.is(
+					await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${exampleDns} ; echo $?`,
+							this.context.get().link,
+						),
+					'1',
+					`Active dnsmasq service should not be using ${exampleDns}.`,
+				);
+
+        test.is(
+					await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q "bad address" ; echo $?`,
+							this.context.get().link,
+						),
+					'1',
+					`Active dnsmasq service should not log "bad address".`,
+				);
+
+				test.comment(`Removing dnsServers field from config.json...`);
+				await this.context
+					.get()
+					.worker.executeCommandInHostOS(
+						`tmp=$(mktemp) && jq "del(.dnsServers)" /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
+						this.context.get().link,
+					);
+
+				test.comment(
+					`Waiting for dnsmasq to be active and using ${defaultDns}...`,
+				);
+				await this.context.get().utils.waitUntil(async () => {
+					return (
+						(await this.context
+							.get()
+							.worker.executeCommandInHostOS(
+								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${defaultDns} ; echo $?`,
+								this.context.get().link,
+							)) === '0'
+					);
+				}, false);
 			},
 		},
 		{
