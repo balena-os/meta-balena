@@ -317,8 +317,7 @@ module.exports = {
 	},
 	tests: [
 		'./tests/smoke',
-		// "./tests/self-serve-dashboard",
-		// "./tests/rollback-altboot",
-		// "./tests/rollback-health",
+		'./tests/rollback-altboot',
+		'./tests/rollback-health',
 	],
 };
