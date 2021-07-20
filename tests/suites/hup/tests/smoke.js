@@ -11,10 +11,11 @@ module.exports = {
 	run: async function(test) {
 		await this.context.get().hup.initDUT(this, test, this.context.get().link);
 
-		const before = await this.context
+		const versionBeforeHup = await this.context
 			.get()
 			.worker.getOSVersion(this.context.get().link);
-		test.comment(`VERSION (before): ${before}`);
+
+		test.comment(`OS version before HUP: ${versionBeforeHup}`);
 
 		await this.context
 			.get()
@@ -26,57 +27,80 @@ module.exports = {
 				this.context.get().link,
 			);
 
-		test.comment(`Reducing amount of time needed for rollback-health to fail`);
 		// reduce number of failures needed to trigger rollback
+		test.comment(`Reducing timeout for rollback-health...`);
 		await this.context
 			.get()
 			.worker.executeCommandInHostOS(
-				`sed -i -e "s/COUNT=.*/COUNT=1/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
+				`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
 				this.context.get().link,
 			);
 
 		await this.context.get().worker.rebootDut(this.context.get().link);
 
-		const after = await this.context
+		// check every 5s for 2min
+		// 0 means file exists, 1 means file does not exist
+		test.comment(`Waiting for rollback-health-breadcrumb to be cleaned up...`);
+		await this.context.get().utils.waitUntil(
+			async () => {
+				return (
+					(await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							this.context.get().link,
+						)) === `1`
+				);
+			},
+			false,
+			24,
+			5000,
+		);
+
+		// 0 means file exists, 1 means file does not exist
+		test.is(
+			await this.context
+				.get()
+				.worker.executeCommandInHostOS(
+					`test -f /mnt/state/rollback-altboot-triggered ; echo $?`,
+					this.context.get().link,
+				),
+			'1',
+			'There should NOT be a rollback-altboot-triggered file in the state partition',
+		);
+
+		// 0 means file exists, 1 means file does not exist
+		test.is(
+			await this.context
+				.get()
+				.worker.executeCommandInHostOS(
+					`test -f /mnt/state/rollback-health-triggered ; echo $?`,
+					this.context.get().link,
+				),
+			'1',
+			'There should NOT be a rollback-health-triggered file in the state partition',
+		);
+
+		// 0 means file exists, 1 means file does not exist
+		test.is(
+			await this.context
+				.get()
+				.worker.executeCommandInHostOS(
+					`test -f /mnt/state/rollback-health-failed ; echo $?`,
+					this.context.get().link,
+				),
+			'1',
+			'There should NOT be a rollback-health-failed file in the state partition',
+		);
+
+		const versionAfterHup = await this.context
 			.get()
 			.worker.getOSVersion(this.context.get().link);
-		test.comment(`VERSION (after): ${after}`);
 
-		// The rollback-health service should always run regardless of the scenario
-		test.comment(`Waiting for rollback-health service to start ...`);
-		await this.context.get().utils.waitUntil(async () => {
-			return (
-				(await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`systemctl is-active rollback-health.service`,
-						this.context.get().link,
-					)) === 'active'
-			);
-		}, false);
+		test.comment(`OS version after HUP: ${versionAfterHup}`);
 
-		test.is(
-			await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-					`[ -f /mnt/state/rollback-health-triggered ] && echo fail || echo pass`,
-					this.context.get().link,
-				),
-			'pass',
-			'Rollback-health should succeed health checks.',
+		test.comment(
+			`Successful HUP from ${versionBeforeHup} to ${versionAfterHup}`,
 		);
-
-		test.is(
-			await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-					`[ -f /mnt/state/rollback-health-failed ] && echo fail || echo pass`,
-					this.context.get().link,
-				),
-			'pass',
-			'Rollback-health should succeed running previous hooks.',
-		);
-
-		test.comment(`Successful hostapp-update from ${before} to ${after}`);
 	},
 };
