@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'tests: Remove reboot requirement from dnsmasq tests'
+      hash: 1ea1985f7ebc56908d018c98211fd52f6fd6701c
+      body: |
+        We no longer require reboots when changing dnsServers in config.json
+        and the service should restart on it's own.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.82.10
+  date: 2021-07-20T20:09:41.348Z
+- commits:
     - subject: 'patch: Make OS test suite compatible with current helpers'
       hash: 5a7dd196686836bd35a95f3f2c5dadf138b2590f
       body: ''
