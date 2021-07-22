@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.82.11
+## (2021-07-21)
+
+* tests: Remove journalctl line limit from hup suite [Kyle Harding]
+* tests: Enable rollback tests in hup suite [Kyle Harding]
+* tests: Update smoke test conditions [Kyle Harding]
+* tests: Add rollback tests to HUP suite [Kyle Harding]
+* rollback-altboot: Fix minor typo in log message [Kyle Harding]
+
 # v2.82.10
 ## (2021-07-20)
 

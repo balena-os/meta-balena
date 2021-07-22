@@ -1,4 +1,63 @@
 - commits:
+    - subject: 'tests: Remove journalctl line limit from hup suite'
+      hash: 5ce248f0d1b37c6500cdd93c639a89027f1fc7f4
+      body: |
+        Having the lines limited to 500 meant we were missing
+        a lot of logs.
+
+        We also don't need to list boots and can use the 'all'
+        arguement to see all logs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'tests: Enable rollback tests in hup suite'
+      hash: 9d1e892324718f2533cae1cf5e09018526d13b20
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'tests: Update smoke test conditions'
+      hash: 64df0c010841b0f00d8025b79ae0f23a6fccdf29
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'tests: Add rollback tests to HUP suite'
+      hash: 87e89fcf7b07180f3221602afc7a5b4dd8cd9e48
+      body: |
+        Adding rollback-health check & rollback-altboot check to the HUP suite
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'rollback-altboot: Fix minor typo in log message'
+      hash: 1b3405ebf116420de032ccbdac39638a420c4a88
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.82.11
+  date: 2021-07-21T20:25:31.196Z
+- commits:
     - subject: 'tests: Remove reboot requirement from dnsmasq tests'
       hash: 1ea1985f7ebc56908d018c98211fd52f6fd6701c
       body: |
