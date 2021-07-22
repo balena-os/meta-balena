@@ -7,7 +7,7 @@
 'use strict';
 
 module.exports = {
-	title: 'Smoke test',
+	title: 'Rollback altboot (broken init) test',
 	run: async function(test) {
 		await this.context.get().hup.initDUT(this, test, this.context.get().link);
 
@@ -27,34 +27,40 @@ module.exports = {
 				this.context.get().link,
 			);
 
-		// reduce number of failures needed to trigger rollback
-		test.comment(`Reducing timeout for rollback-health...`);
+		// break init
+		test.comment(`Breaking init to trigger rollback-altboot...`);
 		await this.context
 			.get()
 			.worker.executeCommandInHostOS(
-				`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
+				`rm /mnt/sysroot/inactive/current/boot/init`,
 				this.context.get().link,
 			);
 
 		await this.context.get().worker.rebootDut(this.context.get().link);
 
-		// check every 5s for 2min
-		// 0 means file exists, 1 means file does not exist
-		test.comment(`Waiting for rollback-health-breadcrumb to be cleaned up...`);
+		// reboots should be finished when breadcrumbs are gone and service is inactive
+		// check every 30s for 5 min since we are expecting multiple reboots
+		test.comment(`Waiting for rollback-altboot.service to be inactive...`);
 		await this.context.get().utils.waitUntil(
 			async () => {
 				return (
 					(await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							`systemctl is-active rollback-altboot.service || test ! -f /mnt/state/rollback-altboot-breadcrumb`,
 							this.context.get().link,
-						)) === `1`
+						)) === `inactive`
 				);
 			},
 			false,
-			24,
-			5000,
+			10,
+			30000,
+		);
+
+		test.is(
+			await this.context.get().worker.getOSVersion(this.context.get().link),
+			versionBeforeHup,
+			`The OS version should have reverted to ${versionBeforeHup}`,
 		);
 
 		// 0 means file exists, 1 means file does not exist
@@ -65,8 +71,8 @@ module.exports = {
 					`test -f /mnt/state/rollback-altboot-triggered ; echo $?`,
 					this.context.get().link,
 				),
-			'1',
-			'There should NOT be a rollback-altboot-triggered file in the state partition',
+			'0',
+			'There should be a rollback-altboot-triggered file in the state partition',
 		);
 
 		// 0 means file exists, 1 means file does not exist
@@ -91,16 +97,6 @@ module.exports = {
 				),
 			'1',
 			'There should NOT be a rollback-health-failed file in the state partition',
-		);
-
-		const versionAfterHup = await this.context
-			.get()
-			.worker.getOSVersion(this.context.get().link);
-
-		test.comment(`OS version after HUP: ${versionAfterHup}`);
-
-		test.comment(
-			`Successful HUP from ${versionBeforeHup} to ${versionAfterHup}`,
 		);
 	},
 };

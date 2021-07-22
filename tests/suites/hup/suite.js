@@ -197,21 +197,10 @@ const initDUT = async (that, test, target) => {
 
 const archiveLogs = async (that, test, target) => {
 	test.comment(`Archiving HUP artifacts`);
-
-	const rollback = await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`journalctl --no-pager --no-hostname --unit rollback-health`,
-			target,
-		);
-	const rollbackLogs = join(that.suite.options.tmpdir, `rollback-health.log`);
-	fs.writeFileSync(rollbackLogs, rollback);
-	await that.archiver.add(rollbackLogs);
-
 	const journal = await that.context
 		.get()
 		.worker.executeCommandInHostOS(
-			`journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -n500 -a -b {};'`,
+			`journalctl --no-pager --no-hostname -a -b all`,
 			target,
 		);
 	const journalLogs = join(that.suite.options.tmpdir, `journal.log`);
@@ -317,8 +306,7 @@ module.exports = {
 	},
 	tests: [
 		'./tests/smoke',
-		// "./tests/self-serve-dashboard",
-		// "./tests/rollback-altboot",
-		// "./tests/rollback-health",
+		'./tests/rollback-altboot',
+		'./tests/rollback-health',
 	],
 };

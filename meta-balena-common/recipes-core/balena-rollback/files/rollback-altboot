@@ -24,7 +24,7 @@ if ! rollback-check-version; then
 fi
 
 if [ "$resin_root_part" != "$current_part_idx" ]; then
-	echo "Rollback: Looks like we are running in atlboot mode. Running hooks to recover bootfiles"
+	echo "Rollback: Looks like we are running in altboot mode. Running hooks to recover bootfiles"
 	DURING_UPDATE=0 /usr/bin/hostapp-update-hooks
 	touch /mnt/state/rollback-altboot-triggered
 	rollback-stop || true
