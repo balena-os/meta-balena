@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.82.12
+## (2021-07-24)
+
+* common: grub: don't install sbin utils [Joseph Kogut]
+
 # v2.82.11
 ## (2021-07-21)
 

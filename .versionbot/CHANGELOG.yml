@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'common: grub: don''t install sbin utils'
+      hash: e3bf23c7977c6c0dce9eb0a49172526a7e447522
+      body: |
+        These utilities aren't used on device. Don't install them to save space.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.82.12
+  date: 2021-07-24T01:06:12.763Z
+- commits:
     - subject: 'tests: Remove journalctl line limit from hup suite'
       hash: 5ce248f0d1b37c6500cdd93c639a89027f1fc7f4
       body: |
