@@ -16,6 +16,12 @@ FILES_${PN}-iwlwifi-qu-b0-hr-b0 = " \
     ${nonarch_base_libdir}/firmware/iwlwifi-Qu-b0-hr-b0-* \
     "
 
+PACKAGES =+ "${PN}-iwlwifi-quz-a0-hr-b0"
+
+FILES_${PN}-iwlwifi-quz-a0-hr-b0 = " \
+    ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-hr-b0-* \
+    "
+
 PACKAGES =+ "${PN}-ibt-19-0-4"
 
 FILES_${PN}-ibt-19-0-4  = " \
