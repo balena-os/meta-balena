@@ -1,3 +1,46 @@
+# Cleanup iwlwifi firmware files
+IWLWIFI_PATH = "lib/firmware"
+IWLWIFI_REGEX = "^iwlwifi-([0-9a-zA-Z-]+)-([0-9]+).ucode$"
+
+IWLWIFI_FW_MIN_API[7260] = "17"
+IWLWIFI_FW_MIN_API[7265] = "17"
+IWLWIFI_FW_MIN_API[7265D] = "29"
+IWLWIFI_FW_MIN_API[8000C] = "34"
+IWLWIFI_FW_MIN_API[8265] = "34"
+
+python() {
+    import os,re
+
+    source_dir = d.getVar('S', True)
+    destination = d.getVar('D', True)
+    if destination is None:
+        return
+    install_path = os.path.join(destination, d.getVar('IWLWIFI_PATH',True))
+    package_name = d.getVar('PN', True)
+    package_version = d.getVar('PV', True)
+    regex = d.getVar('IWLWIFI_REGEX', True)
+    minapi_all = d.getVarFlags('IWLWIFI_FW_MIN_API') or {}
+    if not os.path.exists(source_dir):
+        return
+    for chipset, minapi in minapi_all.items():
+        minapi = int(minapi_all[chipset] or 0)
+        bb.note('Limiting iwlwifi firmware for chipset {} to minimum API version {}.'.format(chipset, minapi))
+        package_files = []
+        for filename in os.listdir(source_dir):
+            m = re.match(regex, filename)
+            if m and m.group(1) and m.group(2):
+                matched_chipset = m.group(1)
+                matched_version = int(m.group(2))
+                if matched_chipset == chipset:
+                    filepath = os.path.join(d.getVar('IWLWIFI_PATH'), filename)
+                    if matched_version >= minapi:
+                        package_files.append(filepath)
+                    else:
+                        bb.note('{} < {}, skipping packaging'.format(filename, minapi))
+
+        d.setVar('FILES_{}-iwlwifi-{}'.format(package_name, chipset.lower()), ' '.join(package_files))
+}
+
 PACKAGES =+ "${PN}-rtl8188eu"
 
 FILES_${PN}-rtl8188eu = " \
