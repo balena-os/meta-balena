@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'tests: Symlink /dev/null instead of copying bash to break services'
+      hash: eea7514c705b43482dd3656d0c34bb2414c267ee
+      body: |
+        Triggered by a failue in the VPN test - the bash binary is bigger than
+        the openvpn binary and on devices with limitted rootfs space the copying
+        is not possible. Symlinking /dev/null will break the services as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.82.13
+  date: 2021-07-29T07:32:26.577Z
+- commits:
     - subject: 'common: grub: don''t install sbin utils'
       hash: e3bf23c7977c6c0dce9eb0a49172526a7e447522
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.82.13
+## (2021-07-29)
+
+* tests: Symlink /dev/null instead of copying bash to break services [Michal Toman]
+
 # v2.82.12
 ## (2021-07-24)
 
