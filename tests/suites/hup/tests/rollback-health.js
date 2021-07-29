@@ -46,7 +46,7 @@ module.exports = {
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
-						`cp /bin/bash $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$")`,
+						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$")`,
 						this.context.get().link,
 					);
 
@@ -151,7 +151,7 @@ module.exports = {
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
-						`cp /bin/bash $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$")`,
+						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$")`,
 						this.context.get().link,
 					);
 
