@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add support for rootfs on MD RAID1
+      hash: bc1cb47f177b0d04a17c26b00b4ca99cf4638c33
+      body: |
+        This commit does two things:
+        - Build in necessary kernel modules
+        - Add the mdadm userspace utility to rootfs and initrd
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.83.0
+  date: 2021-07-29T14:10:41.247Z
+- commits:
     - subject: 'tests: Symlink /dev/null instead of copying bash to break services'
       hash: eea7514c705b43482dd3656d0c34bb2414c267ee
       body: |
