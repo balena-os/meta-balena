@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.1
+## (2021-07-31)
+
+* linux-firmware: package i915 generations separately [Joseph Kogut]
+
 # v2.83.0
 ## (2021-07-29)
 

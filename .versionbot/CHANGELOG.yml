@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'linux-firmware: package i915 generations separately'
+      hash: e741dcf6f520765c3345c1e64cfc3f31f5b6a604
+      body: |
+        Package Intel graphics firmware generations separately, allowing GPU
+        firmware to be installed for specific SoCs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.1
+  date: 2021-07-31T15:24:38.031Z
+- commits:
     - subject: Add support for rootfs on MD RAID1
       hash: bc1cb47f177b0d04a17c26b00b4ca99cf4638c33
       body: |
