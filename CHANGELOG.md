@@ -1,6 +1,30 @@
 Change log
 -----------
 
+# v2.83.2
+## (2021-07-31)
+
+
+<details>
+<summary> Update balena-supervisor from v12.9.3 to v12.9.6 [Florin Sarbu] </summary>
+
+> ## balena-supervisor-12.9.6
+> ### (2021-07-26)
+> 
+> * Use tags to track supervised images in docker [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.9.5
+> ### (2021-07-22)
+> 
+> * Log the delta URL that will be downloaded on update [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.9.4
+> ### (2021-07-08)
+> 
+> * Fix db-helper module for tests [Felipe Lalanne]
+> 
+</details>
+
 # v2.83.1
 ## (2021-07-31)
 

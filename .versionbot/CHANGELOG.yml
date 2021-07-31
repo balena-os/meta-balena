@@ -1,4 +1,114 @@
 - commits:
+    - subject: Update balena-supervisor from v12.9.3 to v12.9.6
+      hash: 1bb48de867fd17783412a9c8d1af20568753737b
+      body: |
+        Update balena-supervisor from 12.9.3 to 12.9.6
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from v12.9.3 to v12.9.6
+        changelog-entry: Update balena-supervisor from v12.9.3 to v12.9.6
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested:
+        - commits:
+            - subject: Use tags to track supervised images in docker
+              hash: f1bd4b8d9bcef29e326cbf97eaddd837c2704d19
+              body: >
+                The image manager module now uses tags instead of docker IDs as
+                the main
+
+                way to identify docker images on the engine. That is, if the
+                target
+
+                state image has a name `imageName:tag@digest`, the supervisor
+                will always use
+
+                the given `imageName` and `tag` (which may be empty) to tag the
+                image on
+
+                the engine after fetching. This PR also adds checkups to ensure
+
+                consistency is maintained between the database and the engine.
+
+
+                Using tags allows to simplify query and removal operations,
+                since now
+
+                removing the image now means removing tags matching the image
+                name.
+
+
+                Before this change the supervisor relied only on information in
+                the
+
+                supervisor database, and used that to remove images by docker
+                ID. However, the docker
+
+                id is not a reliable identifier, since images retain the same id
+                between
+
+                releases or between services in the same release.
+
+
+                List of squashed commits
+
+                - Remove custom type NormalizedImageInfo
+
+                - Remove dependency on docker-toolbelt
+
+                - Use tags to traack supervised images in docker
+
+                - Ensure tag removal occurs in sequence
+
+                - Only save database image after download confirmed
+              footer:
+                Relates-to: '#1616 #1579'
+                relates-to: '#1616 #1579'
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.9.6
+          date: 2021-07-26T13:58:29.275Z
+        - commits:
+            - subject: Log the delta URL that will be downloaded on update
+              hash: c05c5803f08ddd31eeddb2000cc5f162fb916003
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1755'
+                closes: '#1755'
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.9.5
+          date: 2021-07-22T15:08:58.505Z
+        - commits:
+            - subject: Fix db-helper module for tests
+              hash: 357d1baf6188d89b8552fd9068dbea9ac50aa008
+              body: >
+                The previous module was using `rewire` to get the knex instance
+                from the
+
+                db module but that was leading to issues when running tests
+                using `test:fast`.
+
+                This provides a fix for the test module that just removes the
+                destroy
+
+                call entirely (it turns out it is not necessary).
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.9.4
+          date: 2021-07-08T18:48:09.003Z
+  version: 2.83.2
+  date: 2021-07-31T15:38:11.663Z
+- commits:
     - subject: 'linux-firmware: package i915 generations separately'
       hash: e741dcf6f520765c3345c1e64cfc3f31f5b6a604
       body: |
