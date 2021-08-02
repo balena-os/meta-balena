@@ -6,8 +6,9 @@ DEPENDS_append_class-target = " grub-conf"
 # this removes them for aarch64
 FILES_${PN}-common_remove = "${libdir}/${BPN}"
 
-# remove sbin utilities, such as grub-install
+# remove utilities, such as grub-install, grub-mkrescue, etc.
 FILES_${PN}-common_remove = "${sbindir}"
+FILES_${PN}-common_remove = "${bindir}"
 
 # Modules are built into the grub image for speed and simplicity, but DTs still
 # expect the modules directory to exist in ${DEPLOYDIR}, so create it.
