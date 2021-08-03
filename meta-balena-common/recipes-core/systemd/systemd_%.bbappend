@@ -61,6 +61,10 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/systemd-logind-balena-os.conf \
         ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
 
+    # mask systemd-getty-generator
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system-generators
+    ln -sf /dev/null ${D}/${sysconfdir}/systemd/system-generators/systemd-getty-generator
+
     install -d -m 0755 ${D}/srv
 
     # shorten reboot/poweroff timeouts
