@@ -4,6 +4,9 @@ inherit deploy
 
 SRC_URI:append = " \
     file://balena-logo.png \
+    file://plymouth-disable-containerized.conf \
+    file://plymouth-stop-balena-os.conf \
+    file://plymouth-start-balena-os.conf \
     "
 
 # install our theme, and remove some extra files to save a significant
@@ -28,7 +31,37 @@ do_install:append() {
     # Don't stop splash at boot
     rm ${D}${systemd_unitdir}/system/multi-user.target.wants/plymouth-quit.service
     rm ${D}${systemd_unitdir}/system/multi-user.target.wants/plymouth-quit-wait.service
+
+    # disable units when containerized
+    for unit in plymouth-quit-wait.service \
+                plymouth-quit.service \
+                plymouth-read-write.service \
+                plymouth-switch-root.service \
+                systemd-ask-password-plymouth.path; do
+        install -d -m 0755 ${D}${libdir}/systemd/system/${unit}.d
+        install -m 0644 ${WORKDIR}/plymouth-disable-containerized.conf \
+            ${D}${libdir}/systemd/system/${unit}.d
+    done
+
+    # install drop-in configs
+    for unit in plymouth-halt.service \
+                plymouth-kexec.service \
+                plymouth-poweroff.service \
+                plymouth-reboot.service; do
+        install -d -m 0755 ${D}${libdir}/systemd/system/${unit}.d
+        install -m 0644 ${WORKDIR}/plymouth-stop-balena-os.conf \
+            ${D}${libdir}/systemd/system/${unit}.d
+    done
+
+    install -d -m 0755 ${D}${libdir}/systemd/system/plymouth-start.service.d
+    install -m 0644 ${WORKDIR}/plymouth-start-balena-os.conf \
+        ${D}${libdir}/systemd/system/plymouth-start.service.d
 }
+
+# package our drop-in configs
+FILES_${PN} += " \
+    ${libdir}/systemd/system/*.d \
+    "
 
 do_deploy() {
     install ${WORKDIR}/balena-logo.png ${DEPLOYDIR}/balena-logo.png
