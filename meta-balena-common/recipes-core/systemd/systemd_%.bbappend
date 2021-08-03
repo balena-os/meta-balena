@@ -14,6 +14,9 @@ SRC_URI_append = " \
     file://dev-zram0.swap \
     file://resin_update_state_probe \
     file://balena-os-sysctl.conf \
+    file://getty-balena-os.conf \
+    file://serial-getty-balena-os.conf \
+    file://systemd-logind-balena-os.conf \
     "
 
 python() {
@@ -51,6 +54,16 @@ do_install_append() {
 
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
     install -m 06444 ${WORKDIR}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
+
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/getty@.service.d
+    install -m 0644 ${WORKDIR}/getty-balena-os.conf \
+        ${D}/${sysconfdir}/systemd/system/getty@.service.d
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/serial-getty@.service.d
+    install -m 0644 ${WORKDIR}/serial-getty-balena-os.conf \
+        ${D}/${sysconfdir}/systemd/system/serial-getty@.service.d
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
+    install -m 0644 ${WORKDIR}/systemd-logind-balena-os.conf \
+        ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
 
     install -d -m 0755 ${D}/srv
 
