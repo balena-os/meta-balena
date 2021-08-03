@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'systemd: replace duplicated patch w/ shared drop-ins'
+      hash: 38c2f7c6c774b13402424ce04aa4c66c02ebef11
+      body: |
+        Certain services, such as getty@.service, and systemd-logind.service are
+        disabled when running in a container using a patch to the source files.
+        This increases the manual intervention necessary when adding support for
+        a new version of systemd. Replace the patch with drop-in configs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.2
+  date: 2021-08-03T20:44:01.715Z
+- commits:
     - subject: 'linux-firmware: package i915 generations separately'
       hash: e741dcf6f520765c3345c1e64cfc3f31f5b6a604
       body: |

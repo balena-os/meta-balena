@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.2
+## (2021-08-03)
+
+* systemd: replace duplicated patch w/ shared drop-ins [Joseph Kogut]
+
 # v2.83.1
 ## (2021-07-31)
 
