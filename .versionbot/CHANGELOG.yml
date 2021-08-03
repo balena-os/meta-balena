@@ -1,4 +1,35 @@
 - commits:
+    - subject: 'systemd: mask systemd-getty-generator instead of patching'
+      hash: 2e5062ab418a113b80a4005af45b43b874d04c35
+      body: |
+        We disable systemd-getty-generator to allow explicit control over when
+        we setup getty to create consoles. Previously, this was done using a
+        patch to systemd, removing this generator. Mask this instead so we can
+        consolidate this configuration in meta-balena-common.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'systemd: replace duplicated patch w/ shared drop-ins'
+      hash: 64c7d62743f9a01e460eccd478757df92c60db26
+      body: |
+        Certain services, such as getty@.service, and systemd-logind.service are
+        disabled when running in a container using a patch to the source files.
+        This increases the manual intervention necessary when adding support for
+        a new version of systemd. Replace the patch with drop-in configs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.2
+  date: 2021-08-03T21:06:51.413Z
+- commits:
     - subject: 'linux-firmware: package i915 generations separately'
       hash: e741dcf6f520765c3345c1e64cfc3f31f5b6a604
       body: |
