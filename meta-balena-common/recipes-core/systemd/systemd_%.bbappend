@@ -17,6 +17,7 @@ SRC_URI:append = " \
     file://getty-target-development-features.conf \
     file://getty-service-development-features.conf \
     file://disable-user-ns.conf \
+    file://condition-virtualization-not-docker.conf \
     "
 
 python() {
@@ -46,6 +47,17 @@ FILES:${PN} += " \
 do_install:append() {
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
     install -m 06444 ${WORKDIR}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
+
+    # install drop-in configs to disable these services when running containerized
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/getty@.service.d
+    install -m 0644 ${WORKDIR}/condition-virtualization-not-docker.conf \
+        ${D}/${sysconfdir}/systemd/system/getty@.service.d
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/serial-getty@.service.d
+    install -m 0644 ${WORKDIR}/condition-virtualization-not-docker.conf \
+        ${D}/${sysconfdir}/systemd/system/serial-getty@.service.d
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
+    install -m 0644 ${WORKDIR}/condition-virtualization-not-docker.conf \
+        ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
 
     install -d -m 0755 ${D}/srv
 
