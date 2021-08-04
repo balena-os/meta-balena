@@ -1,9 +1,3 @@
-FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
-
-SRC_URI:append = " \
-	file://0001-core-Don-t-redirect-stdio-to-null-when-running-in-co.patch \
-	"
-
 PACKAGECONFIG:remove = "nss-resolve"
 
 do_install:append() {
