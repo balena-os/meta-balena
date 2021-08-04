@@ -129,7 +129,7 @@ FILES_udev += "\
 RDEPENDS_${PN}_append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"
 
 # Network configuration is managed by NetworkManager. ntp is managed by chronyd
-PACKAGECONFIG_remove = "resolved networkd timesyncd"
+PACKAGECONFIG_remove = "resolved networkd timesyncd nss-resolve"
 
 PACKAGECONFIG_remove = "polkit"
 
