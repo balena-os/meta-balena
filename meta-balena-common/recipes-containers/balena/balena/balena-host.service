@@ -13,9 +13,9 @@ EnvironmentFile=-/etc/docker/balenahost.env
 Environment=BALENAD_EXPERIMENTAL=
 Environment=BALENAD_DEBUG=
 Environment=BALENAD_LOGDRIVER=--log-driver=journald
-Environment=BALENAD_STORAGEDRIVER=--storage-driver=@BALENA_STORAGE@
+Environment=BALENAD_STORAGEDRIVER=--storage-driver=overlay2
 Environment=BALENAD_CGROUPDRIVER=--exec-opt=native.cgroupdriver=systemd
-Environment=BALENAD_DELTA_STORAGEDRIVER=--delta-storage-driver=@BALENA_STORAGE@
+Environment=BALENAD_DELTA_STORAGEDRIVER=--delta-storage-driver=overlay2
 Environment=BALENAD_DELTA_DATA_ROOT=--delta-data-root=/mnt/sysroot/active/balena
 Environment=BALENAD_DATA_ROOT=--data-root=/mnt/sysroot/inactive/balena
 Environment=BALENAD_PIDFILE=--pidfile=/var/run/balena-host.pid
