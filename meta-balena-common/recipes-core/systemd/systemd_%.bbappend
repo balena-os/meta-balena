@@ -110,6 +110,9 @@ do_install_append() {
 
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/dev-zram0.swap ${D}${systemd_unitdir}/system/dev-zram0.swap
+
+    # avoid file conflict with timeinit package
+    rm ${D}${systemd_unitdir}/system/time-set.target
 }
 
 PACKAGES =+ "${PN}-zram-swap"
