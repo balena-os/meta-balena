@@ -126,6 +126,14 @@ FILES_udev += "\
     ${rootlibexecdir}/udev/zram-swap-init           \
 "
 
+# Since dunfell, udev rules are packaged explicitly
+# https://github.com/balena-os/poky/commit/e3cd4e584239c207e3c82bdf5d7216d26fd28fc7
+FILES_udev += "\
+	${rootlibexecdir}/udev/rules.d/touchscreen.rules \
+	${rootlibexecdir}/udev/rules.d/10-zram.rules \
+	${rootlibexecdir}/udev/rules.d/60-resin-update-state.rules \
+"
+
 RDEPENDS_${PN}_append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"
 
 # Network configuration is managed by NetworkManager. ntp is managed by chronyd
