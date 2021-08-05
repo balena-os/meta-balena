@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.2
+## (2021-08-05)
+
+* tests: Fix insecure registry error [Robert Günzler]
+
 # v2.83.1
 ## (2021-07-31)
 

@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'tests: Fix insecure registry error'
+      hash: 647d683dbfd0461706e75291c5396752fdc1b2ce
+      body: >
+        introduced when images including
+        8227a61f6bef6d93cc6a5acd0ef93a2012079964
+
+        made it to production.
+
+        We can now use a runtime drop-in unit placed under /run/systemd/ to
+
+        configure the balena-host service, which doesn't require us to remount
+
+        the rootfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.83.2
+  date: 2021-08-05T13:55:32.372Z
+- commits:
     - subject: 'linux-firmware: package i915 generations separately'
       hash: e741dcf6f520765c3345c1e64cfc3f31f5b6a604
       body: |
