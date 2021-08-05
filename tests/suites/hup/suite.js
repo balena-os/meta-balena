@@ -12,14 +12,35 @@ const { join } = require('path');
 const { homedir } = require('os');
 const Docker = require('dockerode');
 const exec = require('bluebird').promisify(require('child_process').exec);
+const Bluebird = require('bluebird');
 
 // Starts registry, uploads target image to registry
 const runRegistry = async (that, seedWithImage) => {
 	const docker = new Docker();
-	const registryImage = 'registry:2';
+	const registryImage = 'registry:2.7.1';
 
-	that.log('Pulling registry image');
-	await docker.pull(registryImage);
+	that.log(`Pulling registry image: ${registryImage}`);
+	const stream = await docker.pull(registryImage);
+
+	await new Bluebird((resolve, reject) => {
+		docker.modem.followProgress(
+			stream,
+			(err, output) => {
+				// onFinished
+				if (!err && output && output.length) {
+					err = output.pop().error;
+				}
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			},
+			event => {
+				// onProgress
+			},
+		);
+	});
 
 	const container = await docker
 		.createContainer({
@@ -179,15 +200,35 @@ const initDUT = async (that, test, target) => {
 	}, true);
 	test.comment(`DUT flashed`);
 
+	const insecureRegistry = await that.context
+		.get()
+		.worker.executeCommandInHostOS(
+			`ip route | awk '/default/{print $3}' | xargs -I {} echo -n ' --insecure-registry={}:5000'`,
+			target,
+		);
+
+	const execStart = await that.context
+		.get()
+		.worker.executeCommandInHostOS(
+			`grep 'ExecStart=/usr/bin/balenad' /lib/systemd/system/balena-host.service`,
+			target,
+		);
+
+	let overrideSetting = `Environment=BALENAD_EXTRA_ARGS=${insecureRegistry}`;
+	// OS releases prior to 2.80.8 do not support BALENAD_EXTRA_ARGS
+	if (execStart.indexOf(`BALENAD_EXTRA_ARGS`) < 0) {
+		overrideSetting = `ExecStart=\n${execStart} ${insecureRegistry}`;
+	}
+
 	test.comment(`Configuring DUT to use test suite registry`);
-	// TODO rework this after https://github.com/balena-os/meta-balena/pull/2175
 	// FIXME we should probably use a shared testbotIP method with the runRegistry helper...
 	await that.context
 		.get()
 		.worker.executeCommandInHostOS(
-			`mount -o remount,rw / && sed -e "s/driver=systemd/driver=systemd --insecure-registry=$(ip route | awk '/default/{print $3}'):5000/" -i /lib/systemd/system/balena-host.service && systemctl daemon-reload && systemctl restart balena-host && mount -o remount,ro /`,
+			`mkdir -p /run/systemd/system/balena-host.service.d/ && echo -e "[Service]\n${overrideSetting}" >/run/systemd/system/balena-host.service.d/hup.conf && systemctl daemon-reload && systemctl restart balena-host`,
 			target,
 		);
+
 	test.comment(`DUT ready`);
 
 	that.teardown.register(async () => {
