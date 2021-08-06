@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'supervisor: Consolidate supervisor container removal'
+      hash: f533be0ee1d6f42801f29426929e5f8b18035b9b
+      body: |
+        Avoid removing supervisor containers in 3 different places
+        and consolidate the steps into start-balena-supervisor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.83.3
+  date: 2021-08-05T18:58:49.620Z
+- commits:
     - subject: 'tests: Fix insecure registry error'
       hash: 647d683dbfd0461706e75291c5396752fdc1b2ce
       body: >
