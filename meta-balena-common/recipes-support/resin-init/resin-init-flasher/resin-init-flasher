@@ -257,7 +257,10 @@ if [ "$LUKS" = "1" ]; then
     STATE_PART_END=$["$ROOTB_PART_END" + "$STATE_PART_SIZE" + "$LUKS_HEADER_SIZE"]
     parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-state "$ROOTB_PART_END" "$STATE_PART_END"
 
-    DATA_PART_END=$["$STATE_PART_END" + "$DATA_PART_SIZE" + "$LUKS_HEADER_SIZE"]
+    # An extra 1MB for when the data partition is not aligned to whole megabytes
+    # By default our images are aligned to megabytes but preloading extends
+    # the data partition and it can end up unaligned.
+    DATA_PART_END=$["$STATE_PART_END" + "$DATA_PART_SIZE" + "$LUKS_HEADER_SIZE" + 1]
     parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-data "$STATE_PART_END" "$DATA_PART_END"
 
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
