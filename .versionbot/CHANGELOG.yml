@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'balena-os: pin linux-firmware to 20210511 from hardknott'
+      hash: e7a72c3e82587ffd2388656de71340afdddc9156
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'linux-firmware: upgrade 20190815 -> 20210511'
+      hash: 497fa316fec3ef99a14872208abb85f7e932922d
+      body: |
+        Add recipe from poky hardknott, revision 74dbb08
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.4
+  date: 2021-08-11T16:09:10.911Z
+- commits:
     - subject: 'supervisor: Consolidate supervisor container removal'
       hash: f533be0ee1d6f42801f29426929e5f8b18035b9b
       body: |
