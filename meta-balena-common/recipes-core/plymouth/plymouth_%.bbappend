@@ -20,7 +20,7 @@ do_install_append() {
     rm ${D}${nonarch_libdir}/plymouth/fade-throbber.*
     rm ${D}${nonarch_libdir}/plymouth/space-flares.*
     rm ${D}${nonarch_libdir}/plymouth/text.*
-    rm ${D}${nonarch_libdir}/plymouth/throbgress.*
+    rm -f ${D}${nonarch_libdir}/plymouth/throbgress.*
     rm ${D}${nonarch_libdir}/plymouth/tribar.*
     rm ${D}${nonarch_libdir}/plymouth/two-step.*
 
