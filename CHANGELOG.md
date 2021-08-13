@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.5
+## (2021-08-13)
+
+* resin-u-boot.bbclass: Make console silencing change more resilient [Florin Sarbu]
+
 # v2.83.4
 ## (2021-08-11)
 

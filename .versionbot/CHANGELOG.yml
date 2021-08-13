@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'resin-u-boot.bbclass: Make console silencing change more resilient'
+      hash: 6f173d763828d63f70582219aa19333b1e599a57
+      body: |
+        There is at least a case in a board where the puts function in u-boot's
+        common/console.c is #ifdef'ed and defined twice. Let's accomodate for
+        such cases by correctly looping through more than one function
+        definition if present.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.83.5
+  date: 2021-08-13T08:16:50.739Z
+- commits:
     - subject: 'balena-os: pin linux-firmware to 20210511 from hardknott'
       hash: e7a72c3e82587ffd2388656de71340afdddc9156
       body: ''
