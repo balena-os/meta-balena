@@ -388,7 +388,7 @@ IMAGE_PREPROCESS_COMMAND += "remove_backup_files ; "
 # dumpe2fs ${image} | grep ${attribute} | cut -d ":" -f2 | tr -d [:blank:]
 def image_dump(image, attribute):
      import subprocess
-     if attribute == "Journal length":
+     if attribute in ["Journal length", "Total journal blocks"]:
         cmd1 = subprocess.Popen(["dumpe2fs", image], stdout=subprocess.PIPE)
      else:
         cmd1 = subprocess.Popen(["tune2fs", "-l", image], stdout=subprocess.PIPE)
@@ -399,7 +399,7 @@ def image_dump(image, attribute):
      cmd4 = subprocess.Popen(["tr", "-d", "[:blank:]"], stdin=cmd3.stdout, stdout=subprocess.PIPE)
      cmd3.stdout.close()
      rout,rerr = cmd4.communicate()
-     return int(rout)
+     return int(rout) if rout else None
 
 # Calculate the available space in KiB on the provided ext4 image file
 # Input sizes are in bytes
@@ -410,7 +410,7 @@ def available_space(img):
      blk_size = image_dump(img, "Block size")
      reserved_blks = image_dump(img, "Reserved block count")
      reserved_gdt_blks = image_dump(img, "Reserved GDT blocks")
-     journal_blks = image_dump(img, "Journal length")
+     journal_blks = image_dump(img, "Journal length") or image_dump(img, "Total journal blocks")
      bb.debug(1, 'free_blk_cnt %d blk_sz %d inode_count %d inode_size %d reserved_blks %d reserved_gdt_blks %d journal_blks %d' % (free_blk_count,blk_size,inode_count,inode_size,reserved_blks,reserved_gdt_blks,journal_blks) )
      available_space = free_blk_count - reserved_blks - reserved_gdt_blks - journal_blks - (inode_count * inode_size / blk_size)
      return int(available_space * blk_size / 1024)
