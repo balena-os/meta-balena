@@ -22,10 +22,14 @@ do_configure_append() {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'development-image', 'false', 'true', d)}; then
         if grep -qP "void puts\(const char \*s\)" ${S}/common/console.c ; then
             line=$(grep -nP "void puts\(const char \*s\)" ${S}/common/console.c | cut -f1 -d:)
-            sed -i "$(expr ${line} \+ 2) i return;" ${S}/common/console.c
+            increment=0
+            for iter in ${line}; do
+                sed -i "$(expr ${iter} \+ 2 \+ ${increment}) i return;" ${S}/common/console.c
+                increment=`expr $increment + 1`
+            done
         else
             bbfatal "Failed to patch u-boot for silencing console in production!"
-	fi;
+        fi;
     fi;
 }
 
