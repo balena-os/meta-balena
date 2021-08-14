@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.83.6
+## (2021-08-13)
+
+* balena-os-sysctl: disable user namespacing by default [Joseph Kogut]
+* common: kernel-resin: enable user namespacing [Joseph Kogut]
+
 # v2.83.5
 ## (2021-08-13)
 

@@ -1,4 +1,53 @@
 - commits:
+    - subject: 'balena-os-sysctl: disable user namespacing by default'
+      hash: 31c3ae8ad5c7ad45e450349b6972524da120e96c
+      body: |
+        Most major distributions now ship kernels with user namespacing enabled
+        in the kernel config. Some distributions, such as Arch and Ubuntu,
+        default to the upstream behavior of allowing unprivileged user
+        namespacing, regardless of potential attack surfaces exposed in the
+        kernel.
+
+        Other distributions, such as Debian, are slightly more conservative,
+        disabling the feature at runtime behind a sysctl tunable. Debian
+        maintains its own patch to add the kernel.unprivileged_userns_clone
+        tunable.
+
+        The Debian patch was rejected by upstream over fears of application
+        developers not using this feature due to it being generally unavailable
+        in systems, as well as fears of bugs going undiscovered.
+
+        RHEL uses a newer tunable introduced upstream to set the max number of
+        user namespaces to zero, which accomplishes the same thing, but without
+        an out of tree patch.
+
+        Disable user namespacing at runtime using the same method as RHEL, in
+        the same manner as the hardened kernels and distributions have chosen.
+
+        https://lwn.net/Articles/673597/
+        https://lists.debian.org/debian-kernel/2020/03/msg00237.html
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'common: kernel-resin: enable user namespacing'
+      hash: 04d9561760b449024a5b411bd366ded2351cd5cd
+      body: |
+        Enable CONFIG_USER_NS, a kernel feature used for user namespacing, and
+        required for docker-in-docker.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.6
+  date: 2021-08-13T16:30:49.145Z
+- commits:
     - subject: 'resin-u-boot.bbclass: Make console silencing change more resilient'
       hash: 6f173d763828d63f70582219aa19333b1e599a57
       body: |
