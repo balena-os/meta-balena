@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'grub: don''t package or install bindir utils'
+      hash: f1835282ecd3b0f9dfc52410d8f1628653e2c1b2
+      body: |
+        Remove ${bindir} from FILES_grub-common, ensuring grub utilities aren't
+        installed to /usr/bin, in addition to a previous similar commit that
+        removed sbin utils. This frees approximately 5.5M.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.7
+  date: 2021-08-14T14:48:17.382Z
+- commits:
     - subject: 'balena-os-sysctl: disable user namespacing by default'
       hash: 31c3ae8ad5c7ad45e450349b6972524da120e96c
       body: |

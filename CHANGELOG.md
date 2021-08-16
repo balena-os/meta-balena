@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.7
+## (2021-08-14)
+
+* grub: don't package or install bindir utils [Joseph Kogut]
+
 # v2.83.6
 ## (2021-08-13)
 
