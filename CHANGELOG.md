@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.83.8
+## (2021-08-17)
+
+
+<details>
+<summary> Update balena-engine to v19.03.24 [Alex Gonzalez] </summary>
+
+> ## balena-engine-19.03.24
+> ### (2021-08-12)
+> 
+> * prevent slice oob access in concatReadSeekCloser [Martin Rauscher]
+> 
+</details>
+
 # v2.83.7
 ## (2021-08-14)
 

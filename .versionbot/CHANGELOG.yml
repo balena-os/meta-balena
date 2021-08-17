@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update balena-engine to v19.03.24
+      hash: 1d3d0d0c8ef60710eaa67d68b5f606eb22e6fd28
+      body: |
+        Update balena-engine from 19.03.23 to 19.03.24
+      footer:
+        Changelog-entry: Update balena-engine to v19.03.24
+        changelog-entry: Update balena-engine to v19.03.24
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested:
+        - commits:
+            - subject: prevent slice oob access in concatReadSeekCloser
+              hash: 1e7045ac957db17fe9838602c9339c0b5ae5c282
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Martin Rauscher
+              nested: []
+          version: balena-engine-19.03.24
+          date: 2021-08-12T08:30:08.031Z
+  version: 2.83.8
+  date: 2021-08-17T07:29:06.381Z
+- commits:
     - subject: 'grub: don''t package or install bindir utils'
       hash: f1835282ecd3b0f9dfc52410d8f1628653e2c1b2
       body: |
