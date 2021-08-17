@@ -1,0 +1,1 @@
+kernel-balena.bbclass
