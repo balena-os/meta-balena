@@ -305,6 +305,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              ${PN}-qcom-adreno-a3xx ${PN}-qcom-adreno-a530 ${PN}-qcom-adreno-a630 \
              ${PN}-qcom-sdm845-audio ${PN}-qcom-sdm845-compute ${PN}-qcom-sdm845-modem \
              ${PN}-amlogic-vdec-license ${PN}-amlogic-vdec \
+             ${PN}-amdgpu-license ${PN}-amdgpu \
              ${PN}-lt9611uxc ${PN}-lontium-license \
              ${PN}-whence-license \
              ${PN}-license \
@@ -966,12 +967,17 @@ FILES_${PN}-amlogic-vdec-license = "${nonarch_base_libdir}/firmware/LICENSE.amlo
 FILES_${PN}-amlogic-vdec = "${nonarch_base_libdir}/firmware/meson/vdec/*"
 RDEPENDS_${PN}-amlogic-vdec = "${PN}-amlogic-vdec-license"
 
+# For AMD GPu
+LICENSE_${PN}-amdgpu = "Firmware-amdgpu"
+FILES_${PN}-amdgpu-license = "${nonarch_base_libdir}/firmware/LICENSE.amdgpu"
+FILES_${PN}-amdgpu = "${nonarch_base_libdir}/firmware/amdgpu"
+RDEPENDS_${PN}-amdgpu = "${PN}-amdgpu-license"
+
 # For other firmwares
 # Maybe split out to separate packages when needed.
 LICENSE_${PN} = "\
     Firmware-Abilis \
     & Firmware-agere \
-    & Firmware-amdgpu \
     & Firmware-amd-ucode \
     & Firmware-amlogic_vdec \
     & Firmware-atmel \
