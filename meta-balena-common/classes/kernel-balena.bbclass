@@ -145,6 +145,7 @@ BALENA_CONFIGS ?= " \
     ipv6_mroute \
     disable_hung_panic \
     mdraid \
+    ${FIRMWARE_COMPRESS} \
     "
 
 #
@@ -210,6 +211,11 @@ BALENA_CONFIGS[balena] ?= " \
     CONFIG_MEMCG_SWAP=y \
     CONFIG_OVERLAY_FS=y \
     "
+
+FIRMWARE_COMPRESS = "${@configure_from_version("5.3", "firmware_compress", "", d)}"
+BALENA_CONFIGS[firmware_compress] = " \
+    CONFIG_FW_LOADER_COMPRESS=y \
+"
 
 BALENA_CONFIGS[aufs] = " \
     CONFIG_AUFS_FS=y \
