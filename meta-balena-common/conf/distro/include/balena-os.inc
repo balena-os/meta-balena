@@ -103,3 +103,6 @@ PREFERRED_VERSION_libstd-rs = "1.36.0"
 # balena-engine go version requirement
 GOVERSION = "1.12.17"
 PREFERRED_PROVIDER_go-native = "go-native"
+
+# Firmware compression support
+FIRMWARE_COMPRESSION ?= "0"
