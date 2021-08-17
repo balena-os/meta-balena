@@ -63,6 +63,33 @@ inherit kernel-resin-noimage
 
 BALENA_DEFCONFIG_NAME ?= "resin-defconfig"
 
+def get_kernel_version(d):
+    import os, re
+    kernelsource = d.getVar('S', True)
+
+    # get the kernel version from the top Makefile in the kernel source tree
+    topmakefile = kernelsource + "/Makefile"
+    if not os.path.exists(topmakefile):
+        return None
+    with open(topmakefile, 'r') as makefile:
+        lines = makefile.readlines()
+
+    kernelversion = ""
+    for s in lines:
+        m = re.match("VERSION = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + m.group(1)
+        m = re.match("PATCHLEVEL = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + '.' + m.group(1)
+        m = re.match("SUBLEVEL = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + '.' + m.group(1)
+        m = re.match("EXTRAVERSION = (\d+)", s)
+        if m:
+            kernelversion = kernelversion + '.' + m.group(1)
+    return kernelversion
+
 BALENA_CONFIGS ?= " \
     ad5446 \
     balena \
@@ -611,35 +638,14 @@ def appendLineToFile (filepath, line):
 
 python do_kernel_resin_aufs_fetch_and_unpack() {
 
-    import collections, os.path, re
+    import collections, os.path
     from bb.fetch2.git import Git
-
-    kernelsource = d.getVar('S', True)
-
-    # get the kernel version from the top Makefile in the kernel source tree
-    topmakefile = kernelsource + "/Makefile"
-    with open(topmakefile, 'r') as makefile:
-        lines = makefile.readlines()
-
-    kernelversion = ""
-    for s in lines:
-        m = re.match("VERSION = (\d+)", s)
-        if m:
-            kernelversion_major = m.group(1)
-            kernelversion = kernelversion + m.group(1)
-        m = re.match("PATCHLEVEL = (\d+)", s)
-        if m:
-            kernelversion = kernelversion + '.' + m.group(1)
-        m = re.match("SUBLEVEL = (\d+)", s)
-        if m:
-            kernelversion = kernelversion + '.' + m.group(1)
-        m = re.match("EXTRAVERSION = (\d+)", s)
-        if m:
-            kernelversion = kernelversion + '.' + m.group(1)
 
     balena_storage = d.getVar('BALENA_STORAGE', True)
     bb.note("Kernel will be configured for " + balena_storage + " balena storage driver.")
 
+    kernelversion = get_kernel_version(d)
+    kernelversion_major = int(kernelversion.split('.')[0])
     # If overlay2, we assume support in the kernel source so no need for extra
     # patches
     if balena_storage == "overlay2":
@@ -648,6 +654,7 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         if not bb.utils.contains("BALENA_CONFIGS", "aufs", True, False, d):
             return
 
+    kernelsource = d.getVar('S', True)
     # Everything from here is for aufs
     if os.path.isdir(kernelsource + "/fs/aufs"):
         bb.note("The kernel source tree has the fs/aufs directory. Will not fetch and unpack aufs patches.")
