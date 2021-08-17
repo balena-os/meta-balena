@@ -90,6 +90,21 @@ def get_kernel_version(d):
             kernelversion = kernelversion + '.' + m.group(1)
     return kernelversion
 
+def configure_from_version(version, passvalue, failvalue, d):
+    kv = get_kernel_version(d)
+    if kv is None:
+        return failvalue
+    kv_major = kv.split('.')[0]
+    kv_minor = kv.split('.')[1]
+    major =  version.split('.')[0]
+    minor = version.split('.')[1]
+    if int(kv_major) > int(major):
+        return passvalue
+    elif int(kv_major) == int(major):
+        if int(kv_minor) > int(minor):
+            return passvalue
+    return failvalue
+
 BALENA_CONFIGS ?= " \
     ad5446 \
     balena \
