@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.9
+## (2021-08-17)
+
+* recipes-connectivity: improve NTP dispatcher script [Mark Corbin]
+
 # v2.83.8
 ## (2021-08-17)
 

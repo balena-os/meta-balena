@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'recipes-connectivity: improve NTP dispatcher script'
+      hash: d060bfa3581f6920fa2e353abaf82d2913d60e67
+      body: |
+        Change the NetworkManager NTP dispatcher script to update the
+        on/offline status of the NTP sources on 'connectivity-change' events
+        instead of 'up/down' events.
+
+        Currently 'chronyc onoffline' is run for 'up/down' events on any
+        network interface. It makes more sense to run it for
+        'connectivity-change' events as we are really interested in whether
+        the internet is there or not rather than whether an interface is
+        up or down.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'recipes-connectivity: improve NTP dispatcher script'
+        changelog-entry: 'recipes-connectivity: improve NTP dispatcher script'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.83.9
+  date: 2021-08-17T10:37:50.423Z
+- commits:
     - subject: Update balena-engine to v19.03.24
       hash: 1d3d0d0c8ef60710eaa67d68b5f606eb22e6fd28
       body: |
