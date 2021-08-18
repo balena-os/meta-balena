@@ -8,8 +8,8 @@ INTERFACE=$1
 ACTION=$2
 
 case "$ACTION" in
-	up|down)
-	echo "Setting NTP source on/offline status ($INTERFACE $ACTION)."
+	connectivity-change)
+	echo "Setting NTP source on/offline status ($ACTION $CONNECTIVITY_STATE)."
 	/usr/bin/chronyc onoffline > /dev/null 2>&1 || true
 	;;
 	*)
