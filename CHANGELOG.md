@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.83.10
+## (2021-08-18)
+
+* kernel-balena: Add function to conditionally configure based on version [Alex Gonzalez]
+* kernel-balena: Split function to get kernel version from source [Alex Gonzalez]
+* kernel-resin: Add as symlink to kernel-balena [Alex Gonzalez]
+* kernel-balena: Replace and deprecate kernel-resin [Alex Gonzalez]
+
 # v2.83.9
 ## (2021-08-17)
 

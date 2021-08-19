@@ -1,4 +1,56 @@
 - commits:
+    - subject: 'kernel-balena: Add function to conditionally configure based on version'
+      hash: 9787d2879d2f372c19f336c7e08bd0e6fee16ae7
+      body: |
+        Some kernel configuration are only applicable from specific kernel
+        versions. This commit adds a function that allows to add a specific
+        configuration set only from a given kernel version.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-balena: Split function to get kernel version from source'
+      hash: c349f647db328558f026f1b914bc0246dc33bda5
+      body: |
+        This allows to re-use this functionality. Note that the `KERNEL_VERSION`
+        variable is only available after the kernel has been built as it relies
+        on get_kernelversion_headers() poky function and utsrelease.h being
+        generated. This function parses the Makefile so only needs the source.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-resin: Add as symlink to kernel-balena'
+      hash: 129128574dbf38c46c0cc7121cdf6fd0f38ef64b
+      body: |
+        This avoids introducing a breaking change.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-balena: Replace and deprecate kernel-resin'
+      hash: 8c0d2ce52d42e72a939d248784d67dc2413c0443
+      body: |
+        New device types should use kernel-balena instead of kernel-resin.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.83.10
+  date: 2021-08-18T19:03:21.519Z
+- commits:
     - subject: 'recipes-connectivity: improve NTP dispatcher script'
       hash: d060bfa3581f6920fa2e353abaf82d2913d60e67
       body: |
