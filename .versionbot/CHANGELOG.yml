@@ -1,4 +1,19 @@
 - commits:
+    - subject: Remove any existing balena engine sock files before exec
+      hash: 91e561482654a851ca74ca649a51d63413992074
+      body: |
+        This should workaround cases where the .sock files have been created
+        as directories and the engine cannot start.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.83.10
+  date: 2021-08-19T13:05:03.123Z
+- commits:
     - subject: 'recipes-connectivity: improve NTP dispatcher script'
       hash: d060bfa3581f6920fa2e353abaf82d2913d60e67
       body: |

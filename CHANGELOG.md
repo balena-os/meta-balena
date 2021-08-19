@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.10
+## (2021-08-19)
+
+* Remove any existing balena engine sock files before exec [Kyle Harding]
+
 # v2.83.9
 ## (2021-08-17)
 
