@@ -35,7 +35,7 @@ const getSSHClientDisposer = config => {
 	return createSSHClient(config).disposer(client => {
 		client.dispose();
 	});
-};
+}
 
 const executeCommandOverSSH = async (command, config, opts) => {
 	return Bluebird.using(getSSHClientDisposer(config), client => {
@@ -49,18 +49,18 @@ const executeCommandOverSSH = async (command, config, opts) => {
 						{
 							stream: 'both',
 						},
-						opts ?? {},
+						opts,
 					),
-				);
+				)
 			);
 		});
 	});
-};
+}
 
 module.exports = {
 	title: 'Proxy HUP',
 	run: async function(test) {
-		await this.context.get().hup.initDUT(this, this.context.get().link);
+		await this.context.get().hup.initDUT(this, test, this.context.get().link);
 
 		const versionBeforeHup = await this.context
 			.get()
@@ -68,19 +68,26 @@ module.exports = {
 
 		test.comment(`OS version before HUP: ${versionBeforeHup}`);
 
-		const args = [];
-		const ip = await this.context.get().worker.ip(this.context.get().link);
-		const hupLogs = await executeCommandOverSSH(
+		// TODO: need to figure out the version of the verison of the PR image
+		// also... can we use the apiUrl from config.js here?
+		const versionAfterHup = versionBeforeHup;
+		const args = [
+			'--no-reboot',
+			`--balenaos-registry=https://api.${this.context.get().suite.options.balena.apiUrl}`,
+			`--hostos-version=${versionAfterHup}`,
+		];
+		const hup = await executeCommandOverSSH(
 			`bash -s -x -- ${args.join(' ')}`,
 			{
-				host: ip,
+				host: (await this.context.get().worker.ip(this.context.get().link)),
 				port: '22222',
 				username: 'root',
 			},
 			{
-				stdin: fs.createReadStream(PROXY_SCRIPT),
+				stdin: (await fs.readFile(PROXY_SCRIPT, 'utf-8')),
 			},
 		);
+		test.comment(`${hup.stdout}`);
 
 		// reduce number of failures needed to trigger rollback
 		test.comment(`Reducing timeout for rollback-health...`);

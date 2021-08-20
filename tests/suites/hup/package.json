@@ -2,6 +2,8 @@
   "dependencies": {
     "bluebird": "^3.5.3",
     "dockerode": "^2.5.8",
-    "fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0",
+    "lodash": "^4.17.10",
+    "node-ssh": "^9.0.0"
   }
 }
