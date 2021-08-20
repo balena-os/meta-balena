@@ -7,6 +7,9 @@ SRC_URI = " \
     file://redsocks.service \
     file://balena-proxy-config \
     file://balena-proxy-config.service \
+    file://redsocks-conf.path \
+    file://redsocks-conf.service \
+    file://redsocks-conf.target \
     "
 S = "${WORKDIR}"
 
@@ -14,7 +17,13 @@ inherit allarch systemd useradd
 
 PACKAGES = "${PN}"
 
-SYSTEMD_SERVICE_${PN} = "balena-proxy-config.service redsocks.service"
+SYSTEMD_SERVICE_${PN} = "\
+    balena-proxy-config.service \
+    redsocks.service \
+    redsocks-conf.service \
+    redsocks-conf.path \
+    redsocks-conf.target \
+"
 RDEPENDS_${PN} = "redsocks iptables"
 
 USERADD_PACKAGES = "${PN}"
@@ -28,6 +37,9 @@ do_install() {
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/balena-proxy-config.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/redsocks.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/redsocks-conf.path ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/redsocks-conf.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/redsocks-conf.target ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/*.service

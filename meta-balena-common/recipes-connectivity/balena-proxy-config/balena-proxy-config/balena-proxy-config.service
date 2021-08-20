@@ -2,6 +2,7 @@
 Description=Resin proxy configuration service
 Requires=resin-boot.service
 After=resin-boot.service dnsmasq.service
+PartOf=redsocks-conf.target
 
 [Service]
 Type=oneshot

@@ -1,0 +1,11 @@
+[Unit]
+Description=redsocks.conf path watch
+Requires=resin-boot.service
+After=resin-boot.service
+
+[Path]
+PathChanged=/mnt/boot/system-proxy/redsocks.conf
+PathChanged=/mnt/boot/system-proxy/no_proxy
+
+[Install]
+WantedBy=basic.target

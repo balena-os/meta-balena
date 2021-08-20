@@ -1,0 +1,9 @@
+[Unit]
+Description=redsocks.conf watcher service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/echo 'redsocks.conf changed'
+ExecStart=/bin/systemctl restart redsocks-conf.target
+# PartOf cannot start/restart inactive units
+ExecStart=/bin/systemctl restart redsocks.service

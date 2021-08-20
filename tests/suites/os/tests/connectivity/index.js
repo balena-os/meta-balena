@@ -70,7 +70,7 @@ module.exports = {
 		},
 		{
 			title: 'Proxy tests',
-			tests: ['redsocks', 'http-connect'].map(proxy => {
+			tests: ['socks5', 'http-connect'].map(proxy => {
 				return {
 					title: `${proxy.charAt(0).toUpperCase()}${proxy.slice(1)} test`,
 					run: async function(test) {
@@ -87,6 +87,7 @@ module.exports = {
 							port: PROXY_PORT,
 						});
 
+						test.comment(`Creating redsocks.conf for ${proxy}...`);
 						await this.context
 							.get()
 							.worker.executeCommandInHostOS(
@@ -108,9 +109,19 @@ module.exports = {
 								this.context.get().link,
 							);
 
-						// Rebooting the DUT
-						await this.context.get().worker.rebootDut(this.context.get().link);
+						test.comment(`Waiting for redsocks service to be active...`);
+						await this.context.get().utils.waitUntil(async () => {
+							return (
+								(await this.context
+									.get()
+									.worker.executeCommandInHostOS(
+										`systemctl is-active redsocks.service`,
+										this.context.get().link,
+									)) === 'active'
+							);
+						}, false, 5, 30000);
 
+						test.comment(`Checking for network connectivity by pinging a public URL...`);
 						await this.context
 							.get()
 							.worker.executeCommandInHostOS(
@@ -119,15 +130,13 @@ module.exports = {
 							);
 						test.true(`${URL_TEST} responded over ${proxy} proxy`);
 
+						test.comment(`Removing redsocks.conf...`);
 						await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								'rm -rf /mnt/boot/system-proxy',
 								this.context.get().link,
 							);
-
-						// Rebooting the DUT
-						await this.context.get().worker.rebootDut(this.context.get().link);
 					},
 				};
 			}),
