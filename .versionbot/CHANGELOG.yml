@@ -1,4 +1,65 @@
 - commits:
+    - subject: 'resindataexpander: expand data part to max usable size on MBR'
+      hash: 53ee274529fd7641af0868cac064176fcd5b2a13
+      body: |
+        MBR formatted disks are only capable of 32-bit addressing of sectors,
+        limiting disk usage to 2 TB. In cases where the full disk cannot be
+        utilized, expand the data partition to fill the usable space, and print
+        a message.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'resindataexpander: reformat spaces -> tabs'
+      hash: ec54b246b54677be03510151bc58bf784926030b
+      body: |
+        Reformat to use tabs instead of spaces, according to the following vim
+        config:
+
+        :set filetype=sh noexpandtab shiftwidth=4 tabstop=4 autoindent
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'resindataexpander: fix SC2069 on line 37'
+      hash: cbe846cc328db48a2f35e024460e1ebf68d19103
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'resindataexpander: fix SC2086 on line 37'
+      hash: 39ac8499436c04528d8e7cb860d41781001b313f
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'resindataexpander: fix SC2046 on line 6'
+      hash: 8a64eeb9227b85f913b8b85e5d01fee7267f31ab
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.11
+  date: 2021-08-23T20:33:25.486Z
+- commits:
     - subject: 'kernel-balena: Add function to conditionally configure based on version'
       hash: 9787d2879d2f372c19f336c7e08bd0e6fee16ae7
       body: |
