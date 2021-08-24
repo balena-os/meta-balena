@@ -229,12 +229,11 @@ function upgrade_supervisor() {
                     CURL_CA_BUNDLE=${TMPCRT} curl --silent --retry 10 --request PATCH --header "Authorization: Bearer ${APIKEY}" --header 'Content-Type: application/json' "${API_ENDPOINT}/v6/device(uuid='${UUID}')" --data-binary "{\"should_be_managed_by__supervisor_release\": \"${UPDATER_SUPERVISOR_ID}\"}" > /dev/null 2>&1
                     log "Running supervisor updater..."
                     # use a transient unit in order to namespace-collide with a potential API-initiated update
-                    supervisor_update="systemd-run --wait --unit run-update-supervisor $(which update-balena-supervisor || which update-resin-supervisor)"
+                    supervisor_update="systemd-run --wait --pipe --unit run-update-supervisor $(which update-balena-supervisor || which update-resin-supervisor)"
                     if version_gt "${HOST_OS_VERSION}" "${minimum_supervisor_stop}"; then
                         supervisor_update+=' -n'
                     fi
-                    eval "${supervisor_update}" || (log WARN "Supervisor couldn't be updated, continuing anyways" && \
-                        systemctl status run-update-supervisor)
+                    eval "${supervisor_update}" || log WARN "Supervisor couldn't be updated, continuing anyways"
                     if version_gt "6.5.9" "${target_supervisor_version}" ; then
                         remove_containers
                         log "Removing supervisor database for migration"
@@ -751,7 +750,7 @@ function get_image_location() {
     image=$(CURL_CA_BUNDLE=${TMPCRT} curl --retry 10 --silent -X GET \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer ${APIKEY}" \
-        "${API_ENDPOINT}/v5/release?\$expand=release_tag,belongs_to__application,contains__image/image&\$filter=(belongs_to__application/any(a:a/device_type%20eq%20'${SLUG}'%20and%20is_host%20eq%20true))%20and%20(release_tag/any(rt:(rt/tag_key%20eq%20'version')%20and%20(rt/value%20eq%20'${version}')))" \
+        "${API_ENDPOINT}/v5/release?\$expand=release_tag,belongs_to__application,contains__image/image&\$filter=(belongs_to__application/any(a:a/device_type%20eq%20'${SLUG}'%20and%20is_host%20eq%20true))%20and%20is_invalidated%20eq%20false%20and%20(release_tag/any(rt:(rt/tag_key%20eq%20'version')%20and%20(rt/value%20eq%20'${version}')))" \
         | jq -r "[.d[] | select(.release_tag[].value == \"${variant_downcase}\") | .contains__image[0].image[0] | [.is_stored_at__image_location, .content_hash] | \"\(.[0])@\(.[1])\"]")
     if echo "${image}" | jq -e '. | length == 1' > /dev/null; then
         echo "${image}" | jq -r '.[0]'

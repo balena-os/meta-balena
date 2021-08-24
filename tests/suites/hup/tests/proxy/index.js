@@ -12,7 +12,7 @@ const SSH = require('node-ssh');
 
 const fs = require('fs-extra');
 
-// https://github.com/balena-io/balena-proxy/blob/master/src/services/actions-backend/actions/scripts/upgrade-2.x.sh
+// https://github.com/balena-os/balenahup/blob/85f4775459cdd36613a1be0ccae0a5d6d22f4091/upgrade-2.x.sh
 const PROXY_SCRIPT = `${__dirname}/upgrade-2.x.sh`;
 
 // TODO: pr this into leviathan
