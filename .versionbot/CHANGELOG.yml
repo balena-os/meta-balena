@@ -1,4 +1,44 @@
 - commits:
+    - subject: 'linux-firmware: Use wildcards when selecting files to package'
+      hash: 16598bcffda7206d9a2ab9d96860cecf7de62756
+      body: |
+        Firmware files can be compressed with an xz extension or not, so use
+        wildcards to cover both cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'linux-firmware: Add firmware compression support'
+      hash: 2ee6d2e652772d28c25df94aa400e7ccd9f207de
+      body: |
+        This commit adds a FIRMWARE_COMPRESSION distro configuration that
+        performs the compression of linux-firmware files. Only kernel versions
+        above 5.3 support loading compressed firmware.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-balena: Support firmware compression from kernel version 5.3'
+      hash: c8faa130b88f11af86619d69a115be96dfbc894a
+      body: |
+        Kernel version 5.3 supports loading compressed firmware files saving
+        storage space.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.83.11
+  date: 2021-08-24T14:52:41.041Z
+- commits:
     - subject: 'kernel-balena: Add function to conditionally configure based on version'
       hash: 9787d2879d2f372c19f336c7e08bd0e6fee16ae7
       body: |
