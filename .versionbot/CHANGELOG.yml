@@ -1,4 +1,39 @@
 - commits:
+    - subject: 'tests: remove reboot requirement from hostname test'
+      hash: 34687ca76515d57a77ba12c0fd44632518181392
+      body: |
+        We no longer require reboots when changing hostname in config.json.
+        The contents of '/etc/hostname' and the avahi mDNS broadcast hostname
+        are updated automatically without requiring a reboot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'tests: remove reboot requirement from hostname test'
+        changelog-entry: 'tests: remove reboot requirement from hostname test'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'hostname: update system hostname when config.json changes'
+      hash: f7b3d37502f03ca65d3352a8a8cc3b8a5d612ff4
+      body: |
+        Automatically update the system hostname when config.json changes.
+
+        Changes to 'config.json' will trigger the 'balena-hostname' service
+        to update the static and transient hostnames and the 'avahi'
+        service to ensure that any hostname changes are broadcast via mDNS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'hostname: update system hostname when config.json changes'
+        changelog-entry: 'hostname: update system hostname when config.json changes'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.83.12
+  date: 2021-08-25T23:51:01.153Z
+- commits:
     - subject: 'linux-firmware: Use wildcards when selecting files to package'
       hash: 16598bcffda7206d9a2ab9d96860cecf7de62756
       body: |

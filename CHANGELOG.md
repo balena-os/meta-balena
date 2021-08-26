@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.83.12
+## (2021-08-25)
+
+* tests: remove reboot requirement from hostname test [Mark Corbin]
+* hostname: update system hostname when config.json changes [Mark Corbin]
+
 # v2.83.11
 ## (2021-08-24)
 
