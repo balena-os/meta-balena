@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'networkmanager: fix hostname race condition'
+      hash: 3f2486bc91994d360086694df9f01bb4b6777284
+      body: |
+        Fix a race condition that can occur when setting the hostname at
+        boot by disabling NetworkManager's ability to modify the hostname.
+        The static and transient system hostnames are now managed exclusively
+        by the 'balena-hostname' service.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: '#2244'
+        connects-to: '#2244'
+        Changelog-entry: 'networkmanager: fix hostname race condition'
+        changelog-entry: 'networkmanager: fix hostname race condition'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.83.13
+  date: 2021-08-26T12:17:00.556Z
+- commits:
     - subject: 'tests: remove reboot requirement from hostname test'
       hash: 34687ca76515d57a77ba12c0fd44632518181392
       body: |

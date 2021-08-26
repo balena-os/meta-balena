@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.13
+## (2021-08-26)
+
+* networkmanager: fix hostname race condition [Mark Corbin]
+
 # v2.83.12
 ## (2021-08-25)
 
