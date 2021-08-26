@@ -8,3 +8,4 @@ PartOf=config-json.target
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/prepare-openvpn
+RemainAfterExit=yes
