@@ -2,6 +2,7 @@
 Description=Balena Hostname Configuration
 Requires=resin-boot.service balena-device-uuid.service bind-etc-hostname.service
 After=resin-boot.service balena-device-uuid.service bind-etc-hostname.service
+PartOf=config-json.target
 
 [Service]
 Type=oneshot

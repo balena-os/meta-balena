@@ -32,30 +32,16 @@ module.exports = {
 						this.context.get().link,
 					);
 
-				// Start reboot check
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'touch /tmp/reboot-check',
-						this.context.get().link,
-					);
-				test.comment('Starting reboot...');
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'systemd-run --on-active=2 /sbin/reboot',
-						this.context.get().link,
-					);
-				// Testbot looks for DUT with an updated hostname
+				// Wait for new hostname to be active
+				test.comment(`Waiting for avahi service to be active...`);
 				await this.context.get().utils.waitUntil(async () => {
-					test.comment('Waiting to come back online...');
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
-								'[[ ! -f /tmp/reboot-check ]] && echo "pass"',
+								`systemctl is-active avahi-daemon.service`,
 								`${hostname}.local`,
-							)) === 'pass'
+							)) === 'active'
 					);
 				}, false);
 
@@ -78,28 +64,17 @@ module.exports = {
 						`${hostname}.local`,
 					);
 
-				// Start reboot check
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'touch /tmp/reboot-check',
-						`${hostname}.local`,
-					);
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'systemd-run --on-active=2 /sbin/reboot',
-						`${hostname}.local`,
-					);
+				// Wait for old hostname to be active again
+				test.comment(`Waiting for avahi service to be active...`);
 				await this.context.get().utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
-								'[[ ! -f /tmp/reboot-check ]] && echo "pass"',
+								`systemctl is-active avahi-daemon.service`,
 								this.context.get().link,
-							)) === 'pass'
+							)) === 'active'
 					);
 				}, false);
 			},
