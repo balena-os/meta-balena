@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.15
+## (2021-08-27)
+
+* proxy: Restart balena-proxy-config and redsocks on conf changes [Kyle Harding]
+
 # v2.83.14
 ## (2021-08-26)
 

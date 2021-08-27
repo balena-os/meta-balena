@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'proxy: Restart balena-proxy-config and redsocks on conf changes'
+      hash: 9b94786f48621ad6aa66e3f7df624f6297c768c8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.83.15
+  date: 2021-08-27T19:33:06.624Z
+- commits:
     - subject: 'tests: remove reboot requirement from NTP server test'
       hash: 47deb00854eefc2c8ca4103d934713d26077a7c8
       body: |
