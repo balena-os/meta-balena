@@ -1,4 +1,39 @@
 - commits:
+    - subject: 'tests: remove reboot requirement from NTP server test'
+      hash: 47deb00854eefc2c8ca4103d934713d26077a7c8
+      body: |
+        We no longer require a reboot when changing the NTP server
+        configuration in config.json. Changes to 'config-json' will
+        automatically trigger the 'balena-ntp-config' service which will
+        update the NTP sources.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'tests: remove reboot requirement from NTP server test'
+        changelog-entry: 'tests: remove reboot requirement from NTP server test'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: 'recipes-connectivity: fix auto-update when config.json changes'
+      hash: 85df30628278eeb0d55e731319391d3cf98df9a8
+      body: |
+        Since adding the 'config-json' systemd target the 'balena-ntp-config'
+        and 'prepare-openvpn' services have stopped running automatically
+        when config.json is updated. This is fixed by adding
+        'RemainAfterExit=yes' to both service files.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'recipes-connectivity: fix auto-update when config.json changes'
+        changelog-entry: 'recipes-connectivity: fix auto-update when config.json changes'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.83.14
+  date: 2021-08-26T17:54:07.640Z
+- commits:
     - subject: 'networkmanager: fix hostname race condition'
       hash: 3f2486bc91994d360086694df9f01bb4b6777284
       body: |

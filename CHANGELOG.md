@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.83.14
+## (2021-08-26)
+
+* tests: remove reboot requirement from NTP server test [Mark Corbin]
+* recipes-connectivity: fix auto-update when config.json changes [Mark Corbin]
+
 # v2.83.13
 ## (2021-08-26)
 
