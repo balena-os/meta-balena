@@ -93,8 +93,18 @@ module.exports = {
 						this.context.get().link,
 					);
 
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
+				// Wait for new NTP server to be active
+				test.comment(`Waiting for balena-ntp-config service to be active...`);
+				await this.context.get().utils.waitUntil(async () => {
+					return (
+						(await this.context
+							.get()
+							.worker.executeCommandInHostOS(
+								`systemctl is-active balena-ntp-config.service`,
+								this.context.get().link,
+							)) === 'active'
+					);
+				}, false, 5, 30000);
 
 				await test.resolves(
 					this.context
