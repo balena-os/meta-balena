@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'kernel-balena: remove global blacklist of btrfs'
+      hash: b9d6df84a1acd45df80da8a90ea4ca4dc2940bcf
+      body: |
+        The kernel-balena class contains a global blacklist of btrfs that
+        disables this filesystem for all device types, regardless of them
+        explicitly enabling it.
+
+        Remove this config to allow devices to enable this filesystem.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.83.15
+  date: 2021-08-30T15:47:20.658Z
+- commits:
     - subject: 'tests: remove reboot requirement from NTP server test'
       hash: 47deb00854eefc2c8ca4103d934713d26077a7c8
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.15
+## (2021-08-30)
+
+* kernel-balena: remove global blacklist of btrfs [Joseph Kogut]
+
 # v2.83.14
 ## (2021-08-26)
 
