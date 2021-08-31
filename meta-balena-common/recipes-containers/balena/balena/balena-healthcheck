@@ -17,4 +17,5 @@ if ! balena image inspect balena-healthcheck-image > /dev/null 2>&1; then
 fi
 
 # Check that we can start a new container
-balena run --rm --log-driver none --network none balena-healthcheck-image > /dev/null
+balena rm --force balena_healthcheck 2>/dev/null || true
+balena run --rm --log-driver none --network none --name balena_healthcheck balena-healthcheck-image > /dev/null
