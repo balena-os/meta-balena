@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'kernel-modules-headers: Copy module.lds'
+      hash: 9fca34e0f4faffc0fa049e9341e7392f365bea31
+      body: |
+        Since kernel v5.10 this file is generated when using modules_prepare. As
+        the kernel-modules-headers contains pre-built target binaries, we also
+        need to include this file in the package.
+
+        This is not a problem when using kernel-source as a modules_prepare is
+        always required.
+      footer:
+        Fixes: '#2289'
+        fixes: '#2289'
+        Relates-to: '#1822'
+        relates-to: '#1822'
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.83.16
+  date: 2021-08-31T11:22:51.142Z
+- commits:
     - subject: 'kernel-balena: remove global blacklist of btrfs'
       hash: b9d6df84a1acd45df80da8a90ea4ca4dc2940bcf
       body: |

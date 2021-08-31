@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.16
+## (2021-08-31)
+
+* kernel-modules-headers: Copy module.lds [Alex Gonzalez]
+
 # v2.83.15
 ## (2021-08-30)
 
