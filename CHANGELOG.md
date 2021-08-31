@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.17
+## (2021-08-31)
+
+* Assign a fixed name to the balena-healthcheck container [Kyle Harding]
+
 # v2.83.16
 ## (2021-08-31)
 

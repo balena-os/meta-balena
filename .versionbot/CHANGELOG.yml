@@ -1,4 +1,19 @@
 - commits:
+    - subject: Assign a fixed name to the balena-healthcheck container
+      hash: c80932d323ae99a3b3a3a9120a29b5c67196fc44
+      body: |
+        This avoids confusion when new containers with random names
+        appear in the runtime history of the engine.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.83.17
+  date: 2021-08-31T16:04:47.503Z
+- commits:
     - subject: 'kernel-modules-headers: Copy module.lds'
       hash: 9fca34e0f4faffc0fa049e9341e7392f365bea31
       body: |
