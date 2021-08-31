@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-supervisor from 12.9.3 to 12.10.1
+      hash: d0cca5dda2546b8ddf1c4512834ca76a383fad6e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor from 12.9.3 to 12.10.1
+        changelog-entry: Update balena-supervisor from 12.9.3 to 12.10.1
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.83.16
+  date: 2021-08-31T03:47:44.733Z
+- commits:
     - subject: 'kernel-balena: remove global blacklist of btrfs'
       hash: b9d6df84a1acd45df80da8a90ea4ca4dc2940bcf
       body: |
