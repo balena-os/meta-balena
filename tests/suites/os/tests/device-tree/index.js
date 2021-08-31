@@ -23,86 +23,135 @@ module.exports = {
 	tests: [
 		{
 			title: 'DToverlay & DTparam tests',
-			run: async function(test) {
+			run: async function (test) {
 				let ip = await this.context.get().worker.ip(this.context.get().link);
+				let targetState
 
-				// Wait for supervisor API to start
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await request({
-							method: 'GET',
-							uri: `http://${ip}:${SUPERVISOR_PORT}/ping`,
-						})) === 'OK'
-					);
-				}, false);
+				// Export the GPIO pin
+				const exportPin = async () => {
+					return await this.context.get().worker.executeCommandInHostOS(
+						`echo 4 >/sys/class/gpio/export`,
+						this.context.get().link
+					)
+				}
 
-				const targetState = {
-					local: {
-						name: 'local',
-						config: {
-							HOST_CONFIG_dtoverlay: '"vc4-fkms-v3d","i2c0","i2c1","i2c3"',
-							HOST_CONFIG_dtparam:
-								'"i2c_arm=on","spi=on","audio=on","foo=bar","level=42"',
-							SUPERVISOR_PERSISTENT_LOGGING: 'true',
-							SUPERVISOR_LOCAL_MODE: 'true',
+				// Check value of GPIO pin and unexport the GPIO pin
+				const getPinValue = async () => {
+					const pinValue =  await this.context.get().worker.executeCommandInHostOS(
+						`cat /sys/class/gpio/gpio4/value`,
+						this.context.get().link
+					)
+
+					await this.context.get().worker.executeCommandInHostOS(
+						`echo 4 >/sys/class/gpio/unexport`,
+						this.context.get().link
+					)
+					return pinValue
+				}
+
+				// After applying Dtoverlay, the GPIO pins becomes unavailable as drivers take control over the pin
+				// Hence, sysfs can't be used to query the value of the GPIO pin hence the user of /sys/kernel/debug/gpio
+				const getPinValueThroughDebug = async () => {
+					const getValue = fs.readFileSync(`${__dirname}/getValue.sh`).toString();
+					return await this.context.get().worker.executeCommandInHostOS(
+							`cd /tmp && ${getValue}`,
+							this.context.get().link,
+						);
+				}
+
+				const applySupervisorConfig = async (direction) => {
+					// Wait for supervisor API to start
+					await this.context.get().utils.waitUntil(async () => {
+						return (
+							(await request({
+								method: 'GET',
+								uri: `http://${ip}:${SUPERVISOR_PORT}/ping`,
+							})) === 'OK'
+						);
+					}, false);
+
+					targetState = {
+						local: {
+							name: 'local',
+							config: {
+								HOST_CONFIG_dtoverlay: `"gpio-key,gpio=4,active_low=0,gpio_pull=${direction}"`,
+								HOST_CONFIG_dtparam:
+									'"i2c_arm=on","spi=on","audio=on","foo=bar","level=42"',
+								SUPERVISOR_PERSISTENT_LOGGING: 'true',
+								SUPERVISOR_LOCAL_MODE: 'true',
+							},
+							apps: {},
 						},
-						apps: {},
-					},
-					dependent: {
-						apps: [],
-						devices: [],
-					},
-				};
+						dependent: {
+							apps: [],
+							devices: [],
+						},
+					};
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'touch /tmp/reboot-check',
-						this.context.get().link,
+					await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							'touch /tmp/reboot-check',
+							this.context.get().link,
+						);
+
+					// Setting the device tree variables using Supervisor API
+					// This request reboots the DUT automatically
+					const setTargetState = await request({
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						json: true,
+						body: targetState,
+						uri: `http://${ip}:${SUPERVISOR_PORT}/v2/local/target-state`,
+					});
+
+					test.same(
+						setTargetState,
+						{ status: 'success', message: 'OK' },
+						'DToverlay & DTparam configured successfully',
 					);
 
-				// Setting the device tree variables using Supervisor API
-				// This request reboots the DUT
-				const setTargetState = await request({
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					json: true,
-					body: targetState,
-					uri: `http://${ip}:${SUPERVISOR_PORT}/v2/local/target-state`,
-				});
+					await this.context.get().utils.waitUntil(async () => {
+						test.comment('Waiting for DUT to come back online after reboot...');
+						return (
+							(await this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									'[[ ! -f /tmp/reboot-check ]] && echo "pass"',
+									this.context.get().link,
+								)) === 'pass'
+						);
+					}, false);
 
-				test.same(
-					setTargetState,
-					{ status: 'success', message: 'OK' },
-					'DToverlay & DTparam configured successfully through Supervisor API',
-				);
+					// IP of the device sometimes change after reboots, hence initalising again
+					ip = await this.context.get().worker.ip(this.context.get().link);
 
-				await this.context.get().utils.waitUntil(async () => {
-					test.comment('Waiting for DUT to come back online after reboot...');
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								'[[ ! -f /tmp/reboot-check ]] && echo "pass"',
-								this.context.get().link,
-							)) === 'pass'
-					);
-				}, false);
+					await this.context.get().utils.waitUntil(async () => {
+						test.comment('Waiting for supervisor to be ready after reboot...');
+						return (
+							(await request({
+								method: 'GET',
+								uri: `http://${ip}:${SUPERVISOR_PORT}/ping`,
+							})) === 'OK'
+						);
+					}, false);
 
-				// IP of the device sometimes change after reboots, hence initalising again
-				ip = await this.context.get().worker.ip(this.context.get().link);
+					return targetState
+				}
 
-				await this.context.get().utils.waitUntil(async () => {
-					test.comment('Waiting for supervisor to be ready after reboot...');
-					return (
-						(await request({
-							method: 'GET',
-							uri: `http://${ip}:${SUPERVISOR_PORT}/ping`,
-						})) === 'OK'
-					);
-				}, false);
+				// Start of the device-tree practical test
+				await exportPin(4)
+				if (await getPinValue(4) === "0") {
+					test.true("Pin 4 was Low when the test started")
+					const targetState = await applySupervisorConfig("up")
+					test.equal(await getPinValueThroughDebug(4), '"hi"', "Pin 4 set to High after applying dtoverlay")
+				} else {
+					test.true("Pin 4 is High as expected")
+					const targetState = await applySupervisorConfig("down")
+					test.equal(await getPinValueThroughDebug(4), '"lo"', "Pin 4 set to Low after applying dtoverlay")
+				}
 
 				// Get the current target state of device
 				const currentState = await request({
@@ -111,6 +160,7 @@ module.exports = {
 					json: true,
 				});
 
+				// Making sure currentState of the DUT matches the target state that was being set. 
 				test.equal(
 					currentState.state.local.config.HOST_CONFIG_dtoverlay,
 					targetState.local.config.HOST_CONFIG_dtoverlay,
@@ -122,12 +172,10 @@ module.exports = {
 					'DTparam successfully set in target state',
 				);
 
-				const dtoverlay = fs
-					.readFileSync(`${__dirname}/dtoverlay.sh`)
-					.toString();
+				const dtoverlay = fs.readFileSync(`${__dirname}/dtoverlay.sh`).toString();
 				const dtparam = fs.readFileSync(`${__dirname}/dtparam.sh`).toString();
 
-				const overlayConfigTxt = await this.context
+				const dtOverlayConfigTxt = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`cd /tmp && ${dtoverlay}`,
@@ -135,20 +183,20 @@ module.exports = {
 					);
 
 				test.equal(
-					overlayConfigTxt,
+					dtOverlayConfigTxt,
 					targetState.local.config.HOST_CONFIG_dtoverlay,
-					'DToverlay successfully configured in the config.txt',
+					'DToverlays successfully configured in config.txt',
 				);
-				const paramConfigTxt = await this.context
+				const dtParamConfigTxt = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`cd /tmp && ${dtparam}`,
 						this.context.get().link,
 					);
 				test.equal(
-					paramConfigTxt,
+					dtParamConfigTxt,
 					targetState.local.config.HOST_CONFIG_dtparam,
-					'DTparam successfully configured in the config.txt',
+					'DTparams successfully configured in config.txt',
 				);
 			},
 		},
