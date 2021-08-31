@@ -248,6 +248,11 @@ if [[ -n "$prefix" ]]; then
 	make HOSTCC="$hostcc" HOSTLD="$LD" $build_opts prepare0
 	mv include/generated/utsrelease.h.bkp include/generated/utsrelease.h
 
+	# From v5.10 - see https://github.com/torvalds/linux/commit/596b0474d3d9
+	if [[ -f "xscripts/module.lds" ]]; then
+		cp xscripts/module.lds scripts/module.lds
+	fi
+
 	if [[ -e xtools/objtool/fixdep ]]; then
 	    if [[ -e tools/build/Makefile ]]; then
 		# let's use the native fixdep for the target objtool compilation
