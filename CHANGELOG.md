@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.20
+## (2021-09-01)
+
+* tests: Use new Archiver implementation & helpers [Vipul Gupta (@vipulgupta2048)]
+
 # v2.83.19
 ## (2021-09-01)
 

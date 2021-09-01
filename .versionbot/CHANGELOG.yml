@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'tests: Use new Archiver implementation & helpers'
+      hash: 883ec60492a16b443cb6ce04c12cda8bbf4d028d
+      body: |
+        The changes are as follows:
+        1. Delete custom logic in tests for archiving logs
+        2. Make use of the new archiveLogs helper
+        3. Make use of the new implementation of the Archiver module
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.83.20
+  date: 2021-09-01T19:37:21.036Z
+- commits:
     - subject: 'tests: List boots when collecting journal logs in hup suite'
       hash: 8e7b6a157b033db57ff2df75a63b5e054957803f
       body: |
