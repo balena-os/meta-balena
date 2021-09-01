@@ -118,7 +118,7 @@ module.exports = {
 				}
 
 				test.comment(`Storing captured frames...`);
-				await this.archiver.add(`/data/capture`);
+				await this.archiver.add(this.id, `/data/capture`);
 				test.comment(`Frames stored`);
 
 				test.true(
