@@ -1,4 +1,231 @@
 - commits:
+    - subject: 'balena-supervisor: Update balena-supervisor to v12.10.3'
+      hash: 782c9e24b91b5beb1c30c7643015c6fe7f53d2d2
+      body: |
+        Update balena-supervisor from 12.9.3 to 12.10.3
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested:
+        - commits:
+            - subject: Skip restarting services if they are part of conf targets
+              hash: 669866b4c296529bd5392a0c48cd389a6d1f5770
+              body: |
+                Some recent changes to the OS allowed some services to restart
+                automatically when the associated config files are changed.
+
+                In these cases we want to avoid restarting the same services
+                manually from the supervisor.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: balena-supervisor-12.10.3
+          date: 2021-08-24T18:07:03.099Z
+        - commits:
+            - subject: Removed fire emoji prefix for firewall logs.
+              hash: 30c728fae23ee66f3c1612736bb0c300f0b0762d
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: peakyDicers
+              nested: []
+          version: balena-supervisor-12.10.2
+          date: 2021-08-02T21:27:42.412Z
+        - commits:
+            - subject: Fix regression with local mode push
+              hash: 6f5f3bc2f3aea1bf5e5772533be80c3bfbb4e3a9
+              body: >
+                PR #1749 introduced a bug when pushing local target state. An
+                update to
+
+                the [image name
+                normalization](https://github.com/balena-os/balena-supervisor/blob/f1bd4b8d9bcef29e326cbf97eaddd837c2704d19/src/lib/docker-utils.ts#L81)
+
+                failed to consider the local image name format. This results in
+                mangling
+
+                of image names in the database, i.e. the image `ubuntu:latest`
+                is stored
+
+                as `/ubuntu:latest`. This causes an exception to be returned by
+                the
+
+                dockerode `getImage('/ubuntu:latest').inspect()` call.
+
+
+                This sends the supervisor into a crash loop and is shown on the
+                supervisor
+
+                journal logs as
+
+
+                ```
+
+                getaddrinfo ENOTFOUND images
+                    at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:64:26)
+                ```
+
+
+                Unfortunately if this happens on a user device, since the
+                mangled image
+
+                name is already on the database, the easiest way to fix is to
+                remove the
+
+                supervisor database and let the supervisor recreate it. Deleting
+                the
+
+                database should be side effect free.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.10.1
+          date: 2021-08-02T15:55:28.001Z
+        - commits:
+            - subject: 'Remove comparison based on image, release, and service ids'
+              hash: b67f94802dd8c2e890121f6ca82eda8dff2c051c
+              body: >
+                Preparing for the new v3 target state, where the supervisor will
+                make environment
+
+                dependent ids optional and rely on using general UUIDs and user
+                known identifiers
+
+                for comparison. This PR moves forward in that direction by
+                removing some of those
+
+                comparisons for v2 target state.
+
+
+                - imageId to be replaced with imageName
+
+                - serviceId to be replace by serviceName
+
+                - releaseId to be replaced by commit (future release_uuid)
+
+
+                This is a backwards compatible change, meaning it doesn't
+                completely get rid of
+
+                these identifiers (which are still being used by supervisor API
+                and for state
+
+                patch), but will not depend on those identifiers for calculating
+                steps to target state.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.10.0
+          date: 2021-07-28T14:00:22.581Z
+        - commits:
+            - subject: Use tags to track supervised images in docker
+              hash: f1bd4b8d9bcef29e326cbf97eaddd837c2704d19
+              body: >
+                The image manager module now uses tags instead of docker IDs as
+                the main
+
+                way to identify docker images on the engine. That is, if the
+                target
+
+                state image has a name `imageName:tag@digest`, the supervisor
+                will always use
+
+                the given `imageName` and `tag` (which may be empty) to tag the
+                image on
+
+                the engine after fetching. This PR also adds checkups to ensure
+
+                consistency is maintained between the database and the engine.
+
+
+                Using tags allows to simplify query and removal operations,
+                since now
+
+                removing the image now means removing tags matching the image
+                name.
+
+
+                Before this change the supervisor relied only on information in
+                the
+
+                supervisor database, and used that to remove images by docker
+                ID. However, the docker
+
+                id is not a reliable identifier, since images retain the same id
+                between
+
+                releases or between services in the same release.
+
+
+                List of squashed commits
+
+                - Remove custom type NormalizedImageInfo
+
+                - Remove dependency on docker-toolbelt
+
+                - Use tags to traack supervised images in docker
+
+                - Ensure tag removal occurs in sequence
+
+                - Only save database image after download confirmed
+              footer:
+                Relates-to: '#1616 #1579'
+                relates-to: '#1616 #1579'
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.9.6
+          date: 2021-07-26T13:58:29.275Z
+        - commits:
+            - subject: Log the delta URL that will be downloaded on update
+              hash: c05c5803f08ddd31eeddb2000cc5f162fb916003
+              body: ''
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: '#1755'
+                closes: '#1755'
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.9.5
+          date: 2021-07-22T15:08:58.505Z
+        - commits:
+            - subject: Fix db-helper module for tests
+              hash: 357d1baf6188d89b8552fd9068dbea9ac50aa008
+              body: >
+                The previous module was using `rewire` to get the knex instance
+                from the
+
+                db module but that was leading to issues when running tests
+                using `test:fast`.
+
+                This provides a fix for the test module that just removes the
+                destroy
+
+                call entirely (it turns out it is not necessary).
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.9.4
+          date: 2021-07-08T18:48:09.003Z
+  version: 2.83.18
+  date: 2021-08-31T20:45:45.918Z
+- commits:
     - subject: Assign a fixed name to the balena-healthcheck container
       hash: c80932d323ae99a3b3a3a9120a29b5c67196fc44
       body: |

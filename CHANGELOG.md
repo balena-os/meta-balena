@@ -1,6 +1,50 @@
 Change log
 -----------
 
+# v2.83.18
+## (2021-08-31)
+
+
+<details>
+<summary> balena-supervisor: Update balena-supervisor to v12.10.3 [Kyle Harding] </summary>
+
+> ## balena-supervisor-12.10.3
+> ### (2021-08-24)
+> 
+> * Skip restarting services if they are part of conf targets [Kyle Harding]
+> 
+> ## balena-supervisor-12.10.2
+> ### (2021-08-02)
+> 
+> * Removed fire emoji prefix for firewall logs. [peakyDicers]
+> 
+> ## balena-supervisor-12.10.1
+> ### (2021-08-02)
+> 
+> * Fix regression with local mode push [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.10.0
+> ### (2021-07-28)
+> 
+> * Remove comparison based on image, release, and service ids [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.9.6
+> ### (2021-07-26)
+> 
+> * Use tags to track supervised images in docker [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.9.5
+> ### (2021-07-22)
+> 
+> * Log the delta URL that will be downloaded on update [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.9.4
+> ### (2021-07-08)
+> 
+> * Fix db-helper module for tests [Felipe Lalanne]
+> 
+</details>
+
 # v2.83.17
 ## (2021-08-31)
 
