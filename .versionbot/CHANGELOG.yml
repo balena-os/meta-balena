@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'tests: List boots when collecting journal logs in hup suite'
+      hash: 8e7b6a157b033db57ff2df75a63b5e054957803f
+      body: |
+        Some OS versions before HUP do not support the '-b all' flag
+        to journalctl. This commit reverts to the original behaviour
+        that lists the boots and requests the logs for each boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.83.19
+  date: 2021-09-01T13:25:10.726Z
+- commits:
     - subject: 'balena-supervisor: Update balena-supervisor to v12.10.3'
       hash: 782c9e24b91b5beb1c30c7643015c6fe7f53d2d2
       body: |

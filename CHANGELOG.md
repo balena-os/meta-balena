@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.19
+## (2021-09-01)
+
+* tests: List boots when collecting journal logs in hup suite [Kyle Harding]
+
 # v2.83.18
 ## (2021-08-31)
 
