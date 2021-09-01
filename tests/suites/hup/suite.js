@@ -241,7 +241,7 @@ const archiveLogs = async (that, test, target) => {
 	const journal = await that.context
 		.get()
 		.worker.executeCommandInHostOS(
-			`journalctl --no-pager --no-hostname -a -b all`,
+			`journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {};'`,
 			target,
 		);
 	const journalLogs = join(that.suite.options.tmpdir, `journal.log`);
