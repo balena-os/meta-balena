@@ -80,11 +80,6 @@ module.exports = {
 
 		this.log('Setting up worker');
 
-		// Retrieving journalctl logs 
-		this.suite.teardown.register(async () => {
-			await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
-		});
-
 		// Create network AP on testbot
 		await this.context
 			.get()
@@ -112,6 +107,12 @@ module.exports = {
 			this.context.get().link.split('.')[0],
 			'Device should be reachable',
 		);
+
+    // Retrieving journalctl logs: register teardown after device is reachable
+    this.suite.teardown.register(async () => {
+			await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
+		});
+
 	},
 	tests: [
 		'./tests/fingerprint',
