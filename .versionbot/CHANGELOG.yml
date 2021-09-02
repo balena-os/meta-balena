@@ -1,4 +1,63 @@
 - commits:
+    - subject: 'plymouth: replace duplicated patches w/ shared drop-ins'
+      hash: 0da8f433bab0e2488fc1516e16d2b7e3e51c7fad
+      body: >
+        Plymouth services are modified in the installation directory with balena
+
+        specific customizations using patches. This increases the manual
+        intervention necessary
+
+        when adding support for a new version of this package or Yocto. Replace
+
+        the patches with equivalent drop-in configs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'systemd: mask systemd-getty-generator instead of patching'
+      hash: 01ece74c8b9d58a7008cbc1a97a315c1d756189b
+      body: |
+        We disable systemd-getty-generator to allow explicit control over when
+        we setup getty to create consoles. Previously, this was done using a
+        patch to systemd, removing this generator. Mask this instead so we can
+        consolidate this configuration in meta-balena-common.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'systemd: replace duplicated patch w/ shared drop-ins'
+      hash: 625ff9e5c00393729548745ed2dce369cae6bb25
+      body: |
+        Certain services, such as getty@.service, and systemd-logind.service are
+        disabled when running in a container using a patch to the source files.
+        This increases the manual intervention necessary when adding support for
+        a new version of systemd. Replace the patch with drop-in configs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: remove healthcheck test race condition'
+      hash: 4f728271e767e8998f73870c2de23c03a5d12823
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.83.22
+  date: 2021-09-02T22:45:19.920Z
+- commits:
     - subject: 'tests: Register teardown only when DUT is reachable'
       hash: 2f01b040236f6565195550cdfde91464687f5cf2
       body: ''
