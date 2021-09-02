@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Register teardown only when DUT is reachable'
+      hash: 2f01b040236f6565195550cdfde91464687f5cf2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.83.21
+  date: 2021-09-01T22:56:06.844Z
+- commits:
     - subject: 'tests: Use new Archiver implementation & helpers'
       hash: 883ec60492a16b443cb6ce04c12cda8bbf4d028d
       body: |

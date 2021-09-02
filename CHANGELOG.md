@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.21
+## (2021-09-01)
+
+* tests: Register teardown only when DUT is reachable [rcooke-warwick]
+
 # v2.83.20
 ## (2021-09-01)
 
