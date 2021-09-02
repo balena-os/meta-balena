@@ -32,6 +32,22 @@ module.exports = {
 			},
 		},
 	},
+	deviceType: {
+		type: 'object',
+		required: ['data'],
+		properties: {
+			data: {
+				type: 'object',
+				required: ['led'],
+				properties: {
+					led: {
+						type: 'boolean',
+						const: true,
+					}
+				}
+			}
+		}
+	},
 	run: async function(test) {
 		const serviceName = 'collector';
 		const ip = await this.context.get().worker.ip(this.context.get().link);
