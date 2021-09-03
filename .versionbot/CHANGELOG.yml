@@ -1,4 +1,72 @@
 - commits:
+    - subject: 'balena-engine: Enable storage migration'
+      hash: 7d69faa7889e6725a4397511a6178ed2c745acbd
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+    - subject: Update balena-engine to v19.03.26
+      hash: a7538159d2015a61dc3effc5e3fe390056d0265b
+      body: |
+        Update balena-engine from 19.03.24 to 19.03.26
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-engine to v19.03.26
+        changelog-entry: Update balena-engine to v19.03.26
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested:
+        - commits:
+            - subject: 'storagemigration: capture failcleanup logs in logfile'
+              hash: 4f7f543eff08766bc584024afdb57760dfb52130
+              body: >
+                reorder the defer statements in the migrate function to only
+                teardown
+
+                the logger after the failcleanup function ran. otherwise errors
+                logged
+
+                there won't show up in the logfile
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.26
+          date: 2021-08-31T11:26:15.276Z
+        - commits:
+            - subject: 'storagemigration: move logic to package'
+              hash: 001835bf61172fdcfdb0416e000852ff05683c71
+              body: >
+                This brings all migration logic into a single call into the
+
+                storagemigration package, which should make future maintenance
+                easier
+
+                and fixes the cleanup logic bug, where the old aufs root would
+                never be
+
+                cleaned up.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.25
+          date: 2021-08-20T15:55:35.623Z
+  version: 2.84.0
+  date: 2021-09-03T11:43:21.582Z
+- commits:
     - subject: 'tests: remove healthcheck test race condition'
       hash: 4f728271e767e8998f73870c2de23c03a5d12823
       body: ''

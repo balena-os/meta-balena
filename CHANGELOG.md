@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.84.0
+## (2021-09-03)
+
+* balena-engine: Enable storage migration [Robert Günzler]
+
+<details>
+<summary> Update balena-engine to v19.03.26 [Robert Günzler] </summary>
+
+> ## balena-engine-19.03.26
+> ### (2021-08-31)
+> 
+> * storagemigration: capture failcleanup logs in logfile [Robert Günzler]
+> 
+> ## balena-engine-19.03.25
+> ### (2021-08-20)
+> 
+> * storagemigration: move logic to package [Robert Günzler]
+> 
+</details>
+
 # v2.83.22
 ## (2021-09-02)
 
