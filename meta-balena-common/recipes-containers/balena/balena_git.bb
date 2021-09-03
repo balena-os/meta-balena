@@ -11,10 +11,10 @@ LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f
 
 inherit systemd go pkgconfig useradd
 
-BALENA_VERSION = "19.03.24"
+BALENA_VERSION = "19.03.26"
 BALENA_BRANCH= "master"
 
-SRCREV = "66b9691181aa5134b1aeff9282a2d8512b77431c"
+SRCREV = "daea8e24284bfb3b81da884e32ae286dc2f0741b"
 SRC_URI = "\
 	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
@@ -23,6 +23,7 @@ SRC_URI = "\
 	file://balena-healthcheck \
 	file://var-lib-docker.mount \
 	file://balena.conf.systemd \
+	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
 	file://0001-imporve-hardcoded-CC-on-cross-compile-docker-ce.patch \
 	"
@@ -52,7 +53,6 @@ INSANE_SKIP_${PN} += "already-stripped"
 FILES_${PN} += " \
 	/lib/systemd/system/* \
 	/home/root \
-	/boot/storage-driver \
 	${localstatedir} \
 	"
 
@@ -117,8 +117,6 @@ do_compile() {
 do_install() {
 	mkdir -p ${D}/${bindir}
 	install -m 0755 ${S}/src/import/bundles/dynbinary-balena/balena-engine ${D}/${bindir}/balena-engine
-	install -d ${D}/boot
-	echo ${BALENA_STORAGE} > ${D}/boot/storage-driver
 
 	ln -sf balena-engine ${D}/${bindir}/balena
 	ln -sf balena-engine ${D}/${bindir}/balenad
@@ -139,10 +137,7 @@ do_install() {
 	install -m 0644 ${S}/src/import/contrib/init/systemd/balena-engine.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
-	sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena.service
-
 	install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
-	sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${systemd_unitdir}/system/balena-host.service
 	install -m 0644 ${WORKDIR}/balena-host.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
@@ -150,10 +145,11 @@ do_install() {
 	mkdir -p ${D}/usr/lib/balena
 	install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
 
+	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
+	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
+
 	if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
-		install -d ${D}${sysconfdir}/systemd/system/balena.service.d
 		install -c -m 0644 ${WORKDIR}/balena.conf.systemd ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
-		sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
 	fi
 
 	install -d ${D}/home/root/.docker

@@ -13,7 +13,7 @@ Environment=BALENAD_HEALTHDOG_HEALTHCHECK=/usr/lib/balena/balena-healthcheck
 Environment=BALENAD_EXPERIMENTAL=--experimental
 Environment=BALENAD_DEBUG=
 Environment=BALENAD_LOGDRIVER=--log-driver=journald
-Environment=BALENAD_STORAGEDRIVER=--storage-driver=@BALENA_STORAGE@
+Environment=BALENAD_STORAGEDRIVER=--storage-driver=overlay2
 Environment=BALENAD_CGROUPDRIVER=--exec-opt=native.cgroupdriver=systemd
 Environment=BALENAD_DELTA_STORAGEDRIVER=
 Environment=BALENAD_DELTA_DATA_ROOT=
