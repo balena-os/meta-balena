@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.22
+## (2021-09-02)
+
+* tests: remove healthcheck test race condition [rcooke-warwick]
+
 # v2.83.21
 ## (2021-09-01)
 

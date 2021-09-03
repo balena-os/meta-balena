@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: remove healthcheck test race condition'
+      hash: 4f728271e767e8998f73870c2de23c03a5d12823
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.83.22
+  date: 2021-09-02T15:34:27.322Z
+- commits:
     - subject: 'tests: Register teardown only when DUT is reachable'
       hash: 2f01b040236f6565195550cdfde91464687f5cf2
       body: ''
