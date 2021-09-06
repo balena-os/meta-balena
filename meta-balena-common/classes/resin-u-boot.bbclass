@@ -46,7 +46,7 @@ BALENA_UBOOT_DEVICE_TYPES ?= "mmc"
 BASE_OS_CMDLINE ?= "${OS_KERNEL_CMDLINE}"
 OS_BOOTCOUNT_FILE ?= "bootcount.env"
 OS_BOOTCOUNT_SKIP ?= "0"
-OS_BOOTCOUNT_LIMIT ?= "1"
+OS_BOOTCOUNT_LIMIT ?= "3"
 
 # These options go into the device headerfile via config_resin.h
 CONFIG_RESET_TO_RETRY ?= "1"
