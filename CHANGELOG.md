@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.84.1
+## (2021-09-05)
+
+* tests: s/BALENA_MACHINE_NAME/BALENA_ARCH [Joseph Kogut]
+
 # v2.84.0
 ## (2021-09-03)
 

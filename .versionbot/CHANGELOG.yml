@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'tests: s/BALENA_MACHINE_NAME/BALENA_ARCH'
+      hash: 16015b5ba1570777478a585aaea37ed354dacc82
+      body: |
+        Replace Dockerfile image %%BALENA_MACHINE_NAME%% var with
+        %%BALENA_ARCH%% for better compatibility
+
+        Device types lacking matching tags in the balenalib Docker Hub account
+        will fail tests when a matching image is not found. Switch to
+        BALENA_ARCH instead, to maintain compatibility.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.84.1
+  date: 2021-09-05T16:47:16.988Z
+- commits:
     - subject: 'balena-engine: Enable storage migration'
       hash: 7d69faa7889e6725a4397511a6178ed2c745acbd
       body: ''
