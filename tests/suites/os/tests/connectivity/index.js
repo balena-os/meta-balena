@@ -70,7 +70,7 @@ module.exports = {
 		},
 		{
 			title: 'Proxy tests',
-			tests: ['redsocks', 'http-connect'].map(proxy => {
+			tests: ['socks5', 'http-connect'].map(proxy => {
 				return {
 					title: `${proxy.charAt(0).toUpperCase()}${proxy.slice(1)} test`,
 					run: async function(test) {
@@ -87,6 +87,7 @@ module.exports = {
 							port: PROXY_PORT,
 						});
 
+						test.comment(`Creating redsocks.conf for ${proxy}...`);
 						await this.context
 							.get()
 							.worker.executeCommandInHostOS(
@@ -108,8 +109,26 @@ module.exports = {
 								this.context.get().link,
 							);
 
-						// Rebooting the DUT
-						await this.context.get().worker.rebootDut(this.context.get().link);
+						// the supervisor would do this if proxy config were set via the supervisor sdk
+						// https://www.balena.io/docs/reference/OS/network/2.x/#connecting-behind-a-proxy
+						test.comment(`Manually restarting services...`);
+						await this.context
+							.get()
+							.worker.executeCommandInHostOS(
+								'systemctl restart balena-proxy-config.service redsocks.service',
+								this.context.get().link,
+							);
+
+						test.is(
+							await this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									'systemctl is-active redsocks.service',
+									this.context.get().link,
+								),
+							'active',
+							'Redsocks proxy service should be active',
+						);
 
 						await this.context
 							.get()
@@ -119,6 +138,7 @@ module.exports = {
 							);
 						test.true(`${URL_TEST} responded over ${proxy} proxy`);
 
+						test.comment(`Removing redsocks.conf...`);
 						await this.context
 							.get()
 							.worker.executeCommandInHostOS(
@@ -126,8 +146,13 @@ module.exports = {
 								this.context.get().link,
 							);
 
-						// Rebooting the DUT
-						await this.context.get().worker.rebootDut(this.context.get().link);
+						test.comment(`Manually restarting services...`);
+						await this.context
+							.get()
+							.worker.executeCommandInHostOS(
+								'systemctl restart balena-proxy-config.service redsocks.service',
+								this.context.get().link,
+							);
 					},
 				};
 			}),
