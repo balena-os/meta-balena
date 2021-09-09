@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'contributing-device-support.md: Updates to board support instructions'
+      hash: 56d47e97ab2becea9d7ecd96de397d937f539954
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.84.2
+  date: 2021-09-08T13:26:00.933Z
+- commits:
     - subject: 'tests: s/BALENA_MACHINE_NAME/BALENA_ARCH'
       hash: 16015b5ba1570777478a585aaea37ed354dacc82
       body: |

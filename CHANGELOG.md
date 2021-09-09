@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.84.2
+## (2021-09-08)
+
+* contributing-device-support.md: Updates to board support instructions [Florin Sarbu]
+
 # v2.84.1
 ## (2021-09-05)
 
