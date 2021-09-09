@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Prevent failure when journalctl has no logs for some boots'
+      hash: cab2b5aa7b97afad9006ed3c3701e49a9d76d366
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.84.3
+  date: 2021-09-09T11:41:46.786Z
+- commits:
     - subject: 'contributing-device-support.md: Updates to board support instructions'
       hash: 56d47e97ab2becea9d7ecd96de397d937f539954
       body: ''
