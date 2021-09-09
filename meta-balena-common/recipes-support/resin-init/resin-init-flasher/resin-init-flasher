@@ -371,7 +371,15 @@ if [ "$LUKS" = "1" ]; then
     mv "$PERSISTENT_KEY_HANDLE" "$EFI_MOUNT_DIR/balena-luks.ctx"
     mv "$ENCRYPTED_PASSPHRASE" "$EFI_MOUNT_DIR/balena-luks.enc"
 
+    # Emulate a stage2 bootloader
+    # At this point just copy the flasher kernel to EFI partition
+    # TODO: Remove or replace by a proper stage2 bootloader when that is ready
+    cp -a /boot/bzImage /boot/bzImage.sig ${EFI_MOUNT_DIR}
+
     INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH="/EFI$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH"
+    if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
+        INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
+    fi
 fi
 
 # Copy custom splash dir
