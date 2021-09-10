@@ -1,12 +1,12 @@
 [Unit]
-Description=Resin persistent logs
+Description=Balena persistent logs
 Requires=resin-boot.service resin-state.service systemd-journald.service
 After=resin-boot.service resin-state.service systemd-journald.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BINDIR@/resin-persistent-logs
+ExecStart=@BINDIR@/balena-persistent-logs
 
 [Install]
 WantedBy=multi-user.target
