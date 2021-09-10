@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Remove reboots from redsocks test cases'
+      hash: 53f58ca927075730d9bb9ebe0a98e525f3d8d793
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.84.4
+  date: 2021-09-09T20:26:17.261Z
+- commits:
     - subject: 'tests: Prevent failure when journalctl has no logs for some boots'
       hash: cab2b5aa7b97afad9006ed3c3701e49a9d76d366
       body: ''

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.84.4
+## (2021-09-09)
+
+* tests: Remove reboots from redsocks test cases [Kyle Harding]
+
 # v2.84.3
 ## (2021-09-09)
 
