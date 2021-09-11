@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.84.5
+## (2021-09-10)
+
+* tests: led: require led property from device type [Joseph Kogut]
+
 # v2.84.4
 ## (2021-09-09)
 

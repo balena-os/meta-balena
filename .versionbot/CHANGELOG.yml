@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'tests: led: require led property from device type'
+      hash: 0439de2a706cabf2b6b82736fa2959313c653c56
+      body: |
+        Only run LED test when device type contract specifies support for it
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.84.5
+  date: 2021-09-10T13:29:21.135Z
+- commits:
     - subject: 'tests: Remove reboots from redsocks test cases'
       hash: 53f58ca927075730d9bb9ebe0a98e525f3d8d793
       body: ''
