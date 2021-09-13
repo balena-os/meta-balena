@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.84.6
+## (2021-09-11)
+
+* balena-persistent-logs: add comment and update logging [Mark Corbin]
+* meta-balena: rename resin-persistent-logs [Mark Corbin]
+
 # v2.84.5
 ## (2021-09-10)
 
