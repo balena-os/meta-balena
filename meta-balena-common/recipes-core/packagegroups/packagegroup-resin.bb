@@ -21,7 +21,7 @@ RDEPENDS_${PN} += " \
     hostapp-extensions-update \
     hostapp-update-hooks \
     resin-filesystem-expand \
-    resin-persistent-logs \
+    balena-persistent-logs \
     resin-info \
     balena-hostname \
     resin-state-reset \

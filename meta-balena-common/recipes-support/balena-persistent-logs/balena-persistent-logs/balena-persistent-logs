@@ -1,19 +1,23 @@
 #!/bin/sh
+#
+# Enable/disable persistent logging based on config.json settings.
+#
 
 set -e
 
+. /usr/libexec/os-helpers-logging
 . /usr/sbin/balena-config-vars
 
 if [ "$PERSISTENT_LOGGING" = "true" ] && [ ! -d /var/log/journal ]; then
     mkdir -p /var/log/journal
     systemctl start bind-var-log-journal.service
     journalctl --flush
-    echo "$(basename "$0"): Persistent logging activated."
+    info "Persistent logging activated."
 elif [ "$PERSISTENT_LOGGING" = "true" ] && [ -d /var/log/journal ]; then
-    echo "$(basename "$0"): Persistent logging already activated."
+    info "Persistent logging already activated."
     journalctl --flush
 elif [ "$PERSISTENT_LOGGING" = "false" ] && [ -d /var/log/journal ]; then
-    echo "$(basename "$0"): Persistent logging was deactivated but system reboot is needed."
+    info "Persistent logging was deactivated but system reboot is needed."
 else
-    echo "$(basename "$0"): Persistent logging deactivated."
+    info "Persistent logging deactivated."
 fi
