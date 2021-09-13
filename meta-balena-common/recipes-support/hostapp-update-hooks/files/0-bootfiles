@@ -14,7 +14,7 @@ bootfiles_blacklist="\
 	/config.json \
 	/config.txt \
 	/splash/balena-logo.png \
-	/extlinux.conf \
+	/extlinux/extlinux.conf \
 	/extra_uEnv.txt \
 	/grub_extraenv \
 	/configfs.json \
