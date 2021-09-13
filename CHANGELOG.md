@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.84.7
+## (2021-09-13)
+
+* hostapp-update-hooks: Fix blacklisted extlinux.conf file path [Alexandru Costache]
+
 # v2.84.6
 ## (2021-09-11)
 

@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'hostapp-update-hooks: Fix blacklisted extlinux.conf file path'
+      hash: 096024808224aea2100e2a2a1f95ef75e23493ef
+      body: |
+        The extlinux.conf file path in meta-balena is currently
+        incorrect, let's update it's boot partition path so that
+        BalenaHUP won't need to transfer the isolcpus setting to
+        the new OS anymore. This is necessary only when updating from older
+        OS versions in which the supervisor adds the isolcpus
+        setting to the boot partition extlinux.conf file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.84.7
+  date: 2021-09-13T12:01:41.123Z
+- commits:
     - subject: 'balena-persistent-logs: add comment and update logging'
       hash: c05ff73df2341ceb182f7bc1acf00d4719a13afd
       body: |
