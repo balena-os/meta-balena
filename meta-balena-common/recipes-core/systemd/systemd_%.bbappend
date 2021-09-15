@@ -16,6 +16,7 @@ SRC_URI_append = " \
     file://balena-os-sysctl.conf \
     file://getty-target-development-features.conf \
     file://getty-service-development-features.conf \
+    file://disable-user-ns.conf \
     "
 
 python() {
@@ -83,6 +84,10 @@ do_install_append() {
 
     install -d -m 0755 ${D}/usr/lib/sysctl.d/
     install -m 0644 ${WORKDIR}/balena-os-sysctl.conf ${D}/usr/lib/sysctl.d/
+
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'disable-user-ns', 'true', 'false', d)}; then
+        install -m 0644 ${WORKDIR}/disable-user-ns.conf ${D}/usr/lib/sysctl.d/
+    fi
 
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/dev-zram0.swap ${D}${systemd_unitdir}/system/dev-zram0.swap
