@@ -148,10 +148,6 @@ do_install() {
 	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
 	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
 
-	if ${@bb.utils.contains('DISTRO_FEATURES','development-image','true','false',d)}; then
-		install -c -m 0644 ${WORKDIR}/balena.conf.systemd ${D}${sysconfdir}/systemd/system/balena.service.d/balena.conf
-	fi
-
 	install -d ${D}/home/root/.docker
 	ln -sf .docker ${D}/home/root/.balena
 	ln -sf .docker ${D}/home/root/.balena-engine

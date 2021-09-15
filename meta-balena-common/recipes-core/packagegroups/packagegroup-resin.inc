@@ -21,4 +21,5 @@ RDEPENDS_${PN} = " \
     os-release \
     less \
     mdadm \
+    development-features \
     "
