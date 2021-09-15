@@ -1,6 +1,65 @@
 Change log
 -----------
 
+# v2.85.0
+## (2021-09-15)
+
+* Replace image variants with development mode [Alex Gonzalez]
+
+<details>
+<summary> balena-supervisor: Update balena-supervisor to v12.10.10 [Alex Gonzalez] </summary>
+
+> ## balena-supervisor-12.10.10
+> ### (2021-09-07)
+> 
+> * api-keys: Remove os variant parameter for authentication check [Alex Gonzalez]
+> * os-release: Use developmentMode to ascertain OS variant in new releases [Alex Gonzalez]
+> * config: Add developmentMode to schema [Alex Gonzalez]
+> 
+> ## balena-supervisor-12.10.9
+> ### (2021-09-02)
+> 
+> * Update URL to balena-proxy-config source code [Kyle Harding]
+> 
+> ## balena-supervisor-12.10.8
+> ### (2021-09-01)
+> 
+> * Bump path-parse from 1.0.6 to 1.0.7 [dependabot[bot]]
+> 
+> ## balena-supervisor-12.10.7
+> ### (2021-09-01)
+> 
+> * Bump tar from 4.4.13 to 4.4.19 [dependabot[bot]]
+> 
+> ## balena-supervisor-12.10.6
+> ### (2021-09-01)
+> 
+> * Remove "variable list" heading in configuration doc [Miguel Casqueira]
+> 
+> ## balena-supervisor-12.10.5
+> ### (2021-08-31)
+> 
+> * Clean up configurations.md [Miguel Casqueira]
+> 
+> ## balena-supervisor-12.10.4
+> ### (2021-08-31)
+> 
+> * Include issues with downgrading versions in README [Miguel Casqueira]
+> 
+</details>
+
+* u-boot: Introduce a compile time osdev-image feature [Alex Gonzalez]
+* os-release: Remove image variants information [Alex Gonzalez]
+* Replace DEVELOPMENT_IMAGE and image variants with OS_DEVELOPMENT [Alex Gonzalez]
+* images: Remove debug-tweaks settings. [Alex Gonzalez]
+* openssh: Enable runtime development configuration [Alex Gonzalez]
+* balena-info: Rename from resin-info [Alex Gonzalez]
+* balena: Expose engine socket on development mode [Alex Gonzalez]
+* image-balena: Allow passwordless root logins [Alex Gonzalez]
+* image_balena: Remove "balena" hostname from development images [Alex Gonzalez]
+* systemd: Runtime enablement of serial console [Alex Gonzalez]
+* development-features: Add service for development features runtime management [Alex Gonzalez]
+
 # v2.84.7
 ## (2021-09-13)
 
