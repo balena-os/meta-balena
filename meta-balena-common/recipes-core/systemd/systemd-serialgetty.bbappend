@@ -1,5 +1,8 @@
-do_install_prepend() {
-    sed -i '/^\[Unit\]/a ConditionPathExists=/var/volatile/development-features' ${WORKDIR}/serial-getty@.service
-    sed -i '/^\[Unit\]/a After=development-features.service' ${WORKDIR}/serial-getty@.service
-    sed -i '/^\[Unit\]/a Requires=development-features.service' ${WORKDIR}/serial-getty@.service
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+SRC_URI_append = " file://development-features.conf"
+
+do_install_append() {
+  install -d ${D}${sysconfdir}/systemd/system/serial-getty@.service.d
+  install -m 0644 ${WORKDIR}/development-features.conf ${D}${sysconfdir}/systemd/system/serial-getty@.service.d/development-features.conf
 }
