@@ -22,16 +22,6 @@ const BLINK_DURATION = 20000;
 
 module.exports = {
 	title: 'Identification test',
-	os: {
-		type: 'object',
-		required: ['variant'],
-		properties: {
-			variant: {
-				type: 'string',
-				const: 'Development',
-			},
-		},
-	},
 	deviceType: {
 		type: 'object',
 		required: ['data'],
