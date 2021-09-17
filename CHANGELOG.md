@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.85.1
+## (2021-09-17)
+
+* Fix typo in OS_DEVELOPMENT distro feature [Kyle Harding]
+* tests: Remove OS variants [Alex Gonzalez]
+
 # v2.85.0
 ## (2021-09-15)
 
