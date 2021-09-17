@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.1
+## (2021-09-17)
+
+* test: remove variants from os-release tests [Kyle Harding]
+
 # v2.85.0
 ## (2021-09-15)
 

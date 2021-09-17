@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'test: remove variants from os-release tests'
+      hash: f13bfde898ee7a5cee06052d608e108b05ae4141
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.85.1
+  date: 2021-09-17T13:05:48.033Z
+- commits:
     - subject: Replace image variants with development mode
       hash: 0c7c629dcde13de9188f05f6f551f34837ad84ff
       body: |
