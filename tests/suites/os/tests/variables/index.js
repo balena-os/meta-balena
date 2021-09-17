@@ -17,16 +17,6 @@
 
 module.exports = {
 	title: 'Container exposed variables test',
-	os: {
-		type: 'object',
-		required: ['variant'],
-		properties: {
-			variant: {
-				type: 'string',
-				const: 'Development',
-			},
-		},
-	},
 	run: async function(test) {
 		const ip = await this.context.get().worker.ip(this.context.get().link);
 

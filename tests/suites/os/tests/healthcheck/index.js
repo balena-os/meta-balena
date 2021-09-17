@@ -19,16 +19,6 @@ const { delay } = require('bluebird');
 
 module.exports = {
 	title: 'Container healthcheck test',
-	os: {
-		type: 'object',
-		required: ['variant'],
-		properties: {
-			variant: {
-				type: 'string',
-				const: 'Development',
-			},
-		},
-	},
 	run: async function(test) {
 		const ip = await this.context.get().worker.ip(this.context.get().link);
 
