@@ -40,11 +40,7 @@ module.exports = {
 					'VERSION_ID',
 					'PRETTY_NAME',
 					'MACHINE',
-					'VARIANT',
-					'VARIANT_ID',
 					'META_BALENA_VERSION',
-					//"RESIN_BOARD_REV",
-					//"META_RESIN_REV",
 					'SLUG',
 				].forEach(field => {
 					test.includes(
