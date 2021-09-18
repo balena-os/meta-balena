@@ -1,4 +1,71 @@
 - commits:
+    - subject: Update balena-engine to v19.03.29
+      hash: a2ed32e139489afd89e59e0e63a7c676969de3d8
+      body: |
+        Update balena-engine from 19.03.26 to 19.03.29
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-engine to v19.03.29
+        changelog-entry: Update balena-engine to v19.03.29
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested:
+        - commits:
+            - subject: 'pkg/storagemigration: use graphdriver/copy.DirCopy'
+              hash: ffbb608492405488bff5e31ea62c0249fb416106
+              body: |
+                instead of our own implementation
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.29
+          date: 2021-09-14T15:38:47.823Z
+        - commits:
+            - subject: Prune Jenkinsfile
+              hash: ea14e503181bbb248a4bed1b86a227d9c214cbfb
+              body: >
+                we are not using it for our CI, and it confuses jenkins set up
+                on the
+
+                balena-os org
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.28
+          date: 2021-09-14T14:54:48.288Z
+        - commits:
+            - subject: Backport platform-detection fixes from containerd
+              hash: 9f71253561b1cd2f262ec0d6e81c5fbd09a7a0a1
+              body: >
+                See https://github.com/containerd/containerd/pull/4530
+
+                and `git log
+                ad25c1a9c34361e4071f508b9a91946b05fce165^..2055e12953bb538228d8d9fe627fa545d7cf82be
+                ./platforms/`
+
+                in the containerd repo
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.27
+          date: 2021-09-01T18:43:57.993Z
+  version: 2.85.2
+  date: 2021-09-17T20:43:01.200Z
+- commits:
     - subject: Fix typo in OS_DEVELOPMENT distro feature
       hash: 7992a7900506eaf0279f93c747dea1520875c817
       body: ''

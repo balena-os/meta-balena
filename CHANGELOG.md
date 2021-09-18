@@ -1,6 +1,30 @@
 Change log
 -----------
 
+# v2.85.2
+## (2021-09-17)
+
+
+<details>
+<summary> Update balena-engine to v19.03.29 [Robert Günzler] </summary>
+
+> ## balena-engine-19.03.29
+> ### (2021-09-14)
+> 
+> * pkg/storagemigration: use graphdriver/copy.DirCopy [Robert Günzler]
+> 
+> ## balena-engine-19.03.28
+> ### (2021-09-14)
+> 
+> * Prune Jenkinsfile [Robert Günzler]
+> 
+> ## balena-engine-19.03.27
+> ### (2021-09-01)
+> 
+> * Backport platform-detection fixes from containerd [Robert Günzler]
+> 
+</details>
+
 # v2.85.1
 ## (2021-09-17)
 
