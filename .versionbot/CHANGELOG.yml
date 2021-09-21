@@ -1,4 +1,175 @@
 - commits:
+    - subject: >-
+        resin-init-flasher: Use flasher kernel to emulate stage2 bootloader with
+        LUKS
+      hash: 0e6f0086c84cbbebc963b56818e91f8d56f1a44f
+      body: >
+        In order to avoid the need to unlock encrypted partitions in GRUB we
+        want
+
+        to use a custom stage2 bootloader. Since that is not ready yet, emulate
+        that
+
+        by copying flasher kernel to the EFI partition, start it from GRUB, have
+        it
+
+        unlock all the partitions, find the real kernel and kexec into it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: >-
+        resin-init-flasher: Add an extra 1MB when resizing data parition for
+        LUKS
+      hash: a04ed2bbc18b9db30486dc1ec8a926e7df4c8f30
+      body: >
+        This is necessary because if the data partition of the flashed image is
+        not
+
+        aligned to whole megabytes it would end up 1 block shorter than it needs
+        to be.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resin-init-flasher: Use TPM for LUKS passphrase manipulation'
+      hash: c94279891f5c8b8848ebb7418cc9ca34b0d1e7d3
+      body: >
+        Done:
+
+        - Generate a LUKS passphrase using the TPM's RNG
+
+        - Make it possible to define an extra passphrase using
+        EXTRA_LUKS_PASSPHRASE
+
+        - Encrypt the passphrase using the TPM and store it in EFI partition
+
+
+        Missing:
+
+        - PCR protection - at this state any booted OS can decrypt the
+        passphrase
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resin_update_state_probe: Look for bootparam_root in /run as well'
+      hash: 97ca6beea39d90a01d71ccbacf99be61fa4f67e1
+      body: >
+        bootparam_root is created under /run/initramfs by fsuuidsinit and /run
+
+        is later moved to /tmp when rootfs is mounted. resin_update_state_probe
+
+        only looks into /tmp at this moment therefore it fails to find
+
+        bootparam_root if udev calls it before /run is moved. This means
+        sometimes
+
+        /dev/disk/by-state symlinks are not populated properly. This only
+        affects
+
+        the first boot when fsuuidsinit is actually executed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resin-update-state.rules: do not run for unnamed partitions'
+      hash: 2a847ea3d988611e12a1cf9f013169ad91c49cf8
+      body: >
+        When udev runs resin_update_state_probe for a non-balena partition
+
+        and ENV{ID_PART_ENTRY_NAME} is undefined it still gets expanded to
+        random
+
+        garbage accidentally lying at the eventual memory address. This can
+        create
+
+        a mess in /dev/disk/by-state e.g. when external devices are connected.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resin-mounts: mount EFI partition if it is disctinct from boot'
+      hash: a4e7fa07351fe62a4236c384ac550f4c93b96be9
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resindataexpander: also resize LUKS volume if necessary'
+      hash: 5de314b310ce619a2ab229ba3818f9ea45b7d0d6
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resin_update_state_probe: do not skip device mapper devices'
+      hash: a39b4c0cfc91f300479bcebd42fdc6ed9e668240
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'grub.cfg_internal_template: Unlock and use encrypted partitions'
+      hash: cc52e96021bcb57aa118000e73c01fcd6a96baca
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resin-init-flasher: Add support for opt-in full disk encryption'
+      hash: 557660d702c0552b53e75b8dec0479f982b3c4b6
+      body: |
+        If resin-init-flasher.conf has LUKS=1 flasher will:
+        - Add extra 2MB to each partition for the LUKS header
+        - Split resin-boot into EFI and linux boot
+        - LUKS-format the partitions, copy image contents after unlocking
+        - Propagate signatures for secure boot
+        - Use LUKS_PASSWORD or default "balenabeta" as passphrase
+
+        Missing:
+        - Progress report
+        - Random password with TPM2
+        - Read partition sizes prior to repartitioning, they are hardcoded now
+
+        The default behavior (LUKS undefined) is unchanged
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.86.0
+  date: 2021-09-21T13:46:21.177Z
+- commits:
     - subject: Update balena-engine to v19.03.29
       hash: a2ed32e139489afd89e59e0e63a7c676969de3d8
       body: |
