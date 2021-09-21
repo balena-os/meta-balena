@@ -1,4 +1,42 @@
 - commits:
+    - subject: 'balena-os-sysctl: Reduce the console default loglevel'
+      hash: 626b0e25cbd13ca65a74bbfe09ff9e0828b380bb
+      body: |
+        This avoids the kernel printing debug messages on the consoles. It is
+        also the default in other upstream distros like Ubuntu.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'balena-config-vars: Re-run os-sshkeys if config.json is modified'
+      hash: 67b7aa5b58a26178411b598415e296fea5628a00
+      body: |
+        This change allows to pick-up changes to "os.sshKeys" in config.json
+        without having to reboot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'systemd: Use drop-in to modify unit files instead of sed'
+      hash: b07a78453243d12db59524836c3cc62d355a6f2d
+      body: |
+        Performing unit modifications in drop-in files is better practise.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.85.3
+  date: 2021-09-21T11:28:51.115Z
+- commits:
     - subject: Update balena-engine to v19.03.29
       hash: a2ed32e139489afd89e59e0e63a7c676969de3d8
       body: |

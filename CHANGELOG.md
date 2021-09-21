@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.85.3
+## (2021-09-21)
+
+* balena-os-sysctl: Reduce the console default loglevel [Alex Gonzalez]
+* balena-config-vars: Re-run os-sshkeys if config.json is modified [Alex Gonzalez]
+* systemd: Use drop-in to modify unit files instead of sed [Alex Gonzalez]
+
 # v2.85.2
 ## (2021-09-17)
 
