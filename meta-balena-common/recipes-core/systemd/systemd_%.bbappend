@@ -14,6 +14,8 @@ SRC_URI_append = " \
     file://dev-zram0.swap \
     file://resin_update_state_probe \
     file://balena-os-sysctl.conf \
+    file://getty-target-development-features.conf \
+    file://getty-service-development-features.conf \
     "
 
 python() {
@@ -86,10 +88,10 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/dev-zram0.swap ${D}${systemd_unitdir}/system/dev-zram0.swap
 
     # Do not start getty on production mode
-    sed -i '/^\[Unit\]/a ConditionPathExists=/var/volatile/development-features' ${D}${systemd_unitdir}/system/getty@.service
-    sed -i '/^\[Unit\]/a PartOf=development-features.target' ${D}${systemd_unitdir}/system/getty.target
-    sed -i '/^\[Unit\]/a After=development-features.service' ${D}${systemd_unitdir}/system/getty.target
-    sed -i '/^\[Unit\]/a Requires=development-features.service' ${D}${systemd_unitdir}/system/getty.target
+    install -d -m 0755 ${D}${sysconfdir}/systemd/system/getty.target.d
+    install -m 0644 ${WORKDIR}/getty-target-development-features.conf ${D}${sysconfdir}/systemd/system/getty.target.d/development-features.conf
+    install -d -m 0755 ${D}${sysconfdir}/systemd/system/getty@.service.d
+    install -m 0644 ${WORKDIR}/getty-service-development-features.conf ${D}${sysconfdir}/systemd/system/getty@.service.d/development-features.conf
 }
 
 PACKAGES =+ "${PN}-zram-swap"
