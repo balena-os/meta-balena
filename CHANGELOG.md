@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.4
+## (2021-09-21)
+
+* common: conf: create disable-user-ns distro feature [Joseph Kogut]
+
 # v2.85.3
 ## (2021-09-21)
 

@@ -1,4 +1,43 @@
 - commits:
+    - subject: 'common: conf: create disable-user-ns distro feature'
+      hash: 7dde2133a5b1df710255b8b0471385cca1449c1d
+      body: >
+        When user namespacing was enabled in the kernel by default, a separate
+
+        commit [0] was introduced to disable the feature at runtime, to allow
+
+        users/administrators to explicitly choose to enable it, avoiding
+
+        potential security implications.
+
+
+        However, some applications such as Chromium's sandbox, require either
+
+        SUID or user namespacing to work. Disabling this feature on boards
+
+        that previously enabled it necessitates container modifications and
+
+        potentially breaks previously working applications.
+
+
+        Create a distro feature to disable user namespacing by default in
+
+        meta-balena, while allowing device types to keep it enabled to maintain
+
+        compatibility with their original behavior.
+
+
+        https://github.com/balena-os/meta-balena/commit/31c3ae8ad5c7ad45e450349b6972524da120e96c
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.85.4
+  date: 2021-09-21T19:37:48.181Z
+- commits:
     - subject: 'balena-os-sysctl: Reduce the console default loglevel'
       hash: 626b0e25cbd13ca65a74bbfe09ff9e0828b380bb
       body: |
