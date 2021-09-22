@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.5
+## (2021-09-22)
+
+* common: conf: don't disable user-ns by default [Joseph Kogut]
+
 # v2.85.4
 ## (2021-09-21)
 

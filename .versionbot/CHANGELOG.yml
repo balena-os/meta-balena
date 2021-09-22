@@ -1,4 +1,26 @@
 - commits:
+    - subject: 'common: conf: don''t disable user-ns by default'
+      hash: 7030ee3ffddb7362e1ef45e9afd8460dcb57bdb8
+      body: |
+        Upon reviewing the kernel configs for existing devices, we found at
+        least 64 DTs that previously enabled user namespacing, and only eight
+        that do not enable user namespacing.
+
+        In order to safely enable this config in the kernel while avoiding
+        enabling it for devices which previously did not have it, remove the
+        runtime configuration that disables it by default in meta-balena. We'll
+        update the few device repos that didn't enable CONFIG_USER_NS to disable
+        the feature at runtime.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.85.5
+  date: 2021-09-22T17:44:31.153Z
+- commits:
     - subject: 'common: conf: create disable-user-ns distro feature'
       hash: 7dde2133a5b1df710255b8b0471385cca1449c1d
       body: >
