@@ -12,7 +12,7 @@ DEPENDS += "xz-native"
 # IWLWIFI_REGEX is the regex defining how to parse the filename to extract
 #   the version and the api.
 
-python do_iwlwifi_firmware_clean() {
+fakeroot python do_iwlwifi_firmware_clean() {
     import os,re
 
     path = os.path.join(d.getVar("D",True), d.getVar("IWLWIFI_PATH",True))
