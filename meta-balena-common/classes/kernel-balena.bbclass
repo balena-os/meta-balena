@@ -608,6 +608,10 @@ BALENA_CONFIGS[ad5446] = " \
     CONFIG_AD5446=m \
 "
 
+BALENA_CONFIGS_DEPS[uprobes] = " \
+    CONFIG_FTRACE=y \
+"
+
 # enable user space probes support
 BALENA_CONFIGS[uprobes] = " \
     CONFIG_UPROBE_EVENTS=y \
