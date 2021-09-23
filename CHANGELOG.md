@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.85.5
+## (2021-09-23)
+
+* Reintroduce balena-linux-firmware class to support firmware compression [Kyle Harding]
+* linux-firmware: don't package iwlwifi below min api [Joseph Kogut]
+
 # v2.85.4
 ## (2021-09-21)
 

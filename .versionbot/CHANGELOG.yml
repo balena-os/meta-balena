@@ -1,4 +1,39 @@
 - commits:
+    - subject: Reintroduce balena-linux-firmware class to support firmware compression
+      hash: 5c99354532f6b877e6d4dd68f8bc3148f6c4bdd1
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'linux-firmware: don''t package iwlwifi below min api'
+      hash: b481a92da50f9cdb116161984781269faa380d88
+      body: |
+        balena-linux-firmware used a Python function to find and delete versions
+        of iwlwifi firmware below a given API version, in order to save space
+        when they're not required. Unfortunately, this causes problems with
+        pseudo aborting because the files have been removed outside of the
+        fakeroot context.
+
+        Instead of removing these files, set FILES_* to the appropriate paths of
+        the firmware blobs we'd like to keep.
+
+        At the same time, remove the IWLWIFI_FW_TOCLEAN variable. If a chipset
+        is present in IWLWIFI_FW_MIN_VERSION, that chipset's limited to
+        packaging blobs equal to or greater than the min version.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.85.5
+  date: 2021-09-23T13:44:11.692Z
+- commits:
     - subject: 'common: conf: create disable-user-ns distro feature'
       hash: 7dde2133a5b1df710255b8b0471385cca1449c1d
       body: >
