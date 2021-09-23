@@ -8,6 +8,8 @@ IWLWIFI_FW_MIN_API[7265D] = "29"
 IWLWIFI_FW_MIN_API[8000C] = "34"
 IWLWIFI_FW_MIN_API[8265] = "34"
 
+inherit balena-linux-firmware
+
 python() {
     import os,re
 
