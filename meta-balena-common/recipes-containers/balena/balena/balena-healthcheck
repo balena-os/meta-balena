@@ -2,12 +2,6 @@
 
 set -o errexit
 
-# Check that info works
-balena info > /dev/null 2>&1
-
-# Check that we can read containers from disk
-balena ps > /dev/null
-
 if ! balena image inspect balena-healthcheck-image > /dev/null 2>&1; then
 	balena image load -i /usr/lib/balena/balena-healthcheck-image.tar
 
