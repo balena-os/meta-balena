@@ -1,4 +1,20 @@
 - commits:
+    - subject: Run iwlwifi firmware cleanup in fakeroot
+      hash: 24b6b9cdc0228c85671a0ba492cfd148a6c547ae
+      body: |
+        This prevents downstream linux-firmware fakeroot tasks, such as
+        firmware compression, from encountering Pseudo Abort due to files
+        changing outside the fakeroot context.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.85.5
+  date: 2021-09-23T16:39:34.551Z
+- commits:
     - subject: 'common: conf: create disable-user-ns distro feature'
       hash: 7dde2133a5b1df710255b8b0471385cca1449c1d
       body: >

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.5
+## (2021-09-23)
+
+* Run iwlwifi firmware cleanup in fakeroot [Kyle Harding]
+
 # v2.85.4
 ## (2021-09-21)
 
