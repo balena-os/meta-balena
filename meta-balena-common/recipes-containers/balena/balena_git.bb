@@ -12,9 +12,9 @@ LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f
 inherit systemd go pkgconfig useradd
 
 BALENA_VERSION = "19.03.29"
-BALENA_BRANCH= "master"
+BALENA_BRANCH= "lmb/set-sched-prio"
 
-SRCREV = "6e4ae37185d26c54514e916ac413b3d7dc36482c"
+SRCREV = "f739b57e282bf5afebeac57e6403dc9714cf3a7d"
 SRC_URI = "\
 	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
