@@ -420,7 +420,10 @@ python do_image_size_check() {
     image_size_aligned = int(disk_aligned(d, os.stat(imgfile).st_size / 1024))
     available = int(disk_aligned(d, available_space(ext4file)))
     if image_size_aligned > available:
-        bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
+        if d.getVar("BALENA_DISABLE_IMAGE_SIZE_CHECK") == "1":
+            bb.warn("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
+        else
+            bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
     bb.debug(1, 'requested %d, available %d' % (image_size_aligned, available) )
 }
 
