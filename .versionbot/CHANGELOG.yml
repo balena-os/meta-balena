@@ -1,4 +1,17 @@
 - commits:
+    - subject: Test engine changes to boost the daemon scheduling priority
+      hash: 770221d2e59db2f0f409bd75aebe9bc900084573
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.85.6
+  date: 2021-09-27T20:28:29.644Z
+- commits:
     - subject: Run iwlwifi firmware cleanup in fakeroot
       hash: 24b6b9cdc0228c85671a0ba492cfd148a6c547ae
       body: |

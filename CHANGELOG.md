@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.6
+## (2021-09-27)
+
+* Test engine changes to boost the daemon scheduling priority [Kyle Harding]
+
 # v2.85.5
 ## (2021-09-23)
 
