@@ -16,7 +16,7 @@ IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
 
-IMAGE_FSTYPES = ""
+IMAGE_FSTYPES = "balenaos-img"
 
 inherit core-image image-balena features_check
 
