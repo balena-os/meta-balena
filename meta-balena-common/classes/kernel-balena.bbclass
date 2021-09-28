@@ -460,6 +460,7 @@ BALENA_CONFIGS[qmi] = " \
 BALENA_CONFIGS[misc] = " \
     CONFIG_USB_SERIAL_CP210X=m \
     CONFIG_PANIC_TIMEOUT=1 \
+    CONFIG_DEBUG_FS=y \
     "
 
 # IP_NF_TARGET_LOG is replaced by NETFILTER_XT_TARGET_LOG from v3.10 (see sha1 6939c33a757bd006c5e0b8b5fd429fc587a4d0f4)
@@ -605,6 +606,10 @@ BALENA_CONFIGS[uinput] = " \
 # enable Analog Devices AD5446 and similar single channel DACs driver
 BALENA_CONFIGS[ad5446] = " \
     CONFIG_AD5446=m \
+"
+
+BALENA_CONFIGS_DEPS[uprobes] = " \
+    CONFIG_FTRACE=y \
 "
 
 # enable user space probes support
