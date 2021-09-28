@@ -1,4 +1,33 @@
 - commits:
+    - subject: 'kernel-balena: Fix kernel config warning for UPROBE_EVENTS'
+      hash: 877a846369f8863145546afe4899de8f14148d94
+      body: |
+        Some BSP kernel configurations do not define FTRACE, so add it as a
+        dependency.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-balena: Configure DEBUG_FS'
+      hash: 15694f9e9510cd0e2c5cd3514d611761724ef003
+      body: |
+        The debugging filesystem is usually mounted on user images and it is
+        enabled by default on most Linux distributions.
+
+        Fixes balena-os/balena-allwinner#128
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.85.6
+  date: 2021-09-27T10:20:36.218Z
+- commits:
     - subject: Run iwlwifi firmware cleanup in fakeroot
       hash: 24b6b9cdc0228c85671a0ba492cfd148a6c547ae
       body: |

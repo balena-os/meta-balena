@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.85.6
+## (2021-09-27)
+
+* kernel-balena: Fix kernel config warning for UPROBE_EVENTS [Alex Gonzalez]
+* kernel-balena: Configure DEBUG_FS [Alex Gonzalez]
+
 # v2.85.5
 ## (2021-09-23)
 
