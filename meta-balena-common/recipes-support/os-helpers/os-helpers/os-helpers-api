@@ -3,6 +3,24 @@
 BALENA_HOSTOS_APP_UUID="io.balena.app-uuid"
 BALENA_HOSTOS_SERVICE_NAME="io.balena.service-name"
 
+# Fetch target state from API
+#
+# Inputs:
+# $1: Device UUID
+# $2: Balena API environment
+# $3: Balena API token
+#
+# Outputs:
+# Target state JSON in stdout
+#
+os_helpers_fetch_target_state() {
+	_device_uuid="$1"
+	_api_env="$2"
+	_token="$3"
+	_target_state_json=$(curl --silent --header "Authorization: Bearer ${_token}" --header "User-Agent:" --compressed "${_api_env}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${_device_uuid}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
+	echo "${_target_state_json}" | tr "\n" " "
+}
+
 # Prints imageID from digest
 #
 # Inputs:
