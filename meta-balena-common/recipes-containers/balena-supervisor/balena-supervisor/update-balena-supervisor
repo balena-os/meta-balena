@@ -41,6 +41,8 @@ done
 # Don't source before parsing args - balena-config-vars parses args too
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-vars
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-api
 
 # A temporary file used until next reboot
 UPDATECONF=/tmp/update-supervisor.conf
@@ -143,7 +145,12 @@ fi
 
 # Pull target version.
 echo "Pulling supervisor $image_name..."
-$DOCKER pull "$image_name" || error_handler "supervisor pull failed"
+if $DOCKER pull "$image_name"; then
+    image_id=$(os_helpers_imageid_from_digest "${image_name}")
+    $DOCKER tag "${image_id}" "balena_supervisor:${version}"
+else
+    error_handler "supervisor pull failed"
+fi
 
 # Ensure device has newly pulled image as the version to run
 setSupervisorConfig
