@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'balena-healthcheck: Remove redundant steps and rely on hello-world'
+      hash: 33925aa5132f23e92d3754b4422c22f40d854d42
+      body: |
+        In situations with limited resources the info and ps commands can take
+        an unecessarily long time when we really only need to know that a
+        container can be started.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.85.7
+  date: 2021-09-28T14:01:40.209Z
+- commits:
     - subject: 'kernel-balena: Fix kernel config warning for UPROBE_EVENTS'
       hash: 877a846369f8863145546afe4899de8f14148d94
       body: |

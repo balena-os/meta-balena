@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.7
+## (2021-09-28)
+
+* balena-healthcheck: Remove redundant steps and rely on hello-world [Kyle Harding]
+
 # v2.85.6
 ## (2021-09-27)
 
