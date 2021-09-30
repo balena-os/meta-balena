@@ -79,17 +79,13 @@ fi
 # Get target supervisor details from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
-echo "Getting image name and tag..."
-if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "Authorization: Bearer $_device_api_key" --header "User-Agent:" --compressed "${API_ENDPOINT}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${UUID}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
-    echo "Supervisor configuration found from API."
-
-    if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
-        echo "WARN: Ignore image/tag arguments as API overrides them."
-    fi
-
-    tag=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $1}')
-    image_name=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $2}')
-    if [ -z "$tag" ] || [ -z "$image_name" ]; then
+echo "Getting image name and version..."
+# shellcheck disable=SC1091
+. /etc/balena-supervisor/supervisor.conf
+if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ]; then
+    _target_state=$(os_helpers_fetch_target_state "${UUID}" "${API_ENDPOINT}" "${_device_api_key}")
+    read -r version image_name <<< "${_target_state}"
+    if [ -z "$version" ] || [ -z "$image_name" ]; then
         echo "ERROR: Unexpected API data."
         error_handler "unexpected API data"
     fi
@@ -99,10 +95,17 @@ if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ] && da
         echo "ERROR: No version received."
         error_handler "no version received"
     fi
+
+    # Check that we didn't get more than one version or image
+    _vc=$(echo "${version}" | wc -w)
+    _ic=$(echo "${image_name}" | wc -w)
+    if [ "${_vc}" -gt "1" ] || [ "${_ic}" -gt "1" ]; then
+        echo "ERROR: Multi-service supervisors not supported"
+        error_handler "Multi-service supervisors not supported"
+    fi
+    echo "Supervisor ${version} configuration found from API: ${image_name}"
 else
     echo "No supervisor configuration found from API. Using preloaded values."
-    # shellcheck disable=SC1091
-    . /etc/balena-supervisor/supervisor.conf
     if [ -n "$SUPERVISOR_VERSION" ]; then
         UPDATER_SUPERVISOR_TAG=$SUPERVISOR_VERSION
         else
