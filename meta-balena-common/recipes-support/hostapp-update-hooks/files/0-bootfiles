@@ -18,6 +18,7 @@ bootfiles_blacklist="\
 	/extra_uEnv.txt \
 	/grub_extraenv \
 	/configfs.json \
+	/hw_intfc.conf \
 	"
 boot_mountpoint="/mnt/boot"
 DURING_UPDATE=${DURING_UPDATE:-0}
