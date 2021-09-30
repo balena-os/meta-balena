@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'hostapp-update-hooks: Blacklist Rock Pi configuration file'
+      hash: 5379c4131b23e912dda9eddc0c309301d007414b
+      body: |
+        The Rock Pi 4B uses a file named hw_intf.conf for
+        enabling/disabling interfaces and for loading overlays.
+        Just noting that the syntax is also slightly different
+        from the config.txt file on RaspberryPi.
+
+        Let's blacklist this file to avoid overriding
+        it during an OS update.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.85.8
+  date: 2021-09-29T13:49:00.466Z
+- commits:
     - subject: 'balena-healthcheck: Remove redundant steps and rely on hello-world'
       hash: 33925aa5132f23e92d3754b4422c22f40d854d42
       body: |

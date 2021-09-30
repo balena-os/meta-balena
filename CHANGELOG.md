@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.8
+## (2021-09-29)
+
+* hostapp-update-hooks: Blacklist Rock Pi configuration file [Alexandru Costache]
+
 # v2.85.7
 ## (2021-09-28)
 
