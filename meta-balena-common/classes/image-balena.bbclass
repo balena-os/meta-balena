@@ -59,6 +59,10 @@ init_config_json() {
 
    # Set deviceType for supervisor
    echo "$(cat ${1}/config.json | jq -S ".deviceType=$slug")" > ${1}/config.json
+
+   if ${@bb.utils.contains('DISTRO_FEATURES','osdev-image','true','false',d)}; then
+      echo "$(cat ${1}/config.json | jq -S ".developmentMode=true")" > ${1}/config.json
+   fi
 }
 
 #
