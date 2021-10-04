@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.9
+## (2021-10-01)
+
+* classes/resin-u-boot: Increase OS_BOOTCOUNT_LIMIT to 3 [Alexandru Costache]
+
 # v2.85.8
 ## (2021-09-29)
 

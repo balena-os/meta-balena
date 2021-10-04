@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'classes/resin-u-boot: Increase OS_BOOTCOUNT_LIMIT to 3'
+      hash: 2756f4e2621f6f24ed8e0add675049bf3515383f
+      body: |
+        Let's increase the current value for the rollback-altboot
+        bootcount to 3, to account for accidental poweroffs triggered
+        by users or by power supplys when booting into the new OS,
+        during HUP.
+
+        When the limit is reached, u-boot will proceed to try
+        to boot into the old OS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.85.9
+  date: 2021-10-01T13:01:16.476Z
+- commits:
     - subject: 'hostapp-update-hooks: Blacklist Rock Pi configuration file'
       hash: 5379c4131b23e912dda9eddc0c309301d007414b
       body: |
