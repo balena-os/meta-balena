@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+BALENA_DATA_MP=@BALENA_DATA_MP@
+
+# Purge data
+rm -rf "${BALENA_DATA_MP:?}"/apps.json || true
+rm -rf "${BALENA_DATA_MP:?}"/resin-data || true
+rm -rf "${BALENA_DATA_MP:?}"/docker || true
+
+# Make sure everything is on disk otherwise the flag 'remove_me_to_reset'
+# might end up before other files on the data partition. If so, in the case of a
+# power loss we might end up in a state with inconsistent data.
+sync
