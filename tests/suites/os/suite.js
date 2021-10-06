@@ -127,8 +127,8 @@ module.exports = {
 		'./tests/config-json',
 		'./tests/boot-splash',
 		'./tests/connectivity',
-		'./tests/engine-healthcheck',
 		'./tests/udev',
 		'./tests/device-tree',
+		'./tests/purge-data',
 	],
 };
