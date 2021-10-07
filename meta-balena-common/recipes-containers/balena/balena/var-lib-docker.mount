@@ -1,7 +1,7 @@
 [Unit]
 Description=Docker data mountpoint
-Requires=resin-data.service var-volatile-lib.service
-After=resin-data.service var-volatile-lib.service
+Requires=resin-data.service balena-data-reset.service var-volatile-lib.service
+After=resin-data.service balena-data-reset.service var-volatile-lib.service
 
 [Mount]
 What=/mnt/data/docker

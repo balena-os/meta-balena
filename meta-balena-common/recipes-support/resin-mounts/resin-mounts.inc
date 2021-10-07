@@ -57,7 +57,7 @@ do_compile () {
 			# service. No need to run it with default target.
 			sed -i -e "/^WantedBy=/ d" "$servicefile"
 			# Mount persistent logs on data partition
-			sed -i -e 's/resin-state.service resin-state-reset.service/resin-data.service/g' "$servicefile"
+			sed -i -e 's/resin-state.service resin-state-reset.service/resin-data.service balena-data-reset.service/g' "$servicefile"
 			sed -i -e 's#/mnt/state#/mnt/data#g' "$servicefile"
 		elif [ "$bindmount" = "/etc/NetworkManager/conf.d" ]; then
 			# This bind mount needs to be running before the NetworkManager service starts for os-networkmanager

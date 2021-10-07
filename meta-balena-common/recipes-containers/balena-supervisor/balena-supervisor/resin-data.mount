@@ -1,7 +1,7 @@
 [Unit]
 Description=resin-data bind mount
-Requires=resin-data.service
-After=resin-data.service
+Requires=resin-data.service balena-data-reset.service
+After=resin-data.service balena-data-reset.service
 
 [Mount]
 What=/mnt/data/resin-data
