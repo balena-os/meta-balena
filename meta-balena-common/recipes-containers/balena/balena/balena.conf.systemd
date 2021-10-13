@@ -1,2 +1,0 @@
-[Service]
-Environment=BALENAD_HOST="-H fd:// -H unix:///var/run/balena.sock -H unix:///var/run/balena-engine.sock -H tcp://0.0.0.0:2375"
