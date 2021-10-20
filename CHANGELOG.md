@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.11
+## (2021-10-06)
+
+* patch: Add dtoverlay practical test [Vipul Gupta (@vipulgupta2048)]
+
 # v2.85.10
 ## (2021-10-04)
 
