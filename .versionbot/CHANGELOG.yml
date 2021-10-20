@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'common: docker-disk: bump tag to 20.10.8-dind'
+      hash: b628ceedd344821827f8a82c1b4b8a1444c44130
+      body: |
+        Bump docker-disk base image from 19.03.10-dind to 20.10.8-dind, adding
+        support for cgroup v2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.85.12
+  date: 2021-10-20T16:47:28.673Z
+- commits:
     - subject: 'patch: Add dtoverlay practical test'
       hash: 76664fceb33d01cf504df464879569f8c147f2fd
       body: ''
