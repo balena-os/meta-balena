@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.11
+## (2021-10-20)
+
+* rollback-parse-bootloader: Revert to grub.cfg if grubenv not available [Alex Gonzalez]
+
 # v2.85.10
 ## (2021-10-04)
 

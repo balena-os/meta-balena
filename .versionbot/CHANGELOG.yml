@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'rollback-parse-bootloader: Revert to grub.cfg if grubenv not available'
+      hash: 96cb608750c36dc12d46cc8c2eb3ae4671bf27ef
+      body: |
+        Since meta-balena 76c82dd987215982dbfcbdf950588dafdc4c129e the grub
+        environment variables have moved from grub.cfg to grubenv.
+
+        However, when a hostOS update fails and the system rolls back, these
+        grub environments are used to restore the contents of the boot partition
+        to the old OS which does not have a grubenv file.
+
+        This commit will fallback to looking for a grub.cfg file if grubenv is
+        not present in the filesystem
+
+        Fixes #2350
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.85.11
+  date: 2021-10-20T15:29:05.295Z
+- commits:
     - subject: 'image-balena: Decouple boot directory generation from rootfs task'
       hash: 0a2a6bc11a0868c6cd858f28783eccfee5199ca9
       body: >
