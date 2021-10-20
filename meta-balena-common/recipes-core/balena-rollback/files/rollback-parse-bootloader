@@ -30,6 +30,10 @@ if [ -f "${BALENA_BOOT_MOUNTPOINT}/resinOS_uEnv.txt" ]; then
 	BOOTLOADER_FILE="${BALENA_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
 else
 	grub_env=$(find "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
+	if [ -z "${grub_env}" ]; then
+		# rollbacks to versions < v2.77 need this
+		grub_env=$(find "${BALENA_BOOT_MOUNTPOINT}" -name grub.cfg)
+	fi
 	if [ -f "${grub_env}" ]; then
 		BOOTLOADER_FILE="${grub_env}"
 	fi
