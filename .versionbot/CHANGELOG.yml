@@ -1,4 +1,17 @@
 - commits:
+    - subject: make led test work with beaglebone
+      hash: e615c008f916fb4542731c3b0c860be0d79a71b2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.85.12
+  date: 2021-10-21T10:59:58.802Z
+- commits:
     - subject: 'patch: Add dtoverlay practical test'
       hash: 76664fceb33d01cf504df464879569f8c147f2fd
       body: ''

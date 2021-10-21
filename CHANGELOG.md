@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.12
+## (2021-10-21)
+
+* make led test work with beaglebone [rcooke-warwick]
+
 # v2.85.11
 ## (2021-10-06)
 
