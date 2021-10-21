@@ -20,6 +20,21 @@ const fs = require('fs');
 
 module.exports = {
 	title: 'Device Tree tests',
+	deviceType: {
+		type: 'object',
+		required: ['slug'],
+		properties: {
+			slug: {
+				type: 'string',
+				enum: [
+					'raspberrypi3',
+					'raspberrypi4-64',
+					'raspberry-pi2',
+					'raspberry-pi',
+				],
+			},
+		},
+	},
 	tests: [
 		{
 			title: 'DToverlay & DTparam tests',
