@@ -33,4 +33,7 @@ EOF
     disk="$(get_state_path_from_label "resin-state")"
     info "Running filesystem checks on partition resin-state ($disk)"
     fsck.ext4 -p "${disk}"
+    disk="$(get_state_path_from_label "resin-data")"
+    info "Running filesystem checks on partition resin-data ($disk)"
+    fsck.ext4 -p "${disk}"
 }
