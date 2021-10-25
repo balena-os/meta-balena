@@ -22,7 +22,6 @@ SRC_URI = "\
 	file://balena-host.socket \
 	file://balena-healthcheck \
 	file://var-lib-docker.mount \
-	file://balena.conf.systemd \
 	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
 	file://0001-imporve-hardcoded-CC-on-cross-compile-docker-ce.patch \
