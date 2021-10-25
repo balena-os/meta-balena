@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.14
+## (2021-10-25)
+
+* balena-supervisor: Update balena-supervisor to v12.11.0 [Felipe Lalanne]
+
 # v2.85.13
 ## (2021-10-21)
 
