@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'balena-engine: Remove deprecated development drop-in service file'
+      hash: 8db04c4e70fc4f30ae6b9e5009d04d8c247d7364
+      body: |
+        This file is no longer used since the merge of dev and prod images.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.85.13
+  date: 2021-10-21T13:51:52.714Z
+- commits:
     - subject: make led test work with beaglebone
       hash: e615c008f916fb4542731c3b0c860be0d79a71b2
       body: ''
