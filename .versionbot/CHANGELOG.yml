@@ -1,4 +1,67 @@
 - commits:
+    - subject: Update balena-engine to v19.03.30
+      hash: abf610e022eeac709c054e4fb672b850ef08a940
+      body: >
+        Fixes EINVAL errors caused by sockets during storage migration,
+
+        https://github.com/balena-os/balena-engine/commit/17a198cb53a53da456c848bf303dc3917ca538c5
+
+
+        Update balena-engine from 19.03.29 to 19.03.30
+      footer:
+        Changelog-entry: Update balena-engine to v19.03.30
+        changelog-entry: Update balena-engine to v19.03.30
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested:
+        - commits:
+            - subject: 'storagemigration: keep going if migration fails'
+              hash: 2bde63c800b1df72fba7161d62b5b6da84a8d390
+              body: >
+                the only hard error is if rollback (failcleanup) fails, in all
+                other
+
+                scenarios we want the daemon to continue starting with the new
+
+                graphdriver
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: 'graphdriver/copy: fix handling of sockets'
+              hash: 17a198cb53a53da456c848bf303dc3917ca538c5
+              body: >
+                previously switch would treat S_IFIFO and S_IFSOCK as the same,
+                passing
+
+                both of the to mkfifo, which lead to EINVAL errors when trying
+                to create
+
+                the socket, we instead handle socket separately.
+
+
+                Also adds cases for this to the unit and integration tests of
+                the
+
+                migrator.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-19.03.30
+          date: 2021-10-26T13:43:43.638Z
+  version: 2.85.16
+  date: 2021-10-27T10:26:55.185Z
+- commits:
     - subject: 'linux-firmware: Include RTL8723BU firmware files'
       hash: 2490287e51d96f3ceabd7e3d7a9cd93f49442ba7
       body: |

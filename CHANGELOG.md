@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.85.16
+## (2021-10-27)
+
+
+<details>
+<summary> Update balena-engine to v19.03.30 [Robert Günzler] </summary>
+
+> ## balena-engine-19.03.30
+> ### (2021-10-26)
+> 
+> * storagemigration: keep going if migration fails [Robert Günzler]
+> * graphdriver/copy: fix handling of sockets [Robert Günzler]
+> 
+</details>
+
 # v2.85.15
 ## (2021-10-26)
 
