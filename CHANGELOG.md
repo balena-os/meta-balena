@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.85.17
+## (2021-10-28)
+
+* restrict dtoverlay test to rpi devices [rcooke-warwick]
+
 # v2.85.16
 ## (2021-10-27)
 

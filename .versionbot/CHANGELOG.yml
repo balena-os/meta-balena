@@ -1,4 +1,17 @@
 - commits:
+    - subject: restrict dtoverlay test to rpi devices
+      hash: 98d8f80b6e2c49fabecad70f539a3e247ac20895
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.85.17
+  date: 2021-10-28T13:26:21.042Z
+- commits:
     - subject: Update balena-engine to v19.03.30
       hash: abf610e022eeac709c054e4fb672b850ef08a940
       body: >
