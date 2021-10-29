@@ -74,7 +74,25 @@ module.exports = {
 				return {
 					title: `${proxy.charAt(0).toUpperCase()}${proxy.slice(1)} test`,
 					run: async function(test) {
-						const PROXY_PORT = 8123;
+						let getProxyContainerID = async() => {
+							return this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									['balena', 'ps', '-qf', 'name=proxy'].join(' '),
+									this.context.get().link
+								);
+						};
+
+						const ip = await this.context.get()
+							.worker.ip(this.context.get().link);
+
+						// Ensure we only push and run the proxy container once
+						if (!await getProxyContainerID()) {
+							test.comment('Running proxy in container');
+							const state = await this.context.get()
+								.worker.pushContainerToDUT(ip, __dirname, 'proxy');
+							test.comment(state);
+						}
 
 						await this.context
 							.get()
@@ -82,10 +100,6 @@ module.exports = {
 								'mkdir -p /mnt/boot/system-proxy',
 								this.context.get().link,
 							);
-
-						const proxyState = await this.context.get().worker.proxy({
-							port: PROXY_PORT,
-						});
 
 						test.comment(`Creating redsocks.conf for ${proxy}...`);
 						await this.context
@@ -101,8 +115,8 @@ module.exports = {
 									'} \n' +
 									'redsocks { \n' +
 									`type = ${proxy}; \n` +
-									`ip = ${proxyState.ip}; \n` +
-									`port = ${PROXY_PORT}; \n` +
+									`ip = 127.0.0.1; \n` +
+									`port = 8123; \n` +
 									'local_ip = 127.0.0.1; \n' +
 									'local_port = 12345; \n' +
 									'} \n" > /mnt/boot/system-proxy/redsocks.conf',
@@ -133,10 +147,32 @@ module.exports = {
 						await this.context
 							.get()
 							.worker.executeCommandInHostOS(
-								`ping -c 10 ${URL_TEST}`,
+								`curl -I https://${URL_TEST}`,
 								this.context.get().link,
 							);
-						test.true(`${URL_TEST} responded over ${proxy} proxy`);
+
+						test.comment('Getting proxy container logs...');
+						const proxyLog = await this.context
+							.get()
+							.worker.executeCommandInHostOS(
+								['balena',
+									'logs',
+									await getProxyContainerID(),
+									'|', 'tail', '-n1'].join(' '),
+								this.context.get().link,
+							);
+
+						const pattern = {
+							'socks5': new RegExp(/\[socks5\] 127\.0\.0\.1:[0-9]* <->/),
+							'http-connect': new RegExp(/\[http\] 127\.0\.0\.1:[0-9]* <->/),
+						}[proxy];
+
+						test.comment(`Looking for ${proxy} connection logs...`);
+						test.match(
+							proxyLog,
+							pattern,
+							`${URL_TEST} responded over ${proxy} proxy`
+						);
 
 						test.comment(`Removing redsocks.conf...`);
 						await this.context
