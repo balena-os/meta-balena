@@ -1,7 +1,7 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/balena-files"
+FILESEXTRAPATHS:append := ":${THISDIR}/balena-files"
 SYSTEMD_AUTO_ENABLE = "enable"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     file://77-mm-huawei-configuration.rules \
     file://mm-huawei-configuration-switch.sh \
     file://77-mm-u-blox-modeswitch.rules \
@@ -10,9 +10,9 @@ SRC_URI_append = " \
     file://ModemManager.conf.systemd \
 "
 
-PACKAGECONFIG_remove = "polkit"
+PACKAGECONFIG:remove = "polkit"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${base_libdir}/udev/rules.d/
     install -m 0644 ${WORKDIR}/77-mm-huawei-configuration.rules ${D}${base_libdir}/udev/rules.d/
     install -m 0755 ${WORKDIR}/mm-huawei-configuration-switch.sh ${D}${base_libdir}/udev/
@@ -24,7 +24,7 @@ do_install_append() {
     install -m 0644 ${WORKDIR}/u-blox-switch@.service ${D}${systemd_unitdir}/system
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${base_libdir}/udev/rules.d/77-mm-huawei-configuration.rules \
     ${base_libdir}/udev/mm-huawei-configuration-switch.sh \
     ${base_libdir}/udev/rules.d/77-mm-u-blox-modeswitch.rules \
