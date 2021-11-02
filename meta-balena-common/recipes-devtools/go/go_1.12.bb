@@ -8,7 +8,7 @@ export GOBUILDMODE=""
 # variants.
 python() {
     if 'mips' in d.getVar('TARGET_ARCH'):
-        d.appendVar('INSANE_SKIP_%s' % d.getVar('PN'), " textrel")
+        d.appendVar('INSANE_SKIP:%s' % d.getVar('PN'), " textrel")
     else:
         d.setVar('GOBUILDMODE', 'pie')
 }

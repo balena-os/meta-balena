@@ -1,5 +1,5 @@
 DEPENDS = "virtual/${TUNE_PKGARCH}-go go-native"
-DEPENDS_class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk go-native"
+DEPENDS:class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk go-native"
 
 export GOHOSTOS = "${BUILD_GOOS}"
 export GOHOSTARCH = "${BUILD_GOARCH}"
@@ -12,10 +12,10 @@ export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
 export GOROOT_FINAL = "${libdir}/go"
 export GOCACHE = "${B}/.cache"
 GO_LDFLAGS = ""
-GO_LDFLAGS_class-nativesdk = "-linkmode external"
+GO_LDFLAGS:class-nativesdk = "-linkmode external"
 export GO_LDFLAGS
 
-CC_append_class-nativesdk = " ${SECURITY_NOPIE_CFLAGS}"
+CC:append:class-nativesdk = " ${SECURITY_NOPIE_CFLAGS}"
 
 do_configure[noexec] = "1"
 
@@ -46,9 +46,9 @@ do_install() {
 }
 
 PACKAGES = "${PN} ${PN}-dev"
-FILES_${PN} = "${libdir}/go/bin ${libdir}/go/pkg/tool/${TARGET_GOTUPLE} ${bindir}"
-FILES_${PN}-dev = "${libdir}/go"
-RDEPENDS_${PN}-dev = "perl bash"
-INSANE_SKIP_${PN} = "ldflags"
+FILES:${PN} = "${libdir}/go/bin ${libdir}/go/pkg/tool/${TARGET_GOTUPLE} ${bindir}"
+FILES:${PN}-dev = "${libdir}/go"
+RDEPENDS:${PN}-dev = "perl bash"
+INSANE_SKIP:${PN} = "ldflags"
 
 BBCLASSEXTEND = "nativesdk"

@@ -1,5 +1,5 @@
 DEPENDS = "virtual/${TUNE_PKGARCH}-go go-native"
-DEPENDS_class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk"
+DEPENDS:class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk"
 PROVIDES = "virtual/${TARGET_PREFIX}go-runtime"
 
 export GOHOSTOS = "${BUILD_GOOS}"
@@ -24,7 +24,7 @@ do_configure() {
 	:
 }
 
-do_configure_libc-musl() {
+do_configure:libc-musl() {
 	rm -f ${S}/src/runtime/race/*.syso
 }
 
@@ -64,9 +64,9 @@ do_install() {
 
 }
 
-ALLOW_EMPTY_${PN} = "1"
-FILES_${PN} = "${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*${SOLIBSDEV}"
-FILES_${PN}-dev = "${libdir}/go/src ${libdir}/go/pkg/include \
+ALLOW_EMPTY:${PN} = "1"
+FILES:${PN} = "${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*${SOLIBSDEV}"
+FILES:${PN}-dev = "${libdir}/go/src ${libdir}/go/pkg/include \
                    ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*.shlibname \
                    ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*.shlibname \
                    ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*.shlibname \
@@ -82,12 +82,12 @@ FILES_${PN}-dev = "${libdir}/go/src ${libdir}/go/pkg/include \
                    ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*/*.a \
                    ${libdir}/go/pkg/${TARGET_GOTUPLE}_dynlink/*/*/*/*/*/*/*.a \
 "
-FILES_${PN}-staticdev = "${libdir}/go/pkg/${TARGET_GOTUPLE}"
+FILES:${PN}-staticdev = "${libdir}/go/pkg/${TARGET_GOTUPLE}"
 
 # Go sources include some scripts and pre-built binaries for
 # multiple architectures.  The static .a files for dynamically-linked
 # runtime are also required in -dev.
-INSANE_SKIP_${PN}-dev = "staticdev file-rdeps arch"
+INSANE_SKIP:${PN}-dev = "staticdev file-rdeps arch"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
