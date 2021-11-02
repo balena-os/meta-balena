@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/balena-files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/balena-files:"
 
 SRC_URI += " \
 	file://dnsmasq.conf.systemd \
@@ -7,7 +7,7 @@ SRC_URI += " \
 
 inherit update-alternatives
 
-do_install_append () {
+do_install:append () {
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
 		install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
@@ -15,9 +15,9 @@ do_install_append () {
 	fi
 }
 
-ALTERNATIVE_${PN} = "resolv-conf"
+ALTERNATIVE:${PN} = "resolv-conf"
 ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.dnsmasq"
 ALTERNATIVE_LINK_NAME[resolv-conf] = "${sysconfdir}/resolv.conf"
 ALTERNATIVE_PRIORITY[resolv-conf] = "60"
 
-PACKAGECONFIG_append = "dbus"
+PACKAGECONFIG:append = "dbus"
