@@ -1,4 +1,4 @@
-# Balena.io layer for Poky Dunfell supported boards
+# Balena.io layer for Poky Honister supported boards
 
 ## Description
 This repository enables building balena.io for sumo supported machines.
@@ -8,4 +8,4 @@ This repository enables building balena.io for sumo supported machines.
 This layer depends on:
 
 * URI: git://git.yoctoproject.org/poky
-    * branch: dunfell
+    * branch: honister
