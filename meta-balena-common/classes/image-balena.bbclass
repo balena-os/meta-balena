@@ -436,6 +436,7 @@ python do_image_size_check() {
 #   ROOTFS_POSTPROCESS_COMMAND_remove = "zap_empty_root_password"
 # But working on all Yocto versions
 python __anonymous() {
+    import re
     rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND')
-    d.setVar('ROOTFS_POSTPROCESS_COMMAND', rootfs_postprocess_command.replace('zap_empty_root_password ;', ''))
+    d.setVar('ROOTFS_POSTPROCESS_COMMAND', re.sub(r'zap_empty_root_password ?;', '', rootfs_postprocess_command))
 }
