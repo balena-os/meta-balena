@@ -16,7 +16,7 @@ DESCRIPTION = "Initialize system clock at boot"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-RDEPENDS_${PN} += "os-helpers-time"
+RDEPENDS:${PN} += "os-helpers-time"
 
 SRC_URI = " \
     file://timeinit-buildtime.service \
@@ -34,7 +34,7 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
 	timeinit-buildtime.service \
 	fake-hwclock.service \
 	fake-hwclock-update.service \

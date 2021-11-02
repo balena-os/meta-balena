@@ -9,7 +9,7 @@ SRC_URI = " \
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
     periodic-vacuum-logs.service \
     periodic-vacuum-logs.timer \
 "
