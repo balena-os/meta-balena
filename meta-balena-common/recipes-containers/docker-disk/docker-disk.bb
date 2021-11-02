@@ -31,7 +31,7 @@ python () {
 
 PV = "${TARGET_TAG}"
 
-RDEPENDS_${PN} = "balena"
+RDEPENDS:${PN} = "balena"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
@@ -79,7 +79,7 @@ do_compile () {
 	$DOCKER rmi ${_image_name}
 }
 
-FILES_${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
+FILES:${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
 do_install () {
 	install -d ${D}${sysconfdir}
 	mkdir -p ${D}/usr/lib/balena
@@ -89,7 +89,7 @@ do_install () {
 	done
 }
 
-FILES_${PN} += "/etc/hostapp-extensions.conf"
+FILES:${PN} += "/etc/hostapp-extensions.conf"
 
 do_deploy () {
 	install -m 644 ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
