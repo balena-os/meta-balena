@@ -1,7 +1,7 @@
 [Unit]
 Description=Hostapp extensions updater
-Requires=resin-data.service balena.service
-After=resin-data.service balena.service
+Requires=resin-data.service balena-data-reset.service balena.service
+After=resin-data.service balena-data-reset.service balena.service
 
 [Service]
 Type=oneshot

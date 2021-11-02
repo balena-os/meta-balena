@@ -23,6 +23,8 @@ useradd -u "$USER_ID" -g "$USER_GID" -p "" docker-disk-user || true
 mkdir -p $DATA_VOLUME/docker
 mkdir -p $DATA_VOLUME/resin-data
 
+touch $DATA_VOLUME/remove_me_to_reset
+
 # Start docker
 echo "Starting docker daemon with $BALENA_STORAGE storage driver."
 dockerd -H "$DOCKER_HOST" --data-root="$DATA_VOLUME/docker" -s "$BALENA_STORAGE" -b none --experimental &

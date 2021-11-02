@@ -1,0 +1,17 @@
+[Unit]
+Description=balena reset OS data
+DefaultDependencies=no
+Requires=resin-data.service var-volatile.mount
+After=resin-data.service var-volatile.mount
+Before=umount.target
+Conflicts=umount.target
+ConditionPathExists=!@BALENA_DATA_MP@/remove_me_to_reset
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/balena-data-reset
+ExecStartPost=@BASE_BINDIR@/touch @BALENA_DATA_MP@/remove_me_to_reset
+
+[Install]
+WantedBy=multi-user.target
