@@ -13,7 +13,7 @@ BALENA_SUPERVISOR ?= "balena-supervisor"
 include packagegroup-resin.inc
 
 # Additional packages
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     dosfstools \
     mobynit \
     docker-disk \

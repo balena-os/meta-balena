@@ -5,7 +5,7 @@ PR = "r1"
 
 inherit packagegroup
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)} \
     ${BALENA_INIT_PACKAGE} \
     ${BALENA_MOUNTS} \
