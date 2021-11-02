@@ -56,7 +56,7 @@ module.exports = {
 						let ping = await this.context
 							.get()
 							.worker.executeCommandInHostOS(
-								`ping -c 10 -I ${iface} ${URL_TEST}`,
+								`ping -c 10 -i 0.002 -I ${iface} ${URL_TEST}`,
 								this.context.get().link,
 							);
 
