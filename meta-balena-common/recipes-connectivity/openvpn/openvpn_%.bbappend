@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/files"
+FILESEXTRAPATHS:append := ":${THISDIR}/files"
 
 SRC_URI += " \
     file://prepare-openvpn \
@@ -10,14 +10,14 @@ SRC_URI += " \
 
 inherit useradd
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} += "--system -d / -M --shell /bin/nologin openvpn"
+USERADD_PARAM:${PN} += "--system -d / -M --shell /bin/nologin openvpn"
 
-RDEPENDS_${PN} += "balena-config-vars bash"
+RDEPENDS:${PN} += "balena-config-vars bash"
 
-SYSTEMD_SERVICE_${PN} = "openvpn.service prepare-openvpn.service"
+SYSTEMD_SERVICE:${PN} = "openvpn.service prepare-openvpn.service"
 SYSTEMD_AUTO_ENABLE = "enable"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${bindir}
 	install -m 0755 ${WORKDIR}/prepare-openvpn ${D}${bindir}
 

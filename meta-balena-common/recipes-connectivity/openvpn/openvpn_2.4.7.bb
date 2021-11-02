@@ -15,12 +15,12 @@ SRC_URI = "http://swupdate.openvpn.org/community/releases/${BP}.tar.gz \
 SRC_URI[md5sum] = "9d67cabc9b0441062ebd4e12bb7dfedb"
 SRC_URI[sha256sum] = "73dce542ed3d6f0553674f49025dfbdff18348eb8a25e6215135d686b165423c"
 
-SYSTEMD_SERVICE_${PN} += "openvpn@loopback-server.service openvpn@loopback-client.service"
+SYSTEMD_SERVICE:${PN} += "openvpn@loopback-server.service openvpn@loopback-client.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
 INITSCRIPT_PACKAGES = "${PN}"
-INITSCRIPT_NAME_${PN} = "openvpn"
-INITSCRIPT_PARAMS_${PN} = "start 10 2 3 4 5 . stop 70 0 1 6 ."
+INITSCRIPT_NAME:${PN} = "openvpn"
+INITSCRIPT_PARAMS:${PN} = "start 10 2 3 4 5 . stop 70 0 1 6 ."
 
 CFLAGS += "-fno-inline"
 
@@ -31,7 +31,7 @@ EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'pam', '', '--disable-p
 # Explicitly specify IPROUTE to bypass the configure-time check for /sbin/ip on the host.
 EXTRA_OECONF += "IPROUTE=${base_sbindir}/ip"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/${sysconfdir}/init.d
     install -m 755 ${WORKDIR}/openvpn ${D}/${sysconfdir}/init.d
 
@@ -60,12 +60,12 @@ do_install_append() {
 
 PACKAGES =+ " ${PN}-sample "
 
-RRECOMMENDS_${PN} = "kernel-module-tun"
+RRECOMMENDS:${PN} = "kernel-module-tun"
 
-FILES_${PN}-dbg += "${libdir}/openvpn/plugins/.debug"
-FILES_${PN} += "${systemd_unitdir}/system/openvpn@.service \
+FILES:${PN}-dbg += "${libdir}/openvpn/plugins/.debug"
+FILES:${PN} += "${systemd_unitdir}/system/openvpn@.service \
                 ${sysconfdir}/tmpfiles.d \
                "
-FILES_${PN}-sample += "${systemd_unitdir}/system/openvpn@loopback-server.service \
+FILES:${PN}-sample += "${systemd_unitdir}/system/openvpn@loopback-server.service \
                        ${systemd_unitdir}/system/openvpn@loopback-client.service \
                        ${sysconfdir}/openvpn/sample/"
