@@ -10,9 +10,9 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = "resin-filesystem-expand.service"
+SYSTEMD_SERVICE:${PN} = "resin-filesystem-expand.service"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     coreutils \
     e2fsprogs-resize2fs \
     e2fsprogs-e2fsck \

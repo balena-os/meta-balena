@@ -13,7 +13,7 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     bash \
     curl \
     jq \
@@ -21,7 +21,7 @@ RDEPENDS_${PN} = " \
     balena-unique-key \
     "
 
-SYSTEMD_SERVICE_${PN} = "resin-device-register.service"
+SYSTEMD_SERVICE:${PN} = "resin-device-register.service"
 
 do_install() {
     install -d ${D}${bindir}
