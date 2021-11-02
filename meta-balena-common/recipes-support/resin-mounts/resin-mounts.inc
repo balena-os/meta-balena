@@ -7,9 +7,9 @@ S = "${WORKDIR}"
 
 inherit systemd allarch
 
-SYSTEMD_SERVICE_${PN} += "${@bindmounts_systemd_services(d)}"
+SYSTEMD_SERVICE:${PN} += "${@bindmounts_systemd_services(d)}"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
 	${sysconfdir} \
 	${systemd_unitdir} \
 	/home/root/.ssh \
@@ -32,7 +32,7 @@ BINDMOUNTS += " \
 
 PACKAGES = "${PN}"
 
-RDEPENDS_${PN} += "util-linux bindmount"
+RDEPENDS:${PN} += "util-linux bindmount"
 
 def bindmounts_systemd_services(d):
     services = []

@@ -9,14 +9,14 @@ SRC_URI += " \
 	file://temp-conf.service \
 	"
 
-SYSTEMD_SERVICE_${PN} += " \
+SYSTEMD_SERVICE:${PN} += " \
 	mnt-boot.mount \
 	mnt-boottmp.mount \
 	resin-boot.service \
 	temp-conf.service \
 	"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
 	/mnt/boot \
 	/mnt/boottmp \
 	"
@@ -27,13 +27,13 @@ BINDMOUNTS += " \
 	/home/root/.rnd \
 	"
 
-do_install_prepend () {
+do_install:prepend () {
 	# These are mountpoints for various mount services/units
 	install -d ${D}/mnt/boot
 	install -d ${D}/mnt/boottmp
 
 	install -d ${D}${sysconfdir}/systemd/system/
-	for service in ${SYSTEMD_SERVICE_resin-mounts-flasher}; do
+	for service in ${SYSTEMD_SERVICE:resin-mounts-flasher}; do
 		# Use sysconfdir so it won't conflict with resin-mounts units
 		# This was fixed in later yocto versions were sysroot is per recipe
 		install -m 0644 $service ${D}${sysconfdir}/systemd/system/

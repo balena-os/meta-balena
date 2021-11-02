@@ -2,7 +2,7 @@ SUMMARY = "Resin systemd mount services"
 
 include resin-mounts.inc
 
-RDEPENDS_${PN} += "os-helpers-fs"
+RDEPENDS:${PN} += "os-helpers-fs"
 
 SRC_URI += " \
 	file://resin-boot.service \
@@ -15,7 +15,7 @@ SRC_URI += " \
 	file://etc-fake-hwclock.mount \
 	"
 
-SYSTEMD_SERVICE_${PN} += " \
+SYSTEMD_SERVICE:${PN} += " \
 	resin-boot.service \
 	resin-data.service \
 	resin-state.service \
@@ -24,7 +24,7 @@ SYSTEMD_SERVICE_${PN} += " \
 	mnt-sysroot-inactive.mount \
 	"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
 	/mnt/boot \
 	/mnt/data \
 	/mnt/state \
@@ -41,7 +41,7 @@ BINDMOUNTS += " \
 	/var/lib/chrony \
 	"
 
-do_install_prepend () {
+do_install:prepend () {
 	# These are mountpoints for various mount services/units
 	install -d ${D}/etc/docker
 	ln -sf docker ${D}/etc/balena
@@ -56,7 +56,7 @@ do_install_prepend () {
 	install -m 755 ${WORKDIR}/resin-partition-mounter ${D}${bindir}
 
 	install -d ${D}${systemd_unitdir}/system
-	for service in ${SYSTEMD_SERVICE_resin-mounts}; do
+	for service in ${SYSTEMD_SERVICE:resin-mounts}; do
 		install -m 0644 $service ${D}${systemd_unitdir}/system/
 	done
 	install -m 0644 ${WORKDIR}/etc-fake-hwclock.mount ${D}${systemd_unitdir}/system/etc-fake\\x2dhwclock.mount
