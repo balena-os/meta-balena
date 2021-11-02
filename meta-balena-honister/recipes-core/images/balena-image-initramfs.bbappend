@@ -1,1 +1,1 @@
-PACKAGE_INSTALL_append = " initramfs-module-console-null-workaround"
+PACKAGE_INSTALL:append = " initramfs-module-console-null-workaround"

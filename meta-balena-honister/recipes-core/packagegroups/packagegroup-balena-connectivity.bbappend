@@ -1,4 +1,4 @@
-CONNECTIVITY_FIRMWARES_append = " \
+CONNECTIVITY_FIRMWARES:append = " \
     linux-firmware-bcm43143 \
     linux-firmware-iwlwifi-135-6 \
     linux-firmware-iwlwifi-3160-7 \
