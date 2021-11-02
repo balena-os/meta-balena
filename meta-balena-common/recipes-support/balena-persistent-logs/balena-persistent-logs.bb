@@ -10,7 +10,7 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = "balena-persistent-logs.service"
+SYSTEMD_SERVICE:${PN} = "balena-persistent-logs.service"
 
 do_install() {
     install -d ${D}${bindir}
