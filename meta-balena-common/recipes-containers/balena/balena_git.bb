@@ -34,22 +34,22 @@ SECURITY_CFLAGS = "${SECURITY_NOPIE_CFLAGS}"
 SECURITY_LDFLAGS = ""
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "balena.service balena-host.socket var-lib-docker.mount"
+SYSTEMD_SERVICE:${PN} = "balena.service balena-host.socket var-lib-docker.mount"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "-r balena-engine"
+GROUPADD_PARAM:${PN} = "-r balena-engine"
 
-DEPENDS_append_class-target = " systemd"
-RDEPENDS_${PN}_class-target = "curl util-linux iptables tini systemd healthdog bash procps-ps"
-RRECOMMENDS_${PN} += "kernel-module-nf-nat"
+DEPENDS:append:class-target = " systemd"
+RDEPENDS:${PN}:class-target = "curl util-linux iptables tini systemd healthdog bash procps-ps"
+RRECOMMENDS:${PN} += "kernel-module-nf-nat"
 
 # oe-meta-go recipes try to build go-cross-native
-DEPENDS_remove_class-native = "go-cross-native"
-DEPENDS_append_class-native = " go-native"
+DEPENDS:remove:class-native = "go-cross-native"
+DEPENDS:append:class-native = " go-native"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
 	/lib/systemd/system/* \
 	/home/root \
 	${localstatedir} \
