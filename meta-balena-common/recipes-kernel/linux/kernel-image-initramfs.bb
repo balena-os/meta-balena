@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 PACKAGES = "${PN}"
-FILES_${PN} = "/boot"
+FILES:${PN} = "/boot"
 
 do_install() {
     mkdir -p ${D}/boot
