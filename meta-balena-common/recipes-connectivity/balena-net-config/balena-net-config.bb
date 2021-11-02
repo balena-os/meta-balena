@@ -15,8 +15,8 @@ inherit allarch systemd
 
 PACKAGES = "${PN} ${PN}-flasher"
 
-SYSTEMD_SERVICE_${PN} = "balena-net-config.service"
-RDEPENDS_${PN} = "bash jq iw"
+SYSTEMD_SERVICE:${PN} = "balena-net-config.service"
+RDEPENDS:${PN} = "bash jq iw"
 
 do_install() {
     install -d ${D}${bindir}
