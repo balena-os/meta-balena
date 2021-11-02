@@ -384,12 +384,18 @@ IMAGE_PREPROCESS_COMMAND += "remove_backup_files ; "
 # tune2fs -l ${image} | grep ${attribute} | cut -d ":" -f2 | tr -d [:blank:]
 # or
 # dumpe2fs ${image} | grep ${attribute} | cut -d ":" -f2 | tr -d [:blank:]
-def image_dump(image, attribute):
+#
+# NOTE: dumpe2fs 1.46.4 in Poky Honister uses "Total journal blocks" instead of "Journal length"
+# See: https://github.com/tytso/e2fsprogs/commit/3cc4f8674
+#
+# NOTE: DISTRO_CODENAME is named 'master' in Honister branch
+JOURNAL_LEN_ATTR = "${@ 'Total journal blocks' if 'master' in d.getVar('DISTRO_CODENAME') else 'Journal length'}"
+def image_dump(image, attribute, tool="tune2fs"):
      import subprocess
-     if attribute == "Journal length":
-        cmd1 = subprocess.Popen(["dumpe2fs", image], stdout=subprocess.PIPE)
+     if tool == "dumpe2fs":
+        cmd1 = subprocess.Popen([tool, image], stdout=subprocess.PIPE)
      else:
-        cmd1 = subprocess.Popen(["tune2fs", "-l", image], stdout=subprocess.PIPE)
+        cmd1 = subprocess.Popen([tool, "-l", image], stdout=subprocess.PIPE)
      cmd2 = subprocess.Popen(["grep", attribute], stdin=cmd1.stdout, stdout=subprocess.PIPE)
      cmd1.stdout.close()
      cmd3 = subprocess.Popen(["cut", "-d", ":",  "-f2"], stdin=cmd2.stdout, stdout=subprocess.PIPE)
@@ -401,14 +407,14 @@ def image_dump(image, attribute):
 
 # Calculate the available space in KiB on the provided ext4 image file
 # Input sizes are in bytes
-def available_space(img):
+def available_space(img, d):
      inode_size = image_dump(img, "Inode size")
      inode_count = image_dump(img, "Inode count")
      free_blk_count = image_dump(img, "Free blocks")
      blk_size = image_dump(img, "Block size")
      reserved_blks = image_dump(img, "Reserved block count")
      reserved_gdt_blks = image_dump(img, "Reserved GDT blocks")
-     journal_blks = image_dump(img, "Journal length")
+     journal_blks = image_dump(img, d.getVar("JOURNAL_LEN_ATTR"), "dumpe2fs")
      bb.debug(1, 'free_blk_cnt %d blk_sz %d inode_count %d inode_size %d reserved_blks %d reserved_gdt_blks %d journal_blks %d' % (free_blk_count,blk_size,inode_count,inode_size,reserved_blks,reserved_gdt_blks,journal_blks) )
      available_space = free_blk_count - reserved_blks - reserved_gdt_blks - journal_blks - (inode_count * inode_size / blk_size)
      return int(available_space * blk_size / 1024)
@@ -420,7 +426,7 @@ python do_image_size_check() {
     rfs_alignment = d.getVar("IMAGE_ROOTFS_ALIGNMENT")
     rfs_size = int(get_rootfs_size(d))
     image_size_aligned = int(disk_aligned(d, os.stat(imgfile).st_size / 1024))
-    available = int(disk_aligned(d, available_space(ext4file)))
+    available = int(disk_aligned(d, available_space(ext4file, d)))
     if image_size_aligned > available:
         bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
     bb.debug(1, 'requested %d, available %d' % (image_size_aligned, available) )
