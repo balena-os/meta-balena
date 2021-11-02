@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'kernel-balena: Enable Real-Time group scheduling'
+      hash: df984f1d063731d43e016190b7b03833138504d1
+      body: |
+        In order to use the real-time group scheduling feature offered by
+        the engine we need to have this feature enabled in the kernel.
+
+        https://www.kernel.org/doc/html/v5.3/scheduler/sched-rt-group.html
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.86.1
+  date: 2021-11-02T15:20:08.702Z
+- commits:
     - subject: Create new data partition reset service
       hash: 60f7dd78b93c3a079aac346d5f587198e541a1a8
       body: |

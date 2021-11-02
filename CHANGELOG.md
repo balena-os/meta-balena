@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.86.1
+## (2021-11-02)
+
+* kernel-balena: Enable Real-Time group scheduling [Kyle Harding]
+
 # v2.86.0
 ## (2021-10-29)
 
