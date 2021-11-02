@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 
 inherit go
 
-RDEPENDS_${PN} = "util-linux"
+RDEPENDS:${PN} = "util-linux"
 
 GO_IMPORT = "github.com/balena-os/mobynit"
 SRC_URI = "git://${GO_IMPORT};nobranch=1"
@@ -27,9 +27,9 @@ do_install() {
         install -m 0755 ${S}/mobynit ${D}/boot/init
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     /boot/init \
 "
 
 INHIBIT_PACKAGE_STRIP = "1"
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"
