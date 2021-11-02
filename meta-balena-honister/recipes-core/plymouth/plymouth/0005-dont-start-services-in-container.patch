@@ -1,6 +1,6 @@
-From 083920b49245b7c091a97023320222b3a40f0df7 Mon Sep 17 00:00:00 2001
+From 07a18a4c0032b202015b7dc23dc1b40adb8419db Mon Sep 17 00:00:00 2001
 From: Andrei Gherzan <andrei@resin.io>
-Date: Mon, 20 May 2019 10:37:41 +0000
+Date: Wed, 27 Oct 2021 17:40:15 +0200
 Subject: [PATCH 5/5] dont-start-services-in-container
 
 When resinOS is ran as privileged container, avoid messing with tty1 as it will
@@ -9,15 +9,14 @@ interfere with the host.
 Upstream-status: Innappropiate [Configuration]
 Signed-off-by: Andrei Gherzan <andrei@resin.io>
 ---
- systemd-units/plymouth-quit-wait.service.in         | 1 +
- systemd-units/plymouth-quit.service.in              | 1 +
- systemd-units/plymouth-read-write.service.in        | 1 +
- systemd-units/plymouth-switch-root.service.in       | 1 +
- systemd-units/systemd-ask-password-plymouth.path.in | 1 +
- 5 files changed, 5 insertions(+)
+ systemd-units/plymouth-quit-wait.service.in   | 1 +
+ systemd-units/plymouth-quit.service.in        | 1 +
+ systemd-units/plymouth-read-write.service.in  | 1 +
+ systemd-units/plymouth-switch-root.service.in | 1 +
+ 4 files changed, 4 insertions(+)
 
 diff --git a/systemd-units/plymouth-quit-wait.service.in b/systemd-units/plymouth-quit-wait.service.in
-index fbb235c..a98c706 100644
+index 94f66cc..e093be2 100644
 --- a/systemd-units/plymouth-quit-wait.service.in
 +++ b/systemd-units/plymouth-quit-wait.service.in
 @@ -1,6 +1,7 @@
@@ -29,7 +28,7 @@ index fbb235c..a98c706 100644
  [Service]
  ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth --wait
 diff --git a/systemd-units/plymouth-quit.service.in b/systemd-units/plymouth-quit.service.in
-index cf9901e..6b72c58 100644
+index ed9f9b9..def0819 100644
 --- a/systemd-units/plymouth-quit.service.in
 +++ b/systemd-units/plymouth-quit.service.in
 @@ -1,6 +1,7 @@
@@ -41,7 +40,7 @@ index cf9901e..6b72c58 100644
  [Service]
  ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
 diff --git a/systemd-units/plymouth-read-write.service.in b/systemd-units/plymouth-read-write.service.in
-index 55b975e..2539b0b 100644
+index 9a6b9c2..45393ef 100644
 --- a/systemd-units/plymouth-read-write.service.in
 +++ b/systemd-units/plymouth-read-write.service.in
 @@ -4,6 +4,7 @@ DefaultDependencies=no
@@ -53,7 +52,7 @@ index 55b975e..2539b0b 100644
  [Service]
  ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth update-root-fs --read-write
 diff --git a/systemd-units/plymouth-switch-root.service.in b/systemd-units/plymouth-switch-root.service.in
-index 8986655..f8bbb92 100644
+index 20b7f7b..50a9148 100644
 --- a/systemd-units/plymouth-switch-root.service.in
 +++ b/systemd-units/plymouth-switch-root.service.in
 @@ -3,6 +3,7 @@ Description=Plymouth switch root service
@@ -64,18 +63,6 @@ index 8986655..f8bbb92 100644
  
  [Service]
  Type=oneshot
-diff --git a/systemd-units/systemd-ask-password-plymouth.path.in b/systemd-units/systemd-ask-password-plymouth.path.in
-index c2ee420..826a6b3 100644
---- a/systemd-units/systemd-ask-password-plymouth.path.in
-+++ b/systemd-units/systemd-ask-password-plymouth.path.in
-@@ -7,6 +7,7 @@ After=plymouth-start.service
- Before=basic.target shutdown.target
- ConditionKernelCommandLine=!plymouth.enable=0
- ConditionPathExists=/run/plymouth/pid
-+ConditionVirtualization=!container
- 
- [Path]
- DirectoryNotEmpty=/run/systemd/ask-password
 -- 
-2.7.4
+2.17.1
 
