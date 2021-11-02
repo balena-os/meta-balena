@@ -1,15 +1,15 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     file://chrony.conf \
     file://chronyd.conf.systemd \
     file://chrony-helper \
     "
-FILES_${PN} += "${libexecdir}/chrony-helper"
+FILES:${PN} += "${libexecdir}/chrony-helper"
 
-RDEPENDS_${PN} = "bash"
+RDEPENDS:${PN} = "bash"
 
-do_install_append() {
+do_install:append() {
     install -m 0644 ${WORKDIR}/chrony.conf ${D}/${sysconfdir}/chrony.conf
 
     # Install systemd drop-in for chronyd.service
