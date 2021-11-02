@@ -13,9 +13,9 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = "resin-init-flasher.service"
+SYSTEMD_SERVICE:${PN} = "resin-init-flasher.service"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     bash \
     coreutils \
     util-linux \

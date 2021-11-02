@@ -8,7 +8,7 @@ S = "${WORKDIR}"
 
 inherit allarch
 
-RDEPENDS_${PN} = "bash"
+RDEPENDS:${PN} = "bash"
 
 do_install() {
     install -d ${D}${bindir}
