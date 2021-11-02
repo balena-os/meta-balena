@@ -10,14 +10,14 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-FILES_${PN} = "${bindir}"
+FILES:${PN} = "${bindir}"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     balena \
     balena-config-vars \
     "
 
-SYSTEMD_SERVICE_${PN} = "update-hostapp-extensions.service"
+SYSTEMD_SERVICE:${PN} = "update-hostapp-extensions.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
 do_install() {

@@ -11,9 +11,9 @@ inherit allarch
 
 BBCLASSEXTEND = "native"
 
-FILES_${PN} = "${bindir}"
+FILES:${PN} = "${bindir}"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     balena \
     "
 
