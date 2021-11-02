@@ -32,7 +32,7 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
 	rollback-altboot.service \
 	rollback-health.service \
 	rollback-clear-bootcount.service \

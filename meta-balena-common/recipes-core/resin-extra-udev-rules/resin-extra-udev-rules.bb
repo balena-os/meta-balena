@@ -10,7 +10,7 @@ SRC_URI = " \
 	file://99-misc.rules \
 	"
 
-do_install_append() {
+do_install:append() {
 	# Rules to prevent ModemManager attempting to use Teensy boards as a modem
 	install -D -m 0644 ${WORKDIR}/49-teensy.rules ${D}/lib/udev/rules.d/49-teensy.rules
 

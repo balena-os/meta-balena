@@ -10,13 +10,13 @@ SRC_URI += " \
 	file://0001-Adjust-CONFIG_JSON_FLASHER_PATH-based-on-OS-changes.patch \
 	"
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
 	os-config.service \
 	os-config.timer \
 	os-config-devicekey.service \
 	"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${sysconfdir}
 	install -m 0644 ${WORKDIR}/os-config.json ${D}${sysconfdir}
 

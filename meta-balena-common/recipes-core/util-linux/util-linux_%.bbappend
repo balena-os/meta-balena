@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/files"
+FILESEXTRAPATHS:append := ":${THISDIR}/files"
 
 python() {
     from distutils.version import StrictVersion
@@ -10,7 +10,7 @@ python() {
         d.setVar('SRC_URI', srcURI + ' ' + 'file://0001-libblkid-don-t-check-for-size-on-UBI-char-dev.patch')
 
     if StrictVersion(packageVersion) < StrictVersion('2.29.1'):
-        d.setVar('FILES_util-linux-lsblk', '${bindir}/lsblk')
+        d.setVar('FILES:util-linux-lsblk', '${bindir}/lsblk')
 
         # we only add to PACKAGES when it contains actual values
         # this is done because when building the resin image target, bitbake would typically run this code here multiple times and one
