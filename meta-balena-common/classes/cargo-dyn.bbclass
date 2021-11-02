@@ -52,7 +52,7 @@ def link_args(d, bin):
 
 # Link dynamically
 RUSTFLAGS += "-C prefer-dynamic -C link-args=${@link_args(d, True)}"
-RDEPENDS_${PN} += "libstd-rs"
+RDEPENDS:${PN} += "libstd-rs"
 
 do_rust_bin_fixups() {
     for f in `find ${PKGD} -name '*.so*'`; do

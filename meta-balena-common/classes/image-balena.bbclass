@@ -114,7 +114,7 @@ remove_backup_files () {
 }
 
 # We generate the host keys in the state partition
-read_only_rootfs_hook_append () {
+read_only_rootfs_hook:append () {
     # Yocto sets this to a volatile mount but we want the host keys persistent
     # in the state partition
     sed -i -e \
@@ -433,7 +433,7 @@ python do_image_size_check() {
 }
 
 # Equivalent to:
-#   ROOTFS_POSTPROCESS_COMMAND_remove = "zap_empty_root_password"
+#   ROOTFS_POSTPROCESS_COMMAND:remove = "zap_empty_root_password"
 # But working on all Yocto versions
 python __anonymous() {
     import re
