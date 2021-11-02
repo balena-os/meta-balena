@@ -11,7 +11,7 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
     development-features.service \
     development-features.target \
     "

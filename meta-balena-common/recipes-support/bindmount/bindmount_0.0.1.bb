@@ -11,7 +11,7 @@ SRC_URI += "git://git@github.com/balena-os/bindmount.git;protocol=ssh"
 SRCREV = "f597fb026636f0f1be1fbfe2f5a8c2edee3c4493"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR=""
-PV_append = ".AUTOINC+f597fb0266"
+PV:append = ".AUTOINC+f597fb0266"
 
 # please note if you have entries that do not begin with crate://
 # you must change them to how that package can be fetched
