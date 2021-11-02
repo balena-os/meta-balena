@@ -1,4 +1,19 @@
 - commits:
+    - subject: Create new data partition reset service
+      hash: 60f7dd78b93c3a079aac346d5f587198e541a1a8
+      body: |
+        Similar to state-reset, the data partition will be mostly
+        purged if the remove_me_to_reset file is removed.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.86.0
+  date: 2021-10-29T12:26:28.613Z
+- commits:
     - subject: restrict dtoverlay test to rpi devices
       hash: 98d8f80b6e2c49fabecad70f539a3e247ac20895
       body: ''
