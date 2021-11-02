@@ -20,21 +20,21 @@ SRC_URI += " \
 	file://migrate-supervisor-state.service \
 	"
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
 	balena-supervisor.service \
 	update-balena-supervisor.service \
 	update-balena-supervisor.timer \
 	migrate-supervisor-state.service \
 	"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
 	/resin-data \
 	${systemd_unitdir} \
 	${sysconfdir} \
 	/usr/lib/balena-supervisor \
 	"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
 	balena \
 	bash \
 	coreutils \
