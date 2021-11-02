@@ -28,16 +28,16 @@ python () {
 MAINTAINER = "Balena <hello@balena.io>"
 
 # Strip down unneeded features
-POKY_DEFAULT_DISTRO_FEATURES_remove = "ptest"
-POKY_DEFAULT_DISTRO_FEATURES_remove = "wayland"
-DISTRO_FEATURES_DEFAULT_remove = "x11"
+POKY_DEFAULT_DISTRO_FEATURES:remove = "ptest"
+POKY_DEFAULT_DISTRO_FEATURES:remove = "wayland"
+DISTRO_FEATURES_DEFAULT:remove = "x11"
 
 # OS development image
 OS_DEVELOPMENT ?= "0"
-DISTRO_FEATURES_append = " ${@bb.utils.contains('OS_DEVELOPMENT','1','osdev-image','',d)}"
+DISTRO_FEATURES:append = " ${@bb.utils.contains('OS_DEVELOPMENT','1','osdev-image','',d)}"
 
 # Disable user namespacing with a sysctl by default, but allow DTs to leave it enabled
-DISTRO_FEATURES_append = " disable-user-ns"
+DISTRO_FEATURES:append = " disable-user-ns"
 
 # Providers
 PREFERRED_PROVIDER_docker ?= "docker"
@@ -83,15 +83,15 @@ BALENA_FINGERPRINT_EXT ?= "fingerprint"
 BALENA_FINGERPRINT_FILENAME ?= "balenaos"
 
 # Hostname is generated at runtime based on config.json
-hostname_pn-base-files = ""
+hostname:pn-base-files = ""
 
 BAD_RECOMMENDATIONS += "shared-mime-info"
 
 # ARM data -> instruction cache consistency bug in latest UPX
 # Downgrade to avoid this bug
 # https://github.com/upx/upx/issues/225
-PREFERRED_VERSION_upx_arm = "3.94"
-PREFERRED_VERSION_upx-native_arm = "3.94"
+PREFERRED_VERSION_upx:arm = "3.94"
+PREFERRED_VERSION_upx-native:arm = "3.94"
 
 # let's pin linux-firmware to the version we imported from Poky hardknott release
 PREFERRED_VERSION_linux-firmware = "20210511"
