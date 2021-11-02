@@ -1,15 +1,15 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/files"
+FILESEXTRAPATHS:append := ":${THISDIR}/files"
 
-SRC_URI_append = " file://avahi-daemon.conf"
+SRC_URI:append = " file://avahi-daemon.conf"
 
-FILES_avahi-daemon += " \
+FILES:avahi-daemon += " \
     ${sysconfdir}/systemd/system/avahi-daemon.service.d/avahi-daemon.conf \
     ${datadir}/dbus-1/interfaces \
 "
 
-RDEPENDS_avahi-daemon += "balena-hostname"
+RDEPENDS:avahi-daemon += "balena-hostname"
 
-do_install_append() {
+do_install:append() {
     # remove example services as we don't want to advertise example services
     [ -f ${D}/${sysconfdir}/avahi/services/ssh.service ] && rm ${D}/${sysconfdir}/avahi/services/ssh.service
     [ -f ${D}/${sysconfdir}/avahi/services/sftp-ssh.service ] && rm ${D}/${sysconfdir}/avahi/services/sftp-ssh.service
