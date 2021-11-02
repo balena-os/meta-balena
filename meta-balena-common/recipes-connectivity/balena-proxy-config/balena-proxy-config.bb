@@ -14,11 +14,11 @@ inherit allarch systemd useradd
 
 PACKAGES = "${PN}"
 
-SYSTEMD_SERVICE_${PN} = "balena-proxy-config.service redsocks.service"
-RDEPENDS_${PN} = "redsocks iptables"
+SYSTEMD_SERVICE:${PN} = "balena-proxy-config.service redsocks.service"
+RDEPENDS:${PN} = "redsocks iptables"
 
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM_${PN} += "--system redsocks"
+USERADD_PARAM:${PN} += "--system redsocks"
 
 do_install() {
     install -d ${D}${bindir}
