@@ -23,7 +23,7 @@ inherit core-image image-balena features_check
 
 SPLASH += "plymouth-balena-theme"
 
-IMAGE_FEATURES_append = " \
+IMAGE_FEATURES:append = " \
     splash \
     ssh-server-openssh \
     read-only-rootfs \
@@ -56,26 +56,26 @@ generate_hostos_version () {
 
 DEPENDS += "jq-native"
 
-IMAGE_PREPROCESS_COMMAND_append = " generate_rootfs_fingerprints ; "
+IMAGE_PREPROCESS_COMMAND:append = " generate_rootfs_fingerprints ; "
 IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
 
-BALENA_BOOT_PARTITION_FILES_append = " \
+BALENA_BOOT_PARTITION_FILES:append = " \
     balena-logo.png:/splash/balena-logo.png \
     os-release:/os-release \
 "
 
 # add the generated <machine-name>.json to the resin-boot partition, renamed as device-type.json
-BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
+BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
 # example NetworkManager config file
-BALENA_BOOT_PARTITION_FILES_append = " \
+BALENA_BOOT_PARTITION_FILES:append = " \
     system-connections/balena-sample.ignore:/system-connections/balena-sample.ignore \
     system-connections/README.ignore:/system-connections/README.ignore \
 "
 
-BALENA_BOOT_PARTITION_FILES_append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') else ''}"
+BALENA_BOOT_PARTITION_FILES:append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') else ''}"
 
 # Resin image flag file
-BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE_FLAG_FILE}"
+BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE_FLAG_FILE}"
 
 addtask image_size_check after do_image_balenaos_img before do_image_complete
