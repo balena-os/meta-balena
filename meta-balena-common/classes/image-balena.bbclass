@@ -387,9 +387,7 @@ IMAGE_PREPROCESS_COMMAND += "remove_backup_files ; "
 #
 # NOTE: dumpe2fs 1.46.4 in Poky Honister uses "Total journal blocks" instead of "Journal length"
 # See: https://github.com/tytso/e2fsprogs/commit/3cc4f8674
-#
-# NOTE: DISTRO_CODENAME is named 'master' in Honister branch
-JOURNAL_LEN_ATTR = "${@ 'Total journal blocks' if 'master' in d.getVar('DISTRO_CODENAME') else 'Journal length'}"
+JOURNAL_LEN_ATTR = "${@ 'Total journal blocks' if 'honister' in d.getVar('DISTRO_CODENAME') else 'Journal length'}"
 def image_dump(image, attribute, tool="tune2fs"):
      import subprocess
      if tool == "dumpe2fs":
