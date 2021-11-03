@@ -1,7 +1,7 @@
 # Balena.io layer for Poky Honister supported boards
 
 ## Description
-This repository enables building balena.io for sumo supported machines.
+This repository enables building balena.io for honister supported machines.
 
 ## Layer dependencies
 
