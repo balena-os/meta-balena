@@ -11,3 +11,9 @@ do_install_append () {
 	# deploy any kernel modules (ex.: resinOS in container)
 	install -d -m 755 ${D}/lib/modules
 }
+
+do_install_basefilesissue_append () {
+	distro_version_nodate="${@d.getVar('DISTRO_VERSION').replace('snapshot-${DATE}','snapshot').replace('${DATE}','')}"
+	sed -i "s/${distro_version_nodate}/${HOSTOS_VERSION}/g" ${D}${sysconfdir}/issue
+	sed -i "s/${distro_version_nodate}/${HOSTOS_VERSION}/g" ${D}${sysconfdir}/issue.net
+}

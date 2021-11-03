@@ -118,6 +118,7 @@ module.exports = {
 	tests: [
 		'./tests/fingerprint',
 		'./tests/os-release',
+		'./tests/issue',
 		'./tests/chrony',
 		'./tests/kernel-overlap',
 		'./tests/bluetooth',
