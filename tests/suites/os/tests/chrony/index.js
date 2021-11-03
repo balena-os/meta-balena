@@ -4,7 +4,17 @@ module.exports = {
 		{
 			title: 'Chronyd service',
 			run: async function(test) {
+				test.comment(`checking for chronyd service...`);
 				let result = '';
+				await this.context.get().utils.waitUntil(async () => {
+					result = await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`systemctl is-active chronyd.service`,
+							this.context.get().link,
+						);
+					return result === 'active';
+				}, false);
 				result = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
