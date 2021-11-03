@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.86.1
+## (2021-11-02)
+
+* tests/issue: Add test to check issues files [Alex Gonzalez]
+* base files: Use HOSTOS_VERSION in issue and issue.net [Alex Gonzalez]
+
 # v2.86.0
 ## (2021-10-29)
 

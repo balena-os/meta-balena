@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'tests/issue: Add test to check issues files'
+      hash: 472bf8a99a111e061e416557e9ab0f538041ae01
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'base files: Use HOSTOS_VERSION in issue and issue.net'
+      hash: fb9fd5c0a848c93b020a81521fa6e0cc0f3dd0bb
+      body: |
+        This allows to display ESR releases on the welcome login.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.86.1
+  date: 2021-11-02T12:36:12.690Z
+- commits:
     - subject: Create new data partition reset service
       hash: 60f7dd78b93c3a079aac346d5f587198e541a1a8
       body: |
