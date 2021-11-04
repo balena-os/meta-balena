@@ -62,6 +62,8 @@ module.exports = {
 									.utils.createSSHKey(this.context.get().sshKeyPath),
 							],
 						},
+						// Set an API endpoint for the HTTPS time sync service.
+						apiEndpoint: 'https://api.balena-cloud.com',
 						// persistentLogging is managed by the supervisor and only read at first boot
 						persistentLogging: true,
 						// Set local mode so we can perform local pushes of containers to the DUT
