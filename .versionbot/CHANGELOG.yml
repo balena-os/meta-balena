@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'tests: wait for the chronyd service become active'
+      hash: c49648a0f27f1a57376803ba9c85ec9ba729ebe9
+      body: |
+        Add a test to wait for the chronyd service to become active before
+        starting the time sync tests.
+
+        The current chronyd tests assume that the chronyd service is
+        instantly available at boot time. With the addition of the new
+        HTTPS time synchronisation service the starting of chronyd can be
+        delayed by a few seconds so we need to ensure that the service
+        is actually running before proceeding.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'tests: wait for the chronyd service become active'
+        changelog-entry: 'tests: wait for the chronyd service become active'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.86.2
+  date: 2021-11-04T10:45:55.313Z
+- commits:
     - subject: 'tests/issue: Add test to check issues files'
       hash: 472bf8a99a111e061e416557e9ab0f538041ae01
       body: ''

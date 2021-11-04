@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.86.2
+## (2021-11-04)
+
+* tests: wait for the chronyd service become active [Mark Corbin]
+
 # v2.86.1
 ## (2021-11-02)
 
