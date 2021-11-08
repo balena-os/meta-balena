@@ -7,10 +7,10 @@ This patch activates the experimental flag when running bluetoothd.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Andrei Gherzan <andrei@resin.io>
 
-Index: bluez-5.58/src/bluetooth.service.in
+Index: bluez-5.61/src/bluetooth.service.in
 ===================================================================
---- bluez-5.58.orig/src/bluetooth.service.in
-+++ bluez-5.58/src/bluetooth.service.in
+--- bluez-5.61.orig/src/bluetooth.service.in
++++ bluez-5.61/src/bluetooth.service.in
 @@ -6,7 +6,7 @@ ConditionPathIsDirectory=/sys/class/blue
  [Service]
  Type=dbus
