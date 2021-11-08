@@ -19,6 +19,7 @@ const pipeline = require('bluebird').promisify(stream.pipeline);
 
 // required to use skopeo for loading the image
 const exec = require('bluebird').promisify(require('child_process').exec);
+const {Worker, BalenaOS, Cloud, Utils} = require('@balena/leviathan-test-helpers')
 
 // Starts registry, uploads target image to registry
 const runRegistry = async (that, test, seedWithImage) => {
@@ -134,15 +135,14 @@ module.exports = {
 	title: 'Hostapp update suite',
 
 	run: async function() {
-		const Worker = this.require('common/worker');
-		const BalenaOS = this.require('components/os/balenaos');
-		const Balena = this.require('components/balena/sdk');
+		// const BalenaOS = this.require('components/os/balenaos');
+		// const Balena = this.require('components/balena/sdk');
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
 		this.suite.context.set({
-			utils: this.require('common/utils'),
-			sdk: new Balena(this.suite.options.balena.apiUrl, this.getLogger()),
+			utils: new Utils(),
+			sdk: new Cloud(this.suite.options.balena.apiUrl, this.getLogger()),
 			sshKeyPath: join(homedir(), 'id'),
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
 			worker: new Worker(this.suite.deviceType.slug, this.getLogger()),
@@ -198,6 +198,7 @@ module.exports = {
 		}
 
 		this.suite.context.set({
+			// The inital image we just downloaded to flash the device 
 			os: new BalenaOS(
 				{
 					deviceType: this.suite.deviceType.slug,
@@ -221,6 +222,7 @@ module.exports = {
 				},
 				this.getLogger(),
 			),
+			// The image from Jenkins build we are testing HUP to
 			hupOs: new BalenaOS({}, this.getLogger()),
 		});
 		this.suite.teardown.register(() => {

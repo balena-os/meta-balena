@@ -10,6 +10,8 @@ const assert = require('assert');
 const fse = require('fs-extra');
 const { join } = require('path');
 const { homedir } = require('os');
+const config = require('config')
+const { Worker, Utils, BalenaOS } = require('@balena/leviathan-test-helpers') 
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
@@ -19,16 +21,21 @@ const pipeline = require('bluebird').promisify(stream.pipeline);
 module.exports = {
 	title: 'Unmanaged BalenaOS release suite',
 	run: async function(test) {
+        console.log("Suite OS -----------------------------")
+        console.log(JSON.stringify(config))
+        console.log(config.get('leviathan.artifacts'))
+        console.log(config.get('leviathan.uploads').image)
+        // console.log(config.get('leviathan.uploads'))
 		// The worker class contains methods to interact with the DUT, such as flashing, or executing a command on the device
-		const Worker = this.require('common/worker');
+		// const Worker = this.require('common/worker');
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
-		const BalenaOS = this.require('components/os/balenaos');
+		// const BalenaOS = this.require('components/os/balenaos');
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
 		// The suite contex is an object that is shared across all tests. Setting something into the context makes it accessible by every test
 		this.suite.context.set({
-			utils: this.require('common/utils'),
+			utils: new Utils(),
 			sshKeyPath: join(homedir(), 'id'),
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
 			worker: new Worker(this.suite.deviceType.slug, this.getLogger()),
@@ -74,6 +81,8 @@ module.exports = {
 						// Set local mode so we can perform local pushes of containers to the DUT
 						localMode: true,
 						developmentMode: true,
+                        asljdnaskjnda: true,
+                        alsjfakj: "bro this is weird"
 					},
 				},
 				this.getLogger(),

@@ -2,6 +2,8 @@
 	"dependencies": {
 		"balena-image-fs": "^7.0.6",
 		"bluebird": "^3.7.2",
+		"@balena/leviathan-test-helpers": "0.0.2-ryan-first-commit-3e9342048d0b2d532d68f2c389d6985db34bf99e",
+		"config": "^3.2.2",
 		"bluebird-retry": "^0.11.0",
 		"dockerode": "^2.5.8",
 		"fs-extra": "^8.1.0",

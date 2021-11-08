@@ -1,5 +1,6 @@
 {
 	"scripts": {
+		"prepare": "for component in 'os' 'hup'; do npm --prefix $component install --package-lock-only; done",
 		"prettify": "prettier --config ./.prettierrc --write \"{os,hup}/**/*.js\"",
 		"lint": "eslint --fix -c ./.eslintrc.* os hup"
 	},
@@ -15,6 +16,5 @@
 		"eslint-plugin-promise": "^3.6.0",
 		"eslint-plugin-standard": "^3.0.1",
 		"prettier": "^1.16.4"
-	},
-	"dependencies": {}
+	}
 }
