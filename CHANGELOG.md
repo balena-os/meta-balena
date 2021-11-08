@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.86.2
+## (2021-11-08)
+
+* dosfstools: selectively apply upstreamed patch [Joseph Kogut]
+* tests: wait for the chronyd service become active [Mark Corbin]
+
 # v2.86.1
 ## (2021-11-02)
 

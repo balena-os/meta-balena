@@ -1,4 +1,48 @@
 - commits:
+    - subject: 'dosfstools: selectively apply upstreamed patch'
+      hash: 8f04f1142bcb3074d86e2827dfda6c7d8c87fefd
+      body: >
+        This patch was submitted and accepted upstream, and is present since
+
+        v4.2.
+
+
+        https://github.com/dosfstools/dosfstools/commit/87a8f29785bb605350821f1638a42e6cf3e49ce3
+
+
+        This fixes a build error applying a patch that's already been applied
+
+        when building newer versions of dosfstools.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: wait for the chronyd service become active'
+      hash: c49648a0f27f1a57376803ba9c85ec9ba729ebe9
+      body: |
+        Add a test to wait for the chronyd service to become active before
+        starting the time sync tests.
+
+        The current chronyd tests assume that the chronyd service is
+        instantly available at boot time. With the addition of the new
+        HTTPS time synchronisation service the starting of chronyd can be
+        delayed by a few seconds so we need to ensure that the service
+        is actually running before proceeding.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'tests: wait for the chronyd service become active'
+        changelog-entry: 'tests: wait for the chronyd service become active'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.86.2
+  date: 2021-11-08T15:41:30.313Z
+- commits:
     - subject: 'tests/issue: Add test to check issues files'
       hash: 472bf8a99a111e061e416557e9ab0f538041ae01
       body: ''
