@@ -10,7 +10,7 @@ This repository enables building balenaOS for various devices.
 
 ## Dependencies
 
-* http://www.yoctoproject.org/docs/latest/yocto-project-qs/yocto-project-qs.html#packages
+* https://docs.yoctoproject.org/brief-yoctoprojectqs/#build-host-packages
 * docker
 * jq
 
