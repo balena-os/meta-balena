@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "\
     file://COPYING;md5=a7710ac18adec371b84a9594ed04fd20 \
 "
 
-DEPENDS += "binutils openssl gnu-efi gnu-efi-native util-linux-libuuid"
+DEPENDS += "binutils openssl gnu-efi gnu-efi-native util-linux"
 DEPENDS += "binutils-native help2man-native coreutils-native openssl-native util-linux-native"
 
 SRC_URI = " \
