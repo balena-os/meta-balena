@@ -84,6 +84,42 @@ function find_part_start {
     parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PARTID}[ \t][ \t]*" | awk '{print $2}' | sed -e "s,\(\.0\)\?MiB,,"
 }
 
+function dd_with_progress {
+    SRC=$1
+    DEST=$2
+    OFFSET=$3
+    TOTAL_SIZE=$4
+
+    dd "if=$SRC" "of=$DEST" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+
+    if ! kill -0 $DD_PID; then
+        # dd might have been too fast, let's check exit status if it is no longer running
+        if ! ps | grep "^ *$DD_PID " && wait "$DD_PID"; then
+            # dd is not running and the exitcode was 0, dd completed too fast to report progress
+            return
+        fi
+
+        # Either dd is still running or exit status reported error
+        fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
+    fi
+
+    # Give dd chance to register the signal handler
+    # This was originally hidden behind determining image size
+    sleep 1
+
+    while kill -USR1 $DD_PID 2>/dev/null; do
+        sleep 3
+        if [ ! -s /tmp/dd_progress_log ]; then
+            continue
+        fi
+        WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
+        TOTAL_WRITTEN_BYTES=$["$WRITTEN_BYTES" + "$OFFSET"]
+        let RATIO=$TOTAL_WRITTEN_BYTES*100/$TOTAL_SIZE || true
+        resin-device-progress --percentage "$RATIO" --state "Flashing balenaOS on internal media" || true
+        truncate -s 0 /tmp/dd_progress_log
+    done
+}
+
 ########
 # MAIN #
 ########
@@ -155,6 +191,8 @@ if [ -z "$internal_dev" ]; then
 fi
 inform "$internal_dev will be used for flashing."
 
+IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
+
 if [ "$LUKS" = "1" ]; then
     # Generate password and encrypt it using the TPM
     TPM="${TPM:-/dev/tpmrm0}"
@@ -197,6 +235,8 @@ if [ "$LUKS" = "1" ]; then
 
     # Attach the image to a loop device
     LOOP_DEVICE=$(losetup --find --show --partscan "/opt/$BALENA_IMAGE")
+
+    resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
 
     # Copy header and resin-boot partition
     inform "Flashing boot partition"
@@ -284,32 +324,22 @@ if [ "$LUKS" = "1" ]; then
             continue
         fi
         inform "Flasing $PART_DEV"
-        dd if="${LOOP_DEVICE}p$LOOP_PART_ID" of="$DM_DEV" bs=4M
+
+        dd_with_progress "${LOOP_DEVICE}p$LOOP_PART_ID" "$DM_DEV" "$FLASHED" "$IMAGE_FILE_SIZE"
+
+        [ "$PART_NAME" = "resin-boot" ] && FLASHED=$["$FLASHED" + ("$BOOT_PART_SIZE" * 1024 * 1024)]
+        [ "$PART_NAME" = "resin-rootA" ] && FLASHED=$["$FLASHED" + ("$ROOTA_PART_SIZE" * 1024 * 1024)]
+        [ "$PART_NAME" = "resin-rootB" ] && FLASHED=$["$FLASHED" + ("$ROOTB_PART_SIZE" * 1024 * 1024)]
+        [ "$PART_NAME" = "resin-state" ] && FLASHED=$["$FLASHED" + ("$STATE_PART_SIZE" * 1024 * 1024)]
+        [ "$PART_NAME" = "resin-data" ] && FLASHED=$["$FLASHED" + ("$DATA_PART_SIZE" * 1024 * 1024)]
+
         sync "$DM_DEV"
     done
 
     losetup -d "$LOOP_DEVICE"
 else
-    dd if="/opt/$BALENA_IMAGE" of="/dev/$internal_dev" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
-
-    if ! kill -0 $DD_PID; then
-        fail "Failed to flash internal device $INTERNAL_DEVICE_KERNEL."
-    fi
-
-    IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
-
     resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
-
-    while kill -USR1 $DD_PID 2>/dev/null; do
-        sleep 3
-        if [ ! -s /tmp/dd_progress_log ]; then
-            continue
-        fi
-        IMAGE_WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
-        let RATIO=$IMAGE_WRITTEN_BYTES*100/$IMAGE_FILE_SIZE || true
-        resin-device-progress --percentage $RATIO --state "Flashing balenaOS on internal media" || true
-        truncate -s 0 /tmp/dd_progress_log
-    done
+    dd_with_progress "/opt/$BALENA_IMAGE" "/dev/$internal_dev" 0 "$IMAGE_FILE_SIZE"
 fi
 
 sync
