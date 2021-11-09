@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.86.3
+## (2021-11-09)
+
+* patch: Fix URL to yocto project dependencies [Kyle Harding]
+
 # v2.86.2
 ## (2021-11-08)
 

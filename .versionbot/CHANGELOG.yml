@@ -1,4 +1,15 @@
 - commits:
+    - subject: 'patch: Fix URL to yocto project dependencies'
+      hash: 916b1d256a0ab3f23818e7307ce219cdaed2002f
+      body: ''
+      footer:
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.86.3
+  date: 2021-11-09T00:07:14.996Z
+- commits:
     - subject: 'dosfstools: selectively apply upstreamed patch'
       hash: 8f04f1142bcb3074d86e2827dfda6c7d8c87fefd
       body: >
