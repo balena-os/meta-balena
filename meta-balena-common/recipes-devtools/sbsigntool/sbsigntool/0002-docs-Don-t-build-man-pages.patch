@@ -1,0 +1,29 @@
+From fb2663b257947effc510ec4133214a22d344a9a8 Mon Sep 17 00:00:00 2001
+From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Date: Wed, 10 Mar 2021 15:52:52 +0200
+Subject: [PATCH 2/3] docs: Don't build man pages
+
+Man pages not needed on embedded targets
+
+Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+---
+ docs/Makefile.am | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/docs/Makefile.am b/docs/Makefile.am
+index 89ed11012492..6918dd8cc3b8 100644
+--- a/docs/Makefile.am
++++ b/docs/Makefile.am
+@@ -1,9 +1,4 @@
+ 
+-man1_MANS = sbsign.1 sbverify.1 sbattach.1 sbvarsign.1 sbsiglist.1 \
+-		sbkeysync.1
+-
+-EXTRA_DIST = sbsign.1.in sbverify.1.in sbattach.1.in \
+-		sbvarsign.1.in sbsiglist.1.in sbkeysync.1.in
+ CLEANFILES = $(man1_MANS)
+ 
+ $(builddir)/%.1: $(srcdir)/%.1.in $(top_builddir)/src/%
+-- 
+2.30.2
+

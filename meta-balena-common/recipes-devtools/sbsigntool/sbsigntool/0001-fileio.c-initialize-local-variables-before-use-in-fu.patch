@@ -1,0 +1,43 @@
+From 8a2dfef2fbb68d72ee8b5a542cfb22817050ebdb Mon Sep 17 00:00:00 2001
+From: Yi Zhao <yi.zhao@windriver.com>
+Date: Tue, 22 Jun 2021 11:20:17 +0800
+Subject: [PATCH] fileio.c: initialize local variables before use in function
+ __fileio_read_file
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fixes:
+fileio.c: In function ‘__fileio_read_file’:
+fileio.c:179:26: error: ‘len’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  179 |                 *out_len = len;
+      |                 ~~~~~~~~~^~~~~
+fileio.c:178:26: error: ‘buf’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  178 |                 *out_buf = buf;
+      |                 ~~~~~~~~~^~~~~
+
+Upstream-Status: Pending
+
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ src/fileio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/fileio.c b/src/fileio.c
+index 032eb1e..929bb00 100644
+--- a/src/fileio.c
++++ b/src/fileio.c
+@@ -142,8 +142,8 @@ static int __fileio_read_file(void *ctx, const char *filename,
+ 		 uint8_t **out_buf, size_t *out_len, int flags)
+ {
+ 	struct stat statbuf;
+-	uint8_t *buf;
+-	size_t len;
++	uint8_t *buf = NULL;
++	size_t len = 0;
+ 	int fd, rc;
+ 
+ 	rc = -1;
+-- 
+2.17.1
+
