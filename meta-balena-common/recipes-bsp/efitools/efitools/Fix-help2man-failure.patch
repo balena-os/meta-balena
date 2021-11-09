@@ -1,0 +1,25 @@
+From 546b8c36301bdcf540b3b027fd25baa9cff2abdc Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Wed, 23 Mar 2016 19:44:51 +0800
+Subject: [PATCH] Fix help2man failure
+
+Add --no-discard-stderr to work around the error.
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Make.rules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Make.rules b/Make.rules
+index 4aa7650..21926b0 100644
+--- a/Make.rules
++++ b/Make.rules
+@@ -142,4 +142,4 @@ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else ec
+ 	$(AR) rcv $@ $^
+ 
+ doc/%.1: doc/%.1.in %
+-	$(HELP2MAN) --no-info -i $< -o $@ ./$*
++	$(HELP2MAN) --no-discard-stderr --no-info -i $< -o $@ ./$*
+-- 
+1.9.1
+

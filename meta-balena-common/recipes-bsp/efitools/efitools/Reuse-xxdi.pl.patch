@@ -1,0 +1,51 @@
+From 959e4395b5524babb27c2bf95fa37b990d79b663 Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Thu, 28 Apr 2016 12:52:22 +0800
+Subject: [PATCH] Reuse xxdi.pl
+
+The missing File::Slurp required by xxdi.pl is added. To avoid introducing
+an extra xxd package, remove the support of using xxd.
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Make.rules | 3 +--
+ Makefile   | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/Make.rules b/Make.rules
+index 21926b0..38c7a22 100644
+--- a/Make.rules
++++ b/Make.rules
+@@ -33,7 +33,6 @@ NM		= nm
+ AR		= ar
+ OPENSSL		= openssl
+ SBSIGN		= sbsign
+-XXD		= xxd
+ SIGN_EFI_SIG_LIST ?= ./sign-efi-sig-list 
+ CERT_TO_EFI_SIG_LIST ?= ./cert-to-efi-sig-list
+ CERT_TO_EFI_HASH_LIST ?= ./cert-to-efi-hash-list
+@@ -76,7 +75,7 @@ endif
+ 	${NM} -D $@ | grep ' U ' && exit 1 || exit 0
+ 
+ %.h: %.auth
+-	$(XXD) -i $< > $@
++	./xxdi.pl $< > $@
+ 
+ %.hash: %.efi hash-to-efi-sig-list
+ 	$(HASH_TO_EFI_SIG_LIST) $< $@
+diff --git a/Makefile b/Makefile
+index da363a6..2534b47 100644
+--- a/Makefile
++++ b/Makefile
+@@ -73,7 +73,7 @@ ms-%.esl: ms-%.crt cert-to-efi-sig-list
+ 
+ hashlist.h: HashTool.hash
+ 	cat $^ > /tmp/tmp.hash
+-	$(XXD) -i /tmp/tmp.hash > $@
++	./xxdi.pl /tmp/tmp.hash > $@
+ 	rm -f /tmp/tmp.hash
+ 
+ 
+-- 
+1.9.1
+

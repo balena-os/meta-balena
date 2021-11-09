@@ -1,0 +1,33 @@
+From 923b9cb2bfe81ff29a29d46bfc4e3fe172e0e5ae Mon Sep 17 00:00:00 2001
+From: Yunguo Wei <yunguo.wei@windriver.com>
+Date: Tue, 17 Jan 2017 17:24:51 +0800
+Subject: [PATCH] Makefile: do not build signed efi image
+
+Signed-off-by: Yunguo Wei <yunguo.wei@windriver.com>
+---
+ Makefile | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index addb593..a1fc538 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,5 +1,4 @@
+-EFIFILES = HelloWorld.efi LockDown.efi Loader.efi ReadVars.efi UpdateVars.efi \
+-	KeyTool.efi HashTool.efi SetNull.efi ShimReplace.efi
++EFIFILES = LockDown.efi
+ BINARIES = cert-to-efi-sig-list sig-list-to-certs sign-efi-sig-list \
+ 	hash-to-efi-sig-list efi-readvar efi-updatevar cert-to-efi-hash-list \
+ 	flash-var
+@@ -27,7 +26,7 @@ include Make.rules
+ 
+ EFISIGNED = $(patsubst %.efi,%-signed.efi,$(EFIFILES))
+ 
+-all: $(EFISIGNED) $(BINARIES) $(MANPAGES) noPK.auth $(KEYAUTH) \
++all: $(EFIFILES) $(BINARIES) $(MANPAGES) noPK.auth $(KEYAUTH) \
+ 	$(KEYUPDATEAUTH) $(KEYBLACKLISTAUTH) $(KEYHASHBLACKLISTAUTH)
+ 
+ 
+-- 
+2.7.4
+

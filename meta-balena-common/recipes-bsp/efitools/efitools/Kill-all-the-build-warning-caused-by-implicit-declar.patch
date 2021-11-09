@@ -1,0 +1,67 @@
+From 872a9d96386b819d2c5fd7581d2bdaf7ea61a5f8 Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Tue, 15 Mar 2016 17:12:24 +0800
+Subject: [PATCH] Kill all the build warning caused by implicit declaration of
+ function
+
+Upstream-Status: Pending
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Loader.c                |    1 +
+ cert-to-efi-hash-list.c |    2 +-
+ flash-var.c             |    2 ++
+ lib/pecoff.c            |    1 +
+ sign-efi-sig-list.c     |    2 ++
+ 5 files changed, 7 insertions(+), 1 deletion(-)
+
+--- a/Loader.c
++++ b/Loader.c
+@@ -9,6 +9,7 @@
+ #include <efi.h>
+ #include <efilib.h>
+ 
++#include <execute.h>
+ #include <simple_file.h>
+ #include <pecoff.h>
+ #include <sha256.h>
+--- a/cert-to-efi-hash-list.c
++++ b/cert-to-efi-hash-list.c
+@@ -3,7 +3,7 @@
+  *
+  * see COPYING file
+  */
+-
++#define _GNU_SOURCE
+ 
+ #include <stdint.h>
+ #define _XOPEN_SOURCE
+--- a/flash-var.c
++++ b/flash-var.c
+@@ -1,3 +1,5 @@
++#define _GNU_SOURCE
++
+ #include <stdlib.h>
+ #include <stdint.h>
+ #include <sys/types.h>
+--- a/lib/pecoff.c
++++ b/lib/pecoff.c
+@@ -59,6 +59,7 @@
+ #endif
+ #endif
+ 
++#include <execute.h>
+ #include <pecoff.h>
+ #include <guid.h>
+ #include <simple_file.h>
+--- a/sign-efi-sig-list.c
++++ b/sign-efi-sig-list.c
+@@ -3,6 +3,8 @@
+  *
+  * see COPYING file
+  */
++#define _GNU_SOURCE
++
+ #include <stdint.h>
+ #define __STDC_VERSION__ 199901L
+ #include <efi.h>

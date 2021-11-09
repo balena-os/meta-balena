@@ -1,0 +1,39 @@
+From: Jason Wessel <jason.wessel@windriver.com>
+Date: Mon, 4 Nov 2019 12:42:49 -0800
+Subject: [PATCH] console.c: Fix compilation against latest /usr/include/efi
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+| gcc  -I/opt/tmp/work/x86_64-linux/efitools-native/1.9.2+gitAUTOINC+392836a46c-r0/git/include/ -I/opt/tmp/work/x86_64-linux/efitools-native/1.9.2+gitAUTOINC+392836a46c-r0/recipe-sysroot-native/usr/include -I/opt/tmp/work/x86_64-linux/efitools-native/1.9.2+gitAUTOINC+392836a46c-r0/recipe-sysroot-native/usr/include/efi -I/opt/tmp/work/x86_64-linux/efitools-native/1.9.2+gitAUTOINC+392836a46c-r0/recipe-sysroot-native/usr/include/efi/x86_64 -I/opt/tmp/work/x86_64-linux/efitools-native/1.9.2+gitAUTOINC+392836a46c-r0/recipe-sysroot-native/usr/include/efi/protocol -O2 -g  -fpic -Wall -fshort-wchar -fno-strict-aliasing -fno-merge-constants -fno-stack-protector -ffreestanding -fno-stack-check -DGNU_EFI_USE_MS_ABI -DEFI_FUNCTION_WRAPPER -mno-red-zone -DCONFIG_x86_64 -fno-toplevel-reorder -DBUILD_EFI -c console.c -o console.efi.o
+| console.c:360:5: error: ‘EFI_WARN_UNKOWN_GLYPH’ undeclared here (not in a function); did you mean ‘EFI_WARN_UNKNOWN_GLYPH’?
+|   {  EFI_WARN_UNKOWN_GLYPH,      L"Warning Unknown Glyph"},
+|      ^~~~~~~~~~~~~~~~~~~~~
+|      EFI_WARN_UNKNOWN_GLYPH
+| ../Make.rules:113: recipe for target 'console.efi.o' failed
+|
+
+
+Upstream-Status: Pending
+
+Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+---
+ lib/console.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/console.c b/lib/console.c
+index 9c10560..b932a44 100644
+--- a/lib/console.c
++++ b/lib/console.c
+@@ -357,7 +357,7 @@ static struct {
+ 	{  EFI_SECURITY_VIOLATION,     L"Security Violation"},
+ 
+ 	// warnings
+-	{  EFI_WARN_UNKOWN_GLYPH,      L"Warning Unknown Glyph"},
++	{  EFI_WARN_UNKNOWN_GLYPH,     L"Warning Unknown Glyph"},
+ 	{  EFI_WARN_DELETE_FAILURE,    L"Warning Delete Failure"},
+ 	{  EFI_WARN_WRITE_FAILURE,     L"Warning Write Failure"},
+ 	{  EFI_WARN_BUFFER_TOO_SMALL,  L"Warning Buffer Too Small"},
+-- 
+2.23.0
+
