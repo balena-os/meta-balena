@@ -5,6 +5,7 @@ include resin-mounts.inc
 RDEPENDS:${PN} += "os-helpers-fs"
 
 SRC_URI += " \
+	file://balena-efi.service \
 	file://resin-boot.service \
 	file://resin-data.service \
 	file://resin-state.service \
@@ -16,6 +17,7 @@ SRC_URI += " \
 	"
 
 SYSTEMD_SERVICE:${PN} += " \
+	balena-efi.service \
 	resin-boot.service \
 	resin-data.service \
 	resin-state.service \
