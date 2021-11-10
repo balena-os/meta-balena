@@ -9,6 +9,7 @@ SRC_URI:append = " \
     file://rorootfs \
     file://rootfs \
     file://finish \
+    file://kexec \
     "
 
 do_install:append() {
@@ -21,6 +22,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
+    install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
 }
 
 PACKAGES:append = " \
@@ -30,6 +32,7 @@ PACKAGES:append = " \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
     initramfs-module-fsuuidsinit \
+    initramfs-module-kexec \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -61,3 +64,10 @@ FILES:initramfs-module-prepare = "/init.d/70-prepare"
 SUMMARY:initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
 RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
 FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
+
+SUMMARY:initramfs-module-kexec = "Find and start a new kernel if in stage2"
+RDEPENDS:initramfs-module-kexec = " \
+    kexec-tools \
+    util-linux-findmnt \
+    "
+FILES:initramfs-module-kexec = "/init.d/92-kexec"

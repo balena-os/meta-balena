@@ -1,0 +1,47 @@
+# Automatically created by OE
+serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
+default=boot
+insmod ext2
+insmod gzio
+insmod test
+insmod loadenv
+insmod regexp
+insmod probe
+insmod configfile
+timeout=@@TIMEOUT@@
+
+load_env --skip-sig bootcount resin_root_part upgrade_available
+source /grub/grub_extraenv
+
+if [ ${upgrade_available} = 1 ] ; then
+ if [ ${bootcount} = 1 ] ; then
+  set bootcount=2
+  save_env bootcount
+ fi
+ if [ ${bootcount} = 0 ] ; then
+  set bootcount=1
+  save_env bootcount
+ fi
+fi
+
+menuentry 'boot'{
+set balena_root=resin-rootA
+if [ ${bootcount} = 2 ] ; then
+ if [ ${resin_root_part} = 2 ] ; then
+  set balena_root=resin-rootB
+ fi
+else
+ if [ ${resin_root_part} = 3 ] ; then
+  set balena_root=resin-rootB
+ fi
+fi
+linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=${balena_root} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+}
+
+menuentry 'manualfallbackA' {
+  linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=resin-rootA @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+}
+
+menuentry 'manualfallbackB' {
+  linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=resin-rootB @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+}
