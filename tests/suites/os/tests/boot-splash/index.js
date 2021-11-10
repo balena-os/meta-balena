@@ -18,7 +18,10 @@
 
 const fs = require('fs-extra');
 const { decode } = require('jpeg-js');
-const { hammingDistance, blockhash } = require('@balena/leviathan-test-helpers')
+// const {
+// 	hammingDistance,
+// 	blockhash,
+// } = require('@balena/leviathan-test-helpers');
 
 const BOOT_SPLASH = `${__dirname}/assets/boot-splash.jpg`;
 
@@ -44,6 +47,8 @@ module.exports = {
 		{
 			title: 'Reboot test',
 			run: async function(test) {
+				const { hammingDistance, blockhash } = this.require('/common/graphics');
+
 				test.comment(`Calculating reference hash`);
 				// Pull in the reference image
 				const referenceHash = await new Promise((resolve, reject) => {

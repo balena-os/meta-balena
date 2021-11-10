@@ -33,10 +33,10 @@ module.exports = {
 					led: {
 						type: 'boolean',
 						const: true,
-					}
-				}
-			}
-		}
+					},
+				},
+			},
+		},
 	},
 	run: async function(test) {
 		const serviceName = 'collector';
@@ -112,7 +112,7 @@ module.exports = {
 				++count;
 			}
 		}
-		test.comment(`Count is: ${count}`)
+		test.comment(`Count is: ${count}`);
 		test.is(count > 10, true, `Led should have blinked multiple times`);
 	},
 };

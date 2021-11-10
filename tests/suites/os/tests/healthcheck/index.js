@@ -26,29 +26,27 @@ module.exports = {
 			.get()
 			.worker.pushContainerToDUT(ip, __dirname, 'healthcheck');
 
-
 		// wait until status of container is "healthy"
 		await this.context.get().utils.waitUntil(async () => {
-			test.comment("Waiting to container to report as healthy...");
+			test.comment('Waiting to container to report as healthy...');
 			// retrieve healthcheck events
-			let health = JSON.parse(await this.context
-			  .get()
-			  .worker.executeCommandInHostOS(
-				`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-				ip
-			  )
-			)
-			let status = health.reduce(function (result, element) {
-			  if (element.status != null) {
-				result.push(element.status);
-			  }
-			  return result;
-			}, [])
-	  
-			return status.includes("health_status: healthy")
-	  
-		  }, false);
+			let health = JSON.parse(
+				await this.context
+					.get()
+					.worker.executeCommandInHostOS(
+						`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
+						ip,
+					),
+			);
+			let status = health.reduce(function(result, element) {
+				if (element.status != null) {
+					result.push(element.status);
+				}
+				return result;
+			}, []);
 
+			return status.includes('health_status: healthy');
+		}, false);
 
 		// cause the container healthcheck to fail
 		await this.context

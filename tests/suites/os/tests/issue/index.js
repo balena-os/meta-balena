@@ -36,7 +36,7 @@ module.exports = {
 
 				const osReleaseVersion = await this.context
 					.get()
-					.worker.getOSVersion(this.context.get().link)
+					.worker.getOSVersion(this.context.get().link);
 
 				const result = {};
 				file.split('\n').forEach(element => {
@@ -78,7 +78,7 @@ module.exports = {
 
 				const osReleaseVersion = await this.context
 					.get()
-					.worker.getOSVersion(this.context.get().link)
+					.worker.getOSVersion(this.context.get().link);
 
 				const result = {};
 				file.split('\n').forEach(element => {

@@ -64,7 +64,6 @@ module.exports = {
 						`${hostname}.local`,
 					);
 
-
 				// Wait for old hostname to be active again
 				test.comment(`Waiting for avahi service to be active...`);
 				await this.context.get().utils.waitUntil(async () => {
@@ -95,16 +94,21 @@ module.exports = {
 
 				// Wait for new NTP server to be active
 				test.comment(`Waiting for balena-ntp-config service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-ntp-config.service`,
-								this.context.get().link,
-							)) === 'active'
-					);
-				}, false, 5, 30000);
+				await this.context.get().utils.waitUntil(
+					async () => {
+						return (
+							(await this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									`systemctl is-active balena-ntp-config.service`,
+									this.context.get().link,
+								)) === 'active'
+						);
+					},
+					false,
+					5,
+					30000,
+				);
 
 				await test.resolves(
 					this.context
@@ -183,7 +187,7 @@ module.exports = {
 					`We should have an empty /run/dnsmasq.servers file.`,
 				);
 
-        		test.is(
+				test.is(
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(

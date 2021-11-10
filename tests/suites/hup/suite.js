@@ -19,7 +19,13 @@ const pipeline = require('bluebird').promisify(stream.pipeline);
 
 // required to use skopeo for loading the image
 const exec = require('bluebird').promisify(require('child_process').exec);
-const {Worker, BalenaOS, Cloud, Utils} = require('@balena/leviathan-test-helpers')
+const Bluebird = require('bluebird');
+const {
+	Worker,
+	BalenaOS,
+	Cloud,
+	Utils,
+} = require('@balena/leviathan-test-helpers');
 
 // Starts registry, uploads target image to registry
 const runRegistry = async (that, test, seedWithImage) => {
@@ -127,7 +133,13 @@ const initDUT = async (that, test, target) => {
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
-		await that.context.get().worker.archiveLogs(that.id, that.context.get().link, "journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'");
+		await that.context
+			.get()
+			.worker.archiveLogs(
+				that.id,
+				that.context.get().link,
+				"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
+			);
 	});
 };
 
@@ -135,9 +147,6 @@ module.exports = {
 	title: 'Hostapp update suite',
 
 	run: async function() {
-		// const BalenaOS = this.require('components/os/balenaos');
-		// const Balena = this.require('components/balena/sdk');
-
 		await fse.ensureDir(this.suite.options.tmpdir);
 
 		this.suite.context.set({
@@ -170,7 +179,7 @@ module.exports = {
 			hup: {
 				doHUP: doHUP,
 				initDUT: initDUT,
-				runRegistry: runRegistry
+				runRegistry: runRegistry,
 			},
 		});
 
@@ -198,7 +207,7 @@ module.exports = {
 		}
 
 		this.suite.context.set({
-			// The inital image we just downloaded to flash the device 
+			// The inital image we just downloaded to flash the device
 			os: new BalenaOS(
 				{
 					deviceType: this.suite.deviceType.slug,

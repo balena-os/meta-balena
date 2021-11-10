@@ -38,43 +38,53 @@ module.exports = {
 	tests: [
 		{
 			title: 'DToverlay & DTparam tests',
-			run: async function (test) {
+			run: async function(test) {
 				let ip = await this.context.get().worker.ip(this.context.get().link);
-				let targetState
+				let targetState;
 
 				// Export the GPIO pin
 				const exportPin = async () => {
-					return await this.context.get().worker.executeCommandInHostOS(
-						`echo 4 >/sys/class/gpio/export`,
-						this.context.get().link
-					)
-				}
+					return await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`echo 4 >/sys/class/gpio/export`,
+							this.context.get().link,
+						);
+				};
 
 				// Check value of GPIO pin and unexport the GPIO pin
 				const getPinValue = async () => {
-					const pinValue =  await this.context.get().worker.executeCommandInHostOS(
-						`cat /sys/class/gpio/gpio4/value`,
-						this.context.get().link
-					)
+					const pinValue = await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`cat /sys/class/gpio/gpio4/value`,
+							this.context.get().link,
+						);
 
-					await this.context.get().worker.executeCommandInHostOS(
-						`echo 4 >/sys/class/gpio/unexport`,
-						this.context.get().link
-					)
-					return pinValue
-				}
+					await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							`echo 4 >/sys/class/gpio/unexport`,
+							this.context.get().link,
+						);
+					return pinValue;
+				};
 
 				// After applying Dtoverlay, the GPIO pins becomes unavailable as drivers take control over the pin
 				// Hence, sysfs can't be used to query the value of the GPIO pin hence the user of /sys/kernel/debug/gpio
 				const getPinValueThroughDebug = async () => {
-					const getValue = fs.readFileSync(`${__dirname}/getValue.sh`).toString();
-					return await this.context.get().worker.executeCommandInHostOS(
+					const getValue = fs
+						.readFileSync(`${__dirname}/getValue.sh`)
+						.toString();
+					return await this.context
+						.get()
+						.worker.executeCommandInHostOS(
 							`cd /tmp && ${getValue}`,
 							this.context.get().link,
 						);
-				}
+				};
 
-				const applySupervisorConfig = async (direction) => {
+				const applySupervisorConfig = async direction => {
 					// Wait for supervisor API to start
 					await this.context.get().utils.waitUntil(async () => {
 						return (
@@ -153,8 +163,8 @@ module.exports = {
 						);
 					}, false);
 
-					return targetState
-				}
+					return targetState;
+				};
 
 				// Start of the device-tree practical test
 				await exportPin(4)
@@ -175,7 +185,7 @@ module.exports = {
 					json: true,
 				});
 
-				// Making sure currentState of the DUT matches the target state that was being set. 
+				// Making sure currentState of the DUT matches the target state that was being set.
 				test.equal(
 					currentState.state.local.config.HOST_CONFIG_dtoverlay,
 					targetState.local.config.HOST_CONFIG_dtoverlay,
@@ -187,7 +197,9 @@ module.exports = {
 					'DTparam successfully set in target state',
 				);
 
-				const dtoverlay = fs.readFileSync(`${__dirname}/dtoverlay.sh`).toString();
+				const dtoverlay = fs
+					.readFileSync(`${__dirname}/dtoverlay.sh`)
+					.toString();
 				const dtparam = fs.readFileSync(`${__dirname}/dtparam.sh`).toString();
 
 				const dtOverlayConfigTxt = await this.context

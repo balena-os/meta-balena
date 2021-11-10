@@ -1,8 +1,9 @@
 {
 	"scripts": {
-		"prepare": "for component in 'os' 'hup'; do npm --prefix $component install --package-lock-only; done",
+		"lockfiles": "for component in 'os' 'hup'; do npm --prefix $component install --package-lock-only; done",
 		"prettify": "prettier --config ./.prettierrc --write \"{os,hup}/**/*.js\"",
-		"lint": "eslint --fix -c ./.eslintrc.* os hup"
+		"lint": "eslint --fix -c ./.eslintrc.* os hup",
+		"prepare": "npm run lockfiles && npm run prettify"
 	},
 	"devDependencies": {
 		"eslint": "^4.19.1",
