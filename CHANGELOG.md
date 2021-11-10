@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.1
+## (2021-11-10)
+
+* grub-efi: add support for signature verification in secure boot mode [Michal Toman]
+
 # v2.87.0
 ## (2021-11-09)
 

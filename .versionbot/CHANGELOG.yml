@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'grub-efi: add support for signature verification in secure boot mode'
+      hash: 4f64d66c2507220a4bd82a06bd80ccf6098086cb
+      body: |
+        This incorporates multiple changes:
+        - Patch grub to propagate secure boot mode to the kernel
+        - Enable GPG signature verification in GRUB
+        - Sign GRUB config files
+        - Sign the grub EFI binary for secure boot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.1
+  date: 2021-11-10T15:28:08.186Z
+- commits:
     - subject: 'meta-balena-common/conf: Switch layer to Honister compatibility'
       hash: 8cc0c59efc9946b74fea6fb3a7d6b0d51bad015b
       body: ''
