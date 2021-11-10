@@ -18,17 +18,17 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-FILES_${PN} = "${sbindir}"
+FILES:${PN} = "${sbindir}"
 
 DEPENDS = "bash-native jq-native coreutils-native"
-RDEPENDS_${PN} = "bash jq udev coreutils"
+RDEPENDS:${PN} = "bash jq udev coreutils"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
     config-json.path \
     config-json.service \
     config-json.target \

@@ -27,6 +27,6 @@ export GOTMPDIR ?= "${WORKDIR}/go-tmp"
 GOTMPDIR[vardepvalue] = ""
 export CGO_ENABLED = "1"
 
-do_compile_prepend() {
+do_compile:prepend() {
 	BUILD_CC=${BUILD_CC}
 }

@@ -53,7 +53,7 @@
 #          in BALENA_CONFIGS[mynewconfigblock].
 #       c) Activate the new block appending the config block name to
 #          BALENA_CONFIGS.
-#          Ex: BALENA_CONFIGS_append = " mynewconfigblock"
+#          Ex: BALENA_CONFIGS:append = " mynewconfigblock"
 #          Mind the space!
 #   2. Using a special filename defined as BALENA_DEFCONFIG_NAME
 #       a) [optional] Define BALENA_DEFCONFIG_NAME. Default: "resin-defconfig"
@@ -948,7 +948,7 @@ do_kernel_resin_checkconfig[dirs] += "${WORKDIR} ${B}"
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 
 # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
-do_deploy_append () {
+do_deploy:append () {
     install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
     install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
 }

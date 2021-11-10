@@ -10,12 +10,12 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     bash \
     coreutils \
     "
 
-SYSTEMD_SERVICE_${PN} = "balena-data-reset.service"
+SYSTEMD_SERVICE:${PN} = "balena-data-reset.service"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"

@@ -31,11 +31,11 @@ python __anonymous() {
     d.setVar("SRC_URI", new_srcuri)
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
 	${sysconfdir}/hostapp-update-hooks.d \
 	"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     balena \
     dropbear \
     openssh-keygen \

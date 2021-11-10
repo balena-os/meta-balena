@@ -27,5 +27,5 @@ do_install() {
 	install -m 0644 ${WORKDIR}/libnss-ato.conf ${D}${sysconfdir}
 }
 
-FILES_${PN} += "${base_libdir}/*.so"
-FILES_${PN}-dev = ""
+FILES:${PN} += "${base_libdir}/*.so"
+FILES:${PN}-dev = ""

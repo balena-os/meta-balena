@@ -34,9 +34,9 @@ EXTRA_OECONF = " \
     --with-at-command-via-dbus=yes \
 "
 
-EXTRA_OECONF_append_toolchain-clang = " --enable-more-warnings=no"
+EXTRA_OECONF:append:toolchain-clang = " --enable-more-warnings=no"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${datadir}/icons \
     ${datadir}/polkit-1 \
     ${datadir}/dbus-1 \
@@ -45,15 +45,15 @@ FILES_${PN} += " \
     ${systemd_unitdir}/system \
 "
 
-FILES_${PN}-dev += " \
+FILES:${PN}-dev += " \
     ${libdir}/ModemManager/*.la \
 "
 
-FILES_${PN}-staticdev += " \
+FILES:${PN}-staticdev += " \
     ${libdir}/ModemManager/*.a \
 "
 
-FILES_${PN}-dbg += "${libdir}/ModemManager/.debug"
+FILES:${PN}-dbg += "${libdir}/ModemManager/.debug"
 
-SYSTEMD_SERVICE_${PN} = "ModemManager.service"
+SYSTEMD_SERVICE:${PN} = "ModemManager.service"
 

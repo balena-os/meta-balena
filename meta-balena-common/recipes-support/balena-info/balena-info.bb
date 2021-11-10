@@ -2,7 +2,7 @@ DESCRIPTION = "Balena info ascii art"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 SRC_URI = " \
     file://balena-info \
@@ -14,7 +14,7 @@ inherit allarch
 
 TTYS = "tty1"
 
-RDEPENDS_${PN} = "bash"
+RDEPENDS:${PN} = "bash"
 
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
@@ -43,4 +43,4 @@ do_install() {
     fi
 }
 
-FILES_${PN} += "${systemd_unitdir}/system/*.service ${sysconfdir}"
+FILES:${PN} += "${systemd_unitdir}/system/*.service ${sysconfdir}"

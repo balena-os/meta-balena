@@ -14,11 +14,11 @@ inherit allarch systemd
 
 PACKAGES = "${PN}"
 
-SYSTEMD_SERVICE_${PN} = " \
+SYSTEMD_SERVICE:${PN} = " \
 	balena-net-connectivity-wait.service \
 	balena-net-connectivity-wait.target \
 	"
-RDEPENDS_${PN} = "bash"
+RDEPENDS:${PN} = "bash"
 
 do_install() {
     install -d ${D}${bindir}

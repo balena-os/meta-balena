@@ -10,10 +10,10 @@ SRC_URI[sha256sum] = "abffac09c87eacd78e101545967dc25af7e989745b4276756d45dbf400
 
 inherit pkgconfig systemd
 
-SYSTEMD_SERVICE_${PN} = "usb_modeswitch@.service"
+SYSTEMD_SERVICE:${PN} = "usb_modeswitch@.service"
 
-FILES_${PN} = "${bindir} ${sysconfdir} ${nonarch_base_libdir}/udev/usb_modeswitch ${sbindir} ${localstatedir}/lib/usb_modeswitch"
-RRECOMMENDS_${PN} = "usb-modeswitch-data"
+FILES:${PN} = "${bindir} ${sysconfdir} ${nonarch_base_libdir}/udev/usb_modeswitch ${sbindir} ${localstatedir}/lib/usb_modeswitch"
+RRECOMMENDS:${PN} = "usb-modeswitch-data"
 
 do_install() {
     oe_runmake DESTDIR=${D} install-static

@@ -4,7 +4,7 @@
 # NOTE: path is relative to PKGD directory
 FILES_COMPRESS ?= ""
 
-DEPENDS_append = " upx-native"
+DEPENDS:append = " upx-native"
 
 UPX ?= "${STAGING_BINDIR_NATIVE}/upx"
 UPX_ARGS ?= "--lzma --best -q"

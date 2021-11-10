@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     file://coredump.conf \
     file://reboot.target.conf \
     file://poweroff.target.conf \
@@ -36,14 +36,14 @@ python() {
         d.setVar('SRC_URI', srcuri + ' file://0001-resolved-fix-loop-on-packets-with-pseudo-dns-types.patch')
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     /srv \
     /etc/localtime \
     /etc/mtab \
     ${sysconfdir}/systemd/journald.conf.d \
     "
 
-do_install_append() {
+do_install:append() {
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
     install -m 06444 ${WORKDIR}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
 
@@ -100,33 +100,33 @@ do_install_append() {
 }
 
 PACKAGES =+ "${PN}-zram-swap"
-SUMMARY_${PN}-zram-swap = "Enable compressed memory swap"
-DESCRIPTION_${PN}-zram-swap = "Enable a already created ZRAM swap memory device."
+SUMMARY:${PN}-zram-swap = "Enable compressed memory swap"
+DESCRIPTION:${PN}-zram-swap = "Enable a already created ZRAM swap memory device."
 SYSTEMD_PACKAGES += "${PN}-zram-swap"
-FILES_${PN}-zram-swap = "\
+FILES:${PN}-zram-swap = "\
     ${systemd_unitdir}/system/dev-zram0.swap \
 "
-SYSTEMD_SERVICE_${PN}-zram-swap += "dev-zram0.swap"
+SYSTEMD_SERVICE:${PN}-zram-swap += "dev-zram0.swap"
 
-FILES_udev += "\
+FILES:udev += "\
     ${rootlibexecdir}/udev/resin_update_state_probe \
     ${rootlibexecdir}/udev/zram-swap-init           \
 "
 
-RDEPENDS_${PN}_append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"
+RDEPENDS:${PN}:append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"
 
 # Network configuration is managed by NetworkManager. ntp is managed by chronyd
-PACKAGECONFIG_remove = "resolved networkd timesyncd"
+PACKAGECONFIG:remove = "resolved networkd timesyncd"
 
-PACKAGECONFIG_remove = "polkit"
+PACKAGECONFIG:remove = "polkit"
 
 # Add missing users/groups defined in /usr/lib/sysusers.d/*
 # In this time we avoid creating these at first boot
-USERADD_PARAM_${PN} += "; --system systemd-bus-proxy; --system -d / -M --shell /bin/nologin -u 65534 nobody;"
-GROUPADD_PARAM_${PN} += "; -r wheel; -r nobody;"
+USERADD_PARAM:${PN} += "; --system systemd-bus-proxy; --system -d / -M --shell /bin/nologin -u 65534 nobody;"
+GROUPADD_PARAM:${PN} += "; -r wheel; -r nobody;"
 
 # Clean up udev hardware database source files
-pkg_postinst_udev-hwdb_append () {
+pkg_postinst:udev-hwdb:append () {
     # These files have already been used to generate /etc/udev/hwdb.bin which is the only file used at runtime
     rm $D/lib/udev/hwdb.d/*
 }

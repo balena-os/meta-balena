@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 DEPENDS = "time-native"
-RDEPENDS_${PN}-fs = "e2fsprogs-tune2fs mtools"
+RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools"
 
 SRC_URI = " \
     file://os-helpers-fs \
@@ -26,6 +26,6 @@ do_install() {
         ${D}${libexecdir}
 }
 
-FILES_${PN}-fs = "${libexecdir}/os-helpers-fs"
-FILES_${PN}-logging = "${libexecdir}/os-helpers-logging"
-FILES_${PN}-time = "${libexecdir}/os-helpers-time"
+FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"
+FILES:${PN}-logging = "${libexecdir}/os-helpers-logging"
+FILES:${PN}-time = "${libexecdir}/os-helpers-time"

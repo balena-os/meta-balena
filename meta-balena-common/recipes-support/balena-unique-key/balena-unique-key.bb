@@ -16,16 +16,16 @@ inherit allarch systemd
 # package
 OPENSSL_PKG ?= "openssl-bin"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     bash \
     jq \
     balena-config-vars \
     ${OPENSSL_PKG} \
     "
 
-SYSTEMD_SERVICE_${PN} = "balena-device-uuid.service"
+SYSTEMD_SERVICE:${PN} = "balena-device-uuid.service"
 
-FILES_${PN} += "/home/root/.rnd"
+FILES:${PN} += "/home/root/.rnd"
 
 do_install() {
     # Create an initial file where openssl will save its state

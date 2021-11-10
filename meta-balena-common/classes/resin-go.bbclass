@@ -1,11 +1,11 @@
 inherit go
 
-do_compile_prepend() {
+do_compile:prepend() {
     export CGO_ENABLED=0
 }
 
 # Fix host-user-contaminated
-do_install_append() {
+do_install:append() {
     chown root:root -R ${D}
 
     # Install all binaries in bindir
@@ -16,4 +16,4 @@ do_install_append() {
     fi
 }
 
-FILES_${PN} += "${bindir}"
+FILES:${PN} += "${bindir}"

@@ -1,17 +1,17 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/${PN}"
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 
 inherit systemd
 
-SYSTEMD_SERVICE_${PN} = "extract-balena-ca.service"
+SYSTEMD_SERVICE:${PN} = "extract-balena-ca.service"
 
-RDEPENDS_${PN}_class-target += "os-helpers-logging"
+RDEPENDS:${PN}:class-target += "os-helpers-logging"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     file://extract-balena-ca \
     file://extract-balena-ca.service \
 "
 
-do_install_append_class-target () {
+do_install:append:class-target () {
     # Create a drop-in directory for balena-controlled CAs
     install -d ${D}/usr/share/ca-certificates/balena/
 
@@ -26,7 +26,7 @@ do_install_append_class-target () {
     sed -i -e "s,^LOCALCERTSDIR=.*$,LOCALCERTSDIR=\$SYSROOT/usr/share/ca-certificates/balena," ${D}/usr/sbin/update-ca-certificates
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${bindir}/extract-balena-ca \
     ${systemd_unitdir}/system/extract-balena-ca.service \
 "

@@ -10,7 +10,7 @@ S = "${WORKDIR}"
 
 inherit allarch
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     bash \
     curl \
     jq \

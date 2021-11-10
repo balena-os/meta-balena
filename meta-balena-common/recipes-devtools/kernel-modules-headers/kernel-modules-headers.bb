@@ -63,14 +63,14 @@ do_compile[depends] += "virtual/kernel:do_deploy virtual/kernel:do_patch"
 addtask deploy before do_package after do_install
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-FILES_${PN} += "/usr/src/*"
+FILES:${PN} += "/usr/src/*"
 
 # Tools inside the headers package are slightly special.
 # Skip some QA checks. We are interested in the arch check only.
-INSANE_SKIP_${PN} = "file-rdeps ldflags staticdev already-stripped"
+INSANE_SKIP:${PN} = "file-rdeps ldflags staticdev already-stripped"
 
 # gen_mod_headers uses host tools on the build machine while running
 # make modules_prepare. gcc on the build host might not support the
 # -fmacro-prefix-map option which is quite recent and introduced in
 # Yocto since warrior. Remove it for this recipe
-DEBUG_PREFIX_MAP_remove = "-fmacro-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
+DEBUG_PREFIX_MAP:remove = "-fmacro-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"

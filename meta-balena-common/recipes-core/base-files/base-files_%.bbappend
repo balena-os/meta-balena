@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-do_install_append () {
+do_install:append () {
 	# Systemd provides mtab so if activated, don't let base-files provide it too
 	# We avoid errors at do_rootfs in this way when using opkg
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
@@ -12,7 +12,7 @@ do_install_append () {
 	install -d -m 755 ${D}/lib/modules
 }
 
-do_install_basefilesissue_append () {
+do_install_basefilesissue:append () {
 	distro_version_nodate="${@d.getVar('DISTRO_VERSION').replace('snapshot-${DATE}','snapshot').replace('${DATE}','')}"
 	sed -i "s/${distro_version_nodate}/${HOSTOS_VERSION}/g" ${D}${sysconfdir}/issue
 	sed -i "s/${distro_version_nodate}/${HOSTOS_VERSION}/g" ${D}${sysconfdir}/issue.net

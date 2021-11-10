@@ -10,9 +10,9 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = "balena-hostname.service"
+SYSTEMD_SERVICE:${PN} = "balena-hostname.service"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     coreutils \
     jq \
     balena-unique-key \

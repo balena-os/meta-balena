@@ -3,4 +3,4 @@
 SYSTEMD_AUTO_ENABLE = "disable"
 
 # We need dropbear to be able to migrate host keys in the update hooks
-RCONFLICTS_${PN} = ""
+RCONFLICTS:${PN} = ""

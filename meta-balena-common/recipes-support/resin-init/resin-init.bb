@@ -13,9 +13,9 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE_${PN} = "resin-init.service"
+SYSTEMD_SERVICE:${PN} = "resin-init.service"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     bash \
     resin-init-board \
     iw \

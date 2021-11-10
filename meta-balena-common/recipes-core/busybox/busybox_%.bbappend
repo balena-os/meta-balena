@@ -1,9 +1,9 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-SRC_URI_append = " \
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+SRC_URI:append = " \
     file://defconfig \
     file://balenaos.cfg \
     "
 
-RDEPENDS_${PN}_append = " openssl"
+RDEPENDS:${PN}:append = " openssl"
 
 ALTERNATIVE_PRIORITY[hwclock] = "100"

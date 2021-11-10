@@ -16,7 +16,7 @@ BALENA_ROOT_FSTYPE = "ext4"
 # Make sure you have the resin image ready
 do_image_balenaos_img[depends] += "balena-image:do_rootfs"
 
-IMAGE_FEATURES_append = " \
+IMAGE_FEATURES:append = " \
     splash \
     read-only-rootfs \
     ssh-server-openssh \
@@ -44,10 +44,10 @@ BALENA_STATE_FS_LABEL = "flash-state"
 BALENA_DATA_FS_LABEL = "flash-data"
 
 # Put the resin logo, uEnv.txt files inside the boot partition
-BALENA_BOOT_PARTITION_FILES_append = " balena-logo.png:/splash/balena-logo.png"
+BALENA_BOOT_PARTITION_FILES:append = " balena-logo.png:/splash/balena-logo.png"
 
 # add the generated <machine-name>.json to the flash-boot partition, renamed as device-type.json
-BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
+BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
 # Put balena-image in the flasher rootfs
 add_resin_image_to_flasher_rootfs() {
@@ -58,10 +58,10 @@ add_resin_image_to_flasher_rootfs() {
 IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
 
 # example NetworkManager config file
-BALENA_BOOT_PARTITION_FILES_append = " \
+BALENA_BOOT_PARTITION_FILES:append = " \
     system-connections/balena-sample.ignore:/system-connections/balena-sample.ignore \
     system-connections/README.ignore:/system-connections/README.ignore \
     "
 
 # Resin flasher flag file
-BALENA_BOOT_PARTITION_FILES_append = " ${BALENA_FLASHER_FLAG_FILE}:/${BALENA_FLASHER_FLAG_FILE}"
+BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_FLASHER_FLAG_FILE}:/${BALENA_FLASHER_FLAG_FILE}"
