@@ -1,0 +1,39 @@
+#!/bin/sh
+
+DURING_UPDATE="${DURING_UPDATE:-0}"
+SECUREBOOT_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
+SETUPMODE_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode"
+EFIVAR_RE="s,^[^ ]*  *\([^ ]*\) .*$,\1,"
+
+# Only applicable in the new OS container
+if [ "${DURING_UPDATE}" != 1 ]; then
+    exit 0
+fi
+
+# Only applicable on UEFI systems
+if [ ! -d "/sys/firmware/efi" ]; then
+    exit 0
+fi
+
+# Only applicable when in secure boot mode
+SECUREBOOT_VAL=$(efivar -p -n "${SECUREBOOT_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
+if [ "${SECUREBOOT_VAL}" -ne "1" ]; then
+    exit 0
+fi
+
+# Not applicable when secure boot is in setup mode
+SETUPMODE_VAL=$(efivar -p -n "${SETUPMODE_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
+if [ "${SETUPMODE_VAL}" -ne "0" ]; then
+    exit 0
+fi
+
+# Not applicable if the signatures are in place
+if [ -f "/resin-boot/EFI/BOOT/grub.cfg.sig" ]; then
+    exit 0
+fi
+
+
+# At this point we are sure the current OS is running in secure boot mode
+# and the new image is not signed, abort the update
+printf "[ERROR] Trying to update to an unsigned OS version while in secure boot mode"
+exit 1
