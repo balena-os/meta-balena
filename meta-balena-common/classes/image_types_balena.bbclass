@@ -27,7 +27,11 @@ inherit image_types
 #
 #   +-------------------+
 #   |                   |  ^
-#   | Reserved          |  |BALENA_IMAGE_ALIGNMENT
+#   |  Reserved         |  |BALENA_IMAGE_ALIGNMENT
+#   |                   |  v
+#   +-------------------+
+#   |                   |  ^
+#   |  BIOS partition   |  |BALENA_BIOS_SIZE
 #   |                   |  v
 #   +-------------------+
 #   |                   |  ^
@@ -94,11 +98,13 @@ def disk_aligned(d, rootfs_size):
 # 700 MiB size, the size  of all other partitions except the data partition,
 # dividing by 2, and substracting filesystem metadata and reserved allocations
 def balena_rootfs_size(d):
+    bios_part_size = int(d.getVar("BALENA_BIOS_SIZE"))
     boot_part_size = int(d.getVar("BALENA_BOOT_SIZE"))
     state_part_size = int(d.getVar("BALENA_STATE_SIZE"))
     balena_rootfs_size = int(((700 * 1024) - boot_part_size - state_part_size) / 2)
     return int(disk_aligned(d, balena_rootfs_size))
 
+BALENA_BIOS_FS_LABEL ?= "resin-bios"
 BALENA_BOOT_FS_LABEL ?= "resin-boot"
 BALENA_ROOTA_FS_LABEL ?= "resin-rootA"
 BALENA_ROOTB_FS_LABEL ?= "resin-rootB"
@@ -109,6 +115,7 @@ BALENA_DATA_FS_LABEL ?= "resin-data"
 BALENA_BOOT_FAT32 ?= "0"
 
 # Sizes in KiB
+BALENA_BIOS_SIZE ?= "1024"
 BALENA_BOOT_SIZE ?= "40960"
 BALENA_ROOTB_SIZE ?= ""
 BALENA_STATE_SIZE ?= "20480"
@@ -149,6 +156,14 @@ IMAGE_CMD:balenaos-img () {
     #
     # Partition size computation (aligned to BALENA_IMAGE_ALIGNMENT)
     #
+
+    if [ "${PARTITION_TABLE_TYPE}" != "gpt" ]; then
+        BALENA_BIOS_SIZE=0
+    fi
+
+    # resin-bios (can be zero)
+    BALENA_BIOS_SIZE_ALIGNED=$(expr ${BALENA_BIOS_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} - 1)
+    BALENA_BIOS_SIZE_ALIGNED=$(expr ${BALENA_BIOS_SIZE_ALIGNED} \- ${BALENA_BIOS_SIZE_ALIGNED} \% ${BALENA_IMAGE_ALIGNMENT})
 
     # resin-boot
     BALENA_BOOT_SIZE_ALIGNED=$(expr ${BALENA_BOOT_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} - 1)
@@ -191,6 +206,7 @@ IMAGE_CMD:balenaos-img () {
     BALENA_RAW_IMG_SIZE=$(expr \
         ${DEVICE_SPECIFIC_SPACE} \+ \
         ${BALENA_IMAGE_ALIGNMENT} \+ \
+        ${BALENA_BIOS_SIZE_ALIGNED} \+ \
         ${BALENA_BOOT_SIZE_ALIGNED} \+ \
         ${BALENA_ROOTA_SIZE_ALIGNED} \+ \
         ${BALENA_ROOTB_SIZE_ALIGNED} \+ \
@@ -200,6 +216,9 @@ IMAGE_CMD:balenaos-img () {
         ${BALENA_DATA_SIZE_ALIGNED} \
     )
     echo "Creating raw image as it follow:"
+    if [ "${BALENA_BIOS_SIZE}" > 0 ]; then
+        echo "  BIOS partition ${BALENA_BIOS_SIZE_ALIGNED} KiB [$(expr ${BALENA_BIOS_SIZE_ALIGNED} \/ 1024) MiB]"
+    fi
     echo "  Boot partition ${BALENA_BOOT_SIZE_ALIGNED} KiB [$(expr ${BALENA_BOOT_SIZE_ALIGNED} \/ 1024) MiB]"
     echo "  Root A partition ${BALENA_ROOTA_SIZE_ALIGNED} KiB [$(expr ${BALENA_ROOTA_SIZE_ALIGNED} \/ 1024) MiB]"
     echo "  Root B partition ${BALENA_ROOTA_SIZE_ALIGNED} KiB [$(expr ${BALENA_ROOTB_SIZE_ALIGNED} \/ 1024) MiB]"
@@ -222,6 +241,17 @@ IMAGE_CMD:balenaos-img () {
 
     device_specific_configuration
 
+    # resin-bios
+    #
+    if [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
+        OPTS="resin-bios"
+        START=${DEVICE_SPECIFIC_SPACE}
+        END=$(expr ${START} \+ ${BALENA_BIOS_SIZE_ALIGNED})
+        parted -s ${BALENA_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
+        BALENA_BIOS_PN=$(parted -s ${BALENA_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
+        parted -s ${BALENA_RAW_IMG} set ${BALENA_BIOS_PN} bios_grub on
+    fi
+
     # resin-boot
     #
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
@@ -230,13 +260,18 @@ IMAGE_CMD:balenaos-img () {
         else
             OPTS="primary fat16"
         fi
+        START=${DEVICE_SPECIFIC_SPACE}
     elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
         OPTS="resin-boot"
+        START=${END}
     fi
-    START=${DEVICE_SPECIFIC_SPACE}
     END=$(expr ${START} \+ ${BALENA_BOOT_SIZE_ALIGNED})
     parted -s ${BALENA_RAW_IMG} unit KiB mkpart ${OPTS} ${START} ${END}
-    BALENA_BOOT_PN=$(parted -s ${BALENA_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
+    if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
+        BALENA_BOOT_PN=$(parted -s ${BALENA_RAW_IMG} print | tail -n 2 | tr '\n' ' ' | awk '{print $1}')
+    elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
+        BALENA_BOOT_PN=$(parted -s ${BALENA_RAW_IMG} print | tail -n 3 | tr '\n' ' ' | awk '{print $1}')
+    fi
     parted -s ${BALENA_RAW_IMG} set ${BALENA_BOOT_PN} boot on
 
     # resin-rootA
@@ -334,21 +369,28 @@ IMAGE_CMD:balenaos-img () {
     #
     # Burn partitions
     #
-    dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE})
-    dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED}))
-    dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED}))
+    if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
+        dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE})
+        dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED}))
+        dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED}))
+    elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
+        dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BIOS_SIZE_ALIGNED})
+        dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BIOS_SIZE_ALIGNED} \+ ${BALENA_BOOT_SIZE_ALIGNED}))
+        dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BIOS_SIZE_ALIGNED} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED}))
+    fi
+    
     if [ -n "${BALENA_STATE_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
             dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED}))
+            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BIOS_SIZE_ALIGNED} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED}))
         fi
     fi
     if [ -n "${BALENA_DATA_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
             dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT} \+ ${BALENA_STATE_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_STATE_SIZE_ALIGNED}))
+            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BIOS_SIZE_ALIGNED} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_STATE_SIZE_ALIGNED}))
         fi
     fi
 
