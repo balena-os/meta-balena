@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.0
+## (2021-11-09)
+
+* meta-balena-common/conf: Switch layer to Honister compatibility [Alexandru Costache]
+
 # v2.86.3
 ## (2021-11-09)
 

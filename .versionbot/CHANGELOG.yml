@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'meta-balena-common/conf: Switch layer to Honister compatibility'
+      hash: 8cc0c59efc9946b74fea6fb3a7d6b0d51bad015b
+      body: ''
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.87.0
+  date: 2021-11-09T09:42:26.620Z
+- commits:
     - subject: 'patch: Fix URL to yocto project dependencies'
       hash: 916b1d256a0ab3f23818e7307ce219cdaed2002f
       body: ''
