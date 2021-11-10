@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+cryptsetup_enabled() {
+    # Flasher is not encrypted
+    if [ "$bootparam_flasher" = "true" ]; then
+        return 1
+    fi
+
+    # Check whether there are any LUKS partitions
+    if ! lsblk -nlo fstype | grep -q crypto_LUKS; then
+        return 1
+    fi
+
+    return 0
+}
+
+cryptsetup_run() {
+    EFI_MOUNT_DIR="/efi"
+    mkdir "$EFI_MOUNT_DIR"
+    mount /dev/disk/by-partlabel/balena-efi "$EFI_MOUNT_DIR"
+
+    PASSPHRASE_FILE=/balena-luks.pwd
+    tpm2_rsadecrypt -c "$EFI_MOUNT_DIR/balena-luks.ctx" -o "$PASSPHRASE_FILE" "$EFI_MOUNT_DIR/balena-luks.enc"
+
+    for LUKS_UUID in $(lsblk -nlo uuid,fstype | grep crypto_LUKS | cut -d " " -f 1); do
+        cryptsetup luksOpen --key-file $PASSPHRASE_FILE UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
+    done
+
+    rm -f "$PASSPHRASE_FILE"
+    umount "$EFI_MOUNT_DIR"
+    rmdir "$EFI_MOUNT_DIR"
+}
