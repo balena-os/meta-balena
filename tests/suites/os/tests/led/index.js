@@ -101,10 +101,10 @@ module.exports = {
 				: acc;
 		}, []);
 
-		/*test.true(
+		/* test.true(
 			result.length > 0 && result.length % 2 === 0,
 			'Blink pattern should have been detected',
-		);*/
+		); */
 
 		let count = 0;
 		for (let i = 0; i < result.length; i += 2) {
