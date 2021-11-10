@@ -1,4 +1,18 @@
 - commits:
+    - subject: 'POC: create BIOS boot partition when table type is GPT'
+      hash: 9af0f499c65d65774bec3315c8d3c4a62b0687a1
+      body: |
+        https://en.wikipedia.org/wiki/BIOS_boot_partition
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.88.0
+  date: 2021-11-10T19:34:35.138Z
+- commits:
     - subject: 'meta-balena-common/conf: Switch layer to Honister compatibility'
       hash: 8cc0c59efc9946b74fea6fb3a7d6b0d51bad015b
       body: ''

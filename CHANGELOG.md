@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.0
+## (2021-11-10)
+
+* POC: create BIOS boot partition when table type is GPT [Kyle Harding]
+
 # v2.87.0
 ## (2021-11-09)
 
