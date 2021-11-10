@@ -1,0 +1,61 @@
++++ b/grub-core/loader/i386/linux.c	2021-03-18 05:42:23.238455042 +0100
+@@ -614,6 +614,27 @@ grub_linux_boot (void)
+ 	ctx.params->v0204.efi_mmap_size = efi_mmap_size;
+       }
+   }
++
++  /* Populate secure boot configuration to linux */
++  grub_uint8_t *secureboot, *setupmode;
++  grub_size_t secureboot_size, setupmode_size;
++  grub_efi_guid_t global_guid = GRUB_EFI_GLOBAL_VARIABLE_GUID;
++  secureboot = grub_efi_get_variable("SecureBoot", &global_guid, &secureboot_size);
++  setupmode = grub_efi_get_variable("SetupMode", &global_guid, &setupmode_size);
++
++  if (secureboot == NULL || secureboot_size == 0 || setupmode == NULL || setupmode_size == 0)
++    ctx.params->secure_boot = efi_secureboot_mode_unset;
++  else if (secureboot[0] == 1 && setupmode[0] == 0)
++    ctx.params->secure_boot = efi_secureboot_mode_enabled;
++  else if (secureboot[0] == 0 || setupmode[0] == 1)
++    ctx.params->secure_boot = efi_secureboot_mode_disabled;
++  else
++    ctx.params->secure_boot = efi_secureboot_mode_unknown;
++
++  if (secureboot != NULL)
++    grub_free(secureboot);
++  if (setupmode != NULL)
++    grub_free(setupmode);
+ #endif
+ 
+   /* FIXME.  */
+diff -urp a/include/grub/i386/linux.h b/include/grub/i386/linux.h
+--- a/include/grub/i386/linux.h	2019-04-23 10:54:47.000000000 +0200
++++ b/include/grub/i386/linux.h	2021-03-17 17:10:32.384737853 +0100
+@@ -90,6 +90,15 @@ enum
+     GRUB_VIDEO_LINUX_TYPE_SIMPLE = 0x70    /* Linear framebuffer without any additional functions.  */
+   };
+ 
++/* From linux/efi.h */
++enum efi_secureboot_mode
++  {
++    efi_secureboot_mode_unset,
++    efi_secureboot_mode_unknown,
++    efi_secureboot_mode_disabled,
++    efi_secureboot_mode_enabled
++  };
++
+ /* For the Linux/i386 boot protocol version 2.10.  */
+ struct linux_i386_kernel_header
+ {
+@@ -275,7 +284,11 @@ struct linux_kernel_params
+ 
+   grub_uint8_t mmap_size;		/* 1e8 */
+ 
+-  grub_uint8_t padding9[0x1f1 - 0x1e9];
++  grub_uint8_t padding9[0x1ec - 0x1e9];
++
++  grub_uint8_t secure_boot;		/* 1ec */
++
++  grub_uint8_t padding9_1[0x1f1 - 0x1ed];
+ 
+   /* Linux setup header copy - BEGIN. */
+   grub_uint8_t setup_sects;		/* The size of the setup in sectors */
