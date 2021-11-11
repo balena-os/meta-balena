@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.3
+## (2021-11-11)
+
+* Add out-of-tree peak CAN driver [Michal Toman]
+
 # v2.87.2
 ## (2021-11-11)
 

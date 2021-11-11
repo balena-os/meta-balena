@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add out-of-tree peak CAN driver
+      hash: 983c233bbc243f83c53706639867485655cafbfb
+      body: |
+        Only add the recipe, let DTs pull it as necessary
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.3
+  date: 2021-11-11T12:59:58.982Z
+- commits:
     - subject: Add recipes for TPM2 tools
       hash: baddbd39fd17d364ebfd69bf139980ca82abc8ba
       body: >
