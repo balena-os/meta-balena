@@ -1,4 +1,55 @@
 - commits:
+    - subject: 'meta-resin-sumo: Fix initramfs-framework kexec dependencies'
+      hash: 2209d9d1475c83db564922277d5a864f4bdd36c3
+      body: |
+        On recent Yocto versions the findmnt package is split into its own
+        package, but sumo needs to include the whole util-linux package.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'initrdscripts: Use a 2nd stage bootloader to unlock LUKS partitions'
+      hash: 79e1cdb0634c2a2e57316ca9ed956e17807c97e0
+      body: >
+        GRUB can not use the TPM easily to unlock the volumes and find the
+        kernel
+
+        on an encrypted partition. Instead, we choose to store a linux kernel
+
+        and use it as 2nd stage bootloader to unlock the partition, load the
+        actual
+
+        kernel and kexec into it. This should eventually be replaced by a proper
+
+        2nd stage bootloader that is being worked on.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'grub-efi: add support for signature verification in secure boot mode'
+      hash: 4f64d66c2507220a4bd82a06bd80ccf6098086cb
+      body: |
+        This incorporates multiple changes:
+        - Patch grub to propagate secure boot mode to the kernel
+        - Enable GPG signature verification in GRUB
+        - Sign GRUB config files
+        - Sign the grub EFI binary for secure boot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.1
+  date: 2021-11-11T13:47:23.377Z
+- commits:
     - subject: 'meta-balena-common/conf: Switch layer to Honister compatibility'
       hash: 8cc0c59efc9946b74fea6fb3a7d6b0d51bad015b
       body: ''
