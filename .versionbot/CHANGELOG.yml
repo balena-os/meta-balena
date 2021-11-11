@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'recipes-devtools/dosfstools: Fix build with Poky Honister'
+      hash: 4c47a01aab59afefbb9ad055fbb975c45f5dd262
+      body: |
+        Poky Honister comes with dosfstools v4.2
+        so we cannot use the v4.1 append in the
+        meta-balena-common layer.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.87.1
+  date: 2021-11-10T17:07:04.950Z
+- commits:
     - subject: 'meta-balena-common/conf: Switch layer to Honister compatibility'
       hash: 8cc0c59efc9946b74fea6fb3a7d6b0d51bad015b
       body: ''

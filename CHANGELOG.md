@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.1
+## (2021-11-10)
+
+* recipes-devtools/dosfstools: Fix build with Poky Honister [Alexandru Costache]
+
 # v2.87.0
 ## (2021-11-09)
 
