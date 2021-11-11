@@ -63,6 +63,8 @@ inherit kernel-resin-noimage
 
 BALENA_DEFCONFIG_NAME ?= "resin-defconfig"
 
+DEPENDS:append = " ca-certificates-native coreutils-native curl-native jq-native"
+
 def get_kernel_version(d):
     import os, re
     kernelsource = d.getVar('S', True)
@@ -145,6 +147,7 @@ BALENA_CONFIGS ?= " \
     ipv6_mroute \
     disable_hung_panic \
     mdraid \
+    dmcrypt \
     ${FIRMWARE_COMPRESS} \
     "
 
@@ -629,6 +632,12 @@ BALENA_CONFIGS[mdraid] = " \
     CONFIG_MD_AUTODETECT=y \
 "
 
+# Enable dmcrypt/LUKS
+BALENA_CONFIGS[dmcrypt] = " \
+    CONFIG_CRYPTO_XTS=y \
+    CONFIG_DM_CRYPT=y \
+"
+
 ###########
 # HELPERS #
 ###########
@@ -947,8 +956,54 @@ do_kernel_resin_checkconfig[dirs] += "${WORKDIR} ${B}"
 # Force compile to depend on the last resin task in the chain
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 
-# copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
+do_configure:append () {
+    mkdir -p certs
+    if [ "${SIGN}" != "true" ]; then
+        return 0
+    fi
+
+    export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
+
+    RESPONSE_FILE=$(mktemp)
+    curl --fail "${SIGN_API}/kmod/cert/${SIGN_KMOD_KEY_ID}" > "${RESPONSE_FILE}"
+    jq -r .cert "${RESPONSE_FILE}" > certs/balenaos.crt
+    rm -f "${RESPONSE_FILE}"
+}
+
+do_sign () {
+    if [ "x${SIGN_API}" = "x" ]; then
+        return 0
+    fi
+
+    export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
+
+    TO_SIGN=$(mktemp)
+
+    # Sign kernel for grub
+    echo "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs" > "${TO_SIGN}"
+
+    for FILE_TO_SIGN in $(cat "${TO_SIGN}")
+    do
+        REQUEST_FILE=$(mktemp)
+        RESPONSE_FILE=$(mktemp)
+        echo "{\"key_id\": \"${SIGN_GRUB_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${FILE_TO_SIGN})\"}" > "${REQUEST_FILE}"
+        curl --fail "${SIGN_API}/gpg/sign" -X POST -H "Content-Type: application/json" -H "X-API-Key: ${SIGN_API_KEY}" -d "@${REQUEST_FILE}" > "${RESPONSE_FILE}"
+        jq -r .signature < "${RESPONSE_FILE}" | base64 -d > "${FILE_TO_SIGN}.sig"
+        rm -f "${REQUEST_FILE}" "${RESPONSE_FILE}"
+    done
+
+    rm -f "${TO_SIGN}"
+}
+
+addtask sign before do_deploy after do_bundle_initramfs
+
 do_deploy:append () {
+    # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
     install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
     install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
+
+    # Deploy the signature as well if we are signing
+    if [ "${SIGN}" = "true" ]; then
+        install -m 0644 ${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs.sig ${DEPLOYDIR}/${KERNEL_IMAGETYPE}.sig
+    fi
 }
