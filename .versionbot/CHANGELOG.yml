@@ -1,4 +1,21 @@
 - commits:
+    - subject: Add recipes for TPM2 tools
+      hash: baddbd39fd17d364ebfd69bf139980ca82abc8ba
+      body: >
+        Taken from
+        http://git.yoctoproject.org/cgit/cgit.cgi/meta-security/tree/meta-tpm/recipes-tpm2
+
+        Only add the recipes, let DTs pull it as necessary.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.2
+  date: 2021-11-11T08:07:31.669Z
+- commits:
     - subject: 'recipes-devtools/dosfstools: Fix build with Poky Honister'
       hash: 4c47a01aab59afefbb9ad055fbb975c45f5dd262
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.2
+## (2021-11-11)
+
+* Add recipes for TPM2 tools [Michal Toman]
+
 # v2.87.1
 ## (2021-11-10)
 
