@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'kernel-balena.class: Add support for FDE and sign for secure boot'
+      hash: ec2ffdd5181e0246bcc9bb27f1ffc59dc436e9f7
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.1
+  date: 2021-11-11T06:08:13.897Z
+- commits:
     - subject: 'meta-balena-common/conf: Switch layer to Honister compatibility'
       hash: 8cc0c59efc9946b74fea6fb3a7d6b0d51bad015b
       body: ''
