@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'resindataexpander: also resize LUKS volume if necessary'
+      hash: aff55ab61db7842202d7aec2e16b3bab505daf60
+      body: |
+        The behaviour for non-LUKS system should be the same as before,
+        an extra step is performed when LUKS resize is necessary.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.4
+  date: 2021-11-11T14:56:27.092Z
+- commits:
     - subject: Add out-of-tree peak CAN driver
       hash: 983c233bbc243f83c53706639867485655cafbfb
       body: |

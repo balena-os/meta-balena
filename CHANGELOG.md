@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.4
+## (2021-11-11)
+
+* resindataexpander: also resize LUKS volume if necessary [Michal Toman]
+
 # v2.87.3
 ## (2021-11-11)
 
