@@ -310,12 +310,6 @@ if [ "$LUKS" = "1" ]; then
         PART_DEV="/dev/$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         inform "Encrypting $PART_DEV"
         echo -n "$LUKS_PASSPHRASE" | cryptsetup luksFormat "$PART_DEV" -
-        if [ "x$EXTRA_LUKS_PASSPHRASE" != "x" ]; then
-            TMP_PWDFILE=$(mktemp)
-            echo -n "$EXTRA_LUKS_PASSPHRASE" > "$TMP_PWDFILE"
-            echo -n "$LUKS_PASSPHRASE" | cryptsetup luksAddKey "$PART_DEV" "$TMP_PWDFILE" --key-file -
-            rm -f "$TMP_PWDFILE"
-        fi
         echo -n "$LUKS_PASSPHRASE" | cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file -
         DM_DEV="/dev/mapper/$PART_NAME"
         if [ "$PART_NAME" = "resin-boot" ]; then
