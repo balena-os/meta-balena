@@ -240,7 +240,11 @@ if [ "$LUKS" = "1" ]; then
 
     # Copy header and resin-boot partition
     inform "Flashing boot partition"
-    dd if="/opt/$BALENA_IMAGE" of="/dev/$internal_dev" bs=4M count=11
+    ORIGINAL_BOOT_PART_ID=$(find_part_id "$LOOP_DEVICE" resin-boot)
+    ORIGINAL_BOOT_PART_SIZE=$(find_part_size "$LOOP_DEVICE" "ORIGINAL_BOOT_PART_ID")
+
+    dd if="/opt/$BALENA_IMAGE" of="/dev/$internal_dev" bs=1M count=$["$ORIGINAL_BOOT_PART_SIZE" + 1]
+    FLASHED=$["$ORIGINAL_BOOT_PART_SIZE" * 1024 * 1024]
 
     # Repartition the new drive - this assumes GPT partition table
     inform "Repartitioning $internal_dev for disk encryption"
