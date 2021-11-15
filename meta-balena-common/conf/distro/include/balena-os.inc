@@ -39,6 +39,9 @@ DISTRO_FEATURES:append = " ${@bb.utils.contains('OS_DEVELOPMENT','1','osdev-imag
 # Disable user namespacing with a sysctl by default, but allow DTs to leave it enabled
 DISTRO_FEATURES:append = " disable-user-ns"
 
+# balenaOS does not use PAM but some vendor BSP might add it
+DISTRO_FEATURES:remove = "pam"
+
 # Providers
 PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
