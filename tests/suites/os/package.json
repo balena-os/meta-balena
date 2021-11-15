@@ -8,6 +8,7 @@
 		"mz": "^2.7.0",
 		"request": "^2.88.0",
 		"request-promise": "^4.2.4",
+		"dockerode": "^2.5.8",
 		"tar-stream": "^2.1.0"
 	}
 }

@@ -130,6 +130,7 @@ module.exports = {
 		'./tests/config-json',
 		'./tests/boot-splash',
 		'./tests/connectivity',
+		'./tests/engine-socket',
 		'./tests/udev',
 		'./tests/device-tree',
 		'./tests/purge-data',
