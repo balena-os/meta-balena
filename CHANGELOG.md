@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.5
+## (2021-11-11)
+
+* tests: os: Add exposed engine socket test [Alex Gonzalez]
+
 # v2.87.4
 ## (2021-11-11)
 

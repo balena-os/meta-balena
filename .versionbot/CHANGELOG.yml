@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'tests: os: Add exposed engine socket test'
+      hash: 612b7853a23441d0192de5580d37d0f89f7f3103
+      body: |
+        This tests the engine socket being exposed in development mode but not
+        in production mode.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.5
+  date: 2021-11-11T17:56:18.921Z
+- commits:
     - subject: 'resindataexpander: also resize LUKS volume if necessary'
       hash: aff55ab61db7842202d7aec2e16b3bab505daf60
       body: |
