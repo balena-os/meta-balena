@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'connectivity: proxy: move nadoo/glider to container'
+      hash: 07dbe414a1dfa556427d4fc94ce7fdec688cf0e2
+      body: |
+        Previously, the core service exposed a /proxy endpoint that would start
+        up a proxy remotely, which would be used by a test in the connectivity
+        module. However, the endpoint returned the address for the testbot to be
+        used as the proxy in the response, and this required manual
+        configuration of the interface. Additionally, it requires the worker
+        service to install and provide glider for forward proxying.
+
+        Move the proxy (glider) to a container on the device being tested,
+        which simplifies configuration, and reduces the complexity and size of
+        the interface of Leviathan.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.87.6
+  date: 2021-11-15T13:04:05.810Z
+- commits:
     - subject: 'tests: os: Add exposed engine socket test'
       hash: 612b7853a23441d0192de5580d37d0f89f7f3103
       body: |

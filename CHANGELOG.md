@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.6
+## (2021-11-15)
+
+* connectivity: proxy: move nadoo/glider to container [Joseph Kogut]
+
 # v2.87.5
 ## (2021-11-11)
 
