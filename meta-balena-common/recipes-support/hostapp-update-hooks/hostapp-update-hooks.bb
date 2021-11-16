@@ -51,6 +51,8 @@ RDEPENDS:${PN} = " \
     dropbear \
     openssh-keygen \
     util-linux \
+    efivar \
+    efitools-utils \
     "
 
 do_install() {
