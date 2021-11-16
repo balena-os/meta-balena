@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.83.22
+## (2021-11-16)
+
+* linux-firmware: Include RTL8723BU firmware files [Zahari Petkov]
+
 # v2.83.21
 ## (2021-09-01)
 
