@@ -47,7 +47,7 @@ SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 LUKS=0
-SECUREBOOT_SETUP=0
+EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -182,7 +182,22 @@ if [ -d /sys/firmware/efi ]; then
         LUKS=1
     fi
     if [ "$SETUPMODE_VAR" -eq "1" ]; then
-        SECUREBOOT_SETUP=1
+        inform "Secure boot setup mode detected - programming keys"
+        if ! mount | grep -q "type efivarfs"; then
+            mount -t efivarfs efivarfs "${EFIVARS_MOUNTDIR}"
+        fi
+        # Leave PK last
+        for e in db KEK PK; do
+            # Remove immutable attribute
+            chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
+            if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
+                /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
+            fi
+        done
+        if [ "$LUKS" -ne "1" ]; then
+            inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
+            reboot
+        fi
     fi
 fi
 
@@ -469,6 +484,7 @@ if [ "$LUKS" = "1" ]; then
         cryptsetup luksClose "$PART_NAME"
     done
 fi
+
 
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 
