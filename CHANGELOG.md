@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.8
+## (2021-11-16)
+
+* mkfs-hostapp-native: Remove BALENA_STORAGE override for native recipes [Alexandru Costache]
+
 # v2.87.7
 ## (2021-11-16)
 
