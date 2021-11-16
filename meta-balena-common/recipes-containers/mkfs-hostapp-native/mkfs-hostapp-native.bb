@@ -16,15 +16,6 @@ DEPENDS = " \
     e2fsprogs-native \
     "
 
-python __anonymous() {
-    # Force BALENA_STORAGE to use the machine specific definition even if we
-    # are building a native recipe
-    machine = d.getVar("MACHINE", True)
-    bs_machine = d.getVar("BALENA_STORAGE_" + machine, True)
-    if bs_machine:
-        d.setVar("BALENA_STORAGE", bs_machine)
-}
-
 S = "${WORKDIR}"
 
 do_compile () {
