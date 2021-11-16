@@ -66,7 +66,7 @@ function inform {
 function find_part_id {
     DEVICE=$1
     LABEL=$2
-    FIELD=${3:-partlabel}
+    FIELD=${3:-label}
 
     lsblk "/dev/${DEVICE}" -nlo "name,${FIELD}" | grep "${LABEL}" | sed -e "s,^${DEVICE}p\?\([0-9][0-9]*\)[ \t]*${LABEL}$,\1,"
 }
@@ -240,18 +240,19 @@ if [ "$LUKS" = "1" ]; then
 
     resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
 
-    # Copy header and resin-boot partition
-    inform "Flashing boot partition"
-    ORIGINAL_BOOT_PART_ID=$(find_part_id "$LOOP_DEVICE" resin-boot)
-    ORIGINAL_BOOT_PART_SIZE=$(find_part_size "$LOOP_DEVICE" "ORIGINAL_BOOT_PART_ID")
-
-    dd if="/opt/$BALENA_IMAGE" of="/dev/$internal_dev" bs=1M count=$["$ORIGINAL_BOOT_PART_SIZE" + 1]
-    FLASHED=$["$ORIGINAL_BOOT_PART_SIZE" * 1024 * 1024]
-
-    # Repartition the new drive - this assumes GPT partition table
+    # Repartition the new drive
     inform "Repartitioning $internal_dev for disk encryption"
 
-    echo -e "OK\nFix" | parted ---pretend-input-tty "/dev/$internal_dev" print
+    # Wipe the existing partition table and create a blank GPT one
+    dd if=/dev/zero of="/dev/$internal_dev" bs=4M count=1
+    parted "/dev/$internal_dev" mktable gpt
+
+    inform "Flashing boot partition"
+    ORIGINAL_BOOT_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-boot)
+    ORIGINAL_BOOT_PART_SIZE=$(find_part_size "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
+    ORIGINAL_BOOT_START=$(find_part_start "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
+
+    parted "/dev/$internal_dev" unit MiB mkpart balena-efi "$ORIGINAL_BOOT_START" $["$ORIGINAL_BOOT_START" + "$ORIGINAL_BOOT_PART_SIZE"]
 
     EFI_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-boot)
 
@@ -260,8 +261,10 @@ if [ "$LUKS" = "1" ]; then
         PART_PREFIX="p"
     fi
 
+    dd if="${LOOP_DEVICE}p${ORIGINAL_BOOT_PART_ID}" of="/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" bs=4M
+    FLASHED=$["$ORIGINAL_BOOT_PART_SIZE" * 1024 * 1024]
+
     # Relabel former boot partition
-    parted -s "/dev/$internal_dev" -- name "$EFI_PART_ID" balena-efi
     fatlabel "/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" "balena-efi"
 
     # Find parition IDs
@@ -280,12 +283,6 @@ if [ "$LUKS" = "1" ]; then
     # Find the beginning of the first partition
     FIRST_PART_ID=$(echo -e "$ROOTA_PART_ID\n$ROOTB_PART_ID\n$STATE_PART_ID\n$DATA_PART_ID" | sort | head -n 1)
     FIRST_PART_START=$(find_part_start "$LOOP_DEVICE_NAME" "$FIRST_PART_ID")
-
-    # Remove partitions that need resizing
-    parted -s "/dev/$internal_dev" -- rm "$DATA_PART_ID"
-    parted -s "/dev/$internal_dev" -- rm "$STATE_PART_ID"
-    parted -s "/dev/$internal_dev" -- rm "$ROOTB_PART_ID"
-    parted -s "/dev/$internal_dev" -- rm "$ROOTA_PART_ID"
 
     # Create new partitions with extra space for LUKS headers
     # LUKS header size is 2MiB
@@ -311,7 +308,7 @@ if [ "$LUKS" = "1" ]; then
 
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
         LOOP_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" "$PART_NAME")
-        INTERNAL_PART_ID=$(find_part_id "$internal_dev" "$PART_NAME")
+        INTERNAL_PART_ID=$(find_part_id "$internal_dev" "$PART_NAME" partlabel)
 
         PART_DEV="/dev/$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         inform "Encrypting $PART_DEV"
