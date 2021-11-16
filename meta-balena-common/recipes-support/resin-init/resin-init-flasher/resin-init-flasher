@@ -74,14 +74,14 @@ function find_part_size {
     DEVICE=$1
     PARTID=$2
 
-    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PARTID}[ \t][ \t]*" | awk '{print $4}' | sed -e "s,\(\.0\)\?MiB,,"
+    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PARTID}[ \t][ \t]*" | awk '{print $4}' | sed -e "s,\(\.00*\)\?MiB,,"
 }
 
 function find_part_start {
     DEVICE=$1
     PARTID=$2
 
-    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PARTID}[ \t][ \t]*" | awk '{print $2}' | sed -e "s,\(\.0\)\?MiB,,"
+    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PARTID}[ \t][ \t]*" | awk '{print $2}' | sed -e "s,\(\.00*\)\?MiB,,"
 }
 
 function dd_with_progress {
