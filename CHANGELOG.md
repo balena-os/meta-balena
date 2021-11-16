@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.7
+## (2021-11-16)
+
+* initrdscripts: add a script for unlocking LUKS volumes [Michal Toman]
+
 # v2.87.6
 ## (2021-11-15)
 

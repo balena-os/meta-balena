@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'initrdscripts: add a script for unlocking LUKS volumes'
+      hash: 7b095c49d49a2ed08c827a872813db270830a503
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.7
+  date: 2021-11-16T12:31:32.268Z
+- commits:
     - subject: 'connectivity: proxy: move nadoo/glider to container'
       hash: 07dbe414a1dfa556427d4fc94ce7fdec688cf0e2
       body: |
