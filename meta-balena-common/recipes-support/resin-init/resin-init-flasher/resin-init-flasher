@@ -476,16 +476,16 @@ fi
 
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
+sync
+
+inform "Board specific flash procedure..."
+/usr/bin/resin-init-flasher-board
+
 if [ "$LUKS" = "1" ]; then
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
         cryptsetup luksClose "$PART_NAME"
     done
 fi
-
-sync
-
-inform "Board specific flash procedure..."
-/usr/bin/resin-init-flasher-board
 
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
 
