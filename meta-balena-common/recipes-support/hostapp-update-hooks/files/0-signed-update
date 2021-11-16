@@ -1,5 +1,12 @@
 #!/bin/sh
 
+#
+# Script which configures balena keys into hardware secure elements and
+# prevents updating to a non-signed system if secure boot is enabled
+#
+
+set -o errexit
+
 # shellcheck source=/dev/null
 . /usr/libexec/os-helpers-logging
 
@@ -8,6 +15,53 @@ UMOUNT_EFIVARS=0
 SECUREBOOT_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
 SETUPMODE_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode"
 EFIVAR_RE="s,^[^ ]*  *\([^ ]*\) .*$,\1,"
+EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
+
+mountEfiVars() {
+    # Mount efivarfs if necessary
+    if ! mount | grep -q "type efivarfs"; then
+        mount -t efivarfs efivarfs "${EFIVARS_MOUNTDIR}"
+        UMOUNT_EFIVARS=1
+    fi
+}
+
+umountEfiVars() {
+    # Leave the system in the original state - unmount efivarfs if we mounted it
+    if [ "${UMOUNT_EFIVARS}" = 1 ]; then
+        umount "${EFIVARS_MOUNTDIR}"
+        UMOUNT_EFIVARS=0
+    fi
+}
+
+verifyMd5sum() {
+    if [ "$1" = "$3" ] ; then return 0; else return 1; fi
+}
+
+countKeys() {
+    /usr/bin/efi-readvar -v "$1" | grep -c "$1:"
+}
+
+updateKeys() {
+    mountEfiVars
+    for k in db KEK PK; do
+        # Remove immutable attribute
+        chattr -i ${EFIVARS_MOUNTDIR}/${k}* || true
+        if verifyMd5sum $(md5sum "/mnt/boot/balena-keys/${k}.auth") $(md5sum "/resin-boot/balena-keys/${k}.auth"); then
+            continue
+        fi
+        count=$(countKeys "${k}")
+        # Append new keys if not present
+        info "Appending %s key...\n" "${k}"
+        /usr/bin/efi-updatevar -a -f "/resin-boot/balena-keys/${k}.auth" "${k}"
+        new_count=$(countKeys "${k}")
+        if [ "${new_count}" != $((count + 1)) ]; then
+            error "Failed to append key"
+            umountEfiVars
+            return 1
+        fi
+    done
+    umountEfiVars
+}
 
 # Only applicable in the new OS container
 if [ "${DURING_UPDATE}" != 1 ]; then
@@ -19,20 +73,13 @@ if [ ! -d "/sys/firmware/efi" ]; then
     exit 0
 fi
 
-# Mount efivarfs if necessary
-if ! mount | grep -q "type efivarfs"; then
-    mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-    UMOUNT_EFIVARS=1
-fi
+mountEfiVars
 
 # Read EFI variables
 SECUREBOOT_VAL=$(efivar -p -n "${SECUREBOOT_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
 SETUPMODE_VAL=$(efivar -p -n "${SETUPMODE_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
 
-# Leave the system in the original state - unmount efivarfs if we mounted it
-if [ "${UMOUNT_EFIVARS}" = 1 ]; then
-    umount /sys/firmware/efi/efivars
-fi
+umountEfiVars
 
 # Only applicable when in secure boot mode
 if [ -z "${SECUREBOOT_VAL}" ] || [ "${SECUREBOOT_VAL}" -ne "1" ]; then
@@ -46,7 +93,8 @@ fi
 
 # Not applicable if the signatures are in place
 if [ -f "/resin-boot/EFI/BOOT/grub.cfg.sig" ]; then
-    exit 0
+    updateKeys
+    exit $?
 fi
 
 
