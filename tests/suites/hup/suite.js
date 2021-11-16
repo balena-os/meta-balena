@@ -17,66 +17,14 @@ const Bluebird = require('bluebird');
 // Starts registry, uploads target image to registry
 const runRegistry = async (that, seedWithImage) => {
 	const docker = new Docker();
-	const registryImage = 'registry:2.7.1';
+	const ip = await that.context.get().worker.ip(that.context.get().link);
 
-	that.log(`Pulling registry image: ${registryImage}`);
-	const stream = await docker.pull(registryImage);
+	that.log('Starting registry...');
+	const state = await that.context.get()
+		.worker.pushContainerToDUT(ip, require('path').join(__dirname, 'assets'), 'registry');
+		that.log(state);
 
-	await new Bluebird((resolve, reject) => {
-		docker.modem.followProgress(
-			stream,
-			(err, output) => {
-				// onFinished
-				if (!err && output && output.length) {
-					err = output.pop().error;
-				}
-				if (err) {
-					reject(err);
-				} else {
-					resolve();
-				}
-			},
-			event => {
-				// onProgress
-			},
-		);
-	});
-
-	const container = await docker
-		.createContainer({
-			Image: registryImage,
-			HostConfig: {
-				AutoRemove: true,
-				Mounts: [
-					{
-						Type: 'tmpfs',
-						Target: '/var/lib/registry',
-					},
-				],
-				PortBindings: {
-					'5000/tcp': [
-						{
-							HostPort: '5000',
-						},
-					],
-				},
-			},
-		})
-		.then(container => {
-			that.log('Starting registry');
-			return container.start();
-		});
-
-	that.suite.teardown.register(async () => {
-		that.log(`Teardown registry`);
-		try {
-			await container.kill();
-		} catch (err) {
-			that.log(`Error removing registry container: ${err}`);
-		}
-	});
-
-	that.log('Loading image into registry');
+	that.log('Loading hostapp image to context...');
 	const imageName = await docker
 		.loadImage(seedWithImage)
 		.then(res => {
@@ -96,10 +44,12 @@ const runRegistry = async (that, seedWithImage) => {
 		});
 
 	const image = await docker.getImage(imageName);
-	const ref = 'localhost:5000/hostapp';
+	const ref = `${ip}:5000/hostapp`;
 
 	await image.tag({ repo: ref, tag: 'latest' });
 	const tagged = await docker.getImage(ref);
+
+	that.log('Pushing hostapp image to registry...');
 	const digest = await tagged
 		.push({ ref })
 		.then(res => {
@@ -123,12 +73,8 @@ const runRegistry = async (that, seedWithImage) => {
 		});
 	await image.remove();
 
-	// this parses the IP of the wlan0 interface which is the gateway for the DUT
-	// Replace the logic below when this merged https://github.com/balena-os/leviathan/pull/442
-	const testbotIP = (
-		await exec(`ip addr | awk '/inet.*wlan0/{print $2}' | cut -d\/ -f1`)
-	).trim();
-	const hostappRef = `${testbotIP}:5000/hostapp@${digest}`;
+	// does it work as localhost?
+	const hostappRef = `${ref}@${digest}`;
 	that.log(`Registry upload complete: ${hostappRef}`);
 
 	that.suite.context.set({
@@ -140,6 +86,7 @@ const runRegistry = async (that, seedWithImage) => {
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, hostapp, target) => {
+
 	test.comment(`Starting HUP`);
 
 	let hupLog;
@@ -200,38 +147,10 @@ const initDUT = async (that, test, target) => {
 	}, true);
 	test.comment(`DUT flashed`);
 
-	const insecureRegistry = await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`ip route | awk '/default/{print $3}' | xargs -I {} echo -n ' --insecure-registry={}:5000'`,
-			target,
-		);
+	// Starts the registry and pushes the hostapp
+	await runRegistry(that, that.context.get().hupOs.image.path);
 
-	const execStart = await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`grep 'ExecStart=/usr/bin/balenad' /lib/systemd/system/balena-host.service`,
-			target,
-		);
-
-	let overrideSetting = `Environment=BALENAD_EXTRA_ARGS=${insecureRegistry}`;
-	// OS releases prior to 2.80.8 do not support BALENAD_EXTRA_ARGS
-	if (execStart.indexOf(`BALENAD_EXTRA_ARGS`) < 0) {
-		overrideSetting = `ExecStart=\n${execStart} ${insecureRegistry}`;
-	}
-
-	test.comment(`Configuring DUT to use test suite registry`);
-	// FIXME we should probably use a shared testbotIP method with the runRegistry helper...
-	await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`mkdir -p /run/systemd/system/balena-host.service.d/ && echo -e "[Service]\n${overrideSetting}" >/run/systemd/system/balena-host.service.d/hup.conf && systemctl daemon-reload && systemctl restart balena-host`,
-			target,
-		);
-
-	test.comment(`DUT ready`);
-
-	// Retrieving journalctl logs 
+	// Retrieving journalctl logs
 	that.teardown.register(async () => {
 		await that.context.get().worker.archiveLogs(that.id, that.context.get().link, "journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'");
 	});
@@ -306,6 +225,9 @@ module.exports = {
 						},
 						// persistentLogging is managed by the supervisor and only read at first boot
 						persistentLogging: true,
+						// Set local mode so we can perform local pushes of containers to the DUT
+						localMode: true,
+						developmentMode: true,
 					},
 				},
 				this.getLogger(),
@@ -327,10 +249,6 @@ module.exports = {
 		await this.context.get().hupOs.fetch();
 		// configure the image
 		await this.context.get().os.configure();
-		// Starts the registry
-		await this.context
-			.get()
-			.hup.runRegistry(this, this.context.get().hupOs.image.path);
 	},
 	tests: [
 		'./tests/smoke',
