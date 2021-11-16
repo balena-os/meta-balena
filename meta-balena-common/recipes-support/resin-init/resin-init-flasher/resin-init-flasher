@@ -65,9 +65,10 @@ function inform {
 
 function find_part_id {
     DEVICE=$1
-    PARTLABEL=$2
+    LABEL=$2
+    FIELD=${3:-partlabel}
 
-    lsblk -nlo "name,partlabel" | grep "${PARTLABEL}" | grep "${DEVICE}" | sed -e "s,^${DEVICE}p\?\([0-9][0-9]*\)[ \t]*${PARTLABEL}$,\1,"
+    lsblk "/dev/${DEVICE}" -nlo "name,${FIELD}" | grep "${LABEL}" | sed -e "s,^${DEVICE}p\?\([0-9][0-9]*\)[ \t]*${LABEL}$,\1,"
 }
 
 function find_part_size {
