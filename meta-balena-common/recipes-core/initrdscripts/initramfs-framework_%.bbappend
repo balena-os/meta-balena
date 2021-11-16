@@ -9,6 +9,7 @@ SRC_URI:append = " \
     file://rorootfs \
     file://rootfs \
     file://finish \
+    file://cryptsetup \
     "
 
 do_install:append() {
@@ -21,6 +22,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
+    install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
 }
 
 PACKAGES:append = " \
@@ -30,6 +32,7 @@ PACKAGES:append = " \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
     initramfs-module-fsuuidsinit \
+    initramfs-module-cryptsetup \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -61,3 +64,7 @@ FILES:initramfs-module-prepare = "/init.d/70-prepare"
 SUMMARY:initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
 RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
 FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
+
+SUMMARY:initramfs-module-cryptsetup = "Unlock encrypted partitions"
+RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup lvm2-udevrules os-helpers-logging"
+FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
