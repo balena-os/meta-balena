@@ -15,6 +15,8 @@ inherit allarch systemd
 
 SYSTEMD_SERVICE:${PN} = "resin-init-flasher.service"
 
+DEPENDS += "balena-keys"
+
 RDEPENDS:${PN} = " \
     bash \
     coreutils \
@@ -26,6 +28,7 @@ RDEPENDS:${PN} = " \
     parted \
     resin-init-flasher-board \
     util-linux-lsblk \
+    efitools-utils \
     "
 
 RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2 efivar',d)}"
