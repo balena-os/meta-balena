@@ -46,6 +46,8 @@ FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
+LUKS=0
+SECUREBOOT_SETUP=0
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -171,6 +173,18 @@ fi
 inform "$internal_dev will be used for flashing."
 
 IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
+
+# Check for UEFI mode and set variables accordingly.
+if [ -d /sys/firmware/efi ]; then
+    SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+    SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+    if [ "$SECUREBOOT_VAR" -eq "1" ]; then
+        LUKS=1
+    fi
+    if [ "$SETUPMODE_VAR" -eq "1" ]; then
+        SECUREBOOT_SETUP=1
+    fi
+fi
 
 if [ "$LUKS" = "1" ]; then
     # Include FS helpers for repartitioning
