@@ -262,7 +262,7 @@ if [ "$LUKS" = "1" ]; then
 
     # Relabel former boot partition
     parted -s "/dev/$internal_dev" -- name "$EFI_PART_ID" balena-efi
-    mlabel ::balena-efi -i "/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}"
+    fatlabel "/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" "balena-efi"
 
     # Find parition IDs
     ROOTA_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-rootA)
@@ -383,9 +383,9 @@ fi
 if [ "$LUKS" = "1" ]; then
     # Split EFI and boot partitions
     EFI_MOUNT_DIR="$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI"
-    mkdir "$EFI_MOUNT_DIR"
-    if ! mount /dev/disk/by-label/BALENA-EFI "$EFI_MOUNT_DIR"; then
-        fail "Failed to mount disk labeled as 'BALENA-EFI'."
+    mkdir -p "$EFI_MOUNT_DIR"
+    if ! mount /dev/disk/by-label/balena-efi "$EFI_MOUNT_DIR"; then
+        fail "Failed to mount disk labeled as 'balena-efi'."
     fi
 
     # Move all non-EFI files to boot partition
