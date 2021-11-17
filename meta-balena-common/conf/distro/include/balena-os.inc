@@ -109,3 +109,10 @@ PREFERRED_PROVIDER_go-native = "go-native"
 
 # Firmware compression support
 FIRMWARE_COMPRESSION ?= "0"
+
+# Signing keys
+SIGN_GRUB_KEY_ID ?= "B22115B27289F02B97DDF0146E43E87B3EEB91B6"
+SIGN_EFI_KEY_ID ?= "balenaos-db"
+SIGN_KMOD_KEY_ID ?= "balenaos-kmod"
+SIGN_EFI_PK_KEY_ID ?= "balenaos-PK"
+SIGN_EFI_KEK_KEY_ID ?= "balenaos-KEK"
