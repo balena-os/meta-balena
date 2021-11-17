@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'resin-mounts: mount EFI partition if it is split from boot'
+      hash: 1cf47718063093369e26ac8831dc83db904de214
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.8
+  date: 2021-11-17T03:04:09.427Z
+- commits:
     - subject: 'initrdscripts: add a script for unlocking LUKS volumes'
       hash: 7b095c49d49a2ed08c827a872813db270830a503
       body: ''

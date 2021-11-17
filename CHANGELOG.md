@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.8
+## (2021-11-17)
+
+* resin-mounts: mount EFI partition if it is split from boot [Michal Toman]
+
 # v2.87.7
 ## (2021-11-16)
 
