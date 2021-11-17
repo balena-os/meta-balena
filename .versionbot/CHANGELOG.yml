@@ -1,4 +1,29 @@
 - commits:
+    - subject: >-
+        hostapp-update-hooks: Add a hook that aborts HUP to unsigned OS under
+        secure boot
+      hash: 9db5d09428bdba067974ff5c5c62a8d35eab7a67
+      body: >
+        When a device is running in secure boot mode, it must not be possible to
+        HUP
+
+        to an unsigned version of the OS because UEFI would refuse to boot it
+        before
+
+        any of our self-recovering rollback mechanisms can be triggered. This
+        would
+
+        effectively brick the device, needing physical access to recover.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.9
+  date: 2021-11-17T03:10:29.925Z
+- commits:
     - subject: 'resin-mounts: mount EFI partition if it is split from boot'
       hash: 1cf47718063093369e26ac8831dc83db904de214
       body: ''

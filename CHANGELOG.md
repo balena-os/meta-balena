@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.9
+## (2021-11-17)
+
+* hostapp-update-hooks: Add a hook that aborts HUP to unsigned OS under secure boot [Michal Toman]
+
 # v2.87.8
 ## (2021-11-17)
 
