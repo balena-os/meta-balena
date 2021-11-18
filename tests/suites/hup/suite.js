@@ -202,12 +202,31 @@ module.exports = {
 		});
 
 		// Downloads the balenaOS image we hup from
-		const path = await this.context
-			.get()
-			.sdk.fetchOS(
-				this.suite.options.balenaOS.download.version,
-				this.suite.deviceType.slug,
-			);
+    const path = await new Promise(async (resolve, reject) => {
+      const path = join(
+        `/tmp/`,
+        `balenaOs.img`,
+      );
+
+      require('http').get(`http://localhost:4080/balena.img`, (stream) => {
+        if (stream.statusCode != 200) {
+          reject(`Download failed with status code ${stream.statusCode}`)
+        }
+        stream.on('error', (e) => reject(e));
+        stream.pipe(fs.createWriteStream(path));
+        stream.on('end', () => {
+          console.log(`Download Successful: ${path}`);
+          resolve(path);
+        });
+      });
+
+    })
+		// const path = await this.context
+		// 	.get()
+		// 	.sdk.fetchOS(
+		// 		this.suite.options.balenaOS.download.version,
+		// 		this.suite.deviceType.slug,
+		// 	);
 
 		this.suite.context.set({
 			os: new BalenaOS(
