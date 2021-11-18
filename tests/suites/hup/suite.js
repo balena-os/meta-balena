@@ -15,16 +15,15 @@ const exec = require('bluebird').promisify(require('child_process').exec);
 const Bluebird = require('bluebird');
 
 // Starts registry, uploads target image to registry
-const runRegistry = async (that, seedWithImage) => {
+const runRegistry = async (that, test, seedWithImage) => {
 	const docker = new Docker();
 	const ip = await that.context.get().worker.ip(that.context.get().link);
 
-	that.log('Starting registry...');
-	const state = await that.context.get()
+	test.comment('Starting registry...');
+	await that.context.get()
 		.worker.pushContainerToDUT(ip, require('path').join(__dirname, 'assets'), 'registry');
-		that.log(state);
 
-	that.log('Loading hostapp image to context...');
+	test.comment('Loading hostapp image to context...');
 	const imageName = await docker
 		.loadImage(seedWithImage)
 		.then(res => {
@@ -41,7 +40,8 @@ const runRegistry = async (that, seedWithImage) => {
 				return str[1].trim();
 			}
 			throw new Error('failed to parse image name from loadImage stream');
-		});
+		})
+		.catch(e => { throw new Error(`Failed to load hostapp image to context: ${e}`) });
 
 	const image = await docker.getImage(imageName);
 	const ref = `${ip}:5000/hostapp`;
@@ -49,7 +49,7 @@ const runRegistry = async (that, seedWithImage) => {
 	await image.tag({ repo: ref, tag: 'latest' });
 	const tagged = await docker.getImage(ref);
 
-	that.log('Pushing hostapp image to registry...');
+	test.comment('Pushing hostapp image to registry...');
 	const digest = await tagged
 		.push({ ref })
 		.then(res => {
@@ -70,12 +70,13 @@ const runRegistry = async (that, seedWithImage) => {
 				}
 			}
 			throw new Error('no digest');
-		});
+		})
+		.catch(e => { throw new Error(`Failed to push image to DUT registry: ${e}`) });
 	await image.remove();
 
 	// does it work as localhost?
 	const hostappRef = `${ref}@${digest}`;
-	that.log(`Registry upload complete: ${hostappRef}`);
+	test.comment(`Registry upload complete: ${hostappRef}`);
 
 	that.suite.context.set({
 		hup: {
@@ -148,7 +149,7 @@ const initDUT = async (that, test, target) => {
 	test.comment(`DUT flashed`);
 
 	// Starts the registry and pushes the hostapp
-	await runRegistry(that, that.context.get().hupOs.image.path);
+	await runRegistry(that, test, that.context.get().hupOs.image.path);
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
