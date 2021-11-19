@@ -11,9 +11,7 @@ SRC_URI = " \
     https://www.peak-system.com/fileadmin/media/linux/files/peak-linux-driver-${PV}.tar.gz \
 "
 
-DEPENDS = "ca-certificates-native coreutils-native curl-native jq-native"
-
-inherit module
+inherit module sign-kmod
 
 S = "${WORKDIR}/peak-linux-driver-${PV}"
 
@@ -23,6 +21,12 @@ EXTRA_OEMAKE:append = " KERNEL_LOCATION=${STAGING_KERNEL_DIR}"
 # we want to build both and ship them at the same time
 # even though only one can be loaded at any moment
 FLAVOURS = "chardev netdev"
+python __anonymous () {
+    artifacts = []
+    for flavour in d.getVar('FLAVOURS').split():
+        artifacts.append(os.path.join(d.getVar('B'), "driver-" + flavour, "pcan.ko" ))
+    d.setVar('SIGNING_ARTIFACTS', ' '.join(artifacts))
+}
 
 do_configure:append() {
     for FLAVOUR in ${FLAVOURS}
@@ -60,33 +64,4 @@ do_install() {
     done
 }
 
-do_sign () {
-    if [ "${SIGN}" != "true" ]; then
-        return 0
-    fi
-
-    # Sign the modules
-    TO_SIGN=$(mktemp)
-
-    for FLAVOUR in ${FLAVOURS}
-    do
-        echo "${B}/driver-${FLAVOUR}/pcan.ko" >> "${TO_SIGN}"
-    done
-
-    export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
-
-    for FILE_TO_SIGN in $(cat "${TO_SIGN}")
-    do
-        REQUEST_FILE=$(mktemp)
-        RESPONSE_FILE=$(mktemp)
-        echo "{\"key_id\": \"${SIGN_KMOD_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${FILE_TO_SIGN})\"}" > "${REQUEST_FILE}"
-        curl --fail "${SIGN_API}/kmod/sign" -X POST -H "Content-Type: application/json" -H "X-API-Key: ${SIGN_API_KEY}" -d "@${REQUEST_FILE}" > "${RESPONSE_FILE}"
-        jq -r .signed < "${RESPONSE_FILE}" | base64 -d > "${FILE_TO_SIGN}.signed"
-        mv "${FILE_TO_SIGN}.signed" "${FILE_TO_SIGN}"
-        rm -f "${REQUEST_FILE}" "${RESPONSE_FILE}"
-    done
-
-    rm -f "${TO_SIGN}"
-}
-
-addtask sign before do_install after do_compile
+addtask sign_kmod before do_install after do_compile
