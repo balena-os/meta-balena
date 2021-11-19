@@ -23,60 +23,26 @@ const runRegistry = async (that, test, seedWithImage) => {
 	await that.context.get()
 		.worker.pushContainerToDUT(ip, require('path').join(__dirname, 'assets'), 'registry');
 
-	test.comment('Loading hostapp image to context...');
-	const imageName = await docker
-		.loadImage(seedWithImage)
-		.then(res => {
-			return new Promise((resolve, reject) => {
-				var bufs = [];
-				res.on('error', err => reject(err));
-				res.on('data', data => bufs.push(data));
-				res.on('end', () => resolve(JSON.parse(Buffer.concat(bufs))));
-			});
-		})
-		.then(json => {
-			const str = json.stream.split('Loaded image ID: ');
-			if (str.length === 2) {
-				return str[1].trim();
-			}
-			throw new Error('failed to parse image name from loadImage stream');
-		})
-		.catch(e => { throw new Error(`Failed to load hostapp image to context: ${e}`) });
+	test.comment('Loading hostapp image into registry...');
+	const ref = `${ip}:5000/hostapp`
 
-	const image = await docker.getImage(imageName);
-	const ref = `${ip}:5000/hostapp`;
+	await exec(`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`);
+	const hostappRef = await exec(`skopeo inspect --tls-verify=false docker://${ref}`)
+		.then(out => {
+			const json = JSON.parse(out);
+			// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
+			// registry, but `hostappRef` is what we tell the DUT to HUP to.
+			// Since balenaEngine on the DUT will also require special setup to allow
+			// pulling from an insecure registry, we pass along a localhost ref
+			// which docker accepts by default
+			//
+			// TODO the alternative would be to push the image directly into the daemon using:
+			// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
+			// Figure out if the DUT docker daemon is exposed...
+			return `localhost:5000/hostapp@${json.Digest}`
+		});
 
-	await image.tag({ repo: ref, tag: 'latest' });
-	const tagged = await docker.getImage(ref);
-
-	test.comment('Pushing hostapp image to registry...');
-	const digest = await tagged
-		.push({ ref })
-		.then(res => {
-			return new Promise((resolve, reject) => {
-				var bufs = [];
-				res.on('error', err => reject(err));
-				res.on('data', data => bufs.push(JSON.parse(data)));
-				res.on('end', () => resolve(bufs));
-			});
-		})
-		.then(output => {
-			for (let json of output) {
-				if (json.error) {
-					throw new Error(json.error);
-				}
-				if (json.aux && json.aux.Digest) {
-					return json.aux.Digest;
-				}
-			}
-			throw new Error('no digest');
-		})
-		.catch(e => { throw new Error(`Failed to push image to DUT registry: ${e}`) });
-	await image.remove();
-
-	// does it work as localhost?
-	const hostappRef = `${ref}@${digest}`;
-	test.comment(`Registry upload complete: ${hostappRef}`);
+	test.comment(`Registry upload complete: ${ref}`);
 
 	that.suite.context.set({
 		hup: {
