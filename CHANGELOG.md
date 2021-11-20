@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.12
+## (2021-11-20)
+
+* initramfs-module-cryptsetup: add TPM dependencies [Michal Toman]
+
 # v2.87.11
 ## (2021-11-20)
 

@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'initramfs-module-cryptsetup: add TPM dependencies'
+      hash: dfff22ad0315c9893d9def6829708b50153d691d
+      body: |
+        The TPM2 utilities were always pulled into the image during development
+        but for the final version they are not and this should pull them
+        as dependencies.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.12
+  date: 2021-11-20T15:38:45.684Z
+- commits:
     - subject: 'balena-keys: Add recipe'
       hash: 1436ac7e3cac2bd244fd387c80a8e52de7f68b5a
       body: |
