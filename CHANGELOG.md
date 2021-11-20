@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.87.10
+## (2021-11-20)
+
+* sign-efi.class, sign-kmod.class: Replace original files with signed ones [Michal Toman]
+* Add signing classes [Alex Gonzalez]
+
 # v2.87.9
 ## (2021-11-17)
 

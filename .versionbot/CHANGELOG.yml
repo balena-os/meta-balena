@@ -1,4 +1,47 @@
 - commits:
+    - subject: 'sign-efi.class, sign-kmod.class: Replace original files with signed ones'
+      hash: 853656e6bcfed0b0206d031c32cd1cde811b8146
+      body: >
+        Currently the two classes would keep the original files untouched and
+        store
+
+        the signed versions as .signed. This patch reverses the logic - the
+        signed
+
+        files replace the original ones and the unsigned version is stored as
+        .unsigned.
+
+        This is because there is no real use-case for the unsigned files, we
+        always
+
+        want to ship the signed version, even if the particular DT does not
+        require it,
+
+        this causes no harm.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: Add signing classes
+      hash: 5c128e6b234d75ba684212a322ababa7b5bd13d2
+      body: >
+        Add classes for GPG, KMOD and EFI artifact signing. Inheriting these
+        classes
+
+        won't run the signing tasks, they have to be manually added to recipes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.10
+  date: 2021-11-20T07:33:31.830Z
+- commits:
     - subject: >-
         hostapp-update-hooks: Add a hook that aborts HUP to unsigned OS under
         secure boot
