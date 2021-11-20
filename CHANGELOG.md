@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.11
+## (2021-11-20)
+
+* balena-keys: Add recipe [Alex Gonzalez]
+
 # v2.87.10
 ## (2021-11-20)
 

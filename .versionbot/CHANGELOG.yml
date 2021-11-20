@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'balena-keys: Add recipe'
+      hash: 1436ac7e3cac2bd244fd387c80a8e52de7f68b5a
+      body: |
+        Add a recipe to deploy the signing keys to the deploy directory.
+        Device types that use them should copy them into the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.11
+  date: 2021-11-20T12:30:28.072Z
+- commits:
     - subject: 'sign-efi.class, sign-kmod.class: Replace original files with signed ones'
       hash: 853656e6bcfed0b0206d031c32cd1cde811b8146
       body: >
