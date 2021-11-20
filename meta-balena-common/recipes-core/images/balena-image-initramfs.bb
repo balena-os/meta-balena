@@ -23,6 +23,8 @@ PACKAGE_INSTALL = " \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
     "
 
+PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-kexec',d)}"
+
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = ""
 
