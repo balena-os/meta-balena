@@ -636,6 +636,16 @@ BALENA_CONFIGS[dmcrypt] = " \
     CONFIG_DM_CRYPT=y \
 "
 
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
+BALENA_CONFIGS[secureboot] = " \
+    CONFIG_MODULE_SIG=y \
+    CONFIG_MODULE_SIG_ALL=y \
+    CONFIG_MODULE_SIG_SHA512=y \
+    CONFIG_SECURITY_LOCKDOWN_LSM=y \
+    CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y \
+    CONFIG_SYSTEM_TRUSTED_KEYS="certs/kmod.crt" \
+"
+
 ###########
 # HELPERS #
 ###########
@@ -951,6 +961,14 @@ do_kernel_resin_checkconfig[vardeps] += "BALENA_CONFIGS BALENA_CONFIGS_DEPS"
 do_kernel_resin_checkconfig[deptask] += "do_kernel_resin_reconfigure"
 do_kernel_resin_checkconfig[dirs] += "${WORKDIR} ${B}"
 
+do_configure:append () {
+    if [ -f "${DEPLOY_DIR_IMAGE}/balena-keys/kmod.crt" ]; then
+        install -d certs
+        install -m 0655 "${DEPLOY_DIR_IMAGE}/balena-keys/kmod.crt" "certs/"
+    fi
+
+}
+do_configure[depends] += "balena-keys:do_deploy"
 # Force compile to depend on the last resin task in the chain
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 
