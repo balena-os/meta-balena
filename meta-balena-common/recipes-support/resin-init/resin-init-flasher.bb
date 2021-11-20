@@ -78,4 +78,8 @@ do_install() {
     echo "BOOTLOADER_IMAGE_1=${BOOTLOADER_IMAGE_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_BLOCK_SIZE_OFFSET_1=${BOOTLOADER_BLOCK_SIZE_OFFSET_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS_1=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+
+    if [ "x${SIGN_API}" != "x" ]; then
+        echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    fi
 }
