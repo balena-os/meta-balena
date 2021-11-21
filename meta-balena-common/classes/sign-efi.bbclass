@@ -27,7 +27,7 @@ do_sign_efi () {
     done
 }
 
-do_deploy_append:class-target() {
+do_deploy:append:class-target() {
     for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}; do
         if [ -f "${SIGNING_ARTIFACT}.signed" ]; then
             install -m 0644 "${SIGNING_ARTIFACT}.signed" "${DEPLOYDIR}/"$(basename ${SIGNING_ARTIFACT}).signed
