@@ -1,4 +1,55 @@
 - commits:
+    - subject: 'meta-resin-sumo/pyro: Fix initramfs-framework kexec dependencies'
+      hash: 9d2d1df166a80f693cfee8a34ffd6e1f5b7ff581
+      body: |
+        On recent Yocto versions the findmnt package is split into its own
+        package, but sumo needs to include the whole util-linux package.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'initrdscripts: Use a 2nd stage bootloader to unlock LUKS partitions'
+      hash: acbc384d527436e5d7382504dcf62f799b9490d5
+      body: >
+        GRUB can not use the TPM easily to unlock the volumes and find the
+        kernel
+
+        on an encrypted partition. Instead, we choose to store a linux kernel
+
+        and use it as 2nd stage bootloader to unlock the partition, load the
+        actual
+
+        kernel and kexec into it. This should eventually be replaced by a proper
+
+        2nd stage bootloader that is being worked on.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'grub-efi: add support for signature verification in secure boot mode'
+      hash: ac22f29ffa370f48704fcfb6c7cdb8eec200ba18
+      body: |
+        This incorporates multiple changes:
+        - Patch grub to propagate secure boot mode to the kernel
+        - Enable GPG signature verification in GRUB
+        - Sign GRUB config files
+        - Sign the grub EFI binary for secure boot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.13
+  date: 2021-11-20T22:06:37.895Z
+- commits:
     - subject: 'initramfs-module-cryptsetup: add TPM dependencies'
       hash: dfff22ad0315c9893d9def6829708b50153d691d
       body: |

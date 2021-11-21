@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.87.13
+## (2021-11-20)
+
+* meta-resin-sumo/pyro: Fix initramfs-framework kexec dependencies [Alex Gonzalez]
+* initrdscripts: Use a 2nd stage bootloader to unlock LUKS partitions [Michal Toman]
+* grub-efi: add support for signature verification in secure boot mode [Michal Toman]
+
 # v2.87.12
 ## (2021-11-20)
 
