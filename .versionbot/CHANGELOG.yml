@@ -1,4 +1,36 @@
 - commits:
+    - subject: 'sign-efi.bbclass: do not mix old and new bitbake syntax'
+      hash: fb8d7ed997f3cdc08d3a7d3b65e1ebd4aba6d90e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: >-
+        Revert "sign-efi.class, sign-kmod.class: Replace original files with
+        signed ones"
+      hash: fe553becac56b973e0adc9adeb71655fa7d9883d
+      body: >
+        This reverts commit 853656e6bcfed0b0206d031c32cd1cde811b8146.
+
+
+        The change overwrites build files, though that is what we need, it is a
+        hacky
+
+        approach and we will look for a clean solution.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.14
+  date: 2021-11-21T07:00:01.356Z
+- commits:
     - subject: 'meta-resin-sumo/pyro: Fix initramfs-framework kexec dependencies'
       hash: 9d2d1df166a80f693cfee8a34ffd6e1f5b7ff581
       body: |

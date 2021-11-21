@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.87.14
+## (2021-11-21)
+
+* sign-efi.bbclass: do not mix old and new bitbake syntax [Michal Toman]
+* Revert "sign-efi.class, sign-kmod.class: Replace original files with signed ones" [Michal Toman]
+
 # v2.87.13
 ## (2021-11-20)
 
