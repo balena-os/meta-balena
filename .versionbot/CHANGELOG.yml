@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'peak: Modify kernel driver to use signing class'
+      hash: 12cbccc2a880bf3f9782b61c4afe4bd393a9414b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.16
+  date: 2021-11-21T10:54:01.163Z
+- commits:
     - subject: 'kernel-balena.class: Add support for FDE and sign for secure boot'
       hash: fa67eb58b88155bf4808181ff6429fd94704cad3
       body: ''

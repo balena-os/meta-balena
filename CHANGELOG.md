@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.16
+## (2021-11-21)
+
+* peak: Modify kernel driver to use signing class [Alex Gonzalez]
+
 # v2.87.15
 ## (2021-11-21)
 
