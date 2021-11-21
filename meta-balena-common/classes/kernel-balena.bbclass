@@ -59,7 +59,7 @@
 #       a) [optional] Define BALENA_DEFCONFIG_NAME. Default: "resin-defconfig"
 #       b) Add BALENA_DEFCONFIG_NAME to SRC_URI.
 
-inherit kernel-resin-noimage
+inherit kernel-resin-noimage sign
 
 BALENA_DEFCONFIG_NAME ?= "resin-defconfig"
 
@@ -145,6 +145,7 @@ BALENA_CONFIGS ?= " \
     ipv6_mroute \
     disable_hung_panic \
     mdraid \
+    dmcrypt \
     ${FIRMWARE_COMPRESS} \
     "
 
@@ -629,6 +630,12 @@ BALENA_CONFIGS[mdraid] = " \
     CONFIG_MD_AUTODETECT=y \
 "
 
+# Enable dmcrypt/LUKS
+BALENA_CONFIGS[dmcrypt] = " \
+    CONFIG_CRYPTO_XTS=y \
+    CONFIG_DM_CRYPT=y \
+"
+
 ###########
 # HELPERS #
 ###########
@@ -946,6 +953,9 @@ do_kernel_resin_checkconfig[dirs] += "${WORKDIR} ${B}"
 
 # Force compile to depend on the last resin task in the chain
 do_compile[deptask] += "do_kernel_resin_checkconfig"
+
+SIGNING_ARTIFACTS = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
+addtask sign before do_deploy after do_bundle_initramfs
 
 # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
 do_deploy:append () {
