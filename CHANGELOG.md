@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.15
+## (2021-11-21)
+
+* kernel-balena.class: Add support for FDE and sign for secure boot [Michal Toman]
+
 # v2.87.14
 ## (2021-11-21)
 

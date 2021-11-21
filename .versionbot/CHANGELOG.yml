@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'kernel-balena.class: Add support for FDE and sign for secure boot'
+      hash: fa67eb58b88155bf4808181ff6429fd94704cad3
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.15
+  date: 2021-11-21T08:53:19.604Z
+- commits:
     - subject: 'sign-efi.bbclass: do not mix old and new bitbake syntax'
       hash: fb8d7ed997f3cdc08d3a7d3b65e1ebd4aba6d90e
       body: ''
