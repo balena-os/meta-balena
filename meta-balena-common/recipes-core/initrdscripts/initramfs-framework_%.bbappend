@@ -10,6 +10,7 @@ SRC_URI:append = " \
     file://rootfs \
     file://finish \
     file://cryptsetup \
+    file://kexec \
     "
 
 do_install:append() {
@@ -23,6 +24,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
     install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
+    install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
 }
 
 PACKAGES:append = " \
@@ -33,6 +35,7 @@ PACKAGES:append = " \
     initramfs-module-prepare \
     initramfs-module-fsuuidsinit \
     initramfs-module-cryptsetup \
+    initramfs-module-kexec \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -68,3 +71,10 @@ FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
 SUMMARY:initramfs-module-cryptsetup = "Unlock encrypted partitions"
 RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libtss2-tcti-device lvm2-udevrules os-helpers-logging tpm2-tools"
 FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
+
+SUMMARY:initramfs-module-kexec = "Find and start a new kernel if in stage2"
+RDEPENDS:initramfs-module-kexec = " \
+    kexec-tools \
+    util-linux-findmnt \
+    "
+FILES:initramfs-module-kexec = "/init.d/92-kexec"

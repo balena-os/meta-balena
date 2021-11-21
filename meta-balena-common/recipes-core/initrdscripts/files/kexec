@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+KERNEL_IMAGE="${ROOTFS_DIR}/boot/bzImage"
+
+kexec_enabled() {
+    if [ "$bootparam_balena_stage2" != "true" ]
+    then
+        return 1
+    fi
+
+    if [ "x${ROOTFS_DIR}" = "x" ]
+    then
+        info "ROOTFS_DIR undefined, skipping kexec"
+        return 1
+    fi
+
+    if [ ! -f "${KERNEL_IMAGE}" ]
+    then
+        info "${KERNEL_IMAGE} not found, skipping kexec"
+        return 1
+    fi
+
+    return 0
+}
+
+kexec_run() {
+    ROOT_UUID=$(findmnt "${ROOTFS_DIR}" -n -o UUID)
+
+    BOOT_PARAMS="$(cat /proc/cmdline | sed -e s,balena_stage2,, | sed -e s,root=[^\ ]*,root=UUID=${ROOT_UUID},)"
+    kexec -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS}"
+
+    umount "${ROOTFS_DIR}"
+
+    kexec -e
+}
