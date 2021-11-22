@@ -11,6 +11,11 @@ const fse = require('fs-extra');
 const { join } = require('path');
 const { homedir } = require('os');
 
+// required for unwrapping images
+const imagefs = require('balena-image-fs');
+const stream = require('stream')
+const pipeline = require('bluebird').promisify(stream.pipeline);
+
 module.exports = {
 	title: 'Unmanaged BalenaOS release suite',
 	run: async function(test) {
@@ -90,6 +95,26 @@ module.exports = {
 
 		// Unpack OS image .gz
 		await this.context.get().os.fetch();
+
+		// If this is a flasher image, and we are using qemu, unwrap
+		if(this.suite.deviceType.data.storage.internal && (process.env.WORKER_TYPE === `qemu`)){
+			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`
+			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img'
+			console.log(`Unwrapping file ${this.context.get().os.image.path}`)
+			console.log(`Looking for ${RAW_IMAGE_PATH}`)
+			try{
+				await imagefs.interact(this.context.get().os.image.path, 2, async (fsImg) => {
+					await pipeline(
+					fsImg.createReadStream(RAW_IMAGE_PATH),
+					fse.createWriteStream(OUTPUT_IMG_PATH)
+					)
+				})
+			}catch(e){
+				console.log(e)
+			}
+			this.context.get().os.image.path = OUTPUT_IMG_PATH
+			console.log(`Unwrapped flasher image!`)
+		}
 
 		// Configure OS image
 		await this.context.get().os.configure();
