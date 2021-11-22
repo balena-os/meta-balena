@@ -25,7 +25,9 @@ do_sign () {
 do_deploy:append() {
     for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}; do
         if [ -f "${SIGNING_ARTIFACT}.sig" ]; then
+            # Both signed and unsigned versions are required
             install -m 0644 "${SIGNING_ARTIFACT}.sig" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT}).sig"
+            install -m 0644 "${SIGNING_ARTIFACT}" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT})"
         fi
     done
 }
