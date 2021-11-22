@@ -1,0 +1,28 @@
+From f2e4ff4e63f4a5f8a4452c970ca271091eeaec7d Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Sun, 18 Jun 2017 23:35:09 +0800
+Subject: [PATCH] Fix help2man error
+
+This issue may be caused by the poky compiler.
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Make.rules | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Make.rules b/Make.rules
+index 38c7a22..bda5518 100644
+--- a/Make.rules
++++ b/Make.rules
+@@ -140,5 +140,7 @@ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else ec
+ %.a:
+ 	$(AR) rcv $@ $^
+ 
++HELP2MAN_PROG_PREFIX ?= .
++
+ doc/%.1: doc/%.1.in %
+-	$(HELP2MAN) --no-discard-stderr --no-info -i $< -o $@ ./$*
++	$(HELP2MAN) --no-discard-stderr --no-info -i $< -o $@ $(HELP2MAN_PROG_PREFIX)/$*
+-- 
+2.7.5
+

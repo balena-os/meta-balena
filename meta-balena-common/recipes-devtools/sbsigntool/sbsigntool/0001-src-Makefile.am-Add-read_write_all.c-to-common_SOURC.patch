@@ -1,0 +1,33 @@
+From c86fa2201f864585f470f33cec4f6d0bf10475a1 Mon Sep 17 00:00:00 2001
+From: Robert Yang <liezhi.yang@windriver.com>
+Date: Thu, 17 Jun 2021 08:05:25 +0000
+Subject: [PATCH] src/Makefile.am: Add read_write_all.c to common_SOURCES
+
+It is required by image.c.
+
+Fixed:
+src/image.c:659: undefined reference to `write_all'
+
+Upstream-Status: Pending
+
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+---
+ src/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index e3f039b..34a0beb 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -5,7 +5,7 @@ coff_headers = coff/external.h coff/pe.h
+ AM_CFLAGS = -Wall -Wextra --std=gnu99
+ 
+ common_SOURCES = idc.c idc.h image.c image.h fileio.c fileio.h \
+-	efivars.h $(coff_headers)
++	../lib/ccan.git/ccan/read_write_all/read_write_all.c efivars.h $(coff_headers)
+ common_LDADD = ../lib/ccan/libccan.a $(libcrypto_LIBS)
+ common_CFLAGS = -I$(top_srcdir)/lib/ccan/ -Werror
+ 
+-- 
+2.29.2
+

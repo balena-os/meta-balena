@@ -1,0 +1,31 @@
+From 06c9f0846f98b8ad92285b422199438f02c7bfdf Mon Sep 17 00:00:00 2001
+From: Yi Zhao <yi.zhao@windriver.com>
+Date: Wed, 20 Oct 2021 15:31:05 +0800
+Subject: [PATCH] Makefile.am: do not use -Werror
+
+Do not use -Werror to disable openssl 3.0 deprecation warnings turning
+into errors.
+
+Upstream-Status: Pending
+
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ src/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index a3257fa..784b061 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -7,7 +7,7 @@ AM_CFLAGS = -Wall -Wextra --std=gnu99
+ common_SOURCES = idc.c idc.h image.c image.h fileio.c fileio.h \
+ 	../lib/ccan.git/ccan/read_write_all/read_write_all.c efivars.h $(coff_headers)
+ common_LDADD = ../lib/ccan/libccan.a $(libcrypto_LIBS)
+-common_CFLAGS = -I$(top_srcdir)/lib/ccan/ -Werror
++common_CFLAGS = -I$(top_srcdir)/lib/ccan/
+ 
+ sbsign_SOURCES = sbsign.c $(common_SOURCES)
+ sbsign_LDADD = $(common_LDADD)
+-- 
+2.17.1
+

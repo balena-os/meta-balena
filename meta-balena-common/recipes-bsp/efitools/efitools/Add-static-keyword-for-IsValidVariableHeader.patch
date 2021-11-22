@@ -1,0 +1,38 @@
+From 960a5fc7c58c875827797b6f4afed2684acc2cde Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Sun, 12 Jun 2016 13:45:54 +0800
+Subject: [PATCH] Add static keyword for IsValidVariableHeader()
+
+Upstream-Status: Pending
+
+GCC does not inline any functions when not optimizing (-O0 specified) unless
+you specify "always_inline" attribute for the function.
+
+By default, GCC complies with C89 standard for c code, which means
+"inline" equals to "extern inline" and thus the definition is used only for
+inlining with the assembly code actually generated.
+
+Therefore, "static inline" is used for both purposes. If -O0 is specified,
+GCC will generate the assembly code as long as the function is referred.
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ include/variableformat.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/include/variableformat.h b/include/variableformat.h
+index 32cde05..45d0ebb 100644
+--- a/include/variableformat.h
++++ b/include/variableformat.h
+@@ -109,7 +109,7 @@ typedef struct {
+ 
+ #pragma pack()
+ 
+-inline BOOLEAN
++static inline BOOLEAN
+ IsValidVariableHeader (VARIABLE_HEADER   *vh) {
+ 	if (vh == NULL || vh->StartId != VARIABLE_DATA)
+ 		return FALSE;
+-- 
+1.7.1
+

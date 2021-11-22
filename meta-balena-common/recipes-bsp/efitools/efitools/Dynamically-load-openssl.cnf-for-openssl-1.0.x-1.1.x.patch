@@ -1,0 +1,48 @@
+From 0b579e0382ac86d6a6a72bbd5898cee75457922e Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Wed, 16 Aug 2017 22:59:12 +0800
+Subject: [PATCH] Dynamically load openssl.cnf for openssl-1.0.x/1.1.x/3.0
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ Make.rules | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/Make.rules b/Make.rules
+index b90c4d3..faf2ae4 100644
+--- a/Make.rules
++++ b/Make.rules
+@@ -116,13 +116,27 @@ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else ec
+ 	$(CC) -S $(INCDIR) $(cflags) $(cppflags) -fno-toplevel-reorder -DBUILD_EFI -c $< -o $@
+ 
+ %.crt:
+-	$(OPENSSL) req -new -x509 -newkey rsa:2048 -subj "/CN=$*/" -keyout $*.key -out $@ -days 3650 -nodes -sha256
++	@if [ -s "$(OPENSSL_LIB)/ssl-3/openssl.cnf" ]; then \
++	    cfg="$(OPENSSL_LIB)/ssl-3/openssl.cnf"; \
++	elif [ -s "$(OPENSSL_LIB)/ssl-1.1/openssl.cnf" ]; then \
++	    cfg="$(OPENSSL_LIB)/ssl-1.1/openssl.cnf"; \
++	else \
++	    cfg="$(OPENSSL_LIB)/ssl/openssl.cnf"; \
++	fi; \
++	$(OPENSSL) req -config $$cfg -new -x509 -newkey rsa:2048 -subj "/CN=$*/" -keyout $*.key -out $@ -days 3650 -nodes -sha256
+ 
+ %.cer: %.crt
+ 	$(OPENSSL) x509 -in $< -out $@ -outform DER
+ 
+ %-subkey.csr:
+-	$(OPENSSL) req -new -newkey rsa:2048 -keyout $*-subkey.key -subj "/CN=Subkey $* of KEK/" -out $@ -nodes
++	@if [ -s "$(OPENSSL_LIB)/ssl-3/openssl.cnf" ]; then \
++	    cfg="$(OPENSSL_LIB)/ssl-3/openssl.cnf"; \
++	elif [ -s "$(OPENSSL_LIB)/ssl-1.1/openssl.cnf" ]; then \
++	    cfg="$(OPENSSL_LIB)/ssl-1.1/openssl.cnf"; \
++	else \
++	    cfg="$(OPENSSL_LIB)/ssl/openssl.cnf"; \
++	fi; \
++	$(OPENSSL) req -config $$cfg -new -newkey rsa:2048 -keyout $*-subkey.key -subj "/CN=Subkey $* of KEK/" -out $@ -nodes
+ 
+ %-subkey.crt: %-subkey.csr KEK.crt
+ 	$(OPENSSL) x509 -req -in $< -CA DB.crt -CAkey DB.key -set_serial 1 -out $@ -days 365
+-- 
+2.17.1
+

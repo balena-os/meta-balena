@@ -1,0 +1,94 @@
+From 1613bae3a9760b3cdcbf8f43e750c475d69ad8bb Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Wed, 23 Mar 2016 19:05:29 +0800
+Subject: [PATCH] Allow to override tools for target build
+
+Upstream-Status: Pending
+
+These tools should use the ones from native build.
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Make.rules | 22 +++++++++++++---------
+ Makefile   |  4 ++--
+ 2 files changed, 15 insertions(+), 11 deletions(-)
+
+diff --git a/Make.rules b/Make.rules
+index 5e8cb82..4aa7650 100644
+--- a/Make.rules
++++ b/Make.rules
+@@ -34,6 +34,10 @@ AR		= ar
+ OPENSSL		= openssl
+ SBSIGN		= sbsign
+ XXD		= xxd
++SIGN_EFI_SIG_LIST ?= ./sign-efi-sig-list 
++CERT_TO_EFI_SIG_LIST ?= ./cert-to-efi-sig-list
++CERT_TO_EFI_HASH_LIST ?= ./cert-to-efi-hash-list
++HASH_TO_EFI_SIG_LIST ?= ./hash-to-efi-sig-list
+ MYGUID		= 11111111-2222-3333-4444-123456789abc
+ INSTALL		= install
+ BINDIR		= $(DESTDIR)/usr/bin
+@@ -75,34 +79,34 @@ endif
+ 	$(XXD) -i $< > $@
+ 
+ %.hash: %.efi hash-to-efi-sig-list
+-	./hash-to-efi-sig-list $< $@
++	$(HASH_TO_EFI_SIG_LIST) $< $@
+ 
+ %-blacklist.esl: %.crt cert-to-efi-sig-list
+-	./cert-to-efi-sig-list $< $@
++	$(CERT_TO_EFI_SIG_LIST) $< $@
+ 
+ %-hash-blacklist.esl: %.crt cert-to-efi-hash-list
+-	./cert-to-efi-hash-list $< $@
++	$(CERT_TO_EFI_HASH_LIST) $< $@
+ 
+ %.esl: %.crt cert-to-efi-sig-list
+-	./cert-to-efi-sig-list -g $(MYGUID) $< $@
++	$(CERT_TO_EFI_SIG_LIST) -g $(MYGUID) $< $@
+ 
+ getcert = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo "-c PK.crt -k PK.key"; else echo "-c KEK.crt -k KEK.key"; fi)
+ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else echo db; fi)
+ 
+ %.auth: %.esl PK.crt KEK.crt sign-efi-sig-list
+-	./sign-efi-sig-list $(call getcert,$*) $(call getvar,$*) $< $@
++	$(SIGN_EFI_SIG_LIST) $(call getcert,$*) $(call getvar,$*) $< $@
+ 
+ %-update.auth: %.esl PK.crt KEK.crt sign-efi-sig-list
+-	./sign-efi-sig-list -a $(call getcert,$*) $(call getvar,$*) $< $@
++	$(SIGN_EFI_SIG_LIST) -a $(call getcert,$*) $(call getvar,$*) $< $@
+ 
+ %-pkupdate.auth: %.esl PK.crt sign-efi-sig-list
+-	./sign-efi-sig-list -a -c PK.crt -k PK.key $(call getvar,$*) $< $@
++	$(SIGN_EFI_SIG_LIST) -a -c PK.crt -k PK.key $(call getvar,$*) $< $@
+ 
+ %-blacklist.auth: %-blacklist.esl KEK.crt sign-efi-sig-list
+-	./sign-efi-sig-list -a -c KEK.crt -k KEK.key dbx $< $@
++	$(SIGN_EFI_SIG_LIST) -a -c KEK.crt -k KEK.key dbx $< $@
+ 
+ %-pkblacklist.auth: %-blacklist.esl PK.crt sign-efi-sig-list
+-	./sign-efi-sig-list -a -c PK.crt -k PK.key dbx $< $@
++	$(SIGN_EFI_SIG_LIST) -a -c PK.crt -k PK.key dbx $< $@
+ 
+ %.o: %.c
+ 	$(CC) $(INCDIR) $(cflags) $(cppflags) -c $< -o $@
+diff --git a/Makefile b/Makefile
+index 15fc944..c4e0081 100644
+--- a/Makefile
++++ b/Makefile
+@@ -66,10 +66,10 @@ noPK.esl:
+ 	> noPK.esl
+ 
+ noPK.auth: noPK.esl PK.crt sign-efi-sig-list
+-	./sign-efi-sig-list -t "$(shell date --date='1 second' +'%Y-%m-%d %H:%M:%S')" -c PK.crt -k PK.key PK $< $@
++	$(SIGN_EFI_SIG_LIST) -t "$(shell date --date='1 second' +'%Y-%m-%d %H:%M:%S')" -c PK.crt -k PK.key PK $< $@
+ 
+ ms-%.esl: ms-%.crt cert-to-efi-sig-list
+-	./cert-to-efi-sig-list -g $(MSGUID) $< $@
++	$(CERT_TO_EFI_SIG_LIST) -g $(MSGUID) $< $@
+ 
+ hashlist.h: HashTool.hash
+ 	cat $^ > /tmp/tmp.hash
+-- 
+1.9.1
+

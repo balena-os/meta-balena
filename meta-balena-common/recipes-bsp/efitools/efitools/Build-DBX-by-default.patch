@@ -1,0 +1,41 @@
+From 363c731290a57f968b7435e648907c6d8cc4499c Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Sat, 28 Jan 2017 13:42:28 +0800
+Subject: [PATCH] Build DBX by default
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index dd45e31..93c919d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -26,7 +26,7 @@ include Make.rules
+ 
+ EFISIGNED = $(patsubst %.efi,%-signed.efi,$(EFIFILES))
+ 
+-all: $(EFIFILES) $(BINARIES) $(MANPAGES) noPK.auth $(KEYAUTH) \
++all: $(EFIFILES) $(BINARIES) $(MANPAGES) noPK.auth $(KEYAUTH) DBX.auth \
+ 	$(KEYUPDATEAUTH) $(KEYBLACKLISTAUTH) $(KEYHASHBLACKLISTAUTH)
+ 
+ 
+@@ -49,7 +49,7 @@ lib/asn1/libasn1.a lib/asn1/libasn1-efi.a: FORCE
+ 
+ .SUFFIXES: .crt
+ 
+-.KEEP: PK.crt KEK.crt DB.crt PK.key KEK.key DB.key PK.esl DB.esl KEK.esl \
++.KEEP: PK.crt KEK.crt DB.crt DBX.crt PK.key KEK.key DB.key PK.esl DB.esl KEK.esl DBX.esl \
+ 	$(EFIFILES)
+ 
+ LockDown.o: PK.h KEK.h DB.h DBX.h
+@@ -116,7 +116,7 @@ flash-var: flash-var.o lib/lib.a
+ 	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a
+ 
+ clean:
+-	rm -f PK.* KEK.* DB.* $(EFIFILES) $(EFISIGNED) $(BINARIES) *.o *.so
++	rm -f PK.* KEK.* DB.* DBX.* $(EFIFILES) $(EFISIGNED) $(BINARIES) *.o *.so
+ 	rm -f noPK.*
+ 	rm -f doc/*.1
+ 	$(MAKE) -C lib clean

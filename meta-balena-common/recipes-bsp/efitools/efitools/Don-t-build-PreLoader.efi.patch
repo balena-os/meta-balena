@@ -1,0 +1,40 @@
+From 95e167f432f1a6d8c96aeca73871122806007c9f Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Thu, 28 Apr 2016 11:21:33 +0800
+Subject: [PATCH] Don't build PreLoader.efi
+
+Upstream-Status: Pending
+
+The upstream has an obvious build failure:
+| PreLoader.c:45:2: error: too few arguments to function 'security_policy_install'
+|   status = security_policy_install();
+|   ^
+| In file included from PreLoader.c:14:0:
+| /buildarea3/jzhang0/projects/wrl8/intel-x86-64-gwp-scp/bitbake_build/tmp/work/x86_64-linux/efitools-native/1.7.0+gitAUTOINC+20a8fdc4ec-r0/git/include/security_policy.h:4:1: note: declared here
+|  security_policy_install(BOOLEAN (*override)(void), POLICY_FUNCTION allow, POLICY_FUNCTION deny);
+|  ^
+
+We are waiting for the upstream fix and remove this workaround in next
+refresh.
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index b3bb73a..da363a6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -5,7 +5,7 @@ BINARIES = cert-to-efi-sig-list sig-list-to-certs sign-efi-sig-list \
+ 	flash-var
+ 
+ ifeq ($(ARCH),x86_64)
+-EFIFILES += PreLoader.efi
++#EFIFILES += PreLoader.efi
+ endif
+ 
+ MSGUID = 77FA9ABD-0359-4D32-BD60-28F4E78F784B
+-- 
+1.9.1
+

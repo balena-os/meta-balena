@@ -1,0 +1,191 @@
+From ab2eb06c1271e46e07add5a0b0a444353d45e055 Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Tue, 15 Mar 2016 21:28:33 +0800
+Subject: [PATCH] Fix for the cross compilation
+
+Upstream-Status: Pending
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ Make.rules |   51 ++++++++++++++++++++++++++++-----------------------
+ Makefile   |   20 ++++++++++----------
+ 2 files changed, 38 insertions(+), 33 deletions(-)
+
+--- a/Make.rules
++++ b/Make.rules
+@@ -13,21 +13,26 @@ ARCH3264 =
+ else
+ $(error unknown architecture $(ARCH))
+ endif
+-INCDIR	   = -I$(TOPDIR)include/ -I/usr/include/efi -I/usr/include/efi/$(ARCH) -I/usr/include/efi/protocol
+-CPPFLAGS   = -DCONFIG_$(ARCH)
+-CFLAGS	   = -O2 -g $(ARCH3264) -fpic -Wall -fshort-wchar -fno-strict-aliasing -fno-merge-constants -fno-stack-protector -ffreestanding -fno-stack-check
+-LDFLAGS	   = -nostdlib
++INCDIR	   = -I$(TOPDIR)include/ -I$(INCDIR_PREFIX)/usr/include -I$(INCDIR_PREFIX)/usr/include/efi -I$(INCDIR_PREFIX)/usr/include/efi/$(ARCH) -I$(INCDIR_PREFIX)/usr/include/efi/protocol
++cppflags   = -DCONFIG_$(ARCH)
++cflags	   = -O2 -g $(ARCH3264) -fpic -Wall -fshort-wchar -fno-strict-aliasing -fno-merge-constants -fno-stack-protector -ffreestanding -fno-stack-check
++ldflags	   = -nostdlib
+ CRTOBJ		= crt0-efi-$(ARCH).o
+ CRTPATHS	= /lib /lib64 /lib/efi /lib64/efi /usr/lib /usr/lib64 /usr/lib/efi /usr/lib64/efi /usr/lib/gnuefi /usr/lib64/gnuefi
+-CRTPATH		= $(shell for f in $(CRTPATHS); do if [ -e $$f/$(CRTOBJ) ]; then echo $$f; break; fi; done)
++CRTPATH		= $(shell for f in $(CRTPATHS); do if [ -e $(CRTPATH_PREFIX)/$$f/$(CRTOBJ) ]; then echo $(CRTPATH_PREFIX)/$$f; break; fi; done)
+ CRTOBJS		= $(CRTPATH)/$(CRTOBJ)
+ # there's a bug in the gnu tools ... the .reloc section has to be
+ # aligned otherwise the file alignment gets screwed up
+ LDSCRIPT	= elf_$(ARCH)_efi.lds
+-LDFLAGS		+= -shared -Bsymbolic $(CRTOBJS) -L $(CRTPATH) -L /usr/lib -L /usr/lib64 -T $(LDSCRIPT)
++ldflags		+= -shared -Bsymbolic $(CRTOBJS) -L $(CRTPATH) -T $(LDSCRIPT)
+ LOADLIBES	= -lefi -lgnuefi $(shell $(CC) $(ARCH3264) -print-libgcc-file-name)
+ FORMAT		= --target=efi-app-$(ARCH)
+ OBJCOPY		= objcopy
++NM		= nm
++AR		= ar
++OPENSSL		= openssl
++SBSIGN		= sbsign
++XXD		= xxd
+ MYGUID		= 11111111-2222-3333-4444-123456789abc
+ INSTALL		= install
+ BINDIR		= $(DESTDIR)/usr/bin
+@@ -36,23 +41,23 @@ EFIDIR		= $(DESTDIR)/usr/share/efitools/
+ DOCDIR		= $(DESTDIR)/usr/share/efitools
+ 
+ # globally use EFI calling conventions (requires gcc >= 4.7)
+-CFLAGS += -DGNU_EFI_USE_MS_ABI
++cflags += -DGNU_EFI_USE_MS_ABI
+ 
+ ifeq ($(ARCH),x86_64)
+-  CFLAGS += -DEFI_FUNCTION_WRAPPER -mno-red-zone
++  cflags += -DEFI_FUNCTION_WRAPPER -mno-red-zone
+ endif
+ 
+ ifeq ($(ARCH),ia32)
+-  CFLAGS += -mno-red-zone
++  cflags += -mno-red-zone
+ endif
+ 
+ ifeq ($(ARCH),arm)
+-  LDFLAGS += --defsym=EFI_SUBSYSTEM=0x0a
++  ldflags += --defsym=EFI_SUBSYSTEM=0x0a
+   FORMAT = -O binary
+ endif
+ 
+ ifeq ($(ARCH),aarch64)
+-  LDFLAGS += --defsym=EFI_SUBSYSTEM=0x0a
++  ldflags += --defsym=EFI_SUBSYSTEM=0x0a
+   FORMAT = -O binary
+ endif
+ 
+@@ -61,12 +66,12 @@ endif
+ 		   -j .rel -j .rela -j .rel.* -j .rela.* -j .rel* -j .rela* \
+ 		   -j .reloc $(FORMAT) $*.so $@
+ %.so: %.o
+-	$(LD) $(LDFLAGS) $^ -o $@ $(LOADLIBES)
++	$(LD) $(ldflags) $^ -o $@ $(LOADLIBES)
+ 	# check we have no undefined symbols
+-	nm -D $@ | grep ' U ' && exit 1 || exit 0
++	${NM} -D $@ | grep ' U ' && exit 1 || exit 0
+ 
+ %.h: %.auth
+-	./xxdi.pl $< > $@
++	$(XXD) -i $< > $@
+ 
+ %.hash: %.efi hash-to-efi-sig-list
+ 	./hash-to-efi-sig-list $< $@
+@@ -99,28 +104,28 @@ getvar = $(shell if [ "$(1)" = "PK" -o "
+ 	./sign-efi-sig-list -a -c PK.crt -k PK.key dbx $< $@
+ 
+ %.o: %.c
+-	$(CC) $(INCDIR) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
++	$(CC) $(INCDIR) $(cflags) $(cppflags) -c $< -o $@
+ 
+ %.efi.o: %.c
+-	$(CC) $(INCDIR) $(CFLAGS) $(CPPFLAGS) -fno-toplevel-reorder -DBUILD_EFI -c $< -o $@
++	$(CC) $(INCDIR) $(cflags) $(cppflags) -fno-toplevel-reorder -DBUILD_EFI -c $< -o $@
+ 
+ %.efi.s: %.c
+-	$(CC) -S $(INCDIR) $(CFLAGS) $(CPPFLAGS) -fno-toplevel-reorder -DBUILD_EFI -c $< -o $@
++	$(CC) -S $(INCDIR) $(cflags) $(cppflags) -fno-toplevel-reorder -DBUILD_EFI -c $< -o $@
+ 
+ %.crt:
+-	openssl req -new -x509 -newkey rsa:2048 -subj "/CN=$*/" -keyout $*.key -out $@ -days 3650 -nodes -sha256
++	$(OPENSSL) req -new -x509 -newkey rsa:2048 -subj "/CN=$*/" -keyout $*.key -out $@ -days 3650 -nodes -sha256
+ 
+ %.cer: %.crt
+-	openssl x509 -in $< -out $@ -outform DER
++	$(OPENSSL) x509 -in $< -out $@ -outform DER
+ 
+ %-subkey.csr:
+-	openssl req -new -newkey rsa:2048 -keyout $*-subkey.key -subj "/CN=Subkey $* of KEK/" -out $@ -nodes
++	$(OPENSSL) req -new -newkey rsa:2048 -keyout $*-subkey.key -subj "/CN=Subkey $* of KEK/" -out $@ -nodes
+ 
+ %-subkey.crt: %-subkey.csr KEK.crt
+-	openssl x509 -req -in $< -CA DB.crt -CAkey DB.key -set_serial 1 -out $@ -days 365
++	$(OPENSSL) x509 -req -in $< -CA DB.crt -CAkey DB.key -set_serial 1 -out $@ -days 365
+ 
+ %-signed.efi: %.efi DB.crt
+-	sbsign --key DB.key --cert DB.crt --output $@ $<
++	$(SBSIGN) --key DB.key --cert DB.crt --output $@ $<
+ 
+ ##
+ # No need for KEK signing
+@@ -129,7 +134,7 @@ getvar = $(shell if [ "$(1)" = "PK" -o "
+ #	sbsign --key KEK.key --cert KEK.crt --output $@ $<
+ 
+ %.a:
+-	ar rcv $@ $^
++	$(AR) rcv $@ $^
+ 
+ doc/%.1: doc/%.1.in %
+ 	$(HELP2MAN) --no-info -i $< -o $@ ./$*
+--- a/Makefile
++++ b/Makefile
+@@ -73,7 +73,7 @@ ms-%.esl: ms-%.crt cert-to-efi-sig-list
+ 
+ hashlist.h: HashTool.hash
+ 	cat $^ > /tmp/tmp.hash
+-	./xxdi.pl /tmp/tmp.hash > $@
++	$(XXD) -i /tmp/tmp.hash > $@
+ 	rm -f /tmp/tmp.hash
+ 
+ 
+@@ -88,31 +88,31 @@ HelloWorld.so: lib/lib-efi.a
+ ShimReplace.so: lib/lib-efi.a
+ 
+ cert-to-efi-sig-list: cert-to-efi-sig-list.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a -lcrypto
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a -lcrypto
+ 
+ sig-list-to-certs: sig-list-to-certs.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a -lcrypto
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a -lcrypto
+ 
+ sign-efi-sig-list: sign-efi-sig-list.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a -lcrypto
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a -lcrypto
+ 
+ hash-to-efi-sig-list: hash-to-efi-sig-list.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a
+ 
+ cert-to-efi-hash-list: cert-to-efi-hash-list.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a -lcrypto
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a -lcrypto
+ 
+ efi-keytool: efi-keytool.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a
+ 
+ efi-readvar: efi-readvar.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a -lcrypto
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a -lcrypto
+ 
+ efi-updatevar: efi-updatevar.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a -lcrypto
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a -lcrypto
+ 
+ flash-var: flash-var.o lib/lib.a
+-	$(CC) $(ARCH3264) -o $@ $< lib/lib.a
++	$(CC) $(ARCH3264) -o $@ $< $(EXTRA_LDFLAGS) lib/lib.a
+ 
+ clean:
+ 	rm -f PK.* KEK.* DB.* $(EFIFILES) $(EFISIGNED) $(BINARIES) *.o *.so

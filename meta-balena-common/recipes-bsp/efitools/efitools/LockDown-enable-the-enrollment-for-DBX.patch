@@ -1,0 +1,85 @@
+From 49b6a0bf2b9c69d1fd682fbc9d2ad7a7f6abee77 Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Fri, 22 Apr 2016 16:28:05 +0800
+Subject: [PATCH] LockDown: enable the enrollment for DBX
+
+Upstream-Status: Pending
+
+DBX acting as blacklist now is able to be enrolled.
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ LockDown.c | 16 +++++++++++-----
+ Makefile   |  4 +++-
+ 2 files changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/LockDown.c b/LockDown.c
+index 821985c..fec2e79 100644
+--- a/LockDown.c
++++ b/LockDown.c
+@@ -12,6 +12,7 @@
+ #include "PK.h"
+ #include "KEK.h"
+ #include "DB.h"
++#include "DBX.h"
+ 
+ EFI_STATUS
+ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+@@ -47,6 +48,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 		return efi_status;
+ 	}
+ 	Print(L"Created KEK Cert\n");
++
+ 	efi_status = RT->SetVariable(L"db", &SIG_DB,
+ 				     EFI_VARIABLE_NON_VOLATILE
+ 				     | EFI_VARIABLE_RUNTIME_ACCESS 
+@@ -58,15 +60,19 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 		return efi_status;
+ 	}
+ 	Print(L"Created db Cert\n");
+-#if 0
+-	/* testing revocation ... this will revoke the certificate
+-	 * we just enrolled in db */
+-	efi_status = SetSecureVariable(L"dbx", DB_cer, DB_cer_len, SIG_DB, 0);
++
++	efi_status = RT->SetVariable(L"dbx", &SIG_DB,
++				     EFI_VARIABLE_NON_VOLATILE
++				     | EFI_VARIABLE_RUNTIME_ACCESS
++				     | EFI_VARIABLE_BOOTSERVICE_ACCESS
++				     | EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS,
++				     DBX_auth_len, DBX_auth);
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"Failed to enroll dbx: %d\n", efi_status);
+ 		return efi_status;
+ 	}
+-#endif
++	Print(L"Created dbx Cert\n");
++
+ 	/* PK must be updated with a signed copy of itself */
+ 	efi_status = RT->SetVariable(L"PK", &GV_GUID,
+ 				     EFI_VARIABLE_NON_VOLATILE
+diff --git a/Makefile b/Makefile
+index b3bb73a..e189866 100644
+--- a/Makefile
++++ b/Makefile
+@@ -53,7 +53,7 @@ lib/asn1/libasn1.a lib/asn1/libasn1-efi.a: FORCE
+ .KEEP: PK.crt KEK.crt DB.crt PK.key KEK.key DB.key PK.esl DB.esl KEK.esl \
+ 	$(EFIFILES)
+ 
+-LockDown.o: PK.h KEK.h DB.h
++LockDown.o: PK.h KEK.h DB.h DBX.h
+ PreLoader.o: hashlist.h
+ 
+ PK.h: PK.auth
+@@ -62,6 +62,8 @@ KEK.h: KEK.auth
+ 
+ DB.h: DB.auth
+ 
++DBX.h: DBX.auth
++
+ noPK.esl:
+ 	> noPK.esl
+ 
+-- 
+1.9.1
+

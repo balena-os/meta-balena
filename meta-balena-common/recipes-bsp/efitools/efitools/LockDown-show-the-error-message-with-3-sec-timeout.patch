@@ -1,0 +1,94 @@
+From 28eb6a3118c3c843b41732ec3cf5167fe027daba Mon Sep 17 00:00:00 2001
+From: Lans Zhang <jia.zhang@windriver.com>
+Date: Tue, 17 Jan 2017 12:48:27 +0800
+Subject: [PATCH] LockDown: show the error message with 3-sec timeout
+
+Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+---
+ LockDown.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/LockDown.c b/LockDown.c
+index fec2e79..13c626f 100644
+--- a/LockDown.c
++++ b/LockDown.c
+@@ -27,12 +27,12 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"No SetupMode variable ... is platform secure boot enabled?\n");
+-		return EFI_SUCCESS;
++		goto out;
+ 	}
+ 
+ 	if (!SetupMode) {
+ 		Print(L"Platform is not in Setup Mode, cannot install Keys\n");
+-		return EFI_SUCCESS;
++		goto out;
+ 	}
+ 
+ 	Print(L"Platform is in Setup Mode\n");
+@@ -45,7 +45,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 				     KEK_auth_len, KEK_auth);
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"Failed to enroll KEK: %d\n", efi_status);
+-		return efi_status;
++		goto out;
+ 	}
+ 	Print(L"Created KEK Cert\n");
+ 
+@@ -57,7 +57,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 				     DB_auth_len, DB_auth);
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"Failed to enroll db: %d\n", efi_status);
+-		return efi_status;
++		goto out;
+ 	}
+ 	Print(L"Created db Cert\n");
+ 
+@@ -69,7 +69,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 				     DBX_auth_len, DBX_auth);
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"Failed to enroll dbx: %d\n", efi_status);
+-		return efi_status;
++		goto out;
+ 	}
+ 	Print(L"Created dbx Cert\n");
+ 
+@@ -84,14 +84,14 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 	
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"Failed to enroll PK: %d\n", efi_status);
+-		return efi_status;
++		goto out;
+ 	}
+ 	Print(L"Created PK Cert\n");
+ 	/* enrolling the PK should put us in SetupMode; check this */
+ 	efi_status = RT->GetVariable(L"SetupMode", &GV_GUID, NULL, &DataSize, &SetupMode);
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"Failed to get SetupMode variable: %d\n", efi_status);
+-		return efi_status;
++		goto out;
+ 	}
+ 	Print(L"Platform is in %s Mode\n", SetupMode ? L"Setup" : L"User");
+ 
+@@ -101,7 +101,7 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 
+ 	if (efi_status != EFI_SUCCESS) {
+ 		Print(L"Failed to get SecureBoot variable: %d\n", efi_status);
+-		return efi_status;
++		goto out;
+ 	}
+ 	Print(L"Platform %s set to boot securely\n", SecureBoot ? L"is" : L"is not");
+ 
+@@ -121,4 +121,8 @@ efi_main (EFI_HANDLE image, EFI_SYSTEM_TABLE *systab)
+ 	        RT->ResetSystem(EfiResetWarm, EFI_SUCCESS, 0, NULL);
+ 
+ 	return EFI_SUCCESS;
++
++out:
++	BS->Stall(3000000);
++	return efi_status;
+ }
+-- 
+2.7.4
+
