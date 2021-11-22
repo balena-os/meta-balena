@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.87.17
+## (2021-11-21)
+
+* efitools: Add recipe [Alex Gonzalez]
+* sbsigntool: Add recipe [Alex Gonzalez]
+
 # v2.87.16
 ## (2021-11-21)
 

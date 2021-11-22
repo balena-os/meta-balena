@@ -1,4 +1,32 @@
 - commits:
+    - subject: 'efitools: Add recipe'
+      hash: 64daca47ee173b94ffc40ed042a19c114a4e371d
+      body: |
+        From
+
+        https://github.com/jiazhang0/meta-secure-core at:
+        3fa3fc6dcb41fb6392de84154445502d0668153c
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'sbsigntool: Add recipe'
+      hash: 32a22fa740bd06cbb399998f7d8fd12c2088de7c
+      body: |
+        Required by efitools.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.17
+  date: 2021-11-21T17:23:50.379Z
+- commits:
     - subject: 'peak: Modify kernel driver to use signing class'
       hash: 12cbccc2a880bf3f9782b61c4afe4bd393a9414b
       body: ''
