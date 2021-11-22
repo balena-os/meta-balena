@@ -1,6 +1,6 @@
 inherit deploy
 
-do_sign () {
+do_sign_gpg () {
     if [ "x${SIGN_API}" = "x" ]; then
         bbnote "Signing API not defined"
         return 0
@@ -32,7 +32,7 @@ do_deploy:append() {
     done
 }
 
-do_sign[depends] += " \
+do_sign_gpg[depends] += " \
     curl-native:do_populate_sysroot \
     jq-native:do_populate_sysroot \
     ca-certificates-native:do_populate_sysroot \

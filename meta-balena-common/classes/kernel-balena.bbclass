@@ -59,7 +59,7 @@
 #       a) [optional] Define BALENA_DEFCONFIG_NAME. Default: "resin-defconfig"
 #       b) Add BALENA_DEFCONFIG_NAME to SRC_URI.
 
-inherit kernel-resin-noimage sign
+inherit kernel-resin-noimage sign-gpg
 
 BALENA_DEFCONFIG_NAME ?= "resin-defconfig"
 
@@ -973,7 +973,7 @@ do_configure[depends] += "balena-keys:do_deploy"
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 
 SIGNING_ARTIFACTS = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
-addtask sign before do_deploy after do_bundle_initramfs
+addtask sign_gpg before do_deploy after do_bundle_initramfs
 
 # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
 do_deploy:append () {

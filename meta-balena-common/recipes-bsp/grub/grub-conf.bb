@@ -9,7 +9,7 @@ SRC_URI = " \
     file://grubenv \
     "
 
-inherit deploy nopackages sign
+inherit deploy nopackages sign-gpg
 
 INHIBIT_DEFAULT_DEPS = "1"
 BOOTLOADER_TIMEOUT = "${@bb.utils.contains('OS_DEV_GRUB_DELAY', '1', '3', '0', d)}"
@@ -33,7 +33,7 @@ do_compile() {
 }
 
 SIGNING_ARTIFACTS = "${B}/grub.cfg_external ${B}/grub.cfg_internal ${B}/grub.cfg_internal_luks"
-addtask sign before do_install after do_compile
+addtask sign_gpg before do_install after do_compile
 
 do_install[noexec] = '1'
 
