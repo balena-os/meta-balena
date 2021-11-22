@@ -1,4 +1,27 @@
 - commits:
+    - subject: unwrap flasher images in os suite if needed
+      hash: e377cdf05d8d3baf456391889978a7a7bd49e9f0
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: bluetooth and hup test with qemu
+      hash: 2bf53fbce9bd2173b60253347a2e0c33d4c06e46
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.87.18
+  date: 2021-11-22T17:26:50.431Z
+- commits:
     - subject: 'efitools: Add recipe'
       hash: 64daca47ee173b94ffc40ed042a19c114a4e371d
       body: |

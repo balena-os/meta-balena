@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.87.18
+## (2021-11-22)
+
+* unwrap flasher images in os suite if needed [rcooke-warwick]
+* bluetooth and hup test with qemu [rcooke-warwick]
+
 # v2.87.17
 ## (2021-11-21)
 
