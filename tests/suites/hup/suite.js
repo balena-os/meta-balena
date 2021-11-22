@@ -11,125 +11,44 @@ const fse = require('fs-extra');
 const { join } = require('path');
 const { homedir } = require('os');
 const Docker = require('dockerode');
+
+// required for unwrapping images
+const imagefs = require('balena-image-fs');
+const stream = require('stream')
+const pipeline = require('bluebird').promisify(stream.pipeline);
+
+// required to use skopeo for loading the image
 const exec = require('bluebird').promisify(require('child_process').exec);
-const Bluebird = require('bluebird');
 
 // Starts registry, uploads target image to registry
-const runRegistry = async (that, seedWithImage) => {
+const runRegistry = async (that, test, seedWithImage) => {
 	const docker = new Docker();
-	const registryImage = 'registry:2.7.1';
+	const ip = await that.context.get().worker.ip(that.context.get().link);
 
-	that.log(`Pulling registry image: ${registryImage}`);
-	const stream = await docker.pull(registryImage);
+	test.comment('Starting registry...');
+	await that.context.get()
+		.worker.pushContainerToDUT(ip, require('path').join(__dirname, 'assets'), 'registry');
 
-	await new Bluebird((resolve, reject) => {
-		docker.modem.followProgress(
-			stream,
-			(err, output) => {
-				// onFinished
-				if (!err && output && output.length) {
-					err = output.pop().error;
-				}
-				if (err) {
-					reject(err);
-				} else {
-					resolve();
-				}
-			},
-			event => {
-				// onProgress
-			},
-		);
-	});
+	test.comment('Loading hostapp image into registry...');
+	const ref = `${ip}:5000/hostapp`
 
-	const container = await docker
-		.createContainer({
-			Image: registryImage,
-			HostConfig: {
-				AutoRemove: true,
-				Mounts: [
-					{
-						Type: 'tmpfs',
-						Target: '/var/lib/registry',
-					},
-				],
-				PortBindings: {
-					'5000/tcp': [
-						{
-							HostPort: '5000',
-						},
-					],
-				},
-			},
-		})
-		.then(container => {
-			that.log('Starting registry');
-			return container.start();
+	await exec(`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`);
+	const hostappRef = await exec(`skopeo inspect --tls-verify=false docker://${ref}`)
+		.then(out => {
+			const json = JSON.parse(out);
+			// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
+			// registry, but `hostappRef` is what we tell the DUT to HUP to.
+			// Since balenaEngine on the DUT will also require special setup to allow
+			// pulling from an insecure registry, we pass along a localhost ref
+			// which docker accepts by default
+			//
+			// TODO the alternative would be to push the image directly into the daemon using:
+			// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
+			// Figure out if the DUT docker daemon is exposed...
+			return `localhost:5000/hostapp@${json.Digest}`
 		});
 
-	that.suite.teardown.register(async () => {
-		that.log(`Teardown registry`);
-		try {
-			await container.kill();
-		} catch (err) {
-			that.log(`Error removing registry container: ${err}`);
-		}
-	});
-
-	that.log('Loading image into registry');
-	const imageName = await docker
-		.loadImage(seedWithImage)
-		.then(res => {
-			return new Promise((resolve, reject) => {
-				var bufs = [];
-				res.on('error', err => reject(err));
-				res.on('data', data => bufs.push(data));
-				res.on('end', () => resolve(JSON.parse(Buffer.concat(bufs))));
-			});
-		})
-		.then(json => {
-			const str = json.stream.split('Loaded image ID: ');
-			if (str.length === 2) {
-				return str[1].trim();
-			}
-			throw new Error('failed to parse image name from loadImage stream');
-		});
-
-	const image = await docker.getImage(imageName);
-	const ref = 'localhost:5000/hostapp';
-
-	await image.tag({ repo: ref, tag: 'latest' });
-	const tagged = await docker.getImage(ref);
-	const digest = await tagged
-		.push({ ref })
-		.then(res => {
-			return new Promise((resolve, reject) => {
-				var bufs = [];
-				res.on('error', err => reject(err));
-				res.on('data', data => bufs.push(JSON.parse(data)));
-				res.on('end', () => resolve(bufs));
-			});
-		})
-		.then(output => {
-			for (let json of output) {
-				if (json.error) {
-					throw new Error(json.error);
-				}
-				if (json.aux && json.aux.Digest) {
-					return json.aux.Digest;
-				}
-			}
-			throw new Error('no digest');
-		});
-	await image.remove();
-
-	// this parses the IP of the wlan0 interface which is the gateway for the DUT
-	// Replace the logic below when this merged https://github.com/balena-os/leviathan/pull/442
-	const testbotIP = (
-		await exec(`ip addr | awk '/inet.*wlan0/{print $2}' | cut -d\/ -f1`)
-	).trim();
-	const hostappRef = `${testbotIP}:5000/hostapp@${digest}`;
-	that.log(`Registry upload complete: ${hostappRef}`);
+	test.comment(`Registry upload complete: ${ref}`);
 
 	that.suite.context.set({
 		hup: {
@@ -140,6 +59,7 @@ const runRegistry = async (that, seedWithImage) => {
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, hostapp, target) => {
+
 	test.comment(`Starting HUP`);
 
 	let hupLog;
@@ -160,6 +80,7 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 				.get()
 				.worker.executeCommandInHostOS(`hostapp-update -f ${hostapp}`, target);
 			break;
+
 
 		case 'image':
 			test.comment(`Running: hostapp-update -i ${hostapp}`);
@@ -200,38 +121,10 @@ const initDUT = async (that, test, target) => {
 	}, true);
 	test.comment(`DUT flashed`);
 
-	const insecureRegistry = await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`ip route | awk '/default/{print $3}' | xargs -I {} echo -n ' --insecure-registry={}:5000'`,
-			target,
-		);
+	// Starts the registry and pushes the hostapp
+	await runRegistry(that, test, that.context.get().hupOs.image.path);
 
-	const execStart = await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`grep 'ExecStart=/usr/bin/balenad' /lib/systemd/system/balena-host.service`,
-			target,
-		);
-
-	let overrideSetting = `Environment=BALENAD_EXTRA_ARGS=${insecureRegistry}`;
-	// OS releases prior to 2.80.8 do not support BALENAD_EXTRA_ARGS
-	if (execStart.indexOf(`BALENAD_EXTRA_ARGS`) < 0) {
-		overrideSetting = `ExecStart=\n${execStart} ${insecureRegistry}`;
-	}
-
-	test.comment(`Configuring DUT to use test suite registry`);
-	// FIXME we should probably use a shared testbotIP method with the runRegistry helper...
-	await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`mkdir -p /run/systemd/system/balena-host.service.d/ && echo -e "[Service]\n${overrideSetting}" >/run/systemd/system/balena-host.service.d/hup.conf && systemctl daemon-reload && systemctl restart balena-host`,
-			target,
-		);
-
-	test.comment(`DUT ready`);
-
-	// Retrieving journalctl logs 
+	// Retrieving journalctl logs
 	that.teardown.register(async () => {
 		await that.context.get().worker.archiveLogs(that.id, that.context.get().link, "journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'");
 	});
@@ -282,12 +175,27 @@ module.exports = {
 		});
 
 		// Downloads the balenaOS image we hup from
-		const path = await this.context
+		let path = await this.context
 			.get()
 			.sdk.fetchOS(
 				this.suite.options.balenaOS.download.version,
 				this.suite.deviceType.slug,
 			);
+
+		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
+		if(this.suite.deviceType.data.storage.internal && (process.env.WORKER_TYPE === `qemu`)){
+			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`
+			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img'
+			console.log(`Unwrapping flasher image ${path}`)
+			await imagefs.interact(path, 2, async (fsImg) => {
+				await pipeline(
+				 fsImg.createReadStream(RAW_IMAGE_PATH),
+				 fs.createWriteStream(OUTPUT_IMG_PATH)
+				)
+			})
+			path = OUTPUT_IMG_PATH
+			console.log(`Unwrapped flasher image!`)
+		}
 
 		this.suite.context.set({
 			os: new BalenaOS(
@@ -306,6 +214,9 @@ module.exports = {
 						},
 						// persistentLogging is managed by the supervisor and only read at first boot
 						persistentLogging: true,
+						// Set local mode so we can perform local pushes of containers to the DUT
+						localMode: true,
+						developmentMode: true,
 					},
 				},
 				this.getLogger(),
@@ -327,10 +238,6 @@ module.exports = {
 		await this.context.get().hupOs.fetch();
 		// configure the image
 		await this.context.get().os.configure();
-		// Starts the registry
-		await this.context
-			.get()
-			.hup.runRegistry(this, this.context.get().hupOs.image.path);
 	},
 	tests: [
 		'./tests/smoke',
