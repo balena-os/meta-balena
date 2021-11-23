@@ -64,6 +64,9 @@ BALENA_BOOT_PARTITION_FILES:append = " \
     os-release:/os-release \
 "
 
+# add the secure boot keys if needed
+BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','','balena-keys:/balena-keys/',d)}"
+
 # add the generated <machine-name>.json to the resin-boot partition, renamed as device-type.json
 BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
 
