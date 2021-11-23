@@ -1,6 +1,7 @@
 #!/bin/sh
 
 DURING_UPDATE="${DURING_UPDATE:-0}"
+UMOUNT_EFIVARS=0
 SECUREBOOT_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
 SETUPMODE_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode"
 EFIVAR_RE="s,^[^ ]*  *\([^ ]*\) .*$,\1,"
@@ -15,15 +16,28 @@ if [ ! -d "/sys/firmware/efi" ]; then
     exit 0
 fi
 
-# Only applicable when in secure boot mode
+# Mount efivarfs if necessary
+if ! mount | grep -q "type efivarfs"; then
+    mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+    UMOUNT_EFIVARS=1
+fi
+
+# Read EFI variables
 SECUREBOOT_VAL=$(efivar -p -n "${SECUREBOOT_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
-if [ "${SECUREBOOT_VAL}" -ne "1" ]; then
+SETUPMODE_VAL=$(efivar -p -n "${SETUPMODE_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
+
+# Leave the system in the original state - unmount efivarfs if we mounted it
+if [ "${UMOUNT_EFIVARS}" = 1 ]; then
+    umount /sys/firmware/efi/efivars
+fi
+
+# Only applicable when in secure boot mode
+if [ -z "${SECUREBOOT_VAL}" ] || [ "${SECUREBOOT_VAL}" -ne "1" ]; then
     exit 0
 fi
 
 # Not applicable when secure boot is in setup mode
-SETUPMODE_VAL=$(efivar -p -n "${SETUPMODE_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
-if [ "${SETUPMODE_VAL}" -ne "0" ]; then
+if [ -n "${SETUPMODE_VAL}" ] && [ "${SETUPMODE_VAL}" -ne "0" ]; then
     exit 0
 fi
 
