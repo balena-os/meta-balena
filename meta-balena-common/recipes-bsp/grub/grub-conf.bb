@@ -28,7 +28,7 @@ do_compile() {
 
     sed -e 's/@@TIMEOUT@@/${BOOTLOADER_TIMEOUT}/' \
         -e 's/@@KERNEL_IMAGETYPE@@/${KERNEL_IMAGETYPE}/' \
-        -e 's/@@KERNEL_CMDLINE@@/rootwait ${OS_KERNEL_CMDLINE} ${MACHINE_SPECIFIC_EXTRA_CMDLINE}/' \
+        -e 's/@@KERNEL_CMDLINE@@/rootwait module.sig_enforce lockdown=integrity ${OS_KERNEL_CMDLINE} ${MACHINE_SPECIFIC_EXTRA_CMDLINE}/' \
         "${WORKDIR}/grub.cfg_internal_luks_template" > "${B}/grub.cfg_internal_luks"
 }
 
