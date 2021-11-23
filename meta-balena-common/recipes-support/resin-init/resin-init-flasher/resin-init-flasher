@@ -384,12 +384,12 @@ if [ "$LUKS" = "1" ]; then
     fi
 
     # Move all non-EFI files to boot partition
-    for FILE in $(ls "$EFI_MOUNT_DIR"); do
-        if [ "$FILE" = "EFI" ]; then
+    for FILE in "$EFI_MOUNT_DIR/"*; do
+        if [ "$FILE" = "$EFI_MOUNT_DIR/EFI" ]; then
             continue
         fi
 
-        mv "$EFI_MOUNT_DIR/$FILE" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/"
+        mv "$FILE" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/"
     done
 
     # Store files necessary for TPM decryption to the EFI partitions
