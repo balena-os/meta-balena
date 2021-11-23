@@ -161,3 +161,43 @@ regenerate_uuid() {
     echo "${new_uuid}"
     return 0
 }
+
+# Find partition with a given label on a given block device and output its number
+# Arguments:
+#   1 - Block device to scan
+#   2 - Label to look for
+#   3 - Field that identifies the label type - defaults to 'label' (FS label)
+#       The default should work fine but it is handy to switch to 'partlabel'
+#       on GPT devices as this does not need to rely on the underlying FS
+#       being labelled correctly.
+function get_part_number_by_label {
+    DEVICE=$1
+    LABEL=$2
+    FIELD=${3:-label}
+
+    lsblk "/dev/${DEVICE}" -nlo "name,${FIELD}" | grep "${LABEL}" | sed -e "s,^${DEVICE}p\?\([0-9][0-9]*\)[ \t]*${LABEL}$,\1,"
+}
+
+# Find partition size of a particular partition on the given block device
+# This rounds down to megabytes (MiB)
+# Arguments:
+#   1 - Block device
+#   2 - Partition number
+function get_part_size_by_number {
+    DEVICE=$1
+    PART_NUMBER=$2
+
+    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PART_NUMBER}[ \t][ \t]*" | awk '{print $4}' | sed -e "s,\(\.00*\)\?MiB,,"
+}
+
+# Find partition start of a particular partition on the given block device
+# This rounds down to megabytes (MiB)
+# Arguments:
+#   1 - Block device
+#   2 - Partition number
+function get_part_start_by_number {
+    DEVICE=$1
+    PART_NUMBER=$2
+
+    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PART_NUMBER}[ \t][ \t]*" | awk '{print $2}' | sed -e "s,\(\.00*\)\?MiB,,"
+}

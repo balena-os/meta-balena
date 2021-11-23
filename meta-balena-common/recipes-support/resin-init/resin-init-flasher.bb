@@ -28,6 +28,8 @@ RDEPENDS:${PN} = " \
     util-linux-lsblk \
     "
 
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' os-helpers-fs',d)}"
+
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
 
