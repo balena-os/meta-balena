@@ -4,10 +4,22 @@ inherit sign-efi
 
 SRC_URI += " \
     file://pass-secure-boot.patch \
+    file://0001-Add-dummyterm-module.patch \
     "
 
 # build in additional required modules
 GRUB_BUILDIN:append = " gcry_sha256 gcry_sha512 gcry_rijndael gcry_rsa regexp probe gzio"
+GRUB_BUILDIN:append = "${@oe.utils.conditional('SIGN_API','','',' dummyterm',d)}"
+
+do_configure:append() {
+    if [ "x${SIGN_API}" != "x" ]; then
+        SILENT_CONFIG=$(mktemp)
+        echo "terminal_input dummyterm" >> "${SILENT_CONFIG}"
+        echo "terminal_output dummyterm" >> "${SILENT_CONFIG}"
+        cat ../cfg >> "${SILENT_CONFIG}"
+        mv "${SILENT_CONFIG}" ../cfg
+    fi
+}
 
 # We don't want grub modules in our sysroot
 do_install:append:class-target() {

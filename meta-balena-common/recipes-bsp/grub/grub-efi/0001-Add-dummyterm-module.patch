@@ -1,0 +1,107 @@
+From 8c231b09bcd8742506e6511009573bd24c46dfc6 Mon Sep 17 00:00:00 2001
+From: Michal Toman <michalt@balena.io>
+Date: Tue, 23 Nov 2021 19:37:18 +0100
+Subject: [PATCH] Add dummyterm module
+
+We want GRUB to output nothing and accept no input under specific. By default
+GRUB has no such option and will require at least one input and one output
+to be configured. This patch adds a dummy terminal module that throws away
+any input or output that goes through it.
+
+Signed-off-by: Michal Toman <michalt@balena.io>
+---
+ grub-core/Makefile.core.def |  5 +++
+ grub-core/term/dummy.c      | 65 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 70 insertions(+)
+ create mode 100644 grub-core/term/dummy.c
+
+diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
+index 8022e1c0a..0c0a344ec 100644
+--- a/grub-core/Makefile.core.def
++++ b/grub-core/Makefile.core.def
+@@ -1042,6 +1042,11 @@ module = {
+   enable = x86;
+ };
+ 
++module = {
++  name = dummyterm;
++  common = term/dummy.c;
++};
++
+ module = {
+   name = probe;
+   common = commands/probe.c;
+diff --git a/grub-core/term/dummy.c b/grub-core/term/dummy.c
+new file mode 100644
+index 000000000..e204a4e3a
+--- /dev/null
++++ b/grub-core/term/dummy.c
+@@ -0,0 +1,65 @@
++/*
++ *  GRUB  --  GRand Unified Bootloader
++ *  Copyright (C) 2021, Balena Ltd.
++ *
++ *  GRUB is free software: you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation, either version 3 of the License, or
++ *  (at your option) any later version.
++ *
++ *  GRUB is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with GRUB.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <grub/dl.h>
++#include <grub/term.h>
++
++GRUB_MOD_LICENSE ("GPLv3+");
++
++
++static int
++dummy (void)
++{
++  return 0;
++}
++
++static struct grub_term_input grub_dummy_term_input =
++  {
++    .name = "dummyterm",
++    .getkey = (void *) dummy,
++    .getkeystatus = (void *) dummy,
++    .init = (void *) dummy,
++  };
++
++static struct grub_term_output grub_dummy_term_output =
++  {
++   .name = "dummyterm",
++   .init = (void *) dummy,
++   .fini = (void *) dummy,
++   .putchar = (void *) dummy,
++   .getwh = (void *) dummy,
++   .getxy = (void *) dummy,
++   .gotoxy = (void *) dummy,
++   .cls = (void *) dummy,
++   .setcolorstate = (void *) dummy,
++   .setcursor = (void *) dummy,
++   .flags = 0,
++   .progress_update_divisor = GRUB_PROGRESS_NO_UPDATE
++  };
++
++GRUB_MOD_INIT (dummyterm)
++{
++  grub_term_register_input ("dummyterm", &grub_dummy_term_input);
++  grub_term_register_output ("dummyterm", &grub_dummy_term_output);
++}
++
++GRUB_MOD_FINI (dummyterm)
++{
++  grub_term_unregister_input (&grub_dummy_term_input);
++  grub_term_unregister_output (&grub_dummy_term_output);
++}
+-- 
+2.31.1
+
