@@ -65,28 +65,6 @@ function inform {
     echo "[resin-init-flasher] INFO: $1"
 }
 
-function find_part_id {
-    DEVICE=$1
-    LABEL=$2
-    FIELD=${3:-label}
-
-    lsblk "/dev/${DEVICE}" -nlo "name,${FIELD}" | grep "${LABEL}" | sed -e "s,^${DEVICE}p\?\([0-9][0-9]*\)[ \t]*${LABEL}$,\1,"
-}
-
-function find_part_size {
-    DEVICE=$1
-    PARTID=$2
-
-    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PARTID}[ \t][ \t]*" | awk '{print $4}' | sed -e "s,\(\.00*\)\?MiB,,"
-}
-
-function find_part_start {
-    DEVICE=$1
-    PARTID=$2
-
-    parted "/dev/${DEVICE}" unit MiB print | grep "^[ \t]*${PARTID}[ \t][ \t]*" | awk '{print $2}' | sed -e "s,\(\.00*\)\?MiB,,"
-}
-
 function dd_with_progress {
     SRC=$1
     DEST=$2
@@ -209,6 +187,9 @@ if [ -d /sys/firmware/efi ]; then
 fi
 
 if [ "$LUKS" = "1" ]; then
+    # Include FS helpers for repartitioning
+    . /usr/libexec/os-helpers-fs
+
     # Generate password and encrypt it using the TPM
     TPM="${TPM:-/dev/tpmrm0}"
     if [ -e "$TPM" ]; then
@@ -262,13 +243,13 @@ if [ "$LUKS" = "1" ]; then
     parted "/dev/$internal_dev" mktable gpt
 
     inform "Flashing boot partition"
-    ORIGINAL_BOOT_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-boot)
-    ORIGINAL_BOOT_PART_SIZE=$(find_part_size "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
-    ORIGINAL_BOOT_START=$(find_part_start "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
+    ORIGINAL_BOOT_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-boot)
+    ORIGINAL_BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
+    ORIGINAL_BOOT_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
 
     parted "/dev/$internal_dev" unit MiB mkpart balena-efi "$ORIGINAL_BOOT_START" $["$ORIGINAL_BOOT_START" + "$ORIGINAL_BOOT_PART_SIZE"]
 
-    EFI_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-boot)
+    EFI_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-boot)
 
     PART_PREFIX=""
     if [ -e "/dev/${internal_dev}p${EFI_PART_ID}" ]; then
@@ -282,21 +263,21 @@ if [ "$LUKS" = "1" ]; then
     fatlabel "/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" "balena-efi"
 
     # Find parition IDs
-    ROOTA_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-rootA)
-    ROOTB_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-rootB)
-    STATE_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-state)
-    DATA_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" resin-data)
+    ROOTA_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-rootA)
+    ROOTB_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-rootB)
+    STATE_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-state)
+    DATA_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-data)
 
     # Find partition sizes
-    BOOT_PART_SIZE=$(find_part_size "$LOOP_DEVICE_NAME" "$EFI_PART_ID")
-    ROOTA_PART_SIZE=$(find_part_size "$LOOP_DEVICE_NAME" "$ROOTA_PART_ID")
-    ROOTB_PART_SIZE=$(find_part_size "$LOOP_DEVICE_NAME" "$ROOTB_PART_ID")
-    STATE_PART_SIZE=$(find_part_size "$LOOP_DEVICE_NAME" "$STATE_PART_ID")
-    DATA_PART_SIZE=$(find_part_size "$LOOP_DEVICE_NAME" "$DATA_PART_ID")
+    BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$EFI_PART_ID")
+    ROOTA_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ROOTA_PART_ID")
+    ROOTB_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ROOTB_PART_ID")
+    STATE_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$STATE_PART_ID")
+    DATA_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$DATA_PART_ID")
 
     # Find the beginning of the first partition
     FIRST_PART_ID=$(echo -e "$ROOTA_PART_ID\n$ROOTB_PART_ID\n$STATE_PART_ID\n$DATA_PART_ID" | sort | head -n 1)
-    FIRST_PART_START=$(find_part_start "$LOOP_DEVICE_NAME" "$FIRST_PART_ID")
+    FIRST_PART_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$FIRST_PART_ID")
 
     # Create new partitions with extra space for LUKS headers
     # LUKS header size is 2MiB
@@ -321,8 +302,8 @@ if [ "$LUKS" = "1" ]; then
     parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-data "$STATE_PART_END" "$DATA_PART_END"
 
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
-        LOOP_PART_ID=$(find_part_id "$LOOP_DEVICE_NAME" "$PART_NAME")
-        INTERNAL_PART_ID=$(find_part_id "$internal_dev" "$PART_NAME" partlabel)
+        LOOP_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" "$PART_NAME")
+        INTERNAL_PART_ID=$(get_part_number_by_label "$internal_dev" "$PART_NAME" partlabel)
 
         PART_DEV="/dev/$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         inform "Encrypting $PART_DEV"
