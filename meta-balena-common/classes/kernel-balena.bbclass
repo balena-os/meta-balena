@@ -117,6 +117,7 @@ BALENA_CONFIGS ?= " \
     leds-gpio \
     proc-config \
     no-logo \
+    optimize-size \
     hid-multitouch \
     ip6tables_nat \
     ip_set \
@@ -259,6 +260,11 @@ BALENA_CONFIGS[systemd] ?= " \
     CONFIG_CGROUP_SCHED=y \
     CONFIG_FAIR_GROUP_SCHED=y \
     CONFIG_CFS_BANDWIDTH=y"
+
+BALENA_CONFIGS[optimize-size] ?= " \
+    CONFIG_CC_OPTIMIZE_FOR_SIZE=y \
+    CONFIG_SLOB=y \
+    "
 
 #
 # We use an out-of-tree kernel module for RTL8192CU WiFi devices
