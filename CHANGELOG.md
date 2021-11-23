@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.19
+## (2021-11-22)
+
+* common: enable multi-label mDNS resolution and IPv6 [Joseph Kogut]
+
 # v2.87.18
 ## (2021-11-22)
 

@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'common: enable multi-label mDNS resolution and IPv6'
+      hash: 7d50c2b78a2c97172c9bdc558e835c8caf7a80ab
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.87.19
+  date: 2021-11-22T22:45:22.434Z
+- commits:
     - subject: unwrap flasher images in os suite if needed
       hash: e377cdf05d8d3baf456391889978a7a7bd49e9f0
       body: ''
