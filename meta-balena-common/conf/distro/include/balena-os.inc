@@ -2,6 +2,9 @@
 require conf/distro/poky.conf
 include conf/distro/include/balena-os-yocto-version.inc
 
+# Optimize for size
+FULL_OPTIMIZATION = "-Os -pipe ${DEBUG_FLAGS}"
+
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
 DISTRO_VERSION = "2.87.29"
