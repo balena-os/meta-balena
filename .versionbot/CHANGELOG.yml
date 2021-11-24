@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'grub-efi: Accept no input and output nothing when in secure boot mode'
+      hash: ffe2f48ed1e770068eb98affc5b29ae39c244869
+      body: >
+        At this moment GRUB drops to rescue shell if config is invalid
+
+        or if signatures are missing/wrong. This lets the user disable the
+        signature
+
+        checks altogether.
+
+
+        With this patch GRUB outputs nothing and accepts no user input if
+        signing
+
+        is configured.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.22
+  date: 2021-11-24T16:39:29.277Z
+- commits:
     - subject: 'linux-firmware: Include MT7601U firmware'
       hash: 33980c8b9ba464c91f016f9cade4140c278e7037
       body: >

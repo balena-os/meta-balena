@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.22
+## (2021-11-24)
+
+* grub-efi: Accept no input and output nothing when in secure boot mode [Michal Toman]
+
 # v2.87.21
 ## (2021-11-24)
 
