@@ -1,4 +1,31 @@
 - commits:
+    - subject: '0-signed-update HUP hook: mount efivarfs if necessary'
+      hash: 1a6c772c9266d5fc219939e9304813356f85d34c
+      body: >
+        The hook tries to read EFI variables from efivarfs but this is not
+        always
+
+        mounted within the container. We have already validated that we are
+        running
+
+        in EFI mode therefore we can just check whether it is already mounted
+
+        and eventually mount with no further checks.
+
+
+        This also adds graceful handling of nonexistent variables since not all
+
+        UEFI implementations come with secure boot support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.23
+  date: 2021-11-24T19:42:32.718Z
+- commits:
     - subject: 'grub-efi: Accept no input and output nothing when in secure boot mode'
       hash: ffe2f48ed1e770068eb98affc5b29ae39c244869
       body: >

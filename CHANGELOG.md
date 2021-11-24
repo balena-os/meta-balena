@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.23
+## (2021-11-24)
+
+* 0-signed-update HUP hook: mount efivarfs if necessary [Michal Toman]
+
 # v2.87.22
 ## (2021-11-24)
 
