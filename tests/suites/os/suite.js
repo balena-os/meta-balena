@@ -100,7 +100,7 @@ module.exports = {
 		if(this.suite.deviceType.data.storage.internal && (process.env.WORKER_TYPE === `qemu`)){
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img'
-			console.log(`Unwrapping file ${this.context.get().os.image.path}`)
+			console.log(`Trying to unwrap file ${this.context.get().os.image.path}`)
 			console.log(`Looking for ${RAW_IMAGE_PATH}`)
 			try{
 				await imagefs.interact(this.context.get().os.image.path, 2, async (fsImg) => {
@@ -109,11 +109,11 @@ module.exports = {
 					fse.createWriteStream(OUTPUT_IMG_PATH)
 					)
 				})
+				this.context.get().os.image.path = OUTPUT_IMG_PATH;
+				console.log(`Unwrapped flasher image!`);
 			}catch(e){
-				console.log(e)
-			}
-			this.context.get().os.image.path = OUTPUT_IMG_PATH
-			console.log(`Unwrapped flasher image!`)
+				console.log(`Could not unwrap flasher image - assuming that this is a raw image`);
+			}	
 		}
 
 		// Configure OS image
