@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.24
+## (2021-11-24)
+
+* Allow os suite to run with flasher or normal image [rcooke-warwick]
+
 # v2.87.23
 ## (2021-11-24)
 

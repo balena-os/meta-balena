@@ -1,4 +1,17 @@
 - commits:
+    - subject: Allow os suite to run with flasher or normal image
+      hash: 90f30e4ebe73ab23d013d5d07289e9c4cd6a1981
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.87.24
+  date: 2021-11-24T21:38:57.880Z
+- commits:
     - subject: '0-signed-update HUP hook: mount efivarfs if necessary'
       hash: 1a6c772c9266d5fc219939e9304813356f85d34c
       body: >
