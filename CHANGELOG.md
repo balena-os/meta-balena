@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.50.11
+## (2021-11-24)
+
+* linux-firmware: Include MT7601U firmware [Zahari Petkov]
+
 # v2.50.10
 ## (2020-08-13)
 

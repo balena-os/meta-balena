@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'linux-firmware: Include MT7601U firmware'
+      hash: fcabcb395667704abc9bfefd4004adf48ec149a1
+      body: >
+        The MT7601U WiFi driver fails to find its firmware, so it is included
+        now.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Backport-to: next
+        backport-to: next
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.50.11
+  date: 2021-11-24T14:32:19.097Z
+- commits:
     - subject: 'balena-supervisor: Update to v11.12.4'
       hash: 6c612f37b9a99ca75130c221a593a1b587e96830
       body: |
