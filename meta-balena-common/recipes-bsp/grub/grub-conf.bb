@@ -9,7 +9,7 @@ SRC_URI = " \
     file://grubenv \
     "
 
-inherit deploy nopackages sign
+inherit deploy nopackages sign-gpg
 
 INHIBIT_DEFAULT_DEPS = "1"
 BOOTLOADER_TIMEOUT = "${@bb.utils.contains('OS_DEV_GRUB_DELAY', '1', '3', '0', d)}"
@@ -28,12 +28,12 @@ do_compile() {
 
     sed -e 's/@@TIMEOUT@@/${BOOTLOADER_TIMEOUT}/' \
         -e 's/@@KERNEL_IMAGETYPE@@/${KERNEL_IMAGETYPE}/' \
-        -e 's/@@KERNEL_CMDLINE@@/rootwait ${OS_KERNEL_CMDLINE} ${MACHINE_SPECIFIC_EXTRA_CMDLINE}/' \
+        -e 's/@@KERNEL_CMDLINE@@/rootwait module.sig_enforce lockdown=integrity ${OS_KERNEL_CMDLINE} ${MACHINE_SPECIFIC_EXTRA_CMDLINE}/' \
         "${WORKDIR}/grub.cfg_internal_luks_template" > "${B}/grub.cfg_internal_luks"
 }
 
 SIGNING_ARTIFACTS = "${B}/grub.cfg_external ${B}/grub.cfg_internal ${B}/grub.cfg_internal_luks"
-addtask sign before do_install after do_compile
+addtask sign_gpg before do_install after do_compile
 
 do_install[noexec] = '1'
 

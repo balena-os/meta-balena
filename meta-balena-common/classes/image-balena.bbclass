@@ -197,6 +197,10 @@ do_resin_boot_dirgen_and_deploy () {
                 mkdir -p $directory
             done
             cp -rvfL $src ${BALENA_BOOT_WORKDIR}/$dst
+            # If there is a signed version copy it too
+            if [ -f "${src}.sig" ]; then
+                cp -vfL "$src.sig" "${BALENA_BOOT_WORKDIR}/$dst.sig"
+            fi
         done
     done
     echo "${IMAGE_NAME}" > ${BALENA_BOOT_WORKDIR}/image-version-info

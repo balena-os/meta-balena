@@ -1,6 +1,6 @@
 inherit deploy
 
-do_sign () {
+do_sign_gpg () {
     if [ "x${SIGN_API}" = "x" ]; then
         bbnote "Signing API not defined"
         return 0
@@ -25,12 +25,14 @@ do_sign () {
 do_deploy:append() {
     for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}; do
         if [ -f "${SIGNING_ARTIFACT}.sig" ]; then
+            # Both signed and unsigned versions are required
             install -m 0644 "${SIGNING_ARTIFACT}.sig" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT}).sig"
+            install -m 0644 "${SIGNING_ARTIFACT}" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT})"
         fi
     done
 }
 
-do_sign[depends] += " \
+do_sign_gpg[depends] += " \
     curl-native:do_populate_sysroot \
     jq-native:do_populate_sysroot \
     ca-certificates-native:do_populate_sysroot \
