@@ -1,4 +1,131 @@
 - commits:
+    - subject: 'balena-image: Add balena keys to boot partition if required'
+      hash: 14624e33c3a48baf71ac7314fc116e7cb21016c9
+      body: |
+        When using secure boot, add the balena keys to the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'grub-conf: Enforce module signing and integrity lockdown on luks config'
+      hash: 1ba23869473faace427782d2aea07a0b46bfbc0c
+      body: >
+        When booting in secure mode, enforce signed modules loading and
+        integrity
+
+        lockdown.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'distro: balena-os: Add empty SIGN_API'
+      hash: b1cce6ee3d921dd8def909d959a48bd0d6805c30
+      body: |
+        By default do not produce signed images.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'classes: image-balena: Copy signed files if present'
+      hash: cad39d9f0bf1630da4084cd9b6650cd612943f7d
+      body: |
+        Grub requires that the signed files carry the .sig suffix, so copy then
+        if present.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'classes/sign-gpg: Rename class to sign_gpg'
+      hash: b1e37430c2f83c045156057198140ba951ea5c5d
+      body: |
+        Use a less generic name.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'classes: Rename sign to sign-gpg'
+      hash: 07012bebb4e0c309a5f148f1ab70cf6bf4f15053
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'classes: sign: Drop suffix from deployed files'
+      hash: d3f05f3f36c1b9d2576e497ca5573dbd2b050efd
+      body: |
+        This way device repositories do not need to be customized.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'resin-init-flasher: Set fde grub.cfg if secure boot is enabled'
+      hash: 5d25ccbec30eacc449783b0b6f9c342befa10924
+      body: |
+        When secure boot is enabled a special grub.cfg is required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'balena-image-initramfs: Add secure boot dependencies'
+      hash: 68d68cfb4523e4e012f174e91495949461782b9d
+      body: |
+        When buildinf an initramfs for secure boot add the needed dependencies.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-image-initramfs: Install signed kernel images if available'
+      hash: 0af48f7555726e969b19bfe29321babb93f265b5
+      body: |
+        Signed images are needed for secure boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'kernel-balena: Configure for secure boot'
+      hash: 52259791b2cc2bfd121255e009808bc5677fde0d
+      body: |
+        On secure boot builds, configure the kernel accordingly.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.20
+  date: 2021-11-23T16:12:35.703Z
+- commits:
     - subject: 'common: enable multi-label mDNS resolution and IPv6'
       hash: 7d50c2b78a2c97172c9bdc558e835c8caf7a80ab
       body: ''

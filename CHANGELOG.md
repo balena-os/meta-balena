@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.87.20
+## (2021-11-23)
+
+* balena-image: Add balena keys to boot partition if required [Alex Gonzalez]
+* grub-conf: Enforce module signing and integrity lockdown on luks config [Alex Gonzalez]
+* distro: balena-os: Add empty SIGN_API [Alex Gonzalez]
+* classes: image-balena: Copy signed files if present [Alex Gonzalez]
+* classes/sign-gpg: Rename class to sign_gpg [Alex Gonzalez]
+* classes: Rename sign to sign-gpg [Alex Gonzalez]
+* classes: sign: Drop suffix from deployed files [Alex Gonzalez]
+* resin-init-flasher: Set fde grub.cfg if secure boot is enabled [Alex Gonzalez]
+* balena-image-initramfs: Add secure boot dependencies [Alex Gonzalez]
+* kernel-image-initramfs: Install signed kernel images if available [Alex Gonzalez]
+* kernel-balena: Configure for secure boot [Alex Gonzalez]
+
 # v2.87.19
 ## (2021-11-22)
 
