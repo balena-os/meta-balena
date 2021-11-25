@@ -130,25 +130,11 @@ module.exports = {
 				const defaultDns = '8.8.8.8';
 				const exampleDns = '1.1.1.1';
 
-				test.comment(
-					`Waiting for dnsmasq to be active and using ${defaultDns}...`,
-				);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${defaultDns} ; echo $?`,
-								this.context.get().link,
-							)) === '0'
-					);
-				}, false);
-
-				test.comment(`Setting dnsServers="${exampleDns}" in config.json...`);
+				test.comment(`Setting DNS nameservers to ${exampleDns} in config.json...`);
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp) && jq '.dnsServers="${exampleDns}"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
+						`tmp=$(mktemp) && jq '.dnsServers="${exampleDns} ${exampleDns}"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
 						this.context.get().link,
 					);
 
@@ -190,25 +176,14 @@ module.exports = {
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${defaultDns} ; echo $?`,
+							`grep -q '[^[:space:]]' < "/run/dnsmasq.servers" ; echo $?`,
 							this.context.get().link,
 						),
 					'1',
-					`Active dnsmasq service should not be using ${defaultDns}.`,
+					`We should have an empty /run/dnsmasq.servers file.`,
 				);
 
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${exampleDns} ; echo $?`,
-							this.context.get().link,
-						),
-					'1',
-					`Active dnsmasq service should not be using ${exampleDns}.`,
-				);
-
-        test.is(
+        		test.is(
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
