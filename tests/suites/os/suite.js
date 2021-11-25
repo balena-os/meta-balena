@@ -144,6 +144,7 @@ module.exports = {
 	},
 	tests: [
 		'./tests/fingerprint',
+		'./tests/fsck',
 		'./tests/os-release',
 		'./tests/issue',
 		'./tests/chrony',
