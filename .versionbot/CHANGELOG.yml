@@ -1,4 +1,28 @@
 - commits:
+    - subject: 'tests: add test for filesystem checks'
+      hash: a58b4a8d89830d739b8a676b1f8669ead6c03e0e
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'common: initrdscript: fsck resin-data on boot'
+      hash: a035f37b4ae3003b41cd450ab24fffbe178ecdb2
+      body: |
+        Check resin-data on boot to automatically repair any errors
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.87.26
+  date: 2021-11-25T07:36:45.881Z
+- commits:
     - subject: 'connectivity: reduce ping interval to minimum'
       hash: b513920cd7d683f6511aee2d190d2e9df924fe87
       body: |

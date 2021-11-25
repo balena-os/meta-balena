@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.87.26
+## (2021-11-25)
+
+* tests: add test for filesystem checks [Joseph Kogut]
+* common: initrdscript: fsck resin-data on boot [Joseph Kogut]
+
 # v2.87.25
 ## (2021-11-25)
 
