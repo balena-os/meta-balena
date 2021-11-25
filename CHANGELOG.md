@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.24
+## (2021-11-24)
+
+* tests: Fix dnsmasq tests in cases where 8.8.8.8 is assigned via DHCP [Kyle Harding]
+
 # v2.87.23
 ## (2021-11-24)
 

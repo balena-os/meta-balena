@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'tests: Fix dnsmasq tests in cases where 8.8.8.8 is assigned via DHCP'
+      hash: 970704092a2f73e120029464edca5b152296f486
+      body: >
+        One of the test was making sure we were NOT using the default 8.8.8.8
+
+        server even though that may be a valid upstream server provided by
+        DHCP/PPP.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.87.24
+  date: 2021-11-24T21:35:13.779Z
+- commits:
     - subject: '0-signed-update HUP hook: mount efivarfs if necessary'
       hash: 1a6c772c9266d5fc219939e9304813356f85d34c
       body: >
