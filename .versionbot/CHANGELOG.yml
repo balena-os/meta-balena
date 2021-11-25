@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'connectivity: reduce ping interval to minimum'
+      hash: b513920cd7d683f6511aee2d190d2e9df924fe87
+      body: |
+        The interface test uses a simple ping to ensure a specific interface
+        works. It sends ten packets, and expects ten packets back. However, the
+        default interval is one second, which increases the time taken for the
+        test while not adding anything of value.
+
+        Reduce the timeout to the minimum non-privileged interval of 2ms.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.87.25
+  date: 2021-11-25T02:05:13.102Z
+- commits:
     - subject: 'tests: Fix dnsmasq tests in cases where 8.8.8.8 is assigned via DHCP'
       hash: 970704092a2f73e120029464edca5b152296f486
       body: >

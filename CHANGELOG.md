@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.25
+## (2021-11-25)
+
+* connectivity: reduce ping interval to minimum [Joseph Kogut]
+
 # v2.87.24
 ## (2021-11-24)
 
