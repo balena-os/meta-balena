@@ -143,6 +143,7 @@ module.exports = {
 
 	},
 	tests: [
+		'./tests/device-specific-tests/beaglebone-black',
 		'./tests/fingerprint',
 		'./tests/fsck',
 		'./tests/os-release',
