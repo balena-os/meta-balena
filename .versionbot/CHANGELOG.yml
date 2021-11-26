@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'balena-os: make sure PAM support is not configured'
+      hash: abb515f6a0bf5d274af873852ddd4e60cf4ee89e
+      body: >
+        BalenaOS does not use PAM but some vendor BSPs enable it and
+        misconfigure
+
+        the hostOS authentication.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.27
+  date: 2021-11-25T14:36:15.066Z
+- commits:
     - subject: 'tests: add test for filesystem checks'
       hash: a58b4a8d89830d739b8a676b1f8669ead6c03e0e
       body: ''

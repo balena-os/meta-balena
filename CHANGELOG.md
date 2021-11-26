@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.27
+## (2021-11-25)
+
+* balena-os: make sure PAM support is not configured [Alex Gonzalez]
+
 # v2.87.26
 ## (2021-11-25)
 
