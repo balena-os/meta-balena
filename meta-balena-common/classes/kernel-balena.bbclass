@@ -59,7 +59,7 @@
 #       a) [optional] Define BALENA_DEFCONFIG_NAME. Default: "resin-defconfig"
 #       b) Add BALENA_DEFCONFIG_NAME to SRC_URI.
 
-inherit kernel-resin-noimage sign-gpg
+inherit kernel-resin-noimage sign-efi sign-gpg
 
 BALENA_DEFCONFIG_NAME ?= "resin-defconfig"
 
@@ -638,6 +638,11 @@ BALENA_CONFIGS[dmcrypt] = " \
 
 BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
 BALENA_CONFIGS[secureboot] = " \
+    CONFIG_KEXEC_SIG=y \
+    CONFIG_KEXEC_SIG_FORCE=y \
+    CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y \
+    CONFIG_INTEGRITY_PLATFORM_KEYRING=y \
+    CONFIG_LOAD_UEFI_KEYS=y \
     CONFIG_MODULE_SIG=y \
     CONFIG_MODULE_SIG_ALL=y \
     CONFIG_MODULE_SIG_SHA512=y \
@@ -972,8 +977,32 @@ do_configure[depends] += "balena-keys:do_deploy"
 # Force compile to depend on the last resin task in the chain
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 
-SIGNING_ARTIFACTS = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
-addtask sign_gpg before do_deploy after do_bundle_initramfs
+# Because we chain signatures here, the signed artifact is different for each
+# and defined in :prepend for each task
+SIGNING_ARTIFACTS_BASE = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
+addtask sign_efi before do_deploy after do_bundle_initramfs
+addtask sign_gpg before do_deploy after do_sign_efi
+
+do_sign_efi:prepend() {
+    SIGNING_ARTIFACTS="${SIGNING_ARTIFACTS_BASE}"
+}
+
+do_sign_gpg:prepend () {
+    SIGNING_ARTIFACTS=""
+    for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS_BASE}; do
+        SIGNING_ARTIFACTS="${SIGNING_ARTIFACTS} ${SIGNING_ARTIFACT}.signed"
+    done
+}
+
+do_sign_gpg:append () {
+    for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS_BASE}; do
+        mv "${SIGNING_ARTIFACT}.signed.sig" "${SIGNING_ARTIFACT}.sig"
+    done
+}
+
+do_deploy:prepend () {
+    SIGNING_ARTIFACTS="${SIGNING_ARTIFACTS_BASE}"
+}
 
 # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
 do_deploy:append () {
