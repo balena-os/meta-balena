@@ -30,7 +30,7 @@ kexec_run() {
     ROOT_UUID=$(findmnt "${ROOTFS_DIR}" -n -o UUID)
 
     BOOT_PARAMS="$(cat /proc/cmdline | sed -e s,balena_stage2,, | sed -e s,root=[^\ ]*,root=UUID=${ROOT_UUID},)"
-    kexec -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS}"
+    kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS}"
 
     umount "${ROOTFS_DIR}"
 
