@@ -43,6 +43,9 @@ BALENA_ROOTB_FS_LABEL = "flash-rootB"
 BALENA_STATE_FS_LABEL = "flash-state"
 BALENA_DATA_FS_LABEL = "flash-data"
 
+# add the secure boot keys if needed
+BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','','balena-keys:/balena-keys/',d)}"
+
 # Put the resin logo, uEnv.txt files inside the boot partition
 BALENA_BOOT_PARTITION_FILES:append = " balena-logo.png:/splash/balena-logo.png"
 
