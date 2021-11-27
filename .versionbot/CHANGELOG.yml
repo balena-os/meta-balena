@@ -1,4 +1,21 @@
 - commits:
+    - subject: Add secure boot keys to the flasher boot partition
+      hash: e5e1c4446f26d028d1e5b6fbdaeb974d84d0a03f
+      body: |
+        Having the keys available in the flasher image allows to use the
+        flasher image as source to program the keys in the EFI.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add secure boot keys to the flasher boot partition
+        changelog-entry: Add secure boot keys to the flasher boot partition
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.87.28
+  date: 2021-11-26T18:00:13.452Z
+- commits:
     - subject: 'balena-os: make sure PAM support is not configured'
       hash: abb515f6a0bf5d274af873852ddd4e60cf4ee89e
       body: >

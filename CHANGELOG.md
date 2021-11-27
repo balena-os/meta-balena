@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.28
+## (2021-11-26)
+
+* Add secure boot keys to the flasher boot partition [Alex Gonzalez]
+
 # v2.87.27
 ## (2021-11-25)
 
