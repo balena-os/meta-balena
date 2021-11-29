@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.29
+## (2021-11-29)
+
+* common: image-balena: enable developmentMode when OS_DEVELOPMENT=1 [Joseph Kogut]
+
 # v2.87.28
 ## (2021-11-26)
 

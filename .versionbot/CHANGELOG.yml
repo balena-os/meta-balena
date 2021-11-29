@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'common: image-balena: enable developmentMode when OS_DEVELOPMENT=1'
+      hash: 14b96077eb1899ebedce64610344989eaf4471cd
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.87.29
+  date: 2021-11-29T14:22:50.702Z
+- commits:
     - subject: Add secure boot keys to the flasher boot partition
       hash: e5e1c4446f26d028d1e5b6fbdaeb974d84d0a03f
       body: |
