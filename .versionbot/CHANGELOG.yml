@@ -1,4 +1,36 @@
 - commits:
+    - subject: 'resin-update-state.rules: do not run for unnamed partitions'
+      hash: bc45916b90e60aa849a2b99903825bce98e36752
+      body: >
+        When udev runs resin_update_state_probe for a non-balena partition
+
+        and ENV{ID_PART_ENTRY_NAME} is undefined it still gets expanded to
+        random
+
+        garbage accidentally lying at the eventual memory address. This can
+        create
+
+        a mess in /dev/disk/by-state e.g. when external devices are connected.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'resin_update_state_probe: do not skip device mapper devices'
+      hash: 4a8da59e5cbe2243518ed0591dc376e935a3175d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.87.31
+  date: 2021-11-30T17:23:29.588Z
+- commits:
     - subject: 'tests: Add device specific RevPi Core 3 DIO module test'
       hash: ffd31de2edf0358ede441aa001f5d32069ec8999
       body: ''

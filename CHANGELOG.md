@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.87.31
+## (2021-11-30)
+
+* resin-update-state.rules: do not run for unnamed partitions [Michal Toman]
+* resin_update_state_probe: do not skip device mapper devices [Michal Toman]
+
 # v2.87.30
 ## (2021-11-30)
 
