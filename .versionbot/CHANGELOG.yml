@@ -1,4 +1,31 @@
 - commits:
+    - subject: 'distro: optimize for size'
+      hash: ff3e71bb81711b1fa328a04dd0ca4688f71b25b0
+      body: |
+        Override FULL_OPTIMIZATION in distro conf to enable -Os to optimize
+        binaries for smallest code size by default.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'kernel-balena: optimize for size'
+      hash: 55248d58ddd09f2afee6f681e40a51bae2a81a28
+      body: |
+        Enable configs to reduce kernel size, including a compiler flag to
+        optimize for size, and the SLOB allocator.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.87.30
+  date: 2021-11-30T09:11:03.551Z
+- commits:
     - subject: 'common: image-balena: enable developmentMode when OS_DEVELOPMENT=1'
       hash: 14b96077eb1899ebedce64610344989eaf4471cd
       body: ''

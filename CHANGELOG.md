@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.87.30
+## (2021-11-30)
+
+* distro: optimize for size [Joseph Kogut]
+* kernel-balena: optimize for size [Joseph Kogut]
+
 # v2.87.29
 ## (2021-11-29)
 

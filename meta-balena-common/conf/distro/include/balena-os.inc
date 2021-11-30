@@ -7,7 +7,7 @@ FULL_OPTIMIZATION = "-Os -pipe ${DEBUG_FLAGS}"
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
-DISTRO_VERSION = "2.87.29"
+DISTRO_VERSION = "2.87.30"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''
