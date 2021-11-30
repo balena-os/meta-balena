@@ -160,5 +160,6 @@ module.exports = {
 		'./tests/udev',
 		'./tests/device-tree',
 		'./tests/purge-data',
+		'./tests/device-specific-tests/revpi-core-3',
 	],
 };
