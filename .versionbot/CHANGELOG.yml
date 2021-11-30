@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Add device specific RevPi Core 3 DIO module test'
+      hash: ffd31de2edf0358ede441aa001f5d32069ec8999
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.87.30
+  date: 2021-11-30T15:30:47.078Z
+- commits:
     - subject: 'common: image-balena: enable developmentMode when OS_DEVELOPMENT=1'
       hash: 14b96077eb1899ebedce64610344989eaf4471cd
       body: ''

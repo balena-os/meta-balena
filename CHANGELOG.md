@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.30
+## (2021-11-30)
+
+* tests: Add device specific RevPi Core 3 DIO module test [Alexandru Costache]
+
 # v2.87.29
 ## (2021-11-29)
 
