@@ -1,7 +1,6 @@
 [Unit]
-Before=time-sync.target
-Wants=time-sync.target var-volatile-lib.service
-After=var-volatile-lib.service
+Wants=time-sync-https-wait.target var-volatile-lib.service
+After=time-sync-https-wait.target var-volatile-lib.service
 
 [Service]
 Type=simple

@@ -1,7 +1,7 @@
 [Unit]
 Description=OpenVPN
-Requires=prepare-openvpn.service bind-etc-openvpn.service
-After=syslog.target network.target prepare-openvpn.service bind-etc-openvpn.service time-sync.target
+Requires=prepare-openvpn.service bind-etc-openvpn.service time-sync-https-wait.target
+After=syslog.target network.target prepare-openvpn.service bind-etc-openvpn.service time-sync-https-wait.target
 ConditionFileNotEmpty=/etc/openvpn/openvpn.conf
 
 [Service]
