@@ -1,4 +1,50 @@
 - commits:
+    - subject: 'systemd/timeinit: add HTTPS time synchronisation service'
+      hash: 2bb18707557979ed6466f45602de4ecf5b386c57
+      body: |
+        Add a new timesync-https systemd service to synchronise the system
+        time at boot using an HTTPS header. The service uses curl to request
+        an HTTPS header from either $API_ENDPOINT/connectivity-check (default)
+        or the URL defined by the os.network.connectivity.uri field in
+        config.json. The URL used *must* return HTTP code 204 (No Content)
+        in response to a request so that we can determine that we have full
+        network connectivity and are not operating behind a captive portal.
+
+        The date field returned by a valid header is used to set the current
+        system time. The date/time derived from the header is assumed to be a
+        reasonable source of 'truth' such that it can be used to adjust the
+        system time both backwards and forwards. This will compensate for any
+        erroneous timestamps saved via fake-hwclock or any invalid data
+        read from an RTC.
+
+        The service will exit when a valid response has been received. Poll
+        attempts will be made at an increasing interval starting at 2s and
+        doubling up to a maximum of 64s. Polling will continue at the maximum
+        interval until a valid response has been received.
+
+        This service will provide initial time synchronisation for devices
+        where NTP ports have been blocked. For devices where NTP access is
+        available it should ensure that any system 'time jump' is only a few
+        seconds when NTP synchronisation is eventually achieved. It also
+        allows other services to start with a reasonably accurate time
+        without having to wait for the NTP synchronisation process to
+        complete.
+
+        Services that are ordered after the new time-sync-https-wait target
+        can be sure that full network connectivity has been achieved and that
+        time has been synchronised with an accuracy of a few seconds.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Connects-to: '#1337 #1776 #2044 #2139'
+        connects-to: '#1337 #1776 #2044 #2139'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.88.0
+  date: 2021-12-01T15:06:07.577Z
+- commits:
     - subject: 'tests: Add BeagleBone Black u-boot overlay test'
       hash: d52a1754ba1620773e1f7f124fe382aa73e869eb
       body: ''

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.0
+## (2021-12-01)
+
+* systemd/timeinit: add HTTPS time synchronisation service [Mark Corbin]
+
 # v2.87.32
 ## (2021-12-01)
 
