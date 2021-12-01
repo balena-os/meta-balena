@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.87.32
+## (2021-12-01)
+
+* tests: Add BeagleBone Black u-boot overlay test [Florin Sarbu]
+
 # v2.87.31
 ## (2021-11-30)
 

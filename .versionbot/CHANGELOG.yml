@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Add BeagleBone Black u-boot overlay test'
+      hash: d52a1754ba1620773e1f7f124fe382aa73e869eb
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.87.32
+  date: 2021-12-01T08:51:25.213Z
+- commits:
     - subject: 'resin-update-state.rules: do not run for unnamed partitions'
       hash: bc45916b90e60aa849a2b99903825bce98e36752
       body: >
