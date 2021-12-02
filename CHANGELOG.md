@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.83.23
+## (2021-11-25)
+
+* repo.yml: Correct ESR backports metadata [Alex Gonzalez]
+* linux-firmware: Include RTL8723BU firmware files [Zahari Petkov]
+
 # v2.83.22
 ## (2021-11-16)
 

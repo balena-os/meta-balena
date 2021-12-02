@@ -1,4 +1,30 @@
 - commits:
+    - subject: 'repo.yml: Correct ESR backports metadata'
+      hash: cbf8aacbb913f5a43835b4a4b0fd40b33a248d12
+      body: |
+        This should be done automatically on the ESR creation script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'linux-firmware: Include RTL8723BU firmware files'
+      hash: e9949ed6b91954ad776d5893a31ffe1f6e444afd
+      body: |
+        The driver for RTL8723BU wireless chipset is present, but its firmware
+        files are not loaded. This patch includes them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.83.23
+  date: 2021-11-25T09:29:11.551Z
+- commits:
     - subject: 'linux-firmware: Include RTL8723BU firmware files'
       hash: e9949ed6b91954ad776d5893a31ffe1f6e444afd
       body: |
