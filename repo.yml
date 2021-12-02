@@ -1,7 +1,7 @@
 backports:
-  current: 2.48.x
-  next: 2.50.x
-  sunset: 2.44.x
+  current: 2.81.x
+  next: 2.83.x
+  sunset: 2.73.x
 esr:
   bsp-branch-pattern: 2021.10.x
   version: '2.83'
