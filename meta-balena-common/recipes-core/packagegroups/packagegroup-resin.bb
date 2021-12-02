@@ -17,6 +17,7 @@ RDEPENDS:${PN} += " \
     dosfstools \
     mobynit \
     docker-disk \
+    crun \
     hostapp-update \
     hostapp-extensions-update \
     hostapp-update-hooks \
