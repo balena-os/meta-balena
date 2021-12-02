@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#
+# Prevent data from being purged when the breadcrumb is missing
+#
+
+set -e
+
+# shellcheck source=/dev/null
+. /usr/libexec/os-helpers-logging
+
+if [ ! -f /mnt/data/remove_me_to_reset ]
+then
+    info "Creating data partition breadcrumb..."
+    touch /mnt/data/remove_me_to_reset
+    sync -f /mnt/data
+fi
