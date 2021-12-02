@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'bluez5: Update to bluez 5.61 from poky honister'
+      hash: 1ce83ba3726b77d679818cc8f10e7092cd094328
+      body: |
+        This commit brings the bluez5 recipe from poky honnister.
+
+        The code originated from poky's honnister branch
+        @ 5f87fbf13bd35169a488ca564875974681aafd4f
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.88.1
+  date: 2021-12-02T10:41:20.034Z
+- commits:
     - subject: 'systemd/timeinit: add HTTPS time synchronisation service'
       hash: 2bb18707557979ed6466f45602de4ecf5b386c57
       body: |

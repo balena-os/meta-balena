@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.1
+## (2021-12-02)
+
+* bluez5: Update to bluez 5.61 from poky honister [Kyle Harding]
+
 # v2.88.0
 ## (2021-12-01)
 
