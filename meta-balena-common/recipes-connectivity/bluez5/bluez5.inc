@@ -45,12 +45,12 @@ PACKAGECONFIG[deprecated] = "--enable-deprecated,--disable-deprecated"
 PACKAGECONFIG[mesh] = "--enable-mesh --enable-external-ell,--disable-mesh, json-c ell"
 PACKAGECONFIG[btpclient] = "--enable-btpclient --enable-external-ell,--disable-btpclient, ell"
 PACKAGECONFIG[udev] = "--enable-udev,--disable-udev,udev"
+PACKAGECONFIG[manpages] = "--enable-manpages,--disable-manpages,python3-docutils-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://init \
            ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '', 'file://0001-Allow-using-obexd-without-systemd-in-the-user-sessio.patch', d)} \
            file://0001-audio-Rename-pause-funciton-to-avoid-shadowing-glibc.patch \
-           file://0001-Makefile.am-add-missing-mkdir-for-ell-shared.patch \
            "
 S = "${WORKDIR}/bluez-${PV}"
 
