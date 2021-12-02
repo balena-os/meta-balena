@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.88.2
+## (2021-12-02)
+
+* sign-efi.bbclass: Do not deploy the unused .signed symlink [Michal Toman]
+* sign-gpg.bbclass: Only deploy the detached signature [Michal Toman]
+* kernel-image-initramfs.bb: Ship kernel and matching signature [Michal Toman]
+* Make kexec work under kernel lockdown [Michal Toman]
+
 # v2.88.1
 ## (2021-12-02)
 

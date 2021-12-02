@@ -1,4 +1,72 @@
 - commits:
+    - subject: 'sign-efi.bbclass: Do not deploy the unused .signed symlink'
+      hash: 33c3e61eac60dff18a1bfe8e7a69cc31a8b16070
+      body: |
+        do_deploy:append replaces the original file with its signed counterpart,
+        the signature just gets ignored for non secure boot setups. The .signed
+        symlink was in place for backwards compatibility but nothing is using it
+        anymore therefore we can safely remove it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'sign-gpg.bbclass: Only deploy the detached signature'
+      hash: 40ead6aefea6d4ab56c76ec0a968da9b23acc887
+      body: |
+        The original file should already be deployed, we only need to add
+        the signature in do_deploy:append. Re-deploying actually causes
+        harm when chaining signatures, replacing a signed file with its
+        unsigned counterpart.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: 'kernel-image-initramfs.bb: Ship kernel and matching signature'
+      hash: 73c254a9396dcf40ba421d70119400af7d4ef21f
+      body: >
+        This patch replaces the kernel being shipped with the one that we
+        eventually
+
+        sign for EFI - without signing the original file used would be identical
+
+        but after applying signature, the signed version is the one we want to
+        ship.
+
+
+        It also fixes the file name for the detached signature, which must match
+
+        the name of the associated file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: Make kexec work under kernel lockdown
+      hash: 3f7ab2a82b29cdb5ddbf2be6ae8b384a76be999e
+      body: |
+        - EFI sign bzImage first
+        - GPG sign the result
+        - Enable kexec signature check in the kernel
+        - Load EFI keys to the kernel keyring
+        - Use -s with kexec load command
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.88.2
+  date: 2021-12-02T12:47:16.559Z
+- commits:
     - subject: 'bluez5: Update to bluez 5.61 from poky honister'
       hash: 1ce83ba3726b77d679818cc8f10e7092cd094328
       body: |
