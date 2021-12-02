@@ -25,9 +25,8 @@ do_sign_gpg () {
 do_deploy:append() {
     for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}; do
         if [ -f "${SIGNING_ARTIFACT}.sig" ]; then
-            # Both signed and unsigned versions are required
+            # Deploy the detached signature if available, the original file has already been deployed
             install -m 0644 "${SIGNING_ARTIFACT}.sig" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT}).sig"
-            install -m 0644 "${SIGNING_ARTIFACT}" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT})"
         fi
     done
 }

@@ -11,7 +11,8 @@ do_install() {
     for type in ${KERNEL_IMAGETYPE}; do
         install -m 0644 ${DEPLOY_DIR_IMAGE}/${type}-initramfs-${MACHINE}.bin ${D}/boot/${type}
         if [ -f "${DEPLOY_DIR_IMAGE}/${type}.initramfs.sig" ]; then
-            install -m 0644 "${DEPLOY_DIR_IMAGE}/${type}.initramfs.sig" "${D}/boot/${type}.initramfs.sig"
+            install -m 0644 ${DEPLOY_DIR_IMAGE}/${type}.initramfs ${D}/boot/${type}
+            install -m 0644 "${DEPLOY_DIR_IMAGE}/${type}.initramfs.sig" "${D}/boot/${type}.sig"
         fi
     done
 }
