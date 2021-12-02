@@ -1,26 +1,23 @@
 module.exports = [{
-	deviceType: `raspberrypi3`,
+	deviceType: `genericx86-64-ext`,
 	suite: `${__dirname}/../suites/os`,
 	config: {
 		networkWired: false,
-		networkWireless: true,
+		networkWireless: false,
 		interactiveTests: false, // redundant
 		balenaApiKey: process.env.BALENA_CLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
 		organization: process.env.BALENA_CLOUD_ORG
 	},
 	image: `${__dirname}/balena.img.gz`,
-	workers: {
-		balenaApplication: process.env.BALENA_CLOUD_APP_NAME,
-		apiKey: process.env.BALENA_CLOUD_API_KEY,
-	},
+	workers: ['http://localhost'],
 },
 {
-	deviceType: `raspberrypi3`,
+	deviceType: `genericx86-64-ext`,
 	suite: `${__dirname}/../suites/hup`,
 	config: {
 		networkWired: false,
-		networkWireless: true,
+		networkWireless: false,
 		downloadVersion: 'latest',
 		interactiveTests: false, // redundant
 		balenaApiKey: process.env.BALENA_CLOUD_API_KEY,
@@ -28,8 +25,5 @@ module.exports = [{
 		organization: process.env.BALENA_CLOUD_ORG
 	},
 	image: `${__dirname}/balena-image.docker`,
-	workers: {
-		balenaApplication: process.env.BALENA_CLOUD_APP_NAME,
-		apiKey: process.env.BALENA_CLOUD_API_KEY,
-	},
+	workers: ['http://localhost'],
 }];
