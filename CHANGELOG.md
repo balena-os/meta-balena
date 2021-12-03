@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.88.4
+## (2021-12-03)
+
+* tests: Add basic checks for data loss during HUP [Kyle Harding]
+* hostapp-update-hooks: Ensure data breadcrumb is present before HUP [Kyle Harding]
+
 # v2.88.3
 ## (2021-12-02)
 

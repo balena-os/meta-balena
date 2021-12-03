@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'tests: Add basic checks for data loss during HUP'
+      hash: 160fba09251de9fc05b3b3ab7a45e6e4e6ca5586
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: 'hostapp-update-hooks: Ensure data breadcrumb is present before HUP'
+      hash: 62b25ec26111003ef12bc16fe4890b5c327e6aba
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.88.4
+  date: 2021-12-03T18:33:53.449Z
+- commits:
     - subject: 'grub-conf: Delay grub boot in os development mode'
       hash: 08b54c04b109341542ff1f2b82d00699369a8280
       body: |
