@@ -19,6 +19,13 @@ module.exports = {
 
 		await this.context
 			.get()
+			.worker.executeCommandInHostOS(
+				`balena volume create hello-world`,
+				this.context.get().link,
+			);
+
+		await this.context
+			.get()
 			.hup.doHUP(
 				this,
 				test,
@@ -97,10 +104,19 @@ module.exports = {
 			.get()
 			.worker.getOSVersion(this.context.get().link);
 
-		test.comment(`OS version after HUP: ${versionAfterHup}`);
-
 		test.comment(
 			`Successful HUP from ${versionBeforeHup} to ${versionAfterHup}`,
+		);
+
+		test.is(
+			await this.context
+				.get()
+				.worker.executeCommandInHostOS(
+					`balena volume inspect hello-world 1>/dev/null 2>&1; echo $?`,
+					this.context.get().link,
+				),
+			'0',
+			'Volume should not be lost during HUP',
 		);
 	},
 };
