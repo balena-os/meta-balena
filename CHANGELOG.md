@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.88.3
+## (2021-12-02)
+
+* grub-conf: Delay grub boot in os development mode [Alex Gonzalez]
+* grub-efi: Allow input/output in OS development mode [Alex Gonzalez]
+
 # v2.88.2
 ## (2021-12-02)
 

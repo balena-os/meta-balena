@@ -1,4 +1,31 @@
 - commits:
+    - subject: 'grub-conf: Delay grub boot in os development mode'
+      hash: 08b54c04b109341542ff1f2b82d00699369a8280
+      body: |
+        When using the compile time OS_DEVELOPMENT switch, delay the boot so
+        the grub menu is displayed and it can be interacted with.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'grub-efi: Allow input/output in OS development mode'
+      hash: 7d450dddf397dc045779fa815b5003bd1b1ca7fa
+      body: |
+        When building with the compile-time OS_DEVELOPMENT switch allow
+        grub shell to work.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.88.3
+  date: 2021-12-02T17:44:27.982Z
+- commits:
     - subject: 'sign-efi.bbclass: Do not deploy the unused .signed symlink'
       hash: 33c3e61eac60dff18a1bfe8e7a69cc31a8b16070
       body: |
