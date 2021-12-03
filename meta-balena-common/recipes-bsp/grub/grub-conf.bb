@@ -12,7 +12,7 @@ SRC_URI = " \
 inherit deploy nopackages sign-gpg
 
 INHIBIT_DEFAULT_DEPS = "1"
-BOOTLOADER_TIMEOUT = "${@bb.utils.contains('OS_DEV_GRUB_DELAY', '1', '3', '0', d)}"
+BOOTLOADER_TIMEOUT = "${@bb.utils.contains('OS_DEVELOPMENT', '1', '3', '0', d)}"
 
 do_configure[noexec] = '1'
 do_compile() {

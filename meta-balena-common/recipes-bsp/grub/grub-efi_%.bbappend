@@ -12,7 +12,7 @@ GRUB_BUILDIN:append = " gcry_sha256 gcry_sha512 gcry_rijndael gcry_rsa regexp pr
 GRUB_BUILDIN:append = "${@oe.utils.conditional('SIGN_API','','',' dummyterm',d)}"
 
 do_configure:append() {
-    if [ "x${SIGN_API}" != "x" ]; then
+    if [ "x${SIGN_API}" != "x" ] && [ "${OS_DEVELOPMENT}" != "1" ]; then
         SILENT_CONFIG=$(mktemp)
         echo "terminal_input dummyterm" >> "${SILENT_CONFIG}"
         echo "terminal_output dummyterm" >> "${SILENT_CONFIG}"
