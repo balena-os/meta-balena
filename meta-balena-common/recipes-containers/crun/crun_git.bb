@@ -20,11 +20,10 @@ SRC_URI = "git://github.com/containers/crun.git;branch=main;name=crun;protocol=h
 PV = "1.2+git${SRCREV_crun}"
 S = "${WORKDIR}/git"
 
-REQUIRED_DISTRO_FEATURES ?= "systemd"
-
 inherit autotools-brokensep pkgconfig features_check
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
+PACKAGECONFIG[systemd] = ",--disable-systemd,systemd"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES ?= "seccomp"
