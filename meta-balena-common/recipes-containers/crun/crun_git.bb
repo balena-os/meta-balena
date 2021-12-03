@@ -24,9 +24,7 @@ inherit autotools-brokensep pkgconfig features_check
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
 PACKAGECONFIG[systemd] = ",--disable-systemd,systemd"
-
-inherit features_check
-REQUIRED_DISTRO_FEATURES ?= "seccomp"
+PACKAGECONFIG[seccomp] = ",--disable-seccomp,libseccomp"
 
 DEPENDS = "yajl libcap m4-native"
 # TODO: is there a packageconfig to turn this off ?
