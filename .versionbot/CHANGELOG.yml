@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'tests: os: fix unhandled exception when unwrapping non-flasher image'
+      hash: ce2d33ad875e83b1ed01a16225a9ca19563836dc
+      body: |
+        Handle ENOENT ErrnoException when attempting to unwrap non-flasher image
+        in os/suite.js.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.88.5
+  date: 2021-12-04T12:25:35.702Z
+- commits:
     - subject: 'tests: Add basic checks for data loss during HUP'
       hash: 160fba09251de9fc05b3b3ab7a45e6e4e6ca5586
       body: ''

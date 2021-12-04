@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.5
+## (2021-12-04)
+
+* tests: os: fix unhandled exception when unwrapping non-flasher image [Joseph Kogut]
+
 # v2.88.4
 ## (2021-12-03)
 
