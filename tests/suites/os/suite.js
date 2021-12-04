@@ -109,11 +109,17 @@ module.exports = {
 					fse.createWriteStream(OUTPUT_IMG_PATH)
 					)
 				})
+
+				this.context.get().os.image.path = OUTPUT_IMG_PATH;
+				console.log(`Unwrapped flasher image!`);
 			}catch(e){
-				console.log(e)
+				// If the outer image doesn't contain an image for installation, ignore the error
+				if (e.code == 'ENOENT') {
+					console.log("Not a flasher image, skipping unwrap");
+				} else {
+					throw e;
+				}
 			}
-			this.context.get().os.image.path = OUTPUT_IMG_PATH
-			console.log(`Unwrapped flasher image!`)
 		}
 
 		// Configure OS image
