@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.5
+## (2021-12-04)
+
+* tests: Update leviathan default config for generic devices [Kyle Harding]
+
 # v2.88.4
 ## (2021-12-03)
 
