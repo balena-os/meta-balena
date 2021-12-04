@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.6
+## (2021-12-04)
+
+* docs: Fix links in Rollback documentation [Kyle Harding]
+
 # v2.88.5
 ## (2021-12-04)
 

@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'docs: Fix links in Rollback documentation'
+      hash: 14399cfd115198b0913fb379760b9710c0710258
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.88.6
+  date: 2021-12-04T17:29:48.922Z
+- commits:
     - subject: 'tests: os: fix unhandled exception when unwrapping non-flasher image'
       hash: ce2d33ad875e83b1ed01a16225a9ca19563836dc
       body: |
