@@ -2,7 +2,7 @@
 
 balenaCloud and balenaOS support [host OS Updates](https://www.balena.io/docs/reference/OS/updates/self-service/)(HUP). Rollbacks is a framework designed to roll back the OS update in case something goes wrong.
 
-There are two rollback mechanisms in the OS, covering different update failure modes: one based on health checks [rollback-health](rollback-health), and another recognizing if the new system is unbootable for some reason [rollback-altboot](rollback-altboot). Their detailed operations are explained below.
+There are two rollback mechanisms in the OS, covering different update failure modes: one based on health checks [rollback-health](#rollback-health), and another recognizing if the new system is unbootable for some reason [rollback-altboot](#rollback-altboot). Their detailed operations are explained below.
 
 ## rollback-health
 The new OS gets to userspace but something is unhealthy. Userspace is functional and we can use systemd services and bash scripts in this case.
