@@ -59,6 +59,20 @@ module.exports = {
 						true,
 						'DUT should be able to see testbot when scanning for bluetooth devices',
 					);
+
+					test.comment('Checking if BD Address is initialized');
+					const devMac = await this.context
+							.get()
+							.worker.executeCommandInHostOS(
+								'hcitool dev',
+								this.context.get().link,
+							);
+
+					test.is(
+						devMac.includes('AA:AA:AA:AA:AA:AA'),
+						false,
+						'BD Address should not be AA:AA:AA:AA:AA:AA',
+					);
 				}
 			},
 		},
