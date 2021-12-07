@@ -4,7 +4,7 @@ SECTION = "net/misc"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://docs/api/html/license.html;md5=0660fa481565243be23062c2fd524ccd \
+                    file://docs/api/html/license.html;md5=4b6f0196cf1f53deecf4300c0b290f4b \
 "
 
 DEPENDS = " \
@@ -29,8 +29,8 @@ SRC_URI:append:libc-musl = " \
     file://musl/0001-Fix-build-with-musl-systemd-specific.patch \
     file://musl/0002-Fix-build-with-musl.patch \
 "
-SRC_URI[md5sum] = "3c4a70764ec3418a796b2c3f2a1f83e0"
-SRC_URI[sha256sum] = "3e170e9045e20598d2630e40c5789b2e2c46b942bfe5cb220f36202299253062"
+SRC_URI[md5sum] = "0913815a98c60d0d2bcc6e930b596906"
+SRC_URI[sha256sum] = "a8ab36a0a502fe73cd8e3bacb6585f97fbb94ebef79e276cdbaf11c33ff8f54b"
 
 UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/"
 # Stable releases are numbered 1.y.z, with y and z being even numbers.
