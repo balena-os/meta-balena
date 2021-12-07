@@ -1,4 +1,26 @@
 - commits:
+    - subject: 'tests: Ensure BDADDR is initialized'
+      hash: 7824025cb4722483a15cd95f7ee93207af2d8f8c
+      body: |
+        The CM4 IO-Board was the first device
+        which exhibited an issue in which
+        the MAC address was set to an
+        unprogrammed value AA:AA:AA...:AA.
+
+        We've addressed this in the device repo,
+        meanwhile it has been fixed in upstream
+        too, so let's check and catch this should
+        it happen again.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.88.7
+  date: 2021-12-06T15:07:42.139Z
+- commits:
     - subject: 'docs: Fix links in Rollback documentation'
       hash: 14399cfd115198b0913fb379760b9710c0710258
       body: ''

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.7
+## (2021-12-06)
+
+* tests: Ensure BDADDR is initialized [Alexandru Costache]
+
 # v2.88.6
 ## (2021-12-04)
 
