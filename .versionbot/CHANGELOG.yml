@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'balena: Update to development branch lmb/set-sched-prio-2'
+      hash: 5525a864ff6ba73809ebda5ed3e27f909b5891b2
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.88.8
+  date: 2021-12-08T18:45:28.273Z
+- commits:
     - subject: 'tests: Ensure BDADDR is initialized'
       hash: 7824025cb4722483a15cd95f7ee93207af2d8f8c
       body: |

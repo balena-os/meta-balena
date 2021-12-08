@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.8
+## (2021-12-08)
+
+* balena: Update to development branch lmb/set-sched-prio-2 [Kyle Harding]
+
 # v2.88.7
 ## (2021-12-06)
 
