@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f
 inherit systemd go pkgconfig useradd
 
 BALENA_VERSION = "19.03.30"
-BALENA_BRANCH= "master"
+BALENA_BRANCH= "lmb/set-sched-prio-2"
 
 SRCREV = "c41a2d5c1a102294994118434aefaa54a76e2814"
 SRC_URI = "\
