@@ -238,6 +238,13 @@ module.exports = {
 		await this.context.get().hupOs.fetch();
 		// configure the image
 		await this.context.get().os.configure();
+    
+    // Retrieving journalctl logs
+		this.suite.teardown.register(async () => {
+			await this.context
+				.get()
+				.worker.archiveLogs(this.id, this.context.get().link);
+		});
 	},
 	tests: [
 		'./tests/smoke',

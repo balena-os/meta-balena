@@ -159,11 +159,11 @@ module.exports = {
 				// Start of the device-tree practical test
 				await exportPin(4)
 				if (await getPinValue(4) === "0") {
-					test.true("Pin 4 was Low when the test started")
+					test.true(true, "Pin 4 was Low when the test started")
 					const targetState = await applySupervisorConfig("up")
 					test.equal(await getPinValueThroughDebug(4), '"hi"', "Pin 4 set to High after applying dtoverlay")
 				} else {
-					test.true("Pin 4 is High as expected")
+					test.true(true, "Pin 4 is High as expected")
 					const targetState = await applySupervisorConfig("down")
 					test.equal(await getPinValueThroughDebug(4), '"lo"', "Pin 4 set to Low after applying dtoverlay")
 				}
