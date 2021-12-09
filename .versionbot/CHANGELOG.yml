@@ -1,4 +1,13 @@
 - commits:
+    - subject: 'patch: Add archiveLogs Teardown for HUP suite'
+      hash: 27abdfaab8ab0790020ebfce0fc64710c8efd609
+      body: ''
+      footer: {}
+      author: Vipul Gupta
+      nested: []
+  version: 2.88.8
+  date: 2021-12-09T19:58:29.923Z
+- commits:
     - subject: 'tests: Ensure BDADDR is initialized'
       hash: 7824025cb4722483a15cd95f7ee93207af2d8f8c
       body: |

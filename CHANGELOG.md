@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.8
+## (2021-12-09)
+
+* patch: Add archiveLogs Teardown for HUP suite [Vipul Gupta]
+
 # v2.88.7
 ## (2021-12-06)
 
