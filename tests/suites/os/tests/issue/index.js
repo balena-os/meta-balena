@@ -18,88 +18,48 @@ module.exports = {
 	title: 'issue tests',
 	tests: [
 		{
-			title: 'issue file check',
-			run: async function(test) {
-				const file = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/issue',
-						this.context.get().link,
-					);
+			title: 'issue file checks',
+			tests: ['issue', 'issue.net'].map(adaptor => {
+				return {
+					title: `${adaptor} test`,
+					run: async function(test) {
+						let context = this.context.get();
+						return context.worker.executeCommandInHostOS(
+							`cat /etc/${adaptor}`,
+							context.link,
+						).then((file) => {
+							const result = {};
+							file.split('\n').forEach(element => {
+								const parse = /(\S*)\s(\S*)/.exec(element);
+								[ result['distro'], result['version'] ] = parse.slice(1);
+							});
 
-				const distroName = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/os-release | grep "^NAME=" | cut -d "=" -f2 | tr -d \'"\'',
-						this.context.get().link,
-					);
-
-				const osReleaseVersion = await this.context
-					.get()
-					.worker.getOSVersion(this.context.get().link)
-
-				const result = {};
-				file.split('\n').forEach(element => {
-					const parse = /(\S*)\s(\S*)/.exec(element);
-					result['distro'] = parse[1];
-					result['version'] = parse[2];
-				});
-
-				// check distro
-				test.is(
-					result['distro'],
-					`${distroName}`,
-					`issue should contain distribution ${result['distro']}`,
-				);
-				// Check version
-				test.is(
-					result['version'],
-					`${osReleaseVersion}`,
-					`issue should contain version ${result['version']}`,
-				);
-			},
-		},
-		{
-			title: 'issue.net file check',
-			run: async function(test) {
-				const file = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/issue.net',
-						this.context.get().link,
-					);
-
-				const distroName = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/os-release | grep "^NAME=" | cut -d "=" -f2 | tr -d \'"\'',
-						this.context.get().link,
-					);
-
-				const osReleaseVersion = await this.context
-					.get()
-					.worker.getOSVersion(this.context.get().link)
-
-				const result = {};
-				file.split('\n').forEach(element => {
-					const parse = /(\S*)\s(\S*)/.exec(element);
-					result['distro'] = parse[1];
-					result['version'] = parse[2];
-				});
-
-				// check distro
-				test.is(
-					result['distro'],
-					`${distroName}`,
-					`issue.net should contain distribution ${result['distro']}`,
-				);
-				// Check version
-				test.is(
-					result['version'],
-					`${osReleaseVersion}`,
-					`issue.net should contain version ${result['version']}`,
-				);
-			},
+							return Promise.all(
+								[
+									context.worker.executeCommandInHostOS(
+										'cat /etc/os-release | grep "^NAME=" | cut -d "=" -f2 | tr -d \'"\'',
+										context.link,
+									).then((distroName) => {
+										test.is(
+											result['distro'],
+											distroName,
+											`${adaptor} should contain distribution ${result['distro']}`);
+									}),
+									context.worker.getOSVersion(
+										context.link,
+									).then(osReleaseVersion => {
+										test.is(
+											result['version'],
+											osReleaseVersion,
+											`${adaptor} should contain version ${result['version']}`
+										);
+									}),
+								],
+							);
+						});
+					},
+				}
+			}),
 		},
 	],
 };
