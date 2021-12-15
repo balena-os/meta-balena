@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.9
+## (2021-12-15)
+
+* u-boot: Move u-boot configs inclusion into resin-u-boot.bbclass [Florin Sarbu]
+
 # v2.88.8
 ## (2021-12-09)
 
