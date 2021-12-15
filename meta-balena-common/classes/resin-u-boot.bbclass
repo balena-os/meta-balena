@@ -1,7 +1,14 @@
+FILESEXTRAPATHS:append := ":${BALENA_COREBASE}/recipes-bsp/u-boot/files"
 FILESEXTRAPATHS:append := ":${BALENA_COREBASE}/recipes-bsp/u-boot/patches"
 
 INTEGRATION_KCONFIG_PATCH = "file://resin-specific-env-integration-kconfig.patch"
 INTEGRATION_NON_KCONFIG_PATCH = "file://resin-specific-env-integration-non-kconfig.patch"
+
+# We require these uboot config options to be enabled for env_resin.h
+SRC_URI += "file://balenaos_uboot.cfg"
+
+SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', '', 'file://balenaos_uboot_prod.cfg', d)}"
+SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'file://balenaos_uboot_delay.cfg', 'file://balenaos_uboot_nodelay.cfg', d)}"
 
 # Machine independent patches
 SRC_URI:append = " \
