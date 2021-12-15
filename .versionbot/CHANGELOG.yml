@@ -1,4 +1,20 @@
 - commits:
+    - subject: 'u-boot: Rename bbappend to match more u-boot recipes'
+      hash: 54cf463a55b8fddd94d28c27fdb33a18cfb9abed
+      body: |
+        Some BSPs name the u-boot such as u-boot-imx_2020 for example.
+        Because of that, our existing bbappend called u-boot_%.bbappend
+        will not match it and will fail to set SRC_URI.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.88.9
+  date: 2021-12-15T11:22:07.079Z
+- commits:
     - subject: 'patch: Add archiveLogs Teardown for HUP suite'
       hash: 27abdfaab8ab0790020ebfce0fc64710c8efd609
       body: ''
