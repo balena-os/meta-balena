@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'os: tests: optimize healthcheck tests'
+      hash: 68734e2b4c507aa3a5f3003aa6e09d1da7a7648d
+      body: |
+        - ok 1 - Container healthcheck test # time=54898.728ms
+        + ok 1 - Container healthcheck test # time=51720.146ms
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.88.8
+  date: 2021-12-16T23:51:52.734Z
+- commits:
     - subject: 'tests: Ensure BDADDR is initialized'
       hash: 7824025cb4722483a15cd95f7ee93207af2d8f8c
       body: |
