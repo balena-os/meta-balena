@@ -20,44 +20,43 @@ module.exports = {
 		{
 			title: 'OS-release file check',
 			run: async function(test) {
-				const file = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/os-release',
-						this.context.get().link,
+				let context = this.context.get();
+				return context.worker.executeCommandInHostOS(
+					'cat /etc/os-release',
+					context.link,
+				).then((file) => {
+					const result = {};
+					file.split('\n').forEach(element => {
+						const parse = /(.*)=(.*)/.exec(element);
+						result[parse[1]] = parse[2];
+					});
+
+					[
+						'ID',
+						'NAME',
+						'VERSION',
+						'VERSION_ID',
+						'PRETTY_NAME',
+						'MACHINE',
+						'META_BALENA_VERSION',
+						'SLUG',
+					].forEach(field => {
+						test.includes(
+							result,
+							{
+								[field]: /.*/,
+							},
+							`OS-release file should contain field ${field}`,
+						);
+					});
+
+					// check slug
+					test.is(
+						result['SLUG'],
+						`"${this.context.get().os.deviceType}"`,
+						`SLUG field should contain ${this.context.get().os.deviceType}`,
 					);
-
-				const result = {};
-				file.split('\n').forEach(element => {
-					const parse = /(.*)=(.*)/.exec(element);
-					result[parse[1]] = parse[2];
 				});
-
-				[
-					'ID',
-					'NAME',
-					'VERSION',
-					'VERSION_ID',
-					'PRETTY_NAME',
-					'MACHINE',
-					'META_BALENA_VERSION',
-					'SLUG',
-				].forEach(field => {
-					test.includes(
-						result,
-						{
-							[field]: /.*/,
-						},
-						`OS-release file should contain field ${field}`,
-					);
-				});
-
-				// check slug
-				test.is(
-					result['SLUG'],
-					`"${this.context.get().os.deviceType}"`,
-					`SLUG field should contain ${this.context.get().os.deviceType}`,
-				);
 			},
 		},
 	],
