@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.8
+## (2021-12-16)
+
+* os: tests: optimize chrony tests [Joseph Kogut]
+
 # v2.88.7
 ## (2021-12-06)
 

@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'os: tests: optimize chrony tests'
+      hash: e3dbd8cbbefcda1bd1f34732586e6ed664941b9c
+      body: |
+        Promisify commands run in chrony tests, reducing the time taken.
+
+        - ok 1 - chrony tests # time=32600.373ms
+        + ok 1 - chrony tests # time=21252.641ms
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.88.8
+  date: 2021-12-16T01:19:33.572Z
+- commits:
     - subject: 'tests: Ensure BDADDR is initialized'
       hash: 7824025cb4722483a15cd95f7ee93207af2d8f8c
       body: |
