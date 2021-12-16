@@ -15,79 +15,83 @@
 
 'use strict';
 
-const { delay } = require('bluebird');
-
 module.exports = {
 	title: 'Container healthcheck test',
 	run: async function(test) {
-		const ip = await this.context.get().worker.ip(this.context.get().link);
+		const containerName = 'healthcheck';
+		const context = this.context.get();
 
-		const state = await this.context
-			.get()
-			.worker.pushContainerToDUT(ip, __dirname, 'healthcheck');
+		async function retrieveHealthcheckEvents(deviceAddress, containerId) {
+			return context.worker.executeCommandInHostOS(
+				[
+					`printf`, `'["null"';`, `balena`, `events`,
+					`--filter`, `container=${containerId}`,
+					`--filter`, `event=health_status`,
+					`--since`, `1`,
+					`--until`, `"$(date +%Y-%m-%dT%H:%M:%S.%NZ)"`,
+					`--format`, `'{{json .}}'`,
+					`|`, `while`, `read`, `LINE;`,
+					`do`, `printf`, `",$LINE";`,
+					`done;`, `printf`, `']'`,
+				].join(' '),
+				deviceAddress,
+			).then((output) => {
+				return Promise.resolve(JSON.parse(output));
+			});
+		}
 
+		async function awaitHealthcheckHealthStatus(deviceAddress, containerId, targetStatus) {
+			return context.utils.waitUntil(async () => {
+				return retrieveHealthcheckEvents(deviceAddress, containerId).then((events) => {
+					let status = events.reduce(
+						function (result, element) {
+							if (element.status != null) {
+								result.push(element.status);
+							}
+							return result;
+						},
+						[],
+					);
 
-		// wait until status of container is "healthy"
-		await this.context.get().utils.waitUntil(async () => {
-			test.comment("Waiting to container to report as healthy...");
-			// retrieve healthcheck events
-			let health = JSON.parse(await this.context
-			  .get()
-			  .worker.executeCommandInHostOS(
-				`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-				ip
-			  )
-			)
-			let status = health.reduce(function (result, element) {
-			  if (element.status != null) {
-				result.push(element.status);
-			  }
-			  return result;
-			}, [])
-	  
-			return status.includes("health_status: healthy")
-	  
-		  }, false);
+					return status.includes(`health_status: ${targetStatus}`);
+				});
+			}, false, 60, 1000);
+		}
 
+		let p = context.worker.ip(
+			context.link
+		).then((deviceAddress) => {
+			test.comment(`Pushing container to DUT`);
+			return context.worker.pushContainerToDUT(
+				deviceAddress,
+				__dirname,
+				containerName,
+			).then((state) => {
+				let targetStatus = 'healthy';
+				test.comment(`Waiting for container to report as ${targetStatus}...`);
+				return awaitHealthcheckHealthStatus(
+					deviceAddress,
+					state.services.healthcheck,
+					targetStatus,
+				).then(() => {
+					// cause the container healthcheck to fail
+					return context.worker.executeCommandInContainer(
+						'rm /tmp/health',
+						containerName,
+						deviceAddress,
+					).then(() => {
+						let targetStatus = 'unhealthy';
+						test.comment(`Waiting for container to report as ${targetStatus}...`);
+						return awaitHealthcheckHealthStatus(
+							deviceAddress,
+							state.services.healthcheck,
+							targetStatus,
+						);
+					});
+				});
+			});
+		});
 
-		// cause the container healthcheck to fail
-		await this.context
-			.get()
-			.worker.executeCommandInContainer('rm /tmp/health', 'healthcheck', ip);
-
-		// wait for 5s before checking for health status to give
-		await delay(1000 * 5);
-
-		let status = [];
-		// Use waitUntil, because sometimes it takes time for the container to report as unhealthy, so we want to be able to re-check
-		await this.context.get().utils.waitUntil(async () => {
-			test.comment('Waiting to container to report as unhealthy...');
-			// retrieve healthcheck events
-			let events = JSON.parse(
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-						ip,
-					),
-			);
-
-			// extract "health status: X" and add to an array
-			status = events.reduce(function(result, element) {
-				if (element.status != null) {
-					result.push(element.status);
-				}
-				return result;
-			}, []);
-			test.comment(`Container is currently: "${status[status.length - 1]}"`);
-
-			return status.includes('health_status: unhealthy'); // Exit this block when container goes to "unhealthy"
-		}, false);
-
-		// check that the container went from healthy to unhealthy
-		test.ok(
-			status.includes('health_status: unhealthy'),
-			'Container should go from healthy to unhealthy',
-		);
+		return test.resolves(p, 'Container should go from healthy to unhealthy');
 	},
 };
