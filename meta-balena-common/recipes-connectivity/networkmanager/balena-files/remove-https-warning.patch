@@ -8,13 +8,13 @@ for more detail.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Zahari Petkov <zahari@balena.io>
 ---
- src/nm-connectivity.c | 2 +-
+ src/core/nm-connectivity.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/nm-connectivity.c b/src/nm-connectivity.c
 index 3cd1d4b8c..46184c0d1 100644
---- a/src/nm-connectivity.c
-+++ b/src/nm-connectivity.c
+--- a/src/core/nm-connectivity.c
++++ b/src/core/nm-connectivity.c
 @@ -1073,7 +1073,7 @@ update_config(NMConnectivity *self, NMConfigData *config_data)
                  _LOGE("invalid URI '%s' for connectivity check.", new_uri);
                  new_uri_valid = FALSE;

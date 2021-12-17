@@ -7,13 +7,13 @@ Signed-off-by: Sebastian Panceac <sebastian@balena.io>
 
 Upstream-Status: Pending
 ---
- src/systemd/src/libsystemd-network/sd-dhcp-client.c | 8 ++++++--
+ src/libnm-systemd-core/src/systemd-network/sd-dhcp-client.c | 8 ++++++--
  1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/src/systemd/src/libsystemd-network/sd-dhcp-client.c b/src/systemd/src/libsystemd-network/sd-dhcp-client.c
+diff --git a/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c b/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c
 index 2f531bc7b29f..13d73fdc21a5 100644
---- a/src/systemd/src/libsystemd-network/sd-dhcp-client.c
-+++ b/src/systemd/src/libsystemd-network/sd-dhcp-client.c
+--- a/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c
++++ b/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c
 @@ -678,13 +678,17 @@ static int client_message_init(
                  client->client_id_len = sizeof(client->client_id.type) + sizeof(client->client_id.ns.iaid) + duid_len;
          }
