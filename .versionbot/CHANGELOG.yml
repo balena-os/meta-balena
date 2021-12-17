@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update NetworkManager to 1.32.12
+      hash: a6313f12e2efe0a6aae8741e7e95ad437a247b3c
+      body: |
+        Closes #2437
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update NetworkManager to 1.32.12
+        changelog-entry: Update NetworkManager to 1.32.12
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.88.10
+  date: 2021-12-16T10:45:16.375Z
+- commits:
     - subject: 'u-boot: Move u-boot configs inclusion into resin-u-boot.bbclass'
       hash: 27e67bb1021f1f2c4c1cdcbb657f09c19908eed4
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.10
+## (2021-12-16)
+
+* Update NetworkManager to 1.32.12 [Zahari Petkov]
+
 # v2.88.9
 ## (2021-12-15)
 
