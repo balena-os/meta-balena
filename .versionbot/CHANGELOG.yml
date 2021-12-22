@@ -1,4 +1,19 @@
 - commits:
+    - subject: >-
+        balena-supervisor: Update balena-supervisor to v12.11.16 Update
+        balena-supervisor from 12.11.0 to 12.11.16
+      hash: 00397eb39bde3aa313373ffa884ca24098781917
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.88.11
+  date: 2021-12-22T04:08:44.540Z
+- commits:
     - subject: Update NetworkManager to 1.32.12
       hash: a6313f12e2efe0a6aae8741e7e95ad437a247b3c
       body: |
