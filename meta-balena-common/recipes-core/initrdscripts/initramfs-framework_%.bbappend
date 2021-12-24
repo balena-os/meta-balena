@@ -11,6 +11,7 @@ SRC_URI:append = " \
     file://finish \
     file://cryptsetup \
     file://kexec \
+    file://udevcleanup \
     "
 
 do_install:append() {
@@ -23,6 +24,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
+    install -m 0755 ${WORKDIR}/udevcleanup ${D}/init.d/89-udevcleanup
     install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
 }
@@ -36,6 +38,7 @@ PACKAGES:append = " \
     initramfs-module-fsuuidsinit \
     initramfs-module-cryptsetup \
     initramfs-module-kexec \
+    initramfs-module-udevcleanup \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -78,3 +81,7 @@ RDEPENDS:initramfs-module-kexec = " \
     util-linux-findmnt \
     "
 FILES:initramfs-module-kexec = "/init.d/92-kexec"
+
+SUMMARY:initramfs-module-udevcleanaup = "Cleanup the udev database before transitioning to the rootfs"
+RDEPENDS:initramfs-module-udevcleanaup = "${PN}-base"
+FILES:initramfs-module-udevcleanup = "/init.d/89-udevcleanup"
