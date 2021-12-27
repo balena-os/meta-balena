@@ -1,10 +1,54 @@
 #!/bin/sh
 
+#
+# Script which configures balena keys into hardware secure elements and
+# prevents updating to a non-signed system if secure boot is enabled
+#
+
+set -o errexit
+
+# shellcheck source=/dev/null
+. /usr/libexec/os-helpers-logging
+
 DURING_UPDATE="${DURING_UPDATE:-0}"
 UMOUNT_EFIVARS=0
 SECUREBOOT_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
 SETUPMODE_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode"
 EFIVAR_RE="s,^[^ ]*  *\([^ ]*\) .*$,\1,"
+EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
+
+exit_with_msg() {
+    result=$?
+    exit ${result}
+}
+trap exit_with_msg EXIT
+
+mountEfiVars() {
+    # Mount efivarfs if necessary
+    if ! mount | grep -q "type efivarfs"; then
+        mount -t efivarfs efivarfs "${EFIVARS_MOUNTDIR}"
+        UMOUNT_EFIVARS=1
+    fi
+}
+
+umountEfiVars() {
+    # Leave the system in the original state - unmount efivarfs if we mounted it
+    if [ "${UMOUNT_EFIVARS}" = 1 ]; then
+        umount "${EFIVARS_MOUNTDIR}"
+        UMOUNT_EFIVARS=0
+    fi
+}
+
+updateKeys() {
+    for k in db KEK PK; do
+        if cmp "/mnt/boot/balena-keys/${k}.auth" "/resin-boot/balena-keys/${k}.auth"; then
+            continue
+        else
+            error "Updating keys is not currently supported - a fresh installation is required"
+            exit 1
+        fi
+    done
+}
 
 # Only applicable in the new OS container
 if [ "${DURING_UPDATE}" != 1 ]; then
@@ -16,20 +60,13 @@ if [ ! -d "/sys/firmware/efi" ]; then
     exit 0
 fi
 
-# Mount efivarfs if necessary
-if ! mount | grep -q "type efivarfs"; then
-    mount -t efivarfs efivarfs /sys/firmware/efi/efivars
-    UMOUNT_EFIVARS=1
-fi
+mountEfiVars
 
 # Read EFI variables
 SECUREBOOT_VAL=$(efivar -p -n "${SECUREBOOT_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
 SETUPMODE_VAL=$(efivar -p -n "${SETUPMODE_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
 
-# Leave the system in the original state - unmount efivarfs if we mounted it
-if [ "${UMOUNT_EFIVARS}" = 1 ]; then
-    umount /sys/firmware/efi/efivars
-fi
+umountEfiVars
 
 # Only applicable when in secure boot mode
 if [ -z "${SECUREBOOT_VAL}" ] || [ "${SECUREBOOT_VAL}" -ne "1" ]; then
@@ -43,11 +80,12 @@ fi
 
 # Not applicable if the signatures are in place
 if [ -f "/resin-boot/EFI/BOOT/grub.cfg.sig" ]; then
-    exit 0
+    updateKeys
+    exit $?
 fi
 
 
 # At this point we are sure the current OS is running in secure boot mode
 # and the new image is not signed, abort the update
-printf "[ERROR] Trying to update to an unsigned OS version while in secure boot mode"
+error "Trying to update to an unsigned OS version while in secure boot mode"
 exit 1
