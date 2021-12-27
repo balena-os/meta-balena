@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=/dev/null
+. /usr/libexec/os-helpers-logging
+
 DURING_UPDATE="${DURING_UPDATE:-0}"
 UMOUNT_EFIVARS=0
 SECUREBOOT_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
@@ -49,5 +52,5 @@ fi
 
 # At this point we are sure the current OS is running in secure boot mode
 # and the new image is not signed, abort the update
-printf "[ERROR] Trying to update to an unsigned OS version while in secure boot mode"
+error "Trying to update to an unsigned OS version while in secure boot mode"
 exit 1
