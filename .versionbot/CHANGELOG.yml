@@ -1,4 +1,24 @@
 - commits:
+    - subject: 'systemd/timeinit: handle missing date field in HTTPS header'
+      hash: e11a421c24a9c4003e0d606ef681447e48b2823b
+      body: |
+        Update the timesync-https.sh script to handle the case where the date
+        field is missing from the returned HTTPS header.
+
+        When the date field is not present the script will now exit with a
+        warning rather than blocking indefinitely.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: 'systemd/timeinit: handle missing date field in HTTPS header'
+        changelog-entry: 'systemd/timeinit: handle missing date field in HTTPS header'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.88.12
+  date: 2022-01-03T14:25:50.684Z
+- commits:
     - subject: >-
         balena-supervisor: Update balena-supervisor to v12.11.16 Update
         balena-supervisor from 12.11.0 to 12.11.16

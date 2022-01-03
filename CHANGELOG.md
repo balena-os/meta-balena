@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.12
+## (2022-01-03)
+
+* systemd/timeinit: handle missing date field in HTTPS header [Mark Corbin]
+
 # v2.88.11
 ## (2021-12-22)
 
