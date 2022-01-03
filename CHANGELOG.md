@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.13
+## (2022-01-03)
+
+* tests: os: optimize suite setup [Joseph Kogut]
+
 # v2.88.12
 ## (2022-01-03)
 

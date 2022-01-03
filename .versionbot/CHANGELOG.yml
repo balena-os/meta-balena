@@ -1,4 +1,25 @@
 - commits:
+    - subject: 'tests: os: optimize suite setup'
+      hash: 25e53f411b9e77ae31618fac40036198e6ee7654
+      body: |
+        Chain operations using Promise.then() and run operations in parallel
+        when they don't have dependencies.
+
+        This significantly reduces time taken during suite setup. Below are
+        results when only running os-release tests.
+
+        - # time=37306.174ms
+        + # time=21844.522ms
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.88.13
+  date: 2022-01-03T23:55:11.716Z
+- commits:
     - subject: 'systemd/timeinit: handle missing date field in HTTPS header'
       hash: e11a421c24a9c4003e0d606ef681447e48b2823b
       body: |
