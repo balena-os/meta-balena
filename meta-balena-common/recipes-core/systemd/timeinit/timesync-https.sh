@@ -70,6 +70,10 @@ while [ true  ]; do
 				info "System time is already synchronised."
 				exit 0
 			fi
+		else
+			warn "HTTPS header did not return a date field."
+			warn "System time not updated."
+			exit 0
 		fi
 	fi
 	sleep $HTTPS_POLL_DELAY
