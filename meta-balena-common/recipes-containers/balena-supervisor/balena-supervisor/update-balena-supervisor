@@ -143,7 +143,7 @@ fi
 setSupervisorConfig() {
     svconfigdir=$(basename "$(ls -d /etc/*-supervisor)")
 
-    # Store the tagged image string so resin-supervisor.service can pick it up
+    # Store the tagged image string so balena-supervisor.service can pick it up
     sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
 }
 
@@ -179,3 +179,6 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
 fi
 
 sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/balena-supervisor/supervisor.conf
+
+# Sync cached writes to disk 
+sync -f /mnt/state
