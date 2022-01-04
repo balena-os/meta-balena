@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.13
+## (2022-01-04)
+
+* hostapp-update-hooks: Handle developmentMode updates [Alex Gonzalez]
+
 # v2.88.12
 ## (2022-01-03)
 

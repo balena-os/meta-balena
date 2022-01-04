@@ -1,4 +1,29 @@
 - commits:
+    - subject: 'hostapp-update-hooks: Handle developmentMode updates'
+      hash: adc76c0588a67705ae20a8c61517f549f2e8549e
+      body: >
+        When updating from a legacy development image which has no
+        developmentMode
+
+        set in config.json to an image configured with development mode, the
+        hooks
+
+        need to set developmentMode accordingly in config.json.
+
+
+        Updating to a development mode image from a production image will not
+
+        set developmentMode.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.88.13
+  date: 2022-01-04T09:48:57.491Z
+- commits:
     - subject: 'systemd/timeinit: handle missing date field in HTTPS header'
       hash: e11a421c24a9c4003e0d606ef681447e48b2823b
       body: |
