@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+udevcleanup_enabled() {
+    return 0
+}
+
+udevcleanup_run() {
+    info "Stopping udevd daemon"
+    killall udevd
+    info "Cleaning up udev database"
+    udevadm info --cleanup-db
+}

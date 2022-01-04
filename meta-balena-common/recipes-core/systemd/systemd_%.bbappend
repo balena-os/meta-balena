@@ -114,6 +114,7 @@ FILES:udev += "\
 "
 
 RDEPENDS:${PN}:append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"
+RDEPENDS_${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' lvm2-udevrules',d)}"
 
 # Network configuration is managed by NetworkManager. ntp is managed by chronyd
 PACKAGECONFIG:remove = "resolved networkd timesyncd"

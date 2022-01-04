@@ -17,6 +17,7 @@ PACKAGE_INSTALL = " \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-udev \
+    initramfs-module-udevcleanup \
     initramfs-framework-base \
     udev \
     mdadm \
