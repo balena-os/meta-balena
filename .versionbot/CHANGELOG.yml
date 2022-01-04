@@ -1,4 +1,17 @@
 - commits:
+    - subject: Sync cached writes to disk when updating supervisor.conf
+      hash: cf51428b9daaf8325cafc850fb47e27a6a6bcb5d
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Miguel Casqueira <miguel@balena.io>
+        signed-off-by: Miguel Casqueira <miguel@balena.io>
+      author: Miguel Casqueira
+      nested: []
+  version: 2.88.14
+  date: 2022-01-04T11:19:00.838Z
+- commits:
     - subject: 'hostapp-update-hooks: Handle developmentMode updates'
       hash: adc76c0588a67705ae20a8c61517f549f2e8549e
       body: >

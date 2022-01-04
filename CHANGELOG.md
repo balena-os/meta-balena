@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.14
+## (2022-01-04)
+
+* Sync cached writes to disk when updating supervisor.conf [Miguel Casqueira]
+
 # v2.88.13
 ## (2022-01-04)
 
