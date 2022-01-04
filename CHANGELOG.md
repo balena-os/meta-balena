@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.88.15
+## (2022-01-04)
+
+* initrdscripts: fsuuidinit: Generate resin-rootA last [Alex Gonzalez]
+* lvm2: Add rule to persist dm devices in udev database [Alex Gonzalez]
+* initrdscript: Cleanup udev database before transitioning to rootfs [Alex Gonzalez]
+* initrdscripts: Use /run as bootparam_root storage [Alex Gonzalez]
+* lvm: Add lvm rules when secure boot is configured [Alex Gonzalez]
+* balena-keys: Fetch DER keys and decode from base64 [Alex Gonzalez]
+
 # v2.88.14
 ## (2022-01-04)
 
