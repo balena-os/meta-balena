@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'linux-firmware: Include RTL8192EU firmware'
+      hash: 8085e842bf45ab9087be4989f3df73bc2fd33577
+      body: >
+        The RTL8192EU WiFi driver fails to find its firmware, so it is included
+        now.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Backport-to: next
+        backport-to: next
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.88.14
+  date: 2022-01-04T11:45:23.648Z
+- commits:
     - subject: 'hostapp-update-hooks: Handle developmentMode updates'
       hash: adc76c0588a67705ae20a8c61517f549f2e8549e
       body: >

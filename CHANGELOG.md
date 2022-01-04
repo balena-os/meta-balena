@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.14
+## (2022-01-04)
+
+* linux-firmware: Include RTL8192EU firmware [Zahari Petkov]
+
 # v2.88.13
 ## (2022-01-04)
 
