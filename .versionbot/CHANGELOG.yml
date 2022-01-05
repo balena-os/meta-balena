@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'balena-os.inc: Switch balena backend storage to overlay2'
+      hash: 90b2630937ecc3171fd925a9c679ab1b20c20a4c
+      body: |
+        Now that we have the aufs to overlay2 migrator in place, let's switch
+        all our boards to overlay2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.88.16
+  date: 2022-01-05T09:44:10.265Z
+- commits:
     - subject: 'initrdscripts: fsuuidinit: Generate resin-rootA last'
       hash: 00d6ca48d32b2b1a111d400457b73be5cc36d6bf
       body: >

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.16
+## (2022-01-05)
+
+* balena-os.inc: Switch balena backend storage to overlay2 [Florin Sarbu]
+
 # v2.88.15
 ## (2022-01-04)
 
