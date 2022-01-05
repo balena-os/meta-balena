@@ -74,7 +74,7 @@ INITRAMFS_TASK = ""
 PACKAGE_CLASSES ?= "package_ipk"
 
 # Default the docker storage driver to aufs
-BALENA_STORAGE ?= "aufs"
+BALENA_STORAGE = "overlay2"
 python () {
     docker_storage = d.getVar('DOCKER_STORAGE', True)
     if docker_storage:
