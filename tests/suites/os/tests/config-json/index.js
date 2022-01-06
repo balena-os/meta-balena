@@ -24,59 +24,50 @@ module.exports = {
 					.toString(36)
 					.substring(2, 10);
 
+				const context = this.context.get();
+
 				// Add hostname
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.hostname="${hostname}"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
-
-				// Wait for new hostname to be active
-				test.comment(`Waiting for avahi service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active avahi-daemon.service`,
-								`${hostname}.local`,
-							)) === 'active'
-					);
-				}, false);
-
-				test.equal(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'cat /etc/hostname',
-							`${hostname}.local`,
-						),
-					hostname,
-					'Device should have new hostname',
-				);
-
-				// Remove hostname
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'tmp=$(mktemp)&&cat /mnt/boot/config.json | jq "del(.hostname)" > $tmp&&mv "$tmp" /mnt/boot/config.json',
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `cat`,  `/mnt/boot/config.json`,
+						`|`, `jq`, `'.hostname="${hostname}"'`,
+						`>`, `$tmp`,
+						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+					].join(' '),
+					context.link,
+				).then(() => {
+					return context.worker.waitForServiceState(
+						'avahi-daemon.service',
+						'active',
+						`${hostname}.local`,
+					)
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						'cat /etc/hostname',
+						`${hostname}.local`
+					)
+				}).then((actual) => {
+					const expected = hostname;
+					test.equal(actual, expected, 'Device should have a new hostname');
+				}).then(() => {
+					// Remove hostname
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `"del(.hostname)"`, `/mnt/boot/config.json`,
+							`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
 						`${hostname}.local`,
 					);
-
-
-				// Wait for old hostname to be active again
-				test.comment(`Waiting for avahi service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active avahi-daemon.service`,
-								this.context.get().link,
-							)) === 'active'
+				}).then(() => {
+					// Wait for old hostname to be active again
+					return context.worker.waitForServiceState(
+						'avahi-daemon.service',
+						'active',
+						context.link,
 					);
-				}, false);
+				});
 			},
 		},
 		{
