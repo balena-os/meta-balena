@@ -283,35 +283,46 @@ module.exports = {
 		{
 			title: 'os.network.wifi.randomMacAddressScan test',
 			run: async function(test) {
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.os.network.wifi.randomMacAddressScan=true' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				const context = this.context.get();
+
+				test.comment('Enabling randomMacAddressScan in config.json');
+				return context.worker.executeCommandInHostOS(
+					[
+						'tmp=$(mktemp)',
+						'&&', 'jq', "'.os.network.wifi.randomMacAddressScan=true'", '/mnt/boot/config.json',
+						'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+					].join(' '),
+					context.link,
+				).then(() => {
+					test.comment('Restarting os-networkmanager.service');
+					return context.worker.executeCommandInHostOS(
+						'systemctl restart os-networkmanager.service',
+						context.link,
 					);
-
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				const config = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'NetworkManager --print-config | awk "/\\[device\\]/{flag=1;next}/\\[/{flag=0}flag"',
-						this.context.get().link,
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'NetworkManager', '--print-config',
+							'|', 'awk', '"/\\[device\\]/{flag=1;next}/\\[/{flag=0}flag"',
+						].join(' '),
+						context.link,
 					);
-
-				test.match(
-					config,
-					/wifi.scan-rand-mac-address=yes/,
-					'NetworkManager should be configured to randomize wifi MAC',
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq 'del(.os.network.wifi)' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				}).then((config) => {
+					test.match(
+						config,
+						/wifi.scan-rand-mac-address=yes/,
+						'NetworkManager should be configured to randomize wifi MAC',
 					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							'&&', 'jq', "'del(.os.network.wifi)'", '/mnt/boot/config.json',
+							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+						].join(' '),
+						context.link,
+					);
+				});
 			},
 		},
 		{
