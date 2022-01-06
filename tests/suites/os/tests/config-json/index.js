@@ -121,91 +121,93 @@ module.exports = {
 				const defaultDns = '8.8.8.8';
 				const exampleDns = '1.1.1.1';
 
+				const context = this.context.get();
+
 				test.comment(`Setting DNS nameservers to ${exampleDns} in config.json...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp) && jq '.dnsServers="${exampleDns} ${exampleDns}"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
-
-				test.comment(
-					`Waiting for dnsmasq to be active and using ${exampleDns}...`,
-				);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${exampleDns} ; echo $?`,
-								this.context.get().link,
-							)) === '0'
-					);
-				}, false);
-
-				test.comment(`Setting dnsServers="null" in config.json...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp) && jq '.dnsServers="null"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
-
-				test.comment(`Waiting for dnsmasq service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active dnsmasq.service`,
-								this.context.get().link,
-							)) === 'active'
-					);
-				}, false);
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`grep -q '[^[:space:]]' < "/run/dnsmasq.servers" ; echo $?`,
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `jq`, `'.dnsServers="${exampleDns} ${exampleDns}"'`, `/mnt/boot/config.json`,
+						`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+					].join(' '),
+					context.link,
+				).then(() => {
+					test.comment(`Waiting for dnsmasq to be active and using ${exampleDns}...`);
+					return this.context.get().utils.waitUntil(async () => {
+						return context.worker.executeCommandInHostOS(
+							[
+								`journalctl`,
+								`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
+								`|`, `grep`, `-q`, `${exampleDns}`, `;`, `echo`, `$?`
+							].join(' '),
 							this.context.get().link,
-						),
-					'1',
-					`We should have an empty /run/dnsmasq.servers file.`,
-				);
-
-        		test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q "bad address" ; echo $?`,
-							this.context.get().link,
-						),
-					'1',
-					`Active dnsmasq service should not log "bad address".`,
-				);
-
-				test.comment(`Removing dnsServers field from config.json...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp) && jq "del(.dnsServers)" /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+						).then((exitCode) => {
+							return Promise.resolve(exitCode === '0');
+						});
+					}, false);
+				}).then(() => {
+					test.comment(`Setting dnsServers="null" in config.json...`);
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `'.dnsServers="null"'`, `/mnt/boot/config.json`, `>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
+						context.link,
 					);
-
-				test.comment(
-					`Waiting for dnsmasq to be active and using ${defaultDns}...`,
-				);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${defaultDns} ; echo $?`,
-								this.context.get().link,
-							)) === '0'
+				}).then(() => {
+					test.comment(`Waiting for dnsmasq service to be active...`);
+					return context.systemd.waitForServiceState(
+						'dnsmasq.service',
+						'active',
+						context.link
 					);
-				}, false);
+				}).then(() => {
+					return Promise.all(
+						[
+							context.worker.executeCommandInHostOS(
+								`grep -q '[^[:space:]]' < "/run/dnsmasq.servers" ; echo $?`,
+								context.link,
+							).then((output) => {
+								test.is(output, '1', 'We should have an empty /run/dnsmasq.servers file.');
+							}),
+							context.worker.executeCommandInHostOS(
+								[
+									'journalctl',
+									'_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"',
+									'|', 'grep', '-q', '"bad address"', ';', 'echo', '$?',
+								].join(' '),
+								context.link
+							).then((output) => {
+								test.is(output, '1', 'Active dnsmasq service should not log "bad address".');
+							}),
+						]
+					);
+				}).then(() => {
+					test.comment(`Removing dnsServers field from config.json...`);
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `"del(.dnsServers)"`, `/mnt/boot/config.json`, `>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
+						context.link,
+					);
+				}).then(() => {
+					test.comment(`Waiting for dnsmasq to be active and using ${defaultDns}...`);
+					return context.utils.waitUntil(async () => {
+						return context.worker.executeCommandInHostOS(
+							[
+								`journalctl`,
+								`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
+								`|`, `grep`, `-q`, defaultDns, `;`, `echo`, `$?`
+							].join(' '),
+							context.link,
+						).then((exitCode) => {
+							return Promise.resolve(exitCode === '0');
+						});
+					}, false);
+				});
 			},
 		},
 		{
