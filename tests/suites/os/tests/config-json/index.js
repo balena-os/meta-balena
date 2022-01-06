@@ -373,13 +373,11 @@ module.exports = {
 		{
 			title: 'sshKeys test',
 			run: async function(test) {
-				await test.resolves(
-					this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'echo true',
-							this.context.get().link,
-						),
+				return test.resolves(
+					this.context.get().worker.executeCommandInHostOS(
+						'echo true',
+						this.context.get().link,
+					),
 					'Should be able to establish ssh connection to the device',
 				);
 			},
