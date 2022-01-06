@@ -385,34 +385,28 @@ module.exports = {
 		{
 			title: 'persistentLogging configuration test',
 			run: async function(test) {
-				const bootCount = parseInt(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'journalctl --list-boots | wc -l',
-							this.context.get().link,
-						),
-				);
+				const context = this.context.get();
 
-				test.comment('Attempting first reboot');
-				await this.context.get().worker.rebootDut(this.context.get().link);
+				async function getBootCount() {
+					return context.worker.executeCommandInHostOS(
+						'journalctl --list-boots | wc -l',
+						context.link
+					).then((output) => {
+						return Promise.resolve(parseInt(output));
+					});
+				}
 
-				test.comment('Attempting second reboot');
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				const testcount = parseInt(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'journalctl --list-boots | wc -l',
-							this.context.get().link,
-						),
-				);
-				test.is(
-					testcount === bootCount + 2,
-					true,
-					`Device should show previous boot records, showed ${testcount} boots`,
-				);
+				return getBootCount().then((bootCount) => {
+					return context.worker.rebootDut(context.link).then(() => {
+						return getBootCount().then((testcount) => {
+							test.is(
+								testcount === bootCount + 1,
+								true,
+								`Device should show previous boot records, showed ${testcount} boots`,
+							);
+						});
+					});
+				});
 			},
 		},
 	],
