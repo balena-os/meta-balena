@@ -77,42 +77,42 @@ module.exports = {
 					return `time${regex}.google.com`;
 				};
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.ntpServers="${ntpServer()}"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
+				const context = this.context.get();
 
-				// Wait for new NTP server to be active
-				test.comment(`Waiting for balena-ntp-config service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-ntp-config.service`,
-								this.context.get().link,
-							)) === 'active'
-					);
-				}, false, 5, 30000);
-
-				await test.resolves(
-					this.context
-						.get()
-						.worker.executeCommandInHostOS(
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `cat`, `/mnt/boot/config.json`,
+						`|`, `jq`, `'.ntpServers="${ntpServer()}"'`, `>`, `$tmp`,
+						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+					].join(' '),
+					this.context.get().link,
+				).then(() => {
+					test.comment(`Waiting for balena-ntp-config service to be active...`);
+					return context.systemd.waitForServiceState(
+						'balena-ntp-config.service',
+						'active',
+						context.link,
+					)
+				}).then(() => {
+					return test.resolves(
+						context.worker.executeCommandInHostOS(
 							`chronyc sources | grep ${ntpServer('.*')}`,
-							this.context.get().link,
+							context.link,
 						),
-					'Device should show one record with our ntp server',
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'tmp=$(mktemp)&&cat /mnt/boot/config.json | jq "del(.ntpServers)" > $tmp&&mv "$tmp" /mnt/boot/config.json',
+						'Device should show one record with our ntp server',
+					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `cat`, `/mnt/boot/config.json`,
+							`|`, `jq`, `"del(.ntpServers)"`, `>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+						].join(' '),
 						this.context.get().link,
 					);
+				});
 			},
 		},
 		{
