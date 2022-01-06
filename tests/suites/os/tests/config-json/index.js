@@ -236,37 +236,48 @@ module.exports = {
 					uri: 'http://www.archlinux.org/check_network_status.txt',
 				};
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.os.network.connectivity=${JSON.stringify(
-							connectivity,
-						)}' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				const context = this.context.get();
+
+				test.comment('Configuring connectivity check in config.json')
+				return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							'&&', 'jq', `'.os.network.connectivity=${JSON.stringify(connectivity)}'`,
+								'/mnt/boot/config.json',
+							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+						].join(' '),
+						context.link,
+				).then(() => {
+					test.comment('Restarting os-networkmanager.service');
+					return context.worker.executeCommandInHostOS(
+						'systemctl restart os-networkmanager.service',
+						context.link,
 					);
-
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				const config = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'NetworkManager --print-config | awk "/\\[connectivity\\]/{flag=1;next}/\\[/{flag=0}flag"',
-						this.context.get().link,
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'NetworkManager', '--print-config',
+							'|', 'awk', '"/\\[connectivity\\]/{flag=1;next}/\\[/{flag=0}flag"',
+						].join(' '),
+						context.link,
+					).then((config) => {
+						test.is(
+							/uri=(.*)\n/.exec(config)[1],
+							connectivity.uri,
+							`NetworkManager should be configured with uri: ${connectivity.uri}`,
+						);
+					});
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							'&&', 'jq', '"del(.os.network.connectivity)"',
+								'/mnt/boot/config.json',
+							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+						].join(' '),
+						context.link,
 					);
-
-				test.is(
-					/uri=(.*)\n/.exec(config)[1],
-					connectivity.uri,
-					`NetworkManager should be configured with uri: ${connectivity.uri}`,
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'tmp=$(mktemp)&&cat /mnt/boot/config.json | jq "del(.os.network.connectivity)" > $tmp&&mv "$tmp" /mnt/boot/config.json',
-						this.context.get().link,
-					);
+				});
 			},
 		},
 		{
