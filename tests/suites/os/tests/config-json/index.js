@@ -306,44 +306,53 @@ module.exports = {
 		{
 			title: 'udevRules test',
 			run: async function(test) {
+				const context = this.context.get();
 				const rule = {
 					99: 'ENV{ID_FS_LABEL_ENC}=="resin-boot", SYMLINK+="disk/test"',
 				};
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.os.udevRules=${JSON.stringify(
-							rule,
-						)}' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				test.comment('Adding udev rule to config.json');
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `jq`, `'.os.udevRules=${JSON.stringify(rule)}'`, `/mnt/boot/config.json`,
+						`>`, `$tmp`, `&&`, `mv`, `$tmp`, `/mnt/boot/config.json`,
+					].join(' '),
+					context.link,
+				).then(() => {
+					test.comment('Restarting os-udevrules.service');
+					return context.worker.executeCommandInHostOS(
+						'systemctl restart os-udevrules.service',
+						context.link,
 					);
-
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'readlink -e /dev/disk/test',
-							this.context.get().link,
-						),
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'readlink -e /dev/disk/by-label/resin-boot',
-							this.context.get().link,
-						),
-					'Dev link should point to the correct device',
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq 'del(.os.udevRules)' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				}).then(() => {
+					test.comment('Reloading udev rules');
+					return context.worker.executeCommandInHostOS(
+						'udevadm trigger',
+						context.link,
 					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						`readlink -e /dev/disk/test`,
+						context.link,
+					);
+				}).then((linkTarget) => {
+					return context.worker.executeCommandInHostOS(
+						`readlink -e /dev/disk/by-label/resin-boot`,
+						context.link,
+					).then((deviceLink) => {
+						test.is(linkTarget, deviceLink, 'Dev link should point to the correct device');
+					});
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							`&&`, `jq`, `'del(.os.udevRules)'`, `/mnt/boot/config.json`,
+							`>`, '$tmp', `&&`, `mv`, '$tmp', `/mnt/boot/config.json`,
+						].join(' '),
+						context.link,
+					);
+				});
 			},
 		},
 		{
