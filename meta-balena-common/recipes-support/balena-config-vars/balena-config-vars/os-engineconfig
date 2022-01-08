@@ -1,0 +1,39 @@
+#!/bin/bash
+
+. /usr/libexec/os-helpers-logging
+. /usr/sbin/balena-config-vars
+
+function set_default_runtime() {
+	new_value=$1
+	valid_runtimes=(runc crun)
+	daemon_conf_path="/etc/docker/daemon.json"
+
+	if [[ ! "${valid_runtimes[*]}" =~ ${new_value} ]]; then
+		error "${new_value} is not a valid runtime option"
+		return
+	fi
+
+	# update the config if it exists, otherwise create it
+	if [ -f "${daemon_conf_path}" ]; then
+		jq --arg value "${new_value}" \
+		   --argjson defaultConfig "${default_config}" \
+			'. + {"default-runtime": $value} + $defaultConfig' "${daemon_conf_path}" \
+			> "${daemon_conf_path}.tmp"
+	else
+		default_config='{"runtimes": {"crun": {"path": "/usr/bin/crun"}}}'
+		echo "${default_config}" | jq --arg value "${new_value}" \
+			'. + {"default-runtime": $value}' > "${daemon_conf_path}.tmp"
+	fi
+
+	sync -f "${daemon_conf_path}.tmp"
+	mv "${daemon_conf_path}.tmp" "${daemon_conf_path}"
+
+	info "Set ${new_value} as default container runtime"
+}
+
+boot_conf_path="/mnt/boot/config.json"
+configured_default_runtime="$(jq -r '.os.engineConfig.defaultRuntime' ${boot_conf_path})"
+
+if [ -n "${configured_default_runtime}" ]; then
+	set_default_runtime "${configured_default_runtime}"
+fi

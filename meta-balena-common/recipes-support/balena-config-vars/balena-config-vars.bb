@@ -6,6 +6,9 @@ SRC_URI = " \
     file://balena-config-vars \
     file://config-json.path \
     file://config-json.service \
+    file://config-json.target \
+    file://os-engineconfig \
+    file://os-engineconfig.service \
     file://os-networkmanager \
     file://os-networkmanager.service \
     file://os-udevrules \
@@ -44,6 +47,8 @@ do_build[noexec] = "1"
 SYSTEMD_SERVICE:${PN} = " \
     config-json.path \
     config-json.service \
+    config-json.target \
+    os-engineconfig.service \
     os-networkmanager.service \
     os-udevrules.service \
     os-sshkeys.service \
@@ -115,6 +120,7 @@ do_test[depends] += "jq-native:do_populate_sysroot"
 do_install() {
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/balena-config-vars ${D}${sbindir}/
+    install -m 0755 ${WORKDIR}/os-engineconfig ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/
@@ -124,6 +130,8 @@ do_install() {
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/config-json.path ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/config-json.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/config-json.target ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/os-engineconfig.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/os-networkmanager.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/os-udevrules.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/os-sshkeys.service ${D}${systemd_unitdir}/system
