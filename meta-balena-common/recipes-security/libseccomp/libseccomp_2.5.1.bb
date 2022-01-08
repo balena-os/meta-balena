@@ -11,7 +11,7 @@ SRCREV = "4bf70431a339a2886ab8c82e9a45378f30c6e6c7"
 SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=release-2.5 \
            "
 
-COMPATIBLE_HOST_riscv32 = "null"
+COMPATIBLE_HOST:riscv32 = "null"
 
 S = "${WORKDIR}/git"
 
@@ -22,5 +22,5 @@ PACKAGECONFIG[python] = "--enable-python, --disable-python, python3"
 
 DISABLE_STATIC = ""
 
-FILES_${PN} = "${bindir} ${libdir}/${BPN}.so*"
-FILES_${PN}-dbg += "${libdir}/${PN}/tests/.debug/* ${libdir}/${PN}/tools/.debug"
+FILES:${PN} = "${bindir} ${libdir}/${BPN}.so*"
+FILES:${PN}-dbg += "${libdir}/${PN}/tests/.debug/* ${libdir}/${PN}/tools/.debug"
