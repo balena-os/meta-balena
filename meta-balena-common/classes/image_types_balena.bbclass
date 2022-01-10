@@ -301,7 +301,7 @@ IMAGE_CMD:balenaos-img () {
     fi
     eval mkfs.vfat "$OPTS" "${BALENA_BOOT_FS}" "${BALENA_BOOT_BLOCKS}"
     if [ "$(ls -A ${BALENA_BOOT_WORKDIR})" ]; then
-        mcopy -i ${BALENA_BOOT_FS} -sv ${BALENA_BOOT_WORKDIR}/* ::
+        mcopy -i ${BALENA_BOOT_FS} -svm ${BALENA_BOOT_WORKDIR}/* ::
     else
         bbwarn "Boot partition was detected empty."
     fi

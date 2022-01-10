@@ -100,11 +100,11 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 PREFERRED_VERSION_linux-firmware = "20210511"
 
 # Preferred rust version
-PREFERRED_VERSION_rust-native = "1.36.0"
-PREFERRED_VERSION_rust-cross-arm = "1.36.0"
-PREFERRED_VERSION_rust-llvm-native = "1.36.0"
-PREFERRED_VERSION_cargo-native = "1.36.0"
-PREFERRED_VERSION_libstd-rs = "1.36.0"
+PREFERRED_VERSION_rust-native = "1.54.0"
+PREFERRED_VERSION_rust-cross-${TARGET_ARCH} = "1.54.0"
+PREFERRED_VERSION_rust-llvm-native = "1.54.0"
+PREFERRED_VERSION_cargo-native = "1.54.0"
+PREFERRED_VERSION_libstd-rs = "1.54.0"
 
 # balena-engine go version requirement
 GOVERSION = "1.12.17"
