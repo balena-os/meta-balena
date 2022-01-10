@@ -238,6 +238,9 @@ if [ "$LUKS" = "1" ]; then
     # Repartition the new drive
     inform "Repartitioning $internal_dev for disk encryption"
 
+    # Align partition sizes to multiples of 4MB
+    PART_SIZE_ALIGN=$[4 * 1024 * 1024]
+
     # Wipe the existing partition table and create a blank one
     dd if=/dev/zero of="/dev/$internal_dev" bs=4M count=1
     # Regardless of what the original image uses we always want GPT for secure boot + LUKS
@@ -247,7 +250,7 @@ if [ "$LUKS" = "1" ]; then
 
     inform "Flashing boot partition"
     ORIGINAL_BOOT_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-boot)
-    ORIGINAL_BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
+    ORIGINAL_BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID" "$PART_SIZE_ALIGN")
     ORIGINAL_BOOT_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
 
     parted "/dev/$internal_dev" unit B mkpart balena-efi "$ORIGINAL_BOOT_START" $["$ORIGINAL_BOOT_START" + "$ORIGINAL_BOOT_PART_SIZE" - 1]
@@ -272,11 +275,11 @@ if [ "$LUKS" = "1" ]; then
     DATA_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-data)
 
     # Find partition sizes
-    BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$EFI_PART_ID")
-    ROOTA_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ROOTA_PART_ID")
-    ROOTB_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ROOTB_PART_ID")
-    STATE_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$STATE_PART_ID")
-    DATA_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$DATA_PART_ID")
+    BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$EFI_PART_ID" "$PART_SIZE_ALIGN")
+    ROOTA_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ROOTA_PART_ID" "$PART_SIZE_ALIGN")
+    ROOTB_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ROOTB_PART_ID" "$PART_SIZE_ALIGN")
+    STATE_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$STATE_PART_ID" "$PART_SIZE_ALIGN")
+    DATA_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$DATA_PART_ID" "$PART_SIZE_ALIGN")
 
     # Find the beginning of the first partition
     FIRST_PART_ID=$(echo -e "$ROOTA_PART_ID\n$ROOTB_PART_ID\n$STATE_PART_ID\n$DATA_PART_ID" | sort | head -n 1)
