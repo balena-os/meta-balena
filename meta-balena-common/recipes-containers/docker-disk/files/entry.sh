@@ -15,7 +15,7 @@ finish() {
 }
 trap finish EXIT
 
-. /balena-api.inc
+. /balena-apps.inc
 
 # Create user
 echo "[INFO] Creating and setting $USER_ID:$USER_GID."
