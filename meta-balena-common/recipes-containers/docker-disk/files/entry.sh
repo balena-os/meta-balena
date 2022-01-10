@@ -44,14 +44,6 @@ do
 done
 echo "Docker started."
 
-if [ -n "${PRIVATE_REGISTRY}" ] && [ -n "${PRIVATE_REGISTRY_USER}" ] && [ -n "${PRIVATE_REGISTRY_PASSWORD}" ]; then
-	echo "login ${PRIVATE_REGISTRY}..."
-	docker login -u "${PRIVATE_REGISTRY_USER}" -p "${PRIVATE_REGISTRY_PASSWORD}" "${PRIVATE_REGISTRY}"
-fi
-
-# Pull in the images
-echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}..."
-docker pull "${TARGET_REPOSITORY}:${TARGET_TAG}"
 # Pull in arch specific hello-world image and tag it balena-healthcheck-image
 echo "Pulling ${HELLO_REPOSITORY}:latest..."
 docker pull --platform "${HOSTAPP_PLATFORM}" "${HELLO_REPOSITORY}"
@@ -67,6 +59,12 @@ for image_name in ${HOSTEXT_IMAGES}; do
 		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
 		exit 1
 	fi
+# Pull in the supervisor image as a separate app until it converges in the hostOS
+if [ -n "${SUPERVISOR_APP}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
+	_supervisor_image=$(balena_api_fetch_image_from_app "${SUPERVISOR_APP}" "${BALENA_API_ENV}" "${SUPERVISOR_VERSION}" "${BALENAOS_TOKEN}")
+	_supervisor_image_id=$(imageid_from_digest "${_supervisor_image}")
+	docker tag "${_supervisor_image_id}" "balena_supervisor":"${SUPERVISOR_VERSION}"
+fi
 done
 
 echo "Stopping docker..."
