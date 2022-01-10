@@ -250,7 +250,7 @@ if [ "$LUKS" = "1" ]; then
     ORIGINAL_BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
     ORIGINAL_BOOT_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
 
-    parted "/dev/$internal_dev" unit MiB mkpart balena-efi "$ORIGINAL_BOOT_START" $["$ORIGINAL_BOOT_START" + "$ORIGINAL_BOOT_PART_SIZE"]
+    parted "/dev/$internal_dev" unit B mkpart balena-efi "$ORIGINAL_BOOT_START" $["$ORIGINAL_BOOT_START" + "$ORIGINAL_BOOT_PART_SIZE" - 1]
 
     EFI_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-boot)
 
@@ -260,7 +260,7 @@ if [ "$LUKS" = "1" ]; then
     fi
 
     dd if="${LOOP_DEVICE}p${ORIGINAL_BOOT_PART_ID}" of="/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" bs=4M
-    FLASHED=$["$ORIGINAL_BOOT_PART_SIZE" * 1024 * 1024]
+    FLASHED="$ORIGINAL_BOOT_PART_SIZE"
 
     # Relabel former boot partition
     fatlabel "/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" "balena-efi"
@@ -284,25 +284,22 @@ if [ "$LUKS" = "1" ]; then
 
     # Create new partitions with extra space for LUKS headers
     # LUKS header size is 2MiB
-    LUKS_HEADER_SIZE=2
+    LUKS_HEADER_SIZE=$[2 * 1024 * 1024]
 
-    BOOT_PART_END=$["$FIRST_PART_START" + "$BOOT_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-boot "$FIRST_PART_START" "$BOOT_PART_END"
+    BOOT_PART_END=$["$FIRST_PART_START" + "$BOOT_PART_SIZE" + "$LUKS_HEADER_SIZE" - 1]
+    parted -s "/dev/$internal_dev" -- unit B mkpart resin-boot "$FIRST_PART_START" "$BOOT_PART_END"
 
     ROOTA_PART_END=$["$BOOT_PART_END" + "$ROOTA_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-rootA "$BOOT_PART_END" "$ROOTA_PART_END"
+    parted -s "/dev/$internal_dev" -- unit B mkpart resin-rootA "$[$BOOT_PART_END + 1]" "$ROOTA_PART_END"
 
     ROOTB_PART_END=$["$ROOTA_PART_END" + "$ROOTB_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-rootB "$ROOTA_PART_END" "$ROOTB_PART_END"
+    parted -s "/dev/$internal_dev" -- unit B mkpart resin-rootB "$[$ROOTA_PART_END + 1]" "$ROOTB_PART_END"
 
     STATE_PART_END=$["$ROOTB_PART_END" + "$STATE_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-state "$ROOTB_PART_END" "$STATE_PART_END"
+    parted -s "/dev/$internal_dev" -- unit B mkpart resin-state "$[$ROOTB_PART_END + 1]" "$STATE_PART_END"
 
-    # An extra 1MB for when the data partition is not aligned to whole megabytes
-    # By default our images are aligned to megabytes but preloading extends
-    # the data partition and it can end up unaligned.
-    DATA_PART_END=$["$STATE_PART_END" + "$DATA_PART_SIZE" + "$LUKS_HEADER_SIZE" + 1]
-    parted -s "/dev/$internal_dev" -- unit MiB mkpart resin-data "$STATE_PART_END" "$DATA_PART_END"
+    DATA_PART_END=$["$STATE_PART_END" + "$DATA_PART_SIZE" + "$LUKS_HEADER_SIZE"]
+    parted -s "/dev/$internal_dev" -- unit B mkpart resin-data "$[$STATE_PART_END + 1]" "$DATA_PART_END"
 
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
         LOOP_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" "$PART_NAME")
@@ -322,11 +319,11 @@ if [ "$LUKS" = "1" ]; then
 
         dd_with_progress "${LOOP_DEVICE}p$LOOP_PART_ID" "$DM_DEV" "$FLASHED" "$IMAGE_FILE_SIZE"
 
-        [ "$PART_NAME" = "resin-boot" ] && FLASHED=$["$FLASHED" + ("$BOOT_PART_SIZE" * 1024 * 1024)]
-        [ "$PART_NAME" = "resin-rootA" ] && FLASHED=$["$FLASHED" + ("$ROOTA_PART_SIZE" * 1024 * 1024)]
-        [ "$PART_NAME" = "resin-rootB" ] && FLASHED=$["$FLASHED" + ("$ROOTB_PART_SIZE" * 1024 * 1024)]
-        [ "$PART_NAME" = "resin-state" ] && FLASHED=$["$FLASHED" + ("$STATE_PART_SIZE" * 1024 * 1024)]
-        [ "$PART_NAME" = "resin-data" ] && FLASHED=$["$FLASHED" + ("$DATA_PART_SIZE" * 1024 * 1024)]
+        [ "$PART_NAME" = "resin-boot" ] && FLASHED=$["$FLASHED" + "$BOOT_PART_SIZE"]
+        [ "$PART_NAME" = "resin-rootA" ] && FLASHED=$["$FLASHED" + "$ROOTA_PART_SIZE"]
+        [ "$PART_NAME" = "resin-rootB" ] && FLASHED=$["$FLASHED" + "$ROOTB_PART_SIZE"]
+        [ "$PART_NAME" = "resin-state" ] && FLASHED=$["$FLASHED" + "$STATE_PART_SIZE"]
+        [ "$PART_NAME" = "resin-data" ] && FLASHED=$["$FLASHED" + "$DATA_PART_SIZE"]
 
         sync "$DM_DEV"
     done
