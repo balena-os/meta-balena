@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.88.17
+## (2022-01-10)
+
+* recipes-core/coreutils: Use 64bit time symbols [Alexandru Costache]
+* classes/image_types_balena: Preserve file modification times with mcopy [Alexandru Costache]
+
 # v2.88.16
 ## (2022-01-05)
 

@@ -1,4 +1,39 @@
 - commits:
+    - subject: 'recipes-core/coreutils: Use 64bit time symbols'
+      hash: 1c86b30cbad9eecb74185610d146a71f81f70857
+      body: |
+        We do this to avoid initial HUP failure that may
+        occur when updating a freshly provisioned device,
+        which has unitialized timestamps for files in the boot partition,
+        to a newer release based on Honister with glibc-2.34.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: 'classes/image_types_balena: Preserve file modification times with mcopy'
+      hash: 7b5e1475838b2ba72ca31b82cfa41b32d47cfd02
+      body: |
+        We should preserve the file modification times when
+        copying them to the boot filesystem, otherwise these
+        timestamps will be incorrect, as they will be set to
+        random values, like for instance:
+
+          Access: 1961-11-25 17:31:44.000000000 +0000
+          Modify: 1961-11-25 17:31:44.000000000 +0000
+          Change: 1961-11-25 17:31:44.000000000 +0000
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.88.17
+  date: 2022-01-10T10:46:43.314Z
+- commits:
     - subject: 'balena-os.inc: Switch balena backend storage to overlay2'
       hash: 90b2630937ecc3171fd925a9c679ab1b20c20a4c
       body: |
