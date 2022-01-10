@@ -22,6 +22,8 @@ PV = "${HOSTOS_VERSION}"
 
 RDEPENDS:${PN} = "balena"
 
+BALENA_ADMIN ?= "balena_os"
+
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile () {
@@ -67,10 +69,55 @@ do_compile () {
 		-e BALENA_API_TOKEN="${_token}" \
 		-e PARTITION_SIZE="${PARTITION_SIZE}" \
 		-e FS_BLOCK_SIZE="${FS_BLOCK_SIZE}" \
+		-e HOSTOS_APPS="${HOSTOS_APPS}" \
+		-e HOSTOS_VERSION="${HOSTOS_VERSION}" \
+		-e BALENA_ADMIN="${BALENA_ADMIN}" \
 		-v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/build \
 		--name ${_container_name} ${_image_name}
 	$DOCKER rmi -f ${_image_name}
 }
+
+python __anonymous() {
+    import urllib.request
+    import json
+    import hashlib
+
+    token = d.getVar('BALENAOS_TOKEN')
+    apiEnv = d.getVar('BALENA_API_ENV')
+    version = d.getVar('HOSTOS_VERSION')
+    semver = version.split('+')[0]
+    revision = version.split('+')[1][3:]
+    translation = "v6"
+    header = {}
+    if token is not None:
+        header = {'Authorization': "bearer " + token}
+
+    cksums = []
+    apps = d.getVar('HOSTOS_APPS')
+    for appName in apps.split():
+        url = 'https://api.%s/%s/application?$filter='  \
+            'slug%%20eq%%20%%27balena_os/%s%%27' % (apiEnv, translation, appName)
+        raw = urllib.request.urlopen(urllib.request.Request(url, headers=header))
+        json_obj = json.load(raw)
+        appID = json_obj['d'][0]['id']
+        url = 'https://api.%s/%s/release?$filter=' \
+            '(belongs_to__application%%20eq%%20%%27%s%%27)%%20and%%20' \
+            '(semver%%20eq%%20%%27%s%%27)%%20and%%20' \
+            '(revision%%20eq%%20%%27%s%%27)' % (apiEnv, translation, appID,
+                                                semver, revision)
+        raw = urllib.request.urlopen(urllib.request.Request(url, headers=header))
+        json_obj = json.load(raw)
+        if len(json_obj['d']) == 0:
+            bb.fatal("HostOS app %s not available at revision %s" % (appName, "".join([semver, '+rev' + revision])))
+        else:
+            cksums.append(hashlib.md5(str(json_obj['d'][0]['composition']).encode('utf-8')).hexdigest())
+    if len(cksums) > 0:
+        d.setVar('HOSTOS_APPS_CKSUMS',str(cksums))
+}
+
+# Recompile if the hostos app list or their composition change
+do_compile[vardeps] += "HOSTOS_APPS"
+do_compile[vardeps] += "HOSTOS_APPS_CKSUMS"
 
 FILES:${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
 do_install () {
@@ -79,6 +126,7 @@ do_install () {
 }
 
 do_deploy () {
+	install -m 644 ${B}/apps.json ${DEPLOYDIR}/apps.json
 	install -m 644 ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
 }
 addtask deploy before do_package after do_install

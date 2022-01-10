@@ -51,3 +51,5 @@ HELLO_REPOSITORY:aarch64 = "arm64v8/hello-world"
 HELLO_REPOSITORY:x86 = "i386/hello-world"
 HELLO_REPOSITORY:x86-64 = "amd64/hello-world"
 HELLO_REPOSITORY:intel-quark = "i386/hello-world"
+
+HOSTOS_APPS ?= ""
