@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = " \
 	file://Dockerfile \
 	file://entry.sh \
+	file://balena-apps.inc \
 	"
 
 S = "${WORKDIR}"
@@ -54,6 +55,7 @@ do_compile () {
 	# docker daemon instead of the result of docker-native. This avoids version
 	# mismatches
 	DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
+	cp "${TOPDIR}/../balena-yocto-scripts/automation/include/balena-api.inc" "${WORKDIR}/"
 
 	# Generate the data filesystem
 	RANDOM=$$
