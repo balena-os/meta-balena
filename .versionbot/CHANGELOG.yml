@@ -1,4 +1,148 @@
 - commits:
+    - subject: 'docker-disk: entry.sh: replace repository/tag for app/version'
+      hash: d307fe8e410ec4dbdc48f546d38a4e399290a10c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'docker-disk: Replace repository/tag for app/version'
+      hash: 2bbcb40a9dc34ffb155a0a8990dda139a4c8fb6b
+      body: |
+        As the supervisor is no longer being pulled from dockerhub use the
+        correct terminology.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'docker-disk: Add balena-apps file'
+      hash: 2b9373cfcdfec947cdef7b66abd98f9fa2f8632b
+      body: |
+        This include file contains utility functions that call the balena API
+        when building the data disk.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: >-
+        update-balena-supervisor: abstract fetching target state to library
+        function
+      hash: 6b9fd397d0a18bcf9ccde84c86c9b8821699985e
+      body: |
+        In preparation of using a v3 target state, use a library functiont to
+        abstract fetching the supervisor details from the target state.
+
+        Also, check that only a single service image is returned.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'os-helpers-api: Add os_helpers_fetch_target_state'
+      hash: 5c14c415a2f1df07e292a64e0c4be1160de394f1
+      body: |
+        This utility function abstracts the fetching of the target state to
+        handle different target state versions in a cleaner way.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'balena-supervisor: tag the supervisor container'
+      hash: dbb51a7220fa733de3e8bbefcd7f1b29c12ef6f9
+      body: |
+        Make the supervisor container more user friendly by tagging it with
+        a descriptive name.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'update-balena-supervisor: Remove command line arguments'
+      hash: cfd148f322fdab54f2f5ad5eab852dd5383b0ef8
+      body: |
+        The supervisor version is API driven, remove the option to update to a
+        command line provided image and version combination.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'resin-device-register: Use supervisor version label instead of tag'
+      hash: 573f1f1d539808dbd96a945cb425ce4482bd74b2
+      body: >
+        This is just a name change that reflects the wider change that the
+
+        supervisor is no longer fetched from dockerhub but from Balena's
+        registry.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Adapt balena-supervisor nomenclature to Balena's register pull
+      hash: 88fab2c304b700f11c3d78f834e092ac5a6323b1
+      body: |
+        Change variable names to reflect the supervisor is being pulled
+        from Balena's registry and not dockerhub.
+
+        When using dockerhub it used repository and tag to identify a supervisor
+        release, but in Balena's register we use app, version and record the
+        image name being used.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Adapt balena-supervisor nomenclature to Balena's register pull
+        changelog-entry: Adapt balena-supervisor nomenclature to Balena's register pull
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'distro: balena-os: Add default cloud environment distro setting'
+      hash: d54e3ffd1f1723b05c9b57e6b4bf3c58c5173072
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Add a os-helper-api target script library
+      hash: 406cc6d64b4dfa4a75d70d7bb5cb317cd2d01d9e
+      body: |
+        The update scripts need to share some common API related code.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add a os-helper-api target script library
+        changelog-entry: Add a os-helper-api target script library
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.89.0
+  date: 2022-01-11T15:03:10.596Z
+- commits:
     - subject: 'recipes-core/coreutils: Use 64bit time symbols'
       hash: 1c86b30cbad9eecb74185610d146a71f81f70857
       body: |
