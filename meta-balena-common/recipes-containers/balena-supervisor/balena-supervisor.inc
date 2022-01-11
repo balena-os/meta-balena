@@ -14,7 +14,7 @@ SUPERVISOR_REPOSITORY:armv7ve ?= "balena/armv7hf-supervisor"
 SUPERVISOR_REPOSITORY:aarch64 ?= "balena/aarch64-supervisor"
 SUPERVISOR_REPOSITORY:x86 ?= "balena/i386-supervisor"
 SUPERVISOR_REPOSITORY:x86-64 ?= "balena/amd64-supervisor"
-SUPERVISOR_REPOSITORY_intel-quark ?= "balena/i386-nlp-supervisor"
+SUPERVISOR_REPOSITORY:intel-quark ?= "balena/i386-nlp-supervisor"
 
 # Balena supervisor default tag
 SUPERVISOR_TAG ?= "v12.11.16"
