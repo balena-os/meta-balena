@@ -34,6 +34,8 @@ FILES:${PN} += " \
 	/usr/lib/balena-supervisor \
 	"
 
+DEPENDS += "jq-native curl-native"
+
 RDEPENDS:${PN} = " \
 	balena \
 	bash \
@@ -57,13 +59,30 @@ do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
+api_fetch_supervisor_image() {
+	_version=$1
+	_slug=$(jq --raw-output '.slug' "${TOPDIR}/../${MACHINE}.json")
+	_api_env="${BALENA_API_ENV}"
+	_token="${BALENA_API_TOKEN}"
+	[ -z "${_token}" ] && [ -f "~/.balena/token" ] && _token=$(cat "~/.balena/token") || true
+
+	curl -X GET --silent -k \
+	"https://api.${_api_env}/v6/supervisor_release?\$select=image_name&\$filter=(is_for__device_type/slug%20eq%20%27${_slug}%27)%20and%20(supervisor_version%20eq%20%27${_version}%27)" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer ${_token}" | jq -r '.d[].image_name'
+}
+
 do_install () {
+	SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_TAG}")
+	if [ -z "${SUPERVISOR_IMAGE}" ]; then
+		bbfatal "Could not retrieve supervisor image for version ${SUPERVISOR_TAG}"
+	fi
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/balena-supervisor/
 	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/balena-supervisor/
-	sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 	sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 	sed -i -e 's:@SUPERVISOR_TAG@:${SUPERVISOR_TAG}:g' ${D}${sysconfdir}/balena-supervisor/supervisor.conf
+	sed -i -e "s,@SUPERVISOR_IMAGE@,${SUPERVISOR_IMAGE},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 
 	install -d ${D}/resin-data
 
