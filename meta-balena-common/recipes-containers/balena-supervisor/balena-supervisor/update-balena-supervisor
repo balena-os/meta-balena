@@ -12,12 +12,6 @@ Options:
   -h, --help
         Display this help and exit.
 
-  -i <SUPERVISOR IMAGE>, --supervisor-image <SUPERVISOR IMAGE>
-        Set supervisor image to update to.
-
-  -t <SUPERVISOR TAG>, --supervisor-tag <SUPERVISOR TAG>
-        Set supervisor tag to update to.
-
   -n, --no-start-stop-supervisor
         Do not start/stop the supervisor.
 EOF
@@ -32,22 +26,6 @@ while [ $# -gt 0 ]; do
         -h|--help)
             update_balena_supervisor_help
             exit 0
-            ;;
-        -i|--supervisor-image)
-            if [ -z "$2" ]; then
-                echo "ERROR: \"$1\" argument needs a value."
-                exit 1
-            fi
-            UPDATER_SUPERVISOR_IMAGE=$2
-            shift
-            ;;
-        -t|--supervisor-tag)
-            if [ -z "$2" ]; then
-                echo "ERROR: \"$1\" argument needs a value."
-                exit 1
-            fi
-            UPDATER_SUPERVISOR_TAG=$2
-            shift
             ;;
         -n|--no-start-stop-supervisor)
             START_STOP_SUPERVISOR=0
@@ -84,6 +62,25 @@ error_handler() {
 
 trap error_handler EXIT
 
+# Fetch target state from API
+#
+# Inputs:
+# $1: Device UUID
+# $2: Balena API environment
+# $3: Balena API token
+#
+# Outputs:
+# Space separated supervisor version and image name, or "null null"
+#
+os_helpers_fetch_target_state() {
+	_device_uuid="$1"
+	_api_env="$2"
+	_token="$3"
+	_target_state_json=$(curl --silent --header "Authorization: Bearer ${_token}" --header "User-Agent:" --compressed "${_api_env}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${_device_uuid}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
+	echo "${_target_state_json}" | tr "\n" " "
+}
+
+
 # Detect containers engine
 if which docker > /dev/null 2>&1; then
     DOCKER=docker
@@ -96,62 +93,50 @@ else
     error_handler "no container engine detected"
 fi
 
-# Get target supervisor tag from API.
+# Get target supervisor details from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
-echo "Getting image name and tag..."
-if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ] && data=$(curl --silent --header "Authorization: Bearer $_device_api_key" --header "User-Agent:" --compressed "${API_ENDPOINT}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${UUID}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
-    echo "Supervisor configuration found from API."
-
-    if [ -n "$UPDATER_SUPERVISOR_TAG" ] || [ -n "$UPDATER_SUPERVISOR_IMAGE" ]; then
-        echo "WARN: Ignore image/tag arguments as API overrides them."
-    fi
-
-    tag=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $1}')
-    image_name=$(echo "$data" | awk 'BEGIN{ RS = "" ; FS = "\n" }{print $2}')
-    if [ -z "$tag" ] || [ -z "$image_name" ]; then
+echo "Getting image name and version..."
+if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ]; then
+    _target_state=$(os_helpers_fetch_target_state "${UUID}" "${API_ENDPOINT}" "${_device_api_key}")
+    read -r version image_name <<< "${_target_state}"
+    if [ -z "$version" ] || [ -z "$image_name" ]; then
         echo "ERROR: Unexpected API data."
         error_handler "unexpected API data"
     fi
+fi
 
-    # Check that we didn't somehow get an empty tag version.
-    if [ -z "$tag" ]; then
-        echo "ERROR: No tag received."
-        error_handler "no tag received"
+# shellcheck disable=SC1091
+. /etc/balena-supervisor/supervisor.conf
+
+# If no API version is set, use preloaded values
+if [ "$version" = "null" ] || [ "$image_name" = "null" ]; then
+    echo "No supervisor configuration found from API. Using preloaded values."
+    if [ -z "$SUPERVISOR_VERSION" ]; then
+        echo "ERROR: No preloaded version found."
+        error_handler "no preloaded version found"
     fi
-else
-    echo "No supervisor configuration found from API or required variables not set. Using arguments for image and tag."
-    # shellcheck disable=SC1091
-    . /etc/balena-supervisor/supervisor.conf
-    if [ -z "$UPDATER_SUPERVISOR_TAG" ]; then
-        # Try to get the tag from supervisor.conf
-        if [ -n "$SUPERVISOR_TAG" ]; then
-            UPDATER_SUPERVISOR_TAG=$SUPERVISOR_TAG
-        else
-            echo "ERROR: No tag argument provided."
-            error_handler "no tag argument provided"
-        fi
+    if [ -z "$SUPERVISOR_IMAGE" ]; then
+        echo "ERROR: No preloaded image found."
+        error_handler "no preloaded image found."
     fi
-    if [ -z "$UPDATER_SUPERVISOR_IMAGE" ]; then
-        UPDATER_SUPERVISOR_IMAGE=$SUPERVISOR_IMAGE
-    fi
-    echo "Set based on arguments image=$UPDATER_SUPERVISOR_IMAGE and tag=$UPDATER_SUPERVISOR_TAG."
-    image_name=$UPDATER_SUPERVISOR_IMAGE
-    tag=$UPDATER_SUPERVISOR_TAG
+    echo "Set based on preloaded values image=$SUPERVISOR_IMAGE and version=$SUPERVISOR_VERSION."
+    image_name="$SUPERVISOR_IMAGE"
+    version="$SUPERVISOR_VERSION"
 fi
 
 setSupervisorConfig() {
     svconfigdir=$(basename "$(ls -d /etc/*-supervisor)")
 
     # Store the tagged image string so balena-supervisor.service can pick it up
-    sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
+    sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG|SUPERVISOR_VERSION|" -e "s|SUPERVISOR_VERSION=.*|SUPERVISOR_VERSION=$version|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
 }
 
 echo "Getting image id..."
 imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name") || imageid=""
 
 if [ -n "$imageid" ]; then
-    echo "Supervisor $image_name:$tag already downloaded."
+    echo "Supervisor $image_name at version $version already downloaded."
     # Since target Supervisor version is downloaded ensure the device is configured to use it
     setSupervisorConfig
     exit 0
@@ -165,7 +150,12 @@ fi
 
 # Pull target version.
 echo "Pulling supervisor $image_name..."
-$DOCKER pull "$image_name" || error_handler "supervisor pull failed"
+if $DOCKER pull "$image_name"; then
+    image_id=$(balena images --filter=reference="${image_name%@*}" --format "{{.ID}}")
+    $DOCKER tag "${image_id}" "balena_supervisor":${version}"
+else
+    error_handler "supervisor pull failed"
+fi
 
 # Ensure device has newly pulled image as the version to run
 setSupervisorConfig
@@ -177,7 +167,7 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     systemctl start balena-supervisor
 fi
 
-sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" /etc/balena-supervisor/supervisor.conf
+sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG|SUPERVISOR_VERSION|" -e "s|SUPERVISOR_VERSION=.*|SUPERVISOR_VERSION=$version|" /etc/balena-supervisor/supervisor.conf
 
 # Sync cached writes to disk 
 sync -f /mnt/state
