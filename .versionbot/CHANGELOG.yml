@@ -1,4 +1,40 @@
 - commits:
+    - subject: 'tests: os: config-json: remove reboot from randomMacAddressScan test'
+      hash: f31dba37d6d5eb2099fb07e3e574c32878eb0605
+      body: |
+        Restructure randomMacAddressScan test to remove unnecessary reboot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: remove reboot from connectivity test'
+      hash: e0653038c25a3ce3866fbba9a4ed630d3615cef2
+      body: |
+        Restructure connectivity test to remove unnecessary reboot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: remove reboot from udevRules test'
+      hash: 8ec743bd08f36542abae51780fb2032c16158c6b
+      body: |
+        Restructure udevRules test to remove unnecessary reboot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.88.18
+  date: 2022-01-12T19:09:52.721Z
+- commits:
     - subject: 'recipes-core/coreutils: Use 64bit time symbols'
       hash: 1c86b30cbad9eecb74185610d146a71f81f70857
       body: |

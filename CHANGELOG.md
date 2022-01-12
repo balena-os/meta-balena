@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.88.18
+## (2022-01-12)
+
+* tests: os: config-json: remove reboot from randomMacAddressScan test [Joseph Kogut]
+* tests: os: config-json: remove reboot from connectivity test [Joseph Kogut]
+* tests: os: config-json: remove reboot from udevRules test [Joseph Kogut]
+
 # v2.88.17
 ## (2022-01-10)
 
