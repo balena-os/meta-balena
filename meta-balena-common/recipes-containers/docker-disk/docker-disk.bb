@@ -14,22 +14,10 @@ inherit deploy
 require docker-disk.inc
 require recipes-containers/balena-supervisor/balena-supervisor.inc
 
-# By default pull balena-supervisor
-TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
-TARGET_TAG ?= "${SUPERVISOR_TAG}"
-
 PARTITION_SIZE ?= "192"
 FS_BLOCK_SIZE ?= "4k"
 
-python () {
-    import re
-    repo = d.getVar("TARGET_REPOSITORY", True)
-    tag = d.getVar("TARGET_TAG", True)
-    pv = re.sub(r"[^a-z0-9A-Z_.-]", "_", "%s-%s" % (repo,tag))
-    d.setVar('PV', pv)
-}
-
-PV = "${TARGET_TAG}"
+PV = "${HOSTOS_VERSION}"
 
 RDEPENDS:${PN} = "balena"
 
@@ -37,8 +25,8 @@ do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile () {
 	# Some sanity first
-	if [ -z "${TARGET_REPOSITORY}" ] || [ -z "${TARGET_TAG}" ]; then
-		bbfatal "docker-disk: TARGET_REPOSITORY and/or TARGET_TAG not set."
+	if [ -z "${SUPERVISOR_FLEET}" ] || [ -z "${SUPERVISOR_VERSION}" ]; then
+		bbfatal "docker-disk: SUPERVISOR_FLEET and/or SUPERVISOR_VERSION not set."
 	fi
 	if [ -z "${PARTITION_SIZE}" ]; then
 		bbfatal "docker-disk: PARTITION_SIZE needs to have a value (megabytes)."
@@ -65,13 +53,13 @@ do_compile () {
 	RANDOM=$$
 	_image_name="docker-disk-$RANDOM"
 	_container_name="docker-disk-$RANDOM"
-	$DOCKER rmi ${_image_name} > /dev/null 2>&1 || true
+	$DOCKER rmi -f ${_image_name} > /dev/null 2>&1 || true
 	$DOCKER build -t ${_image_name} -f ${WORKDIR}/Dockerfile ${WORKDIR}
 	$DOCKER run --privileged --rm \
 		-e BALENA_STORAGE=${BALENA_STORAGE} \
 		-e USER_ID=$(id -u) -e USER_GID=$(id -u) \
-		-e TARGET_REPOSITORY="${TARGET_REPOSITORY}" \
-		-e TARGET_TAG="${TARGET_TAG}" \
+		-e SUPERVISOR_FLEET="${SUPERVISOR_FLEET}" \
+		-e SUPERVISOR_VERSION="${SUPERVISOR_VERSION}" \
 		-e HELLO_REPOSITORY="${HELLO_REPOSITORY}" \
 		-e HOSTEXT_IMAGES="${HOSTEXT_IMAGES}" \
 		-e HOSTAPP_PLATFORM="${HOSTAPP_PLATFORM}" \
@@ -81,7 +69,7 @@ do_compile () {
 		-e FS_BLOCK_SIZE="${FS_BLOCK_SIZE}" \
 		-v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/build \
 		--name ${_container_name} ${_image_name}
-	$DOCKER rmi ${_image_name}
+	$DOCKER rmi -f ${_image_name}
 }
 
 FILES:${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
