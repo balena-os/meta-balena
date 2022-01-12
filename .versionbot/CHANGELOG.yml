@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'conf/distro: Prefer rust v1.36 for releases older than Honister'
+      hash: f4025980e13f291b9e9778a4e545cfea490f9fe5
+      body: |
+        Poky releases older than Honister should stick to rust v1.36
+        which has been used in balenaOS builds so far.
+
+        Newer ones should prefer v1.54, which is the latest rust
+        version to use the Honister syntax.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.88.18
+  date: 2022-01-11T14:59:20.607Z
+- commits:
     - subject: 'recipes-core/coreutils: Use 64bit time symbols'
       hash: 1c86b30cbad9eecb74185610d146a71f81f70857
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.18
+## (2022-01-11)
+
+* conf/distro: Prefer rust v1.36 for releases older than Honister [Alexandru Costache]
+
 # v2.88.17
 ## (2022-01-10)
 
