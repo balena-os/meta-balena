@@ -14,6 +14,8 @@
 
 'use strict';
 
+const Promise = require('bluebird');
+
 module.exports = {
 	title: 'fsck.ext4 tests',
 	tests: [
@@ -21,7 +23,7 @@ module.exports = {
 			title: 'ext4 filesystems are checked on boot',
 			run: async function(test) {
 				async function markDirty(context, label) {
-					await context.get()
+					return context.get()
 						.worker.executeCommandInHostOS(
 							['tune2fs', '-E', 'force_fsck',
 								`/dev/disk/by-label/${label}`
@@ -31,7 +33,7 @@ module.exports = {
 				}
 
 				async function getFilesystemState(context, label) {
-					return await context.get()
+					return context.get()
 						.worker.executeCommandInHostOS(
 							['tune2fs', '-l', `/dev/disk/by-label/${label}`,
 								'|', 'grep', '"Filesystem state"',
@@ -52,29 +54,33 @@ module.exports = {
 					'resin-data',
 				];
 
-				for (const label of diskLabels) {
-					await markDirty(this.context, label);
-					let state = await getFilesystemState(this.context, label);
-					let expectedState = 'clean with errors';
-					test.is(
-						state,
-						expectedState,
-						`Filesystem state for ${label} should be '${expectedState}'`
-					)
-				}
-
-				test.comment('Filesystems have been marked dirty');
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				for (const label of diskLabels) {
-					let state = await getFilesystemState(this.context, label);
-					let expectedState = 'clean';
-					test.is(
-						state,
-						expectedState,
-						`Filesystem state for ${label} should be '${expectedState}'`
-					);
-				}
+				return Promise.map(diskLabels, (label) => {
+					return markDirty(this.context, label).then(() => {
+						return getFilesystemState(this.context, label).then((state) => {
+							let expectedState = 'clean with errors';
+							test.is(
+								state,
+								expectedState,
+								`Filesystem state for ${label} should be '${expectedState}'`
+							);
+						});
+					});
+				}).then(() => {
+					test.comment('Filesystems have been marked dirty');
+					return this.context.get()
+						.worker.rebootDut(this.context.get().link);
+				}).then(() => {
+					return Promise.map(diskLabels, (label) => {
+						return getFilesystemState(this.context, label).then((state) => {
+							let expectedState = 'clean';
+							test.is(
+								state,
+								expectedState,
+								`Filesystem state for ${label} should be '${expectedState}'`
+							);
+						});
+					});
+				});
 			}
 		}
 	]
