@@ -121,3 +121,10 @@ SIGN_EFI_KEY_ID ?= "balenaos-db"
 SIGN_KMOD_KEY_ID ?= "balenaos-kmod"
 SIGN_EFI_PK_KEY_ID ?= "balenaos-PK"
 SIGN_EFI_KEK_KEY_ID ?= "balenaos-KEK"
+
+# glibc enables 64bit time for stat and similar routines only if both
+# _FILE_OFFSET_BITS=64 and _TIME_BITS=64 are set on 32bit platforms.
+# We thus set them for the tools that read or modify config.json or other files
+# that may have an invalid modification date
+# See https://www.phoronix.com/scan.php?page=news_item&px=Glibc-More-Y2038-Work
+TARGET_CFLAGS += " -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64 "
