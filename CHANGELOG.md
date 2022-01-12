@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.19
+## (2022-01-12)
+
+* os: tests: optimize fsck tests [Joseph Kogut]
+
 # v2.88.18
 ## (2022-01-11)
 
