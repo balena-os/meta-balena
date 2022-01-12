@@ -15,6 +15,8 @@ finish() {
 }
 trap finish EXIT
 
+. /balena-api.inc
+
 # Create user
 echo "[INFO] Creating and setting $USER_ID:$USER_GID."
 groupadd -g "$USER_GID" docker-disk-group || true
@@ -42,14 +44,6 @@ do
 done
 echo "Docker started."
 
-if [ -n "${PRIVATE_REGISTRY}" ] && [ -n "${PRIVATE_REGISTRY_USER}" ] && [ -n "${PRIVATE_REGISTRY_PASSWORD}" ]; then
-	echo "login ${PRIVATE_REGISTRY}..."
-	docker login -u "${PRIVATE_REGISTRY_USER}" -p "${PRIVATE_REGISTRY_PASSWORD}" "${PRIVATE_REGISTRY}"
-fi
-
-# Pull in the images
-echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}..."
-docker pull "${TARGET_REPOSITORY}:${TARGET_TAG}"
 # Pull in arch specific hello-world image and tag it balena-healthcheck-image
 echo "Pulling ${HELLO_REPOSITORY}:latest..."
 docker pull --platform "${HOSTAPP_PLATFORM}" "${HELLO_REPOSITORY}"
@@ -66,6 +60,13 @@ for image_name in ${HOSTEXT_IMAGES}; do
 		exit 1
 	fi
 done
+
+# Pull in the supervisor image as a separate app until it converges in the hostOS
+if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
+	_supervisor_image=$(balena_api_fetch_image_from_app "${TARGET_REPOSITORY}" "${TARGET_TAG#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
+	echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}"
+	docker pull "${_supervisor_image}"
+fi
 
 echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"
