@@ -164,6 +164,11 @@ module.exports = {
 
 		this.log('Setting up worker');
 
+		// Get worker setup info
+		this.suite.context.set({
+			workerContract: await this.context.get().worker.getContract()
+		})
+
 		// Create network AP on testbot
 		await this.context
 			.get()
