@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.20
+## (2022-01-13)
+
+* meta-balena-common: Extend 64bit time support to other tools that manage config.json [Alexandru Costache]
+
 # v2.88.19
 ## (2022-01-12)
 

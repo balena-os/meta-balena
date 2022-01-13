@@ -1,4 +1,24 @@
 - commits:
+    - subject: >-
+        meta-balena-common: Extend 64bit time support to other tools that manage
+        config.json
+      hash: 3a218503163d058ff9626f60164e0251e5d4e245
+      body: |
+        We have noticed on the testbot Pi3 leviathan HUP test that
+        the modified date for config.json is 2098, and this
+        causes os-config to fail, as well as other tools like jq,
+        that edit or read config.json. Let's enable these flags
+        system-wide.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.88.20
+  date: 2022-01-13T13:15:55.006Z
+- commits:
     - subject: 'os: tests: optimize fsck tests'
       hash: 15100419eb9e1fb8c0e99d0a9e07a09b8c8d415f
       body: |
