@@ -97,6 +97,10 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/getty-target-development-features.conf ${D}${sysconfdir}/systemd/system/getty.target.d/development-features.conf
     install -d -m 0755 ${D}${sysconfdir}/systemd/system/getty@.service.d
     install -m 0644 ${WORKDIR}/getty-service-development-features.conf ${D}${sysconfdir}/systemd/system/getty@.service.d/development-features.conf
+
+    # We don't have audit configs enabled in the kernel, so we can remove the audit sockets
+    rm ${D}/lib/systemd/system/sockets.target.wants/systemd-journald-audit.socket || true
+    rm ${D}/lib/systemd/system/systemd-journald-audit.socket || true
 }
 
 PACKAGES =+ "${PN}-zram-swap"
