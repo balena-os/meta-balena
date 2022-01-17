@@ -1,4 +1,111 @@
 - commits:
+    - subject: 'tests: os: config-json: cleanup persistentLogging test'
+      hash: 1625e14c13da802e0bbd39467b106155861441be
+      body: |
+        Minor cleanup of persistentLogging configuration test. Additionally,
+        reduce the reboot count to one to save time.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: return promise from sshKeys test'
+      hash: caf3dfe4b43643ac5cfa219cb892f431992e0aaa
+      body: |
+        Return the promise from the sshKeys test instead of awaiting inside the
+        async function, a minor style improvement.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: cleanup dnsServers config test'
+      hash: 7a4872aa41435a3e386ad9051dc9dbfc64957762
+      body: |
+        Simplify dnsServers config test, including using
+        worker.waitForServiceState().
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: cleanup ntpServer config test'
+      hash: 85372adacd450186ba40e7d1e2bd9751e470a7d6
+      body: |
+        Simplify ntpServer config test, including using
+        worker.waitForServiceState().
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: cleanup hostname config test'
+      hash: 28983f940d9fe6dd342df9a367e2768501d1d408
+      body: |
+        Simplify hostname configuration test, including using
+        worker.waitForServiceState().
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: create waitForServiceState helper'
+      hash: 080ead9e17a20d47843ccec0bc2355ee0b9200f3
+      body: |
+        Create helper to wait for a service to be active or inactive.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: remove reboot from randomMacAddressScan test'
+      hash: b832ef095532e54a8508c41441575ef9f5661557
+      body: |
+        Restructure randomMacAddressScan test to remove unnecessary reboot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: remove reboot from connectivity test'
+      hash: c3988214cfb0fea2f92b3a8ad096cafd2d271417
+      body: |
+        Restructure connectivity test to remove unnecessary reboot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: 'tests: os: config-json: remove reboot from udevRules test'
+      hash: 6f7ebbc7a0f201248b731acc188033a3ddc9a12f
+      body: |
+        Restructure udevRules test to remove unnecessary reboot
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.88.21
+  date: 2022-01-17T18:42:06.387Z
+- commits:
     - subject: 'chrony: fix mount service dependency for driftfile'
       hash: 4823b0299002192820d36c90e5d2dfd9ff122ff5
       body: |
