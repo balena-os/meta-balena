@@ -1,4 +1,32 @@
 - commits:
+    - subject: 'chrony: fix mount service dependency for driftfile'
+      hash: 4823b0299002192820d36c90e5d2dfd9ff122ff5
+      body: |
+        The chrony driftfile is not being updated at shutdown due to an
+        incorrect mount service dependency in the systemd chronyd.service
+        file. The current dependency on 'var-volatile-lib' does not cover the
+        subsequent bind mounting of the '/var/lib/chrony' sub-directory, so
+        the chrony directory gets unmounted at shutdown before the drift file
+        has been updated.
+
+        This issue is solved by changing the mount service dependency from
+        'var-volatile-lib' to 'bind-var-lib-chrony' (which is similar to the
+        way bind mount dependencies are already handled for the NetworkManager
+        and bluetooth services).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Connects-to: '#1995'
+        connects-to: '#1995'
+        Changelog-entry: 'chrony: fix mount service dependency for driftfile'
+        changelog-entry: 'chrony: fix mount service dependency for driftfile'
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+  version: 2.88.20
+  date: 2022-01-17T10:54:19.982Z
+- commits:
     - subject: 'os: tests: optimize fsck tests'
       hash: 15100419eb9e1fb8c0e99d0a9e07a09b8c8d415f
       body: |

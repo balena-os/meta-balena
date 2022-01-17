@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.88.20
+## (2022-01-17)
+
+* chrony: fix mount service dependency for driftfile [Mark Corbin]
+
 # v2.88.19
 ## (2022-01-12)
 
