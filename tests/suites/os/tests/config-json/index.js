@@ -24,59 +24,50 @@ module.exports = {
 					.toString(36)
 					.substring(2, 10);
 
+				const context = this.context.get();
+
 				// Add hostname
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.hostname="${hostname}"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
-
-				// Wait for new hostname to be active
-				test.comment(`Waiting for avahi service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active avahi-daemon.service`,
-								`${hostname}.local`,
-							)) === 'active'
-					);
-				}, false);
-
-				test.equal(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'cat /etc/hostname',
-							`${hostname}.local`,
-						),
-					hostname,
-					'Device should have new hostname',
-				);
-
-				// Remove hostname
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'tmp=$(mktemp)&&cat /mnt/boot/config.json | jq "del(.hostname)" > $tmp&&mv "$tmp" /mnt/boot/config.json',
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `cat`,  `/mnt/boot/config.json`,
+						`|`, `jq`, `'.hostname="${hostname}"'`,
+						`>`, `$tmp`,
+						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+					].join(' '),
+					context.link,
+				).then(() => {
+					return context.systemd.waitForServiceState(
+						'avahi-daemon.service',
+						'active',
+						`${hostname}.local`,
+					)
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						'cat /etc/hostname',
+						`${hostname}.local`
+					)
+				}).then((actual) => {
+					const expected = hostname;
+					test.equal(actual, expected, 'Device should have a new hostname');
+				}).then(() => {
+					// Remove hostname
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `"del(.hostname)"`, `/mnt/boot/config.json`,
+							`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
 						`${hostname}.local`,
 					);
-
-
-				// Wait for old hostname to be active again
-				test.comment(`Waiting for avahi service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active avahi-daemon.service`,
-								this.context.get().link,
-							)) === 'active'
+				}).then(() => {
+					// Wait for old hostname to be active again
+					return context.systemd.waitForServiceState(
+						'avahi-daemon.service',
+						'active',
+						context.link,
 					);
-				}, false);
+				});
 			},
 		},
 		{
@@ -86,42 +77,42 @@ module.exports = {
 					return `time${regex}.google.com`;
 				};
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.ntpServers="${ntpServer()}"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
+				const context = this.context.get();
 
-				// Wait for new NTP server to be active
-				test.comment(`Waiting for balena-ntp-config service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-ntp-config.service`,
-								this.context.get().link,
-							)) === 'active'
-					);
-				}, false, 5, 30000);
-
-				await test.resolves(
-					this.context
-						.get()
-						.worker.executeCommandInHostOS(
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `cat`, `/mnt/boot/config.json`,
+						`|`, `jq`, `'.ntpServers="${ntpServer()}"'`, `>`, `$tmp`,
+						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+					].join(' '),
+					this.context.get().link,
+				).then(() => {
+					test.comment(`Waiting for balena-ntp-config service to be active...`);
+					return context.systemd.waitForServiceState(
+						'balena-ntp-config.service',
+						'active',
+						context.link,
+					)
+				}).then(() => {
+					return test.resolves(
+						context.worker.executeCommandInHostOS(
 							`chronyc sources | grep ${ntpServer('.*')}`,
-							this.context.get().link,
+							context.link,
 						),
-					'Device should show one record with our ntp server',
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'tmp=$(mktemp)&&cat /mnt/boot/config.json | jq "del(.ntpServers)" > $tmp&&mv "$tmp" /mnt/boot/config.json',
+						'Device should show one record with our ntp server',
+					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `cat`, `/mnt/boot/config.json`,
+							`|`, `jq`, `"del(.ntpServers)"`, `>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+						].join(' '),
 						this.context.get().link,
 					);
+				});
 			},
 		},
 		{
@@ -130,91 +121,93 @@ module.exports = {
 				const defaultDns = '8.8.8.8';
 				const exampleDns = '1.1.1.1';
 
+				const context = this.context.get();
+
 				test.comment(`Setting DNS nameservers to ${exampleDns} in config.json...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp) && jq '.dnsServers="${exampleDns} ${exampleDns}"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
-
-				test.comment(
-					`Waiting for dnsmasq to be active and using ${exampleDns}...`,
-				);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${exampleDns} ; echo $?`,
-								this.context.get().link,
-							)) === '0'
-					);
-				}, false);
-
-				test.comment(`Setting dnsServers="null" in config.json...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp) && jq '.dnsServers="null"' /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
-					);
-
-				test.comment(`Waiting for dnsmasq service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active dnsmasq.service`,
-								this.context.get().link,
-							)) === 'active'
-					);
-				}, false);
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`grep -q '[^[:space:]]' < "/run/dnsmasq.servers" ; echo $?`,
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `jq`, `'.dnsServers="${exampleDns} ${exampleDns}"'`, `/mnt/boot/config.json`,
+						`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+					].join(' '),
+					context.link,
+				).then(() => {
+					test.comment(`Waiting for dnsmasq to be active and using ${exampleDns}...`);
+					return this.context.get().utils.waitUntil(async () => {
+						return context.worker.executeCommandInHostOS(
+							[
+								`journalctl`,
+								`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
+								`|`, `grep`, `-q`, `${exampleDns}`, `;`, `echo`, `$?`
+							].join(' '),
 							this.context.get().link,
-						),
-					'1',
-					`We should have an empty /run/dnsmasq.servers file.`,
-				);
-
-        		test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q "bad address" ; echo $?`,
-							this.context.get().link,
-						),
-					'1',
-					`Active dnsmasq service should not log "bad address".`,
-				);
-
-				test.comment(`Removing dnsServers field from config.json...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp) && jq "del(.dnsServers)" /mnt/boot/config.json > $tmp && mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+						).then((exitCode) => {
+							return Promise.resolve(exitCode === '0');
+						});
+					}, false);
+				}).then(() => {
+					test.comment(`Setting dnsServers="null" in config.json...`);
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `'.dnsServers="null"'`, `/mnt/boot/config.json`, `>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
+						context.link,
 					);
-
-				test.comment(
-					`Waiting for dnsmasq to be active and using ${defaultDns}...`,
-				);
-				await this.context.get().utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`journalctl _SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)" | grep -q ${defaultDns} ; echo $?`,
-								this.context.get().link,
-							)) === '0'
+				}).then(() => {
+					test.comment(`Waiting for dnsmasq service to be active...`);
+					return context.systemd.waitForServiceState(
+						'dnsmasq.service',
+						'active',
+						context.link
 					);
-				}, false);
+				}).then(() => {
+					return Promise.all(
+						[
+							context.worker.executeCommandInHostOS(
+								`grep -q '[^[:space:]]' < "/run/dnsmasq.servers" ; echo $?`,
+								context.link,
+							).then((output) => {
+								test.is(output, '1', 'We should have an empty /run/dnsmasq.servers file.');
+							}),
+							context.worker.executeCommandInHostOS(
+								[
+									'journalctl',
+									'_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"',
+									'|', 'grep', '-q', '"bad address"', ';', 'echo', '$?',
+								].join(' '),
+								context.link
+							).then((output) => {
+								test.is(output, '1', 'Active dnsmasq service should not log "bad address".');
+							}),
+						]
+					);
+				}).then(() => {
+					test.comment(`Removing dnsServers field from config.json...`);
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `"del(.dnsServers)"`, `/mnt/boot/config.json`, `>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
+						context.link,
+					);
+				}).then(() => {
+					test.comment(`Waiting for dnsmasq to be active and using ${defaultDns}...`);
+					return context.utils.waitUntil(async () => {
+						return context.worker.executeCommandInHostOS(
+							[
+								`journalctl`,
+								`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
+								`|`, `grep`, `-q`, defaultDns, `;`, `echo`, `$?`
+							].join(' '),
+							context.link,
+						).then((exitCode) => {
+							return Promise.resolve(exitCode === '0');
+						});
+					}, false);
+				});
 			},
 		},
 		{
@@ -236,126 +229,155 @@ module.exports = {
 					uri: 'http://www.archlinux.org/check_network_status.txt',
 				};
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.os.network.connectivity=${JSON.stringify(
-							connectivity,
-						)}' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				const context = this.context.get();
+
+				test.comment('Configuring connectivity check in config.json')
+				return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							'&&', 'jq', `'.os.network.connectivity=${JSON.stringify(connectivity)}'`,
+								'/mnt/boot/config.json',
+							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+						].join(' '),
+						context.link,
+				).then(() => {
+					test.comment('Restarting os-networkmanager.service');
+					return context.worker.executeCommandInHostOS(
+						'systemctl restart os-networkmanager.service',
+						context.link,
 					);
-
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				const config = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'NetworkManager --print-config | awk "/\\[connectivity\\]/{flag=1;next}/\\[/{flag=0}flag"',
-						this.context.get().link,
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'NetworkManager', '--print-config',
+							'|', 'awk', '"/\\[connectivity\\]/{flag=1;next}/\\[/{flag=0}flag"',
+						].join(' '),
+						context.link,
+					).then((config) => {
+						test.is(
+							/uri=(.*)\n/.exec(config)[1],
+							connectivity.uri,
+							`NetworkManager should be configured with uri: ${connectivity.uri}`,
+						);
+					});
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							'&&', 'jq', '"del(.os.network.connectivity)"',
+								'/mnt/boot/config.json',
+							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+						].join(' '),
+						context.link,
 					);
-
-				test.is(
-					/uri=(.*)\n/.exec(config)[1],
-					connectivity.uri,
-					`NetworkManager should be configured with uri: ${connectivity.uri}`,
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'tmp=$(mktemp)&&cat /mnt/boot/config.json | jq "del(.os.network.connectivity)" > $tmp&&mv "$tmp" /mnt/boot/config.json',
-						this.context.get().link,
-					);
+				});
 			},
 		},
 		{
 			title: 'os.network.wifi.randomMacAddressScan test',
 			run: async function(test) {
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.os.network.wifi.randomMacAddressScan=true' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				const context = this.context.get();
+
+				test.comment('Enabling randomMacAddressScan in config.json');
+				return context.worker.executeCommandInHostOS(
+					[
+						'tmp=$(mktemp)',
+						'&&', 'jq', "'.os.network.wifi.randomMacAddressScan=true'", '/mnt/boot/config.json',
+						'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+					].join(' '),
+					context.link,
+				).then(() => {
+					test.comment('Restarting os-networkmanager.service');
+					return context.worker.executeCommandInHostOS(
+						'systemctl restart os-networkmanager.service',
+						context.link,
 					);
-
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				const config = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						'NetworkManager --print-config | awk "/\\[device\\]/{flag=1;next}/\\[/{flag=0}flag"',
-						this.context.get().link,
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'NetworkManager', '--print-config',
+							'|', 'awk', '"/\\[device\\]/{flag=1;next}/\\[/{flag=0}flag"',
+						].join(' '),
+						context.link,
 					);
-
-				test.match(
-					config,
-					/wifi.scan-rand-mac-address=yes/,
-					'NetworkManager should be configured to randomize wifi MAC',
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq 'del(.os.network.wifi)' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				}).then((config) => {
+					test.match(
+						config,
+						/wifi.scan-rand-mac-address=yes/,
+						'NetworkManager should be configured to randomize wifi MAC',
 					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							'&&', 'jq', "'del(.os.network.wifi)'", '/mnt/boot/config.json',
+							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
+						].join(' '),
+						context.link,
+					);
+				});
 			},
 		},
 		{
 			title: 'udevRules test',
 			run: async function(test) {
+				const context = this.context.get();
 				const rule = {
 					99: 'ENV{ID_FS_LABEL_ENC}=="resin-boot", SYMLINK+="disk/test"',
 				};
 
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.os.udevRules=${JSON.stringify(
-							rule,
-						)}' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				test.comment('Adding udev rule to config.json');
+				return context.worker.executeCommandInHostOS(
+					[
+						`tmp=$(mktemp)`,
+						`&&`, `jq`, `'.os.udevRules=${JSON.stringify(rule)}'`, `/mnt/boot/config.json`,
+						`>`, `$tmp`, `&&`, `mv`, `$tmp`, `/mnt/boot/config.json`,
+					].join(' '),
+					context.link,
+				).then(() => {
+					test.comment('Restarting os-udevrules.service');
+					return context.worker.executeCommandInHostOS(
+						'systemctl restart os-udevrules.service',
+						context.link,
 					);
-
-				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'readlink -e /dev/disk/test',
-							this.context.get().link,
-						),
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'readlink -e /dev/disk/by-label/resin-boot',
-							this.context.get().link,
-						),
-					'Dev link should point to the correct device',
-				);
-
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq 'del(.os.udevRules)' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+				}).then(() => {
+					test.comment('Reloading udev rules');
+					return context.worker.executeCommandInHostOS(
+						'udevadm trigger',
+						context.link,
 					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						`readlink -e /dev/disk/test`,
+						context.link,
+					);
+				}).then((linkTarget) => {
+					return context.worker.executeCommandInHostOS(
+						`readlink -e /dev/disk/by-label/resin-boot`,
+						context.link,
+					).then((deviceLink) => {
+						test.is(linkTarget, deviceLink, 'Dev link should point to the correct device');
+					});
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							`&&`, `jq`, `'del(.os.udevRules)'`, `/mnt/boot/config.json`,
+							`>`, '$tmp', `&&`, `mv`, '$tmp', `/mnt/boot/config.json`,
+						].join(' '),
+						context.link,
+					);
+				});
 			},
 		},
 		{
 			title: 'sshKeys test',
 			run: async function(test) {
-				await test.resolves(
-					this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'echo true',
-							this.context.get().link,
-						),
+				return test.resolves(
+					this.context.get().worker.executeCommandInHostOS(
+						'echo true',
+						this.context.get().link,
+					),
 					'Should be able to establish ssh connection to the device',
 				);
 			},
@@ -363,34 +385,28 @@ module.exports = {
 		{
 			title: 'persistentLogging configuration test',
 			run: async function(test) {
-				const bootCount = parseInt(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'journalctl --list-boots | wc -l',
-							this.context.get().link,
-						),
-				);
+				const context = this.context.get();
 
-				test.comment('Attempting first reboot');
-				await this.context.get().worker.rebootDut(this.context.get().link);
+				async function getBootCount() {
+					return context.worker.executeCommandInHostOS(
+						'journalctl --list-boots | wc -l',
+						context.link
+					).then((output) => {
+						return Promise.resolve(parseInt(output));
+					});
+				}
 
-				test.comment('Attempting second reboot');
-				await this.context.get().worker.rebootDut(this.context.get().link);
-
-				const testcount = parseInt(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'journalctl --list-boots | wc -l',
-							this.context.get().link,
-						),
-				);
-				test.is(
-					testcount === bootCount + 2,
-					true,
-					`Device should show previous boot records, showed ${testcount} boots`,
-				);
+				return getBootCount().then((bootCount) => {
+					return context.worker.rebootDut(context.link).then(() => {
+						return getBootCount().then((testcount) => {
+							test.is(
+								testcount === bootCount + 1,
+								true,
+								`Device should show previous boot records, showed ${testcount} boots`,
+							);
+						});
+					});
+				});
 			},
 		},
 	],

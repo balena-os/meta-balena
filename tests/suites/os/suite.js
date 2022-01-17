@@ -23,15 +23,41 @@ module.exports = {
 		const Worker = this.require('common/worker');
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
 		const BalenaOS = this.require('components/os/balenaos');
+		const utils = this.require('common/utils');
+		const worker = new Worker(this.suite.deviceType.slug, this.getLogger());
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
+		let systemd = {
+			/**
+			 * Wait for a service to be active/inactive
+			 * @param {string} serviceName systemd service to query and wait for
+			 * @param {string} state active|inactive
+			 * @param {string} target the address of the device to query
+			 *
+			 * @category helper
+			 */
+			waitForServiceState: async function (serviceName, state, target) {
+				return utils.waitUntil(async () => {
+					return worker.executeCommandInHostOS(
+						`systemctl is-active ${serviceName}`,
+						target,
+					).then((serviceStatus) => {
+						return Promise.resolve(serviceStatus === state);
+					}).catch((err) => {
+						Promise.reject(err);
+					});
+				}, 120, 250);
+			},
+		};
+
 		// The suite contex is an object that is shared across all tests. Setting something into the context makes it accessible by every test
 		this.suite.context.set({
-			utils: this.require('common/utils'),
+			utils: utils,
+			systemd: systemd,
 			sshKeyPath: join(homedir(), 'id'),
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
-			worker: new Worker(this.suite.deviceType.slug, this.getLogger()),
+			worker: worker,
 		});
 
 		// Network definitions - here we check what network configuration is selected for the DUT for the suite, and add the appropriate configuration options (e.g wifi credentials)
