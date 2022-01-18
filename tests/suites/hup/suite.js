@@ -20,6 +20,49 @@ const pipeline = require('bluebird').promisify(stream.pipeline);
 // required to use skopeo for loading the image
 const exec = require('bluebird').promisify(require('child_process').exec);
 
+// copied from the SV
+// https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
+// TODO: retrieve this from the SDK (requires v16.2.0) or future versions of device contracts
+// https://www.balena.io/docs/reference/sdk/node-sdk/#balena.models.config.getConfigVarSchema
+const supportsBootConfig = (deviceType) => {
+	return (
+		[
+			'fincm3',
+			'rt-rpi-300',
+			'243390-rpi3',
+			'nebra-hnt',
+			'revpi-connect',
+			'revpi-core-3',
+		].includes(deviceType) || deviceType.startsWith('raspberry')
+	);
+};
+
+const enableSerialConsole = async (imagePath) => {
+	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
+		return require('bluebird')
+			.promisify(_fs.readFile)('/config.txt')
+			.catch((err) => {
+				return undefined;
+			});
+	});
+
+	if (bootConfig) {
+		await imagefs.interact(imagePath, 1, async (_fs) => {
+			const regex = /^enable_uart=.*$/m;
+			const value = 'enable_uart=1';
+
+			console.log(`Setting ${value} in config.txt...`);
+
+			// delete any existing instances before appending to the file
+			const newConfig = bootConfig.toString().replace(regex, '');
+			await require('bluebird').promisify(_fs.writeFile)(
+				'/config.txt',
+				newConfig.concat(`\n\n${value}\n\n`),
+			);
+		});
+	}
+};
+
 // Starts registry, uploads target image to registry
 const runRegistry = async (that, test, seedWithImage) => {
 	const docker = new Docker();
@@ -108,6 +151,10 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 
 const initDUT = async (that, test, target) => {
 	test.comment(`Initializing DUT for HUP test`);
+
+	if (supportsBootConfig(that.suite.deviceType.slug)) {
+		await enableSerialConsole(that.context.get().os.image.path);
+	}
 
 	test.comment(`Flashing DUT`);
 	await that.context.get().worker.off();
