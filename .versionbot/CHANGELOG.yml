@@ -1,4 +1,41 @@
 - commits:
+    - subject: 'intel-quark: Fix to honister syntax'
+      hash: c32e3f0c5421e46fbac991c5e5cb6240994422b2
+      body: |
+        The converter script did not consider the intel-quark an override, so
+        fix manually.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'recipes-core/bash: Use 64bit time symbols'
+      hash: d26b1a09a6ac8a0def6ab2ec4d0249884aacb738
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: 'recipes-core/busybox: Use 64bit time symbols'
+      hash: 989c0a3584b99bf637f2a727f8a6bda11fb05441
+      body: |
+        So that commands like find can work with
+        files that have incorrect timestamps on 32bit systems.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.88.22
+  date: 2022-01-18T17:55:03.016Z
+- commits:
     - subject: 'tests: os: config-json: cleanup persistentLogging test'
       hash: 1625e14c13da802e0bbd39467b106155861441be
       body: |
