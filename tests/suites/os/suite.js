@@ -13,12 +13,12 @@ const { homedir } = require('os');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
-const stream = require('stream')
+const stream = require('stream');
 const pipeline = require('bluebird').promisify(stream.pipeline);
 
 module.exports = {
 	title: 'Unmanaged BalenaOS release suite',
-	run: async function(test) {
+	run: async function (test) {
 		// The worker class contains methods to interact with the DUT, such as flashing, or executing a command on the device
 		const Worker = this.require('common/worker');
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
@@ -38,16 +38,23 @@ module.exports = {
 			 * @category helper
 			 */
 			waitForServiceState: async function (serviceName, state, target) {
-				return utils.waitUntil(async () => {
-					return worker.executeCommandInHostOS(
-						`systemctl is-active ${serviceName}`,
-						target,
-					).then((serviceStatus) => {
-						return Promise.resolve(serviceStatus === state);
-					}).catch((err) => {
-						Promise.reject(err);
-					});
-				}, 120, 250);
+				return utils.waitUntil(
+					async () => {
+						return worker
+							.executeCommandInHostOS(
+								`systemctl is-active ${serviceName}`,
+								target,
+							)
+							.then((serviceStatus) => {
+								return Promise.resolve(serviceStatus === state);
+							})
+							.catch((err) => {
+								Promise.reject(err);
+							});
+					},
+					120,
+					250,
+				);
 			},
 		};
 
@@ -123,25 +130,32 @@ module.exports = {
 		await this.context.get().os.fetch();
 
 		// If this is a flasher image, and we are using qemu, unwrap
-		if(this.suite.deviceType.data.storage.internal && (process.env.WORKER_TYPE === `qemu`)){
-			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`
-			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img'
-			console.log(`Unwrapping file ${this.context.get().os.image.path}`)
-			console.log(`Looking for ${RAW_IMAGE_PATH}`)
-			try{
-				await imagefs.interact(this.context.get().os.image.path, 2, async (fsImg) => {
-					await pipeline(
-					fsImg.createReadStream(RAW_IMAGE_PATH),
-					fse.createWriteStream(OUTPUT_IMG_PATH)
-					)
-				})
+		if (
+			this.suite.deviceType.data.storage.internal &&
+			process.env.WORKER_TYPE === `qemu`
+		) {
+			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
+			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
+			console.log(`Unwrapping file ${this.context.get().os.image.path}`);
+			console.log(`Looking for ${RAW_IMAGE_PATH}`);
+			try {
+				await imagefs.interact(
+					this.context.get().os.image.path,
+					2,
+					async (fsImg) => {
+						await pipeline(
+							fsImg.createReadStream(RAW_IMAGE_PATH),
+							fse.createWriteStream(OUTPUT_IMG_PATH),
+						);
+					},
+				);
 
 				this.context.get().os.image.path = OUTPUT_IMG_PATH;
 				console.log(`Unwrapped flasher image!`);
-			}catch(e){
+			} catch (e) {
 				// If the outer image doesn't contain an image for installation, ignore the error
-				if (e.code == 'ENOENT') {
-					console.log("Not a flasher image, skipping unwrap");
+				if (e.code === 'ENOENT') {
+					console.log('Not a flasher image, skipping unwrap');
 				} else {
 					throw e;
 				}
@@ -168,11 +182,12 @@ module.exports = {
 			'Device should be reachable',
 		);
 
-    // Retrieving journalctl logs: register teardown after device is reachable
-    this.suite.teardown.register(async () => {
-			await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
+		// Retrieving journalctl logs: register teardown after device is reachable
+		this.suite.teardown.register(async () => {
+			await this.context
+				.get()
+				.worker.archiveLogs(this.id, this.context.get().link);
 		});
-
 	},
 	tests: [
 		'./tests/device-specific-tests/beaglebone-black',

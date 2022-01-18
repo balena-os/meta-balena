@@ -14,7 +14,7 @@ const Docker = require('dockerode');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
-const stream = require('stream')
+const stream = require('stream');
 const pipeline = require('bluebird').promisify(stream.pipeline);
 
 // required to use skopeo for loading the image
@@ -26,27 +26,35 @@ const runRegistry = async (that, test, seedWithImage) => {
 	const ip = await that.context.get().worker.ip(that.context.get().link);
 
 	test.comment('Starting registry...');
-	await that.context.get()
-		.worker.pushContainerToDUT(ip, require('path').join(__dirname, 'assets'), 'registry');
+	await that.context
+		.get()
+		.worker.pushContainerToDUT(
+			ip,
+			require('path').join(__dirname, 'assets'),
+			'registry',
+		);
 
 	test.comment('Loading hostapp image into registry...');
-	const ref = `${ip}:5000/hostapp`
+	const ref = `${ip}:5000/hostapp`;
 
-	await exec(`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`);
-	const hostappRef = await exec(`skopeo inspect --tls-verify=false docker://${ref}`)
-		.then(out => {
-			const json = JSON.parse(out);
-			// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
-			// registry, but `hostappRef` is what we tell the DUT to HUP to.
-			// Since balenaEngine on the DUT will also require special setup to allow
-			// pulling from an insecure registry, we pass along a localhost ref
-			// which docker accepts by default
-			//
-			// TODO the alternative would be to push the image directly into the daemon using:
-			// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
-			// Figure out if the DUT docker daemon is exposed...
-			return `localhost:5000/hostapp@${json.Digest}`
-		});
+	await exec(
+		`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`,
+	);
+	const hostappRef = await exec(
+		`skopeo inspect --tls-verify=false docker://${ref}`,
+	).then((out) => {
+		const json = JSON.parse(out);
+		// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
+		// registry, but `hostappRef` is what we tell the DUT to HUP to.
+		// Since balenaEngine on the DUT will also require special setup to allow
+		// pulling from an insecure registry, we pass along a localhost ref
+		// which docker accepts by default
+		//
+		// TODO the alternative would be to push the image directly into the daemon using:
+		// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
+		// Figure out if the DUT docker daemon is exposed...
+		return `localhost:5000/hostapp@${json.Digest}`;
+	});
 
 	test.comment(`Registry upload complete: ${ref}`);
 
@@ -59,7 +67,6 @@ const runRegistry = async (that, test, seedWithImage) => {
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, hostapp, target) => {
-
 	test.comment(`Starting HUP`);
 
 	let hupLog;
@@ -80,7 +87,6 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 				.get()
 				.worker.executeCommandInHostOS(`hostapp-update -f ${hostapp}`, target);
 			break;
-
 
 		case 'image':
 			test.comment(`Running: hostapp-update -i ${hostapp}`);
@@ -126,14 +132,20 @@ const initDUT = async (that, test, target) => {
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
-		await that.context.get().worker.archiveLogs(that.id, that.context.get().link, "journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'");
+		await that.context
+			.get()
+			.worker.archiveLogs(
+				that.id,
+				that.context.get().link,
+				"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
+			);
 	});
 };
 
 module.exports = {
 	title: 'Hostapp update suite',
 
-	run: async function() {
+	run: async function () {
 		const Worker = this.require('common/worker');
 		const BalenaOS = this.require('components/os/balenaos');
 		const Balena = this.require('components/balena/sdk');
@@ -170,7 +182,7 @@ module.exports = {
 			hup: {
 				doHUP: doHUP,
 				initDUT: initDUT,
-				runRegistry: runRegistry
+				runRegistry: runRegistry,
 			},
 		});
 
@@ -183,18 +195,21 @@ module.exports = {
 			);
 
 		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
-		if(this.suite.deviceType.data.storage.internal && (process.env.WORKER_TYPE === `qemu`)){
-			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`
-			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img'
-			console.log(`Unwrapping flasher image ${path}`)
+		if (
+			this.suite.deviceType.data.storage.internal &&
+			process.env.WORKER_TYPE === `qemu`
+		) {
+			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
+			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
+			console.log(`Unwrapping flasher image ${path}`);
 			await imagefs.interact(path, 2, async (fsImg) => {
 				await pipeline(
-				 fsImg.createReadStream(RAW_IMAGE_PATH),
-				 fs.createWriteStream(OUTPUT_IMG_PATH)
-				)
-			})
-			path = OUTPUT_IMG_PATH
-			console.log(`Unwrapped flasher image!`)
+					fsImg.createReadStream(RAW_IMAGE_PATH),
+					fs.createWriteStream(OUTPUT_IMG_PATH),
+				);
+			});
+			path = OUTPUT_IMG_PATH;
+			console.log(`Unwrapped flasher image!`);
 		}
 
 		this.suite.context.set({
@@ -238,8 +253,8 @@ module.exports = {
 		await this.context.get().hupOs.fetch();
 		// configure the image
 		await this.context.get().os.configure();
-    
-    // Retrieving journalctl logs
+
+		// Retrieving journalctl logs
 		this.suite.teardown.register(async () => {
 			await this.context
 				.get()
