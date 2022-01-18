@@ -168,6 +168,10 @@ for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 done
 echo "success."
 
+printf "[INFO] Updating timestamps for all files in ${boot_mountpoint}..."
+find "${boot_mountpoint}/" -exec touch {} +
+printf " done"
+
 # Deploy all files in the bootfiles list except fingerprint
 new_deployed_files=""
 for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
