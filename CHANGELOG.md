@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.88.22
+## (2022-01-18)
+
+* recipes-core/bash: Use 64bit time symbols [Alexandru Costache]
+* recipes-core/busybox: Use 64bit time symbols [Alexandru Costache]
+
 # v2.88.21
 ## (2022-01-17)
 
