@@ -318,7 +318,7 @@ if [ "$LUKS" = "1" ]; then
             mkfs.ext4 -L "resin-boot" "$DM_DEV"
             continue
         fi
-        inform "Flasing $PART_DEV"
+        inform "Flashing $PART_DEV"
 
         dd_with_progress "${LOOP_DEVICE}p$LOOP_PART_ID" "$DM_DEV" "$FLASHED" "$IMAGE_FILE_SIZE"
 
