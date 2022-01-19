@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.89.0
+## (2022-01-19)
+
+* docker-disk: Pull images from Balena's registry [Alex Gonzalez]
+* balena-supervisor: Use image location path instead of repository:tag [Alex Gonzalez]
+* distro: balena-os: Add default cloud environment distro setting [Alex Gonzalez]
+
 # v2.88.22
 ## (2022-01-18)
 

@@ -1,4 +1,40 @@
 - commits:
+    - subject: 'docker-disk: Pull images from Balena''s registry'
+      hash: 324a091d14e64928feb1635957930eda4e809f8d
+      body: |
+        Stop using dockerhub to pull container images from.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'balena-supervisor: Use image location path instead of repository:tag'
+      hash: 10cf86186bef846123d5431f810fedc219f7e2ee
+      body: |
+        Balena's registry does not use repository:tag to identify images but
+        the image location path.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'distro: balena-os: Add default cloud environment distro setting'
+      hash: 6175fd72188766fc0fa05989f55d79f36434face
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.89.0
+  date: 2022-01-19T09:42:10.888Z
+- commits:
     - subject: 'intel-quark: Fix to honister syntax'
       hash: c32e3f0c5421e46fbac991c5e5cb6240994422b2
       body: |
