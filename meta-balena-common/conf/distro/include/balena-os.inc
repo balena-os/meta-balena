@@ -121,3 +121,6 @@ SIGN_EFI_KEY_ID ?= "balenaos-db"
 SIGN_KMOD_KEY_ID ?= "balenaos-kmod"
 SIGN_EFI_PK_KEY_ID ?= "balenaos-PK"
 SIGN_EFI_KEK_KEY_ID ?= "balenaos-KEK"
+
+# Default cloud API environment
+BALENA_API_ENV ?= "balena-cloud.com"

@@ -147,9 +147,8 @@ setSupervisorConfig() {
     sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG=.*|SUPERVISOR_TAG=$tag|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
 }
 
-# Get image id of tag. This will be non-empty only in case it's already downloaded.
 echo "Getting image id..."
-imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name:$tag") || imageid=""
+imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name") || imageid=""
 
 if [ -n "$imageid" ]; then
     echo "Supervisor $image_name:$tag already downloaded."
@@ -165,8 +164,8 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
 fi
 
 # Pull target version.
-echo "Pulling supervisor $image_name:$tag..."
-$DOCKER pull "$image_name:$tag" || error_handler "supervisor pull failed"
+echo "Pulling supervisor $image_name..."
+$DOCKER pull "$image_name" || error_handler "supervisor pull failed"
 
 # Ensure device has newly pulled image as the version to run
 setSupervisorConfig
