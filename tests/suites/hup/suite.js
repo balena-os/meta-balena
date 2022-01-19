@@ -14,11 +14,54 @@ const Docker = require('dockerode');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
-const stream = require('stream')
+const stream = require('stream');
 const pipeline = require('bluebird').promisify(stream.pipeline);
 
 // required to use skopeo for loading the image
 const exec = require('bluebird').promisify(require('child_process').exec);
+
+// copied from the SV
+// https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
+// TODO: retrieve this from the SDK (requires v16.2.0) or future versions of device contracts
+// https://www.balena.io/docs/reference/sdk/node-sdk/#balena.models.config.getConfigVarSchema
+const supportsBootConfig = (deviceType) => {
+	return (
+		[
+			'fincm3',
+			'rt-rpi-300',
+			'243390-rpi3',
+			'nebra-hnt',
+			'revpi-connect',
+			'revpi-core-3',
+		].includes(deviceType) || deviceType.startsWith('raspberry')
+	);
+};
+
+const enableSerialConsole = async (imagePath) => {
+	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
+		return require('bluebird')
+			.promisify(_fs.readFile)('/config.txt')
+			.catch((err) => {
+				return undefined;
+			});
+	});
+
+	if (bootConfig) {
+		await imagefs.interact(imagePath, 1, async (_fs) => {
+			const regex = /^enable_uart=.*$/m;
+			const value = 'enable_uart=1';
+
+			console.log(`Setting ${value} in config.txt...`);
+
+			// delete any existing instances before appending to the file
+			const newConfig = bootConfig.toString().replace(regex, '');
+			await require('bluebird').promisify(_fs.writeFile)(
+				'/config.txt',
+				newConfig.concat(`\n\n${value}\n\n`),
+			);
+		});
+	}
+};
 
 // Starts registry, uploads target image to registry
 const runRegistry = async (that, test, seedWithImage) => {
@@ -26,27 +69,35 @@ const runRegistry = async (that, test, seedWithImage) => {
 	const ip = await that.context.get().worker.ip(that.context.get().link);
 
 	test.comment('Starting registry...');
-	await that.context.get()
-		.worker.pushContainerToDUT(ip, require('path').join(__dirname, 'assets'), 'registry');
+	await that.context
+		.get()
+		.worker.pushContainerToDUT(
+			ip,
+			require('path').join(__dirname, 'assets'),
+			'registry',
+		);
 
 	test.comment('Loading hostapp image into registry...');
-	const ref = `${ip}:5000/hostapp`
+	const ref = `${ip}:5000/hostapp`;
 
-	await exec(`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`);
-	const hostappRef = await exec(`skopeo inspect --tls-verify=false docker://${ref}`)
-		.then(out => {
-			const json = JSON.parse(out);
-			// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
-			// registry, but `hostappRef` is what we tell the DUT to HUP to.
-			// Since balenaEngine on the DUT will also require special setup to allow
-			// pulling from an insecure registry, we pass along a localhost ref
-			// which docker accepts by default
-			//
-			// TODO the alternative would be to push the image directly into the daemon using:
-			// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
-			// Figure out if the DUT docker daemon is exposed...
-			return `localhost:5000/hostapp@${json.Digest}`
-		});
+	await exec(
+		`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`,
+	);
+	const hostappRef = await exec(
+		`skopeo inspect --tls-verify=false docker://${ref}`,
+	).then((out) => {
+		const json = JSON.parse(out);
+		// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
+		// registry, but `hostappRef` is what we tell the DUT to HUP to.
+		// Since balenaEngine on the DUT will also require special setup to allow
+		// pulling from an insecure registry, we pass along a localhost ref
+		// which docker accepts by default
+		//
+		// TODO the alternative would be to push the image directly into the daemon using:
+		// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
+		// Figure out if the DUT docker daemon is exposed...
+		return `localhost:5000/hostapp@${json.Digest}`;
+	});
 
 	test.comment(`Registry upload complete: ${ref}`);
 
@@ -59,7 +110,6 @@ const runRegistry = async (that, test, seedWithImage) => {
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, hostapp, target) => {
-
 	test.comment(`Starting HUP`);
 
 	let hupLog;
@@ -81,7 +131,6 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 				.worker.executeCommandInHostOS(`hostapp-update -f ${hostapp}`, target);
 			break;
 
-
 		case 'image':
 			test.comment(`Running: hostapp-update -i ${hostapp}`);
 			hupLog = await that.context
@@ -102,6 +151,10 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 
 const initDUT = async (that, test, target) => {
 	test.comment(`Initializing DUT for HUP test`);
+
+	if (supportsBootConfig(that.suite.deviceType.slug)) {
+		await enableSerialConsole(that.context.get().os.image.path);
+	}
 
 	test.comment(`Flashing DUT`);
 	await that.context.get().worker.off();
@@ -126,14 +179,20 @@ const initDUT = async (that, test, target) => {
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
-		await that.context.get().worker.archiveLogs(that.id, that.context.get().link, "journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'");
+		await that.context
+			.get()
+			.worker.archiveLogs(
+				that.id,
+				that.context.get().link,
+				"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
+			);
 	});
 };
 
 module.exports = {
 	title: 'Hostapp update suite',
 
-	run: async function() {
+	run: async function () {
 		const Worker = this.require('common/worker');
 		const BalenaOS = this.require('components/os/balenaos');
 		const Balena = this.require('components/balena/sdk');
@@ -170,7 +229,7 @@ module.exports = {
 			hup: {
 				doHUP: doHUP,
 				initDUT: initDUT,
-				runRegistry: runRegistry
+				runRegistry: runRegistry,
 			},
 		});
 
@@ -183,18 +242,21 @@ module.exports = {
 			);
 
 		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
-		if(this.suite.deviceType.data.storage.internal && (process.env.WORKER_TYPE === `qemu`)){
-			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`
-			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img'
-			console.log(`Unwrapping flasher image ${path}`)
+		if (
+			this.suite.deviceType.data.storage.internal &&
+			process.env.WORKER_TYPE === `qemu`
+		) {
+			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
+			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
+			console.log(`Unwrapping flasher image ${path}`);
 			await imagefs.interact(path, 2, async (fsImg) => {
 				await pipeline(
-				 fsImg.createReadStream(RAW_IMAGE_PATH),
-				 fs.createWriteStream(OUTPUT_IMG_PATH)
-				)
-			})
-			path = OUTPUT_IMG_PATH
-			console.log(`Unwrapped flasher image!`)
+					fsImg.createReadStream(RAW_IMAGE_PATH),
+					fs.createWriteStream(OUTPUT_IMG_PATH),
+				);
+			});
+			path = OUTPUT_IMG_PATH;
+			console.log(`Unwrapped flasher image!`);
 		}
 
 		this.suite.context.set({
@@ -238,8 +300,8 @@ module.exports = {
 		await this.context.get().hupOs.fetch();
 		// configure the image
 		await this.context.get().os.configure();
-    
-    // Retrieving journalctl logs
+
+		// Retrieving journalctl logs
 		this.suite.teardown.register(async () => {
 			await this.context
 				.get()

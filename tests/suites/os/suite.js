@@ -13,12 +13,55 @@ const { homedir } = require('os');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
-const stream = require('stream')
+const stream = require('stream');
 const pipeline = require('bluebird').promisify(stream.pipeline);
+
+// copied from the SV
+// https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
+// TODO: retrieve this from the SDK (requires v16.2.0) or future versions of device contracts
+// https://www.balena.io/docs/reference/sdk/node-sdk/#balena.models.config.getConfigVarSchema
+const supportsBootConfig = (deviceType) => {
+	return (
+		[
+			'fincm3',
+			'rt-rpi-300',
+			'243390-rpi3',
+			'nebra-hnt',
+			'revpi-connect',
+			'revpi-core-3',
+		].includes(deviceType) || deviceType.startsWith('raspberry')
+	);
+};
+
+const enableSerialConsole = async (imagePath) => {
+	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
+		return require('bluebird')
+			.promisify(_fs.readFile)('/config.txt')
+			.catch((err) => {
+				return undefined;
+			});
+	});
+
+	if (bootConfig) {
+		await imagefs.interact(imagePath, 1, async (_fs) => {
+			const regex = /^enable_uart=.*$/m;
+			const value = 'enable_uart=1';
+
+			console.log(`Setting ${value} in config.txt...`);
+
+			// delete any existing instances before appending to the file
+			const newConfig = bootConfig.toString().replace(regex, '');
+			await require('bluebird').promisify(_fs.writeFile)(
+				'/config.txt',
+				newConfig.concat(`\n\n${value}\n\n`),
+			);
+		});
+	}
+};
 
 module.exports = {
 	title: 'Unmanaged BalenaOS release suite',
-	run: async function(test) {
+	run: async function (test) {
 		// The worker class contains methods to interact with the DUT, such as flashing, or executing a command on the device
 		const Worker = this.require('common/worker');
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
@@ -38,16 +81,23 @@ module.exports = {
 			 * @category helper
 			 */
 			waitForServiceState: async function (serviceName, state, target) {
-				return utils.waitUntil(async () => {
-					return worker.executeCommandInHostOS(
-						`systemctl is-active ${serviceName}`,
-						target,
-					).then((serviceStatus) => {
-						return Promise.resolve(serviceStatus === state);
-					}).catch((err) => {
-						Promise.reject(err);
-					});
-				}, 120, 250);
+				return utils.waitUntil(
+					async () => {
+						return worker
+							.executeCommandInHostOS(
+								`systemctl is-active ${serviceName}`,
+								target,
+							)
+							.then((serviceStatus) => {
+								return Promise.resolve(serviceStatus === state);
+							})
+							.catch((err) => {
+								Promise.reject(err);
+							});
+					},
+					120,
+					250,
+				);
 			},
 		};
 
@@ -123,29 +173,40 @@ module.exports = {
 		await this.context.get().os.fetch();
 
 		// If this is a flasher image, and we are using qemu, unwrap
-		if(this.suite.deviceType.data.storage.internal && (process.env.WORKER_TYPE === `qemu`)){
-			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`
-			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img'
-			console.log(`Unwrapping file ${this.context.get().os.image.path}`)
-			console.log(`Looking for ${RAW_IMAGE_PATH}`)
-			try{
-				await imagefs.interact(this.context.get().os.image.path, 2, async (fsImg) => {
-					await pipeline(
-					fsImg.createReadStream(RAW_IMAGE_PATH),
-					fse.createWriteStream(OUTPUT_IMG_PATH)
-					)
-				})
+		if (
+			this.suite.deviceType.data.storage.internal &&
+			process.env.WORKER_TYPE === `qemu`
+		) {
+			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
+			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
+			console.log(`Unwrapping file ${this.context.get().os.image.path}`);
+			console.log(`Looking for ${RAW_IMAGE_PATH}`);
+			try {
+				await imagefs.interact(
+					this.context.get().os.image.path,
+					2,
+					async (fsImg) => {
+						await pipeline(
+							fsImg.createReadStream(RAW_IMAGE_PATH),
+							fse.createWriteStream(OUTPUT_IMG_PATH),
+						);
+					},
+				);
 
 				this.context.get().os.image.path = OUTPUT_IMG_PATH;
 				console.log(`Unwrapped flasher image!`);
-			}catch(e){
+			} catch (e) {
 				// If the outer image doesn't contain an image for installation, ignore the error
-				if (e.code == 'ENOENT') {
-					console.log("Not a flasher image, skipping unwrap");
+				if (e.code === 'ENOENT') {
+					console.log('Not a flasher image, skipping unwrap');
 				} else {
 					throw e;
 				}
 			}
+		}
+
+		if (supportsBootConfig(this.suite.deviceType.slug)) {
+			await enableSerialConsole(this.context.get().os.image.path);
 		}
 
 		// Configure OS image
@@ -168,11 +229,12 @@ module.exports = {
 			'Device should be reachable',
 		);
 
-    // Retrieving journalctl logs: register teardown after device is reachable
-    this.suite.teardown.register(async () => {
-			await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
+		// Retrieving journalctl logs: register teardown after device is reachable
+		this.suite.teardown.register(async () => {
+			await this.context
+				.get()
+				.worker.archiveLogs(this.id, this.context.get().link);
 		});
-
 	},
 	tests: [
 		'./tests/device-specific-tests/beaglebone-black',
