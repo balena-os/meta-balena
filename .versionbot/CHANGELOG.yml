@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: Enable UART serial console where supported'
+      hash: c2847e272e271cbc06dead5c798ee47e8ec8ba8c
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.89.1
+  date: 2022-01-19T14:28:24.489Z
+- commits:
     - subject: 'docker-disk: Pull images from Balena''s registry'
       hash: 324a091d14e64928feb1635957930eda4e809f8d
       body: |

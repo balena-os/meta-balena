@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.1
+## (2022-01-19)
+
+* tests: Enable UART serial console where supported [Kyle Harding]
+
 # v2.89.0
 ## (2022-01-19)
 
