@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.2
+## (2022-01-20)
+
+* recipes-core/jq: Use 64bit time symbols [Alexandru Costache]
+
 # v2.89.1
 ## (2022-01-19)
 

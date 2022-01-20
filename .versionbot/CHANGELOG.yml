@@ -1,4 +1,23 @@
 - commits:
+    - subject: 'recipes-core/jq: Use 64bit time symbols'
+      hash: 010b8f2f655aecb39ef62f9cfac288f5042ebb80
+      body: |
+        jq is used in the bootfiles hostapp-update
+        hook for accessing config.json, which may have
+        one of the modification dates invalid,
+        as we've seen during testing. We thus need to
+        avoid performing a touch on config.json
+        to avoid reloading of containers.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.89.2
+  date: 2022-01-20T15:16:05.188Z
+- commits:
     - subject: 'tests: Enable UART serial console where supported'
       hash: c2847e272e271cbc06dead5c798ee47e8ec8ba8c
       body: ''
