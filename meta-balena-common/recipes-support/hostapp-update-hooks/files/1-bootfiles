@@ -169,8 +169,8 @@ done
 echo "success."
 
 printf "[INFO] Updating timestamps for all files in ${boot_mountpoint}..."
-find "${boot_mountpoint}/" -exec touch {} +
-printf " done"
+find /mnt/boot/ $(printf "! -name %s " $(for blacklisted_file in  $bootfiles_blacklist; do echo $blacklisted_file | awk -F'/' '{print $NF}'; done)) -exec touch {} +
+echo " done"
 
 # Deploy all files in the bootfiles list except fingerprint
 new_deployed_files=""
