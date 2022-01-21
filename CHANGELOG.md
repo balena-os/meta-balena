@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.3
+## (2022-01-20)
+
+* initramfs-framework: Make cleaning udev database the last step [Alex Gonzalez]
+
 # v2.89.2
 ## (2022-01-20)
 

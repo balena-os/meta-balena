@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'initramfs-framework: Make cleaning udev database the last step'
+      hash: 333162a83daf742612a2e97353c9d3766eaad058
+      body: |
+        To avoid issues, move the udev database cleanup just before switching
+        roots.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.89.3
+  date: 2022-01-20T17:24:54.139Z
+- commits:
     - subject: 'recipes-core/jq: Use 64bit time symbols'
       hash: 010b8f2f655aecb39ef62f9cfac288f5042ebb80
       body: |
