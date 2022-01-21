@@ -10,6 +10,7 @@ const fs = require('fs');
 const fse = require('fs-extra');
 const { join } = require('path');
 const { homedir } = require('os');
+const Bluebird = require('bluebird');
 const Docker = require('dockerode');
 
 // required for unwrapping images
@@ -64,42 +65,121 @@ const enableSerialConsole = async (imagePath) => {
 };
 
 // Starts registry, uploads target image to registry
-const runRegistry = async (that, test, seedWithImage) => {
+const runRegistry = async (that, seedWithImage) => {
 	const docker = new Docker();
-	const ip = await that.context.get().worker.ip(that.context.get().link);
+	const registryImage = 'registry:2.7.1';
 
-	test.comment('Starting registry...');
-	await that.context
-		.get()
-		.worker.pushContainerToDUT(
-			ip,
-			require('path').join(__dirname, 'assets'),
-			'registry',
+	that.log(`Pulling registry image: ${registryImage}`);
+	const stream = await docker.pull(registryImage);
+
+	await new Bluebird((resolve, reject) => {
+		docker.modem.followProgress(
+			stream,
+			(err, output) => {
+				// onFinished
+				if (!err && output && output.length) {
+					err = output.pop().error;
+				}
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			},
+			event => {
+				// onProgress
+			},
 		);
-
-	test.comment('Loading hostapp image into registry...');
-	const ref = `${ip}:5000/hostapp`;
-
-	await exec(
-		`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`,
-	);
-	const hostappRef = await exec(
-		`skopeo inspect --tls-verify=false docker://${ref}`,
-	).then((out) => {
-		const json = JSON.parse(out);
-		// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
-		// registry, but `hostappRef` is what we tell the DUT to HUP to.
-		// Since balenaEngine on the DUT will also require special setup to allow
-		// pulling from an insecure registry, we pass along a localhost ref
-		// which docker accepts by default
-		//
-		// TODO the alternative would be to push the image directly into the daemon using:
-		// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
-		// Figure out if the DUT docker daemon is exposed...
-		return `localhost:5000/hostapp@${json.Digest}`;
 	});
 
-	test.comment(`Registry upload complete: ${ref}`);
+	const container = await docker
+		.createContainer({
+			Image: registryImage,
+			HostConfig: {
+				AutoRemove: true,
+				Mounts: [
+					{
+						Type: 'tmpfs',
+						Target: '/var/lib/registry',
+					},
+				],
+				PortBindings: {
+					'5000/tcp': [
+						{
+							HostPort: '5000',
+						},
+					],
+				},
+			},
+		})
+		.then(container => {
+			that.log('Starting registry');
+			return container.start();
+		});
+
+	that.suite.teardown.register(async () => {
+		that.log(`Teardown registry`);
+		try {
+			await container.kill();
+		} catch (err) {
+			that.log(`Error removing registry container: ${err}`);
+		}
+	});
+
+	that.log('Loading image into registry');
+	const imageName = await docker
+		.loadImage(seedWithImage)
+		.then(res => {
+			return new Promise((resolve, reject) => {
+				var bufs = [];
+				res.on('error', err => reject(err));
+				res.on('data', data => bufs.push(data));
+				res.on('end', () => resolve(JSON.parse(Buffer.concat(bufs))));
+			});
+		})
+		.then(json => {
+			const str = json.stream.split('Loaded image ID: ');
+			if (str.length === 2) {
+				return str[1].trim();
+			}
+			throw new Error('failed to parse image name from loadImage stream');
+		});
+
+	const image = await docker.getImage(imageName);
+	const ref = 'localhost:5000/hostapp';
+
+	await image.tag({ repo: ref, tag: 'latest' });
+	const tagged = await docker.getImage(ref);
+	const digest = await tagged
+		.push({ ref })
+		.then(res => {
+			return new Promise((resolve, reject) => {
+				var bufs = [];
+				res.on('error', err => reject(err));
+				res.on('data', data => bufs.push(JSON.parse(data)));
+				res.on('end', () => resolve(bufs));
+			});
+		})
+		.then(output => {
+			for (let json of output) {
+				if (json.error) {
+					throw new Error(json.error);
+				}
+				if (json.aux && json.aux.Digest) {
+					return json.aux.Digest;
+				}
+			}
+			throw new Error('no digest');
+		});
+	await image.remove();
+
+	// this parses the IP of the wlan0 interface which is the gateway for the DUT
+	// Replace the logic below when this merged https://github.com/balena-os/leviathan/pull/442
+	const testbotIP = (
+		await exec(`ip addr | awk '/inet.*wlan0/{print $2}' | cut -d\/ -f1`)
+	).trim();
+	const hostappRef = `${testbotIP}:5000/hostapp@${digest}`;
+	that.log(`Registry upload complete: ${hostappRef}`);
 
 	that.suite.context.set({
 		hup: {
@@ -174,8 +254,45 @@ const initDUT = async (that, test, target) => {
 	}, true);
 	test.comment(`DUT flashed`);
 
-	// Starts the registry and pushes the hostapp
-	await runRegistry(that, test, that.context.get().hupOs.image.path);
+	// we need to configure the engine on the DUT to accept pulls from the registry
+	// running the testbot. Since that registry is not configured to use TLS,
+	// docker otherwise refuses to connect
+
+	// first get the testbot ip (since testbot is configured as the default gateway)
+	// we can just filter the output of `ip route`
+	//
+	// the string we return here is the argument that needs to be passed to
+	// balena-engine-daemon
+	//
+	// FIXME we should probably use a shared testbotIP method with the runRegistry helper...
+	const insecureRegistry = await that.context
+		.get()
+		.worker.executeCommandInHostOS(
+			`ip route | awk '/default/{print $3}' | xargs -I {} echo -n ' --insecure-registry={}:5000'`,
+			target,
+		);
+
+	const execStart = await that.context
+		.get()
+		.worker.executeCommandInHostOS(
+			`grep 'ExecStart=/usr/bin/balenad' /lib/systemd/system/balena-host.service`,
+			target,
+		);
+	let overrideSetting = `Environment=BALENAD_EXTRA_ARGS=${insecureRegistry}`;
+	// OS releases prior to 2.80.8 do not support BALENAD_EXTRA_ARGS
+	if (execStart.indexOf(`BALENAD_EXTRA_ARGS`) < 0) {
+		overrideSetting = `ExecStart=\n${execStart} ${insecureRegistry}`;
+	}
+
+	test.comment(`Configuring DUT to use test suite registry`);
+	await that.context
+		.get()
+		.worker.executeCommandInHostOS(
+			`mkdir -p /run/systemd/system/balena-host.service.d/ && echo -e "[Service]\n${overrideSetting}" >/run/systemd/system/balena-host.service.d/hup.conf && systemctl daemon-reload && systemctl restart balena-host`,
+			target,
+		);
+
+	test.comment(`DUT ready`);
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
@@ -300,6 +417,10 @@ module.exports = {
 		await this.context.get().hupOs.fetch();
 		// configure the image
 		await this.context.get().os.configure();
+		// Starts the registry
+		await this.context
+			.get()
+			.hup.runRegistry(this, this.context.get().hupOs.image.path);
 
 		// Retrieving journalctl logs
 		this.suite.teardown.register(async () => {
