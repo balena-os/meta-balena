@@ -42,6 +42,7 @@ const enableSerialConsole = async (imagePath) => {
 	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
 		return require('bluebird')
 			.promisify(_fs.readFile)('/config.txt')
+			// eslint-disable-next-line handle-callback-err
 			.catch((err) => {
 				return undefined;
 			});
@@ -176,6 +177,7 @@ const runRegistry = async (that, seedWithImage) => {
 	// this parses the IP of the wlan0 interface which is the gateway for the DUT
 	// Replace the logic below when this merged https://github.com/balena-os/leviathan/pull/442
 	const testbotIP = (
+		// eslint-disable-next-line no-useless-escape
 		await exec(`ip addr | awk '/inet.*wlan0/{print $2}' | cut -d\/ -f1`)
 	).trim();
 	const hostappRef = `${testbotIP}:5000/hostapp@${digest}`;
