@@ -25,7 +25,12 @@ else
 fi
 
 new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT -t ext4)
-blockdev=$(basename "$new_part")
+type=$(lsblk -no TYPE "${new_part}")
+if [ "${type}" = "crypt" ]; then
+    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].children[].name')
+else
+    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].name')
+fi
 new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 new_part_label=$(blkid "$new_part" | awk '{print $2}' | cut -d'"' -f 2)
 
