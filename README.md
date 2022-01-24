@@ -163,7 +163,12 @@ The behavior of balenaOS can be configured by setting the following keys in the 
 
 ### balenaRootCA
 
-(string) A base64-encoded CA certificate if trusted and required for connection.
+(string) A base64-encoded PEM CA certificate that will be installed into the root trust store. This makes the device trust TLS/SSL certificates from this authority. 
+This is useful when the device is running behind a re-encrypting network device, like a transparent proxy or some deep packet inspection devices.
+
+```json
+"balenaRootCA": "4oCU4oCTQkVHSU4gQ0VSVElGSUNBVEXigJTi..."
+```
 
 ### developmentMode
 
