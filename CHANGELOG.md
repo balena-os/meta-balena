@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.5
+## (2022-01-24)
+
+* os: tests: optimize fingerprint tests [Joseph Kogut]
+
 # v2.89.4
 ## (2022-01-21)
 

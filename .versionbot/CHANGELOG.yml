@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'os: tests: optimize fingerprint tests'
+      hash: 64afc5f3ca862cd23c639f702b00a55a4527f296
+      body: |
+        Run fingerprint tests in parallel with Promise.any(). This significantly
+        reduces the amount of time taken in these tests.
+
+        - ok 1 - OS corruption tests # time=92739.718ms
+        + ok 1 - OS corruption tests # time=2062.513ms
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.89.5
+  date: 2022-01-24T15:41:27.529Z
+- commits:
     - subject: 'tests: add cloud test suite'
       hash: 4955539b5cd0b9ab5c56ce76f92847fa637ce90b
       body: ''
