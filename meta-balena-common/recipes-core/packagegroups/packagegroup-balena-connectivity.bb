@@ -28,6 +28,7 @@ CONNECTIVITY_PACKAGES = " \
     balena-proxy-config \
     usb-modeswitch \
     iw \
+    bluez5-noinst-tools \
     "
 
 RDEPENDS_${PN} = " \
