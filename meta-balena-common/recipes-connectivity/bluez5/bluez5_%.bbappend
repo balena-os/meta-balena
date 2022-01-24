@@ -18,4 +18,4 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/main.conf ${D}${sysconfdir}/bluetooth/main.conf
 }
 
-PACKAGECONFIG:append = " sixaxis"
+PACKAGECONFIG:append = " sixaxis tools readline"
