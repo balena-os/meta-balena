@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.4
+## (2022-01-21)
+
+* tests: add cloud test suite [rcooke-warwick]
+
 # v2.89.3
 ## (2022-01-20)
 

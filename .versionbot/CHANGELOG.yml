@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'tests: add cloud test suite'
+      hash: 4955539b5cd0b9ab5c56ce76f92847fa637ce90b
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.89.4
+  date: 2022-01-21T15:30:16.116Z
+- commits:
     - subject: 'initramfs-framework: Make cleaning udev database the last step'
       hash: 333162a83daf742612a2e97353c9d3766eaad058
       body: |
