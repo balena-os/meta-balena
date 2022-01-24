@@ -123,7 +123,7 @@ const runRegistry = async (that, seedWithImage) => {
 		try {
 			await container.kill();
 		} catch (err) {
-			that.log(`Error removing registry container: ${err}`);
+			throw new Error(`Failed to cleanup registry container: ${err}`);
 		}
 	});
 
