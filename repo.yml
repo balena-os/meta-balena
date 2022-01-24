@@ -1,17 +1,18 @@
-type: 'yocto layer'
-reviewers: 1
-
 backports:
-  next: 2.50.x
   current: 2.48.x
+  next: 2.50.x
   sunset: 2.44.x
-
+esr:
+  bsp-branch-pattern: 2022.01.x
+  version: '2.88'
+reviewers: 1
+type: yocto layer
 upstream:
-  - repo: 'balena-supervisor'
-    url: 'https://github.com/balena-os/balena-supervisor'
-  - repo: 'healthdog'
-    url: 'https://github.com/balena-os/healthdog-rs'
-  - repo: 'os-config'
-    url: 'https://github.com/balena-os/os-config'
-  - repo: 'balena-engine'
-    url: 'https://github.com/balena-os/balena-engine'
+- repo: balena-supervisor
+  url: https://github.com/balena-os/balena-supervisor
+- repo: healthdog
+  url: https://github.com/balena-os/healthdog-rs
+- repo: os-config
+  url: https://github.com/balena-os/os-config
+- repo: balena-engine
+  url: https://github.com/balena-os/balena-engine
