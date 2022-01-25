@@ -213,9 +213,10 @@ module.exports = {
       return this.context.get().worker.teardown();
     });
 
+    console.log('--config.json--')
+    console.log(this.context.get().os.configJson);
     // preload image with the single container application
     this.log(`Device uuid should be ${this.context.get().balena.uuid}`)
-    this.log("Preloading image...");
     await this.context.get().os.configure();
     await this.context.get().cli.preload(this.context.get().os.image.path, {
       app: this.context.get().balena.application,
