@@ -4,6 +4,7 @@ SRC_URI += " \
     file://10-local-bt-hci-up.rules \
     file://bluetooth.conf.systemd \
     file://main.conf \
+    file://0001-btgatt-server-Add-test-delay.patch \
     "
 
 do_install_append() {
