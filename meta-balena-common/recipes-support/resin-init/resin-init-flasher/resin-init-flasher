@@ -377,11 +377,13 @@ fi
 
 if [ "$LUKS" = "1" ]; then
     # Split EFI and boot partitions
-    EFI_MOUNT_DIR="$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI"
+    EFI_MOUNT_DIR="$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/../efi"
     mkdir -p "$EFI_MOUNT_DIR"
     if ! mount /dev/disk/by-label/balena-efi "$EFI_MOUNT_DIR"; then
         fail "Failed to mount disk labeled as 'balena-efi'."
     fi
+
+    ln -s "../efi/EFI" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI"
 
     # Move all non-EFI files to boot partition
     for FILE in "$EFI_MOUNT_DIR/"*; do
@@ -401,7 +403,6 @@ if [ "$LUKS" = "1" ]; then
     # TODO: Remove or replace by a proper stage2 bootloader when that is ready
     cp -a /boot/bzImage /boot/bzImage.sig ${EFI_MOUNT_DIR}
 
-    INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH="/EFI$INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH"
     if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
         INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
     fi
