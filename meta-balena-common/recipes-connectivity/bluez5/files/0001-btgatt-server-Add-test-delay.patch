@@ -1,0 +1,23 @@
+From 9ee3c13ddb737d8dd3a93e483c18e49cf721f912 Mon Sep 17 00:00:00 2001
+From: Alex Gonzalez <alexg@balena.io>
+Date: Tue, 25 Jan 2022 11:33:54 +0100
+Subject: [PATCH] btgatt-server: Add test delay
+
+Signed-off-by: Alex Gonzalez <alexg@balena.io>
+---
+ tools/btgatt-server.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/btgatt-server.c b/tools/btgatt-server.c
+index 000145a3db1a..a4a5a96b5d65 100644
+--- a/tools/btgatt-server.c
++++ b/tools/btgatt-server.c
+@@ -353,6 +353,8 @@ static void hr_msrmt_ccc_write_cb(struct gatt_db_attribute *attrib,
+ 	update_hr_msrmt_simulation(server);
+ 
+ done:
++	printf("[AG] test delay");
++	sleep(5);
+ 	gatt_db_attribute_write_result(attrib, id, ecode);
+ }
+ 
