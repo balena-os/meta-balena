@@ -22,7 +22,7 @@ set -o errexit
 if [ -f "/mnt/state/rollback-altboot-breadcrumb" ]; then
 	echo "Rollback: Clearing bootcount"
 	# Clear grub bootcount
-	grub_env=$(find "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
+	grub_env=$(find -L "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
 	if [ -f "${grub_env}" ]; then
 		sed -i "s#bootcount=.*#bootcount=0 #g" "${grub_env}" || true
 	else
