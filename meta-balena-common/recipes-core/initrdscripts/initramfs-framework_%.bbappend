@@ -72,7 +72,7 @@ RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
 FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
 
 SUMMARY:initramfs-module-cryptsetup = "Unlock encrypted partitions"
-RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libtss2-tcti-device lvm2-udevrules os-helpers-logging tpm2-tools"
+RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup lvm2-udevrules os-helpers-logging os-helpers-tpm2"
 FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
 
 SUMMARY:initramfs-module-kexec = "Find and start a new kernel if in stage2"

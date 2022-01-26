@@ -2,6 +2,7 @@
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-tpm2
 
 EFI_DEV="/dev/disk/by-partlabel/balena-efi"
 
@@ -25,56 +26,33 @@ cryptsetup_enabled() {
 }
 
 cryptsetup_run() {
+    # Die if anything fails here
+    set -e
+
     EFI_MOUNT_DIR="/efi"
     mkdir "$EFI_MOUNT_DIR"
     mount "$EFI_DEV" "$EFI_MOUNT_DIR"
 
     PASSPHRASE_FILE=/balena-luks.pwd
-    if tpm2_rsadecrypt -c "$EFI_MOUNT_DIR/balena-luks.ctx" -p pcr:sha256:0,1,2,3 -o "$PASSPHRASE_FILE" "$EFI_MOUNT_DIR/balena-luks.enc"; then
+    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,1,2,3" "$PASSPHRASE_FILE"; then
         info "Successfully unlocked LUKS passphrase using the TPM"
-    elif tpm2_rsadecrypt -c "$EFI_MOUNT_DIR/balena-luks.ctx" -p pcr:sha256:0,2,3 -o "$PASSPHRASE_FILE" "$EFI_MOUNT_DIR/balena-luks.enc"; then
-        info "Unlocked LUKS passhprase without UEFI config protection, re-locking"
+    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,2,3" "$PASSPHRASE_FILE"; then
+        info "Unlocked LUKS passphrase without UEFI config protection, re-locking"
 
-        TMP_DIR="/luks-tmp"
-        mkdir -p "$TMP_DIR"
+        RESULT_DIR="/balena-luks"
+        mkdir -p "$RESULT_DIR"
 
         # Create a PCR protection policy
         # We are using PCRs 0, 1, 2 and 3
         # This ensures secure boot is enabled and no UEFI configuration has been tampered with
-        POLICY="$TMP_DIR/pcr.policy"
-        tpm2_createpolicy --policy-pcr -l sha256:0,1,2,3 -L "$POLICY"
-
-        # Create a primary key pair within the TPM
-        PRIMARY_CTX="$TMP_DIR/primary.ctx"
-        tpm2_createprimary -c "$PRIMARY_CTX"
-
-        # Create the actual key pair that will be used for encrypting the LUKS passphrase
-        # rsa2048 seems most universal, not all TPM chips support more than 2048
-        PRIVATE_KEY="$TMP_DIR/private.key"
-        PUBLIC_KEY="$TMP_DIR/public.key"
-        tpm2_create -C "$PRIMARY_CTX" -G rsa2048 -r "$PRIVATE_KEY" -u "$PUBLIC_KEY" -L "$POLICY"
-
-        # Load the generated key pair into the TPM
-        # The userspace tooling allows this to be done together with tpm2_create above, not needing
-        # to store the keys as files, but not all TPM chips support that.
-        KEY_CTX="$TMP_DIR/key.ctx"
-        tpm2_load -C "$PRIMARY_CTX" -r "$PRIVATE_KEY" -u "$PUBLIC_KEY" -c "$KEY_CTX"
-
-        # Make the key persistent and save the handle
-        PERSISTENT_KEY_HANDLE="$TMP_DIR/persistent.ctx"
-        tpm2_evictcontrol -c "$KEY_CTX" -o "$PERSISTENT_KEY_HANDLE"
-
-        # Encrypt the passphrase using the newly generated key pair
-        ENCRYPTED_PASSPHRASE="$TMP_DIR/passphrase.enc"
-        tpm2_rsaencrypt -c "$PERSISTENT_KEY_HANDLE" -o "$ENCRYPTED_PASSPHRASE" < "$PASSPHRASE_FILE"
+        hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,1,2,3" "$RESULT_DIR"
 
         # Ditch the old key pair from the TPM and replace existing files with new ones
         tpm2_evictcontrol -c "$EFI_MOUNT_DIR/balena-luks.ctx"
-        mv "$PERSISTENT_KEY_HANDLE" "$EFI_MOUNT_DIR/balena-luks.ctx"
-        mv "$ENCRYPTED_PASSPHRASE" "$EFI_MOUNT_DIR/balena-luks.enc"
+        mv "$RESULT_DIR/persistent.ctx" "$EFI_MOUNT_DIR/balena-luks.ctx"
+        mv "$RESULT_DIR/passphrase.enc" "$EFI_MOUNT_DIR/balena-luks.enc"
 
-        # Remove unnecessary files
-        rm -f "$PRIMARY_CTX" "$PRIVATE_KEY" "$PUBLIC_KEY" "$KEY_CTX" "$POLICY"
+        rm -rf "$RESULT_DIR"
 
         sync
 
@@ -91,4 +69,7 @@ cryptsetup_run() {
     rm -f "$PASSPHRASE_FILE"
     umount "$EFI_MOUNT_DIR"
     rmdir "$EFI_MOUNT_DIR"
+
+    # Revert dying on error
+    set +e
 }
