@@ -780,6 +780,7 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         ('5.8', '541e69ed9ceacb63105c88edd30355bf7267dc02'),
         ('5.9', 'a786c5eb13b3a45938ac1b829709d0b1d59cd47d'),
         ('5.10', 'e52be5a0f1290b2d113f8bb82f33527ffab8b790'),
+        ('5.10.82','673da58f06082548fd5a5a1ba7862f3f2a9f3cdc'),
     ])
 
 
