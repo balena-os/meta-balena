@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.7
+## (2022-01-26)
+
+* tests/hup: run registry on testbot again [Robert Günzler]
+
 # v2.89.6
 ## (2022-01-26)
 

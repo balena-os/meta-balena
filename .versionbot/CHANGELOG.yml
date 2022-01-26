@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'tests/hup: run registry on testbot again'
+      hash: 7c00ca659267e18a7b6b4e97de99d64f8f6c3d1e
+      body: |
+        test duration and stability suffer from rate-limits, which were
+        introduced when we put the registry on the DUT. every test run would
+        cause the DUT to pull from dockerhub vs. previously we were only
+        bringing up the registry once per suite run.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.89.7
+  date: 2022-01-26T15:40:53.490Z
+- commits:
     - subject: 'classes/kernel-balena: Update aufs patches for kernel 5.10.82'
       hash: 83a1ae95bef32ccfb54a742649165f0311c7ae7e
       body: |
