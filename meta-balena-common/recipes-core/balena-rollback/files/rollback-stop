@@ -26,7 +26,7 @@ rm -f /mnt/state/rollback-altboot-breadcrumb || true
 rm -f /mnt/state/rollback-health-breadcrumb || true
 rm -f /mnt/state/rollback-health-failed || true
 rm -f "${BALENA_BOOT_MOUNTPOINT}/bootcount.env" || true
-grub_env=$(find "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
+grub_env=$(find -L "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
 if [ -f "${grub_env}" ]; then
 	sed -i "s#bootcount=.*#bootcount=0 #g" "${grub_env}" || true
 fi
