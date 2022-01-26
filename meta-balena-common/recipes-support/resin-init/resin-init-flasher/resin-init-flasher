@@ -202,6 +202,16 @@ if [ "$LUKS" = "1" ]; then
     # Generate a random passphrase, 32 bytes long
     LUKS_PASSPHRASE="$(tpm2_getrandom 32)"
 
+    # Create a PCR protection policy
+    # We are using PCRs 0, 1, 2 and 3
+    # This ensures secure boot is enabled and no UEFI configuration has been tampered with
+
+    # Since we tamper with boot order at the very end (putting balenaOS first), we omit PCR1 here
+    # PCR1 is added on first boot since this is the setup we want to lock against
+    # It is therefore important to boot the device at least once after provisioning in secure environment to enable the protection
+    POLICY=$(mktemp)
+    tpm2_createpolicy --policy-pcr -l sha256:0,2,3 -L "$POLICY"
+
     # Create a primary key pair within the TPM
     PRIMARY_CTX=$(mktemp)
     tpm2_createprimary -c "$PRIMARY_CTX"
@@ -210,7 +220,7 @@ if [ "$LUKS" = "1" ]; then
     # rsa2048 seems most universal, not all TPM chips support more than 2048
     PRIVATE_KEY=$(mktemp)
     PUBLIC_KEY=$(mktemp)
-    tpm2_create -C "$PRIMARY_CTX" -G rsa2048 -r "$PRIVATE_KEY" -u "$PUBLIC_KEY"
+    tpm2_create -C "$PRIMARY_CTX" -G rsa2048 -r "$PRIVATE_KEY" -u "$PUBLIC_KEY" -L "$POLICY"
 
     # Load the generated key pair into the TPM
     # The userspace tooling allows this to be done together with tpm2_create above, not needing
