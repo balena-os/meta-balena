@@ -277,6 +277,11 @@ module.exports = {
       await enableSerialConsole(this.context.get().os.image.path);
     }
 
+
+    this.suite.teardown.register(async () => {
+      await this.archiver.add(this.id, this.context.get().os.image.path);
+    });
+
     await this.context.get().worker.off();
     await this.context.get().worker.flash(this.context.get().os.image.path);
     await this.context.get().worker.on();
@@ -298,9 +303,6 @@ module.exports = {
       await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
     });
 
-    this.suite.teardown.register(async () => {
-      await this.archiver.add(this.id, this.context.get().os.image.path);
-    });
 
     this.log("Device is online and provisioned successfully");
     await this.context.get().utils.waitUntil(async () => {
