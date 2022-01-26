@@ -1,4 +1,15 @@
 - commits:
+    - subject: explain balenaRootCA better
+      hash: 3c5dccfbb0ad9f40f893274dc25748f0d35905c8
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Martin Rauscher
+      nested: []
+  version: 2.89.7
+  date: 2022-01-26T14:54:38.251Z
+- commits:
     - subject: 'classes/kernel-balena: Update aufs patches for kernel 5.10.82'
       hash: 83a1ae95bef32ccfb54a742649165f0311c7ae7e
       body: |

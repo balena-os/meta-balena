@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.7
+## (2022-01-26)
+
+* explain balenaRootCA better [Martin Rauscher]
+
 # v2.89.6
 ## (2022-01-26)
 
