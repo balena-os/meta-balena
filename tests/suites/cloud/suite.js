@@ -203,6 +203,7 @@ module.exports = {
       .cloud.balena.models.device.get(this.context.get().balena.uuid);
     config.deviceId = devId.id;
     config.persistentLogging = true;
+    config.developmentMode= true;
 
     // get ready to populate DUT image config.json with the attributes we just generated
     this.context.get().os.addCloudConfig(config);
