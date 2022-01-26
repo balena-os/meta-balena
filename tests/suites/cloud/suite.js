@@ -251,6 +251,10 @@ module.exports = {
       await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
     });
 
+    this.suite.teardown.register(async () => {
+      await this.archiver.add(this.id, this.context.get().os.image.path);
+    });
+
     this.log("Device is online and provisioned successfully");
     await this.context.get().utils.waitUntil(async () => {
       this.log("Trying to ssh into device");
