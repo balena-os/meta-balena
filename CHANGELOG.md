@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.6
+## (2022-01-26)
+
+* classes/kernel-balena: Update aufs patches for kernel 5.10.82 [Alexandru Costache]
+
 # v2.89.5
 ## (2022-01-24)
 

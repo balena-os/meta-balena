@@ -1,4 +1,19 @@
 - commits:
+    - subject: 'classes/kernel-balena: Update aufs patches for kernel 5.10.82'
+      hash: 83a1ae95bef32ccfb54a742649165f0311c7ae7e
+      body: |
+        The aufs patches are used by the devices
+        that transition from aufs to overlay2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.89.6
+  date: 2022-01-26T10:10:09.799Z
+- commits:
     - subject: 'os: tests: optimize fingerprint tests'
       hash: 64afc5f3ca862cd23c639f702b00a55a4527f296
       body: |
