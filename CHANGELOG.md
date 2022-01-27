@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.89.9
+## (2022-01-27)
+
+* archive logs using local ssh [rcooke-warwick]
+* put archiver in the right place [rcooke-warwick]
+* Enable UART serial console for supported devices [Kyle Harding]
+* archive image on teardown [rcooke-warwick]
+* put device in dev mode [rcooke-warwick]
+* tests: add extra logging to cloud suite [rcooke-warwick]
+
 # v2.89.8
 ## (2022-01-27)
 

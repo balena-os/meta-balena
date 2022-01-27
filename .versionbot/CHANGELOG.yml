@@ -1,4 +1,68 @@
 - commits:
+    - subject: archive logs using local ssh
+      hash: 763fd146f042f60b4df5498d41e4dfe06dc931fe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: put archiver in the right place
+      hash: 69234e0dff6dc1bd08bf70bd07d06d4c2b7d4edb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: Enable UART serial console for supported devices
+      hash: 57733d47160d019452d8f9316a7728ac65bb9581
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: archive image on teardown
+      hash: 68cf636207c04a0a8f81e727edafda3bb53bfa31
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: put device in dev mode
+      hash: f1cd979692cd16dd93d8354230f5317bb78e76f8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: add extra logging to cloud suite"
+      hash: 0f39876b55475b654cfed4b20dfda6243d21908f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.89.9
+  title: "tests: add extra logging to cloud suite"
+  date: 2022-01-27T14:55:54.155Z
+- commits:
     - subject: "u-boot: Move config fragments merging code out of common layer"
       hash: 0396efaf0964dc46e0a72792c7dfc0ce17955231
       body: |
