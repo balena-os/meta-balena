@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.8
+## (2022-01-27)
+
+* u-boot: Move config fragments merging code out of common layer [Florin Sarbu]
+
 # v2.89.7
 ## (2022-01-26)
 
