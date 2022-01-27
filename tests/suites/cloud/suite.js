@@ -18,6 +18,49 @@ const imagefs = require('balena-image-fs');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
+// copied from the SV
+// https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
+// TODO: retrieve this from the SDK (requires v16.2.0) or future versions of device contracts
+// https://www.balena.io/docs/reference/sdk/node-sdk/#balena.models.config.getConfigVarSchema
+const supportsBootConfig = (deviceType) => {
+	return (
+		[
+			'fincm3',
+			'rt-rpi-300',
+			'243390-rpi3',
+			'nebra-hnt',
+			'revpi-connect',
+			'revpi-core-3',
+		].includes(deviceType) || deviceType.startsWith('raspberry')
+	);
+};
+
+const enableSerialConsole = async (imagePath) => {
+	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
+		return require('bluebird')
+			.promisify(_fs.readFile)('/config.txt')
+			.catch((err) => {
+				return undefined;
+			});
+	});
+
+	if (bootConfig) {
+		await imagefs.interact(imagePath, 1, async (_fs) => {
+			const regex = /^enable_uart=.*$/m;
+			const value = 'enable_uart=1';
+
+			console.log(`Setting ${value} in config.txt...`);
+
+			// delete any existing instances before appending to the file
+			const newConfig = bootConfig.toString().replace(regex, '');
+			await require('bluebird').promisify(_fs.writeFile)(
+				'/config.txt',
+				newConfig.concat(`\n\n${value}\n\n`),
+			);
+		});
+	}
+};
+
 module.exports = {
   title: "Managed BalenaOS release suite",
   run: async function () {
@@ -203,6 +246,7 @@ module.exports = {
       .cloud.balena.models.device.get(this.context.get().balena.uuid);
     config.deviceId = devId.id;
     config.persistentLogging = true;
+    config.developmentMode= true;
 
     // get ready to populate DUT image config.json with the attributes we just generated
     this.context.get().os.addCloudConfig(config);
@@ -213,9 +257,10 @@ module.exports = {
       return this.context.get().worker.teardown();
     });
 
+    console.log('--config.json--')
+    console.log(this.context.get().os.configJson);
     // preload image with the single container application
     this.log(`Device uuid should be ${this.context.get().balena.uuid}`)
-    this.log("Preloading image...");
     await this.context.get().os.configure();
     await this.context.get().cli.preload(this.context.get().os.image.path, {
       app: this.context.get().balena.application,
@@ -228,6 +273,20 @@ module.exports = {
       .get()
       .worker.network(this.suite.options.balenaOS.network);
 
+    if (supportsBootConfig(this.suite.deviceType.slug)) {
+      await enableSerialConsole(this.context.get().os.image.path);
+    }
+
+
+    this.suite.teardown.register(async () => {
+      await this.archiver.add(this.id, this.context.get().os.image.path);
+    });
+
+
+    this.suite.teardown.register(async () => {
+      await this.context.get().worker.archiveLogs(this.id,  `${this.context.get().balena.uuid.slice(0, 7)}.local`,);
+    });
+    
     await this.context.get().worker.off();
     await this.context.get().worker.flash(this.context.get().os.image.path);
     await this.context.get().worker.on();
@@ -242,11 +301,6 @@ module.exports = {
 
       console.log(isOnline);
       return isOnline === true
-    });
-
-    // Retrieving journalctl logs
-    this.suite.teardown.register(async () => {
-      await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
     });
 
     this.log("Device is online and provisioned successfully");
