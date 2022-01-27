@@ -282,6 +282,11 @@ module.exports = {
       await this.archiver.add(this.id, this.context.get().os.image.path);
     });
 
+
+    this.suite.teardown.register(async () => {
+      await this.context.get().worker.archiveLogs(this.id,  `${this.context.get().balena.uuid.slice(0, 7)}.local`,);
+    });
+    
     await this.context.get().worker.off();
     await this.context.get().worker.flash(this.context.get().os.image.path);
     await this.context.get().worker.on();
@@ -297,12 +302,6 @@ module.exports = {
       console.log(isOnline);
       return isOnline === true
     });
-
-    // Retrieving journalctl logs
-    this.suite.teardown.register(async () => {
-      await this.context.get().worker.archiveLogs(this.id, this.context.get().link);
-    });
-
 
     this.log("Device is online and provisioned successfully");
     await this.context.get().utils.waitUntil(async () => {
