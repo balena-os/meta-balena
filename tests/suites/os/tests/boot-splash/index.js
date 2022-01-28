@@ -108,7 +108,7 @@ module.exports = {
 					});
 
 					let testDistance = hammingDistance(referenceHash, capturedHash);
-					if (testDistance < 20) {
+					if (testDistance < 23) {
 						test.comment(
 							`Found match, image ${image}, hamming distance from reference: ${testDistance}`,
 						);
