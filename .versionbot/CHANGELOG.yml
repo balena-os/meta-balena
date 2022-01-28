@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Use worker contracts in test suites"
+      hash: 81868479d7645d663124a92cd552450b495cec18
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.89.11
+  title: "patch: Use worker contracts in test suites"
+  date: 2022-01-28T19:26:55.226Z
+- commits:
     - subject: "tests: relax boot splash screen check"
       hash: 114b0f752f3b6c25e959ea193a501b5cd669fa7c
       body: ""
