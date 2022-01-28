@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.10
+## (2022-01-28)
+
+* tests: relax boot splash screen check [rcooke-warwick]
+
 # v2.89.9
 ## (2022-01-27)
 

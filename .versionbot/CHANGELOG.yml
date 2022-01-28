@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: relax boot splash screen check"
+      hash: 114b0f752f3b6c25e959ea193a501b5cd669fa7c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.89.10
+  title: Ryan/boot splash improvement
+  date: 2022-01-28T10:11:36.644Z
+- commits:
     - subject: archive logs using local ssh
       hash: 763fd146f042f60b4df5498d41e4dfe06dc931fe
       body: ""
