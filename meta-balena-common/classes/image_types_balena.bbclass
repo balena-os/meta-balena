@@ -139,7 +139,7 @@ do_image_balenaos_img[depends] = " \
     ${BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
 
-do_image_balenaos_img[depends] += "${@ ' virtual/bootloader:do_deploy ' if d.getVar('UBOOT_CONFIG') else ''}"
+do_image_balenaos_img[depends] += "${@ ' virtual/bootloader:do_deploy ' if (d.getVar('UBOOT_CONFIG') or d.getVar('UBOOT_MACHINE')) else ''}"
 
 device_specific_configuration() {
     echo "No device specific configuration"
