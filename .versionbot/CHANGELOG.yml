@@ -1,4 +1,21 @@
 - commits:
+    - subject: "image_types_balena: Augment dependency on u-boot do_deploy task"
+      hash: e1782d968caa20e407386ba58bff3b1842006e9a
+      body: |
+        Some BSPs might only make use of UBOOT_MACHINE so let's consider
+        this case in addition to UBOOT_CONFIG when setting dependency for
+        u-boot's do_deploy task.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.89.11
+  title: "image_types_balena: Augment dependency on u-boot do_deploy task"
+  date: 2022-01-29T08:06:09.408Z
+- commits:
     - subject: "tests: relax boot splash screen check"
       hash: 114b0f752f3b6c25e959ea193a501b5cd669fa7c
       body: ""

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.11
+## (2022-01-29)
+
+* image_types_balena: Augment dependency on u-boot do_deploy task [Florin Sarbu]
+
 # v2.89.10
 ## (2022-01-28)
 
