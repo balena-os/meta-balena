@@ -70,10 +70,10 @@ module.exports = {
 		const BalenaOS = this.require('components/os/balenaos');
 		const utils = this.require('common/utils');
 		const worker = new Worker(
-			this.suite.deviceType.slug, 
-			this.getLogger(), 
-			this.suite.options.workerUrl, 
-			this.suite.options.balena.organization, 
+			this.suite.deviceType.slug,
+			this.getLogger(),
+			this.suite.options.workerUrl,
+			this.suite.options.balena.organization,
 			join(homedir(), 'id')
 		);
 
@@ -143,8 +143,8 @@ module.exports = {
 
 
 		const keys = await this.context
-		.get()
-		.utils.createSSHKey(this.sshKeyPath);
+			.get()
+			.utils.createSSHKey(this.sshKeyPath);
 		// Create an instance of the balenOS object, containing information such as device type, and config.json options
 		this.suite.context.set({
 			os: new BalenaOS(
@@ -228,10 +228,23 @@ module.exports = {
 			await enableSerialConsole(this.os.image.path);
 		}
 
-		if (this.suite.options?.balena?.apiKey) {
-			this.log("Logging into balena with balenaSDK");
-			await this.cloud.balena.auth.loginWithToken(
-				this.suite.options.balena.apiKey
+
+		// Authenticating balenaSDK
+		await this.context
+			.get()
+			.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+		await this.context
+			.get()
+			.cloud.balena.models.key.create(
+				this.sshKeyLabel,
+				keys.pubKey
+			);
+		this.suite.teardown.register(() => {
+			return Promise.resolve(
+				this.context
+					.get()
+					.cloud.removeSSHKey(this.sshKeyLabel)
 			);
 			await this.cloud.balena.models.key.create(
 				this.sshKeyLabel,
@@ -251,7 +264,7 @@ module.exports = {
 		await this.worker.off(); // Ensure DUT is off before starting tests
 		await this.worker.flash(this.os.image.path);
 		await this.worker.on();
-		
+
 		await this.worker.addSSHKey(this.sshKeyPath);
 
 		// create tunnels
@@ -264,11 +277,11 @@ module.exports = {
 		await this.utils.waitUntil(async () => {
 			this.log("Trying to ssh into device");
 			let hostname = await this.context
-			.get()
-			.worker.executeCommandInHostOS(
-			  "cat /etc/hostname",
-			  this.link
-			)
+				.get()
+				.worker.executeCommandInHostOS(
+					"cat /etc/hostname",
+					this.link
+				)
 			return (hostname === this.link.split('.')[0])
 		}, true);
 

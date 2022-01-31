@@ -128,8 +128,10 @@ module.exports = {
     }
 
     // Authenticating balenaSDK
-    this.log("Logging into balena with balenaSDK");
-    await this.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+    await this.context
+    .get()
+    .cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+    this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
 
     // create a balena application
     this.log("Creating application in cloud...");
@@ -309,7 +311,6 @@ module.exports = {
     await this.worker.off();
     await this.worker.flash(this.os.image.path);
     await this.worker.on();
-
 
     // create tunnels
     this.log('Creating SSH tunnels to DUT');

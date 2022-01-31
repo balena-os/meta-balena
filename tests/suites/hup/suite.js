@@ -42,9 +42,9 @@ const checkUnderVoltage = async (that, test) => {
 	test.comment(`checking for under-voltage reports in kernel logs...`);
 	let result = '';
 	result = await that.worker.executeCommandInHostOS(
-				`dmesg | grep -q "Under-voltage detected" ; echo $?`,
-				that.link,
-			);
+		`dmesg | grep -q "Under-voltage detected" ; echo $?`,
+		that.link,
+	);
 
 	if (result.includes('0')) {
 		test.comment(`not ok! - Under-voltage detected on device, please check power source and cable!`);
@@ -106,7 +106,7 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 		`gzip -df ${hostappPath}.gz`,
 		target,
 	);
-	
+
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
 	const hupLoadTmp = "/mnt/data/resin-data/tmp";
 
@@ -117,9 +117,9 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 		case 'local':
 			if (
 				(await that.worker.executeCommandInHostOS(
-						`[[ -f ${hostappPath} ]] && echo exists`,
-						target,
-					)) !== 'exists'
+					`[[ -f ${hostappPath} ]] && echo exists`,
+					target,
+				)) !== 'exists'
 			) {
 				throw new Error(`Target image doesn't exists at location "${hostappPath}"`);
 			}
@@ -175,9 +175,9 @@ const initDUT = async (that, test, target) => {
 	await that.utils.waitUntil(async () => {
 		return (
 			(await that.worker.executeCommandInHostOS(
-					'[[ -f /etc/hostname ]] && echo pass || echo fail',
-					target,
-				)) === 'pass'
+				'[[ -f /etc/hostname ]] && echo pass || echo fail',
+				target,
+			)) === 'pass'
 		);
 	}, true);
 	test.comment(`DUT flashed`);
@@ -185,10 +185,10 @@ const initDUT = async (that, test, target) => {
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
 		await that.worker.archiveLogs(
-				that.id,
-				that.link,
-				"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
-			);
+			that.id,
+			that.link,
+			"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
+		);
 	});
 };
 
@@ -208,10 +208,10 @@ module.exports = {
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
-			worker: new Worker(this.suite.deviceType.slug, 
-				this.getLogger(), 
-				this.suite.options.workerUrl, 
-				this.suite.options.balena.organization, 
+			worker: new Worker(this.suite.deviceType.slug,
+				this.getLogger(),
+				this.suite.options.workerUrl,
+				this.suite.options.balena.organization,
 				join(homedir(), 'id')
 			),
 		});
@@ -246,14 +246,16 @@ module.exports = {
 
 		// Downloads the balenaOS image we hup from
 		let path = await this.sdk.fetchOS(
-				this.suite.options.balenaOS.download.version,
-				this.suite.deviceType.slug,
-			);
-
+			this.suite.options.balenaOS.download.version,
+			this.suite.deviceType.slug,
+		);
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
-		this.log("Logging into balena with balenaSDK");
-		await this.sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		// Authenticating balenaSDK
+		await this.context
+			.get()
+			.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
 		await this.sdk.balena.models.key.create(
 			this.sshKeyLabel,
 			keys.pubKey
