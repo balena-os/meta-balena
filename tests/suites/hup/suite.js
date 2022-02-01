@@ -93,8 +93,28 @@ const runRegistry = async (that, seedWithImage) => {
 		);
 	});
 
+	const containerName = 'hupRegistry';
+
+	var opts = {
+		"filters": `{"name": "${containerName}"}`
+	  };
+
+	// force remove any existing containers with this name
+	await docker.listContainers(opts, 
+		function (err, containers) {
+		if (err) {
+			console.error(err);
+		} else {
+			containers.forEach(async function (containerInfo) {
+				console.warn(`Stopping existing registry ${containerInfo.Id}...`);
+				await docker.getContainer(containerInfo.Id).remove({force: true});
+			});
+		}
+	});
+
 	const container = await docker
 		.createContainer({
+			name: containerName,
 			Image: registryImage,
 			HostConfig: {
 				AutoRemove: true,
@@ -174,13 +194,8 @@ const runRegistry = async (that, seedWithImage) => {
 		});
 	await image.remove();
 
-	// this parses the IP of the wlan0 interface which is the gateway for the DUT
-	// Replace the logic below when this merged https://github.com/balena-os/leviathan/pull/442
-	const testbotIP = (
-		// eslint-disable-next-line no-useless-escape
-		await exec(`ip addr | awk '/inet.*wlan0/{print $2}' | cut -d\/ -f1`)
-	).trim();
-	const hostappRef = `${testbotIP}:5000/hostapp@${digest}`;
+	const testbotLink = (await exec(`hostname`)).trim();
+	const hostappRef = `${testbotLink}.local:5000/hostapp@${digest}`;
 	that.log(`Registry upload complete: ${hostappRef}`);
 
 	that.suite.context.set({
@@ -210,14 +225,14 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 			test.comment(`Running: hostapp-update -f ${hostapp}`);
 			hupLog = await that.context
 				.get()
-				.worker.executeCommandInHostOS(`hostapp-update -f ${hostapp}`, target);
+				.worker.executeCommandInHostOS(`hostapp-update -f ${hostapp}`, target, { interval: 5000, tries: 3});
 			break;
 
 		case 'image':
 			test.comment(`Running: hostapp-update -i ${hostapp}`);
 			hupLog = await that.context
 				.get()
-				.worker.executeCommandInHostOS(`hostapp-update -i ${hostapp}`, target);
+				.worker.executeCommandInHostOS(`hostapp-update -i ${hostapp}`, target, { interval: 5000, tries: 3});
 			break;
 
 		default:
@@ -260,19 +275,8 @@ const initDUT = async (that, test, target) => {
 	// running the testbot. Since that registry is not configured to use TLS,
 	// docker otherwise refuses to connect
 
-	// first get the testbot ip (since testbot is configured as the default gateway)
-	// we can just filter the output of `ip route`
-	//
-	// the string we return here is the argument that needs to be passed to
-	// balena-engine-daemon
-	//
-	// FIXME we should probably use a shared testbotIP method with the runRegistry helper...
-	const insecureRegistry = await that.context
-		.get()
-		.worker.executeCommandInHostOS(
-			`ip route | awk '/default/{print $3}' | xargs -I {} echo -n ' --insecure-registry={}:5000'`,
-			target,
-		);
+	const testbotLink = (await exec(`hostname`)).trim();
+	const insecureRegistry = ` --insecure-registry=${testbotLink}.local:5000`
 
 	const execStart = await that.context
 		.get()
