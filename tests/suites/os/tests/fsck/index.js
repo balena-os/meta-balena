@@ -22,25 +22,23 @@ module.exports = {
 		{
 			title: 'ext4 filesystems are checked on boot',
 			run: async function(test) {
-				async function markDirty(context, label) {
-					return context.get()
-						.worker.executeCommandInHostOS(
+				async function markDirty(that, label) {
+					return that.worker.executeCommandInHostOS(
 							['tune2fs', '-E', 'force_fsck',
 								`/dev/disk/by-label/${label}`
 							].join(' '),
-							context.get().link
+							that.link
 						);
 				}
 
-				async function getFilesystemState(context, label) {
-					return context.get()
-						.worker.executeCommandInHostOS(
+				async function getFilesystemState(that, label) {
+						return that.worker.executeCommandInHostOS(
 							['tune2fs', '-l', `/dev/disk/by-label/${label}`,
 								'|', 'grep', '"Filesystem state"',
 								'|', 'cut', '-d:', '-f2',
 								'|', 'xargs'
 							].join(' '),
-							context.get().link
+							that.link
 						);
 				}
 
@@ -55,8 +53,8 @@ module.exports = {
 				];
 
 				return Promise.map(diskLabels, (label) => {
-					return markDirty(this.context, label).then(() => {
-						return getFilesystemState(this.context, label).then((state) => {
+					return markDirty(this, label).then(() => {
+						return getFilesystemState(this, label).then((state) => {
 							let expectedState = 'clean with errors';
 							test.is(
 								state,
@@ -67,11 +65,10 @@ module.exports = {
 					});
 				}).then(() => {
 					test.comment('Filesystems have been marked dirty');
-					return this.context.get()
-						.worker.rebootDut(this.context.get().link);
+					return this.worker.rebootDut(this.link);
 				}).then(() => {
 					return Promise.map(diskLabels, (label) => {
-						return getFilesystemState(this.context, label).then((state) => {
+						return getFilesystemState(this, label).then((state) => {
 							let expectedState = 'clean';
 							test.is(
 								state,
