@@ -138,9 +138,7 @@ module.exports = {
 						uuid: this.suite.options.balenaOS.config.uuid,
 						os: {
 							sshKeys: [
-								await this.context
-									.get()
-									.utils.createSSHKey(this.context.get().sshKeyPath),
+								await this.utils.createSSHKey(this.sshKeyPath),
 							],
 						},
 						// Set an API endpoint for the HTTPS time sync service.
@@ -159,18 +157,16 @@ module.exports = {
 		// Register a teardown function execute at the end of the test, regardless of a pass or fail
 		this.suite.teardown.register(() => {
 			this.log('Worker teardown');
-			return this.context.get().worker.teardown();
+			return this.worker.teardown();
 		});
 
 		this.log('Setting up worker');
 
 		// Create network AP on testbot
-		await this.context
-			.get()
-			.worker.network(this.suite.options.balenaOS.network);
+		await this.worker.network(this.suite.options.balenaOS.network);
 
 		// Unpack OS image .gz
-		await this.context.get().os.fetch();
+		await this.os.fetch();
 
 		// If this is a flasher image, and we are using qemu, unwrap
 		if (
@@ -179,11 +175,11 @@ module.exports = {
 		) {
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
-			console.log(`Unwrapping file ${this.context.get().os.image.path}`);
+			console.log(`Unwrapping file ${this.os.image.path}`);
 			console.log(`Looking for ${RAW_IMAGE_PATH}`);
 			try {
 				await imagefs.interact(
-					this.context.get().os.image.path,
+					this.os.image.path,
 					2,
 					async (fsImg) => {
 						await pipeline(
@@ -193,7 +189,7 @@ module.exports = {
 					},
 				);
 
-				this.context.get().os.image.path = OUTPUT_IMG_PATH;
+				this.os.image.path = OUTPUT_IMG_PATH;
 				console.log(`Unwrapped flasher image!`);
 			} catch (e) {
 				// If the outer image doesn't contain an image for installation, ignore the error
@@ -206,34 +202,30 @@ module.exports = {
 		}
 
 		if (supportsBootConfig(this.suite.deviceType.slug)) {
-			await enableSerialConsole(this.context.get().os.image.path);
+			await enableSerialConsole(this.os.image.path);
 		}
 
 		// Configure OS image
-		await this.context.get().os.configure();
+		await this.os.configure();
 
 		// Flash the DUT
-		await this.context.get().worker.off(); // Ensure DUT is off before starting tests
-		await this.context.get().worker.flash(this.context.get().os.image.path);
-		await this.context.get().worker.on();
+		await this.worker.off(); // Ensure DUT is off before starting tests
+		await this.worker.flash(this.os.image.path);
+		await this.worker.on();
 
 		this.log('Waiting for device to be reachable');
 		assert.equal(
-			await this.context
-				.get()
-				.worker.executeCommandInHostOS(
+			await this.worker.executeCommandInHostOS(
 					'cat /etc/hostname',
-					this.context.get().link,
+					this.link,
 				),
-			this.context.get().link.split('.')[0],
+			this.link.split('.')[0],
 			'Device should be reachable',
 		);
 
 		// Retrieving journalctl logs: register teardown after device is reachable
 		this.suite.teardown.register(async () => {
-			await this.context
-				.get()
-				.worker.archiveLogs(this.id, this.context.get().link);
+			await this.worker.archiveLogs(this.id, this.link);
 		});
 	},
 	tests: [
