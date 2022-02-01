@@ -24,10 +24,8 @@ module.exports = {
 					.toString(36)
 					.substring(2, 10);
 
-				const context = this.context.get();
-
 				// Add hostname
-				return context.worker.executeCommandInHostOS(
+				return this.worker.executeCommandInHostOS(
 					[
 						`tmp=$(mktemp)`,
 						`&&`, `cat`,  `/mnt/boot/config.json`,
@@ -35,15 +33,15 @@ module.exports = {
 						`>`, `$tmp`,
 						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
 					].join(' '),
-					context.link,
+					this.link,
 				).then(() => {
-					return context.systemd.waitForServiceState(
+					return this.systemd.waitForServiceState(
 						'avahi-daemon.service',
 						'active',
 						`${hostname}.local`,
 					)
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						'cat /etc/hostname',
 						`${hostname}.local`
 					)
@@ -52,7 +50,7 @@ module.exports = {
 					test.equal(actual, expected, 'Device should have a new hostname');
 				}).then(() => {
 					// Remove hostname
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							`tmp=$(mktemp)`,
 							`&&`, `jq`, `"del(.hostname)"`, `/mnt/boot/config.json`,
@@ -62,10 +60,10 @@ module.exports = {
 					);
 				}).then(() => {
 					// Wait for old hostname to be active again
-					return context.systemd.waitForServiceState(
+					return this.systemd.waitForServiceState(
 						'avahi-daemon.service',
 						'active',
-						context.link,
+						this.link,
 					);
 				});
 			},
@@ -77,40 +75,38 @@ module.exports = {
 					return `time${regex}.google.com`;
 				};
 
-				const context = this.context.get();
-
-				return context.worker.executeCommandInHostOS(
+				return this.worker.executeCommandInHostOS(
 					[
 						`tmp=$(mktemp)`,
 						`&&`, `cat`, `/mnt/boot/config.json`,
 						`|`, `jq`, `'.ntpServers="${ntpServer()}"'`, `>`, `$tmp`,
 						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
 					].join(' '),
-					this.context.get().link,
+					this.link,
 				).then(() => {
 					test.comment(`Waiting for balena-ntp-config service to be active...`);
-					return context.systemd.waitForServiceState(
+					return this.systemd.waitForServiceState(
 						'balena-ntp-config.service',
 						'active',
-						context.link,
+						this.link,
 					)
 				}).then(() => {
 					return test.resolves(
-						context.worker.executeCommandInHostOS(
+						this.worker.executeCommandInHostOS(
 							`chronyc sources | grep ${ntpServer('.*')}`,
-							context.link,
+							this.link,
 						),
 						'Device should show one record with our ntp server',
 					);
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							`tmp=$(mktemp)`,
 							`&&`, `cat`, `/mnt/boot/config.json`,
 							`|`, `jq`, `"del(.ntpServers)"`, `>`, `$tmp`,
 							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
 						].join(' '),
-						this.context.get().link,
+						this.link,
 					);
 				});
 			},
@@ -121,63 +117,61 @@ module.exports = {
 				const defaultDns = '8.8.8.8';
 				const exampleDns = '1.1.1.1';
 
-				const context = this.context.get();
-
 				test.comment(`Setting DNS nameservers to ${exampleDns} in config.json...`);
-				return context.worker.executeCommandInHostOS(
+				return this.worker.executeCommandInHostOS(
 					[
 						`tmp=$(mktemp)`,
 						`&&`, `jq`, `'.dnsServers="${exampleDns} ${exampleDns}"'`, `/mnt/boot/config.json`,
 						`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
 					].join(' '),
-					context.link,
+					this.link,
 				).then(() => {
 					test.comment(`Waiting for dnsmasq to be active and using ${exampleDns}...`);
-					return this.context.get().utils.waitUntil(async () => {
-						return context.worker.executeCommandInHostOS(
+					return this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
 							[
 								`journalctl`,
 								`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
 								`|`, `grep`, `-q`, `${exampleDns}`, `;`, `echo`, `$?`
 							].join(' '),
-							this.context.get().link,
+							this.link,
 						).then((exitCode) => {
 							return Promise.resolve(exitCode === '0');
 						});
 					}, false);
 				}).then(() => {
 					test.comment(`Setting dnsServers="null" in config.json...`);
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							`tmp=$(mktemp)`,
 							`&&`, `jq`, `'.dnsServers="null"'`, `/mnt/boot/config.json`, `>`, `$tmp`,
 							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
 						].join(' '),
-						context.link,
+						this.link,
 					);
 				}).then(() => {
 					test.comment(`Waiting for dnsmasq service to be active...`);
-					return context.systemd.waitForServiceState(
+					return this.systemd.waitForServiceState(
 						'dnsmasq.service',
 						'active',
-						context.link
+						this.link
 					);
 				}).then(() => {
 					return Promise.all(
 						[
-							context.worker.executeCommandInHostOS(
+							this.worker.executeCommandInHostOS(
 								`grep -q '[^[:space:]]' < "/run/dnsmasq.servers" ; echo $?`,
-								context.link,
+								this.link,
 							).then((output) => {
 								test.is(output, '1', 'We should have an empty /run/dnsmasq.servers file.');
 							}),
-							context.worker.executeCommandInHostOS(
+							this.worker.executeCommandInHostOS(
 								[
 									'journalctl',
 									'_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"',
 									'|', 'grep', '-q', '"bad address"', ';', 'echo', '$?',
 								].join(' '),
-								context.link
+								this.link
 							).then((output) => {
 								test.is(output, '1', 'Active dnsmasq service should not log "bad address".');
 							}),
@@ -185,24 +179,24 @@ module.exports = {
 					);
 				}).then(() => {
 					test.comment(`Removing dnsServers field from config.json...`);
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							`tmp=$(mktemp)`,
 							`&&`, `jq`, `"del(.dnsServers)"`, `/mnt/boot/config.json`, `>`, `$tmp`,
 							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
 						].join(' '),
-						context.link,
+						this.link,
 					);
 				}).then(() => {
 					test.comment(`Waiting for dnsmasq to be active and using ${defaultDns}...`);
-					return context.utils.waitUntil(async () => {
-						return context.worker.executeCommandInHostOS(
+					return this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
 							[
 								`journalctl`,
 								`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
 								`|`, `grep`, `-q`, defaultDns, `;`, `echo`, `$?`
 							].join(' '),
-							context.link,
+							this.link,
 						).then((exitCode) => {
 							return Promise.resolve(exitCode === '0');
 						});
@@ -229,30 +223,28 @@ module.exports = {
 					uri: 'http://www.archlinux.org/check_network_status.txt',
 				};
 
-				const context = this.context.get();
-
 				test.comment('Configuring connectivity check in config.json')
-				return context.worker.executeCommandInHostOS(
+				return this.worker.executeCommandInHostOS(
 						[
 							'tmp=$(mktemp)',
 							'&&', 'jq', `'.os.network.connectivity=${JSON.stringify(connectivity)}'`,
 								'/mnt/boot/config.json',
 							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
 						].join(' '),
-						context.link,
+						this.link,
 				).then(() => {
 					test.comment('Restarting os-networkmanager.service');
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						'systemctl restart os-networkmanager.service',
-						context.link,
+						this.link,
 					);
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							'NetworkManager', '--print-config',
 							'|', 'awk', '"/\\[connectivity\\]/{flag=1;next}/\\[/{flag=0}flag"',
 						].join(' '),
-						context.link,
+						this.link,
 					).then((config) => {
 						test.is(
 							/uri=(.*)\n/.exec(config)[1],
@@ -261,14 +253,14 @@ module.exports = {
 						);
 					});
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							'tmp=$(mktemp)',
 							'&&', 'jq', '"del(.os.network.connectivity)"',
 								'/mnt/boot/config.json',
 							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
 						].join(' '),
-						context.link,
+						this.link,
 					);
 				});
 			},
@@ -276,29 +268,27 @@ module.exports = {
 		{
 			title: 'os.network.wifi.randomMacAddressScan test',
 			run: async function(test) {
-				const context = this.context.get();
-
 				test.comment('Enabling randomMacAddressScan in config.json');
-				return context.worker.executeCommandInHostOS(
+				return this.worker.executeCommandInHostOS(
 					[
 						'tmp=$(mktemp)',
 						'&&', 'jq', "'.os.network.wifi.randomMacAddressScan=true'", '/mnt/boot/config.json',
 						'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
 					].join(' '),
-					context.link,
+					this.link,
 				).then(() => {
 					test.comment('Restarting os-networkmanager.service');
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						'systemctl restart os-networkmanager.service',
-						context.link,
+						this.link,
 					);
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							'NetworkManager', '--print-config',
 							'|', 'awk', '"/\\[device\\]/{flag=1;next}/\\[/{flag=0}flag"',
 						].join(' '),
-						context.link,
+						this.link,
 					);
 				}).then((config) => {
 					test.match(
@@ -307,13 +297,13 @@ module.exports = {
 						'NetworkManager should be configured to randomize wifi MAC',
 					);
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							'tmp=$(mktemp)',
 							'&&', 'jq', "'del(.os.network.wifi)'", '/mnt/boot/config.json',
 							'>', '$tmp', '&&', 'mv', '$tmp', '/mnt/boot/config.json',
 						].join(' '),
-						context.link,
+						this.link,
 					);
 				});
 			},
@@ -321,51 +311,50 @@ module.exports = {
 		{
 			title: 'udevRules test',
 			run: async function(test) {
-				const context = this.context.get();
 				const rule = {
 					99: 'ENV{ID_FS_LABEL_ENC}=="resin-boot", SYMLINK+="disk/test"',
 				};
 
 				test.comment('Adding udev rule to config.json');
-				return context.worker.executeCommandInHostOS(
+				return this.worker.executeCommandInHostOS(
 					[
 						`tmp=$(mktemp)`,
 						`&&`, `jq`, `'.os.udevRules=${JSON.stringify(rule)}'`, `/mnt/boot/config.json`,
 						`>`, `$tmp`, `&&`, `mv`, `$tmp`, `/mnt/boot/config.json`,
 					].join(' '),
-					context.link,
+					this.link,
 				).then(() => {
 					test.comment('Restarting os-udevrules.service');
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						'systemctl restart os-udevrules.service',
-						context.link,
+						this.link,
 					);
 				}).then(() => {
 					test.comment('Reloading udev rules');
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						'udevadm trigger',
-						context.link,
+						this.link,
 					);
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						`readlink -e /dev/disk/test`,
-						context.link,
+						this.link,
 					);
 				}).then((linkTarget) => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						`readlink -e /dev/disk/by-label/resin-boot`,
-						context.link,
+						this.link,
 					).then((deviceLink) => {
 						test.is(linkTarget, deviceLink, 'Dev link should point to the correct device');
 					});
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
+					return this.worker.executeCommandInHostOS(
 						[
 							'tmp=$(mktemp)',
 							`&&`, `jq`, `'del(.os.udevRules)'`, `/mnt/boot/config.json`,
 							`>`, '$tmp', `&&`, `mv`, '$tmp', `/mnt/boot/config.json`,
 						].join(' '),
-						context.link,
+						this.link,
 					);
 				});
 			},
@@ -374,9 +363,9 @@ module.exports = {
 			title: 'sshKeys test',
 			run: async function(test) {
 				return test.resolves(
-					this.context.get().worker.executeCommandInHostOS(
+					this.worker.executeCommandInHostOS(
 						'echo true',
-						this.context.get().link,
+						this.link,
 					),
 					'Should be able to establish ssh connection to the device',
 				);
@@ -385,20 +374,18 @@ module.exports = {
 		{
 			title: 'persistentLogging configuration test',
 			run: async function(test) {
-				const context = this.context.get();
-
-				async function getBootCount() {
-					return context.worker.executeCommandInHostOS(
+				async function getBootCount(that) {
+					return that.worker.executeCommandInHostOS(
 						'journalctl --list-boots | wc -l',
-						context.link
+						that.link
 					).then((output) => {
 						return Promise.resolve(parseInt(output));
 					});
 				}
 
-				return getBootCount().then((bootCount) => {
-					return context.worker.rebootDut(context.link).then(() => {
-						return getBootCount().then((testcount) => {
+				return getBootCount(this).then((bootCount) => {
+					return this.worker.rebootDut(this.link).then(() => {
+						return getBootCount(this).then((testcount) => {
 							test.is(
 								testcount === bootCount + 1,
 								true,
