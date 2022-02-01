@@ -65,7 +65,12 @@ done
 if [ -n "${TARGET_REPOSITORY}" ] && [ -n "${TARGET_TAG}" ]; then
 	_supervisor_image=$(balena_api_fetch_image_from_app "${TARGET_REPOSITORY}" "${TARGET_TAG#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
 	echo "Pulling ${TARGET_REPOSITORY}:${TARGET_TAG}"
-	docker pull "${_supervisor_image}"
+	if docker pull "${_supervisor_image}"; then
+		docker tag "${_supervisor_image}" "${_supervisor_image%@*}"
+	else
+		echo "Not able to pull ${_supervisor_image}"
+		exit 1
+	fi
 fi
 
 echo "Stopping docker..."
