@@ -2,7 +2,6 @@
 Description=OS SSH keys
 Requires=resin-boot.service bind-home-root-.ssh.service
 After=resin-boot.service bind-home-root-.ssh.service
-PartOf=config-json.target
 
 [Service]
 Type=oneshot

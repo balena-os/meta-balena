@@ -4,4 +4,3 @@ Description=Config.json watcher service
 [Service]
 Type=oneshot
 ExecStart=/bin/echo 'config.json changed'
-ExecStart=/bin/systemctl restart config-json.target
