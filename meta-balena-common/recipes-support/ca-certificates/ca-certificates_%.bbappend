@@ -1,6 +1,7 @@
 FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 
-inherit systemd
+SYSTEMD_UNIT_NAMES = "extract-balena-ca"
+inherit systemd balena-configurable
 
 SYSTEMD_SERVICE:${PN} = "extract-balena-ca.service"
 

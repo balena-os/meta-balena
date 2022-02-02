@@ -31,11 +31,13 @@ inherit allarch systemd
 
 FILES:${PN} = "${sbindir} ${sysconfdir}/systemd/unit-conf.json"
 
+SYSTEMD_UNIT_NAMES = "os-sshkeys os-udevrules os-networkmanager"
+inherit balena-configurable
+
 DEPENDS = "bash-native jq-native coreutils-native"
 RDEPENDS:${PN} = "bash jq udev coreutils"
 
 do_patch[noexec] = "1"
-do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_build[noexec] = "1"
 

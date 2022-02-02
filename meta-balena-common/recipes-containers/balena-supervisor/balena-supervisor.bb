@@ -2,7 +2,7 @@ DESCRIPTION = "resin supervisor"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-inherit systemd deploy
+inherit systemd deploy balena-configurable
 require recipes-containers/balena-supervisor/balena-supervisor.inc
 
 LED_FILE ?= "/dev/null"
@@ -56,7 +56,6 @@ python () {
 S = "${WORKDIR}"
 
 do_patch[noexec] = "1"
-do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
 api_fetch_supervisor_image() {
