@@ -4,3 +4,4 @@ Description=Config.json watcher service
 [Service]
 Type=oneshot
 ExecStart=/bin/echo 'config.json changed'
+ExecStart=/usr/sbin/os-config-json

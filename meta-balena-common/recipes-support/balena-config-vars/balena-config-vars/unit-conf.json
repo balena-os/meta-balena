@@ -1,0 +1,59 @@
+{
+	"$id": "http://www.balena.io/os/schemas/configuration.json",
+	"title": "BalenaOS unit configuration",
+	"description": "config.json values per OS systemd unit",
+	"type": "object",
+	"properties": {
+		"units": {
+			"type": "object",
+			"properties": {
+				"balena": {
+					"description": "The balena engine",
+					"configuration": "developmentMode hostname"
+				},
+				"balena-supervisor": {
+					"description": "The balena supervisor",
+					"comment": "Although apiTimeout and mixpanelToken are also used by the supervisor, they do not require a restart",
+					"configuration": "listenPort balenaRootCA"
+				},
+				"development-features": {
+					"description": "Enable / disable development mode",
+					"configuration": "developmentMode"
+				},
+				"balena-info": {
+					"description": "Display banner on graphical terminal",
+					"configuration": "developmentMode"
+				},
+				"balena-ntp-config": {
+					"description": "NTP server configuration",
+					"configuration": "ntpServers"
+				},
+				"balena-net-config": {
+					"description": "Network configuration",
+					"configuration": "country dnsServers"
+				},
+				"dnsmasq": {
+					"description": "Local DNS cache",
+					"configuration": "dnsServers hostname"
+				},
+				"os-networkmanager": {
+					"description": "Openvpn server configuration",
+					"configuration": "os.network.wifi.randomMacAddressScan os.network.connectivity.uri os.network.connectivity.interval "
+				},
+				"balena-hostname": {
+					"description": "Hostname configuration",
+					"comment": "Restarts avahi daemon as a dependency",
+					"configuration": "hostname"
+				},
+				"os-udevrules": {
+					"description": "udev rules configuration",
+					"configuration": "os.udevRules"
+				},
+				"os-sshkeys": {
+					"description": "SSH public keys configuration",
+					"configuration": "os.sshKeys"
+				}
+			}
+		}
+	}
+}
