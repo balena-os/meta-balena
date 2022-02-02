@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.13
+## (2022-02-01)
+
+* docker-disk: Tag the supervisor digest with the repo name [Kyle Harding]
+
 # v2.89.12
 ## (2022-01-31)
 

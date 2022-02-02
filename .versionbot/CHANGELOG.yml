@@ -1,4 +1,21 @@
 - commits:
+    - subject: "docker-disk: Tag the supervisor digest with the repo name"
+      hash: 52c2b0843bc19865fbe2298e508a9196c7143a2f
+      body: |
+        This will allow us to refer to the supervisor image by the repo name
+        in docker commands, like docker inspect, and prevent re-downloading the
+        image even though it already exists as an untagged digest.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.89.13
+  title: "docker-disk: Tag the supervisor digest with the repo name"
+  date: 2022-02-01T21:39:09.997Z
+- commits:
     - subject: "resindataexpander: expand fs independent of partition"
       hash: 2889cb431e02f1f3e030f6c05a42be7374457eeb
       body: |
