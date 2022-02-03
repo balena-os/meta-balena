@@ -64,7 +64,17 @@ else
 fi
 
 grub_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub.cfg)
+grub_luks_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub-luks.cfg)
 grub_env=$(find -L $BALENA_BOOT_MOUNTPOINT -name grubenv)
+
+if [ -n "$grub_luks_cfg" ]; then
+    if [ "$type" = "crypt" ]; then
+        mv "$grub_luks_cfg" "$grub_cfg"
+        mv "$grub_luks_cfg.sig" "$grub_cfg.sig"
+    else
+        rm -f "$grub_luks_cfg" "$grub_luks_cfg.sig"
+    fi
+fi
 
 if  grep -q upgrade_available "$grub_env" ; then
     printf "[INFO] Automated Rollback support in grub.cfg detected \n"
