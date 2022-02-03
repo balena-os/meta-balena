@@ -99,7 +99,7 @@ do_generate_resin_uboot_configuration[vardeps] += "${UBOOT_VARS}"
 # config_default to be able to inject config options that aren't
 # changeable via Kconfig and config fragments.
 do_inject_config_resin () {
-    sed -i '/^#endif.*/i #include <config_resin.h>' ${S}/include/config_defaults.h
+    sed -i '/^#endif.*/i #include <config_resin.h>' ${S}/include/config_defaults.h || true
 }
 
 do_deploy:append() {
