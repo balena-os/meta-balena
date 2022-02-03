@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.14
+## (2022-02-03)
+
+* resin-u-boot.bbclass: Do not error if no config_defaults.h [Florin Sarbu]
+
 # v2.89.13
 ## (2022-02-01)
 

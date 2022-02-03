@@ -1,4 +1,20 @@
 - commits:
+    - subject: "resin-u-boot.bbclass: Do not error if no config_defaults.h"
+      hash: 74b297cd03bd6f6f8af9d4a9e60514770420a218
+      body: |
+        The header has been removed in upstream commit
+        5c6a4d5a2779d7c2611319076d9aa4a23981855f
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.89.14
+  title: "'resin-u-boot.bbclass: Do not error if no config_defaults.h'"
+  date: 2022-02-03T17:15:47.568Z
+- commits:
     - subject: "docker-disk: Tag the supervisor digest with the repo name"
       hash: 52c2b0843bc19865fbe2298e508a9196c7143a2f
       body: |
