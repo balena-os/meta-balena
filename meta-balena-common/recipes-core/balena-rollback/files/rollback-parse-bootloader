@@ -50,7 +50,12 @@ if [ -z "${resin_root_part}" ]; then
 fi
 
 current_part=$(findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active)
-blockdev=$(basename "$current_part")
+type=$(lsblk -no TYPE "${current_part}")
+if [ "${type}" = "crypt" ]; then
+    blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].children[].name')
+else
+    blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].name')
+fi
 current_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 
 # Partition numbers are in hex.
