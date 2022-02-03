@@ -49,8 +49,15 @@ if [ -z "${resin_root_part}" ]; then
 	exit 1
 fi
 
-current_part=$(findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active)
-blockdev=$(basename "$current_part")
+# --uniq here because findmnt returns the same device twice because /mnt/sysroot/active
+# is bind-mounted over itself while running old hooks from the inactive partition
+current_part=$(findmnt --noheadings --canonicalize --uniq --output SOURCE /mnt/sysroot/active)
+type=$(lsblk -no TYPE "${current_part}")
+if [ "${type}" = "crypt" ]; then
+    blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].children[].name')
+else
+    blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].name')
+fi
 current_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 
 # Partition numbers are in hex.
