@@ -64,7 +64,17 @@ else
 fi
 
 grub_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub.cfg)
+grub_luks_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub-luks.cfg)
 grub_env=$(find -L $BALENA_BOOT_MOUNTPOINT -name grubenv)
+
+if [ -n "$grub_luks_cfg" ]; then
+    if [ "$type" = "crypt" ]; then
+        "${MV}" "$grub_luks_cfg" "$grub_cfg"
+        "${MV}" "$grub_luks_cfg.sig" "$grub_cfg.sig"
+    else
+        rm -f "$grub_luks_cfg" "$grub_luks_cfg.sig"
+    fi
+fi
 
 tmpfile=$(mktemp)
 if  "${CAT}" "$grub_env" | grep -q upgrade_available; then
