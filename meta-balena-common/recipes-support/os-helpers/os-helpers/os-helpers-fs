@@ -214,3 +214,12 @@ function get_part_start_by_number {
 
     parted "/dev/${DEVICE}" unit B print | grep "^[ \t]*${PART_NUMBER}[ \t][ \t]*" | awk '{print $2}' | sed -e "s,B$,,"
 }
+
+# Find partition table type of the given block device
+# Arguments:
+#   1 - Block device
+get_part_table_type() {
+    DEVICE=$1
+
+    parted -s "/dev/${DEVICE}" print | grep "Partition Table" | tr -d " " |cut -d ":" -f2
+}

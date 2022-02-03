@@ -52,7 +52,7 @@ RDEPENDS:initramfs-module-machineid = "${PN}-base initramfs-module-udev"
 FILES:initramfs-module-machineid = "/init.d/91-machineid"
 
 SUMMARY:initramfs-module-resindataexpander = "Expand the data partition to the end of device"
-RDEPENDS:initramfs-module-resindataexpander = "${PN}-base initramfs-module-udev busybox parted util-linux-lsblk e2fsprogs-resize2fs"
+RDEPENDS:initramfs-module-resindataexpander = "${PN}-base initramfs-module-udev busybox parted util-linux-lsblk e2fsprogs-resize2fs os-helpers-fs"
 FILES:initramfs-module-resindataexpander = "/init.d/88-resindataexpander"
 
 SUMMARY:initramfs-module-rorootfs = "Mount our rootfs"
