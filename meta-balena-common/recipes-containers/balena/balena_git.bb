@@ -11,10 +11,15 @@ LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f
 
 inherit systemd go pkgconfig useradd
 
-BALENA_VERSION = "19.03.30"
+BALENA_VERSION = "20.10.12"
 BALENA_BRANCH= "master"
 
-SRCREV = "c41a2d5c1a102294994118434aefaa54a76e2814"
+SRCREV = "73c78258302d94f9652da995af6f65a621fac918"
+# NOTE: update patches when bumping major versions
+# [0] will have up-to-date versions, make sure poky version matches what
+# meta-balena uses
+#
+# 0: https://git.yoctoproject.org/meta-virtualization/tree/recipes-containers/docker/files
 SRC_URI = "\
 	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
 	file://balena.service \
