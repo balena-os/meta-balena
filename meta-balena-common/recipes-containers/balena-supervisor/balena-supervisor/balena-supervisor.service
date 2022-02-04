@@ -4,7 +4,8 @@ Requires=\
     resin\x2ddata.mount \
     balena-device-uuid.service \
     os-config-devicekey.service \
-    bind-etc-balena-supervisor.service
+    bind-etc-balena-supervisor.service \
+    extract-balena-ca.service
 Wants=\
     migrate-supervisor-state.service
 After=\
@@ -14,7 +15,8 @@ After=\
     os-config-devicekey.service \
     bind-etc-systemd-system-resin.target.wants.service \
     bind-etc-balena-supervisor.service \
-    migrate-supervisor-state.service
+    migrate-supervisor-state.service \
+    extract-balena-ca.service
 Wants=balena.service
 ConditionPathExists=/etc/balena-supervisor/supervisor.conf
 
