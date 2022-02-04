@@ -1,4 +1,523 @@
 - commits:
+    - subject: "grub-conf: fix partition indexes in LUKS config"
+      hash: fda85267f15ee198514a48fc9cd625e7f82cf525
+      body: |
+        On most device types rootA and rootB are partitions 2 and 3
+        but with LUKS encryption and boot/EFI split they are shifted to 3 and 4
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "os-helpers-fs: incorporate get_part_table_type from resindataexpander"
+      hash: 258e231130345e16ee2d4209c35342093bc7c866
+      body: >
+        This is only called from a single script within meta-balena at this
+        moment
+
+        but update hooks for particular device types need it as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "hostapp-update-hooks: use stage2 bootloader GRUB config when using LUKS"
+      hash: fd4674f747b1f4352d0bfb3bae3e0476215ba934
+      body: |
+        We are using two variants of GRUB configs - one for LUKS-encrypted OS
+        and the other one for the rest. HUP needs to acknowledge this and use
+        the correct one based on the system being updated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-rollback: Fix partition index detection for luks devices"
+      hash: 7151f6e12f6e846481a4e426a66662bd9ab5cf47
+      body: |
+        This is the same as we do for hostapp-update-hooks
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-rollback: Find following symbolic links"
+      hash: da9b5af5817ac06e041c8bce489547e8d01f0068
+      body: |
+        On full disk encrypted devices the EFI partition is a soft link in the
+        boot partition. This commit fixes detecting files in the EFI partition
+        from the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Find following symlinks"
+      hash: 225c708be230873ab876f7ff3d9d940746e63153
+      body: |
+        On full disk encrypted devices the EFI partition is a soft link in the
+        boot partition. This commit fixes detecting files in the EFI partition
+        from the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Fix partition index detection for luks devices"
+      hash: 59f7a4c8380523c02fac6a02810f0812d99a382d
+      body: >
+        When using LUKS encryption, the output of lsblk is:
+
+            sda                                             8:0    0    8G  0 disk
+          |-sda1                                          8:1    0   40M  0 part  /mnt/boot/EFI
+          |-sda2                                          8:2    0   42M  0 part
+          | `-luks-a91cd125-9e4c-45e6-b3f4-1e9b4ec9e5b9 250:0    0   40M  0 crypt /mnt/boot
+
+        This commit allows extracting the physical device (sdaN) whic is needed
+
+        to extract the partition index using sysfs both for luks or standard
+
+        devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Update balena keys when updating"
+      hash: 6e441ac71773bf156d5aa2036f84bd262b2d4d67
+      body: |
+        On UEFI systems with secure boot enabled, new keys may be shipped on
+        the new filesystem.
+      footer:
+        Relates-to: "#2444"
+        relates-to: "#2444"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: 0-signed-updates: Use logging helpers"
+      hash: 50e13c21fb9c2f6d01fa0197b7095f738c75122e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Fix test for SetupMode and SecureBoot variables"
+      hash: 9abacd84582e0253614bdb2afe7502b40b1b19e6
+      body: |
+        The SetupMode and SecureBoot variables are defined as 8bit in the UEFI
+        spec, and they are represented as %02x in efivar, so fix the match.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: In setupmode program new keys"
+      hash: f980ee5d510d14f440695b107d727c6d1d728dd4
+      body: |
+        If the device has been configured in setupmode, make the flasher images
+        program the balena keys from the boot partition.
+      footer:
+        Relates-to: "#2444"
+        relates-to: "#2444"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add TPM2 helpers"
+      hash: da14a95df736a1c6c35b0a45f0b71ec4b66b296b
+      body: |
+        This helps with code duplication in flasher and initrd scripts using
+        the TPM to manipulate LUKS passphrase.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: Add PCR protection policy to TPM operation unlocking LUKS passphrase
+      hash: 52d6042e8d5ea55597fac45e13ce7ea31d67ff09
+      body: >
+        This patch adds the check for PCRs
+
+        - 0 - firmware/UEFI blob
+
+        - 1 - firmware/UEFI config
+
+        - 2 - Expansion card firmware blobs
+
+        - 3 - Expansion card firmware configs
+
+
+        The full protection is only applied on first boot after provisioning,
+
+        flasher only locks against PCRs 0, 2 and 3.
+
+        This is because when using flasher, the environment is not in the same
+
+        state as the one we want to lock to. In particular the boot order is
+
+        different (flasher is booted from a different drive than the resulting OS).
+
+        As for now we were not able to find a better solution than fully locking
+
+        only on first boot. This means the device must be booted in a secure
+
+        environment at least once after provisioning.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-mounts: Mount EFI partition under /mnt/efi instead of
+        /mnt/boot/EFI"
+      hash: 8466ad1ed1c293ae253ffa51a00815dec8befcc0
+      body: >
+        At this moment the EFI partition would be mounted under /mnt/boot/EFI
+
+        which results into duplication of the /EFI directory - what should be under
+
+        /mnt/boot/EFI is actually in /mnt/boot/EFI/EFI and this is a problem for HUP.
+
+
+        With this patch the EFI partition is mounted under /mnt/efi and /mnt/boot/EFI
+
+        is replaced by a symlink that points to the correct directory.
+
+
+        This only applies to DTs that have boot and EFI partitions split (e.g. LUKS)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Fix typo"
+      hash: f3443b2461ad46d30da7705bda0468c35fbdb9b9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Align partition sizes to 4MB when resizing for LUKS"
+      hash: b1c69400c8fd50a2dddcc08c995abb92c6a93ff4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: use bytes instead of megabytes when repartitioning
+        for LUKS"
+      hash: cdd6187af8f61413358902ad258d3eb46c7f0096
+      body: >
+        Using megabytes is more difficult to parse and causes alignment issues
+        when
+
+        partition sizes are not aligned to whole megabytes (e.g. after preloading).
+
+        Using bytes is the correct approach.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Use glob for iterating files instead of ls"
+      hash: 71916f14f20753ffce1a2130f8f9c5b90f2d7595
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Add comment about always using GPT for LUKS"
+      hash: 9a94b5a78c0db764ac8cd1efae0ec70b1617c46a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Add missing dependencies for LUKS"
+      hash: 363edde295c1fa12a6a05da5f041005f54c54680
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Move partition helper functions to os-helpers-fs"
+      hash: 85a4432d2b035542e30d9f6a3f218fdf113f0b2e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: check for UEFI mode and set config variables"
+      hash: 6a0df73b376528c45a386831746e53248ba60cbb
+      body: |
+        Check to see whether we are running in UEFI mode and set secure
+        boot configuration variables as appropriate.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: "resin-init-flasher: repartition properly for LUKS"
+      hash: 16fede75966a7d0aec05f9b428faf99562bdb1c9
+      body: |
+        In the current state flasher would copy the partition table and the boot
+        partition to the target drive, then operate on it.
+
+        With this patch the target drive is actually partitioned from scratch.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Replace mlabel by fatlabel when labelling
+        balena-efi"
+      hash: 95d40f7500b2fa41a5cd98fbad104dad446088c5
+      body: >
+        mlabel always uppercases the label which causes inconsitencies
+
+        across the stack, fatlabel from dosfstools is able to set a lowercase label
+
+        as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: make the filtering field in find_part_id
+        customizable"
+      hash: 8767e3ff3569c27a5d959efe9992d58da4f92635
+      body: >
+        In the current state find_part_id always looks for partlabel but this is
+        only
+
+        available for GPT partition table. This patch makes it possible to override
+
+        the field and make it work for MBR as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: close LUKS after board-specific hooks"
+      hash: 82118e244c794a1e50d0fe2050d4df88cbebc761
+      body: |
+        resin-init-flasher-board may still want to touch the partitions,
+        if we close LUKS beforehand it would not be able to find them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: scan the original image when repartitioning for
+        LUKS"
+      hash: e7f00c9478468a303fa22ad4642aabf2cd0e4609
+      body: >
+        In the current state flasher dd's the partition table and looks for
+        partition
+
+        metadata on the new device, which is pretty fragile, because the partition
+
+        table may get corrupted. We also want to remove this trick and repartition
+
+        properly.
+
+
+        With this patch flasher scans for the original image attached to a loop device
+
+        for the partition metadata, which is r/o and assumed to be valid from build.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: make partition size and start detection more robust"
+      hash: 24d7bf56412f00b6fd4551b8fff82a5793d4540c
+      body: |
+        In the current state this assumed the parted output would be one of
+        - 123MiB
+        - 12.0MiB
+
+        with this patch it is also able to handle
+        - 12.00MiB
+        - 12.000MiB
+        - etc.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Determine boot partition size before copying it
+        for LUKS"
+      hash: da349b8b85eee974ebbd3fe5a8c994467ed6718d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Remove EXTRA_LUKS_PASSPHRASE handling"
+      hash: 91d4a186279305a36aa2fc3526b2c286987b7fb1
+      body: >
+        This was a development feature and we do not need it in the final product
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Fix flashing progress reporting for LUKS"
+      hash: 10d91887177fdcfd53bde1ecc9f7e2c6a2d588c8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Use flasher kernel to emulate stage2 bootloader
+        with LUKS"
+      hash: f026b19a555063aeaf5fcef3d0bbf36ca31e8f03
+      body: >
+        In order to avoid the need to unlock encrypted partitions in GRUB we
+        want
+
+        to use a custom stage2 bootloader. Since that is not ready yet, emulate that
+
+        by copying flasher kernel to the EFI partition, start it from GRUB, have it
+
+        unlock all the partitions, find the real kernel and kexec into it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Add an extra 1MB when resizing data parition for
+        LUKS"
+      hash: d73657e2a2c755cfaf3fd65be7b9188f071793ae
+      body: >
+        This is necessary because if the data partition of the flashed image is
+        not
+
+        aligned to whole megabytes it would end up 1 block shorter than it needs to be.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Use TPM for LUKS passphrase manipulation"
+      hash: 6876f548584fea19b8f60854a6191b125a1ffa1a
+      body: >
+        Done:
+
+        - Generate a LUKS passphrase using the TPM's RNG
+
+        - Make it possible to define an extra passphrase using EXTRA_LUKS_PASSPHRASE
+
+        - Encrypt the passphrase using the TPM and store it in EFI partition
+
+
+        Missing:
+
+        - PCR protection - at this state any booted OS can decrypt the passphrase
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Add support for opt-in full disk encryption"
+      hash: 1380d39e192176e12064aabccb881e03101407d7
+      body: |
+        If resin-init-flasher.conf has LUKS=1 flasher will:
+        - Add extra 2MB to each partition for the LUKS header
+        - Split resin-boot into EFI and linux boot
+        - LUKS-format the partitions, copy image contents after unlocking
+        - Propagate signatures for secure boot
+
+        The default behavior (LUKS undefined) is unchanged
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.90.0
+  title: "'Fix HUP for LUKS-encrypted systems'"
+  date: 2022-02-04T07:51:50.335Z
+- commits:
     - subject: "resin-u-boot.bbclass: Do not error if no config_defaults.h"
       hash: 74b297cd03bd6f6f8af9d4a9e60514770420a218
       body: |

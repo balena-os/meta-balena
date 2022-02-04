@@ -1,6 +1,45 @@
 Change log
 -----------
 
+# v2.90.0
+## (2022-02-04)
+
+* grub-conf: fix partition indexes in LUKS config [Michal Toman]
+* os-helpers-fs: incorporate get_part_table_type from resindataexpander [Michal Toman]
+* hostapp-update-hooks: use stage2 bootloader GRUB config when using LUKS [Michal Toman]
+* balena-rollback: Fix partition index detection for luks devices [Michal Toman]
+* balena-rollback: Find following symbolic links [Alex Gonzalez]
+* hostapp-update-hooks: Find following symlinks [Alex Gonzalez]
+* hostapp-update-hooks: Fix partition index detection for luks devices [Alex Gonzalez]
+* hostapp-update-hooks: Update balena keys when updating [Alex Gonzalez]
+* hostapp-update-hooks: 0-signed-updates: Use logging helpers [Alex Gonzalez]
+* resin-init-flasher: Fix test for SetupMode and SecureBoot variables [Alex Gonzalez]
+* resin-init-flasher: In setupmode program new keys [Alex Gonzalez]
+* os-helpers: add TPM2 helpers [Michal Toman]
+* Add PCR protection policy to TPM operation unlocking LUKS passphrase [Michal Toman]
+* resin-mounts: Mount EFI partition under /mnt/efi instead of /mnt/boot/EFI [Michal Toman]
+* resin-init-flasher: Fix typo [Michal Toman]
+* resin-init-flasher: Align partition sizes to 4MB when resizing for LUKS [Michal Toman]
+* resin-init-flasher: use bytes instead of megabytes when repartitioning for LUKS [Michal Toman]
+* resin-init-flasher: Use glob for iterating files instead of ls [Michal Toman]
+* resin-init-flasher: Add comment about always using GPT for LUKS [Michal Toman]
+* resin-init-flasher: Add missing dependencies for LUKS [Michal Toman]
+* resin-init-flasher: Move partition helper functions to os-helpers-fs [Michal Toman]
+* resin-init-flasher: check for UEFI mode and set config variables [Mark Corbin]
+* resin-init-flasher: repartition properly for LUKS [Michal Toman]
+* resin-init-flasher: Replace mlabel by fatlabel when labelling balena-efi [Michal Toman]
+* resin-init-flasher: make the filtering field in find_part_id customizable [Michal Toman]
+* resin-init-flasher: close LUKS after board-specific hooks [Michal Toman]
+* resin-init-flasher: scan the original image when repartitioning for LUKS [Michal Toman]
+* resin-init-flasher: make partition size and start detection more robust [Michal Toman]
+* resin-init-flasher: Determine boot partition size before copying it for LUKS [Michal Toman]
+* resin-init-flasher: Remove EXTRA_LUKS_PASSPHRASE handling [Michal Toman]
+* resin-init-flasher: Fix flashing progress reporting for LUKS [Michal Toman]
+* resin-init-flasher: Use flasher kernel to emulate stage2 bootloader with LUKS [Michal Toman]
+* resin-init-flasher: Add an extra 1MB when resizing data parition for LUKS [Michal Toman]
+* resin-init-flasher: Use TPM for LUKS passphrase manipulation [Michal Toman]
+* resin-init-flasher: Add support for opt-in full disk encryption [Michal Toman]
+
 # v2.89.14
 ## (2022-02-03)
 
