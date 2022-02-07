@@ -75,7 +75,7 @@ resindataexpander_run() {
 
                 # We return when we've done the expansion
 		info "Data partition at $datapart expanded."
-                return
+                break
         fi
     done
 
