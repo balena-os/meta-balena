@@ -276,16 +276,6 @@ module.exports = {
     if (supportsBootConfig(this.suite.deviceType.slug)) {
       await enableSerialConsole(this.context.get().os.image.path);
     }
-
-
-    this.suite.teardown.register(async () => {
-      await this.archiver.add(this.id, this.context.get().os.image.path);
-    });
-
-
-    this.suite.teardown.register(async () => {
-      await this.context.get().worker.archiveLogs(this.id,  `${this.context.get().balena.uuid.slice(0, 7)}.local`,);
-    });
     
     await this.context.get().worker.off();
     await this.context.get().worker.flash(this.context.get().os.image.path);
@@ -330,6 +320,10 @@ module.exports = {
 
       return unpinned
     }, false);
+
+    this.suite.teardown.register(async () => {
+      await this.context.get().worker.archiveLogs(this.id,  `${this.context.get().balena.uuid.slice(0, 7)}.local`,);
+    });
 
     // wait until the service is running before continuing
     await this.context.get().cloud.waitUntilServicesRunning(
