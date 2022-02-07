@@ -1,4 +1,20 @@
 - commits:
+    - subject: "balena-supervisor: Update balena-supervisor to v12.11.32"
+      hash: d222a1f6c84ff98f7698efd671063a0eeebb3ae3
+      body: >
+        Includes improvements when writing to `config.json` to reduce the
+        chances of corruption.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Felipe Lalanne <felipe@balena.io>
+        signed-off-by: Felipe Lalanne <felipe@balena.io>
+      author: Felipe Lalanne
+      nested: []
+  version: 2.89.16
+  title: "'balena-supervisor: Update balena-supervisor to v12.11.32'"
+  date: 2022-02-07T15:27:34.945Z
+- commits:
     - subject: "resindataexpander: do not return after resizing the partition only"
       hash: dfb9a2e0b30ac5bbfef24332487ef537b6a830b1
       body: |

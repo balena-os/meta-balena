@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.16
+## (2022-02-07)
+
+* balena-supervisor: Update balena-supervisor to v12.11.32 [Felipe Lalanne]
+
 # v2.89.15
 ## (2022-02-07)
 
