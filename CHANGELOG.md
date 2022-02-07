@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.15
+## (2022-02-07)
+
+* resindataexpander: do not return after resizing the partition only [Michal Toman]
+
 # v2.89.14
 ## (2022-02-03)
 

@@ -1,4 +1,22 @@
 - commits:
+    - subject: "resindataexpander: do not return after resizing the partition only"
+      hash: dfb9a2e0b30ac5bbfef24332487ef537b6a830b1
+      body: |
+        After moving the partition resizing code to execute on each boot,
+        we made it unreachable on first boot. We must not exit the script
+        after resizing the partition only because that way the resizing
+        is only finished on 2nd boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.89.15
+  title: "'resindataexpander: do not return after resizing the partition only'"
+  date: 2022-02-07T10:54:58.341Z
+- commits:
     - subject: "resin-u-boot.bbclass: Do not error if no config_defaults.h"
       hash: 74b297cd03bd6f6f8af9d4a9e60514770420a218
       body: |
