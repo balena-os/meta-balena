@@ -108,7 +108,7 @@ PREFERRED_VERSION_cargo-native ?= "1.54.0"
 PREFERRED_VERSION_libstd-rs ?= "1.54.0"
 
 # balena-engine go version requirement
-GOVERSION = "1.12.17"
+GOVERSION = "1.16.2"
 PREFERRED_PROVIDER_go-native = "go-native"
 
 # Firmware compression support
