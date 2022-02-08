@@ -9,7 +9,11 @@ pulling."
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://src/import/LICENSE;md5=4859e97a9c7780e77972d989f0823f28"
 
-inherit systemd go pkgconfig useradd
+inherit systemd
+inherit go
+inherit goarch
+inherit pkgconfig
+inherit useradd
 
 BALENA_VERSION = "20.10.12"
 BALENA_BRANCH= "master"
@@ -61,40 +65,11 @@ FILES:${PN} += " \
 	"
 
 DOCKER_PKG="github.com/docker/docker"
+BUILD_TAGS="no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs"
 
 do_configure[noexec] = "1"
 
 do_compile() {
-	export PATH=${STAGING_BINDIR_NATIVE}/${HOST_SYS}:$PATH
-
-	export GOCACHE="${B}/.cache"
-	export GOHOSTOS="linux"
-	export GOOS="linux"
-	case "${TARGET_ARCH}" in
-		x86_64)
-			GOARCH=amd64
-			;;
-		i586|i686)
-			GOARCH=386
-			;;
-		arm)
-			GOARCH=${TARGET_ARCH}
-			case "${TUNE_PKGARCH}" in
-				cortexa*)
-					export GOARM=7
-					;;
-			esac
-			;;
-		aarch64)
-			# ARM64 is invalid for Go 1.4
-			GOARCH=arm64
-		;;
-		*)
-			GOARCH="${TARGET_ARCH}"
-		;;
-	esac
-	export GOARCH
-
 	# Set GOPATH. See 'PACKAGERS.md'. Don't rely on
 	# docker to download its dependencies but rather
 	# use dependencies packaged independently.
@@ -102,26 +77,28 @@ do_compile() {
 	rm -rf .gopath
 	mkdir -p .gopath/src/"$(dirname "${DOCKER_PKG}")"
 	ln -sf ../../../.. .gopath/src/"${DOCKER_PKG}"
-	export GOPATH="${S}/src/import/.gopath:${S}/src/import/vendor:${STAGING_DIR_TARGET}/${prefix}/local/go"
 
-	export CGO_ENABLED="1"
+	export GOPATH="${S}/src/import/.gopath:${S}/src/import/vendor:${STAGING_DIR_TARGET}/${prefix}/local/go"
+	export GOROOT="${STAGING_DIR_NATIVE}/${nonarch_libdir}/${HOST_SYS}/go"
 
 	# Pass the needed cflags/ldflags so that cgo
 	# can find the needed headers files and libraries
+	export GOARCH=${TARGET_GOARCH}
+	export CGO_ENABLED="1"
 	export CGO_CFLAGS="${CFLAGS} --sysroot=${STAGING_DIR_TARGET}"
-	export CGO_LDFLAGS="${LDFLAGS}  --sysroot=${STAGING_DIR_TARGET}"
-
-	export DOCKER_GITCOMMIT="${SRCREV}"
-	export DOCKER_BUILDTAGS="no_buildkit no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs"
+	export CGO_LDFLAGS="${LDFLAGS} --sysroot=${STAGING_DIR_TARGET}"
+	export DOCKER_BUILDTAGS="${BUILD_TAGS} ${PACKAGECONFIG_CONFARGS}"
 	export DOCKER_LDFLAGS="-s"
 	export GO111MODULE=off
 
-	VERSION=${BALENA_VERSION} ./hack/make.sh dynbinary-balena
+	export DISABLE_WARN_OUTSIDE_CONTAINER=1
+
+	VERSION=${BALENA_VERSION} DOCKER_GITCOMMIT="${SRCREV}" ./hack/make.sh dynbinary
 }
 
 do_install() {
 	mkdir -p ${D}/${bindir}
-	install -m 0755 ${S}/src/import/bundles/dynbinary-balena/balena-engine ${D}/${bindir}/balena-engine
+	install -m 0755 ${S}/src/import/bundles/dynbinary-daemon/balena-engine ${D}/${bindir}/balena-engine
 
 	ln -sf balena-engine ${D}/${bindir}/balena
 	ln -sf balena-engine ${D}/${bindir}/balenad
