@@ -1,4 +1,26 @@
 - commits:
+    - subject: "tests: os: optimize issue tests"
+      hash: 0275acd6e942a64935bd77babe93ed375a1b3c47
+      body: |
+        Convert issue tests to use promises, and run operations in parallel
+        where possible.
+
+        Testing shows this change to be approximately 25-30% faster when running
+        this single test.
+
+        - ok 1 - Unmanaged BalenaOS release suite # time=75206.585ms
+        + ok 1 - Unmanaged BalenaOS release suite # time=54918.529ms
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.89.17
+  title: "'tests: os: optimize issue tests'"
+  date: 2022-02-08T12:50:11.741Z
+- commits:
     - subject: "balena-supervisor: Update balena-supervisor to v12.11.32"
       hash: d222a1f6c84ff98f7698efd671063a0eeebb3ae3
       body: >

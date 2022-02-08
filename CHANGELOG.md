@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.17
+## (2022-02-08)
+
+* tests: os: optimize issue tests [Joseph Kogut]
+
 # v2.89.16
 ## (2022-02-07)
 
