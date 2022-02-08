@@ -1,15 +1,6 @@
 DEPENDS = "virtual/${TUNE_PKGARCH}-go go-native"
 DEPENDS:class-nativesdk = "virtual/${TARGET_PREFIX}go-crosssdk go-native"
 
-export GOHOSTOS = "${BUILD_GOOS}"
-export GOHOSTARCH = "${BUILD_GOARCH}"
-export GOOS = "${TARGET_GOOS}"
-export GOARCH = "${TARGET_GOARCH}"
-export GOARM = "${TARGET_GOARM}"
-export GO386 = "${TARGET_GO386}"
-export GOMIPS = "${TARGET_GOMIPS}"
-export GOROOT_BOOTSTRAP = "${STAGING_LIBDIR_NATIVE}/go"
-export GOROOT_FINAL = "${libdir}/go"
 export GOCACHE = "${B}/.cache"
 GO_LDFLAGS = ""
 GO_LDFLAGS:class-nativesdk = "-linkmode external"
@@ -43,6 +34,7 @@ do_install() {
 		install -m 0755 $f ${D}${libdir}/go/bin/
 		ln -sf ../${baselib}/go/bin/$name ${D}${bindir}/
 	done
+	rm -rf ${D}${libdir}/go/src
 }
 
 PACKAGES = "${PN} ${PN}-dev"
