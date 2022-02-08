@@ -29,7 +29,7 @@ SRC_URI = "\
 	file://var-lib-docker.mount \
 	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
-	file://0001-imporve-hardcoded-CC-on-cross-compile-docker-ce.patch \
+	file://0001-dynbinary-use-go-cross-compiler.patch \
 	"
 S = "${WORKDIR}/git"
 
