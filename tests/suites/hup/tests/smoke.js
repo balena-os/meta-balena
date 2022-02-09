@@ -17,6 +17,14 @@ module.exports = {
 
 		test.comment(`OS version before HUP: ${versionBeforeHup}`);
 
+		// Check for under-voltage before HUP, in the old OS
+		await this.context
+			.get()
+			.hup.checkUnderVoltage(
+				this,
+				test
+			);
+
 		await this.context
 			.get()
 			.worker.executeCommandInHostOS(
@@ -118,5 +126,13 @@ module.exports = {
 			'0',
 			'Volume should not be lost during HUP',
 		);
+
+		// Check for under-voltage after HUP, in the new OS
+		await this.context
+			.get()
+			.hup.checkUnderVoltage(
+				this,
+				test
+			);
 	},
 };

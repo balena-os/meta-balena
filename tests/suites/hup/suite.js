@@ -37,6 +37,24 @@ const supportsBootConfig = (deviceType) => {
 	);
 };
 
+const checkUnderVoltage = async (that, test) => {
+	test.comment(`checking for under-voltage reports in kernel logs...`);
+	let result = '';
+	result = await that.context
+			.get()
+			.worker.executeCommandInHostOS(
+				`dmesg | grep -q "Under-voltage detected" ; echo $?`,
+				that.context.get().link,
+			);
+
+	if (result.includes('0')) {
+		test.comment(`not ok! - Under-voltage detected on device, please check power source and cable!`);
+	} else {
+		test.comment(`ok - No under-voltage reports in the kernel logs`);
+	}
+};
+
+
 const enableSerialConsole = async (imagePath) => {
 	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
 		return require('bluebird')
@@ -227,6 +245,7 @@ module.exports = {
 
 		this.suite.context.set({
 			hup: {
+				checkUnderVoltage: checkUnderVoltage,
 				doHUP: doHUP,
 				initDUT: initDUT,
 				runRegistry: runRegistry,
