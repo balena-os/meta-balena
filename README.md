@@ -16,15 +16,12 @@ This repository enables building balenaOS for various devices.
 
 ## Versioning
 
-`meta-balena` version is kept in `DISTRO_VERSION` variable. `balena-<board>` version is kept in the file called VERSION located in the root of the `balena-<board>` repository and read in the build as variable HOSTOS_VERSION.
+The `meta-balena` version is kept in the `DISTRO_VERSION` variable. The `balena-<board>` version is kept in the file called VERSION located in the root of the `balena-<board>` repository and read in the build as the variable HOSTOS_VERSION.
 
-* The version of `meta-balena` is in the format is 3 numbers separated by a dot. The patch number can have a `beta` label. e.g. 1.2.3, 1.2.3-beta1, 2.0.0-beta1.
-* The version of `balena-<board>` is constructed by appending to the `meta-balena` version a `rev` label. This will have the semantics of a board revision which adapts a specific `meta-balena` version for a targeted board. For example a meta-balena 1.2.3 can go through 3 board revisions at the end of which the final version will be 1.2.3+rev3 .
-* The first `balena-board` release based on a specific `meta-balena` release X.Y.Z, will be X.Y.Z+rev1 . Example: the first `balena-board` version based on `meta-balena` 1.2.3 will be 1.2.3+rev1 .
-* When updating `meta-balena` version in `balena-board`, the revision will reset to 1. Ex: 1.2.3+rev4 will be updated to 1.2.4+rev1 .
-* Note that the final OS version is NOT based on semver specification so parsing of such a version needs to be handled in a custom way.
-* e.g. For `meta-balena` release 1.2.3 there can be `balena-<board>` releases 1.2.3+rev`X`.
-* e.g. For `meta-balena` release 2.0.0-beta0 there can be `balena-<board>` releases 2.0.0-beta0+rev`X`.
+* The version of `meta-balena` is in semver format being 3 numbers separated by a dot. The patch number can have a `beta` label. e.g. 1.2.3, 1.2.3-beta1, 2.0.0-beta1.
+* The first `balena-<board>` release based on a specific `meta-balena` release X.Y.Z, will be X.Y.Z, the same as the `meta-balena` version. Example: the first `balena-<board>` version based on `meta-balena` 1.2.3 will be 1.2.3.
+* Subsequent `balena-<board>` releases are constructed by appending to the `meta-balena` version a `rev` label. For example a meta-balena 1.2.3 can go through 3 board revisions, being 1.2.3 the initial revision, and 1.2.3+revN the subsequent ones, with the final version being 1.2.3+rev2 .
+* When updating `meta-balena` version in `balena-<board>`, the version will reset to the `meta-balena` version. Ex: 1.2.3+rev4 will be updated to 1.2.4 .
 
 We define host OS version as the `balena-<board>` version and we use this version as HOSTOS_VERSION.
 
