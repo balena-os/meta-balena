@@ -1,4 +1,31 @@
 - commits:
+    - subject: "suites/hup: Add under-voltage test before and after HUP"
+      hash: e12de74e6cdcec2af488a8e5f8e0e14613ac1658
+      body: |
+        We add this this check since we discovered
+        that with newer boot firmware the Pi4 will
+        not reboot when under-voltage is reported.
+
+        We don't mark the test as failed in
+        this case, since there may be devices that
+        continue to work even if under-powered and we
+        don't want to block or delay development if the
+        DUT is remote and cannot be checked or replaced
+        easily.
+
+        This check provides an indication for further
+        debugging of failed test cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.89.17
+  title: "'[tests]: Add under-voltage check for OS and HUP suites'"
+  date: 2022-02-09T16:48:41.543Z
+- commits:
     - subject: "balena-supervisor: Update balena-supervisor to v12.11.32"
       hash: d222a1f6c84ff98f7698efd671063a0eeebb3ae3
       body: >

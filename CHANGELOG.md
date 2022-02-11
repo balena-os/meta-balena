@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.17
+## (2022-02-09)
+
+* suites/hup: Add under-voltage test before and after HUP [Alexandru Costache]
+
 # v2.89.16
 ## (2022-02-07)
 
