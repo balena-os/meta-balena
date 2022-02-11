@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.89.18
+## (2022-02-11)
+
+* tests: os: connectivity: remove context references [Joseph Kogut]
+* tests: os: purge-data: remove context references [Joseph Kogut]
+* tests: os: config-json: remove context references [Joseph Kogut]
+* tests: os: fsck: remove context references [Joseph Kogut]
+* tests: os: suite: remove context references [Joseph Kogut]
+
 # v2.89.17
 ## (2022-02-09)
 

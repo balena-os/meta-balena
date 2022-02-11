@@ -1,4 +1,58 @@
 - commits:
+    - subject: "tests: os: connectivity: remove context references"
+      hash: 88a1701a5f67812461c0b41f5fad7a47afc4a7b5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: purge-data: remove context references"
+      hash: 5a9fcfca83767ffc9b967c76cfd1ebd175284160
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: config-json: remove context references"
+      hash: 47c1c849f4196a00a246df7e87e9b0fe6b32fd62
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: fsck: remove context references"
+      hash: 37a91d16fbce2259313e3d3d6079dbfb591cc909
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: suite: remove context references"
+      hash: 0c7072a6e8696095d1035c88f9552c75fe05599b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.89.18
+  title: "'Remove obsolete references to context from various tests'"
+  date: 2022-02-11T23:52:10.498Z
+- commits:
     - subject: "suites/hup: Add under-voltage test before and after HUP"
       hash: e12de74e6cdcec2af488a8e5f8e0e14613ac1658
       body: |
