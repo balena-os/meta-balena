@@ -252,6 +252,7 @@ module.exports = {
 		'./tests/boot-splash',
 		'./tests/connectivity',
 		'./tests/engine-socket',
+		'./tests/under-voltage',
 		'./tests/udev',
 		'./tests/device-tree',
 		'./tests/purge-data',
