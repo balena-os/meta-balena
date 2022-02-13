@@ -1,4 +1,18 @@
 - commits:
+    - subject: fix cloud suite teardown
+      hash: 6fd7cb7ac9b7612db859afe931c0c34f693d3521
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.89.18
+  title: "'fix cloud suite teardown'"
+  date: 2022-02-11T20:46:38.043Z
+- commits:
     - subject: "suites/hup: Add under-voltage test before and after HUP"
       hash: e12de74e6cdcec2af488a8e5f8e0e14613ac1658
       body: |

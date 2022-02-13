@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.18
+## (2022-02-11)
+
+* fix cloud suite teardown [rcooke-warwick]
+
 # v2.89.17
 ## (2022-02-09)
 
