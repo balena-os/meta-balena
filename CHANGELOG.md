@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.89.19
+## (2022-02-13)
+
+* README: Update versioning information [Alex Gonzalez]
+
 # v2.89.18
 ## (2022-02-11)
 

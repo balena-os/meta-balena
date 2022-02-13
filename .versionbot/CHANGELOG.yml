@@ -1,4 +1,21 @@
 - commits:
+    - subject: "README: Update versioning information"
+      hash: 3ac5a5aaac1be6364a5ec8519b313b1da979b6a3
+      body: |
+        The `balena-<board>` repositories now use the same versioning scheme as
+        application containers. This commit reflects this change in the
+        documentation.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.89.19
+  title: "'README: Update versioning information'"
+  date: 2022-02-13T12:49:17.731Z
+- commits:
     - subject: fix cloud suite teardown
       hash: 6fd7cb7ac9b7612db859afe931c0c34f693d3521
       body: ""
