@@ -1,4 +1,66 @@
 - commits:
+    - subject: "resin-init-flasher: check for UEFI mode and set config variables"
+      hash: 102a710fbbcbbd347d801263a9b96e432ec5e7b9
+      body: |
+        Check to see whether we are running in UEFI mode and set secure
+        boot configuration variables as appropriate.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Mark Corbin <mark@balena.io>
+        signed-off-by: Mark Corbin <mark@balena.io>
+      author: Mark Corbin
+      nested: []
+    - subject: "resin-init-flasher: Fix flashing progress reporting for LUKS"
+      hash: 5c44a257073a993c81692e09eabba842f2aaca1a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Use flasher kernel to emulate stage2 bootloader
+        with LUKS"
+      hash: ebd9c9b775cb82247c1cd9b5ed4fe44864aa2343
+      body: >
+        In order to avoid the need to unlock encrypted partitions in GRUB we
+        want
+
+        to use a custom stage2 bootloader. Since that is not ready yet, emulate that
+
+        by copying flasher kernel to the EFI partition, start it from GRUB, have it
+
+        unlock all the partitions, find the real kernel and kexec into it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Add support for opt-in full disk encryption"
+      hash: 857f44dc37ed28d2bfe285e0243a9894d7315ffe
+      body: |
+        If resin-init-flasher.conf has LUKS=1 flasher will:
+        - Add extra 2MB to each partition for the LUKS header
+        - Split resin-boot into EFI and linux boot
+        - LUKS-format the partitions, copy image contents after unlocking
+        - Propagate signatures for secure boot
+
+        The default behavior (LUKS undefined) is unchanged
+      footer:
+        Change-Type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.90.0
+  title: "'Update flasher for LUKS encryption'"
+  date: 2022-02-13T18:21:21.805Z
+- commits:
     - subject: "README: Update versioning information"
       hash: 3ac5a5aaac1be6364a5ec8519b313b1da979b6a3
       body: |

@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.90.0
+## (2022-02-13)
+
+* resin-init-flasher: check for UEFI mode and set config variables [Mark Corbin]
+* resin-init-flasher: Fix flashing progress reporting for LUKS [Michal Toman]
+* resin-init-flasher: Use flasher kernel to emulate stage2 bootloader with LUKS [Michal Toman]
+* resin-init-flasher: Add support for opt-in full disk encryption [Michal Toman]
+
 # v2.89.19
 ## (2022-02-13)
 
