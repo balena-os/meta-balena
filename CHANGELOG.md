@@ -1,6 +1,17 @@
 Change log
 -----------
 
+# v2.91.0
+## (2022-02-14)
+
+* openssh: Add a dependency on os-sshkeys [Alex Gonzalez]
+* balena-supervisor: Add dependency on root CA [Alex Gonzalez]
+* balena: Add dependency on balena-hostname [Alex Gonzalez]
+* Make services configurable [Alex Gonzalez]
+* classes: Add balena-configurable [Alex Gonzalez]
+* balena-config-vars: Split config.json configuration on write [Alex Gonzalez]
+* Remove config-json.target [Alex Gonzalez]
+
 # v2.90.0
 ## (2022-02-13)
 

@@ -1,4 +1,107 @@
 - commits:
+    - subject: "openssh: Add a dependency on os-sshkeys"
+      hash: 0abc9213ba004325b77d96541e856aaf93cfdde2
+      body: |
+        This is required so that changes in the public keys are picked up
+        by the SSH server.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-supervisor: Add dependency on root CA"
+      hash: 64cb45211a909b25170227079a400c2dfc9afae9
+      body: |
+        This is required so that the supervisor picks up a change in the root CA
+        certificate.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena: Add dependency on balena-hostname"
+      hash: b4d9569261de3a6640394ff416264f9e64c5367b
+      body: |
+        This is needed so that the hostname change is picked up by the container
+        applications.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Make services configurable
+      hash: eb2028e5ed477ac4626bc55180cd872cd93f67b7
+      body: |
+        Changes to the system configuration will now restart several services.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: Add balena-configurable"
+      hash: 5b26f9200e8051859906016e84c03ab3d72a11d1
+      body: |
+        This class adds support to apply configuration changes to a systemd
+        unit.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: Split config.json configuration on write"
+      hash: cd7dcc30dc58255d5c84c6e64142f4073797d557
+      body: >
+        When config.json is written, use the config.json unit configuration to
+        create
+
+        per-unit configuration files extracts.
+
+
+        These will then be monitored by the respective service units to trigger
+
+        restarts, so that service units will only be restarted when there are
+
+        configuration changes that apply to them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Remove config-json.target
+      hash: 5e5de909b648d97ca949e7f6fed08ebbd6471893
+      body: |
+        Unit files that are configured via config.json and want to be restarted
+        on config.json changes are part of this target.
+
+        This causes a burst of service restarts each time config.json changes,
+        independently of whether the configuration changes applies to the unit
+        or not.
+
+        This commit removes all config-json.target instances in preparation for
+        the introduction of a better, more fine grained mechanism.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.91.0
+  title: "'Per-unit configuration files'"
+  date: 2022-02-14T09:30:35.337Z
+- commits:
     - subject: "resin-init-flasher: check for UEFI mode and set config variables"
       hash: 102a710fbbcbbd347d801263a9b96e432ec5e7b9
       body: |
