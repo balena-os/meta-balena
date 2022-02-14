@@ -9,7 +9,7 @@ SRC_URI = " \
     "
 S = "${WORKDIR}"
 
-inherit allarch systemd
+inherit allarch systemd balena-configurable
 
 SYSTEMD_SERVICE:${PN} = " \
     development-features.service \
@@ -17,7 +17,6 @@ SYSTEMD_SERVICE:${PN} = " \
     "
 
 do_patch[noexec] = "1"
-do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_build[noexec] = "1"
 

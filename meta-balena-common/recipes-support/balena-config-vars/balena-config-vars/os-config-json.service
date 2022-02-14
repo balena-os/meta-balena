@@ -1,12 +1,11 @@
 [Unit]
-Description=OS SSH keys
+Description=config.json split into configuration units
 Requires=resin-boot.service bind-home-root-.ssh.service
 After=resin-boot.service bind-home-root-.ssh.service
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
-ExecStart=@SBINDIR@/os-sshkeys
+ExecStart=@SBINDIR@/os-config-json
 
 [Install]
 WantedBy=multi-user.target

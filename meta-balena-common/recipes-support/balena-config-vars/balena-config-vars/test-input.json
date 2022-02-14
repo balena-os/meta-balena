@@ -1,0 +1,25 @@
+{
+  "key_string": "example string",
+  "key_boolean": true,
+  "key_integer": 433565,
+  "key_nested": {
+    "key_nested_child1_object": {
+      "0": "example string",
+      "1" : "example string"
+    },
+    "key_nested_child2_nested": {
+      "key_child2_nested": {
+        "0": "example string",
+        "1" : "example string"
+      }
+    },
+    "key_nested_child3_array": [
+      "example",
+      "example"
+    ]
+  },
+  "key_object": {
+    "one": "example",
+    "two": "example"
+  }
+}

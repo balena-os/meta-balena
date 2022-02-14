@@ -1,0 +1,28 @@
+{
+	"$id": "http://www.balena.io/os/schemas/configuration.json",
+	"title": "BalenaOS configuration",
+	"description": "Schema for balenaOS config.json validation",
+	"type": "object",
+	"properties": {
+		"units": {
+			"type": "object",
+			"properties": {
+				"unit1": {
+					"configuration": "key_nested.key_nested_child2_nested.key_child2_nested.0 key_object.one"
+				},
+				"unit2": {
+					"configuration": "key_nested.key_nested_child3_array"
+				},
+				"unit3": {
+					"configuration": "key_integer key_boolean key_nested.key_nested_child2_nested"
+				},
+				"unit4": {
+					"configuration": "key_object key_string"
+				},
+				"unit5": {
+					"configuration": "key_object.two key_integer"
+				}
+			}
+		}
+	}
+}

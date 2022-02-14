@@ -1,7 +1,6 @@
 [Unit]
 Wants=balena-net-config.service
 After=balena-net-config.service
-PartOf=config-json.target
 
 [Service]
 Type=simple

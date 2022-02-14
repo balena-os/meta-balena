@@ -1,0 +1,10 @@
+{
+  "key_integer": 433565,
+  "key_boolean": true,
+  "key_nested_child2_nested": {
+    "key_child2_nested": {
+      "0": "example string",
+      "1": "example string"
+    }
+  }
+}

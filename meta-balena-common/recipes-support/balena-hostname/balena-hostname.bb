@@ -8,7 +8,7 @@ SRC_URI = " \
     "
 S = "${WORKDIR}"
 
-inherit allarch systemd
+inherit allarch systemd balena-configurable
 
 SYSTEMD_SERVICE:${PN} = "balena-hostname.service"
 

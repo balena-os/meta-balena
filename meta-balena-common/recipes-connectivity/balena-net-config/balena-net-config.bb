@@ -11,7 +11,7 @@ SRC_URI = " \
     "
 S = "${WORKDIR}"
 
-inherit allarch systemd
+inherit allarch systemd balena-configurable
 
 PACKAGES = "${PN} ${PN}-flasher"
 
