@@ -29,6 +29,7 @@ SYSTEMD_SERVICE:${PN} += " \
 FILES:${PN} += " \
 	/mnt/boot \
 	/mnt/data \
+	/mnt/efi \
 	/mnt/state \
 	/mnt/sysroot/active \
 	/mnt/sysroot/inactive \
@@ -50,6 +51,7 @@ do_install:prepend () {
 	ln -sf docker ${D}/etc/balena-engine
 	install -d ${D}/mnt/boot
 	install -d ${D}/mnt/data
+	install -d ${D}/mnt/efi
 	install -d ${D}/mnt/state
 	install -d ${D}/mnt/sysroot/active
 	install -d ${D}/mnt/sysroot/inactive
