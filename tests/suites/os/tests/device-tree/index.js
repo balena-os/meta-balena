@@ -92,6 +92,7 @@ module.exports = {
 								HOST_CONFIG_dtoverlay: `"gpio-key,gpio=4,active_low=0,gpio_pull=${direction}"`,
 								HOST_CONFIG_dtparam:
 									'"i2c_arm=on","spi=on","audio=on","foo=bar","level=42"',
+								HOST_CONFIG_gpu_mem: '64',
 								SUPERVISOR_PERSISTENT_LOGGING: 'true',
 								SUPERVISOR_LOCAL_MODE: 'true',
 							},
@@ -212,6 +213,30 @@ module.exports = {
 					dtParamConfigTxt,
 					targetState.local.config.HOST_CONFIG_dtparam,
 					'DTparams successfully configured in config.txt',
+				);
+				/* Static binary currently shared by RPI maintainer in gdrive only
+				 * See: https://github.com/raspberrypi/Raspberry-Pi-OS-64bit/issues/67#issuecomment-653209729
+				 */
+				test.is(
+					await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							'cd /tmp/ && curl -L "https://drive.google.com/uc?export=download&id=1HS9E5vnxxNqrizB4mEYrnFoQQ1axSRKm" -o vcdbg && chmod +x ./vcdbg && \
+							./vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?',
+							this.context.get().link,
+						),
+						'0',
+						'vcdbg static binary should be downloaded and run successfuly'
+				);
+				test.is(
+					await this.context
+						.get()
+						.worker.executeCommandInHostOS(
+							'cd /tmp/ && ./vcdbg log msg 2>&1 | grep -q -i "Failed to load" ; echo $?',
+							this.context.get().link,
+						),
+						'1',
+						'vcdbg logs should be clean of device-tree or overlay load failures'
 				);
 			},
 		},
