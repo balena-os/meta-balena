@@ -281,6 +281,10 @@ module.exports = {
     await this.context.get().worker.flash(this.context.get().os.image.path);
     await this.context.get().worker.on();
 
+    this.suite.teardown.register(async () => {
+      await this.context.get().worker.archiveLogs(this.id, `${this.context.get().balena.uuid.slice(0, 7)}.local`,);
+    });
+
     this.log("Waiting for device to be reachable");
     await this.context.get().utils.waitUntil(async() => {
       console.log(`checking device is online in the dashboard....`)
@@ -320,10 +324,6 @@ module.exports = {
 
       return unpinned
     }, false);
-
-    this.suite.teardown.register(async () => {
-      await this.context.get().worker.archiveLogs(this.id,  `${this.context.get().balena.uuid.slice(0, 7)}.local`,);
-    });
 
     // wait until the service is running before continuing
     await this.context.get().cloud.waitUntilServicesRunning(
