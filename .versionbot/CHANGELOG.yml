@@ -1,4 +1,61 @@
 - commits:
+    - subject: "hostapp-update-hooks: Fail if new keys are used"
+      hash: 2b7e0941845b35e114229b1bcbe082e17cca57ba
+      body: |
+        We currently have not found a way to use efi-updatevar to append new
+        keys, so this is not currently supported.
+
+        Still, abort the hostOS update if new keys are detected so the device is
+        not bricked.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Update balena keys when updating"
+      hash: c78727d45eadf970e3c9f0e63fcfca6a7c7feeaa
+      body: |
+        On UEFI systems with secure boot enabled, new keys may be shipped on
+        the new filesystem.
+      footer:
+        Relates-to: "#2444"
+        relates-to: "#2444"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: 0-signed-updates: Use logging helpers"
+      hash: d5e8876c674cf0fb75957bbd9d9714e2475bcecb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: In setupmode program new keys"
+      hash: b84db42b6a3d3445a92a5b54bc94e6cf90989124
+      body: |
+        If the device has been configured in setupmode, make the flasher images
+        program the balena keys from the boot partition.
+      footer:
+        Relates-to: "#2444"
+        relates-to: "#2444"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.91.1
+  title: "'Setup mode'"
+  date: 2022-02-21T18:21:38.724Z
+- commits:
     - subject: "openssh: Add a dependency on os-sshkeys"
       hash: 0abc9213ba004325b77d96541e856aaf93cfdde2
       body: |

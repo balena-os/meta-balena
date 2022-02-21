@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.91.1
+## (2022-02-21)
+
+* hostapp-update-hooks: Fail if new keys are used [Alex Gonzalez]
+* hostapp-update-hooks: Update balena keys when updating [Alex Gonzalez]
+* hostapp-update-hooks: 0-signed-updates: Use logging helpers [Alex Gonzalez]
+* resin-init-flasher: In setupmode program new keys [Alex Gonzalez]
+
 # v2.91.0
 ## (2022-02-14)
 
