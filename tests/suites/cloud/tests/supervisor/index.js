@@ -127,10 +127,15 @@ module.exports = {
           `Release should be downloaded, but not running due to lockfile`
         );
 
-        let updatesLocked = await this.context.get().cloud.checkLogsContain(
-          this.context.get().balena.uuid, 
-          `Updates are locked`,           
-        );
+        let updatesLocked = false;
+        await this.context.get().utils.waitUntil(async () => {
+          updatesLocked = await this.context.get().cloud.checkLogsContain(
+            this.context.get().balena.uuid, 
+            `Updates are locked`
+          );
+
+          return updatesLocked === true
+        })
 
         test.ok(updatesLocked, `Update lock message should appear in logs`)
 
