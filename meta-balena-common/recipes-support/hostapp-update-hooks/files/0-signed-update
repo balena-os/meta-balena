@@ -44,30 +44,15 @@ verifyMd5sum() {
     if [ "$1" = "$3" ] ; then return 0; else return 1; fi
 }
 
-countKeys() {
-    /usr/bin/efi-readvar -v "$1" | grep -c "$1:"
-}
-
 updateKeys() {
-    mountEfiVars
     for k in db KEK PK; do
-        # Remove immutable attribute
-        chattr -i ${EFIVARS_MOUNTDIR}/${k}* || true
         if verifyMd5sum $(md5sum "/mnt/boot/balena-keys/${k}.auth") $(md5sum "/resin-boot/balena-keys/${k}.auth"); then
             continue
-        fi
-        count=$(countKeys "${k}")
-        # Append new keys if not present
-        info "Appending ${k} key...\n"
-        /usr/bin/efi-updatevar -a -f "/resin-boot/balena-keys/${k}.auth" "${k}"
-        new_count=$(countKeys "${k}")
-        if [ "${new_count}" != $((count + 1)) ]; then
-            error "Failed to append ${k} key"
-            umountEfiVars
-            return 1
+        else
+            error "Updating keys is not currently supported - a fresh installation is required"
+            exit 1
         fi
     done
-    umountEfiVars
 }
 
 # Only applicable in the new OS container
