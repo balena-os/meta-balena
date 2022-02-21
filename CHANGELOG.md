@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.91.1
+## (2022-02-21)
+
+* tests/cloud: wait for update lock message in logs [rcooke-warwick]
+* tests/cloud: register teardown before  online [rcooke-warwick]
+
 # v2.91.0
 ## (2022-02-14)
 

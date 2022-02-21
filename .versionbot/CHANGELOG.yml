@@ -1,4 +1,29 @@
 - commits:
+    - subject: "tests/cloud: wait for update lock message in logs"
+      hash: c50dd793f7409cb4b899e859478730ebe3c576e0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests/cloud: register teardown before  online"
+      hash: 2b6f8cc7b91472ebb612c60d56044cbc03af3ca8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.91.1
+  title: "'fix journal log retrieval in cloud suite, and try to make override lock
+    test consistant'"
+  date: 2022-02-21T10:48:39.255Z
+- commits:
     - subject: "openssh: Add a dependency on os-sshkeys"
       hash: 0abc9213ba004325b77d96541e856aaf93cfdde2
       body: |
