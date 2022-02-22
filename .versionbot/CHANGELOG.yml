@@ -1,4 +1,19 @@
 - commits:
+    - subject: "mobyinit: Set GOPATH not to use Go's ${USER}/go default"
+      hash: dd13007d780303ba3c43b6fe7b2533d59d3d01f9
+      body: |
+        Fixes #2176
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.91.2
+  title: "'mobyinit: Set GOPATH not to use Go's root/go default'"
+  date: 2022-02-22T11:04:34.015Z
+- commits:
     - subject: "tests/cloud: wait for update lock message in logs"
       hash: c50dd793f7409cb4b899e859478730ebe3c576e0
       body: ""
