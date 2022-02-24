@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests/os: Wait for os-config-json service to be inactive"
+      hash: 1a7eead77e63c72cc1418a0f87d6b540e7deaa80
+      body: |
+        Wait for os-config-json service to be inactive between tests
+        so the next changes to config.json are not missed by systemd.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.91.3
+  title: "'tests/os: Wait for os-config-json service to be inactive'"
+  date: 2022-02-24T17:56:40.238Z
+- commits:
     - subject: "contributing-device-support.md: Updates to board support instructions"
       hash: 47230867149db0a526a0dfdfa847e0eec9a3020b
       body: ""

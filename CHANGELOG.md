@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.91.3
+## (2022-02-24)
+
+* tests/os: Wait for os-config-json service to be inactive [Kyle Harding]
+
 # v2.91.2
 ## (2022-02-23)
 
