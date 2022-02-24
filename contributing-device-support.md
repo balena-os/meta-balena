@@ -103,7 +103,7 @@ This directory contains optional and mandatory directories:
 
 ### `recipes-bsp`
 
-This directory should contain the changes to the bootloader recipes used by your board. For example, for u-boot based boards, it must define the [following](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-bsp/u-boot/u-boot-rockpi-4.bbappend#L3-L5) and it must include at least a patch to the u-boot bootcmd that changes the default boot command to include balena required setup. See this [example](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-bsp/u-boot/files/0001-Integrate-with-Balena-u-boot-environment.patch).
+This directory should contain the changes to the bootloader recipes used by your board. For example, for u-boot based boards, it must define the [following](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-bsp/u-boot/u-boot-rockpi-4.bbappend#L3-L5) and it must include at least a patch to the u-boot bootcmd that changes the default boot command to include balena required setup. See this [example](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-bsp/u-boot/files/0001-Integrate-with-Balena-u-boot-environment.patch) or if you use a newer u-boot you can simply use config fragments to alter the bootcmd like done [here](https://github.com/balena-os/balena-nanopi-r2c/blob/master/layers/meta-balena-nanopi-r2c/recipes-bsp/u-boot/files/balenaos_bootcommand.cfg).
 
 ### `recipes-core/images` directory
 
