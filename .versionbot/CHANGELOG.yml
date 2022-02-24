@@ -1,4 +1,18 @@
 - commits:
+    - subject: "contributing-device-support.md: Updates to board support instructions"
+      hash: 47230867149db0a526a0dfdfa847e0eec9a3020b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.91.2
+  title: "'contributing-device-support.md: Updates to board support instructions'"
+  date: 2022-02-23T14:52:43.399Z
+- commits:
     - subject: "tests/cloud: wait for update lock message in logs"
       hash: c50dd793f7409cb4b899e859478730ebe3c576e0
       body: ""
