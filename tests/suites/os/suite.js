@@ -85,7 +85,7 @@ module.exports = {
 					async () => {
 						return worker
 							.executeCommandInHostOS(
-								`systemctl is-active ${serviceName}`,
+								`systemctl is-active ${serviceName} || true`,
 								target,
 							)
 							.then((serviceStatus) => {

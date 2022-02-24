@@ -26,17 +26,23 @@ module.exports = {
 
 				const context = this.context.get();
 
-				// Add hostname
-				return context.worker.executeCommandInHostOS(
-					[
-						`tmp=$(mktemp)`,
-						`&&`, `cat`,  `/mnt/boot/config.json`,
-						`|`, `jq`, `'.hostname="${hostname}"'`,
-						`>`, `$tmp`,
-						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
-					].join(' '),
-					context.link,
+				test.comment(`Waiting for os-config-json service to be inactive...`);
+				return context.systemd.waitForServiceState(
+						'os-config-json.service',
+						'inactive',
+						context.link
 				).then(() => {
+					test.comment(`Setting hostname to ${hostname} in config.json...`);
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `cat`,  `/mnt/boot/config.json`,
+							`|`, `jq`, `'.hostname="${hostname}"'`,
+							`>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+						].join(' '),
+						context.link);
+				}).then(() => {
 					return context.systemd.waitForServiceState(
 						'avahi-daemon.service',
 						'active',
@@ -79,15 +85,22 @@ module.exports = {
 
 				const context = this.context.get();
 
-				return context.worker.executeCommandInHostOS(
-					[
-						`tmp=$(mktemp)`,
-						`&&`, `cat`, `/mnt/boot/config.json`,
-						`|`, `jq`, `'.ntpServers="${ntpServer()}"'`, `>`, `$tmp`,
-						`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
-					].join(' '),
-					this.context.get().link,
+				test.comment(`Waiting for os-config-json service to be inactive...`);
+				return context.systemd.waitForServiceState(
+						'os-config-json.service',
+						'inactive',
+						context.link
 				).then(() => {
+					test.comment(`Setting ntpServers to ${ntpServer()} in config.json...`);
+					return context.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `cat`, `/mnt/boot/config.json`,
+							`|`, `jq`, `'.ntpServers="${ntpServer()}"'`, `>`, `$tmp`,
+							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
+						].join(' '),
+						this.context.get().link);
+				}).then(() => {
 					test.comment(`Waiting for balena-ntp-config service to be active...`);
 					return context.systemd.waitForServiceState(
 						'balena-ntp-config.service',
@@ -123,15 +136,21 @@ module.exports = {
 
 				const context = this.context.get();
 
-				test.comment(`Setting DNS nameservers to ${exampleDns} in config.json...`);
-				return context.worker.executeCommandInHostOS(
+				test.comment(`Waiting for os-config-json service to be inactive...`);
+				return context.systemd.waitForServiceState(
+						'os-config-json.service',
+						'inactive',
+						context.link
+				).then(() => {
+					test.comment(`Setting dnsServers to "${exampleDns} ${exampleDns}" in config.json...`);
+					return context.worker.executeCommandInHostOS(
 					[
 						`tmp=$(mktemp)`,
 						`&&`, `jq`, `'.dnsServers="${exampleDns} ${exampleDns}"'`, `/mnt/boot/config.json`,
 						`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
 					].join(' '),
-					context.link,
-				).then(() => {
+					context.link);
+				}).then(() => {
 					test.comment(`Waiting for dnsmasq to be active and using ${exampleDns}...`);
 					return this.context.get().utils.waitUntil(async () => {
 						return context.worker.executeCommandInHostOS(
@@ -140,13 +159,13 @@ module.exports = {
 								`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
 								`|`, `grep`, `-q`, `${exampleDns}`, `;`, `echo`, `$?`
 							].join(' '),
-							this.context.get().link,
+							context.link,
 						).then((exitCode) => {
 							return Promise.resolve(exitCode === '0');
 						});
 					}, false);
 				}).then(() => {
-					test.comment(`Setting dnsServers="null" in config.json...`);
+					test.comment(`Setting dnsServers to "null" in config.json...`);
 					return context.worker.executeCommandInHostOS(
 						[
 							`tmp=$(mktemp)`,
