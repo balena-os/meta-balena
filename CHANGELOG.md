@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.91.4
+## (2022-02-24)
+
+* openvpn: Remove dependency on timesync-http target [Alex Gonzalez]
+
 # v2.91.3
 ## (2022-02-24)
 

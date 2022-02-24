@@ -1,4 +1,40 @@
 - commits:
+    - subject: "openvpn: Remove dependency on timesync-http target"
+      hash: 13cf7c9fef0a6e0df6b042ba34ceaa7a0d005254
+      body: >
+        We want the VPN to start unconditionally even if the connectivity URL
+
+        is not reachable.
+
+
+        The rationale for adding the dependency in the first place was that
+
+        without an initial timesync certificate checks may fail. This can still
+
+        happen, but the VPN will retry continuously and eventually succeed once
+
+        the time is synched.
+
+
+        What happens now is that the VPN is delayed until the http sync, so if
+
+        the connectivity URL is blocked or unreachable, but the internet is
+
+        accessible, VPN will not even launch and no remote debugging is possible.
+
+
+        Fixes #2508
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.91.4
+  title: "'openvpn: Remove dependency on timesync-http target'"
+  date: 2022-02-24T20:29:51.915Z
+- commits:
     - subject: "tests/os: Wait for os-config-json service to be inactive"
       hash: 1a7eead77e63c72cc1418a0f87d6b540e7deaa80
       body: |
