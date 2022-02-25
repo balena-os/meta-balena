@@ -1,4 +1,33 @@
 - commits:
+    - subject: "resin-device-register: Regenerate VPN credentials on registration"
+      hash: e6ccbc74b35c900f99998599e61bf36795dd4419
+      body: |
+        Before registration the VPN credentials use the `apiKey`, once the
+        device is registered we need to regenerate the credentials to use the
+        `deviceApiKey` instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Wait for resin-device-register to start"
+      hash: 314047e72cb133dcd531df2e7b8c632024f78694
+      body: |
+        Unless the device has been registered, provisioning reports are not
+        sent to the fleet.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.91.6
+  title: "'Improve provisioning'"
+  date: 2022-02-25T09:14:39.101Z
+- commits:
     - subject: "suites/os: Add testcase for RPi device-tree"
       hash: 682d64ff8cd0290cd4788c332fbe021045299639
       body: |

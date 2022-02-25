@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.91.6
+## (2022-02-25)
+
+* resin-device-register: Regenerate VPN credentials on registration [Alex Gonzalez]
+* resin-init-flasher: Wait for resin-device-register to start [Alex Gonzalez]
+
 # v2.91.5
 ## (2022-02-24)
 
