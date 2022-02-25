@@ -10,6 +10,7 @@ const assert = require('assert');
 const fse = require('fs-extra');
 const { join } = require('path');
 const { homedir } = require('os');
+const Bluebird = require("bluebird");
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
@@ -64,10 +65,12 @@ module.exports = {
 	run: async function (test) {
 		// The worker class contains methods to interact with the DUT, such as flashing, or executing a command on the device
 		const Worker = this.require('common/worker');
+		const Balena = this.require("components/balena/sdk");
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
 		const BalenaOS = this.require('components/os/balenaos');
 		const utils = this.require('common/utils');
-		const worker = new Worker(this.suite.deviceType.slug, this.getLogger());
+		const worker = new Worker(this.suite.deviceType.slug, this.getLogger(), this.suite.options.workerUrl, this.suite.options.balena.organization, join(homedir(), 'id'));
+		const cloud = new Balena(this.suite.options.balena.apiUrl, this.getLogger());
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
@@ -103,9 +106,11 @@ module.exports = {
 
 		// The suite contex is an object that is shared across all tests. Setting something into the context makes it accessible by every test
 		this.suite.context.set({
+			cloud: cloud,
 			utils: utils,
 			systemd: systemd,
 			sshKeyPath: join(homedir(), 'id'),
+			sshKeyLabel: this.suite.options.id,
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
 			worker: worker,
 		});
@@ -128,6 +133,10 @@ module.exports = {
 			delete this.suite.options.balenaOS.network.wireless;
 		}
 
+
+		const keys = await this.context
+		.get()
+		.utils.createSSHKey(this.context.get().sshKeyPath);
 		// Create an instance of the balenOS object, containing information such as device type, and config.json options
 		this.suite.context.set({
 			os: new BalenaOS(
@@ -138,9 +147,7 @@ module.exports = {
 						uuid: this.suite.options.balenaOS.config.uuid,
 						os: {
 							sshKeys: [
-								await this.context
-									.get()
-									.utils.createSSHKey(this.context.get().sshKeyPath),
+								keys.pubKey
 							],
 						},
 						// Set an API endpoint for the HTTPS time sync service.
@@ -169,13 +176,17 @@ module.exports = {
 			.get()
 			.worker.network(this.suite.options.balenaOS.network);
 
+
+		this.suite.context.set({
+			workerContract: await this.context.get().worker.getContract()
+		})
 		// Unpack OS image .gz
 		await this.context.get().os.fetch();
 
 		// If this is a flasher image, and we are using qemu, unwrap
 		if (
 			this.suite.deviceType.data.storage.internal &&
-			process.env.WORKER_TYPE === `qemu`
+			this.context.get().workerContract.workerType === `qemu`
 		) {
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
@@ -209,6 +220,26 @@ module.exports = {
 			await enableSerialConsole(this.context.get().os.image.path);
 		}
 
+
+		this.log("Logging into balena with balenaSDK");
+		await this.context
+		  .get()
+		  .cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		await this.context
+		.get()
+		.cloud.balena.models.key.create(
+			this.context.get().sshKeyLabel,
+			keys.pubKey
+		);
+		this.suite.teardown.register(() => {
+			return Bluebird.resolve(
+				this.context
+				.get()
+				.cloud.removeSSHKey(this.context.get().sshKeyLabel)
+			);
+		});
+
+
 		// Configure OS image
 		await this.context.get().os.configure();
 
@@ -216,18 +247,26 @@ module.exports = {
 		await this.context.get().worker.off(); // Ensure DUT is off before starting tests
 		await this.context.get().worker.flash(this.context.get().os.image.path);
 		await this.context.get().worker.on();
+		
+		await this.context.get().worker.addSSHKey(this.context.get().sshKeyPath);
+
+		// create tunnels
+		this.log('Creating SSH tunnels to DUT');
+		await this.context.get().worker.createSSHTunnels(
+			this.context.get().link,
+		);
 
 		this.log('Waiting for device to be reachable');
-		assert.equal(
-			await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-					'cat /etc/hostname',
-					this.context.get().link,
-				),
-			this.context.get().link.split('.')[0],
-			'Device should be reachable',
-		);
+		await this.context.get().utils.waitUntil(async () => {
+			this.log("Trying to ssh into device");
+			let hostname = await this.context
+			.get()
+			.worker.executeCommandInHostOS(
+			  "cat /etc/hostname",
+			  this.context.get().link
+			)
+			return (hostname === this.context.get().link.split('.')[0])
+		}, true);
 
 		// Retrieving journalctl logs: register teardown after device is reachable
 		this.suite.teardown.register(async () => {

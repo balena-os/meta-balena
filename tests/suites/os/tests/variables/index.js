@@ -25,7 +25,7 @@ module.exports = {
 			.worker.pushContainerToDUT(ip, __dirname, 'variables');
 		const env = await this.context
 			.get()
-			.worker.executeCommandInContainer('env', 'variables', ip);
+			.worker.executeCommandInContainer('env', 'variables', this.context.get().link);
 
 		const result = {};
 		env.split('\n').forEach(element => {

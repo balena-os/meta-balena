@@ -35,7 +35,7 @@ module.exports = {
 			  .get()
 			  .worker.executeCommandInHostOS(
 				`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-				ip
+				this.context.get().link
 			  )
 			)
 			let status = health.reduce(function (result, element) {
@@ -53,7 +53,7 @@ module.exports = {
 		// cause the container healthcheck to fail
 		await this.context
 			.get()
-			.worker.executeCommandInContainer('rm /tmp/health', 'healthcheck', ip);
+			.worker.executeCommandInContainer('rm /tmp/health', 'healthcheck', this.context.get().link);
 
 		// wait for 5s before checking for health status to give
 		await delay(1000 * 5);
@@ -68,7 +68,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-						ip,
+						this.context.get().link,
 					),
 			);
 

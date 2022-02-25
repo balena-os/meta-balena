@@ -67,32 +67,17 @@ module.exports = {
 				// Rebooting the DUT
 				await this.context.get().worker.rebootDut(this.context.get().link);
 				test.comment(`Stopping capture...`);
-
-				let stopCapture = new Promise((resolve, reject) => {
-					const res = this.context.get().worker.capture('stop');
-					res.on('error', error => {
-						throw new Error(`Error stopping capture: ${error}`);
-					});
-
-					res.on('response', response => {
-						if (response.statusCode === 200) {
-							test.comment(`Capture stopped...`);
-							resolve();
-						}
-					});
-				});
-
-				await stopCapture;
+				await this.context.get().worker.capture('stop');
 
 				// captured frames are stored in /data/capture - we probably want a way to remove the need for a hard coded reference here
-				const captured = fs.readdirSync(`/data/capture`);
+				const captured = fs.readdirSync(`/tmp/capture`);
 
 				let pass = false;
 				test.comment(`Comparing captured images to reference image...`);
 				for (let image of captured.reverse()) {
 					const capturedHash = await new Promise((resolve, reject) => {
 						try {
-							const stream = fs.createReadStream(`/data/capture/` + image);
+							const stream = fs.createReadStream(`/tmp/capture/` + image);
 							const buffer = [];
 
 							stream.on('error', reject);
@@ -118,7 +103,7 @@ module.exports = {
 				}
 
 				test.comment(`Storing captured frames...`);
-				await this.archiver.add(this.id, `/data/capture`);
+				await this.archiver.add(this.id, `/tmp/capture`);
 				test.comment(`Frames stored`);
 
 				test.true(

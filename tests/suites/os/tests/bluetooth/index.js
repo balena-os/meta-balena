@@ -29,17 +29,16 @@ module.exports = {
 		{
 			title: 'Bluetooth scanning test',
 			run: async function(test) {
-				if(process.env.WORKER_TYPE === `qemu`){
+				if(this.context.get().workerContract.workerType === `qemu`){
 					test.pass(
 						'Qemu worker used - skipping bluetooth test',
 					);
 				} else {
 					// get the testbot bluetooth name
-					let btName = await exec('bluetoothctl show | grep Name');
+					let btName = await this.context.get().worker.executeCommandInWorker('bluetoothctl show | grep Name');
 					let btNameParsed = /(.*): (.*)/.exec(btName); // the bluetoothctl command returns "Name: <btname>", so extract the <btname here>
-
 					// make testbot bluetooth discoverable
-					await exec('bluetoothctl discoverable on');
+					await this.context.get().worker.executeCommandInWorker('bluetoothctl discoverable on');
 
 					// scan for bluetooth devices on DUT, we retry a couple of times
 					let scan = '';
