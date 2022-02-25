@@ -83,7 +83,7 @@ module.exports = {
       cli: new CLI(this.suite.options.balena.apiUrl, this.getLogger()),
       sshKeyPath: join(homedir(), "id"),
       utils: this.require("common/utils"),
-      worker: new Worker(this.suite.deviceType.slug, this.getLogger()),
+      worker: new Worker(this.suite.deviceType.slug, this.getLogger(), this.suite.options.workerUrl, this.suite.options.balena.organization, join(homedir(), 'id')),
     });
 
     // Network definitions - these are given to the testbot via the config sent via the config.js
@@ -156,13 +156,14 @@ module.exports = {
     })
 
     // create an ssh key, so we can ssh into DUT later
+    const keys = await this.context
+		.get()
+		.utils.createSSHKey(this.context.get().sshKeyPath);
     await this.context
       .get()
       .cloud.balena.models.key.create(
         this.context.get().balena.sshKey.label,
-        await this.context
-          .get()
-          .utils.createSSHKey(this.context.get().sshKeyPath)
+        keys.pubKey
       );
     this.suite.teardown.register(() => {
       return Bluebird.resolve(
@@ -189,13 +190,17 @@ module.exports = {
       ),
     });
 
-    // unpack OS
-    await this.context.get().os.fetch();
 
-    // If this is a flasher image, and we are using qemu, unwrap
+    this.suite.context.set({
+			workerContract: await this.context.get().worker.getContract()
+		})
+		// Unpack OS image .gz
+		await this.context.get().os.fetch();
+
+		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
 		if (
 			this.suite.deviceType.data.storage.internal &&
-			process.env.WORKER_TYPE === `qemu`
+			this.context.get().workerContract.workerType === `qemu`
 		) {
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
