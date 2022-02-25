@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.91.5
+## (2022-02-24)
+
+* suites/os: Add testcase for RPi device-tree [Alexandru Costache]
+
 # v2.91.4
 ## (2022-02-24)
 

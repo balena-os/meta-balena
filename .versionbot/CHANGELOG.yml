@@ -1,4 +1,26 @@
 - commits:
+    - subject: "suites/os: Add testcase for RPi device-tree"
+      hash: 682d64ff8cd0290cd4788c332fbe021045299639
+      body: |
+        Upstream kernel added a new fkms overlay for
+        the Pi4 and CM4 and switched to using it
+        from overlay-map, however, we were not aware
+        of this.
+
+        Let's add a vcdbg testcase to warn in case the RPi
+        firmware fails to load any overlay or dtb, and set
+        gpu_mem to 64 so that vcdbg can run.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.91.5
+  title: "'suites/os: Add testcase for RPi device-tree'"
+  date: 2022-02-24T22:45:17.483Z
+- commits:
     - subject: "openvpn: Remove dependency on timesync-http target"
       hash: 13cf7c9fef0a6e0df6b042ba34ceaa7a0d005254
       body: >
