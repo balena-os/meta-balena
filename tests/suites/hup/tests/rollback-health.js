@@ -27,8 +27,8 @@ module.exports = {
 					.hup.doHUP(
 						this,
 						test,
-						'image',
-						this.context.get().hup.payload,
+						'local',
+						this.context.get().hupOs.image.path,
 						this.context.get().link,
 					);
 
@@ -132,8 +132,8 @@ module.exports = {
 					.hup.doHUP(
 						this,
 						test,
-						'image',
-						this.context.get().hup.payload,
+						'local',
+						this.context.get().hupOs.image.path,
 						this.context.get().link,
 					);
 

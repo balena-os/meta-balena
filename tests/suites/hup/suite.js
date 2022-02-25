@@ -8,9 +8,9 @@
 
 const fs = require('fs');
 const fse = require('fs-extra');
-const { join } = require('path');
+const { join, basename } = require('path');
 const { homedir } = require('os');
-const Docker = require('dockerode');
+const Bluebird = require("bluebird");
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
@@ -81,53 +81,25 @@ const enableSerialConsole = async (imagePath) => {
 	}
 };
 
-// Starts registry, uploads target image to registry
-const runRegistry = async (that, test, seedWithImage) => {
-	const docker = new Docker();
-	const ip = await that.context.get().worker.ip(that.context.get().link);
-
-	test.comment('Starting registry...');
-	await that.context
-		.get()
-		.worker.pushContainerToDUT(
-			ip,
-			require('path').join(__dirname, 'assets'),
-			'registry',
-		);
-
-	test.comment('Loading hostapp image into registry...');
-	const ref = `${ip}:5000/hostapp`;
-
-	await exec(
-		`skopeo copy --dest-tls-verify=false docker-archive://${seedWithImage} docker://${ref}`,
-	);
-	const hostappRef = await exec(
-		`skopeo inspect --tls-verify=false docker://${ref}`,
-	).then((out) => {
-		const json = JSON.parse(out);
-		// we use ${ip}:5000/hostapp in the suite to push the hostapp to the
-		// registry, but `hostappRef` is what we tell the DUT to HUP to.
-		// Since balenaEngine on the DUT will also require special setup to allow
-		// pulling from an insecure registry, we pass along a localhost ref
-		// which docker accepts by default
-		//
-		// TODO the alternative would be to push the image directly into the daemon using:
-		// skopeo copy docker-archive://tarball docker-daemon://${ip}:2376/hostapp
-		// Figure out if the DUT docker daemon is exposed...
-		return `localhost:5000/hostapp@${json.Digest}`;
-	});
-
-	test.comment(`Registry upload complete: ${ref}`);
-
-	that.suite.context.set({
-		hup: {
-			payload: hostappRef,
-		},
-	});
-};
-
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, hostapp, target) => {
+	test.comment('Sending image to DUT');
+	let hupOsName = basename(hostapp);
+	console.log(hupOsName)
+
+	// send hostapp to DUT
+	await that.context.get().worker.sendFile(hostapp, `/mnt/data/resin-data/`, target);
+	const hostappPath = `/mnt/data/resin-data/${hupOsName}`;
+	console.log(hostappPath);
+
+	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
+	const hupLoadTmp = "/mnt/data/resin-data/tmp";
+
+	await that.context.get().worker.executeCommandInHostOS(
+		`grep -q "LOADTMP" "$(command -v hostapp-update)" || { mkdir -p "${hupLoadTmp}" "${balenaHostTmpPath}" ; mount --bind "${hupLoadTmp}" "${balenaHostTmpPath}" ; }`,
+		target,
+	);
+
 	test.comment(`Starting HUP`);
 
 	let hupLog;
@@ -137,16 +109,24 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 				(await that.context
 					.get()
 					.worker.executeCommandInHostOS(
-						`[[ -f ${hostapp} ]] && echo exists`,
+						`[[ -f ${hostappPath} ]] && echo exists`,
 						target,
 					)) !== 'exists'
 			) {
-				throw new Error(`Target image doesn't exists at location "${hostapp}"`);
+				throw new Error(`Target image doesn't exists at location "${hostappPath}"`);
 			}
-			test.comment(`Running: hostapp-update -f ${hostapp}`);
+			test.comment(`Running: hostapp-update -f ${hostappPath}`);
 			hupLog = await that.context
 				.get()
-				.worker.executeCommandInHostOS(`hostapp-update -f ${hostapp}`, target);
+				.worker.executeCommandInHostOS(`hostapp-update -f ${hostappPath}`, target);
+
+			await that.context
+				.get()
+				.worker.executeCommandInHostOS(`rm ${hostappPath}`, target);
+
+			await that.context
+				.get()
+				.worker.executeCommandInHostOS(`umount /mnt/sysroot/inactive/balena/tmp`, target);
 			break;
 
 		case 'image':
@@ -179,6 +159,14 @@ const initDUT = async (that, test, target) => {
 	await that.context.get().worker.flash(that.context.get().os.image.path);
 	await that.context.get().worker.on();
 
+	await that.context.get().worker.addSSHKey(that.context.get().sshKeyPath);
+
+	// create tunnels
+	console.log('Creating SSH tunnels to DUT');
+	await that.context.get().worker.createSSHTunnels(
+		that.context.get().link,
+	);
+
 	test.comment(`Waiting for DUT to be reachable`);
 	await that.context.get().utils.waitUntil(async () => {
 		return (
@@ -191,9 +179,6 @@ const initDUT = async (that, test, target) => {
 		);
 	}, true);
 	test.comment(`DUT flashed`);
-
-	// Starts the registry and pushes the hostapp
-	await runRegistry(that, test, that.context.get().hupOs.image.path);
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
@@ -221,9 +206,12 @@ module.exports = {
 			utils: this.require('common/utils'),
 			sdk: new Balena(this.suite.options.balena.apiUrl, this.getLogger()),
 			sshKeyPath: join(homedir(), 'id'),
+			sshKeyLabel: this.suite.options.id,
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
-			worker: new Worker(this.suite.deviceType.slug, this.getLogger()),
+			worker: new Worker(this.suite.deviceType.slug, this.getLogger(), this.suite.options.workerUrl, this.suite.options.balena.organization, join(homedir(), 'id')),
 		});
+
+		console.log(this.suite.options)
 
 		// Network definitions
 		if (this.suite.options.balenaOS.network.wired === true) {
@@ -248,7 +236,6 @@ module.exports = {
 				checkUnderVoltage: checkUnderVoltage,
 				doHUP: doHUP,
 				initDUT: initDUT,
-				runRegistry: runRegistry,
 			},
 		});
 
@@ -260,10 +247,36 @@ module.exports = {
 				this.suite.deviceType.slug,
 			);
 
+
+		const keys = await this.context
+		.get()
+		.utils.createSSHKey(this.context.get().sshKeyPath);
+		this.log("Logging into balena with balenaSDK");
+		await this.context
+			.get()
+			.sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		await this.context
+		.get()
+		.sdk.balena.models.key.create(
+			this.context.get().sshKeyLabel,
+			keys.pubKey
+		);
+		this.suite.teardown.register(() => {
+			return Bluebird.resolve(
+				this.context
+				.get()
+				.sdk.removeSSHKey(this.context.get().sshKeyLabel)
+			);
+		});
+
+
+		this.suite.context.set({
+			workerContract: await this.context.get().worker.getContract()
+		})
 		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
 		if (
 			this.suite.deviceType.data.storage.internal &&
-			process.env.WORKER_TYPE === `qemu`
+			this.context.get().workerContract.workerType === `qemu`
 		) {
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
@@ -288,9 +301,7 @@ module.exports = {
 						uuid: this.suite.options.balenaOS.config.uuid,
 						os: {
 							sshKeys: [
-								await this.context
-									.get()
-									.utils.createSSHKey(this.context.get().sshKeyPath),
+								keys.pubKey
 							],
 						},
 						// persistentLogging is managed by the supervisor and only read at first boot
