@@ -11,9 +11,11 @@ inherit gnomebase gettext systemd vala gobject-introspection bash-completion
 
 DEPENDS = "glib-2.0 libgudev dbus-glib intltool-native libxslt-native"
 
-SRC_URI = "http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz"
-SRC_URI[md5sum] = "3a4a94376ca6e8dbfb964394022f7a0e"
-SRC_URI[sha256sum] = "5fb5553aecd6eb9d6d8ecd130a24f3461e5f93c5f91a0e4ae0508b5228e8b0be"
+SRC_URI = " \
+    http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
+    file://core-switch-bash-shell-scripts-to-use-bin-sh-for-use.patch \
+"
+SRC_URI[sha256sum] = "11fb970f63e2da88df4b6d8759e4ee649944c515244b979bf50a7a6df1d7f199"
 
 
 S = "${WORKDIR}/ModemManager-${PV}"
