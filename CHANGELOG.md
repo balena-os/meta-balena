@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.92.0
+## (2022-02-25)
+
+* Update ModemManager to v1.18.4 [Zahari Petkov]
+
 # v2.91.6
 ## (2022-02-25)
 

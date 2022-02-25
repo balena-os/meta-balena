@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update ModemManager to v1.18.4
+      hash: ac680ef2005ae9c0f263e6fab7755bf29dc37977
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update ModemManager to v1.18.4
+        changelog-entry: Update ModemManager to v1.18.4
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.92.0
+  title: "'modemmanager: Update to v1.18.4'"
+  date: 2022-02-25T18:11:37.797Z
+- commits:
     - subject: "resin-device-register: Regenerate VPN credentials on registration"
       hash: e6ccbc74b35c900f99998599e61bf36795dd4419
       body: |
