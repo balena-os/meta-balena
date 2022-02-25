@@ -1,53 +1,49 @@
 module.exports = [{
-	deviceType: `raspberrypi3`,
+	deviceType: process.env.DEVICE_TYPE,
 	suite: `${__dirname}/../suites/os`,
 	config: {
 		networkWired: false,
-		networkWireless: true,
-		interactiveTests: false, // redundant
-		balenaApiKey: process.env.BALENA_CLOUD_API_KEY,
+		networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
+		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
-		organization: process.env.BALENA_CLOUD_ORG
+		organization: process.env.BALENACLOUD_ORG
 	},
 	image: `${__dirname}/balena.img.gz`,
-	workers: {
-		balenaApplication: process.env.BALENA_CLOUD_APP_NAME,
-		apiKey: process.env.BALENA_CLOUD_API_KEY,
+	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://localhost:80'] : {
+		balenaApplication: process.env.BALENACLOUD_APP_NAME,
+		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
 },
 {
-	deviceType: `raspberrypi3`,
+	deviceType: process.env.DEVICE_TYPE,
 	suite: `${__dirname}/../suites/hup`,
 	config: {
 		networkWired: false,
-		networkWireless: true,
+		networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
 		downloadVersion: 'latest',
-		interactiveTests: false, // redundant
-		balenaApiKey: process.env.BALENA_CLOUD_API_KEY,
+		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
-		organization: process.env.BALENA_CLOUD_ORG
+		organization: process.env.BALENACLOUD_ORG
 	},
 	image: `${__dirname}/balena-image.docker`,
-	workers: {
-		balenaApplication: process.env.BALENA_CLOUD_APP_NAME,
-		apiKey: process.env.BALENA_CLOUD_API_KEY,
+	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://localhost:80'] : {
+		balenaApplication: process.env.BALENACLOUD_APP_NAME,
+		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
 },
 {
-	deviceType: 'raspberrypi3',
+	deviceType: process.env.DEVICE_TYPE,
 	suite: `${__dirname}/../suites/cloud`,
 	config: {
 		networkWired: false,
-		networkWireless: true,
-		downloadType: 'local',
-		interactiveTests: false,
-		balenaApiKey: process.env.BALENA_CLOUD_API_KEY,
+		networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
+		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
-		organization: process.env.BALENA_CLOUD_ORG
+		organization: process.env.BALENACLOUD_ORG
 	},
 	image: `${__dirname}/balena.img.gz`,
-	workers: {
-		balenaApplication: process.env.BALENA_CLOUD_APP_NAME,
-		apiKey: process.env.BALENA_CLOUD_API_KEY,
+	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://localhost:80'] : {
+		balenaApplication: process.env.BALENACLOUD_APP_NAME,
+		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
 }];
