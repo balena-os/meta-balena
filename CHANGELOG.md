@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.93.1
+## (2022-02-28)
+
+* tests/cloud: Use deviceID returned from pre-registration [Kyle Harding]
+
 # v2.93.0
 ## (2022-02-26)
 
