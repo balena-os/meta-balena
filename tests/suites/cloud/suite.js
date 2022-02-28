@@ -77,7 +77,6 @@ module.exports = {
       cloud: new Balena(this.suite.options.balena.apiUrl, this.getLogger()),
       balena: {
         name: this.suite.options.id,
-        application: `${this.suite.options.balena.organization}/${this.suite.options.id}`,
         organization: this.suite.options.balena.organization,
         sshKey: { label: this.suite.options.id },
       },
@@ -113,10 +112,17 @@ module.exports = {
 
     // create a balena application
     this.log("Creating application in cloud...");
-    await this.context.get().cloud.balena.models.application.create({
-      name: this.suite.options.id,
+    const app = await this.context.get().cloud.balena.models.application.create({
+      name: this.context.get().balena.name,
       deviceType: this.suite.deviceType.slug,
       organization: this.context.get().balena.organization,
+    });
+
+    this.suite.context.set({
+      balena: {
+        name: app.app_name,
+        application: app.slug,
+      }
     });
 
     // remove application when tests are done
@@ -222,7 +228,8 @@ module.exports = {
     await this.context.get().os.readOsRelease();
 
     // get config.json for application
-    let config = await this.context
+    this.log("Getting application config.json...");
+    const config = await this.context
       .get()
       .cloud.balena.models.os.getConfig(this.context.get().balena.application, {
         version: this.context.get().os.contract.version,
@@ -231,20 +238,17 @@ module.exports = {
     config.uuid = this.context.get().balena.uuid;
 
     //register the device with the application, add the api key to the config.json
-    let deviceApiKey = await this.context
+    this.log("Pre-registering a new device...");
+    const deviceRegInfo = await this.context
       .get()
       .cloud.balena.models.device.register(
         this.context.get().balena.application,
         this.context.get().balena.uuid
       );
-    config.deviceApiKey = deviceApiKey.api_key;
-
-    // get newly registered device id, add to config.json
-    await Bluebird.delay(1000 * 10);
-    let devId = await this.context
-      .get()
-      .cloud.balena.models.device.get(this.context.get().balena.uuid);
-    config.deviceId = devId.id;
+    
+    // Add registered device's id and api key to config.json
+    config.deviceApiKey = deviceRegInfo.api_key;
+    config.deviceId = deviceRegInfo.id;
     config.persistentLogging = true;
     config.developmentMode= true;
 
