@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.93.0
+## (2022-02-26)
+
+* resin-device-register: Use supervisor version label instead of tag [Alex Gonzalez]
+* balena-supervisor: Rename repository/tag to fleet/version [Alex Gonzalez]
+* docker-disk: entry.sh: Rename repository/tag to fleet/version [Alex Gonzalez]
+
 # v2.92.0
 ## (2022-02-25)
 

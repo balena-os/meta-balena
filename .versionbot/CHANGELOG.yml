@@ -1,4 +1,41 @@
 - commits:
+    - subject: "resin-device-register: Use supervisor version label instead of tag"
+      hash: 8219b38be32cfa5b3674d7d96cf6b81b31e95328
+      body: >
+        This is just a name change that reflects the wider change that the
+
+        supervisor is no longer fetched from dockerhub but from Balena's registry.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-supervisor: Rename repository/tag to fleet/version"
+      hash: 2d284b2015e3d7f6c6a37a63ce49f6f89da7696d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docker-disk: entry.sh: Rename repository/tag to fleet/version"
+      hash: c308fbc1f040a708d44fda20dc2e81d75b07b6d3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.93.0
+  title: "'Rename repository/tag to fleet/version'"
+  date: 2022-02-26T15:34:40.619Z
+- commits:
     - subject: Update ModemManager to v1.18.4
       hash: ac680ef2005ae9c0f263e6fab7755bf29dc37977
       body: ""
