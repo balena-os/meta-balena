@@ -52,6 +52,10 @@
 				"os-sshkeys": {
 					"description": "SSH public keys configuration",
 					"configuration": "os.sshKeys"
+				},
+				"prepare-openvpn": {
+					"description": "Setup VPN authentication",
+					"configuration": "apiKey"
 				}
 			}
 		}
