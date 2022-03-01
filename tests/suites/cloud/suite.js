@@ -313,20 +313,20 @@ module.exports = {
       return hostname === this.context.get().balena.uuid.slice(0, 7)
     }, false);
 
-    this.log("Unpinning");
-    await this.context.get().utils.waitUntil(async () => {
-      this.log(`Unpinning device from release`)
-      await this.context
+    this.log(`Unpinning device from release`)
+    await this.context
       .get()
       .cloud.balena.models.device.trackApplicationRelease(
         this.context.get().balena.uuid
-      );
+    );
 
-      let unpinned = await this.context
-      .get()
-      .cloud.balena.models.device.isTrackingApplicationRelease(this.context.get().balena.uuid)
-
-      return unpinned
+    await this.context.get().utils.waitUntil(async () => {
+      console.log('Checking all services are running latest commit...')
+      return await this.context
+        .get()
+        .cloud.balena.models.device.isTrackingApplicationRelease(
+          this.context.get().balena.uuid
+        )
     }, false);
 
     // wait until the service is running before continuing
