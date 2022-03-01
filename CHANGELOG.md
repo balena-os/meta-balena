@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.93.2
+## (2022-03-01)
+
+* prepare-openvpn: Make configurable [Alex Gonzalez]
+
 # v2.93.1
 ## (2022-02-28)
 

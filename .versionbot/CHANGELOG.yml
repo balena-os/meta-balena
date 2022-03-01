@@ -1,4 +1,25 @@
 - commits:
+    - subject: "prepare-openvpn: Make configurable"
+      hash: a475af4c69a7fafca28009286ddba7e4f3015ae4
+      body: |
+        The prepare-openvpn service needs to be restarted to regenerate the
+        VPN keys when provisioning is finished and the `apiKey` is removed.
+
+        Note that flasher images make changes to `/mnt/boottmp/config.json` so
+        we still need to manually kick `prepare-openvpn` in
+        `resin-device-register`, which is preferable to modifying services to
+        watch multiple paths.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.93.2
+  title: "'Make  restart on  change'"
+  date: 2022-03-01T16:49:06.172Z
+- commits:
     - subject: "tests/cloud: Use deviceID returned from pre-registration"
       hash: 7fdddb9a886bef14442a89f4440528a513239645
       body: |
