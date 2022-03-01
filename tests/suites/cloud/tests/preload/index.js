@@ -1,29 +1,26 @@
 "use strict";
-const Bluebird = require("bluebird");
 module.exports = {
   title: "Image preload test",
   run: async function (test) {
     // make sure DUT is online
-    await this.context.get().utils.waitUntil(() => {
-      return this.context
-        .get()
-        .cloud.balena.models.device.isOnline(this.context.get().balena.uuid);
+    await this.utils.waitUntil(() => {
+      return this.cloud.balena.models.device.isOnline(this.balena.uuid);
     }, false);
 
     // wait until the service is running
-    await this.context.get().cloud.waitUntilServicesRunning(
-      this.context.get().balena.uuid, 
+    await this.cloud.waitUntilServicesRunning(
+      this.balena.uuid, 
       [`main`], 
-      this.context.get().balena.initialCommit
+      this.balena.initialCommit
     )
 
-    test.ok(true, `Preload commit hash should be ${this.context.get().balena.initialCommit}`);
+    test.ok(true, `Preload commit hash should be ${this.balena.initialCommit}`);
 
     // give it some time to be sure no release is downloaded
-    await Bluebird.delay(1000*60)
+    await new Promise(resolve => setTimeout(resolve, 1000*60));
 
-    let downloadedLog = await this.context.get().cloud.checkLogsContain(
-      this.context.get().balena.uuid, 
+    let downloadedLog = await this.cloud.checkLogsContain(
+      this.balena.uuid, 
       `Downloading`, 
       `Supervisor starting`
     );

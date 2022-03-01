@@ -4,8 +4,8 @@ const exec = util.promisify(require('child_process').exec);
 
 const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
   test.comment(`Waiting for device: ${uuid} to run services: ${services} at commit: ${commit}`);
-  await that.context.get().utils.waitUntil(async () => {
-    let deviceServices = await that.context.get().cloud.balena.models.device.getWithServiceDetails(
+  await that.utils.waitUntil(async () => {
+    let deviceServices = await that.cloud.balena.models.device.getWithServiceDetails(
       uuid
       );
     let running = false
@@ -23,34 +23,32 @@ module.exports = {
       title: "Provisioning without deltas",
       run: async function (test) {
         test.comment(`Disabling deltas`);
-        await this.context
-          .get()
-          .cloud.balena.models.device.configVar.set(
-            this.context.get().balena.uuid,
+        await this.cloud.balena.models.device.configVar.set(
+            this.balena.uuid,
             "BALENA_SUPERVISOR_DELTA",
             0
           );
         
         // add a comment to the end of the server.js file, to trigger a delta when pushing
-        await exec(`echo "//comment" >> ${this.context.get().appPath}/server.js`);
+        await exec(`echo "//comment" >> ${this.appPath}/server.js`);
         test.comment(`Pushing release...`);
 
-        let secondCommit = await this.context.get().cloud.pushReleaseToApp(
-          this.context.get().balena.application, 
-          `${this.context.get().appPath}`
+        let secondCommit = await this.cloud.pushReleaseToApp(
+          this.balena.application, 
+          `${this.appPath}`
         );
 
         await waitUntilServicesRunning(
           this,
-          this.context.get().balena.uuid, 
+          this.balena.uuid, 
           [`main`], 
           secondCommit,
           test
         )
 
         // device should have downloaded application without mentioning that deltas are being used
-        let usedDeltas = await this.context.get().cloud.checkLogsContain(
-          this.context.get().balena.uuid, 
+        let usedDeltas = await this.cloud.checkLogsContain(
+          this.balena.uuid, 
           `Downloading delta for image`, 
           `Applied configuration change {"SUPERVISOR_DELTA":"0"}`
         );
@@ -62,10 +60,8 @@ module.exports = {
         );
         
         // re-enable deltas to save time later
-        await this.context
-        .get()
-        .cloud.balena.models.device.configVar.set(
-          this.context.get().balena.uuid,
+        await this.cloud.balena.models.device.configVar.set(
+          this.balena.uuid,
           "BALENA_SUPERVISOR_DELTA",
           1
         );
@@ -74,33 +70,31 @@ module.exports = {
     {
       title: "Override lock test",
       run: async function (test) {
-        let firstCommit = await this.context.get().cloud.balena.models.application.getTargetReleaseHash(
-          this.context.get().balena.application
+        let firstCommit = await this.cloud.balena.models.application.getTargetReleaseHash(
+          this.balena.application
         )
 
         // create a lockfile
-        let createLockfile = await this.context.get().cloud.executeCommandInContainer(
+        let createLockfile = await this.cloud.executeCommandInContainer(
           `bash -c '(flock -x -n 200)200>/tmp/balena/updates.lock'`, 
           `main`,
-          this.context.get().balena.uuid)
+          this.balena.uuid)
 
         // push release to application
-        await exec(`echo "//comment" >> ${this.context.get().appPath}/server.js`);
+        await exec(`echo "//comment" >> ${this.appPath}/server.js`);
         test.comment(`Pushing release...`);
-        let secondCommit = await this.context.get().cloud.pushReleaseToApp(
-          this.context.get().balena.application, 
-          `${this.context.get().appPath}` // push original release to application (node hello world)
+        let secondCommit = await this.cloud.pushReleaseToApp(
+          this.balena.application, 
+          `${this.appPath}` // push original release to application (node hello world)
         );
 
         // check original application is downloaded - shouldn't be installed
-        await this.context.get().utils.waitUntil(async () => {
+        await this.utils.waitUntil(async () => {
           test.comment(
             "Checking if release is downloaded, but not installed..."
           );
-          let services = await this.context
-            .get()
-            .cloud.balena.models.device.getWithServiceDetails(
-              this.context.get().balena.uuid
+          let services = await this.cloud.balena.models.device.getWithServiceDetails(
+              this.balena.uuid
             );
           let downloaded = false;
           let originalRunning = false;
@@ -128,9 +122,9 @@ module.exports = {
         );
 
         let updatesLocked = false;
-        await this.context.get().utils.waitUntil(async () => {
-          updatesLocked = await this.context.get().cloud.checkLogsContain(
-            this.context.get().balena.uuid, 
+        await this.utils.waitUntil(async () => {
+          updatesLocked = await this.cloud.checkLogsContain(
+            this.balena.uuid, 
             `Updates are locked`
           );
 
@@ -140,17 +134,15 @@ module.exports = {
         test.ok(updatesLocked, `Update lock message should appear in logs`)
 
         // enable lock override
-        await this.context
-          .get()
-          .cloud.balena.models.device.configVar.set(
-            this.context.get().balena.uuid,
+        await this.cloud.balena.models.device.configVar.set(
+            this.balena.uuid,
             "BALENA_SUPERVISOR_OVERRIDE_LOCK",
             1
           );
 
         await waitUntilServicesRunning(
           this,
-          this.context.get().balena.uuid, 
+          this.balena.uuid, 
           [`main`], 
           secondCommit,
           test
@@ -162,10 +154,10 @@ module.exports = {
         );
 
         // remove lockfile
-        let removeLockfile = await this.context.get().cloud.executeCommandInContainer(
+        let removeLockfile = await this.cloud.executeCommandInContainer(
           `rm /tmp/balena/updates.lock`, 
           `main`,
-          this.context.get().balena.uuid)
+          this.balena.uuid)
       },
     },
   ],
