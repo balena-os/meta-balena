@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/cloud: Set track latest once, then loop to confirm"
+      hash: a710ecb395c5a2c62adda66d1c9bc939090359df
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.93.2
+  title: "'tests/cloud: Use the device API key when pre-registered'"
+  date: 2022-03-01T13:35:59.055Z
+- commits:
     - subject: "tests/cloud: Use deviceID returned from pre-registration"
       hash: 7fdddb9a886bef14442a89f4440528a513239645
       body: |

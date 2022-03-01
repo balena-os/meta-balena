@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.93.2
+## (2022-03-01)
+
+* tests/cloud: Set track latest once, then loop to confirm [Kyle Harding]
+
 # v2.93.1
 ## (2022-02-28)
 
