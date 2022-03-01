@@ -10,15 +10,15 @@ const fs = require('fs');
 const fse = require('fs-extra');
 const { join, basename } = require('path');
 const { homedir } = require('os');
-const Bluebird = require("bluebird");
+const util = require('util');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
-const pipeline = require('bluebird').promisify(stream.pipeline);
+const pipeline = util.promisify(stream.pipeline);
 
 // required to use skopeo for loading the image
-const exec = require('bluebird').promisify(require('child_process').exec);
+const exec = util.promisify(require('child_process').exec);
 
 // copied from the SV
 // https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
@@ -40,11 +40,9 @@ const supportsBootConfig = (deviceType) => {
 const checkUnderVoltage = async (that, test) => {
 	test.comment(`checking for under-voltage reports in kernel logs...`);
 	let result = '';
-	result = await that.context
-			.get()
-			.worker.executeCommandInHostOS(
+	result = await that.worker.executeCommandInHostOS(
 				`dmesg | grep -q "Under-voltage detected" ; echo $?`,
-				that.context.get().link,
+				that.link,
 			);
 
 	if (result.includes('0')) {
@@ -57,7 +55,7 @@ const checkUnderVoltage = async (that, test) => {
 
 const enableSerialConsole = async (imagePath) => {
 	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
-		return require('bluebird')
+		return util
 			.promisify(_fs.readFile)('/config.txt')
 			.catch((err) => {
 				return undefined;
@@ -73,7 +71,7 @@ const enableSerialConsole = async (imagePath) => {
 
 			// delete any existing instances before appending to the file
 			const newConfig = bootConfig.toString().replace(regex, '');
-			await require('bluebird').promisify(_fs.writeFile)(
+			await util.promisify(_fs.writeFile)(
 				'/config.txt',
 				newConfig.concat(`\n\n${value}\n\n`),
 			);
@@ -88,14 +86,14 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 	console.log(hupOsName)
 
 	// send hostapp to DUT
-	await that.context.get().worker.sendFile(hostapp, `/mnt/data/resin-data/`, target);
+	await that.worker.sendFile(hostapp, `/mnt/data/resin-data/`, target);
 	const hostappPath = `/mnt/data/resin-data/${hupOsName}`;
 	console.log(hostappPath);
 
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
 	const hupLoadTmp = "/mnt/data/resin-data/tmp";
 
-	await that.context.get().worker.executeCommandInHostOS(
+	await that.worker.executeCommandInHostOS(
 		`grep -q "LOADTMP" "$(command -v hostapp-update)" || { mkdir -p "${hupLoadTmp}" "${balenaHostTmpPath}" ; mount --bind "${hupLoadTmp}" "${balenaHostTmpPath}" ; }`,
 		target,
 	);
@@ -106,9 +104,7 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 	switch (mode) {
 		case 'local':
 			if (
-				(await that.context
-					.get()
-					.worker.executeCommandInHostOS(
+				(await that.worker.executeCommandInHostOS(
 						`[[ -f ${hostappPath} ]] && echo exists`,
 						target,
 					)) !== 'exists'
@@ -116,24 +112,16 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 				throw new Error(`Target image doesn't exists at location "${hostappPath}"`);
 			}
 			test.comment(`Running: hostapp-update -f ${hostappPath}`);
-			hupLog = await that.context
-				.get()
-				.worker.executeCommandInHostOS(`hostapp-update -f ${hostappPath}`, target);
+			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -f ${hostappPath}`, target);
 
-			await that.context
-				.get()
-				.worker.executeCommandInHostOS(`rm ${hostappPath}`, target);
+			await that.worker.executeCommandInHostOS(`rm ${hostappPath}`, target);
 
-			await that.context
-				.get()
-				.worker.executeCommandInHostOS(`umount /mnt/sysroot/inactive/balena/tmp`, target);
+			await that.worker.executeCommandInHostOS(`umount /mnt/sysroot/inactive/balena/tmp`, target);
 			break;
 
 		case 'image':
 			test.comment(`Running: hostapp-update -i ${hostapp}`);
-			hupLog = await that.context
-				.get()
-				.worker.executeCommandInHostOS(`hostapp-update -i ${hostapp}`, target);
+			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -i ${hostapp}`, target);
 			break;
 
 		default:
@@ -151,28 +139,26 @@ const initDUT = async (that, test, target) => {
 	test.comment(`Initializing DUT for HUP test`);
 
 	if (supportsBootConfig(that.suite.deviceType.slug)) {
-		await enableSerialConsole(that.context.get().os.image.path);
+		await enableSerialConsole(that.os.image.path);
 	}
 
 	test.comment(`Flashing DUT`);
-	await that.context.get().worker.off();
-	await that.context.get().worker.flash(that.context.get().os.image.path);
-	await that.context.get().worker.on();
+	await that.worker.off();
+	await that.worker.flash(that.os.image.path);
+	await that.worker.on();
 
-	await that.context.get().worker.addSSHKey(that.context.get().sshKeyPath);
+	await that.worker.addSSHKey(that.sshKeyPath);
 
 	// create tunnels
 	console.log('Creating SSH tunnels to DUT');
-	await that.context.get().worker.createSSHTunnels(
-		that.context.get().link,
+	await that.worker.createSSHTunnels(
+		that.link,
 	);
 
 	test.comment(`Waiting for DUT to be reachable`);
-	await that.context.get().utils.waitUntil(async () => {
+	await that.utils.waitUntil(async () => {
 		return (
-			(await that.context
-				.get()
-				.worker.executeCommandInHostOS(
+			(await that.worker.executeCommandInHostOS(
 					'[[ -f /etc/hostname ]] && echo pass || echo fail',
 					target,
 				)) === 'pass'
@@ -182,11 +168,9 @@ const initDUT = async (that, test, target) => {
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
-		await that.context
-			.get()
-			.worker.archiveLogs(
+		await that.worker.archiveLogs(
 				that.id,
-				that.context.get().link,
+				that.link,
 				"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
 			);
 	});
@@ -208,7 +192,12 @@ module.exports = {
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
-			worker: new Worker(this.suite.deviceType.slug, this.getLogger(), this.suite.options.workerUrl, this.suite.options.balena.organization, join(homedir(), 'id')),
+			worker: new Worker(this.suite.deviceType.slug, 
+				this.getLogger(), 
+				this.suite.options.workerUrl, 
+				this.suite.options.balena.organization, 
+				join(homedir(), 'id')
+			),
 		});
 
 		console.log(this.suite.options)
@@ -240,43 +229,33 @@ module.exports = {
 		});
 
 		// Downloads the balenaOS image we hup from
-		let path = await this.context
-			.get()
-			.sdk.fetchOS(
+		let path = await this.sdk.fetchOS(
 				this.suite.options.balenaOS.download.version,
 				this.suite.deviceType.slug,
 			);
 
 
-		const keys = await this.context
-		.get()
-		.utils.createSSHKey(this.context.get().sshKeyPath);
+		const keys = await this.utils.createSSHKey(this.sshKeyPath);
 		this.log("Logging into balena with balenaSDK");
-		await this.context
-			.get()
-			.sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-		await this.context
-		.get()
-		.sdk.balena.models.key.create(
-			this.context.get().sshKeyLabel,
+		await this.sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		await this.sdk.balena.models.key.create(
+			this.sshKeyLabel,
 			keys.pubKey
 		);
 		this.suite.teardown.register(() => {
-			return Bluebird.resolve(
-				this.context
-				.get()
-				.sdk.removeSSHKey(this.context.get().sshKeyLabel)
+			return Promise.resolve(
+				this.sdk.removeSSHKey(this.sshKeyLabel)
 			);
 		});
 
 
 		this.suite.context.set({
-			workerContract: await this.context.get().worker.getContract()
+			workerContract: await this.worker.getContract()
 		})
 		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
 		if (
 			this.suite.deviceType.data.storage.internal &&
-			this.context.get().workerContract.workerType === `qemu`
+			this.workerContract.workerType === `qemu`
 		) {
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
@@ -317,25 +296,21 @@ module.exports = {
 		});
 		this.suite.teardown.register(() => {
 			this.log('Worker teardown');
-			return this.context.get().worker.teardown();
+			return this.worker.teardown();
 		});
 
 		this.log('Setting up worker');
-		await this.context
-			.get()
-			.worker.network(this.suite.options.balenaOS.network);
+		await this.worker.network(this.suite.options.balenaOS.network);
 
 		// Unpack both base and target OS images
-		await this.context.get().os.fetch();
-		await this.context.get().hupOs.fetch();
+		await this.os.fetch();
+		await this.hupOs.fetch();
 		// configure the image
-		await this.context.get().os.configure();
+		await this.os.configure();
 
 		// Retrieving journalctl logs
 		this.suite.teardown.register(async () => {
-			await this.context
-				.get()
-				.worker.archiveLogs(this.id, this.context.get().link);
+			await this.worker.archiveLogs(this.id, this.link);
 		});
 	},
 	tests: [
