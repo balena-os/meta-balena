@@ -281,36 +281,31 @@ module.exports = {
       await this.worker.archiveLogs(this.id, `${this.balena.uuid.slice(0, 7)}.local`,);
     });
 
-    this.log("Waiting for device to be reachable");
     await this.utils.waitUntil(async() => {
-      console.log(`checking device is online in the dashboard....`)
-      
-      let isOnline =  await this.cloud.balena.models.device.isOnline(this.balena.uuid);
-
-      console.log(isOnline);
-      return isOnline === true
-    });
-
-    this.log("Device is online and provisioned successfully");
-    await this.utils.waitUntil(async () => {
-      this.log("Trying to ssh into device");
-      let hostname = await this.cloud.executeCommandInHostOS(
-        "cat /etc/hostname",
-        this.balena.uuid
-      )
-      return hostname === this.balena.uuid.slice(0, 7)
+      console.log("Waiting for device to be online...");
+      return await this.cloud.balena.models.device.isOnline(this.balena.uuid);
     }, false);
 
-    this.log("Unpinning");
+    this.log("Device is online and provisioned successfully");
+    
     await this.utils.waitUntil(async () => {
-      this.log(`Unpinning device from release`)
-      await this.cloud.balena.models.device.trackApplicationRelease(
+      this.log("Trying to ssh into device...");
+      return await this.cloud.executeCommandInHostOS(
+        "cat /etc/hostname",
+        this.balena.uuid
+      ) === this.balena.uuid.slice(0, 7);
+    }, false);
+
+    this.log("Unpinning device from release");
+    await this.cloud.balena.models.device.trackApplicationRelease(
+      this.balena.uuid
+    );
+
+    await this.utils.waitUntil(async () => {
+      console.log('Waiting for device to be running latest release...');
+      return await this.cloud.balena.models.device.isTrackingApplicationRelease(
         this.balena.uuid
       );
-
-      let unpinned = await this.cloud.balena.models.device.isTrackingApplicationRelease(this.balena.uuid)
-
-      return unpinned
     }, false);
 
     // wait until the service is running before continuing
