@@ -21,23 +21,23 @@ module.exports = {
 			title: 'Engine socket is exposed in development images',
 			run: async function(test) {
 				const Docker = require('dockerode');
-				let ip = await this.context.get().worker.ip(this.context.get().link)
+				let ip = await this.worker.ip(this.link)
 				const docker = new Docker({host: `http://${ip}`, port: 2375})
 				test.comment(`Setting system in development mode...`)
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="true"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+						this.link,
 				);
 				test.comment(`Waiting for engine to restart...`)
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena.service`,
-								this.context.get().link,
+								this.link,
 						)) == 'active'
 					);
 				}, false);
@@ -57,23 +57,23 @@ module.exports = {
 			title: 'Engine socket is not exposed in production images',
 			run: async function(test) {
 				const Docker = require('dockerode');
-				let ip = await this.context.get().worker.ip(this.context.get().link)
+				let ip = await this.worker.ip(this.link)
 				const docker = new Docker({host: `http://${ip}`, port: 2375})
 				test.comment(`Setting system in production mode...`)
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="false"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+						this.link,
 				);
 				test.comment(`Waiting for engine to restart...`)
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena.service`,
-								this.context.get().link,
+								this.link,
 						)) == 'active'
 					);
 				}, false);
@@ -92,7 +92,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="true"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.context.get().link,
+						this.link,
 				);
 			},
 		},

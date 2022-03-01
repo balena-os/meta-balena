@@ -26,21 +26,19 @@ module.exports = {
 		);
 
 		test.comment('Enabling u-boot overlays ...');
-		await this.context
-			.get()
-			.worker.executeCommandInHostOS(
+		await this.worker.executeCommandInHostOS(
 				`echo "enable_uboot_overlays=1" >> /mnt/boot/uEnv.txt`,
-				this.context.get().link,
+				this.link,
 			);
 
 		// Reboot the DUT to pick up the changes
-		await this.context.get().worker.rebootDut(this.context.get().link);
+		await this.worker.rebootDut(this.link);
 
 		const resp_before = await this.context
 			.get()
 			.worker.executeCommandInHostOS(
 				'ls -al /proc/device-tree/chosen/overlays/',
-				this.context.get().link,
+				this.link,
 			);
 
 		test.is(
@@ -54,17 +52,17 @@ module.exports = {
 			.get()
 			.worker.executeCommandInHostOS(
 				`echo "disable_uboot_overlay_video=1" >> /mnt/boot/uEnv.txt`,
-				this.context.get().link,
+				this.link,
 			);
 
 		// Reboot the DUT to pick up the changes
-		await this.context.get().worker.rebootDut(this.context.get().link);
+		await this.worker.rebootDut(this.link);
 
 		const resp_after = await this.context
 			.get()
 			.worker.executeCommandInHostOS(
 				'ls -al /proc/device-tree/chosen/overlays/',
-				this.context.get().link,
+				this.link,
 			);
 
 		test.is(

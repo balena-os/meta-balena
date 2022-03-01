@@ -28,7 +28,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`touch ${testFile}`,
-						this.context.get().link,
+						this.link,
 					);
 
 				test.comment(`Clearing reset flag from state partition...`);
@@ -36,20 +36,20 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`rm ${resetFile}`,
-						this.context.get().link,
+						this.link,
 					);
 
 				// reboot
-				await this.context.get().worker.rebootDut(this.context.get().link);
+				await this.worker.rebootDut(this.link);
 
 				test.comment(`Waiting for supervisor service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena-supervisor.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
@@ -59,7 +59,7 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 							`test -f ${testFile} ; echo $?`,
-							this.context.get().link,
+							this.link,
 						),
 					'1',
 					`Test file should be cleared from state partition.`,
@@ -73,25 +73,25 @@ module.exports = {
 				const resetFile = '/mnt/data/remove_me_to_reset';
 
 				test.comment(`Waiting for engine service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
 
 				test.comment(`Waiting for supervisor service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena-supervisor.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
@@ -101,7 +101,7 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
-							this.context.get().link,
+							this.link,
 						),
 					'0',
 					'Engine healthcheck should pass.',
@@ -112,7 +112,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`touch ${testFile}`,
-						this.context.get().link,
+						this.link,
 					);
 
 				test.comment(`Clearing reset flag from data partition...`);
@@ -120,32 +120,32 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`rm ${resetFile}`,
-						this.context.get().link,
+						this.link,
 					);
 
 				// reboot
-				await this.context.get().worker.rebootDut(this.context.get().link);
+				await this.worker.rebootDut(this.link);
 
 				test.comment(`Waiting for engine service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
 
 				test.comment(`Waiting for supervisor service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena-supervisor.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
@@ -155,7 +155,7 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
-							this.context.get().link,
+							this.link,
 						),
 					'0',
 					'Engine healthcheck should pass.',
@@ -166,7 +166,7 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 							`test -f ${testFile} ; echo $?`,
-							this.context.get().link,
+							this.link,
 						),
 					'1',
 					`Test file should be cleared from data partition.`,
@@ -177,25 +177,25 @@ module.exports = {
 			title: 'prune all images',
 			run: async function(test) {
 				test.comment(`Waiting for engine service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
 
 				test.comment(`Waiting for supervisor service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena-supervisor.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
@@ -205,17 +205,17 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`balena image prune --all --force`,
-						this.context.get().link,
+						this.link,
 					);
 
 				test.comment(`Waiting for supervisor service to be active...`);
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena-supervisor.service`,
-								this.context.get().link,
+								this.link,
 							)) === 'active'
 					);
 				}, false);
@@ -225,7 +225,7 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
-							this.context.get().link,
+							this.link,
 						),
 					'0',
 					'Engine healthcheck should pass.',

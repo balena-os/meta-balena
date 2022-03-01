@@ -10,12 +10,12 @@ const assert = require('assert');
 const fse = require('fs-extra');
 const { join } = require('path');
 const { homedir } = require('os');
-const Bluebird = require("bluebird");
+const util = require('util');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
-const pipeline = require('bluebird').promisify(stream.pipeline);
+const pipeline = util.promisify(stream.pipeline);
 
 // copied from the SV
 // https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
@@ -36,7 +36,7 @@ const supportsBootConfig = (deviceType) => {
 
 const enableSerialConsole = async (imagePath) => {
 	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
-		return require('bluebird')
+		return util
 			.promisify(_fs.readFile)('/config.txt')
 			.catch((err) => {
 				return undefined;
@@ -52,7 +52,7 @@ const enableSerialConsole = async (imagePath) => {
 
 			// delete any existing instances before appending to the file
 			const newConfig = bootConfig.toString().replace(regex, '');
-			await require('bluebird').promisify(_fs.writeFile)(
+			await util.promisify(_fs.writeFile)(
 				'/config.txt',
 				newConfig.concat(`\n\n${value}\n\n`),
 			);
@@ -69,7 +69,13 @@ module.exports = {
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
 		const BalenaOS = this.require('components/os/balenaos');
 		const utils = this.require('common/utils');
-		const worker = new Worker(this.suite.deviceType.slug, this.getLogger(), this.suite.options.workerUrl, this.suite.options.balena.organization, join(homedir(), 'id'));
+		const worker = new Worker(
+			this.suite.deviceType.slug, 
+			this.getLogger(), 
+			this.suite.options.workerUrl, 
+			this.suite.options.balena.organization, 
+			join(homedir(), 'id')
+		);
 		const cloud = new Balena(this.suite.options.balena.apiUrl, this.getLogger());
 
 		await fse.ensureDir(this.suite.options.tmpdir);
@@ -136,7 +142,7 @@ module.exports = {
 
 		const keys = await this.context
 		.get()
-		.utils.createSSHKey(this.context.get().sshKeyPath);
+		.utils.createSSHKey(this.sshKeyPath);
 		// Create an instance of the balenOS object, containing information such as device type, and config.json options
 		this.suite.context.set({
 			os: new BalenaOS(
@@ -166,7 +172,7 @@ module.exports = {
 		// Register a teardown function execute at the end of the test, regardless of a pass or fail
 		this.suite.teardown.register(() => {
 			this.log('Worker teardown');
-			return this.context.get().worker.teardown();
+			return this.worker.teardown();
 		});
 
 		this.log('Setting up worker');
@@ -178,23 +184,23 @@ module.exports = {
 
 
 		this.suite.context.set({
-			workerContract: await this.context.get().worker.getContract()
+			workerContract: await this.worker.getContract()
 		})
 		// Unpack OS image .gz
-		await this.context.get().os.fetch();
+		await this.os.fetch();
 
 		// If this is a flasher image, and we are using qemu, unwrap
 		if (
 			this.suite.deviceType.data.storage.internal &&
-			this.context.get().workerContract.workerType === `qemu`
+			this.workerContract.workerType === `qemu`
 		) {
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
-			console.log(`Unwrapping file ${this.context.get().os.image.path}`);
+			console.log(`Unwrapping file ${this.os.image.path}`);
 			console.log(`Looking for ${RAW_IMAGE_PATH}`);
 			try {
 				await imagefs.interact(
-					this.context.get().os.image.path,
+					this.os.image.path,
 					2,
 					async (fsImg) => {
 						await pipeline(
@@ -204,7 +210,7 @@ module.exports = {
 					},
 				);
 
-				this.context.get().os.image.path = OUTPUT_IMG_PATH;
+				this.os.image.path = OUTPUT_IMG_PATH;
 				console.log(`Unwrapped flasher image!`);
 			} catch (e) {
 				// If the outer image doesn't contain an image for installation, ignore the error
@@ -217,7 +223,7 @@ module.exports = {
 		}
 
 		if (supportsBootConfig(this.suite.deviceType.slug)) {
-			await enableSerialConsole(this.context.get().os.image.path);
+			await enableSerialConsole(this.os.image.path);
 		}
 
 
@@ -228,51 +234,51 @@ module.exports = {
 		await this.context
 		.get()
 		.cloud.balena.models.key.create(
-			this.context.get().sshKeyLabel,
+			this.sshKeyLabel,
 			keys.pubKey
 		);
 		this.suite.teardown.register(() => {
-			return Bluebird.resolve(
+			return Promise.resolve(
 				this.context
 				.get()
-				.cloud.removeSSHKey(this.context.get().sshKeyLabel)
+				.cloud.removeSSHKey(this.sshKeyLabel)
 			);
 		});
 
 
 		// Configure OS image
-		await this.context.get().os.configure();
+		await this.os.configure();
 
 		// Flash the DUT
-		await this.context.get().worker.off(); // Ensure DUT is off before starting tests
-		await this.context.get().worker.flash(this.context.get().os.image.path);
-		await this.context.get().worker.on();
+		await this.worker.off(); // Ensure DUT is off before starting tests
+		await this.worker.flash(this.os.image.path);
+		await this.worker.on();
 		
-		await this.context.get().worker.addSSHKey(this.context.get().sshKeyPath);
+		await this.worker.addSSHKey(this.sshKeyPath);
 
 		// create tunnels
 		this.log('Creating SSH tunnels to DUT');
-		await this.context.get().worker.createSSHTunnels(
-			this.context.get().link,
+		await this.worker.createSSHTunnels(
+			this.link,
 		);
 
 		this.log('Waiting for device to be reachable');
-		await this.context.get().utils.waitUntil(async () => {
+		await this.utils.waitUntil(async () => {
 			this.log("Trying to ssh into device");
 			let hostname = await this.context
 			.get()
 			.worker.executeCommandInHostOS(
 			  "cat /etc/hostname",
-			  this.context.get().link
+			  this.link
 			)
-			return (hostname === this.context.get().link.split('.')[0])
+			return (hostname === this.link.split('.')[0])
 		}, true);
 
 		// Retrieving journalctl logs: register teardown after device is reachable
 		this.suite.teardown.register(async () => {
 			await this.context
 				.get()
-				.worker.archiveLogs(this.id, this.context.get().link);
+				.worker.archiveLogs(this.id, this.link);
 		});
 	},
 	tests: [

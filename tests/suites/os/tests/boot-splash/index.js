@@ -62,12 +62,12 @@ module.exports = {
 				test.comment('Finished calculating reference hash');
 
 				test.comment('Starting capture');
-				await this.context.get().worker.capture('start');
+				await this.worker.capture('start');
 
 				// Rebooting the DUT
-				await this.context.get().worker.rebootDut(this.context.get().link);
+				await this.worker.rebootDut(this.link);
 				test.comment(`Stopping capture...`);
-				await this.context.get().worker.capture('stop');
+				await this.worker.capture('stop');
 
 				// captured frames are stored in /data/capture - we probably want a way to remove the need for a hard coded reference here
 				const captured = fs.readdirSync(`/tmp/capture`);

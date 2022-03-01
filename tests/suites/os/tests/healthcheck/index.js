@@ -20,7 +20,7 @@ const { delay } = require('bluebird');
 module.exports = {
 	title: 'Container healthcheck test',
 	run: async function(test) {
-		const ip = await this.context.get().worker.ip(this.context.get().link);
+		const ip = await this.worker.ip(this.link);
 
 		const state = await this.context
 			.get()
@@ -28,14 +28,14 @@ module.exports = {
 
 
 		// wait until status of container is "healthy"
-		await this.context.get().utils.waitUntil(async () => {
+		await this.utils.waitUntil(async () => {
 			test.comment("Waiting to container to report as healthy...");
 			// retrieve healthcheck events
 			let health = JSON.parse(await this.context
 			  .get()
 			  .worker.executeCommandInHostOS(
 				`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-				this.context.get().link
+				this.link
 			  )
 			)
 			let status = health.reduce(function (result, element) {
@@ -53,14 +53,14 @@ module.exports = {
 		// cause the container healthcheck to fail
 		await this.context
 			.get()
-			.worker.executeCommandInContainer('rm /tmp/health', 'healthcheck', this.context.get().link);
+			.worker.executeCommandInContainer('rm /tmp/health', 'healthcheck', this.link);
 
 		// wait for 5s before checking for health status to give
 		await delay(1000 * 5);
 
 		let status = [];
 		// Use waitUntil, because sometimes it takes time for the container to report as unhealthy, so we want to be able to re-check
-		await this.context.get().utils.waitUntil(async () => {
+		await this.utils.waitUntil(async () => {
 			test.comment('Waiting to container to report as unhealthy...');
 			// retrieve healthcheck events
 			let events = JSON.parse(
@@ -68,7 +68,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-						this.context.get().link,
+						this.link,
 					),
 			);
 

@@ -39,27 +39,27 @@ module.exports = {
 		{
 			title: 'DToverlay & DTparam tests',
 			run: async function (test) {
-				let ip = await this.context.get().worker.ip(this.context.get().link);
+				let ip = await this.worker.ip(this.link);
 				let targetState
 
 				// Export the GPIO pin
 				const exportPin = async () => {
-					return await this.context.get().worker.executeCommandInHostOS(
+					return await this.worker.executeCommandInHostOS(
 						`echo 4 >/sys/class/gpio/export`,
-						this.context.get().link
+						this.link
 					)
 				}
 
 				// Check value of GPIO pin and unexport the GPIO pin
 				const getPinValue = async () => {
-					const pinValue =  await this.context.get().worker.executeCommandInHostOS(
+					const pinValue =  await this.worker.executeCommandInHostOS(
 						`cat /sys/class/gpio/gpio4/value`,
-						this.context.get().link
+						this.link
 					)
 
-					await this.context.get().worker.executeCommandInHostOS(
+					await this.worker.executeCommandInHostOS(
 						`echo 4 >/sys/class/gpio/unexport`,
-						this.context.get().link
+						this.link
 					)
 					return pinValue
 				}
@@ -68,15 +68,15 @@ module.exports = {
 				// Hence, sysfs can't be used to query the value of the GPIO pin hence the user of /sys/kernel/debug/gpio
 				const getPinValueThroughDebug = async () => {
 					const getValue = fs.readFileSync(`${__dirname}/getValue.sh`).toString();
-					return await this.context.get().worker.executeCommandInHostOS(
+					return await this.worker.executeCommandInHostOS(
 							`cd /tmp && ${getValue}`,
-							this.context.get().link,
+							this.link,
 						);
 				}
 
 				const applySupervisorConfig = async (direction) => {
 					// Wait for supervisor API to start
-					await this.context.get().utils.waitUntil(async () => {
+					await this.utils.waitUntil(async () => {
 						return (
 							(await request({
 								method: 'GET',
@@ -108,7 +108,7 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 							'touch /tmp/reboot-check',
-							this.context.get().link,
+							this.link,
 						);
 
 					// Setting the device tree variables using Supervisor API
@@ -129,22 +129,22 @@ module.exports = {
 						'DToverlay & DTparam configured successfully',
 					);
 
-					await this.context.get().utils.waitUntil(async () => {
+					await this.utils.waitUntil(async () => {
 						test.comment('Waiting for DUT to come back online after reboot...');
 						return (
 							(await this.context
 								.get()
 								.worker.executeCommandInHostOS(
 									'[[ ! -f /tmp/reboot-check ]] && echo "pass"',
-									this.context.get().link,
+									this.link,
 								)) === 'pass'
 						);
 					}, false);
 
 					// IP of the device sometimes change after reboots, hence initalising again
-					ip = await this.context.get().worker.ip(this.context.get().link);
+					ip = await this.worker.ip(this.link);
 
-					await this.context.get().utils.waitUntil(async () => {
+					await this.utils.waitUntil(async () => {
 						test.comment('Waiting for supervisor to be ready after reboot...');
 						return (
 							(await request({
@@ -195,7 +195,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`cd /tmp && ${dtoverlay}`,
-						this.context.get().link,
+						this.link,
 					);
 
 				test.equal(
@@ -207,7 +207,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`cd /tmp && ${dtparam}`,
-						this.context.get().link,
+						this.link,
 					);
 				test.equal(
 					dtParamConfigTxt,
@@ -223,7 +223,7 @@ module.exports = {
 						.worker.executeCommandInHostOS(
 							'cd /tmp/ && curl -L "https://drive.google.com/uc?export=download&id=1HS9E5vnxxNqrizB4mEYrnFoQQ1axSRKm" -o vcdbg && chmod +x ./vcdbg && \
 							./vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?',
-							this.context.get().link,
+							this.link,
 						),
 						'0',
 						'vcdbg static binary should be downloaded and run successfuly'
@@ -233,7 +233,7 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 							'cd /tmp/ && ./vcdbg log msg 2>&1 | grep -q -i "Failed to load" ; echo $?',
-							this.context.get().link,
+							this.link,
 						),
 						'1',
 						'vcdbg logs should be clean of device-tree or overlay load failures'

@@ -9,7 +9,7 @@ module.exports = {
 			.get()
 			.worker.executeCommandInHostOS(
 				`cd /tmp && ${fileContents}`,
-				this.context.get().link,
+				this.link,
 			);
 
 		test.is(
