@@ -1,4 +1,955 @@
 - commits:
+    - subject: Update balena-supervisor to v12.11.36
+      hash: 8e9c3d992a5d681701580f52e5f9ba3d696bf1d8
+      body: >
+        Update balena-supervisor from 12.11.32 to 12.11.36
+
+
+        Includes a fix for https://github.com/balena-os/balena-supervisor/issues/1890
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-supervisor to v12.11.36
+        changelog-entry: Update balena-supervisor to v12.11.36
+        Signed-off-by: Robert Günzler robertg@balena.io
+        signed-off-by: Robert Günzler robertg@balena.io
+      author: Robert Günzler
+      nested:
+        - commits:
+            - subject: Ignore selinux security opts when comparing services
+              hash: 1b54ce8bfd5dd3d1f14f573a0bfe17ee1dd81630
+              body: >
+                The moby engine v20.x.y adds some selinux [security
+                configurations](https://docs.docker.com/engine/reference/run/#security-configuration)
+
+                depending on the [container configuration](https://github.com/moby/moby/blob/master/daemon/create.go#L214).
+
+                This would cause the supervisor to enter a service restart loop as the
+
+                current and target service configurations will never match. The
+
+                supervisor now ignores selinux specific security options since those are
+
+                not supported by balenaOS.
+              footer:
+                Closes: "#1890"
+                closes: "#1890"
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.11.36
+          title: "'Ignore selinux security opts when comparing services'"
+          date: 2022-02-23T21:15:31.484Z
+        - commits:
+            - subject: Add troubleshooting notice for macOS
+              hash: 6ab314f8c0af647cdb0537b6a396ccb3d5ce060f
+              body: |
+                When developing on macOS (Darwin) DBus may have to be installed.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: fisehara <harald@balena.io>
+                signed-off-by: fisehara <harald@balena.io>
+              author: fisehara
+              nested: []
+          version: balena-supervisor-12.11.35
+          title: "'Add troubleshooting notice for macOS'"
+          date: 2022-02-16T19:41:22.558Z
+        - commits:
+            - subject: Create `touch` and `getBootTime` utility functions
+              hash: a4d91d381a3e2dfda182bb7809a6d78b18aafebf
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Add update lock check to PATCH /v1/device/host-config
+              hash: 5f1a77da25b9d0bd07c2fbec85cb5deefae18884
+              body: >
+                This is necessary with the changes as of balenaOS 2.82.6, which
+                watches config.json
+
+                and will restart balena-hostname and some other services automatically on file change.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Relates-to: "#1876"
+                relates-to: "#1876"
+                Signed-off-by: Christina Wang <christina@balena.io>
+                signed-off-by: Christina Wang <christina@balena.io>
+              author: Christina Wang
+              nested: []
+          version: balena-supervisor-12.11.34
+          title: "'Make the supervisor more resistant to restarts during config changes'"
+          date: 2022-02-15T15:58:42.783Z
+        - commits:
+            - subject: Add support for local ipv6 reporting
+              hash: 72f6cbe4c7225623ed99083d20c4a2cb2f3b70ac
+              body: >
+                With more and more devices in ipv6 only networks, this ensures
+                the
+
+                local addresses are reported to the cloud as part of the state patch.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.11.33
+          title: "'Add support for local ipv6 reporting'"
+          date: 2022-02-09T17:57:09.778Z
+    - subject: "meta-resin-pyro: make sure $GO is set"
+      hash: f618d4575068be226b2fd6da5b74d6604236e5d5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+    - subject: Refactor balena-engine recipe to more closely resemble upstream
+      hash: 1280c281d79b413d885e44dbf507a2b59005f25b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Refactor balena-engine recipe to more closely resemble upstream
+        changelog-entry: Refactor balena-engine recipe to more closely resemble upstream
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+    - subject: Update Golang recipes to 1.16.2
+      hash: 475adc63cf7902fbc91a32e53a02af8d275daf2c
+      body: |
+        This reverts commit 4303346ccda6d3e3c4f83cc3782c73a6d1adb494.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update Golang recipes to 1.16.2
+        changelog-entry: Update Golang recipes to 1.16.2
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+    - subject: Update balena-engine to v20.10.12
+      hash: ae632d7fb7cf10e0770c6f511dd9f454ee0d9dac
+      body: |
+        Update balena-engine from 19.03.30 to 20.10.12
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update balena-engine to v20.10.12
+        changelog-entry: Update balena-engine to v20.10.12
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested:
+        - commits:
+            - subject: "storagemigration: keep going if migration fails"
+              hash: 2bde63c800b1df72fba7161d62b5b6da84a8d390
+              body: >
+                the only hard error is if rollback (failcleanup) fails, in all
+                other
+
+                scenarios we want the daemon to continue starting with the new
+
+                graphdriver
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "graphdriver/copy: fix handling of sockets"
+              hash: 17a198cb53a53da456c848bf303dc3917ca538c5
+              body: >
+                previously switch would treat S_IFIFO and S_IFSOCK as the same,
+                passing
+
+                both of the to mkfifo, which lead to EINVAL errors when trying to create
+
+                the socket, we instead handle socket separately.
+
+
+                Also adds cases for this to the unit and integration tests of the
+
+                migrator.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "pkg/storagemigration: use graphdriver/copy.DirCopy"
+              hash: ffbb608492405488bff5e31ea62c0249fb416106
+              body: |
+                instead of our own implementation
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Prune Jenkinsfile
+              hash: ea14e503181bbb248a4bed1b86a227d9c214cbfb
+              body: >
+                we are not using it for our CI, and it confuses jenkins set up
+                on the
+
+                balena-os org
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Backport platform-detection fixes from containerd
+              hash: 9f71253561b1cd2f262ec0d6e81c5fbd09a7a0a1
+              body: >
+                See https://github.com/containerd/containerd/pull/4530
+
+                and `git log ad25c1a9c34361e4071f508b9a91946b05fce165^..2055e12953bb538228d8d9fe627fa545d7cf82be ./platforms/`
+
+                in the containerd repo
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "storagemigration: capture failcleanup logs in logfile"
+              hash: 4f7f543eff08766bc584024afdb57760dfb52130
+              body: >
+                reorder the defer statements in the migrate function to only
+                teardown
+
+                the logger after the failcleanup function ran. otherwise errors logged
+
+                there won't show up in the logfile
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "storagemigration: move logic to package"
+              hash: 001835bf61172fdcfdb0416e000852ff05683c71
+              body: >
+                This brings all migration logic into a single call into the
+
+                storagemigration package, which should make future maintenance easier
+
+                and fixes the cleanup logic bug, where the old aufs root would never be
+
+                cleaned up.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: prevent slice oob access in concatReadSeekCloser
+              hash: 1e7045ac957db17fe9838602c9339c0b5ae5c282
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Martin Rauscher
+              nested: []
+            - subject: Make layer download resuming more resilient
+              hash: 582487f832c59c2f734a780ab0492833f29002c9
+              body: >
+                This commit changes the way we retry layer downloads after
+                failures with
+
+                the goal of making it more resilient, especially for cases involving
+
+                large layers and unreliable network connections.
+
+
+                These are the changes:
+
+
+                * Make sure we also retry after failures in `v2LayerDescriptor.reset()`.
+                  This method creates a new HTTP request to resume a failed download,
+                  and therefore depends on a working network to succeed.
+                * Wait exponentially longer times between retries (instead of retrying
+                  immediately as before). This shall increase of success in case of
+                  network issues that take longer to get resolved.
+                * Increase the number of retries to 10.
+
+                * Reset retry count whenever we successfully download anything at all.
+                  The idea is that we want to give up downloading only after a long
+                  continuous period of failures. Combined with the exponential back-off
+                  strategy and increased number of retries described above, a layer pull
+                  will fail only after about 17 minutes.
+                * Add a bit more logging to help with troubleshooting.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Drop CODEOWNERS
+              hash: e70e1a9fe622563719993626e834c85efc17905c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "pkg/storagemigration: poperly handle errors during state creation"
+              hash: b8170db554ac1d1abb3adcfe1f6265701e9147c5
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "pkg/storagemigration: allow writing logs to separate file"
+              hash: 77536d3866ac706f049a02d2eed44a7df1cb779c
+              body: >
+                This can be used to keep a record of failed migrations.
+
+                Only runs if BALENA_MIGRATE_OVERLAY_LOGFILE is set to a path on disk.
+
+                The log file will be deleted if there are no errors.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "storagemigration: defer commit to next start"
+              hash: bd1628e67136b78ca7e7c83c5569666207d28a84
+              body: >
+                With this change the aufs data is kept around until the next
+                time we
+
+                start. If we find both an aufs AND an overlay2 storage root, we cleanup
+
+                the aufs data.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Lock destination layers while delta is being processed
+              hash: 0ad4281e11e4d3ef263010787aecd244c0ce333d
+              body: >
+                During fingerpinting of the source image the destination layers
+                are not
+
+                exepmt from being released (e.g. when `balena image rm <iid>`) is run
+
+                simultaneously.
+
+                Similarly when processing the destination layers to generate deltas we
+
+                only hold one reference at a time, leaving the subsequent layers
+
+                vulnerable to the same issues.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Add aufs to overlay2 migrator
+              hash: b3a976b1294469e75222752bdc1fdc06bfcc97b8
+              body: >
+                The main logic is under pkg/storagemigration. This is able to
+                seamlessly
+
+                migrate images and containers from AUFS to overlay2.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Update the README
+              hash: 4a95df5bc30a40389191d9b2417b0f9bf35fefdc
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Cleanup repo
+              hash: de3a38940ab7410fbb3fd719190db401e419b77d
+              body: |
+                remove some obsolete files/directories
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Add a SECURITY.md
+              hash: 477d70db260a8dda71e2dba12ccd9f169fe9b480
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "top_unix.go: allow busybox ps with no args"
+              hash: 6617c4d76d275e05d6055d91aabbd7df25332342
+              body: |
+                Busybox in balenaOS is compiled with desktop mode disabled,
+                so features like `-ef` and providing pids via `-q` are not
+                supported. Add a 3rd condition to try ps with no args and allow
+                parsePSOutput to filter by pid.
+
+                https://github.com/balena-os/balena-engine/issues/236
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Bump balena-os/balena-containerd to 1da48a8
+              hash: ab1a49816fd8ae2ec73dc83152ad06a05a6b9799
+              body: |
+                Fixes balena-engine-runc version format.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Connects-to: balena-os/balena-containerd#6
+                connects-to: balena-os/balena-containerd#6
+                Signed-off-by: Tian Yuanhao <tianyuanhao@aliyun.com>
+                signed-off-by: Tian Yuanhao <tianyuanhao@aliyun.com>
+              author: Tian Yuanhao
+              nested: []
+            - subject: Add changelog template to allow generating nested changelogs
+              hash: f272b547ee6c27c41be70da6b913699a2c5ef928
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Update github issue and pr templates
+              hash: 123449f806b691e3d193c340a9e72285839f8bb9
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Update codeowners
+              hash: 538f01a22413db44ce0304dedb704c285189d3a5
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "hack: Fix CLI versioning"
+              hash: a9d487d0751f7ad293ab66b3d24734505b41f85b
+              body: >
+                https://github.com/balena-os/balena-engine-cli/commit/20c19830a95455e8562551aad52c715ad0807cc6
+
+                moves the versioning variables to a separate package. We have to adjust
+
+                the location in hack/make.sh too
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Fixed typos in getting-started.md docs
+              hash: f162d15114fdb5d2ea87eee08979f1a5882f52cc
+              body: ""
+              footer:
+                Closes: "#209"
+                closes: "#209"
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Miguel Casqueira <miguel@balena.io>
+                signed-off-by: Miguel Casqueira <miguel@balena.io>
+              author: Miguel Casqueira
+              nested: []
+            - subject: Add integration tests for hostapp handling
+              hash: 0c18f60f1124567e51c752bb76d801c97bef5916
+              body: |
+                This refactors mobynit to allow for testing parts of it from
+                the integration tests.
+                Also adds some sanity checks for "bare" containers.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Fix container data deletion
+              hash: bbdf9e2137de87696d758847a2eb544eb04d828e
+              body: >
+                Previous implementation was not comparing graphdriver content to
+                layerStore mounts.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Roman Mazur <roman@balena.io>
+                signed-off-by: Roman Mazur <roman@balena.io>
+              author: Roman Mazur
+              nested: []
+            - subject: "overlay2: Add List support"
+              hash: 90a45216050664742ed8088d5a00304dd097a791
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Roman Mazur <roman@balena.io>
+                signed-off-by: Roman Mazur <roman@balena.io>
+              author: Roman Mazur
+              nested: []
+            - subject: "aufs: Add List support"
+              hash: c2f02fec80c89a7ad907cb21a4dedee8db854fac
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Roman Mazur <roman@balena.io>
+                signed-off-by: Roman Mazur <roman@balena.io>
+              author: Roman Mazur
+              nested: []
+            - subject: "layer: Remove unreferenced driver layers on create"
+              hash: 152736dfbb764e6c74f1afc71df853e93488a91f
+              body: >
+                Earlier engine versions were not properly persisting cacheID
+
+                in layer metadata. As a result, because of abruptly terminated transactions,
+
+                a lot of devices have unreferenced graphdriver layers on disk.
+
+
+                With this change, the engine will be able to clean up such unreferenced layers.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Roman Mazur <roman@balena.io>
+                signed-off-by: Roman Mazur <roman@balena.io>
+              author: Roman Mazur
+              nested: []
+            - subject: "layer: Prune unused data on layer store creation"
+              hash: 01e4688f8c4f42e769d319353accdc0c34ffcc0b
+              body: >
+                When layer store is created, its tmp directory may contain
+                information
+
+                about transactions that were abruptly treminated during the previous process run.
+
+                Such data is now identified before any new transactions can be created,
+
+                and a background process is started to delete both meta data and graph driver layeres.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Roman Mazur <roman@balena.io>
+                signed-off-by: Roman Mazur <roman@balena.io>
+              author: Roman Mazur
+              nested: []
+            - subject: "layer: Persist cacheID early on transaction start"
+              hash: b1709e0881b3ed61c1608ef5ed19acf8008b2275
+              body: >
+                If the engine process is terminated during the layer extraction
+                transaction,
+
+                before Commit or Cancel is called on the transaction, a new FS layer can be created
+
+                by the graph driver without any link to the layers metadata.
+
+
+                This change ensures we don't perform any actions on the graph driver storage until
+
+                the FS layer ID (the cacheID) is  persisted as a part of the transaction data.
+
+
+                We can use this data to clean up the graph driver storage on next process start
+
+                deleting all data associated with the transactions terminated abruptly.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Roman Mazur <roman@balena.io>
+                signed-off-by: Roman Mazur <roman@balena.io>
+              author: Roman Mazur
+              nested: []
+            - subject: "pkg/authorization: Fix test failures on macOS"
+              hash: 6e9af0514461f1ce3945ed308ef13e3ddbc7dc4f
+              body: >
+                On macOS, unit tests where failing with
+
+
+                root@c4101a75c792:/go/src/github.com/docker/docker/pkg/authorization# go test .
+
+                --- FAIL: TestAuthZRequestPluginError (0.00s)
+                    authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
+                --- FAIL: TestAuthZRequestPlugin (0.00s)
+                    authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
+                --- FAIL: TestAuthZResponsePlugin (0.00s)
+                    authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
+                time="2020-04-07T10:07:04Z" level=warning msg="Request body is larger than: '1048576' skipping body"
+
+                --- FAIL: TestMiddlewareWrapHandler (0.00s)
+                    authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
+                FAIL
+
+                FAIL	github.com/docker/docker/pkg/authorization	0.120s
+
+
+                This change moves the socket creation from a working test directory to a tmp directory,
+
+                so the path is shorter.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Roman Mazur <roman@balena.io>
+                signed-off-by: Roman Mazur <roman@balena.io>
+              author: Roman Mazur
+              nested: []
+            - subject: Move ci to balenaCI
+              hash: 9182c33542feb05ae46a66f2cfdeeefef6fa7333
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Connects-to: https://github.com/balena-io-modules/detectorist/pull/27
+                connects-to: https://github.com/balena-io-modules/detectorist/pull/27
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "contrib: Add balena-engine version of dind container"
+              hash: ef813f867206df9ae6f3ddf1cb5d3915f8718cc5
+              body: >
+                This modifies https://github.com/docker-library/docker for
+                balena-engine
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "build.sh: Disable btrfs,zfs,devicemapper graphdrivers"
+              hash: 88a5416e94945bc6998ba00723da26b738eb5bcd
+              body: >
+                We don't support these on balenaOS anyway and we are planning to
+                drop
+
+                support for them once we move to the new balenaCI-based pipeline.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "Bump CLI dependency to include fix for #178"
+              hash: de8d373699d5e45676a769f6ff5927e95df3dade
+              body: ""
+              footer:
+                Connects-to: https://github.com/balena-os/balena-engine/issues/178
+                connects-to: https://github.com/balena-os/balena-engine/issues/178
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Bump CLI dependency to include --cidenv flag
+              hash: bf7bfef7f8e8dee6dd7c17a81a69bc5ea891bec7
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Connects-to: https://github.com/balena-os/balena-engine-cli/pull/8
+                connects-to: https://github.com/balena-os/balena-engine-cli/pull/8
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Allow passing container ID to container via environment variable
+              hash: 635b48ca954c92ce7e35b2667c2001a52f43ef6d
+              body: >
+                This adds a new ContainerIDEnv field to HostConfig that can pass
+                an
+
+                environment variable name, which will be set to the container ID and
+
+                passed to the container environment.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Connects-to: https://github.com/balena-os/balena-engine/issues/173
+                connects-to: https://github.com/balena-os/balena-engine/issues/173
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "contrib/install.sh: Add details to the success message"
+              hash: 876ea49bb8e948c97cd959fcb7413e84e33f7006
+              body: >
+                First warn the user that balena-engine-daemon needs to be
+                started.
+
+                Including instructions on how to make the system ready for that:
+
+                - service files
+
+                - balena-engine group
+
+                - how to allow non-root users to run containers
+              footer:
+                Connects-to: "#51"
+                connects-to: "#51"
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "contrib/install.sh: Rename balena to balenaEngine in ASCII art output"
+              hash: 4d922b5df74978275dab83e7564359c0dfe99797
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "contrib/install.sh: Fail on error"
+              hash: f93ce1f5226a882b0115cf321fc40e7d55f0e583
+              body: >
+                The install script should not print the success message if it
+                didn't
+
+                actually succeed to install anything
+              footer:
+                Connects-to: "#54"
+                connects-to: "#54"
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Add daemon flags to configure max download/upload attempts during
+                pull/push
+              hash: feaeb5dd826eeb0a95908dfd91704238a59e8257
+              body: >
+                The defaults remain the same (dl=5, ul=5), but are moved from
+                distribution/xfer to
+
+                daemon/config.
+              footer:
+                Connects-to: https://github.com/balena-os/balena-engine/issues/160
+                connects-to: https://github.com/balena-os/balena-engine/issues/160
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "aufs,overlay2: Add driver opts for disk sync"
+              hash: 4fed10dd3a66e37f0f128b2f9fa227a9a6800da2
+              body: >
+                This patch adds a driver option to enalble/disable the to disk
+                syncing introduced in
+
+                684d8ba6109c853b355bf11ca3733c4099f14b92.
+
+
+                The default is still to sync all currently mounted filesystems before
+
+                reporting an ApplyDiff as successful.
+              footer:
+                Connects-to: https://github.com/balena-os/balena-engine/issues/133
+                connects-to: https://github.com/balena-os/balena-engine/issues/133
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Fix double locking in the event handling code of OOM events
+              hash: d0bc0e5326438656f7d41a1f25ae621693777c2f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "integration-tests: Add test for containers with memory,cpu
+                constraints"
+              hash: ff2ac4d6823dfc30c115499a5d6f908752ea9223
+              body: >
+                The only test from integration/ that covers any resource
+                constrained
+
+                container scenarios is the OomKilled check in integration/container/kill_test.go
+
+
+                This adds two addional checks that try to create, startk, stop and
+
+                inspect a busybox container with:
+
+                a) a memory constraint like: balena-engine run -m 32m ..
+
+                b) a memory constraint like: balena-engine run -cpus ".5" ..
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Update Dockerfiles used for build to Go 1.10.8
+              hash: fa51b5b458889c413f2ab82171e0f5fe3b3def5e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "travis: Use the minimal machine"
+              hash: 1f6ab50f0cc20d21a5719e4a00f5407f231ed6f2
+              body: >
+                Since we build in docker anyway we can save the time it usually
+                takes to
+
+                set up the Go environment.
+
+                See https://docs.travis-ci.com/user/languages/minimal-and-generic/
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Add cli for tagging delta images
+              hash: 547a76a4924cf02e104fb31301f548a11c7bc4bb
+              body: >
+                Update vendor.conf and vendor/ to include
+                https://github.com/balena-os/balena-engine-cli/pull/7
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: Allow tagging of image deltas on creation
+              hash: 7f569a1e2407800e1c5f5d94f715c4313c5c4300
+              body: >
+                Similar to how the build command allows tagging of images this
+                allows
+
+                specifying a repo:tag indentifier to tag the delta with
+              footer:
+                Requires: https://github.com/balena-os/balena-engine-cli/pull/7
+                requires: https://github.com/balena-os/balena-engine-cli/pull/7
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+            - subject: "docs: Fix Docker capitalisation in balenaEngine docs"
+              hash: 06a6c66a5c69eed887d75030db211314449bb3d4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Paulo Castro <paulo@balena.io>
+                signed-off-by: Paulo Castro <paulo@balena.io>
+              author: Paulo Castro
+              nested: []
+            - subject: Update balenaEngine logo in README.md
+              hash: fccd0f311c732a74bdc02b2d14254f1ff13ac4a0
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Paulo Castro <paulo@balena.io>
+                signed-off-by: Paulo Castro <paulo@balena.io>
+              author: Paulo Castro
+              nested: []
+            - subject: Disable incompatible integration tests
+              hash: 55bd77642535e56fa47d54d7cd1e86b318e17644
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Paulo Castro <paulo@resin.io>
+                signed-off-by: Paulo Castro <paulo@resin.io>
+              author: Paulo Castro
+              nested: []
+          version: balena-engine-20.10.12
+          title: "'Update to moby v20.10.11'"
+          date: 2022-02-18T11:34:33.484Z
+        - commits:
+            - subject: Merge upstream v20.10.11
+              hash: 8bd50366a9390750523562b3be8087c87e977fda
+              body: "For full changelog see:
+                https://github.com/balena-os/balena-engine/blob/20.10-balena/CH\
+                ANGELOG.md#2021-12-09-upstream-release"
+              footers:
+                change-type: major
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-20.10.11
+          date: 2021-12-09T12:00:00.000Z
+  version: 2.94.0
+  title: "'balena-engine: Update to 20.10.12'"
+  date: 2022-03-01T18:22:50.587Z
+- commits:
     - subject: "prepare-openvpn: Make configurable"
       hash: a475af4c69a7fafca28009286ddba7e4f3015ae4
       body: |

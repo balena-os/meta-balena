@@ -1,6 +1,107 @@
 Change log
 -----------
 
+# v2.94.0
+## (2022-03-01)
+
+
+<details>
+<summary> Update balena-supervisor to v12.11.36 [Robert Günzler] </summary>
+
+> ## balena-supervisor-12.11.36
+> ### (2022-02-23)
+> 
+> * Ignore selinux security opts when comparing services [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.11.35
+> ### (2022-02-16)
+> 
+> * Add troubleshooting notice for macOS [fisehara]
+> 
+> ## balena-supervisor-12.11.34
+> ### (2022-02-15)
+> 
+> * Create `touch` and `getBootTime` utility functions [Felipe Lalanne]
+> * Add update lock check to PATCH /v1/device/host-config [Christina Wang]
+> 
+> ## balena-supervisor-12.11.33
+> ### (2022-02-09)
+> 
+> * Add support for local ipv6 reporting [Felipe Lalanne]
+> 
+</details>
+
+* meta-resin-pyro: make sure $GO is set [Robert Günzler]
+* Refactor balena-engine recipe to more closely resemble upstream [Robert Günzler]
+* Update Golang recipes to 1.16.2 [Robert Günzler]
+
+<details>
+<summary> Update balena-engine to v20.10.12 [Robert Günzler] </summary>
+
+> ## balena-engine-20.10.12
+> ### (2022-02-18)
+> 
+> * storagemigration: keep going if migration fails [Robert Günzler]
+> * graphdriver/copy: fix handling of sockets [Robert Günzler]
+> * pkg/storagemigration: use graphdriver/copy.DirCopy [Robert Günzler]
+> * Prune Jenkinsfile [Robert Günzler]
+> * Backport platform-detection fixes from containerd [Robert Günzler]
+> * storagemigration: capture failcleanup logs in logfile [Robert Günzler]
+> * storagemigration: move logic to package [Robert Günzler]
+> * prevent slice oob access in concatReadSeekCloser [Martin Rauscher]
+> * Make layer download resuming more resilient [Leandro Motta Barros]
+> * Drop CODEOWNERS [Robert Günzler]
+> * pkg/storagemigration: poperly handle errors during state creation [Robert Günzler]
+> * pkg/storagemigration: allow writing logs to separate file [Robert Günzler]
+> * storagemigration: defer commit to next start [Robert Günzler]
+> * Lock destination layers while delta is being processed [Robert Günzler]
+> * Add aufs to overlay2 migrator [Robert Günzler]
+> * Update the README [Robert Günzler]
+> * Cleanup repo [Robert Günzler]
+> * Add a SECURITY.md [Robert Günzler]
+> * top_unix.go: allow busybox ps with no args [Kyle Harding]
+> * Bump balena-os/balena-containerd to 1da48a8 [Tian Yuanhao]
+> * Add changelog template to allow generating nested changelogs [Robert Günzler]
+> * Update github issue and pr templates [Robert Günzler]
+> * Update codeowners [Robert Günzler]
+> * hack: Fix CLI versioning [Robert Günzler]
+> * Fixed typos in getting-started.md docs [Miguel Casqueira]
+> * Add integration tests for hostapp handling [Robert Günzler]
+> * Fix container data deletion [Roman Mazur]
+> * overlay2: Add List support [Roman Mazur]
+> * aufs: Add List support [Roman Mazur]
+> * layer: Remove unreferenced driver layers on create [Roman Mazur]
+> * layer: Prune unused data on layer store creation [Roman Mazur]
+> * layer: Persist cacheID early on transaction start [Roman Mazur]
+> * pkg/authorization: Fix test failures on macOS [Roman Mazur]
+> * Move ci to balenaCI [Robert Günzler]
+> * contrib: Add balena-engine version of dind container [Robert Günzler]
+> * build.sh: Disable btrfs,zfs,devicemapper graphdrivers [Robert Günzler]
+> * Bump CLI dependency to include fix for #178 [Robert Günzler]
+> * Bump CLI dependency to include --cidenv flag [Robert Günzler]
+> * Allow passing container ID to container via environment variable [Robert Günzler]
+> * contrib/install.sh: Add details to the success message [Robert Günzler]
+> * contrib/install.sh: Rename balena to balenaEngine in ASCII art output [Robert Günzler]
+> * contrib/install.sh: Fail on error [Robert Günzler]
+> * Add daemon flags to configure max download/upload attempts during pull/push [Robert Günzler]
+> * aufs,overlay2: Add driver opts for disk sync [Robert Günzler]
+> * Fix double locking in the event handling code of OOM events [Robert Günzler]
+> * integration-tests: Add test for containers with memory,cpu constraints [Robert Günzler]
+> * Update Dockerfiles used for build to Go 1.10.8 [Robert Günzler]
+> * travis: Use the minimal machine [Robert Günzler]
+> * Add cli for tagging delta images [Robert Günzler]
+> * Allow tagging of image deltas on creation [Robert Günzler]
+> * docs: Fix Docker capitalisation in balenaEngine docs [Paulo Castro]
+> * Update balenaEngine logo in README.md [Paulo Castro]
+> * Disable incompatible integration tests [Paulo Castro]
+> 
+> ## balena-engine-20.10.11
+> ### (2021-12-09)
+> 
+> * Merge upstream v20.10.11 [Robert Günzler]
+> 
+</details>
+
 # v2.93.2
 ## (2022-03-01)
 
