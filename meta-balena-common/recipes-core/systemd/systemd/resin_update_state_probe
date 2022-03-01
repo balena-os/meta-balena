@@ -44,6 +44,13 @@ else
 fi
 # Determine if the partition is on the same drive as root
 rpdev=$(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1) || true
+if [ -n "${rpdev}" ]; then
+	rptype=$(lsblk -nlo type,uuid | grep "${ruuid}" | cut -d " " -f1) || true
+	if [ "${rptype}" = "crypt" ]; then
+		cryptdev_uuid=$(lsblk -nlo uuid,kname | grep "${rpdev}" | cut -d " " -f1) || true
+		rpdev=$(lsblk -nlo pkname,uuid | grep "${cryptdev_uuid}" | cut -d " " -f1) || true
+	fi
+fi
 if [ "${rpdev}" = "${parent}" ] || [ "${part:0:8}" = "/dev/dm-" ]; then
 	echo "BALENA_FS_USE=${label}"
 	# Determine if its the active or inactive partition. The active one's

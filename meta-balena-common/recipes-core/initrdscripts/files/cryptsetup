@@ -2,9 +2,10 @@
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-fs
 . /usr/libexec/os-helpers-tpm2
 
-EFI_DEV="/dev/disk/by-partlabel/balena-efi"
+EFI_DEV=$(get_state_path_from_label "balena-efi")
 
 cryptsetup_enabled() {
     # Flasher should not try to unlock the partitions
