@@ -8,7 +8,8 @@ SRC_URI += " \
     file://downscript.sh \
     "
 
-inherit useradd
+SYSTEMD_UNIT_NAMES = "prepare-openvpn"
+inherit useradd balena-configurable
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM:${PN} += "--system -d / -M --shell /bin/nologin openvpn"
 
