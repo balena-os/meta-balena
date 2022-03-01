@@ -1,0 +1,23 @@
+From bbf600cc4d46c3f7ec0c1b486790a2402d41f550 Mon Sep 17 00:00:00 2001
+From: Bruce Ashfield <bruce.ashfield@gmail.com>
+Date: Tue, 30 Jun 2020 22:23:33 -0400
+Subject: [PATCH] dynbinary: use go cross compiler
+
+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+---
+ hack/make/.binary | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: git/src/import/hack/make/.binary
+===================================================================
+--- git.orig/src/import/hack/make/.binary
++++ git/src/import/hack/make/.binary
+@@ -81,7 +81,7 @@
+ 
+ 	echo "Building: $DEST/$BINARY_FULLNAME"
+ 	echo "GOOS=\"${GOOS}\" GOARCH=\"${GOARCH}\" GOARM=\"${GOARM}\""
+-	go build \
++	${GO} build \
+ 		-o "$DEST/$BINARY_FULLNAME" \
+ 		"${BUILDFLAGS[@]}" \
+ 		-ldflags "
