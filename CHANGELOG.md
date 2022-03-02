@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.94.2
+## (2022-03-02)
+
+* tests: Enhance BeagleBone Black u-boot overlay test [Florin Sarbu]
+
 # v2.94.1
 ## (2022-03-01)
 

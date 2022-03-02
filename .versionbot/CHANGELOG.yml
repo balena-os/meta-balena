@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: Enhance BeagleBone Black u-boot overlay test"
+      hash: 0051fa51e15b092f16b264cdf4a0147e37e5fd25
+      body: |
+        Let's make sure that when we finish the test we leave
+        uEnv.txt as before we started the test.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.94.2
+  title: "'tests: Enhance BeagleBone Black u-boot overlay test'"
+  date: 2022-03-02T09:01:45.548Z
+- commits:
     - subject: "balena-image: Default image type to balenaos-img"
       hash: a3c276a1058d05e66991871bf167079fc2824843
       body: |
