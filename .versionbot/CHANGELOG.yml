@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/os: fix bracket in bbb overlay test"
+      hash: c11bc9d3e8ad4102f1b0d38a4d2658222687e156
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.94.3
+  title: "'tests/os: fix bracket in bbb overlay test'"
+  date: 2022-03-02T12:06:17.701Z
+- commits:
     - subject: "tests: Enhance BeagleBone Black u-boot overlay test"
       hash: 0051fa51e15b092f16b264cdf4a0147e37e5fd25
       body: |

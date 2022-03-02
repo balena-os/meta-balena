@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.94.3
+## (2022-03-02)
+
+* tests/os: fix bracket in bbb overlay test [rcooke-warwick]
+
 # v2.94.2
 ## (2022-03-02)
 
