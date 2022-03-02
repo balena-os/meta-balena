@@ -1,4 +1,34 @@
 - commits:
+    - subject: "balena-image: Default image type to balenaos-img"
+      hash: a3c276a1058d05e66991871bf167079fc2824843
+      body: |
+        This avoids device repositories having to specify it, and it can always
+        be overwritten in append files.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Remove legacy resinhup images.
+      hash: d895c90e6382da56f7327305b3def4ab5b37742c
+      body: |
+        These image types are no longer generated and are not used for hostOS
+        updates any longer.
+      footer:
+        Changelog-entry: Remove legacy resinhup images.
+        changelog-entry: Remove legacy resinhup images.
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.94.1
+  title: "'images: Remove generation of legacy resinhup images'"
+  date: 2022-03-01T20:45:50.839Z
+- commits:
     - subject: Update balena-supervisor to v12.11.36
       hash: 8e9c3d992a5d681701580f52e5f9ba3d696bf1d8
       body: >

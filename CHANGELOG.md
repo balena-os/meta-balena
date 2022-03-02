@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.94.1
+## (2022-03-01)
+
+* balena-image: Default image type to balenaos-img [Alex Gonzalez]
+* Remove legacy resinhup images. [Alex Gonzalez]
+
 # v2.94.0
 ## (2022-03-01)
 
