@@ -80,7 +80,7 @@ module.exports = {
 			.worker.executeCommandInHostOS(
 				`head -n -2 /mnt/boot/uEnv.txt > /mnt/boot/temp_uEnv.txt && mv /mnt/boot/temp_uEnv.txt /mnt/boot/uEnv.txt`,
 				this.context.get().link,
-			};
+			);
 		await this.context.get().worker.rebootDut(this.context.get().link);
 
 		const resp_final = await this.context
