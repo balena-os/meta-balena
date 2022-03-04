@@ -165,6 +165,13 @@ module.exports = {
 						});
 					}, false);
 				}).then(() => {
+					test.comment(`Waiting for os-config-json service to be inactive...`);
+					return context.systemd.waitForServiceState(
+						'os-config-json.service',
+						'inactive',
+						context.link
+					);
+				}).then(() => {
 					test.comment(`Setting dnsServers to "null" in config.json...`);
 					return context.worker.executeCommandInHostOS(
 						[
@@ -201,6 +208,13 @@ module.exports = {
 								test.is(output, '1', 'Active dnsmasq service should not log "bad address".');
 							}),
 						]
+					);
+				}).then(() => {
+					test.comment(`Waiting for os-config-json service to be inactive...`);
+					return context.systemd.waitForServiceState(
+						'os-config-json.service',
+						'inactive',
+						context.link
 					);
 				}).then(() => {
 					test.comment(`Removing dnsServers field from config.json...`);
