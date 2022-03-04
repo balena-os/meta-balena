@@ -1,0 +1,72 @@
+#!/bin/sh
+
+# Copyright 2022 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Helper functions wrapping TPM2 manipulation
+# Functions are intentionally named hw_* as other secure element
+# implementations are expected in the future
+#
+
+hw_gen_passphrase() {
+    tpm2_getrandom 32
+}
+
+hw_encrypt_passphrase() {
+    PASSPHRASE_FILE="$1"
+    PCRS="$2"
+    OUT_DIR="$3"
+
+    # Create a PCR protection policy
+    # We are using PCRs 0, 1, 2 and 3
+    # This ensures secure boot is enabled and no UEFI configuration has been tampered with
+    POLICY="${OUT_DIR}/pcr.policy"
+    tpm2_createpolicy --policy-pcr -l "sha256:${PCRS}" -L "${POLICY}"
+
+    # Create a primary key pair within the TPM
+    PRIMARY_CTX="${OUT_DIR}/primary.ctx"
+    tpm2_createprimary -c "${PRIMARY_CTX}"
+
+    # Create the actual key pair that will be used for encrypting the LUKS passphrase
+    # rsa2048 seems most universal, not all TPM chips support more than 2048
+    PRIVATE_KEY="${OUT_DIR}/private.key"
+    PUBLIC_KEY="${OUT_DIR}/public.key"
+    tpm2_create -C "${PRIMARY_CTX}" -G rsa2048 -r "${PRIVATE_KEY}" -u "${PUBLIC_KEY}" -L "${POLICY}"
+
+    # Load the generated key pair into the TPM
+    # The userspace tooling allows this to be done together with tpm2_create above, not needing
+    # to store the keys as files, but not all TPM chips support that.
+    KEY_CTX="${OUT_DIR}/key.ctx"
+    tpm2_load -C "${PRIMARY_CTX}" -r "${PRIVATE_KEY}" -u "${PUBLIC_KEY}" -c "${KEY_CTX}"
+
+    # Make the key persistent and save the handle
+    PERSISTENT_KEY_HANDLE="${OUT_DIR}/persistent.ctx"
+    tpm2_evictcontrol -c "${KEY_CTX}" -o "${PERSISTENT_KEY_HANDLE}"
+
+    # Encrypt the passphrase using the newly generated key pair
+    ENCRYPTED_PASSPHRASE="${OUT_DIR}/passphrase.enc"
+    tpm2_rsaencrypt -c "${PERSISTENT_KEY_HANDLE}" -o "${ENCRYPTED_PASSPHRASE}" < "${PASSPHRASE_FILE}"
+
+    # Remove unnecessary files
+    rm -f "${PRIMARY_CTX}" "${PRIVATE_KEY}" "${PUBLIC_KEY}" "${KEY_CTX}" "${POLICY}"
+}
+
+hw_decrypt_passphrase() {
+    EFI_DIR="$1"
+    PCRS="$2"
+    OUTPUT_FILE="$3"
+
+    tpm2_rsadecrypt -c "${EFI_DIR}/balena-luks.ctx" -p "pcr:sha256:${PCRS}" -o "${OUTPUT_FILE}" "${EFI_DIR}/balena-luks.enc"
+}

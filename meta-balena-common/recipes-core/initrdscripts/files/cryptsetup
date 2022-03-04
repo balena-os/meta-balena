@@ -2,10 +2,19 @@
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-fs
+. /usr/libexec/os-helpers-tpm2
+
+EFI_DEV=$(get_state_path_from_label "balena-efi")
 
 cryptsetup_enabled() {
-    # Flasher is not encrypted
+    # Flasher should not try to unlock the partitions
     if [ "$bootparam_flasher" = "true" ]; then
+        return 1
+    fi
+
+    # Only run if the EFI partition is split
+    if [ ! -e "$EFI_DEV" ]; then
         return 1
     fi
 
@@ -18,12 +27,41 @@ cryptsetup_enabled() {
 }
 
 cryptsetup_run() {
+    # Die if anything fails here
+    set -e
+
     EFI_MOUNT_DIR="/efi"
     mkdir "$EFI_MOUNT_DIR"
-    mount /dev/disk/by-partlabel/balena-efi "$EFI_MOUNT_DIR"
+    mount "$EFI_DEV" "$EFI_MOUNT_DIR"
 
     PASSPHRASE_FILE=/balena-luks.pwd
-    tpm2_rsadecrypt -c "$EFI_MOUNT_DIR/balena-luks.ctx" -o "$PASSPHRASE_FILE" "$EFI_MOUNT_DIR/balena-luks.enc"
+    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,1,2,3" "$PASSPHRASE_FILE"; then
+        info "Successfully unlocked LUKS passphrase using the TPM"
+    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,2,3" "$PASSPHRASE_FILE"; then
+        info "Unlocked LUKS passphrase without UEFI config protection, re-locking"
+
+        RESULT_DIR="/balena-luks"
+        mkdir -p "$RESULT_DIR"
+
+        # Create a PCR protection policy
+        # We are using PCRs 0, 1, 2 and 3
+        # This ensures secure boot is enabled and no UEFI configuration has been tampered with
+        hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,1,2,3" "$RESULT_DIR"
+
+        # Ditch the old key pair from the TPM and replace existing files with new ones
+        tpm2_evictcontrol -c "$EFI_MOUNT_DIR/balena-luks.ctx"
+        mv "$RESULT_DIR/persistent.ctx" "$EFI_MOUNT_DIR/balena-luks.ctx" && sync
+        mv "$RESULT_DIR/passphrase.enc" "$EFI_MOUNT_DIR/balena-luks.enc" && sync
+
+        rm -rf "$RESULT_DIR"
+
+        sync
+
+        info "Passphrase lock includes UEFI configuration now"
+    else
+        umount "$EFI_MOUNT_DIR"
+        fail "Failed to unlock LUKS passphrase using the TPM"
+    fi
 
     for LUKS_UUID in $(lsblk -nlo uuid,fstype | grep crypto_LUKS | cut -d " " -f 1); do
         cryptsetup luksOpen --key-file $PASSPHRASE_FILE UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
@@ -32,4 +70,7 @@ cryptsetup_run() {
     rm -f "$PASSPHRASE_FILE"
     umount "$EFI_MOUNT_DIR"
     rmdir "$EFI_MOUNT_DIR"
+
+    # Revert dying on error
+    set +e
 }
