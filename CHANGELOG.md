@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.94.4
+## (2022-03-04)
+
+* balena-supervisor: Fix supervisor tagging command [Florin Sarbu]
+
 # v2.94.3
 ## (2022-03-02)
 

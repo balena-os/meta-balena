@@ -1,4 +1,18 @@
 - commits:
+    - subject: "balena-supervisor: Fix supervisor tagging command"
+      hash: d25d6289b14edd9111d6abbc45448693ca872036
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.94.4
+  title: "'balena-supervisor: Fix supervisor tagging command'"
+  date: 2022-03-04T05:54:28.770Z
+- commits:
     - subject: "tests/os: fix bracket in bbb overlay test"
       hash: c11bc9d3e8ad4102f1b0d38a4d2658222687e156
       body: ""
