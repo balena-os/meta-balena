@@ -152,7 +152,7 @@ fi
 echo "Pulling supervisor $image_name..."
 if $DOCKER pull "$image_name"; then
     image_id=$(balena images --filter=reference="${image_name%@*}" --format "{{.ID}}")
-    $DOCKER tag "${image_id}" "balena_supervisor":${version}"
+    $DOCKER tag "${image_id}" "balena_supervisor:${version}"
 else
     error_handler "supervisor pull failed"
 fi
