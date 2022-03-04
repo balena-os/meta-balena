@@ -1,4 +1,78 @@
 - commits:
+    - subject: Use by-state symlink for mounting the EFI partition when split
+      hash: 42d8ac8daaee2a67d5666c7220e1b9cd0e013e6e
+      body: >
+        In the current state the by-state symlink for balena-efi partition
+
+        is not generated for two reasons:
+
+        - 60-resin-update-state.rules only react to resin-* partition names
+
+        - the root device is not identified correctly in resin_update_state_probe
+          for LUKS devices
+
+        This patch fixes both the issues and makes use of the by-state symlink
+
+        instead of by-label.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "os-helpers: add TPM2 helpers"
+      hash: 78f7da3a3cdf1942861195238a6cea691899a140
+      body: |
+        This helps with code duplication in flasher and initrd scripts using
+        the TPM to manipulate LUKS passphrase.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: Add PCR protection policy to TPM operation unlocking LUKS passphrase
+      hash: aa76a9b45e18192ecaa67f17ef68f9cfc4d66a66
+      body: >
+        This patch adds the check for PCRs
+
+        - 0 - firmware/UEFI blob
+
+        - 1 - firmware/UEFI config
+
+        - 2 - Expansion card firmware blobs
+
+        - 3 - Expansion card firmware configs
+
+
+        The full protection is only applied on first boot after provisioning,
+
+        flasher only locks against PCRs 0, 2 and 3.
+
+        This is because when using flasher, the environment is not in the same
+
+        state as the one we want to lock to. In particular the boot order is
+
+        different (flasher is booted from a different drive than the resulting OS).
+
+        As for now we were not able to find a better solution than fully locking
+
+        only on first boot. This means the device must be booted in a secure
+
+        environment at least once after provisioning.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.94.5
+  title: "'Add PCR protection to LUKS/TPM manipulation'"
+  date: 2022-03-04T13:12:52.505Z
+- commits:
     - subject: "balena-supervisor: Fix supervisor tagging command"
       hash: d25d6289b14edd9111d6abbc45448693ca872036
       body: ""

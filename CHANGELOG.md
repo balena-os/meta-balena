@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.94.5
+## (2022-03-04)
+
+* Use by-state symlink for mounting the EFI partition when split [Michal Toman]
+* os-helpers: add TPM2 helpers [Michal Toman]
+* Add PCR protection policy to TPM operation unlocking LUKS passphrase [Michal Toman]
+
 # v2.94.4
 ## (2022-03-04)
 
