@@ -1,4 +1,17 @@
 - commits:
+    - subject: "tests/cloud: add device diagnostics in test"
+      hash: fe2a43df45844ce9f084d536af9d6bc16d182c14
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.94.6
+  date: 2022-03-07T12:45:09.576Z
+- commits:
     - subject: Use by-state symlink for mounting the EFI partition when split
       hash: 42d8ac8daaee2a67d5666c7220e1b9cd0e013e6e
       body: >

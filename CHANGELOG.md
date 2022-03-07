@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.94.6
+## (2022-03-07)
+
+* tests/cloud: add device diagnostics in test [rcooke-warwick]
+
 # v2.94.5
 ## (2022-03-04)
 
