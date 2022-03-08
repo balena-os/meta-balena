@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.0
+## (2022-03-04)
+
+* Adds modem test suite [Alex]
+
 # v2.94.5
 ## (2022-03-04)
 

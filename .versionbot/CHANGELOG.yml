@@ -1,4 +1,18 @@
 - commits:
+    - subject: Adds modem test suite
+      hash: c3cc64723e8a8d50aa5c6d4ece52d2c5a3b90e8a
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+        signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+      author: Alex
+      nested: []
+  version: 2.95.0
+  title: "'Adds modem test suite'"
+  date: 2022-03-04T18:27:18.723Z
+- commits:
     - subject: Use by-state symlink for mounting the EFI partition when split
       hash: 42d8ac8daaee2a67d5666c7220e1b9cd0e013e6e
       body: >
