@@ -248,6 +248,7 @@ module.exports = {
 		'./tests/healthcheck',
 		'./tests/variables',
 		'./tests/led',
+		'./tests/modem',
 		'./tests/config-json',
 		'./tests/boot-splash',
 		'./tests/connectivity',
