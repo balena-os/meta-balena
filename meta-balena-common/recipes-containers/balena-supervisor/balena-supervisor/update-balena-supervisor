@@ -98,11 +98,13 @@ trap error_handler EXIT
 # Space separated supervisor version and image name, or "null null"
 #
 os_helpers_fetch_target_state() {
-	_device_uuid="$1"
-	_api_env="$2"
-	_token="$3"
-	_target_state_json=$(curl --silent --header "Authorization: Bearer ${_token}" --header "User-Agent:" --compressed "${_api_env}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${_device_uuid}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
-	echo "${_target_state_json}" | tr "\n" " "
+    _device_uuid="$1"
+    _api_env="$2"
+    _token="$3"
+    _target_state_json=$(curl --silent --header "Authorization: Bearer ${_token}" --header "User-Agent: --compressed" "${_api_env}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${_device_uuid}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
+    if [ $? -eq 0 ]; then
+        echo "${_target_state_json}" | tr "\n" " "
+    fi
 }
 
 
@@ -124,10 +126,12 @@ fi
 echo "Getting image name and version..."
 if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ]; then
     _target_state=$(os_helpers_fetch_target_state "${UUID}" "${API_ENDPOINT}" "${_device_api_key}")
-    read -r version image_name <<< "${_target_state}"
-    if [ -z "$version" ] || [ -z "$image_name" ]; then
-        echo "ERROR: Unexpected API data."
-        error_handler "unexpected API data"
+    if [ -n "${_target_state}" ]; then
+        read -r version image_name <<< "${_target_state}"
+        if [ -z "$version" ] || [ -z "$image_name" ]; then
+            echo "ERROR: Unexpected API data."
+            error_handler "unexpected API data"
+        fi
     fi
 fi
 
@@ -135,7 +139,7 @@ fi
 . /etc/balena-supervisor/supervisor.conf
 
 # If no API version is set, use preloaded values
-if [ "$version" = "null" ] || [ "$image_name" = "null" ]; then
+if [ -z "$version" ] || [ -z "$image_name" ] || [ "$version" = "null" ] || [ "$image_name" = "null" ]; then
     echo "No supervisor configuration found from API."
     if [ -n "${TARGET_SUPERVISOR_IMAGE}" ]; then
         echo "Using command line image argument $TARGET_SUPERVISOR_IMAGE."
