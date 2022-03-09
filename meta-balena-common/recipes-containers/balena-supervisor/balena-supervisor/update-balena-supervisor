@@ -12,6 +12,12 @@ Options:
   -h, --help
         Display this help and exit.
 
+  -i <SUPERVISOR IMAGE>, --supervisor-image <SUPERVISOR IMAGE>
+        Set supervisor image to update to. This can be an image path like:
+          registry2.balena-cloud.com/v2/8f3d658a373039a9c27b8f1811b0261d
+        or a friendly URL like:
+          bh.cr/<org>/<fleet>/<commit|semver>
+
   -n, --no-start-stop-supervisor
         Do not start/stop the supervisor.
 EOF
@@ -27,6 +33,25 @@ while [ $# -gt 0 ]; do
             update_balena_supervisor_help
             exit 0
             ;;
+        -i|--supervisor-image)
+            if [ -z "$2" ]; then
+                echo "ERROR: \"$1\" argument needs a value."
+                exit 1
+            fi
+            # Matches <[sub.]domain.tld>/<fleet|translation>/<digest|semver>
+            # For example:
+            # bh.cr/balena/supervisor/0.0.0
+            # registry2.balena-cloud.com/v2/8f3d658a373039a9c27b8f1811b0261d
+            _regex='^([A-Za-z0-9\-]{1,63}\.)+[A-Za-z]{2,6}\/[a-zA-Z0-9_\.\-\/]+|v[0-9]+\/[0-9a-zA-Z_\-]+$'
+            if [[ "$2" =~ ${_regex} ]]; then
+                  TARGET_SUPERVISOR_IMAGE=$2
+            else
+                echo "ERROR: \"$2\" invalid value - should be of the form <[sub.]domain.tld>/<fleet|translation/<digest|semver>."
+                exit 1
+            fi
+            shift
+            ;;
+
         -n|--no-start-stop-supervisor)
             START_STOP_SUPERVISOR=0
             shift
@@ -111,18 +136,25 @@ fi
 
 # If no API version is set, use preloaded values
 if [ "$version" = "null" ] || [ "$image_name" = "null" ]; then
-    echo "No supervisor configuration found from API. Using preloaded values."
-    if [ -z "$SUPERVISOR_VERSION" ]; then
-        echo "ERROR: No preloaded version found."
-        error_handler "no preloaded version found"
+    echo "No supervisor configuration found from API."
+    if [ -n "${TARGET_SUPERVISOR_IMAGE}" ]; then
+        echo "Using command line image argument $TARGET_SUPERVISOR_IMAGE."
+        image_name="${TARGET_SUPERVISOR_IMAGE}"
+        version=$(basename "${image_name}")
+    else
+        echo "Using preloaded values."
+        if [ -z "$SUPERVISOR_VERSION" ]; then
+            echo "ERROR: No preloaded version found."
+            error_handler "no preloaded version found"
+        fi
+        if [ -z "$SUPERVISOR_IMAGE" ]; then
+            echo "ERROR: No preloaded image found."
+            error_handler "no preloaded image found."
+        fi
+        echo "Set based on preloaded values image=$SUPERVISOR_IMAGE and version=$SUPERVISOR_VERSION."
+        image_name="$SUPERVISOR_IMAGE"
+        version="$SUPERVISOR_VERSION"
     fi
-    if [ -z "$SUPERVISOR_IMAGE" ]; then
-        echo "ERROR: No preloaded image found."
-        error_handler "no preloaded image found."
-    fi
-    echo "Set based on preloaded values image=$SUPERVISOR_IMAGE and version=$SUPERVISOR_VERSION."
-    image_name="$SUPERVISOR_IMAGE"
-    version="$SUPERVISOR_VERSION"
 fi
 
 setSupervisorConfig() {
@@ -149,7 +181,7 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
 fi
 
 # Pull target version.
-echo "Pulling supervisor $image_name..."
+echo "Pulling supervisor $image_name at version $version..."
 if $DOCKER pull "$image_name"; then
     image_id=$(balena images --filter=reference="${image_name%@*}" --format "{{.ID}}")
     $DOCKER tag "${image_id}" "balena_supervisor:${version}"
