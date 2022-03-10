@@ -6,12 +6,12 @@ module.exports = {
 			run: async function(test) {
 				test.comment(`checking for chronyd service...`);
 				let result = '';
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					result = await this.context
 						.get()
 						.worker.executeCommandInHostOS(
 							`systemctl is-active chronyd.service`,
-							this.context.get().link,
+							this.link,
 						);
 					return result === 'active';
 				}, false);
@@ -19,7 +19,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						'systemctl status chronyd | grep running',
-						this.context.get().link,
+						this.link,
 					);
 				test.is(result !== '', true, 'Chronyd service should be running');
 			},
@@ -28,13 +28,13 @@ module.exports = {
 			title: 'Sync test',
 			run: async function(test) {
 				let result = '';
-				await this.context.get().utils.waitUntil(async () => {
+				await this.utils.waitUntil(async () => {
 					test.comment('checking system clock synchronized...');
 					result = await this.context
 						.get()
 						.worker.executeCommandInHostOS(
 							'timedatectl | grep System',
-							this.context.get().link,
+							this.link,
 						);
 					return result === 'System clock synchronized: yes';
 				});
@@ -42,7 +42,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						'timedatectl | grep System',
-						this.context.get().link,
+						this.link,
 					);
 				test.is(
 					result,
@@ -59,7 +59,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						`chronyc sources -n | fgrep '^*'`,
-						this.context.get().link,
+						this.link,
 					);
 				test.is(result !== '', true, 'Should see ^* next to chrony source');
 			},

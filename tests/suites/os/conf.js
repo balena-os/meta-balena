@@ -47,6 +47,9 @@ module.exports = options => {
 			releaseInfo: {
 				version: options.osReleaseVersion,
 			},
+			worker: {
+				url: options.workerUrl
+			}
 		},
 	};
 };

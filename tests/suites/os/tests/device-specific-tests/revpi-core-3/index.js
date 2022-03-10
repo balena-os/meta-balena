@@ -35,16 +35,16 @@ module.exports = {
 						.get()
 						.worker.executeCommandInHostOS(
 								`cd /mnt/boot/ && wget ${test_repository}${config_file} -O ${config_file}`,
-								this.context.get().link,
+								this.link,
 						);
 
-		await this.context.get().worker.rebootDut(this.context.get().link);
+		await this.worker.rebootDut(this.link);
 
 		await this.context
 				.get()
 				.worker.executeCommandInHostOS(
 						`cd /tmp/ && wget ${test_repository}bin/${dio_binary} -O ${dio_binary} && chmod +x ./${dio_binary}`,
-						this.context.get().link,
+						this.link,
 				);
 
 		// Set output O1 to 1 and ensure input I1 reads the value 1
@@ -52,14 +52,14 @@ module.exports = {
 				.get()
 				.worker.executeCommandInHostOS(
 						`/tmp/${dio_binary} -w O_1,1`,
-						this.context.get().link,
+						this.link,
 				);
 
 		output = await this.context
 				.get()
 				.worker.executeCommandInHostOS(
 						`sleep 1 && /tmp/${dio_binary} -1r I_1`,
-						this.context.get().link,
+						this.link,
 				);
 
 		test.is(
@@ -73,14 +73,14 @@ module.exports = {
 				.get()
 				.worker.executeCommandInHostOS(
 						`/tmp/${dio_binary} -w O_1,0`,
-						this.context.get().link,
+						this.link,
 				);
 
 		output = await this.context
 				.get()
 				.worker.executeCommandInHostOS(
 						`sleep 1 && /tmp/${dio_binary} -1r I_1`,
-						this.context.get().link,
+						this.link,
 				);
 
 		test.is(

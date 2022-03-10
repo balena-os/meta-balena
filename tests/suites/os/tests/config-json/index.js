@@ -99,7 +99,7 @@ module.exports = {
 							`|`, `jq`, `'.ntpServers="${ntpServer()}"'`, `>`, `$tmp`,
 							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
 						].join(' '),
-						this.context.get().link);
+						this.link);
 				}).then(() => {
 					test.comment(`Waiting for balena-ntp-config service to be active...`);
 					return context.systemd.waitForServiceState(
@@ -123,7 +123,7 @@ module.exports = {
 							`|`, `jq`, `"del(.ntpServers)"`, `>`, `$tmp`,
 							`&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`,
 						].join(' '),
-						this.context.get().link,
+						this.link,
 					);
 				});
 			},
@@ -152,7 +152,7 @@ module.exports = {
 					context.link);
 				}).then(() => {
 					test.comment(`Waiting for dnsmasq to be active and using ${exampleDns}...`);
-					return this.context.get().utils.waitUntil(async () => {
+					return this.utils.waitUntil(async () => {
 						return context.worker.executeCommandInHostOS(
 							[
 								`journalctl`,
@@ -393,9 +393,9 @@ module.exports = {
 			title: 'sshKeys test',
 			run: async function(test) {
 				return test.resolves(
-					this.context.get().worker.executeCommandInHostOS(
+					this.worker.executeCommandInHostOS(
 						'echo true',
-						this.context.get().link,
+						this.link,
 					),
 					'Should be able to establish ssh connection to the device',
 				);

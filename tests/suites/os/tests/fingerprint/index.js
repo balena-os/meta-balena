@@ -25,9 +25,9 @@ module.exports = {
 				let p = Promise.any(
 					['/resinos.fingerprint', '/balenaos.fingerprint'].map(
 						async (fingerprint) => {
-							return this.context.get().worker.executeCommandInHostOS(
+							return this.worker.executeCommandInHostOS(
 								`md5sum --quiet -c ${fingerprint}`,
-								this.context.get().link,
+								this.link,
 							);
 						}
 					)

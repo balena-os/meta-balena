@@ -29,27 +29,26 @@ module.exports = {
 		{
 			title: 'Bluetooth scanning test',
 			run: async function(test) {
-				if(process.env.WORKER_TYPE === `qemu`){
+				if(this.workerContract.workerType === `qemu`){
 					test.pass(
 						'Qemu worker used - skipping bluetooth test',
 					);
 				} else {
 					// get the testbot bluetooth name
-					let btName = await exec('bluetoothctl show | grep Name');
+					let btName = await this.worker.executeCommandInWorker('bluetoothctl show | grep Name');
 					let btNameParsed = /(.*): (.*)/.exec(btName); // the bluetoothctl command returns "Name: <btname>", so extract the <btname here>
-
 					// make testbot bluetooth discoverable
-					await exec('bluetoothctl discoverable on');
+					await this.worker.executeCommandInWorker('bluetoothctl discoverable on');
 
 					// scan for bluetooth devices on DUT, we retry a couple of times
 					let scan = '';
-					await this.context.get().utils.waitUntil(async () => {
+					await this.utils.waitUntil(async () => {
 						test.comment('Scanning for bluetooth devices...');
 						scan = await this.context
 							.get()
 							.worker.executeCommandInHostOS(
 								'hcitool scan',
-								this.context.get().link,
+								this.link,
 							);
 						return scan.includes(btNameParsed[2]);
 					});
@@ -65,7 +64,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								'hcitool dev',
-								this.context.get().link,
+								this.link,
 							);
 
 					test.is(

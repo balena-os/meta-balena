@@ -68,7 +68,7 @@ module.exports = {
 				}).then(() => {
 					test.comment('Filesystems have been marked dirty');
 					return this.context.get()
-						.worker.rebootDut(this.context.get().link);
+						.worker.rebootDut(this.link);
 				}).then(() => {
 					return Promise.map(diskLabels, (label) => {
 						return getFilesystemState(this.context, label).then((state) => {

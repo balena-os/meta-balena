@@ -40,10 +40,10 @@ module.exports = {
 	},
 	run: async function(test) {
 		const serviceName = 'collector';
-		const ip = await this.context.get().worker.ip(this.context.get().link);
+		const ip = await this.worker.ip(this.link);
 
 		// Wait for the supervisor API to be up
-		await this.context.get().utils.waitUntil(async () => {
+		await this.utils.waitUntil(async () => {
 			return (
 				(await request({
 					method: 'GET',
@@ -56,7 +56,7 @@ module.exports = {
 			.get()
 			.worker.executeCommandInHostOS(
 				`source /etc/balena-supervisor/supervisor.conf ; systemd-run --unit=${serviceName} bash -c "while true ; do cat $LED_FILE ; done"`,
-				this.context.get().link,
+				this.link,
 			);
 
 		const body = await request({
@@ -73,7 +73,7 @@ module.exports = {
 			.get()
 			.worker.executeCommandInHostOS(
 				`systemctl stop ${serviceName}`,
-				this.context.get().link,
+				this.link,
 			);
 
 		const lines = (
@@ -81,7 +81,7 @@ module.exports = {
 				.get()
 				.worker.executeCommandInHostOS(
 					`journalctl -o cat --unit=${serviceName}`,
-					this.context.get().link,
+					this.link,
 				)
 		).split('\n');
 

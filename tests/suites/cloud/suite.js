@@ -6,7 +6,6 @@
 
 "use strict";
 
-const Bluebird = require("bluebird");
 const fse = require("fs-extra");
 const { join } = require("path");
 const { homedir } = require("os");
@@ -37,8 +36,7 @@ const supportsBootConfig = (deviceType) => {
 
 const enableSerialConsole = async (imagePath) => {
 	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
-		return require('bluebird')
-			.promisify(_fs.readFile)('/config.txt')
+		return util.promisify(_fs.readFile)('/config.txt')
 			.catch((err) => {
 				return undefined;
 			});
@@ -53,7 +51,7 @@ const enableSerialConsole = async (imagePath) => {
 
 			// delete any existing instances before appending to the file
 			const newConfig = bootConfig.toString().replace(regex, '');
-			await require('bluebird').promisify(_fs.writeFile)(
+			await util.promisify(_fs.writeFile)(
 				'/config.txt',
 				newConfig.concat(`\n\n${value}\n\n`),
 			);
@@ -83,7 +81,12 @@ module.exports = {
       cli: new CLI(this.suite.options.balena.apiUrl, this.getLogger()),
       sshKeyPath: join(homedir(), "id"),
       utils: this.require("common/utils"),
-      worker: new Worker(this.suite.deviceType.slug, this.getLogger()),
+      worker: new Worker(
+        this.suite.deviceType.slug, 
+        this.getLogger(), 
+        this.suite.options.workerUrl, 
+        this.suite.options.balena.organization, 
+        join(homedir(), 'id')),
     });
 
     // Network definitions - these are given to the testbot via the config sent via the config.js
@@ -106,16 +109,14 @@ module.exports = {
 
     // Authenticating balenaSDK
     this.log("Logging into balena with balenaSDK");
-    await this.context
-      .get()
-      .cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+    await this.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
 
     // create a balena application
     this.log("Creating application in cloud...");
-    const app = await this.context.get().cloud.balena.models.application.create({
-      name: this.context.get().balena.name,
+    const app = await this.cloud.balena.models.application.create({
+      name: this.balena.name,
       deviceType: this.suite.deviceType.slug,
-      organization: this.context.get().balena.organization,
+      organization: this.balena.organization,
     });
 
     this.suite.context.set({
@@ -129,10 +130,8 @@ module.exports = {
     this.suite.teardown.register(() => {
       this.log("Removing application");
       try {
-        return this.context
-        .get()
-        .cloud.balena.models.application.remove(
-          this.context.get().balena.application
+        return this.cloud.balena.models.application.remove(
+          this.balena.application
         );
       } catch(e){
         this.log(`Error while removing application...`)
@@ -145,10 +144,10 @@ module.exports = {
       appPath: `${__dirname}/app`
     })
     await exec(
-      `git clone https://github.com/balena-io-examples/balena-node-hello-world.git ${this.context.get().appPath}`
+      `git clone https://github.com/balena-io-examples/balena-node-hello-world.git ${this.appPath}`
     );
     this.log(`Pushing release to app...`);
-    const initialCommit = await this.context.get().cloud.pushReleaseToApp(this.context.get().balena.application, `${__dirname}/app`)
+    const initialCommit = await this.cloud.pushReleaseToApp(this.balena.application, `${__dirname}/app`)
     this.suite.context.set({
       balena: {
         initialCommit: initialCommit
@@ -156,26 +155,21 @@ module.exports = {
     })
 
     // create an ssh key, so we can ssh into DUT later
-    await this.context
-      .get()
-      .cloud.balena.models.key.create(
-        this.context.get().balena.sshKey.label,
-        await this.context
-          .get()
-          .utils.createSSHKey(this.context.get().sshKeyPath)
+    const keys = await this.utils.createSSHKey(this.sshKeyPath);
+    await this.cloud.balena.models.key.create(
+        this.balena.sshKey.label,
+        keys.pubKey
       );
     this.suite.teardown.register(() => {
-      return Bluebird.resolve(
-        this.context
-          .get()
-          .cloud.removeSSHKey(this.context.get().balena.sshKey.label)
+      return Promise.resolve(
+        this.cloud.removeSSHKey(this.balena.sshKey.label)
       );
     });
 
     // generate a uuid
     this.suite.context.set({
       balena: {
-        uuid: this.context.get().cloud.balena.models.device.generateUniqueKey(),
+        uuid: this.cloud.balena.models.device.generateUniqueKey(),
       },
     });
 
@@ -189,21 +183,25 @@ module.exports = {
       ),
     });
 
-    // unpack OS
-    await this.context.get().os.fetch();
 
-    // If this is a flasher image, and we are using qemu, unwrap
+    this.suite.context.set({
+			workerContract: await this.worker.getContract()
+		})
+		// Unpack OS image .gz
+		await this.os.fetch();
+
+		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
 		if (
 			this.suite.deviceType.data.storage.internal &&
-			process.env.WORKER_TYPE === `qemu`
+			this.workerContract.workerType === `qemu`
 		) {
 			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
 			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
-			console.log(`Unwrapping file ${this.context.get().os.image.path}`);
+			console.log(`Unwrapping file ${this.os.image.path}`);
 			console.log(`Looking for ${RAW_IMAGE_PATH}`);
 			try {
 				await imagefs.interact(
-					this.context.get().os.image.path,
+					this.os.image.path,
 					2,
 					async (fsImg) => {
 						await pipeline(
@@ -213,7 +211,7 @@ module.exports = {
 					},
 				);
 
-				this.context.get().os.image.path = OUTPUT_IMG_PATH;
+				this.os.image.path = OUTPUT_IMG_PATH;
 				console.log(`Unwrapped flasher image!`);
 			} catch (e) {
 				// If the outer image doesn't contain an image for installation, ignore the error
@@ -225,25 +223,21 @@ module.exports = {
 			}
 		}
 
-    await this.context.get().os.readOsRelease();
+    await this.os.readOsRelease();
 
     // get config.json for application
     this.log("Getting application config.json...");
-    const config = await this.context
-      .get()
-      .cloud.balena.models.os.getConfig(this.context.get().balena.application, {
-        version: this.context.get().os.contract.version,
+    const config = await this.cloud.balena.models.os.getConfig(this.balena.application, {
+        version: this.os.contract.version,
       });
 
-    config.uuid = this.context.get().balena.uuid;
+    config.uuid = this.balena.uuid;
 
     //register the device with the application, add the api key to the config.json
     this.log("Pre-registering a new device...");
-    const deviceRegInfo = await this.context
-      .get()
-      .cloud.balena.models.device.register(
-        this.context.get().balena.application,
-        this.context.get().balena.uuid
+    const deviceRegInfo = await this.cloud.balena.models.device.register(
+        this.balena.application,
+        this.balena.uuid
       );
     
     // Add registered device's id and api key to config.json
@@ -253,87 +247,72 @@ module.exports = {
     config.developmentMode= true;
 
     // get ready to populate DUT image config.json with the attributes we just generated
-    this.context.get().os.addCloudConfig(config);
+    this.os.addCloudConfig(config);
 
     // Teardown the worker when the tests end
     this.suite.teardown.register(() => {
       this.log("Worker teardown");
-      return this.context.get().worker.teardown();
+      return this.worker.teardown();
     });
 
     console.log('--config.json--')
-    console.log(this.context.get().os.configJson);
+    console.log(this.os.configJson);
     // preload image with the single container application
-    this.log(`Device uuid should be ${this.context.get().balena.uuid}`)
-    await this.context.get().os.configure();
-    await this.context.get().cli.preload(this.context.get().os.image.path, {
-      app: this.context.get().balena.application,
+    this.log(`Device uuid should be ${this.balena.uuid}`)
+    await this.os.configure();
+    await this.cli.preload(this.os.image.path, {
+      app: this.balena.application,
       commit: initialCommit,
       pin: true,
     });
 
     this.log("Setting up worker");
-    await this.context
-      .get()
-      .worker.network(this.suite.options.balenaOS.network);
+    await this.worker.network(this.suite.options.balenaOS.network);
 
     if (supportsBootConfig(this.suite.deviceType.slug)) {
-      await enableSerialConsole(this.context.get().os.image.path);
+      await enableSerialConsole(this.os.image.path);
     }
     
-    await this.context.get().worker.off();
-    await this.context.get().worker.flash(this.context.get().os.image.path);
-    await this.context.get().worker.on();
+    await this.worker.off();
+    await this.worker.flash(this.os.image.path);
+    await this.worker.on();
 
     this.suite.teardown.register(async () => {
-      await this.context.get().worker.archiveLogs(this.id, `${this.context.get().balena.uuid.slice(0, 7)}.local`,);
+      await this.worker.archiveLogs(this.id, `${this.balena.uuid.slice(0, 7)}.local`,);
     });
 
-    this.log("Waiting for device to be reachable");
-    await this.context.get().utils.waitUntil(async() => {
-      console.log(`checking device is online in the dashboard....`)
-      
-      let isOnline =  await this.context
-        .get()
-        .cloud.balena.models.device.isOnline(this.context.get().balena.uuid);
-
-      console.log(isOnline);
-      return isOnline === true
-    });
-
-    this.log("Device is online and provisioned successfully");
-    await this.context.get().utils.waitUntil(async () => {
-      this.log("Trying to ssh into device");
-      let hostname = await this.context
-      .get()
-      .cloud.executeCommandInHostOS(
-        "cat /etc/hostname",
-        this.context.get().balena.uuid
-      )
-      return hostname === this.context.get().balena.uuid.slice(0, 7)
+    await this.utils.waitUntil(async() => {
+      console.log("Waiting for device to be online...");
+      return await this.cloud.balena.models.device.isOnline(this.balena.uuid);
     }, false);
 
-    this.log("Unpinning");
-    await this.context.get().utils.waitUntil(async () => {
-      this.log(`Unpinning device from release`)
-      await this.context
-      .get()
-      .cloud.balena.models.device.trackApplicationRelease(
-        this.context.get().balena.uuid
+    this.log("Device is online and provisioned successfully");
+    
+    await this.utils.waitUntil(async () => {
+      this.log("Trying to ssh into device...");
+      return await this.cloud.executeCommandInHostOS(
+        "cat /etc/hostname",
+        this.balena.uuid
+      ) === this.balena.uuid.slice(0, 7);
+    }, false);
+
+    this.log("Unpinning device from release");
+    await this.cloud.balena.models.device.trackApplicationRelease(
+      this.balena.uuid
+    );
+
+    await this.utils.waitUntil(async () => {
+      console.log('Waiting for device to be running latest release...');
+      return await this.cloud.balena.models.device.isTrackingApplicationRelease(
+        this.balena.uuid
       );
-
-      let unpinned = await this.context
-      .get()
-      .cloud.balena.models.device.isTrackingApplicationRelease(this.context.get().balena.uuid)
-
-      return unpinned
     }, false);
 
     // wait until the service is running before continuing
-    await this.context.get().cloud.waitUntilServicesRunning(
-      this.context.get().balena.uuid,
+    await this.cloud.waitUntilServicesRunning(
+      this.balena.uuid,
       [`main`],
-      this.context.get().balena.initialCommit
+      this.balena.initialCommit
     )
   },
   tests: [

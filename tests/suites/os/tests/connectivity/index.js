@@ -46,7 +46,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								`nmcli d  | grep ' ${testIface} ' | grep connected | awk '{print $1}'`,
-								this.context.get().link,
+								this.link,
 							);
 
 						if (iface === '') {
@@ -57,7 +57,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								`ping -c 10 -i 0.002 -I ${iface} ${URL_TEST}`,
-								this.context.get().link,
+								this.link,
 							);
 
 						test.ok(
@@ -79,12 +79,12 @@ module.exports = {
 								.get()
 								.worker.executeCommandInHostOS(
 									['balena', 'ps', '-qf', 'name=proxy'].join(' '),
-									this.context.get().link
+									this.link
 								);
 						};
 
 						const ip = await this.context.get()
-							.worker.ip(this.context.get().link);
+							.worker.ip(this.link);
 
 						// Ensure we only push and run the proxy container once
 						if (!await getProxyContainerID()) {
@@ -98,7 +98,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								'mkdir -p /mnt/boot/system-proxy',
-								this.context.get().link,
+								this.link,
 							);
 
 						test.comment(`Creating redsocks.conf for ${proxy}...`);
@@ -120,7 +120,7 @@ module.exports = {
 									'local_ip = 127.0.0.1; \n' +
 									'local_port = 12345; \n' +
 									'} \n" > /mnt/boot/system-proxy/redsocks.conf',
-								this.context.get().link,
+								this.link,
 							);
 
 						// the supervisor would do this if proxy config were set via the supervisor sdk
@@ -130,7 +130,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								'systemctl restart balena-proxy-config.service redsocks.service',
-								this.context.get().link,
+								this.link,
 							);
 
 						test.is(
@@ -138,7 +138,7 @@ module.exports = {
 								.get()
 								.worker.executeCommandInHostOS(
 									'systemctl is-active redsocks.service',
-									this.context.get().link,
+									this.link,
 								),
 							'active',
 							'Redsocks proxy service should be active',
@@ -148,7 +148,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								`curl -I https://${URL_TEST}`,
-								this.context.get().link,
+								this.link,
 							);
 
 						test.comment('Getting proxy container logs...');
@@ -159,7 +159,7 @@ module.exports = {
 									'logs',
 									await getProxyContainerID(),
 									'|', 'tail', '-n1'].join(' '),
-								this.context.get().link,
+								this.link,
 							);
 
 						const pattern = {
@@ -179,7 +179,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								'rm -rf /mnt/boot/system-proxy',
-								this.context.get().link,
+								this.link,
 							);
 
 						test.comment(`Manually restarting services...`);
@@ -187,7 +187,7 @@ module.exports = {
 							.get()
 							.worker.executeCommandInHostOS(
 								'systemctl restart balena-proxy-config.service redsocks.service',
-								this.context.get().link,
+								this.link,
 							);
 					},
 				};

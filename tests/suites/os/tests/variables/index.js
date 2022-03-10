@@ -18,14 +18,14 @@
 module.exports = {
 	title: 'Container exposed variables test',
 	run: async function(test) {
-		const ip = await this.context.get().worker.ip(this.context.get().link);
+		const ip = await this.worker.ip(this.link);
 
 		await this.context
 			.get()
 			.worker.pushContainerToDUT(ip, __dirname, 'variables');
 		const env = await this.context
 			.get()
-			.worker.executeCommandInContainer('env', 'variables', ip);
+			.worker.executeCommandInContainer('env', 'variables', this.link);
 
 		const result = {};
 		env.split('\n').forEach(element => {

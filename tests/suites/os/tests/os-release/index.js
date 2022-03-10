@@ -24,7 +24,7 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						'cat /etc/os-release',
-						this.context.get().link,
+						this.link,
 					);
 
 				const result = {};
@@ -55,8 +55,8 @@ module.exports = {
 				// check slug
 				test.is(
 					result['SLUG'],
-					`"${this.context.get().os.deviceType}"`,
-					`SLUG field should contain ${this.context.get().os.deviceType}`,
+					`"${this.os.deviceType}"`,
+					`SLUG field should contain ${this.os.deviceType}`,
 				);
 			},
 		},

@@ -7,7 +7,7 @@ module.exports = {
 			.get()
 			.worker.executeCommandInHostOS(
 				`dmesg | grep -q "Under-voltage detected" ; echo $?`,
-				this.context.get().link,
+				this.link,
 			);
 
 		if (result.includes('0')) {

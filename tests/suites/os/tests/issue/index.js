@@ -24,19 +24,19 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						'cat /etc/issue',
-						this.context.get().link,
+						this.link,
 					);
 
 				const distroName = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						'cat /etc/os-release | grep "^NAME=" | cut -d "=" -f2 | tr -d \'"\'',
-						this.context.get().link,
+						this.link,
 					);
 
 				const osReleaseVersion = await this.context
 					.get()
-					.worker.getOSVersion(this.context.get().link)
+					.worker.getOSVersion(this.link)
 
 				const result = {};
 				file.split('\n').forEach(element => {
@@ -66,19 +66,19 @@ module.exports = {
 					.get()
 					.worker.executeCommandInHostOS(
 						'cat /etc/issue.net',
-						this.context.get().link,
+						this.link,
 					);
 
 				const distroName = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						'cat /etc/os-release | grep "^NAME=" | cut -d "=" -f2 | tr -d \'"\'',
-						this.context.get().link,
+						this.link,
 					);
 
 				const osReleaseVersion = await this.context
 					.get()
-					.worker.getOSVersion(this.context.get().link)
+					.worker.getOSVersion(this.link)
 
 				const result = {};
 				file.split('\n').forEach(element => {
