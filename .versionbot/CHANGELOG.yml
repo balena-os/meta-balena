@@ -1,4 +1,101 @@
 - commits:
+    - subject: "tests: Add leviathan v2.0.0 as a submodule"
+      hash: 49b6fd8e07edc4facdef13795fa4fe079958977c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/cloud: Cleanup wait until loops in cloud suite"
+      hash: 65775fdf08d260ee7a87dbe262038bc9831780f7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/hup: Remove bluebird and this.context.get references"
+      hash: be472ff82d27a0ff5a67fd3202ae15e63aafb685
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/os: Remove bluebird and this.context.get references"
+      hash: c3570af3bd58f5fd8a134ffe5d71bce970b3ade8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/cloud: Remove bluebird and this.context.get references"
+      hash: 8c901905dadfb66a157f05ed9fcea2f6499e15bd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests: Cleanup suites config to support both testbot and qemu workers"
+      hash: e48e71e0bd2533806e7eff31f74b3e3a243e9493
+      body: >
+        This avoids having to make perl regex changes in yocto-scripts or in
+        Jenkins.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/cloud: Update cloud suite to support core on client"
+      hash: 428d9d616edacbaf70df9df0f76bc731af247c98
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/hup: Update hup suite to support core on client"
+      hash: 2f386863408f32b0197090e786c46605e2ab7fcb
+      body: |
+        This also removes the need for a registry and performs hup from file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/os: Update os suite to support core on client"
+      hash: fe68f8192c4875b575f86bc41c6e3ff9fb27f587
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.95.1
+  title: "'tests: Suite updates for compatiblity with core moved to client'"
+  date: 2022-03-08T18:48:12.462Z
+- commits:
     - subject: Adds modem test suite
       hash: c3cc64723e8a8d50aa5c6d4ece52d2c5a3b90e8a
       body: ""
