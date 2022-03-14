@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.2
+## (2022-03-11)
+
+* kernel-balena: Disable building gcc plugins [Alexandru Costache]
+
 # v2.95.1
 ## (2022-03-08)
 

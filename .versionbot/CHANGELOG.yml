@@ -1,4 +1,39 @@
 - commits:
+    - subject: "kernel-balena: Disable building gcc plugins"
+      hash: bd8d2de9983f47e46ffa0e689be88c5b12e46617
+      body: >
+        Since
+        https://github.com/raspberrypi/linux/commit/1eee36a5520b5a89fb4d0d6af6f9cb0217a3164f
+
+        was merged and included in kernel versions after 5.10.84,
+
+        building the kernel-modules-headers fails due to various missing
+
+        headers from the gmp and mpc packages. This problem is visible
+
+        only after upgrading to a newer kernel, because until now the
+
+        gcc plugins kernel config was not enabled at all, due to the
+
+        failed check in the above mentioned patch.
+
+
+        Since we are not using the functions provided
+
+        by the gcc plugins anyway, we can disable this
+
+        config.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.95.2
+  title: "'kernel-balena: Disable building of gcc plugins'"
+  date: 2022-03-11T17:26:05.533Z
+- commits:
     - subject: "tests: Add leviathan v2.0.0 as a submodule"
       hash: 49b6fd8e07edc4facdef13795fa4fe079958977c
       body: ""
