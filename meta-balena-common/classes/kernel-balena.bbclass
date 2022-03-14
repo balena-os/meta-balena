@@ -146,6 +146,7 @@ BALENA_CONFIGS ?= " \
     disable_hung_panic \
     mdraid \
     dmcrypt \
+    no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
     "
 
@@ -621,6 +622,10 @@ BALENA_CONFIGS[uprobes] = " \
 BALENA_CONFIGS[disable_hung_panic] = " \
     CONFIG_BOOTPARAM_HUNG_TASK_PANIC=n \
     "
+
+BALENA_CONFIGS[no_gcc_plugins] = " \
+    CONFIG_GCC_PLUGINS=n \
+"
 
 # enable rootfs on RAID1
 BALENA_CONFIGS[mdraid] = " \
