@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.3
+## (2022-03-15)
+
+* balena-supervisor: Update balena-supervisor to v12.11.38 Ensure preloaded applications are ran when no internet is available on first run [20k-ultra]
+
 # v2.95.2
 ## (2022-03-11)
 

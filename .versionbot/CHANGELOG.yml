@@ -1,4 +1,20 @@
 - commits:
+    - subject: "balena-supervisor: Update balena-supervisor to v12.11.38 Ensure
+        preloaded applications are ran when no internet is available on first
+        run"
+      hash: 08058f8671704f7d925ed97c3202b3620570a95b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+        signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+      author: 20k-ultra
+      nested: []
+  version: 2.95.3
+  title: "'balena-supervisor: Update balena-supervisor to v12.11.38'"
+  date: 2022-03-15T23:32:43.991Z
+- commits:
     - subject: "kernel-balena: Disable building gcc plugins"
       hash: bd8d2de9983f47e46ffa0e689be88c5b12e46617
       body: >
