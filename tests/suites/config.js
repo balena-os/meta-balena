@@ -9,7 +9,7 @@ module.exports = [{
 		organization: process.env.BALENACLOUD_ORG
 	},
 	image: `${__dirname}/balena.img.gz`,
-	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://localhost:80'] : {
+	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
 		balenaApplication: process.env.BALENACLOUD_APP_NAME,
 		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
@@ -26,7 +26,7 @@ module.exports = [{
 		organization: process.env.BALENACLOUD_ORG
 	},
 	image: `${__dirname}/balena-image.docker`,
-	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://localhost:80'] : {
+	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
 		balenaApplication: process.env.BALENACLOUD_APP_NAME,
 		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
@@ -42,7 +42,7 @@ module.exports = [{
 		organization: process.env.BALENACLOUD_ORG
 	},
 	image: `${__dirname}/balena.img.gz`,
-	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://localhost:80'] : {
+	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
 		balenaApplication: process.env.BALENACLOUD_APP_NAME,
 		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
