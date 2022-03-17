@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/os: wait for osconfig service to be inactive"
+      hash: da59749c901057a55adaf990643fc235480156aa
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.95.4
+  title: "'Fix dns test'"
+  date: 2022-03-17T17:38:43.827Z
+- commits:
     - subject: "balena-supervisor: Update balena-supervisor to v12.11.38 Ensure
         preloaded applications are ran when no internet is available on first
         run"

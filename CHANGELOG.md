@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.4
+## (2022-03-17)
+
+* tests/os: wait for osconfig service to be inactive [rcooke-warwick]
+
 # v2.95.3
 ## (2022-03-15)
 
