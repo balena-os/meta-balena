@@ -20,6 +20,20 @@
 set -e
 [ -n "$DEBUG" ] && set -x
 
+# According to the above commit, the issue affected kernel versions 4.13 and
+# newer. Therefore we need to run this test on kernels newer than that,
+# otherwise it will fail.
+MIN_KERNEL_VER="4.13"
+KERNEL_VER=$(uname -r | sed 's/\./-/2' | cut -d- -f1)
+
+if [ "$(printf '%s\n' "$MIN_KERNEL_VER" "$KERNEL_VER" | sort -V | head -n1)" = "$MIN_KERNEL_VER" ]; then
+	echo "kernel version ${KERNEL_VER} suitable for test"
+else
+	# Exit now, otherwise the test will fail on kernels older than the 4.13
+	echo "ok - test skipped, min kernel version requirement not met - DUT running ${KERNEL_VER}"
+	exit 0
+fi
+
 root=${ROOT:-$PWD}
 root="$root"/ovl
 
