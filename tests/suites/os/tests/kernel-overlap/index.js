@@ -11,7 +11,9 @@ module.exports = {
 				`cd /tmp && ${fileContents}`,
 				this.link,
 			);
-
+		if (script.includes('skipped')) {
+			test.comment('DUT runs a kernel older than 4.13, this test will be skipped');
+		}
 		test.is(
 			script.includes('ok'),
 			true,
