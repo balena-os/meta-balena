@@ -17,6 +17,8 @@
 
 set -e
 
+. /usr/libexec/os-helpers-devmode
+
 tool=$(basename "$0")
 custom_ssh_public_keys=".os.sshKeys"
 authorized_keys_path=/home/root/.ssh/authorized_keys_local
@@ -63,6 +65,7 @@ if [ -n "$ssh_keys" ]; then
 	else
 		log "Custom SSH public keys already in place."
 	fi
+	gen_devmode_config
 else
 	log "No custom SSH public keys configured."
 	[ ! -f "$authorized_keys_path" ] || rm -f "$authorized_keys_path"
