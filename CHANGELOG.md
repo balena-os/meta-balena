@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.5
+## (2022-03-21)
+
+* tests/kernel-overlap: Prevent test run failure on older kernels [Alexandru Costache]
+
 # v2.95.4
 ## (2022-03-17)
 

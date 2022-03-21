@@ -1,4 +1,23 @@
 - commits:
+    - subject: "tests/kernel-overlap: Prevent test run failure on older kernels"
+      hash: 3d230a9d003988924b6c16720d554c9f48a05c16
+      body: |
+        The issue that this test is aimed at has been introduced in
+        kernel versions above 4.13. On older kernels like for instance
+        4.9, the test will not pass.
+
+        Let's run this test on kernel versions where the issue was present.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.95.5
+  title: "'tests/kernel-overlap: Prevent test run failure on older kernels'"
+  date: 2022-03-21T15:04:59.766Z
+- commits:
     - subject: "tests/os: wait for osconfig service to be inactive"
       hash: da59749c901057a55adaf990643fc235480156aa
       body: ""
