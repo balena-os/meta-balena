@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.95.6
+## (2022-03-22)
+
+* balena-supervisor: Use architecture instead of device type to query API [Alex Gonzalez]
+* update-balena-supervisor: Support passing command line image argument [Alex Gonzalez]
+
 # v2.95.5
 ## (2022-03-21)
 

@@ -1,4 +1,38 @@
 - commits:
+    - subject: "balena-supervisor: Use architecture instead of device type to query API"
+      hash: 419e1eefe64b6e5ffc9ff370e50cd256a319ef2c
+      body: |
+        This caters for the use case of custom device types that are not
+        registered in balena-cloud but still need to fetch the supervisor from
+        balena-cloud's registry by querying the `supervisor_version` endpoint,
+        for example when using openBalena.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "update-balena-supervisor: Support passing command line image argument"
+      hash: 227fea72a17c00bcd7e8ee069414ccc006703072
+      body: |
+        For balena-cloud managed devices, the supervisor update data is managed
+        by the API.
+
+        Providing the image name in the command line provides an update path
+        for unmanaged devices, manual updates on ESR devices (which currently
+        do not allow dashboard based updates) and openBalena use cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.95.6
+  title: "'Supervisor update enhacements'"
+  date: 2022-03-22T15:05:51.376Z
+- commits:
     - subject: "tests/kernel-overlap: Prevent test run failure on older kernels"
       hash: 3d230a9d003988924b6c16720d554c9f48a05c16
       body: |
