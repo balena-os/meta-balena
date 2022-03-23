@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.7
+## (2022-03-23)
+
+* hostapp-update-hooks: Always update legacy development variants to development mode [Alex Gonzalez]
+
 # v2.95.6
 ## (2022-03-22)
 

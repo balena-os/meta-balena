@@ -1,4 +1,26 @@
 - commits:
+    - subject: "hostapp-update-hooks: Always update legacy development variants to
+        development mode"
+      hash: 8c7bd8d87d0db97851528f97c4853097c63273e4
+      body: >
+        A legacy development image will update to development mode enabled
+
+        independently of whether the newOS is configured for development mode or
+
+        not. The only case when a hostapp has developmentMode set is when locally
+
+        building with `OS_DEVELOPMENT`.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.95.7
+  title: "'Always update legacy development variants to development mode'"
+  date: 2022-03-23T12:47:07.162Z
+- commits:
     - subject: "balena-supervisor: Use architecture instead of device type to query API"
       hash: 419e1eefe64b6e5ffc9ff370e50cd256a319ef2c
       body: |
