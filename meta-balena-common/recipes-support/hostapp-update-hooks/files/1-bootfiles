@@ -105,9 +105,8 @@ deploy() {
 				return
 			fi
 		elif [ "$_file" = "/config.json" ]; then
-			development_mode="$(jq -r ".developmentMode" "/resin-boot$_file")"
-			if [ "${development_mode}" = "true" ]; then
-				# New OS has development mode configured
+			development_mode="$(jq -r ".developmentMode" "${boot_mountpoint}$_file")"
+			if [ -z "${development_mode}" ] || [ "${development_mode}" = "null" ]; then
 				# Only configure developmentMode if updating from a legacy development image
 				old_os_os_release=$(find "/mnt/sysroot/active" -path "*/etc/os-release")
 				if grep -i -q 'VARIANT="Development"' "${old_os_os_release}"; then
