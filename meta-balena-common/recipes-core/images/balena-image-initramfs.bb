@@ -25,6 +25,7 @@ PACKAGE_INSTALL = " \
     "
 
 PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-kexec',d)}"
+PACKAGE_INSTALL:append = "${@oe.utils.conditional('PARTITION_TABLE_TYPE','gpt',' gptfdisk ','',d)}"
 
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = ""
