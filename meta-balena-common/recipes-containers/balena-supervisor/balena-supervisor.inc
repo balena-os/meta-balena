@@ -17,4 +17,4 @@ SUPERVISOR_FLEET:x86-64 ?= "amd64-supervisor"
 SUPERVISOR_FLEET:intel-quark ?= "i386-nlp-supervisor"
 
 # Balena supervisor default version
-SUPERVISOR_VERSION ?= "v12.11.38"
+SUPERVISOR_VERSION ?= "v13.0.0"
