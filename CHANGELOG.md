@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.8
+## (2022-03-25)
+
+* Test draft v3 supervisor [Felipe Lalanne]
+
 # v2.95.7
 ## (2022-03-23)
 

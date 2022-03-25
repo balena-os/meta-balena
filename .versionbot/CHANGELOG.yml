@@ -1,4 +1,16 @@
 - commits:
+    - subject: Test draft v3 supervisor
+      hash: bf3e1ddf1100dc308da28248354f2652bd14eda2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+      nested: []
+  version: 2.95.8
+  title: "'Test draft v3 supervisor'"
+  date: 2022-03-25T16:38:37.745Z
+- commits:
     - subject: "hostapp-update-hooks: Always update legacy development variants to
         development mode"
       hash: 8c7bd8d87d0db97851528f97c4853097c63273e4
