@@ -63,7 +63,6 @@ inherit image_types
 #
 
 BALENA_ROOT_FSTYPE ?= "hostapp-ext4"
-PARTITION_TABLE_TYPE ?= "msdos"
 
 python() {
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR

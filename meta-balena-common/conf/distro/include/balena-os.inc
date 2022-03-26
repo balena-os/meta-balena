@@ -36,6 +36,8 @@ DISTRO_FEATURES_DEFAULT:remove = "x11"
 OS_DEVELOPMENT ?= "0"
 DISTRO_FEATURES:append = " ${@bb.utils.contains('OS_DEVELOPMENT','1','osdev-image','',d)}"
 
+PARTITION_TABLE_TYPE ?= "msdos"
+
 # Disable user namespacing with a sysctl by default, but allow DTs to leave it enabled
 DISTRO_FEATURES:append = " disable-user-ns"
 

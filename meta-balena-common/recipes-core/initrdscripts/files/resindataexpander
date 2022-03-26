@@ -41,6 +41,11 @@ resindataexpander_enabled() {
 	    echo "Fix" | parted  ---pretend-input-tty /dev/${datadev} print 2>&1 > /dev/null
 	    partprobe
 	    sync
+
+            if sgdisk -v /dev/${datadev} 2>&1 | grep -q "corrupt GPT"; then
+                sgdisk --backup=/run/gpt.bkp /dev/${datadev}
+                sgdisk --load-backup=/run/gpt.bkp /dev/${datadev}
+            fi
     fi
 
     return 0
