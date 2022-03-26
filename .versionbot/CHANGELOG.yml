@@ -1,4 +1,24 @@
 - commits:
+    - subject: "resindataexpander: Check and fix end GPT if necessary"
+      hash: 5d2435e17851f44f17cfba491b01f766d7930317
+      body: |
+        Under certain circumstances that we haven't reproduced,
+        it is reported that the alternate GPT may become corrupt,
+        preventing the device from booting.
+
+        Should this happen, we use sgdisk to check and recover the end gpt
+        from the main one.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.95.8
+  title: "'Add gpt check'"
+  date: 2022-03-25T08:08:23.471Z
+- commits:
     - subject: "hostapp-update-hooks: Always update legacy development variants to
         development mode"
       hash: 8c7bd8d87d0db97851528f97c4853097c63273e4

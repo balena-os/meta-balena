@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.8
+## (2022-03-25)
+
+* resindataexpander: Check and fix end GPT if necessary [Alexandru Costache]
+
 # v2.95.7
 ## (2022-03-23)
 
