@@ -1,4 +1,28 @@
 - commits:
+    - subject: "tests: update leviathan to 2.0.4"
+      hash: b90c280d8f08497fcf2ca7b5329bdb7e7dc7c22a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: update config for new leviathan version"
+      hash: 788cacc8daadf487698e28e2ad308cc54f1d96b4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.95.9
+  title: "'tests: update config for new leviathan version'"
+  date: 2022-03-28T12:52:25.738Z
+- commits:
     - subject: "resindataexpander: Check and fix end GPT if necessary"
       hash: 5d2435e17851f44f17cfba491b01f766d7930317
       body: |

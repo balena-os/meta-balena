@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.95.9
+## (2022-03-28)
+
+* tests: update leviathan to 2.0.4 [rcooke-warwick]
+* tests: update config for new leviathan version [rcooke-warwick]
+
 # v2.95.8
 ## (2022-03-25)
 
