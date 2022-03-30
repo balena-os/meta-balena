@@ -1,0 +1,83 @@
+From b8842065ad621a03a971dfd50db862c5bffdeb49 Mon Sep 17 00:00:00 2001
+From: Dmitry Eremin-Solenikov <dmitry_eremin@mentor.com>
+Date: Sat, 18 Apr 2015 17:58:17 +0300
+Subject: [PATCH] e2fsprogs: add ptest
+
+Upstream-Status: Inappropriate
+
+Rebase for e2fsprogs 1.45.3.
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
+---
+ tests/Makefile.in |  4 ++--
+ tests/test_config | 32 ++++++++++++++++----------------
+ 2 files changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/tests/Makefile.in b/tests/Makefile.in
+index 8c4d2048..e021af32 100644
+--- a/tests/Makefile.in
++++ b/tests/Makefile.in
+@@ -19,7 +19,7 @@ test_one: $(srcdir)/test_one.in Makefile mke2fs.conf
+ 	@echo "#!/bin/sh" > test_one
+ 	@echo "HTREE=y" >> test_one
+ 	@echo "QUOTA=y" >> test_one
+-	@echo "SRCDIR=@srcdir@" >> test_one
++	@echo "SRCDIR=${prefix}${libdir}/e2fsprogs/ptest/test" >> test_one
+ 	@echo "DIFF_OPTS=@UNI_DIFF_OPTS@" >> test_one
+ 	@echo "SIZEOF_TIME_T=@SIZEOF_TIME_T@" >> test_one
+ 	@echo "DD=@DD@" >>test_one
+@@ -30,7 +30,7 @@ test_script: test_one test_script.in Makefile mke2fs.conf
+ 	@echo "Creating test_script..."
+ 	@[ -f test_script ] && chmod u+w test_script || true
+ 	@echo "#!/bin/sh" > test_script
+-	@echo "SRCDIR=@srcdir@" >> test_script
++	@echo "SRCDIR=${prefix}${libdir}/e2fsprogs/ptest/test" >> test_script
+ 	@cat $(srcdir)/test_script.in >> test_script
+ 	@chmod +x-w test_script
+ 
+diff --git a/tests/test_config b/tests/test_config
+index 9dc762ce..a5fbdef6 100644
+--- a/tests/test_config
++++ b/tests/test_config
+@@ -3,25 +3,25 @@
+ #
+ 
+ unset LANG LANGUAGE LC_ADDRESS LC_ALL LC_COLLATE LC_CTYPE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE LC_TIME PAGER
+-FSCK="$USE_VALGRIND ../e2fsck/e2fsck"
+-MKE2FS="$USE_VALGRIND ../misc/mke2fs"
+-DUMPE2FS="$USE_VALGRIND ../misc/dumpe2fs"
+-TUNE2FS="$USE_VALGRIND ../misc/tune2fs"
+-CHATTR="$USE_VALGRIND../misc/chattr"
+-LSATTR="$USE_VALGRIND ../misc/lsattr"
+-E2IMAGE="$USE_VALGRIND ../misc/e2image"
+-E2IMAGE_EXE="../misc/e2image"
+-DEBUGFS="$USE_VALGRIND ../debugfs/debugfs"
+-DEBUGFS_EXE="../debugfs/debugfs"
++FSCK="$USE_VALGRIND e2fsck"
++MKE2FS="$USE_VALGRIND mke2fs"
++DUMPE2FS="$USE_VALGRIND dumpe2fs"
++TUNE2FS="$USE_VALGRIND tune2fs"
++CHATTR="$USE_VALGRIND chattr"
++LSATTR="$USE_VALGRIND lsattr"
++E2IMAGE="$USE_VALGRIND e2image"
++E2IMAGE_EXE="/sbin/e2image"
++DEBUGFS="$USE_VALGRIND debugfs"
++DEBUGFS_EXE="/sbin/debugfs"
+ TEST_BITS="test_data.tmp"
+-RESIZE2FS_EXE="../resize/resize2fs"
++RESIZE2FS_EXE="/sbin/resize2fs"
+ RESIZE2FS="$USE_VALGRIND $RESIZE2FS_EXE"
+-E2UNDO_EXE="../misc/e2undo"
++E2UNDO_EXE="/sbin/e2undo"
+ E2UNDO="$USE_VALGRIND $E2UNDO_EXE"
+-E2MMPSTATUS="$USE_VALGRIND ../misc/dumpe2fs -m"
+-TEST_REL=../tests/progs/test_rel
+-TEST_ICOUNT=../tests/progs/test_icount
+-CRCSUM=../tests/progs/crcsum
++E2MMPSTATUS="$USE_VALGRIND dumpe2fs -m"
++TEST_REL=./progs/test_rel
++TEST_ICOUNT=./progs/test_icount
++CRCSUM=./progs/crcsum
+ CLEAN_OUTPUT="sed -f $cmd_dir/filter.sed"
+ LD_LIBRARY_PATH=../lib:../lib/ext2fs:../lib/e2p:../lib/et:../lib/ss:${LD_LIBRARY_PATH}
+ DYLD_LIBRARY_PATH=../lib:../lib/ext2fs:../lib/e2p:../lib/et:../lib/ss:${DYLD_LIBRARY_PATH}
