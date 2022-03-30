@@ -1,4 +1,28 @@
 - commits:
+    - subject: "recipes-devtools/e2fsprogs: Bring in e2fsprogs recipe from Poky
+        Honister"
+      hash: 2c6d9024266e792d079b794acbd98b1d04ec2357
+      body: >
+        Various boards may fail testbot fsck runs due to older
+
+        tune2fs version not supporting various options.
+
+
+        eg:
+           not ok 1 - tune2fs -E force_fsck ... failed. stderr: Bad options specified.
+
+        Let's bring in the e2fsprogs recipe from Poky Honister.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.95.10
+  title: "'recipes-devtools/e2fsprogs: Bring in e2fsprogs recipe from poky master'"
+  date: 2022-03-30T10:05:07.828Z
+- commits:
     - subject: "tests: update leviathan to 2.0.4"
       hash: b90c280d8f08497fcf2ca7b5329bdb7e7dc7c22a
       body: ""

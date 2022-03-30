@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.10
+## (2022-03-30)
+
+* recipes-devtools/e2fsprogs: Bring in e2fsprogs recipe from Poky Honister [Alexandru Costache]
+
 # v2.95.9
 ## (2022-03-28)
 
