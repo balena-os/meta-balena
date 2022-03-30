@@ -147,7 +147,7 @@ module.exports = {
 						await this.context
 							.get()
 							.worker.executeCommandInHostOS(
-								`curl -I https://${URL_TEST}`,
+								`curl -I https://${URL_TEST} && sleep 3`,
 								this.link,
 							);
 
