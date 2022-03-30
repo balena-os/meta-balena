@@ -13,6 +13,21 @@
  */
 
 'use strict';
+const request = require('request-promise');
+
+async function waitUntilSupervisorActive(test, context){
+	const ip = await context.worker.ip(context.link);
+
+	await context.utils.waitUntil(async () => {
+		test.comment(`Waiting for DUT supervisor to be reachable on port 48484...`)
+		return (
+			(await request({
+				method: 'GET',
+				uri: `http://${ip}:48484/ping`,
+			})) === 'OK'
+		);
+	}, false);
+}
 
 module.exports = {
 	title: 'Reset tests',
@@ -150,6 +165,8 @@ module.exports = {
 					);
 				}, false);
 
+				await waitUntilSupervisorActive(test, this.context.get());
+
 				test.is(
 					await this.context
 						.get()
@@ -219,6 +236,8 @@ module.exports = {
 							)) === 'active'
 					);
 				}, false);
+
+				await waitUntilSupervisorActive(test, this.context.get());
 
 				test.is(
 					await this.context
