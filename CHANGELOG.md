@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.10
+## (2022-03-30)
+
+* tests/os: check supervisor is pulled  after purge [rcooke-warwick]
+
 # v2.95.9
 ## (2022-03-28)
 

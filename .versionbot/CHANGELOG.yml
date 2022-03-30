@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/os: check supervisor is pulled  after purge"
+      hash: 58a645684921797383602311821522604064fd62
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.95.10
+  title: "'tests/os: check supervisor is pulled  after purge'"
+  date: 2022-03-30T11:28:54.776Z
+- commits:
     - subject: "tests: update leviathan to 2.0.4"
       hash: b90c280d8f08497fcf2ca7b5329bdb7e7dc7c22a
       body: ""
