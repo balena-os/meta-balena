@@ -3,7 +3,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/grub-efi:"
 inherit sign-efi
 
 SRC_URI += " \
-    file://pass-secure-boot.patch \
     file://0001-Add-dummyterm-module.patch \
     "
 
