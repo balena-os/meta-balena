@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.12
+## (2022-03-31)
+
+* grub-efi: Remove patch passing secure boot status to the kernel [Michal Toman]
+
 # v2.95.11
 ## (2022-03-30)
 
