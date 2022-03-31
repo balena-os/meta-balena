@@ -40,6 +40,7 @@ fi
 
 export DOCKER_HOST="unix:///var/run/balena-host.sock"
 SYSROOT="/mnt/sysroot/inactive"
+LOADTMP="/mnt/data/resin-data/tmp"
 
 if [ -d /mnt/state ]; then
 	# Save VPN state for rollbacks
@@ -80,7 +81,18 @@ done
 
 # Load new hostapp
 if [ "$local_image" != "" ]; then
+	# bind mount the data partition for temporary extract/load files
+	if ! mountpoint "${SYSROOT}/balena/tmp"; then
+		mkdir -p "${LOADTMP}"
+		mount --bind "${LOADTMP}" "${SYSROOT}/balena/tmp"
+	fi
+
+	# load a local image tarball
 	HOSTAPP_IMAGE=$(balena load --quiet -i "$local_image" | cut -d: -f1 --complement | tr -d ' ')
+
+	# attempt to unmount and clean up the temporary extract/load files but ignore failures
+	umount "${SYSROOT}/balena/tmp" || true
+	rm -rf "${LOADTMP}" || true
 elif [ "$remote_image" != "" ]; then
 	HOSTAPP_IMAGE="$remote_image"
 	balena pull "$HOSTAPP_IMAGE"
