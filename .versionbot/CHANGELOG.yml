@@ -1,4 +1,24 @@
 - commits:
+    - subject: "hostapp-update: Mount data partition on target balena/tmp"
+      hash: 548c6c08f041f69786f0092eb2397f2fbf8e7e86
+      body: |
+        In most cases there is not enough space on rootfs to extract
+        and load a local hostapp image when the balena-host tmpdir
+        is on the same partition.
+
+        This uses a data mount to ensure temporary extracted files of the
+        compressed image will not fill the target sysroot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.95.11
+  title: "'hostapp-update: Mount data partition on target balena/tmp'"
+  date: 2022-03-30T17:20:46.022Z
+- commits:
     - subject: "tests/os: check supervisor is pulled  after purge"
       hash: 58a645684921797383602311821522604064fd62
       body: ""

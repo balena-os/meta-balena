@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.11
+## (2022-03-30)
+
+* hostapp-update: Mount data partition on target balena/tmp [Kyle Harding]
+
 # v2.95.10
 ## (2022-03-30)
 
