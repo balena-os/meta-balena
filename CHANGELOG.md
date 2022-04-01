@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.13
+## (2022-04-01)
+
+* tests: Update leviathan to klutchell/aarch64-hosts [Kyle Harding]
+
 # v2.95.12
 ## (2022-03-31)
 

@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: Update leviathan to klutchell/aarch64-hosts"
+      hash: 367fed62a7a5d08041d771a176026fa13814a36f
+      body: |
+        Update tests/leviathan to klutchell/aarch64-hosts
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.95.13
+  title: "'tests: Update leviathan to support aarch64 hosts'"
+  date: 2022-04-01T20:16:10.331Z
+- commits:
     - subject: "grub-efi: Remove patch passing secure boot status to the kernel"
       hash: fb171dc507348e11ab2c6ed894289f51689fc874
       body: >
