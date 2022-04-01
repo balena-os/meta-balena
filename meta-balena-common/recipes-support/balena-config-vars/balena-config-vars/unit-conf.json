@@ -37,7 +37,7 @@
 					"configuration": "dnsServers hostname"
 				},
 				"os-networkmanager": {
-					"description": "Openvpn server configuration",
+					"description": "Network connectivity configuration",
 					"configuration": "os.network.wifi.randomMacAddressScan os.network.connectivity.uri os.network.connectivity.interval "
 				},
 				"balena-hostname": {
