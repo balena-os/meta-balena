@@ -1,7 +1,9 @@
 {
     "network": {
-        "apn": "hologram",
+        "apn": "soracom.io",
         "ipType": "ipv4",
+        "user": "sora",
+        "password": "sora",
         "testUrl": "8.8.8.8"
     },
     "skip": []
