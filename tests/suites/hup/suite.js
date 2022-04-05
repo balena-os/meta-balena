@@ -116,7 +116,7 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 
 			await that.worker.executeCommandInHostOS(`rm ${hostappPath}`, target);
 
-			await that.worker.executeCommandInHostOS(`umount /mnt/sysroot/inactive/balena/tmp`, target);
+			await that.worker.executeCommandInHostOS(`umount /mnt/sysroot/inactive/balena/tmp || true`, target);
 			break;
 
 		case 'image':
