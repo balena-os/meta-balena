@@ -1,6 +1,8 @@
 #include <linux/init.h>
 #include <linux/module.h>
 
+MODULE_LICENSE("GPLv2");
+
 static int __init
 hello_init(void)
 {

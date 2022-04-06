@@ -24,6 +24,9 @@ RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/a
 RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_source/*/build/ M=/usr/src/app/example_module_headers_src
 
 # Compile external hello module using pre-built headers
-# We run modules_prepare again because the tools pre-compiled are actually the target device arch. While we cross-compile for testing.
+# We run modules_prepare again because the tools pre-compiled are actually the target device arch, and ensure tools like fixdep are built in this container. While we cross-compile for testing.
+RUN if [ -f /usr/src/app/kernel_modules_headers/tools/objtool/fixdep ]; then \
+        ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_modules_headers/tools/objtool clean ; \
+    fi;
 RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_modules_headers/ modules_prepare
 RUN ARCH=${kernel_arch} CROSS_COMPILE=${cross_compile_prefix} make -C /usr/src/app/kernel_modules_headers/ M=/usr/src/app/example_module_headers_built
