@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.14
+## (2022-04-06)
+
+* Updates SIM info for soracom and provides docs. [Alex]
+
 # v2.95.13
 ## (2022-04-06)
 

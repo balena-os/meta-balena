@@ -1,4 +1,18 @@
 - commits:
+    - subject: Updates SIM info for soracom and provides docs.
+      hash: 4706cc1f52e345e3409cd9580cdc9a1372545164
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+        signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+      author: Alex
+      nested: []
+  version: 2.95.14
+  title: "'Updates SIM info for soracom and provides docs.'"
+  date: 2022-04-06T08:53:44.650Z
+- commits:
     - subject: "test/hup: fix unmounting error"
       hash: 3a318468d90632360109aeea994a51819347742a
       body: ""
