@@ -114,7 +114,7 @@ module.exports = {
 
                     // attempt to connect modem to network
                     await this.worker.executeCommandInHostOS(
-                        `mmcli -m ${targetAddress} --simple-connect='apn=${config.network.apn},ip-type=${config.network.ipType}'`,
+                        `mmcli -m ${targetAddress} --simple-connect='apn=${config.network.apn},ip-type=${config.network.ipType},user=${config.network.user},password=${config.network.password}'`,
                         this.link,
                     );
 
