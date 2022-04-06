@@ -1,4 +1,29 @@
 - commits:
+    - subject: "kernel-headers-test: clean tools like fixdep"
+      hash: bdc217b2da79349989f32b65454a4e5e2509fa1a
+      body: |
+        Let's ensure tools like fixdep are built in container
+        and not reused from the yocto build, otherwise they
+        may not run if they were linked against a different
+        version of libc that may not be available in the kernel
+        modules build container.
+
+        This fixes the following error encountered when doing
+        a Poky Honister build for the balena-intel repository:
+
+          scripts/basic/fixdep: /lib64/libc.so.6: version `GLIBC_2.34'
+          not found (required by scripts/basic/fixdep)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.95.15
+  title: "'kernel-headers-test: clean tools like fixdep'"
+  date: 2022-04-06T12:39:17.305Z
+- commits:
     - subject: Updates SIM info for soracom and provides docs.
       hash: 4706cc1f52e345e3409cd9580cdc9a1372545164
       body: ""

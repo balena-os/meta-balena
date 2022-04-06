@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.15
+## (2022-04-06)
+
+* kernel-headers-test: clean tools like fixdep [Alexandru Costache]
+
 # v2.95.14
 ## (2022-04-06)
 
