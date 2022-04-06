@@ -1,4 +1,18 @@
 - commits:
+    - subject: "test/hup: fix unmounting error"
+      hash: 3a318468d90632360109aeea994a51819347742a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.95.13
+  title: "'test/hup: fix unmounting error'"
+  date: 2022-04-06T07:56:32.752Z
+- commits:
     - subject: "grub-efi: Remove patch passing secure boot status to the kernel"
       hash: fb171dc507348e11ab2c6ed894289f51689fc874
       body: >

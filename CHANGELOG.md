@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.13
+## (2022-04-06)
+
+* test/hup: fix unmounting error [rcooke-warwick]
+
 # v2.95.12
 ## (2022-03-31)
 
