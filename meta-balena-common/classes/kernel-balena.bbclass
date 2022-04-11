@@ -824,11 +824,11 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
             break
 
     if kernelversion.split('.')[0] is '3':
-        srcuri = "git://git.code.sf.net/p/aufs/aufs3-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
+        srcuri = "git://git.code.sf.net/p/aufs/aufs3-standalone.git;protocol=https;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
     elif kernelversion.split('.')[0] is '4':
-        srcuri = "git://github.com/sfjro/aufs4-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
+        srcuri = "git://github.com/sfjro/aufs4-standalone.git;protocol=https;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
     elif kernelversion.split('.')[0] is '5':
-        srcuri = "git://github.com/sfjro/aufs5-standalone.git;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
+        srcuri = "git://github.com/sfjro/aufs5-standalone.git;protocol=https;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
 
     d.setVar('SRCREV_aufs', aufsdict[aufsbranch])
     aufsgit = Git()
