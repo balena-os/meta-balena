@@ -40,6 +40,7 @@ LimitCORE=infinity
 WatchdogSec=360
 Restart=always
 KillMode=process
+TimeoutStartSec=infinity
 
 [Install]
 Alias=balena-engine.service
