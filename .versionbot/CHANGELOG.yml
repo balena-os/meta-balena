@@ -1,4 +1,45 @@
 - commits:
+    - subject: "balena-config-vars: unit-conf: Correct description"
+      hash: f549808c37932120af902738df4c2d5598cc65ee
+      body: |
+        The os-networkmanager entry had an incorrect description.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: os: Remove sshKeys test"
+      hash: f9ae841754b35e42d242f6ed6877cf69df656d30
+      body: |
+        This is replaced by an SSH authentication test in the cloud suite, which
+        is more comprenhensive.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: cloud: Add SSH authentication tests"
+      hash: fdb737c4abecb01bafd952e4d8a21b5998f790bd
+      body: |
+        This new test validates SSH authentication both in production and
+        development mode.
+
+        A managed device is always accessible via the configured custom keys.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.95.16
+  title: "'Add SSH authentication test'"
+  date: 2022-04-13T16:10:46.838Z
+- commits:
     - subject: "kernel-headers-test: clean tools like fixdep"
       hash: bdc217b2da79349989f32b65454a4e5e2509fa1a
       body: |

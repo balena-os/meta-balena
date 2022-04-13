@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.95.16
+## (2022-04-13)
+
+* balena-config-vars: unit-conf: Correct description [Alex Gonzalez]
+* tests: os: Remove sshKeys test [Alex Gonzalez]
+* tests: cloud: Add SSH authentication tests [Alex Gonzalez]
+
 # v2.95.15
 ## (2022-04-06)
 
