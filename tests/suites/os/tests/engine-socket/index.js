@@ -43,12 +43,13 @@ module.exports = {
 				}, false);
 				test.comment(`Verify engine socket is exposed`)
 
-				await test.doesNotThrow(
+				await test.doesNotThrow( function() {
 						docker.info(function (err, info) {
 							if (err) {
 								throw new Error(`Docker info failed: ${err}`);
 							}
 						}),
+					},
 					"Engine socket should be exposed in development images"
 				);
 			},
@@ -79,12 +80,14 @@ module.exports = {
 				}, false);
 				test.comment(`Verify engine socket is not exposed`)
 
-				await test.throws(
+				await test.throws(function () {
 						docker.info(function (err, info) {
 							if (!err && info && info.lenght) {
 								throw new Error(`Docker info succeeded: ${info}`)
 							}
-						}), {},
+						})
+					},
+					{},
 					"Engine socket should not be exposed in production images"
 				);
 				test.comment(`Leaving system in development mode...`)
