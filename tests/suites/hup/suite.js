@@ -93,11 +93,6 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
 	const hupLoadTmp = "/mnt/data/resin-data/tmp";
 
-	await that.worker.executeCommandInHostOS(
-		`grep -q "LOADTMP" "$(command -v hostapp-update)" || { mkdir -p "${hupLoadTmp}" "${balenaHostTmpPath}" ; mount --bind "${hupLoadTmp}" "${balenaHostTmpPath}" ; }`,
-		target,
-	);
-
 	test.comment(`Starting HUP`);
 
 	let hupLog;
@@ -111,12 +106,16 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 			) {
 				throw new Error(`Target image doesn't exists at location "${hostappPath}"`);
 			}
+
+			// bind mount the data partition for temporary extract & load files
+			await that.worker.executeCommandInHostOS(
+				`mkdir -p "${hupLoadTmp}" "${balenaHostTmpPath}" ; mount --bind "${hupLoadTmp}" "${balenaHostTmpPath}"`,
+				target,
+			);
+
 			test.comment(`Running: hostapp-update -f ${hostappPath}`);
 			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -f ${hostappPath}`, target);
 
-			await that.worker.executeCommandInHostOS(`rm ${hostappPath}`, target);
-
-			await that.worker.executeCommandInHostOS(`umount /mnt/sysroot/inactive/balena/tmp || true`, target);
 			break;
 
 		case 'image':
