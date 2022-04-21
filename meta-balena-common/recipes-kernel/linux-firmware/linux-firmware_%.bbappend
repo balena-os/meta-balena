@@ -160,3 +160,8 @@ PACKAGES =+ "${PN}-i915-dg1"
 FILES:${PN}-i915-dg1 = " \
     ${nonarch_base_libdir}/firmware/i915/dg1* \
     "
+PACKAGES =+ "${PN}-iwlwifi-quz-a0-hr-b0"
+
+FILES:${PN}-iwlwifi-quz-a0-hr-b0 = " \
+    ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-hr-b0-48.ucode \
+"
