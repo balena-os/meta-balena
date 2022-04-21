@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.16
+## (2022-04-21)
+
+* mobynit: Update to draft release 0.2.0 [Kyle Harding]
+
 # v2.95.15
 ## (2022-04-06)
 

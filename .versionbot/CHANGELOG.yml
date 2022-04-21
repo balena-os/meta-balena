@@ -1,4 +1,18 @@
 - commits:
+    - subject: "mobynit: Update to draft release 0.2.0"
+      hash: ccce03578071ce733b9c042e964254299bbdbaca
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.95.16
+  title: "'mobynit: Update to draft release 0.2.0'"
+  date: 2022-04-21T14:20:14.089Z
+- commits:
     - subject: "kernel-headers-test: clean tools like fixdep"
       hash: bdc217b2da79349989f32b65454a4e5e2509fa1a
       body: |
