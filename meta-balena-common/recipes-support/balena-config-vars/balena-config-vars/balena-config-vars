@@ -76,6 +76,7 @@ if [ -f $CONFIG_PATH ]; then
          PROVISIONING_API_KEY=\(.apiKey // "")
          REGISTERED_AT=\(.registered_at // "")
          UUID=\(.uuid // "")
+         ENGINE_WATCHDOG_TIMEOUT=\(.engineWatchdogTimeout // 0)
          "' $CONFIG_PATH)
     RESULT=$?
     if [ "$RESULT" = "4" ]; then

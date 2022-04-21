@@ -30,6 +30,7 @@ Environment=BALENAD_MAX_DL_ATTEMPTS=--max-download-attempts=10
 Environment=BALENAD_EXTRA_ARGS=
 Environment="BALENA_DEVELOPMENT_ARGS="
 EnvironmentFile=-/var/volatile/development-features
+ExecStartPre=/usr/lib/balena/balena-override-healthcheck
 ExecStart=/usr/bin/healthdog --healthcheck=${BALENAD_HEALTHDOG_HEALTHCHECK} /usr/bin/balenad $BALENAD_EXPERIMENTAL $BALENAD_DEBUG $BALENAD_LOGDRIVER $BALENAD_STORAGEDRIVER $BALENAD_HOST $BALENAD_DATA_ROOT $BALENAD_DELTA_STORAGEDRIVER $BALENAD_DELTA_DATA_ROOT $BALENAD_EXEC_ROOT $BALENAD_PIDFILE $BALENAD_DNS $BALENAD_BIP $BALENAD_CIDR $BALENAD_IPTABLES $BALENAD_MAX_DL_ATTEMPTS $BALENAD_CGROUPDRIVER $BALENAD_EXTRA_ARGS $BALENA_DEVELOPMENT_ARGS
 #Adjust OOMscore to -900 to make killing unlikely
 OOMScoreAdjust=-900
@@ -37,7 +38,7 @@ MountFlags=slave
 LimitNOFILE=1048576
 LimitNPROC=1048576
 LimitCORE=infinity
-WatchdogSec=360
+WatchdogSec=0
 Restart=always
 KillMode=process
 TimeoutStartSec=infinity

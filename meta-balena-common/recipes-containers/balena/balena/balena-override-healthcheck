@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#
+# TODO: If this becomes a more generic mechanism, this should be renamed and
+# moved somewhere not related to balenaEngine.
+#
+
+set -o errexit
+
+source /usr/sbin/balena-config-vars
+
+overrideFile="/run/systemd/system/balena.service.d/z-override.conf"
+balenaServiceUnit="/lib/systemd/system/balena.service"
+
+function forceEngineRestart() {
+	systemctl daemon-reload
+	systemctl reload balena.service
+
+	# This script is run from ExecStartPre=, so `exit 1` will force a restart.
+	exit 1
+}
+
+function recreateOverrideFile() {
+	mkdir -p $(dirname $overrideFile)
+	cat <<-EOF >${overrideFile}
+		[Service]
+		WatchdogSec=${ENGINE_WATCHDOG_TIMEOUT}
+	EOF
+}
+
+
+# Override file does not exist.
+if [ ! -e ${overrideFile} ]; then
+	recreateOverrideFile
+	forceEngineRestart
+	exit 0
+fi
+
+# Mismatch between environment variable and override file.
+currentOverrideValue=$(sed -n "s|^WatchdogSec=||p" ${overrideFile})
+if [ ${ENGINE_WATCHDOG_TIMEOUT} != ${currentOverrideValue} ]; then
+	recreateOverrideFile
+	forceEngineRestart
+	exit 0
+fi
+
+# Otherwise, nothing to do.
+exit 0

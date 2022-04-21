@@ -9,7 +9,7 @@
 			"properties": {
 				"balena": {
 					"description": "The balena engine",
-					"configuration": "developmentMode hostname"
+					"configuration": "developmentMode hostname engineWatchdogTimeout"
 				},
 				"balena-supervisor": {
 					"description": "The balena supervisor",

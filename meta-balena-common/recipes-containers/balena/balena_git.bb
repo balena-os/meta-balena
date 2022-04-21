@@ -14,6 +14,7 @@ inherit go
 inherit goarch
 inherit pkgconfig
 inherit useradd
+inherit balena-configurable
 
 BALENA_VERSION = "20.10.17"
 BALENA_BRANCH= "master"
@@ -30,6 +31,7 @@ SRC_URI = "\
 	file://balena-host.service \
 	file://balena-host.socket \
 	file://balena-healthcheck \
+	file://balena-override-healthcheck \
 	file://var-lib-docker.mount \
 	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
@@ -66,8 +68,6 @@ FILES:${PN} += " \
 
 DOCKER_PKG="github.com/docker/docker"
 BUILD_TAGS="no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs"
-
-do_configure[noexec] = "1"
 
 do_compile() {
 	# Set GOPATH. See 'PACKAGERS.md'. Don't rely on
@@ -126,6 +126,7 @@ do_install() {
 
 	mkdir -p ${D}/usr/lib/balena
 	install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
+	install -m 0755 ${WORKDIR}/balena-override-healthcheck ${D}/usr/lib/balena/balena-override-healthcheck
 
 	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
 	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
