@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.95.16
+## (2022-04-21)
+
+* networkmanager: Set DHCP timeout to 90s for IPv4 [Jesseemus]
+
 # v2.95.15
 ## (2022-04-06)
 

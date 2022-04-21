@@ -1,4 +1,30 @@
 - commits:
+    - subject: "networkmanager: Set DHCP timeout to 90s for IPv4"
+      hash: 8b735fe6d3ad4f74f0fe89daf09b0f2e117ad520
+      body: >
+        networkmanager: Set DHCP timeout to 90 seconds for IPv4
+
+
+        [Issue #2578]
+
+
+        Fixes issue where routers that do not renew leases properly looses connectivity completely once the lease expires. 
+
+        For example a router power cycle may cause this.
+
+        Default dhcp timeout value on Debian is 90 seconds
+
+
+        Signed-off-by: Jesse Jämsén <jasse.jamsen@gmail.com>
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Jesseemus
+      nested: []
+  version: 2.95.16
+  title: "'networkmanager: Set DHCP timeout to 90s for IPv4'"
+  date: 2022-04-21T14:46:57.984Z
+- commits:
     - subject: "kernel-headers-test: clean tools like fixdep"
       hash: bdc217b2da79349989f32b65454a4e5e2509fa1a
       body: |
