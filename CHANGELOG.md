@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.96.1
+## (2022-04-22)
+
+* kernel-balena: Mention https protocol for github repository [Alexandru Costache]
+
 # v2.96.0
 ## (2022-04-22)
 

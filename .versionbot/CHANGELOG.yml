@@ -1,4 +1,20 @@
 - commits:
+    - subject: "kernel-balena: Mention https protocol for github repository"
+      hash: e3ee5b0b70827fa5ae1f70b0721d9125885affe5
+      body: |
+        Github now requires for the https protocol to be used
+        when cloning repositories.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.96.1
+  title: "'kernel-balena: Mention https protocol for github repository'"
+  date: 2022-04-22T17:25:18.183Z
+- commits:
     - subject: "mobynit: Update to v0.2.0"
       hash: 1a6dbc795aa2546f38bbd4cef30d77f167e60182
       body: |
