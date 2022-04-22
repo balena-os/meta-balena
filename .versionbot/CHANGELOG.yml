@@ -1,4 +1,25 @@
 - commits:
+    - subject: "resin-device-register: avoid blocking the flasher when not connected"
+      hash: b5c521404c14df8a5d14e2789c97eebe79eb7d96
+      body: >
+        Starting with v2.91.6 device provisioning will not start if the device
+
+        was unable to register in the cloud due to lack of internet connectivity.
+
+        To avoid this, we switch to retrying 3 times with the usual 2 second delay
+
+        between attempts, after which the flashing process will start.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.95.17
+  title: "'resin-device-register: improve provisioning'"
+  date: 2022-04-22T08:33:14.274Z
+- commits:
     - subject: Package iwlwifi-QuZ-a0-hr-b0 firmware separately
       hash: 261534942e5fe5b60680f51b129f33f00363a88e
       body: |
