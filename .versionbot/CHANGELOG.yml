@@ -1,4 +1,19 @@
 - commits:
+    - subject: "mobynit: Update to v0.2.0"
+      hash: 1a6dbc795aa2546f38bbd4cef30d77f167e60182
+      body: |
+        Fixes #2589
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.96.0
+  title: "'mobynit: Update to v0.2.0'"
+  date: 2022-04-22T12:42:16.844Z
+- commits:
     - subject: "resin-device-register: avoid blocking the flasher when not connected"
       hash: b5c521404c14df8a5d14e2789c97eebe79eb7d96
       body: >

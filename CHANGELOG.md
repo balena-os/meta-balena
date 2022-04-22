@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.96.0
+## (2022-04-22)
+
+* mobynit: Update to v0.2.0 [Alex Gonzalez]
+
 # v2.95.17
 ## (2022-04-22)
 
