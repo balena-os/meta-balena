@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests/leviathan: Update leviathan to v2.2.4"
+      hash: 162c36be826eb3028a11fca2266407e8d2570d88
+      body: |
+        Update leviathan from 2.0.4 to 2.2.4
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.1
+  title: "'tests/leviathan: Update leviathan to v2.2.4'"
+  date: 2022-04-23T18:56:56.077Z
+- commits:
     - subject: Refresh PKI assets from config endpoint
       hash: 081fca887b36108bc192ee98da6ba088f9e909b9
       body: >

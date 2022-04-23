@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.1
+## (2022-04-23)
+
+* tests/leviathan: Update leviathan to v2.2.4 [Kyle Harding]
+
 # v2.98.0
 ## (2022-04-23)
 
