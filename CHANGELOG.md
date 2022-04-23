@@ -1,6 +1,35 @@
 Change log
 -----------
 
+# v2.97.0
+## (2022-04-23)
+
+
+<details>
+<summary> Update balena-engine to v20.10.16 [Leandro Motta Barros] </summary>
+
+> ## balena-engine-20.10.16
+> ### (2022-04-07)
+> 
+> * contrib/init/systemd: update balena-engine.service [TIAN Yuanhao]
+> 
+> ## balena-engine-20.10.15
+> ### (2022-04-05)
+> 
+> * Log more info upon when raising errRootFSMismatch [Leandro Motta Barros]
+> 
+> ## balena-engine-20.10.14
+> ### (2022-04-01)
+> 
+> * Add more integration tests for deltas [Leandro Motta Barros]
+> 
+> ## balena-engine-20.10.13
+> ### (2022-03-09)
+> 
+> * Add link to post to test landr [andrew]
+> 
+</details>
+
 # v2.96.1
 ## (2022-04-22)
 

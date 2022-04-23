@@ -1,4 +1,94 @@
 - commits:
+    - subject: Update balena-engine to v20.10.16
+      hash: 7affe9d563250d79906ffc26401d8d7beea74114
+      body: |
+        Update balena-engine from 20.10.12 to 20.10.16
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Changelog-entry: Update balena-engine to v20.10.16
+        changelog-entry: Update balena-engine to v20.10.16
+      author: Leandro Motta Barros
+      nested:
+        - commits:
+            - subject: "contrib/init/systemd: update balena-engine.service"
+              hash: 4d3b831bfbe197a68792a3baf33cbea639811763
+              body: |
+                Currently this file is used by Buildroot.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: TIAN Yuanhao <tianyuanhao3@163.com>
+                signed-off-by: TIAN Yuanhao <tianyuanhao3@163.com>
+              author: TIAN Yuanhao
+              nested: []
+          version: balena-engine-20.10.16
+          title: "'update balena-engine.service'"
+          date: 2022-04-07T05:22:26.128Z
+        - commits:
+            - subject: Log more info upon when raising errRootFSMismatch
+              hash: ab3db5c03663e0b2ee35213ceebf9038e4af6b62
+              body: >
+                We currently do not log any information to help us understanding
+                the
+
+                underlying issue -- not even to identify what is the exact point in
+
+                which the error is raised. This commit improves on this situation.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.15
+          title: "'Configure Renovate'"
+          date: 2022-04-05T07:56:50.137Z
+        - commits:
+            - subject: Add more integration tests for deltas
+              hash: 59f6cd6dc32ee178532dbf7595933ef606cebf39
+              body: >
+                This adds two new integration tests:
+
+
+                * TestDeltaSize: this is meant to catch regressions on delta sizes. It
+                  generates deltas and compare their sizes with the delta sizes we get
+                  as of now. If the size increases, the test fails.
+                * TestDeltaCorrectness: checks if applying a delta indeed results in the
+                  same image as we had originally.
+
+                A number of different test cases (different images with distinct
+
+                features) are tested for each of these integration tests.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.14
+          title: "'Add more integration tests for deltas'"
+          date: 2022-04-01T13:30:28.649Z
+        - commits:
+            - subject: Add link to post to test landr
+              hash: 4688b2395c49dcd350a6107824da61a13a1c4765
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: andrew
+              nested: []
+          version: balena-engine-20.10.13
+          title: "'Add link to post to test landr'"
+          date: 2022-03-09T23:12:06.832Z
+  version: 2.97.0
+  title: "'balena-engine: Update to 20.10.16'"
+  date: 2022-04-23T01:23:49.298Z
+- commits:
     - subject: "kernel-balena: Mention https protocol for github repository"
       hash: e3ee5b0b70827fa5ae1f70b0721d9125885affe5
       body: |
