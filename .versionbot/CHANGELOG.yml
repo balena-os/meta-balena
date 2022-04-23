@@ -1,4 +1,22 @@
 - commits:
+    - subject: Refresh PKI assets from config endpoint
+      hash: 081fca887b36108bc192ee98da6ba088f9e909b9
+      body: >
+        * Fixes #2569
+
+        * ensure OpenVPN client always starts with the latest CA certificate
+          from API config endpoint as this certificate may have changed and
+          we don't want VPN to be down for ~24 hours until os-config is triggered
+          by systemd timer
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: ab77
+      nested: []
+  version: 2.98.0
+  title: "'Refresh PKI assets from config endpoint'"
+  date: 2022-04-23T10:43:47.657Z
+- commits:
     - subject: Update balena-engine to v20.10.16
       hash: 7affe9d563250d79906ffc26401d8d7beea74114
       body: |
