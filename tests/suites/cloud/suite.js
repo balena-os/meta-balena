@@ -77,6 +77,7 @@ module.exports = {
         name: this.suite.options.id,
         organization: this.suite.options.balena.organization,
         sshKey: { label: this.suite.options.id },
+        apiKey: this.suite.options.balena.apiKey,
       },
       cli: new CLI(this.suite.options.balena.apiUrl, this.getLogger()),
       sshKeyPath: join(homedir(), "id"),
@@ -319,5 +320,6 @@ module.exports = {
     "./tests/preload",
     "./tests/supervisor",
     "./tests/multicontainer",
+    "./tests/diagnostics"
   ],
 };
