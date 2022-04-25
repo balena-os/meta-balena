@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add renovate configuration
+      hash: 2537c8eed6f50399ce60b9f2ccc22336fb7cb86a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.3
+  title: "'Add renovate configuration'"
+  date: 2022-04-25T18:07:21.534Z
+- commits:
     - subject: "balena-config-vars: unit-conf: Correct description"
       hash: b1ff3f620ea823239442cfeccd52feef6928f405
       body: |

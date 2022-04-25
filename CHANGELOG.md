@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.3
+## (2022-04-25)
+
+* Add renovate configuration [Kyle Harding]
+
 # v2.98.2
 ## (2022-04-25)
 
