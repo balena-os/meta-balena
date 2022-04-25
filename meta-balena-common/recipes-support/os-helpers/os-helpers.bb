@@ -12,12 +12,13 @@ SRC_URI = " \
     file://os-helpers-logging \
     file://os-helpers-time \
     file://os-helpers-tpm2 \
+    file://os-helpers-devmode \
 "
 S = "${WORKDIR}"
 
 inherit allarch
 
-PACKAGES = "${PN}-fs ${PN}-logging ${PN}-time ${PN}-tpm2"
+PACKAGES = "${PN}-fs ${PN}-logging ${PN}-time ${PN}-tpm2 ${PN}-devmode"
 
 do_install() {
     install -d ${D}${libexecdir}
@@ -26,6 +27,7 @@ do_install() {
         ${WORKDIR}/os-helpers-logging \
         ${WORKDIR}/os-helpers-time \
         ${WORKDIR}/os-helpers-tpm2 \
+        ${WORKDIR}/os-helpers-devmode \
         ${D}${libexecdir}
 }
 
@@ -33,3 +35,4 @@ FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"
 FILES:${PN}-logging = "${libexecdir}/os-helpers-logging"
 FILES:${PN}-time = "${libexecdir}/os-helpers-time"
 FILES:${PN}-tpm2 = "${libexecdir}/os-helpers-tpm2"
+FILES:${PN}-devmode = "${libexecdir}/os-helpers-devmode"

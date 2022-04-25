@@ -404,18 +404,6 @@ module.exports = {
 			},
 		},
 		{
-			title: 'sshKeys test',
-			run: async function(test) {
-				return test.resolves(
-					this.worker.executeCommandInHostOS(
-						'echo true',
-						this.link,
-					),
-					'Should be able to establish ssh connection to the device',
-				);
-			},
-		},
-		{
 			title: 'persistentLogging configuration test',
 			run: async function(test) {
 				const context = this.context.get();

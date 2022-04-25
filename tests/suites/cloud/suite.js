@@ -67,6 +67,7 @@ module.exports = {
     const Balena = this.require("components/balena/sdk");
     // used for `preload`
     const CLI = this.require("components/balena/cli");
+    const utils = this.require('common/utils');
 
     await fse.ensureDir(this.suite.options.tmpdir);
 
@@ -82,11 +83,30 @@ module.exports = {
       sshKeyPath: join(homedir(), "id"),
       utils: this.require("common/utils"),
       worker: new Worker(
-        this.suite.deviceType.slug, 
-        this.getLogger(), 
-        this.suite.options.workerUrl, 
-        this.suite.options.balena.organization, 
+        this.suite.deviceType.slug,
+        this.getLogger(),
+        this.suite.options.workerUrl,
+        this.suite.options.balena.organization,
         join(homedir(), 'id')),
+      waitForServiceState: async function (serviceName, state, target) {
+        return utils.waitUntil(
+          async () => {
+            return this.cloud
+              .executeCommandInHostOS(
+                `systemctl is-active ${serviceName} || true`,
+                target,
+              )
+              .then((serviceStatus) => {
+                return Promise.resolve(serviceStatus === state);
+              })
+              .catch((err) => {
+                Promise.reject(err);
+              });
+          },
+          120,
+          250,
+        );
+      }
     });
 
     // Network definitions - these are given to the testbot via the config sent via the config.js
@@ -296,6 +316,24 @@ module.exports = {
       ) === this.balena.uuid.slice(0, 7);
     }, false);
 
+    // create tunnels
+    this.log('Creating SSH tunnels to DUT');
+    await this.worker.createSSHTunnels(
+      `${this.balena.uuid.slice(0, 7)}.local`
+    );
+
+    this.log('Waiting for device to be reachable');
+    await this.utils.waitUntil(async () => {
+      this.log("Trying to ssh into device");
+      let hostname = await this.context
+        .get()
+        .worker.executeCommandInHostOS(
+          "cat /etc/hostname",
+          `${this.balena.uuid.slice(0, 7)}.local`
+        )
+      return (hostname === `${this.balena.uuid.slice(0, 7)}`)
+    }, true);
+
     this.log("Unpinning device from release");
     await this.cloud.balena.models.device.trackApplicationRelease(
       this.balena.uuid
@@ -319,5 +357,6 @@ module.exports = {
     "./tests/preload",
     "./tests/supervisor",
     "./tests/multicontainer",
+    "./tests/ssh-auth",
   ],
 };
