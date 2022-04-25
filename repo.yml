@@ -15,3 +15,5 @@ upstream:
     url: 'https://github.com/balena-os/os-config'
   - repo: 'balena-engine'
     url: 'https://github.com/balena-os/balena-engine'
+  - repo: 'tests/leviathan'
+    url: 'https://github.com/balena-os/leviathan'
