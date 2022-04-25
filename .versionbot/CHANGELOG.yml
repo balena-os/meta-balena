@@ -1,4 +1,84 @@
 - commits:
+    - subject: "balena-config-vars: unit-conf: Correct description"
+      hash: b1ff3f620ea823239442cfeccd52feef6928f405
+      body: |
+        The os-networkmanager entry had an incorrect description.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: os: Remove sshKeys test"
+      hash: 579aef0199ed91f31bca301f7dc8ebd517594583
+      body: |
+        This is replaced by an SSH authentication test in the cloud suite, which
+        is more comprenhensive.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: cloud: Add SSH authentication tests"
+      hash: e9f125a67aa61136fe36a5844ca751984ab679aa
+      body: |
+        This new test validates SSH authentication both in production and
+        development mode.
+
+        A managed device is always accessible via the configured custom keys.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-sshkeys: When ssh keys change, regenerate development configuration"
+      hash: 0856b6e7acbe41a1bc60afb26906ee5bf9b253a9
+      body: |
+        The behaviour of the SSH connection depends on whether custom keys are
+        present or not. This commit calls out to generate the development mode
+        configuration file on ssh key change.
+
+        Fixes #2530
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "development-features: use os-helpers-devmode include file"
+      hash: afb63f9bfb794fa7af14c6e03bf29e85705dbf7f
+      body: |
+        The development mode configuration file is now generated on a helper
+        script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: Add os-helpers-devmode"
+      hash: dfaef0b9c7d07b31f254c2f9592772a58562f9e9
+      body: |
+        This extracts the generation of the development mode configuration file
+        so it can be shared.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.98.2
+  title: "'Apply sshKeys change on development Mode'"
+  date: 2022-04-25T08:16:24.320Z
+- commits:
     - subject: "tests/leviathan: Update leviathan to v2.2.4"
       hash: 162c36be826eb3028a11fca2266407e8d2570d88
       body: |

@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.98.2
+## (2022-04-25)
+
+* balena-config-vars: unit-conf: Correct description [Alex Gonzalez]
+* tests: os: Remove sshKeys test [Alex Gonzalez]
+* tests: cloud: Add SSH authentication tests [Alex Gonzalez]
+* os-sshkeys: When ssh keys change, regenerate development configuration [Alex Gonzalez]
+* development-features: use os-helpers-devmode include file [Alex Gonzalez]
+* os-helpers: Add os-helpers-devmode [Alex Gonzalez]
+
 # v2.98.1
 ## (2022-04-23)
 
