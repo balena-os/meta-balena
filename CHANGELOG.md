@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.5
+## (2022-04-26)
+
+* networkmanager: Use default DHCP timeout [Zahari Petkov]
+
 # v2.98.4
 ## (2022-04-25)
 

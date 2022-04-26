@@ -1,4 +1,39 @@
 - commits:
+    - subject: "networkmanager: Use default DHCP timeout"
+      hash: 6175420731baa349c8d197151189462a23b2f460
+      body: >
+        This reverts 5047757 where we set the global DHCP timeout for ipv4 to
+
+        infinity to mitigate problems with routers that do not respond to DHCP
+
+        requests in time.
+
+
+        This however causes issues on some routers, which after power cycle fail to
+
+        renew leases after they are expired.
+
+
+        The same ipv4.dhcp-timeout can be specified on per connection basis. Since
+
+        the case with lease renewal due to router power cycle is a more common case,
+
+        it is better to keep the global dhcp-timeout default unmodified. If the
+
+        setting needs adjustment then it can be overwritten in the particular
+
+        connection profile.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.98.5
+  title: "'networkmanager: Use default DHCP timeout'"
+  date: 2022-04-26T11:36:14.839Z
+- commits:
     - subject: Disable Engine startup timeouts
       hash: c4ce541526455c8cb891e7c76889e0d4cb2735b1
       body: |
