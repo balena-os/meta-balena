@@ -65,6 +65,7 @@ while [ true  ]; do
 				info "Time synchronised via HTTPS."
 				info "Old time: $(get_display_time_from_timestamp "$SYS_TIME")"
 				info "New time: $(get_display_time_from_timestamp "$SERVER_TIME")"
+				hwclock -w || true
 				exit 0
 			else
 				info "System time is already synchronised."
