@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.4
+## (2022-04-25)
+
+* Disable Engine startup timeouts [Leandro Motta Barros]
+
 # v2.98.3
 ## (2022-04-25)
 

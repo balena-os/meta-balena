@@ -1,4 +1,29 @@
 - commits:
+    - subject: Disable Engine startup timeouts
+      hash: c4ce541526455c8cb891e7c76889e0d4cb2735b1
+      body: |
+        There are known situations in which balenaEngine times out during
+        initialization (for example, during aufs to overlayfs migrations, or
+        when restarting a device that was running a large number of containers).
+        When these time outs occur, Systemd kills the Engine, causing further
+        problems.
+
+        To avoid these cases, this commit disables timeouts during the Engine
+        initialization.
+
+        This is also aligned with the default Systemd settings distributed with
+        the Moby project.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.98.4
+  title: "'Disable Engine startup timeouts'"
+  date: 2022-04-25T22:36:18.725Z
+- commits:
     - subject: Add renovate configuration
       hash: 2537c8eed6f50399ce60b9f2ccc22336fb7cb86a
       body: ""
