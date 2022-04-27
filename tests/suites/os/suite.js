@@ -303,5 +303,6 @@ module.exports = {
 		'./tests/device-tree',
 		'./tests/purge-data',
 		'./tests/device-specific-tests/revpi-core-3',
+		'./tests/swap',
 	],
 };
