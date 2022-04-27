@@ -1,4 +1,19 @@
 - commits:
+    - subject: "linux-firmware: package QuZ-a0-jf-b0 separately"
+      hash: 20695e32e0e8b3d60267090530b3cd41a3450d56
+      body: |
+        This is used by Intel Wireless-AC 9462
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.98.7
+  title: "'linux-firmware: package QuZ-a0-jf-b0 separately'"
+  date: 2022-04-27T09:22:39.188Z
+- commits:
     - subject: "timeinit/timesync-https: Update rtc after setting system time"
       hash: f16451b49b77bd7d3f5f82d20e0605a9797832eb
       body: |

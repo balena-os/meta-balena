@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.7
+## (2022-04-27)
+
+* linux-firmware: package QuZ-a0-jf-b0 separately [Michal Toman]
+
 # v2.98.6
 ## (2022-04-26)
 
