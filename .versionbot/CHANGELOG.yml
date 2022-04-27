@@ -1,4 +1,23 @@
 - commits:
+    - subject: "timeinit/timesync-https: Update rtc after setting system time"
+      hash: f16451b49b77bd7d3f5f82d20e0605a9797832eb
+      body: |
+        This solves a problem seen on a device on which, although
+        timeinit-rtc finishes running before timesync-https, chronyd
+        sets the system time to the incorrect rtc time
+        as soon as timesync-https finished running and setting the correct date
+        from the servers.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.98.6
+  title: "'timeinit/timesync-https: Update rtc after setting system time'"
+  date: 2022-04-26T19:32:46.066Z
+- commits:
     - subject: "networkmanager: Use default DHCP timeout"
       hash: 6175420731baa349c8d197151189462a23b2f460
       body: >
