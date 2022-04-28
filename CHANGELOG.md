@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.8
+## (2022-04-28)
+
+* tests/cloud: fix ssh test for testbot workers [rcooke-warwick]
+
 # v2.98.7
 ## (2022-04-27)
 

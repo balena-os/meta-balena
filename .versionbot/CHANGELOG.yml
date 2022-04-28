@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/cloud: fix ssh test for testbot workers"
+      hash: 4d44bb297e015bfaef140d8c92d14de0e412be47
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.98.8
+  title: "'tests/cloud: fix ssh test for testbot workers'"
+  date: 2022-04-28T09:09:48.983Z
+- commits:
     - subject: "linux-firmware: package QuZ-a0-jf-b0 separately"
       hash: 20695e32e0e8b3d60267090530b3cd41a3450d56
       body: |
