@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.9
+## (2022-04-28)
+
+* tests: bump leviathan to 2.2.11 [rcooke-warwick]
+
 # v2.98.8
 ## (2022-04-28)
 

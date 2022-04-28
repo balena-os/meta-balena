@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: bump leviathan to 2.2.11"
+      hash: 617ab26578364b95525c225b3f2066e792b3cf2f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.98.9
+  title: "'tests: bump leviathan to 2.2.11'"
+  date: 2022-04-28T10:27:03.026Z
+- commits:
     - subject: "tests/cloud: fix ssh test for testbot workers"
       hash: 4d44bb297e015bfaef140d8c92d14de0e412be47
       body: ""
