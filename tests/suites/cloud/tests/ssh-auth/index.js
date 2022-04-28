@@ -14,17 +14,21 @@
 
 'use strict';
 
+const fse = require("fs-extra");
+const sshPath = '/tmp/newKey/id';
+
 module.exports = {
 	title: 'SSH authentication test',
 	tests: [
 		{
 			title: 'SSH authentication in production mode',
 			run: async function(test) {
+				await fse.ensureDir('/tmp/newKey');
 				const Bluebird = require('bluebird');
 				const keygen = Bluebird.promisify(require('ssh-keygen'));
 				const exec = Bluebird.promisify(require('child_process').exec);
 				const customKey = await keygen({
-					location: this.sshKeyPath,
+					location: sshPath,
 					})
 				return this.waitForServiceState(
 						'os-config-json.service',
@@ -86,7 +90,10 @@ module.exports = {
 						"Local SSH authentication without custom keys is not allowed in production mode"
 					)
 				}).then( async () => {
-					await exec(`ssh-add ${this.sshKeyPath}`);
+					await exec(`ssh-add ${sshPath}`);
+					// send new custom key to worker
+					await this.worker.addSSHKey(sshPath);
+
 					return this.cloud.executeCommandInHostOS(
 						['tmp=$(mktemp)', `&&`,
 							`jq --arg keys '${customKey.pubKey.trim()}' '. + {os: {sshKeys: [$keys]}}' "/mnt/boot/config.json" > $tmp`, `&&`,
@@ -126,11 +133,12 @@ module.exports = {
 		{
 			title: 'SSH authentication in development mode',
 			run: async function(test) {
+				await fse.ensureDir('/tmp/newKey');
 				const Bluebird = require('bluebird');
 				const keygen = Bluebird.promisify(require('ssh-keygen'));
 				const exec = Bluebird.promisify(require('child_process').exec);
 				const customKey = await keygen({
-					location: this.sshKeyPath,
+					location: sshPath,
 					})
 				return this.waitForServiceState(
 					'os-config-json.service',
@@ -218,7 +226,9 @@ module.exports = {
 						"Local SSH authentication with phony custom keys is not allowed in development mode"
 					)
 				}).then(async () => {
-						await exec(`ssh-add ${this.sshKeyPath}`);
+						await exec(`ssh-add ${sshPath}`);
+						await this.worker.addSSHKey(sshPath);
+
 						return this.cloud.executeCommandInHostOS(
 							[
 								`tmp=$(mktemp)`, `&&`,
