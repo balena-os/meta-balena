@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: bump leviathan to 2.13"
+      hash: 5dcf43cfcae4a8628c9aca0834205fbe4476edf1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.98.10
+  title: "'tests: bump leviathan to 2.13'"
+  date: 2022-04-28T16:57:41.215Z
+- commits:
     - subject: "tests: bump leviathan to 2.2.11"
       hash: 617ab26578364b95525c225b3f2066e792b3cf2f
       body: ""
