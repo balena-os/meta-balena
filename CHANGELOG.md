@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.11
+## (2022-04-29)
+
+* tests: os: create swap test [Joseph Kogut]
+
 # v2.98.10
 ## (2022-04-28)
 

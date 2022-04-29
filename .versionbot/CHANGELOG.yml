@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: create swap test"
+      hash: cb19043d77a68e24e48a96acb2391938acd7cd71
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.11
+  title: "'tests: os: create swap test'"
+  date: 2022-04-29T19:55:50.927Z
+- commits:
     - subject: "tests: bump leviathan to 2.13"
       hash: 5dcf43cfcae4a8628c9aca0834205fbe4476edf1
       body: ""
