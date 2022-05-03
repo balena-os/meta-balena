@@ -163,10 +163,10 @@ FILES:${PN}-i915-dg1 = " \
 PACKAGES =+ "${PN}-iwlwifi-quz-a0-hr-b0"
 
 FILES:${PN}-iwlwifi-quz-a0-hr-b0 = " \
-    ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-hr-b0-48.ucode \
+    ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-hr-b0-48.ucode* \
 "
 
 PACKAGES =+ "${PN}-iwlwifi-quz-a0-jf-b0"
 FILES:${PN}-iwlwifi-quz-a0-jf-b0 = " \
-    ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-jf-b0-*.ucode \
+    ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-jf-b0-*.ucode* \
 "
