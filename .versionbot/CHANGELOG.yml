@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests/hup: Test hostapp-update from current release"
+      hash: 2f5b7fd58b11a69f10aea7b4391dba264e454f9b
+      body: |
+        After HUP from previous release to current under-test release
+        we should HUP again to ensure hostapp-update is sane in the
+        new release.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.12
+  title: "'Add \"HUP from this release\" test to ensure hostapp-update is functional'"
+  date: 2022-05-02T13:38:42.232Z
+- commits:
     - subject: "tests: os: create swap test"
       hash: cb19043d77a68e24e48a96acb2391938acd7cd71
       body: ""

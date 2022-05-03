@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.12
+## (2022-05-02)
+
+* tests/hup: Test hostapp-update from current release [Kyle Harding]
+
 # v2.98.11
 ## (2022-04-29)
 
