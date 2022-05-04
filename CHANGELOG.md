@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.13
+## (2022-05-03)
+
+* os: tests: optimize connectivity tests [Joseph Kogut]
+
 # v2.98.12
 ## (2022-05-02)
 

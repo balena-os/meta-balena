@@ -1,4 +1,18 @@
 - commits:
+    - subject: "os: tests: optimize connectivity tests"
+      hash: fdfa61579dff1a1aaf3aea1318d16cb9f4fc3f50
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.13
+  title: "'os: tests: optimize connectivity tests'"
+  date: 2022-05-03T15:52:26.943Z
+- commits:
     - subject: "tests/hup: Test hostapp-update from current release"
       hash: 2f5b7fd58b11a69f10aea7b4391dba264e454f9b
       body: |
