@@ -1,6 +1,88 @@
 Change log
 -----------
 
+# v2.98.14
+## (2022-05-04)
+
+
+<details>
+<summary> supervisor: Update balena-supervisor to v13.1.4 [Kyle Harding] </summary>
+
+> ## balena-supervisor-13.1.4
+> ### (2022-04-28)
+> 
+> * Use delay instead of interval to recursively report state [20k-ultra]
+> 
+> ## balena-supervisor-13.1.3
+> ### (2022-04-20)
+> 
+> * Remove in memory storage of started/stopped containers [20k-ultra]
+> * Only start a container once in its lifetime This will ensure the restart policy specified is not violated [20k-ultra]
+> 
+> ## balena-supervisor-13.1.2
+> ### (2022-04-18)
+> 
+> * Explain /v2/state/status's status field in its response [Christina Wang]
+> 
+> ## balena-supervisor-13.1.1
+> ### (2022-04-13)
+> 
+> * Do not fail lockfile cleanup if files do not exist [Felipe Lalanne]
+> 
+> ## balena-supervisor-13.1.0
+> ### (2022-04-12)
+> 
+> * Add lockfile binary and internal lib for interfacing with it [Christina Wang]
+> 
+> ## balena-supervisor-13.0.3
+> ### (2022-04-08)
+> 
+> * Add system id/model support for Compulab IOT-gate [Felipe Lalanne]
+> 
+> ## balena-supervisor-13.0.2
+> ### (2022-04-08)
+> 
+> * Correctly evaluate downloadProgress when computing current state [20k-ultra]
+> 
+> ## balena-supervisor-13.0.1
+> ### (2022-04-01)
+> 
+> * Fix database migration for legacyApps [Felipe Lalanne]
+> 
+> ## balena-supervisor-13.0.0
+> ### (2022-03-23)
+> 
+> * Add support for GET v3 target state [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.11.43
+> ### (2022-03-21)
+> 
+> * Always add status to image download report [Felipe Lalanne]
+> 
+> ## balena-supervisor-12.11.42
+> ### (2022-03-18)
+> 
+> * Moved test setup into file included for all tests [20k-ultra]
+> 
+> ## balena-supervisor-12.11.41
+> ### (2022-03-16)
+> 
+> * Added PR template doc [20k-ultra]
+> 
+> ## balena-supervisor-12.11.40
+> ### (2022-03-16)
+> 
+> * Only count report connectivity errors for healthcheck [Felipe Lalanne]
+> * update packages for vulnerabilities [20k-ultra]
+> 
+> ## balena-supervisor-12.11.39
+> ### (2022-03-16)
+> 
+> * Move report throttle out of reporting logic [20k-ultra]
+> * Update npm dep sinon to v11.1.2 [20k-ultra]
+> 
+</details>
+
 # v2.98.13
 ## (2022-05-03)
 

@@ -1,4 +1,312 @@
 - commits:
+    - subject: "supervisor: Update balena-supervisor to v13.1.4"
+      hash: f4a10db5608fa3d4822e8a5fde166078bbc44c7b
+      body: |
+        Update balena-supervisor from 12.11.38 to 13.1.4
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested:
+        - commits:
+            - subject: Use delay instead of interval to recursively report state
+              hash: 2e81a7328e6ff01c397bb1bced73010470520657
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+          version: balena-supervisor-13.1.4
+          title: "'Use delay instead of interval to recursively report state'"
+          date: 2022-04-28T03:19:33.567Z
+        - commits:
+            - subject: Remove in memory storage of started/stopped containers
+              hash: 5437aea786e6be4a908e2cb0c24faeca3282c37e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+            - subject: Only start a container once in its lifetime This will ensure the
+                restart policy specified is not violated
+              hash: ca9945bdfb716e1b14b24d3f3069f48cc7aff493
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: "#1668"
+                closes: "#1668"
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+          version: balena-supervisor-13.1.3
+          title: "'Prevent restart policy violation'"
+          date: 2022-04-20T03:29:57.844Z
+        - commits:
+            - subject: Explain /v2/state/status's status field in its response
+              hash: 27249c278555c46154d1e917e769dd3fb9d2dcfc
+              body: >
+                The status field does not indicate the current state of the
+                Engine on the device.
+
+                Rather, it only indicates whether the HTTP response returned successfully or not.
+
+
+                To get the current state of the device, i.e. whether it has applied target state or not,
+
+                use the `appState` field in the response.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Wang <christina@balena.io>
+                signed-off-by: Christina Wang <christina@balena.io>
+              author: Christina Wang
+              nested: []
+          version: balena-supervisor-13.1.2
+          title: "'Explain /v2/state/status's status field in its response'"
+          date: 2022-04-18T20:20:06.946Z
+        - commits:
+            - subject: Do not fail lockfile cleanup if files do not exist
+              hash: 8681d6b5808142613931b4e9fe63fa94f04c65bc
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-13.1.1
+          title: "'Do not fail lockfile cleanup if files do not exist'"
+          date: 2022-04-13T17:08:20.101Z
+        - commits:
+            - subject: Add lockfile binary and internal lib for interfacing with it
+              hash: 51e63ea22b876580de276808eca891ff6ab2a6c5
+              body: >
+                The linked issue describes the Supervisor not cleaning up locks
+                it creates due
+
+                to crashing at just the wrong time. After internal discussion we decided to
+
+                differentiate Supervisor-created lockfiles from user-created lockfiles by using
+
+                the `nobody` UID (65534) for Supervisor-created lockfiles.
+
+
+                As the existing NPM lockfile lib does not allow creating lockfiles atomically
+
+                with different UIDs, we move to using the lockfile binary, which is part of the
+
+                procmail package. To allow nonroot users to write to lock directories, permissions
+
+                are changed to allow write access by nonroot users.
+              footer:
+                See: https://www.flowdock.com/app/rulemotion/r-resinos/threads/gWMgK5hmR26TzWGHux62NpgJtVl
+                see: https://www.flowdock.com/app/rulemotion/r-resinos/threads/gWMgK5hmR26TzWGHux62NpgJtVl
+                Change-type: minor
+                change-type: minor
+                Closes: "#1758"
+                closes: "#1758"
+                Signed-off-by: Christina Wang <christina@balena.io>
+                signed-off-by: Christina Wang <christina@balena.io>
+              author: Christina Wang
+              nested: []
+          version: balena-supervisor-13.1.0
+          title: "'Differentiate Supervisor-created lockfiles from userapp-created
+            lockfiles'"
+          date: 2022-04-12T19:07:17.817Z
+        - commits:
+            - subject: Add system id/model support for Compulab IOT-gate
+              hash: e6fa22306b9e2b55480772560e62bb8e8988b529
+              body: >
+                dmidecode for alpine 3.11 doesn't work in this device type. This
+                change
+
+                moves to using `/proc/device-tree/product-sn` and
+
+                `/proc/device-tree/product-name` for these devices.
+              footer:
+                Resolves: "#1916"
+                resolves: "#1916"
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-13.0.3
+          title: "'Add system id/model support for Compulab IOT-gate'"
+          date: 2022-04-08T16:06:29.933Z
+        - commits:
+            - subject: Correctly evaluate downloadProgress when computing current state
+              hash: c1b5e58ebd7a1c01c985f75c9a84ac22f7f090f0
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: "#1918"
+                closes: "#1918"
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+          version: balena-supervisor-13.0.2
+          title: "'Correctly evaluate downloadProgress when computing current state'"
+          date: 2022-04-08T01:24:44.461Z
+        - commits:
+            - subject: Fix database migration for legacyApps
+              hash: eee24604459440569dee455db918d6901ea86645
+              body: >
+                Migration `M00008` had a bug with the check for legacy apps,
+                which
+
+                resulted in devices that had at some point been updated from a single
+
+                container supervisor to get the error
+
+
+                ```
+
+                Undefined binding(s) detected when compiling UPDATE. Undefined column(s): [appUuid] query
+
+                ```
+
+
+                This adds a new migration with the fix to ensure broken fix the
+
+                inconsistent database state.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: "#1913"
+                closes: "#1913"
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-13.0.1
+          title: "'Fix database migration for legacyApps'"
+          date: 2022-04-01T21:09:42.303Z
+        - commits:
+            - subject: Add support for GET v3 target state
+              hash: 7425d1110b719dffd132c681c6e0c28fcc218dea
+              body: >
+                This change updates types and database format in order to allow
+
+                receiving the new format of the target state from the cloud and allow
+
+                applications to keep working.
+
+
+                This change also updates metadata in the containers, meaning services
+
+                will need to be restarted on supervisor update
+              footer:
+                Change-type: major
+                change-type: major
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-13.0.0
+          title: "'Update supervisor to use new v3 target state format'"
+          date: 2022-03-23T18:15:27.194Z
+        - commits:
+            - subject: Always add status to image download report
+              hash: 21c1c006f7b8dfcf566f3e4a8e853e5e9978edf4
+              body: >
+                It seems that in some cases the supervisor can report
+
+                an image without a `status` field leading to a cloud side 401 response.
+
+                See #1905 for more details.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-12.11.43
+          title: "'Always add status to image download report'"
+          date: 2022-03-21T17:55:39.079Z
+        - commits:
+            - subject: Moved test setup into file included for all tests
+              hash: b068c209b0cd8cff4c2fb5218bd1d4c2116451e6
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+          version: balena-supervisor-12.11.42
+          title: "'Moved test setup into file included for all tests'"
+          date: 2022-03-18T22:22:27.948Z
+        - commits:
+            - subject: Added PR template doc
+              hash: edcbb622d84bc1290cc5ce0ef7929a9ef9195df4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+          version: balena-supervisor-12.11.41
+          title: "'Added PR template doc'"
+          date: 2022-03-16T20:56:50.062Z
+        - commits:
+            - subject: Only count report connectivity errors for healthcheck
+              hash: e217ff9027dad3e2ab092d16290b2eca0ecf6c25
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: update packages for vulnerabilities
+              hash: b5a2b8b7510860ba926f2e015e9294c824c700e1
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+          version: balena-supervisor-12.11.40
+          title: "'Only count report connectivity errors for healthcheck'"
+          date: 2022-03-16T19:01:20.454Z
+        - commits:
+            - subject: Move report throttle out of reporting logic
+              hash: 2fdb83839c2262b398deb77eb0fa4ae2c16c374a
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+            - subject: Update npm dep sinon to v11.1.2
+              hash: 5e5f1fb305d06399af37f1ce490a27f6e0289140
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+                signed-off-by: 20k-ultra <3946250+20k-ultra@users.noreply.github.com>
+              author: 20k-ultra
+              nested: []
+          version: balena-supervisor-12.11.39
+          title: "'Move report throttle out of reporting logic'"
+          date: 2022-03-16T02:57:26.149Z
+  version: 2.98.14
+  title: "'supervisor: Update balena-supervisor to v13.1.4'"
+  date: 2022-05-04T13:42:13.540Z
+- commits:
     - subject: "os: tests: optimize connectivity tests"
       hash: fdfa61579dff1a1aaf3aea1318d16cb9f4fc3f50
       body: ""
