@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.15
+## (2022-05-04)
+
+* Rename renovate config [Kyle Harding]
+
 # v2.98.14
 ## (2022-05-04)
 

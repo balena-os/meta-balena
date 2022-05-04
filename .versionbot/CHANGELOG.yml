@@ -1,4 +1,18 @@
 - commits:
+    - subject: Rename renovate config
+      hash: 11070330e7ef2a22e38fe341c4098df478300127
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.15
+  title: "'Rename renovate config to json'"
+  date: 2022-05-04T17:13:58.711Z
+- commits:
     - subject: "supervisor: Update balena-supervisor to v13.1.4"
       hash: f4a10db5608fa3d4822e8a5fde166078bbc44c7b
       body: |
