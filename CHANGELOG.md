@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.16
+## (2022-05-05)
+
+* renovate: Replace tests with tests/suites in default ignorePaths [Kyle Harding]
+
 # v2.98.15
 ## (2022-05-04)
 

@@ -1,4 +1,19 @@
 - commits:
+    - subject: "renovate: Replace tests with tests/suites in default ignorePaths"
+      hash: c354fded7c56960b69ae9c0ede362e90e0d71a46
+      body: |
+        This way renovate can operate on tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.16
+  title: "'renovate: Replace tests with tests/suites in default ignorePaths'"
+  date: 2022-05-05T16:33:33.391Z
+- commits:
     - subject: Rename renovate config
       hash: 11070330e7ef2a22e38fe341c4098df478300127
       body: ""
