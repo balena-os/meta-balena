@@ -1,5 +1,15 @@
 {
     "extends": [
         "github>balena-os/renovate-config"
-    ]
+    ],
+    "ignorePaths": [
+        "**/node_modules/**",
+        "**/bower_components/**",
+        "**/vendor/**",
+        "**/examples/**",
+        "**/__tests__/**",
+        "**/test/**",
+        "**/tests/suites/**",
+        "**/__fixtures__/**"
+      ]
 }
