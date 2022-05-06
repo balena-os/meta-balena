@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.17
+## (2022-05-06)
+
+* renovate: Override default package rules to enable leviathan [Kyle Harding]
+
 # v2.98.16
 ## (2022-05-05)
 

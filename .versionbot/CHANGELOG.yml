@@ -1,4 +1,18 @@
 - commits:
+    - subject: "renovate: Override default package rules to enable leviathan"
+      hash: a711a1f59bd241fc25fe04b086d1bf22b05441ee
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.17
+  title: "'renovate: Override default package rules to enable leviathan'"
+  date: 2022-05-06T13:07:35.911Z
+- commits:
     - subject: "renovate: Replace tests with tests/suites in default ignorePaths"
       hash: c354fded7c56960b69ae9c0ede362e90e0d71a46
       body: |
