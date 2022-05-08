@@ -1,4 +1,24 @@
 - commits:
+    - subject: "tests: connectivity: proxy: Add sleep before checking logs"
+      hash: b5021a2af4b26fe4be7559b828a5b13628e9263d
+      body: |
+        Lately we have seen this test fail because at the second http-connect
+        test we would still fetch the old socks5 logs from the glider container.
+        So let's add a 3 seconds sleep in between the api ping call and the log
+        check. If even after this 3 seconds sleep we get the old logs then it's
+        an indication of a problem with either the container being slow to run
+        or a problem with slow logs output from the glider container.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.98.12
+  title: "'tests: connectivity: proxy: Add sleep before checking logs'"
+  date: 2022-05-08T03:52:25.809Z
+- commits:
     - subject: "tests: os: create swap test"
       hash: cb19043d77a68e24e48a96acb2391938acd7cd71
       body: ""
