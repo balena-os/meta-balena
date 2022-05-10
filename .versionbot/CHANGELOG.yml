@@ -1,4 +1,28 @@
 - commits:
+    - subject: "tests/connectivity: Force proxy tests to use IPv4"
+      hash: df6db848d3729b2200200ce3fcb493b3381deca0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests/connectivity: Fix compose warnings for expected string"
+      hash: d6882eeb070686642b0fd685257fce109f50297c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.19
+  title: "'tests/connectivity: Force proxy tests to use IPv4'"
+  date: 2022-05-10T19:34:34.822Z
+- commits:
     - subject: "supervisor: Update balena-supervisor to v13.1.6"
       hash: 541eeeb25dcb928f23a920df27d30fa213c5df14
       body: |

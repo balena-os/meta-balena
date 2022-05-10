@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.98.19
+## (2022-05-10)
+
+* tests/connectivity: Force proxy tests to use IPv4 [Kyle Harding]
+* tests/connectivity: Fix compose warnings for expected string [Kyle Harding]
+
 # v2.98.18
 ## (2022-05-10)
 
