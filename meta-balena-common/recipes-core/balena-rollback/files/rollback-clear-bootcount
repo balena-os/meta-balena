@@ -24,7 +24,9 @@ if [ -f "/mnt/state/rollback-altboot-breadcrumb" ]; then
 	# Clear grub bootcount
 	grub_env=$(find "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
 	if [ -f "${grub_env}" ]; then
-		sed -i "s#bootcount=.*#bootcount=0 #g" "${grub_env}" || true
+		tmpfile=$(mktemp)
+		"${CAT}" "${grub_env}" | sed "s#bootcount=.*#bootcount=0 #g" > "${tmpfile}" || true
+		"${MV}" "${tmpfile}" "${grub_env}"
 	else
 		# Clear u-boot bootcount
 		rm -f "${BALENA_BOOT_MOUNTPOINT}/bootcount.env" || true
