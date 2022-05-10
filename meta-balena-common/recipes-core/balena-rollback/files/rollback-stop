@@ -28,17 +28,14 @@ rm -f /mnt/state/rollback-health-failed || true
 rm -f "${BALENA_BOOT_MOUNTPOINT}/bootcount.env" || true
 grub_env=$(find "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
 if [ -f "${grub_env}" ]; then
-	sed -i "s#bootcount=.*#bootcount=0 #g" "${grub_env}" || true
+	"${CAT}" "${grub_env}" | sed "s#bootcount=.*#bootcount=0 #g" | "${WR}" "${grub_env}" || true
 fi
 sync -f /mnt/state
 sync -f "${BALENA_BOOT_MOUNTPOINT}"
 
 echo "Rollback: Following bootloader file ${BOOTLOADER_FILE} found"
 if [ -f "${BOOTLOADER_FILE}" ]; then
-	cp "${BOOTLOADER_FILE}" "${BOOTLOADER_FILE}.new"
-	sed -i "s#upgrade_available=.*#upgrade_available=0#g" "${BOOTLOADER_FILE}.new"
-	sync -f "${BALENA_BOOT_MOUNTPOINT}"
-	mv "${BOOTLOADER_FILE}.new" "${BOOTLOADER_FILE}"
+	"${CAT}" "${BOOTLOADER_FILE}" | sed "s#upgrade_available=.*#upgrade_available=0#g" | "${WR}" "${BOOTLOADER_FILE}"
 fi
 
 sync -f "${BALENA_BOOT_MOUNTPOINT}"
