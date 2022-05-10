@@ -1,6 +1,25 @@
 Change log
 -----------
 
+# v2.98.18
+## (2022-05-10)
+
+
+<details>
+<summary> supervisor: Update balena-supervisor to v13.1.6 [Alex Gonzalez] </summary>
+
+> ## balena-supervisor-13.1.6
+> ### (2022-05-06)
+> 
+> * Avoid splash image failures if image is corrupt [Felipe Lalanne]
+> 
+> ## balena-supervisor-13.1.5
+> ### (2022-05-03)
+> 
+> * Use write + sync when writing configs to /mnt/boot [Felipe Lalanne]
+> 
+</details>
+
 # v2.98.17
 ## (2022-05-06)
 

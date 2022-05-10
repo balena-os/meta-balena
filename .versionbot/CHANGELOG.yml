@@ -1,4 +1,63 @@
 - commits:
+    - subject: "supervisor: Update balena-supervisor to v13.1.6"
+      hash: 541eeeb25dcb928f23a920df27d30fa213c5df14
+      body: |
+        Update balena-supervisor from 13.1.4 to 13.1.6
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested:
+        - commits:
+            - subject: Avoid splash image failures if image is corrupt
+              hash: a5ede01b18abd5e079361d24f2f8f5368d23da6d
+              body: >
+                Splash image backend would throw if the image is not a valid png
+                during
+
+                the write step. This could prevent the device from provisioning if some
+
+                corruption happens at some point.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-13.1.6
+          title: "'Avoid splash image failures if image is corrupt'"
+          date: 2022-05-06T18:46:18.641Z
+        - commits:
+            - subject: Use write + sync when writing configs to /mnt/boot
+              hash: c04955354a76ab32ab5dc52062fdf72d668f7c3b
+              body: >
+                This commit updates all backends that write to /mnt/boot to do
+                it
+
+                through a new `lib/host-utils` module. Writes are now done using write +
+
+                sync as rename is not an atomic operation in vfat.
+
+
+                The change also applies for writes through the `/v1/host-config`
+
+                endpoint.
+
+
+                Finally this change includes some improvements on tests.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-13.1.5
+          title: "'Use write+sync when writing to '"
+          date: 2022-05-03T15:28:52.610Z
+  version: 2.98.18
+  title: "'supervisor: Update balena-supervisor to v13.1.6'"
+  date: 2022-05-10T12:02:12.200Z
+- commits:
     - subject: "renovate: Override default package rules to enable leviathan"
       hash: a711a1f59bd241fc25fe04b086d1bf22b05441ee
       body: ""
