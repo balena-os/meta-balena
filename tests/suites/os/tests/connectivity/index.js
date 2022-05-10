@@ -14,7 +14,7 @@
 
 'use strict';
 
-const URL_TEST = 'www.google.com';
+const URL_TEST = 'ipv4.google.com';
 
 module.exports = {
 	title: 'Connectivity tests',
