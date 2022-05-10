@@ -38,6 +38,28 @@ done
 BOOT_MOUNTPOINT="/mnt/boot"
 FLASHER_FILEFLAG="$BOOT_MOUNTPOINT/balena-image-flasher"
 
+fatcp() {
+    /usr/bin/fatrw copy "${1}" "${2}"
+}
+
+fatmv() {
+    fatcp "${1}" "${2}"
+    rm -rf "${1}"
+}
+
+fatcat() {
+    /usr/bin/fatrw read "${1}"
+}
+
+CP="/bin/cp"
+MV="/bin/mv"
+CAT="/bin/cat"
+if command -v "/usr/bin/fatrw" > /dev/null; then
+    CP=fatcp
+    MV=fatmv
+    CAT=fatcat
+fi
+
 # Default values
 if [ -z "$CONFIG_PATH" ]; then
     if [ -f "$FLASHER_FILEFLAG" ]; then
@@ -53,7 +75,7 @@ BALENA_BOOT_MOUNTPOINT="/mnt/boot"
 # If config.json provides redefinitions for our vars let us rewrite their
 # runtime value
 if [ -f $CONFIG_PATH ]; then
-    CONFIG_PARAMS=$(jq -r '@sh "
+    CONFIG_PARAMS=$("${CAT}" "${CONFIG_PATH}" | jq -r '@sh "
          API_ENDPOINT=\(.apiEndpoint // "")
          APPLICATION_ID=\(.applicationId // "")
          BALENA_ROOT_CA=\(.balenaRootCA // "")
@@ -76,7 +98,7 @@ if [ -f $CONFIG_PATH ]; then
          PROVISIONING_API_KEY=\(.apiKey // "")
          REGISTERED_AT=\(.registered_at // "")
          UUID=\(.uuid // "")
-         "' $CONFIG_PATH)
+         "')
     RESULT=$?
     if [ "$RESULT" = "4" ]; then
         echo "[ERROR] $0: Failed to parse '$CONFIG_PATH'."
