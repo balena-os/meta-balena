@@ -42,7 +42,7 @@ if [ -z "$CONFIG_PATH" ]; then
     exit 1
 fi
 
-if ! key=$(jq -r ".$key_name //empty" "$CONFIG_PATH"); then
+if ! key=$("${CAT}" "${CONFIG_PATH}" | jq -r ".$key_name //empty"); then
     echo "[ERROR] balena-unique-key : Error parsing the CONFIG_PATH json. Is it a valid json?"
     exit 1
 fi
@@ -51,12 +51,9 @@ if [ -z "$key" ]; then
     echo "[INFO] balena-unique-key: $key_name missing from config file. Generating..."
     if ! key=$(openssl rand -hex 16); then
         echo "[ERROR] balena-unique-key : Failed to generate the random key."
-	exit 1
+        exit 1
     fi
-    generated_json=$(jq ".$key_name=\"$key\"" "$CONFIG_PATH")
-    echo "$generated_json" > "$CONFIG_PATH.tmp"
-    sync "$CONFIG_PATH.tmp"
-    mv "$CONFIG_PATH.tmp" "$CONFIG_PATH" && sync
+    "${CAT}" "$CONFIG_PATH" | jq ".$key_name=\"$key\"" | "${WR}" "$CONFIG_PATH"
 else
     echo "[INFO] balena-unique-key : Device already has $key_name assigned."
 fi
