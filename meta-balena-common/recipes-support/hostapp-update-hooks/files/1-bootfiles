@@ -8,6 +8,8 @@
 
 set -o errexit
 
+. /usr/sbin/balena-config-vars
+
 # Variables
 boot_fingerprint="@BALENA_BOOT_FINGERPRINT@"
 bootfiles_blacklist="\
@@ -48,9 +50,9 @@ isBlacklisted() {
 isModified() {
 	local _file="$1"
 	local _current_md5
-	_current_md5="$(md5sum "$boot_mountpoint/$_file" | awk '{print $1}')"
+	_current_md5=$("${CAT}" "$boot_mountpoint/$_file" | md5sum | awk '{print $1}')
 	local _initial_md5
-	_initial_md5="$(grep "$_file" < "$boot_mountpoint/$boot_fingerprint" | awk '{print $1}')"
+	_initial_md5=$("${CAT}" "$boot_mountpoint/$boot_fingerprint" | grep "$_file" | awk '{print $1}')
 	if [ "$_current_md5" != "$_initial_md5" ]; then
 		return 0
 	else
@@ -64,9 +66,9 @@ isModified() {
 copyBootFile() {
 	local _file="$1"
 	mkdir -p "$boot_mountpoint/$(dirname "$_file")"
-	if cp "/resin-boot/$_file" "$boot_mountpoint/$_file.new"; then
+	if "${CP}" "/resin-boot/$_file" "$boot_mountpoint/$_file.new"; then
 		sync -f $boot_mountpoint
-		mv "$boot_mountpoint/$_file.new" "$boot_mountpoint/$_file"
+		"${MV}" "$boot_mountpoint/$_file.new" "$boot_mountpoint/$_file"
 		sync -f $boot_mountpoint
 	else
 		if [ "$DURING_UPDATE" = "1" ]; then
@@ -93,7 +95,7 @@ deploy() {
 					# Keep custom logo
 					printf "renaming resin-logo to balena-logo..."
 					sync -f $boot_mountpoint
-					mv $boot_mountpoint/splash/resin-logo.png $boot_mountpoint/splash/balena-logo.png
+					"${MV}" $boot_mountpoint/splash/resin-logo.png $boot_mountpoint/splash/balena-logo.png
 					sync -f $boot_mountpoint
 				else
 					# This rebrands from old resin logo
@@ -105,13 +107,13 @@ deploy() {
 				return
 			fi
 		elif [ "$_file" = "/config.json" ]; then
-			development_mode="$(jq -r ".developmentMode" "${boot_mountpoint}$_file")"
+			development_mode="$("${CAT}" "${boot_mountpoint}$_file" | jq -r ".developmentMode")"
 			if [ -z "${development_mode}" ] || [ "${development_mode}" = "null" ]; then
 				# Only configure developmentMode if updating from a legacy development image
 				old_os_os_release=$(find "/mnt/sysroot/active" -path "*/etc/os-release")
 				if grep -i -q 'VARIANT="Development"' "${old_os_os_release}"; then
-					jq -S ".developmentMode=true" < "${boot_mountpoint}/config.json" > "/tmp/config.json"
-					mv "/tmp/config.json" "${boot_mountpoint}/config.json"
+					"${CAT}" "${boot_mountpoint}/config.json" | jq -S ".developmentMode=true" > "/tmp/config.json"
+					"${MV}" "/tmp/config.json" "${boot_mountpoint}/config.json"
 					sync -f "${boot_mountpoint}"
 					printf "Development mode set in new OS... "
 				fi
