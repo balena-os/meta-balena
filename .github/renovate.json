@@ -9,16 +9,5 @@
     "**/test/**",
     "**/tests/suites/**",
     "**/__fixtures__/**"
-  ],
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["*"],
-      "excludePackagePatterns": [".*leviathan"],
-      "enabled": false
-    },
-    {
-      "matchManagers": ["git-submodules"],
-      "automerge": true
-    }
   ]
 }
