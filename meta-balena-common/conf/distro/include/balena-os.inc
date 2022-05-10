@@ -4,7 +4,7 @@ include conf/distro/include/balena-os-yocto-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
-DISTRO_VERSION = "2.98.19"
+DISTRO_VERSION = "2.98.20"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''

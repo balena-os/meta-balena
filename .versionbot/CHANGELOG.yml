@@ -1,4 +1,31 @@
 - commits:
+    - subject: "renovate: Override commit body for meta-balena to Change-type"
+      hash: 27be3bc8d27915a6fd9b2f6e13b754b4976a14d8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "renovate: Remove extra leviathan package rules"
+      hash: 50c0ede0a045bf3073d14b6ade3aeb810a36a251
+      body: |
+        The upstream balena-os/renovate-config package rules were
+        matched before the leviathan exception could be matched so
+        these rules were not effective.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.98.20
+  title: "'renovate: Override commit body for meta-balena to Change-type'"
+  date: 2022-05-10T22:05:08.508Z
+- commits:
     - subject: "tests/connectivity: Force proxy tests to use IPv4"
       hash: df6db848d3729b2200200ce3fcb493b3381deca0
       body: ""

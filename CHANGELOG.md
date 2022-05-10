@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.98.20
+## (2022-05-10)
+
+* renovate: Override commit body for meta-balena to Change-type [Kyle Harding]
+* renovate: Remove extra leviathan package rules [Kyle Harding]
+
 # v2.98.19
 ## (2022-05-10)
 
