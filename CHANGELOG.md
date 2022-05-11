@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.21
+## (2022-05-11)
+
+* contributing-device-support.md: Enhance device contribution guide [Florin Sarbu]
+
 # v2.98.20
 ## (2022-05-10)
 

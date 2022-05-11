@@ -1,4 +1,18 @@
 - commits:
+    - subject: "contributing-device-support.md: Enhance device contribution guide"
+      hash: e5d87b1ffa4cd86d4b133ba241f52fb820833cfb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.98.21
+  title: "'contributing-device-support.md: Enhance device contribution guide'"
+  date: 2022-05-11T04:48:12.298Z
+- commits:
     - subject: "renovate: Override commit body for meta-balena to Change-type"
       hash: 27be3bc8d27915a6fd9b2f6e13b754b4976a14d8
       body: ""
