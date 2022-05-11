@@ -1,4 +1,80 @@
 - commits:
+    - subject: Update tests/leviathan digest to 01719b5
+      hash: de0657c7635b175b7c94b85c06875f4da2d66520
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Fixes spelling and grammar in e2e
+              hash: dc2ad10263c5b04c58964fe2f37e06a1589092c0
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+                signed-off-by: Alex Bucknall <alex.bucknall@gmail.com>
+              author: Alex
+              nested: []
+          version: leviathan-2.3.3
+          title: "'Fixes spelling and grammar in e2e'"
+          date: 2022-05-09T08:48:11.177Z
+        - commits:
+            - subject: Record environment variables to file for client env
+              hash: 86edddf6879686028733cb87dc14110d1cca0ee1
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.3.2
+          title: "'Record environment variables to file for client env'"
+          date: 2022-05-02T16:35:04.137Z
+        - commits:
+            - subject: "patch: Remove development shortcuts"
+              hash: f9d593a1a92568e8341666be4a6f6c00ecb24552
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.3.1
+          title: "'patch: Remove development shortcuts'"
+          date: 2022-05-02T13:39:59.588Z
+        - commits:
+            - subject: "minor: Add support for debug object"
+              hash: 0b58fa94f68868c5f296adcb5eda5ca69efedd2e
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.3.0
+          title: "'Add Debug object for debugging'"
+          date: 2022-04-29T23:54:29.594Z
+        - commits:
+            - subject: "patch: Remove Express server port config"
+              hash: 117d32df99b6704e71e3da39d9456aeb752e1bb1
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.2.14
+          title: "'patch: Remove Express server port config'"
+          date: 2022-04-29T21:42:58.975Z
+  version: 2.98.22
+  title: "'Update tests/leviathan digest to 01719b5'"
+  date: 2022-05-11T05:34:46.375Z
+- commits:
     - subject: "contributing-device-support.md: Enhance device contribution guide"
       hash: e5d87b1ffa4cd86d4b133ba241f52fb820833cfb
       body: ""
