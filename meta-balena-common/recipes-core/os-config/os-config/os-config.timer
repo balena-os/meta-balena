@@ -3,6 +3,7 @@ Description=Periodic check for configuration changes
 
 [Timer]
 OnCalendar=daily
+RandomizedDelaySec=21600
 
 [Install]
 WantedBy=multi-user.target

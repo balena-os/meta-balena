@@ -358,5 +358,6 @@ module.exports = {
     "./tests/supervisor",
     "./tests/multicontainer",
     "./tests/ssh-auth",
+    "./tests/os-config",
   ],
 };
