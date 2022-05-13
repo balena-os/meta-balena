@@ -1,4 +1,25 @@
 - commits:
+    - subject: "linux-firmware: Fix quz-a0-hr-b0 and quz-a0-jf-b0 packaging for
+        compression"
+      hash: 9e9d8986d31d449a9c317d44f9a2b6c0cddf2123
+      body: >
+        Add a missing asterisk to FILES for iwlwifi-quz-a0-hr-b0
+
+        and iwlwifi-quz-a0-jf-b0 to include compressed firmware files. Without it
+
+        the packages end up empty as we have compression enabled.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.98.23
+  title: "'linux-firmware: Fix quz-a0-hr-b0 and quz-a0-jf-b0 packaging for
+    compression'"
+  date: 2022-05-11T11:10:57.896Z
+- commits:
     - subject: Update tests/leviathan digest to 01719b5
       hash: de0657c7635b175b7c94b85c06875f4da2d66520
       body: Update tests/leviathan

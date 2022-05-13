@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.23
+## (2022-05-11)
+
+* linux-firmware: Fix quz-a0-hr-b0 and quz-a0-jf-b0 packaging for compression [Michal Toman]
+
 # v2.98.22
 ## (2022-05-11)
 
