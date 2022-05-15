@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.24
+## (2022-05-15)
+
+* os-config: Randomize the timer period [Alex Gonzalez]
+
 # v2.98.23
 ## (2022-05-11)
 

@@ -1,4 +1,20 @@
 - commits:
+    - subject: "os-config: Randomize the timer period"
+      hash: 6a9a456869ac37367058ea56bbf24d33a2cf42f2
+      body: |
+        To avoid all devices fetching configuration settings at the same time,
+        distribute the timer adding a random time between 0 and 6 hours.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.98.24
+  title: "'Randomize os-config timer service'"
+  date: 2022-05-15T17:05:46.782Z
+- commits:
     - subject: "linux-firmware: Fix quz-a0-hr-b0 and quz-a0-jf-b0 packaging for
         compression"
       hash: 9e9d8986d31d449a9c317d44f9a2b6c0cddf2123
