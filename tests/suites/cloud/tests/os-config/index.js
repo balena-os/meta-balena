@@ -4,21 +4,19 @@ module.exports = {
 		{
 			title: 'os-config service on boot',
 			run: async function(test) {
-				let result = '';
-				await this.utils.waitUntil(async () => {
-					result = await this.cloud.executeCommandInHostOS(
-							`systemctl is-active os-config.service`,
-							this.balena.uuid,
-						);
-					return result === 'inactive';
-				}, false);
-				test.is(
-					await this.cloud.executeCommandInHostOS(
-						`journalctl -u os-config.service | grep -q "Service configuration retrieved" >/dev/null 2>&1 && echo "pass"`,
-						this.balena.uuid),
-					'pass',
-					'Service configuration has been fetched on boot'
-					)
+				return this.waitForServiceState(
+							'os-config.service',
+							'inactive',
+							this.balena.uuid
+				).then(async () => {
+					test.is(
+						 await this.cloud.executeCommandInHostOS(
+							`journalctl -u os-config.service | grep -q "Service configuration retrieved" >/dev/null 2>&1 && echo "pass"`,
+							this.balena.uuid),
+						'pass',
+						'Service configuration has been fetched on boot'
+						)
+				})
 			},
 		},
 		{
