@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.98.25
+## (2022-05-16)
+
+* patch: Get CDS doc ready for docs sync [Vipul Gupta]
+* test: os-config: Use common code to wait for service state [Alex Gonzalez]
+
 # v2.98.24
 ## (2022-05-15)
 
