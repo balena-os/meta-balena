@@ -1,4 +1,18 @@
 - commits:
+    - subject: "test: os-config: Use common code to wait for service state"
+      hash: 1ccf232c9f2676b0631d71870b2556cddfb69dd6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.98.25
+  title: "'test: os-config: Use common code to wait for service state'"
+  date: 2022-05-16T09:30:47.715Z
+- commits:
     - subject: "os-config: Randomize the timer period"
       hash: 6a9a456869ac37367058ea56bbf24d33a2cf42f2
       body: |
