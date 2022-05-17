@@ -1,4 +1,22 @@
 - commits:
+    - subject: "balena-supervisor: Randomize the updater timer period"
+      hash: 5c402bc9a449c4f6d6cefe9aa44b7cdacb8ae4c8
+      body: |
+        To avoid fleets updating the supervisor at the same time,
+        distribute the timer adding a random time between 0 and 1 hour.
+
+        Fixes #2631
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.98.26
+  title: "'balena-supervisor: Randomize the updater timer period'"
+  date: 2022-05-17T16:20:39.324Z
+- commits:
     - subject: "patch: Get CDS doc ready for docs sync"
       hash: f15dc2055e78af9966ac5166061e49bc401c6647
       body: ""

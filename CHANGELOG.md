@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.26
+## (2022-05-17)
+
+* balena-supervisor: Randomize the updater timer period [Alex Gonzalez]
+
 # v2.98.25
 ## (2022-05-16)
 
