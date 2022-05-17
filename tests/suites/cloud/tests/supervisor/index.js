@@ -160,5 +160,33 @@ module.exports = {
           this.balena.uuid)
       },
     },
+    {
+      title: 'Update supervisor randomized timer',
+      run: async function(test) {
+        const nextTriggers = []
+        return this.waitForServiceState(
+          'update-balena-supervisor.service',
+          'inactive',
+          this.balena.uuid
+        ).then(async () => {
+          let samples = 0
+          do {
+              nextTriggers.push( await this.cloud.executeCommandInHostOS(
+              `date -s "+2 hours" > /dev/null && sleep 0.5 && systemctl status update-balena-supervisor.timer | grep "Trigger:" | cut -d ';' -f2`,
+              this.balena.uuid))
+              samples = samples + 1
+          } while (samples < 3);
+          test.notOk (
+            nextTriggers.every( (v, i, a) => v === a[0] ),
+            'Balena supervisor updater will run on a randomized timer'
+          )
+        }).then(async () => {
+          /* Restore current time */
+          await this.cloud.executeCommandInHostOS(
+            `chronyc -a 'burst 4/4'`,
+            this.balena.uuid)
+        })
+      },
+    },
   ],
 };

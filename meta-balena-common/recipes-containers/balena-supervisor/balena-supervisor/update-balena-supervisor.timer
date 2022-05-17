@@ -4,6 +4,7 @@ Description=Balena supervisor updater timer
 [Timer]
 OnBootSec=15min
 OnUnitInactiveSec=1d
+RandomizedDelaySec=3600
 
 [Install]
 WantedBy=multi-user.target
