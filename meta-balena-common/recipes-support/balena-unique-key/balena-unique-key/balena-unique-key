@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 help () {
     cat << EOF
 Generate unique key for a new balena device

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 #
 # Script which configures the resinOS_uEnv,txt to use an updated root index
 #

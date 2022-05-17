@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 #
 # Script which configures the grub.cfg to use an updated root index
 #

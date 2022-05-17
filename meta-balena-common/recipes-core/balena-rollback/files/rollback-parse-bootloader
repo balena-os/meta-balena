@@ -15,6 +15,7 @@
 # limitations under the License.
 
 set -o errexit
+set -x
 
 . /usr/sbin/balena-config-vars
 

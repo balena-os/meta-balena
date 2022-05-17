@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 #
 # Script to deploy the boot files from rootfs to the boot partition
 #
