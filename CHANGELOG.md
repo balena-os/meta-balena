@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.27
+## (2022-05-18)
+
+* patch: Fix heading anchor links in CDS doc index [Vipul Gupta]
+
 # v2.98.26
 ## (2022-05-17)
 

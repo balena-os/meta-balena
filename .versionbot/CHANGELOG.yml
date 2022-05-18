@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Fix heading anchor links in CDS doc index"
+      hash: 0886fe3323fa2431a780fc701d45ac601b5b0980
+      body: ""
+      footer: {}
+      author: Vipul Gupta
+      nested: []
+  version: 2.98.27
+  title: "'patch: Fix heading anchor links in CDS doc index'"
+  date: 2022-05-18T12:53:30.139Z
+- commits:
     - subject: "balena-supervisor: Randomize the updater timer period"
       hash: 5c402bc9a449c4f6d6cefe9aa44b7cdacb8ae4c8
       body: |
