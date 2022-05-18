@@ -6,11 +6,10 @@ The repositories used to build the balenaOS host Operating System (OS) are typic
 
 Contributing support for a new board is a process that involves the following steps:
 
-* create the board support repository ([1](https://github.com/balena-os/meta-balena/blob/master/contributing-device-support.md#1-board-support-repository-breakout)),
-* because the board support repository needs to be located in the [balena-os GitHub organization](https://github.com/balena-os), once the above steps have been done, 
-contact balena to have the repository moved/mirrored and the build system jobs created ([2](https://github.com/balena-os/meta-balena/blob/master/contributing-device-support.md#2-contact-balena)),
-* send a Pull Request for a hardware contract which describes the board's capabilities ([3](https://github.com/balena-os/meta-balena/blob/master/contributing-device-support.md#3-hardware-contract)),
-* maintain the repository ([4](https://github.com/balena-os/meta-balena/blob/master/contributing-device-support.md#4-maintaining-the-repository-and-os-updates)).
+* [Create the board support repository](#step-1-board-support-repository-breakout)
+* [Contact balena to have the repository moved/mirrored and the build system jobs created](#step-2-contact-balena)
+* [Send a Pull Request for a hardware contract which describes the board's capabilities](#step-3-hardware-contract)
+* [Maintaining the repository and OS updates](#step-4-maintaining-the-repository-and-os-updates)
 
 ## Step 1: Board Support Repository Breakout
 
