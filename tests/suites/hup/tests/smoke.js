@@ -31,6 +31,13 @@ module.exports = {
 					'Should create hello-world volume'
 				);
 
+				test.comment('Creating files on the volume');
+				await this.worker.executeCommandInHostOS(
+					`balena run -v hello-world:/the-volume --entrypoint "/bin/sh" alpine -c 'echo "Howdy!" > /the-volume/the-file.txt' &&
+					balena run -v hello-world:/the-volume --entrypoint "/bin/sh" alpine -c 'md5sum /the-volume/the-file.txt > /the-volume/MD5.SUM'`,
+					this.link,
+				);
+
 				await this.hup.doHUP(
 					this,
 					test,
@@ -119,6 +126,16 @@ module.exports = {
 					),
 					'0',
 					'Volume should not be lost during HUP',
+				);
+
+				test.comment('Checking files on the volume');
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`balena run -v hello-world:/the-volume alpine md5sum -c /the-volume/MD5.SUM &> /dev/null ; echo $?`,
+						this.link,
+					),
+					'0',
+					'Volume contents should have been preserved during HUP',
 				);
 
 				// Check for under-voltage after HUP, in the new OS
@@ -143,6 +160,13 @@ module.exports = {
 					'Should create hello-world volume'
 				);
 
+				test.comment('Creating files on the volume');
+				await this.worker.executeCommandInHostOS(
+					`balena run -v hello-world:/the-volume --entrypoint "/bin/sh" alpine -c 'echo "Howdy!" > /the-volume/the-file.txt' &&
+					balena run -v hello-world:/the-volume --entrypoint "/bin/sh" alpine -c 'md5sum /the-volume/the-file.txt > /the-volume/MD5.SUM'`,
+					this.link,
+				);
+
 				await this.hup.doHUP(
 					this,
 					test,
@@ -231,6 +255,16 @@ module.exports = {
 					),
 					'0',
 					'Volume should not be lost during HUP',
+				);
+
+				test.comment('Checking files on the volume');
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`balena run -v hello-world:/the-volume alpine md5sum -c /the-volume/MD5.SUM &> /dev/null ; echo $?`,
+						this.link,
+					),
+					'0',
+					'Volume contents should have been preserved during HUP',
 				);
 			},
 		},
