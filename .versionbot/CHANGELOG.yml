@@ -1,4 +1,75 @@
 - commits:
+    - subject: Update tests/leviathan digest to 727ba9f
+      hash: b9b9847a3c0bc6082eec319bcac1439ca0752aac
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "worker: qemu: add new qemu firmware paths"
+              hash: b19831d5209962eb729ffa55851b593e632a70d8
+              body: |
+                Search for firmware shipped as part of QEMU package to enable
+                cross-platform emulation with UEFI.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "worker: install edk2 firmware for aarch64"
+              hash: 514069e45c814e7f6051ea41ba9da0852f765976
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "worker: Change default qemu memory from 2G to 512M"
+              hash: 0820094150876d67ce9203d641fe5c41d1afcef4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "make: Do not assume qemu DUT arch will match the host"
+              hash: 4aac404ff5e221eecef289d07339532335532543
+              body: |
+                When KVM is not used we can easily emulate generic-aarch64
+                on x86_64 hosts so avoid tying the host and target architectures
+                together in the Makefile.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "make: Allow passed env vars to replace any .env values"
+              hash: 4b71f90615c68c90fa8b0bf4c2068f089784ea00
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.3.4
+          title: "'Do not assume qemu DUT arch will match the host'"
+          date: 2022-05-20T14:09:51.819Z
+  version: 2.98.28
+  title: "'Update tests/leviathan digest to 727ba9f'"
+  date: 2022-05-20T15:17:40.870Z
+- commits:
     - subject: "patch: Fix heading anchor links in CDS doc index"
       hash: 0886fe3323fa2431a780fc701d45ac601b5b0980
       body: ""

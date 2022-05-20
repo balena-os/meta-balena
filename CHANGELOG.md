@@ -1,6 +1,24 @@
 Change log
 -----------
 
+# v2.98.28
+## (2022-05-20)
+
+
+<details>
+<summary> Update tests/leviathan digest to 727ba9f [Renovate Bot] </summary>
+
+> ## leviathan-2.3.4
+> ### (2022-05-20)
+> 
+> * worker: qemu: add new qemu firmware paths [Joseph Kogut]
+> * worker: install edk2 firmware for aarch64 [Joseph Kogut]
+> * worker: Change default qemu memory from 2G to 512M [Kyle Harding]
+> * make: Do not assume qemu DUT arch will match the host [Kyle Harding]
+> * make: Allow passed env vars to replace any .env values [Kyle Harding]
+> 
+</details>
+
 # v2.98.27
 ## (2022-05-18)
 
