@@ -18,7 +18,7 @@ inherit useradd
 BALENA_VERSION = "20.10.17"
 BALENA_BRANCH= "master"
 
-SRCREV = "13db38c82bdb056f013f5497b0662ad34ffb98f7"
+SRCREV = "7e84f09ef4d5e98c8f073f984e0ecda62b088f9a"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
