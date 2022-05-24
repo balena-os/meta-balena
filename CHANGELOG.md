@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.98.29
+## (2022-05-23)
+
+
+<details>
+<summary> Update balena-engine to v20.10.17 [Leandro Motta Barros] </summary>
+
+> ## balena-engine-20.10.17
+> ### (2022-05-17)
+> 
+> * Fix "slice bounds out of range" while applying deltas [Leandro Motta Barros]
+> 
+</details>
+
 # v2.98.28
 ## (2022-05-20)
 

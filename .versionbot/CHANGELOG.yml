@@ -1,4 +1,52 @@
 - commits:
+    - subject: Update balena-engine to v20.10.17
+      hash: 8a7b24d38f67749b5d979ce12a0fafe5626190bb
+      body: |
+        Update balena-engine from 20.10.16 to 20.10.17
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Changelog-entry: Update balena-engine to v20.10.17
+        changelog-entry: Update balena-engine to v20.10.17
+      author: Leandro Motta Barros
+      nested:
+        - commits:
+            - subject: Fix "slice bounds out of range" while applying deltas
+              hash: 6f12d0abb3e438f26a18eee9bbaeca9c4702f7e7
+              body: >
+                The root cause of this issue was an integer overflow in 32-bit
+                platforms
+
+                -- specifically, when explicitly converting `io.Reader` offsets
+
+                (`int64`) to slice indices (`int`, which is only 32-bit long on 32-bit
+
+                platforms).
+
+
+                We already had in place the checks supposed to ensure slice bounds where
+
+                always within the expected bounds. So, in a way, this commit just
+
+                re-organizes the code so that we perform safely this required `int64` to
+
+                `int` type conversion.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.17
+          title: "'Lmb/fix oob slice'"
+          date: 2022-05-17T20:01:47.266Z
+  version: 2.98.29
+  title: "'balena-engine: Update to 20.10.17'"
+  date: 2022-05-23T17:18:04.355Z
+- commits:
     - subject: Update tests/leviathan digest to 727ba9f
       hash: b9b9847a3c0bc6082eec319bcac1439ca0752aac
       body: Update tests/leviathan
