@@ -170,6 +170,12 @@ module.exports = {
 					'inactive',
 					context.link
 				);
+				const dnsmasqInvocationId = await context.worker.executeCommandInHostOS(
+					[
+						`systemctl`, `show`, `-p`, `InvocationID`, `--value`, `dnsmasq.service`
+					],
+					context.link
+				);
 				test.comment(`Setting dnsServers to "null" in config.json...`);
 				await context.worker.executeCommandInHostOS(
 					[
@@ -179,6 +185,17 @@ module.exports = {
 					].join(' '),
 					context.link,
 				);
+				test.comment(`Waiting for dnsmasq InvocationID change...`);
+				await this.utils.waitUntil(async() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							`systemctl`, `show`, `-p`, `InvocationID`, `--value`, `dnsmasq.service`
+						],
+						context.link
+					).then(newInvocationId => {
+						return Promise.resolve(newInvocationId != dnsmasqInvocationId);
+					});
+				}, false, 20, 500);
 				test.comment(`Waiting for dnsmasq service to be active...`);
 				await context.systemd.waitForServiceState(
 					'dnsmasq.service',
