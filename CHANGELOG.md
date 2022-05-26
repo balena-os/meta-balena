@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.30
+## (2022-05-24)
+
+* Remove localMode setting from standalone image configuration [Alex Gonzalez]
+
 # v2.98.29
 ## (2022-05-23)
 

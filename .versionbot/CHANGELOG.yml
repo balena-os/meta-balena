@@ -1,4 +1,24 @@
 - commits:
+    - subject: Remove localMode setting from standalone image configuration
+      hash: 26aa3caf4e4d649d323e57c21f818ca83a9b9b13
+      body: |
+        The `localMode` variable in `config.json` is not longer used and it can
+        be removed
+
+        Fixes #2041
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Remove localMode setting from standalone image configuration
+        changelog-entry: Remove localMode setting from standalone image configuration
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.98.30
+  title: "'image-balena: Remove localMode from standalone image configuration'"
+  date: 2022-05-24T10:09:17.695Z
+- commits:
     - subject: Update balena-engine to v20.10.17
       hash: 8a7b24d38f67749b5d979ce12a0fafe5626190bb
       body: |
