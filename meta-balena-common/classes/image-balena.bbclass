@@ -50,9 +50,6 @@ init_config_json() {
    # Default no to persistent-logging
    echo "$(cat ${1}/config.json | jq -S ".persistentLogging=false")" > ${1}/config.json
 
-   # Default localMode to true
-   echo "$(cat ${1}/config.json | jq -S ".localMode=true")" > ${1}/config.json
-
    # Find board json and extract slug
    json_path=${BALENA_COREBASE}/../../../${MACHINE}.json
    slug=$(jq .slug $json_path)
