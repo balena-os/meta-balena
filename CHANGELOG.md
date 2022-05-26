@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.98.31
+## (2022-05-26)
+
+* tests: os: config-json: fix race by waiting for InvocationID change [Joseph Kogut]
+* tests: os: reformat config-json tests [Joseph Kogut]
+
 # v2.98.30
 ## (2022-05-24)
 

@@ -1,4 +1,47 @@
 - commits:
+    - subject: "tests: os: config-json: fix race by waiting for InvocationID change"
+      hash: a8303039013b6252680eb48a139e46a358506949
+      body: |
+        When tests execute quicker, a race condition can occur where config.json
+        is edited to remove the dnsServers property, but /run/dnsmasq.servers is
+        not changed yet. This causes the test to fail, as the file is not empty.
+
+            not ok 1 - We should have an empty /run/dnsmasq.servers file.
+              ---
+              found: |-
+        	server=1.1.1.1
+        	server=1.1.1.1
+              pattern: !re /^\s?$/
+              diff: |
+        	--- expected
+        	+++ actual
+        	-/^\s?$/
+        	+"server=1.1.1.1\nserver=1.1.1.1"
+
+        Fix this by waiting until the InvocationID of dnsmasq.service changes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: reformat config-json tests"
+      hash: 440b799974eaf237664db1813d1ebc0bff3a46b9
+      body: |
+        Reformat config-json tests w/ await where variables aren't passed to
+        chained promises.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.31
+  title: "'Fix config json race'"
+  date: 2022-05-26T17:59:23.238Z
+- commits:
     - subject: Remove localMode setting from standalone image configuration
       hash: 26aa3caf4e4d649d323e57c21f818ca83a9b9b13
       body: |
