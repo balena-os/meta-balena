@@ -1,4 +1,20 @@
 - commits:
+    - subject: "supervisor: Update balena-supervisor to v13.1.11"
+      hash: 1f1266bd0893b963528e88dfd7fd08f232088cb9
+      body: ""
+      footer:
+        Relates-to: https://github.com/balena-os/balena-supervisor/pull/1944
+        relates-to: https://github.com/balena-os/balena-supervisor/pull/1944
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Felipe Lalanne <felipe@balena.io>
+        signed-off-by: Felipe Lalanne <felipe@balena.io>
+      author: Felipe Lalanne
+      nested: []
+  version: 2.98.32
+  title: "'supervisor: Update balena-supervisor to v13.1.11'"
+  date: 2022-05-27T15:22:00.185Z
+- commits:
     - subject: "tests: os: config-json: fix race by waiting for InvocationID change"
       hash: a8303039013b6252680eb48a139e46a358506949
       body: |
