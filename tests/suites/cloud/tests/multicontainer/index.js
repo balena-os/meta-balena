@@ -28,7 +28,7 @@ const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
       return (deviceServices.current_services[service][0].status === "Running") && (deviceServices.current_services[service][0].commit === commit)
     })
     return running;
-  }, false, 50)
+  }, false, 60, 5 * 1000)
 }
 
 module.exports = {
@@ -126,7 +126,7 @@ module.exports = {
           return services.every((service) => {
             return results[service] === true
           })
-        }, false, 30);
+        }, false, 60, 5 * 1000);
 
         test.ok(true, `Should see device env variable`);
       },
@@ -155,7 +155,7 @@ module.exports = {
           let env = await this.cloud.executeCommandInContainer(`env`, `frontend`, this.balena.uuid)
 
           return env.includes(`${key}=${value}\n`);
-        }, false, 30);
+        }, false, 60, 5 * 1000);
         test.ok(true, `Should service env var in service it was set for`);
       },
     },

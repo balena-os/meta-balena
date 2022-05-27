@@ -304,7 +304,7 @@ module.exports = {
     await this.utils.waitUntil(async() => {
       console.log("Waiting for device to be online...");
       return await this.cloud.balena.models.device.isOnline(this.balena.uuid);
-    }, false);
+    }, false, 60, 5 * 1000);
 
     this.log("Device is online and provisioned successfully");
     
@@ -314,7 +314,7 @@ module.exports = {
         "cat /etc/hostname",
         this.balena.uuid
       ) === this.balena.uuid.slice(0, 7);
-    }, false);
+    }, false, 60, 5 * 1000);
 
     // create tunnels
     this.log('Creating SSH tunnels to DUT');
@@ -332,7 +332,7 @@ module.exports = {
           `${this.balena.uuid.slice(0, 7)}.local`
         )
       return (hostname === `${this.balena.uuid.slice(0, 7)}`)
-    }, true);
+    }, true, 60, 5 * 1000);
 
     this.log("Unpinning device from release");
     await this.cloud.balena.models.device.trackApplicationRelease(
@@ -344,7 +344,7 @@ module.exports = {
       return await this.cloud.balena.models.device.isTrackingApplicationRelease(
         this.balena.uuid
       );
-    }, false);
+    }, false, 60, 5 * 1000);
 
     // wait until the service is running before continuing
     await this.cloud.waitUntilServicesRunning(

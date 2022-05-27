@@ -111,7 +111,7 @@ module.exports = {
 										result = await this.worker.executeCommandInHostOS('echo -n pass',
 											`${this.balena.uuid.slice(0, 7)}.local`);
 										return result
-									})
+									}, false, 60, 5 * 1000);
 							test.equals(
 								result,
 								"pass",
@@ -197,7 +197,7 @@ module.exports = {
 							result = await this.worker.executeCommandInHostOS('echo -n pass',
 								`${this.balena.uuid.slice(0, 7)}.local`);
 							return result
-						})
+						}, false, 60, 5 * 1000);
 					test.equals(
 						result,
 						"pass",
@@ -249,7 +249,7 @@ module.exports = {
 							result = await this.worker.executeCommandInHostOS('echo -n pass',
 								`${this.balena.uuid.slice(0, 7)}.local`);
 							return result
-						})
+						}, false, 60, 5 * 1000);
 					test.equals(
 						result,
 						"pass",
