@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.98.33
+## (2022-05-27)
+
+
+<details>
+<summary> Update tests/leviathan digest to 95649fb [Renovate Bot] </summary>
+
+> ## leviathan-2.3.5
+> ### (2022-05-25)
+> 
+> * workers: qemu: fix vars path for x86_64 [Joseph Kogut]
+> 
+</details>
+
 # v2.98.32
 ## (2022-05-27)
 

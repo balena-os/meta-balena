@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to 95649fb
+      hash: 4216f127f4935cb6e0adeccaf7c20daec55fcff7
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "workers: qemu: fix vars path for x86_64"
+              hash: b34b92dde6b9b55e9e8393f61787de6895a6e339
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.3.5
+          title: "'workers: qemu: fix vars path for x86_64'"
+          date: 2022-05-25T21:12:24.421Z
+  version: 2.98.33
+  title: "'Update tests/leviathan digest to 95649fb'"
+  date: 2022-05-27T20:39:54.151Z
+- commits:
     - subject: "supervisor: Update balena-supervisor to v13.1.11"
       hash: 1f1266bd0893b963528e88dfd7fd08f232088cb9
       body: ""
