@@ -1,4 +1,4 @@
-# Custom Board Support
+# Customer Board Support
 
 **Pre-requisites:** a [Yocto](https://www.yoctoproject.org) Board Support Package (BSP) layer for your particular board. It should be compatible with the Yocto releases balenaOS supports.
 
