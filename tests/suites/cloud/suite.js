@@ -297,10 +297,6 @@ module.exports = {
     await this.worker.flash(this.os.image.path);
     await this.worker.on();
 
-    this.suite.teardown.register(async () => {
-      await this.worker.archiveLogs(this.id, `${this.balena.uuid.slice(0, 7)}.local`,);
-    });
-
     await this.utils.waitUntil(async() => {
       console.log("Waiting for device to be online...");
       return await this.cloud.balena.models.device.isOnline(this.balena.uuid);
@@ -333,6 +329,11 @@ module.exports = {
         )
       return (hostname === `${this.balena.uuid.slice(0, 7)}`)
     }, true, 60, 5 * 1000);
+
+    // Retrieving journalctl logs: register teardown after device is reachable
+    this.suite.teardown.register(async () => {
+      await this.worker.archiveLogs(this.id, `${this.balena.uuid.slice(0, 7)}.local`,);
+    });
 
     this.log("Unpinning device from release");
     await this.cloud.balena.models.device.trackApplicationRelease(
