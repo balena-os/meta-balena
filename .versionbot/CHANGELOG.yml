@@ -1,4 +1,18 @@
 - commits:
+    - subject: Correct CBS annotation to Customer Board Support
+      hash: dfe92f466046de371d00166d8b06a43967bb48b3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.98.34
+  title: "'Correct CBS annotation to Customer Board Support'"
+  date: 2022-05-30T13:25:27.241Z
+- commits:
     - subject: Update tests/leviathan digest to 95649fb
       hash: 4216f127f4935cb6e0adeccaf7c20daec55fcff7
       body: Update tests/leviathan

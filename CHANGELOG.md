@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.34
+## (2022-05-30)
+
+* Correct CBS annotation to Customer Board Support [Vipul Gupta (@vipulgupta2048)]
+
 # v2.98.33
 ## (2022-05-27)
 
