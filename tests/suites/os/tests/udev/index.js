@@ -23,16 +23,7 @@ module.exports = {
 				// This is an artificial condition - it is difficult to say at any moment whether
 				// all the devices have been brought up as some of them may take longer than others.
 				// This waits for the engine to start which should mean the system is up and running.
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active --quiet balena.service && echo "pass"`,
-								this.link,
-							)) === 'pass'
-					);
-				});
+				await this.systemd.waitForServiceState('balena.service', 'active', this.link);
 
 				test.is(
 					await this.context
