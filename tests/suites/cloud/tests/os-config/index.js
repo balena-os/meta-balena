@@ -23,15 +23,14 @@ module.exports = {
 			title: 'os-config service randomized timer',
 			run: async function(test) {
 				const nextTriggers = []
-				nextTriggers.push( await this.cloud.executeCommandInHostOS(
-							`date -s "1 day" > /dev/null && sleep 0.5 && systemctl status os-config.timer | grep "Trigger:" | cut -d ';' -f2`,
-							this.balena.uuid))
-				nextTriggers.push( await this.cloud.executeCommandInHostOS(
-							`date -s "1 day" > /dev/null && sleep 0.5 && systemctl status os-config.timer | grep "Trigger:" | cut -d ';' -f2`,
-							this.balena.uuid))
-				nextTriggers.push( await this.cloud.executeCommandInHostOS(
-							`date -s "1 day" > /dev/null && sleep 0.5 && systemctl status os-config.timer | grep "Trigger:" | cut -d ';' -f2`,
-							this.balena.uuid))
+				let samples = 0
+				do {
+					nextTriggers.push( await this.worker.executeCommandInHostOS(
+						`date -s "1 day" > /dev/null && sleep 0.5 && systemctl status os-config.timer | grep "Trigger:" | cut -d ';' -f2`,
+						`${this.balena.uuid.slice(0, 7)}.local`)
+					)
+					samples = samples + 1
+				} while (samples < 3);
 				test.notOk (
 					nextTriggers.every( (v, i, a) => v === a[0] ),
 					'Service configuration has been fetched on a randomized timer'

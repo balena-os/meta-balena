@@ -171,9 +171,10 @@ module.exports = {
         ).then(async () => {
           let samples = 0
           do {
-              nextTriggers.push( await this.cloud.executeCommandInHostOS(
+              nextTriggers.push( await this.worker.executeCommandInHostOS(
               `date -s "+2 hours" > /dev/null && sleep 0.5 && systemctl status update-balena-supervisor.timer | grep "Trigger:" | cut -d ';' -f2`,
-              this.balena.uuid))
+              `${this.balena.uuid.slice(0, 7)}.local`)
+            )
               samples = samples + 1
           } while (samples < 3);
           test.notOk (
