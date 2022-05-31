@@ -26,10 +26,12 @@ module.exports = {
 				await this.systemd.waitForServiceState('balena.service', 'active', this.link);
 
 				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`journalctl -u systemd-udevd.service | grep "Failed to substitute variable" >/dev/null 2>&1 || echo "pass"`,
+					await this.worker.executeCommandInHostOS(
+							[
+								`journalctl`, `-u`, `systemd-udevd.service`,
+								`|`, `grep`, `"Failed to substitute variable"`,
+								`>`, `/dev/null`, `2>&1`, `||`, `echo`, `"pass"`,
+							],
 							this.link,
 						),
 					'pass',
