@@ -14,7 +14,7 @@ module.exports = {
 							this.link,
 						);
 					return result === 'active';
-				}, false);
+				}, false, 2 * 60, 1000);
 				result = await this.context
 					.get()
 					.worker.executeCommandInHostOS(
@@ -28,22 +28,18 @@ module.exports = {
 			title: 'Sync test',
 			run: async function(test) {
 				let result = '';
+				test.comment('checking system clock synchronized...');
 				await this.utils.waitUntil(async () => {
-					test.comment('checking system clock synchronized...');
-					result = await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'timedatectl | grep System',
-							this.link,
-						);
-					return result === 'System clock synchronized: yes';
-				});
-				result = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
+					result = await this.worker.executeCommandInHostOS(
 						'timedatectl | grep System',
 						this.link,
 					);
+					return result === 'System clock synchronized: yes';
+				}, false, 2 * 60, 1000);
+				result = await this.worker.executeCommandInHostOS(
+					'timedatectl | grep System',
+					this.link,
+				);
 				test.is(
 					result,
 					'System clock synchronized: yes',
