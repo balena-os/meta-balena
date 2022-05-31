@@ -7,17 +7,13 @@ module.exports = {
 				test.comment(`checking for chronyd service...`);
 				let result = '';
 				await this.utils.waitUntil(async () => {
-					result = await this.context
-						.get()
-						.worker.executeCommandInHostOS(
+					result = await this.worker.executeCommandInHostOS(
 							`systemctl is-active chronyd.service`,
 							this.link,
 						);
 					return result === 'active';
 				}, false, 2 * 60, 1000);
-				result = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
+				result = await this.worker.executeCommandInHostOS(
 						'systemctl status chronyd | grep running',
 						this.link,
 					);
@@ -51,9 +47,7 @@ module.exports = {
 			title: 'Source test',
 			run: async function(test) {
 				let result = '';
-				result = await this.context
-					.get()
-					.worker.executeCommandInHostOS(
+				result = await this.worker.executeCommandInHostOS(
 						`chronyc sources -n | fgrep '^*'`,
 						this.link,
 					);
