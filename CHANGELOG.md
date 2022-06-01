@@ -1,6 +1,27 @@
 Change log
 -----------
 
+# v2.98.34
+## (2022-06-01)
+
+
+<details>
+<summary> Update tests/leviathan digest to b3b1b48 [Renovate Bot] </summary>
+
+> ## leviathan-2.3.7
+> ### (2022-06-01)
+> 
+> * worker: qemu: remove debug print statements [Joseph Kogut]
+> 
+> ## leviathan-2.3.6
+> ### (2022-05-26)
+> 
+> * core: worker: shorten getDutIp interval [Joseph Kogut]
+> * worker: helpers: memoize resolveLocalTarget [Joseph Kogut]
+> * worker: helpers: resolveLocalTarget: increase timeout [Joseph Kogut]
+> 
+</details>
+
 # v2.98.33
 ## (2022-05-27)
 

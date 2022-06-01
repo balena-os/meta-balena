@@ -1,4 +1,80 @@
 - commits:
+    - subject: Update tests/leviathan digest to b3b1b48
+      hash: e5281f46702ec32213e8242de5d9ece58146246d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "worker: qemu: remove debug print statements"
+              hash: c4f0b0c37fc7a7102f292db61a5271d7c3e23855
+              body: >
+                Log statements for powerOn/powerOff were added for debugging
+                when
+
+                refactoring the QEMU worker to operate w/out libvirt. Remove these.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.3.7
+          title: "'worker: qemu: remove debug print statements'"
+          date: 2022-05-31T23:32:38.579Z
+        - commits:
+            - subject: "core: worker: shorten getDutIp interval"
+              hash: 37b7347bf63a1acb1b4efd7965e5b764a8f6ce84
+              body: >
+                Waiting ten seconds between retries is onerous, shorten to one
+                second
+
+                interval with more retries.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "worker: helpers: memoize resolveLocalTarget"
+              hash: eff95325a566502e522f7106053fab6d860c93e7
+              body: >
+                Device addresses likely won't change during a single test run,
+                and mDNS
+
+                queries can be time consuming. Memoize the result of the query to save
+
+                some time.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "worker: helpers: resolveLocalTarget: increase timeout"
+              hash: 56cf5bb6b8a95b61c9143d6ddaa4edcd6bca852a
+              body: >
+                mDNS resolution can take some time, increase the timeout from 4s
+                -> 15s
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.3.6
+          title: "'Optimize mdns resolver'"
+          date: 2022-05-26T23:44:13.510Z
+  version: 2.98.34
+  title: "'Update tests/leviathan digest to b3b1b48'"
+  date: 2022-06-01T00:23:18.092Z
+- commits:
     - subject: Update tests/leviathan digest to 95649fb
       hash: 4216f127f4935cb6e0adeccaf7c20daec55fcff7
       body: Update tests/leviathan
