@@ -3,6 +3,7 @@
     "balena-image-fs": "^7.0.6",
     "bluebird": "^3.5.3",
     "dockerode": "^2.5.8",
-    "fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0",
+    "zlib": "^1.0.5"
   }
 }
