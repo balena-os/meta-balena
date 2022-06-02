@@ -6,7 +6,7 @@ Requires=resin-boot.service
 Before=umount.target
 Conflicts=umount.target
 ConditionVirtualization=!docker
-ConditionPathExists=/dev/disk/by-state/balena-efi
+ConditionPathIsSymbolicLink=/mnt/boot/EFI
 
 [Service]
 Type=oneshot
