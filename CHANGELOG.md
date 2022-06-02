@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.98.35
+## (2022-06-02)
+
+* tests: os: udev: improve formatting [Joseph Kogut]
+* tests: os: udev: use systemd.waitForServiceState [Joseph Kogut]
+
 # v2.98.34
 ## (2022-06-01)
 

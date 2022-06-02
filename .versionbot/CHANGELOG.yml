@@ -1,4 +1,32 @@
 - commits:
+    - subject: "tests: os: udev: improve formatting"
+      hash: bab6ca92bdbd7c7b30bbb96ea1ed4319e489e832
+      body: |
+        Improve formatting of long command
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: udev: use systemd.waitForServiceState"
+      hash: 82bfff92ab1dc431032f95cd3c3409210089d167
+      body: |
+        Use systemd.waitForServiceState instead of waitUntil. This improves
+        readability, and reduces the time taken in the case that the test fails
+        and the default interval of waitUntil causes an excessive wait.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.35
+  title: "'Cleanup udev tests'"
+  date: 2022-06-02T18:04:49.177Z
+- commits:
     - subject: Update tests/leviathan digest to b3b1b48
       hash: e5281f46702ec32213e8242de5d9ece58146246d
       body: Update tests/leviathan
