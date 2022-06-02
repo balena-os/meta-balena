@@ -43,7 +43,6 @@ module.exports = {
 
 				await this.worker.rebootDut(this.link);
 
-				// check every 5s for 2min
 				// 0 means file exists, 1 means file does not exist
 				test.comment(
 					`Waiting for rollback-health-breadcrumb to be cleaned up...`,
@@ -58,8 +57,8 @@ module.exports = {
 						);
 					},
 					false,
-					24,
-					5000,
+					2 * 60,
+					1000,
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -140,7 +139,6 @@ module.exports = {
 
 				await this.worker.rebootDut(this.link);
 
-				// check every 5s for 2min
 				// 0 means file exists, 1 means file does not exist
 				test.comment(
 					`Waiting for rollback-health-breadcrumb to be cleaned up...`,
@@ -155,8 +153,8 @@ module.exports = {
 						);
 					},
 					false,
-					24,
-					5000,
+					2 * 60,
+					1000,
 				);
 
 				// 0 means file exists, 1 means file does not exist
