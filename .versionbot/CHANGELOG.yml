@@ -1,4 +1,47 @@
 - commits:
+    - subject: Update tests/leviathan digest to 8976bdb
+      hash: de94a30c1fb3b82ab45da049870c21abd48067c0
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "core: bump node 12 -> 14"
+              hash: e40a9484c760fb0292da80c6fe6da46eb4373eec
+              body: |
+                Bump Node 12.19.1 to 14.19.3 in core
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.3.9
+          title: "'core: bump node 12 -> 14'"
+          date: 2022-06-02T19:29:24.315Z
+        - commits:
+            - subject: "core: suiteSubprocess: replace this.state.log w/ console.log"
+              hash: c5fd5673c41b9ad48c818a4895712d8ee6c22729
+              body: |
+                This fixes the error:
+                  TypeError: Cannot read property 'state' of undefined
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.3.8
+          title: "'core: suiteSubprocess: replace this.state.log w/ console.log'"
+          date: 2022-06-02T16:35:18.359Z
+  version: 2.98.37
+  title: "'Update tests/leviathan digest to 8976bdb'"
+  date: 2022-06-03T18:25:50.520Z
+- commits:
     - subject: "os: waitForServiceState: fix missing rejectionFail"
       hash: 6bd43901e2d460c4e3df2a83734213ab62523689
       body: |
