@@ -1,4 +1,20 @@
 - commits:
+    - subject: "os: waitForServiceState: fix missing rejectionFail"
+      hash: 6bd43901e2d460c4e3df2a83734213ab62523689
+      body: |
+        utils.waitUntil expects rejectionFail before _times and _delay, include
+        this argument to ensure the later arguments have the intended effect
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.36
+  title: "'os: waitForServiceState: fix missing rejectionFail'"
+  date: 2022-06-03T13:24:28.082Z
+- commits:
     - subject: "tests: os: udev: improve formatting"
       hash: bab6ca92bdbd7c7b30bbb96ea1ed4319e489e832
       body: |

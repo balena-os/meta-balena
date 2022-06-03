@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.36
+## (2022-06-03)
+
+* os: waitForServiceState: fix missing rejectionFail [Joseph Kogut]
+
 # v2.98.35
 ## (2022-06-02)
 
