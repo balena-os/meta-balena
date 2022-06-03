@@ -1,4 +1,39 @@
 - commits:
+    - subject: "chronyd: Add periodic time synchronization check"
+      hash: 1d1999f5953d55c86a09daca99fa4f5749465960
+      body: >
+        By default, chronyd is configured to poll every ~4h to minimize
+        bandwidth
+
+        use. However, if the sync fails, it won't retry until the next poll time.
+
+
+        This means that time can get out of sync on unreliable networks.
+
+
+        This commit introduces a timer that checks chrony synchronization status
+
+        on a varying time range between 1m and 15m, roughly equivalent to the
+
+        chronyd minpoll and maxpoll defaults which are 64s and 1024s respectively.
+
+        It checks synchronization once every 10s for 10 minutes, and syncs time
+
+        if not synchronized.
+
+
+        Fixes #2314
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.0
+  title: "'chronyd: Add periodic time synchronization check'"
+  date: 2022-06-03T16:50:07.941Z
+- commits:
     - subject: "tests: os: udev: improve formatting"
       hash: bab6ca92bdbd7c7b30bbb96ea1ed4319e489e832
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.0
+## (2022-06-03)
+
+* chronyd: Add periodic time synchronization check [Alex Gonzalez]
+
 # v2.98.35
 ## (2022-06-02)
 
