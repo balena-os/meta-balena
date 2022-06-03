@@ -1,0 +1,9 @@
+[Unit]
+Description=Periodic check for NTP time synchronization
+
+[Timer]
+OnUnitInactiveSec=64s
+RandomizedDelaySec=1024
+
+[Install]
+WantedBy=multi-user.target

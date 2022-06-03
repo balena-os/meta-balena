@@ -1,0 +1,12 @@
+[Unit]
+Description=NTP time synchronization check
+Requires=chronyd.service
+After=chronyd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/chronyc waitsync 60 0.1 0.0 1
+ExecStopPost=/usr/libexec/chronyd-sync-check
+
+[Install]
+WantedBy=multi-user.target
