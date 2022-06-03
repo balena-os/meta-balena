@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
 FREESPACE_LIMIT=10
 datapart=$(get_state_path_from_label "resin-data")
 dataparttype=$(lsblk "${datapart}" -nlo type)
@@ -14,11 +17,6 @@ if [ "${dataparttype}" = "crypt" ]; then
     datapartdev=$(ls "/sys/class/block/${datapartdev}/slaves")
 fi
 datadev=$(lsblk "/dev/${datapartdev}" -d -n -o PKNAME)
-
-get_part_table_type() {
-    parted -s "$1" print | grep "Partition Table" | tr -d " " |cut -d ":" -f2
-}
-
 pttype=$(get_part_table_type "/dev/${datadev}")
 
 resindataexpander_enabled() {
