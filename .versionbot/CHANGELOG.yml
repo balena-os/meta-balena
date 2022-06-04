@@ -1,4 +1,18 @@
 - commits:
+    - subject: Added all device support options
+      hash: 5d29b6d1e0808d87103897f8210a75342f7f898f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Hampton (@rhampt) rhampt@balena.io
+        signed-off-by: Ryan Hampton (@rhampt) rhampt@balena.io
+      author: Ryan H
+      nested: []
+  version: 2.98.38
+  title: "'Added all device support options'"
+  date: 2022-06-03T22:19:04.182Z
+- commits:
     - subject: Update tests/leviathan digest to 8976bdb
       hash: de94a30c1fb3b82ab45da049870c21abd48067c0
       body: Update tests/leviathan
