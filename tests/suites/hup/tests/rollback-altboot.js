@@ -45,8 +45,8 @@ module.exports = {
 				);
 			},
 			false,
-			10,
-			30000,
+			5 * 60,
+			1000,
 		);
 
 		test.is(
