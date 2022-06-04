@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.39
+## (2022-06-04)
+
+* tests: cloud: reduce waitUntil interval [Joseph Kogut]
+
 # v2.98.38
 ## (2022-06-03)
 

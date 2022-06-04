@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: cloud: reduce waitUntil interval"
+      hash: 34f77b125c97d82e182bca1cee94fddc49ad5b07
+      body: |
+        When the promise called in waitUntil fails, the function defaults to a
+        30s interval before trying again. Reduce this to a 5s interval w/
+        maximum 5m retry window in the cloud suite.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.39
+  title: "'tests: cloud: reduce waitUntil interval'"
+  date: 2022-06-04T12:43:32.134Z
+- commits:
     - subject: Added all device support options
       hash: 5d29b6d1e0808d87103897f8210a75342f7f898f
       body: ""
