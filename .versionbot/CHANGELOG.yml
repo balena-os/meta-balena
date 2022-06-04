@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: hup: reduce delay between retries"
+      hash: cb48541fa98093f6ce97419b8304469a4b3bb7ab
+      body: |
+        Reduce delay between retries when using waitUntil, reducing latency and
+        test runtime.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.40
+  title: "'tests: hup: reduce delay between retries'"
+  date: 2022-06-04T16:25:23.750Z
+- commits:
     - subject: "tests: cloud: reduce waitUntil interval"
       hash: 34f77b125c97d82e182bca1cee94fddc49ad5b07
       body: |

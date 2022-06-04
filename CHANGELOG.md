@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.40
+## (2022-06-04)
+
+* tests: hup: reduce delay between retries [Joseph Kogut]
+
 # v2.98.39
 ## (2022-06-04)
 
