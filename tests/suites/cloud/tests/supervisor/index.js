@@ -13,7 +13,7 @@ const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
       return (deviceServices.current_services[service][0].status === "Running") && (deviceServices.current_services[service][0].commit === commit)
     })
     return running;
-  }, false, 50)
+  }, false, 60, 5 * 1000);
 }
 
 module.exports = {
@@ -114,7 +114,7 @@ module.exports = {
             }
           });
           return downloaded && originalRunning;
-        }, false, 50);
+        }, false, 60, 5 * 1000);
 
         test.ok(
           true,
@@ -129,7 +129,7 @@ module.exports = {
           );
 
           return updatesLocked === true
-        })
+        }, false, 60, 5 * 1000);
 
         test.ok(updatesLocked, `Update lock message should appear in logs`)
 

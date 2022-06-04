@@ -5,7 +5,7 @@ module.exports = {
     // make sure DUT is online
     await this.utils.waitUntil(() => {
       return this.cloud.balena.models.device.isOnline(this.balena.uuid);
-    }, false);
+    }, false, 60, 5 * 1000);
 
     // wait until the service is running
     await this.cloud.waitUntilServicesRunning(
