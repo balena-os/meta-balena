@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to 4fbc1b8
+      hash: 47aef0c5ec7b76cc50a00e1cca6c7d1397ba3a36
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "worker: Expose additional QEMU runtime args via docker-compose"
+              hash: ee574bb798cafa3e4a0504d2dde72079f8db8eeb
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.3.10
+          title: "'worker: Expose additional QEMU runtime args via docker-compose'"
+          date: 2022-06-05T16:58:48.060Z
+  version: 2.98.41
+  title: "'Update tests/leviathan digest to 4fbc1b8'"
+  date: 2022-06-05T18:58:18.622Z
+- commits:
     - subject: "tests: hup: reduce delay between retries"
       hash: cb48541fa98093f6ce97419b8304469a4b3bb7ab
       body: |

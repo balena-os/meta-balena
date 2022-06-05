@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.98.41
+## (2022-06-05)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4fbc1b8 [Renovate Bot] </summary>
+
+> ## leviathan-2.3.10
+> ### (2022-06-05)
+> 
+> * worker: Expose additional QEMU runtime args via docker-compose [Kyle Harding]
+> 
+</details>
+
 # v2.98.40
 ## (2022-06-04)
 
