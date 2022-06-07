@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests:cloud: Register teardown only when DUT is reachable"
+      hash: fd822dabb42b2a45b1e77f262159bee192022d80
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.98.42
+  title: "'tests:cloud: Register teardown only when DUT is reachable'"
+  date: 2022-06-05T21:57:22.077Z
+- commits:
     - subject: Update tests/leviathan digest to 4fbc1b8
       hash: 47aef0c5ec7b76cc50a00e1cca6c7d1397ba3a36
       body: Update tests/leviathan

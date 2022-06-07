@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.42
+## (2022-06-05)
+
+* tests:cloud: Register teardown only when DUT is reachable [Florin Sarbu]
+
 # v2.98.41
 ## (2022-06-05)
 
