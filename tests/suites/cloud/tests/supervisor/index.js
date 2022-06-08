@@ -41,7 +41,7 @@ module.exports = {
         await waitUntilServicesRunning(
           this,
           this.balena.uuid, 
-          [`main`], 
+          [this.appServiceName], 
           secondCommit,
           test
         )
@@ -77,7 +77,7 @@ module.exports = {
         // create a lockfile
         let createLockfile = await this.cloud.executeCommandInContainer(
           `bash -c '(flock -x -n 200)200>/tmp/balena/updates.lock'`, 
-          `main`,
+          this.appServiceName,
           this.balena.uuid)
 
         // push release to application
@@ -98,7 +98,7 @@ module.exports = {
             );
           let downloaded = false;
           let originalRunning = false;
-          services.current_services.main.forEach((service) => {
+          services.current_services[this.appServiceName].forEach((service) => {
             if (
               service.commit === secondCommit &&
               service.status === "Downloaded"
@@ -143,7 +143,7 @@ module.exports = {
         await waitUntilServicesRunning(
           this,
           this.balena.uuid, 
-          [`main`], 
+          [this.appServiceName], 
           secondCommit,
           test
         )
@@ -156,7 +156,7 @@ module.exports = {
         // remove lockfile
         let removeLockfile = await this.cloud.executeCommandInContainer(
           `rm /tmp/balena/updates.lock`, 
-          `main`,
+          this.appServiceName,
           this.balena.uuid)
       },
     },
