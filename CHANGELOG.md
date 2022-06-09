@@ -1,6 +1,25 @@
 Change log
 -----------
 
+# v2.98.44
+## (2022-06-09)
+
+
+<details>
+<summary> Update tests/leviathan digest to ea72650 [Renovate Bot] </summary>
+
+> ## leviathan-2.4.1
+> ### (2022-06-09)
+> 
+> * catch error in executeCommandInhostOs [rcooke-warwick]
+> 
+> ## leviathan-2.4.0
+> ### (2022-06-07)
+> 
+> * get ssh to work with ed25519 algorithm [rcooke-warwick]
+> 
+</details>
+
 # v2.98.43
 ## (2022-06-09)
 
