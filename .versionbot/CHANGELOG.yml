@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: cloud: update container names"
+      hash: 8b85216ea886c77788ceaf377ee775e9c48913df
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.98.43
+  title: "'tests: cloud: update container names'"
+  date: 2022-06-09T11:03:45.627Z
+- commits:
     - subject: "tests:cloud: Register teardown only when DUT is reachable"
       hash: fd822dabb42b2a45b1e77f262159bee192022d80
       body: ""

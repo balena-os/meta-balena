@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.98.43
+## (2022-06-09)
+
+* tests: cloud: update container names [rcooke-warwick]
+
 # v2.98.42
 ## (2022-06-05)
 
