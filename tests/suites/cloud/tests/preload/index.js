@@ -10,7 +10,7 @@ module.exports = {
     // wait until the service is running
     await this.cloud.waitUntilServicesRunning(
       this.balena.uuid, 
-      [`main`], 
+      [this.appServiceName], 
       this.balena.initialCommit
     )
 

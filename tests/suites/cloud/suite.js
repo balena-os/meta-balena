@@ -161,7 +161,8 @@ module.exports = {
     // Push a single container application
     this.log(`Cloning getting started repo...`);
     this.suite.context.set({
-      appPath: `${__dirname}/app`
+      appPath: `${__dirname}/app`,
+      appServiceName: `balena-hello-world`
     })
     await exec(
       `git clone https://github.com/balena-io-examples/balena-node-hello-world.git ${this.appPath}`
@@ -350,7 +351,7 @@ module.exports = {
     // wait until the service is running before continuing
     await this.cloud.waitUntilServicesRunning(
       this.balena.uuid,
-      [`main`],
+      [this.appServiceName],
       this.balena.initialCommit
     )
   },

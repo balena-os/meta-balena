@@ -176,7 +176,7 @@ module.exports = {
         await waitUntilServicesRunning(
           this,
           this.balena.uuid, 
-          [`main`], 
+          [this.appServiceName], 
           commit,
           test
         )
