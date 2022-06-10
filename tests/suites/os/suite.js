@@ -281,6 +281,7 @@ module.exports = {
 	},
 	tests: [
 		'./tests/device-specific-tests/beaglebone-black',
+		'./tests/device-specific-tests/243390-rpi3',
 		'./tests/fingerprint',
 		'./tests/fsck',
 		'./tests/os-release',
