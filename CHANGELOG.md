@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.1
+## (2022-06-10)
+
+* tests: Rollback leviathan to v2.3.8 before node and alpine updates [Kyle Harding]
+
 # v2.99.0
 ## (2022-06-10)
 

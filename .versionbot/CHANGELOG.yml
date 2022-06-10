@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: Rollback leviathan to v2.3.8 before node and alpine updates"
+      hash: 459d9fac769ed330ea40fea2c1fbcc0e1794a004
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.99.1
+  title: "'tests: Rollback leviathan to v2.3.8 before node and alpine updates'"
+  date: 2022-06-10T12:57:17.159Z
+- commits:
     - subject: "chronyd: Add time synchronization healthcheck"
       hash: e2a0fb8ebd45400789ab466dbbe0e70da7fa6165
       body: |
