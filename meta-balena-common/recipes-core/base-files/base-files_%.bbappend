@@ -22,6 +22,6 @@ do_install_basefilesissue:append () {
 	sed -i "s/${distro_version_nodate}/${HOSTOS_VERSION}/g" ${D}${sysconfdir}/issue.net
 }
 
-do_install:append_libc-glibc () {
+do_install:append:libc-glibc () {
 	install -m 0644 ${WORKDIR}/mdns.allow ${D}${sysconfdir}/mdns.allow
 }
