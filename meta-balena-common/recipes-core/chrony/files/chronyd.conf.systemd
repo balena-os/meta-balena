@@ -7,4 +7,5 @@ Type=simple
 Restart=always
 RestartSec=10s
 ExecStart=
-ExecStart=/usr/sbin/chronyd -d
+ExecStart=/usr/bin/healthdog --healthcheck=/usr/libexec/chrony-healthcheck /usr/sbin/chronyd -d
+WatchdogSec=240

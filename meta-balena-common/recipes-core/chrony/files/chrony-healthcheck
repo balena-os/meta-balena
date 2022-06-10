@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -o errexit
+
+. /usr/libexec/os-helpers-logging
+
+offline="true"
+sources=$(chronyc sources | tail -n +3 | awk '{ print $1 }')
+for source in $sources; do
+	if [[ $source = *\** ]]; then
+		offline="false"
+	fi
+done
+
+if [ "${offline}" = "true" ]; then
+	info "No online NTP sources - forcing poll"
+
+	if ! /usr/bin/chronyc 'burst 4/4' > /dev/null ||
+		 ! /usr/bin/chronyc makestep > /dev/null; then
+		error "Failed to trigger NTP sync"
+		exit 1
+	fi
+fi
+
+if ! /usr/bin/chronyc waitsync 60 0.1 0.0 1; then
+	error "NTP time lost synchronization - restarting chronyd"
+	exit 1
+fi
