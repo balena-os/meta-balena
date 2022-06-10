@@ -1,4 +1,33 @@
 - commits:
+    - subject: "tests: os: chrony: fix formatting of this.worker"
+      hash: c79e4b2b470f726e8099702cfeaea6da18e7e286
+      body: |
+        Test context is now accessible from self, remove verbose
+        this.context.get() syntax when calling worker.executeCommandInHostOS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: chrony: reduce delays and retries"
+      hash: 1064fd20a474af3aac8253f34cf543fb78725f9f
+      body: |
+        When calling waitUntil(), reduce calling intervals and the total number
+        of retries. This effectively halves the runtime for these tests, as the
+        latency for detecting success is much lower.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.98.45
+  title: "'Reduce chrony timeouts'"
+  date: 2022-06-09T23:03:44.828Z
+- commits:
     - subject: Update tests/leviathan digest to ea72650
       hash: 264147110d2517cb7929cdf709de1cd228f20dae
       body: Update tests/leviathan

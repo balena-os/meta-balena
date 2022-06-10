@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.98.45
+## (2022-06-09)
+
+* tests: os: chrony: fix formatting of this.worker [Joseph Kogut]
+* tests: os: chrony: reduce delays and retries [Joseph Kogut]
+
 # v2.98.44
 ## (2022-06-09)
 
