@@ -1,4 +1,25 @@
 - commits:
+    - subject: "chronyd: Add time synchronization healthcheck"
+      hash: e2a0fb8ebd45400789ab466dbbe0e70da7fa6165
+      body: |
+        Add a healthcheck that will check that the NTP sources are reachable
+        and the system time does not skew.
+
+        The healthcheck will command a burst sync if there is no selected
+        reachable source, and will restart chronyd if the system clock skews.
+
+        Fixes #2314
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.0
+  title: "'chronyd: Add time synchronization healthcheck'"
+  date: 2022-06-10T08:04:29.339Z
+- commits:
     - subject: "tests: os: chrony: fix formatting of this.worker"
       hash: c79e4b2b470f726e8099702cfeaea6da18e7e286
       body: |

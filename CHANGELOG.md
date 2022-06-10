@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.0
+## (2022-06-10)
+
+* chronyd: Add time synchronization healthcheck [Alex Gonzalez]
+
 # v2.98.45
 ## (2022-06-09)
 
