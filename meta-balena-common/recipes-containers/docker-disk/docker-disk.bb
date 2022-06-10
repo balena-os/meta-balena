@@ -107,6 +107,8 @@ python __anonymous() {
                                                 semver, revision)
         raw = urllib.request.urlopen(urllib.request.Request(url, headers=header))
         json_obj = json.load(raw)
+        bb.note(str(json_obj))
+        bb.note("len %d" % (len(json_obj['d'])))
         if len(json_obj['d']) == 0:
             bb.fatal("HostOS app %s not available at revision %s" % (appName, "".join([semver, '+rev' + revision])))
         else:
