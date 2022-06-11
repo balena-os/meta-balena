@@ -11,6 +11,7 @@ const fse = require('fs-extra');
 const { join, basename } = require('path');
 const { homedir } = require('os');
 const util = require('util');
+const zlib = require('zlib');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
@@ -81,15 +82,31 @@ const enableSerialConsole = async (imagePath) => {
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, hostapp, target) => {
-	test.comment('Sending image to DUT');
 	let hupOsName = basename(hostapp);
 	console.log(hupOsName)
 
+	// compress hostapp before sending
+	test.comment('Compressing image...')
+	let hostAppGzipped = `${hostapp}.gz`
+	await pipeline(
+		fs.createReadStream(hostapp),
+		zlib.createGzip(),
+		fs.createWriteStream(hostAppGzipped)
+	);
+
+	test.comment('Sending image to DUT');
 	// send hostapp to DUT
-	await that.worker.sendFile(hostapp, `/mnt/data/resin-data/`, target);
+	await that.worker.sendFile(hostAppGzipped, `/mnt/data/resin-data/`, target);
+
 	const hostappPath = `/mnt/data/resin-data/${hupOsName}`;
 	console.log(hostappPath);
 
+	// unzip hostapp
+	await that.worker.executeCommandInHostOS(
+		`gzip -df ${hostappPath}.gz`,
+		target,
+	);
+	
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
 	const hupLoadTmp = "/mnt/data/resin-data/tmp";
 
