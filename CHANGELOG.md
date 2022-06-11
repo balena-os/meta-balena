@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.1
+## (2022-06-11)
+
+* tests: hup: gzip hostapp before transfer to DUT [rcooke-warwick]
+
 # v2.99.0
 ## (2022-06-10)
 

@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: hup: gzip hostapp before transfer to DUT"
+      hash: cac92a4d5e884110ae5caaf807c2c5685a88237e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.99.1
+  title: "'tests: hup: gzip hostapp before transfer to DUT'"
+  date: 2022-06-11T12:01:27.278Z
+- commits:
     - subject: "chronyd: Add time synchronization healthcheck"
       hash: e2a0fb8ebd45400789ab466dbbe0e70da7fa6165
       body: |
