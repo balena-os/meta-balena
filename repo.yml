@@ -1,19 +1,17 @@
-type: 'yocto layer'
-reviewers: 1
-
 backports:
-  next: 2.50.x
-  current: 2.48.x
-  sunset: 2.44.x
-
+  current: 2.88.x
+  next: 2.98.x
+  sunset: 2.83.x
+reviewers: 1
+type: yocto layer
 upstream:
-  - repo: 'balena-supervisor'
-    url: 'https://github.com/balena-os/balena-supervisor'
-  - repo: 'healthdog'
-    url: 'https://github.com/balena-os/healthdog-rs'
-  - repo: 'os-config'
-    url: 'https://github.com/balena-os/os-config'
-  - repo: 'balena-engine'
-    url: 'https://github.com/balena-os/balena-engine'
-  - repo: 'tests/leviathan'
-    url: 'https://github.com/balena-os/leviathan'
+- repo: balena-supervisor
+  url: https://github.com/balena-os/balena-supervisor
+- repo: healthdog
+  url: https://github.com/balena-os/healthdog-rs
+- repo: os-config
+  url: https://github.com/balena-os/os-config
+- repo: balena-engine
+  url: https://github.com/balena-os/balena-engine
+- repo: tests/leviathan
+  url: https://github.com/balena-os/leviathan
