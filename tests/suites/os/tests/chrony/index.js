@@ -89,7 +89,7 @@ module.exports = {
 						.catch((err) => {
 							Promise.reject(err)
 						})
-				}, false, 60, 80000)
+				}, false, 2 * 60, 1000)
 			},
 		},
 		{
@@ -118,7 +118,7 @@ module.exports = {
 						.catch((err) => {
 							Promise.reject(err)
 						})
-				}, false, 80, 80000)
+				}, false, 2 * 60, 1000)
 				await this.worker.executeCommandInHostOS(
 						`iptables-restore < /var/run/iptables.back && rm -f /var/run/iptables.back`,
 						this.link,
