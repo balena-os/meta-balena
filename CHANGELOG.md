@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.3
+## (2022-06-14)
+
+* tests: os: Refactor config-json tests to wait for passing results [Kyle Harding]
+
 # v2.99.2
 ## (2022-06-13)
 
