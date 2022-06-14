@@ -1,4 +1,19 @@
 - commits:
+    - subject: "image_types_balena: Tag the hostapp docker container"
+      hash: 2fdcb9d3b83bf85732331921034a4478583da52f
+      body: |
+        This allows for it to be used from cache when deploying the hostOS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.2
+  title: "'image_types_balena: Tag the hostapp docker container'"
+  date: 2022-06-14T09:21:56.185Z
+- commits:
     - subject: "tests: hup: gzip hostapp before transfer to DUT"
       hash: cac92a4d5e884110ae5caaf807c2c5685a88237e
       body: ""

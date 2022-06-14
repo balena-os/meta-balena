@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.2
+## (2022-06-14)
+
+* image_types_balena: Tag the hostapp docker container [Alex Gonzalez]
+
 # v2.99.1
 ## (2022-06-11)
 
