@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.2
+## (2022-06-13)
+
+* tests: os: chrony: reduce retry interval [Joseph Kogut]
+
 # v2.99.1
 ## (2022-06-11)
 
