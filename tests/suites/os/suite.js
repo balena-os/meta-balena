@@ -76,7 +76,8 @@ module.exports = {
 			this.suite.options.balena.organization, 
 			join(homedir(), 'id')
 		);
-		const cloud = new Balena(this.suite.options.balena.apiUrl, this.getLogger());
+
+		const cloud = new Balena(this.suite.options?.balena?.apiUrl, this.getLogger());
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
@@ -227,25 +228,21 @@ module.exports = {
 			await enableSerialConsole(this.os.image.path);
 		}
 
-
-		this.log("Logging into balena with balenaSDK");
-		await this.context
-		  .get()
-		  .cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-		await this.context
-		.get()
-		.cloud.balena.models.key.create(
-			this.sshKeyLabel,
-			keys.pubKey
-		);
-		this.suite.teardown.register(() => {
-			return Promise.resolve(
-				this.context
-				.get()
-				.cloud.removeSSHKey(this.sshKeyLabel)
+		if (this.suite.options?.balena?.apiKey) {
+			this.log("Logging into balena with balenaSDK");
+			await this.cloud.balena.auth.loginWithToken(
+				this.suite.options.balena.apiKey
 			);
-		});
-
+			await this.cloud.balena.models.key.create(
+				this.sshKeyLabel,
+				keys.pubKey
+			);
+			this.suite.teardown.register(() => {
+				return Promise.resolve(
+					this.cloud.removeSSHKey(this.sshKeyLabel)
+				);
+			});
+		}
 
 		// Configure OS image
 		await this.os.configure();
