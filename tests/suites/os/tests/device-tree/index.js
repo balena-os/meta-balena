@@ -28,6 +28,7 @@ module.exports = {
 				type: 'string',
 				enum: [
 					'raspberrypi3',
+					'raspberrypi3-64',
 					'raspberrypi4-64',
 					'raspberry-pi2',
 					'raspberry-pi',
@@ -142,7 +143,11 @@ module.exports = {
 					}, false);
 
 					// IP of the device sometimes change after reboots, hence initalising again
-					ip = await this.worker.ip(this.link);
+					// Commenting this to check if the IP really changes or not after reboot
+					// If it does, then it's a bug, because the IP shouldn't change. 
+					// If not, then remove the snippet
+					// Leviathan issue: https://github.com/balena-os/leviathan/issues/781
+					// ip = await this.worker.ip(this.link);
 
 					await this.utils.waitUntil(async () => {
 						test.comment('Waiting for supervisor to be ready after reboot...');
