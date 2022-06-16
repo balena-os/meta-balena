@@ -167,8 +167,10 @@ BALENA_CONFIGS_DEPS[balena] ?= " \
     CONFIG_IP_NF_NAT=y \
     CONFIG_IPV6=y \
     CONFIG_IP_NF_IPTABLES=y \
+    CONFIG_IP6_NF_IPTABLES=y \
     CONFIG_NF_CONNTRACK=y \
     CONFIG_NF_CONNTRACK_IPV4=y \
+    CONFIG_NF_CONNTRACK_IPV6=y \
     CONFIG_NETFILTER=y \
     CONFIG_IP_VS=y \
     CONFIG_NETFILTER_XT_MATCH_IPVS=y \
@@ -195,7 +197,7 @@ BALENA_CONFIGS[balena] ?= " \
     CONFIG_VETH=y \
     CONFIG_BRIDGE=y \
     CONFIG_IP_NF_FILTER=y \
-    CONFIG_IP6_NF_FILTER=m \
+    CONFIG_IP6_NF_FILTER=y \
     CONFIG_IP_NF_TARGET_REJECT=m \
     CONFIG_IP6_NF_TARGET_REJECT=m \
     CONFIG_IP_NF_TARGET_MASQUERADE=m \
@@ -399,11 +401,6 @@ BALENA_CONFIGS[ip_set] = " \
     "
 
 # enable ip6table_nat and nf_nat_ipv6 as modules (we only add CONFIG_IP6_NF_NAT here as that will also bring in CONFIG_NF_NAT_IPV6)
-
-BALENA_CONFIGS_DEPS[ip6tables_nat] = " \
-    CONFIG_NF_CONNTRACK_IPV6=m \
-    CONFIG_IP6_NF_IPTABLES=m \
-    "
 BALENA_CONFIGS[ip6tables_nat] = " \
     CONFIG_IP6_NF_NAT=m \
     "
