@@ -1,4 +1,45 @@
 - commits:
+    - subject: "tests: os: Run os suite before hup and cloud"
+      hash: 279dea44014c2e649c2c8de8571276b29f532a31
+      body: |
+        Unmanaged os suites are the most critical and usually
+        the fastest to complete, so run them first.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests: os: Refactor config-json tests to wait for passing results"
+      hash: 3ee1951ecfff92d3176f64a484f307b976784d96
+      body: |
+        To avoid race conditions with services restarting automatically
+        this commit wraps the individual test results with waitUntil and
+        moves the common jq logic to a shared function.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "tests: os: chrony: Avoid conflicts with supervisor firewall"
+      hash: ec7dcabd2e47ae9f7641388296c5c3c6e668c8bf
+      body: |
+        Flushing the iptables can leave the engine and supervisor
+        in a bad state. Instead just add and delete the NTP rules.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.99.3
+  title: "'Fix race conditions in os-config and chrony tests'"
+  date: 2022-06-16T21:10:23.417Z
+- commits:
     - subject: "tests: os: chrony: reduce retry interval"
       hash: 99ef89af348902008fd3370c968013afc0990f15
       body: ""

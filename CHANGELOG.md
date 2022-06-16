@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.99.3
+## (2022-06-16)
+
+* tests: os: Run os suite before hup and cloud [Kyle Harding]
+* tests: os: Refactor config-json tests to wait for passing results [Kyle Harding]
+* tests: os: chrony: Avoid conflicts with supervisor firewall [Kyle Harding]
+
 # v2.99.2
 ## (2022-06-13)
 
