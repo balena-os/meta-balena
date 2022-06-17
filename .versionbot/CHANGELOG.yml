@@ -1,4 +1,122 @@
 - commits:
+    - subject: Update tests/leviathan digest to 6934150
+      hash: 050487f01e96c92e0fed301bb363ff09641f0d04
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "patch: Fix failFast options"
+              hash: 878d4351068945398c1c46e52966283563f06450
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.5.3
+          title: "'Fix failFast debug option'"
+          date: 2022-06-16T11:19:39.675Z
+        - commits:
+            - subject: "core: worker: handle all local connections the same"
+              hash: 7b6eee28e6d0db63ca3ec7f6046aad46a12b7eaa
+              body: >
+                Create a directConnect variable that indicates whether we're
+                connecting
+
+                to a local instance of the worker server, including if the connection is
+
+                over a unix domain socket. This allows the suite to skip steps that
+
+                don't pertain to local runs.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.5.2
+          title: "'core: worker: handle all local connections the same'"
+          date: 2022-06-15T19:50:29.158Z
+        - commits:
+            - subject: "core: catch ssh errors correctly"
+              hash: b6d651f78d84bfc9c4e89de01717c2f87e5af2ef
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.5.1
+          title: "'core: catch ssh errors correctly'"
+          date: 2022-06-14T15:10:14.924Z
+        - commits:
+            - subject: "make: Disable buildkit and add --pull to worker flags"
+              hash: 7ec5f156df5629f65655e019274b94a947056af9
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "patch: Replace worker Dockerfile with bh.cr reference"
+              hash: 57ca536e66406a96992b1e3e4d041e554ebc28e6
+              body: ""
+              footer:
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "patch: Remove testbot worker compose file"
+              hash: eb32e4b95adcd248c9404234bbdbd78dc12c3e87
+              body: ""
+              footer:
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "patch: Remove balena-ci workflow for deploying to rigs"
+              hash: 5aef72775a771319b4ac6fb212b032aa4e40ea10
+              body: ""
+              footer:
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Remove worker references from package.json
+              hash: 31d8ffded5e18201dd02293b7db6eab75d1bb144
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Remove worker source files
+              hash: 78f3d3a5dd80bebfb1b79783e3386c7c122a5132
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.5.0
+          title: "'Remove worker source files'"
+          date: 2022-06-13T17:19:02.178Z
+  version: 2.99.4
+  title: "'Update tests/leviathan digest to 6934150'"
+  date: 2022-06-16T22:34:26.687Z
+- commits:
     - subject: "tests: os: Run os suite before hup and cloud"
       hash: 279dea44014c2e649c2c8de8571276b29f532a31
       body: |
