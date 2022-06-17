@@ -1,4 +1,29 @@
 - commits:
+    - subject: "kernel-balena.bbclass: make ip6tables built in"
+      hash: 285cf39d9771e09bf6324060588e6110bd08fa69
+      body: >
+        Previously ip6tables were built as a module but the supervisor's entry
+        script
+
+        loads the module unconditionally, which means it does not really make sense
+
+        to keep it as a module. This patch makes IPv6/netfilter built in keeping only
+
+        NAT as a module.
+
+
+        Fixes #2686
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.99.3
+  title: "'kernel-balena.bbclass: make ip6tables built in'"
+  date: 2022-06-17T12:59:46.871Z
+- commits:
     - subject: "tests: os: chrony: reduce retry interval"
       hash: 99ef89af348902008fd3370c968013afc0990f15
       body: ""
