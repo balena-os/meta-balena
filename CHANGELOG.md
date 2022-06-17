@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.6
+## (2022-06-17)
+
+* balena-efi.service: Mount if /mnt/boot/EFI is a symlink [Michal Toman]
+
 # v2.99.5
 ## (2022-06-17)
 

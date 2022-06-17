@@ -1,4 +1,38 @@
 - commits:
+    - subject: "balena-efi.service: Mount if /mnt/boot/EFI is a symlink"
+      hash: 9a873418d094b8b951535c52154be71f8b295c31
+      body: >
+        This changes the condition in the unit file from checking whether
+
+        /dev/disk/by-state/balena-efi exists to checking whether /mnt/boot/EFI
+
+        is a symlink. The original approach has a race condition populating
+
+        the by-state symlink - it is depending on udev and if the link is
+
+        not present when the service is started (after the boot partition is mounted),
+
+        the service fails and the EFI partition is never mounted.
+
+
+        The new approach does the trick pretty well - /mnt/boot/EFI is a symlink
+
+        if the EFI partition is split and a regular directory in case there is a single
+
+        boot partition. That said the service is only started when necessary
+
+        and the waiting for udev is implemented as a part of the mount script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.99.6
+  title: "'balena-efi.service: Mount if /mnt/boot/EFI is a symlink'"
+  date: 2022-06-17T08:41:59.334Z
+- commits:
     - subject: "grub-efi: disable shim_lock when in secure boot mode"
       hash: dd0c128664a4b5cb004cd154f4dabc627d1f6e77
       body: >
