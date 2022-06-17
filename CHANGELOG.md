@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.7
+## (2022-06-17)
+
+* resindataexpander: Move get_part_table_type to os-helpers-fs [Michal Toman]
+
 # v2.99.6
 ## (2022-06-17)
 

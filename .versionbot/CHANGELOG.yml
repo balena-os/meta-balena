@@ -1,4 +1,22 @@
 - commits:
+    - subject: "resindataexpander: Move get_part_table_type to os-helpers-fs"
+      hash: 7fc9af86c8b994ac61fe376ec8e63d6095dda3de
+      body: >
+        This is useful outside of the expander script, specifically in the
+        init-board
+
+        script in device repos.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.99.7
+  title: "'resindataexpander: Move get_part_table_type to os-helpers-fs'"
+  date: 2022-06-17T10:47:48.847Z
+- commits:
     - subject: "balena-efi.service: Mount if /mnt/boot/EFI is a symlink"
       hash: 9a873418d094b8b951535c52154be71f8b295c31
       body: >
