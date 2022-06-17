@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.5
+## (2022-06-17)
+
+* grub-efi: disable shim_lock when in secure boot mode [Michal Toman]
+
 # v2.99.4
 ## (2022-06-16)
 

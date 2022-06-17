@@ -1,4 +1,24 @@
 - commits:
+    - subject: "grub-efi: disable shim_lock when in secure boot mode"
+      hash: dd0c128664a4b5cb004cd154f4dabc627d1f6e77
+      body: >
+        Recent versions of GRUB default to use shim_lock when in secure boot
+        mode.
+
+        We do not use shim and do not build the shim_lock module into GRUB EFI binary
+
+        therefore this needs to be disabled.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.99.5
+  title: "'grub-efi: disable shim_lock when in secure boot mode'"
+  date: 2022-06-17T04:45:40.248Z
+- commits:
     - subject: Update tests/leviathan digest to 6934150
       hash: 050487f01e96c92e0fed301bb363ff09641f0d04
       body: Update tests/leviathan
