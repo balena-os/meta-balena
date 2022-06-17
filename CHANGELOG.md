@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.9
+## (2022-06-17)
+
+* hostapp-update-hooks: Rework bootfiles blacklist [Florin Sarbu]
+
 # v2.99.8
 ## (2022-06-17)
 

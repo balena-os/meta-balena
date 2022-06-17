@@ -1,4 +1,28 @@
 - commits:
+    - subject: "hostapp-update-hooks: Rework bootfiles blacklist"
+      hash: 7b523caa0099530c45b4d9981d31ca6c72a76262
+      body: >
+        We may have cases when for some boards we do not want
+
+        to have all these files blacklisted. See for example
+
+        https://github.com/balena-os/balena-rockpi/commit/b5eadcfb3a296eea2554dc0cbdd16002d51c5169
+
+
+        In conclusion, we rework how the blacklist is constructed
+
+        so that users of meta-balena can alter this list as they see fit.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.99.9
+  title: "'hostapp-update-hooks: Rework bootfiles blacklist'"
+  date: 2022-06-17T20:21:57.823Z
+- commits:
     - subject: "base-files: Fix syntax in mdns.allow addition"
       hash: 144bfbf7c0426440351802d52183c3eeefcd060f
       body: |
