@@ -21,6 +21,15 @@ HOSTAPP_HOOKS = " \
 HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
 
 BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
+BALENA_BOOTFILES_BLACKLIST="\
+	/config.json \
+	/config.txt \
+	/splash/balena-logo.png \
+	/extra_uEnv.txt \
+	/grub_extraenv \
+	/configfs.json \
+	/hw_intfc.conf \
+	"
 
 python __anonymous() {
     # Generate SRC_URI based on HOSTAPP_HOOKS
@@ -58,4 +67,6 @@ do_install() {
 
 	sed -i -e 's:@BALENA_BOOT_FINGERPRINT@:${BALENA_BOOT_FINGERPRINT}:g;' \
 	 	${D}${sysconfdir}/hostapp-update-hooks.d/1-bootfiles
+	sed -i -e 's:@BALENA_BOOTFILES_BLACKLIST@:${BALENA_BOOTFILES_BLACKLIST}:g;' \
+		${D}${sysconfdir}/hostapp-update-hooks.d/1-bootfiles
 }

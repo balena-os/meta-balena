@@ -10,16 +10,7 @@ set -o errexit
 
 # Variables
 boot_fingerprint="@BALENA_BOOT_FINGERPRINT@"
-bootfiles_blacklist="\
-	/config.json \
-	/config.txt \
-	/splash/balena-logo.png \
-	/extlinux/extlinux.conf \
-	/extra_uEnv.txt \
-	/grub_extraenv \
-	/configfs.json \
-	/hw_intfc.conf \
-	"
+bootfiles_blacklist="@BALENA_BOOTFILES_BLACKLIST@"
 boot_mountpoint="/mnt/boot"
 DURING_UPDATE=${DURING_UPDATE:-0}
 
