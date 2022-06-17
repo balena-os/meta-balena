@@ -35,7 +35,7 @@ do_mkimage() {
     cd ${B}
 
     if [ -f "${DEPLOY_DIR_IMAGE}/balena-keys/grub.gpg" ]; then
-        GRUB_PUBKEY_ARG="--pubkey ${DEPLOY_DIR_IMAGE}/balena-keys/grub.gpg"
+        GRUB_PUBKEY_ARG="--pubkey ${DEPLOY_DIR_IMAGE}/balena-keys/grub.gpg --disable-shim-lock"
     fi
 
     # Search for the grub.cfg on the local boot media by using the
