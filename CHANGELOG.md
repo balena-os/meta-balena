@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.99.8
+## (2022-06-17)
+
+* base-files: Fix syntax in mdns.allow addition [Alex Gonzalez]
+* efitools: Fix append syntax [Alex Gonzalez]
+
 # v2.99.7
 ## (2022-06-17)
 

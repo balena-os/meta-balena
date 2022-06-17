@@ -1,4 +1,32 @@
 - commits:
+    - subject: "base-files: Fix syntax in mdns.allow addition"
+      hash: 144bfbf7c0426440351802d52183c3eeefcd060f
+      body: |
+        The mdns.allow overwrite was not being properly applied on newer Yocto
+        versions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "efitools: Fix append syntax"
+      hash: 30053e1c43d8adba236e52a33416e601cdcfd9f8
+      body: |
+        The efitools package was already correctly build for x86_64, so this
+        flag is most likely a noop.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.8
+  title: "'Fix append syntax'"
+  date: 2022-06-17T13:09:54.918Z
+- commits:
     - subject: "resindataexpander: Move get_part_table_type to os-helpers-fs"
       hash: 7fc9af86c8b994ac61fe376ec8e63d6095dda3de
       body: >
