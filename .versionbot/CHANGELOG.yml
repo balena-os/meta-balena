@@ -1,4 +1,20 @@
 - commits:
+    - subject: "balena-os.inc: Enable firmware compression by default"
+      hash: 9d452edc4bdaaa173c48b6ffdf7cf2cde2a447a0
+      body: |
+        The only requirement is kernel >= 5.3, we should default to compressed
+        and opt-out on devices with older kernels.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.99.10
+  title: "'balena-os.inc: Enable firmware compression by default'"
+  date: 2022-06-19T15:55:15.169Z
+- commits:
     - subject: "hostapp-update-hooks: Rework bootfiles blacklist"
       hash: 7b523caa0099530c45b4d9981d31ca6c72a76262
       body: >
