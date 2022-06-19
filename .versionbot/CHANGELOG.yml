@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update backport for current being 2.88.x
+      hash: 80b729bbf2a2f161d2812645ac82fa9cbdcc349f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.10
+  title: "'Update backport for current being 2.88.x'"
+  date: 2022-06-18T19:57:24.112Z
+- commits:
     - subject: "hostapp-update-hooks: Rework bootfiles blacklist"
       hash: 7b523caa0099530c45b4d9981d31ca6c72a76262
       body: >

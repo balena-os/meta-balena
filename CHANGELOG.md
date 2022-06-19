@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.10
+## (2022-06-18)
+
+* Update backport for current being 2.88.x [Alex Gonzalez]
+
 # v2.99.9
 ## (2022-06-17)
 
