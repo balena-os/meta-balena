@@ -1,4 +1,18 @@
 - commits:
+    - subject: "os-config: Upgrade os-config to v1.2.3"
+      hash: f39f75811655e36d1c6585f68013185d66dcc93d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.99.11
+  title: "'os-config: Upgrade os-config to v1.2.3'"
+  date: 2022-06-20T14:30:07.171Z
+- commits:
     - subject: Update backport for current being 2.88.x
       hash: 80b729bbf2a2f161d2812645ac82fa9cbdcc349f
       body: ""
