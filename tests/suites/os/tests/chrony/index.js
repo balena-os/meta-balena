@@ -107,15 +107,12 @@ module.exports = {
 				}).then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
+							const regex = /NTP time lost synchronization - restarting chronyd/;
 							return this.worker.executeCommandInHostOS(
-									`journalctl -u chronyd.service | grep -q "NTP time lost synchronization - restarting chronyd" >/dev/null 2>&1 ; echo $?`,
+									`journalctl -u chronyd.service`,
 									this.link,
-								)
-								.then( (output) => {
-									return Promise.resolve(output === '0')
-								})
-								.catch((err) => {
-									Promise.reject(err)
+								).then(logs => {
+									return Promise.resolve(regex.test(logs));
 								})
 						}, false, 5 * 60, 1000),
 						'Should restart chronyd when system time skew detected'
