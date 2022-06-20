@@ -270,6 +270,11 @@ module.exports = {
     // get ready to populate DUT image config.json with the attributes we just generated
     this.os.addCloudConfig(config);
 
+    // add DUT local hostname to context
+    this.suite.context.set({
+      link: `${this.balena.uuid.slice(0, 7)}.local`
+    })
+
     // Teardown the worker when the tests end
     this.suite.teardown.register(() => {
       this.log("Worker teardown");
@@ -293,30 +298,23 @@ module.exports = {
     if (supportsBootConfig(this.suite.deviceType.slug)) {
       await enableSerialConsole(this.os.image.path);
     }
-    
+
+    // disable port forwarding on the testbot - disables the DUT internet access.
+    if (
+			this.workerContract.workerType === `testbot`
+		){
+      await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
+    }
+
     await this.worker.off();
     await this.worker.flash(this.os.image.path);
     await this.worker.on();
 
-    await this.utils.waitUntil(async() => {
-      console.log("Waiting for device to be online...");
-      return await this.cloud.balena.models.device.isOnline(this.balena.uuid);
-    }, false, 60, 5 * 1000);
-
-    this.log("Device is online and provisioned successfully");
-    
-    await this.utils.waitUntil(async () => {
-      this.log("Trying to ssh into device...");
-      return await this.cloud.executeCommandInHostOS(
-        "cat /etc/hostname",
-        this.balena.uuid
-      ) === this.balena.uuid.slice(0, 7);
-    }, false, 60, 5 * 1000);
 
     // create tunnels
     this.log('Creating SSH tunnels to DUT');
     await this.worker.createSSHTunnels(
-      `${this.balena.uuid.slice(0, 7)}.local`
+      this.link
     );
 
     this.log('Waiting for device to be reachable');
@@ -326,34 +324,16 @@ module.exports = {
         .get()
         .worker.executeCommandInHostOS(
           "cat /etc/hostname",
-          `${this.balena.uuid.slice(0, 7)}.local`
+          this.link
         )
       return (hostname === `${this.balena.uuid.slice(0, 7)}`)
     }, true, 60, 5 * 1000);
 
     // Retrieving journalctl logs: register teardown after device is reachable
     this.suite.teardown.register(async () => {
-      await this.worker.archiveLogs(this.id, `${this.balena.uuid.slice(0, 7)}.local`,);
+      await this.worker.archiveLogs(this.id, this.link);
     });
 
-    this.log("Unpinning device from release");
-    await this.cloud.balena.models.device.trackApplicationRelease(
-      this.balena.uuid
-    );
-
-    await this.utils.waitUntil(async () => {
-      console.log('Waiting for device to be running latest release...');
-      return await this.cloud.balena.models.device.isTrackingApplicationRelease(
-        this.balena.uuid
-      );
-    }, false, 60, 5 * 1000);
-
-    // wait until the service is running before continuing
-    await this.cloud.waitUntilServicesRunning(
-      this.balena.uuid,
-      [this.appServiceName],
-      this.balena.initialCommit
-    )
   },
   tests: [
     "./tests/preload",
