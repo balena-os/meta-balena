@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.11
+## (2022-06-20)
+
+* os-config: Upgrade os-config to v1.2.3 [Zahari Petkov]
+
 # v2.99.10
 ## (2022-06-18)
 
