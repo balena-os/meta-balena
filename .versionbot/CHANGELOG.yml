@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: cloud: check preloaded app starts w/o api"
+      hash: 64b52e08dd761a7d796df204561dfb3329b16311
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.99.11
+  title: "'tests: cloud: check preloaded app starts w/o api'"
+  date: 2022-06-20T15:04:24.223Z
+- commits:
     - subject: Update backport for current being 2.88.x
       hash: 80b729bbf2a2f161d2812645ac82fa9cbdcc349f
       body: ""

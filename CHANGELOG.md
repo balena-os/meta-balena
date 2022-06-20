@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.11
+## (2022-06-20)
+
+* tests: cloud: check preloaded app starts w/o api [rcooke-warwick]
+
 # v2.99.10
 ## (2022-06-18)
 
