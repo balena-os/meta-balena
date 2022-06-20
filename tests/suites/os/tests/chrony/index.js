@@ -34,13 +34,7 @@ module.exports = {
 			run: async function(test) {
 				test.comment(`checking for chronyd service...`);
 				let result = '';
-				await this.utils.waitUntil(async () => {
-					result = await this.worker.executeCommandInHostOS(
-							`systemctl is-active chronyd.service`,
-							this.link,
-						);
-					return result === 'active';
-				}, false, 2 * 60, 1000);
+				await this.systemd.waitForServiceState('chronyd.service', 'active', this.link);
 				result = await this.worker.executeCommandInHostOS(
 						'systemctl status chronyd | grep running',
 						this.link,
