@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-io/balena-supervisor to v14
+      hash: 5d78b0536398fa27c60353d0c0d894dfdbfff3b6
+      body: Update balena-io/balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.99.13
+  title: "'Update balena-io/balena-supervisor to v14'"
+  date: 2022-06-21T01:20:23.966Z
+- commits:
     - subject: "renovate: Add regex manager for balena-supervisor"
       hash: 9820c61551a099b273f014f87cd4bf4a1b00d952
       body: ""
