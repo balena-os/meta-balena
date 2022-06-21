@@ -26,7 +26,7 @@ async function waitUntilSupervisorActive(test, context){
 				uri: `http://${ip}:48484/ping`,
 			})) === 'OK'
 		);
-	}, false);
+	}, false, 2 * 60 * 4, 250);
 }
 
 module.exports = {
@@ -67,7 +67,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				test.is(
 					await this.context
@@ -97,7 +97,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				test.comment(`Waiting for supervisor service to be active...`);
 				await this.utils.waitUntil(async () => {
@@ -109,7 +109,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				test.is(
 					await this.context
@@ -151,7 +151,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				test.comment(`Waiting for supervisor service to be active...`);
 				await this.utils.waitUntil(async () => {
@@ -163,7 +163,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				await waitUntilSupervisorActive(test, this.context.get());
 
@@ -203,7 +203,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				test.comment(`Waiting for supervisor service to be active...`);
 				await this.utils.waitUntil(async () => {
@@ -215,7 +215,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				test.comment(`Pruning all container images...`);
 				await this.context
@@ -235,7 +235,7 @@ module.exports = {
 								this.link,
 							)) === 'active'
 					);
-				}, false);
+				}, false, 2 * 60 * 4, 250);
 
 				await waitUntilSupervisorActive(test, this.context.get());
 
