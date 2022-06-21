@@ -17,7 +17,7 @@
 const fsPromises = require('fs').promises;
 const CONFIG_FILE = `${__dirname}/modems.json`;
 
-const SCAN_ATTEMPTS = 10;
+const SCAN_ATTEMPTS = 5;
 const PING_ATTEMPTS = 3;
 
 module.exports = {
@@ -48,7 +48,7 @@ module.exports = {
         },
             false,
             SCAN_ATTEMPTS,
-            5000
+            1000
         )
             .catch(() => {
                 test.comment(`timeout after ${SCAN_ATTEMPTS} attempts`)
