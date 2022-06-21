@@ -1,42 +1,27 @@
 
 const blockNTP = async (that, test) => {
-	test.comment('blocking NTP traffic on port 123...');
-	// when supervisor starts up it flushes the INPUT table
-	// so wait for supervisor to be active before stopping it
-	return that.systemd.waitForServiceState('balena-supervisor.service', 'active', that.link)
-	.then(async () => {
+	return that.worker.executeCommandInHostOS(
+		`journalctl --rotate --vacuum-time=1s`,
+		that.link,
+	).then(() => {
+		// Stop DNS server to make NTP requests fail
 		return that.worker.executeCommandInHostOS(
-			[
-				`systemctl stop balena-supervisor`,
-				`&&`,
-				`journalctl --rotate`,
-				`&&`,
-				`journalctl --vacuum-time=1s`,
-				`&&`,
-				// make sure these rules take priority in the respective tables
-				`/usr/sbin/iptables -I INPUT 1 -p udp --destination-port 123 -j DROP`,
-				`&&`,
-				`/usr/sbin/iptables -I OUTPUT 1 -p udp --destination-port 123 -j DROP`,
-				`&&`,
-				`systemctl restart chronyd.service`
-			].join(' '),
+			`systemctl stop dnsmasq.service`,
 			that.link,
 		);
-	}).then(async () => {
-		return that.systemd.waitForServiceState('chronyd.service', 'active', that.link);
+	}).then(() => {
+		return that.worker.executeCommandInHostOS(
+			`systemctl restart chronyd.service`,
+			that.link
+		);
+	}).then(() => {
+		return that.systemd.waitForServiceState('chronyd.service', 'active', that.link)
 	});
 }
 
 const restoreNTP = async (that, test) => {
-	test.comment('restoring NTP traffic on port 123...');
 	return that.worker.executeCommandInHostOS(
-		[
-			`/usr/sbin/iptables -D INPUT -p udp --destination-port 123 -j DROP`,
-			`&&`,
-			`/usr/sbin/iptables -D OUTPUT -p udp --destination-port 123 -j DROP`,
-			`&&`,
-			`systemctl restart balena-supervisor`,
-		].join(' '),
+		`systemctl restart dnsmasq`,
 		that.link,
 	);
 }
@@ -49,13 +34,7 @@ module.exports = {
 			run: async function(test) {
 				test.comment(`checking for chronyd service...`);
 				let result = '';
-				await this.utils.waitUntil(async () => {
-					result = await this.worker.executeCommandInHostOS(
-							`systemctl is-active chronyd.service`,
-							this.link,
-						);
-					return result === 'active';
-				}, false, 2 * 60, 1000);
+				await this.systemd.waitForServiceState('chronyd.service', 'active', this.link);
 				result = await this.worker.executeCommandInHostOS(
 						'systemctl status chronyd | grep running',
 						this.link,
@@ -104,16 +83,13 @@ module.exports = {
 				.then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
+							const regex = /No online NTP sources - forcing poll/;
 							return this.worker.executeCommandInHostOS(
-									`journalctl -u chronyd.service | grep -q "No online NTP sources - forcing poll" >/dev/null 2>&1 ; echo $?`,
-									this.link,
-								)
-								.then( (output) => {
-									return Promise.resolve(output === '0')
-								})
-								.catch((err) => {
-									Promise.reject(err)
-								})
+								`journalctl -u chronyd.service`,
+								this.link,
+							).then(logs => {
+								return Promise.resolve(regex.test(logs));
+							})
 						}, false, 5 * 60, 1000),
 						'Should force NTP poll when sources become offline'
 					);
@@ -131,15 +107,12 @@ module.exports = {
 				}).then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
+							const regex = /NTP time lost synchronization - restarting chronyd/;
 							return this.worker.executeCommandInHostOS(
-									`journalctl -u chronyd.service | grep -q "NTP time lost synchronization - restarting chronyd" >/dev/null 2>&1 ; echo $?`,
+									`journalctl -u chronyd.service`,
 									this.link,
-								)
-								.then( (output) => {
-									return Promise.resolve(output === '0')
-								})
-								.catch((err) => {
-									Promise.reject(err)
+								).then(logs => {
+									return Promise.resolve(regex.test(logs));
 								})
 						}, false, 5 * 60, 1000),
 						'Should restart chronyd when system time skew detected'
