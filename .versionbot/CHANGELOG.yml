@@ -1,4 +1,43 @@
 - commits:
+    - subject: "tests: os: chrony: simplify error handling"
+      hash: b72b370d456ef99b910b9c860bb686cbbe3312d8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: chrony: use waitForServiceState"
+      hash: 596fed9a703f6f8c938f6d4dc23236c5ecb2fbfc
+      body: |
+        Use waitForServiceState() to ensure chronyd is active
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: chrony: block NTP by disabling DNS resolution"
+      hash: 78b393841a787f4ead18e9850488a23a4779cfd7
+      body: |
+        Certain chrony tests require the ability to block NTP requests. Switch
+        from blocking these requests using iptables rules to simply stopping the
+        local DNS server, which is faster and simpler, and doesn't conflict with
+        the supervisor firewall.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.99.14
+  title: "'Cleanup chrony tests'"
+  date: 2022-06-21T06:07:38.125Z
+- commits:
     - subject: Update balena-io/balena-supervisor to v14
       hash: 5d78b0536398fa27c60353d0c0d894dfdbfff3b6
       body: Update balena-io/balena-supervisor

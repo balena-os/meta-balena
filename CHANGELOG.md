@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.99.14
+## (2022-06-21)
+
+* tests: os: chrony: simplify error handling [Joseph Kogut]
+* tests: os: chrony: use waitForServiceState [Joseph Kogut]
+* tests: os: chrony: block NTP by disabling DNS resolution [Joseph Kogut]
+
 # v2.99.13
 ## (2022-06-21)
 
