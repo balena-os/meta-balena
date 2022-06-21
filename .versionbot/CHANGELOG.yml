@@ -1,4 +1,18 @@
 - commits:
+    - subject: "renovate: Add regex manager for balena-supervisor"
+      hash: 9820c61551a099b273f014f87cd4bf4a1b00d952
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.99.12
+  title: "'renovate: Add regex manager for balena-supervisor'"
+  date: 2022-06-20T17:07:21.269Z
+- commits:
     - subject: "tests: cloud: check preloaded app starts w/o api"
       hash: 64b52e08dd761a7d796df204561dfb3329b16311
       body: ""

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.12
+## (2022-06-20)
+
+* renovate: Add regex manager for balena-supervisor [Kyle Harding]
+
 # v2.99.11
 ## (2022-06-20)
 
