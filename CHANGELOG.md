@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.16
+## (2022-06-22)
+
+* cloud: timer checks: Use local worker SSH execute call if possible [Alex Gonzalez]
+
 # v2.99.15
 ## (2022-06-21)
 
