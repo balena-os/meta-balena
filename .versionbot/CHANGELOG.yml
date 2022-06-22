@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: os: modem: reduce time taken scanning for modems"
+      hash: 7cb747bfadba14447cb682cfd15e0a15df0e3545
+      body: |
+        Reduce the interval between scans as well as the maximum number of scans
+        for modems, reducing the time spent waiting when no modem is present
+        from ~50s to ~5s.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.99.16
+  title: "'tests: os: modem: reduce time taken scanning for modems'"
+  date: 2022-06-22T15:50:28.606Z
+- commits:
     - subject: Update tests/leviathan digest to 9e0ab34
       hash: 5a828ca31e722a76a8f3fa869354fcf39dae0e8b
       body: Update tests/leviathan

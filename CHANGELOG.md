@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.16
+## (2022-06-22)
+
+* tests: os: modem: reduce time taken scanning for modems [Joseph Kogut]
+
 # v2.99.15
 ## (2022-06-21)
 
