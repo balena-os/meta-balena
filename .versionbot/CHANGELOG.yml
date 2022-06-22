@@ -1,4 +1,19 @@
 - commits:
+    - subject: "cloud: timer checks: Use local worker SSH execute call if possible"
+      hash: b34013822b4574b2d6015b7428793b791707b0a5
+      body: |
+        The cloud SSH execute command in hostOS is much more prone to failure
+        as it depends on the cloud API connectivity.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.16
+  date: 2022-06-22T08:15:56.204Z
+- commits:
     - subject: Update tests/leviathan digest to 9e0ab34
       hash: 5a828ca31e722a76a8f3fa869354fcf39dae0e8b
       body: Update tests/leviathan
