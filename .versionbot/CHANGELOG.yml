@@ -1,4 +1,56 @@
 - commits:
+    - subject: Update tests/leviathan digest to 9e0ab34
+      hash: 5a828ca31e722a76a8f3fa869354fcf39dae0e8b
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "core: worker: simplify rebootDut"
+              hash: 55981700fb4c90a1f81192a44725f2c2d49e6135
+              body: >
+                worker.rebootDut() contains retry logic using utils.waitUntil()
+                wrapping
+
+                this.executeCommandInHostOS(). The latter contains its own retry logic,
+
+                which will try to execute a given command for up to five minutes before
+
+                timing out. Remove the retry logic from worker.rebootDut(), as it's
+
+                redundant and adds latency.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "core: worker: reduce interval in executeCommandInHostOS"
+              hash: 7f8b371b3035eed2b32011295768d5bec19ba1ba
+              body: >
+                The default interval for retrying this command is 5s, with a
+                total
+
+                timeout of 2m30s. Reduce the timeout to 1s to reduce latency for the
+
+                successful case, while increasing the total timeout to 5m.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.5.4
+          title: "'Simplify reboot'"
+          date: 2022-06-17T19:55:24.238Z
+  version: 2.99.15
+  title: "'Update tests/leviathan digest to 9e0ab34'"
+  date: 2022-06-21T19:54:36.661Z
+- commits:
     - subject: "tests: os: chrony: simplify error handling"
       hash: b72b370d456ef99b910b9c860bb686cbbe3312d8
       body: ""

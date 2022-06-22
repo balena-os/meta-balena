@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.99.15
+## (2022-06-21)
+
+
+<details>
+<summary> Update tests/leviathan digest to 9e0ab34 [renovate[bot]] </summary>
+
+> ## leviathan-2.5.4
+> ### (2022-06-17)
+> 
+> * core: worker: simplify rebootDut [Joseph Kogut]
+> * core: worker: reduce interval in executeCommandInHostOS [Joseph Kogut]
+> 
+</details>
+
 # v2.99.14
 ## (2022-06-21)
 
