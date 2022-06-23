@@ -263,8 +263,9 @@ module.exports = {
 			title: 'udevRules test',
 			run: async function(test) {
 				const context = this.context.get();
+				const linkPath = 'disk/test';
 				const rule = {
-					99: 'ENV{ID_FS_LABEL_ENC}=="resin-boot", SYMLINK+="disk/test"',
+					99: `ENV{ID_FS_LABEL_ENC}=="resin-boot", SYMLINK+="${linkPath}"`,
 				};
 
 				return setConfig(test, context, 'os.udevRules', rule)
@@ -275,9 +276,19 @@ module.exports = {
 						context.link,
 					);
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
-						`readlink -e /dev/disk/test`,
-						context.link,
+					// This readlink command can fail if the link hasn't been created by
+					// the relevant udev rule yet, so test that it exists beforehand
+					return this.utils.waitUntil(
+						() => context.worker.executeCommandInHostOS(
+							`test -L /dev/${linkPath}`,
+							context.link,
+						).then(() => true),
+						false, 30 * 4, 250
+					).then(
+						() => context.worker.executeCommandInHostOS(
+							`readlink -e /dev/${linkPath}`,
+							context.link,
+						)
 					);
 				}).then((linkTarget) => {
 					return context.worker.executeCommandInHostOS(
