@@ -56,6 +56,7 @@ do_test() {
     JQ="${JQ}" \
     CONF_TMPDIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/test-input.json \
+    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNIT_CONF_PATH=${WORKDIR}/test-conf.json \
     /bin/sh "${WORKDIR}/os-config-json"
     for i in 1 2 3 4 5; do
@@ -76,6 +77,7 @@ do_test() {
     JQ="${JQ}" \
     CONF_TMPDIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/${tmpfile} \
+    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNIT_CONF_PATH=${WORKDIR}/test-conf.json \
     /bin/sh "${WORKDIR}/os-config-json"
     cksum1=$(md5sum "${WORKDIR}/tmp/unit5.json" | cut -d " " -f1)
@@ -89,6 +91,7 @@ do_test() {
     JQ="${JQ}" \
     CONF_TMPDIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/${tmpfile} \
+    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNIT_CONF_PATH=${WORKDIR}/test-conf.json \
     /bin/sh "${WORKDIR}/os-config-json"
     cksum1=$(md5sum "${WORKDIR}/tmp/unit1.json" | cut -d " " -f1)
@@ -102,6 +105,7 @@ do_test() {
     JQ="${JQ}" \
     CONF_TMPDIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/${tmpfile} \
+    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNIT_CONF_PATH=${WORKDIR}/test-conf.json \
     /bin/sh "${WORKDIR}/os-config-json"
     if [ -f "${WORKDIR}/tmp/unit1.json" ]; then

@@ -35,7 +35,18 @@ fi
 JQ="${JQ:-"/usr/bin/jq"}"
 CONF_TMPDIR=${CONF_TMPDIR:-"/var/volatile"}
 CONFIG_PATH=${CONFIG_PATH:-"/mnt/boot/config.json"}
+CACHED_CONFIG_PATH=${CACHED_CONFIG_PATH:-"/var/cache/config.json"}
 UNIT_CONF_PATH=${UNIT_CONF_PATH:-"/etc/systemd/unit-conf.json"}
+
+mkdir -p "$(dirname "${CACHED_CONFIG_PATH}")"
+if [ -f "${CACHED_CONFIG_PATH}" ]; then
+	info "Changed configuration:"
+	tmpfile=$(mktemp)
+	jq . "${CONFIG_PATH}" > "${tmpfile}"
+	diff "${CACHED_CONFIG_PATH}" "${tmpfile}" | tail -n +4 | grep '^[+-]' >&2 || true
+	rm -f "${tmpfile}"
+fi
+jq . "${CONFIG_PATH}" > "${CACHED_CONFIG_PATH}"
 
 if [ ! -f "${UNIT_CONF_PATH}" ]; then
 	error "${UNIT_CONF_PATH} not found"
@@ -93,22 +104,25 @@ for unit in ${units}; do
 			_newcksum=$(md5sum "${_tmpdir}/${unit}.json" | cut -d " " -f1)
 			_oldcksum=$(md5sum "${CONF_TMPDIR}/${unit}.json" | cut -d " " -f1)
 			if [ "${_newcksum}" != "${_oldcksum}" ]; then
-				info "${unit} configuration changed"
+				info "${unit} configuration changed:"
+				diff "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json" | tail -n +4 >&2
 				mv "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json"
 			fi
 		else
-			info "New ${unit} configuration"
+			info "New ${unit} configuration:"
 			touch "${CONF_TMPDIR}/${unit}.json"
 			if find /lib/systemd/system -name "${unit}-conf.path" | grep -q .; then
 				if [ "$(systemctl is-active "${unit}-conf.path")" = "inactive" ]; then
 					systemctl start "${unit}-conf.path"
 				fi
 			fi
+			cat "${_tmpdir}/${unit}.json" >&2
 			mv "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json"
 		fi
 	else
 		if [ -f "${CONF_TMPDIR}/${unit}.json" ]; then
-			info "${unit} configuration removed"
+			info "${unit} configuration removed:"
+			cat "${CONF_TMPDIR}/${unit}.json" >&2
 			rm "${CONF_TMPDIR}/${unit}.json"
 		fi
 	fi
