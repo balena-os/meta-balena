@@ -74,7 +74,7 @@ runSupervisor() {
         --mount type=bind,source=/,target=/mnt/root \
         -e DOCKER_ROOT=/mnt/root/var/lib/docker \
         -e DOCKER_SOCKET=/var/run/balena-engine.sock \
-        -e "BOOT_MOUNTPOINT=$BOOT_MOUNTPOINT" \
+        -e "BOOT_MOUNTPOINT=$BALENA_BOOT_MOUNTPOINT" \
         -e "MIXPANEL_TOKEN=$MIXPANEL_TOKEN" \
         -e "DELTA_ENDPOINT=$DELTA_ENDPOINT" \
         -e "LED_FILE=${LED_FILE}" \
