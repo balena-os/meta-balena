@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright 2022 Balena Ltd.
 #
@@ -16,6 +16,10 @@
 # limitations under the License.
 
 set -e
+
+if [ -f "/usr/sbin/balena-config-vars" ]; then
+	source /usr/sbin/balena-config-vars --no-cache
+fi
 
 if [ -f "/usr/libexec/os-helpers-logging" ]; then
 	. /usr/libexec/os-helpers-logging
