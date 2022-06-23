@@ -9,6 +9,7 @@ ConditionVirtualization=!docker
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/bin/resin-partition-mounter --mount resin-boot
+ExecStartPost=/usr/sbin/balena-config-vars
 ExecStop=/usr/bin/resin-partition-mounter --umount resin-boot
 
 [Install]
