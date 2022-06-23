@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-io/balena-supervisor to v14.0.7
+      hash: 81c901c7a5c4636a4c19ee411b2c6137ac926ea2
+      body: Update balena-io/balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.99.17
+  title: "'Update balena-io/balena-supervisor to v14.0.7'"
+  date: 2022-06-22T23:30:36.614Z
+- commits:
     - subject: "tests: os: modem: reduce time taken scanning for modems"
       hash: 7cb747bfadba14447cb682cfd15e0a15df0e3545
       body: |
