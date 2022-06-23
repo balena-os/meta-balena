@@ -12,9 +12,14 @@ Options:
     -c, --config-path CONFIG_PATH
         Use a non default config.json file.
         Default: /mnt/boot/config.json
+
+    -n, --no-cache
+        Recreate cache
+        Default: Uses cache if present
 EOF
 }
 
+USE_CACHE=1
 # Parse arguments
 while [ "$#" -gt "0" ]; do
     key=$1
@@ -27,6 +32,10 @@ while [ "$#" -gt "0" ]; do
             CONFIG_PATH=$2
             shift
             ;;
+
+        -n|--no-cache)
+            USE_CACHE=0
+            ;;
         *)
             echo "[WARNING] $0 : Argument '$1' unknown. Ignoring."
             ;;
@@ -34,13 +43,12 @@ while [ "$#" -gt "0" ]; do
     shift
 done
 
-# Resin-boot mountpoint
+# Default values
+BALENA_CONFIG_VARS_CACHE="/var/cache/balena-config-vars"
 BALENA_BOOT_MOUNTPOINT="/mnt/boot"
 # Do not use - left here for backwards compatibility - use BALENA_BOOT_MOUNTPOINT instead
 BOOT_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
 FLASHER_FILEFLAG="$BALENA_BOOT_MOUNTPOINT/balena-image-flasher"
-
-# Default values
 if [ -z "$CONFIG_PATH" ]; then
     if [ -f "$FLASHER_FILEFLAG" ]; then
         # Flasher stores a volatile file in tmpfs
@@ -50,53 +58,62 @@ if [ -z "$CONFIG_PATH" ]; then
     fi
 fi
 
-# If config.json provides redefinitions for our vars let us rewrite their
-# runtime value
-if [ -f $CONFIG_PATH ]; then
-    CONFIG_PARAMS=$(jq -r '@sh "
-         API_ENDPOINT=\(.apiEndpoint // "")
-         APPLICATION_ID=\(.applicationId // "")
-         BALENA_ROOT_CA=\(.balenaRootCA // "")
-         CONFIG_HOSTNAME=\(.hostname // "")
-         COUNTRY=\(.country // "")
-         DELTA_ENDPOINT=\(.deltaEndpoint // "")
-         DEVICE_API_KEY=\(.deviceApiKey // "")
-         DEVICE_ID=\(.deviceId // "")
-         DEVICE_TYPE=\(.deviceType // "")
-         DNS_SERVERS=\(.dnsServers // "8.8.8.8")
-         HOSTEXT_IMAGES=\(.hostappExtensions // "")
-         LISTEN_PORT=\(.listenPort // "")
-         MIXPANEL_TOKEN=\(.mixpanelToken // "")
-         NTP_SERVERS=\(.ntpServers // "")
-         OS_NET_CONN_INTERVAL=\(.os.network.connectivity.interval // 3600)
-         OS_NET_CONN_RESPONSE=\(.os.network.connectivity.response // "")
-         OS_NET_CONN_URI=\(.os.network.connectivity.uri // "")
-         OS_NET_WIFI_MACSCAN=\(.os.network.wifi.randomMacAddressScan)
-         PERSISTENT_LOGGING=\(.persistentLogging // false)
-         PROVISIONING_API_KEY=\(.apiKey // "")
-         REGISTERED_AT=\(.registered_at // "")
-         UUID=\(.uuid // "")
-         "' $CONFIG_PATH)
-    RESULT=$?
-    if [ "$RESULT" = "4" ]; then
-        echo "[ERROR] $0: Failed to parse '$CONFIG_PATH'."
-        exit 1
-    else
-        eval "$CONFIG_PARAMS"
-    fi
-
-    # "null" is a valid setting in config.json that should write
-    # an empty string for dns servers rather than the defaults
-    if [ "$DNS_SERVERS" = "null" ]; then
-        DNS_SERVERS=""
-    fi
-
-    # Set additional default values.
-    if [ -z "$OS_NET_CONN_URI" ]; then
-        if [ -n "$API_ENDPOINT" ]; then
-            OS_NET_CONN_URI="$API_ENDPOINT/connectivity-check"
-        fi
-    fi
+if [ "${USE_CACHE}" -eq "1" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then
+        . "${BALENA_CONFIG_VARS_CACHE}"
 else
-    echo "[WARNING] $0 : '$CONFIG_PATH' not found."
+    rm -f "${BALENA_CONFIG_VARS_CACHE}"
+
+    # If config.json provides redefinitions for our vars let us rewrite their
+    # runtime value
+    if [ -f $CONFIG_PATH ]; then
+        CONFIG_PARAMS=$(jq -r '@sh "
+             API_ENDPOINT=\(.apiEndpoint // "")
+             APPLICATION_ID=\(.applicationId // "")
+             BALENA_ROOT_CA=\(.balenaRootCA // "")
+             CONFIG_HOSTNAME=\(.hostname // "")
+             COUNTRY=\(.country // "")
+             DELTA_ENDPOINT=\(.deltaEndpoint // "")
+             DEVICE_API_KEY=\(.deviceApiKey // "")
+             DEVICE_ID=\(.deviceId // "")
+             DEVICE_TYPE=\(.deviceType // "")
+             DNS_SERVERS=\(.dnsServers // "8.8.8.8")
+             HOSTEXT_IMAGES=\(.hostappExtensions // "")
+             LISTEN_PORT=\(.listenPort // "")
+             MIXPANEL_TOKEN=\(.mixpanelToken // "")
+             NTP_SERVERS=\(.ntpServers // "")
+             OS_NET_CONN_INTERVAL=\(.os.network.connectivity.interval // 3600)
+             OS_NET_CONN_RESPONSE=\(.os.network.connectivity.response // "")
+             OS_NET_CONN_URI=\(.os.network.connectivity.uri // "")
+             OS_NET_WIFI_MACSCAN=\(.os.network.wifi.randomMacAddressScan)
+             PERSISTENT_LOGGING=\(.persistentLogging // false)
+             PROVISIONING_API_KEY=\(.apiKey // "")
+             REGISTERED_AT=\(.registered_at // "")
+             UUID=\(.uuid // "")
+             "' $CONFIG_PATH)
+        RESULT=$?
+        if [ "$RESULT" = "4" ]; then
+            echo "[ERROR] $0: Failed to parse '$CONFIG_PATH'."
+            exit 1
+        else
+            tmpfile=$(mktemp)
+            echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
+            mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
+            eval "$CONFIG_PARAMS"
+        fi
+    else
+        echo "[WARNING] $0 : '$CONFIG_PATH' not found."
+    fi
+fi
+
+# "null" is a valid setting in config.json that should write
+# an empty string for dns servers rather than the defaults
+if [ "$DNS_SERVERS" = "null" ]; then
+    DNS_SERVERS=""
+fi
+
+# Set additional default values.
+if [ -z "$OS_NET_CONN_URI" ]; then
+    if [ -n "$API_ENDPOINT" ]; then
+        OS_NET_CONN_URI="$API_ENDPOINT/connectivity-check"
+    fi
 fi
