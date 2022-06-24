@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.20
+## (2022-06-24)
+
+* tests: os: make apiKey an optional parameter [Joseph Kogut]
+
 # v2.99.19
 ## (2022-06-24)
 

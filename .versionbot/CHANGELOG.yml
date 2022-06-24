@@ -1,4 +1,26 @@
 - commits:
+    - subject: "tests: os: make apiKey an optional parameter"
+      hash: 5b959d374810ab1d5e82d3017b91e678d50e4a2d
+      body: |
+        When accessing a test device as part of a fleet, a cloud API key is
+        required in order to generate an SSH key and access the device through
+        the VPN. However, when accessing a device locally, such as a QEMU
+        instance running on the workstation itself, we have a direct path, and
+        no VPN is necessary.
+
+        Make the apiKey optional, and don't login when it's not specified. This
+        allows direct connections to work without it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.99.20
+  title: "'tests: os: make apiKey an optional parameter'"
+  date: 2022-06-24T20:23:18.792Z
+- commits:
     - subject: "tests: os: purge-data: reduce intervals in waitUntil"
       hash: 1d1bc06cfbaf7be838190cf33427aa63f5b61788
       body: ""
