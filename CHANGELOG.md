@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.19
+## (2022-06-24)
+
+* tests: os: purge-data: reduce intervals in waitUntil [Joseph Kogut]
+
 # v2.99.18
 ## (2022-06-23)
 

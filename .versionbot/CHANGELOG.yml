@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: purge-data: reduce intervals in waitUntil"
+      hash: 1d1bc06cfbaf7be838190cf33427aa63f5b61788
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.99.19
+  title: "'tests: os: purge-data: reduce intervals in waitUntil'"
+  date: 2022-06-24T02:35:03.988Z
+- commits:
     - subject: "tests: os: config-json: fix race in udevRules test"
       hash: 8825d721ca64d523dc6faf8c317f4a09796457b6
       body: |
