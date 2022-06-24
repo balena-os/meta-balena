@@ -2,12 +2,12 @@
 set -e
 
 . /usr/libexec/os-helpers-logging
-. /usr/libexec/os-helpers-devmode
+. /usr/libexec/os-helpers-config
 
 if [ -f "${CONFIG_PATH}" ]; then
 	development_mode="$(jq -r ".developmentMode" "${CONFIG_PATH}")"
 	if [ "${development_mode}" = "true" ]; then
-		gen_devmode_config
+		config_gen_devmode
 		info "Entering development mode"
 		/bin/systemctl restart development-features.target
 	else
