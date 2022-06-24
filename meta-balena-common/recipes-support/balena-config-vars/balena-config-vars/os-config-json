@@ -24,23 +24,19 @@ fi
 if [ -f "/usr/libexec/os-helpers-logging" ]; then
 	. /usr/libexec/os-helpers-logging
 else
-	error() {
-		echo "[ERROR] $*"
-	}
-	info() {
-		echo "[INFO] $*"
-	}
+	if [ -f "${STAGING_DIR}/usr/libexec/os-helpers-logging" ]; then
+		. "${STAGING_DIR}/usr/libexec/os-helpers-logging"
+	fi
 fi
 
-JQ="${JQ:-"/usr/bin/jq"}"
-CONF_TMPDIR=${CONF_TMPDIR:-"/var/volatile"}
-CONFIG_PATH=${CONFIG_PATH:-"/mnt/boot/config.json"}
-UNIT_CONF_PATH=${UNIT_CONF_PATH:-"/etc/systemd/unit-conf.json"}
-
-if [ ! -f "${UNIT_CONF_PATH}" ]; then
-	error "${UNIT_CONF_PATH} not found"
-	exit 1
+if [ -f "/usr/libexec/os-helpers-config" ]; then
+	. /usr/libexec/os-helpers-config
+else
+	if [ -f "${STAGING_DIR}/usr/libexec/os-helpers-config" ]; then
+		. "${STAGING_DIR}/usr/libexec/os-helpers-config"
+	fi
 fi
+
 if [ ! -f "${CONFIG_PATH}" ]; then
 	error "${CONFIG_PATH} not found"
 	exit 1
@@ -48,71 +44,36 @@ fi
 
 # Exit if syntactically incorrect
 ${JQ} -e '.' "${CONFIG_PATH}" > /dev/null
-${JQ} -e '.' "${UNIT_CONF_PATH}" > /dev/null
 
 mkdir -p "${CONF_TMPDIR}"
 
-rm_value() {
-	_value="${1}"
-	_unit_file="${2}"
-	if [ ! -f "${_unit_file}" ]; then
-		return
-	fi
-	_tmpfile=$(mktemp)
-	${JQ} "del(.${_value})" "${_unit_file}" > "${_tmpfile}"
-	mv "${_tmpfile}" "${_unit_file}"
-	if [ "$(${JQ} '.' "${_unit_file}")" = "{}" ]; then
-		rm -f "${_unit_file}"
-	fi
-}
-
 _tmpdir=$(mktemp -d)
-units=$(${JQ} -r '.properties.units.properties | keys[]' "${UNIT_CONF_PATH}")
+UNITS_DIR="${UNITS_DIR:-/etc/systemd}"
+UNITS_FILE="${UNITS_DIR}/units.conf"
+units=$(cat "${UNITS_FILE}")
 for unit in ${units}; do
-	confs=$(${JQ} -r ".properties.units.properties | .[\"${unit}\"].configuration" "${UNIT_CONF_PATH}")
-	for conf in ${confs}; do
-		_path=${conf%.*}
-		_value=${conf##*.}
-		if [ "${_path}" = "${_value}" ]; then
-			_path=""
-		fi
-		_entry=$(${JQ} ".${_path} | to_entries | [.[] | select(.key == \"${_value}\")] | from_entries" "${CONFIG_PATH}" 2> /dev/null || true)
-		if [ -n "${_entry}" ] && [ "${_entry}" != "{}" ]; then
-			if [ -f "${_tmpdir}/${unit}.json" ]; then
-				_json=$(${JQ} --argjson entry "${_entry}" '. += $entry' "${_tmpdir}/${unit}.json")
-				echo "${_json}" > "${_tmpdir}/${unit}.json"
+	if [ -f "${UNITS_DIR}/${unit}-conf.conf" ]; then
+		for conf in $(cat "${UNITS_DIR}/${unit}-conf.conf"); do
+			config_gen_unit "${unit}" "${conf}" "${_tmpdir}"
+		done
+		if [ -f "${_tmpdir}/${unit}.json" ]; then
+			if [ -f "${CONF_TMPDIR}/${unit}.json" ]; then
+				_newcksum=$(md5sum "${_tmpdir}/${unit}.json" | cut -d " " -f1)
+				_oldcksum=$(md5sum "${CONF_TMPDIR}/${unit}.json" | cut -d " " -f1)
+				if [ "${_newcksum}" != "${_oldcksum}" ]; then
+					info "${unit} configuration changed:"
+					diff "${CONF_TMPDIR}/${unit}.json" "${_tmpdir}/${unit}.json" | tail -n +4 >&2
+					mv "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json"
+				fi
 			else
-				echo "${_entry}" > "${_tmpdir}/${unit}.json"
-			fi
-		elif [ "${_entry}" = "{}" ]; then
-			rm_value "${conf}" "${_tmpdir}/${unit}.json"
-		fi
-	done
-	if [ -f "${_tmpdir}/${unit}.json" ]; then
-		if [ -f "${CONF_TMPDIR}/${unit}.json" ]; then
-			_newcksum=$(md5sum "${_tmpdir}/${unit}.json" | cut -d " " -f1)
-			_oldcksum=$(md5sum "${CONF_TMPDIR}/${unit}.json" | cut -d " " -f1)
-			if [ "${_newcksum}" != "${_oldcksum}" ]; then
-				info "${unit} configuration changed:"
-				diff "${CONF_TMPDIR}/${unit}.json" "${_tmpdir}/${unit}.json" | tail -n +4 >&2
-				mv "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json"
+				config_new_unit "${unit}" "${_tmpdir}"
 			fi
 		else
-			info "New ${unit} configuration:"
-			touch "${CONF_TMPDIR}/${unit}.json"
-			if find /lib/systemd/system -name "${unit}-conf.path" | grep -q .; then
-				if [ "$(systemctl is-active "${unit}-conf.path")" = "inactive" ]; then
-					systemctl start "${unit}-conf.path"
-				fi
+			if [ -f "${CONF_TMPDIR}/${unit}.json" ]; then
+				info "${unit} configuration removed:"
+				cat "${CONF_TMPDIR}/${unit}.json" >&2
+				rm "${CONF_TMPDIR}/${unit}.json"
 			fi
-			cat "${_tmpdir}/${unit}.json" >&2
-			mv "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json"
-		fi
-	else
-		if [ -f "${CONF_TMPDIR}/${unit}.json" ]; then
-			info "${unit} configuration removed:"
-			cat "${CONF_TMPDIR}/${unit}.json" >&2
-			rm "${CONF_TMPDIR}/${unit}.json"
 		fi
 	fi
 done
