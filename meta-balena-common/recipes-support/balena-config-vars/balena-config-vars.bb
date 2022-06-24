@@ -13,7 +13,6 @@ SRC_URI = " \
     file://os-sshkeys \
     file://os-sshkeys.service \
     file://os-config-json \
-    file://os-config-json.service \
     file://unit-conf.json \
     file://test-input.json \
     file://test-conf.json \
@@ -47,7 +46,6 @@ SYSTEMD_SERVICE:${PN} = " \
     os-networkmanager.service \
     os-udevrules.service \
     os-sshkeys.service \
-    os-config-json.service \
     "
 
 do_test() {
