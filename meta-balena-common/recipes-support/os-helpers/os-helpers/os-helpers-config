@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -f "/usr/libexec/os-helpers-logging" ]; then
 . /usr/libexec/os-helpers-logging
@@ -8,12 +8,15 @@ if [ -f "/usr/sbin/balena-config-vars" ]; then
 fi
 
 DEVELOPMENT_FEATURES_FLAG_FILE="/var/volatile/development-features"
+JQ="${JQ:-"/usr/bin/jq"}"
+CONF_DIR=${CONF_DIR:-"/var/volatile"}
+CONFIG_PATH=${CONFIG_PATH:-"/mnt/boot/config.json"}
 
 config_gen_devmode() {
 	if [ -f "${CONFIG_PATH}" ]; then
-		development_mode="$(jq -r ".developmentMode" "${CONFIG_PATH}")"
+		development_mode="$(${JQ} -r ".developmentMode" "${CONFIG_PATH}")"
 		if [ "${development_mode}" = "true" ]; then
-			authenticated_ssh="$(jq -r ".os.sshKeys" "${CONFIG_PATH}")"
+			authenticated_ssh="$(${JQ} -r ".os.sshKeys" "${CONFIG_PATH}")"
 			if [ -n "${authenticated_ssh}" ] && [ "${authenticated_ssh}" != "null" ]; then
 				info "Disabling SSH passwordless login on development mode"
 				echo "SSHD_OPTS='-f /etc/ssh/sshd_config_development -o PasswordAuthentication=no'" > "${DEVELOPMENT_FEATURES_FLAG_FILE}"
@@ -22,5 +25,54 @@ config_gen_devmode() {
 			fi
 			echo 'BALENA_DEVELOPMENT_ARGS="-H tcp://0.0.0.0:2375"' >> "${DEVELOPMENT_FEATURES_FLAG_FILE}"
 		fi
+	fi
+}
+
+config_rm_value() {
+	_value="${1}"
+	_unit_file="${2}"
+	if [ ! -f "${_unit_file}" ]; then
+		return
+	fi
+	_tmpfile=$(mktemp)
+	${JQ} "del(.${_value})" "${_unit_file}" > "${_tmpfile}"
+	mv "${_tmpfile}" "${_unit_file}"
+	if [ "$(${JQ} '.' "${_unit_file}")" = "{}" ]; then
+		rm -f "${_unit_file}"
+	fi
+}
+
+config_new_unit() {
+	local unit="${1}"
+	local _tmpdir="${2}"
+	[ ! -d "${CONF_DIR}" ] && mkdir -p "${CONF_DIR}"
+	if [ ! -f "${CONF_DIR}/${unit}.json" ]; then
+		if [ -f "${_tmpdir}/${unit}.json" ]; then
+			info "New ${unit} configuration:"
+			cat "${_tmpdir}/${unit}.json" >&2
+			mv "${_tmpdir}/${unit}.json" "${CONF_DIR}/${unit}.json" && sync -f "${CONF_DIR}"
+		fi
+	fi
+}
+
+config_gen_unit() {
+	local unit="${1}"
+	local conf="${2}"
+	local _tmpdir="${3}"
+	_path=${conf%.*}
+	_value=${conf##*.}
+	if [ "${_path}" = "${_value}" ]; then
+		_path=""
+	fi
+	_entry=$(${JQ} ".${_path} | to_entries | [.[] | select(.key == \"${_value}\")] | from_entries" "${CONFIG_PATH}" 2> /dev/null || true)
+	if [ -n "${_entry}" ] && [ "${_entry}" != "{}" ]; then
+		if [ -f "${_tmpdir}/${unit}.json" ]; then
+			_json=$(${JQ} --argjson entry "${_entry}" '. += $entry' "${_tmpdir}/${unit}.json")
+			echo "${_json}" > "${_tmpdir}/${unit}.json"
+		else
+			echo "${_entry}" > "${_tmpdir}/${unit}.json"
+		fi
+	elif [ "${_entry}" = "{}" ]; then
+		config_rm_value "${conf}" "${_tmpdir}/${unit}.json"
 	fi
 }
