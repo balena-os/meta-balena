@@ -34,7 +34,7 @@ SYSTEMD_UNIT_NAMES = "os-sshkeys os-udevrules os-networkmanager"
 inherit balena-configurable
 
 DEPENDS = "bash-native jq-native coreutils-native"
-RDEPENDS:${PN} = "bash jq udev coreutils os-helpers-devmode"
+RDEPENDS:${PN} = "bash jq udev coreutils os-helpers-config"
 
 do_patch[noexec] = "1"
 do_compile[noexec] = "1"
