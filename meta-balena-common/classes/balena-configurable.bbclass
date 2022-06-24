@@ -3,6 +3,7 @@
 #
 
 SYSTEMD_UNIT_NAMES ?= "${BPN}"
+RDEPENDS:${PN}:append:class-target = " balena-units-conf"
 
 python __anonymous () {
     systemd_unitdir=d.getVar("systemd_unitdir")
