@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.18
+## (2022-06-23)
+
+* tests: os: config-json: fix race in udevRules test [Joseph Kogut]
+
 # v2.99.17
 ## (2022-06-22)
 
