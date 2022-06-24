@@ -1,11 +1,15 @@
 #!/bin/sh
 
+if [ -f "/usr/libexec/os-helpers-logging" ]; then
 . /usr/libexec/os-helpers-logging
+fi
+if [ -f "/usr/sbin/balena-config-vars" ]; then
 . /usr/sbin/balena-config-vars
+fi
 
 DEVELOPMENT_FEATURES_FLAG_FILE="/var/volatile/development-features"
 
-gen_devmode_config() {
+config_gen_devmode() {
 	if [ -f "${CONFIG_PATH}" ]; then
 		development_mode="$(jq -r ".developmentMode" "${CONFIG_PATH}")"
 		if [ "${development_mode}" = "true" ]; then
