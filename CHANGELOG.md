@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.99.22
+## (2022-06-27)
+
+* balena-supervisor: Replace BOOT_MOUNTPOINT with BALENA_BOOT_MOUNTPOINT [Alex Gonzalez]
+* balena-config-vars: Remove BOOT_MOUNTPOINT from configuration environment [Alex Gonzalez]
+
 # v2.99.21
 ## (2022-06-27)
 
