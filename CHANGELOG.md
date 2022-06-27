@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.21
+## (2022-06-27)
+
+* balena-config-vars: Do not use systemctl to list unit files [Alex Gonzalez]
+
 # v2.99.20
 ## (2022-06-24)
 

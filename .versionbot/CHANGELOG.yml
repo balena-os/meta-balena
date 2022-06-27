@@ -1,4 +1,19 @@
 - commits:
+    - subject: "balena-config-vars: Do not use systemctl to list unit files"
+      hash: efcc9a0f876dc9b0955189cab535bc4a1926554d
+      body: |
+        On occassions, this fails with a broken pipe error.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.21
+  title: "'balena-config-vars: Do not use systemctl to list unit files'"
+  date: 2022-06-27T09:18:07.649Z
+- commits:
     - subject: "tests: os: make apiKey an optional parameter"
       hash: 5b959d374810ab1d5e82d3017b91e678d50e4a2d
       body: |
