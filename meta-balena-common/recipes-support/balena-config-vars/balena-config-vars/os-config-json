@@ -95,7 +95,7 @@ for unit in ${units}; do
 		else
 			info "New ${unit} configuration"
 			touch "${CONF_TMPDIR}/${unit}.json"
-			if systemctl list-units --full -all | grep -Fq "${unit}-conf.path"; then
+			if find /lib/systemd/system -name "${unit}-conf.path" | grep -q .; then
 				if [ "$(systemctl is-active "${unit}-conf.path")" = "inactive" ]; then
 					systemctl start "${unit}-conf.path"
 				fi
