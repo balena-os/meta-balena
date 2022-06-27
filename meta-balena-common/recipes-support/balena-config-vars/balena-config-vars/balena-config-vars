@@ -35,8 +35,10 @@ while [ "$#" -gt "0" ]; do
 done
 
 # Resin-boot mountpoint
-BOOT_MOUNTPOINT="/mnt/boot"
-FLASHER_FILEFLAG="$BOOT_MOUNTPOINT/balena-image-flasher"
+BALENA_BOOT_MOUNTPOINT="/mnt/boot"
+# Do not use - left here for backwards compatibility - use BALENA_BOOT_MOUNTPOINT instead
+BOOT_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
+FLASHER_FILEFLAG="$BALENA_BOOT_MOUNTPOINT/balena-image-flasher"
 
 # Default values
 if [ -z "$CONFIG_PATH" ]; then
@@ -44,11 +46,9 @@ if [ -z "$CONFIG_PATH" ]; then
         # Flasher stores a volatile file in tmpfs
         CONFIG_PATH=/mnt/boottmp/config.json
     else
-        CONFIG_PATH=$BOOT_MOUNTPOINT/config.json
+        CONFIG_PATH=$BALENA_BOOT_MOUNTPOINT/config.json
     fi
 fi
-
-BALENA_BOOT_MOUNTPOINT="/mnt/boot"
 
 # If config.json provides redefinitions for our vars let us rewrite their
 # runtime value
