@@ -1,4 +1,16 @@
 - commits:
+    - subject: "Update: update balena-io/balena-supervisor to v14.0.8"
+      hash: 87b9883c5cef60d2e00d566cc3bc83ac18bb737d
+      body: Update balena-io/balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.99.23
+  title: "'Update: update balena-io/balena-supervisor to v14.0.8'"
+  date: 2022-06-27T23:40:10.965Z
+- commits:
     - subject: "balena-supervisor: Replace BOOT_MOUNTPOINT with BALENA_BOOT_MOUNTPOINT"
       hash: 8e4ed15d512304498540fd30c280a5f000dc4ba9
       body: |
