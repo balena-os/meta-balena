@@ -172,7 +172,7 @@ module.exports = {
           let samples = 0
           do {
               nextTriggers.push( await this.cloud.executeCommandInHostOS(
-              `date -s "+2 hours" > /dev/null && sleep 0.5 && systemctl status update-balena-supervisor.timer | grep "Trigger:" | cut -d ';' -f2`,
+              `date -s "+2 hours" > /dev/null && sleep 2 && systemctl status update-balena-supervisor.timer | grep "Trigger:" | cut -d ';' -f2`,
               this.balena.uuid))
               samples = samples + 1
           } while (samples < 3);
