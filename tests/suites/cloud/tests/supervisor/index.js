@@ -154,7 +154,7 @@ module.exports = {
         );
 
         // remove lockfile
-        let removeLockfile = await this.cloud.executeCommandInContainer(
+        await this.cloud.executeCommandInContainer(
           `rm /tmp/balena/updates.lock`, 
           this.appServiceName,
           this.balena.uuid)
@@ -172,12 +172,27 @@ module.exports = {
           let samples = 0
           do {
               nextTriggers.push( await this.cloud.executeCommandInHostOS(
-              `date -s "+2 hours" > /dev/null && sleep 2 && systemctl status update-balena-supervisor.timer | grep "Trigger:" | cut -d ';' -f2`,
-              this.balena.uuid))
-              samples = samples + 1
+                  `date -s "+2 hours" > /dev/null`,
+                  this.balena.uuid
+                ).then(async () => {
+                  let trigger;
+                  await this.utils.waitUntil(async () => {
+                    // on slower hardware this command can return an empty string so don't proceed
+                    // until we have a value for trigger
+                    trigger = await this.cloud.executeCommandInHostOS(
+                      `systemctl status update-balena-supervisor.timer | grep "Trigger:" | awk '{print $4}'`,
+                      this.balena.uuid
+                    );
+                    return trigger !== "";
+                  }, false, 20, 500)
+                  return trigger;
+                })
+              );
+              samples = samples + 1;
           } while (samples < 3);
-          test.notOk (
-            nextTriggers.every( (v, i, a) => v === a[0] ),
+          test.ok (
+            // check that all results are unique
+            (new Set(nextTriggers)).size === nextTriggers.length,
             'Balena supervisor updater will run on a randomized timer'
           )
         }).then(async () => {
