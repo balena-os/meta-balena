@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.24
+## (2022-06-28)
+
+* tests: Increase delay when testing randomized timers [Kyle Harding]
+
 # v2.99.23
 ## (2022-06-27)
 

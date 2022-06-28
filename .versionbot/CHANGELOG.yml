@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: Increase delay when testing randomized timers"
+      hash: 0163f4b3df5fbe2e49e56b45f5f200b18128417b
+      body: |
+        This should prevent failed tests on slower devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.99.24
+  title: "'tests: Increase delay when testing randomized timers'"
+  date: 2022-06-28T14:53:51.098Z
+- commits:
     - subject: "Update: update balena-io/balena-supervisor to v14.0.8"
       hash: 87b9883c5cef60d2e00d566cc3bc83ac18bb737d
       body: Update balena-io/balena-supervisor
