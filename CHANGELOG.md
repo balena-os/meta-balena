@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.26
+## (2022-06-29)
+
+* tests: cloud: Wait for random triggers to be updated [Kyle Harding]
+
 # v2.99.25
 ## (2022-06-28)
 

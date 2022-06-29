@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: cloud: Wait for random triggers to be updated"
+      hash: b0223bb3a36ffcbfdf5e306cd9fa88398278a42c
+      body: |
+        This prevents a race condition on slower hardware where
+        the systemd unit does not have a value for Trigger immediately
+        after skewing the clock.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.99.26
+  title: "'tests: cloud: Wait for random triggers to be updated'"
+  date: 2022-06-29T18:46:55.181Z
+- commits:
     - subject: Update tests/leviathan digest to 4fe9b19
       hash: 8d61aa7664fdfb621770fe546d20edd21be9d51c
       body: Update tests/leviathan
