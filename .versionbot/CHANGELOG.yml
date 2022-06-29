@@ -1,4 +1,61 @@
 - commits:
+    - subject: Update tests/leviathan digest to 4fe9b19
+      hash: 8d61aa7664fdfb621770fe546d20edd21be9d51c
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "github: Run e2e tests via github actions"
+              hash: 3ef31444872dc701f0efa23cc0a208f0cbcf5155
+              body: |
+                This will replace the Jenkins job for e2e tests
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "make: Clean local volumes before running tests"
+              hash: 1ff4f9e8bddca3f25d5d260d925448d62ca3be22
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "worker: Pin worker image to latest by default"
+              hash: 3d8a4d5c57db246c4d4b9b82ae2ec4f5bdc0b081
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "e2e: Update e2e suite config to support testbots"
+              hash: 46ff1fe17f33dffdacf6bdc923a4f986b16465af
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.5.5
+          title: "'Run QEMU and testbot e2e tests via github-actions'"
+          date: 2022-06-24T20:48:38.481Z
+  version: 2.99.25
+  title: "'Update tests/leviathan digest to 4fe9b19'"
+  date: 2022-06-28T23:32:06.902Z
+- commits:
     - subject: "tests: Increase delay when testing randomized timers"
       hash: 0163f4b3df5fbe2e49e56b45f5f200b18128417b
       body: |
