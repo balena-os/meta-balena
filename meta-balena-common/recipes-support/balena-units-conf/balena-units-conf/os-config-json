@@ -45,7 +45,7 @@ fi
 # Exit if syntactically incorrect
 ${JQ} -e '.' "${CONFIG_PATH}" > /dev/null
 
-mkdir -p "${CONF_TMPDIR}"
+mkdir -p "${CONF_DIR}"
 
 _tmpdir=$(mktemp -d)
 UNITS_DIR="${UNITS_DIR:-/etc/systemd}"
@@ -57,22 +57,22 @@ for unit in ${units}; do
 			config_gen_unit "${unit}" "${conf}" "${_tmpdir}"
 		done
 		if [ -f "${_tmpdir}/${unit}.json" ]; then
-			if [ -f "${CONF_TMPDIR}/${unit}.json" ]; then
+			if [ -f "${CONF_DIR}/${unit}.json" ]; then
 				_newcksum=$(md5sum "${_tmpdir}/${unit}.json" | cut -d " " -f1)
-				_oldcksum=$(md5sum "${CONF_TMPDIR}/${unit}.json" | cut -d " " -f1)
+				_oldcksum=$(md5sum "${CONF_DIR}/${unit}.json" | cut -d " " -f1)
 				if [ "${_newcksum}" != "${_oldcksum}" ]; then
 					info "${unit} configuration changed:"
-					diff "${CONF_TMPDIR}/${unit}.json" "${_tmpdir}/${unit}.json" | tail -n +4 >&2
-					mv "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json"
+					diff "${CONF_DIR}/${unit}.json" "${_tmpdir}/${unit}.json" | tail -n +4 >&2
+					mv "${_tmpdir}/${unit}.json" "${CONF_DIR}/${unit}.json"
 				fi
 			else
 				config_new_unit "${unit}" "${_tmpdir}"
 			fi
 		else
-			if [ -f "${CONF_TMPDIR}/${unit}.json" ]; then
+			if [ -f "${CONF_DIR}/${unit}.json" ]; then
 				info "${unit} configuration removed:"
-				cat "${CONF_TMPDIR}/${unit}.json" >&2
-				rm "${CONF_TMPDIR}/${unit}.json"
+				cat "${CONF_DIR}/${unit}.json" >&2
+				rm "${CONF_DIR}/${unit}.json"
 			fi
 		fi
 	fi
