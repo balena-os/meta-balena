@@ -1,7 +1,7 @@
 DESCRIPTION = "Balena unit configuration files"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
-DEPENDS = "bash-native jq-native os-helpers-native"
+DEPENDS = "bash-native jq-native os-helpers-native coreutils-native"
 RDEPENDS:${PN} = "bash jq coreutils os-helpers-config"
 
 SRC_URI = " \
