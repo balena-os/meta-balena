@@ -40,7 +40,7 @@ do_test() {
     JQ="${STAGING_BINDIR_NATIVE}/jq"
     # Test parsing into configuration units
     JQ="${JQ}" \
-    CONF_TMPDIR=${WORKDIR}/tmp \
+    CONF_DIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/test-input.json \
     CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNITS_DIR=${WORKDIR}/tmp\
@@ -62,7 +62,7 @@ do_test() {
     tmpfile=$(mktemp)
     "${JQ}" '.key_integer=10' "${WORKDIR}/test-input.json" > "${WORKDIR}/${tmpfile}"
     JQ="${JQ}" \
-    CONF_TMPDIR=${WORKDIR}/tmp \
+    CONF_DIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/${tmpfile} \
     CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNITS_DIR=${WORKDIR}/tmp\
@@ -77,7 +77,7 @@ do_test() {
     # Test removal of value from configuration unit
     "${JQ}" 'del(.key_object.one)' "${WORKDIR}/test-input.json" > "${WORKDIR}/${tmpfile}"
     JQ="${JQ}" \
-    CONF_TMPDIR=${WORKDIR}/tmp \
+    CONF_DIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/${tmpfile} \
     CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNITS_DIR=${WORKDIR}/tmp\
@@ -92,7 +92,7 @@ do_test() {
     # Test removal of all values from configuration unit
     "${JQ}" 'del(.key_nested.key_nested_child2_nested.key_child2_nested."0") | del(.key_object.one)' "${WORKDIR}/test-input.json" > "${WORKDIR}/${tmpfile}"
     JQ="${JQ}" \
-    CONF_TMPDIR=${WORKDIR}/tmp \
+    CONF_DIR=${WORKDIR}/tmp \
     CONFIG_PATH=${WORKDIR}/${tmpfile} \
     CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
     UNITS_DIR=${WORKDIR}/tmp\
