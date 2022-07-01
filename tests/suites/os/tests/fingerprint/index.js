@@ -14,28 +14,23 @@
 
 'use strict';
 
-const Promise = require('bluebird');
-
 module.exports = {
 	title: 'OS corruption tests',
 	tests: [
 		{
-			title: 'resinos.fingerprint file test',
+			title: 'fingerprint file test',
 			run: async function(test) {
-				let p = Promise.any(
-					['/resinos.fingerprint', '/balenaos.fingerprint'].map(
-						async (fingerprint) => {
-							return this.worker.executeCommandInHostOS(
-								`md5sum --quiet -c ${fingerprint}`,
-								this.link,
-							);
-						}
-					)
-				);
-
 				return test.resolves(
-					p,
-					'resinos.fingerprint/balenaos.fingerprint file passed md5sum, no OS corruption detected.',
+					this.worker.executeCommandInHostOS(
+						'md5sum --quiet -c /balenaos.fingerprint',
+						this.link,
+					).catch(
+						() => this.worker.executeCommandInHostOS(
+							'md5sum --quiet -c /resinos.fingerprint',
+							this.link,
+						)
+					),
+					'resinos.fingerprint/balenaos.fingerprint file passed md5sum, no OS corruption detected.'
 				);
 			},
 		},
