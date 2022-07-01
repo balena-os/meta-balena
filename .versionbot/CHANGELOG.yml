@@ -1,4 +1,24 @@
 - commits:
+    - subject: "tests: os: fingerprint: fix errant promise"
+      hash: ff22bce2e729c4fd74963ab7a96377656cad7559
+      body: |
+        When parallelizing fingerprint checks with Promise.any(), the
+        unsuccessful command would continue retrying in the background, causing
+        spurious error messages.
+
+        With mDNS resolution memoization, this optimization no longer saves us
+        time, so remove it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.99.27
+  title: "'tests: os: fingerprint: fix errant promise'"
+  date: 2022-06-30T18:10:06.725Z
+- commits:
     - subject: "tests: cloud: Wait for random triggers to be updated"
       hash: b0223bb3a36ffcbfdf5e306cd9fa88398278a42c
       body: |

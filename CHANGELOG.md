@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.99.27
+## (2022-06-30)
+
+* tests: os: fingerprint: fix errant promise [Joseph Kogut]
+
 # v2.99.26
 ## (2022-06-29)
 
