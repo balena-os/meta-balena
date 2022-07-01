@@ -10,6 +10,7 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/bin/resin-partition-mounter --mount resin-boot
 ExecStartPost=/usr/sbin/balena-config-vars
+ExecStartPost=/usr/sbin/os-config-json
 ExecStop=/usr/bin/resin-partition-mounter --umount resin-boot
 
 [Install]
