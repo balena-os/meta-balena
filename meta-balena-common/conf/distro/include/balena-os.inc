@@ -31,6 +31,8 @@ MAINTAINER = "Balena <hello@balena.io>"
 POKY_DEFAULT_DISTRO_FEATURES:remove = "ptest"
 POKY_DEFAULT_DISTRO_FEATURES:remove = "wayland"
 DISTRO_FEATURES_DEFAULT:remove = "x11"
+PACKAGECONFIG:pn-btrfs-tools = ""
+PACKAGECONFIG:pn-btrfs-tools-native = ""
 
 # OS development image
 OS_DEVELOPMENT ?= "0"
