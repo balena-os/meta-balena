@@ -77,6 +77,14 @@ for unit in ${units}; do
 				mv "${_tmpdir}/${unit}.json" "${CONF_TMPDIR}/${unit}.json"
 			fi
 		else
+			if find /lib/systemd/system -name "${unit}-conf.path" | grep -q .; then
+				if [ "$(systemctl is-active "${unit}-conf.path")" = "inactive" ]; then
+					# Make sure the watched path exists so the path unit activates
+					touch "${CONF_TMPDIR}/${unit}.json"
+					systemctl start "${unit}-conf.path"
+					info "Starting ${unit}-conf.path"
+				fi
+			fi
 			config_new_unit "${unit}" "${_tmpdir}"
 		fi
 	else
