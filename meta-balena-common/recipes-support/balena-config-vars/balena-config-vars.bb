@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 SRC_URI = " \
     file://balena-config-vars \
+    file://balena-config-defaults \
     file://config-json.path \
     file://config-json.service \
     file://os-networkmanager \
@@ -115,6 +116,7 @@ do_test[depends] += "jq-native:do_populate_sysroot"
 do_install() {
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/balena-config-vars ${D}${sbindir}/
+    install -m 0755 ${WORKDIR}/balena-config-defaults ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/
