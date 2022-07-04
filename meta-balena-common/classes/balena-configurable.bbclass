@@ -3,6 +3,8 @@
 #
 
 SYSTEMD_UNIT_NAMES ?= "${BPN}"
+DEPENDS += "jq-native"
+RDEPENDS:${PN}:append:class-target = " balena-units-conf"
 
 python __anonymous () {
     systemd_unitdir=d.getVar("systemd_unitdir")
@@ -37,12 +39,28 @@ ExecStartPre=/bin/echo "${SYSTEMD_UNIT_NAME} configuration changed"
 ExecStart=/bin/systemctl restart ${SYSTEMD_UNIT_NAME}.service
 EOF
     done
+
+    for SYSTEMD_UNIT_NAME in ${SYSTEMD_UNIT_NAMES}; do
+        cat > "${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.conf" << EOF
+[Unit]
+After=resin-boot.service
+[Service]
+ExecStartPre=/usr/sbin/gen-conf-unit ${SYSTEMD_UNIT_NAME}
+EOF
+    done
 }
+
+FILES:${PN} += " \
+    ${systemd_unitdir}/system/ \
+    ${sysconfdir}/systemd/system/ \
+"
 
 do_install:append() {
     install -d ${D}${systemd_unitdir}/system
     for SYSTEMD_UNIT_NAME in ${SYSTEMD_UNIT_NAMES}; do
         install -c -m 0644 ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.path ${D}${systemd_unitdir}/system
         install -c -m 0644 ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.service ${D}${systemd_unitdir}/system
+        install -d ${D}${sysconfdir}/systemd/system/${SYSTEMD_UNIT_NAME}.service.d
+        install -c -m 0644 ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.conf ${D}${sysconfdir}/systemd/system/${SYSTEMD_UNIT_NAME}.service.d/${SYSTEMD_UNIT_NAME}-conf.conf
     done
 }
