@@ -43,20 +43,8 @@ while [ "$#" -gt "0" ]; do
     shift
 done
 
-# Default values
-BALENA_CONFIG_VARS_CACHE="/var/cache/balena-config-vars"
-BALENA_BOOT_MOUNTPOINT="/mnt/boot"
-# Do not use - left here for backwards compatibility - use BALENA_BOOT_MOUNTPOINT instead
-BOOT_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
-FLASHER_FILEFLAG="$BALENA_BOOT_MOUNTPOINT/balena-image-flasher"
-if [ -z "$CONFIG_PATH" ]; then
-    if [ -f "$FLASHER_FILEFLAG" ]; then
-        # Flasher stores a volatile file in tmpfs
-        CONFIG_PATH=/mnt/boottmp/config.json
-    else
-        CONFIG_PATH=$BALENA_BOOT_MOUNTPOINT/config.json
-    fi
-fi
+# Source static defaults
+. /usr/sbin/balena-config-defaults
 
 if [ "${USE_CACHE}" -eq "1" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then
         . "${BALENA_CONFIG_VARS_CACHE}"
