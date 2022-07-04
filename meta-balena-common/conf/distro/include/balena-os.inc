@@ -126,3 +126,6 @@ SIGN_EFI_KEK_KEY_ID ?= "balenaos-KEK"
 
 # Default cloud API environment
 BALENA_API_ENV ?= "balena-cloud.com"
+
+# Default storage of configuration units
+BALENA_CONF_UNIT_STORE ?= "/var/volatile"

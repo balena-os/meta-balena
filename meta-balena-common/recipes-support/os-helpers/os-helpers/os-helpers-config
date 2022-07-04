@@ -9,7 +9,7 @@ fi
 
 DEVELOPMENT_FEATURES_FLAG_FILE="/var/volatile/development-features"
 JQ="${JQ:-"/usr/bin/jq"}"
-CONF_DIR=${CONF_DIR:-"/var/volatile"}
+CONF_DIR=${CONF_DIR:-@@BALENA_CONF_UNIT_STORE@@}
 CONFIG_PATH=${CONFIG_PATH:-"/mnt/boot/config.json"}
 
 config_gen_devmode() {

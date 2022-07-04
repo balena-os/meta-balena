@@ -23,7 +23,7 @@ do_configure:prepend() {
 Description=${SYSTEMD_UNIT_NAME} path watch
 
 [Path]
-PathChanged=/var/volatile/${SYSTEMD_UNIT_NAME}.json
+PathChanged=${BALENA_CONF_UNIT_STORE}/${SYSTEMD_UNIT_NAME}.json
 
 [Install]
 WantedBy=basic.target

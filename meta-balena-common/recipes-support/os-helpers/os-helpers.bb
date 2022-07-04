@@ -30,6 +30,7 @@ do_install() {
         ${WORKDIR}/os-helpers-tpm2 \
         ${WORKDIR}/os-helpers-config \
         ${D}${libexecdir}
+        sed -i "s,@@BALENA_CONF_UNIT_STORE@@,${BALENA_CONF_UNIT_STORE},g" ${D}${libexecdir}/os-helpers-config
 }
 
 FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"
