@@ -16,19 +16,18 @@ SRC_URI = " \
     file://test-output6.json \
     file://test-output7.json \
     file://os-config-json \
-    file://os-config-json.service \
+    file://gen-conf-unit \
 "
 
 S = "${WORKDIR}"
 
-inherit allarch systemd
+inherit allarch
 
 do_patch[noexec] = "1"
 do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
 SYSTEMD_SERVICE:${PN} = " \
-    os-config-json.service \
     "
 
 FILES:${PN} = " \
@@ -118,17 +117,10 @@ parse_conf_to_units() {
 do_install() {
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/os-config-json ${D}${sbindir}/
+    install -m 0755 ${WORKDIR}/gen-conf-unit ${D}${sbindir}/
     install -d ${D}${sysconfdir}/systemd
     install -d ${WORKDIR}/tmp
     install -c -m 0644 ${WORKDIR}/unit-conf.json ${STAGING_DIR_TARGET}
     parse_conf_to_units "${WORKDIR}/unit-conf.json" "${D}/${sysconfdir}/systemd"
     parse_conf_to_units "${WORKDIR}/test-conf.json" "${WORKDIR}/tmp"
-    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/os-config-json.service ${D}${systemd_unitdir}/system
-        sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
-            -e 's,@SBINDIR@,${sbindir},g' \
-            -e 's,@BINDIR@,${bindir},g' \
-            ${D}${systemd_unitdir}/system/*.service
-    fi
 }
