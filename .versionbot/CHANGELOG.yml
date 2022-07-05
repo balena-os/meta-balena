@@ -1,4 +1,59 @@
 - commits:
+    - subject: "os-config-json: Log configuration changes"
+      hash: a1b3a4bf37d04a2e0ed024a9a4e9202c15da362b
+      body: |
+        Identify configuration changes in the log.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-config-json: Recreate environment cache file"
+      hash: 42c96437a5a4783a52d9dd4bded1ceab89175c8e
+      body: |
+        When config.json changes the environment cache file needs to be
+        recreated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: Cache environment in memory file"
+      hash: 55857de10d02471d7fc443dd69b1e8e58576fab0
+      body: |
+        Executing balena-config-vars is quite taxing for smaller devices. For
+        example a RaspberryPi Zero.
+
+        This commit introduces a cached memory file with the configuration
+        environment that is recreated when `config.json` changes and will be
+        used if present.
+
+        time source /usr/sbin/balena-config-vars --no-cache
+
+        real    0m2.928s
+        user    0m1.050s
+        sys     0m0.030s
+
+        time source /usr/sbin/balena-config-vars
+
+        real    0m0.011s
+        user    0m0.008s
+        sys     0m0.000s
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.100.0
+  title: "'Create and use a balena configuration variables cache'"
+  date: 2022-07-05T13:41:47.722Z
+- commits:
     - subject: "tests: os: fingerprint: fix errant promise"
       hash: ff22bce2e729c4fd74963ab7a96377656cad7559
       body: |

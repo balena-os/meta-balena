@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.100.0
+## (2022-07-05)
+
+* os-config-json: Log configuration changes [Alex Gonzalez]
+* os-config-json: Recreate environment cache file [Alex Gonzalez]
+* balena-config-vars: Cache environment in memory file [Alex Gonzalez]
+
 # v2.99.27
 ## (2022-06-30)
 
