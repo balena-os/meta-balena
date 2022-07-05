@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.99.28
+## (2022-07-05)
+
+* kernel-balena: enable BTRFS support when present in DISTRO_FEATURES [Joseph Kogut]
+* kernel-balena: add config for BTRFS support [Joseph Kogut]
+* grub: enable BTRFS support when enabled in DISTRO_FEATURES [Joseph Kogut]
+* u-boot: enable BTRFS support when enabled in DISTRO_FEATURES [Joseph Kogut]
+* conf: add rootfs type to DISTRO_FEATURES [Joseph Kogut]
+* common: remove python from btrfs-tools PACKAGECONFIG [Joseph Kogut]
+
 # v2.99.27
 ## (2022-06-30)
 

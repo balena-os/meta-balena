@@ -1,4 +1,72 @@
 - commits:
+    - subject: "kernel-balena: enable BTRFS support when present in DISTRO_FEATURES"
+      hash: 389114748071f966cd1536ddbbbf786d65c8f566
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "kernel-balena: add config for BTRFS support"
+      hash: 088ca2f95c900fce4e46cfe636ce72c3952420c5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "grub: enable BTRFS support when enabled in DISTRO_FEATURES"
+      hash: f23f1a8410aefd4b4bc58e05e83479fddb2cee54
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "u-boot: enable BTRFS support when enabled in DISTRO_FEATURES"
+      hash: 695bed5f38af9ab398a9a3a9192e0dfbd002f719
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "conf: add rootfs type to DISTRO_FEATURES"
+      hash: 3c0749c27e66222ad8228b2a50eb80f71c6f9e3b
+      body: |
+        Split BALENA_ROOT_FSTYPE and add the filesystem to DISTRO_FEATURES in
+        order for other packages to enable support when required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: remove python from btrfs-tools PACKAGECONFIG"
+      hash: 309d960e9e03a116094eb79ddac1a5dc5d276de0
+      body: |
+        btrfs-tools by default installs Python modules that blow up the size of
+        the initramfs, disable this feature to save space
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.99.28
+  title: "'BTRFS rootfs support'"
+  date: 2022-07-05T20:01:42.286Z
+- commits:
     - subject: "tests: os: fingerprint: fix errant promise"
       hash: ff22bce2e729c4fd74963ab7a96377656cad7559
       body: |
