@@ -70,9 +70,12 @@ for unit in ${units}; do
 			fi
 		else
 			if [ -f "${CONF_DIR}/${unit}.json" ]; then
-				info "${unit} configuration removed:"
-				cat "${CONF_DIR}/${unit}.json" >&2
-				rm "${CONF_DIR}/${unit}.json"
+				contents=$(cat "${CONF_DIR}/${unit}.json")
+				if [ "${contents}" != "{}" ]; then
+					info "${unit} configuration removed:"
+					cat "${CONF_DIR}/${unit}.json" >&2
+					echo '{}' > "${CONF_DIR}/${unit}.json"
+				fi
 			fi
 		fi
 	fi

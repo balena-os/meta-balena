@@ -51,6 +51,9 @@ config_new_unit() {
 			info "New ${unit} configuration:"
 			cat "${_tmpdir}/${unit}.json" >&2
 			mv "${_tmpdir}/${unit}.json" "${CONF_DIR}/${unit}.json"
+		else
+			info "New empty ${unit} configuration:"
+			echo '{}' > "${CONF_DIR}/${unit}.json"
 		fi
 	fi
 }

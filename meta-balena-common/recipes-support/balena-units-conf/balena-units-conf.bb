@@ -50,7 +50,7 @@ do_test() {
             cksum1=$(md5sum "${WORKDIR}/tmp/unit$i.json" | cut -d " " -f1)
             cksum2=$(md5sum "${WORKDIR}/test-output$i.json" | cut -d " " -f1)
             if [ "${cksum1}" != "${cksum2}" ]; then
-                bbfatal "os-config-json: Unexpected output"
+                bbfatal "[PARSING] os-config-json: Unexpected output for unit$i and test-output$i"
             fi
         else
             bbfatal "os-config-json: No output"
@@ -70,7 +70,7 @@ do_test() {
     cksum1=$(md5sum "${WORKDIR}/tmp/unit5.json" | cut -d " " -f1)
     cksum2=$(md5sum "${WORKDIR}/test-output7.json" | cut -d " " -f1)
     if [ "${cksum1}" != "${cksum2}" ]; then
-        bbfatal "os-config-json: Unexpected output"
+        bbfatal "[MODIFICATION] os-config-json: Unexpected output"
     fi
 
     # Test removal of value from configuration unit
@@ -85,7 +85,7 @@ do_test() {
     cksum1=$(md5sum "${WORKDIR}/tmp/unit1.json" | cut -d " " -f1)
     cksum2=$(md5sum "${WORKDIR}/test-output6.json" | cut -d " " -f1)
     if [ "${cksum1}" != "${cksum2}" ]; then
-        bbfatal "os-config-json: Unexpected output"
+        bbfatal "[REMOVAL] os-config-json: Unexpected output"
     fi
 
     # Test removal of all values from configuration unit
@@ -98,7 +98,10 @@ do_test() {
     STAGING_DIR=${STAGING_DIR_NATIVE} \
     /bin/sh "${WORKDIR}/os-config-json"
     if [ -f "${WORKDIR}/tmp/unit1.json" ]; then
-        bbfatal "os-config-json: Unexpected output"
+        contents=$(cat "${WORKDIR}/tmp/unit1.json")
+        if [ "${contents}" != "{}" ]; then
+            bbfatal "[REMOVAL-ALL] os-config-json: Unexpected output"
+        fi
     fi
     rm -f "${tmpfile}"
 }
