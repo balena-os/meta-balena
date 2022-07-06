@@ -1,4 +1,152 @@
 - commits:
+    - subject: "tests: os: add test for default engine runtime"
+      hash: 15f6bb7e41a8b7ce1c41568bd43143494b588339
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "balena-config-vars: create os-engineconfig"
+      hash: 6270948ca280a5e78e84daf9a04424c206c94105
+      body: |
+        Create os-engineconfig script and systemd service for configuring engine
+        daemon from config.json. Initially, this supports changing the default
+        container runtime.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: add crun to packagegroup-resin"
+      hash: 2a9f21a22d172fe129540a8a627e004b16ceac1f
+      body: |
+        Add crun to packagegroup-resin, ensuring it's installed in all images.
+        With this patch, crun can be used in place of the default golang runc
+        runtime.
+
+        This runtime is smaller, and allows for faster container startup and
+        lower resource usage compared to runc.
+
+        The runtime can either be specified on the command line:
+
+        $ balena run --runtime=crun hello-world
+
+        Or as the default runtime in the engine's daemon.json config:
+
+        $ cat << EOF > /etc/docker/daemon.json
+        {
+          "runtimes": {
+            "crun": {"path": "/usr/bin/crun"}
+          },
+          "default-runtime": "crun"
+        }
+        EOF
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "crun: make systemd optional"
+      hash: ec1ba51d6d1c1d5accb12e788b9e5dd8e39e76f2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "crun: remove go-md2man-native from DEPENDS"
+      hash: f321b125e4f7e67d51cb85cb07c6a177f2e65508
+      body: |
+        This won't build with our Go version, and isn't required for building
+        crun.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "crun: copy recipe from meta-virtualization"
+      hash: 15e1c99c2a99373da82d8bad027ce7f833860c1e
+      body: |
+        Copy crun_git recipe unmodified from meta-virtualization,
+        commit: a9b1fb1787ba03618ebb80fdb5e79433ab922cb8
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "libseccomp: Convert to Honister syntax"
+      hash: 6e0f8d311dba121f293599bcfee36d8f9d391fe3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "libseccomp: remove ptest related code"
+      hash: 17168a00b8e9ed35b8f730d85f8d7803a8c0005d
+      body: |
+        We don't include the ptest distro feature, so remove related code
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "libseccomp: copy recipe from meta-security"
+      hash: ef74e83df94c4abd7df1fa34a6c8245e8d68e2e8
+      body: |
+        Copy libseccomp, a dependency of crun, from meta-security,
+        commit: 9bb7fa51a59fe80080746a763b4f530c4ba29f4e
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "oci-runtime-spec: copy recipe from meta-virtualization"
+      hash: 3ff947617720929315d09eebd6624090bd0c3bd7
+      body: |
+        Copy oci-runtime-spec, a dependency of crun, from meta-virtualization,
+        commit: baf9e1a06f116c12af46a4400edfc1aa10d3fc8b
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "oci-image-spec: copy recipe from meta-virtualization"
+      hash: 0c12237ef15cbfef14623cb38bee412d90ab3c93
+      body: |
+        Copy oci-image-spec, a dependency of crun, from meta-virtualization,
+        commit: 3fea81e4c58f7c0f263341a96eec2cca39e87a59
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.99.28
+  date: 2022-07-06T19:25:31.922Z
+- commits:
     - subject: "tests: os: fingerprint: fix errant promise"
       hash: ff22bce2e729c4fd74963ab7a96377656cad7559
       body: |
