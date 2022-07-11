@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.100.0
+## (2022-07-11)
+
+* (WIP) Disable Engine healthchecks by default [Leandro Motta Barros]
+
 # v2.99.7
 ## (2022-06-17)
 

@@ -1,4 +1,19 @@
 - commits:
+    - subject: (WIP) Disable Engine healthchecks by default
+      hash: a71084e244f93e5d4f18fde541fbd6dfd01b7baf
+      body: |
+        Allow them to be reactivated through a config.json setting.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: minor
+        change-type: minor
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.100.0
+  title: "'[WIP] Disable Engine healthchecks by default'"
+  date: 2022-07-11T23:48:37.519Z
+- commits:
     - subject: "resindataexpander: Move get_part_table_type to os-helpers-fs"
       hash: 7fc9af86c8b994ac61fe376ec8e63d6095dda3de
       body: >
