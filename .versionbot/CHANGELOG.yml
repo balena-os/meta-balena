@@ -1,4 +1,149 @@
 - commits:
+    - subject: Update tests/leviathan digest to d57299a
+      hash: 72ff6adac8ab2b0bf0e4dd359ae5e5f3da7cb7d6
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "core: Reduce the interval for sdk.executeCommandInHostOS"
+              hash: 72d3ff016213b88f6a552761536a697cbec98b03
+              body: |
+                Maintaining the total time of 600s but reducing the interval
+                from 10s to 1s to catch successful commands faster.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Revert "reduce ssh retries"
+              hash: 47ca4a05ad2c970fa71dc5819c04fbfa46489a3b
+              body: |
+                This reverts commit ca1a9238fd59fb3b46321f36a157021c705d1605.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.6.5
+          title: "'Revert \"reduce ssh retries\"'"
+          date: 2022-07-12T21:38:11.489Z
+        - commits:
+            - subject: remove parallel suites across multiple workers
+              hash: d3d1558f2f732fc0e559f1b0a46f3e057f37a82e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.6.4
+          title: "'remove parallel suites across multiple workers'"
+          date: 2022-07-07T10:40:01.869Z
+        - commits:
+            - subject: reduce ssh retries
+              hash: ca1a9238fd59fb3b46321f36a157021c705d1605
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.6.3
+          title: "'reduce ssh retries'"
+          date: 2022-07-06T11:25:17.154Z
+        - commits:
+            - subject: "Makefile: Fix unique container names when running on Jenkins"
+              hash: 59d1f3e41aef5f60b61de27eb05512cec69b7d36
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "Makefile: Ignore failures when cleaning up"
+              hash: 808dd2218755c34f86e849ce9378f1bc8cc540a2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.6.2
+          title: "'Makefile: Ignore failures when cleaning up'"
+          date: 2022-07-04T19:32:28.939Z
+        - commits:
+            - subject: "patch: Remove testing step of purging old volumes"
+              hash: ff51ed9846c46cef5733d35414b8952acc83187f
+              body: ""
+              footer:
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "patch: Increase timeout for worker connections"
+              hash: 87a741fd22a78c190bec59fa6628de921ac2809f
+              body: ""
+              footer:
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.6.1
+          title: "'patch: Increase timeout of http requests to worker'"
+          date: 2022-07-01T14:27:56.188Z
+        - commits:
+            - subject: "minor: Improve e2e serial test for Leviathan v2"
+              hash: 3cff5f39767dfa507c52a7827e7317fdc07d0be6
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.6.0
+          title: "'minor: Improve e2e serial test for Leviathan v2'"
+          date: 2022-06-30T23:41:09.545Z
+        - commits:
+            - subject: "patch: Limit e2e execution time to 2 hours"
+              hash: e8daaaef99db5476d3d78b370a05d4c08bd4a6cc
+              body: ""
+              footer:
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.5.7
+          title: "'patch: Limit e2e execution time to 2 hours'"
+          date: 2022-06-30T21:19:32.813Z
+        - commits:
+            - subject: "patch: Use ubuntu-latest GH runners for e2e"
+              hash: ee024769aa476e5d5dca66cc8fbc707f1eed37bc
+              body: ""
+              footer: {}
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.5.6
+          title: "'patch: Use ubuntu-latest GH runners for e2e'"
+          date: 2022-06-30T17:30:22.471Z
+  version: 2.99.28
+  title: "'Update tests/leviathan digest to d57299a'"
+  date: 2022-07-13T17:09:10.663Z
+- commits:
     - subject: "tests: os: fingerprint: fix errant promise"
       hash: ff22bce2e729c4fd74963ab7a96377656cad7559
       body: |
