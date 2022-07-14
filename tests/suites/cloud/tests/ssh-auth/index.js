@@ -81,14 +81,21 @@ module.exports = {
 						const expected = 'null';
 						test.equal(actual, expected, 'No custom keys are present in config.json');
 				}).then(async () => {
-					await test.throws(function () {
-						this.worker.executeCommandInHostOS(
-							'echo -n pass',
-							`${this.balena.uuid.slice(0, 7)}.local`)
-						},
-						{},
-						"Local SSH authentication without custom keys is not allowed in production mode"
-					)
+					// disable retry, as we want to evaluate the failure
+					const retryOptions = { max_tries: 0 };
+					await this.worker.executeCommandInHostOS(
+						'true',
+						`${this.balena.uuid.slice(0, 7)}.local`,
+						retryOptions,
+					).then(() => {
+						throw new Error("SSH authentication passed when it should have failed");
+					}).catch((err) => {
+						test.match(
+							err.message,
+							/All configured authentication methods failed/,
+							"Local SSH authentication without custom keys is not allowed in production mode"
+						);
+					});
 				}).then( async () => {
 					await exec(`ssh-add ${sshPath}`);
 					// send new custom key to worker
