@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update backport for current being 2.98.x
+      hash: b9e0614e7fca33fefdfd05267881e2a4405ef127
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.99.30
+  title: "'Update backport for current being 2.98.x'"
+  date: 2022-07-14T07:57:05.557Z
+- commits:
     - subject: Update balena-io/balena-supervisor to v14.0.10
       hash: 8333afa3429b681419d0d834e39c80c6180f31cc
       body: Update balena-io/balena-supervisor
