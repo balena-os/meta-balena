@@ -14,17 +14,20 @@ module.exports = {
 			run: async function(test) {
 				await this.hup.initDUT(this, test, this.link);
 
-				const versionBeforeHup = await this.worker.getOSVersion(this.link);
+				const origVersion = await this.worker.getOSVersion(this.link);
 
-				test.comment(`OS version before HUP: ${versionBeforeHup}`);
+				const activePartition = await this.worker.executeCommandInHostOS(
+					`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+					this.link,
+				);
 
 				await this.hup.doHUP(
-						this,
-						test,
-						'local',
-						this.hupOs.image.path,
-						this.link,
-					);
+					this,
+					test,
+					'local',
+					this.hupOs.image.path,
+					this.link,
+				);
 
 				test.is(
 					await this.worker.executeCommandInHostOS(
@@ -46,6 +49,18 @@ module.exports = {
 
 				await this.worker.rebootDut(this.link);
 
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+							this.link,
+						).then(out => {
+							return out === activePartition;
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should have rolled back to the original root partition'
+				);
+
 				// 0 means file exists, 1 means file does not exist
 				await test.resolves(
 					this.utils.waitUntil(async () => {
@@ -57,16 +72,6 @@ module.exports = {
 						})
 					}, false, 5 * 60, 1000),	// 5 min
 					'Should not have rollback-health-breadcrumb in the state partition'
-				);
-
-				// 0 means file exists, 1 means file does not exist
-				test.is(
-					await this.worker.executeCommandInHostOS(
-						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
-						this.link,
-					),
-					'1',
-					'Should not have rollback-altboot-breadcrumb in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -101,8 +106,8 @@ module.exports = {
 
 				test.is(
 					await this.worker.getOSVersion(this.link),
-					versionBeforeHup,
-					`The OS version should have reverted to ${versionBeforeHup}`,
+					origVersion,
+					`Should have rolled back to the original OS version`,
 				);
 			},
 		},
@@ -111,17 +116,20 @@ module.exports = {
 			run: async function(test) {
 				await this.hup.initDUT(this, test, this.link);
 
-				const versionBeforeHup = await this.worker.getOSVersion(this.link);
+				const origVersion = await this.worker.getOSVersion(this.link);
 
-				test.comment(`OS version before HUP: ${versionBeforeHup}`);
+				const activePartition = await this.worker.executeCommandInHostOS(
+					`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+					this.link,
+				);
 
 				await this.hup.doHUP(
-						this,
-						test,
-						'local',
-						this.hupOs.image.path,
-						this.link,
-					);
+					this,
+					test,
+					'local',
+					this.hupOs.image.path,
+					this.link,
+				);
 
 				test.is(
 					await this.worker.executeCommandInHostOS(
@@ -152,6 +160,18 @@ module.exports = {
 
 				await this.worker.rebootDut(this.link);
 
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+							this.link,
+						).then(out => {
+							return out === activePartition;
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should have rolled back to the original root partition'
+				);
+
 				// 0 means file exists, 1 means file does not exist
 				await test.resolves(
 					this.utils.waitUntil(async () => {
@@ -207,8 +227,8 @@ module.exports = {
 
 				test.is(
 					await this.worker.getOSVersion(this.link),
-					versionBeforeHup,
-					`The OS version should have reverted to ${versionBeforeHup}`,
+					origVersion,
+					`Should have rolled back to the original OS version`,
 				);
 			},
 		},

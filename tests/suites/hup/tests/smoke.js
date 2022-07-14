@@ -14,9 +14,10 @@ module.exports = {
 			run: async function (test) {
 				await this.hup.initDUT(this, test, this.link);
 
-				const versionBeforeHup = await this.worker.getOSVersion(this.link);
-
-				test.comment(`OS version before HUP: ${versionBeforeHup}`);
+				const activePartition = await this.worker.executeCommandInHostOS(
+					`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+					this.link,
+				);
 
 				// Check for under-voltage before HUP, in the old OS
 				await this.hup.checkUnderVoltage(this, test);
@@ -101,11 +102,14 @@ module.exports = {
 					'1',
 					'Should not have rollback-health-failed in the state partition',
 				);
-
-				const versionAfterHup = await this.worker.getOSVersion(this.link);
-
-				test.comment(
-					`Successful HUP from ${versionBeforeHup} to ${versionAfterHup}`,
+		
+				test.not(
+					await this.worker.executeCommandInHostOS(
+						`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+						this.link,
+					),
+					activePartition,
+					`Should not have rolled back to the original root partition`,
 				);
 
 				test.is(
@@ -124,9 +128,11 @@ module.exports = {
 		{
 			title: 'HUP from this release',
 			run: async function (test) {
-				const versionBeforeHup = await this.worker.getOSVersion(this.link);
 
-				test.comment(`OS version before HUP: ${versionBeforeHup}`);
+				const activePartition = await this.worker.executeCommandInHostOS(
+					`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+					this.link,
+				);
 
 				test.is(
 					await this.worker.executeCommandInHostOS(
@@ -208,11 +214,14 @@ module.exports = {
 					'1',
 					'Should not have rollback-health-failed in the state partition',
 				);
-
-				const versionAfterHup = await this.worker.getOSVersion(this.link);
-
-				test.comment(
-					`Successful HUP from ${versionBeforeHup} to ${versionAfterHup}`,
+		
+				test.not(
+					await this.worker.executeCommandInHostOS(
+						`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+						this.link,
+					),
+					activePartition,
+					`Should not have rolled back to the original root partition`,
 				);
 
 				test.is(
