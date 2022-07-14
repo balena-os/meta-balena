@@ -1,4 +1,185 @@
 - commits:
+    - subject: "docs: Add configuration overview"
+      hash: c5ffb602ede43b129770024d4e0fb1919741c0dd
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Create empty configuration units
+      hash: 7fa2152878de1f40df40dc6db74fc77e02480967
+      body: |
+        By creating empty configuration units when no configuratin is applied to
+        a service instead we avoid regenerating them at boot if stored in
+        persistent memory helping with boot times in less powerful devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Make configuration units storage path a distro setting
+      hash: a5a9b3cf31b92e31f91eb6d4c99c9a2cc42b1257
+      body: |
+        This allows for specific devices to override the defaults, which is to
+        store configuration units on volatile memory re-generating them every
+        boot and avoiding storage media writes.
+
+        Changing this to permanent storage trades boot times with media life
+        expectancy.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-configurable: Generate initial unit configuration file"
+      hash: f59f2f1716f0c59ac4e21cb35ebf1b34ad8a945e
+      body: |
+        Before starting services generate the initial unit configuration file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-units-conf: Add script to generate configuration units"
+      hash: 0de0d36727f13d8229e6f4936cc8ff14fdb4e204
+      body: |
+        Separate the generation of configuration units before a service has been
+        started, from the processing of configuration changes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-units-conf: Rename configuration directory"
+      hash: ef87329afc96e168acca33b79ed1db04fffc85b2
+      body: |
+        Rename CONF_TMPDIR to CONF_DIR not to imply volatile storage.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-units-conf: Process static configuration unit files at build
+        time"
+      hash: a0bbe0038b2bf99f0845095c42a9dca517293049
+      body: |
+        Currently `os-config-json` is also parsing `units-conf.json` at runtime.
+        This is expensive to do for smaller devices, so this commit performs the
+        processing at build time.
+
+        For this, it also splits the configuration units processing in
+        balena-config-vars into its own recipe to allow for task ordering.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-config: Extract functions from os-config-json to helper file"
+      hash: 368d2c981d6229c5896e54afb11fc9488893dc3d
+      body: |
+        This allows to re-use the functions from other places.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: Rename os-helpers-devmode to os-helpers-config"
+      hash: 2afcac4cd3b35c0299b34f43cdaec96c700d3928
+      body: |
+        This makes it more general and allows it to be expanded.
+
+        Also, allow its native use so it can be included in recipe tests.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: Split static defaults into a different file"
+      hash: bfe134f8dc24bb3bab5cef8e1b82a6844e1e5de3
+      body: |
+        This allows to source the static configuration without having to parse
+        config.json which is expensive for smaller devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-config-json: Log configuration changes"
+      hash: 6b876340ccccdc326b772292f5fcb7ba8304f9e5
+      body: |
+        Identify configuration changes in the log.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-config-json: Recreate environment cache file"
+      hash: bddb396bee22111b908f67b332169ce11cda5fcc
+      body: |
+        When config.json changes the environment cache file needs to be
+        recreated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: Cache environment in memory file"
+      hash: fe1581bf347fd354e806eb617ee6c446d22b52cb
+      body: |
+        Executing balena-config-vars is quite taxing for smaller devices. For
+        example a RaspberryPi Zero.
+
+        This commit introduces a cached memory file with the configuration
+        environment that is recreated when `config.json` changes and will be
+        used if present.
+
+        time source /usr/sbin/balena-config-vars --no-cache
+
+        real    0m2.928s
+        user    0m1.050s
+        sys     0m0.030s
+
+        time source /usr/sbin/balena-config-vars
+
+        real    0m0.011s
+        user    0m0.008s
+        sys     0m0.000s
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.100.0
+  title: "'Optimize configuration watchers'"
+  date: 2022-07-14T12:22:34.189Z
+- commits:
     - subject: Update backport for current being 2.98.x
       hash: b9e0614e7fca33fefdfd05267881e2a4405ef127
       body: ""

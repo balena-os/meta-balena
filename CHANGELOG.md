@@ -1,6 +1,23 @@
 Change log
 -----------
 
+# v2.100.0
+## (2022-07-14)
+
+* docs: Add configuration overview [Alex Gonzalez]
+* Create empty configuration units [Alex Gonzalez]
+* Make configuration units storage path a distro setting [Alex Gonzalez]
+* balena-configurable: Generate initial unit configuration file [Alex Gonzalez]
+* balena-units-conf: Add script to generate configuration units [Alex Gonzalez]
+* balena-units-conf: Rename configuration directory [Alex Gonzalez]
+* balena-units-conf: Process static configuration unit files at build time [Alex Gonzalez]
+* os-helpers-config: Extract functions from os-config-json to helper file [Alex Gonzalez]
+* os-helpers: Rename os-helpers-devmode to os-helpers-config [Alex Gonzalez]
+* balena-config-vars: Split static defaults into a different file [Alex Gonzalez]
+* os-config-json: Log configuration changes [Alex Gonzalez]
+* os-config-json: Recreate environment cache file [Alex Gonzalez]
+* balena-config-vars: Cache environment in memory file [Alex Gonzalez]
+
 # v2.99.30
 ## (2022-07-14)
 
