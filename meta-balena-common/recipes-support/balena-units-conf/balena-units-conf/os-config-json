@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# Copyright 2022 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -e
+
+if [ -f "/usr/sbin/balena-config-vars" ]; then
+	source /usr/sbin/balena-config-vars --no-cache
+fi
+
+if [ -f "/usr/libexec/os-helpers-logging" ]; then
+	. /usr/libexec/os-helpers-logging
+else
+	if [ -f "${STAGING_DIR}/usr/libexec/os-helpers-logging" ]; then
+		. "${STAGING_DIR}/usr/libexec/os-helpers-logging"
+	fi
+fi
+
+if [ -f "/usr/libexec/os-helpers-config" ]; then
+	. /usr/libexec/os-helpers-config
+else
+	if [ -f "${STAGING_DIR}/usr/libexec/os-helpers-config" ]; then
+		. "${STAGING_DIR}/usr/libexec/os-helpers-config"
+	fi
+fi
+
+if [ ! -f "${CONFIG_PATH}" ]; then
+	error "${CONFIG_PATH} not found"
+	exit 1
+fi
+
+# Exit if syntactically incorrect
+${JQ} -e '.' "${CONFIG_PATH}" > /dev/null
+
+mkdir -p "${CONF_DIR}"
+
+_tmpdir=$(mktemp -d)
+UNITS_DIR="${UNITS_DIR:-/etc/systemd}"
+UNITS_FILE="${UNITS_DIR}/units.conf"
+units=$(cat "${UNITS_FILE}")
+for unit in ${units}; do
+	if [ -f "${UNITS_DIR}/${unit}-conf.conf" ]; then
+		for conf in $(cat "${UNITS_DIR}/${unit}-conf.conf"); do
+			config_gen_unit "${unit}" "${conf}" "${_tmpdir}"
+		done
+		if [ -f "${_tmpdir}/${unit}.json" ]; then
+			if [ -f "${CONF_DIR}/${unit}.json" ]; then
+				_newcksum=$(md5sum "${_tmpdir}/${unit}.json" | cut -d " " -f1)
+				_oldcksum=$(md5sum "${CONF_DIR}/${unit}.json" | cut -d " " -f1)
+				if [ "${_newcksum}" != "${_oldcksum}" ]; then
+					info "${unit} configuration changed:"
+					diff "${CONF_DIR}/${unit}.json" "${_tmpdir}/${unit}.json" | tail -n +4 >&2
+					mv "${_tmpdir}/${unit}.json" "${CONF_DIR}/${unit}.json"
+				fi
+			else
+				config_new_unit "${unit}" "${_tmpdir}"
+			fi
+		else
+			if [ -f "${CONF_DIR}/${unit}.json" ]; then
+				contents=$(cat "${CONF_DIR}/${unit}.json")
+				if [ "${contents}" != "{}" ]; then
+					info "${unit} configuration removed:"
+					cat "${CONF_DIR}/${unit}.json" >&2
+					echo '{}' > "${CONF_DIR}/${unit}.json"
+				fi
+			fi
+		fi
+	fi
+done
+rm -r "${_tmpdir}"

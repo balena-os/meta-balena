@@ -1,0 +1,19 @@
+#!/bin/bash
+
+unit="${1}"
+[ -z "${unit}" ] && echo "No configuration unit name provided" >&2 && exit 0
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-config
+
+[ -f "${CONF_DIR}/${unit}.json" ] && exit 0
+
+if [ -f "/etc/systemd/${unit}-conf.conf" ]; then
+	info "Generating configuration unit for ${unit} in ${CONF_DIR}"
+	_tmpdir=$(mktemp -d)
+	for conf in $(cat "/etc/systemd/${unit}-conf.conf"); do
+		config_gen_unit "${unit}" "${conf}" "${_tmpdir}"
+	done
+	config_new_unit "${unit}" "${_tmpdir}"
+	rm -rf "${_tmpdir}"
+fi
