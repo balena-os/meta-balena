@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-io/balena-supervisor to v14.0.10
+      hash: 8333afa3429b681419d0d834e39c80c6180f31cc
+      body: Update balena-io/balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.99.29
+  title: "'Update balena-io/balena-supervisor to v14.0.10'"
+  date: 2022-07-14T00:31:19.818Z
+- commits:
     - subject: Update tests/leviathan digest to d57299a
       hash: 72ff6adac8ab2b0bf0e4dd359ae5e5f3da7cb7d6
       body: Update tests/leviathan
