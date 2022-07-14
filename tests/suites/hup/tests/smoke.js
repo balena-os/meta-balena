@@ -44,21 +44,26 @@ module.exports = {
 				await this.worker.rebootDut(this.link);
 
 				// 0 means file exists, 1 means file does not exist
-				test.comment(
-					`Waiting for rollback-health-breadcrumb to be cleaned up...`,
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							this.link,
+						).then(out => {
+							return out === '1';
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should not have rollback-health-breadcrumb in the state partition'
 				);
-				await this.utils.waitUntil(
-					async () => {
-						return (
-							(await this.worker.executeCommandInHostOS(
-								`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
-								this.link,
-							)) === `1`
-						);
-					},
-					false,
-					2 * 60,
-					1000,
+
+				// 0 means file exists, 1 means file does not exist
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
+						this.link,
+					),
+					'1',
+					'Should not have rollback-altboot-breadcrumb in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -68,7 +73,7 @@ module.exports = {
 						this.link,
 					),
 					'1',
-					'There should NOT be a rollback-altboot-triggered file in the state partition',
+					'Should not have rollback-altboot-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -78,7 +83,7 @@ module.exports = {
 						this.link,
 					),
 					'1',
-					'There should NOT be a rollback-health-triggered file in the state partition',
+					'Should not have rollback-health-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -88,7 +93,7 @@ module.exports = {
 						this.link,
 					),
 					'1',
-					'There should NOT be a rollback-health-failed file in the state partition',
+					'Should not have rollback-health-failed in the state partition',
 				);
 
 				const versionAfterHup = await this.worker.getOSVersion(this.link);
@@ -140,21 +145,26 @@ module.exports = {
 				await this.worker.rebootDut(this.link);
 
 				// 0 means file exists, 1 means file does not exist
-				test.comment(
-					`Waiting for rollback-health-breadcrumb to be cleaned up...`,
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							this.link,
+						).then(out => {
+							return out === '1';
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should not have rollback-health-breadcrumb in the state partition'
 				);
-				await this.utils.waitUntil(
-					async () => {
-						return (
-							(await this.worker.executeCommandInHostOS(
-								`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
-								this.link,
-							)) === `1`
-						);
-					},
-					false,
-					2 * 60,
-					1000,
+
+				// 0 means file exists, 1 means file does not exist
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
+						this.link,
+					),
+					'1',
+					'Should not have rollback-altboot-breadcrumb in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -164,7 +174,7 @@ module.exports = {
 						this.link,
 					),
 					'1',
-					'There should NOT be a rollback-altboot-triggered file in the state partition',
+					'Should not have rollback-altboot-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -174,7 +184,7 @@ module.exports = {
 						this.link,
 					),
 					'1',
-					'There should NOT be a rollback-health-triggered file in the state partition',
+					'Should not have rollback-health-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -184,7 +194,7 @@ module.exports = {
 						this.link,
 					),
 					'1',
-					'There should NOT be a rollback-health-failed file in the state partition',
+					'Should not have rollback-health-failed in the state partition',
 				);
 
 				const versionAfterHup = await this.worker.getOSVersion(this.link);

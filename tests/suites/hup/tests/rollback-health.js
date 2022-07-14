@@ -42,37 +42,37 @@ module.exports = {
 
 				await this.worker.rebootDut(this.link);
 
-				// reboots should be finished when breadcrumbs are gone and service is inactive
-				// check every 30s for 5 min since we are expecting multiple reboots
-				test.comment(`Waiting for rollback-health.service to be inactive...`);
-				await this.utils.waitUntil(
-					async () => {
-						return (
-							(await this.worker.executeCommandInHostOS(
-									`systemctl is-active rollback-health.service || test ! -f /mnt/state/rollback-health-breadcrumb`,
-									this.link,
-								)) === `inactive`
-						);
-					},
-					false,
-					5 * 60,
-					1000,
-				);
-
-				test.is(
-					await this.worker.getOSVersion(this.link),
-					versionBeforeHup,
-					`The OS version should have reverted to ${versionBeforeHup}`,
+				// 0 means file exists, 1 means file does not exist
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							this.link,
+						).then(out => {
+							return out === '1';
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should not have rollback-health-breadcrumb in the state partition'
 				);
 
 				// 0 means file exists, 1 means file does not exist
 				test.is(
 					await this.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-triggered ; echo $?`,
-							this.link,
-						),
+						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
+						this.link,
+					),
+					'1',
+					'Should not have rollback-altboot-breadcrumb in the state partition',
+				);
+
+				// 0 means file exists, 1 means file does not exist
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`test -f /mnt/state/rollback-health-triggered ; echo $?`,
+						this.link,
+					),
 					'0',
-					'There should be a rollback-health-triggered file in the state partition',
+					'Should have rollback-health-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -82,7 +82,7 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-altboot-triggered file in the state partition',
+					'Should not have rollback-altboot-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -92,7 +92,13 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-health-failed file in the state partition',
+					'Should not have rollback-health-failed in the state partition',
+				);
+
+				test.is(
+					await this.worker.getOSVersion(this.link),
+					versionBeforeHup,
+					`The OS version should have reverted to ${versionBeforeHup}`,
 				);
 			},
 		},
@@ -137,37 +143,37 @@ module.exports = {
 
 				await this.worker.rebootDut(this.link);
 
-				// reboots should be finished when breadcrumbs are gone and service is inactive
-				// check every 30s for 5 min since we are expecting multiple reboots
-				test.comment(`Waiting for rollback-health.service to be inactive...`);
-				await this.utils.waitUntil(
-					async () => {
-						return (
-							(await this.worker.executeCommandInHostOS(
-									`systemctl is-active rollback-health.service || test ! -f /mnt/state/rollback-health-breadcrumb`,
-									this.link,
-								)) === `inactive`
-						);
-					},
-					false,
-					5 * 60,
-					1000,
-				);
-
-				test.is(
-					await this.worker.getOSVersion(this.link),
-					versionBeforeHup,
-					`The OS version should have reverted to ${versionBeforeHup}`,
+				// 0 means file exists, 1 means file does not exist
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							this.link,
+						).then(out => {
+							return out === '1';
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should not have rollback-health-breadcrumb in the state partition'
 				);
 
 				// 0 means file exists, 1 means file does not exist
 				test.is(
 					await this.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-triggered ; echo $?`,
-							this.link,
-						),
+						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
+						this.link,
+					),
+					'1',
+					'Should not have rollback-altboot-breadcrumb in the state partition',
+				);
+
+				// 0 means file exists, 1 means file does not exist
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`test -f /mnt/state/rollback-health-triggered ; echo $?`,
+						this.link,
+					),
 					'0',
-					'There should be a rollback-health-triggered file in the state partition',
+					'Should have rollback-health-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -177,7 +183,7 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-altboot-triggered file in the state partition',
+					'Should not have rollback-altboot-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -187,7 +193,13 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-health-failed file in the state partition',
+					'Should not have rollback-health-failed in the state partition',
+				);
+
+				test.is(
+					await this.worker.getOSVersion(this.link),
+					versionBeforeHup,
+					`The OS version should have reverted to ${versionBeforeHup}`,
 				);
 			},
 		},
