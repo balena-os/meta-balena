@@ -329,5 +329,72 @@ module.exports = {
 				});
 			},
 		},
+		{
+			title: 'os.engineConfig.defaultRuntime test',
+			run: async function(test) {
+				const context = this.context.get();
+				test.comment('Configuring default container runtime');
+				return context.worker.executeCommandInHostOS(
+					[
+						'tmp=$(mktemp)',
+						'&&', 'jq', `'.os.engineConfig.defaultRuntime="crun"'`, '/mnt/boot/config.json',
+						'>', '${tmp}', '&&', 'mv', '${tmp}', '/mnt/boot/config.json',
+					].join(' '),
+					context.link,
+				).then(() => {
+					test.comment('Restarting os-engineconfig.service');
+					return context.worker.executeCommandInHostOS(
+						'systemctl restart os-engineconfig.service balena.service',
+						context.link,
+					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						'cat /etc/docker/daemon.json',
+						context.link,
+					).then((config) => {
+						return Promise.resolve();
+					});
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'balena', 'info',
+							'|', 'grep', '"Default Runtime"',
+							'|', 'cut', '-d:', '-f2',
+						].join(' '),
+						context.link,
+					);
+				}).then((defaultRuntime) => {
+					test.is(
+						defaultRuntime,
+						'crun',
+						'Default runtime should be crun',
+					);
+				}).then(() => {
+					test.comment('Running container using crun');
+					return context.worker.executeCommandInHostOS(
+						[
+							'balena', 'run', 'hello-world', '>', '/dev/null',
+							'&&', 'echo', '$?',
+						].join(' '),
+						context.link,
+					);
+				}).then((exitCode) => {
+					test.is(
+						exitCode,
+						'0',
+						'crun runtime should be functional'
+					);
+				}).then(() => {
+					return context.worker.executeCommandInHostOS(
+						[
+							'tmp=$(mktemp)',
+							'&&', 'jq', `'del(.os.engineConfig)'`, '/mnt/boot/config.json',
+							'>', '${tmp}', '&&', 'mv', '${tmp}', '/mnt/boot/config.json',
+						].join(' '),
+						context.link,
+					);
+				});
+			},
+		},
 	],
 };

@@ -1,0 +1,14 @@
+[Unit]
+Description=balenaEngine daemon configuration from config.json
+Requires=resin-boot.service bind-etc-docker.service
+After=resin-boot.service bind-etc-docker.service
+Before=balena.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@SBINDIR@/os-engineconfig
+SyslogIdentifier=os-engineconfig
+
+[Install]
+WantedBy=multi-user.target
