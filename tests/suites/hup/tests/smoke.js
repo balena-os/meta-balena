@@ -21,9 +21,13 @@ module.exports = {
 				// Check for under-voltage before HUP, in the old OS
 				await this.hup.checkUnderVoltage(this, test);
 
-				await this.worker.executeCommandInHostOS(
-					`balena volume create hello-world`,
-					this.link,
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`balena volume create hello-world`,
+						this.link,
+					),
+					'hello-world',
+					'Should create hello-world volume'
 				);
 
 				await this.hup.doHUP(
@@ -34,11 +38,13 @@ module.exports = {
 					this.link,
 				);
 
-				// reduce number of failures needed to trigger rollback
-				test.comment(`Reducing timeout for rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-					`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
-					this.link,
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
+						this.link,
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s'
 				);
 
 				await this.worker.rebootDut(this.link);
@@ -122,9 +128,13 @@ module.exports = {
 
 				test.comment(`OS version before HUP: ${versionBeforeHup}`);
 
-				await this.worker.executeCommandInHostOS(
-					`balena volume create hello-world`,
-					this.link,
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`balena volume create hello-world`,
+						this.link,
+					),
+					'hello-world',
+					'Should create hello-world volume'
 				);
 
 				await this.hup.doHUP(
@@ -135,11 +145,13 @@ module.exports = {
 					this.link,
 				);
 
-				// reduce number of failures needed to trigger rollback
-				test.comment(`Reducing timeout for rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-					`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
-					this.link,
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
+						this.link,
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s'
 				);
 
 				await this.worker.rebootDut(this.link);

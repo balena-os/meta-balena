@@ -23,12 +23,14 @@ module.exports = {
 				this.link,
 			);
 
-		// break init
-		test.comment(`Breaking init to trigger rollback-altboot...`);
-		await this.worker.executeCommandInHostOS(
-				`rm /mnt/sysroot/inactive/current/boot/init`,
+		test.is(
+			await this.worker.executeCommandInHostOS(
+				`rm /mnt/sysroot/inactive/current/boot/init ; echo $?`,
 				this.link,
-			);
+			),
+			'0',
+			'Should delete mobynit to trigger rollback-altboot'
+		);
 
 		await this.worker.rebootDut(this.link);
 

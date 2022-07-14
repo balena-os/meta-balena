@@ -26,19 +26,23 @@ module.exports = {
 						this.link,
 					);
 
-				// reduce number of failures needed to trigger rollback
-				test.comment(`Reducing timeout for rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 						this.link,
-					);
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s'
+				);
 
-				// break balena-engine
-				test.comment(`Breaking balena-engine to trigger rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$")`,
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$") ; echo $?`,
 						this.link,
-					);
+					),
+					'0',
+					'Should replace balena-engine with a null link to trigger rollback-health'
+				);
 
 				await this.worker.rebootDut(this.link);
 
@@ -119,27 +123,32 @@ module.exports = {
 						this.link,
 					);
 
-				// reduce number of failures needed to trigger rollback
-				test.comment(`Reducing timeout for rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 						this.link,
-					);
-
-				// break openvpn
-				test.comment(`Breaking openvpn to trigger rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$")`,
-						this.link,
-					);
-
-				test.comment(
-					`Pretend VPN was previously active for unmanaged OS suite...`,
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s'
 				);
-				await this.worker.executeCommandInHostOS(
-						`sed 's/BALENAOS_ROLLBACK_VPNONLINE=0/BALENAOS_ROLLBACK_VPNONLINE=1/' -i /mnt/state/rollback-health-variables && sync -f /mnt/state`,
+
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$") ; echo $?`,
 						this.link,
-					);
+					),
+					'0',
+					'Should replace openvpn with a null link to trigger rollback-health'
+				);
+
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`sed 's/BALENAOS_ROLLBACK_VPNONLINE=0/BALENAOS_ROLLBACK_VPNONLINE=1/' -i /mnt/state/rollback-health-variables && sync -f /mnt/state ; echo $?`,
+						this.link,
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should override vpn online status so failed openvpn is not ignored'
+				);
 
 				await this.worker.rebootDut(this.link);
 
