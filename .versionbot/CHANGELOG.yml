@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to c2755a1
+      hash: d585bb1d5c02402a8a33718174b75439f8f4edc1
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "core: worker: add retryOptions to executeCommand methods"
+              hash: 2f2d7a8b99fcaffc22d0032f9102e194160f7e1f
+              body: >
+                The executeCommand family of methods default to retrying on
+                failure. In
+
+                some cases, such as in the ssh-auth test in the cloud test suite, we
+
+                expect failures to happen, and want them to be raised immediately. Other
+
+                situations might demand adjusting the number of retries and interval to
+
+                fit specific tests. Add a retryOptions object to these methods to allow
+
+                for this behavior to be configured.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.6.6
+          title: "'core: worker: add retryOptions to executeCommand methods'"
+          date: 2022-07-15T00:04:31.325Z
+  version: 2.100.2
+  title: "'Update tests/leviathan digest to c2755a1'"
+  date: 2022-07-15T17:58:23.253Z
+- commits:
     - subject: "tests: cloud: fix production mode ssh test"
       hash: 916d400456ef2cb58f13c7b8b6e542c23b57e8c2
       body: |

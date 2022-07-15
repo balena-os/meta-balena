@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.100.2
+## (2022-07-15)
+
+
+<details>
+<summary> Update tests/leviathan digest to c2755a1 [renovate[bot]] </summary>
+
+> ## leviathan-2.6.6
+> ### (2022-07-15)
+> 
+> * core: worker: add retryOptions to executeCommand methods [Joseph Kogut]
+> 
+</details>
+
 # v2.100.1
 ## (2022-07-15)
 
