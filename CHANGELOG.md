@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.100.1
+## (2022-07-15)
+
+* tests: cloud: fix production mode ssh test [Joseph Kogut]
+
 # v2.100.0
 ## (2022-07-14)
 

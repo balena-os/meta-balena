@@ -1,4 +1,23 @@
 - commits:
+    - subject: "tests: cloud: fix production mode ssh test"
+      hash: 916d400456ef2cb58f13c7b8b6e542c23b57e8c2
+      body: |
+        This test was broken previously, and would fail with "All configured
+        authentication methods failed" after a long delay caused by excessive
+        retries.
+
+        Fixes: #2719
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.100.1
+  title: "'tests: cloud: fix production mode ssh test'"
+  date: 2022-07-15T00:06:09.193Z
+- commits:
     - subject: "docs: Add configuration overview"
       hash: c5ffb602ede43b129770024d4e0fb1919741c0dd
       body: ""
