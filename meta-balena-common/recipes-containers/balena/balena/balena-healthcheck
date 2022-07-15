@@ -2,14 +2,11 @@
 
 set -o errexit
 
-if ! balena image inspect balena-healthcheck-image > /dev/null 2>&1; then
-	balena image load -i /usr/lib/balena/balena-healthcheck-image.tar
+BALENAD_SOCKET="/run/balena.sock"
+CONTAINERD_SOCKET="/run/balena-engine/containerd/balena-engine-containerd.sock"
 
-	# The healthcheck image was previously called hello-world.
-	# Clean it up
-	balena rmi hello-world 2> /dev/null || true
-fi
+# Check if balena-engine-daemon is responding.
+curl --fail --unix-socket $BALENAD_SOCKET http:/v1.40/_ping > /dev/null 2>&1
 
-# Check that we can start a new container
-balena rm --force balena_healthcheck 2>/dev/null || true
-balena run --rm --log-driver none --network none --name balena_healthcheck balena-healthcheck-image > /dev/null
+# Check if balena-engine-containerd is responding.
+balena-engine-containerd-ctr --address $CONTAINERD_SOCKET version > /dev/null 2>&1

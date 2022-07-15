@@ -43,13 +43,4 @@ HOSTAPP_PLATFORM:x86 = "linux/i386"
 HOSTAPP_PLATFORM:x86-64 = "linux/amd64"
 HOSTAPP_PLATFORM:intel-quark = "linux/i386"
 
-HELLO_REPOSITORY:armv5 = "arm32v5/hello-world"
-HELLO_REPOSITORY:armv6 = "arm32v5/hello-world"
-HELLO_REPOSITORY:armv7a = "arm32v7/hello-world"
-HELLO_REPOSITORY:armv7ve = "arm32v7/hello-world"
-HELLO_REPOSITORY:aarch64 = "arm64v8/hello-world"
-HELLO_REPOSITORY:x86 = "i386/hello-world"
-HELLO_REPOSITORY:x86-64 = "amd64/hello-world"
-HELLO_REPOSITORY:intel-quark = "i386/hello-world"
-
 HOSTEXT_IMAGES ?= ""
