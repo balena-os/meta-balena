@@ -43,12 +43,21 @@ module.exports = {
 				}, false);
 				test.comment(`Verify engine socket is exposed`)
 
-				await test.doesNotThrow(
-						docker.info(function (err, info) {
-							if (err) {
-								throw new Error(`Docker info failed: ${err}`);
-							}
-						}),
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						await new Promise((resolve, reject) => {
+							docker.info(function (err, info) {
+								if (err){
+									reject(`Docker info failed: ${err}`);
+								} else {
+									console.log('got response, resolving!')
+									resolve(info)
+								}
+							})
+						})
+						
+						return true
+					}, false, 5, 500),
 					"Engine socket should be exposed in development images"
 				);
 			},
