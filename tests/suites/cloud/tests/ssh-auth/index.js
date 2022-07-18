@@ -14,8 +14,74 @@
 
 'use strict';
 
+const Bluebird = require('bluebird');
+const keygen = Bluebird.promisify(require('ssh-keygen'));
+const exec = Bluebird.promisify(require('child_process').exec);
+const { join, dirname } = require("path");
+const { homedir } = require("os");
 const fse = require("fs-extra");
-const sshPath = '/tmp/newKey/id';
+const sshPath = join(homedir(), "test_id");
+
+const setConfig = async (test, that, target, key, value) => {
+
+	test.test(`Update or delete ${key} in config.json`, t =>
+		t.resolves(
+			that.waitForServiceState(
+				'config-json.service',
+				'inactive',
+				target
+			),
+			'Should wait for config-json.service to be inactive'
+		).then(() => {
+			if (value == null) {
+				return t.resolves(
+					that.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `"del(.${key})"`, `/mnt/boot/config.json`,
+							`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
+						target
+					), `Should delete ${key} from config.json`
+				)
+			} else {
+				if (typeof(value) == 'string') {
+					value = `"${value}"`
+				} else {
+					value = JSON.stringify(value);
+				}
+
+				return t.resolves(
+					that.worker.executeCommandInHostOS(
+						[
+							`tmp=$(mktemp)`,
+							`&&`, `jq`, `'.${key}=${value}'`, `/mnt/boot/config.json`,
+							`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+						].join(' '),
+						target
+					), `Should set ${key} to ${value.substring(24) ? value.replace(value.substring(24), '...') : value} in config.json`
+				)
+			}
+		}).then(() => {
+			// avoid hitting 'start request repeated too quickly'
+			return t.resolves(
+				that.worker.executeCommandInHostOS(
+					'systemctl reset-failed config-json.service',
+					target
+				), `Should reset start counter of config-json.service`
+			);
+		}).then(() => {
+			return t.resolves(
+				that.waitForServiceState(
+					'config-json.service',
+					'inactive',
+					target
+				),
+				'Should wait for config-json.service to be inactive'
+			)
+		})
+	);
+}
 
 module.exports = {
 	title: 'SSH authentication test',
@@ -23,254 +89,139 @@ module.exports = {
 		{
 			title: 'SSH authentication in production mode',
 			run: async function(test) {
-				await fse.ensureDir('/tmp/newKey');
-				const Bluebird = require('bluebird');
-				const keygen = Bluebird.promisify(require('ssh-keygen'));
-				const exec = Bluebird.promisify(require('child_process').exec);
+				await fse.ensureDir(dirname(sshPath));
 				const customKey = await keygen({
 					location: sshPath,
-					})
-				return this.waitForServiceState(
-						'os-config-json.service',
-						'inactive',
-						this.balena.uuid
-				).then(() => {
-					test.comment(`Setting production mode in config.json...`);
-					return this.cloud.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`, `&&`,
-							`cat`,  `/mnt/boot/config.json`, `|`, `jq`, `'.developmentMode="false"'`, `>`, `$tmp`, `&&`,
-							`mv`, `"$tmp"`, `/mnt/boot/config.json`,
-						].join(' '),
-						this.balena.uuid);
+				});
+				return setConfig(test, this, this.balena.uuid, 'developmentMode', false)
+				.then(() => {
+					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				}).then(() => {
-					return this.waitForServiceState(
-						'balena.service',
-						'active',
-						this.balena.uuid,
+					return test.resolves(
+						this.waitForServiceState(
+							'os-sshkeys.service',
+							'active',
+							this.balena.uuid
+						),
+						'Should wait for os-sshkeys.service to be active'
 					)
-				}).then(() => {
-					return this.cloud.executeCommandInHostOS(
-						`jq -r '.developmentMode' /mnt/boot/config.json`,
-						this.balena.uuid
-					)
-				}).then((actual) => {
-					const expected = 'false';
-					test.equal(actual, expected, 'Device should be in production mode ');
-				}).then(() => {
-					return this.cloud.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`, `&&`,
-							`jq 'del(.os.sshKeys)'`, `/mnt/boot/config.json`, `>`,`$tmp`,`&&`,
-							`mv`, `$tmp`,`/mnt/boot/config.json`
-						].join(' '),
-						this.balena.uuid
-					)
-				}).then(() => {
-					return this.waitForServiceState(
-						'os-sshkeys.service',
-						'active',
-						this.balena.uuid,
-					)
-				}).then(() => {
-					return this.cloud.executeCommandInHostOS(
-						`jq -r '.os.sshKeys' /mnt/boot/config.json`,
-						this.balena.uuid
-					)
-				}).then((actual) => {
-						const expected = 'null';
-						test.equal(actual, expected, 'No custom keys are present in config.json');
 				}).then(async () => {
 					// disable retry, as we want to evaluate the failure
 					const retryOptions = { max_tries: 0 };
 					await this.worker.executeCommandInHostOS(
 						'true',
-						`${this.balena.uuid.slice(0, 7)}.local`,
+						this.link,
 						retryOptions,
 					).then(() => {
 						throw new Error("SSH authentication passed when it should have failed");
 					}).catch((err) => {
-						test.match(
+						return test.match(
 							err.message,
 							/All configured authentication methods failed/,
 							"Local SSH authentication without custom keys is not allowed in production mode"
 						);
 					});
-				}).then( async () => {
-					await exec(`ssh-add ${sshPath}`);
-					// send new custom key to worker
-					await this.worker.addSSHKey(sshPath);
-
-					return this.cloud.executeCommandInHostOS(
-						['tmp=$(mktemp)', `&&`,
-							`jq --arg keys '${customKey.pubKey.trim()}' '. + {os: {sshKeys: [$keys]}}' "/mnt/boot/config.json" > $tmp`, `&&`,
-							`mv "$tmp" "/mnt/boot/config.json"`
-						].join(' '),
-						this.balena.uuid).then(() => {
-						return this.waitForServiceState(
-							'os-sshkeys.service',
-							'active',
-							this.balena.uuid)
-						}).then(async () => {
-							let result;
-							await this.utils.waitUntil(
-									async () => {
-										result = await this.worker.executeCommandInHostOS('echo -n pass',
-											`${this.balena.uuid.slice(0, 7)}.local`);
-										return result
-									}, false, 60, 5 * 1000);
-							test.equals(
-								result,
-								"pass",
-								"Local SSH authentication with custom keys is allowed in production mode"
-							)
-						})
-				}).then(() => {
-					return this.worker.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`, `&&`,
-							`jq 'del(.os.sshKeys)'`, `/mnt/boot/config.json`, `>`,`$tmp`, `&&`,
-							`mv`, `$tmp`,`/mnt/boot/config.json`
-						].join(' '),
-					`${this.balena.uuid.slice(0, 7)}.local`
-					)
+				}).then(async () => {
+					return exec(`ssh-add ${sshPath}`)
+					.then(() => {
+						this.worker.addSSHKey(sshPath);
+					})
+					.then(() => {
+						return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
+					});
+				}).then(async () => {
+					let result;
+					await this.utils.waitUntil(
+						async () => {
+							result = await this.worker.executeCommandInHostOS('echo -n pass',
+								this.link);
+							return result
+						}, false, 60, 5 * 1000);
+					return test.equals(
+						result,
+						"pass",
+						"Local SSH authentication with custom keys is allowed in production mode"
+					);
+				}).then(async () => {
+					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				});
 			},
 		},
 		{
 			title: 'SSH authentication in development mode',
 			run: async function(test) {
-				await fse.ensureDir('/tmp/newKey');
-				const Bluebird = require('bluebird');
-				const keygen = Bluebird.promisify(require('ssh-keygen'));
-				const exec = Bluebird.promisify(require('child_process').exec);
+				await fse.ensureDir(dirname(sshPath));
 				const customKey = await keygen({
 					location: sshPath,
-					})
-				return this.waitForServiceState(
-					'os-config-json.service',
-					'inactive',
-					this.balena.uuid
-				).then(() => {
-					test.comment(`Setting development mode in config.json...`);
-					return this.cloud.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`, `&&`,
-							`cat`,  `/mnt/boot/config.json`, `|`, `jq`, `'.developmentMode="true"'`, `>`, `$tmp`, `&&`,
-							`mv`, `"$tmp"`, `/mnt/boot/config.json`,
-						].join(' '),
-						this.balena.uuid);
+				});
+				return setConfig(test, this, this.balena.uuid, 'developmentMode', true)
+				.then(() => {
+					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				}).then(() => {
-					return this.waitForServiceState(
-						'balena.service',
-						'active',
-						this.balena.uuid,
+					return test.resolves(
+						this.waitForServiceState(
+							'os-sshkeys.service',
+							'active',
+							this.balena.uuid
+						),
+						'Should wait for os-sshkeys.service to be active'
 					)
-				}).then(() => {
-					return this.cloud.executeCommandInHostOS(
-						`jq -r '.developmentMode' /mnt/boot/config.json`,
-						this.balena.uuid
-					)
-				}).then((actual) => {
-					const expected = 'true';
-					test.equal(actual, expected, 'Device should be in development mode ');
-				}).then(() => {
-					return this.cloud.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`, `&&`,
-							`jq 'del(.os.sshKeys)'`, `/mnt/boot/config.json`, `>`,`$tmp`,`&&`,
-							`mv`, `$tmp`,`/mnt/boot/config.json`
-						].join(' '),
-						this.balena.uuid
-					)
-				}).then(() => {
-					return this.waitForServiceState(
-						'os-sshkeys.service',
-						'active',
-						this.balena.uuid,
-					)
-				}).then(() => {
-					return this.cloud.executeCommandInHostOS(
-						`jq -r '.os.sshKeys' /mnt/boot/config.json`,
-						this.balena.uuid
-					)
-				}).then((actual) => {
-					const expected = 'null';
-					test.equal(actual, expected, 'No custom keys are present in config.json');
 				}).then( async () => {
 					let result;
 					await this.utils.waitUntil(
 						async () => {
 							result = await this.worker.executeCommandInHostOS('echo -n pass',
-								`${this.balena.uuid.slice(0, 7)}.local`);
+								this.link);
 							return result
 						}, false, 60, 5 * 1000);
-					test.equals(
+					return test.equals(
 						result,
 						"pass",
 						"Local SSH authentication without custom keys is allowed in development mode"
 					)
 				}).then(() => {
-					return this.worker.executeCommandInHostOS(
-						['tmp=$(mktemp)', `&&`,
-							`jq --arg keys '${customKey.pubKey.trim()}' '. + {os: {sshKeys: [$keys]}}' "/mnt/boot/config.json" > $tmp`, `&&`,
-							`mv "$tmp" /mnt/boot/config.json`
-						].join(' '),
-						`${this.balena.uuid.slice(0, 7)}.local`)
+					return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
 				}).then(() => {
-					return this.waitForServiceState(
-						'os-sshkeys.service',
-						'active',
-						this.balena.uuid,
+					return test.resolves(
+						this.waitForServiceState(
+							'os-sshkeys.service',
+							'active',
+							this.balena.uuid
+						),
+						'Should wait for os-sshkeys.service to be active'
 					)
 				}).then(async () => {
-					await test.throws( function () {
+					return test.throws( function () {
 						this.worker.executeCommandInHostOS(
 							'echo -n pass',
-							`${this.balena.uuid.slice(0, 7)}.local`)
+							this.link)
 						},
 						{},
 						"Local SSH authentication with phony custom keys is not allowed in development mode"
 					)
 				}).then(async () => {
-						await exec(`ssh-add ${sshPath}`);
-						await this.worker.addSSHKey(sshPath);
-
-						return this.cloud.executeCommandInHostOS(
-							[
-								`tmp=$(mktemp)`, `&&`,
-								`jq 'del(.os.sshKeys)'`, `/mnt/boot/config.json`, `>`,`$tmp`,`&&`,
-								`jq --arg keys '${customKey.pubKey.trim()}' '. + {os: {sshKeys: [$keys]}}' $tmp > /mnt/boot/config.json`
-							].join(' '),
-							this.balena.uuid)
-				}).then(() => {
-					return this.waitForServiceState(
-						'os-sshkeys.service',
-						'active',
-						this.balena.uuid,
-					)
+						return exec(`ssh-add ${sshPath}`)
+						.then(() => {
+							this.worker.addSSHKey(sshPath);
+						})
+						.then(() => {
+							return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
+						});
 				}).then(async () => {
 					let result;
 					await this.utils.waitUntil(
 						async () => {
 							result = await this.worker.executeCommandInHostOS('echo -n pass',
-								`${this.balena.uuid.slice(0, 7)}.local`);
+								this.link);
 							return result
 						}, false, 60, 5 * 1000);
-					test.equals(
+					return test.equals(
 						result,
 						"pass",
 						"Local SSH authentication with custom keys is allowed in development mode"
 					)
-				}).then(() => {
-					return this.worker.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`, `&&`,
-							`jq 'del(.os.sshKeys)'`, `/mnt/boot/config.json`, `>`,`$tmp`, `&&`,
-							`mv`, `$tmp`,`/mnt/boot/config.json`
-						].join(' '),
-						`${this.balena.uuid.slice(0, 7)}.local`
-					)
+				}).then(async () => {
+					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				});
 			},
 		},
