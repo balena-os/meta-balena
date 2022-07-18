@@ -46,6 +46,32 @@ done
 # Source static defaults
 . /usr/sbin/balena-config-defaults
 
+fatcp() {
+    /usr/bin/fatrw copy "${1}" "${2}"
+}
+
+fatmv() {
+    fatcp "${1}" "${2}" && rm -f "${1}" && sync
+}
+
+fatcat() {
+    /usr/bin/fatrw read "${1}"
+}
+
+fatwr() {
+    /usr/bin/fatrw write "${1}"
+}
+
+if command -v "/usr/bin/fatrw" > /dev/null; then
+    CP=fatcp
+    MV=fatmv
+    CAT=fatcat
+    WR=fatwr
+else
+    echo "[ERROR] $0: Missing fatrw command"
+    exit 1
+fi
+
 if [ "${USE_CACHE}" -eq "1" ] && [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then
         . "${BALENA_CONFIG_VARS_CACHE}"
 else
@@ -54,7 +80,7 @@ else
     # If config.json provides redefinitions for our vars let us rewrite their
     # runtime value
     if [ -f $CONFIG_PATH ]; then
-        CONFIG_PARAMS=$(jq -r '@sh "
+        CONFIG_PARAMS=$("${CAT}" "${CONFIG_PATH}" | jq -r '@sh "
              API_ENDPOINT=\(.apiEndpoint // "")
              APPLICATION_ID=\(.applicationId // "")
              BALENA_ROOT_CA=\(.balenaRootCA // "")
@@ -77,7 +103,7 @@ else
              PROVISIONING_API_KEY=\(.apiKey // "")
              REGISTERED_AT=\(.registered_at // "")
              UUID=\(.uuid // "")
-             "' $CONFIG_PATH)
+             "')
         RESULT=$?
         if [ "$RESULT" = "4" ]; then
             echo "[ERROR] $0: Failed to parse '$CONFIG_PATH'."
