@@ -1,0 +1,4 @@
+FROM alpine@sha256:c3c58223e2af75154c4a7852d6924b4cc51a00c821553bbd9b3319481131b2e0
+
+COPY entry.sh .
+CMD ./entry.sh

@@ -1,6 +1,5 @@
 `use strict`;
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
+const fs = require('fs');
 
 const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
   test.comment(`Waiting for device: ${uuid} to run services: ${services} at commit: ${commit}`);
@@ -29,8 +28,9 @@ module.exports = {
             0
           );
         
-        // add a comment to the end of the server.js file, to trigger a delta when pushing
-        await exec(`echo "//comment" >> ${this.appPath}/server.js`);
+        // touch the entry script to force an update
+        const now = new Date();
+        fs.utimesSync(`${this.appPath}/entry.sh`, now, now);
         test.comment(`Pushing release...`);
 
         let secondCommit = await this.cloud.pushReleaseToApp(
@@ -74,14 +74,25 @@ module.exports = {
           this.balena.application
         )
 
-        // create a lockfile
-        let createLockfile = await this.cloud.executeCommandInContainer(
-          `bash -c '(flock -x -n 200)200>/tmp/balena/updates.lock'`, 
+        /* Create a lockfile using an ostensibly free fd
+         *
+         * If this ever conflicts, bash allows for grabbing the lowest free fd
+         * > 10, and assigning it to a variable, like so:
+         * /bin/bash -c 'exec {FD}<>/tmp/balena/updates.lock; flock -x -n $FD'
+         *
+         * However, grabbing a high FD and assuming it's unused saves us the
+         * hassle of adding bash to the image. Practically speaking, this will
+         * probably never be an issue.
+         */
+				const lockfileFd = 200;
+        await this.cloud.executeCommandInContainer(
+          `/bin/sh -c '(flock -x -n ${lockfileFd})${lockfileFd}>/tmp/balena/updates.lock'`,
           this.appServiceName,
           this.balena.uuid)
 
         // push release to application
-        await exec(`echo "//comment" >> ${this.appPath}/server.js`);
+        const now = new Date();
+        fs.utimesSync(`${this.appPath}/entry.sh`, now, now);
         test.comment(`Pushing release...`);
         let secondCommit = await this.cloud.pushReleaseToApp(
           this.balena.application, 
@@ -114,7 +125,7 @@ module.exports = {
             }
           });
           return downloaded && originalRunning;
-        }, false, 60, 5 * 1000);
+        }, false, 120, 500);
 
         test.ok(
           true,
