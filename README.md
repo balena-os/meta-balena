@@ -262,15 +262,19 @@ The following example contains two custom udev rules that will create `/etc/udev
 ## Yocto version support
 
 The following Yocto versions are supported:
+ * Kirkstone (4.0)
+  * **Long Term Support**
+ * Honister (3.4)
+  * **EOL**
  * Dunfell (3.1)
-  * **TESTED**
+  * **Long Term Support**
  * Warrior (2.7)
-  * **TESTED**
+  * **EOL**
  * Thud (2.6)
-  * **TESTED**
+  * **EOL**
  * Sumo (2.5)
-  * **TESTED**
+  * **EOL**
  * Rocko (2.4)
-  * **TESTED**
+  * **EOL**
  * Pyro (2.3)
-  * **TESTED**
+  * **EOL**
