@@ -265,7 +265,7 @@ module.exports = {
     config.deviceApiKey = deviceRegInfo.api_key;
     config.deviceId = deviceRegInfo.id;
     config.persistentLogging = true;
-    config.developmentMode= true;
+    config.developmentMode = true;
 
     // get ready to populate DUT image config.json with the attributes we just generated
     this.os.addCloudConfig(config);
@@ -310,7 +310,6 @@ module.exports = {
     await this.worker.flash(this.os.image.path);
     await this.worker.on();
 
-
     // create tunnels
     this.log('Creating SSH tunnels to DUT');
     await this.worker.createSSHTunnels(
@@ -331,7 +330,7 @@ module.exports = {
 
     // Retrieving journalctl logs: register teardown after device is reachable
     this.suite.teardown.register(async () => {
-      await this.worker.archiveLogs(this.id, this.link);
+      await this.worker.archiveLogs(this.id, this.balena.uuid);
     });
 
   },
