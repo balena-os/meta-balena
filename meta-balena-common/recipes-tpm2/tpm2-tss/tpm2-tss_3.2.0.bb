@@ -7,24 +7,34 @@ SECTION = "tpm"
 DEPENDS = "autoconf-archive-native libgcrypt openssl"
 
 SRC_URI = "https://github.com/tpm2-software/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.gz \
-           file://0001-configure.ac-fix-compatibility-with-autoconf-2.70.patch \
-          "
-SRC_URI[sha256sum] = "78392be7309baf47f51b122f566ac915fd4d1760ea78571cba2e1484f9b5be17"
+           file://fixup_hosttools.patch \
+           "
 
-inherit autotools pkgconfig systemd extrausers
+SRC_URI[sha256sum] = "48305e4144dcf6d10f3b25b7bccf0189fd2d1186feafd8cd68c6b17ecf0d7912"
+
+inherit autotools pkgconfig systemd useradd
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[oxygen] = ",--disable-doxygen-doc, "
-PACKAGECONFIG[fapi] = "--enable-fapi,--disable-fapi,json-c "
+PACKAGECONFIG[fapi] = "--enable-fapi,--disable-fapi,curl json-c "
 
-EXTRA_OECONF += "--enable-static --with-udevrulesdir=${base_prefix}/lib/udev/rules.d/"
+EXTRA_OECONF += "--enable-static --with-udevrulesdir=${nonarch_base_libdir}/udev/rules.d/"
+EXTRA_OECONF += "--runstatedir=/run"
 EXTRA_OECONF:remove = " --disable-static"
 
+USERADD_PACKAGES = "${PN}"
+GROUPADD_PARAM:${PN} = "--system tss"
+USERADD_PARAM:${PN} = "--system -M -d /var/lib/tpm -s /bin/false -g tss tss"
 
-EXTRA_USERS_PARAMS = "\
-	useradd -p '' tss; \
-	groupadd tss; \
-	"
+do_configure:prepend() {
+    # do not extract the version number from git
+    sed -i -e 's/m4_esyscmd_s(\[git describe --tags --always --dirty\])/${PV}/' ${S}/configure.ac
+}
+
+do_install:append() {
+    # Remove /run as it is created on startup
+    rm -rf ${D}/run
+}
 
 PROVIDES = "${PACKAGES}"
 PACKAGES = " \
@@ -73,6 +83,13 @@ FILES:libtss2-dev = " \
     ${libdir}/libtss2*so"
 FILES:libtss2-staticdev = "${libdir}/libtss*a"
 
-FILES:${PN} = "${libdir}/udev ${base_prefix}/lib/udev"
+FILES:${PN} = "\
+    ${libdir}/udev \
+    /var/lib/tpm2-tss \
+    /var/run \
+    ${nonarch_base_libdir}/udev \
+    ${sysconfdir}/tmpfiles.d \
+    ${sysconfdir}/tpm2-tss \
+    ${sysconfdir}/sysusers.d"
 
 RDEPENDS:libtss2 = "libgcrypt"
