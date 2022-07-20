@@ -64,13 +64,8 @@ module.exports = {
     });
 
     // push multicontainer app release to new app
-    test.comment(`Cloning repo...`);
-    await exec(
-      `git clone https://github.com/balena-io-examples/multicontainer-getting-started.git ${__dirname}/app`
-    );
-
     test.comment(`Pushing release...`);
-    const initialCommit = await this.cloud.pushReleaseToApp(moveApplicationName, `${__dirname}/app`)
+    const initialCommit = await this.cloud.pushReleaseToApp(moveApplicationName, `${__dirname}/../../multicontainer-app`);
     this.suite.context.set({
       multicontainer: {
         initialCommit: initialCommit
@@ -90,7 +85,7 @@ module.exports = {
         await waitUntilServicesRunning(
           this,
           this.balena.uuid, 
-          [`frontend`, `proxy`, `data`], 
+          [`foo`, `bar`, `baz`],
           this.multicontainer.initialCommit,
           test
         )
@@ -112,11 +107,11 @@ module.exports = {
           );
 
         // Check that device env variable is present in each service
-        let services  = [`frontend`, `proxy`, `data`]
+        let services  = [`foo`, `bar`, `baz`];
         await this.utils.waitUntil(async () => {
           let results = {}
           for (let service of services){
-            let env = await this.cloud.executeCommandInContainer(`env`, service, this.balena.uuid)
+            let env = await this.cloud.executeCommandInContainer(`env`, service, this.balena.uuid);
             if (env.includes(`${key}=${value}\n`)){
               results[service] = true
             } else {
@@ -141,10 +136,10 @@ module.exports = {
             this.balena.uuid
           );
 
-        // set device service variable for frontend service
+        // set device service variable for 'foo' service
         await this.cloud.balena.models.device.serviceVar.set(
             this.balena.uuid,
-            services.current_services.frontend[0].service_id,
+            services.current_services.foo[0].service_id,
             key,
             value
           );
@@ -152,7 +147,7 @@ module.exports = {
         // Check to see if variable is present in front end service
         await this.utils.waitUntil(async () => {
           test.comment("Checking to see if variables are visible...");
-          let env = await this.cloud.executeCommandInContainer(`env`, `frontend`, this.balena.uuid)
+          let env = await this.cloud.executeCommandInContainer(`env`, `foo`, this.balena.uuid);
 
           return env.includes(`${key}=${value}\n`);
         }, false, 60, 5 * 1000);

@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  foo:
+    build: .
+    expose:
+      - "80"
+  bar:
+    build: .
+    command: "sleep infinity"
+  baz:
+    build: .
+    command: "sleep infinity"
