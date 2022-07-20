@@ -2,6 +2,7 @@
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-fs
+. /usr/libexec/os-helpers-partition
 
 FREESPACE_LIMIT=10
 datapart=$(get_state_path_from_label "resin-data")

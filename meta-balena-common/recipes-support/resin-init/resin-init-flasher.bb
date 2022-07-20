@@ -28,7 +28,7 @@ RDEPENDS:${PN} = " \
     util-linux-lsblk \
     "
 
-RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2',d)}"
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-partition os-helpers-tpm2',d)}"
 
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
