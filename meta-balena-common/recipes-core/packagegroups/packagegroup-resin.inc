@@ -12,7 +12,6 @@ RDEPENDS:${PN} = " \
     ${BALENA_REGISTER} \
     chrony \
     chronyc \
-    libnss-ato \
     resin-extra-udev-rules \
     rsync \
     kernel-modules \
