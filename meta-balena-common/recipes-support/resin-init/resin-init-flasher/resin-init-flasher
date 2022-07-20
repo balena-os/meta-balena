@@ -187,8 +187,8 @@ if [ -d /sys/firmware/efi ]; then
 fi
 
 if [ "$LUKS" = "1" ]; then
-    # Include FS helpers for repartitioning
-    . /usr/libexec/os-helpers-fs
+    # Include partition helpers for repartitioning
+    . /usr/libexec/os-helpers-partition
 
     # Include TPM2 helpers
     . /usr/libexec/os-helpers-tpm2
