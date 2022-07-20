@@ -21,6 +21,7 @@ PV = "${HOSTOS_VERSION}"
 
 RDEPENDS:${PN} = "balena"
 
+do_compile[network] = "1"
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile () {
