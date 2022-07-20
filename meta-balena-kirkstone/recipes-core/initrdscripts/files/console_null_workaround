@@ -1,0 +1,17 @@
+#!/bin/sh
+
+console_null_workaround_enabled() {
+	return 0
+}
+
+console_null_workaround_run() {
+       if [ ! -h /proc/self/fd/0 ] ; then
+               exec 0> /dev/null
+       fi
+       if [ ! -h /proc/self/fd/1 ] ; then
+               exec 1> /dev/null
+       fi
+       if [ ! -h /proc/self/fd/2 ] ; then
+               exec 2> /dev/null
+       fi
+}
