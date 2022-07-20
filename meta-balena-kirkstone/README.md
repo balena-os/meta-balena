@@ -1,11 +1,11 @@
-# Balena.io layer for Poky Honister supported boards
+# Balena.io layer for Poky Kirkstone supported boards
 
 ## Description
-This repository enables building balena.io for honister supported machines.
+This repository enables building balena.io for kirkstone supported machines.
 
 ## Layer dependencies
 
 This layer depends on:
 
 * URI: git://git.yoctoproject.org/poky
-    * branch: honister
+    * branch: kirkstone
