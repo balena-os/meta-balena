@@ -192,7 +192,7 @@ module.exports = {
             this.balena.uuid
           )
           return deviceHash === commit
-        })
+        }, false, 180, 5 * 1000);
 
         test.ok(
           true,
