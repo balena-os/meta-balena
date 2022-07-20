@@ -64,6 +64,6 @@ module.exports = {
       return await this.cloud.balena.models.device.isTrackingApplicationRelease(
         this.balena.uuid
       );
-    }, false);
+    }, false, 60, 5 * 1000);
   },
 };
