@@ -1,13 +1,12 @@
-From 81411a8e5c5a4305cfed9b08af1b123020283ae1 Mon Sep 17 00:00:00 2001
-From: Andrei Gherzan <andrei@resin.io>
-Date: Wed, 27 Oct 2021 17:37:08 +0200
-Subject: [PATCH 2/5] plymouth: systemd append
+From 247c100deb9b56222aa7f85540e384721d5c36a6 Mon Sep 17 00:00:00 2001
+From: Alex Gonzalez <alexg@balena.io>
+Date: Wed, 20 Jul 2022 17:43:32 +0200
+Subject: [PATCH] plymouth: systemd append
 
 Change systemd services in order to make the boot partition mount available and
 provide custom kernel command line.
 
-Signed-off-by: Theodor Gherzan <theodor@resin.io>
-Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Signed-off-by: Alex Gonzalez <alexg@balena.io>
 ---
  systemd-units/plymouth-halt.service.in     | 4 +++-
  systemd-units/plymouth-kexec.service.in    | 4 +++-
@@ -17,7 +16,7 @@ Signed-off-by: Andrei Gherzan <andrei@resin.io>
  5 files changed, 17 insertions(+), 7 deletions(-)
 
 diff --git a/systemd-units/plymouth-halt.service.in b/systemd-units/plymouth-halt.service.in
-index cb87c1f..e2d6f27 100644
+index cb87c1f4f799..e2d6f27ac29d 100644
 --- a/systemd-units/plymouth-halt.service.in
 +++ b/systemd-units/plymouth-halt.service.in
 @@ -2,12 +2,14 @@
@@ -37,7 +36,7 @@ index cb87c1f..e2d6f27 100644
  Type=forking
  RemainAfterExit=yes
 diff --git a/systemd-units/plymouth-kexec.service.in b/systemd-units/plymouth-kexec.service.in
-index 22bc5bd..740ecf8 100644
+index 22bc5bd06269..740ecf8c121c 100644
 --- a/systemd-units/plymouth-kexec.service.in
 +++ b/systemd-units/plymouth-kexec.service.in
 @@ -2,12 +2,14 @@
@@ -57,7 +56,7 @@ index 22bc5bd..740ecf8 100644
  Type=forking
  RemainAfterExit=yes
 diff --git a/systemd-units/plymouth-poweroff.service.in b/systemd-units/plymouth-poweroff.service.in
-index cf05e47..9d29f2a 100644
+index cf05e47f3355..9d29f2ade4f6 100644
 --- a/systemd-units/plymouth-poweroff.service.in
 +++ b/systemd-units/plymouth-poweroff.service.in
 @@ -2,12 +2,14 @@
@@ -77,7 +76,7 @@ index cf05e47..9d29f2a 100644
  Type=forking
  RemainAfterExit=yes
 diff --git a/systemd-units/plymouth-reboot.service.in b/systemd-units/plymouth-reboot.service.in
-index 3624550..5793a7a 100644
+index 3624550dcf13..5793a7ad0112 100644
 --- a/systemd-units/plymouth-reboot.service.in
 +++ b/systemd-units/plymouth-reboot.service.in
 @@ -2,12 +2,14 @@
@@ -97,10 +96,10 @@ index 3624550..5793a7a 100644
  Type=forking
  RemainAfterExit=yes
 diff --git a/systemd-units/plymouth-start.service.in b/systemd-units/plymouth-start.service.in
-index 3d00cc6..474667c 100644
+index c20aabeb9a8a..3ded9a2a2ca8 100644
 --- a/systemd-units/plymouth-start.service.in
 +++ b/systemd-units/plymouth-start.service.in
-@@ -1,14 +1,16 @@
+@@ -1,15 +1,17 @@
  [Unit]
  Description=Show Plymouth Boot Screen
  DefaultDependencies=no
@@ -112,14 +111,12 @@ index 3d00cc6..474667c 100644
 +Requires=resin-boot.service
  ConditionKernelCommandLine=!plymouth.enable=0
  ConditionVirtualization=!container
+ IgnoreOnIsolate=true
  
  [Service]
--ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session
+-ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --mode=boot  --kernel-command-line="splash plymouth.ignore-serial-consoles" --pid-file=@plymouthruntimedir@/pid --attach-to-session
 +Environment='CMDLINE=plymouth.ignore-serial-consoles splash'
 +ExecStart=@PLYMOUTH_DAEMON_DIR@/plymouthd --tty=tty1 --mode=boot --pid-file=@plymouthruntimedir@/pid --attach-to-session --kernel-command-line=${CMDLINE}
  ExecStartPost=-@PLYMOUTH_CLIENT_DIR@/plymouth show-splash
  Type=forking
  RemainAfterExit=yes
--- 
-2.17.1
-

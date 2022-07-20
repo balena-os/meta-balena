@@ -1,13 +1,12 @@
-From 07a18a4c0032b202015b7dc23dc1b40adb8419db Mon Sep 17 00:00:00 2001
-From: Andrei Gherzan <andrei@resin.io>
-Date: Wed, 27 Oct 2021 17:40:15 +0200
-Subject: [PATCH 5/5] dont-start-services-in-container
+From 76aab6b13e9f10386b1ca08bafd6da4ae95c123c Mon Sep 17 00:00:00 2001
+From: Alex Gonzalez <alexg@balena.io>
+Date: Wed, 20 Jul 2022 17:47:29 +0200
+Subject: [PATCH] dont-start-services-in-container
 
 When resinOS is ran as privileged container, avoid messing with tty1 as it will
 interfere with the host.
 
-Upstream-status: Innappropiate [Configuration]
-Signed-off-by: Andrei Gherzan <andrei@resin.io>
+Signed-off-by: Alex Gonzalez <alexg@balena.io>
 ---
  systemd-units/plymouth-quit-wait.service.in   | 1 +
  systemd-units/plymouth-quit.service.in        | 1 +
@@ -16,7 +15,7 @@ Signed-off-by: Andrei Gherzan <andrei@resin.io>
  4 files changed, 4 insertions(+)
 
 diff --git a/systemd-units/plymouth-quit-wait.service.in b/systemd-units/plymouth-quit-wait.service.in
-index 94f66cc..e093be2 100644
+index 94f66cc6e608..e093be25fb20 100644
 --- a/systemd-units/plymouth-quit-wait.service.in
 +++ b/systemd-units/plymouth-quit-wait.service.in
 @@ -1,6 +1,7 @@
@@ -28,7 +27,7 @@ index 94f66cc..e093be2 100644
  [Service]
  ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth --wait
 diff --git a/systemd-units/plymouth-quit.service.in b/systemd-units/plymouth-quit.service.in
-index ed9f9b9..def0819 100644
+index 147e9eef23a5..48dcfb57874c 100644
 --- a/systemd-units/plymouth-quit.service.in
 +++ b/systemd-units/plymouth-quit.service.in
 @@ -1,6 +1,7 @@
@@ -38,9 +37,9 @@ index ed9f9b9..def0819 100644
 +ConditionVirtualization=!container
  
  [Service]
- ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit --retain-splash
 diff --git a/systemd-units/plymouth-read-write.service.in b/systemd-units/plymouth-read-write.service.in
-index 9a6b9c2..45393ef 100644
+index 9a6b9c22f46b..45393ef39d97 100644
 --- a/systemd-units/plymouth-read-write.service.in
 +++ b/systemd-units/plymouth-read-write.service.in
 @@ -4,6 +4,7 @@ DefaultDependencies=no
@@ -52,7 +51,7 @@ index 9a6b9c2..45393ef 100644
  [Service]
  ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth update-root-fs --read-write
 diff --git a/systemd-units/plymouth-switch-root.service.in b/systemd-units/plymouth-switch-root.service.in
-index 20b7f7b..50a9148 100644
+index 20b7f7b762f4..50a9148720a2 100644
 --- a/systemd-units/plymouth-switch-root.service.in
 +++ b/systemd-units/plymouth-switch-root.service.in
 @@ -3,6 +3,7 @@ Description=Plymouth switch root service
@@ -63,6 +62,3 @@ index 20b7f7b..50a9148 100644
  
  [Service]
  Type=oneshot
--- 
-2.17.1
-
