@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.100.3
+## (2022-07-20)
+
+* tests: ssh-auth: Rework to prevent race conditions [Kyle Harding]
+
 # v2.100.2
 ## (2022-07-15)
 

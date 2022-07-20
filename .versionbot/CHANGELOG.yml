@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: ssh-auth: Rework to prevent race conditions"
+      hash: a54368b0c2f52e17242117ec59313ce8d0fec88c
+      body: |
+        Use a common function to apply settings in config.json to avoid
+        code duplication. It also provides timed results so we know
+        how long it took to apply a setting.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.100.3
+  title: "'tests: ssh-auth: Rework to prevent race conditions'"
+  date: 2022-07-20T20:33:49.443Z
+- commits:
     - subject: Update tests/leviathan digest to c2755a1
       hash: d585bb1d5c02402a8a33718174b75439f8f4edc1
       body: Update tests/leviathan
