@@ -61,7 +61,7 @@ module.exports = {
 
     await this.utils.waitUntil(async () => {
       console.log('Waiting for device to be running latest release...');
-      return await this.cloud.balena.models.device.isTrackingApplicationRelease(
+      return this.cloud.balena.models.device.isTrackingApplicationRelease(
         this.balena.uuid
       );
     }, false, 60, 5 * 1000);
