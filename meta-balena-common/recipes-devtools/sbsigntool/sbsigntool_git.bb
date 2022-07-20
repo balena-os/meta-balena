@@ -11,8 +11,8 @@ DEPENDS += "binutils openssl gnu-efi gnu-efi-native util-linux"
 DEPENDS += "binutils-native help2man-native coreutils-native openssl-native util-linux-native"
 
 SRC_URI = " \
-    git://git.kernel.org/pub/scm/linux/kernel/git/jejb/sbsigntools.git;protocol=https;name=sbsigntools \
-    git://github.com/rustyrussell/ccan.git;protocol=https;destsuffix=git/lib/ccan.git;name=ccan \
+    git://git.kernel.org/pub/scm/linux/kernel/git/jejb/sbsigntools.git;protocol=https;name=sbsigntools;branch=master \
+    git://github.com/rustyrussell/ccan.git;protocol=https;destsuffix=git/lib/ccan.git;name=ccan;branch=master \
     file://0001-configure-Dont-t-check-for-gnu-efi.patch \
     file://0002-docs-Don-t-build-man-pages.patch \
     file://0003-sbsign-add-x-option-to-avoid-overwrite-existing-sign.patch  \

@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://include/autoconf.h;startline=1;endline=18;md5=25cbdd5
 
 inherit module
 
-SRC_URI = "git://github.com/agherzan/rtl8192cu.git"
+SRC_URI = "git://github.com/agherzan/rtl8192cu.git;branch=master;protocol=https"
 SRCREV = "8dc5b70d63154d85d71a213546a978393ccc2f16"
 S = "${WORKDIR}/git"
 

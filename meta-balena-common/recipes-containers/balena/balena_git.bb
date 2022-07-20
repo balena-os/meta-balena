@@ -25,7 +25,7 @@ SRCREV = "13db38c82bdb056f013f5497b0662ad34ffb98f7"
 #
 # 0: https://git.yoctoproject.org/meta-virtualization/tree/recipes-containers/docker/files
 SRC_URI = "\
-	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import \
+	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import;protocol=https \
 	file://balena.service \
 	file://balena-host.service \
 	file://balena-host.socket \

@@ -18,7 +18,7 @@ DEPENDS:append = " \
 PV = "1.9.2+git${SRCPV}"
 
 SRC_URI = "\
-    git://git.kernel.org/pub/scm/linux/kernel/git/jejb/efitools.git \
+    git://git.kernel.org/pub/scm/linux/kernel/git/jejb/efitools.git;branch=master \
     file://Fix-for-the-cross-compilation.patch \
     file://Kill-all-the-build-warning-caused-by-implicit-declar.patch \
     file://Fix-the-wrong-dependency-for-blacklist.esl.patch \
