@@ -13,14 +13,12 @@ DEPENDS = "autoconf-archive dbus glib-2.0 tpm2-tss glib-2.0-native \
             libtss2 libtss2-mu libtss2-tcti-device libtss2-tcti-mssim"
 
 SRC_URI = "\
-    git://github.com/tpm2-software/tpm2-abrmd.git;branch=master;protocol=https \
+    https://github.com/tpm2-software/${BPN}/releases/download/${PV}/${BPN}-${PV}.tar.gz \
     file://tpm2-abrmd-init.sh \
     file://tpm2-abrmd.default \
 "
 
-SRCREV = "4f332013a02c422e186c4aaf127ab6a40b996028"
-
-S = "${WORKDIR}/git"
+SRC_URI[sha256sum] = "a7844a257eaf5176f612fe9620018edc0880cca7036465ad2593f83ae0ad6673"
 
 inherit autotools pkgconfig systemd update-rc.d useradd
 
