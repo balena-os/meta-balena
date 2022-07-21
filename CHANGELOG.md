@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.100.6
+## (2022-07-21)
+
+* balena-config-vars: Do not use cache in flasher images [Alex Gonzalez]
+
 # v2.100.5
 ## (2022-07-21)
 
