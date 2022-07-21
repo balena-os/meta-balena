@@ -14,65 +14,74 @@ module.exports = {
 			run: async function(test) {
 				await this.hup.initDUT(this, test, this.link);
 
-				const versionBeforeHup = await this.worker.getOSVersion(this.link);
+				const origVersion = await this.worker.getOSVersion(this.link);
 
-				test.comment(`OS version before HUP: ${versionBeforeHup}`);
+				const activePartition = await this.worker.executeCommandInHostOS(
+					`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+					this.link,
+				);
 
 				await this.hup.doHUP(
-						this,
-						test,
-						'local',
-						this.hupOs.image.path,
-						this.link,
-					);
-
-				// reduce number of failures needed to trigger rollback
-				test.comment(`Reducing timeout for rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
-						this.link,
-					);
-
-				// break balena-engine
-				test.comment(`Breaking balena-engine to trigger rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$")`,
-						this.link,
-					);
-
-				await this.worker.rebootDut(this.link);
-
-				// reboots should be finished when breadcrumbs are gone and service is inactive
-				// check every 30s for 5 min since we are expecting multiple reboots
-				test.comment(`Waiting for rollback-health.service to be inactive...`);
-				await this.utils.waitUntil(
-					async () => {
-						return (
-							(await this.worker.executeCommandInHostOS(
-									`systemctl is-active rollback-health.service || test ! -f /mnt/state/rollback-health-breadcrumb`,
-									this.link,
-								)) === `inactive`
-						);
-					},
-					false,
-					5 * 60,
-					1000,
+					this,
+					test,
+					'local',
+					this.hupOs.image.path,
+					this.link,
 				);
 
 				test.is(
-					await this.worker.getOSVersion(this.link),
-					versionBeforeHup,
-					`The OS version should have reverted to ${versionBeforeHup}`,
+					await this.worker.executeCommandInHostOS(
+						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
+						this.link,
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s'
+				);
+
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$") ; echo $?`,
+						this.link,
+					),
+					'0',
+					'Should replace balena-engine with a null link to trigger rollback-health'
+				);
+
+				await this.worker.rebootDut(this.link);
+
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+							this.link,
+						).then(out => {
+							return out === activePartition;
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should have rolled back to the original root partition'
+				);
+
+				// 0 means file exists, 1 means file does not exist
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							this.link,
+						).then(out => {
+							return out === '1';
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should not have rollback-health-breadcrumb in the state partition'
 				);
 
 				// 0 means file exists, 1 means file does not exist
 				test.is(
 					await this.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-triggered ; echo $?`,
-							this.link,
-						),
+						`test -f /mnt/state/rollback-health-triggered ; echo $?`,
+						this.link,
+					),
 					'0',
-					'There should be a rollback-health-triggered file in the state partition',
+					'Should have rollback-health-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -82,7 +91,7 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-altboot-triggered file in the state partition',
+					'Should not have rollback-altboot-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -92,7 +101,13 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-health-failed file in the state partition',
+					'Should not have rollback-health-failed in the state partition',
+				);
+
+				test.is(
+					await this.worker.getOSVersion(this.link),
+					origVersion,
+					`Should have rolled back to the original OS version`,
 				);
 			},
 		},
@@ -101,73 +116,93 @@ module.exports = {
 			run: async function(test) {
 				await this.hup.initDUT(this, test, this.link);
 
-				const versionBeforeHup = await this.worker.getOSVersion(this.link);
+				const origVersion = await this.worker.getOSVersion(this.link);
 
-				test.comment(`OS version before HUP: ${versionBeforeHup}`);
+				const activePartition = await this.worker.executeCommandInHostOS(
+					`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+					this.link,
+				);
 
 				await this.hup.doHUP(
-						this,
-						test,
-						'local',
-						this.hupOs.image.path,
-						this.link,
-					);
-
-				// reduce number of failures needed to trigger rollback
-				test.comment(`Reducing timeout for rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=20/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health")`,
-						this.link,
-					);
-
-				// break openvpn
-				test.comment(`Breaking openvpn to trigger rollback-health...`);
-				await this.worker.executeCommandInHostOS(
-						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$")`,
-						this.link,
-					);
-
-				test.comment(
-					`Pretend VPN was previously active for unmanaged OS suite...`,
-				);
-				await this.worker.executeCommandInHostOS(
-						`sed 's/BALENAOS_ROLLBACK_VPNONLINE=0/BALENAOS_ROLLBACK_VPNONLINE=1/' -i /mnt/state/rollback-health-variables && sync -f /mnt/state`,
-						this.link,
-					);
-
-				await this.worker.rebootDut(this.link);
-
-				// reboots should be finished when breadcrumbs are gone and service is inactive
-				// check every 30s for 5 min since we are expecting multiple reboots
-				test.comment(`Waiting for rollback-health.service to be inactive...`);
-				await this.utils.waitUntil(
-					async () => {
-						return (
-							(await this.worker.executeCommandInHostOS(
-									`systemctl is-active rollback-health.service || test ! -f /mnt/state/rollback-health-breadcrumb`,
-									this.link,
-								)) === `inactive`
-						);
-					},
-					false,
-					5 * 60,
-					1000,
+					this,
+					test,
+					'local',
+					this.hupOs.image.path,
+					this.link,
 				);
 
 				test.is(
-					await this.worker.getOSVersion(this.link),
-					versionBeforeHup,
-					`The OS version should have reverted to ${versionBeforeHup}`,
+					await this.worker.executeCommandInHostOS(
+						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
+						this.link,
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s'
+				);
+
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$") ; echo $?`,
+						this.link,
+					),
+					'0',
+					'Should replace openvpn with a null link to trigger rollback-health'
+				);
+
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`sed 's/BALENAOS_ROLLBACK_VPNONLINE=0/BALENAOS_ROLLBACK_VPNONLINE=1/' -i /mnt/state/rollback-health-variables && sync -f /mnt/state ; echo $?`,
+						this.link,
+					),
+					'0',	// does not confirm that sed replaced the values, only that the command did not fail
+					'Should override vpn online status so failed openvpn is not ignored'
+				);
+
+				await this.worker.rebootDut(this.link);
+
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+							this.link,
+						).then(out => {
+							return out === activePartition;
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should have rolled back to the original root partition'
+				);
+
+				// 0 means file exists, 1 means file does not exist
+				await test.resolves(
+					this.utils.waitUntil(async () => {
+						return this.worker.executeCommandInHostOS(
+							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+							this.link,
+						).then(out => {
+							return out === '1';
+						})
+					}, false, 5 * 60, 1000),	// 5 min
+					'Should not have rollback-health-breadcrumb in the state partition'
 				);
 
 				// 0 means file exists, 1 means file does not exist
 				test.is(
 					await this.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-triggered ; echo $?`,
-							this.link,
-						),
+						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
+						this.link,
+					),
+					'1',
+					'Should not have rollback-altboot-breadcrumb in the state partition',
+				);
+
+				// 0 means file exists, 1 means file does not exist
+				test.is(
+					await this.worker.executeCommandInHostOS(
+						`test -f /mnt/state/rollback-health-triggered ; echo $?`,
+						this.link,
+					),
 					'0',
-					'There should be a rollback-health-triggered file in the state partition',
+					'Should have rollback-health-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -177,7 +212,7 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-altboot-triggered file in the state partition',
+					'Should not have rollback-altboot-triggered in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -187,7 +222,13 @@ module.exports = {
 							this.link,
 						),
 					'1',
-					'There should NOT be a rollback-health-failed file in the state partition',
+					'Should not have rollback-health-failed in the state partition',
+				);
+
+				test.is(
+					await this.worker.getOSVersion(this.link),
+					origVersion,
+					`Should have rolled back to the original OS version`,
 				);
 			},
 		},
