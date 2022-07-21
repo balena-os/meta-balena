@@ -1,4 +1,60 @@
 - commits:
+    - subject: Update tests/leviathan digest to d3c6489
+      hash: 03e3f1863ef6e0d3627b16cbb300bff13ad9f8a0
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "core: Reduce logging in failed SSH attempts"
+              hash: a51082819ea19c25a3e195ef9af420b01e425a55
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.6.8
+          title: "'core: Reduce logging in failed SSH attempts'"
+          date: 2022-07-20T18:16:21.491Z
+        - commits:
+            - subject: 'Revert "patch: Increase timeout for worker connections"'
+              hash: 5e98079b8a44b2470c8edc9ac6e4ab65b9a6da96
+              body: >
+                This reverts commit 87a741fd22a78c190bec59fa6628de921ac2809f.
+
+
+                This change didn't actually help to resolve the original ETIMEDOUT
+
+                issues so it can be reverted.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "core: Update node-tap to 14.10.8"
+              hash: 9307ec92f4a700e4d3e51aebb812667c3b809fb5
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.6.7
+          title: "'core: Update node-tap to 14.10.8'"
+          date: 2022-07-18T19:00:05.817Z
+  version: 2.100.4
+  title: "'Update tests/leviathan digest to d3c6489'"
+  date: 2022-07-20T23:56:49.035Z
+- commits:
     - subject: "tests: ssh-auth: Rework to prevent race conditions"
       hash: a54368b0c2f52e17242117ec59313ce8d0fec88c
       body: |

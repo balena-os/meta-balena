@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.100.4
+## (2022-07-20)
+
+
+<details>
+<summary> Update tests/leviathan digest to d3c6489 [renovate[bot]] </summary>
+
+> ## leviathan-2.6.8
+> ### (2022-07-20)
+> 
+> * core: Reduce logging in failed SSH attempts [Kyle Harding]
+> 
+> ## leviathan-2.6.7
+> ### (2022-07-18)
+> 
+> * Revert "patch: Increase timeout for worker connections" [Kyle Harding]
+> * core: Update node-tap to 14.10.8 [Kyle Harding]
+> 
+</details>
+
 # v2.100.3
 ## (2022-07-20)
 
