@@ -1,4 +1,58 @@
 - commits:
+    - subject: "tests: cloud: preload: fix no-return-await"
+      hash: d54e05a147aab1b8187a5f50bdb84c6e84ad4ee7
+      body: |
+        Fix ESLint no-return-await
+        https://eslint.org/docs/latest/rules/no-return-await
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: preload: reduce waitUntil interval"
+      hash: 996ca9ed2ebcd031aadb4c19fb8808a202c399c0
+      body: |
+        Specify an explicit retry interval in waitUntil().
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: multicontainer: reduce waitUntil interval"
+      hash: 348483d2e16ac37fb30f5dba1ecc4e0db6440537
+      body: |
+        Specify an explicit retry interval in waitUntil().
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: supervisor: use minimal app image"
+      hash: 16ecb0cc5a7818ff5ab53d64829398e78aaecd18
+      body: |
+        Several supervisor tests in the managed cloud suite depend on the
+        balena-nodejs-hello-world app, which builds a ~225 MB image for testing.
+        Building, pushing, and pulling this image is time consuming. Switch to a
+        minimal image that accomplishes much the same thing.
+
+        This cuts approximately a minute from the supervisor tests.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.100.6
+  title: "'tests: cloud: supervisor: use minimal app image'"
+  date: 2022-07-21T13:33:00.681Z
+- commits:
     - subject: Update balena-io/balena-supervisor to v14.0.12
       hash: a02e1aaa0128bb8d83af498be7c5e9baec4facab
       body: Update balena-io/balena-supervisor
