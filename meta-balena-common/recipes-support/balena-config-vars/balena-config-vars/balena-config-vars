@@ -46,10 +46,10 @@ done
 # Source static defaults
 . /usr/sbin/balena-config-defaults
 
-if [ "${USE_CACHE}" -eq "1" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then
+if [ "${USE_CACHE}" -eq "1" ] && [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then
         . "${BALENA_CONFIG_VARS_CACHE}"
 else
-    rm -f "${BALENA_CONFIG_VARS_CACHE}"
+    [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ] && rm -f "${BALENA_CONFIG_VARS_CACHE}"
 
     # If config.json provides redefinitions for our vars let us rewrite their
     # runtime value
@@ -83,9 +83,11 @@ else
             echo "[ERROR] $0: Failed to parse '$CONFIG_PATH'."
             exit 1
         else
-            tmpfile=$(mktemp)
-            echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
-            mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
+            if [ -n "${BALENA_CONFIG_VARS_CACHE}" ]; then
+                tmpfile=$(mktemp)
+                echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
+                mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
+            fi
             eval "$CONFIG_PARAMS"
         fi
     else
