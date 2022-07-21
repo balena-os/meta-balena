@@ -17,6 +17,11 @@ const imagefs = require('balena-image-fs');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
+// required for constraints tests
+const yaml = require(`js-yaml`)
+const git = require(`nodegit`)
+const exec = util.promisify(require('child_process').exec)
+
 // copied from the SV
 // https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
 // TODO: retrieve this from the SDK (requires v16.2.0) or future versions of device contracts
@@ -166,10 +171,138 @@ module.exports = {
 						localMode: true,
 						developmentMode: true,
 					},
+					constraintsRepo: this.suite.options.constraints.repoUrl
 				},
 				this.getLogger(),
 			),
 		});
+
+
+		/**
+		 * Checkout a specific repository tag
+		 * @param {repo} Cloned repository object
+		 * @param {tag} Specific tag to checkout
+		 *
+		 * @category helper
+		 */
+		const checkoutTag = function checkOutTag(repo, tag) {
+			return git.Reference
+				.dwim(repo, "refs/tags/" + tag)
+				.then( ref => {
+					return ref.peel(git.Object.TYPE.COMMIT);
+				})
+				.then( ref => {
+					return repo.getCommit(ref);
+				})
+				.then( commit => {
+					return git.Checkout
+						.tree(repo, commit, {checkoutStrategy: git.Checkout.STRATEGY.SAFE})
+						.then( () => {
+							return repo.setHeadDetached(commit, repo.defaultSignature,
+								"Checkout: HEAD " + commit.id());
+						})
+				});
+		}
+
+		/**
+		 * Obtain last release from given tag
+		 * @param {repo} Cloned repository object
+		 * @param {tag} Reference OS version
+		 *
+		 * @category helper
+		 */
+		let lastOSRelease = async (repo, tag) => {
+			return checkoutTag(repo, tag)
+				.then ( () => {
+					return exec(
+						`cd ${repoPath} && git describe --tags --abbrev=0 HEAD^1`
+					).then( (result) => {
+						return result.stdout.trim()
+					})
+				})
+				.then ( () => {
+					fs.removeSync(repoPath)
+				})
+		}
+
+		/**
+		 * Fetch results file for the specified test and version
+		 * @param {repo} Cloned repository object
+		 * @param {tag} OS version to fetch result from
+		 * @param {fileName} Name of the file to fetch
+		 *
+		 * @category helper
+		 */
+		let fetchFile = async function(repo, tag, filePath) {
+			return checkoutTag(repo, tag).then( () => {
+				return repo.getHeadCommit().then( (commit) => {
+					return commit.getTree().then( (tree) => {
+						return tree.getEntry(path.join(this.suite.deviceType.slug,filePath))
+					})
+						.then( (entryResult) => {
+							return entryResult.getBlob()
+						})
+						.then ( (blob) => {
+							return blob.toString()
+						})
+				})
+			})
+		}
+
+		let checkTimeConstraint = async function(repo, testName, version, newValue) {
+			const filePath = path.join(this.suite.deviceType.slug,testName,`results.yml`)
+			return fetchFile(repo, this.suite.version, filePath).then( (output) => {
+				return yaml.load(output).then( (results) => {
+					return test.ok(
+						newValue + results.tolerance_secs  <= results.time_secs,
+						`Boot time has not increased above tolerance`
+					)
+				})
+			})
+		}
+
+		let addTimeConstraint = async (repo, filePath, version, value) => {
+			return repo.getMasterCommit().then( (masterHead) => {
+				return checkoutCommit(repo, masterHead).then( () => {
+					return fs.ensureFile(path.join(repo.workdir(), filePath)).then( () => {
+						results = {'time_secs': value, 'tolerance_secs': this.suite.options.constraints.default_tolerance_secs}
+						return fs.writeFile(path.join(repo.workdir(), filePath), yaml.dump(results)).then( () => {
+							return repo.refreshIndex().then( async (index) => {
+								await index.addByPath(filePath)
+								await index.write()
+								const oid = await index.writeTree()
+								const parent = await repo.getHeadCommit()
+								const signature = await git.Signature.now("leviathan", "leviathanbot@balena.io")
+								const message = `Add time constraint for balenaOS ${version}`
+								const options = {
+									callbacks: {
+										credentials: () => {
+											return git.Cred.userpassPlaintextNew(process.env.GITHUB_TOKEN, "x-oauth-basic");
+										},
+										certificateCheck: () => {
+											return 1;
+										}
+									}
+								}
+								return repo.createCommit("HEAD", signature, signature, message, oid, [parent]).then( (commit) => {
+									return repo.createTag(commit, version, message).then( () => {
+										return git.Remote.lookup(repo, 'origin')
+											.then( async (remote) => {
+												await remote.push(
+													["HEAD:refs/heads/master"],
+													options)
+												await remote.push(
+													[`refs/tags/${version}:refs/tags/${version}`],
+													options)
+											})
+									})
+								})
+							})
+						})
+					})
+				})
+			})
+		}
 
 		// Register a teardown function execute at the end of the test, regardless of a pass or fail
 		this.suite.teardown.register(() => {

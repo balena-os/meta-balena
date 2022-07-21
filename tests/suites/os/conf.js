@@ -49,6 +49,10 @@ module.exports = options => {
 			},
 			worker: {
 				url: options.workerUrl
+			},
+			constraints: {
+				repoUrl: options.repoUrl,
+				default_tolerance_secs: options.default_tolerance_secs,
 			}
 		},
 	};
