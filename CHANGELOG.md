@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.100.7
+## (2022-07-21)
+
+* tests: hup: Clear inactive storage partition before HUP [Kyle Harding]
+* tests: hup: Add root partition tests [Kyle Harding]
+* tests: hup: Replace custom steps with tests and verify exit code [Kyle Harding]
+* tests: hup: Wait for rollback files to be removed or created [Kyle Harding]
+
 # v2.100.6
 ## (2022-07-21)
 
