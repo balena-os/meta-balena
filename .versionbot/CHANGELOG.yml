@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests/os: Add 243390 unmanged Wifi HATs tests from testLodge"
+      hash: d02baf51d053124059aae911eb1e0e75f92d62d7
+      body: |
+        This covers the unmanaged part of the tests for the CUS
+        and EUS wifi chipsets on this DT: TC50, TC51, TC52, TC53,
+        TC55, TC56.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.100.8
+  title: "'tests: Add 243390 unmanged Wifi HATs tests from testLodge'"
+  date: 2022-07-21T23:48:56.244Z
+- commits:
     - subject: "tests: hup: Clear inactive storage partition before HUP"
       hash: 411639a031cdbdfc8ccdcc911e06f94fbf28ca9c
       body: ""

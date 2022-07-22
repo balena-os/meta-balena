@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.100.8
+## (2022-07-21)
+
+* tests/os: Add 243390 unmanged Wifi HATs tests from testLodge [Alexandru Costache]
+
 # v2.100.7
 ## (2022-07-21)
 
