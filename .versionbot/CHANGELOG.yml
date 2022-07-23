@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: engine-socket - wait for response"
+      hash: 61b32c0d36e2c2af387b77bdc398d3294ffedbda
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.100.9
+  title: "'tests: os: engine-socket - wait for response before continuing test'"
+  date: 2022-07-22T19:35:54.404Z
+- commits:
     - subject: "tests/os: Add 243390 unmanged Wifi HATs tests from testLodge"
       hash: d02baf51d053124059aae911eb1e0e75f92d62d7
       body: |

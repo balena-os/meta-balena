@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.100.9
+## (2022-07-22)
+
+* tests: os: engine-socket - wait for response [rcooke-warwick]
+
 # v2.100.8
 ## (2022-07-21)
 
