@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.100.10
+## (2022-07-24)
+
+* os-helpers: split os-helpers-partition from os-helpers-fs [Michal Toman]
+
 # v2.100.9
 ## (2022-07-22)
 

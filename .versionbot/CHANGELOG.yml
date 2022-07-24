@@ -1,4 +1,23 @@
 - commits:
+    - subject: "os-helpers: split os-helpers-partition from os-helpers-fs"
+      hash: 2225b5003cd2e37714294e47dd4f46760957c15f
+      body: >
+        These provide two related though distinct sets of functionality and pull
+
+        different dependencies. In order to optimize image sizes, the device types
+
+        should be able to pull them individually.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.100.10
+  title: "'os-helpers: split os-helpers-partition from os-helpers-fs'"
+  date: 2022-07-24T05:16:44.823Z
+- commits:
     - subject: "tests: os: engine-socket - wait for response"
       hash: 61b32c0d36e2c2af387b77bdc398d3294ffedbda
       body: ""
