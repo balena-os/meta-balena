@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.100.10
+## (2022-07-24)
+
+* tests: cloud: preload: fix no-return-await [Joseph Kogut]
+* tests: cloud: preload: reduce waitUntil interval [Joseph Kogut]
+* tests: cloud: multicontainer: reduce waitUntil interval [Joseph Kogut]
+
 # v2.100.9
 ## (2022-07-22)
 

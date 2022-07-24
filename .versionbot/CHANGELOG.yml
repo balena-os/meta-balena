@@ -1,4 +1,42 @@
 - commits:
+    - subject: "tests: cloud: preload: fix no-return-await"
+      hash: 4011daec80bf0e81915bdaf6aafdcd1cd298e5d6
+      body: |
+        Fix ESLint no-return-await
+        https://eslint.org/docs/latest/rules/no-return-await
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: preload: reduce waitUntil interval"
+      hash: 5b4669444e99788ceff5615ed66edc13719ab70b
+      body: |
+        Specify an explicit retry interval in waitUntil().
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: multicontainer: reduce waitUntil interval"
+      hash: 92d72c900e0017203a8de21a7de1930528eb25e6
+      body: |
+        Specify an explicit retry interval in waitUntil().
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.100.10
+  title: "'Jakogut/cloud fixups'"
+  date: 2022-07-24T10:14:15.412Z
+- commits:
     - subject: "tests: os: engine-socket - wait for response"
       hash: 61b32c0d36e2c2af387b77bdc398d3294ffedbda
       body: ""
