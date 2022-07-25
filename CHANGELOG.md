@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.100.11
+## (2022-07-25)
+
+* test: os: chrony: Double the wait for time skew test [Kyle Harding]
+* os: tests: chrony: Wrap disable/enable NTP in test conditions [Kyle Harding]
+* tests: os: Add helper to write or remove properties in config.json [Kyle Harding]
+
 # v2.100.10
 ## (2022-07-24)
 
