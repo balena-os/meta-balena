@@ -158,7 +158,12 @@ module.exports = {
 			run: async function(test) {
 				return blockNTP(test, this, this.link)
 				.then(() => {
-					return this.worker.executeCommandInHostOS(`date --set="-2min"`, this.link);
+					return test.resolves(
+						this.worker.executeCommandInHostOS(
+							`date --set="-2min"`,
+							this.link
+						), `Should apply time skew of -2 minutes`
+					);
 				}).then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -169,7 +174,7 @@ module.exports = {
 								).then(logs => {
 									return Promise.resolve(regex.test(logs));
 								})
-						}, false, 5 * 60, 1000), // 5 min
+						}, false, 10 * 60, 1000), // 10 min
 						'Should restart chronyd when system time skew detected'
 					);
 				}).then(() => {
