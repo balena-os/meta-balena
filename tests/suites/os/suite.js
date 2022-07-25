@@ -299,10 +299,12 @@ module.exports = {
 		}
 
 		if (this.suite.options?.balena?.apiKey) {
-			this.log("Logging into balena with balenaSDK");
-			await this.cloud.balena.auth.loginWithToken(
-				this.suite.options.balena.apiKey
-			);
+			// Authenticating balenaSDK
+			await this.context
+			.get()
+			.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+			this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+			
 			await this.cloud.balena.models.key.create(
 				this.sshKeyLabel,
 				keys.pubKey
