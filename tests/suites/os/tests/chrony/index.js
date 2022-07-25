@@ -1,28 +1,83 @@
 
-const blockNTP = async (that, test) => {
-	return that.worker.executeCommandInHostOS(
-		`journalctl --rotate --vacuum-time=1s`,
-		that.link,
-	).then(() => {
-		// Stop DNS server to make NTP requests fail
-		return that.worker.executeCommandInHostOS(
-			`systemctl stop dnsmasq.service`,
-			that.link,
-		);
-	}).then(() => {
-		return that.worker.executeCommandInHostOS(
-			`systemctl restart chronyd.service`,
-			that.link
-		);
-	}).then(() => {
-		return that.systemd.waitForServiceState('chronyd.service', 'active', that.link)
-	});
+const blockNTP = async (test, that, target) => {
+
+	return test.test(`Blocking NTP by stopping dnsmasq.service`, t =>
+		t.resolves(
+			that.worker.executeCommandInHostOS(
+				`journalctl --rotate --vacuum-time=1s`,
+				target,
+			),
+			'Should rotate journal logs'
+		).then(() => {
+			return t.resolves(
+				that.worker.executeCommandInHostOS(
+					`systemctl stop dnsmasq.service`,
+					target
+				), `Should stop dnsmasq.service`
+			);
+		}).then(() => {
+			// avoid hitting 'start request repeated too quickly'
+			return t.resolves(
+				that.worker.executeCommandInHostOS(
+					'systemctl reset-failed chronyd.service',
+					target
+				), `Should reset start counter of chronyd.service`
+			);
+		}).then(() => {
+			return t.resolves(
+				that.worker.executeCommandInHostOS(
+					`systemctl restart chronyd.service`,
+					target
+				), `Should restart chronyd.service`
+			);
+		}).then(() => {
+			return t.resolves(
+				that.systemd.waitForServiceState(
+					'chronyd.service',
+					'active',
+					target
+				),
+				'Should wait for chronyd.service to be active'
+			)
+		}).then(() => {
+			return t.resolves(
+				that.systemd.waitForServiceState(
+					'dnsmasq.service',
+					'inactive',
+					target
+				),
+				'Should wait for dnsmasq.service to be inactive'
+			)
+		})
+	);
 }
 
-const restoreNTP = async (that, test) => {
-	return that.worker.executeCommandInHostOS(
-		`systemctl restart dnsmasq`,
-		that.link,
+const restoreNTP = async (test, that, target) => {
+
+	return test.test(`Unblocking NTP by restarting dnsmasq.service`, t =>
+		t.resolves(
+			// avoid hitting 'start request repeated too quickly'
+			that.worker.executeCommandInHostOS(
+				'systemctl reset-failed dnsmasq.service',
+				target
+			), `Should reset start counter of dnsmasq.service`
+		).then(() => {
+			return t.resolves(
+				that.worker.executeCommandInHostOS(
+					`systemctl restart dnsmasq.service`,
+					target
+				), `Should stop dnsmasq.service`
+			);
+		}).then(() => {
+			return t.resolves(
+				that.systemd.waitForServiceState(
+					'dnsmasq.service',
+					'active',
+					target
+				),
+				'Should wait for dnsmasq.service to be active'
+			)
+		})
 	);
 }
 
@@ -79,7 +134,7 @@ module.exports = {
 		{
 			title: 'Offline sources test',
 			run: async function(test) {
-				return blockNTP(this, test)
+				return blockNTP(test, this, this.link)
 				.then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -90,20 +145,25 @@ module.exports = {
 							).then(logs => {
 								return Promise.resolve(regex.test(logs));
 							})
-						}, false, 5 * 60, 1000),
+						}, false, 5 * 60, 1000), // 5 min
 						'Should force NTP poll when sources become offline'
 					);
 				}).then(() => {
-					return restoreNTP(this, test);
+					return restoreNTP(test, this, this.link);
 				});
 			},
 		},
 		{
 			title: 'System time skew test',
 			run: async function(test) {
-				return blockNTP(this, test)
+				return blockNTP(test, this, this.link)
 				.then(() => {
-					return this.worker.executeCommandInHostOS(`date --set="-2min"`, this.link);
+					return test.resolves(
+						this.worker.executeCommandInHostOS(
+							`date --set="-2min"`,
+							this.link
+						), `Should apply time skew of -2 minutes`
+					);
 				}).then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -114,11 +174,11 @@ module.exports = {
 								).then(logs => {
 									return Promise.resolve(regex.test(logs));
 								})
-						}, false, 5 * 60, 1000),
+						}, false, 10 * 60, 1000), // 10 min
 						'Should restart chronyd when system time skew detected'
 					);
 				}).then(() => {
-					return restoreNTP(this, test);
+					return restoreNTP(test, this, this.link);
 				});
 			}
 		},

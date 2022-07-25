@@ -112,6 +112,76 @@ module.exports = {
 			},
 		};
 
+		/**
+		 * Write or remove a property from config.json in the boot partition
+		 * @param {string} test Current test instance to append results
+		 * @param {string} key Object key to update, dot separated
+		 * @param {string} value New value, can be string, or object, or null|undefined to remove
+		 * @param {string} target The address of the target device
+		 *
+		 * @category helper
+		 */
+		systemd.writeConfigJsonProp = async (test, key, value, target) => {
+
+			return test.test(`Write or remove ${key} in config.json`, t =>
+				t.resolves(
+					systemd.waitForServiceState(
+						'config-json.service',
+						'inactive',
+						target
+					),
+					'Should wait for config-json.service to be inactive'
+				).then(() => {
+					if (value == null) {
+						return t.resolves(
+							worker.executeCommandInHostOS(
+								[
+									`tmp=$(mktemp)`,
+									`&&`, `jq`, `"del(.${key})"`, `/mnt/boot/config.json`,
+									`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+								].join(' '),
+								target
+							), `Should remove ${key} from config.json`
+						)
+					} else {
+						if (typeof(value) == 'string') {
+							value = `"${value}"`
+						} else {
+							value = JSON.stringify(value);
+						}
+		
+						return t.resolves(
+							worker.executeCommandInHostOS(
+								[
+									`tmp=$(mktemp)`,
+									`&&`, `jq`, `'.${key}=${value}'`, `/mnt/boot/config.json`,
+									`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+								].join(' '),
+								target
+							), `Should write ${key} to ${value.substring(24) ? value.replace(value.substring(24), '...') : value} in config.json`
+						)
+					}
+				}).then(() => {
+					// avoid hitting 'start request repeated too quickly'
+					return t.resolves(
+						worker.executeCommandInHostOS(
+							'systemctl reset-failed config-json.service',
+							target
+						), `Should reset start counter of config-json.service`
+					);
+				}).then(() => {
+					return t.resolves(
+						systemd.waitForServiceState(
+							'config-json.service',
+							'inactive',
+							target
+						),
+						'Should wait for config-json.service to be inactive'
+					)
+				})
+			);
+		}
+
 		// The suite contex is an object that is shared across all tests. Setting something into the context makes it accessible by every test
 		this.suite.context.set({
 			cloud: cloud,
