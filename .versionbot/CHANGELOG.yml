@@ -1,4 +1,21 @@
 - commits:
+    - subject: Make sure u-boot is able to import an environment file
+      hash: 6a1a8f23fadbb4e9b4bb0e1dd89e5744e94c2ead
+      body: |
+        BalenaOS requires the `env import` command to be available so make sure
+        to configure u-boot accordingly.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Make sure u-boot is able to import an environment file
+        changelog-entry: Make sure u-boot is able to import an environment file
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.100.11
+  date: 2022-07-25T13:52:32.038Z
+- commits:
     - subject: "tests: cloud: preload: fix no-return-await"
       hash: 4011daec80bf0e81915bdaf6aafdcd1cd298e5d6
       body: |
