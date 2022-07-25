@@ -14,51 +14,6 @@
 
 'use strict';
 
-const setConfig = async (test, context, key, value) => {
-
-	return context.systemd.waitForServiceState(
-			'config-json.service',
-			'inactive',
-			context.link
-	).then(() => {
-		if (!value) {
-			test.comment(`Removing ${key} from config.json...`);
-			return context.worker.executeCommandInHostOS(
-				[
-					`tmp=$(mktemp)`,
-					`&&`, `jq`, `"del(.${key})"`, `/mnt/boot/config.json`,
-					`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
-				].join(' '),
-				context.link);
-		} else {
-			if (typeof(value) == 'string') {
-				value = `"${value}"`
-			} else {
-				value = JSON.stringify(value);
-			}
-
-			test.comment(`Setting ${key} to ${value} in config.json...`);
-			return context.worker.executeCommandInHostOS(
-				[
-					`tmp=$(mktemp)`,
-					`&&`, `jq`, `'.${key}=${value}'`, `/mnt/boot/config.json`,
-					`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
-				].join(' '),
-				context.link);
-		}
-	}).then(() => {
-		// avoid hitting 'start request repeated too quickly'
-		return context.worker.executeCommandInHostOS(
-			'systemctl reset-failed config-json.service',
-			context.link);
-	}).then(() => {
-		return context.systemd.waitForServiceState(
-			'config-json.service',
-			'inactive',
-			context.link);
-	});
-}
-
 module.exports = {
 	title: 'Config.json configuration tests',
 	tests: [
@@ -71,7 +26,7 @@ module.exports = {
 
 				const context = this.context.get();
 
-				return setConfig(test, context, 'hostname', hostname) 
+				return this.systemd.writeConfigJsonProp(test, 'hostname', hostname, context.link)
 				.then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -85,7 +40,7 @@ module.exports = {
 						`${hostname}.local should resolve and /etc/hostname should contain ${hostname}`
 					);
 				}).then(() => {
-					return setConfig(test, context, 'hostname');
+					return this.systemd.writeConfigJsonProp(test, 'hostname', null, context.link);
 				});
 			},
 		},
@@ -98,7 +53,7 @@ module.exports = {
 
 				const context = this.context.get();
 
-				return setConfig(test, context, 'ntpServers', ntpServer()) 
+				return this.systemd.writeConfigJsonProp(test, 'ntpServers', ntpServer(), context.link)
 				.then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -112,7 +67,7 @@ module.exports = {
 						'Device should show one record with our ntp server'
 					);
 				}).then(() => {
-					return setConfig(test, context, 'ntpServers');
+					return this.systemd.writeConfigJsonProp(test, 'ntpServers', null, context.link);
 				});
 			},
 		},
@@ -124,7 +79,7 @@ module.exports = {
 
 				const context = this.context.get();
 
-				return setConfig(test, context, 'dnsServers', `${exampleDns} ${exampleDns}`)
+				return this.systemd.writeConfigJsonProp(test, 'dnsServers', `${exampleDns} ${exampleDns}`, context.link)
 				.then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -142,7 +97,7 @@ module.exports = {
 						`Active dnsmasq service should include ${exampleDns} in the logs`
 					)
 				}).then(() => {
-					return setConfig(test, context, 'dnsServers', 'null');
+					return this.systemd.writeConfigJsonProp(test, 'dnsServers', 'null', context.link);
 				}).then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -167,7 +122,7 @@ module.exports = {
 						return test.is(output, '1', 'Active dnsmasq service should not log "bad address".');
 					});
 				}).then(() => {
-					return setConfig(test, context, 'dnsServers');
+					return this.systemd.writeConfigJsonProp(test, 'dnsServers', null, context.link);
 				}).then(() => {
 					return test.resolves(
 						context.utils.waitUntil(async () => {
@@ -208,7 +163,7 @@ module.exports = {
 
 				const context = this.context.get();
 
-				return setConfig(test, context, 'os.network.connectivity', connectivity)
+				return this.systemd.writeConfigJsonProp(test, 'os.network.connectivity', connectivity, context.link)
 				.then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -227,7 +182,7 @@ module.exports = {
 						`NetworkManager should be configured with uri ${connectivity.uri}`
 					);
 				}).then(() => {
-					return setConfig(test, context, 'os.network.connectivity');
+					return this.systemd.writeConfigJsonProp(test, 'os.network.connectivity', null, context.link);
 				})
 			},
 		},
@@ -236,7 +191,7 @@ module.exports = {
 			run: async function(test) {
 				const context = this.context.get();
 
-				return setConfig(test, context, 'os.network.wifi.randomMacAddressScan', true)
+				return this.systemd.writeConfigJsonProp(test, 'os.network.wifi.randomMacAddressScan', true, context.link)
 				.then(() => {
 					return test.resolves(
 						this.utils.waitUntil(async () => {
@@ -255,7 +210,7 @@ module.exports = {
 						'NetworkManager should be configured to randomize wifi MAC'
 					);
 				}).then(() => {
-					setConfig(test, context, 'os.network.wifi.randomMacAddressScan');
+					return this.systemd.writeConfigJsonProp(test, 'os.network.wifi.randomMacAddressScan', null, context.link);
 				});
 			},
 		},
@@ -268,7 +223,7 @@ module.exports = {
 					99: `ENV{ID_FS_LABEL_ENC}=="resin-boot", SYMLINK+="${linkPath}"`,
 				};
 
-				return setConfig(test, context, 'os.udevRules', rule)
+				return this.systemd.writeConfigJsonProp(test, 'os.udevRules', rule, context.link)
 				.then(() => {
 					test.comment('Reloading udev rules...');
 					return context.worker.executeCommandInHostOS(
@@ -298,7 +253,7 @@ module.exports = {
 						test.is(linkTarget, deviceLink, 'Dev link should point to the correct device');
 					});
 				}).then(() => {
-					return setConfig(test, context, 'os.udevRules');
+					return this.systemd.writeConfigJsonProp(test, 'os.udevRules', null, context.link);
 				});
 			},
 		},
