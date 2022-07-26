@@ -59,7 +59,7 @@
 #       a) [optional] Define BALENA_DEFCONFIG_NAME. Default: "resin-defconfig"
 #       b) Add BALENA_DEFCONFIG_NAME to SRC_URI.
 
-inherit kernel-resin-noimage sign-efi sign-gpg
+inherit kernel-balena-noimage sign-efi sign-gpg
 
 BALENA_DEFCONFIG_NAME ?= "resin-defconfig"
 

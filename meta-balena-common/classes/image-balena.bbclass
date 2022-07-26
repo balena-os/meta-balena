@@ -2,7 +2,7 @@
 # Balena images customizations
 #
 
-inherit image_types_balena
+inherit image_types_balena kernel-balena-noimage
 
 # When building a Balena OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build
