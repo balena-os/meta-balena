@@ -168,7 +168,7 @@ else
 	content=$(jq -S ". |= .+ {\"hostappExtensions\" : \"${current_hostext_images}\"}" < "${tmpfile}")
 	echo "${content}" > "${tmpfile}"
 fi
-mv "${tmpfile}" "${CONFIG_PATH}" && sync
+"${MV}" "${tmpfile}" "${CONFIG_PATH}"
 rm -rf "${tmpdir}"
 
 if [ -n "${current_hostext_images}" ]; then

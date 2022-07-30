@@ -36,8 +36,8 @@ else
 fi
 
 # Parse bootloader config file for key variables
-upgrade_available=`grep "upgrade_available=" "${BOOTLOADER_FILE}" | cut -d'=' -f 2`
-resin_root_part=`grep "resin_root_part=" "${BOOTLOADER_FILE}" | cut -d'=' -f 2`
+upgrade_available=`"${CAT}" "${BOOTLOADER_FILE}" |  grep "upgrade_available=" | cut -d'=' -f 2`
+resin_root_part=`"${CAT}" "${BOOTLOADER_FILE}" | grep "resin_root_part=" | cut -d'=' -f 2`
 
 if [ -z "${upgrade_available}" ]; then
 	echo "Rollback: Could not find upgrade_available variable in bootloader environment"
