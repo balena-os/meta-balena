@@ -1,4 +1,83 @@
 - commits:
+    - subject: "resin-device-register: Use fatrw to access the boot partition"
+      hash: 9730e7a5805f8589ff392ccad0029b67ff0619d4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Use fatrw to access the boot partition"
+      hash: a4b626edb5d27f35a754cf6e7b718dd379453a01
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-unique-key: Use fatrw to access the boot partition"
+      hash: 4c29d63e09ad1e6966bfe3a6ada7f4875ca5ff58
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-rollback: Use fatrw if available"
+      hash: 2f14cdf9e82bd50d5cbabfc62d9d3ed5b3f2de7b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "update-hostapp-extensions: Use fatrw if available"
+      hash: 6043f89df336b2aa22253c90a1923f0ea9f9b773
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: Provide FAT safe filesystem access alternatives"
+      hash: 09ddd9c7d9e9cce2e9956d15644931d879ce0ad3
+      body: |
+        The boot partition is currently a FAT filesystem that does not support
+        atomic writes. To prevent corruption, this commit introduces a fatrw
+        application that needs to be used both when reading and writing files
+        to the boot partition to provide safe accesses.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "fatrw: Add recipe"
+      hash: c8312e6a8a6b20d5534754ab2930463b302c87d4
+      body: |
+        Builds a CLI application to perform atomic writes to FAT filesystems.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.101.0
+  title: "'Use fatrw for atomic writes to boot partition'"
+  date: 2022-07-29T15:21:30.925Z
+- commits:
     - subject: "test: os: chrony: Double the wait for time skew test"
       hash: 756b5eba8d3b197f56688be030b522f94a628c42
       body: |
