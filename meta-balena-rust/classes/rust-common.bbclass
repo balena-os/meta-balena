@@ -19,6 +19,13 @@ RUST_LIBC = "${TCLIBC}"
 RUST_LIBC:class-crosssdk = "glibc"
 RUST_LIBC:class-native = "glibc"
 
+def set_rust_arch(arch):
+    try:
+        import oe.rust
+        return oe.rust.arch_to_rust_arch(arch)
+    except ImportError or ModuleNotFoundError:
+        return arch
+
 def determine_libc(d, thing):
     '''Determine which libc something should target'''
 
@@ -66,7 +73,7 @@ def rust_base_triple(d, thing):
     if thing == "TARGET" and target_is_armv7(d):
         arch = "armv7"
     else:
-        arch = oe.rust.arch_to_rust_arch(d.getVar('{}_ARCH'.format(thing)))
+        arch = set_rust_arch(d.getVar('{}_ARCH'.format(thing)))
 
     # All the Yocto targets are Linux and are 'unknown'
     vendor = "-unknown"
@@ -91,8 +98,9 @@ def rust_base_triple(d, thing):
     return arch + vendor + '-' + os + libc
 
 
+
 # In some cases uname and the toolchain differ on their idea of the arch name
-RUST_BUILD_ARCH = "${@oe.rust.arch_to_rust_arch(d.getVar('BUILD_ARCH'))}"
+RUST_BUILD_ARCH = "${@set_rust_arch(d.getVar('BUILD_ARCH'))}"
 
 # Naming explanation
 # Yocto
