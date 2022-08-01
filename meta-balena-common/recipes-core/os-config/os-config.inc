@@ -1,6 +1,6 @@
 inherit systemd cargo-dyn
 
-DEPENDS += "dbus openssl"
+DEPENDS += "dbus openssl pkgconfig-native"
 
 SRC_URI += " \
 	file://os-config.json \
@@ -16,6 +16,7 @@ SYSTEMD_SERVICE:${PN} = " \
 	os-config-devicekey.service \
 	"
 
+do_compile[network] = "1"
 do_install:append() {
 	install -d ${D}${sysconfdir}
 	install -m 0644 ${WORKDIR}/os-config.json ${D}${sysconfdir}
