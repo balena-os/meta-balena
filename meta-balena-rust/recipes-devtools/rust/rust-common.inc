@@ -297,7 +297,7 @@ def rust_gen_target(d, thing, wd, features, cpu, arch, abi=""):
     sys = sys_for(d, thing)
     prefix = prefix_for(d, thing)
 
-    rust_arch = oe.rust.arch_to_rust_arch(arch)
+    rust_arch = set_rust_arch(arch)
 
     if abi:
         arch_abi = "{}-{}".format(rust_arch, abi)
