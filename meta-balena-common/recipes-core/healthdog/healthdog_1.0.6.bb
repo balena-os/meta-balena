@@ -6,9 +6,9 @@ inherit cargo
 # DEFAULT_PREFERENCE = "-1"
 
 # how to get healthdog could be as easy as but default to a git checkout:
-# SRC_URI += "crate://crates.io/healthdog/1.0.1"
+# SRC_URI += "crate://crates.io/healthdog/1.0.6"
 SRC_URI += "git://github.com/balena-os/healthdog-rs.git;protocol=https;nobranch=1"
-SRCREV = "04f6180d6711e9fb0171432a822867a0f2100455"
+SRCREV = "37f9dbb37a399e5548fe47477ddd027bb846212d"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR = ""
 
