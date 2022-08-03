@@ -1,4 +1,19 @@
 - commits:
+    - subject: "os-config: Update os-config from v1.2.1 to v1.2.10"
+      hash: 1663c7d601882813f9219209fefee6bfb3eb2e6d
+      body: |
+        The tool now has optimized binary size in release builds
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.101.1
+  title: "'Optimize binary size in release builds for Rust tools'"
+  date: 2022-08-01T14:48:59.790Z
+- commits:
     - subject: "resin-device-register: Use fatrw to access the boot partition"
       hash: 9730e7a5805f8589ff392ccad0029b67ff0619d4
       body: ""
