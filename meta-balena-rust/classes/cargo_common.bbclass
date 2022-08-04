@@ -8,7 +8,14 @@
 ## is used by cargo.bbclass and Rust
 ##
 
+def set_crate_fetcher(d):
+    # Check to see whether bitbake has a crate fetcher (included in Kirkstone)
+    if not os.path.exists(os.path.join(d.getVar('TOPDIR'),'../layers/poky/bitbake/lib/bb/fetch2/crate.py')):
+        return "crate-fetch"
+    return ""
+
 # add crate fetch support
+inherit ${@set_crate_fetcher(d)}
 inherit rust-common
 
 # Where we download our registry and dependencies to
