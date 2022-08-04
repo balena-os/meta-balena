@@ -157,6 +157,10 @@ python do_configure() {
     bb.build.exec_func("setup_cargo_environment", d)
 }
 
+def get_parallel_make_argument(d):
+    if "parallel_make_argument" in dir(oe.utils):
+        return oe.utils.parallel_make_argument(d, '-j %d')
+    return d.getVar('PARALLEL_MAKE')
 
 rust_runx () {
     echo "COMPILE ${PN}" "$@"
@@ -171,7 +175,7 @@ rust_runx () {
 
     oe_cargo_fix_env
 
-    python3 src/bootstrap/bootstrap.py ${@oe.utils.parallel_make_argument(d, '-j %d')} "$@" --verbose
+    python3 src/bootstrap/bootstrap.py ${@get_parallel_make_argument(d)} "$@" --verbose
 }
 rust_runx[vardepsexclude] += "PARALLEL_MAKE"
 
