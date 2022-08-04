@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.101.2
+## (2022-08-04)
+
+* dunfell/honister: remove obsolete systemd patch [Joseph Kogut]
+* plymouth: replace duplicated patches w/ shared drop-ins [Joseph Kogut]
+* systemd: mask systemd-getty-generator instead of patching [Joseph Kogut]
+* systemd: replace duplicated patch w/ shared drop-ins [Joseph Kogut]
+
 # v2.101.1
 ## (2022-08-01)
 

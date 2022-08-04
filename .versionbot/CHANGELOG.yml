@@ -1,4 +1,78 @@
 - commits:
+    - subject: "dunfell/honister: remove obsolete systemd patch"
+      hash: a8ac60dad0f7657c80af519bd01aedf8c546c540
+      body: >
+        The patch applied to systemd addressed this upstream moby issue:
+
+        https://github.com/moby/moby/issues/27202
+
+
+        This was fixed in containerd 1.0.2:
+
+        https://github.com/containerd/console/pull/10/commits/c358734ec94e72903243bd1c9034874a1de09424
+
+
+        This fix is present in balena engine since v17.13.5, which has been in
+
+        use since commit 53ce147. Drop this patch from meta-balena-dunfell and
+
+        later.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "plymouth: replace duplicated patches w/ shared drop-ins"
+      hash: e98ce66ef52aa65a1b591f4c8e40a7e5601407b3
+      body: >
+        Plymouth services are modified in the installation directory with balena
+
+        specific customizations using patches. This increases the manual intervention necessary
+
+        when adding support for a new version of this package or Yocto. Replace
+
+        the patches with equivalent drop-in configs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "systemd: mask systemd-getty-generator instead of patching"
+      hash: 40e80562e6474b9f262f5f8ad106588aa867fa1b
+      body: |
+        We disable systemd-getty-generator to allow explicit control over when
+        we setup getty to create consoles. Previously, this was done using a
+        patch to systemd, removing this generator. Mask this instead so we can
+        consolidate this configuration in meta-balena-common.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "systemd: replace duplicated patch w/ shared drop-ins"
+      hash: 6176a0f1295bbae4cf68d27cea500bead426230e
+      body: |
+        Certain services, such as getty@.service, and systemd-logind.service are
+        disabled when running in a container using a patch to the source files.
+        This increases the manual intervention necessary when adding support for
+        a new version of systemd. Replace the patch with drop-in configs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.101.2
+  title: "'Compat layer cleanup v2'"
+  date: 2022-08-04T15:41:39.067Z
+- commits:
     - subject: "os-config: Update os-config from v1.2.1 to v1.2.10"
       hash: 1663c7d601882813f9219209fefee6bfb3eb2e6d
       body: |
