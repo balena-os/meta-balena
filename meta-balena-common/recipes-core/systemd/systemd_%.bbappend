@@ -8,7 +8,7 @@ SRC_URI:append = " \
     file://vacuum.conf \
     file://watchdog.conf \
     file://os.conf \
-    file://60-resin-update-state.rules \
+    file://65-resin-update-state.rules \
     file://10-zram.rules \
     file://zram-swap-init \
     file://dev-zram0.swap \
