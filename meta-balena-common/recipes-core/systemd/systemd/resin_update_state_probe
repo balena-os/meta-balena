@@ -27,7 +27,14 @@ part=$1
 label=$2
 parent=$3
 
-[ -z "${parent}" ] && [ "${part:0:8}" != "/dev/dm-" ] && exit 1
+valid_device() {
+	p=$1
+	if [ "${p:0:8}" != "/dev/dm-" ] && [ "${p:0:7}" != "/dev/md" ]; then
+		return 1
+	fi
+}
+
+[ -z "${parent}" ] && ! valid_device "${part}" && exit 1
 
 # If the UUIDs have been regenerated in this boot, the root UUID is stored
 # on a temporary file, otherwise fetch from the kernel command line
@@ -51,7 +58,7 @@ if [ -n "${rpdev}" ]; then
 		rpdev=$(lsblk -nlo pkname,uuid | grep "${cryptdev_uuid}" | cut -d " " -f1) || true
 	fi
 fi
-if [ "${rpdev}" = "${parent}" ] || [ "${part:0:8}" = "/dev/dm-" ]; then
+if [ "${rpdev}" = "${parent}" ] || valid_device "${part}"; then
 	echo "BALENA_FS_USE=${label}"
 	# Determine if its the active or inactive partition. The active one's
 	# UUID is passed by the bootloader in the kernel command line
