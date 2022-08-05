@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.101.2
+## (2022-08-05)
+
+* DRY the HUP smoke tests [Leandro Motta Barros]
+* Check volume contents over HUPs [Leandro Motta Barros]
+
 # v2.101.1
 ## (2022-08-01)
 

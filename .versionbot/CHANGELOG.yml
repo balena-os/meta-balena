@@ -1,4 +1,36 @@
 - commits:
+    - subject: DRY the HUP smoke tests
+      hash: 46dc350d829c352dae62a87eb1aec21e69789503
+      body: |
+        Our tests perform two HUPs (into and out of the release under test), and
+        the code for both of these HUPs were duplicated. This commit factors
+        this code out to a common function.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+    - subject: Check volume contents over HUPs
+      hash: ef4e861fdd1dd7ea8d3a9b6dd34a0e1e30c8e852
+      body: |
+        This is a small improvement over our previous test: in addition to
+        checking that the volumes themselves are preserved over HUPs, we now
+        check if the contents of these volumes is preserved.
+
+        Resolves #2428
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.101.2
+  title: "'Check volume contents over HUPs'"
+  date: 2022-08-05T13:32:38.536Z
+- commits:
     - subject: "os-config: Update os-config from v1.2.1 to v1.2.10"
       hash: 1663c7d601882813f9219209fefee6bfb3eb2e6d
       body: |
