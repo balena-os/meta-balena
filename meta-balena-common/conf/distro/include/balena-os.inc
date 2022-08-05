@@ -1,6 +1,7 @@
 # Poky based distro file
 require conf/distro/poky.conf
 include conf/distro/include/balena-os-yocto-version.inc
+include conf/distro/include/balena-os-rust-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
