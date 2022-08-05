@@ -1,6 +1,7 @@
 # Poky based distro file
 require conf/distro/poky.conf
 include conf/distro/include/balena-os-yocto-version.inc
+include conf/distro/include/balena-os-rust-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
@@ -100,14 +101,6 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 
 # let's pin linux-firmware to the version we imported from Poky hardknott release
 PREFERRED_VERSION_linux-firmware = "20210511"
-
-# Preferred rust version
-PREFERRED_VERSION_rust ?= "1.54.0"
-PREFERRED_VERSION_rust-native ?= "1.54.0"
-PREFERRED_VERSION_rust-cross-${TARGET_ARCH} ?= "1.54.0"
-PREFERRED_VERSION_rust-llvm-native ?= "1.54.0"
-PREFERRED_VERSION_cargo-native ?= "1.54.0"
-PREFERRED_VERSION_libstd-rs ?= "1.54.0"
 
 # balena-engine go version requirement
 GOVERSION = "1.16.2"
