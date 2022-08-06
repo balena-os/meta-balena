@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-io/balena-supervisor to v14.0.13
+      hash: 86f7f397f711093dcf71a86c349f3adc29bd17ac
+      body: Update balena-io/balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.101.3
+  title: "'Update balena-io/balena-supervisor to v14.0.13'"
+  date: 2022-08-05T17:03:57.877Z
+- commits:
     - subject: DRY the HUP smoke tests
       hash: 46dc350d829c352dae62a87eb1aec21e69789503
       body: |
