@@ -1,4 +1,148 @@
 - commits:
+    - subject: "meta-balena-common: os-config: Update to v1.2.11"
+      hash: c19df87bda6e49db220fbe69783f458271156263
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-integration: Replace parallel_make_argument()"
+      hash: 9afd8434321e6e5f0f092066001d18b792e238ca
+      body: |
+        The oe.utils parallel_make_argument() was introduced in Zeus, so this
+        commit replaces by a direct call to fetch PARALLEL_MAKE.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-integration: Update cmake for versions below Zeus"
+      hash: 01ab1073ed295a3656697357bc6cfcd33e1b860b
+      body: |
+        In order to use the same rust toolchain across all supported Yocto
+        versions this commit updates the cmake version on all integration layers
+        below Zeus to 3.13.4, which is the minimum version to compile the rust
+        1.62 toolchain.
+
+        The cmake recipe and classes come from Poky's 2daa03ecfeaf
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-common: distro: Add rust preferred versions"
+      hash: 0c1087fe4714ebc620e8965c959b6f440b97ddd1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-rust: Add condition check for parallel_make_argument() use"
+      hash: cf79552fd8c48aff97b8433b5761df7f05daba39
+      body: |
+        This function is not part of all supported Yocto versions so make a
+        check for its existence before using it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-rust: Provide crate fetcher for Yocto versions without it"
+      hash: e5ef54665433c4a5d7a5c529b6babcfa841ac66f
+      body: |
+        The crate fetcher was introduced in bitbake in Kirkstone, before that
+        it was living in meta-rust.
+
+        We want to use the balena-rust layer across a wide variety of Yocto
+        versions so include the fetcher conditionally.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-rust: Modify to use without oe.rust.arch_to_rust_arch()
+        support"
+      hash: ad73641c6a0d98155f58f467ae3953f4a36d9160
+      body: >
+        The arch_to_rust_arch() function was introduced to cater for ppc64le
+
+        systems and is not present in older Yocto releases.
+
+
+        This commit reverts to the previous way of setting the rust architecture.
+
+        It will not work for ppc64le and if we would need to support such an
+
+        architecture the arch_to_rust_arch() function will still be called if it
+
+        exists in Kirkstone or newer Yocto versions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-rust: Add rust recipes to keep the rust version a
+        distribution config"
+      hash: d851c793668950a8c780093419d8369c1a0461fe
+      body: >
+        With Kirkstone and the support of openSSL 3.0 it's not possible to find
+
+        a set of dependencies that work for all of our rust applications across
+
+        the 1.32 to 1.62 toolchain versions that are supported across all the
+
+        Yocto versions we keep compatibility with.
+
+
+        This layer allows to set a preferred version as a distro setting that can
+
+        be used across all Yocto versions.
+
+
+        These rust recipes come from Poky Kirkstone
+
+        2642bdb8908afb800e6dc5722602a87228dd8694
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-rust: Add compatibility layer"
+      hash: ecff7687e9a1b3d4129f287da51942c7404b640b
+      body: >
+        This layer will allow to use the same rust toolchain across all
+        supported
+
+        Yocto compatibility layers.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.102.0
+  title: "'Update os-config to rust 1.62'"
+  date: 2022-08-09T10:36:11.501Z
+- commits:
     - subject: Update balena-io/balena-supervisor to v14.0.13
       hash: 86f7f397f711093dcf71a86c349f3adc29bd17ac
       body: Update balena-io/balena-supervisor

@@ -1,6 +1,19 @@
 Change log
 -----------
 
+# v2.102.0
+## (2022-08-09)
+
+* meta-balena-common: os-config: Update to v1.2.11 [Alex Gonzalez]
+* meta-balena-integration: Replace parallel_make_argument() [Alex Gonzalez]
+* meta-balena-integration: Update cmake for versions below Zeus [Alex Gonzalez]
+* meta-balena-common: distro: Add rust preferred versions [Alex Gonzalez]
+* meta-balena-rust: Add condition check for parallel_make_argument() use [Alex Gonzalez]
+* meta-balena-rust: Provide crate fetcher for Yocto versions without it [Alex Gonzalez]
+* meta-balena-rust: Modify to use without oe.rust.arch_to_rust_arch() support [Alex Gonzalez]
+* meta-balena-rust: Add rust recipes to keep the rust version a distribution config [Alex Gonzalez]
+* meta-balena-rust: Add compatibility layer [Alex Gonzalez]
+
 # v2.101.3
 ## (2022-08-05)
 
