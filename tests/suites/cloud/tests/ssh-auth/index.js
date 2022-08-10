@@ -20,7 +20,7 @@ const exec = Bluebird.promisify(require('child_process').exec);
 const { join, dirname } = require("path");
 const { homedir } = require("os");
 const fse = require("fs-extra");
-const sshPath = join(homedir(), "test_id");
+const sshPath = join(homedir(), "id");
 
 const setConfig = async (test, that, target, key, value) => {
 
@@ -117,7 +117,7 @@ module.exports = {
 					}).catch((err) => {
 						return test.match(
 							err.message,
-							/All configured authentication methods failed/,
+							/All configured authentication methods failed|Connection lost before handshake/,
 							"Local SSH authentication without custom keys is not allowed in production mode"
 						);
 					});
@@ -136,7 +136,7 @@ module.exports = {
 							result = await this.worker.executeCommandInHostOS('echo -n pass',
 								this.link);
 							return result
-						}, false, 60, 5 * 1000);
+						}, false, 10, 5 * 1000);
 					return test.equals(
 						result,
 						"pass",
@@ -173,7 +173,7 @@ module.exports = {
 							result = await this.worker.executeCommandInHostOS('echo -n pass',
 								this.link);
 							return result
-						}, false, 60, 5 * 1000);
+						}, false, 10, 5 * 1000);
 					return test.equals(
 						result,
 						"pass",
@@ -214,7 +214,7 @@ module.exports = {
 							result = await this.worker.executeCommandInHostOS('echo -n pass',
 								this.link);
 							return result
-						}, false, 60, 5 * 1000);
+						}, false, 10, 5 * 1000);
 					return test.equals(
 						result,
 						"pass",
