@@ -13,7 +13,7 @@ RDEPENDS:${PN} = " \
     chrony \
     chronyc \
     libnss-ato \
-    resin-extra-udev-rules \
+    extra-udev-rules \
     rsync \
     kernel-modules \
     kernel-image-initramfs \
