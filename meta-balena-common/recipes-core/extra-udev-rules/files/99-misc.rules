@@ -1,0 +1,9 @@
+#
+# Miscellaneous rules
+#
+
+# 0483:5740 - STM32F4 Discovery in USB Serial Mode (CN5)
+ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+# 30A4:0001 - Inca Roads Serial Device
+ATTRS{idVendor}=="30A4", ATTRS{idProduct}=="0001", ENV{ID_MM_DEVICE_IGNORE}="1"
