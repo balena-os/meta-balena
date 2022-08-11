@@ -12,7 +12,7 @@ RDEPENDS:${PN} = " \
     ${BALENA_REGISTER} \
     chrony \
     chronyc \
-    resin-extra-udev-rules \
+    extra-udev-rules \
     rsync \
     kernel-modules \
     kernel-image-initramfs \
