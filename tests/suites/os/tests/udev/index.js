@@ -39,5 +39,33 @@ module.exports = {
 				);
 			},
 		},
+		{
+			title: 'by-state links are created',
+			run: async function(test) {
+				const links = [
+					'active',
+					'inactive',
+					'resin-data',
+					'resin-rootA',
+					'resin-rootB',
+					'resin-state',
+				];
+
+				const rootDisk = await this.worker.executeCommandInHostOS(
+					`eval $(lsblk -oMOUNTPOINT,PKNAME -P | grep 'MOUNTPOINT="/mnt/sysroot/active"'); echo $PKNAME`,
+					this.link
+				);
+
+				test.comment(`active root is on /dev/${rootDisk}`);
+
+				await test.resolves(
+					this.worker.executeCommandInHostOS(
+						`for l in ${links.join(' ')}; do test -L "/dev/disk/by-state/$l"; done`,
+						this.link
+					),
+					'All required by-state links have been created'
+				);
+			}
+		}
 	],
 };
