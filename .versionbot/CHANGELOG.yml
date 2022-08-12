@@ -1,4 +1,135 @@
 - commits:
+    - subject: "README: Add a section for the overlay data blocks"
+      hash: b7e81c109a3701b45d54e19c0cdf4a1e6aac31f3
+      body: |
+        Add a short section that explains the caveats of using data overlays and
+        the way to disable them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "package-group-resin: Replace hostapp-extensions-update"
+      hash: 219bc13db57776a3b3c95a3ccb70a3dd4548b340
+      body: |
+        The script is now called update-data-store to reflect architectural
+        design changes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Add update-data-store to replace update-hostapp-extensions
+      hash: 4265b12b765d08097914658b49942c32443c1ea5
+      body: |
+        This script is now called by the supervisor with the target state.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add update-data-store to replace update-hostapp-extensions
+        changelog-entry: Add update-data-store to replace update-hostapp-extensions
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Do not use supervisor endpoint at build time
+      hash: ffb504e58206b7aee1a22d984bcd202e4c8c9966
+      body: |
+        The build process is already fetching all OS blocks, including the
+        supervisor, as preloaded apps. No need to use the supervisor endpoint
+        at build time.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Do not use supervisor endpoint at build time
+        changelog-entry: Do not use supervisor endpoint at build time
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docker-disk: Allow to define a custom CA"
+      hash: 72277190a7eacd1d66c0a038b889f90fb20ada54
+      body: |
+        When building images against openBalena a custom CA needs to be used so
+        secure API calls are possible.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Install data store images
+      hash: 2084e0052334482365f7569848b92701ab4ce322
+      body: |
+        Handle the installation of hostOS images with a target store in the data
+        partition as specified in the hostOS app.
+
+        Also, create an apps.json file that defines the preloaded default state
+        of the system
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Install data store images
+        changelog-entry: Install data store images
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docker-disk: Add balena-apps file"
+      hash: dee58bf69f470009bbc8f35cff1afe74fc467c9c
+      body: |
+        This include file contains utility functions that call the balena API
+        when building the data disk.
+
+        Initially they contain functions for blocks support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'Revert "docker-disk: Add the host extension images to the data
+        partition"'
+      hash: 4412c872d91f1bd818950ef5ae04ff5eb11b0ab3
+      body: >
+        This reverts commit cd44a94cf1646828832070417a2deb9236b0f5ee.
+
+
+        The preloaded hostapp extensions are no longer recorded in the read-only rootfs
+
+        but on the apps.json file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'Revert "resin-vars: Parse the HOSTEXT_IMAGES variable from config.json"'
+      hash: 8b5fb83c3a9aa6f98cb2145398019442c492c60d
+      body: |
+        This reverts commit 761f517f955f829e12b2c7f0a0f88830ded39e13.
+
+        The hostapp extension information will no longer be added to config.json
+        but to apps.json so that it can be managed by the supervisor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.102.0
+  title: "'Use balenaCloud registry for data store images and create
+    multi-container hostOS apps.json'"
+  date: 2022-08-12T09:44:54.833Z
+- commits:
     - subject: Update tests/leviathan digest to c2c68d2
       hash: 769f708630e8bf5bc58ca97a05d24a62e9c8976b
       body: Update tests/leviathan
