@@ -15,7 +15,14 @@ finish() {
 }
 trap finish EXIT
 
-. /balena-api.inc
+. /balena-apps.inc
+
+adjust_partition_size() {
+	local _image_size_bytes="$1"
+	MB_TO_BYTES=$(( 1024*1024 ))
+	_image_size_bytes=$(( PARTITION_SIZE*MB_TO_BYTES + _image_size_bytes ))
+	PARTITION_SIZE=$(( _image_size_bytes/MB_TO_BYTES ))
+}
 
 # Create user
 echo "[INFO] Creating and setting $USER_ID:$USER_GID."
@@ -50,37 +57,32 @@ docker pull --platform "${HOSTAPP_PLATFORM}" "${HELLO_REPOSITORY}"
 docker tag "${HELLO_REPOSITORY}" balena-healthcheck-image
 docker rmi "${HELLO_REPOSITORY}"
 docker save balena-healthcheck-image > ${BUILD}/balena-healthcheck-image.tar
-# Pull in host extension images
-BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
-for image_name in ${HOSTEXT_IMAGES}; do
-	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
-		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${image_name}" none
-	else
-		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
-		exit 1
-	fi
-done
 
-# Pull in the supervisor image as a separate app until it converges in the hostOS
 if [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
-	_supervisor_image=$(balena_api_fetch_image_from_app "${SUPERVISOR_FLEET}" "${SUPERVISOR_VERSION#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
-	echo "Pulling ${SUPERVISOR_FLEET}:${SUPERVISOR_VERSION}"
-	if docker pull "${_supervisor_image}"; then
-		docker tag "${_supervisor_image}" "${_supervisor_image%@*}"
-		docker tag "${_supervisor_image}" "balena_supervisor":"${SUPERVISOR_VERSION}"
-	else
-		echo "Not able to pull ${_supervisor_image}"
-		exit 1
-	fi
+	image_sizes=$(install_app "${SUPERVISOR_FLEET}" "${SUPERVISOR_VERSION}")
+	adjust_partition_size "${image_sizes}"
+	_supervisor_image=$(jq -r '.apps | .[] | select(.name=="'"${SUPERVISOR_FLEET}"'") | .releases[].services | .[].image' "${DATA_VOLUME}/apps.json")
+	_supervisor_image_id=$(imageid_from_digest "${_supervisor_image}")
+	docker tag "${_supervisor_image}" "${_supervisor_image%@*}"
+	docker tag "${_supervisor_image}" "balena_supervisor":"${SUPERVISOR_VERSION}"
 fi
+
+# Pull in hostos apps, both space-separated or colon-separated lists are accepted
+for image_name in $(echo ${HOSTOS_APPS} | tr ":" " "); do
+	image_sizes=$(install_app "${image_name}" "${HOSTOS_VERSION}")
+	adjust_partition_size "${image_sizes}"
+done
 
 echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"
 # don't let wait() error out and crash the build if the docker daemon has already been stopped
 wait "$(cat /var/run/docker.pid)" || true
 
+# Export the apps.json meta-data
+cp "${DATA_VOLUME}/apps.json" "${BUILD}"/
+
 # Export the final data filesystem
 dd if=/dev/zero of=${BUILD}/resin-data.img bs=1M count=0 seek="${PARTITION_SIZE}"
 
 # Usage type default, block size 4k defined in recipe. See https://github.com/tytso/e2fsprogs/issues/50
-mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -T default -b ${FS_BLOCK_SIZE}  -i 8192 -d ${DATA_VOLUME} -F ${BUILD}/resin-data.img
+mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -T default -b "${FS_BLOCK_SIZE}"  -i 8192 -d "${DATA_VOLUME}" -F "${BUILD}/resin-data.img"

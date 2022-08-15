@@ -5,6 +5,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = " \
 	file://Dockerfile \
 	file://entry.sh \
+	file://balena-apps.inc \
+	file://ca.crt \
 	"
 
 S = "${WORKDIR}"
@@ -21,6 +23,8 @@ PV = "${HOSTOS_VERSION}"
 
 RDEPENDS:${PN} = "balena"
 
+BALENA_ADMIN ?= "balena_os"
+
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile () {
@@ -32,6 +36,10 @@ do_compile () {
 		bbfatal "docker-disk: PARTITION_SIZE needs to have a value (megabytes)."
 	fi
 
+	if [ -n "${BALENA_CUSTOM_CA}" ]; then
+		cp "${BALENA_CUSTOM_CA}" ${WORKDIR}/ca.crt
+		no_cache="--no-cache"
+	fi
 	# At this point we really need internet connectivity for building the
 	# docker image
 	if [ "x${@connected(d)}" != "xyes" ]; then
@@ -54,37 +62,78 @@ do_compile () {
 	_image_name="docker-disk-$RANDOM"
 	_container_name="docker-disk-$RANDOM"
 	$DOCKER rmi -f ${_image_name} > /dev/null 2>&1 || true
-	$DOCKER build -t ${_image_name} -f ${WORKDIR}/Dockerfile ${WORKDIR}
+	$DOCKER build ${no_cache} -t ${_image_name} -f ${WORKDIR}/Dockerfile ${WORKDIR}
 	$DOCKER run --privileged --rm \
 		-e BALENA_STORAGE=${BALENA_STORAGE} \
 		-e USER_ID=$(id -u) -e USER_GID=$(id -u) \
 		-e SUPERVISOR_FLEET="${SUPERVISOR_FLEET}" \
 		-e SUPERVISOR_VERSION="${SUPERVISOR_VERSION}" \
 		-e HELLO_REPOSITORY="${HELLO_REPOSITORY}" \
-		-e HOSTEXT_IMAGES="${HOSTEXT_IMAGES}" \
 		-e HOSTAPP_PLATFORM="${HOSTAPP_PLATFORM}" \
 		-e BALENA_API_ENV="${BALENA_API_ENV}" \
 		-e BALENA_API_TOKEN="${_token}" \
 		-e PARTITION_SIZE="${PARTITION_SIZE}" \
 		-e FS_BLOCK_SIZE="${FS_BLOCK_SIZE}" \
+		-e HOSTOS_APPS="${HOSTOS_APPS}" \
+		-e HOSTOS_VERSION="${HOSTOS_VERSION}" \
+		-e BALENA_ADMIN="${BALENA_ADMIN}" \
 		-v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/build \
 		--name ${_container_name} ${_image_name}
 	$DOCKER rmi -f ${_image_name}
 }
 
-FILES:${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
-do_install () {
-	install -d ${D}${sysconfdir}
-	mkdir -p ${D}/usr/lib/balena
-	install -m 644 ${B}/balena-healthcheck-image.tar ${D}/usr/lib/balena/balena-healthcheck-image.tar
-	for image in "${HOSTEXT_IMAGES}"; do
-		echo "${image}" >> ${D}${sysconfdir}/hostapp-extensions.conf
-	done
+python __anonymous() {
+    import urllib.request
+    import json
+    import hashlib
+
+    token = d.getVar('BALENAOS_TOKEN')
+    apiEnv = d.getVar('BALENA_API_ENV')
+    version = d.getVar('HOSTOS_VERSION')
+    semver = version.split('+')[0]
+    revision = version.split('+')[1][3:]
+    translation = "v6"
+    header = {}
+    if token is not None:
+        header = {'Authorization': "bearer " + token}
+
+    cksums = []
+    apps = d.getVar('HOSTOS_APPS')
+    for appName in apps.split():
+        url = 'https://api.%s/%s/application?$filter='  \
+            'slug%%20eq%%20%%27balena_os/%s%%27' % (apiEnv, translation, appName)
+        raw = urllib.request.urlopen(urllib.request.Request(url, headers=header))
+        json_obj = json.load(raw)
+        appID = json_obj['d'][0]['id']
+        url = 'https://api.%s/%s/release?$filter=' \
+            '(belongs_to__application%%20eq%%20%%27%s%%27)%%20and%%20' \
+            '(semver%%20eq%%20%%27%s%%27)%%20and%%20' \
+            '(revision%%20eq%%20%%27%s%%27)' % (apiEnv, translation, appID,
+                                                semver, revision)
+        raw = urllib.request.urlopen(urllib.request.Request(url, headers=header))
+        json_obj = json.load(raw)
+        bb.note(str(json_obj))
+        bb.note("len %d" % (len(json_obj['d'])))
+        if len(json_obj['d']) == 0:
+            bb.fatal("HostOS app %s not available at revision %s" % (appName, "".join([semver, '+rev' + revision])))
+        else:
+            cksums.append(hashlib.md5(str(json_obj['d'][0]['composition']).encode('utf-8')).hexdigest())
+    if len(cksums) > 0:
+        d.setVar('HOSTOS_APPS_CKSUMS',str(cksums))
 }
 
-FILES:${PN} += "/etc/hostapp-extensions.conf"
+# Recompile if the hostos app list or their composition change
+do_compile[vardeps] += "HOSTOS_APPS"
+do_compile[vardeps] += "HOSTOS_APPS_CKSUMS"
+
+FILES:${PN} = "/usr/lib/balena/balena-healthcheck-image.tar"
+do_install () {
+	mkdir -p ${D}/usr/lib/balena
+	install -m 644 ${B}/balena-healthcheck-image.tar ${D}/usr/lib/balena/balena-healthcheck-image.tar
+}
 
 do_deploy () {
+	install -m 644 ${B}/apps.json ${DEPLOYDIR}/apps.json
 	install -m 644 ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
 }
 addtask deploy before do_package after do_install
