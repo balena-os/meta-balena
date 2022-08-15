@@ -1,4 +1,23 @@
 - commits:
+    - subject: "meta-balena-rust: Link to meta-rust"
+      hash: 83bd38733af9063c5d29d90fc0695838e4b718d3
+      body: |
+        This is a temporary way that will allow to update the bblayers.conf of
+        device type repositories to include meta-balena/meta-balena-rust while
+        still building.
+
+        This change will be reverted with the meta-balena-rust layer.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.101.5
+  title: "'meta-balena-rust: Link to meta-rust'"
+  date: 2022-08-12T08:01:52.474Z
+- commits:
     - subject: Update tests/leviathan digest to c2c68d2
       hash: 769f708630e8bf5bc58ca97a05d24a62e9c8976b
       body: Update tests/leviathan

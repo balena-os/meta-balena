@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.101.5
+## (2022-08-12)
+
+* meta-balena-rust: Link to meta-rust [Alex Gonzalez]
+
 # v2.101.4
 ## (2022-08-08)
 
