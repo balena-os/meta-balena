@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/cloud: fix ssh prod test for physical duts"
+      hash: abbb8233f803fd4216fe27bb8a9c28f96d30085e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.101.6
+  title: "'tests/cloud: fix ssh prod test for physical duts'"
+  date: 2022-08-15T12:33:41.204Z
+- commits:
     - subject: "meta-balena-rust: Link to meta-rust"
       hash: 83bd38733af9063c5d29d90fc0695838e4b718d3
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.101.6
+## (2022-08-15)
+
+* tests/cloud: fix ssh prod test for physical duts [rcooke-warwick]
+
 # v2.101.5
 ## (2022-08-12)
 
