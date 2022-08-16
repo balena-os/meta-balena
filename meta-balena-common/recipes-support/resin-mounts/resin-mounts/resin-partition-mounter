@@ -108,8 +108,8 @@ fi
 if [ "$target" = "resin-data" ]; then
     overwriting_target_path="$(get_state_path_from_label "resin-data-override")"
     if [ -z $overwriting_target_path ]; then
-        target = "resin-data-override"
-        target_path = overwriting_target_path
+        target="resin-data-override"
+        target_path=$overwriting_target_path
     fi
 fi
 
