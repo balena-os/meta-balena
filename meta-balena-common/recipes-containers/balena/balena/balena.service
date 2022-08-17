@@ -37,6 +37,7 @@ MountFlags=slave
 LimitNOFILE=1048576
 LimitNPROC=1048576
 LimitCORE=infinity
+WatchdogSignal=SIGTERM
 WatchdogSec=360
 Restart=always
 KillMode=process

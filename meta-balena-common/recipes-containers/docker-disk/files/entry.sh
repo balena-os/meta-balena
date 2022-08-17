@@ -44,12 +44,6 @@ do
 done
 echo "Docker started."
 
-# Pull in arch specific hello-world image and tag it balena-healthcheck-image
-echo "Pulling ${HELLO_REPOSITORY}:latest..."
-docker pull --platform "${HOSTAPP_PLATFORM}" "${HELLO_REPOSITORY}"
-docker tag "${HELLO_REPOSITORY}" balena-healthcheck-image
-docker rmi "${HELLO_REPOSITORY}"
-docker save balena-healthcheck-image > ${BUILD}/balena-healthcheck-image.tar
 # Pull in host extension images
 BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
 for image_name in ${HOSTEXT_IMAGES}; do
