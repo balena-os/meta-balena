@@ -1,4 +1,58 @@
 - commits:
+    - subject: Add automated tests for the Engine healthcheck
+      hash: 16d8dbe0e1dae47b161680a227213247ea699f1a
+      body: ""
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+    - subject: Use a lightweight Engine healthcheck
+      hash: 7146e4614c2658d6f7d5384602eb8ad213e08759
+      body: |
+        Previously, our healthcheck verified if we were able to start a new
+        container. This had two downsides:
+
+        1. It was relatively heavyweight. In devices under heavy load, it would
+           sometimes take so long to run that the Engine was killed by the
+           watchdog.
+        2. It wrote to the storage media. Creating a container involves writing
+           some data to persistent storage, therefore the healthcheck was
+           wearing the storage media.
+
+        This new healthcheck simply pings both `balenad` and `containerd`, which
+        is much faster than starting a new container and doesn't write to disk.
+        The step of pinging `containerd` is important because we have seen at
+        least one case in the past in which `balenad` was working but
+        `containerd` wasn't.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+    - subject: Make Engine watchdog termination graceful
+      hash: 9e322ee25bf50949880446f4fb85d1d8e864da37
+      body: |
+        With `WatchdogSignal=SIGTERM` systemd will send a SIGTERM and give the
+        Engine 90 seconds to gracefully shutdown before sending a SIGKILL. We
+        had cases of Engine metadata on disk getting corrupted after the
+        watchdog sent it a SIGKILL directly. This change shall minimize this
+        issue.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.101.7
+  title: "'Improve Engine healthchecks'"
+  date: 2022-08-17T13:45:38.348Z
+- commits:
     - subject: "tests/cloud: fix ssh prod test for physical duts"
       hash: abbb8233f803fd4216fe27bb8a9c28f96d30085e
       body: ""
