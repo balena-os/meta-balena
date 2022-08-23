@@ -1,1 +1,0 @@
-ACTION=="add", KERNEL=="wl*", SUBSYSTEM=="net", RUN+="/usr/sbin/iw dev $name set power_save off"
