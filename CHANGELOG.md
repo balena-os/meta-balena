@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.101.9
+## (2022-08-23)
+
+
+<details>
+<summary> Update tests/leviathan digest to f7533c1 [renovate[bot]] </summary>
+
+> ## leviathan-2.7.3
+> ### (2022-08-16)
+> 
+> * compose: qemu: enable loopback and metadata devices [Joseph Kogut]
+> 
+</details>
+
 # v2.101.8
 ## (2022-08-23)
 
