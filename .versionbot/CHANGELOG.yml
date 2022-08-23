@@ -1,4 +1,62 @@
 - commits:
+    - subject: "meta-resin-sumo: linux-firmware: Move to a location included in BBPATH"
+      hash: 148fcadbb792bdbabdbc152b886125415b3e4838
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-resin-sumo: use v1.14.2"
+      hash: 5bb3a29c1c5dfa0f02da47e48f3b64d3d3f9cd08
+      body: |
+        Newer versions are not compatible with the libc version in sumo.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-resin-sumo: libqmi: Use v1.26.0"
+      hash: 1c25bb333c6cb458af955274c82f164a83a2b914
+      body: |
+        Newer versions are incompatible with the libc available in sumo.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-resin-sumo: libmbim: use v 1.24.2"
+      hash: 1fe708b4bf84e60032c4e7f52316632a49ecc490
+      body: |
+        The current meta-balena libmbim is not compatible with sumo's libc
+        version.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena: Disable GOCACHE"
+      hash: 2e79582c81a6f0f5ff42ed01bdc69ba06550e63a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.101.10
+  title: "'Update sumo compatibility layer'"
+  date: 2022-08-23T08:15:40.582Z
+- commits:
     - subject: Update tests/leviathan digest to f7533c1
       hash: d31e056f263085ce4451bd99a01911c359b9e0f6
       body: Update tests/leviathan
