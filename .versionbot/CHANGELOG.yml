@@ -1,4 +1,15 @@
 - commits:
+    - subject: Update balena-io/balena-supervisor to v14.0.15
+      hash: fee89c4e5d4a990d7d6b63082a1bc0ed28df92cc
+      body: Update balena-io/balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.101.11
+  date: 2022-08-24T23:05:00.507Z
+- commits:
     - subject: "meta-resin-sumo: linux-firmware: Move to a location included in BBPATH"
       hash: 148fcadbb792bdbabdbc152b886125415b3e4838
       body: ""
