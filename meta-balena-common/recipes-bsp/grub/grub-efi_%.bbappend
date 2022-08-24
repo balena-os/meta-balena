@@ -7,7 +7,7 @@ SRC_URI += " \
     "
 
 # build in additional required modules
-GRUB_BUILDIN:append = " gcry_sha256 gcry_sha512 gcry_rijndael gcry_rsa regexp probe gzio"
+GRUB_BUILDIN:append = " gcry_sha256 gcry_sha512 gcry_rijndael gcry_rsa regexp probe gzio chain"
 GRUB_BUILDIN:append = "${@oe.utils.conditional('SIGN_API','','',' dummyterm',d)}"
 
 do_configure:append() {
