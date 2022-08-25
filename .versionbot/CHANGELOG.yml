@@ -1,4 +1,18 @@
 - commits:
+    - subject: "renovate: Fix nested changelogs and change-type for SV updates"
+      hash: 516432877cf9fda8b65cae1b3cddcd8bd8cc249d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.101.11
+  title: "'renovate: Fix nested changelogs and change-type for SV updates'"
+  date: 2022-08-24T12:22:37.592Z
+- commits:
     - subject: "meta-resin-sumo: linux-firmware: Move to a location included in BBPATH"
       hash: 148fcadbb792bdbabdbc152b886125415b3e4838
       body: ""

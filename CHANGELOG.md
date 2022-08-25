@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.101.11
+## (2022-08-24)
+
+* renovate: Fix nested changelogs and change-type for SV updates [Kyle Harding]
+
 # v2.101.10
 ## (2022-08-23)
 
