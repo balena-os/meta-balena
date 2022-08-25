@@ -10,13 +10,13 @@
     "**/tests/suites/**",
     "**/__fixtures__/**"
   ],
-  "commitBody": "Update {{depName}}\nChange-type: patch",
   "regexManagers": [
     {
       "fileMatch": ["(^|/)balena-supervisor.inc$"],
       "matchStrings": ["SUPERVISOR_VERSION \\?= \"(?<currentValue>.*?)\"\\n"],
       "depNameTemplate": "balena-io/balena-supervisor",
-      "datasourceTemplate": "github-tags"
+      "datasourceTemplate": "github-tags",
+      "commitBody": "Update balena-supervisor\nChange-type: {{updateType}}"
     }
   ]
 }
