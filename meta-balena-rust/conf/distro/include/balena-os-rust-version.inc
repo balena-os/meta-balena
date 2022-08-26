@@ -1,0 +1,7 @@
+PREFERRED_VERSION_rust = "1.62.0"
+PREFERRED_VERSION_rust-native = "1.62.0"
+PREFERRED_VERSION_rust-cross-${TARGET_ARCH} = "1.62.0"
+PREFERRED_VERSION_rust-llvm-native = "1.62.0"
+PREFERRED_VERSION_cargo-native = "1.62.0"
+PREFERRED_VERSION_libstd-rs = "1.62.0"
+
