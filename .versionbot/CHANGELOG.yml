@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Enable RPi3-64 for Device tree tests"
+      hash: a5e8f31c6aa8d37a7fe7d635e649d12c9f610bb5
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.102.1
+  title: "'patch: Enable RPi3-64 for Device tree tests'"
+  date: 2022-08-27T20:09:52.702Z
+- commits:
     - subject: "meta-balena-common: distro: Add rust preferred versions"
       hash: 0d3221fe5378ddb09248694ba2eb8571db63511b
       body: |
