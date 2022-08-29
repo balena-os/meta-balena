@@ -14,9 +14,16 @@
     {
       "fileMatch": ["(^|/)balena-supervisor.inc$"],
       "matchStrings": ["SUPERVISOR_VERSION \\?= \"(?<currentValue>.*?)\"\\n"],
-      "depNameTemplate": "balena-io/balena-supervisor",
-      "datasourceTemplate": "github-tags",
-      "commitBody": "Update balena-supervisor\nChange-type: {{updateType}}"
+      "depNameTemplate": "balena-os/balena-supervisor",
+      "datasourceTemplate": "github-tags"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["regex"],
+      "matchPackagePatterns": [".*balena-supervisor"],
+      "commitBody": "Update balena-supervisor\nChange-type: {{updateType}}",
+      "automerge": true
     }
   ]
 }
