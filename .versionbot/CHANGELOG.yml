@@ -1,4 +1,21 @@
 - commits:
+    - subject: "meta-balena-thud: initramfs: Fix building with latest meta-balena"
+      hash: 30bc6e7d27fb2ceaff5ea241fdd0e7b8224b84ea
+      body: |
+        The latest meta-balena includes `util-linux-findmnt` as a kexec module
+        dependency and this package has not yet been split from `util-linux` in
+        thud.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.102.1
+  title: "'meta-balena-thud: initramfs: Fix building with latest meta-balena'"
+  date: 2022-08-29T08:26:13.610Z
+- commits:
     - subject: "meta-balena-common: distro: Add rust preferred versions"
       hash: 0d3221fe5378ddb09248694ba2eb8571db63511b
       body: |

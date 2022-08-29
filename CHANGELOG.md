@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.1
+## (2022-08-29)
+
+* meta-balena-thud: initramfs: Fix building with latest meta-balena [Alex Gonzalez]
+
 # v2.102.0
 ## (2022-08-25)
 
