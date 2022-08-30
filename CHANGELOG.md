@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.3
+## (2022-08-30)
+
+* renovate: Restore default commit body [Kyle Harding]
+
 # v2.102.2
 ## (2022-08-29)
 
