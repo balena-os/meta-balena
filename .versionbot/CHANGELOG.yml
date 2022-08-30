@@ -1,4 +1,18 @@
 - commits:
+    - subject: "Renovate: Fix package rules for balena supervisor"
+      hash: 2a7cb0c5bc3a53980ac8bcd2190500a51fcd85c5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.102.2
+  title: "'Renovate: Fix package rules for balena supervisor'"
+  date: 2022-08-29T16:15:17.586Z
+- commits:
     - subject: "meta-balena-thud: initramfs: Fix building with latest meta-balena"
       hash: 30bc6e7d27fb2ceaff5ea241fdd0e7b8224b84ea
       body: |

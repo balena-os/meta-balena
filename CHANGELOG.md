@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.2
+## (2022-08-29)
+
+* Renovate: Fix package rules for balena supervisor [Kyle Harding]
+
 # v2.102.1
 ## (2022-08-29)
 
