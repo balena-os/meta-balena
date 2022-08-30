@@ -39,12 +39,13 @@
 set -e
 
 # Very long variables :)
-EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/mnt/boot # mounted by systemd
+BALENA_ROOT_MOUNTPOINT=${BALENA_ROOT_MOUNTPOINT:-}
+EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=${BALENA_BOOT_MOUNTPOINT}
+FLASHER_CONF_FILE=${FLASHER_CONF_FILE:-"${BALENA_ROOT_MOUNTPOINT}/etc/resin-init-flasher.conf"}
+SPLASH_DIRNAME=${SPLASH_DIRNAME:-splash}
+BALENA_BOOTLOADER_CONFIG=${BALENA_BOOTLOADER_CONFIG:-resinOS_uEnv.txt}
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
-FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
-SPLASH_DIRNAME=splash
-BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 LUKS=0
 SECUREBOOT_SETUP=0
@@ -63,6 +64,16 @@ function fail {
 
 function inform {
     echo "[resin-init-flasher] INFO: $1"
+}
+
+report_progress() {
+    local _ratio="${1}"
+    local _msg="${2}"
+    if command -v resin-device-progress; then
+        resin-device-progress --percentage "${_ratio}" --state "${_msg}" || true
+    else
+        inform "[${_ratio}%]: ${_msg}"
+    fi
 }
 
 function dd_with_progress {
@@ -96,7 +107,7 @@ function dd_with_progress {
         WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
         TOTAL_WRITTEN_BYTES=$["$WRITTEN_BYTES" + "$OFFSET"]
         let RATIO=$TOTAL_WRITTEN_BYTES*100/$TOTAL_SIZE || true
-        resin-device-progress --percentage "$RATIO" --state "Flashing balenaOS on internal media" || true
+        report_progress "$RATIO" "Flashing balenaOS on internal media"
         truncate -s 0 /tmp/dd_progress_log
     done
 }
@@ -111,23 +122,18 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 inform "Board specific initialization..."
-/usr/bin/resin-init-board
+${BALENA_ROOT_MOUNTPOINT}/usr/bin/resin-init-board
+
+# Balena configuration file
+if [ -f ${BALENA_ROOT_MOUNTPOINT}/usr/sbin/balena-config-vars ]; then
+    source ${BALENA_ROOT_MOUNTPOINT}/usr/sbin/balena-config-vars
+fi
 
 # Configuration file
 if [ -f $FLASHER_CONF_FILE ]; then
     source $FLASHER_CONF_FILE
-else
-    fail "No configuration for resin-init-flasher."
+    inform "resin-init-flasher configuration found."
 fi
-inform "resin-init-flasher configuration found."
-
-# Balena configuration file
-if [ -f /usr/sbin/balena-config-vars ]; then
-    source /usr/sbin/balena-config-vars
-else
-    fail "No balena configuration found."
-fi
-inform "balena configuration found."
 
 # CONFIG_PATH should exist
 if [ ! -f "$CONFIG_PATH" ]; then
@@ -143,15 +149,17 @@ fi
 STARTTIME=$(date +%s)
 ENDTIME="$STARTTIME"
 TIMEOUT=15
-while [ "$(systemctl is-active openvpn)" != "active" ]
-do
-    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1 && ENDTIME=$((ENDTIME + 1))
-    else
-        inform "Timeout while waiting for openvpn to come alive. No network?"
-        break
-    fi
-done
+if command -v systemclt; then
+    while [ "$(systemctl is-active openvpn)" != "active" ]
+    do
+        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+            sleep 1 && ENDTIME=$((ENDTIME + 1))
+        else
+            inform "Timeout while waiting for openvpn to come alive. No network?"
+            break
+        fi
+    done
+fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
@@ -167,15 +175,15 @@ for d in $INTERNAL_DEVICE_KERNEL; do
     fi
 done
 if [ -z "$internal_dev" ]; then
-    resin-device-progress --percentage 100 --state "Failed to find any block devices." || true
+    report_progress 100 "Failed to find any block devices."
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
 inform "$internal_dev will be used for flashing."
 
-IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
+IMAGE_FILE_SIZE=$(wc -c "${BALENA_ROOT_MOUNTPOINT}/opt/$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
-if [ -d /sys/firmware/efi ]; then
+if [ -d ${BALENA_ROOT_MOUNTPOINT}/sys/firmware/efi ]; then
     SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
     SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
     if [ "$SECUREBOOT_VAR" -eq "1" ]; then
@@ -188,10 +196,10 @@ fi
 
 if [ "$LUKS" = "1" ]; then
     # Include FS helpers for repartitioning
-    . /usr/libexec/os-helpers-fs
+    . "${BALENA_ROOT_MOUNTPOINT}"/usr/libexec/os-helpers-fs
 
     # Include TPM2 helpers
-    . /usr/libexec/os-helpers-tpm2
+    . "${BALENA_ROOT_MOUNTPOINT}"/usr/libexec/os-helpers-tpm2
 
     # Generate password and encrypt it using the TPM
     TPM="${TPM:-/dev/tpmrm0}"
@@ -217,7 +225,7 @@ if [ "$LUKS" = "1" ]; then
     LOOP_DEVICE_NAME="${LOOP_DEVICE#/dev/}"
 
     # Repartition the new drive
-    resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
+    report_progress 0 "Starting flashing balenaOS on internal media"
     inform "Repartitioning $internal_dev for disk encryption"
 
     # Align partition sizes to multiples of 4MB
@@ -317,8 +325,8 @@ if [ "$LUKS" = "1" ]; then
     rm -f "$PASSPHRASE_FILE"
     losetup -d "$LOOP_DEVICE"
 else
-    resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
-    dd_with_progress "/opt/$BALENA_IMAGE" "/dev/$internal_dev" 0 "$IMAGE_FILE_SIZE"
+    report_progress 0 "Starting flashing balenaOS on internal media"
+    dd_with_progress "${BALENA_ROOT_MOUNTPOINT}/opt/$BALENA_IMAGE" "/dev/$internal_dev" 0 "$IMAGE_FILE_SIZE"
 fi
 
 sync
@@ -387,7 +395,7 @@ if [ "$LUKS" = "1" ]; then
     # Emulate a stage2 bootloader
     # At this point just copy the flasher kernel to EFI partition
     # TODO: Remove or replace by a proper stage2 bootloader when that is ready
-    cp -a /boot/bzImage /boot/bzImage.sig ${EFI_MOUNT_DIR}
+    cp -a "${BALENA_ROOT_MOUNTPOINT}/boot/bzImage" "${BALENA_ROOT_MOUNTPOINT}/boot/bzImage.sig" ${EFI_MOUNT_DIR}
 
     if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
         INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
@@ -462,7 +470,7 @@ umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 sync
 
 inform "Board specific flash procedure..."
-/usr/bin/resin-init-flasher-board
+"${BALENA_ROOT_MOUNTPOINT}"/usr/bin/resin-init-flasher-board
 
 if [ "$LUKS" = "1" ]; then
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
@@ -470,9 +478,10 @@ if [ "$LUKS" = "1" ]; then
     done
 fi
 
-resin-device-progress --percentage 100 --state "Post-Provisioning" || true
+report_progress 100 "Post-Provisioning"
 
-inform "Shutting down ..."
-shutdown -h now
+POWER_DOWN=${POWER_DOWN:-"shutdown -h now"}
+inform "Powering down ..."
+${POWER_DOWN}
 
 exit 0
