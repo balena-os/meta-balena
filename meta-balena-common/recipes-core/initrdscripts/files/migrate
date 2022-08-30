@@ -1,0 +1,71 @@
+#!/bin/sh
+
+migrate_enabled() {
+    # shellcheck disable=SC2154
+    if [ "$bootparam_flasher" = "true" ]; then
+        current_root=$(findmnt --noheadings --canonicalize --output SOURCE /)
+        flash_rootA=$(readlink /dev/disk/by-label/flash-rootA)
+        # Migrator is a flasher booting from internal storage
+        if [ "${current_root}" = "${flash_rootA}" ]; then
+            return 0
+        fi
+    fi
+
+    return 1
+}
+
+flash_boot_src="/var/cache/flash-boot-src"
+flash_rootA_src="/var/cache/flash-rootA-src"
+migrate_clean() {
+    umount "flash_boot_src"
+    umount "flash_rootA_src"
+}
+
+copy_files() {
+    _src="${1}"
+    _dst="${2}"
+    _list="${3}"
+    for e in ${_list}; do
+        if [ ! -d "$(dirname "${e}")" ]; then
+            mkdir -p "${e}"
+        fi
+        cp -r "${_src}/${e}" "${_dst}/${e}"
+    done
+}
+
+migrate_run() {
+    # TODO: Migrator should configure bootloader to boot previous OS and start a watchdog device
+
+    mkdir -p "${flash_boot_src}"
+    mount /dev/disk/by-label/flash-boot  "${flash_boot_src}"
+    mkdir -p "${flash_rootA_src}"
+    mount /dev/disk/by-label/flash-rootA "${flash_rootA_src}"
+
+    # Check available memory
+    flash_boot_bytes=$(du -s "${flash_boot_src}" | awk '{ print $1 }')
+    flash_rootA_bytes=$(du -s "${flash_rootA_src}" | awk '{ print $1 }')
+    total_bytes=$(expr $flash_boot_bytes + $flash_rootA_bytes)
+    free_bytes=$(awk '/MemFree/ { printf "%.3f \n", $2 }' /proc/meminfo)
+    if [ "${free_bytes}" -lt "${total_bytes}" ]; then
+        echo "Not enough available memory for migration"
+        migrate_clean
+        exit 1
+    fi
+
+    BALENA_BOOT_MOUNTPOINT="/var/cache/flash-boot"
+    BALENA_ROOT_MOUNTPOINT="/var/cache/flash-rootA"
+    mkdir "${BALENA_BOOT_MOUNTPOINT}" "${BALENA_ROOT_MOUNTPOINT}"
+    ROOT_ARTIFACTS="/usr/bin/resin-init-board /usr/bin/resin-init-flasher-board /opt/${BALENA_IMAGE}"
+    copy_files "${flash_rootA_src}" "${BALENA_ROOT_MOUNTPOINT}" "${ROOT_ARTIFACTS}"
+    BOOT_ARTIFACTS="${BOOTLOADER_IMAGE} ${BOOTLOADER_IMAGE_1} ${INTERNAL_DEVICE_BOOTLOADER_CONFIG} ${BALENA_BOOTLOADER_CONFIG} ${CONFIG_PATH} ${SPLASH_DIRNAME} system-connections system-proxy"
+    copy_files "${flash_boot_src}" "${BALENA_BOOT_MOUNTPOINT}" "${BOOT_ARTIFACTS}"
+
+    migrate_clean
+    # Run installer
+    export BALENA_BOOT_MOUNTPOINT BALENA_ROOT_MOUNTPOINT
+    export CONFIG_PATH="${BALENA_BOOT_MOUNTPOINT}/config.json"
+    export POWER_DOWN="reboot -n"
+    "${flash_rootA_src}/usr/bin/resin-init-flasher"
+
+    # If we appear here migration failed - fallback to old OS
+}

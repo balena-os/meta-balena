@@ -12,9 +12,11 @@ SRC_URI:append = " \
     file://cryptsetup \
     file://kexec \
     file://udevcleanup \
+    file://migrate \
     "
 
 do_install:append() {
+    install -m 0755 ${WORKDIR}/migrate ${D}/init.d/50-migrate
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
@@ -39,9 +41,17 @@ PACKAGES:append = " \
     initramfs-module-cryptsetup \
     initramfs-module-kexec \
     initramfs-module-udevcleanup \
+    initramfs-module-migrate \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
+
+SUMMARY:initramfs-module-migrate = "Perform a migration"
+RDEPENDS:initramfs-module-migrate = "${PN}-base"
+FILES:initramfs-module-migrate = "/init.d/50-migrate"
+RDEPENDS:initramfs-module-migrate = " \
+    util-linux-findmnt \
+    "
 
 SUMMARY:initramfs-module-fsck = "Filesystem check for partitions"
 RDEPENDS:initramfs-module-fsck = "${PN}-base e2fsprogs-e2fsck dosfstools-fsck"
