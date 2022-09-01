@@ -1,4 +1,103 @@
 - commits:
+    - subject: "grub-conf: fix partition indexes in LUKS config"
+      hash: 5e5cfb117072b2eb338eb6ac19fdb58df534f1e8
+      body: |
+        On most device types rootA and rootB are partitions 2 and 3
+        but with LUKS encryption and boot/EFI split they are shifted to 3 and 4
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "os-helpers-fs: add dependency on parted"
+      hash: 74ca8a420587e71cecb733c1027527a65bc09a2b
+      body: |
+        This is necessary for get_part_table_type
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "hostapp-update-hooks: use stage2 bootloader GRUB config when using LUKS"
+      hash: 2baefa883cf38e9bc503b82baabb5f6451ce0c07
+      body: |
+        We are using two variants of GRUB configs - one for LUKS-encrypted OS
+        and the other one for the rest. HUP needs to acknowledge this and use
+        the correct one based on the system being updated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-rollback: Fix partition index detection for luks devices"
+      hash: 1f14ce1243c4a40a0c625af50055d0d1bb3f5352
+      body: |
+        This is the same as we do for hostapp-update-hooks
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-rollback: Find following symbolic links"
+      hash: 270fafac752d670b636a15a2298eb1d6d5ea340f
+      body: |
+        On full disk encrypted devices the EFI partition is a soft link in the
+        boot partition. This commit fixes detecting files in the EFI partition
+        from the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Find following symlinks"
+      hash: 9419558f12fbd80db0b7878b2bcf57aafebca80b
+      body: |
+        On full disk encrypted devices the EFI partition is a soft link in the
+        boot partition. This commit fixes detecting files in the EFI partition
+        from the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Fix partition index detection for luks devices"
+      hash: f75035cf0919b767863d16d07707abc6a09a65cd
+      body: >
+        When using LUKS encryption, the output of lsblk is:
+
+            sda                                             8:0    0    8G  0 disk
+          |-sda1                                          8:1    0   40M  0 part  /mnt/boot/EFI
+          |-sda2                                          8:2    0   42M  0 part
+          | `-luks-a91cd125-9e4c-45e6-b3f4-1e9b4ec9e5b9 250:0    0   40M  0 crypt /mnt/boot
+
+        This commit allows extracting the physical device (sdaN) whic is needed
+
+        to extract the partition index using sysfs both for luks or standard
+
+        devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.102.4
+  title: "'HUP support for LUKS encrypted partitions'"
+  date: 2022-09-01T09:58:52.782Z
+- commits:
     - subject: "renovate: Restore default commit body"
       hash: 05be6314e136d40ae8cdf54988b27e059de07e68
       body: ""
