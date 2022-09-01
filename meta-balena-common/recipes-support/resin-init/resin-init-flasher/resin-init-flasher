@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 #
 # Script which burns an image from an external device to an internal device
 # Assumptions:
