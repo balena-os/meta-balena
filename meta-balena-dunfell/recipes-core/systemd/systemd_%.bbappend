@@ -16,5 +16,5 @@ do_install_append() {
 FILES_udev += "\
 	${rootlibexecdir}/udev/rules.d/touchscreen.rules \
 	${rootlibexecdir}/udev/rules.d/10-zram.rules \
-	${rootlibexecdir}/udev/rules.d/60-resin-update-state.rules \
+	${rootlibexecdir}/udev/rules.d/65-resin-update-state.rules \
 "
