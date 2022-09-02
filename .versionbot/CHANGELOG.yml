@@ -1,4 +1,31 @@
 - commits:
+    - subject: "udev: run resin-update-state after md assemble"
+      hash: 09a985b3847b887ae47047c011057372cfee993e
+      body: |
+        Run the resin-update-state rules that create the by-state links after md
+        arrays are assembled. This fixes state link creation when running on a
+        RAID array.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "resin_update_state_probe: do not skip md devices"
+      hash: fbfb67820b58fcf7659d616e20657857959e46fe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.102.4
+  title: "'Fix creating by-state links when rootfs is on a RAID array'"
+  date: 2022-08-30T21:04:53.554Z
+- commits:
     - subject: "renovate: Restore default commit body"
       hash: 05be6314e136d40ae8cdf54988b27e059de07e68
       body: ""

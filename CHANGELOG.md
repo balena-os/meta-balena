@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.102.4
+## (2022-08-30)
+
+* udev: run resin-update-state after md assemble [Joseph Kogut]
+* resin_update_state_probe: do not skip md devices [Joseph Kogut]
+
 # v2.102.3
 ## (2022-08-30)
 
