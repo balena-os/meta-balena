@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add package-lock.json files for tests"
+      hash: 89ce7a08596ba0fd3402910f224c21de49201f9f
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.102.5
+  title: "'build(deps): bump minimist from 1.2.5 to 1.2.6 in /tests/suites/hup'"
+  date: 2022-09-06T11:16:18.440Z
+- commits:
     - subject: "udev: run resin-update-state after md assemble"
       hash: 09a985b3847b887ae47047c011057372cfee993e
       body: |
