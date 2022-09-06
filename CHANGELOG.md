@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.5
+## (2022-09-06)
+
+* patch: Add package-lock.json files for tests [Vipul Gupta (@vipulgupta2048)]
+
 # v2.102.4
 ## (2022-08-30)
 
