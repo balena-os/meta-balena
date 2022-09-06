@@ -1,5 +1,6 @@
 {
 	"scripts": {
+		"lockfiles": "for component in 'os' 'hup' 'cloud'; do npm --prefix $component install --package-lock-only; done",
 		"prettify": "prettier --config ./.prettierrc --write \"{os,hup}/**/*.js\"",
 		"lint": "eslint --fix -c ./.eslintrc.* os hup"
 	},

@@ -10,5 +10,4 @@ conf-notes.txt
 
 # These files may be produced by balenaCI. Since this is not a node project we can
 # simply ignore both
-package-lock.json
 node_modules
