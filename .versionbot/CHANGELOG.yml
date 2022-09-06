@@ -1,4 +1,19 @@
 - commits:
+    - subject: "grub: Add chain module to support multiboot"
+      hash: f7cff16781e8b851c9a2c2d516b382f395726d70
+      body: |
+        This is used in the brownfield migrator.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.102.6
+  title: "'grub: Add chain module to support multiboot'"
+  date: 2022-09-06T14:16:07.156Z
+- commits:
     - subject: "patch: Add package-lock.json files for tests"
       hash: 89ce7a08596ba0fd3402910f224c21de49201f9f
       body: ""

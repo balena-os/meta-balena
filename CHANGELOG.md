@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.6
+## (2022-09-06)
+
+* grub: Add chain module to support multiboot [Alex Gonzalez]
+
 # v2.102.5
 ## (2022-09-06)
 
