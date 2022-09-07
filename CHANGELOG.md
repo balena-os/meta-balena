@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.102.6
+## (2022-09-07)
+
+* initrdscripts: Add migrator module [Alex Gonzalez]
+* resin-init-flasher: Adapt so it runs from initramfs [Alex Gonzalez]
+* grub: Add chain module to support multiboot [Alex Gonzalez]
+
 # v2.102.5
 ## (2022-09-06)
 
