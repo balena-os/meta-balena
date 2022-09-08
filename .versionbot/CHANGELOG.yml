@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Delete conf.js for test suites"
+      hash: fd51f4d19ae6ea6443e2aa9710d168efa0c93d96
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.102.7
+  title: "'patch: Delete conf.js for test suites'"
+  date: 2022-09-08T10:58:06.528Z
+- commits:
     - subject: Update tests/leviathan digest to 7fe3c5f
       hash: 501e9f0cd4a82b40451cca4eef244ad242565614
       body: Update tests/leviathan

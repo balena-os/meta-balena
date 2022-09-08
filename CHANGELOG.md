@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.7
+## (2022-09-08)
+
+* patch: Delete conf.js for test suites [Vipul Gupta (@vipulgupta2048)]
+
 # v2.102.6
 ## (2022-09-07)
 
