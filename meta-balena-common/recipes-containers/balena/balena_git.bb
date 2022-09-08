@@ -50,7 +50,7 @@ GROUPADD_PARAM:${PN} = "-r balena-engine"
 
 DEPENDS:append:class-target = " systemd"
 RDEPENDS:${PN}:class-target = "curl util-linux iptables tini systemd healthdog bash procps-ps"
-RRECOMMENDS:${PN} += "kernel-module-nf-nat"
+RRECOMMENDS:${PN}:class-target += "kernel-module-nf-nat"
 
 # oe-meta-go recipes try to build go-cross-native
 DEPENDS:remove:class-native = "go-cross-native"
