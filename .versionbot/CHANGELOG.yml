@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add additional logs when logging in using balenaSDK"
+      hash: f0267ac28ff3de87708104e6727a304995439944
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.102.7
+  title: "'patch: Add additional logs when logging in using balenaSDK'"
+  date: 2022-09-08T08:05:02.831Z
+- commits:
     - subject: Update tests/leviathan digest to 7fe3c5f
       hash: 501e9f0cd4a82b40451cca4eef244ad242565614
       body: Update tests/leviathan
