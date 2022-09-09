@@ -112,6 +112,7 @@ else
             if [ -n "${BALENA_CONFIG_VARS_CACHE}" ]; then
                 tmpfile=$(mktemp)
                 echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
+                chmod a+rx "${tmpfile}"
                 mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
             fi
             eval "$CONFIG_PARAMS"

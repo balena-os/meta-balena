@@ -142,8 +142,36 @@ module.exports = {
 						"pass",
 						"Local SSH authentication with custom keys is allowed in production mode"
 					);
-				}).then(async () => {
-					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
+			  }).then(async () => {
+					await setConfig(test, this, this.balena.uuid, 'os.sshKeys');
+			  }).then(async () => {
+					let result;
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					await this.cloud.balena.models.key.create(this.suite.options.id, customKey.pubKey);
+					config = {
+						host: ip,
+						port: '22222',
+						username: this.worker.username,
+						privateKeyPath: `${sshPath}`
+					};
+					await this.utils.waitUntil(
+						async () => {
+							try {
+								result = await this.utils.executeCommandOverSSH('echo -n pass',
+								config);
+							} catch (err) {
+								console.error(err.message);
+								throw new Error(err);
+							}
+							return result
+						}, false, 10, 5 * 1000);
+					return test.equals(
+						result.stdout,
+						"pass",
+						"Local SSH authentication with balenaCloud registered keys is allowed in production mode"
+					)
+					await this.cloud.balena.removeSSHKey(this.suite.options.id);
 				});
 			},
 		},
@@ -222,6 +250,34 @@ module.exports = {
 					)
 				}).then(async () => {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
+				}).then(async () => {
+					let result;
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					await this.cloud.balena.models.key.create(this.suite.options.id, customKey.pubKey);
+					config = {
+						host: ip,
+						port: '22222',
+						username: this.worker.username,
+						privateKeyPath: `${sshPath}`
+					};
+					await this.utils.waitUntil(
+						async () => {
+							try {
+								result = await this.utils.executeCommandOverSSH('echo -n pass',
+									config);
+							} catch (err) {
+								console.error(err.message);
+								throw new Error(err);
+							}
+							return result
+						}, false, 10, 5 * 1000);
+					return test.equals(
+						result.stdout,
+						"pass",
+						"Local SSH authentication with balenaCloud registered keys is allowed in development mode"
+					)
+					await this.cloud.balena.removeSSHKey(this.suite.options.id);
 				});
 			},
 		},
