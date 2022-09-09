@@ -143,6 +143,26 @@ module.exports = {
 						"Local SSH authentication with custom keys is allowed in production mode"
 					);
 				}).then(async () => {
+					let result;
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					config = {
+						host: ip,
+						port: '22222',
+						username: this.username,
+					};
+					await this.utils.waitUntil(
+						async () => {
+							result = await utils.executeCommandOverSSH('echo -n pass',
+								config);
+							return result
+						}, false, 10, 5 * 1000);
+					return test.equals(
+						result,
+						"pass",
+						"Local SSH authentication with balenaCloud registered keys is allowed in production mode"
+					)
+				}).then(async () => {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				});
 			},
@@ -219,6 +239,26 @@ module.exports = {
 						result,
 						"pass",
 						"Local SSH authentication with custom keys is allowed in development mode"
+					)
+				}).then(async () => {
+					let result;
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					config = {
+						host: ip,
+						port: '22222',
+						username: this.username,
+					};
+					await this.utils.waitUntil(
+						async () => {
+							result = await utils.executeCommandOverSSH('echo -n pass',
+								config);
+							return result
+						}, false, 10, 5 * 1000);
+					return test.equals(
+						result,
+						"pass",
+						"Local SSH authentication with balenaCloud registered keys is allowed in development mode"
 					)
 				}).then(async () => {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
