@@ -14,6 +14,7 @@ SRCREV="0423d69ee52970bb8eeae46da8f1d5cf7a8c948c"
 
 S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
 
+do_compile[network] = "1"
 do_compile() {
     cd ${S}
     unset GO_LDFLAGS
