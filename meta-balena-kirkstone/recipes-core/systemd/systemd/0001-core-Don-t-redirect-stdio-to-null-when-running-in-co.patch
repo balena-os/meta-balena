@@ -1,0 +1,25 @@
+From 84f843de46e47613c88b4fe61da1d23bdc77e69b Mon Sep 17 00:00:00 2001
+From: Andrei Gherzan <andrei@balena.io>
+Date: Wed, 27 Oct 2021 17:18:57 +0200
+Subject: [PATCH] core: Don't redirect stdio to null when running in container
+
+Upstream-status: Rejected [https://github.com/systemd/systemd/pull/8220]
+Signed-off-by: Andrei Gherzan <andrei@balena.io>
+---
+ src/core/main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/core/main.c b/src/core/main.c
+index 57aedb9b93b4..d609f5ef634a 100644
+--- a/src/core/main.c
++++ b/src/core/main.c
+@@ -2845,7 +2845,8 @@ int main(int argc, char *argv[]) {
+                  * instances since they never log into the console. */
+                 log_show_color(colors_enabled());
+ 
+-                r = make_null_stdio();
++                if (detect_container() <= 0)
++                        r = make_null_stdio();
+                 if (r < 0)
+                         log_warning_errno(r, "Failed to redirect standard streams to /dev/null, ignoring: %m");
+ 

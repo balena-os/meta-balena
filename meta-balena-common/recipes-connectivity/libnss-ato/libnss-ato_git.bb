@@ -7,7 +7,7 @@ LICENSE = "LGPLv3"
 LIC_FILES_CHKSUM = "file://copyright;md5=37e0ae856bc7cedaaaca1d4a681b62b0"
 
 SRC_URI = " \
-	git://github.com/donapieppo/libnss-ato \
+	git://github.com/donapieppo/libnss-ato;branch=master;protocol=https \
 	file://0001-libnss_ato.c-Enable-use-for-root-user.patch \
 	file://libnss-ato.conf \
 "

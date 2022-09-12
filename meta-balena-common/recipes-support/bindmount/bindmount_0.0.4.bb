@@ -7,7 +7,7 @@ inherit cargo
 
 # how to get bindmount could be as easy as but default to a git checkout:
 # SRC_URI += "crate://crates.io/bindmount/0.0.4"
-SRC_URI += "git://git@github.com/balena-os/bindmount.git;protocol=ssh"
+SRC_URI += "git://git@github.com/balena-os/bindmount.git;branch=master;protocol=https"
 SRCREV = "82761d07cce8a61e09e2e37ba07477288c5683b6"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR=""

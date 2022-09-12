@@ -1,0 +1,29 @@
+revert configure: add checks for all tools used by make install
+
+Not appropriate for cross build env.
+
+Upstream-Status: OE [inappropriate]
+Signed-off-by: Armin Kuster <akuster808@gmail.com>
+
+Index: tpm2-tss-3.2.0/configure.ac
+===================================================================
+--- tpm2-tss-3.2.0.orig/configure.ac
++++ tpm2-tss-3.2.0/configure.ac
+@@ -488,17 +488,6 @@
+ AC_CHECK_PROG(systemd_tmpfiles, systemd-tmpfiles, yes)
+ AM_CONDITIONAL(SYSD_TMPFILES, test "x$systemd_tmpfiles" = "xyes")
+ 
+-# Check all tools used by make install
+-AS_IF([test "$HOSTOS" = "Linux"],
+-    [ AC_CHECK_PROG(useradd, useradd, yes)
+-      AC_CHECK_PROG(groupadd, groupadd, yes)
+-      AC_CHECK_PROG(adduser, adduser, yes)
+-      AC_CHECK_PROG(addgroup, addgroup, yes)
+-      AS_IF([test "x$addgroup" != "xyes" && test "x$groupadd" != "xyes" ],
+-         [AC_MSG_ERROR([addgroup or groupadd are needed.])])
+-      AS_IF([test "x$adduser" != "xyes" && test "x$useradd" != "xyes" ],
+-         [AC_MSG_ERROR([adduser or useradd are needed.])])])
+-
+ AC_SUBST([PATH])
+ 
+ dnl --------- Doxy Gen -----------------------

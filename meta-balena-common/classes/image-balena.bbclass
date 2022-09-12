@@ -2,7 +2,7 @@
 # Balena images customizations
 #
 
-inherit image_types_balena
+inherit image_types_balena kernel-balena-noimage
 
 # When building a Balena OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build
@@ -367,15 +367,25 @@ IMAGE_POSTPROCESS_COMMAND =+ " \
     "
 IMAGE_PREPROCESS_COMMAND += "remove_backup_files ; "
 
+# NOTE: dumpe2fs 1.46.4 from Poky Honister uses "Total journal blocks" instead of "Journal length"
+# See: https://github.com/tytso/e2fsprogs/commit/3cc4f8674
+def journal_len_attr():
+    import subprocess
+    from pkg_resources import parse_version
+    cmd = subprocess.Popen(["dumpe2fs", "-V"], stderr=subprocess.PIPE)
+    rout,rerr = cmd.communicate()
+    version =  str(rerr.splitlines()[0]).split(' ')[1]
+    if parse_version(version) >= parse_version("1.46.4"):
+        return "Total journal blocks"
+    else:
+        return "Journal length"
+
 # Extract the ext4 image properties
 # This is doing:
 # tune2fs -l ${image} | grep ${attribute} | cut -d ":" -f2 | tr -d [:blank:]
 # or
 # dumpe2fs ${image} | grep ${attribute} | cut -d ":" -f2 | tr -d [:blank:]
 #
-# NOTE: dumpe2fs 1.46.4 in Poky Honister uses "Total journal blocks" instead of "Journal length"
-# See: https://github.com/tytso/e2fsprogs/commit/3cc4f8674
-JOURNAL_LEN_ATTR = "${@ 'Total journal blocks' if 'honister' in d.getVar('DISTRO_CODENAME') else 'Journal length'}"
 def image_dump(image, attribute, tool="tune2fs"):
      import subprocess
      if tool == "dumpe2fs":
@@ -400,7 +410,7 @@ def available_space(img, d):
      blk_size = image_dump(img, "Block size")
      reserved_blks = image_dump(img, "Reserved block count")
      reserved_gdt_blks = image_dump(img, "Reserved GDT blocks")
-     journal_blks = image_dump(img, d.getVar("JOURNAL_LEN_ATTR"), "dumpe2fs")
+     journal_blks = image_dump(img, journal_len_attr(), "dumpe2fs")
      bb.debug(1, 'free_blk_cnt %d blk_sz %d inode_count %d inode_size %d reserved_blks %d reserved_gdt_blks %d journal_blks %d' % (free_blk_count,blk_size,inode_count,inode_size,reserved_blks,reserved_gdt_blks,journal_blks) )
      available_space = free_blk_count - reserved_blks - reserved_gdt_blks - journal_blks - (inode_count * inode_size / blk_size)
      return int(available_space * blk_size / 1024)

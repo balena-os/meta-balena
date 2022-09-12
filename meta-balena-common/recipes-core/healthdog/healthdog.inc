@@ -1,2 +1,2 @@
 inherit cargo-dyn
-DEPENDS += "systemd"
+DEPENDS += "systemd pkgconfig-native"

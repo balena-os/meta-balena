@@ -1,0 +1,64 @@
+From 76aab6b13e9f10386b1ca08bafd6da4ae95c123c Mon Sep 17 00:00:00 2001
+From: Alex Gonzalez <alexg@balena.io>
+Date: Wed, 20 Jul 2022 17:47:29 +0200
+Subject: [PATCH] dont-start-services-in-container
+
+When resinOS is ran as privileged container, avoid messing with tty1 as it will
+interfere with the host.
+
+Signed-off-by: Alex Gonzalez <alexg@balena.io>
+---
+ systemd-units/plymouth-quit-wait.service.in   | 1 +
+ systemd-units/plymouth-quit.service.in        | 1 +
+ systemd-units/plymouth-read-write.service.in  | 1 +
+ systemd-units/plymouth-switch-root.service.in | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/systemd-units/plymouth-quit-wait.service.in b/systemd-units/plymouth-quit-wait.service.in
+index 94f66cc6e608..e093be25fb20 100644
+--- a/systemd-units/plymouth-quit-wait.service.in
++++ b/systemd-units/plymouth-quit-wait.service.in
+@@ -1,6 +1,7 @@
+ [Unit]
+ Description=Hold until boot process finishes up
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
++ConditionVirtualization=!container
+ 
+ [Service]
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth --wait
+diff --git a/systemd-units/plymouth-quit.service.in b/systemd-units/plymouth-quit.service.in
+index 147e9eef23a5..48dcfb57874c 100644
+--- a/systemd-units/plymouth-quit.service.in
++++ b/systemd-units/plymouth-quit.service.in
+@@ -1,6 +1,7 @@
+ [Unit]
+ Description=Terminate Plymouth Boot Screen
+ After=rc-local.service plymouth-start.service systemd-user-sessions.service
++ConditionVirtualization=!container
+ 
+ [Service]
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth quit --retain-splash
+diff --git a/systemd-units/plymouth-read-write.service.in b/systemd-units/plymouth-read-write.service.in
+index 9a6b9c22f46b..45393ef39d97 100644
+--- a/systemd-units/plymouth-read-write.service.in
++++ b/systemd-units/plymouth-read-write.service.in
+@@ -4,6 +4,7 @@ DefaultDependencies=no
+ After=local-fs.target
+ Before=sysinit.target
+ ConditionPathExists=!/etc/initrd-release
++ConditionVirtualization=!container
+ 
+ [Service]
+ ExecStart=-@PLYMOUTH_CLIENT_DIR@/plymouth update-root-fs --read-write
+diff --git a/systemd-units/plymouth-switch-root.service.in b/systemd-units/plymouth-switch-root.service.in
+index 20b7f7b762f4..50a9148720a2 100644
+--- a/systemd-units/plymouth-switch-root.service.in
++++ b/systemd-units/plymouth-switch-root.service.in
+@@ -3,6 +3,7 @@ Description=Plymouth switch root service
+ DefaultDependencies=no
+ ConditionPathExists=/etc/initrd-release
+ Before=initrd-switch-root.service
++ConditionVirtualization=!container
+ 
+ [Service]
+ Type=oneshot

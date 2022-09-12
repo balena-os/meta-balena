@@ -30,6 +30,7 @@ IMAGE_FEATURES:append = " \
 
 IMAGE_INSTALL = " \
     packagegroup-core-boot \
+    libnss-ato \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     packagegroup-resin-debugtools \
     packagegroup-balena-connectivity \

@@ -71,6 +71,7 @@ api_fetch_supervisor_image() {
 	-H "Authorization: Bearer ${_token}" | jq -r '.d[].image_name'
 }
 
+do_install[network] = "1"
 do_install () {
 	SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
 	if [ -z "${SUPERVISOR_IMAGE}" ] || [ "${SUPERVISOR_IMAGE}" = "null" ]; then
