@@ -1,4 +1,306 @@
 - commits:
+    - subject: "README: Add kirkstone support"
+      hash: aeff6b085ceeca7ff1d27079bcee7ebe2c6e6d7e
+      body: |
+        Also, remove the TESTED note as all releases are tested. Specify what is
+        the upstream status for the different releases too.
+
+        Fixes #2616
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "layer.conf: Add kirkstone support"
+      hash: d1eb2f80951f199976c002cbc7af55c7a7b125fc
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena-noimage: Remove kernel-image packages from image"
+      hash: 08a1b066dfe21da6f43642c2d396edbfc34bb757
+      body: >
+        These packages also install kernel images into the boot directory in the
+
+        root partition, overwriting the initramfs kernel installed by
+
+        kernel-image-initramfs.
+
+
+        Before kirkstone, the way to not include the kernel image was to
+
+        override the `RDEPENDS:${KERNEL_PACKAGE_NAME}-base` not to include
+
+        `kernel-image`, as was done in the `kernel-resin-noimage` class.
+
+
+        Kirkstone changes the dependency from RDEPENDS to RRECOMMENDS in
+
+        Poky's commit f6d963fa6d0e64d53f7ef56fd2c12d67f5811829
+
+
+        Now excluding the kernel image needs to `PACKAGE_EXCLUDE = "kernel-image-*"`
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-kirkstone: plymouth: Adapt custom patches"
+      hash: 1a559f5ea11114c8fa5d0cf046abf83e9ff35032
+      body: |
+        Fix patches that no longer apply.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-kirkstone: systemd: Ammend patches to remove fuzziness
+        warning"
+      hash: b534b8e8e81f3ccd0f78a3ad587f7755b4a86a6d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-kirkstone: replace honister with kirkstone"
+      hash: cbd28eeab4688ec2c6825b8943aef5d36f1aed48
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-kirkstone: use upstream kernel-devsrc recipe"
+      hash: d7656e313c88dd2b751d8e269a7f9dd049fbd4d4
+      body: |
+        This recipe was brough-in when the default meta-balena version was still
+        behind the upstream version introducing it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-kirkstone: use the procps recipe from upstream"
+      hash: 871fc59292c9ca0673bae3486022d36751478a7d
+      body: |
+        This recipe was useful until poky modified the procps recipe to include
+        just the ps utility.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-kirkstone: Add kirkstone integration layer"
+      hash: 55731ad71793e0c9ebbf4a80d1b04fa5f049213e
+      body: |
+        This is a 1:1 copy of meta-balena-honister
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: image-balena: Fix journal blocks calculation"
+      hash: b890cab9e4c5b364944e520ed4034ce71932f0bc
+      body: |
+        Replace a static check for the "honister" distro name with a version
+        check on dumpe2fs which does not need further maintenance.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "packagegroup-resin: Move libnss-ato out of packagegroup to avoid build
+        error"
+      hash: c03f72e3da35193b68de139e688039700ad4599d
+      body: >
+        Yocto kirkstone complains with:
+
+
+        ERROR: packagegroup-resin-1.0-r1 do_package_write_ipk: An allarch packagegroup shouldn't depend on packages which are dynamically renamed (libnss-ato to libnss-ato2)
+
+
+        For lack of a better place, move to the balena-image recipe.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "openvpn: update to version 2.5.6"
+      hash: 106fa9df896e2594638c48aef2557aadc75900e1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-supervisor: Allow network use in install task"
+      hash: 817c68135f5a96a4fc1673175bee25402fc58801
+      body: |
+        This recipe checks the API for the supervisor version so it must be
+        allowed network access.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docker-disk: Allow compile task to use network"
+      hash: f1110e861c33625d1789d1dc6f262f302f550f10
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "chrony: update to version 4.1 to match kirkstone's version"
+      hash: 5049451b32d2d2c59f2aeb4713b2e6539bffeb49
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-config: Adapt to kirkstone"
+      hash: 7092dda34b52947db2e8643c45c3f5f9a6e31407
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "healthdog: Adapt to kirkstone"
+      hash: e15b4faf33d0d7b72d65a0ee5ca7a7d6eff25d9d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "compatibility: Do not update tpm2-tss below Dunfell"
+      hash: b3dfb63f189e50f6dd2303c6201e26e91209fd0d
+      body: |
+        Newer versions require autoconf >= v2.70 not to fail with:
+        ```
+        configure: error: unrecognized option: `--runstatedir=/run'
+        ```
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tpm2-tss: update to kirkstone"
+      hash: 7f37dae8a1300d58daf0b09ef8a9732916d65130
+      body: >
+        Copied from the kirkstone branch of
+        https://git.yoctoproject.org/meta-security/
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tpm2-tools: update to kirkstone"
+      hash: e25996b46287d43033b673b6c02d685a0a00f01f
+      body: >
+        Copied from the kirkstone branch of
+        https://git.yoctoproject.org/meta-security/
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tpm2-abrmd: update to kirkstone"
+      hash: 27895d536b277b5dae9ac6fa8b4f89526176d6f2
+      body: >
+        Copied from the kirkstone branch of
+        https://git.yoctoproject.org/meta-security/
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-common: Assure all recipes have branch and protocol in
+        SRC_URI"
+      hash: f84acf9c4dee58987d1abf3c45e55d4d9f0834f3
+      body: |
+        This is the result of running the `convert-srcuri.py` script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "bluez5: update to 5.64"
+      hash: f70ef8d009461fb5c25fec23ee51a56a3d50a2a6
+      body: |
+        We keep the bluez recipe in meta-balena so we can use the same version
+        independently of the Yocto version and integration layer used.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "efi-tools: Replace SSTATE_DUPWHITELIST with SSTATE_ALLOW_OVERLAP_FILES"
+      hash: 8e3628e32c3ecc880a40e90f227eb536aa2f64cb
+      body: |
+        This is part of Yocto's inclusive language improvements.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.103.0
+  title: "'Update to kirkstone'"
+  date: 2022-09-12T10:29:08.814Z
+- commits:
     - subject: Update tests/leviathan digest to 7fe3c5f
       hash: 501e9f0cd4a82b40451cca4eef244ad242565614
       body: Update tests/leviathan
