@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.7
+## (2022-09-12)
+
+* tests/hup: Add storagemigration tests [Robert Günzler]
+
 # v2.102.6
 ## (2022-09-07)
 
