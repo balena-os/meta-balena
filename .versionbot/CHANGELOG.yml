@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/hup: Add storagemigration tests"
+      hash: 5b7d05414132006c41c9b143624820d4829ba1b3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Robert Günzler <robertg@balena.io>
+        signed-off-by: Robert Günzler <robertg@balena.io>
+      author: Robert Günzler
+      nested: []
+  version: 2.102.7
+  title: "'tests: add engine storage migration tests to hup suite'"
+  date: 2022-09-12T14:52:15.770Z
+- commits:
     - subject: Update tests/leviathan digest to 7fe3c5f
       hash: 501e9f0cd4a82b40451cca4eef244ad242565614
       body: Update tests/leviathan
