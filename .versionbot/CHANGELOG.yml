@@ -1,4 +1,36 @@
 - commits:
+    - subject: "balena-config-vars: Set permissions for cache file"
+      hash: 9aa68612dcd3e55f1c441c4ed41e0646b2b6c23c
+      body: >
+        The sshd daemon is configured to fetch keys from the API for local
+
+        user connections. The script that fetches the keys, cloud-public-sshkeys,
+
+        sources balena-config-vars and is run as an exclusive non-root user.
+
+
+        Let's set the correct permissions for this file to allow not to break
+
+        the above.
+
+
+        Also, add a test to check that the SSH authentication with user
+
+        registered keys does not break again.
+
+
+        Fixes #2785
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.103.1
+  title: "'balena-config-vars: Set permissions for cache file'"
+  date: 2022-09-13T17:55:28.225Z
+- commits:
     - subject: "README: Add kirkstone support"
       hash: aeff6b085ceeca7ff1d27079bcee7ebe2c6e6d7e
       body: |

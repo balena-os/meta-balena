@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.103.1
+## (2022-09-13)
+
+* balena-config-vars: Set permissions for cache file [Alex Gonzalez]
+
 # v2.103.0
 ## (2022-09-12)
 
