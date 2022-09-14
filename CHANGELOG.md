@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.103.1
+## (2022-09-13)
+
+* tests: os: only do hdmi test if has capture device [rcooke-warwick]
+
 # v2.103.0
 ## (2022-09-12)
 
