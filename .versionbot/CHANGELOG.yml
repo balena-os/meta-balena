@@ -1,4 +1,45 @@
 - commits:
+    - subject: "ntp: Remove race condition from directory creation"
+      hash: aca93d40426f74aea9820ff49357bb106c3db32a
+      body: >
+        Chronyd checks that the directory specified as `sourcedir` in
+        `chrony.conf`
+
+        (in this case `/var/chrony`) is not world accessible if it exists (chrony
+
+        will create it correctly if it does not exist), and does not start
+
+        if that's the case.
+
+
+        The way that the `/var/chrony` is created when it does not exist opens
+
+        the possibility of the directory existing with the wrong permissions and
+
+        hitting this problem.
+
+
+        This commit creates the directory with the correct permissions from the
+
+        start to avoid the race condition.
+
+
+        It also changes the permissiong from 750 to 770 to match what chrony
+
+        does (see
+
+        https://github.com/mlichvar/chrony/blob/7b197953e8add5515b7e58c4638dc55aa4bb91b7/conf.c#L1761)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.103.2
+  title: "'ntp: Remove race condition from directory creation'"
+  date: 2022-09-14T16:48:49.735Z
+- commits:
     - subject: "tests: os: only do hdmi test if has capture device"
       hash: 7dbe61633da64fd2c6372a817a954e0d1db24556
       body: ""

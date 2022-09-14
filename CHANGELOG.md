@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.103.2
+## (2022-09-14)
+
+* ntp: Remove race condition from directory creation [Alex Gonzalez]
+
 # v2.103.1
 ## (2022-09-13)
 
