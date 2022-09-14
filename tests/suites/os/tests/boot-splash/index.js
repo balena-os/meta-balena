@@ -39,6 +39,22 @@ module.exports = {
 			},
 		},
 	},
+	workerContract: {
+		type: 'object',
+		required: ['supportedFeatures'],
+		properties: {
+			supportedFeatures: {
+				type: 'object',
+				required: ['screencapture'],
+				properties: {
+					screencapture: {
+						type: 'boolean',
+						const: true,
+					},
+				},
+			},
+		},
+	},
 	tests: [
 		{
 			title: 'Reboot test',
