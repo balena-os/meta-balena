@@ -11,8 +11,7 @@ SERVER_DIR=/run/chrony/
 SERVER_FILE=${SERVER_DIR}/added_dhcp_${INTERFACE}.sources
 
 if [ ! -d "$SERVER_DIR" ]; then
-	mkdir -p $SERVER_DIR
-	chmod 750 $SERVER_DIR
+	mkdir -p $SERVER_DIR -m 770
 fi
 
 case "$ACTION" in
