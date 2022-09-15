@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: os: ensure by-state links are created"
+      hash: 349ce68ee67e198d5f29e2bf20c33c4d26b34377
+      body: |
+        These links are required for HUP, ensure they're created by udev
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.103.3
+  title: "'tests: os: ensure by-state links are created'"
+  date: 2022-09-15T21:49:02.078Z
+- commits:
     - subject: "mobynit: allow compile task to use network"
       hash: 307a7ecbd1e803a901738d5eecda69e15ea2340c
       body: |

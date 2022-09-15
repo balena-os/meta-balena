@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.103.3
+## (2022-09-15)
+
+* tests: os: ensure by-state links are created [Joseph Kogut]
+
 # v2.103.2
 ## (2022-09-14)
 
