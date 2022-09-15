@@ -1,4 +1,19 @@
 - commits:
+    - subject: "mobynit: allow compile task to use network"
+      hash: 307a7ecbd1e803a901738d5eecda69e15ea2340c
+      body: |
+        Mobynit requires network access to fetch dependencies.
+      footer:
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Joseph Kogut
+      nested: []
+  version: 2.103.2
+  title: "'mobynit: allow compile task to use network'"
+  date: 2022-09-14T16:17:30.163Z
+- commits:
     - subject: "tests: os: only do hdmi test if has capture device"
       hash: 7dbe61633da64fd2c6372a817a954e0d1db24556
       body: ""

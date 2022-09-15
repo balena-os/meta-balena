@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.103.2
+## (2022-09-14)
+
+* mobynit: allow compile task to use network [Joseph Kogut]
+
 # v2.103.1
 ## (2022-09-13)
 
