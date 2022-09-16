@@ -1,4 +1,47 @@
 - commits:
+    - subject: "resin-init-flasher: skip array members not matching a named array"
+      hash: 2c4c437329ff0e74521cf11b74edcf83f58ff8b3
+      body: |
+        If a block device specified in resin-init-flasher.conf is part of an
+        array, but that assembled array name wasn't specified, skip it to avoid
+        data loss.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "resin-init-flasher: support pattern matching of devices"
+      hash: d552508ce70cf53b5a9fd1e18f5e31d9dbcf2108
+      body: >
+        Instead of querying devices w/ `fdisk -l`, glob match patterns specified
+
+        in resin-init-flasher.conf with devices present in `/dev`. This allows us to
+
+        specify devices like `hd? sd? mmcblk?` instead of individual device
+
+        numbers, which don't consistently map to any particular disk.
+
+
+        This also allows RAID arrays to be matched with the array name and a
+
+        pattern that glob matches even arrays assembled automatically on a
+
+        non-matching host, such as `md/balena?(_?)` matching an array named
+
+        `balena` and assembled on-device at `/dev/md/balena_0`.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.103.3
+  title: "'resin-init-flasher: support pattern matching of devices'"
+  date: 2022-09-15T14:44:38.001Z
+- commits:
     - subject: "mobynit: allow compile task to use network"
       hash: 307a7ecbd1e803a901738d5eecda69e15ea2340c
       body: |

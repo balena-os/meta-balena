@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.103.3
+## (2022-09-15)
+
+* resin-init-flasher: skip array members not matching a named array [Joseph Kogut]
+* resin-init-flasher: support pattern matching of devices [Joseph Kogut]
+
 # v2.103.2
 ## (2022-09-14)
 
