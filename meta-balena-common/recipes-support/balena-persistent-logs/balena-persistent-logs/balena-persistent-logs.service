@@ -6,7 +6,9 @@ After=resin-boot.service resin-state.service systemd-journald.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BINDIR@/balena-persistent-logs
+ExecStart=@BINDIR@/balena-persistent-logs start
+ExecStop=@BINDIR@/balena-persistent-logs stop
+RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target

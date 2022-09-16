@@ -14,7 +14,7 @@
 				"balena-supervisor": {
 					"description": "The balena supervisor",
 					"comment": "Although apiTimeout and mixpanelToken are also used by the supervisor, they do not require a restart",
-					"configuration": "listenPort balenaRootCA"
+					"configuration": "listenPort balenaRootCA persistentLogging"
 				},
 				"development-features": {
 					"description": "Enable / disable development mode",
@@ -56,6 +56,10 @@
 				"prepare-openvpn": {
 					"description": "Setup VPN authentication",
 					"configuration": "apiKey"
+				},
+				"balena-persistent-logs": {
+					"description": "Enable/Disable persistent logging",
+					"configuration": "persistentLogging"
 				}
 			}
 		}

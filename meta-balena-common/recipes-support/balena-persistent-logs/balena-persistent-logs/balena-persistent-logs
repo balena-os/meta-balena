@@ -5,19 +5,33 @@
 
 set -e
 
+# Parse arguments
+if [ $# -gt 0 ]; then
+    cmd=$1
+    shift
+fi
+
 . /usr/libexec/os-helpers-logging
 . /usr/sbin/balena-config-vars
 
-if [ "$PERSISTENT_LOGGING" = "true" ] && [ ! -d /var/log/journal ]; then
-    mkdir -p /var/log/journal
-    systemctl start bind-var-log-journal.service
-    journalctl --flush
-    info "Persistent logging activated."
-elif [ "$PERSISTENT_LOGGING" = "true" ] && [ -d /var/log/journal ]; then
-    info "Persistent logging already activated."
-    journalctl --flush
-elif [ "$PERSISTENT_LOGGING" = "false" ] && [ -d /var/log/journal ]; then
-    info "Persistent logging was deactivated but system reboot is needed."
+if [ "${cmd}" = "start" ]; then
+    if [ "$PERSISTENT_LOGGING" = "true" ]; then
+        mkdir -p /var/log/journal
+        systemctl start bind-var-log-journal.service
+        journalctl --flush
+        info "Persistent logging activated."
+    elif [ "$PERSISTENT_LOGGING" = "false" ]; then
+        info "Persistent logging was deactivated."
+        journalctl --sync
+        systemctl stop systemd-journald.service
+        systemctl stop bind-var-log-journal.service
+        systemctl start systemd-journald.service
+    fi
+elif [ "${cmd}" = "stop" ]; then
+    if [ "$PERSISTENT_LOGGING" = "true" ]; then
+        journalctl --sync
+        systemctl stop bind-var-log-journal.service
+    fi
 else
-    info "Persistent logging deactivated."
+    error "Unknown command."
 fi
