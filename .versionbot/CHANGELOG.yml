@@ -1,4 +1,18 @@
 - commits:
+    - subject: "balena-persistent-logs: Make configurable"
+      hash: bacd91228ab6a85c1ec97719a4324ffe22a44750
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.104.0
+  title: "'balena-persistent-logs: Unbind the logs on shutdown'"
+  date: 2022-09-16T13:32:09.324Z
+- commits:
     - subject: "mobynit: allow compile task to use network"
       hash: 307a7ecbd1e803a901738d5eecda69e15ea2340c
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.104.0
+## (2022-09-16)
+
+* balena-persistent-logs: Make configurable [Alex Gonzalez]
+
 # v2.103.2
 ## (2022-09-14)
 
