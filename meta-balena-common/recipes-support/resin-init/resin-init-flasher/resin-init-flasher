@@ -156,15 +156,24 @@ done
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
 internal_dev=""
-for d in $INTERNAL_DEVICE_KERNEL; do
-    if [ "$CURRENT_ROOT" = "$d" ]; then
-        inform "$d is our install media, skip it..."
-        continue
-    fi
-    if fdisk -l | grep -q "$d"; then
-        internal_dev=$d
-        break
-    fi
+for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
+    for device in /dev/${device_pattern}; do
+        if [[ "${CURRENT_ROOT}" = "${device}" ]]; then
+            inform "${device} is our install media, skip it..."
+            continue
+        fi
+        if test -b "$(readlink -f "${device}")"; then
+            if ! [[ "${device_pattern}" = md/* ]]; then
+                if mdadm --examine "${device}" | grep -q Array; then
+                    inform "${device} is part of an existing RAID array that wasn't specified by name, skip it..."
+                    continue
+                fi
+            fi
+
+            internal_dev="${device}"
+            break 2
+        fi
+    done
 done
 if [ -z "$internal_dev" ]; then
     resin-device-progress --percentage 100 --state "Failed to find any block devices." || true
@@ -224,31 +233,35 @@ if [ "$LUKS" = "1" ]; then
     PART_SIZE_ALIGN=$[4 * 1024 * 1024]
 
     # Wipe the existing partition table and create a blank one
-    dd if=/dev/zero of="/dev/$internal_dev" bs=4M count=1
+    dd if=/dev/zero of="$internal_dev" bs=4M count=1
     # Regardless of what the original image uses we always want GPT for secure boot + LUKS
     # Though in practice MBR would work as well in most cases, it is not globally guaranteed
     # and it is much harder to operate on due to the necessity of an extended partition
-    parted "/dev/$internal_dev" mktable gpt
+    parted "$internal_dev" mktable gpt
 
     inform "Flashing boot partition"
     ORIGINAL_BOOT_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-boot)
     ORIGINAL_BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID" "$PART_SIZE_ALIGN")
     ORIGINAL_BOOT_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
 
-    parted "/dev/$internal_dev" unit B mkpart balena-efi "$ORIGINAL_BOOT_START" $["$ORIGINAL_BOOT_START" + "$ORIGINAL_BOOT_PART_SIZE" - 1]
+    parted "$internal_dev" \
+	    unit B \
+	    mkpart balena-efi \
+	    "$ORIGINAL_BOOT_START" \
+	    $["$ORIGINAL_BOOT_START" + "$ORIGINAL_BOOT_PART_SIZE" - 1]
 
     EFI_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-boot)
 
     PART_PREFIX=""
-    if [ -e "/dev/${internal_dev}p${EFI_PART_ID}" ]; then
+    if [ -e "${internal_dev}p${EFI_PART_ID}" ]; then
         PART_PREFIX="p"
     fi
 
-    dd if="${LOOP_DEVICE}p${ORIGINAL_BOOT_PART_ID}" of="/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" bs=4M
+    dd if="${LOOP_DEVICE}p${ORIGINAL_BOOT_PART_ID}" of="${internal_dev}${PART_PREFIX}${EFI_PART_ID}" bs=4M
     FLASHED="$ORIGINAL_BOOT_PART_SIZE"
 
     # Relabel former boot partition
-    fatlabel "/dev/${internal_dev}${PART_PREFIX}${EFI_PART_ID}" "balena-efi"
+    fatlabel "${internal_dev}${PART_PREFIX}${EFI_PART_ID}" "balena-efi"
 
     # Find parition IDs
     ROOTA_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-rootA)
@@ -272,25 +285,25 @@ if [ "$LUKS" = "1" ]; then
     LUKS_HEADER_SIZE=$[2 * 1024 * 1024]
 
     BOOT_PART_END=$["$FIRST_PART_START" + "$BOOT_PART_SIZE" + "$LUKS_HEADER_SIZE" - 1]
-    parted -s "/dev/$internal_dev" -- unit B mkpart resin-boot "$FIRST_PART_START" "$BOOT_PART_END"
+    parted -s "$internal_dev" -- unit B mkpart resin-boot "$FIRST_PART_START" "$BOOT_PART_END"
 
     ROOTA_PART_END=$["$BOOT_PART_END" + "$ROOTA_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit B mkpart resin-rootA "$[$BOOT_PART_END + 1]" "$ROOTA_PART_END"
+    parted -s "$internal_dev" -- unit B mkpart resin-rootA "$[$BOOT_PART_END + 1]" "$ROOTA_PART_END"
 
     ROOTB_PART_END=$["$ROOTA_PART_END" + "$ROOTB_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit B mkpart resin-rootB "$[$ROOTA_PART_END + 1]" "$ROOTB_PART_END"
+    parted -s "$internal_dev" -- unit B mkpart resin-rootB "$[$ROOTA_PART_END + 1]" "$ROOTB_PART_END"
 
     STATE_PART_END=$["$ROOTB_PART_END" + "$STATE_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit B mkpart resin-state "$[$ROOTB_PART_END + 1]" "$STATE_PART_END"
+    parted -s "$internal_dev" -- unit B mkpart resin-state "$[$ROOTB_PART_END + 1]" "$STATE_PART_END"
 
     DATA_PART_END=$["$STATE_PART_END" + "$DATA_PART_SIZE" + "$LUKS_HEADER_SIZE"]
-    parted -s "/dev/$internal_dev" -- unit B mkpart resin-data "$[$STATE_PART_END + 1]" "$DATA_PART_END"
+    parted -s "$internal_dev" -- unit B mkpart resin-data "$[$STATE_PART_END + 1]" "$DATA_PART_END"
 
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
         LOOP_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" "$PART_NAME")
         INTERNAL_PART_ID=$(get_part_number_by_label "$internal_dev" "$PART_NAME" partlabel)
 
-        PART_DEV="/dev/$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
+        PART_DEV="$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         inform "Encrypting $PART_DEV"
         cryptsetup luksFormat "$PART_DEV" "$PASSPHRASE_FILE"
         cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file "$PASSPHRASE_FILE"
@@ -318,13 +331,13 @@ if [ "$LUKS" = "1" ]; then
     losetup -d "$LOOP_DEVICE"
 else
     resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
-    dd_with_progress "/opt/$BALENA_IMAGE" "/dev/$internal_dev" 0 "$IMAGE_FILE_SIZE"
+    dd_with_progress "/opt/$BALENA_IMAGE" "$internal_dev" 0 "$IMAGE_FILE_SIZE"
 fi
 
 sync
 
 # Trigger udev
-partprobe /dev/"$internal_dev"
+partprobe "$internal_dev"
 udevadm trigger
 udevadm settle
 
