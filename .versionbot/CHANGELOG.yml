@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.0.25
+      hash: df1ecdb5747440bccdf4628c86c15c3a158b224a
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.103.5
+  title: "'Update balena-os/balena-supervisor to v14.0.25'"
+  date: 2022-09-19T09:18:33.056Z
+- commits:
     - subject: Update tests/leviathan digest to 881cd72
       hash: 8134b1cd498dbac2cc90ab165e21afafb9a91b6e
       body: Update tests/leviathan
