@@ -1,6 +1,47 @@
 Change log
 -----------
 
+# v2.103.4
+## (2022-09-17)
+
+
+<details>
+<summary> Update tests/leviathan digest to 881cd72 [renovate[bot]] </summary>
+
+> ## leviathan-2.9.5
+> ### (2022-09-15)
+> 
+> * bump contracts to  v2.0.15 [rcooke-warwick]
+> 
+> ## leviathan-2.9.4
+> ### (2022-09-13)
+> 
+> * increase timeout on local push sv ping [rcooke-warwick]
+> 
+> ## leviathan-2.9.3
+> ### (2022-09-08)
+> 
+> * patch: Remove unused SDK helpers [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.9.2
+> ### (2022-09-08)
+> 
+> * patch: Remove unused CLI helpers [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.9.1
+> ### (2022-09-08)
+> 
+> * patch: Remove npm package as dependency [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.9.0
+> ### (2022-09-07)
+> 
+> * core: Switch to debian base and install standalone balena-cli [Kyle Harding]
+> * core: Set node engine to match the Dockerfile [Kyle Harding]
+> * core: Remove balena-cli npm dependency [Kyle Harding]
+> 
+</details>
+
 # v2.103.3
 ## (2022-09-15)
 

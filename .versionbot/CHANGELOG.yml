@@ -1,4 +1,125 @@
 - commits:
+    - subject: Update tests/leviathan digest to 881cd72
+      hash: 8134b1cd498dbac2cc90ab165e21afafb9a91b6e
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: bump contracts to  v2.0.15
+              hash: 89f6ae542f33f1e9ae533ca40e1902e6dc4f9f25
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.9.5
+          title: "'bump contracts to  v2.0.15'"
+          date: 2022-09-15T07:45:52.354Z
+        - commits:
+            - subject: increase timeout on local push sv ping
+              hash: e767bd998022a5f2f0b4eeec9f99ccc7252bea4d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.9.4
+          title: "'increase timeout on local push sv ping'"
+          date: 2022-09-13T13:50:43.614Z
+        - commits:
+            - subject: "patch: Remove unused SDK helpers"
+              hash: 459b90b19682cc1670794188fc0c8f8e04e25e57
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.9.3
+          title: "'patch: Remove unused SDK helpers'"
+          date: 2022-09-08T12:30:15.417Z
+        - commits:
+            - subject: "patch: Remove unused CLI helpers"
+              hash: 66afc7ec415604bc04fd463c93042dc39bab4ac2
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.9.2
+          title: "'patch: Remove unused CLI helpers'"
+          date: 2022-09-08T11:06:43.780Z
+        - commits:
+            - subject: "patch: Remove npm package as dependency"
+              hash: 613af06779560bd0ac1c660227a2d2fcd8613dbb
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.9.1
+          title: "'Core: Cleanup dependencies'"
+          date: 2022-09-08T08:03:01.727Z
+        - commits:
+            - subject: "core: Switch to debian base and install standalone balena-cli"
+              hash: b6993366ce72f0c25f14dfeccdf42076fbf8dd50
+              body: >
+                Unfortunately the standalone balena-cli package is linked to
+                glibc
+
+                and does not work with musl (alpine) so we need to switch to debian.
+
+
+                The trade-off seems worth it for build times though.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "core: Set node engine to match the Dockerfile"
+              hash: 06fcacf6573385aa2709bb2f0deb8a6bee3dd14a
+              body: |
+                This version can likely be increased now that the balena-cli
+                is no longer part of the ndoe dependencies, but for now just
+                publish the current setting.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "core: Remove balena-cli npm dependency"
+              hash: 8b785515f4e4b5d2161f2b84a93a6d162b929875
+              body: |
+                Pave the way for installing balena-cli standalone package.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.9.0
+          title: "'core: Switch to debian base and install standalone balena-cli'"
+          date: 2022-09-07T20:13:19.163Z
+  version: 2.103.4
+  title: "'Update tests/leviathan digest to 881cd72'"
+  date: 2022-09-17T01:16:08.536Z
+- commits:
     - subject: "resin-init-flasher: skip array members not matching a named array"
       hash: 2c4c437329ff0e74521cf11b74edcf83f58ff8b3
       body: |
