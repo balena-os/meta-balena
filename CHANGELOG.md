@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.104.1
+## (2022-09-20)
+
+* balena: remove kernel-module-nf-nat-native dependency for host build [Alexandru Costache]
+
 # v2.104.0
 ## (2022-09-19)
 
