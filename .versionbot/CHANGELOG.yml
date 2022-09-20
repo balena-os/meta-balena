@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.2.0
+      hash: 3ff628443f4ac28111cdec3255bfd88c6ab50bc4
+      body: Update balena-supervisor
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: renovate[bot]
+      nested: []
+  version: 2.105.0
+  title: "'Update balena-os/balena-supervisor to v14.2.0'"
+  date: 2022-09-20T19:26:25.046Z
+- commits:
     - subject: "balena: remove kernel-module-nf-nat-native dependency for host build"
       hash: bd36b84df9281ddfc61920189968f51cb691ac16
       body: >
