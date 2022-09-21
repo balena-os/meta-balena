@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.105.1
+## (2022-09-21)
+
+
+<details>
+<summary> Update tests/leviathan digest to 15d608b [renovate[bot]] </summary>
+
+> ## leviathan-2.9.6
+> ### (2022-09-21)
+> 
+> * core/contracts: bump contracts to v2.0.16 [Alexandru Costache]
+> 
+</details>
+
 # v2.105.0
 ## (2022-09-20)
 

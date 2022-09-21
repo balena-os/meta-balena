@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update tests/leviathan digest to 15d608b
+      hash: d4e90da30fccd8e811df4ec68e2b6c34053350be
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "core/contracts: bump contracts to v2.0.16"
+              hash: 2643f0d89eb47a6d27a2c49da172baff26d7fbd0
+              body: |
+                To include RockPro LED changes
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.9.6
+          title: "'core/contracts: bump contracts to v2.0.16'"
+          date: 2022-09-21T09:27:41.644Z
+  version: 2.105.1
+  title: "'Update tests/leviathan digest to 15d608b'"
+  date: 2022-09-21T11:00:59.021Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.2.0
       hash: 3ff628443f4ac28111cdec3255bfd88c6ab50bc4
       body: Update balena-supervisor
