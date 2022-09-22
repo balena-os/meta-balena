@@ -15,7 +15,7 @@ The repositories used to build the balenaOS host Operating System (OS) are typic
 Contributing support for a new board is a process that involves the following steps:
 
 - [Create the board support repository](#step-1-board-support-repository-breakout)
-- [Contact balena to have the repository moved/mirrored and the build system jobs created](#step-2-contact-balena)
+- [Contact balena to have the repository transferred/cloned and the build system jobs created](#step-2-contact-balena)
 - [Send a Pull Request for a hardware contract which describes the board's capabilities](#step-3-hardware-contract)
 - [Maintaining the repository and OS updates](#step-4-maintaining-the-repository-and-os-updates)
 
@@ -223,8 +223,11 @@ See the [meta-balena Readme](https://github.com/balena-os/meta-balena/blob/maste
 ## Step 2: Contact balena
 
 When you have completed the development of the yocto board support repository as detailed in the previous step, please get in touch with balena to finish the process of having your board available in the balena dashboard.  
-This will mean your board repository would need to be hosted in [balena-os GitHub organization](https://github.com/balena-os). Depending on your needs and upon agreeing with balena,
-it can be hosted either as a public repository for everyone to access or hosted privately with access only to selected users.
+This will mean your board repository would need to be hosted in [balena-os GitHub organization](https://github.com/balena-os). Your repository can either be transferred to the balenaOS github organization (repository ownership
+transfer can be done from the github UI under Settings -> General and scroll all the way to the botton over to `Danger Zone`) or balena will clone your repository under the balenaOS github organization (we avoid to use forking
+because this creates issues with outdated PRs and repositories diverging due to renovatebot auto-merge of balena-yocto-scripts, meta-balena and VersionBot updates to CHANGELOG.md, VERSION). Please note that from this point forward,
+all pull requests need to be done against this new board repository from [balena-os](https://github.com/balena-os). Depending on your needs and upon agreeing with balena, this new repository can be hosted either as a public
+repository for everyone to access or hosted privately with access only to selected users.
 
 ## Step 3: Hardware contract
 
