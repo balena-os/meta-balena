@@ -1,4 +1,18 @@
 - commits:
+    - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
+      hash: ef51c09db6b72bed58d4662f11717c7835611eee
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.105.2
+  title: "'contributing-device-support.md: Clarify repo set-up in balenaOS org'"
+  date: 2022-09-22T14:00:38.365Z
+- commits:
     - subject: Update tests/leviathan digest to 15d608b
       hash: d4e90da30fccd8e811df4ec68e2b6c34053350be
       body: Update tests/leviathan

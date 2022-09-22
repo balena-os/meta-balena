@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.2
+## (2022-09-22)
+
+* contributing-device-support.md: Clarify repo set-up in balenaOS org [Florin Sarbu]
+
 # v2.105.1
 ## (2022-09-21)
 
