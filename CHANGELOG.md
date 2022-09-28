@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.105.2
+## (2022-09-28)
+
+* tests: multicontainer: add backoff to retries [Joseph Kogut]
+* tests: preload: add backoff to retries [Joseph Kogut]
+* tests: cloud: remove duplicated method [Joseph Kogut]
+* tests: cloud: add backoff to systemd.waitForServiceState() [Joseph Kogut]
+
 # v2.105.1
 ## (2022-09-21)
 

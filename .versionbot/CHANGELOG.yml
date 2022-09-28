@@ -1,4 +1,52 @@
 - commits:
+    - subject: "tests: multicontainer: add backoff to retries"
+      hash: 77d6215a81f98f94f2f0b5e0f55905b3615ba745
+      body: |
+        Replace use of utils.waitUntil() w/ bluebird-retry using backoff.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: preload: add backoff to retries"
+      hash: 266b606631b8dc53d0eeee04b55868f5fc495951
+      body: |
+        Replace use of utils.waitUntil() w/ bluebird-retry using backoff.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: remove duplicated method"
+      hash: 3224810936842012832c2c1fe1526b141eef1ad6
+      body: |
+        Remove duplicates of cloud.waitUntilServicesRunning()
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: add backoff to systemd.waitForServiceState()"
+      hash: 315640df57a5e627f57f49ef460dfc3e8d3ffe30
+      body: |
+        Use bluebird-retry instead of utils.waitUntil for exponential backoff.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.2
+  title: "'Cloud retry backoff'"
+  date: 2022-09-28T19:38:38.304Z
+- commits:
     - subject: Update tests/leviathan digest to 15d608b
       hash: d4e90da30fccd8e811df4ec68e2b6c34053350be
       body: Update tests/leviathan
