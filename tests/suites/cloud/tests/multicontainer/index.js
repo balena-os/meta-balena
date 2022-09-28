@@ -16,7 +16,9 @@
 "use strict";
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const retry = require('bluebird-retry');
 
+const retryOptions = { backoff: 1.5, max_tries: 15 };
 
 module.exports = {
   title: "Multicontainer app tests",
@@ -98,20 +100,25 @@ module.exports = {
 
         // Check that device env variable is present in each service
         let services  = [`frontend`, `proxy`, `data`]
-        await this.utils.waitUntil(async () => {
-          let results = {}
-          for (let service of services){
-            let env = await this.cloud.executeCommandInContainer(`env`, service, this.balena.uuid)
-            if (env.includes(`${key}=${value}\n`)){
-              results[service] = true
-            } else {
-              results[service] = false
+        await retry(
+          async () => {
+            let results = {}
+            for (let service of services){
+              let env = await this.cloud.executeCommandInContainer(`env`, service, this.balena.uuid)
+              if (env.includes(`${key}=${value}\n`)){
+                results[service] = true
+              } else {
+                results[service] = false
+              }
             }
-          }
-          return services.every((service) => {
-            return results[service] === true
-          })
-        }, false, 60, 5 * 1000);
+            const varsPresent = services.every((service) => {
+              return results[service] === true
+            });
+
+            if (!varsPresent) throw new Error('Variables are not present in each service');
+          },
+          retryOptions,
+        );
 
         test.ok(true, `Should see device env variable`);
       },
@@ -135,13 +142,18 @@ module.exports = {
           );
 
         // Check to see if variable is present in front end service
-        await this.utils.waitUntil(async () => {
-          test.comment("Checking to see if variables are visible...");
-          let env = await this.cloud.executeCommandInContainer(`env`, `frontend`, this.balena.uuid)
+        test.resolves(
+          await retry(
+            async () => {
+              test.comment("Checking to see if variables are visible...");
+              let env = await this.cloud.executeCommandInContainer(`env`, `frontend`, this.balena.uuid)
 
-          return env.includes(`${key}=${value}\n`);
-        }, false, 60, 5 * 1000);
-        test.ok(true, `Should service env var in service it was set for`);
+              return env.includes(`${key}=${value}\n`);
+            },
+            retryOptions,
+          ),
+          `Service variables should be present in services`,
+        );
       },
     },
     {
@@ -170,12 +182,16 @@ module.exports = {
         );
 
         // wait until cloud sees device as running original service release - this will allow us to delete the application after
-        await this.utils.waitUntil(async() => {
-          let deviceHash = await this.cloud.balena.models.device.getTargetReleaseHash(
-            this.balena.uuid
-          )
-          return deviceHash === commit
-        }, false, 180, 5 * 1000);
+        await retry(
+          async() => {
+            let deviceHash = await this.cloud.balena.models.device.getTargetReleaseHash(
+              this.balena.uuid
+            )
+            if (deviceHash !== commit)
+              throw new Error('Device is not running original app');
+          },
+          retryOptions,
+        );
 
         test.ok(
           true,
