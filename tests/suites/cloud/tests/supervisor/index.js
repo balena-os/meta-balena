@@ -2,20 +2,6 @@
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
-  test.comment(`Waiting for device: ${uuid} to run services: ${services} at commit: ${commit}`);
-  await that.utils.waitUntil(async () => {
-    let deviceServices = await that.cloud.balena.models.device.getWithServiceDetails(
-      uuid
-      );
-    let running = false
-    running = services.every((service) => {
-      return (deviceServices.current_services[service][0].status === "Running") && (deviceServices.current_services[service][0].commit === commit)
-    })
-    return running;
-  }, false, 60, 5 * 1000);
-}
-
 module.exports = {
   title: "Supervisor test suite",
   tests: [
@@ -38,12 +24,10 @@ module.exports = {
           `${this.appPath}`
         );
 
-        await waitUntilServicesRunning(
-          this,
+        await this.cloud.waitUntilServicesRunning(
           this.balena.uuid, 
           [this.appServiceName], 
           secondCommit,
-          test
         )
 
         // device should have downloaded application without mentioning that deltas are being used
@@ -140,12 +124,10 @@ module.exports = {
             1
           );
 
-        await waitUntilServicesRunning(
-          this,
+        await this.cloud.waitUntilServicesRunning(
           this.balena.uuid, 
           [this.appServiceName], 
           secondCommit,
-          test
         )
 
         test.ok(

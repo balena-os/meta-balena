@@ -17,30 +17,6 @@
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-const waitUntilServicesRunning = async (that, uuid, services, commit, test) => {
-	await that.utils.waitUntil(
-		async () => {
-			test.comment(
-				`Waiting for device: ${uuid} to run services: ${services} at commit: ${commit}`,
-			);
-			let deviceServices = await that.cloud.balena.models.device.getWithServiceDetails(
-				uuid,
-			);
-			let running = false;
-			running = services.every(service => {
-				return (
-					deviceServices.current_services[service][0].status === 'Running' &&
-					deviceServices.current_services[service][0].commit === commit
-				);
-			});
-			return running;
-		},
-		false,
-		60,
-		5 * 1000,
-	);
-};
-
 const waitUntilHotspotCreated = async (that, uuid, test) => {
 	let result = false;
 	await that.utils.waitUntil(
@@ -130,12 +106,10 @@ module.exports = {
 					this.moveApp,
 				);
 
-				await waitUntilServicesRunning(
-					this,
+				await this.cloud.waitUntilServicesRunning(
 					this.balena.uuid,
 					[`main`],
 					this.hostapd.initialCommit,
-					test,
 				);
 
 				let hotspotCreated = await waitUntilHotspotCreated(
@@ -168,12 +142,10 @@ module.exports = {
 				let commit = await this.cloud.balena.models.application.getTargetReleaseHash(
 					this.balena.application,
 				);
-				await waitUntilServicesRunning(
-					this,
+				await this.cloud.waitUntilServicesRunning(
 					this.balena.uuid,
 					[this.appServiceName],
 					commit,
-					test,
 				);
 				test.ok(
 					true,
