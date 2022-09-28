@@ -41,15 +41,16 @@ module.exports = {
 						},
 					},
 					run: async function(test) {
-						let testIface = adaptor === 'wireless' ? 'wifi' : 'ethernet';
+						let connection = adaptor === 'wireless' ? 'balena-wifi' : 'Wired';
 						return this.worker.executeCommandInHostOS(
-							`nmcli d  | grep ' ${testIface} ' | grep connected | awk '{print $1}'`,
+							`nmcli d  | grep ' ${connection} ' | grep connected | awk '{print $1}'`,
 							this.link,
 						).then((iface) => {
 							if (iface === '') {
-								throw new Error(`No ${testIface} interface found.`);
+								throw new Error(`No ${connection} connection found.`);
 							}
 
+							test.comment(`Attempting to connect to ${URL_TEST} over interface ${iface}`)
 							return this.worker.executeCommandInHostOS(
 								`ping -c 10 -i 0.002 -I ${iface} ${URL_TEST}`,
 								this.link,
@@ -57,7 +58,7 @@ module.exports = {
 						}).then((ping) => {
 							test.ok(
 								ping.includes('10 packets transmitted, 10 packets received'),
-								`${URL_TEST} responded over ${testIface}`,
+								`${URL_TEST} should respond over ${connection}`,
 							);
 						});
 					},
