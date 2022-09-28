@@ -1,4 +1,18 @@
 - commits:
+    - subject: "test: os: fix search for active interface"
+      hash: 9549378225fd8fe457ba5950c2b2baf627ed5bec
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.105.3
+  title: "'test: os: fix search for active interface'"
+  date: 2022-09-28T14:13:14.875Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
