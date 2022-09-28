@@ -11,6 +11,7 @@ const { join } = require("path");
 const { homedir } = require("os");
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const retry = require('bluebird-retry');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
@@ -88,25 +89,25 @@ module.exports = {
         this.suite.options.workerUrl,
         this.suite.options.balena.organization,
         join(homedir(), 'id')),
-      waitForServiceState: async function (serviceName, state, target) {
-        return utils.waitUntil(
-          async () => {
-            return this.cloud
-              .executeCommandInHostOS(
-                `systemctl is-active ${serviceName} || true`,
-                target,
-              )
-              .then((serviceStatus) => {
-                return Promise.resolve(serviceStatus === state);
-              })
-              .catch((err) => {
-                Promise.reject(err);
-              });
-          },
-          120,
-          250,
-        );
-      }
+      systemd: {
+        waitForServiceState: async function (serviceName, state, target) {
+          const retryOptions = { backoff: 1.5, max_tries: 15 }
+          return retry(
+            async () => {
+              return this.cloud
+                .executeCommandInHostOS(
+                  `systemctl is-active ${serviceName} || true`,
+                  target,
+                )
+                .then((serviceStatus) => {
+                  if (serviceStatus !== state)
+                    throw new Error(`${serviceName} is not ${state}`);
+                });
+            },
+            retryOptions,
+          );
+        },
+      },
     });
 
     // Network definitions - these are given to the testbot via the config sent via the config.js

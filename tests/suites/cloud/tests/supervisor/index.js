@@ -164,7 +164,7 @@ module.exports = {
       title: 'Update supervisor randomized timer',
       run: async function(test) {
         const nextTriggers = []
-        return this.waitForServiceState(
+        return this.systemd.waitForServiceState(
           'update-balena-supervisor.service',
           'inactive',
           this.balena.uuid

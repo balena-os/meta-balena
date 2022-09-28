@@ -26,7 +26,7 @@ const setConfig = async (test, that, target, key, value) => {
 
 	test.test(`Update or delete ${key} in config.json`, t =>
 		t.resolves(
-			that.waitForServiceState(
+			that.systemd.waitForServiceState(
 				'config-json.service',
 				'inactive',
 				target
@@ -72,7 +72,7 @@ const setConfig = async (test, that, target, key, value) => {
 			);
 		}).then(() => {
 			return t.resolves(
-				that.waitForServiceState(
+				this.systemd.waitForServiceState(
 					'config-json.service',
 					'inactive',
 					target
@@ -98,7 +98,7 @@ module.exports = {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				}).then(() => {
 					return test.resolves(
-						this.waitForServiceState(
+						this.systemd.waitForServiceState(
 							'os-sshkeys.service',
 							'active',
 							this.balena.uuid
@@ -159,7 +159,7 @@ module.exports = {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				}).then(() => {
 					return test.resolves(
-						this.waitForServiceState(
+						this.systemd.waitForServiceState(
 							'os-sshkeys.service',
 							'active',
 							this.balena.uuid
@@ -183,7 +183,7 @@ module.exports = {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
 				}).then(() => {
 					return test.resolves(
-						this.waitForServiceState(
+						this.systemd.waitForServiceState(
 							'os-sshkeys.service',
 							'active',
 							this.balena.uuid

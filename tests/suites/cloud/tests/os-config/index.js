@@ -4,7 +4,7 @@ module.exports = {
 		{
 			title: 'os-config service on boot',
 			run: async function(test) {
-				return this.waitForServiceState(
+				return this.systemd.waitForServiceState(
 							'os-config.service',
 							'inactive',
 							this.balena.uuid
