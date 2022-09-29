@@ -1,4 +1,53 @@
 - commits:
+    - subject: "common: update openvpn conf w/ cloudlink URL"
+      hash: e6160e14f766aa347716c9a32285a41e53abab6c
+      body: >
+        As the expiration of the TLS certificate for vpn.balena-cloud.com drew
+
+        near, we setup an additional OpenVPN endpoint at
+
+        cloudlink.balena-cloud.com with a renewed certificate and a different
+
+        name, to clarify the purpose of the connection as a tunnel from balena
+
+        cloud to devices.
+
+
+        https://www.balena.io/blog/sunsetting-vpn-balenacloud-and-introducing-cloudlink/
+
+
+        That endpoint is the new preferred URL to connect to, though devices may
+
+        still successfully connect with the old URL until the certificate
+
+        expires, and os-config should update them to point to the new URL
+
+        anyway.
+
+
+        However, newly provisioned devices may fail to authenticate with the
+
+        cloudlink endpoint when first provisioned, and that unauthorized
+
+        response can be cached by the API, leading to an extended period where
+
+        the device appears offline on the dashboard.
+
+
+        Update the URL for cloudlink to improve the provisioning time for new
+
+        devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.3
+  title: "'common: update openvpn conf w/ cloudlink URL'"
+  date: 2022-09-29T00:30:58.314Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
