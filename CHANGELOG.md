@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.3
+## (2022-09-29)
+
+* common: openvpn: remove resin.conf [Joseph Kogut]
+
 # v2.105.2
 ## (2022-09-22)
 

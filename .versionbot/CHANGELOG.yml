@@ -1,4 +1,24 @@
 - commits:
+    - subject: "common: openvpn: remove resin.conf"
+      hash: 5ef6735d62f149b6f3b453a9cf6fd29f3c6c2ca3
+      body: |
+        This config file hasn't been used since commit 2db88c2, which unified
+        how managed and unmanaged images operate. Since that commit, openvpn
+        starts up if the config file at /etc/openvpn/openvpn.conf is found, and
+        otherwise remains inactive. This file is populated by os-config.
+
+        Remove the old config to prevent misdirection and cleanup the layer.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.3
+  title: "'common: openvpn: remove resin.conf'"
+  date: 2022-09-29T18:10:35.147Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
