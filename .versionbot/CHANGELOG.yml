@@ -1,4 +1,43 @@
 - commits:
+    - subject: "meta-balena-rust: Fix ABI for arm"
+      hash: 1f1b0bfddb2f3f35e788ace45977cc79b6cbbf95
+      body: >
+        The move to include the ABI in the target definition was done in Poky:
+
+        d6b563710e6cc0857843433d85023d47f9f2037d
+
+
+        Without much explanation in the commit, the ABI was removed in Poky:
+
+        e4c16d11128f0e9cc2567fc9e3579e9a94988b2e
+
+
+        Only to be re-introduced, also without much explanation in Poky:
+
+        0bf2fd16273436f1cd9ea2ab99ad882e879f965d
+
+
+        Then, there was a partial revert to remove the ABI again in Poky:
+
+        66ff1fb3a164fa794ee186960809e3fa9e938b48
+
+
+        This last 66ff1fb3a164fa794ee186960809e3fa9e938b48 commit is reverted here as
+
+        it fails to build for ARM targets. All our boards that cover all the
+
+        possible ABIs build with this change.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.3
+  title: "'meta-balena-rust: Fix ABI for arm'"
+  date: 2022-09-30T11:08:02.936Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
