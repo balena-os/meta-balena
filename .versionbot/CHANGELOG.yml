@@ -1,4 +1,26 @@
 - commits:
+    - subject: "flowzone: Run also for pull requests into ESR branches"
+      hash: 1c9fa8bf07231b5ede3d640292161b62eeb818af
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Switch from balenaCI to flowzone
+      hash: 970175638be9665a05faeb5ac7a6b29ccb996237
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 2.105.3
+  title: ""
+  date: 2022-09-30T18:43:16.299Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""

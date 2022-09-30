@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.105.3
+## (2022-09-30)
+
+* flowzone: Run also for pull requests into ESR branches [Alex Gonzalez]
+* Switch from balenaCI to flowzone [Pagan Gazzard]
+
 # v2.105.2
 ## (2022-09-22)
 
