@@ -2,7 +2,7 @@ name: Flowzone
 
 on:
   pull_request:
-    types: [opened, synchronize, closed]
+    types: [opened, reopened, synchronize, closed]
     branches:
       - "main"
       - "master"
