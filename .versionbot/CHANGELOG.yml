@@ -1,4 +1,23 @@
 - commits:
+    - subject: "classes: kernel-balena: Remove aufs kernel configuration"
+      hash: ae085a52e4587beda77b9bf90441a4d220835935
+      body: |
+        The only storage engine currently supportes is overlay2.
+
+        Devices that update to this version of balenaOS and were on aufs will
+        migrate to overlay2. In case of HUP failure, the previous kernel will
+        have aufs support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.3
+  title: "'classes: kernel-balena: Remove aufs kernel configuration'"
+  date: 2022-09-30T09:16:05.966Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
