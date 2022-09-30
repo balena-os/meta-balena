@@ -1,4 +1,25 @@
 - commits:
+    - subject: "classes: kernel-balena: improve aufs branch selection"
+      hash: 604993d2f98f1a4821e2d69daed236b7e5721995
+      body: |
+        The task that applies the aufs patches is still required to support
+        hostOS updates between aufs and overlay2 balenaOS versions.
+
+        This commit adds support for 5.15 kernels and improves the branch
+        selection logic to cover some corner cases.
+
+        It also adds a test task so that we can test regressions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.3
+  title: "'classes: kernel-balena: improve aufs branch selection'"
+  date: 2022-09-30T11:19:28.422Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
