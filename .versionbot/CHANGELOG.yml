@@ -1,4 +1,45 @@
 - commits:
+    - subject: Update tests/leviathan digest to a2079bd
+      hash: 897f002e8f17452caeb92a947e4dc67854d820e2
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Splie interface name into config
+              hash: e49a508e0390cb5f89d34c3a6f5d91ff27ee31b0
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+            - subject: "core: Specify wireless interface name for the 243390 device type"
+              hash: ab724d208cdbb8ba8a34b3c6cdd46144a4265f7a
+              body: |
+                The 243390 device specific tests assess that the hotspot
+                connection is created on the intended interface. We thus
+                need to ensure that the connection to the testbot is
+                established using the embedded wifi chip.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.9.7
+          title: "'core: Add 243390-rpi3 support, use specific network configuration for
+            it'"
+          date: 2022-09-30T11:46:08.530Z
+  version: 2.105.5
+  title: ""
+  date: 2022-10-01T08:58:29.896Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.2.7
       hash: 819b8e70d8a918cc534d68091b150fc2bc74d71d
       body: Update balena-supervisor
