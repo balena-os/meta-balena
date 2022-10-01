@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.2.7
+      hash: 819b8e70d8a918cc534d68091b150fc2bc74d71d
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.105.4
+  title: ""
+  date: 2022-10-01T02:59:51.026Z
+- commits:
     - subject: "flowzone: Run also for pull requests into ESR branches"
       hash: 1c9fa8bf07231b5ede3d640292161b62eeb818af
       body: ""
