@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.105.6
+## (2022-10-06)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4482393 [renovate[bot]] </summary>
+
+> ## leviathan-2.9.9
+> ### (2022-10-05)
+> 
+> * Revert "worker: Pin to stable release 2.5.10 prior to md support" [Kyle Harding]
+> 
+> ## leviathan-2.9.8
+> ### (2022-10-05)
+> 
+> * Switch to Flowzone for CI [Kyle Harding]
+> * Remove leftover balena.yml file [Kyle Harding]
+> 
+</details>
+
 # v2.105.5
 ## (2022-10-01)
 

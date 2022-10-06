@@ -1,4 +1,58 @@
 - commits:
+    - subject: Update tests/leviathan digest to 4482393
+      hash: f3b00f1bb4c811fdd020de0f13d12da301393a43
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: 'Revert "worker: Pin to stable release 2.5.10 prior to md support"'
+              hash: 4f6f194e231fb1afccb0a86f6f8550e26dbcd142
+              body: |
+                This reverts commit 3b6ce13734e98e981492e01bc874c0a439cb1536.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.9.9
+          title: ""
+          date: 2022-10-05T23:52:50.772Z
+        - commits:
+            - subject: Switch to Flowzone for CI
+              hash: b4397c12da38c2bfd00be93a3d1f5d666e389ea9
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Remove leftover balena.yml file
+              hash: 376b764d8ee5404f096e8cdcc8b877aa44e30dfd
+              body: |
+                This repo is not deployed as a fleet, instead the
+                balena-os/leviathan-worker is deployed as a block and
+                as a fleet.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.9.8
+          title: ""
+          date: 2022-10-05T23:37:02.507Z
+  version: 2.105.6
+  title: ""
+  date: 2022-10-06T03:18:48.372Z
+- commits:
     - subject: Update tests/leviathan digest to a2079bd
       hash: 897f002e8f17452caeb92a947e4dc67854d820e2
       body: Update tests/leviathan
