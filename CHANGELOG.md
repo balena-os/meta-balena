@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.9
+## (2022-10-11)
+
+* meta-balena-rust: Fix ABI for arm [Alex Gonzalez]
+
 # v2.105.8
 ## (2022-10-11)
 
