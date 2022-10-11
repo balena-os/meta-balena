@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.8
+## (2022-10-11)
+
+* meta-balena-thud: Enable GOCACHE [Alex Gonzalez]
+
 # v2.105.7
 ## (2022-10-06)
 

@@ -1,4 +1,19 @@
 - commits:
+    - subject: "meta-balena-thud: Enable GOCACHE"
+      hash: a2189c33b4969a76c963dad736f60d23e6fba83c
+      body: |
+        Versions above 1.12 require GOCACHE to be used.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.8
+  title: ""
+  date: 2022-10-11T15:49:46.421Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.2.8
       hash: 5a09b25d77f3dd3fe467fab36d218578f2d2d2d3
       body: Update balena-supervisor
