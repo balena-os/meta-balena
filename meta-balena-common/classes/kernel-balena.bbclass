@@ -687,30 +687,8 @@ def appendLineToFile (filepath, line):
 # Configuration for balena storage
 #
 
-python do_kernel_resin_aufs_fetch_and_unpack() {
-
-    import collections, os.path
-    from bb.fetch2.git import Git
-
-    balena_storage = d.getVar('BALENA_STORAGE', True)
-    bb.note("Kernel will be configured for " + balena_storage + " balena storage driver.")
-
-    kernelversion = get_kernel_version(d)
-    kernelversion_major = int(kernelversion.split('.')[0])
-    # If overlay2, we assume support in the kernel source so no need for extra
-    # patches
-    if balena_storage == "overlay2":
-        if int(kernelversion_major) < 4:
-            bb.fatal("overlay2 is only available from kernel version 4.0. Can't use overlay2 as BALENA_STORAGE.")
-        if not bb.utils.contains("BALENA_CONFIGS", "aufs", True, False, d):
-            return
-
-    kernelsource = d.getVar('S', True)
-    # Everything from here is for aufs
-    if os.path.isdir(kernelsource + "/fs/aufs"):
-        bb.note("The kernel source tree has the fs/aufs directory. Will not fetch and unpack aufs patches.")
-        return
-
+def aufs_kernel_select(kernelversion):
+    import collections
     # define an ordered dictionary with aufs branch names as keys and branch revisions as values
     aufsdict = collections.OrderedDict([
         ('3.0', 'aa3d7447003abd5e3c437de52d8da2e6203390ac'),
@@ -786,6 +764,10 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         ('5.9', 'a786c5eb13b3a45938ac1b829709d0b1d59cd47d'),
         ('5.10', 'e52be5a0f1290b2d113f8bb82f33527ffab8b790'),
         ('5.10.82','673da58f06082548fd5a5a1ba7862f3f2a9f3cdc'),
+        ('5.15','39e948b1b73122dc0069be89691494516c3a91c3'),
+        ('5.15.5','c2ce6a805f301e939724e9a48e523c7298b797e6'),
+        ('5.15.36','8c2481e91182fc6959cb3ad56858c66d7a0c97fd'),
+        ('5.15.41','5e018961ad499fc74e750ae857c33fbfc7641cfd'),
     ])
 
 
@@ -797,11 +779,12 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
     # does not exist in aufs-util repository, then "aufs4.9", "aufs4.8"
     # or something numerically smaller is the branch for your kernel.'
 
-    for key, value in reversed(list(aufsdict.items())) :
-        if key.split('+')[0] is kernelversion:
+    # Some branch names finish in '+', it is always removed for comparison
+
+    for key, value in reversed(list(aufsdict.items())):
+        if key.split('+')[0] == kernelversion:
             aufsbranch = key
             break
-
         keylen = len(key.split('+')[0].split('.'))
         if int(key.split('+')[0].split('.')[0]) > int(kernelversion.split('.')[0]):
             continue
@@ -816,12 +799,78 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
             break
 
         if keylen is 3:
-            if int(key.split('+')[0].split('.')[2][:-1] + '0') <= int(kernelversion.split('.')[2]):
-                aufsbranch = key
-                break
+            # If kernel version does not have a third digit continue searching
+            if len(kernelversion.split('.')) < keylen:
+                continue
+            # Branch name of the form M.m.x, replace with M.m.0 for comparison
+            patchlevel = key.split('+')[0].split('.')[2]
+            if patchlevel[-1] == 'x':
+                if int(patchlevel[:-1] + '0') < int(kernelversion.split('.')[2]):
+                    aufsbranch = key
+                    break
+            # Branch name is standard kernel version format M.m.p
+            else:
+                if int(patchlevel) < int(kernelversion.split('.')[2]):
+                    aufsbranch = key
+                    break
+
         else:
             aufsbranch = key
             break
+
+    return aufsbranch,aufsdict[aufsbranch]
+
+python do_test_aufs_kernel_select() {
+    import collections
+    # Tuples with kernel version and expected branch combinations
+    testdata = collections.OrderedDict([
+        ('3.2.10', '3.2.x'),
+        ('3.10', '3.10'),
+        ('3.12.31','3.12.31+'),
+        ('3.14.40','3.14.40+'),
+        ('4.19.18','4.19.17+'),
+        ('5.2.0','5.2'),
+        ('5.2.5','5.2.5+'),
+        ('5.2.6','5.2.5+'),
+        ('5.10.82','5.10.82'),
+        ('5.15.34','5.15.5'),
+        ('5.15.36','5.15.36'),
+        ('5.15.41','5.15.41'),
+        ('5.15.42','5.15.41'),
+        ])
+
+    for kernelversion,expectedBranch in list(testdata.items()):
+        result = aufs_kernel_select(kernelversion)[0]
+        if result != expectedBranch:
+            bb.fatal("Expecting %s but got %s" % (expectedBranch, result))
+}
+addtask test_aufs_kernel_select after do_fetch before do_patch
+
+python do_kernel_resin_aufs_fetch_and_unpack() {
+
+    import os.path
+    from bb.fetch2.git import Git
+
+    balena_storage = d.getVar('BALENA_STORAGE', True)
+    bb.note("Kernel will be configured for " + balena_storage + " balena storage driver.")
+
+    kernelversion = get_kernel_version(d)
+    kernelversion_major = int(kernelversion.split('.')[0])
+    # If overlay2, we assume support in the kernel source so no need for extra
+    # patches
+    if balena_storage == "overlay2":
+        if int(kernelversion_major) < 4:
+            bb.fatal("overlay2 is only available from kernel version 4.0. Can't use overlay2 as BALENA_STORAGE.")
+        if not bb.utils.contains("BALENA_CONFIGS", "aufs", True, False, d):
+            return
+
+    kernelsource = d.getVar('S', True)
+    # Everything from here is for aufs
+    if os.path.isdir(kernelsource + "/fs/aufs"):
+        bb.note("The kernel source tree has the fs/aufs directory. Will not fetch and unpack aufs patches.")
+        return
+
+    aufsbranch,aufscommit = aufs_kernel_select(kernelversion)
 
     if kernelversion.split('.')[0] is '3':
         srcuri = "git://git.code.sf.net/p/aufs/aufs3-standalone.git;protocol=https;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
@@ -830,7 +879,7 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
     elif kernelversion.split('.')[0] is '5':
         srcuri = "git://github.com/sfjro/aufs5-standalone.git;protocol=https;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
 
-    d.setVar('SRCREV_aufs', aufsdict[aufsbranch])
+    d.setVar('SRCREV_aufs', aufscommit)
     aufsgit = Git()
     urldata = bb.fetch.FetchData(srcuri, d)
     aufsgit.download(urldata, d)
