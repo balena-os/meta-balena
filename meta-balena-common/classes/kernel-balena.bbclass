@@ -909,6 +909,7 @@ apply_aufs_patches () {
     $PATCH_CMD < `find ${WORKDIR}/aufs_standalone/ -name 'aufs*-mmap.patch'`
 }
 do_kernel_resin_aufs_fetch_and_unpack[postfuncs] += "apply_aufs_patches"
+do_kernel_resin_aufs_fetch_and_unpack[network] = "1"
 
 #
 # Inject resin configs
