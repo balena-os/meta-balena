@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.12
+## (2022-10-17)
+
+* classes: kernel-balena: Allow aufs patching to use network [Alex Gonzalez]
+
 # v2.105.11
 ## (2022-10-13)
 

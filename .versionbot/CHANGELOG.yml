@@ -1,4 +1,20 @@
 - commits:
+    - subject: "classes: kernel-balena: Allow aufs patching to use network"
+      hash: 549c6922e4d427f37727b6dffb7e5008f5afdfb6
+      body: |
+        On kirkstone, tasks need to be explicitely allowed to access the
+        network.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.12
+  title: ""
+  date: 2022-10-17T08:41:58.221Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.2.10
       hash: e6a6abbb3994937bbb5e5d2e1479e97a76faec88
       body: Update balena-supervisor
