@@ -1,4 +1,45 @@
 - commits:
+    - subject: "ntp: Remove race condition from directory creation"
+      hash: 5fd19e26d35d7160e2531277a9a14e194d0b95c6
+      body: >
+        Chronyd checks that the directory specified as `sourcedir` in
+        `chrony.conf`
+
+        (in this case `/var/chrony`) is not world accessible if it exists (chrony
+
+        will create it correctly if it does not exist), and does not start
+
+        if that's the case.
+
+
+        The way that the `/var/chrony` is created when it does not exist opens
+
+        the possibility of the directory existing with the wrong permissions and
+
+        hitting this problem.
+
+
+        This commit creates the directory with the correct permissions from the
+
+        start to avoid the race condition.
+
+
+        It also changes the permissiong from 750 to 770 to match what chrony
+
+        does (see
+
+        https://github.com/mlichvar/chrony/blob/7b197953e8add5515b7e58c4638dc55aa4bb91b7/conf.c#L1761)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.13
+  title: ""
+  date: 2022-10-18T12:38:31.247Z
+- commits:
     - subject: "classes: kernel-balena: Allow aufs patching to use network"
       hash: 549c6922e4d427f37727b6dffb7e5008f5afdfb6
       body: |
