@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Enable RPi3-64 for Device tree tests"
+      hash: 55ac90b20dabbd8efe54f6e84d6c9e8c0d8166e9
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.105.14
+  title: ""
+  date: 2022-10-18T16:04:41.810Z
+- commits:
     - subject: "ntp: Remove race condition from directory creation"
       hash: 5fd19e26d35d7160e2531277a9a14e194d0b95c6
       body: >

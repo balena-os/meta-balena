@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.14
+## (2022-10-18)
+
+* patch: Enable RPi3-64 for Device tree tests [Vipul Gupta (@vipulgupta2048)]
+
 # v2.105.13
 ## (2022-10-18)
 
