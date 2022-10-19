@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.15
+## (2022-10-19)
+
+* Revert "chrony: update to version 4.1 to match kirkstone's version" [Alex Gonzalez]
+
 # v2.105.14
 ## (2022-10-18)
 

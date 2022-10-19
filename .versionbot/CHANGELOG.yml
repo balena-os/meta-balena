@@ -1,4 +1,23 @@
 - commits:
+    - subject: "Revert \"chrony: update to version 4.1 to match kirkstone's version\""
+      hash: 3ea5184c30f3051d58f1a1befd19c76c17ee4334
+      body: |
+        With the updated version the systemd watchdog events are not received.
+
+        Fixes #2823
+
+        This reverts commit 5049451b32d2d2c59f2aeb4713b2e6539bffeb49.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.15
+  title: ""
+  date: 2022-10-19T16:58:50.881Z
+- commits:
     - subject: "patch: Enable RPi3-64 for Device tree tests"
       hash: 55ac90b20dabbd8efe54f6e84d6c9e8c0d8166e9
       body: ""
