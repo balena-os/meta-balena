@@ -27,7 +27,7 @@ the client program only."
 
 HOMEPAGE = "https://chrony.tuxfamily.org/"
 SECTION = "net"
-LICENSE = "GPL-2.0-only"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 SRC_URI = "https://download.tuxfamily.org/chrony/chrony-${PV}.tar.gz \
@@ -39,18 +39,13 @@ SRC_URI = "https://download.tuxfamily.org/chrony/chrony-${PV}.tar.gz \
 SRC_URI:append:libc-musl = " \
     file://0001-Fix-compilation-with-musl.patch \
 "
-SRC_URI[sha256sum] = "273f9fd15c328ed6f3a5f6ba6baec35a421a34a73bb725605329b1712048db9a"
+SRC_URI[sha256sum] = "be27ea14c55e7a4434b2fa51d53018c7051c42fa6a3198c9aa6a1658bae0c625"
 
 DEPENDS = "pps-tools"
 
 # Note: Despite being built via './configure; make; make install',
 #       chrony does not use GNU Autotools.
 inherit update-rc.d systemd
-
-# Add chronyd user if privdrop packageconfig is selected
-inherit ${@bb.utils.contains('PACKAGECONFIG', 'privdrop', 'useradd', '', d)}
-USERADD_PACKAGES = "${@bb.utils.contains('PACKAGECONFIG', 'privdrop', '${PN}', '', d)}"
-USERADD_PARAM:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'privdrop', '--system -d / -M --shell /bin/nologin chronyd;', '', d)}"
 
 # Configuration options:
 # - For command line editing support in chronyc, you may specify either
@@ -73,7 +68,7 @@ PACKAGECONFIG ??= "editline \
 PACKAGECONFIG[readline] = "--without-editline,--without-readline,readline"
 PACKAGECONFIG[editline] = ",--without-editline,libedit"
 PACKAGECONFIG[sechash] = "--without-tomcrypt,--disable-sechash,nss"
-PACKAGECONFIG[privdrop] = "--with-libcap,--disable-privdrop --without-libcap,libcap"
+PACKAGECONFIG[privdrop] = ",--disable-privdrop,libcap"
 PACKAGECONFIG[scfilter] = "--enable-scfilter,--without-seccomp,libseccomp"
 PACKAGECONFIG[ipv6] = ",--disable-ipv6,"
 PACKAGECONFIG[nss] = "--with-nss,--without-nss,nss"
@@ -102,10 +97,6 @@ do_install() {
     # Config file
     install -d ${D}${sysconfdir}
     install -m 644 ${WORKDIR}/chrony.conf ${D}${sysconfdir}
-    if ${@bb.utils.contains('PACKAGECONFIG', 'privdrop', 'true', 'false', d)}; then
-        echo "# Define user to drop to after dropping root privileges" >> ${D}${sysconfdir}/chrony.conf
-        echo "user chronyd" >> ${D}${sysconfdir}/chrony.conf
-    fi
 
     # System V init script
     install -d ${D}${sysconfdir}/init.d
@@ -126,10 +117,6 @@ do_install() {
            ${D}${systemd_unitdir}/system/chronyd.service
     sed -i 's!^PATH=.*!PATH=${base_sbindir}:${base_bindir}:${sbindir}:${bindir}!' ${D}${sysconfdir}/init.d/chronyd
     sed -i 's!^EnvironmentFile=.*!EnvironmentFile=-${sysconfdir}/default/chronyd!' ${D}${systemd_unitdir}/system/chronyd.service
-
-    install -d ${D}${sysconfdir}/tmpfiles.d
-    echo "d /var/lib/chrony 0755 root root -" > ${D}${sysconfdir}/tmpfiles.d/chronyd.conf
-
 }
 
 FILES:${PN} = "${sbindir}/chronyd ${sysconfdir} ${localstatedir}/lib/chrony ${localstatedir}"
