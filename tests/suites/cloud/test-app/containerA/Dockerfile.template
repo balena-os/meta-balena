@@ -1,0 +1,3 @@
+FROM balenalib/%%BALENA_ARCH%%-alpine:3.12-run
+
+CMD ["bash", "-c", "echo 'HELLO_WORLD'; bash"]

@@ -30,7 +30,7 @@ module.exports = {
           );
         
         // add a comment to the end of the server.js file, to trigger a delta when pushing
-        await exec(`echo "//comment" >> ${this.appPath}/server.js`);
+        await exec(`echo "#comment" >> ${this.appPath}/containerA/Dockerfile.template`);
         test.comment(`Pushing release...`);
 
         let secondCommit = await this.cloud.pushReleaseToApp(
@@ -80,12 +80,10 @@ module.exports = {
           this.appServiceName,
           this.balena.uuid)
 
-        // push release to application
-        await exec(`echo "//comment" >> ${this.appPath}/server.js`);
-        test.comment(`Pushing release...`);
-        let secondCommit = await this.cloud.pushReleaseToApp(
-          this.balena.application, 
-          `${this.appPath}` // push original release to application (node hello world)
+        //pin to a previous, different commit
+        await this.cloud.balena.models.device.pinToRelease(
+          this.balena.uuid, 
+          this.balena.initialCommit
         );
 
         // check original application is downloaded - shouldn't be installed
@@ -100,7 +98,7 @@ module.exports = {
           let originalRunning = false;
           services.current_services[this.appServiceName].forEach((service) => {
             if (
-              service.commit === secondCommit &&
+              service.commit === this.balena.initialCommit &&
               service.status === "Downloaded"
             ) {
               downloaded = true;
@@ -144,7 +142,7 @@ module.exports = {
           this,
           this.balena.uuid, 
           [this.appServiceName], 
-          secondCommit,
+          this.balena.initialCommit,
           test
         )
 

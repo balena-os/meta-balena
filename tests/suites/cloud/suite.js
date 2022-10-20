@@ -158,17 +158,12 @@ module.exports = {
       }
     });
 
-    // Push a single container application
-    this.log(`Cloning getting started repo...`);
     this.suite.context.set({
-      appPath: `${__dirname}/app`,
-      appServiceName: `balena-hello-world`
+      appPath: `${__dirname}/test-app`,
+      appServiceName: `containerA`
     })
-    await exec(
-      `git clone https://github.com/balena-io-examples/balena-node-hello-world.git ${this.appPath}`
-    );
     this.log(`Pushing release to app...`);
-    const initialCommit = await this.cloud.pushReleaseToApp(this.balena.application, `${__dirname}/app`)
+    const initialCommit = await this.cloud.pushReleaseToApp(this.balena.application, `${__dirname}/test-app`)
     this.suite.context.set({
       balena: {
         initialCommit: initialCommit

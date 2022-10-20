@@ -9,21 +9,18 @@ module.exports = {
     // if test is being done on physical DUT via the testbot, check that the preloaded application is working
     if(this.workerContract.workerType !== `qemu`){
       // we should be able to see the app starting.
-      const ip = await this.worker.ip(this.link);
-      
-      // create tunnel to DUT port 80
-      console.log(`Creating tunnel to DUT port 80...`)
-      await this.worker.createTunneltoDUT(this.link, 80, 8899);
-      await this.utils.waitUntil(async () => {
-        console.log(`Checking preloaded app is running... `)
-        let page = await request({
-          method: 'GET',
-          uri: `http://${ip}:80`,
-        })
-        return page.includes("Welcome to balena!"); 
-      }, false);
+  
+      await this.utils.waitUntil(
+        async () => {
+          console.log(`Checking preloaded app has started`)
+          let result = await this.worker.executeCommandInHostOS(
+            'journalctl -a | grep ": HELLO_WORLD"',
+            this.link);
+          console.log(`Result: ${result}`);
+          return result !== '';
+        }, false, 10, 5*1000);
 
-      test.ok(true, `Web page should be exposed on port 80 of DUT`)
+      test.ok(true, `preloaded app should be running without api access`)
       // When we confirm the app has started, then re-enable internet access to DUT
       await this.worker.executeCommandInWorker('sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"');
     }
