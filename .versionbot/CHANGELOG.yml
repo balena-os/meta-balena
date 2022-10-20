@@ -1,4 +1,24 @@
 - commits:
+    - subject: "common: openvpn: remove resin.conf"
+      hash: ce288ba9138ab385370e2375a64ef8c185feb2c9
+      body: |
+        This config file hasn't been used since commit 2db88c2, which unified
+        how managed and unmanaged images operate. Since that commit, openvpn
+        starts up if the config file at /etc/openvpn/openvpn.conf is found, and
+        otherwise remains inactive. This file is populated by os-config.
+
+        Remove the old config to prevent misdirection and cleanup the layer.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.16
+  title: ""
+  date: 2022-10-20T02:12:40.759Z
+- commits:
     - subject: "Revert \"chrony: update to version 4.1 to match kirkstone's version\""
       hash: 3ea5184c30f3051d58f1a1befd19c76c17ee4334
       body: |
