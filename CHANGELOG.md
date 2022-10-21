@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.17
+## (2022-10-21)
+
+* tests: hup: reduce num. flashes and  hostapp sends [rcooke-warwick]
+
 # v2.105.16
 ## (2022-10-20)
 

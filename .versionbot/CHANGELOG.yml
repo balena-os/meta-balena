@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: hup: reduce num. flashes and  hostapp sends"
+      hash: 51f558450d60776470f92341789e14eecc217a65
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.105.17
+  title: ""
+  date: 2022-10-21T15:04:03.760Z
+- commits:
     - subject: "common: openvpn: remove resin.conf"
       hash: ce288ba9138ab385370e2375a64ef8c185feb2c9
       body: |
