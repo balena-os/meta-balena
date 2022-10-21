@@ -81,32 +81,7 @@ const enableSerialConsole = async (imagePath) => {
 };
 
 // Executes the HUP process on the DUT
-const doHUP = async (that, test, mode, hostapp, target) => {
-	let hupOsName = basename(hostapp);
-	console.log(hupOsName)
-
-	// compress hostapp before sending
-	test.comment('Compressing image...')
-	let hostAppGzipped = `${hostapp}.gz`
-	await pipeline(
-		fs.createReadStream(hostapp),
-		zlib.createGzip(),
-		fs.createWriteStream(hostAppGzipped)
-	);
-
-	test.comment('Sending image to DUT');
-	// send hostapp to DUT
-	await that.worker.sendFile(hostAppGzipped, `/mnt/data/resin-data/`, target);
-
-	const hostappPath = `/mnt/data/resin-data/${hupOsName}`;
-	console.log(hostappPath);
-
-	// unzip hostapp
-	await that.worker.executeCommandInHostOS(
-		`gzip -df ${hostappPath}.gz`,
-		target,
-	);
-	
+const doHUP = async (that, test, mode, target) => {
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
 	const hupLoadTmp = "/mnt/data/resin-data/tmp";
 	const inactiveStorage = "/mnt/sysroot/inactive/docker";
@@ -123,11 +98,11 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 		case 'local':
 			if (
 				(await that.worker.executeCommandInHostOS(
-						`[[ -f ${hostappPath} ]] && echo exists`,
+						`[[ -f ${that.hostappPath} ]] && echo exists`,
 						target,
 					)) !== 'exists'
 			) {
-				throw new Error(`Target image doesn't exists at location "${hostappPath}"`);
+				throw new Error(`Target image doesn't exists at location "${that.hostappPath}"`);
 			}
 
 			// bind mount the data partition for temporary extract & load files
@@ -136,14 +111,14 @@ const doHUP = async (that, test, mode, hostapp, target) => {
 				target,
 			);
 
-			test.comment(`Running: hostapp-update -f ${hostappPath}`);
-			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -f ${hostappPath}`, target);
+			test.comment(`Running: hostapp-update -f ${that.hostappPath}`);
+			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -f ${that.hostappPath}`, target);
 
 			break;
 
 		case 'image':
-			test.comment(`Running: hostapp-update -i ${hostapp}`);
-			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -i ${hostapp}`, target);
+			test.comment(`Running: hostapp-update -i ${that.hupOs.image.path}`);
+			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -i ${that.hupOs.image.path}`, target);
 			break;
 
 		default:
@@ -196,6 +171,31 @@ const initDUT = async (that, test, target) => {
 				"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
 			);
 	});
+
+	let hupOsName = basename(that.hupOs.image.path);
+	console.log(hupOsName)
+
+	// compress hostapp before sending
+	test.comment('Compressing image...')
+	let hostAppGzipped = `${that.hupOs.image.path}.gz`
+	await pipeline(
+		fs.createReadStream(that.hupOs.image.path),
+		zlib.createGzip(),
+		fs.createWriteStream(hostAppGzipped)
+	);
+
+	test.comment('Sending image to DUT');
+	// send hostapp to DUT
+	await that.worker.sendFile(hostAppGzipped, `/mnt/data/resin-data/`, target);
+
+	that.suite.context.set({hostappPath: `/mnt/data/resin-data/${hupOsName}`})
+	console.log(that.hostappPath);
+
+	// unzip hostapp
+	await that.worker.executeCommandInHostOS(
+		`gzip -df ${that.hostappPath}.gz`,
+		target,
+	);
 };
 
 module.exports = {
@@ -336,8 +336,7 @@ module.exports = {
 		});
 	},
 	tests: [
+		'./tests/rollbacks',
 		'./tests/smoke',
-		'./tests/rollback-altboot',
-		'./tests/rollback-health',
 	],
 };

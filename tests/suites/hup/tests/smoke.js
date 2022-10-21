@@ -13,7 +13,10 @@ module.exports = {
 			// HUP from the previous release to the release under test.
 			title: 'HUP from previous release',
 			run: async function (test) {
-				await this.hup.initDUT(this, test, this.link);
+				// a check to see if there is a hostapp on the DUT already
+				if(!this.hostappPath){
+					await this.hup.initDUT(this, test, this.link);
+				}
 				await runSmokeTest(this, test);
 			},
 		},
@@ -39,14 +42,18 @@ async function runSmokeTest(that, test) {
 	// Check for under-voltage before HUP, in the old OS
 	await that.hup.checkUnderVoltage(that, test);
 
-	test.is(
-		await that.worker.executeCommandInHostOS(
-			`balena volume create hello-world`,
-			that.link,
-		),
-		'hello-world',
-		'Should create hello-world volume'
-	);
+
+	test.comment(`Waiting to create volume on DUT`);
+	await that.utils.waitUntil(async () => {
+		return (
+			(await that.worker.executeCommandInHostOS(
+				`balena volume create hello-world`,
+				that.link
+				)) === 'hello-world'
+		);
+	}, true);
+	
+	test.ok(true, `Should create hello-world volume`);
 
 	test.comment('Creating files on the volume');
 	await that.worker.executeCommandInHostOS(
@@ -59,7 +66,6 @@ async function runSmokeTest(that, test) {
 		that,
 		test,
 		'local',
-		that.hupOs.image.path,
 		that.link,
 	);
 
