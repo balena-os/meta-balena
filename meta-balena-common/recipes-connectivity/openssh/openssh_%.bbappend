@@ -39,6 +39,8 @@ do_install:append () {
     echo "# Get public SSH keys from the API when available" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
     echo "AuthorizedKeysCommand ${libexecdir}/${BPN}/cloud-public-sshkeys %u" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
     echo "AuthorizedKeysCommandUser sshd-authcommands" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+    # Allow RSA signatures using SHA1 algorithm for backwards compatibility
+    echo "PubkeyAcceptedKeyTypes=+ssh-rsa" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 
     install -D -m 0755 ${WORKDIR}/cloud-public-sshkeys ${D}${libexecdir}/${BPN}/cloud-public-sshkeys
 
