@@ -1,4 +1,28 @@
 - commits:
+    - subject: Update tests/leviathan digest to f83df7d
+      hash: fb3a49ca995fb2553f1b635cdf06559a239f92ed
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "minor: Add @balena/leviathan-test-helpers package"
+              hash: 47f061bef9a6bc73782599ad8ab0add43d10883b
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.10.0
+          title: ""
+          date: 2022-10-25T13:23:40.230Z
+  version: 2.105.18
+  title: ""
+  date: 2022-10-25T16:35:47.720Z
+- commits:
     - subject: "tests: hup: reduce num. flashes and  hostapp sends"
       hash: 51f558450d60776470f92341789e14eecc217a65
       body: ""
