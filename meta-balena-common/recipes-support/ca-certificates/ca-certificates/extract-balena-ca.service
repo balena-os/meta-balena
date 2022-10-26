@@ -5,6 +5,7 @@ Requires=bind-usr-share-ca-certificates-balena.service
 
 [Service]
 Type=oneshot
+RemainAfterExit=yes
 ExecStart=/usr/bin/extract-balena-ca
 
 [Install]
