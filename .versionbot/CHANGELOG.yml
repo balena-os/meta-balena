@@ -1,4 +1,37 @@
 - commits:
+    - subject: "meta-resin-sumo: libical: Fix build QA error"
+      hash: a34583a3f5cbac25502ac9ad62f0d0073eb96511
+      body: >
+        Address the following build error:
+
+        ```
+
+        ERROR: libical-2.0.0-r0 do_package: QA Issue: libical: Files/directories were installed but not shipped in any package:
+
+        /usr/lib/cmake
+
+        /usr/lib/cmake/LibIcal
+
+        /usr/lib/cmake/LibIcal/LibIcalTargets.cmake
+
+        /usr/lib/cmake/LibIcal/LibIcalConfig.cmake
+
+        /usr/lib/cmake/LibIcal/LibIcalConfigVersion.cmake
+
+        /usr/lib/cmake/LibIcal/LibIcalTargets-noconfig.cmake
+
+        ```
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.20
+  title: ""
+  date: 2022-10-26T14:42:10.358Z
+- commits:
     - subject: "meta-resin-sumo: keep tpm2-tools in 5.0"
       hash: 6c0596989bd182f26da1255ccfa7a55e45a0194e
       body: >
