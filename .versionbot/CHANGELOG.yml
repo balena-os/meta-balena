@@ -1,4 +1,28 @@
 - commits:
+    - subject: "common: fix race w/ balena-supervisor startup"
+      hash: fbbfd20c3fae38555da2363887d7e5ddade3e077
+      body: |
+        On startup, extract-balena-ca.service exits, and being a oneshot
+        service, its status changes to inactive/dead instead of active.
+
+        Meanwhile, balena-supervisor.service depends on
+        extract-balena-ca.service, so this can effectively halt the supervisor
+        from ever starting.
+
+        Add RemainAfterExit=yes to extract-balena-ca.service to report as active
+        after successfully exiting, which fixes the startup race with
+        balena-supervisor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.3
+  title: "'common: fix race w/ balena-supervisor startup'"
+  date: 2022-10-26T21:14:21.272Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
