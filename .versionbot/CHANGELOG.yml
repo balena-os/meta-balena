@@ -1,4 +1,21 @@
 - commits:
+    - subject: "meta-resin-sumo: keep tpm2-tools in 5.0"
+      hash: 6c0596989bd182f26da1255ccfa7a55e45a0194e
+      body: >
+        Newer versions fail on the configuration step with:
+
+        Requested 'libcrypto >= 1.1.0' but version of OpenSSL-libcrypto is 1.0.2o
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.19
+  title: ""
+  date: 2022-10-26T01:25:34.955Z
+- commits:
     - subject: Update tests/leviathan digest to f83df7d
       hash: fb3a49ca995fb2553f1b635cdf06559a239f92ed
       body: Update tests/leviathan

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.19
+## (2022-10-26)
+
+* meta-resin-sumo: keep tpm2-tools in 5.0 [Alex Gonzalez]
+
 # v2.105.18
 ## (2022-10-25)
 
