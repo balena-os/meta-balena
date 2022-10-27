@@ -1,4 +1,20 @@
 - commits:
+    - subject: "openssh: allow RSA signatures with SHA1 algorithms"
+      hash: df5e9dcd4a8f61ace849d5bb437798d16a440191
+      body: |
+        Openssh v8.8 removes this support by default but the backend still
+        needs to be updated to drop these.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.21
+  title: ""
+  date: 2022-10-27T08:02:52.407Z
+- commits:
     - subject: "meta-resin-sumo: libical: Fix build QA error"
       hash: a34583a3f5cbac25502ac9ad62f0d0073eb96511
       body: >

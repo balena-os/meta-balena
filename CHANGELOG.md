@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.21
+## (2022-10-27)
+
+* openssh: allow RSA signatures with SHA1 algorithms [Alex Gonzalez]
+
 # v2.105.20
 ## (2022-10-26)
 
