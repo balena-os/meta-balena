@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update Docs Link Updated the link in the docs to the device-type
+        listings (on hub as SOT)
+      hash: c79adacfc30e36cf9bc548c9495dae5bfc4eb742
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+        signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+      author: Ryan H
+      nested: []
+  version: 2.105.22
+  title: ""
+  date: 2022-10-31T12:42:22.402Z
+- commits:
     - subject: "openssh: allow RSA signatures with SHA1 algorithms"
       hash: df5e9dcd4a8f61ace849d5bb437798d16a440191
       body: |

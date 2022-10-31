@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.22
+## (2022-10-31)
+
+* Update Docs Link Updated the link in the docs to the device-type listings (on hub as SOT) [Ryan H]
+
 # v2.105.21
 ## (2022-10-27)
 
