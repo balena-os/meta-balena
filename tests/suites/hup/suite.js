@@ -279,17 +279,25 @@ module.exports = {
 			this.suite.deviceType.data.storage.internal &&
 			this.workerContract.workerType === `qemu`
 		) {
-			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
-			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
-			console.log(`Unwrapping flasher image ${path}`);
-			await imagefs.interact(path, 2, async (fsImg) => {
-				await pipeline(
-					fsImg.createReadStream(RAW_IMAGE_PATH),
-					fs.createWriteStream(OUTPUT_IMG_PATH),
-				);
-			});
-			path = OUTPUT_IMG_PATH;
-			console.log(`Unwrapped flasher image!`);
+			try {
+				const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
+				const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
+				console.log(`Unwrapping flasher image ${path}`);
+				await imagefs.interact(path, 2, async (fsImg) => {
+					await pipeline(
+						fsImg.createReadStream(RAW_IMAGE_PATH),
+						fs.createWriteStream(OUTPUT_IMG_PATH),
+					);
+				});
+				path = OUTPUT_IMG_PATH;
+				console.log(`Unwrapped flasher image!`);
+			} catch (e) {
+				if (e.code === 'ENOENT') {
+					console.log('Not a flasher image, skipping unwrap');
+				} else {
+					throw e;
+				}
+			}
 		}
 
 		this.suite.context.set({
