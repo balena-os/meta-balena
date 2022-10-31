@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: hup: handle exception when unwrapping non-flasher image"
+      hash: fc37b299a79c40602c10301709c8e25585349742
+      body: |
+        Handle ENOENT ErrnoException when attempting to unwrap a non-flasher
+        image in HUP tests. This mirrors a similar change made in ce2d33ad8.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.3
+  title: "'tests: hup: handle exception when unwrapping non-flasher image'"
+  date: 2022-10-31T20:19:51.930Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""
