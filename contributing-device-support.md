@@ -2,9 +2,9 @@
 
 There are several ways for enabling balenaOS support for your hardware:
 
-1. Checking out if balenaOS doesn't already provide support for your board through our [supported devices list](https://www.balena.io/docs/reference/hardware/devices/).
-2. Consider our [Custom Device Support](https://www.balena.io/pricing/#custom-device-support) (CDS) service. This is a paid service where we create a custom balenaOS build for you and maintain it for a monthly fee. Check out out [our overview](https://drive.google.com/file/d/17-DTeXkflkzW8Qduj48ut7JNUTWqiRv-/view?usp=sharing) to learn more. 
-3. Building and maintaining balenaOS yourselves using our Customer Board Support (CBS) documentation. This will require knowledge of the Yocto project and familiarity with tools used to build custom images. Follow along the documentation for CBS below: 
+1. Checking out if balenaOS doesn't already provide support for your board through our [supported devices list](https://hub.balena.io/device-types).
+2. Consider our [Custom Device Support](https://www.balena.io/pricing/#custom-device-support) (CDS) service. This is a paid service where we create a custom balenaOS build for you and maintain it for a monthly fee. Check out out [our overview](https://drive.google.com/file/d/17-DTeXkflkzW8Qduj48ut7JNUTWqiRv-/view?usp=sharing) to learn more.
+3. Building and maintaining balenaOS yourselves using our Customer Board Support (CBS) documentation. This will require knowledge of the Yocto project and familiarity with tools used to build custom images. Follow along the documentation for CBS below:
 
 ## Pre-requisites
 
