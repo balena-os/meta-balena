@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.23
+## (2022-11-01)
+
+* tests: hup: handle exception when unwrapping non-flasher image [Joseph Kogut]
+
 # v2.105.22
 ## (2022-10-31)
 

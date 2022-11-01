@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: hup: handle exception when unwrapping non-flasher image"
+      hash: 4d020e008232c29a8d9ab316f7c71d7fb161d98e
+      body: |
+        Handle ENOENT ErrnoException when attempting to unwrap a non-flasher
+        image in HUP tests. This mirrors a similar change made in ce2d33ad8.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.23
+  title: ""
+  date: 2022-11-01T00:42:23.029Z
+- commits:
     - subject: Update Docs Link Updated the link in the docs to the device-type
         listings (on hub as SOT)
       hash: c79adacfc30e36cf9bc548c9495dae5bfc4eb742
