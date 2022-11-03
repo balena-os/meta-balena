@@ -8,7 +8,7 @@
 
 
 module.exports = {
-	title: 'Rollback  tests',
+	title: 'Rollback tests',
     run: async function (test) {
         await this.hup.initDUT(this, test, this.link);
     },

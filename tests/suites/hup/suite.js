@@ -251,11 +251,20 @@ module.exports = {
 		});
 
 		// Downloads the balenaOS image we hup from
+		// It can't accept invalid deviceType because we check contracts already in the start
+		// If there are no releases found for a deviceType then skip the HUP suite
+		if (((await this.sdk.balena.models.os.getAvailableOsVersions(this.suite.deviceType.slug)).length) === 0) {
+			// Concat method not working so pushing one test suite at a time to skip
+			// Also, can't access the tests object using `this.tests` to keep this from becoming hard-coded
+			this.suite.options.debug.unstable.push('Rollback tests')
+			this.suite.options.debug.unstable.push('Smoke tests')
+			return
+		}
+		
 		let path = await this.sdk.fetchOS(
 				this.suite.options.balenaOS.download.version,
 				this.suite.deviceType.slug,
 			);
-
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
 		this.log("Logging into balena with balenaSDK");
