@@ -157,7 +157,11 @@ done
 inform "Flash internal device... will take around 5 minutes... "
 internal_dev=""
 for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
-    for device in /dev/${device_pattern}; do
+    inform "Searching for devices matching pattern /dev/${device_pattern}"
+    # shellcheck disable=SC2046
+    ! IFS=$'\n' read -rd '' -a devices <<< \
+	    "$(ls $(eval echo "/dev/${device_pattern}") 2>/dev/null)"
+    for device in "${devices[@]}"; do
         if [[ "${CURRENT_ROOT}" = "${device}" ]]; then
             inform "${device} is our install media, skip it..."
             continue
@@ -172,6 +176,8 @@ for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
 
             internal_dev="${device}"
             break 2
+	else
+		inform "$device is not a block device, skipping"
         fi
     done
 done
