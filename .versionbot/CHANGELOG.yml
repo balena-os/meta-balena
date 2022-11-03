@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.2.18
+      hash: 797d966e06f4ef02962f8afc51a78a5a4b2bcc03
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.105.24
+  title: ""
+  date: 2022-11-03T01:52:10.456Z
+- commits:
     - subject: "tests: hup: handle exception when unwrapping non-flasher image"
       hash: 4d020e008232c29a8d9ab316f7c71d7fb161d98e
       body: |
