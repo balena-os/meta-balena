@@ -169,7 +169,8 @@ for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
         if test -b "$(readlink -f "${device}")"; then
             if ! [[ "${device_pattern}" = md/* ]]; then
                 if mdadm --examine "${device}" | grep -q Array; then
-                    inform "${device} is part of an existing RAID array that wasn't specified by name, skip it..."
+                    inform "${device} is part of an existing RAID array" \
+			    "that wasn't specified by name, skip it..."
                     continue
                 fi
             fi
