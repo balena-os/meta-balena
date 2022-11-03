@@ -18,9 +18,6 @@ const imagefs = require('balena-image-fs');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
-// required to use skopeo for loading the image
-const exec = util.promisify(require('child_process').exec);
-
 // copied from the SV
 // https://github.com/balena-os/balena-supervisor/blob/master/src/config/backends/config-txt.ts
 // TODO: retrieve this from the SDK (requires v16.2.0) or future versions of device contracts
@@ -42,9 +39,9 @@ const checkUnderVoltage = async (that, test) => {
 	test.comment(`checking for under-voltage reports in kernel logs...`);
 	let result = '';
 	result = await that.worker.executeCommandInHostOS(
-				`dmesg | grep -q "Under-voltage detected" ; echo $?`,
-				that.link,
-			);
+		`dmesg | grep -q "Under-voltage detected" ; echo $?`,
+		that.link,
+	);
 
 	if (result.includes('0')) {
 		test.comment(`not ok! - Under-voltage detected on device, please check power source and cable!`);
@@ -98,9 +95,9 @@ const doHUP = async (that, test, mode, target) => {
 		case 'local':
 			if (
 				(await that.worker.executeCommandInHostOS(
-						`[[ -f ${that.hostappPath} ]] && echo exists`,
-						target,
-					)) !== 'exists'
+					`[[ -f ${that.hostappPath} ]] && echo exists`,
+					target,
+				)) !== 'exists'
 			) {
 				throw new Error(`Target image doesn't exists at location "${that.hostappPath}"`);
 			}
@@ -156,9 +153,9 @@ const initDUT = async (that, test, target) => {
 	await that.utils.waitUntil(async () => {
 		return (
 			(await that.worker.executeCommandInHostOS(
-					'[[ -f /etc/hostname ]] && echo pass || echo fail',
-					target,
-				)) === 'pass'
+				'[[ -f /etc/hostname ]] && echo pass || echo fail',
+				target,
+			)) === 'pass'
 		);
 	}, true);
 	test.comment(`DUT flashed`);
@@ -166,10 +163,10 @@ const initDUT = async (that, test, target) => {
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
 		await that.worker.archiveLogs(
-				that.id,
-				that.link,
-				"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
-			);
+			that.id,
+			that.link,
+			"journalctl --no-pager --no-hostname --list-boots | awk '{print $1}' | xargs -I{} sh -c 'set -x; journalctl --no-pager --no-hostname -a -b {} || true;'",
+		);
 	});
 
 	let hupOsName = basename(that.hupOs.image.path);
@@ -188,7 +185,7 @@ const initDUT = async (that, test, target) => {
 	// send hostapp to DUT
 	await that.worker.sendFile(hostAppGzipped, `/mnt/data/resin-data/`, target);
 
-	that.suite.context.set({hostappPath: `/mnt/data/resin-data/${hupOsName}`})
+	that.suite.context.set({ hostappPath: `/mnt/data/resin-data/${hupOsName}` })
 	console.log(that.hostappPath);
 
 	// unzip hostapp
@@ -214,10 +211,10 @@ module.exports = {
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
-			worker: new Worker(this.suite.deviceType.slug, 
-				this.getLogger(), 
-				this.suite.options.workerUrl, 
-				this.suite.options.balena.organization, 
+			worker: new Worker(this.suite.deviceType.slug,
+				this.getLogger(),
+				this.suite.options.workerUrl,
+				this.suite.options.balena.organization,
 				join(homedir(), 'id')
 			),
 		});
@@ -260,11 +257,11 @@ module.exports = {
 			this.suite.options.debug.unstable.push('Smoke tests')
 			return
 		}
-		
+
 		let path = await this.sdk.fetchOS(
-				this.suite.options.balenaOS.download.version,
-				this.suite.deviceType.slug,
-			);
+			this.suite.options.balenaOS.download.version,
+			this.suite.deviceType.slug,
+		);
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
 		this.log("Logging into balena with balenaSDK");
