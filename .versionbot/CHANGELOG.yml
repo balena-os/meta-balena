@@ -1,4 +1,18 @@
 - commits:
+    - subject: "docs: add RAID setup info"
+      hash: 459fd7b71826955f260bdb3e5a5d743a8223a402
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.3
+  title: "'docs: add RAID setup info'"
+  date: 2022-11-03T17:24:42.994Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org"
       hash: ef51c09db6b72bed58d4662f11717c7835611eee
       body: ""

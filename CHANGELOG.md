@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.3
+## (2022-11-03)
+
+* docs: add RAID setup info [Joseph Kogut]
+
 # v2.105.2
 ## (2022-09-22)
 
