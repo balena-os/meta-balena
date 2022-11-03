@@ -162,7 +162,7 @@ for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
     ! IFS=$'\n' read -rd '' -a devices <<< \
 	    "$(ls $(eval echo "/dev/${device_pattern}") 2>/dev/null)"
     for device in "${devices[@]}"; do
-        if [[ "${CURRENT_ROOT}" = "${device}" ]]; then
+        if [[ "/dev/${CURRENT_ROOT}" = "${device}" ]]; then
             inform "${device} is our install media, skip it..."
             continue
         fi
