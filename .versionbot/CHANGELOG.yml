@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Skip HUP suite if no releases found"
+      hash: 40a12706d64383f5b5f1f41cecc6331d1c2fcc79
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.105.26
+  title: ""
+  date: 2022-11-04T10:56:57.967Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.2.20
       hash: 6b77e059fb1fc0e3eddebaa5702fce26f11b5e76
       body: Update balena-supervisor

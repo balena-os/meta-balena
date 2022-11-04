@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.26
+## (2022-11-04)
+
+* patch: Skip HUP suite if no releases found [Vipul Gupta (@vipulgupta2048)]
+
 # v2.105.25
 ## (2022-11-04)
 
