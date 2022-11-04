@@ -15,10 +15,11 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "20.10.17"
-BALENA_BRANCH= "master"
+BALENA_VERSION = "20.10.26"
+BALENA_BRANCH= "20.10.17-balena"
 
-SRCREV = "13db38c82bdb056f013f5497b0662ad34ffb98f7"
+# TODO: Check final commit once merged on the Engine repo
+SRCREV = "cd9a672e3b1b23def1481551fab4f5f633ba305d"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
