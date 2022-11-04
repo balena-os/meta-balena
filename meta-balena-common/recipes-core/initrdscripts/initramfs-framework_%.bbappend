@@ -12,6 +12,7 @@ SRC_URI:append = " \
     file://cryptsetup \
     file://kexec \
     file://udevcleanup \
+    file://recovery \
     "
 
 do_install:append() {
@@ -27,6 +28,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
     install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
+    install -m 0755 ${WORKDIR}/recovery ${D}/init.d/00-recovery
 }
 
 PACKAGES:append = " \
@@ -39,6 +41,7 @@ PACKAGES:append = " \
     initramfs-module-cryptsetup \
     initramfs-module-kexec \
     initramfs-module-udevcleanup \
+    initramfs-module-recovery \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -85,3 +88,7 @@ FILES:initramfs-module-kexec = "/init.d/92-kexec"
 SUMMARY:initramfs-module-udevcleanaup = "Cleanup the udev database before transitioning to the rootfs"
 RDEPENDS:initramfs-module-udevcleanaup = "${PN}-base"
 FILES:initramfs-module-udevcleanup = "/init.d/98-udevcleanup"
+
+SUMMARY:initramfs-module-recovery = "Boot into a recovery shell"
+RDEPENDS:initramfs-module-recovery = "${PN}-base android-tools-adbd"
+FILES:initramfs-module-recovery = "/init.d/00-recovery"

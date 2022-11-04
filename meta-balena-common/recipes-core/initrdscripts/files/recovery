@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# Copyright 2022 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Boots into a recovery shell
+#
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+# Enable module function
+recovery_enabled() {
+    # shellcheck disable=SC2154
+    if [ "$bootparam_recovery" = "true" ]; then
+        return 0
+    fi
+    return 1
+}
+
+# Main module function
+recovery_run() {
+    if ! udhcpc -n; then
+        warn "DHCP request failed - network adb access won't be possible."
+    fi
+    mkdir /dev/pts
+    mount -t devpts devpts /dev/pts
+    ADBD_TIMEOUT="${bootparam_adbdtimeout:-10m}"
+    ADBD_KILLTIMEOUT="${bootparam_adbdkilltimeout:-15m}"
+    if [ "${ADBD_TIMEOUT}" -gt "${ADBD_KILLTIMEOUT}" ]; then
+        ADBD_KILLTIMEOUT="${ADBD_TIMEOUT}"
+    fi
+    info "Starting adbd daemon with a ${ADBD_TIMEOUT} timeout, sigkill in ${ADBD_KILLTIMEOUT}..."
+    timeout -k "${ADBD_KILLTIMEOUT}" "${ADBD_TIMEOUT}" adbd &
+    export ADBD_PID="$!"
+}

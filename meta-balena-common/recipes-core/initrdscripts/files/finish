@@ -3,6 +3,13 @@
 # Licensed on MIT
 
 finish_enabled() {
+    # shellcheck disable=SC2154
+    if [ "$bootparam_recovery" = "true" ]; then
+        if [ -n "${ADBD_PID}" ]; then
+            # adbd is not a child process so cannot wait
+            while kill -0  "${ADBD_PID}" 2>/dev/null; do sleep 1; done
+        fi
+    fi
     return 0
 }
 
