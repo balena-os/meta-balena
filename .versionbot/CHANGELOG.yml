@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.2.20
+      hash: 6b77e059fb1fc0e3eddebaa5702fce26f11b5e76
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.105.25
+  title: ""
+  date: 2022-11-04T02:27:30.706Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.2.18
       hash: 797d966e06f4ef02962f8afc51a78a5a4b2bcc03
       body: Update balena-supervisor
