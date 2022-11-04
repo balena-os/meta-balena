@@ -2,7 +2,7 @@
 
 set -e
 
-. /usr/sbin/balena-config-vars
+. /usr/sbin/balena-config-vars --no-cache
 
 generate_vpn_authfile() {
 	local _user
