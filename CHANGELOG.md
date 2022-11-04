@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.27
+## (2022-11-04)
+
+* wpa-supplicant: Sync with v2.10 from upstream [Zahari Petkov]
+
 # v2.105.26
 ## (2022-11-04)
 

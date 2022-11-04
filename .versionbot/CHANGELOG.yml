@@ -1,4 +1,24 @@
 - commits:
+    - subject: "wpa-supplicant: Sync with v2.10 from upstream"
+      hash: 5464be07070bbc4a06a4d432250dd70b2b2e1522
+      body: >
+        Synced from:
+
+        http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-connectivity/wpa-supplicant?id=3a43c2a82881688d85238464db371f695e60b572
+
+
+        Closes #2838
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.105.27
+  title: ""
+  date: 2022-11-04T22:15:37.135Z
+- commits:
     - subject: "patch: Skip HUP suite if no releases found"
       hash: 40a12706d64383f5b5f1f41cecc6331d1c2fcc79
       body: ""
