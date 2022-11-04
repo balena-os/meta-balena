@@ -35,6 +35,7 @@ do_deploy:append:class-target() {
     done
 }
 
+do_sign_efi[network] = "1"
 do_sign_efi[depends] += " \
     curl-native:do_populate_sysroot \
     jq-native:do_populate_sysroot \

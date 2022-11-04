@@ -22,6 +22,7 @@ do_sign_kmod () {
     done
 }
 
+do_sign_kmod[network] = "1"
 do_sign_kmod[depends] += " \
     curl-native:do_populate_sysroot \
     jq-native:do_populate_sysroot \

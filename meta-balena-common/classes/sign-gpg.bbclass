@@ -31,6 +31,7 @@ do_deploy:append() {
     done
 }
 
+do_sign_gpg[network] = "1"
 do_sign_gpg[depends] += " \
     curl-native:do_populate_sysroot \
     jq-native:do_populate_sysroot \
