@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests/leviathan: update to v2.9.5"
+      hash: 41e3830ec6c3b5d11c8dc9be12aa30617052d293
+      body: |
+        This includes a version of the contracts that takes into account the
+        LED for the rockpi.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.102.7
+  title: "'tests/leviathan: update to v2.9.5'"
+  date: 2022-11-02T11:42:05.675Z
+- commits:
     - subject: Update tests/leviathan digest to 7fe3c5f
       hash: 501e9f0cd4a82b40451cca4eef244ad242565614
       body: Update tests/leviathan

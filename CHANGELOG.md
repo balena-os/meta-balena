@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.102.7
+## (2022-11-02)
+
+* tests/leviathan: update to v2.9.5 [Alex Gonzalez]
+
 # v2.102.6
 ## (2022-09-07)
 
