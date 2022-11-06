@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Delete conf.js for test suites"
+      hash: 5e52f52aec4cd1ccd238dd0e6ee6dd68fdc1dc63
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.105.28
+  title: ""
+  date: 2022-11-06T11:05:01.690Z
+- commits:
     - subject: "wpa-supplicant: Sync with v2.10 from upstream"
       hash: 5464be07070bbc4a06a4d432250dd70b2b2e1522
       body: >

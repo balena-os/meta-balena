@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.28
+## (2022-11-06)
+
+* patch: Delete conf.js for test suites [Vipul Gupta (@vipulgupta2048)]
+
 # v2.105.27
 ## (2022-11-04)
 
