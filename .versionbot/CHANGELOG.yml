@@ -1,4 +1,20 @@
 - commits:
+    - subject: "prepare-openvpn: do not use cached configuration"
+      hash: 021495a07f736c7a80497e18dea33e23ac63318b
+      body: |
+        This script needs to update the VPN authentication with the currently
+        configured keys so do not use cached values.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.29
+  title: ""
+  date: 2022-11-07T15:30:37.789Z
+- commits:
     - subject: "patch: Delete conf.js for test suites"
       hash: 5e52f52aec4cd1ccd238dd0e6ee6dd68fdc1dc63
       body: ""

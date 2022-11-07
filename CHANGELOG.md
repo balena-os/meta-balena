@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.29
+## (2022-11-07)
+
+* prepare-openvpn: do not use cached configuration [Alex Gonzalez]
+
 # v2.105.28
 ## (2022-11-06)
 
