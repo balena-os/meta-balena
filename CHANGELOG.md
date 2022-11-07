@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.30
+## (2022-11-07)
+
+* patch: Add balenaOS documentation [Vipul Gupta (@vipulgupta2048)]
+
 # v2.105.29
 ## (2022-11-07)
 
