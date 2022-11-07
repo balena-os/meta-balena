@@ -16,16 +16,12 @@ SECTION = "base"
 DEPENDS = "lzo util-linux zlib"
 
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git;branch=master \
-           file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
 SRCREV = "31458c9c81935abbed010221261897273a98d2c1"
 S = "${WORKDIR}/git"
 
 PACKAGECONFIG ??= " \
     programs \
-    convert \
-    python \
-    crypto-builtin \
 "
 PACKAGECONFIG[manpages] = "--enable-documentation, --disable-documentation, asciidoc-native xmlto-native"
 PACKAGECONFIG[programs] = "--enable-programs,--disable-programs"
