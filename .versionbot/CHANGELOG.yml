@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: os: ensure by-state links are created"
+      hash: 724fa0e549fa6752c2f00acf52549255037f1fbd
+      body: |
+        These links are required for HUP, ensure they're created by udev
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.105.30
+  title: ""
+  date: 2022-11-08T05:28:07.419Z
+- commits:
     - subject: "prepare-openvpn: do not use cached configuration"
       hash: 021495a07f736c7a80497e18dea33e23ac63318b
       body: |
