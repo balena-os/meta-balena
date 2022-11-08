@@ -117,7 +117,7 @@ module.exports = {
 					}).catch((err) => {
 						return test.match(
 							err.message,
-							/All configured authentication methods failed|Connection lost before handshake/,
+							/All configured authentication methods failed|Connection lost before handshake|Timed out while waiting for handshake/,
 							"Local SSH authentication without custom keys is not allowed in production mode"
 						);
 					});
