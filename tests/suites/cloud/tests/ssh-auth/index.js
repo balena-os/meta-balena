@@ -35,7 +35,7 @@ const setConfig = async (test, that, target, key, value) => {
 		).then(() => {
 			if (value == null) {
 				return t.resolves(
-					that.worker.executeCommandInHostOS(
+					that.cloud.executeCommandInHostOS(
 						[
 							`tmp=$(mktemp)`,
 							`&&`, `jq`, `"del(.${key})"`, `/mnt/boot/config.json`,
@@ -52,7 +52,7 @@ const setConfig = async (test, that, target, key, value) => {
 				}
 
 				return t.resolves(
-					that.worker.executeCommandInHostOS(
+					that.cloud.executeCommandInHostOS(
 						[
 							`tmp=$(mktemp)`,
 							`&&`, `jq`, `'.${key}=${value}'`, `/mnt/boot/config.json`,
@@ -65,7 +65,7 @@ const setConfig = async (test, that, target, key, value) => {
 		}).then(() => {
 			// avoid hitting 'start request repeated too quickly'
 			return t.resolves(
-				that.worker.executeCommandInHostOS(
+				that.cloud.executeCommandInHostOS(
 					'systemctl reset-failed config-json.service',
 					target
 				), `Should reset start counter of config-json.service`
