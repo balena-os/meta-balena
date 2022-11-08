@@ -42,6 +42,8 @@ WatchdogSec=360
 Restart=always
 KillMode=process
 TimeoutStartSec=infinity
+# Let balenaEngine (instead of systemd) manage the containers cgroups.
+Delegate=yes
 
 [Install]
 Alias=balena-engine.service
