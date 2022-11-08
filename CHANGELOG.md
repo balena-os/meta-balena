@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.31
+## (2022-11-08)
+
+* Add meta-balena-esr workflow [Alex Gonzalez]
+
 # v2.105.30
 ## (2022-11-08)
 

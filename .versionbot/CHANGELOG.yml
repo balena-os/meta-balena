@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add meta-balena-esr workflow
+      hash: bcaddc164814569a9971c728bfbae316bbae88b3
+      body: |
+        This workflow will create an ESR branch from the latest patch of the
+        previous minor version the first day of each quarter.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.105.31
+  title: ""
+  date: 2022-11-08T20:30:19.317Z
+- commits:
     - subject: "tests: os: ensure by-state links are created"
       hash: 724fa0e549fa6752c2f00acf52549255037f1fbd
       body: |
