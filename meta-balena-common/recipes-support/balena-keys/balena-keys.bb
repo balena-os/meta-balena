@@ -57,6 +57,7 @@ do_get_public_keys() {
     fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".der" "db.der"
 }
 do_get_public_keys[cleandirs] = "${B}"
+do_get_public_keys[network] = "1"
 addtask get_public_keys before do_build
 do_get_public_keys[depends] += " \
     curl-native:do_populate_sysroot \
