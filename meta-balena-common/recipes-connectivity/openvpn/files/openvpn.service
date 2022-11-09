@@ -11,7 +11,7 @@ RestartSec=10s
 #Adjust OOMscore to -1000 to disable OOM killing for openvpn
 OOMScoreAdjust=-1000
 PIDFile=/run/openvpn/openvpn.pid
-ExecStartPre=-/bin/systemctl restart os-config
+ExecStartPre=-@BASE_BINDIR@/sh -c "@BASE_BINDIR@/systemctl is-active --quiet os-config || @BASE_BINDIR@/systemctl start os-config"
 ExecStart=/usr/sbin/openvpn --writepid /run/openvpn/openvpn.pid --cd /etc/openvpn/ --config /etc/openvpn/openvpn.conf --connect-retry 5 120
 
 [Install]

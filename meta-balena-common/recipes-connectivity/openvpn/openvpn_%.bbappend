@@ -31,4 +31,10 @@ do_install:append() {
 		${WORKDIR}/prepare-openvpn.service \
 		${WORKDIR}/openvpn.service \
 		${D}${systemd_unitdir}/system
+
+    sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+        -e 's,@SBINDIR@,${sbindir},g' \
+        -e 's,@BINDIR@,${bindir},g' \
+        -e 's,@BALENA_STATE_MP@,${BALENA_STATE_MOUNT_POINT},g' \
+        ${D}${systemd_unitdir}/system/*.service
 }
