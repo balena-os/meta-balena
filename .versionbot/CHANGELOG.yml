@@ -1,4 +1,20 @@
 - commits:
+    - subject: Enable network access for tasks talking to the signing service
+      hash: ab1d75a0db11cde16d93cb7b3ebe734f61583e28
+      body: |
+        Since kirkstone tasks have network access disabled by default so we need
+        to enable it explicitly for tasks that talk to the signing service.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.105.32
+  title: ""
+  date: 2022-11-09T15:15:46.084Z
+- commits:
     - subject: Add meta-balena-esr workflow
       hash: bcaddc164814569a9971c728bfbae316bbae88b3
       body: |

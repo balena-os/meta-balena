@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.32
+## (2022-11-09)
+
+* Enable network access for tasks talking to the signing service [Michal Toman]
+
 # v2.105.31
 ## (2022-11-08)
 
