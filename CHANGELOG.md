@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.106.2
+## (2022-11-10)
+
+* flasher: minor formatting [Joseph Kogut]
+* flasher: fix detection and exclusion of installation media [Joseph Kogut]
+* flasher: properly expand device_pattern globs [Joseph Kogut]
+
 # v2.106.1
 ## (2022-11-10)
 
