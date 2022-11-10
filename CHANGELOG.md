@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.106.1
+## (2022-11-10)
+
+* tests: cloud: use cloud ssh to avoid race cond [rcooke-warwick]
+
 # v2.106.0
 ## (2022-11-10)
 
