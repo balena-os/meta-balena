@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.3.0
+      hash: 099700fd5247b20af5aec205f51e54c0a6c1fef3
+      body: Update balena-supervisor
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: renovate[bot]
+      nested: []
+  version: 2.106.0
+  title: ""
+  date: 2022-11-10T05:31:24.750Z
+- commits:
     - subject: Enable network access for tasks talking to the signing service
       hash: ab1d75a0db11cde16d93cb7b3ebe734f61583e28
       body: |
