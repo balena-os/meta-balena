@@ -4,7 +4,6 @@ do_install:append() {
 
 do_deploy() {
     cp ${WORKDIR}/kernel_source.tar.gz ${DEPLOYDIR}/
-    rm ${WORKDIR}/kernel_source.tar.gz
 }
 inherit deploy
 addtask do_deploy before do_package after do_install
