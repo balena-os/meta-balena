@@ -47,5 +47,8 @@ module.exports = [
 		balenaApplication: process.env.BALENACLOUD_APP_NAME,
 		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
+	debug: {
+		unstable: ["Engine healthcheck performance"],
+	},
 }
 ];
