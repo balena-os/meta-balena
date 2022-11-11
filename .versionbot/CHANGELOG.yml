@@ -1,4 +1,31 @@
 - commits:
+    - subject: "common: kernel-devsrc: fix pseudo abort"
+      hash: e5307d7c7459ac977914122edc11d9ae7222e54b
+      body: |
+        Yocto builds will abort due to inconsistencies between the pseudo
+        database and files modified outside of the pseudo context [0].
+
+        This will occasionally cause builds to fail in the do_deploy step of the
+        kernel-devsrc recipe. [1]
+
+        Fix this by not removing the kernel_source tarball in the do_deploy
+        step.
+
+        Fixes: https://github.com/balena-os/meta-balena/issues/2806
+
+        [0] https://wiki.yoctoproject.org/wiki/Pseudo_Abort
+        [1] https://github.com/balena-os/meta-balena/issues/2806
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.106.3
+  title: ""
+  date: 2022-11-11T08:21:56.144Z
+- commits:
     - subject: "flasher: minor formatting"
       hash: b92ade134716ea122949a0d5adf7238f274acc96
       body: ""

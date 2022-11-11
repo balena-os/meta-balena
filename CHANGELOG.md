@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.106.3
+## (2022-11-11)
+
+* common: kernel-devsrc: fix pseudo abort [Joseph Kogut]
+
 # v2.106.2
 ## (2022-11-10)
 
