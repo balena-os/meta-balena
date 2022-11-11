@@ -72,5 +72,8 @@ module.exports = {
 		);
 
 		test.is(output.includes('passed'), true, 'Wifi hotspot is active');
+
+		await this.context.get().worker.executeCommandInHostOS(`${testHelpers} cleanup_hotspot_connections`, this.link);
+		await this.worker.rebootDut(this.link);
 	},
 };
