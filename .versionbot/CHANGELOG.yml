@@ -1,4 +1,60 @@
 - commits:
+    - subject: "ssh-auth: setConfig: run synchronously"
+      hash: 5534839614a5221068d25fb703658b780d6c7463
+      body: |
+        Most tests expects a specific device configuration so having the setting
+        run asynchronously leads to unexpected failures.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "cloud: ssh-auth: use custom path for custom key"
+      hash: 6c83fd02383baf7b6932858a3e88ae207cbecc3b
+      body: |
+        Right now it overwrites the key created by the cloud suite to connect
+        to the proxy.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: Set permissions for cache file"
+      hash: 3406f9a45a5a97542972c442f1c8a8e3e80a7d37
+      body: >
+        The sshd daemon is configured to fetch keys from the API for local
+
+        user connections. The script that fetches the keys, cloud-public-sshkeys,
+
+        sources balena-config-vars and is run as an exclusive non-root user.
+
+
+        Let's set the correct permissions for this file to allow not to break
+
+        the above.
+
+
+        Also, add a test to check that the SSH authentication with user
+
+        registered keys does not break again.
+
+
+        Fixes #2785
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.106.4
+  title: ""
+  date: 2022-11-12T15:47:45.326Z
+- commits:
     - subject: "common: kernel-devsrc: fix pseudo abort"
       hash: e5307d7c7459ac977914122edc11d9ae7222e54b
       body: |

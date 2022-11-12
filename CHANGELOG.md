@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.106.4
+## (2022-11-12)
+
+* ssh-auth: setConfig: run synchronously [Alex Gonzalez]
+* cloud: ssh-auth: use custom path for custom key [Alex Gonzalez]
+* balena-config-vars: Set permissions for cache file [Alex Gonzalez]
+
 # v2.106.3
 ## (2022-11-11)
 
