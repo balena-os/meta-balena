@@ -24,7 +24,7 @@ const sshPath = join(homedir(), "test_id");
 
 const setConfig = async (test, that, target, key, value) => {
 
-	test.test(`Update or delete ${key} in config.json`, t =>
+	return test.test(`Update or delete ${key} in config.json`, t =>
 		t.resolves(
 			that.waitForServiceState(
 				'config-json.service',
