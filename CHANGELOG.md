@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.106.5
+## (2022-11-14)
+
+* openvpn: fix a race condition that leaves system with no running supervisor [Alex Gonzalez]
+
 # v2.106.4
 ## (2022-11-12)
 

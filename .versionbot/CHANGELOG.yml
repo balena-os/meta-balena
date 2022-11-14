@@ -1,4 +1,29 @@
 - commits:
+    - subject: "openvpn: fix a race condition that leaves system with no running
+        supervisor"
+      hash: fd788120e5915820e75240e548760fd107cc0580
+      body: |
+        The `os-config` application stops the supervisor before fetching openvpn
+        configuration and starting the `openvpn` service unit.
+
+        As the `openvpn` service units stops `os-config`, it might not get to
+        restart the supervisor.
+
+        This commit checks that `os-config` is not already active before
+        starting it.
+
+        Fixes #2855
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.106.5
+  title: ""
+  date: 2022-11-14T09:32:57.346Z
+- commits:
     - subject: "ssh-auth: setConfig: run synchronously"
       hash: 5534839614a5221068d25fb703658b780d6c7463
       body: |
