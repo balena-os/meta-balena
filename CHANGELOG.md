@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.106.7
+## (2022-11-15)
+
+* test: ssh-auth: fix test cases using custom keys [Alex Gonzalez]
+
 # v2.106.6
 ## (2022-11-15)
 

@@ -1,4 +1,23 @@
 - commits:
+    - subject: "test: ssh-auth: fix test cases using custom keys"
+      hash: b24d92774a67cf0c0b83a29848bdcf6ed8a574db
+      body: |
+        There are two sets of keys used in this test, one stored in `/root/id`
+        which is created by the cloud suite to SSH via the proxy server, and
+        a custom key stored in `/root/test_id` used in some of the subtests.
+
+        Fix the test cases using the custom key to use the correct private key.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.106.7
+  title: ""
+  date: 2022-11-15T15:37:55.466Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.3.3
       hash: f2d3858900aa8a092331c38a590a63525fbb2a57
       body: Update balena-supervisor
