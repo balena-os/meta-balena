@@ -131,14 +131,27 @@ module.exports = {
 					});
 				}).then(async () => {
 					let result;
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					config = {
+						host: ip,
+						port: '22222',
+						username: 'root',
+						privateKeyPath: `${sshPath}`
+					};
 					await this.utils.waitUntil(
 						async () => {
-							result = await this.worker.executeCommandInHostOS('echo -n pass',
-								this.link);
+							try {
+								result = await this.utils.executeCommandOverSSH('echo -n pass',
+								config);
+							} catch (err) {
+								console.error(err.message);
+								throw new Error(err);
+							}
 							return result
 						}, false, 10, 5 * 1000);
 					return test.equals(
-						result,
+						result.stdout,
 						"pass",
 						"Local SSH authentication with custom keys is allowed in production mode"
 					);
@@ -237,14 +250,27 @@ module.exports = {
 						});
 				}).then(async () => {
 					let result;
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					config = {
+						host: ip,
+						port: '22222',
+						username: 'root',
+						privateKeyPath: `${sshPath}`
+					};
 					await this.utils.waitUntil(
 						async () => {
-							result = await this.worker.executeCommandInHostOS('echo -n pass',
-								this.link);
+							try {
+								result = await this.utils.executeCommandOverSSH('echo -n pass',
+								config);
+							} catch (err) {
+								console.error(err.message);
+								throw new Error(err);
+							}
 							return result
 						}, false, 10, 5 * 1000);
 					return test.equals(
-						result,
+						result.stdout,
 						"pass",
 						"Local SSH authentication with custom keys is allowed in development mode"
 					)
