@@ -148,6 +148,7 @@ BALENA_CONFIGS ?= " \
     dmcrypt \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
+    ${WIREGUARD} \
     "
 
 #
@@ -215,6 +216,11 @@ BALENA_CONFIGS[balena] ?= " \
 FIRMWARE_COMPRESS = "${@configure_from_version("5.3", "firmware_compress", "", d)}"
 BALENA_CONFIGS[firmware_compress] = " \
     CONFIG_FW_LOADER_COMPRESS=y \
+"
+
+WIREGUARD = "${@configure_from_version("5.10", "wireguard", "", d)}"
+BALENA_CONFIGS[wireguard] = " \
+    CONFIG_WIREGUARD=m \
 "
 
 BALENA_CONFIGS[aufs] = " \
