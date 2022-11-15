@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.3.3
+      hash: f2d3858900aa8a092331c38a590a63525fbb2a57
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.106.6
+  title: ""
+  date: 2022-11-15T05:36:48.415Z
+- commits:
     - subject: "openvpn: fix a race condition that leaves system with no running
         supervisor"
       hash: fd788120e5915820e75240e548760fd107cc0580
