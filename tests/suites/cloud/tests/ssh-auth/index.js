@@ -20,7 +20,7 @@ const exec = Bluebird.promisify(require('child_process').exec);
 const { join, dirname } = require("path");
 const { homedir } = require("os");
 const fse = require("fs-extra");
-const sshPath = join(homedir(), "test_id");
+const sshPath = join("/tmp", "test_id");
 
 const setConfig = async (test, that, target, key, value) => {
 
