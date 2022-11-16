@@ -335,11 +335,6 @@ module.exports = {
 
   },
   tests: [
-    "./tests/preload",
-    "./tests/device-specific-tests/hostapd",
-    "./tests/supervisor",
-    "./tests/multicontainer",
     "./tests/ssh-auth",
-    "./tests/os-config",
   ],
 };
