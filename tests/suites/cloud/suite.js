@@ -310,24 +310,6 @@ module.exports = {
     await this.worker.flash(this.os.image.path);
     await this.worker.on();
 
-    // create tunnels
-    this.log('Creating SSH tunnels to DUT');
-    await this.worker.createSSHTunnels(
-      this.link
-    );
-
-    this.log('Waiting for device to be reachable');
-    await this.utils.waitUntil(async () => {
-      this.log("Trying to ssh into device");
-      let hostname = await this.context
-        .get()
-        .worker.executeCommandInHostOS(
-          "cat /etc/hostname",
-          this.link
-        )
-      return (hostname === `${this.balena.uuid.slice(0, 7)}`)
-    }, true, 60, 5 * 1000);
-
     // Retrieving journalctl logs: register teardown after device is reachable
     this.suite.teardown.register(async () => {
       await this.worker.archiveLogs(this.id, this.balena.uuid);

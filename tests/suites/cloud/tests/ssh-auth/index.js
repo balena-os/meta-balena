@@ -22,6 +22,23 @@ const { homedir } = require("os");
 const fse = require("fs-extra");
 const sshPath = join("/tmp", "test_id");
 
+const setupTunnel = async (that) => {
+	if (!that.worker.directConnect) {
+		that.worker.dutSshKey = sshPath
+		console.log(`Setting up DUT tunnel..`)
+		that.worker.createTunneltoDUT(that.link, 22222, 7777);
+	} else {
+		let dutIp = await that.worker.getDutIp(that.link);
+		let workerIp = await exec(`dig +short worker`);
+		console.log(`ip route add ${dutIp} via ${workerIp}`)
+		try {
+			await exec(`ip route add ${dutIp} via ${workerIp}`)
+		} catch (e) {
+			console.error(`Failed to add ip route: ${e}`);
+		}
+	}
+}
+
 const setConfig = async (test, that, target, key, value) => {
 
 	return test.test(`Update or delete ${key} in config.json`, t =>
@@ -93,8 +110,14 @@ module.exports = {
 				const customKey = await keygen({
 					location: sshPath,
 				});
-				return setConfig(test, this, this.balena.uuid, 'developmentMode', false)
+				await exec(`ssh-add ${sshPath}`)
 				.then(() => {
+					return this.worker.addSSHKey(sshPath);
+				}).then( () => {
+					return setupTunnel(this)
+				}).then(() => {
+					return setConfig(test, this, this.balena.uuid, 'developmentMode', false);
+				}).then(() => {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				}).then(() => {
 					return test.resolves(
@@ -106,12 +129,15 @@ module.exports = {
 						'Should wait for os-sshkeys.service to be active'
 					)
 				}).then(async () => {
-					// disable retry, as we want to evaluate the failure
-					const retryOptions = { max_tries: 0 };
-					await this.worker.executeCommandInHostOS(
-						'true',
-						this.link,
-						retryOptions,
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					config = {
+						host: ip,
+						port: '22222',
+						username: 'root',
+						privateKeyPath: `${sshPath}`
+					};
+					await this.utils.executeCommandOverSSH('true', config
 					).then(() => {
 						throw new Error("SSH authentication passed when it should have failed");
 					}).catch((err) => {
@@ -121,14 +147,8 @@ module.exports = {
 							"Local SSH authentication without custom keys is not allowed in production mode"
 						);
 					});
-				}).then(async () => {
-					return exec(`ssh-add ${sshPath}`)
-					.then(() => {
-						this.worker.addSSHKey(sshPath);
-					})
-					.then(() => {
+				}).then(() => {
 						return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
-					});
 				}).then(async () => {
 					let result;
 					let ip = await this.worker.getDutIp(this.link);
@@ -195,8 +215,12 @@ module.exports = {
 				const customKey = await keygen({
 					location: sshPath,
 				});
-				return setConfig(test, this, this.balena.uuid, 'developmentMode', true)
-				.then(() => {
+				await this.worker.addSSHKey(sshPath)
+				.then( () => {
+					return setupTunnel(this)
+				}).then( () => {
+					return setConfig(test, this, this.balena.uuid, 'developmentMode', true)
+				}).then(() => {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				}).then(() => {
 					return test.resolves(
@@ -209,14 +233,26 @@ module.exports = {
 					)
 				}).then( async () => {
 					let result;
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					config = {
+						host: ip,
+						port: '22222',
+						username: 'root',
+					};
 					await this.utils.waitUntil(
 						async () => {
-							result = await this.worker.executeCommandInHostOS('echo -n pass',
-								this.link);
+							try {
+								result = await this.utils.executeCommandOverSSH('echo -n pass',
+									config);
+							} catch (err) {
+								console.error(err.message);
+								throw new Error(err);
+							}
 							return result
 						}, false, 10, 5 * 1000);
 					return test.equals(
-						result,
+						result.stdout,
 						"pass",
 						"Local SSH authentication without custom keys is allowed in development mode"
 					)
@@ -232,19 +268,24 @@ module.exports = {
 						'Should wait for os-sshkeys.service to be active'
 					)
 				}).then(async () => {
+					let ip = await this.worker.getDutIp(this.link);
+					let config = {}
+					config = {
+						host: ip,
+						port: '22222',
+						username: 'root',
+						privateKeyPath: `${sshPath}`
+					};
 					return test.throws( function () {
-						this.worker.executeCommandInHostOS(
+						this.utils.executeCommandOverSSH(
 							'echo -n pass',
-							this.link)
+							config)
 						},
 						{},
 						"Local SSH authentication with phony custom keys is not allowed in development mode"
 					)
 				}).then(async () => {
 						return exec(`ssh-add ${sshPath}`)
-						.then(() => {
-							this.worker.addSSHKey(sshPath);
-						})
 						.then(() => {
 							return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
 						});
