@@ -20,7 +20,6 @@ const exec = Bluebird.promisify(require('child_process').exec);
 const { join, dirname } = require("path");
 const { homedir } = require("os");
 const fse = require("fs-extra");
-const sshPath = join(homedir(), "test_id");
 
 const setConfig = async (test, that, target, key, value) => {
 
@@ -89,10 +88,6 @@ module.exports = {
 		{
 			title: 'SSH authentication in production mode',
 			run: async function(test) {
-				await fse.ensureDir(dirname(sshPath));
-				const customKey = await keygen({
-					location: sshPath,
-				});
 				return setConfig(test, this, this.balena.uuid, 'developmentMode', false)
 				.then(() => {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
@@ -105,6 +100,11 @@ module.exports = {
 						),
 						'Should wait for os-sshkeys.service to be active'
 					)
+				}).then(async () => {
+					return exec(`ssh-add ${this.context.get().sshKeyPath}`)
+					.then(() => {
+						this.worker.addSSHKey(this.context.get().sshKeyPath);
+					})
 				}).then(async () => {
 					// disable retry, as we want to evaluate the failure
 					const retryOptions = { max_tries: 0 };
@@ -122,13 +122,7 @@ module.exports = {
 						);
 					});
 				}).then(async () => {
-					return exec(`ssh-add ${sshPath}`)
-					.then(() => {
-						this.worker.addSSHKey(sshPath);
-					})
-					.then(() => {
-						return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
-					});
+						return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()]);
 				}).then(async () => {
 					let result;
 					await this.utils.waitUntil(
@@ -178,9 +172,10 @@ module.exports = {
 		{
 			title: 'SSH authentication in development mode',
 			run: async function(test) {
-				await fse.ensureDir(dirname(sshPath));
+				const customSshPath = join(homedir(), 'custom_id')
+				await fse.ensureDir(dirname(customSshPath));
 				const customKey = await keygen({
-					location: sshPath,
+					location: customSshPath,
 				});
 				return setConfig(test, this, this.balena.uuid, 'developmentMode', true)
 				.then(() => {
@@ -228,12 +223,12 @@ module.exports = {
 						"Local SSH authentication with phony custom keys is not allowed in development mode"
 					)
 				}).then(async () => {
-						return exec(`ssh-add ${sshPath}`)
+						return exec(`ssh-add ${this.context.get().sshKeyPath}`)
 						.then(() => {
-							this.worker.addSSHKey(sshPath);
+							this.worker.addSSHKey(this.context.get().sshKeyPath);
 						})
 						.then(() => {
-							return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
+							return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()]);
 						});
 				}).then(async () => {
 					let result;
