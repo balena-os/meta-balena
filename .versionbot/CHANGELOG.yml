@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.4.0
+      hash: ca6727af811b274e036b259e286316170292d401
+      body: Update balena-supervisor
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: renovate[bot]
+      nested: []
+  version: 2.107.0
+  title: ""
+  date: 2022-11-17T17:45:43.032Z
+- commits:
     - subject: "classes: kernel-balena: add wireguard module"
       hash: a3491c4ba4161ca7b6e9c25e6e0beb33f0f67a04
       body: |
