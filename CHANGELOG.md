@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.106.8
+## (2022-11-17)
+
+* classes: kernel-balena: add wireguard module [Alex Gonzalez]
+
 # v2.106.7
 ## (2022-11-15)
 
