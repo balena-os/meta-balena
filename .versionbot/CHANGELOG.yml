@@ -1,4 +1,18 @@
 - commits:
+    - subject: "docs: add RAID setup info"
+      hash: c1be8607aca2b4086230305689a0bc6ea77f5cc7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.107.1
+  title: ""
+  date: 2022-11-17T22:46:30.954Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.4.0
       hash: ca6727af811b274e036b259e286316170292d401
       body: Update balena-supervisor
