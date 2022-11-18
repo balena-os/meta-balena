@@ -25,7 +25,7 @@ SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
     file://0001-Fixed-configure.ac-Fix-pkgconfig-sysroot-locations.patch \
 "
-SRC_URI:append:libc-musl = " \
+SRC_URI_append_libc-musl = " \
     file://musl/0001-Fix-build-with-musl-systemd-specific.patch \
     file://musl/0002-Fix-build-with-musl.patch \
 "
@@ -57,13 +57,13 @@ EXTRA_OECONF = " \
 # | ../NetworkManager-1.16.0/src/systemd/sd-adapt-core/nm-sd-adapt-core.h:68:6: error: #error neither secure_getenv nor __secure_getenv is available
 # |  #    error neither secure_getenv nor __secure_getenv is available
 # |       ^~~~~
-CFLAGS:append:libc-musl = " \
+CFLAGS_append_libc-musl = " \
     -DRTLD_DEEPBIND=0 \
     -DHAVE_SECURE_GETENV \
     -Dsecure_getenv=getenv \
 "
 
-do_compile:prepend() {
+do_compile_prepend() {
     export GIR_EXTRA_LIBS_PATH="${B}/libnm/.libs:${B}/libnm-glib/.libs:${B}/libnm-util/.libs"
 }
 
@@ -97,13 +97,13 @@ PACKAGES =+ "libnmutil libnmglib libnmglib-vpn \
   ${PN}-adsl \
 "
 
-FILES:libnmutil += "${libdir}/libnm-util.so.*"
-FILES:libnmglib += "${libdir}/libnm-glib.so.*"
-FILES:libnmglib-vpn += "${libdir}/libnm-glib-vpn.so.*"
+FILES_libnmutil += "${libdir}/libnm-util.so.*"
+FILES_libnmglib += "${libdir}/libnm-glib.so.*"
+FILES_libnmglib-vpn += "${libdir}/libnm-glib-vpn.so.*"
 
-FILES:${PN}-adsl = "${libdir}/NetworkManager/libnm-device-plugin-adsl.so"
+FILES_${PN}-adsl = "${libdir}/NetworkManager/libnm-device-plugin-adsl.so"
 
-FILES:${PN} += " \
+FILES_${PN} += " \
     ${libexecdir} \
     ${libdir}/NetworkManager/dispatcher.d \
     ${libdir}/NetworkManager/system-connections \
@@ -117,31 +117,31 @@ FILES:${PN} += " \
     ${libdir}/pppd \
 "
 
-RRECOMMENDS:${PN} += "iptables \
+RRECOMMENDS_${PN} += "iptables \
     ${@bb.utils.filter('PACKAGECONFIG', 'dnsmasq', d)} \
 "
-RCONFLICTS:${PN} = "connman"
+RCONFLICTS_${PN} = "connman"
 
-FILES:${PN}-dev += " \
+FILES_${PN}-dev += " \
     ${datadir}/NetworkManager/gdb-cmd \
     ${libdir}/pppd/*/*.la \
     ${libdir}/NetworkManager/*.la \
     ${libdir}/NetworkManager/${PV}/*.la \
 "
 
-FILES:${PN}-nmtui = " \
+FILES_${PN}-nmtui = " \
     ${bindir}/nmtui \
     ${bindir}/nmtui-edit \
     ${bindir}/nmtui-connect \
     ${bindir}/nmtui-hostname \
 "
 
-FILES:${PN}-nmtui-doc = " \
+FILES_${PN}-nmtui-doc = " \
     ${mandir}/man1/nmtui* \
 "
 
-SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'NetworkManager.service NetworkManager-dispatcher.service', '', d)}"
+SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'NetworkManager.service NetworkManager-dispatcher.service', '', d)}"
 
-do_install:append() {
+do_install_append() {
     rm -rf ${D}/run ${D}${localstatedir}/run
 }
