@@ -22,23 +22,25 @@ RDEPENDS:${PN}:append = " \
     "
 FILES:${PN}:append = " ${sysconfdir}/*"
 
-EXTRA_OECONF += " \
-    --with-resolvconf=/sbin/resolvconf \
-    --disable-ovs \
+EXTRA_OEMESON += " \
+    -Dpolkit=false \
+    -Dresolvconf=/sbin/resolvconf \
+    -Dovs=false \
     "
 PACKAGECONFIG:append = " modemmanager ppp"
 
 # The external DHCP client doesn't work well with our `ipv4.dhcp-timeout`
 # configuration. Switch to the internal one.
 PACKAGECONFIG:remove = "dhclient"
-EXTRA_OECONF += " \
-	--with-config-dhcp-default=internal \
-	--with-dhclient=no \
+EXTRA_OEMESON += " \
+	-Ddhclient=false \
 	"
 
-EXTRA_OECONF += " \
-    --enable-introspection=no \
-    --enable-firewalld-zone=no \
+PACKAGECONFIG:remove = "vala"
+EXTRA_OEMESON += " \
+    -Dvapi=false \
+    -Dintrospection=false \
+    -Dfirewalld_zone=false \
     "
 
 do_install:append() {

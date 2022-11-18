@@ -15,11 +15,12 @@ DEPENDS = " \
     util-linux \
     libndp \
     libnewt \
-    jansson \
     curl \
 "
 
-inherit gnomebase gettext systemd bash-completion vala gobject-introspection gtk-doc
+GNOMEBASEBUILDCLASS = "meson"
+#inherit gnomebase gettext systemd bash-completion vala gobject-introspection gtk-doc
+inherit gnomebase gettext systemd gobject-introspection gtk-doc update-alternatives upstream-version-is-even
 
 SRC_URI = " \
     ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
@@ -29,7 +30,6 @@ SRC_URI:append:libc-musl = " \
     file://musl/0001-Fix-build-with-musl-systemd-specific.patch \
     file://musl/0002-Fix-build-with-musl.patch \
 "
-SRC_URI[md5sum] = "82088af23cac1be7394bde000f4612f8"
 SRC_URI[sha256sum] = "b23214b5481c80f93f7515fcdeac11c09c8c96466872d7ec386d64fb5fd12cbf"
 
 UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/"
@@ -38,59 +38,83 @@ UPSTREAM_CHECK_REGEX = "NetworkManager\-(?P<pver>1\.(\d*[02468])+\.(\d*[02468])+
 
 S = "${WORKDIR}/NetworkManager-${PV}"
 
-EXTRA_OECONF = " \
-    --disable-ifcfg-rh \
-    --disable-more-warnings \
-    --with-iptables=${sbindir}/iptables \
-    --with-tests \
-    --with-nmtui=yes \
-    --with-udev-dir=${nonarch_base_libdir}/udev \
+# ['auto', 'symlink', 'file', 'netconfig', 'resolvconf']
+NETWORKMANAGER_DNS_RC_MANAGER_DEFAULT ??= "auto"
+
+# ['dhcpcanon', 'dhclient', 'dhcpcd', 'internal', 'nettools']
+NETWORKMANAGER_DHCP_DEFAULT ??= "internal"
+
+#EXTRA_OECONF = " \
+#    --disable-ifcfg-rh \
+#    --disable-more-warnings \
+#    --with-iptables=${sbindir}/iptables \
+#    --with-tests \
+#    --with-nmtui=yes \
+#    --with-udev-dir=${nonarch_base_libdir}/udev \
+#"
+
+EXTRA_OEMESON = "\
+    -Difcfg_rh=false \
+    -Dtests=yes \
+    -Dnmtui=true \
+    -Dudev_dir=${nonarch_base_libdir}/udev \
+    -Dlibpsl=false \
+    -Dqt=false \
+    -Dconfig_dns_rc_manager_default=${NETWORKMANAGER_DNS_RC_MANAGER_DEFAULT} \
+    -Dconfig_dhcp_default=${NETWORKMANAGER_DHCP_DEFAULT} \
+    -Ddhcpcanon=false \
 "
 
 # stolen from https://github.com/void-linux/void-packages/blob/master/srcpkgs/NetworkManager/template
 # avoids:
 # | ../NetworkManager-1.16.0/libnm-core/nm-json.c:106:50: error: 'RTLD_DEEPBIND' undeclared (first use in this function); did you mean 'RTLD_DEFAULT'?
-#
-# and
-#
-# | In file included from ../NetworkManager-1.16.0/src/systemd/nm-sd-utils-core.c:25:
-# | ../NetworkManager-1.16.0/src/systemd/sd-adapt-core/nm-sd-adapt-core.h:68:6: error: #error neither secure_getenv nor __secure_getenv is available
-# |  #    error neither secure_getenv nor __secure_getenv is available
-# |       ^~~~~
 CFLAGS:append:libc-musl = " \
     -DRTLD_DEEPBIND=0 \
-    -DHAVE_SECURE_GETENV \
-    -Dsecure_getenv=getenv \
 "
 
 do_compile:prepend() {
-    export GIR_EXTRA_LIBS_PATH="${B}/libnm/.libs:${B}/libnm-glib/.libs:${B}/libnm-util/.libs"
+    export GI_TYPELIB_PATH="${B}}/src/libnm-client-impl${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"
 }
 
-PACKAGECONFIG ??= "nss ifupdown dhclient dnsmasq \
+
+PACKAGECONFIG ??= "readline nss ifupdown dnsmasq nmcli vala \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', bb.utils.contains('DISTRO_FEATURES', 'x11', 'consolekit', '', d), d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez5', '', d)} \
     ${@bb.utils.filter('DISTRO_FEATURES', 'wifi polkit', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux audit', '', d)} \
 "
-PACKAGECONFIG[systemd] = " \
-    --with-systemdsystemunitdir=${systemd_unitdir}/system --with-session-tracking=systemd, \
-    --without-systemdsystemunitdir, \
+
+inherit ${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}
+
+PACKAGECONFIG[systemd] = "\
+    -Dsystemdsystemunitdir=${systemd_unitdir}/system -Dsession_tracking=systemd,\
+    -Dsystemdsystemunitdir=no -Dsystemd_journal=false -Dsession_tracking=no\
 "
-PACKAGECONFIG[polkit] = "--enable-polkit,--disable-polkit,polkit"
-PACKAGECONFIG[bluez5] = "--enable-bluez5-dun,--disable-bluez5-dun,bluez5"
+PACKAGECONFIG[polkit] = "-Dpolkit=true,-Dpolkit=false,polkit"
+PACKAGECONFIG[bluez5] = "-Dbluez5_dun=true,-Dbluez5_dun=false,bluez5"
 # consolekit is not picked by shlibs, so add it to RDEPENDS too
-PACKAGECONFIG[consolekit] = "--with-session-tracking=consolekit,,consolekit,consolekit"
-PACKAGECONFIG[modemmanager] = "--with-modem-manager-1=yes,--with-modem-manager-1=no,modemmanager"
-PACKAGECONFIG[ppp] = "--enable-ppp --with-pppd-plugin-dir=${libdir}/pppd/2.4.7,--disable-ppp,ppp,ppp"
-# Use full featured dhcp client instead of internal one
-PACKAGECONFIG[dhclient] = "--with-dhclient=${base_sbindir}/dhclient,,,dhcp-client"
-PACKAGECONFIG[dnsmasq] = "--with-dnsmasq=${bindir}/dnsmasq"
-PACKAGECONFIG[nss] = "--with-crypto=nss,,nss"
-PACKAGECONFIG[glib] = "--with-libnm-glib,,dbus-glib-native dbus-glib"
-PACKAGECONFIG[gnutls] = "--with-crypto=gnutls,,gnutls"
-PACKAGECONFIG[wifi] = "--enable-wifi=yes,--enable-wifi=no,,wpa-supplicant"
-PACKAGECONFIG[ifupdown] = "--enable-ifupdown,--disable-ifupdown"
-PACKAGECONFIG[qt4-x11-free] = "--enable-qt,--disable-qt,qt4-x11-free"
+PACKAGECONFIG[consolekit] = "-Dsession_tracking_consolekit=true,-Dsession_tracking_consolekit=false,consolekit,consolekit"
+PACKAGECONFIG[modemmanager] = "-Dmodem_manager=true,-Dmodem_manager=false,modemmanager mobile-broadband-provider-info"
+PACKAGECONFIG[ppp] = "-Dppp=true -Dpppd=${sbindir}/pppd,-Dppp=false,ppp"
+PACKAGECONFIG[dnsmasq] = "-Ddnsmasq=${bindir}/dnsmasq"
+PACKAGECONFIG[nss] = "-Dcrypto=nss,,nss"
+PACKAGECONFIG[resolvconf] = "-Dresolvconf=${base_sbindir}/resolvconf,-Dresolvconf=no,,resolvconf"
+PACKAGECONFIG[gnutls] = "-Dcrypto=gnutls,,gnutls"
+PACKAGECONFIG[crypto-null] = "-Dcrypto=null"
+PACKAGECONFIG[wifi] = "-Dwext=true -Dwifi=true,-Dwext=false -Dwifi=false"
+PACKAGECONFIG[iwd] = "-Diwd=true,-Diwd=false"
+PACKAGECONFIG[ifupdown] = "-Difupdown=true,-Difupdown=false"
+PACKAGECONFIG[cloud-setup] = "-Dnm_cloud_setup=true,-Dnm_cloud_setup=false"
+PACKAGECONFIG[nmcli] = "-Dnmcli=true,-Dnmcli=false"
+PACKAGECONFIG[readline] = "-Dreadline=libreadline,,readline"
+PACKAGECONFIG[libedit] = "-Dreadline=libedit,,libedit"
+PACKAGECONFIG[ovs] = "-Dovs=true,-Dovs=false,jansson"
+PACKAGECONFIG[audit] = "-Dlibaudit=yes,-Dlibaudit=no"
+PACKAGECONFIG[selinux] = "-Dselinux=true,-Dselinux=false,libselinux"
+PACKAGECONFIG[vala] = "-Dvapi=true,-Dvapi=false"
+PACKAGECONFIG[dhcpcd] = "-Ddhcpcd=yes,-Ddhcpcd=no,,dhcpcd"
+PACKAGECONFIG[dhclient] = "-Ddhclient=yes,-Ddhclient=no,,dhcp"
+PACKAGECONFIG[concheck] = "-Dconcheck=true,-Dconcheck=false"
 
 PACKAGES =+ "libnmutil libnmglib libnmglib-vpn \
   ${PN}-nmtui ${PN}-nmtui-doc \
@@ -115,6 +139,7 @@ FILES:${PN} += " \
     ${noarch_base_libdir}/udev/* \
     ${systemd_unitdir}/system \
     ${libdir}/pppd \
+    /usr/share/bash-completion/completions/nmcli \
 "
 
 RRECOMMENDS:${PN} += "iptables \
