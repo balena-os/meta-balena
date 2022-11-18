@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.2
+## (2022-11-18)
+
+* Mark "Engine healthcheck performance" as unstable [Leandro Motta Barros]
+
 # v2.107.1
 ## (2022-11-17)
 
