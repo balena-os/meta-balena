@@ -29,8 +29,8 @@ SRC_URI:append:libc-musl = " \
     file://musl/0001-Fix-build-with-musl-systemd-specific.patch \
     file://musl/0002-Fix-build-with-musl.patch \
 "
-SRC_URI[md5sum] = "0913815a98c60d0d2bcc6e930b596906"
-SRC_URI[sha256sum] = "a8ab36a0a502fe73cd8e3bacb6585f97fbb94ebef79e276cdbaf11c33ff8f54b"
+SRC_URI[md5sum] = "82088af23cac1be7394bde000f4612f8"
+SRC_URI[sha256sum] = "b23214b5481c80f93f7515fcdeac11c09c8c96466872d7ec386d64fb5fd12cbf"
 
 UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/"
 # Stable releases are numbered 1.y.z, with y and z being even numbers.
