@@ -1,4 +1,36 @@
 - commits:
+    - subject: "chronyd: allow service status notification socket access to all"
+      hash: ddf2c4ed50e812296ed5f9fe3ece48b1ce8a0107
+      body: |
+        chrony 4.2 introduces security hardening in the
+        service definition that removes the CAP_SYS_ADMIN permission, affecting
+        the way healthdog uses execve to become chronyd.
+
+        commit 83f96efdfd2d (examples: harden systemd services)
+
+        This commits works around it by allowing all members of the service's
+        control group to send notification messages.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "chrony: update to version 4.2"
+      hash: 6a923864e66d7a2a552f3977727caefda444045d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.2
+  title: ""
+  date: 2022-11-18T19:49:48.786Z
+- commits:
     - subject: "docs: add RAID setup info"
       hash: c1be8607aca2b4086230305689a0bc6ea77f5cc7
       body: ""

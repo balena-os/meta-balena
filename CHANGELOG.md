@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.107.2
+## (2022-11-18)
+
+* chronyd: allow service status notification socket access to all [Alex Gonzalez]
+* chrony: update to version 4.2 [Alex Gonzalez]
+
 # v2.107.1
 ## (2022-11-17)
 
