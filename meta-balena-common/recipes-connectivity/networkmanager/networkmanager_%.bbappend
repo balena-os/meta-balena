@@ -10,7 +10,6 @@ SRC_URI:append = " \
     file://README.ignore \
     file://balena-sample.ignore \
     file://nm-tmpfiles.conf \
-    file://balena-client-id.patch \
     file://remove-https-warning.patch \
     "
 
