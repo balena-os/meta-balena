@@ -4,7 +4,7 @@ SECTION = "net/misc"
 
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://docs/api/html/license.html;md5=4b6f0196cf1f53deecf4300c0b290f4b \
+                    file://docs/api/html/license.html;md5=0660fa481565243be23062c2fd524ccd \
 "
 
 DEPENDS = " \
