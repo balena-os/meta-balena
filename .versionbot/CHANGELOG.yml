@@ -1,4 +1,23 @@
 - commits:
+    - subject: "kernel-balena: Kernel version check should include provided version"
+      hash: 42ec259c4d1c6e9a7c8171f21157562ed3a07cc9
+      body: |
+        When adding a kernel configuration conditional in a provided kernel
+        version, make the check include the provided kernel version as that is
+        the intuitive way to understand it.
+
+        The two places that use this function already used it in this way.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.3
+  title: ""
+  date: 2022-11-19T14:52:45.759Z
+- commits:
     - subject: "chronyd: allow service status notification socket access to all"
       hash: ddf2c4ed50e812296ed5f9fe3ece48b1ce8a0107
       body: |

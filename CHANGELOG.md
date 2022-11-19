@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.3
+## (2022-11-19)
+
+* kernel-balena: Kernel version check should include provided version [Alex Gonzalez]
+
 # v2.107.2
 ## (2022-11-18)
 
