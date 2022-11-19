@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.4.1
+      hash: 3904c5734f5307cc6d225df7021dea61d8a014fd
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.107.4
+  title: ""
+  date: 2022-11-19T22:54:21.548Z
+- commits:
     - subject: "kernel-balena: Kernel version check should include provided version"
       hash: 42ec259c4d1c6e9a7c8171f21157562ed3a07cc9
       body: |
