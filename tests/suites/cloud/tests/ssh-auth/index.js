@@ -140,32 +140,32 @@ module.exports = {
 					await setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 			  }).then(async () => {
 					let result;
+					let config = {};
 					let ip = await this.worker.getDutIp(this.link);
-					let config = {}
-					await this.cloud.balena.models.key.create(this.suite.options.id, customKey.pubKey);
-					config = {
-						host: ip,
-						port: '22222',
-						username: this.worker.username,
-						privateKeyPath: `${sshPath}`
-					};
 					await this.utils.waitUntil(
 						async () => {
-							try {
-								result = await this.utils.executeCommandOverSSH('echo -n pass',
-								config);
-							} catch (err) {
-								console.error(err.message);
-								throw new Error(err);
-							}
-							return result
+							if (!this.worker.directConnect) {
+									/* Because communication between core and DUT is a tunnel, this needs to be run directly on the worker */
+									result = await this.worker.executeCommandInWorker(`sh -c "ssh -p 22222 -i /tmp/id -o StrictHostKeyChecking=no ${this.worker.username}@${ip} echo -n pass"`);
+									return result
+								} else {
+									config = {
+										host: ip,
+										port: '22222',
+										username: this.worker.username,
+										privateKeyPath: this.context.get().sshKeyPath
+									};
+									result = await this.utils.executeCommandOverSSH(`echo -n pass`,
+										config)
+									result = result.stdout
+									return result
+								}
 						}, false, 10, 5 * 1000);
 					return test.equals(
-						result.stdout,
+						result,
 						"pass",
 						"Local SSH authentication with balenaCloud registered keys is allowed in production mode"
 					)
-					await this.cloud.balena.removeSSHKey(this.suite.options.id);
 				});
 			},
 		},
@@ -247,32 +247,32 @@ module.exports = {
 					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
 				}).then(async () => {
 					let result;
+					let config = {};
 					let ip = await this.worker.getDutIp(this.link);
-					let config = {}
-					await this.cloud.balena.models.key.create(this.suite.options.id, customKey.pubKey);
-					config = {
-						host: ip,
-						port: '22222',
-						username: this.worker.username,
-						privateKeyPath: `${sshPath}`
-					};
 					await this.utils.waitUntil(
 						async () => {
-							try {
-								result = await this.utils.executeCommandOverSSH('echo -n pass',
-									config);
-							} catch (err) {
-								console.error(err.message);
-								throw new Error(err);
-							}
+							if (!this.worker.directConnect) {
+							/* Because communication between core and DUT is a tunnel, this needs to be run directly on the worker */
+							result = await this.worker.executeCommandInWorker(`sh -c "ssh -p 22222 -i /tmp/id -o StrictHostKeyChecking=no ${this.worker.username}@${ip} echo -n pass"`);
 							return result
+						} else {
+								config = {
+									host: ip,
+									port: '22222',
+									username: this.worker.username,
+									privateKeyPath: this.context.get().sshKeyPath
+								};
+								result = await this.utils.executeCommandOverSSH(`echo -n pass`,
+									config)
+								result = result.stdout
+								return result
+							}
 						}, false, 10, 5 * 1000);
 					return test.equals(
-						result.stdout,
+						result,
 						"pass",
 						"Local SSH authentication with balenaCloud registered keys is allowed in development mode"
 					)
-					await this.cloud.balena.removeSSHKey(this.suite.options.id);
 				});
 			},
 		},
