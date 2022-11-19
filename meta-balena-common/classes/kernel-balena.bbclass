@@ -90,6 +90,7 @@ def get_kernel_version(d):
             kernelversion = kernelversion + '.' + m.group(1)
     return kernelversion
 
+# Return passed value if the kernel version is equal or above the one provided
 def configure_from_version(version, passvalue, failvalue, d):
     kv = get_kernel_version(d)
     if kv is None:
@@ -101,7 +102,7 @@ def configure_from_version(version, passvalue, failvalue, d):
     if int(kv_major) > int(major):
         return passvalue
     elif int(kv_major) == int(major):
-        if int(kv_minor) > int(minor):
+        if int(kv_minor) >= int(minor):
             return passvalue
     return failvalue
 
