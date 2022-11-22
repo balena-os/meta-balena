@@ -13,10 +13,12 @@ SRC_URI:append = " \
     file://kexec \
     file://udevcleanup \
     file://recovery \
+    file://provision \
     "
 
 do_install:append() {
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
+    install -m 0755 ${WORKDIR}/provision ${D}/init.d/71-provision
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
@@ -42,6 +44,7 @@ PACKAGES:append = " \
     initramfs-module-kexec \
     initramfs-module-udevcleanup \
     initramfs-module-recovery \
+    initramfs-module-provision \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -92,3 +95,7 @@ FILES:initramfs-module-udevcleanup = "/init.d/98-udevcleanup"
 SUMMARY:initramfs-module-recovery = "Boot into a recovery shell"
 RDEPENDS:initramfs-module-recovery = "${PN}-base android-tools-adbd"
 FILES:initramfs-module-recovery = "/init.d/99-recovery"
+
+SUMMARY:initramfs-module-provision = "Cloud provisioning"
+RDEPENDS:initramfs-module-provision = "${PN}-base"
+FILES:initramfs-module-provision = "/init.d/71-provision"

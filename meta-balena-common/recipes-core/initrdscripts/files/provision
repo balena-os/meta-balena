@@ -1,0 +1,43 @@
+#!/bin/sh
+
+# Copyright 2022 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Cloud provisioning
+#
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+# Enable module function
+provision_enabled() {
+    # shellcheck disable=SC2154
+    if [ "$bootparam_flasher" = "true" ]; then
+        return 0
+    fi
+    return 1
+}
+
+# Main module function
+provision_run() {
+    if ! udhcpc -n; then
+        warn "DHCP request failed - progress report to cloud won't be possible."
+    fi
+    mkdir -p /mnt/boot/
+    mount /dev/disk/by-state/resin-boot /mnt/boot/
+    /usr/bin/os-config generate-api-key
+    /usr/bin/resin-device-register
+    /usr/bin/balena-unique-key uuid
+}
