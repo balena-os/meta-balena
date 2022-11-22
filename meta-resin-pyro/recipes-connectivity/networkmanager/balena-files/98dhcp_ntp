@@ -1,0 +1,48 @@
+#!/bin/sh
+
+#
+# Update NTP sources that are passed via DHCP.
+#
+
+INTERFACE=$1
+ACTION=$2
+
+SERVER_DIR=/run/chrony/
+SERVER_FILE=${SERVER_DIR}/added_dhcp_${INTERFACE}.sources
+
+if [ ! -d "$SERVER_DIR" ]; then
+	mkdir -p $SERVER_DIR -m 770
+fi
+
+case "$ACTION" in
+	up|dhcp4-change)
+	if [[ -n $DHCP4_NTP_SERVERS ]]; then
+		if [ -f "$SERVER_FILE" ]; then
+			echo "Updating DHCP NTP sources (${INTERFACE} ${ACTION})."
+			rm -f $SERVER_FILE
+		else
+			echo "Adding DHCP NTP sources (${INTERFACE} ${ACTION})."
+		fi
+
+		for server in ${DHCP4_NTP_SERVERS}; do
+			echo "pool $server iburst minpoll 14 maxpoll 14 maxsources 1" >> $SERVER_FILE
+		done
+		/usr/libexec/chrony-helper update-sources || true
+	else
+		if [ -f "$SERVER_FILE" ]; then
+			echo "Removing DHCP NTP sources (${INTERFACE} ${ACTION})."
+			rm -f $SERVER_FILE
+			/usr/libexec/chrony-helper update-sources || true
+		fi
+	fi
+	;;
+	down)
+	if [ -f "$SERVER_FILE" ]; then
+		echo "Removing DHCP NTP sources (${INTERFACE} ${ACTION})."
+		rm -f "$SERVER_FILE"
+		/usr/libexec/chrony-helper update-sources || true
+	fi
+	;;
+	*)
+	;;
+esac
