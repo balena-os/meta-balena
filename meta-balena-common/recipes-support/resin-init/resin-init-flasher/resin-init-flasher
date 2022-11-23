@@ -121,6 +121,12 @@ else
 fi
 inform "resin-init-flasher configuration found."
 
+# Find path to image
+BALENA_IMAGE=$(find / -name "${BALENA_IMAGE}")
+if [ ! -f "${BALENA_IMAGE}" ]; then
+    fail "Raw image ${BALENA_IMAGE}  not found in rootfs"
+fi
+
 # Balena configuration file
 if [ -f /usr/sbin/balena-config-vars ]; then
     source /usr/sbin/balena-config-vars
@@ -129,14 +135,14 @@ else
 fi
 inform "balena configuration found."
 
+# BALENA_BOOT_MOUNTPOINT should exist
+if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
+	fail "$BALENA_BOOT_MOUNTPOINT : No such directory."
+fi
+
 # CONFIG_PATH should exist
 if [ ! -f "$CONFIG_PATH" ]; then
     fail "$CONFIG_PATH : No such file."
-fi
-
-# BALENA_BOOT_MOUNTPOINT should exit
-if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
-	fail "$BALENA_BOOT_MOUNTPOINT : No such directory."
 fi
 
 # Give a chance to openvpn to come alive
@@ -188,7 +194,7 @@ if [ -z "$internal_dev" ]; then
 fi
 inform "$internal_dev will be used for flashing."
 
-IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
+IMAGE_FILE_SIZE=$(wc -c "$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
 if [ -d /sys/firmware/efi ]; then
@@ -229,7 +235,7 @@ if [ "$LUKS" = "1" ]; then
     hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,2,3" "$TPM_RESULT_DIR"
 
     # Attach the image to a loop device
-    LOOP_DEVICE=$(losetup --find --show --partscan "/opt/$BALENA_IMAGE")
+    LOOP_DEVICE=$(losetup --find --show --partscan "$BALENA_IMAGE")
     LOOP_DEVICE_NAME="${LOOP_DEVICE#/dev/}"
 
     # Repartition the new drive
@@ -338,7 +344,7 @@ if [ "$LUKS" = "1" ]; then
     losetup -d "$LOOP_DEVICE"
 else
     resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
-    dd_with_progress "/opt/$BALENA_IMAGE" "$internal_dev" 0 "$IMAGE_FILE_SIZE"
+    dd_with_progress "$BALENA_IMAGE" "$internal_dev" 0 "$IMAGE_FILE_SIZE"
 fi
 
 sync
@@ -347,6 +353,7 @@ sync
 partprobe "$internal_dev"
 udevadm trigger
 udevadm settle
+
 
 # Flash bootloader(s)
 if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
