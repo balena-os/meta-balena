@@ -479,8 +479,16 @@ if [ "$LUKS" = "1" ]; then
 fi
 
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
+sync
 
-inform "Shutting down ..."
-shutdown -h now
+# After migration we want to reboot as the remote device might not be accesible otherwise
+# This is achieved because the shutdown command is not part of the initramfs
+if command -v shutdown; then
+    inform "Shutting down ..."
+    shutdown -h now
+elif command -v reboot; then
+    inform "Rebooting..."
+    reboot -f
+fi
 
-exit 0
+fail "Unable to shutdown or reboot"
