@@ -181,6 +181,9 @@ module.exports = {
         this.balena.sshKey.label,
         keys.pubKey
       );
+    this.suite.context.set({
+      sshKey: keys
+    })
     this.suite.teardown.register(() => {
       return Promise.resolve(
         this.cloud.removeSSHKey(this.balena.sshKey.label)
