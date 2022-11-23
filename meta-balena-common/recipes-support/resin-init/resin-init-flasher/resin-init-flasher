@@ -580,6 +580,14 @@ fi
 
 report_progress 100 "Post-Provisioning"
 
-inform "Shutting down ..."
-shutdown -h now
-exit 0
+# After migration we want to reboot as the remote device might not be accesible otherwise
+# This is achieved because the shutdown command is not part of the initramfs
+if command -v shutdown; then
+    inform "Shutting down ..."
+    shutdown -h now
+elif command -v reboot; then
+    inform "Rebooting..."
+    reboot -f
+fi
+
+fail "Unable to shutdown or reboot"
