@@ -20,3 +20,19 @@ can be used in the following ways:
     from a user application, so this can only be used as a local recovery
     mechanism, replacing the use of `shell` for devices with no accesible
     serial console.
+
+* Internal flasher image:
+ * On flasher images, when a `flasher` command is found in the kernel command
+   line, if the initramfs is running from the same device that the flasher
+   is targetting, the flashing will be carried out from the initramfs instead of
+   booting into the flasher user space.
+ * This allows the flasher to work not only when booting from an external
+   device, but also when booting from the internal device as is the case
+   when migrating from a different operating system into `balenaOS`, or
+   installing into encrypted disks.
+ * Note that when flashing from the initramfs, provisioning will not happen
+   so no progress reports into the cloud are possible.
+ * When the migration finishes, the new system is booted into and a log file
+   from the migration can be found in the installed boot partition.
+ * Debugging problems with the migration can only be done locally using the
+   recovery mode explained above.

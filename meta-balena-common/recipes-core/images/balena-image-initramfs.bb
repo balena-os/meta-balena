@@ -15,6 +15,7 @@ PACKAGE_INSTALL = " \
     initramfs-module-fsck \
     initramfs-module-machineid \
     initramfs-module-recovery \
+    initramfs-module-migrate \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-udev \

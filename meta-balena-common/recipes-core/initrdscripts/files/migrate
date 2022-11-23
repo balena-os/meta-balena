@@ -1,0 +1,133 @@
+#!/bin/bash
+
+# Copyright 2022 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# OS migration
+#
+# Expects to find flash-boot and a mounted flash-rootA rootfs in the boot disk
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+# shellcheck disable=SC1091
+. /usr/sbin/balena-config-defaults
+
+memory_check() {
+    _size="${1}"
+    sync && echo 3 > /proc/sys/vm/drop_caches > /dev/null
+    swapoff -a && swapon -a
+    _memfree=$(awk '/MemFree/{free=$2} END{print (free*1024)}' /proc/meminfo)
+    if [ "${_memfree}" -lt "${_size}" ]; then
+        relocate_log_mount
+        fail "Not enough memory: requested ${_size}, available ${_memfree}"
+    fi
+    return 0
+}
+
+relocate_log_mount() {
+    # Preserve log file in rootfs
+    # Move the /run mountpoint to the rootfs mountpoint
+    if [ -d "${ROOTFS_DIR}/run" ]; then
+        if mountpoint '/run' > /dev/null; then
+            mount -n -o move /run "${ROOTFS_DIR}/run"
+        fi
+    else
+        # Older releases do not create /run so use /tmp instead
+        if mountpoint '/run' > /dev/null; then
+            mount -n -o move /run "${ROOTFS_DIR}/tmp"
+        fi
+    fi
+    sync "${ROOTFS_DIR}/run" "${ROOTFS_DIR}/tmp" || true
+}
+
+# Enable module function
+migrate_enabled() {
+    # shellcheck disable=SC2154
+    if [ "$bootparam_flasher" = "true" ]; then
+        # flash-rootA has been identified as rootfs
+
+        _flash_file_name=$(basename "${FLASHER_FILEFLAG}")
+        if [ -f "${ROOTFS_DIR}/flash-boot/${_flash_file_name}" ]; then
+            # shellcheck disable=SC1090
+            . "${ROOTFS_DIR}/etc/resin-init-flasher.conf"
+
+            # Check that we are booting from the same disk we want to program
+            device=$(findmnt --noheadings --canonicalize --output SOURCE "${ROOTFS_DIR}" | xargs lsblk -no pkname)
+            internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
+            if [ "${internal_dev#/dev/}" = "${device}" ]; then
+                info "Running migration on ${device}..."
+                return 0
+            fi
+        fi
+    fi
+    # Booting from external media - leave flashing after pivot-rooting
+    relocate_log_mount
+    return 1
+}
+
+# Main module function
+migrate_run() {
+    # Find the raw image in the rootfs partition
+    image=$(find "${ROOTFS_DIR}" -xdev -type f -name "${BALENA_IMAGE}")
+    if [ -n "${image}" ]; then
+        EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
+        FLASH_BOOT_DEVICE=$(get_dev_path_in_device_with_label "${internal_dev}" "flash-boot")
+        if [ -n "${FLASH_BOOT_DEVICE}" ]; then
+            FLASH_BOOT_MOUNT="/tmp/flash-boot"
+            mkdir -p "${FLASH_BOOT_MOUNT}"
+            mount "${FLASH_BOOT_DEVICE}" "${FLASH_BOOT_MOUNT}"
+
+            _image_size=$(wc -c "${image}" | awk '{print $1}')
+            _flash_boot_size=$(du -bs ${FLASH_BOOT_MOUNT} | awk '{print $1}')
+            _total_size=$(("$_image_size" + "$_flash_boot_size"))
+            memory_check "${_total_size}"
+        else
+            relocate_log_mount
+            fail "Flash boot partition not found in ${internal_dev}"
+        fi
+        # Copy the raw image to memory
+        cp "${image}" "/tmp"
+
+        # Copy the flasher boot partition into memory (contains configuration)
+        mkdir -p "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+        cp -r "${FLASH_BOOT_MOUNT}"/* "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/"
+
+        # Need to source this again to set CONFIG_PATH correctly
+        unset CONFIG_PATH
+        # shellcheck disable=SC1091
+        . /usr/sbin/balena-config-defaults
+
+        mkdir -p "$(dirname "${CONFIG_PATH}")"
+        _config_json_name=$(basename "${CONFIG_PATH}")
+        cp "${FLASH_BOOT_MOUNT}/${_config_json_name}" "${CONFIG_PATH}"
+
+        umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
+        sync "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+        # Unmount the rootfs as we are going to program over
+        umount "${ROOTFS_DIR}"
+        # Run flasher - should not return
+        /usr/bin/resin-init-flasher
+    else
+        relocate_log_mount
+        # If recovery mode, wait for adbd to exit
+        if [ -n "${ADBD_PID}" ]; then
+            # adbd is not a child process so cannot wait
+            while kill -0  "${ADBD_PID}" 2>/dev/null; do sleep 1; done
+        fi
+        fail "No ${BALENA_IMAGE} found in ${ROOTFS_DIR}"
+    fi
+}
