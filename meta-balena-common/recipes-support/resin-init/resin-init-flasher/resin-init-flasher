@@ -51,6 +51,8 @@ EFI=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 SECUREBOOT_ENABLED=0
 
+. /usr/libexec/os-helpers-fs
+
 function clean {
     echo "[resin-init-flasher] Cleanup."
     umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1 || true
@@ -258,9 +260,6 @@ if [ -d /sys/firmware/efi ]; then
     fi
 fi
 
-# Include FS helpers for repartitioning
-. /usr/libexec/os-helpers-fs
-
 if [ "$LUKS" = "1" ]; then
     # Include TPM2 helpers
     . /usr/libexec/os-helpers-tpm2
@@ -432,8 +431,13 @@ fi
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting internal device boot partition."
 
-if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
-    fail "Failed to mount disk labeled as 'resin-boot'."
+BOOT_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" resin-boot)
+if [ -n "${BOOT_MOUNT}" ]; then
+    if ! mount "${BOOT_MOUNT}"  "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"; then
+        fail "Failed to mount disk labeled as 'resin-boot'."
+    fi
+else
+    fail "Internal boot partition (resin-boot) not found in ${internal_dev}"
 fi
 
 if [ "$LUKS" = "1" ]; then
