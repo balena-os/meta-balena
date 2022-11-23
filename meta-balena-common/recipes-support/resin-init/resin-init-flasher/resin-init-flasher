@@ -385,7 +385,8 @@ fi
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting internal device boot partition."
 
-if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
+BOOT_MOUNT=$(blkid -L resin-boot "${internal_dev}")
+if ! mount "${BOOT_MOUNT:-"/dev/disk/by-label/resin-boot"}"  "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"; then
     fail "Failed to mount disk labeled as 'resin-boot'."
 fi
 
