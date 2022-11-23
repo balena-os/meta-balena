@@ -1,4 +1,58 @@
 - commits:
+    - subject: "tests: ssh-auth: rework local authentication with cloud keys to work
+        in testbots"
+      hash: f93065327126d39069e5d1d19a4c78b41e582b17
+      body: |
+        The tunnel to port 22222 used by testbots communicate between the core
+        container and the DUT does not allow to ssh as a non-root user.
+
+        Run ssh from the worker to test local SSH authentication with a cloud
+        user.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "ssh-auth: do not use a separate custom key"
+      hash: abf5936f0ada2d7af15c87a147e4416a403b3607
+      body: |
+        Given that testbot devices use a tunnel to specific ports to communicate
+        with the DUT that is established with the suite-generated keys, using
+        a different keypair for the ssh-auth test would require to tear down and
+        re-establish the tunnel.
+
+        It's easier to just use the existing key pair in the ssh-auth test.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: 'Revert "test: ssh-auth: fix test cases using custom keys"'
+      hash: b2450a9df2c1a773b807652bc37e6c92ccecef35
+      body: |
+        Using two set of keys, the one created by the suite to authenticate by
+        the proxy and a new custom key, is tricky as when running on testbot the
+        key is used to establish the tunnel between core and DUT.
+
+        Revert this change in preparation to removing the custom key and
+        modifying the tests to use a single key.
+
+        This reverts commit b24d92774a67cf0c0b83a29848bdcf6ed8a574db.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.7
+  title: ""
+  date: 2022-11-23T14:08:31.414Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.4.4
       hash: 6917f26494d1c68803508c8c5ff3d06e5fa0d99c
       body: Update balena-supervisor

@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.107.7
+## (2022-11-23)
+
+* tests: ssh-auth: rework local authentication with cloud keys to work in testbots [Alex Gonzalez]
+* ssh-auth: do not use a separate custom key [Alex Gonzalez]
+* Revert "test: ssh-auth: fix test cases using custom keys" [Alex Gonzalez]
+
 # v2.107.6
 ## (2022-11-22)
 
