@@ -150,15 +150,17 @@ fi
 STARTTIME=$(date +%s)
 ENDTIME="$STARTTIME"
 TIMEOUT=15
-while [ "$(systemctl is-active openvpn)" != "active" ]
-do
-    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1 && ENDTIME=$((ENDTIME + 1))
-    else
-        inform "Timeout while waiting for openvpn to come alive. No network?"
-        break
-    fi
-done
+if command -v "systemctl"; then
+    while [ "$(systemctl is-active openvpn)" != "active" ]
+    do
+        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+            sleep 1 && ENDTIME=$((ENDTIME + 1))
+        else
+            inform "Timeout while waiting for openvpn to come alive. No network?"
+            break
+        fi
+    done
+fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
@@ -468,15 +470,17 @@ fi
 STARTTIME=$(date +%s)
 ENDTIME="$STARTTIME"
 TIMEOUT=10
-while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
-do
-    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1 && ENDTIME=$((ENDTIME + 1))
-    else
-        inform "Timeout while waiting for register to finish. No network?"
-        break
-    fi
-done
+if command -v "systemctl"; then
+    while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
+    do
+        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+            sleep 1 && ENDTIME=$((ENDTIME + 1))
+        else
+            inform "Timeout while waiting for register to finish. No network?"
+            break
+        fi
+    done
+fi
 
 # Copy json configuration file from external (flasher) to the internal (booting) device
 cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
