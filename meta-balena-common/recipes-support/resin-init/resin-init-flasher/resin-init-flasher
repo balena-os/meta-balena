@@ -504,8 +504,15 @@ if [ "$LUKS" = "1" ]; then
 fi
 
 resin-device-progress --percentage 100 --state "Post-Provisioning" || true
+sync
 
 inform "Shutting down ..."
-shutdown -h now
+if command -v shutdown; then
+    shutdown -h now
+elif command -v poweroff; then
+    poweroff -f
+else
+    reboot -f
+fi
 
 exit 0
