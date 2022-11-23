@@ -14,6 +14,7 @@ SRC_URI:append = " \
     file://udevcleanup \
     file://recovery \
     file://provision \
+    file://migrate \
     "
 
 do_install:append() {
@@ -22,6 +23,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
+    install -m 0755 ${WORKDIR}/migrate ${D}/init.d/92-migrate
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
 
     install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
@@ -45,6 +47,7 @@ PACKAGES:append = " \
     initramfs-module-udevcleanup \
     initramfs-module-recovery \
     initramfs-module-provision \
+    initramfs-module-migrate \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -99,3 +102,10 @@ FILES:initramfs-module-recovery = "/init.d/99-recovery"
 SUMMARY:initramfs-module-provision = "Cloud provisioning"
 RDEPENDS:initramfs-module-provision = "${PN}-base"
 FILES:initramfs-module-provision = "/init.d/71-provision"
+
+SUMMARY:initramfs-module-migrate = "OS Migration"
+RDEPENDS:initramfs-module-migrate = " \
+    util-linux-findmnt \
+    resin-init-flasher \
+    "
+FILES:initramfs-module-migrate = "/init.d/92-migrate"

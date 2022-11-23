@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# Copyright 2022 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# OS migration
+#
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+# Enable module function
+migrate_enabled() {
+    # shellcheck disable=SC2154
+    if [ "$bootparam_recovery" = "true" ]; then
+        return 1
+    fi
+    # shellcheck disable=SC2154
+    if [ "$bootparam_flasher" = "true" ]; then
+        if [ -f "${ROOTFS_DIR}/flash-boot/balena-image-flasher" ]; then
+            # shellcheck disable=SC1090
+            . "${ROOTFS_DIR}/etc/resin-init-flasher.conf"
+
+            # Check that we are booting from the same disk we want to program
+            device=$(findmnt --noheadings --canonicalize --output SOURCE "${ROOTFS_DIR}" | xargs lsblk -no pkname)
+            if [ "${INTERNAL_DEVICE_KERNEL}" = "${device}" ]; then
+                # Find the raw image in the rootfs partition
+                image=$(find "${ROOTFS_DIR}" -name "${BALENA_IMAGE}")
+                if [ -n "${image}" ]; then
+                    IMAGE_FILE_SIZE=$(wc -c "${image}" | awk '{print $1}')
+                    # Check we have enough memory for the image
+                    sync
+                    echo 2 > /proc/sys/vm/drop_caches > /dev/null
+                    MEMFREE=$(awk '/MemFree/{free=$2} END{print (free*1024)}' /proc/meminfo)
+                    if [ "${MEMFREE}" -lt "${IMAGE_FILE_SIZE}" ]; then
+                        fail "Not enough memory to load image"
+                    fi
+                    cp "${image}" "/tmp"
+                    return 0
+                fi
+            fi
+        fi
+    fi
+    # Booting from external media - leave flashing after pivot-rooting 
+    return 1
+}
+
+# Main module function
+migrate_run() {
+    # Unmount the rootfs as we are going to program over
+    umount -l "${ROOTFS_DIR}"
+    /usr/bin/resin-init-flasher
+}
