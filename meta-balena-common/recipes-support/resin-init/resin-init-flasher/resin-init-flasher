@@ -45,7 +45,6 @@ INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
-CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 LUKS=0
 SECUREBOOT_SETUP=0
 
@@ -163,33 +162,7 @@ fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
-internal_dev=""
-for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
-    inform "Searching for devices matching pattern /dev/${device_pattern}"
-    # shellcheck disable=SC2046
-    ! IFS=$'\n' read -rd '' -a devices <<< \
-	    "$(ls $(eval echo "/dev/${device_pattern}") 2>/dev/null)"
-    for device in "${devices[@]}"; do
-        if [[ "/dev/${CURRENT_ROOT}" = "${device}" ]]; then
-            inform "${device} is our install media, skip it..."
-            continue
-        fi
-        if test -b "$(readlink -f "${device}")"; then
-            if ! [[ "${device_pattern}" = md/* ]]; then
-                if mdadm --examine "${device}" | grep -q Array; then
-                    inform "${device} is part of an existing RAID array" \
-			    "that wasn't specified by name, skip it..."
-                    continue
-                fi
-            fi
-
-            internal_dev="${device}"
-            break 2
-	else
-		inform "$device is not a block device, skipping"
-        fi
-    done
-done
+internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
 if [ -z "$internal_dev" ]; then
     resin-device-progress --percentage 100 --state "Failed to find any block devices." || true
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
