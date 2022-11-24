@@ -27,11 +27,11 @@ fi
 menuentry 'boot'{
 set balena_root=resin-rootA
 if [ ${bootcount} = 2 ] ; then
- if [ ${resin_root_part} = 2 ] ; then
+ if [ ${resin_root_part} = 3 ] ; then
   set balena_root=resin-rootB
  fi
 else
- if [ ${resin_root_part} = 3 ] ; then
+ if [ ${resin_root_part} = 4 ] ; then
   set balena_root=resin-rootB
  fi
 fi

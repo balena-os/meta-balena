@@ -308,7 +308,7 @@ if [ "$LUKS" = "1" ]; then
 
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
         LOOP_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" "$PART_NAME")
-        INTERNAL_PART_ID=$(get_part_number_by_label "$internal_dev" "$PART_NAME" partlabel)
+        INTERNAL_PART_ID=$(get_part_number_by_label "${internal_dev#/dev/}" "$PART_NAME" partlabel)
 
         PART_DEV="$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         inform "Encrypting $PART_DEV"

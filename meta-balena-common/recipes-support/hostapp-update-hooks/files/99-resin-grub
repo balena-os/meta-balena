@@ -25,7 +25,12 @@ else
 fi
 
 new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT -t ext4)
-blockdev=$(basename "$new_part")
+type=$(lsblk -no TYPE "${new_part}")
+if [ "${type}" = "crypt" ]; then
+    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].children[].name')
+else
+    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].name')
+fi
 new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 new_part_label=$(blkid "$new_part" | awk '{print $2}' | cut -d'"' -f 2)
 
@@ -58,8 +63,18 @@ else
     rm -rf "$BALENA_BOOT_MOUNTPOINT/grub" || true
 fi
 
-grub_cfg=$(find $BALENA_BOOT_MOUNTPOINT -name grub.cfg)
-grub_env=$(find $BALENA_BOOT_MOUNTPOINT -name grubenv)
+grub_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub.cfg)
+grub_luks_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub-luks.cfg)
+grub_env=$(find -L $BALENA_BOOT_MOUNTPOINT -name grubenv)
+
+if [ -n "$grub_luks_cfg" ]; then
+    if [ "$type" = "crypt" ]; then
+        "${MV}" "$grub_luks_cfg" "$grub_cfg"
+        "${MV}" "$grub_luks_cfg.sig" "$grub_cfg.sig"
+    else
+        rm -f "$grub_luks_cfg" "$grub_luks_cfg.sig"
+    fi
+fi
 
 tmpfile=$(mktemp)
 if  "${CAT}" "$grub_env" | grep -q upgrade_available; then
