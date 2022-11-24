@@ -1,4 +1,64 @@
 - commits:
+    - subject: "[WIP] Enable core dumps in development mode"
+      hash: 33cf126cbede07e3cc620e4d736467c1795ae6a4
+      body: ""
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+    - subject: Don't create core dumps in containers by default
+      hash: 546007b036c216974b0d5aad98ba8efe7217ab2a
+      body: |
+        Setting `LimitCORE=0` will avoid the creation of core dump files on
+        containers. This will avoid cases in which a crashlooping user app ends
+        up filling up the entire storage with dump files.
+
+        Users can re-enable core dumps in their services by manually setting the
+        `ulimits.core`. For example:
+
+        ```
+        services:
+          my-service:
+            ulimits:
+              core: -1
+        ```
+
+        (Where -1 is used to mean "unlimited")
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+    - subject: Make sure balenaEngine owns the container cgroups
+      hash: 289c1cffdd3ae8006cc3933310de4f2fc30b27b9
+      body: >
+        Setting `Delegate=yes` ensures that systemd will not change anything on
+
+        the cgroups created for running the containers.
+
+
+        This setting is used upstream since this commit:
+
+        https://github.com/moby/moby/commit/d16737f971092767c1b9d28302a3f5aedbe2f576
+
+
+        And also is recommended by systemd: https://systemd.io/CGROUP_DELEGATION/
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.107.8
+  title: ""
+  date: 2022-11-24T18:33:25.112Z
+- commits:
     - subject: "tests: ssh-auth: rework local authentication with cloud keys to work
         in testbots"
       hash: f93065327126d39069e5d1d19a4c78b41e582b17

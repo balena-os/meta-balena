@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.107.8
+## (2022-11-24)
+
+* [WIP] Enable core dumps in development mode [Leandro Motta Barros]
+* Don't create core dumps in containers by default [Leandro Motta Barros]
+* Make sure balenaEngine owns the container cgroups [Leandro Motta Barros]
+
 # v2.107.7
 ## (2022-11-23)
 
