@@ -1,4 +1,116 @@
 - commits:
+    - subject: "resin-init-flasher: Fix double /dev/ prefix when encrypting partitions"
+      hash: 96186d604c40d804226ddb20790797c67c4337b2
+      body: >
+        get_part_number_by_label expects the block device name without the /dev/
+
+        prefix, flasher uses this correctly in all but one place, this patch fixes it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "grub-conf: fix partition indexes in LUKS config"
+      hash: 9268f5309703c10e4320dc27a8230950503b821a
+      body: |
+        On most device types rootA and rootB are partitions 2 and 3
+        but with LUKS encryption and boot/EFI split they are shifted to 3 and 4
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "os-helpers-fs: add dependency on parted"
+      hash: b11e98742cee3acf8cbe9f06440758732ff76948
+      body: |
+        This is necessary for get_part_table_type
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "hostapp-update-hooks: use stage2 bootloader GRUB config when using LUKS"
+      hash: bd97f35a3a0f50652b3ac1e26849e25b8330292e
+      body: |
+        We are using two variants of GRUB configs - one for LUKS-encrypted OS
+        and the other one for the rest. HUP needs to acknowledge this and use
+        the correct one based on the system being updated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-rollback: Fix partition index detection for luks devices"
+      hash: b73c9657d041b9e70ab2c905dd4e52f6e45853fd
+      body: |
+        This is the same as we do for hostapp-update-hooks
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-rollback: Find following symbolic links"
+      hash: 27efb90747605d0ca8e853d65b08f95bc726a32e
+      body: |
+        On full disk encrypted devices the EFI partition is a soft link in the
+        boot partition. This commit fixes detecting files in the EFI partition
+        from the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Find following symlinks"
+      hash: f29fd0e4bb5fdcf84055636c0888048343d15c97
+      body: |
+        On full disk encrypted devices the EFI partition is a soft link in the
+        boot partition. This commit fixes detecting files in the EFI partition
+        from the boot partition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Fix partition index detection for luks devices"
+      hash: 58b959b7a587d705ef9123a98c21b3c6585b145d
+      body: >
+        When using LUKS encryption, the output of lsblk is:
+
+            sda                                             8:0    0    8G  0 disk
+          |-sda1                                          8:1    0   40M  0 part  /mnt/boot/EFI
+          |-sda2                                          8:2    0   42M  0 part
+          | `-luks-a91cd125-9e4c-45e6-b3f4-1e9b4ec9e5b9 250:0    0   40M  0 crypt /mnt/boot
+
+        This commit allows extracting the physical device (sdaN) whic is needed
+
+        to extract the partition index using sysfs both for luks or standard
+
+        devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.9
+  title: ""
+  date: 2022-11-24T15:12:42.613Z
+- commits:
     - subject: Update tests/leviathan digest to bdf8eb2
       hash: 443fd7c7a87d8d43f2f42b697ae975d9ebce5484
       body: Update tests/leviathan
