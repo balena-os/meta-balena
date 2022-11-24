@@ -1,6 +1,25 @@
 Change log
 -----------
 
+# v2.107.8
+## (2022-11-24)
+
+
+<details>
+<summary> Update tests/leviathan digest to bdf8eb2 [renovate[bot]] </summary>
+
+> ## leviathan-2.10.2
+> ### (2022-11-23)
+> 
+> * add high level architecture overview [rcooke-warwick]
+> 
+> ## leviathan-2.10.1
+> ### (2022-11-23)
+> 
+> * Add conditions for Apple Silicon workstations [Kyle Harding]
+> 
+</details>
+
 # v2.107.7
 ## (2022-11-23)
 

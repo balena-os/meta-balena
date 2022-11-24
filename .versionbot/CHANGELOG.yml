@@ -1,4 +1,45 @@
 - commits:
+    - subject: Update tests/leviathan digest to bdf8eb2
+      hash: 443fd7c7a87d8d43f2f42b697ae975d9ebce5484
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: add high level architecture overview
+              hash: 49fcd08d9b7d8af9a3b1f33c6d758906bf4b63ec
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.10.2
+          title: ""
+          date: 2022-11-23T15:38:40.661Z
+        - commits:
+            - subject: Add conditions for Apple Silicon workstations
+              hash: ff3d9fee035d2aa7a7c04e47dfbddb638c564878
+              body: |
+                Convert Darwin to lowercase and arm64 -> aarch64 as needed.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.10.1
+          title: ""
+          date: 2022-11-23T12:09:17.356Z
+  version: 2.107.8
+  title: ""
+  date: 2022-11-24T00:10:11.885Z
+- commits:
     - subject: "tests: ssh-auth: rework local authentication with cloud keys to work
         in testbots"
       hash: f93065327126d39069e5d1d19a4c78b41e582b17
