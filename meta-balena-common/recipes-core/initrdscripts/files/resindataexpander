@@ -4,20 +4,6 @@
 . /usr/libexec/os-helpers-fs
 
 FREESPACE_LIMIT=10
-datapart=$(get_state_path_from_label "resin-data")
-dataparttype=$(lsblk "${datapart}" -nlo type)
-datapartdev=$(basename $(readlink -f "${datapart}"))
-if [ "${dataparttype}" = "crypt" ]; then
-    if [ "$(ls /sys/class/block/${datapartdev}/slaves | wc -l)" != "1" ]; then
-        # This is just a disaster circuit breaker, it should never happen
-        fail "Unable to determine parent partition for ${datapartdev}"
-    fi
-
-    # We have asserted that there is a single slave device
-    datapartdev=$(ls "/sys/class/block/${datapartdev}/slaves")
-fi
-datadev=$(lsblk "/dev/${datapartdev}" -d -n -o PKNAME)
-pttype=$(get_part_table_type "/dev/${datadev}")
 
 resindataexpander_enabled() {
     # On flasher avoid expanding partition
@@ -26,6 +12,21 @@ resindataexpander_enabled() {
         info "Flasher detected. Avoiding expand partition mechanism."
         return 1
     fi
+
+    datapart=$(get_state_path_from_label "resin-data")
+    dataparttype=$(lsblk "${datapart}" -nlo type)
+    datapartdev=$(basename $(readlink -f "${datapart}"))
+    if [ "${dataparttype}" = "crypt" ]; then
+        if [ "$(ls /sys/class/block/${datapartdev}/slaves | wc -l)" != "1" ]; then
+            # This is just a disaster circuit breaker, it should never happen
+            fail "Unable to determine parent partition for ${datapartdev}"
+        fi
+
+        # We have asserted that there is a single slave device
+        datapartdev=$(ls "/sys/class/block/${datapartdev}/slaves")
+    fi
+    datadev=$(lsblk "/dev/${datapartdev}" -d -n -o PKNAME)
+    pttype=$(get_part_table_type "/dev/${datadev}")
 
     if ! wait4file "$datapart" "300"; then
 	    error "Timeout while waiting for data partition to be detected. Data partition expansion will not be tried."
