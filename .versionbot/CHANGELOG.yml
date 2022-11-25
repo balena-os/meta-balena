@@ -1,4 +1,22 @@
 - commits:
+    - subject: "balena-image.bb: Include bits for LUKS when FDE is enabled"
+      hash: 57670e3d2538729cb17c882edf75bc523cd72bef
+      body: >
+        We want meta-balena to pull in these packages automatically when FDE is
+        enabled
+
+        rather than relying on device types to have them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.107.10
+  title: ""
+  date: 2022-11-25T09:31:14.957Z
+- commits:
     - subject: "resin-init-flasher: Fix double /dev/ prefix when encrypting partitions"
       hash: 96186d604c40d804226ddb20790797c67c4337b2
       body: >

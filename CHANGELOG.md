@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.10
+## (2022-11-25)
+
+* balena-image.bb: Include bits for LUKS when FDE is enabled [Michal Toman]
+
 # v2.107.9
 ## (2022-11-24)
 
