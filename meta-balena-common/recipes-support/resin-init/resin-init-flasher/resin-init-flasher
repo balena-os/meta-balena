@@ -127,6 +127,12 @@ if [ ! -f "${BALENA_IMAGE}" ]; then
     fail "Raw image ${BALENA_IMAGE}  not found in rootfs"
 fi
 EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT="/mnt/boot"
+# If no flash-boot partition is mounted mount it
+if ! findmnt -n -o TARGET -l | grep -e "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"; then
+    mkdir -p "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+    boot_device=$(lsblk -nlo name,label "${LOOP_DEVICE}" | grep "flash-boot" | cut -d ' ' -f1)
+    mount "/dev/${boot_device}" "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+fi
 
 # Balena configuration file
 if [ -f /usr/sbin/balena-config-vars ]; then
@@ -356,7 +362,6 @@ sync
 partprobe "$internal_dev"
 udevadm trigger
 udevadm settle
-
 
 # Flash bootloader(s)
 if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
