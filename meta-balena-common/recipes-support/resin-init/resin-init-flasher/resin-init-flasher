@@ -40,7 +40,6 @@ set -e
 
 # Very long variables :)
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
-INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
