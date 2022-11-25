@@ -5,23 +5,16 @@ Test the transition between balenaOS releases via the `hostapp-update` mechanism
 
 ## setup
 
-1. Run a registry on the testbot
-2. Push the "os-under-test" to the registry
-3. Run tests, repeating the following:
-	1. Flash the DUT with the latest balenaOS release (`balena os download --version latest ...`)
-	2. _do test case specific stuff before running hup script_
-	3. Run `hostapp-update -i <testbot>:5000/hostapp`
-	4. _do test case specific stuff before reboot_
-	5. Wait for the DUT to come back online
-	6. _do test case specific stuff after reboot_
+1. Download the latest production release of balenaOS for the device type of the DUT
+2. set up the test networking environment
+3. configure the downloaded OS image
+4. provision the DUT with this image
+5. power on the DUT with this image
+6. send the hostapp file to the DUT
+7. trigger a HUP on the DUT, to this new hostapp
 
-# current tests
 
-* [smoke test](./tests/smoke.js): check if we can HUP successfully
+## Current tests
 
-## TODO
-
-* [self-serve-dashboard](./tests/self-serve-dashboard.js)
-* [rollback-altboot](./tests/rollback-altboot.js)
-* [rollback-health](./tests/rollback-health.js)
-* [storage migration](./tests/storagemigration.js)
+- `rollbacks`: tests `rollback-health`, `rollback-altboot`, functionality works as expected. Docs about this framework are [here](https://www.balena.io/docs/reference/OS/updates/rollbacks/)
+- `smoke`: tests that the latest production OS release can successfully HUP to the new OS without any rollbacks occuring
