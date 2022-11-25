@@ -37,6 +37,9 @@ IMAGE_INSTALL = " \
     packagegroup-resin \
     "
 
+# add packages for LUKS operations if necessary
+IMAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup lvm2-udevrules tpm2-tools libtss2-tcti-device',d)}"
+
 generate_rootfs_fingerprints () {
     # Generate fingerprints file for root filesystem
     # We exclude some entries that are bind mounted to state partition
@@ -66,6 +69,9 @@ BALENA_BOOT_PARTITION_FILES:append = " \
 
 # add the secure boot keys if needed
 BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','','balena-keys:/balena-keys/',d)}"
+
+# add the LUKS variant of GRUB config if needed
+BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','',' grub.cfg_internal_luks:/EFI/BOOT/grub-luks.cfg',d)}"
 
 # add the generated <machine-name>.json to the resin-boot partition, renamed as device-type.json
 BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
