@@ -84,4 +84,9 @@ do_install() {
     if [ "x${SIGN_API}" != "x" ]; then
         echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     fi
+    # Configuration data
+    echo "BALENA_SPLASH_CONFIG=splash" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "BALENA_NM_CONFIG=system-connections" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "BALENA_PROXY_CONFIG=system-proxy" >> ${D}/${sysconfdir}/resin-init-flasher.conf
 }
