@@ -116,9 +116,19 @@ PACKAGECONFIG[dhcpcd] = "-Ddhcpcd=yes,-Ddhcpcd=no,,dhcpcd"
 PACKAGECONFIG[dhclient] = "-Ddhclient=yes,-Ddhclient=no,,dhcp"
 PACKAGECONFIG[concheck] = "-Dconcheck=true,-Dconcheck=false"
 
-PACKAGES =+ "libnmutil libnmglib libnmglib-vpn \
-  ${PN}-nmtui ${PN}-nmtui-doc \
-  ${PN}-adsl \
+PACKAGES =+ " \
+    libnm \
+    ${PN}-adsl \
+    ${PN}-bluetooth \
+    ${PN}-cloud-setup \
+    ${PN}-nmcli \
+    ${PN}-nmcli-bash-completion \
+    ${PN}-nmtui \
+    ${PN}-wifi \
+    ${PN}-wwan \
+    ${PN}-ovs \
+    ${PN}-ppp \
+    ${PN}-daemon \
 "
 
 FILES:libnmutil += "${libdir}/libnm-util.so.*"
@@ -146,6 +156,15 @@ RRECOMMENDS:${PN} += "iptables \
     ${@bb.utils.filter('PACKAGECONFIG', 'dnsmasq', d)} \
 "
 RCONFLICTS:${PN} = "connman"
+
+
+SUMMARY:${PN}-ppp = "PPP plugin for NetworkManager"
+FILES:${PN}-ppp = "\
+    ${NETWORKMANAGER_PLUGINDIR}/libnm-ppp-plugin.so \
+    ${libdir}/pppd/*/nm-pppd-plugin.so \
+"
+RDEPENDS:${PN}-ppp += "${PN}-daemon ${@bb.utils.contains('PACKAGECONFIG','ppp','ppp','',d)}"
+
 
 FILES:${PN}-dev += " \
     ${datadir}/NetworkManager/gdb-cmd \
