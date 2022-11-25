@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.11
+## (2022-11-25)
+
+* add os testing docs [rcooke-warwick]
+
 # v2.107.10
 ## (2022-11-25)
 

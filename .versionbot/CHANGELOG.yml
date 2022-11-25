@@ -1,4 +1,18 @@
 - commits:
+    - subject: add os testing docs
+      hash: f3f16f956cd2c0dad6cf9ae2c07d295a41f22999
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.11
+  title: ""
+  date: 2022-11-25T20:17:32.926Z
+- commits:
     - subject: "balena-image.bb: Include bits for LUKS when FDE is enabled"
       hash: 57670e3d2538729cb17c882edf75bc523cd72bef
       body: >
