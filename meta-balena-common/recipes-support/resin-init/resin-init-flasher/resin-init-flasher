@@ -41,8 +41,6 @@ set -e
 # Very long variables :)
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
-SPLASH_DIRNAME=splash
-BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 LUKS=0
 EFI=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
@@ -447,23 +445,23 @@ if [ "$LUKS" = "1" ]; then
 fi
 
 # Copy custom splash dir
-mkdir -p "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME"
-cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME/* $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
+mkdir -p "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$BALENA_SPLASH_CONFIG"
+cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$BALENA_SPLASH_CONFIG/* $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$BALENA_SPLASH_CONFIG
 # Copy Network Manager connection files
-CONFIG_NM="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/system-connections/"
-if [ -d "$CONFIG_NM" ]; then
+_nm_config="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_NM_CONFIG}"
+if [ -d "${_nm_config}" ]; then
     inform "Transferring system connections on the internal device."
-    rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-connections/"
-    cp -rvf "$CONFIG_NM" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
+    rm -rf "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_NM_CONFIG}/"
+    cp -rvf "${_nm_config}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
 else
     inform "No system connections found to transfer on the internal device."
 fi
 # Copy proxy configuration files
-CONFIG_PROXY="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/system-proxy/"
-if [ -d "$CONFIG_PROXY" ]; then
+_proxy_config="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_PROXY_CONFIG}"
+if [ -d "${_proxy_config}" ]; then
     inform "Transferring proxy configuration on the internal device."
-    rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-proxy/"
-    cp -rvf "$CONFIG_PROXY" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
+    rm -rf "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_PROXY_CONFIG}"
+    cp -rvf "${_proxy_config}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
 else
     inform "No proxy configuration found to transfer on the internal device."
 fi
