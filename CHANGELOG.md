@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.107.12
+## (2022-11-28)
+
+* resin-extra-udev-rules: Remove after all device types have been updated [Alex Gonzalez]
+* extra-udev-rules: Update teensy.rules [Alex Gonzalez]
+* extra-udev-rules: Rename recipe [Alex Gonzalez]
+
 # v2.107.11
 ## (2022-11-25)
 
