@@ -23,7 +23,6 @@ RDEPENDS:${PN}:append = " \
 FILES:${PN}:append = " ${sysconfdir}/*"
 
 EXTRA_OEMESON += " \
-    -Dpolkit=false \
     -Dresolvconf=/sbin/resolvconf \
     -Dovs=false \
     "
