@@ -1,6 +1,25 @@
 Change log
 -----------
 
+# v2.107.12
+## (2022-11-28)
+
+
+<details>
+<summary> Update tests/leviathan digest to 61016ad [renovate[bot]] </summary>
+
+> ## leviathan-2.10.4
+> ### (2022-11-25)
+> 
+> * bump contracts to 2.0.27 [rcooke-warwick]
+> 
+> ## leviathan-2.10.3
+> ### (2022-11-24)
+> 
+> * On Apple Silicon we should install balena CLI via npm [Kyle Harding]
+> 
+</details>
+
 # v2.107.11
 ## (2022-11-25)
 
