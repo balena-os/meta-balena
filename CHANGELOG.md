@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.13
+## (2022-11-29)
+
+* balena-image-flasher: Include LUKS variant of GRUB config with FDE in place [Michal Toman]
+
 # v2.107.12
 ## (2022-11-28)
 

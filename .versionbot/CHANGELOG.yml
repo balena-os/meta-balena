@@ -1,4 +1,24 @@
 - commits:
+    - subject: "balena-image-flasher: Include LUKS variant of GRUB config with FDE in
+        place"
+      hash: 87b65de7f8506b0a7796d007145a230228b5ae06
+      body: >
+        There are two GRUB config variants - one for regular devices and one
+
+        for devices with FDE enabled. This commit makes flasher include the latter
+
+        in the boot partition when secure boot and FDE is included in the image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.107.13
+  title: ""
+  date: 2022-11-29T13:54:47.975Z
+- commits:
     - subject: Update tests/leviathan digest to 61016ad
       hash: a40308833e556d9d5c0a8db88ca17c6376e6caab
       body: Update tests/leviathan
