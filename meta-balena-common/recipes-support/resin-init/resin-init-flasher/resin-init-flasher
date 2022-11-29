@@ -71,7 +71,7 @@ function dd_with_progress {
     OFFSET=$3
     TOTAL_SIZE=$4
 
-    dd "if=$SRC" "of=$DEST" bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
+    dd "if=$SRC" "of=$DEST" conv=sparse bs=4M 2> /tmp/dd_progress_log & DD_PID=$!
 
     if ! kill -0 $DD_PID; then
         # dd might have been too fast, let's check exit status if it is no longer running
