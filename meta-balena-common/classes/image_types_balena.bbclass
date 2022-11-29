@@ -70,11 +70,13 @@ python() {
     if d.getVar('IMGDEPLOYDIR', True):
         d.setVar('BALENA_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${BALENA_ROOT_FSTYPE}')
         d.setVar('BALENA_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.balenaos-img')
+        d.setVar('BALENA_RAW_BMAP', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.bmap')
         d.setVar('BALENA_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
         d.setVar('BALENA_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.${BALENA_ROOT_FSTYPE}')
     else:
         d.setVar('BALENA_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${BALENA_ROOT_FSTYPE}')
         d.setVar('BALENA_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.balenaos-img')
+        d.setVar('BALENA_RAW_BMAP', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.bmap')
         d.setVar('BALENA_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
         d.setVar('BALENA_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${BALENA_ROOT_FSTYPE}')
 
@@ -134,6 +136,7 @@ do_image_balenaos_img[depends] = " \
     e2fsprogs-native:do_populate_sysroot \
     mtools-native:do_populate_sysroot \
     parted-native:do_populate_sysroot \
+    bmap-tools-native:do_populate_sysroot \
     virtual/kernel:do_deploy \
     ${BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
@@ -357,6 +360,9 @@ IMAGE_CMD:balenaos-img () {
             dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
         fi
     fi
+
+    # create bmap to enable recreating sparse image after full allocation
+    bmaptool create ${BALENA_RAW_IMG} > ${BALENA_RAW_BMAP}
 
     # Optionally apply compression
     case "${BALENA_RAW_IMG_COMPRESSION}" in
