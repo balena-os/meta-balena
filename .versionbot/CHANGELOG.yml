@@ -1,4 +1,58 @@
 - commits:
+    - subject: "contributing-device-support: replace resin-init with balena-init"
+      hash: 09a193bfac68f8ce4dc23a4ed00fb4300a6c97b8
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-init: replace resin-init with balena-init"
+      hash: 296386d55633fc0426bff79db035a336b4b69440
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-init-flasher: replace resin-init with balena-init"
+      hash: 1a19dbe2730cd27b57767d1fc0f7b9614c8ebc69
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-init-board: replace resin-init with balena-init"
+      hash: 3e61a1652f79c01592688e99edf35a5317b45b6e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "packagegroups: replace resin-init with balena-init"
+      hash: 9c447c886b1c9c1ca9daabdba0eb0dd2a5aa68f5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.0
+  title: ""
+  date: 2022-11-30T13:48:00.535Z
+- commits:
     - subject: "test: os: fix search for active interface"
       hash: 45c5fd9850e5cdcf5360d6910b3fde253b9629a9
       body: ""

@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.108.0
+## (2022-11-30)
+
+* contributing-device-support: replace resin-init with balena-init [Alex Gonzalez]
+* balena-init: replace resin-init with balena-init [Alex Gonzalez]
+* balena-init-flasher: replace resin-init with balena-init [Alex Gonzalez]
+* balena-init-board: replace resin-init with balena-init [Alex Gonzalez]
+* packagegroups: replace resin-init with balena-init [Alex Gonzalez]
+
 # v2.107.14
 ## (2022-11-30)
 
