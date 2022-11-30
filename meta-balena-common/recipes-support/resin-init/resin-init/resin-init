@@ -1,7 +1,0 @@
-#!/bin/bash
-set -e
-
-echo "Board specific initialization..."
-/usr/bin/resin-init-board
-
-exit 0
