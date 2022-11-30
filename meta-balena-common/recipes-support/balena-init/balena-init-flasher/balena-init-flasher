@@ -3,9 +3,9 @@
 # Script which burns an image from an external device to an internal device
 # Assumptions:
 #   * image is in boot partition of external device
-#   * all needed variables are configured in resin-init-flasher.conf
+#   * all needed variables are configured in balena-init-flasher.conf
 #   * filesystems labeling scheme is persistent (flasher-*/resin-*)
-# Variables in resin-init-flasher.conf
+# Variables in balena-init-flasher.conf
 #  INTERNAL_DEVICE_KERNEL                 - internal device (enumerated by kernel) to be flashed
 #                                             * it's impossible to known what dev to flash because
 #                                               we don't have any labels before flashing something
@@ -42,7 +42,7 @@ set -e
 EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/mnt/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
-FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
+FLASHER_CONF_FILE=/etc/balena-init-flasher.conf
 SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
@@ -52,19 +52,19 @@ EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 SECUREBOOT_ENABLED=0
 
 function clean {
-    echo "[resin-init-flasher] Cleanup."
+    echo "[balena-init-flasher] Cleanup."
     umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT > /dev/null 2>&1 || true
     umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1 || true
 }
 
 function fail {
-    echo "[resin-init-flasher] ERROR: $1"
+    echo "[balena-init-flasher] ERROR: $1"
     clean
     exit 1
 }
 
 function inform {
-    echo "[resin-init-flasher] INFO: $1"
+    echo "[balena-init-flasher] INFO: $1"
 }
 
 function dd_with_progress {
@@ -113,15 +113,15 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 inform "Board specific initialization..."
-/usr/bin/resin-init-board
+/usr/bin/balena-init-board
 
 # Configuration file
 if [ -f $FLASHER_CONF_FILE ]; then
     source $FLASHER_CONF_FILE
 else
-    fail "No configuration for resin-init-flasher."
+    fail "No configuration for balena-init-flasher."
 fi
-inform "resin-init-flasher configuration found."
+inform "balena-init-flasher configuration found."
 
 # Balena configuration file
 if [ -f /usr/sbin/balena-config-vars ]; then
@@ -523,7 +523,7 @@ umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 sync
 
 inform "Board specific flash procedure..."
-/usr/bin/resin-init-flasher-board
+/usr/bin/balena-init-flasher-board
 
 EFIPART_LABEL="resin-boot"
 LOADER_PATH="/EFI/BOOT/bootx64.efi"
