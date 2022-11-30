@@ -133,11 +133,11 @@ The `balena-image-flasher.bbappend` file shall define the following variable(s):
 
 Shall contain a `.bbappend` to the kernel recipe used by the respective board. This kernel `.bbappend` must "inherit kernel-balena" in order to add the necessary kernel configs for balenaOS
 
-### `recipes-support/resin-init` directory
+### `recipes-support/balena-init` directory
 
-Shall contain a `resin-init-flasher.bbappend` file if you intend to install balenaOS to internal storage and hence use the flasher image.
+Shall contain a `balena-init-flasher.bbappend` file if you intend to install balenaOS to internal storage and hence use the flasher image.
 
-`resin-init-flasher.bbappend` should define the following variables:
+`balena-init-flasher.bbappend` should define the following variables:
 
 - `INTERNAL_DEVICE_KERNEL_<yocto-machine-name>`: used to identify the internal storage where balenaOS will be written to.
 
@@ -212,8 +212,8 @@ The directory structure then looks similar to this:
         ├── files
         │   └── <bootloader update hook>
         └──  hostapp-update-hooks.bbappend
-    └── resin-init
-        └── resin-init-flasher.bbappend
+    └── balena-init
+        └── balena-init-flasher.bbappend
 ```
 
 ### Building
