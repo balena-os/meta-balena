@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+echo "Board specific initialization..."
+if [ -f /usr/bin/balena-init-board ]; then
+	/usr/bin/balena-init-board
+elif [ -f /usr/bin/resin-init-board ]; then
+	/usr/bin/resin-init-board
+fi
+
+exit 0
