@@ -5,7 +5,7 @@ PR = "r1"
 
 inherit packagegroup
 
-BALENA_INIT_PACKAGE ?= "resin-init-flasher"
+BALENA_INIT_PACKAGE ?= "balena-init-flasher"
 BALENA_MOUNTS ?= "resin-mounts-flasher"
 BALENA_REGISTER ?= "resin-device-register"
 
