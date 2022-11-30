@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.14
+## (2022-11-30)
+
+* test: os: fix search for active interface [rcooke-warwick]
+
 # v2.107.13
 ## (2022-11-29)
 

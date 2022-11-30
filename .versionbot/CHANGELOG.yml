@@ -1,4 +1,18 @@
 - commits:
+    - subject: "test: os: fix search for active interface"
+      hash: 45c5fd9850e5cdcf5360d6910b3fde253b9629a9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.14
+  title: ""
+  date: 2022-11-30T09:07:27.223Z
+- commits:
     - subject: "balena-image-flasher: Include LUKS variant of GRUB config with FDE in
         place"
       hash: 87b65de7f8506b0a7796d007145a230228b5ae06
