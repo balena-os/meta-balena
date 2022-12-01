@@ -1,4 +1,18 @@
 - commits:
+    - subject: Updated CBS Docs Updated link to the CDS Product Repo
+      hash: 8513275e98d0fec277c0b4dd98acc20fa90812f7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+        signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+      author: Ryan H
+      nested: []
+  version: 2.107.15
+  title: ""
+  date: 2022-12-01T16:39:52.944Z
+- commits:
     - subject: "test: os: fix search for active interface"
       hash: 45c5fd9850e5cdcf5360d6910b3fde253b9629a9
       body: ""

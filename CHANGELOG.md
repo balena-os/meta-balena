@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.15
+## (2022-12-01)
+
+* Updated CBS Docs Updated link to the CDS Product Repo [Ryan H]
+
 # v2.107.14
 ## (2022-11-30)
 
