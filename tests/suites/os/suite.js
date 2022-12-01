@@ -288,6 +288,8 @@ module.exports = {
 				// If the outer image doesn't contain an image for installation, ignore the error
 				if (e.code === 'ENOENT') {
 					console.log('Not a flasher image, skipping unwrap');
+				} else if (e.message.includes('Unsupported filesystem')) {
+					console.log('Root filesystem is not supported, skipping unwrap');
 				} else {
 					throw e;
 				}
