@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.16
+## (2022-12-01)
+
+* Refactor and clean up the purge data tests [Kyle Harding]
+
 # v2.107.15
 ## (2022-12-01)
 

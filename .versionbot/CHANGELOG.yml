@@ -1,4 +1,21 @@
 - commits:
+    - subject: Refactor and clean up the purge data tests
+      hash: 65b0e02ec72ab1b68448f9546e5e5c570b1fe01a
+      body: |
+        Clean up some duplicated code and avoid test comments
+        that to not write to logs when called but instead await
+        the next test command.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.107.16
+  title: ""
+  date: 2022-12-01T23:40:57.700Z
+- commits:
     - subject: Updated CBS Docs Updated link to the CDS Product Repo
       hash: 8513275e98d0fec277c0b4dd98acc20fa90812f7
       body: ""
