@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.107.16
+## (2022-12-01)
+
+* tests: os: fsck: only check ext4 filesystems [Joseph Kogut]
+* tests: os: disable unwrap when unsupported [Joseph Kogut]
+* image-balena: disable space check for btrfs [Joseph Kogut]
+* kernel-balena: enable BTRFS support when present in DISTRO_FEATURES [Joseph Kogut]
+* kernel-balena: add config for BTRFS support [Joseph Kogut]
+* grub: enable BTRFS support when enabled in DISTRO_FEATURES [Joseph Kogut]
+* u-boot: enable BTRFS support when enabled in DISTRO_FEATURES [Joseph Kogut]
+* conf: add rootfs type to DISTRO_FEATURES [Joseph Kogut]
+* common: btrfs-tools: disable unneeded packages [Joseph Kogut]
+* copy btrfs-tools from kirkstone [Joseph Kogut]
+
 # v2.107.15
 ## (2022-12-01)
 

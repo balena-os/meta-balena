@@ -1,4 +1,131 @@
 - commits:
+    - subject: "tests: os: fsck: only check ext4 filesystems"
+      hash: 4b2d394bddd9066e8db232eabb6036b6b3bd1917
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: os: disable unwrap when unsupported"
+      hash: b4fca43437ca60f88b8d7cbb92e214fea3ab1095
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "image-balena: disable space check for btrfs"
+      hash: 1309e3b015ca36f60ff59aabd1d7427926336886
+      body: |
+        With filesystem level compression such as used by btrfs, it's not
+        possible to assess at build time if the hostapp content will fit in the
+        inactive partition, as the compression ratio isn't known until it's
+        written to disk.
+
+        Disable this check to allow images to be built anyway.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "kernel-balena: enable BTRFS support when present in DISTRO_FEATURES"
+      hash: 477b03f1f99e550e5de6d96247710e0c8e91212c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "kernel-balena: add config for BTRFS support"
+      hash: 637f9fd3136e352f02c66a05684c1a7494818fa9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "grub: enable BTRFS support when enabled in DISTRO_FEATURES"
+      hash: 8b965e5a597bc74c2e088d70638ad7ac1d995bb0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "u-boot: enable BTRFS support when enabled in DISTRO_FEATURES"
+      hash: c2588c77b80f44136c88e15abd5b63fa0c9ce9a1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "conf: add rootfs type to DISTRO_FEATURES"
+      hash: 5db842e1887fe5e9ddf13501d5e7bc4a566f088e
+      body: |
+        Split BALENA_ROOT_FSTYPE and add the filesystem to DISTRO_FEATURES in
+        order for other packages to enable support when required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: btrfs-tools: disable unneeded packages"
+      hash: ff6b747cc3208e559140a1e2357d272620c9b777
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: copy btrfs-tools from kirkstone
+      hash: bb1fd098bb37069dc8e13c687fb6230f0fefb399
+      body: >
+        Yocto parses the original recipe before the bbappend is applied, which
+
+        results in the recipe still inheriting from distutils3-base if the
+
+        python package is removed in an append. See the mailing list thread [0]
+
+        for details.
+
+
+        Instead, copy the recipe into our layer unmodified so we can remove
+
+        unneeded packages. This keeps the initramfs from blowing up in size.
+
+
+        [0] https://lore.kernel.org/all/aebe57d858d895a9266a9a25e90b60c8a34dd9e3.camel@redrectangle.org/T/
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.107.16
+  title: ""
+  date: 2022-12-01T17:32:32.564Z
+- commits:
     - subject: Updated CBS Docs Updated link to the CDS Product Repo
       hash: 8513275e98d0fec277c0b4dd98acc20fa90812f7
       body: ""
