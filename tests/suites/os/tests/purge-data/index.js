@@ -13,243 +13,95 @@
  */
 
 'use strict';
-const request = require('request-promise');
-
-async function waitUntilSupervisorActive(test, context){
-	const ip = await context.worker.ip(context.link);
-
-	await context.utils.waitUntil(async () => {
-		test.comment(`Waiting for DUT supervisor to be reachable on port 48484...`)
-		return (
-			(await request({
-				method: 'GET',
-				uri: `http://${ip}:48484/ping`,
-			})) === 'OK'
-		);
-	}, false, 2 * 60 * 4, 250);
-}
 
 module.exports = {
 	title: 'Reset tests',
 	tests: [
 		{
 			title: 'state partition reset',
-			run: async function(test) {
+			run: async function (test) {
 				const testFile = '/mnt/state/root-overlay/reset-check';
 				const resetFile = '/mnt/state/remove_me_to_reset';
-
-				test.comment(`Writing test file to state partition...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`touch ${testFile}`,
-						this.link,
-					);
-
-				test.comment(`Clearing reset flag from state partition...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`rm ${resetFile}`,
-						this.link,
-					);
-
-				// reboot
-				await this.worker.rebootDut(this.link);
-
-				test.comment(`Waiting for supervisor service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-supervisor.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`test -f ${testFile} ; echo $?`,
-							this.link,
-						),
-					'1',
-					`Test file should be cleared from state partition.`,
-				);
+				await runResetTest(this, test, testFile, resetFile);
 			},
 		},
 		{
 			title: 'data partition reset',
-			run: async function(test) {
+			run: async function (test) {
 				const testFile = '/mnt/data/resin-data/reset-check';
 				const resetFile = '/mnt/data/remove_me_to_reset';
-
-				test.comment(`Waiting for engine service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				test.comment(`Waiting for supervisor service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-supervisor.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
-							this.link,
-						),
-					'0',
-					'Engine healthcheck should pass.',
-				);
-
-				test.comment(`Writing test file to data partition...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`touch ${testFile}`,
-						this.link,
-					);
-
-				test.comment(`Clearing reset flag from data partition...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`rm ${resetFile}`,
-						this.link,
-					);
-
-				// reboot
-				await this.worker.rebootDut(this.link);
-
-				test.comment(`Waiting for engine service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				test.comment(`Waiting for supervisor service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-supervisor.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				await waitUntilSupervisorActive(test, this.context.get());
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
-							this.link,
-						),
-					'0',
-					'Engine healthcheck should pass.',
-				);
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`test -f ${testFile} ; echo $?`,
-							this.link,
-						),
-					'1',
-					`Test file should be cleared from data partition.`,
-				);
-			},
-		},
-		{
-			title: 'prune all images',
-			run: async function(test) {
-				test.comment(`Waiting for engine service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				test.comment(`Waiting for supervisor service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-supervisor.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				test.comment(`Pruning all container images...`);
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`balena image prune --all --force`,
-						this.link,
-					);
-
-				test.comment(`Waiting for supervisor service to be active...`);
-				await this.utils.waitUntil(async () => {
-					return (
-						(await this.context
-							.get()
-							.worker.executeCommandInHostOS(
-								`systemctl is-active balena-supervisor.service`,
-								this.link,
-							)) === 'active'
-					);
-				}, false, 2 * 60 * 4, 250);
-
-				await waitUntilSupervisorActive(test, this.context.get());
-
-				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
-							this.link,
-						),
-					'0',
-					'Engine healthcheck should pass.',
-				);
+				await runResetTest(this, test, testFile, resetFile);
 			},
 		},
 	],
 };
+
+async function runResetTest(that, test, testFile, resetFile) {
+	test.is(
+		await that.worker.executeCommandInHostOS(
+			`touch ${testFile} ; echo $?`,
+			that.link,
+		),
+		'0',
+		`Should write test file ${testFile}`
+	);
+
+	test.is(
+		await that.worker.executeCommandInHostOS(
+			`rm ${resetFile} ; echo $?`,
+			that.link,
+		),
+		'0',
+		`Should clear reset file ${resetFile}`
+	);
+
+	// reboot
+	await that.worker.rebootDut(that.link);
+
+	await test.resolves(
+		Promise.all([
+			that.systemd.waitForServiceState('balena-supervisor.service','active',that.link), 
+			that.systemd.waitForServiceState('balena.service','active',that.link)
+		]),
+		'Should wait for balena.service and balena-supervisor.service to be active'
+	);
+
+	test.is(
+		await that.worker.executeCommandInHostOS(
+				`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
+				that.link,
+			),
+		'0',
+		'The engine healthcheck should pass',
+	);
+
+	await test.resolves(
+		that.utils.waitUntil(async () => {
+			return that.worker.executeCommandInHostOS(
+				`curl -fs http://127.0.0.1:48484/ping || true`,
+				that.link,
+			).then((response) => {
+				return Promise.resolve(response === 'OK');
+			});
+		}, false, 10 * 60 * 4, 250), // 10 min
+		'The supervisor should respond to the ping endpoint'
+	);
+
+	test.is(
+		await that.worker.executeCommandInHostOS(
+				`test -f ${testFile} ; echo $?`,
+				that.link,
+			),
+		'1',
+		`Should clear test file ${testFile}`,
+	);
+
+	test.is(
+		await that.worker.executeCommandInHostOS(
+				`test -f ${resetFile} ; echo $?`,
+				that.link,
+			),
+		'0',
+		`Should restore reset file ${resetFile}`,
+	);
+}
