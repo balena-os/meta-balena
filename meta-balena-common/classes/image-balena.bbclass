@@ -418,15 +418,19 @@ def available_space(img, d):
 
 # Check that the generated docker image can be updated to the rootfs partition
 python do_image_size_check() {
-    imgfile = d.getVar("BALENA_DOCKER_IMG")
-    ext4file = d.getVar("BALENA_ROOTB_FS")
-    rfs_alignment = d.getVar("IMAGE_ROOTFS_ALIGNMENT")
-    rfs_size = int(get_rootfs_size(d))
-    image_size_aligned = int(disk_aligned(d, os.stat(imgfile).st_size / 1024))
-    available = int(disk_aligned(d, available_space(ext4file, d)))
-    if image_size_aligned > available:
-        bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
-    bb.debug(1, 'requested %d, available %d' % (image_size_aligned, available) )
+    rootfs_type = d.getVar('BALENA_ROOT_FSTYPE')
+    if rootfs_type == 'ext4':
+        imgfile = d.getVar("BALENA_DOCKER_IMG")
+        fs_image = d.getVar("BALENA_ROOTB_FS")
+        rfs_alignment = d.getVar("IMAGE_ROOTFS_ALIGNMENT")
+        rfs_size = int(get_rootfs_size(d))
+        image_size_aligned = int(disk_aligned(d, os.stat(imgfile).st_size / 1024))
+        available = int(disk_aligned(d, available_space(fs_image, d)))
+        if image_size_aligned > available:
+            bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
+        bb.debug(1, 'requested %d, available %d' % (image_size_aligned, available) )
+    elif rootfs_type == 'btrfs':
+        bb.warn('Unable to check for adequate space with btrfs')
 }
 
 # Equivalent to:
