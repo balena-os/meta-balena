@@ -115,9 +115,6 @@ BAD_RECOMMENDATIONS += "shared-mime-info"
 PREFERRED_VERSION_upx:arm = "3.94"
 PREFERRED_VERSION_upx-native:arm = "3.94"
 
-# let's pin linux-firmware to the version we imported from Poky hardknott release
-PREFERRED_VERSION_linux-firmware = "20210511"
-
 # balena-engine go version requirement
 GOVERSION = "1.16.2"
 PREFERRED_PROVIDER_go-native = "go-native"
