@@ -15,6 +15,7 @@
 'use strict';
 
 const Promise = require('bluebird');
+const semver = require('semver');
 
 module.exports = {
 	title: 'fsck.ext4 tests',
@@ -44,6 +45,20 @@ module.exports = {
 						);
 				}
 
+				async function checkTune2fsVersion(context){
+					// exit 0 is to prevent a nonzero exit code here which will cause executeCommandInHostOS to retry
+					return context.get()
+						.worker.executeCommandInHostOS(
+							'tune2fs || exit 0',
+							context.get().link
+						)
+					.then((tune2fs) => {
+						tune2fs = tune2fs.split(/\r?\n/);
+						let version = tune2fs[0].split(' ')[1];
+						return semver.satisfies(version, '>=1.45.0')
+					})
+				}
+
 				// Exclude the boot partition for now, as it doesn't have metadata to
 				// track when it was last checked, nor can we check the dirty bit while
 				// it's mounted
@@ -54,32 +69,40 @@ module.exports = {
 					'resin-data',
 				];
 
-				return Promise.map(diskLabels, (label) => {
-					return markDirty(this.context, label).then(() => {
-						return getFilesystemState(this.context, label).then((state) => {
-							let expectedState = 'clean with errors';
-							test.is(
-								state,
-								expectedState,
-								`Filesystem state for ${label} should be '${expectedState}'`
-							);
+				return checkTune2fsVersion(this.context).then((valid) => {
+					if (valid){
+						return Promise.map(diskLabels, (label) => {
+							return markDirty(this.context, label).then(() => {
+								return getFilesystemState(this.context, label).then((state) => {
+									let expectedState = 'clean with errors';
+									test.is(
+										state,
+										expectedState,
+										`Filesystem state for ${label} should be '${expectedState}'`
+									);
+								});
+							});
+						}).then(() => {
+							test.comment('Filesystems have been marked dirty');
+							return this.context.get()
+								.worker.rebootDut(this.link);
+						}).then(() => {
+							return Promise.map(diskLabels, (label) => {
+								return getFilesystemState(this.context, label).then((state) => {
+									let expectedState = 'clean';
+									test.is(
+										state,
+										expectedState,
+										`Filesystem state for ${label} should be '${expectedState}'`
+									);
+								});
+							});
 						});
-					});
-				}).then(() => {
-					test.comment('Filesystems have been marked dirty');
-					return this.context.get()
-						.worker.rebootDut(this.link);
-				}).then(() => {
-					return Promise.map(diskLabels, (label) => {
-						return getFilesystemState(this.context, label).then((state) => {
-							let expectedState = 'clean';
-							test.is(
-								state,
-								expectedState,
-								`Filesystem state for ${label} should be '${expectedState}'`
-							);
-						});
-					});
+					} else{
+						test.pass(
+							'tune2fs version >= 1.45.0 not found - skipping test',
+						);
+					}
 				});
 			}
 		}
