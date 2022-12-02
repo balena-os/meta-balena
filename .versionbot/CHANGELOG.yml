@@ -1,4 +1,20 @@
 - commits:
+    - subject: "contributing-device-support.md: Updates to board support instructions"
+      hash: 0697f812259f6fbaa7a22c0e0c0c8d48df049678
+      body: |
+        [skip actions]
+        [skip ci]
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.107.18
+  title: ""
+  date: 2022-12-02T10:35:01.805Z
+- commits:
     - subject: Update tests/leviathan digest to de97fa2
       hash: 050b88febd7ae6d9e548abfd95a5681b04928049
       body: Update tests/leviathan
