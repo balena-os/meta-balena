@@ -1,6 +1,36 @@
 Change log
 -----------
 
+# v2.107.17
+## (2022-12-02)
+
+
+<details>
+<summary> Update tests/leviathan digest to de97fa2 [renovate[bot]] </summary>
+
+> ## leviathan-2.10.8
+> ### (Invalid date)
+> 
+> * patch: Improve archivelogs journalctl command [Vipul Gupta (@vipulgupta2048)]
+> * core: Reduce to 30 the retries number when trying to get the IP address of the DUT [Florin Sarbu]
+> 
+> ## leviathan-2.10.7
+> ### (Invalid date)
+> 
+> * docker-compose: stop using the default docker bridge [Alex Gonzalez]
+> 
+> ## leviathan-2.10.6
+> ### (2022-11-29)
+> 
+> * os/balenaos: Remove hidden attribute from DUT wireless connection file [Alexandru Costache]
+> 
+> ## leviathan-2.10.5
+> ### (2022-11-29)
+> 
+> * patch: Add debug: unstable to docs [Vipul Gupta (@vipulgupta2048)]
+> 
+</details>
+
 # v2.107.16
 ## (2022-12-01)
 

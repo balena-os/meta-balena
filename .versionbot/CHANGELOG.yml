@@ -1,4 +1,98 @@
 - commits:
+    - subject: Update tests/leviathan digest to de97fa2
+      hash: 050b88febd7ae6d9e548abfd95a5681b04928049
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "patch: Improve archivelogs journalctl command"
+              hash: 30ba7b601fd06182d4383bb0a5ebb3caadfccc27
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+            - subject: "core: Reduce to 30 the retries number when trying to get the IP
+                address of the DUT"
+              hash: 02b270e1c55429c7316a9c65f70362185bbe3aec
+              body: >
+                Instead of retrying to get the DUT IP address 120 times on a 1 seconds
+                interval,
+
+                let's reduce it to 30 times because the resolveLocalTarget which we call will
+
+                timeout too in 15 seconds:
+
+
+                https://github.com/balena-os/leviathan-worker/blob/master/lib/helpers/index.ts#L162
+
+
+                So reducing the retries number to 30 will effectly bring the total combined timeout to a maximum of 8 minutes.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: leviathan-2.10.8
+          title: ""
+          date: 2022-11-30T20:29:13.571Z
+        - commits:
+            - subject: "docker-compose: stop using the default docker bridge"
+              hash: eb69ff445fe0cac4f2060e67fa6994e61c3ca4b9
+              body: >
+                This causes problems for make-local tests when the user apps in the
+
+                DUT also uses the default docker bridge network range.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: leviathan-2.10.7
+          title: ""
+          date: 2022-11-30T13:06:01.741Z
+        - commits:
+            - subject: "os/balenaos: Remove hidden attribute from DUT wireless connection
+                file"
+              hash: 5046eaae99fb0ba2edf8c15ef6ad2e34e54260d8
+              body: |
+                The testbot AP is visible and is discovered during a scan.
+                Let's remove the hidden attribute as it may cause problems
+                for the 243390-rpi wireless tests.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.10.6
+          title: ""
+          date: 2022-11-29T15:23:45.559Z
+        - commits:
+            - subject: "patch: Add debug: unstable to docs"
+              hash: ea6fc63f1848540f5af7e011920afe13e18e82d1
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.10.5
+          title: ""
+          date: 2022-11-29T11:26:46.125Z
+  version: 2.107.17
+  title: ""
+  date: 2022-12-02T06:49:15.345Z
+- commits:
     - subject: Refactor and clean up the purge data tests
       hash: 65b0e02ec72ab1b68448f9546e5e5c570b1fe01a
       body: |
