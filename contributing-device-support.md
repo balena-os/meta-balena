@@ -24,7 +24,7 @@ Contributing support for a new board is a process that involves the following st
 The following documentation walks you through creating such a Yocto package. Because of the substantial difference between the hardware of many boards, this document provides general directions,
 and often it might be helpful to see the examples of already supported boards. The list of the relevant repositories is found at the end of this document.
 
-There is a [sample repo](https://github.com/balena-os/balena-board-template) which we encourage you use as a starting base for your repository.
+There is a [sample repo](https://github.com/balena-os/balena-board-template) which we encourage you use as a starting base for your repository. Please make sure CHANGELOG.md and .versionbot/CHANGELOG.yml are empty files.
 
 The balena-`<board-family>` repositories use [git submodules](https://git-scm.com/docs/git-submodule) for including required Yocto layers from the relevant sub-projects.
 _Note: you add submodules by `git submodule add <url> <directory>`, see the git documentation for more details. The submodules have to be added using the https protocol._
@@ -35,6 +35,7 @@ The root directory structure contains the following directories:
 ├──.github
 ├──.versionbot
 ├── balena-yocto-scripts
+├── contracts
 └── layers
 ```
 
@@ -225,8 +226,9 @@ See the [meta-balena Readme](https://github.com/balena-os/meta-balena/blob/maste
 ## Step 2: Contact balena
 
 When you have completed the development of the yocto board support repository as detailed in the previous step, please get in touch with balena to finish the process of having your board available in the balena dashboard.  
+
 This will mean your board repository would need to be hosted in [balena-os GitHub organization](https://github.com/balena-os). Your repository can either be transferred to the balenaOS github organization (repository ownership
-transfer can be done from the github UI under Settings -> General and scroll all the way to the botton over to `Danger Zone`) or balena will clone your repository under the balenaOS github organization (we avoid to use forking
+transfer can be done from the github UI under `Settings -> General` and scroll all the way to the botton over to `Danger Zone`) or balena will clone your repository under the balenaOS github organization (we avoid to use forking
 because this creates issues with outdated PRs and repositories diverging due to renovatebot auto-merge of balena-yocto-scripts, meta-balena and VersionBot updates to CHANGELOG.md, VERSION). Please note that from this point forward,
 all pull requests need to be done against this new board repository from [balena-os](https://github.com/balena-os). Depending on your needs and upon agreeing with balena, this new repository can be hosted either as a public
 repository for everyone to access or hosted privately with access only to selected users.
@@ -237,6 +239,7 @@ for you. Furthermore, for private repositories you also need to supply balena a 
 ## Step 3: Hardware contract
 
 Having a board supported by balena also means having a hardware contract describing that device type.  
+
 balena allows for public or private device types. Public device types can be used by all users while private device types are only accessible to selected users upon agreeing with balena.
 Note that public/private device type visibility mentioned here is independent of the GitHub repository visibility (you can choose to have any combination of these two).
 
@@ -291,7 +294,6 @@ The versions before v2.0-beta.3 didn't support kernel sources that were not git 
 [balena-intel grub append]: https://github.com/balena-os/balena-intel/tree/master/layers/meta-balena-genericx86/recipes-bsp/grub
 [meta-intel repo]: http://git.yoctoproject.org/cgit/cgit.cgi/meta-intel
 [intel-corei7-64 coffee]: https://github.com/balena-os/balena-intel/blob/master/intel-corei7-64.coffee
-[balena-yocto-scripts]: https://github.com/balena-os/balena-yocto-scripts
 [poky]: https://github.com/balena-os/poky
 [meta-openembedded]: https://github.com/openembedded/meta-openembedded
 [meta-balena]: https://github.com/balena-os/meta-balena
