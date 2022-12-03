@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.18
+## (2022-12-03)
+
+* initrdscripts: add recovery module [Alex Gonzalez]
+
 # v2.107.17
 ## (2022-12-02)
 

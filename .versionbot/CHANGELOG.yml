@@ -1,4 +1,33 @@
 - commits:
+    - subject: "initrdscripts: add recovery module"
+      hash: 1340330ff26c90179950b4df774498b62c5a552f
+      body: |
+        When `recovery` is passed in the kernel command line, the initramfs will
+        not boot into the OS but launch adbd.
+
+        A connection can then be established via the network (if a DHCP address
+        is provided) or using a USB gadget connection.
+
+        For a network connection, the client needs to install `adb` and run:
+        ```
+        adb connect $IPADDR:5555
+        adb shell
+        ```
+
+        Other adb commands, like pull/push of files are also available.
+
+        Resolves #2864
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.18
+  title: ""
+  date: 2022-12-03T18:50:17.237Z
+- commits:
     - subject: Update tests/leviathan digest to de97fa2
       hash: 050b88febd7ae6d9e548abfd95a5681b04928049
       body: Update tests/leviathan
