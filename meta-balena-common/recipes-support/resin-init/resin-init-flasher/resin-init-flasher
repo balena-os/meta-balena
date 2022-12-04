@@ -533,12 +533,18 @@ if [ "$LUKS" = "1" ]; then
     umount "$EFI_MOUNT_DIR"
 fi
 
+inform "Board specific flash procedure..."
+/usr/bin/resin-init-flasher-board
+
+info "Log end"
+# Preserve logs when running from initramfs
+if [ -n "${INITRAMFS_LOGFILE}" ] && [ -f "${INITRAMFS_LOGFILE}" ]; then
+    cp "${INITRAMFS_LOGFILE}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/migration_$(date +"%Y%m%dT%H%M")"
+fi
+
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 
 sync
-
-inform "Board specific flash procedure..."
-/usr/bin/resin-init-flasher-board
 
 EFIPART_LABEL="resin-boot"
 LOADER_PATH="/EFI/BOOT/bootx64.efi"
