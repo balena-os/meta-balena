@@ -492,6 +492,12 @@ fi
 report_progress 100 "Post-Provisioning"
 sync
 
+# If in initramfs recovery mode, wait for adbd to finish
+if [ -n "${ADBD_PID}" ]; then
+    # adbd is not a child process so cannot wait
+    while kill -0  "${ADBD_PID}" 2>/dev/null; do sleep 1; done
+fi
+
 # After migration we want to reboot as the remote device might not be accesible otherwise
 # This is achieved because the shutdown command is not part of the initramfs
 if command -v shutdown; then
