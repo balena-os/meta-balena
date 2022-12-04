@@ -1,4 +1,20 @@
 - commits:
+    - subject: "grub: Add chain module to support multiboot"
+      hash: 3fdc6124853d1e3c9a1bfe114b4eed962f395783
+      body: |
+        This is used to support falling back into the original OS when
+        performing a brownfield migration into balenaOS from a flasher image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.18
+  title: ""
+  date: 2022-12-04T18:33:09.269Z
+- commits:
     - subject: Update tests/leviathan digest to de97fa2
       hash: 050b88febd7ae6d9e548abfd95a5681b04928049
       body: Update tests/leviathan
