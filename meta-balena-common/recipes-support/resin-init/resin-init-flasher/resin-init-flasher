@@ -461,12 +461,17 @@ if [ "$LUKS" = "1" ]; then
     umount "$EFI_MOUNT_DIR"
 fi
 
-umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
-
-sync
+# Preserve logs when running from initramfs
+if [ -n "${INITRAMFS_LOGFILE}" ] && [ -f "${INITRAMFS_LOGFILE}" ]; then
+    cp "${INITRAMFS_LOGFILE}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/$(basename "${INITRAMFS_LOGFILE}")"
+fi
 
 inform "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
+
+info "Log end"
+umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+sync
 
 if [ "$LUKS" = "1" ]; then
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
