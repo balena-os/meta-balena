@@ -64,6 +64,16 @@ function inform {
     echo "[resin-init-flasher] INFO: $1"
 }
 
+function report_progress() {
+    _ratio="${1}"
+    _msg="${2}"
+    if [ -n "${API_ENDPOINT}" ]; then
+        resin-device-progress --percentage "${_ratio}" --state "${_msg}" || true
+    else
+        info "Unprovisioned: Percentage ${_ratio}, status ${_msg}"
+    fi
+}
+
 function dd_with_progress {
     SRC=$1
     DEST=$2
@@ -95,7 +105,7 @@ function dd_with_progress {
         WRITTEN_BYTES=$(awk 'END{print $1}' /tmp/dd_progress_log)
         TOTAL_WRITTEN_BYTES=$["$WRITTEN_BYTES" + "$OFFSET"]
         let RATIO=$TOTAL_WRITTEN_BYTES*100/$TOTAL_SIZE || true
-        resin-device-progress --percentage "$RATIO" --state "Flashing balenaOS on internal media" || true
+        report_progress "${RATIO}" "Flashing balenaOS on internal media"
         truncate -s 0 /tmp/dd_progress_log
     done
 }
@@ -166,7 +176,7 @@ fi
 inform "Flash internal device... will take around 5 minutes... "
 internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
 if [ -z "$internal_dev" ]; then
-    resin-device-progress --percentage 100 --state "Failed to find any block devices." || true
+    report_progress 100 "Failed to find any block devices."
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
 inform "$internal_dev will be used for flashing."
@@ -258,7 +268,7 @@ if [ "$LUKS" = "1" ]; then
     LOOP_DEVICE_NAME="${LOOP_DEVICE#/dev/}"
 
     # Repartition the new drive
-    resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
+    report_progress 0 "Starting flashing balenaOS on internal media"
     inform "Repartitioning $internal_dev for disk encryption"
 
     # Align partition sizes to multiples of 4MB
@@ -362,7 +372,7 @@ if [ "$LUKS" = "1" ]; then
     rm -f "$PASSPHRASE_FILE"
     losetup -d "$LOOP_DEVICE"
 else
-    resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
+    report_progress 0 "Starting flashing balenaOS on internal media"
     dd_with_progress "$BALENA_IMAGE" "$internal_dev" 0 "$IMAGE_FILE_SIZE"
 fi
 
@@ -552,9 +562,7 @@ if [ "$LUKS" = "1" ]; then
     done
 fi
 
-
-resin-device-progress --percentage 100 --state "Post-Provisioning" || true
-
+report_progress 100 "Post-Provisioning"
 inform "Shutting down ..."
 shutdown -h now
 
