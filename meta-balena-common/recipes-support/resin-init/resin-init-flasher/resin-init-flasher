@@ -572,8 +572,14 @@ if [ "$LUKS" = "1" ]; then
     done
 fi
 
+# If in initramfs recovery mode, wait for adbd to finish
+if [ -n "${ADBD_PID}" ]; then
+    # adbd is not a child process so cannot wait
+    while kill -0  "${ADBD_PID}" 2>/dev/null; do sleep 1; done
+fi
+
 report_progress 100 "Post-Provisioning"
+
 inform "Shutting down ..."
 shutdown -h now
-
 exit 0
