@@ -5,4 +5,4 @@ services:
     network_mode: host
     restart: on-failure
     command: -verbose -listen :8123
-    user: "995" # run as redsocks user to avoid loop
+    user: redsocks # run as redsocks user to avoid loop
