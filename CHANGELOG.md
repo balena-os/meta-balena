@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.107.19
+## (2022-12-06)
+
+* image_types_balena: generate bmap file [Joseph Kogut]
+* flasher: write disk image skipping sparse blocks [Joseph Kogut]
+* image_types_balena: create sparse disk image [Joseph Kogut]
+
 # v2.107.18
 ## (2022-12-04)
 

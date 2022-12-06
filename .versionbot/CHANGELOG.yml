@@ -1,4 +1,46 @@
 - commits:
+    - subject: "image_types_balena: generate bmap file"
+      hash: 73541251086eeecf19ddfe89f84af432c137f1f1
+      body: |
+        Generate a bmap file from the sparse image to allow for punching holes
+        in the disk image ranges that were unmapped after building. This data is
+        lost during compression, and the bmapfile allows for recreating,
+        writing, and verifying the sparse image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "flasher: write disk image skipping sparse blocks"
+      hash: a19ca73cc1b155ac2acec79a853d402a4a69d56b
+      body: |
+        This optimization reduces write wear, and speeds up flashing by
+        approximately 200%.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "image_types_balena: create sparse disk image"
+      hash: 7d4d1c40fc11088f2b17c3297021c15c31596462
+      body: |
+        Create filesystem images sparsely allocated. Write filesystems to final
+        disk image skipping sparse blocks.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.107.19
+  title: ""
+  date: 2022-12-06T15:14:03.293Z
+- commits:
     - subject: Update tests/leviathan digest to fe4d6a1
       hash: 1d95e19ed302bc281db4dc86b0394f7ce8ef74f3
       body: Update tests/leviathan
