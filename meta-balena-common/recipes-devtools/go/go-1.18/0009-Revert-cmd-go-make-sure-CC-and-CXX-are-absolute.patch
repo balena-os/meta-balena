@@ -1,4 +1,4 @@
-From a983bc6cd48fb0da939e3329cac18d7a3b29ecf8 Mon Sep 17 00:00:00 2001
+From 66a45dae3af140662e17ef85c2e6fe40270a2553 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 22 Feb 2021 17:54:01 -0800
 Subject: [PATCH] Revert "cmd/go: make sure CC and CXX are absolute"
@@ -17,20 +17,20 @@ Upstream-Status: Inappropriate [OE-Specific]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  src/cmd/go/internal/envcmd/env.go        |  5 -----
- src/cmd/go/internal/work/init.go         |  7 -------
+ src/cmd/go/internal/work/init.go         |  6 ------
  src/cmd/go/testdata/script/env_write.txt | 24 ------------------------
- 3 files changed, 36 deletions(-)
+ 3 files changed, 35 deletions(-)
 
 diff --git a/src/cmd/go/internal/envcmd/env.go b/src/cmd/go/internal/envcmd/env.go
-index 6937187522..29f9057c3f 100644
+index ff6f0d8..43b94e7 100644
 --- a/src/cmd/go/internal/envcmd/env.go
 +++ b/src/cmd/go/internal/envcmd/env.go
-@@ -427,11 +427,6 @@ func checkEnvWrite(key, val string) error {
+@@ -457,11 +457,6 @@ func checkEnvWrite(key, val string) error {
  		if !filepath.IsAbs(val) && val != "" {
  			return fmt.Errorf("GOPATH entry is relative; must be absolute path: %q", val)
  		}
 -	// Make sure CC and CXX are absolute paths
--	case "CC", "CXX":
+-	case "CC", "CXX", "GOMODCACHE":
 -		if !filepath.IsAbs(val) && val != "" && val != filepath.Base(val) {
 -			return fmt.Errorf("%s entry is relative; must be absolute path: %q", key, val)
 -		}
@@ -38,10 +38,10 @@ index 6937187522..29f9057c3f 100644
  
  	if !utf8.ValidString(val) {
 diff --git a/src/cmd/go/internal/work/init.go b/src/cmd/go/internal/work/init.go
-index ba7c7c2fbb..3a6df5f758 100644
+index 37a3e2d..316b0cf 100644
 --- a/src/cmd/go/internal/work/init.go
 +++ b/src/cmd/go/internal/work/init.go
-@@ -41,13 +41,6 @@ func BuildInit() {
+@@ -39,12 +39,6 @@ func BuildInit() {
  		cfg.BuildPkgdir = p
  	}
  
@@ -51,12 +51,11 @@ index ba7c7c2fbb..3a6df5f758 100644
 -			base.Fatalf("go %s: %s environment variable is relative; must be absolute path: %s\n", flag.Args()[0], key, path)
 -		}
 -	}
--
- 	// For each experiment that has been enabled in the toolchain, define a
- 	// build tag with the same name but prefixed by "goexperiment." which can be
- 	// used for compiling alternative files for the experiment. This allows
+ }
+ 
+ func instrumentInit() {
 diff --git a/src/cmd/go/testdata/script/env_write.txt b/src/cmd/go/testdata/script/env_write.txt
-index bda1e57826..c99aadb7f2 100644
+index b5e9739..566c876 100644
 --- a/src/cmd/go/testdata/script/env_write.txt
 +++ b/src/cmd/go/testdata/script/env_write.txt
 @@ -129,30 +129,6 @@ go env -w GOTMPDIR=
@@ -91,5 +90,5 @@ index bda1e57826..c99aadb7f2 100644
  env GOOS=
  env GOARCH=
 -- 
-2.30.1
+2.20.1
 
