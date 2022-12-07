@@ -1,0 +1,182 @@
+[
+  {
+    "id": "raspberrypi4-64",
+    "name": "Raspberry Pi 4",
+    "bootMedia": "SD card",
+    "family": "Raspberry Pi"
+  },
+  {
+    "id": "raspberrypi3",
+    "name": "Raspberry Pi 3 B/B+",
+    "bootMedia": "SD card",
+    "family": "Raspberry Pi"
+  },
+  {
+    "id": "raspberry-pi",
+    "name": "Raspberry Pi 1",
+    "bootMedia": "SD card",
+    "family": "Raspberry Pi"
+  },
+  {
+    "id": "raspberry-pi2",
+    "name": "Raspberry Pi 2",
+    "bootMedia": "SD card",
+    "family": "Raspberry Pi"
+  },
+  {
+    "id": "artik5",
+    "name": "ARTIK 520",
+    "bootMedia": "SD card",
+    "family": "Artik"
+  },
+  {
+    "id": "artik530",
+    "name": "ARTIK 530",
+    "bootMedia": "SD card",
+    "family": "Artik"
+  },
+  {
+    "id": "artik533s",
+    "name": "ARTIK 530s 1G",
+    "bootMedia": "SD card",
+    "family": "Artik"
+  },
+  {
+    "id": "artik10",
+    "name": "ARTIK 1020",
+    "bootMedia": "SD card",
+    "family": "Artik"
+  },
+  {
+    "id": "artik710",
+    "name": "ARTIK 710",
+    "bootMedia": "SD card",
+    "family": "Artik"
+  },
+  {
+    "id": "asus-tinker-board",
+    "name": "Asus Tinker Board",
+    "bootMedia": "SD card",
+    "family": "Asus Tinker Board"
+  },
+  {
+    "id": "asus-tinker-board-s",
+    "name": "Asus Tinker Board S",
+    "bootMedia": "eMMC",
+    "family": "Asus Tinker Board"
+  },
+  {
+    "id": "imx6ul-var-dart",
+    "name": "Variscite DART-6UL",
+    "bootMedia": "SD card",
+    "family": "Variscite"
+  },
+  {
+    "id": "up-board",
+    "name": "UP board",
+    "bootMedia": "SD card",
+    "family": "UP"
+  },
+  {
+    "id": "fincm3",
+    "name": "Balena Fin (CM3)",
+    "bootMedia": "internal MMC",
+    "family": "Balena Fin"
+  },
+  {
+    "id": "bananapi-m1-plus",
+    "name": "Banana Pi M1+",
+    "bootMedia": "SD card",
+    "family": "Banana Pi"
+  },
+  {
+    "id": "beaglebone-black",
+    "name": "Beaglebone Black",
+    "bootMedia": "SD card",
+    "family": "Beagle Bone"
+  },
+  {
+    "id": "beaglebone-green",
+    "name": "Beaglebone Green",
+    "bootMedia": "SD card",
+    "family": "Beagle Bone"
+  },
+  {
+    "id": "beaglebone-green-wifi",
+    "name": "Beaglebone Green Wireless",
+    "bootMedia": "SD card",
+    "family": "Beagle Bone"
+  },
+  {
+    "id": "beaglebone-pocket",
+    "name": "Pocket Beagle",
+    "bootMedia": "SD card",
+    "family": "Beagle Bone"
+  },
+  {
+    "id": "hummingboard",
+    "name": "HummingBoard i2",
+    "bootMedia": "SD card",
+    "family": "Solid Run"
+  },
+  {
+    "id": "intel-nuc",
+    "name": "Intel NUC",
+    "bootMedia": "USB drive",
+    "family": "Intel"
+  },
+  {
+    "id": "odroid-c1",
+    "name": "Odroid C1/C1+",
+    "bootMedia": "SD card",
+    "family": "Odroid"
+  },
+  {
+    "id": "odroid-xu4",
+    "name": "Odroid XU4",
+    "bootMedia": "SD card",
+    "family": "Odroid"
+  },
+  {
+    "id": "orangepi-plus2",
+    "name": "Orange Pi Plus2",
+    "bootMedia": "SD card",
+    "family": "Orange Pi"
+  },
+  {
+    "id": "orange-pi-zero",
+    "name": "Orange Pi Zero",
+    "bootMedia": "SD card",
+    "family": "Orange Pi"
+  },
+  {
+    "id": "ts4900",
+    "name": "ts4900",
+    "bootMedia": "SD card",
+    "family": "Technologic Systems"
+  },
+  {
+    "id": "jetson-nano",
+    "name": "Nvidia Jetson Nano",
+    "bootMedia": "SD card",
+    "family": "Nvidia"
+  },
+  {
+    "id": "jetson-tx1",
+    "name": "Nvidia Jetson TX1",
+    "bootMedia": "SD card",
+    "family": "Nvidia"
+  },
+  {
+    "id": "jetson-tx2",
+    "name": "Nvidia Jetson TX2",
+    "bootMedia": "SD card",
+    "family": "Nvidia"
+  },
+  {
+    "id": "iot2000",
+    "name": "Siemens IOT2000",
+    "bootMedia": "SD card",
+    "family": "iot2000"
+  }
+]
