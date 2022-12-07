@@ -101,9 +101,9 @@ To persist logs on the device, enable persistent logging by setting the `"persis
 
 ## OS Yocto composition
 
-BalenaOS is composed of multiple [Yocto](https://www.yoctoproject.org/) layers. The Yocto Project build system uses these layers to compile balenaOS for the various [supported devices](/os/docs/supported-boards/). Below is an example from the [Raspberry Pi family](https://github.com/balena-os/balena-raspberrypi/blob/master/layers/meta-balena-raspberrypi/conf/samples/bblayers.conf.sample).
+BalenaOS is composed of multiple [Yocto](https://www.yoctoproject.org/) layers. The Yocto Project build system uses these layers to compile balenaOS for the various [supported devices](./supported-boards/). Below is an example from the [Raspberry Pi family](https://github.com/balena-os/balena-raspberrypi/blob/master/layers/meta-balena-raspberrypi/conf/samples/bblayers.conf.sample).
 
-__Note:__ Instructions for building your own version of balenaOS are available [here](/os/docs/custom-build/#Bake-your-own-Image).
+__Note:__ Instructions for building your own version of balenaOS are available [here](./custom-build/#Bake-your-own-Image).
 
 | Layer Name                                 | Repository                                                                                 | Description                                                               |
 |--------------------------------------------|--------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
@@ -129,4 +129,4 @@ Next is the board-specific meta-balena configuration layer. This layer works in 
 
 The final meta-rust layer enables support for the rust compiler and the cargo package manager.
 
-__Note:__ Instructions for adding custom board support may be found [here](/os/docs/custom-build/#Supporting-your-Own-Board).
+__Note:__ Instructions for adding custom board support may be found [here](./custom-build/).
