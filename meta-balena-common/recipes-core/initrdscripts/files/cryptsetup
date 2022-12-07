@@ -7,6 +7,38 @@
 
 EFI_DEV=$(get_state_path_from_label "balena-efi")
 
+wait4udev() {
+    # Wait for udev processing of a DM device to finish
+    #
+    # After cryptsetup luksOpen returns to shell, udev events initializing
+    # the DM device are still being generated in the background.
+    # 95-dm-notify.rules will notify dmsetup when udev processing is finished
+    # but we found no way to hook to this from shell.
+    #
+    # This function waits for a particular udev env variable to be defined
+    # on the specified device. This is not the cleanest solution but it works
+    # for this use-case - it indicates the last necessary udev event is being
+    # processed and, if necessary from a shell, a subsequent settle will block
+    # until the processing finishes.
+    #
+    # The function will fail if the variable does not appear in a reasonable amount of time.
+
+    DM_DEVICE="$1"
+
+    I=0
+    # DM_UDEV_RULES_VSN is the last variable that 10-dm.rules defines for an active device
+    while ! udevadm info "${DM_DEVICE}" | grep -q "DM_UDEV_RULES_VSN=2"; do
+        if [ "${I}" -gt 4 ]; then
+            return 1
+        fi
+
+        sleep 1
+        I=$["${I}" + 1]
+    done
+
+    return 0
+}
+
 cryptsetup_enabled() {
     # Flasher should not try to unlock the partitions
     if [ "$bootparam_flasher" = "true" ]; then
@@ -65,8 +97,19 @@ cryptsetup_run() {
 
     BOOT_DEVICE=$(lsblk -nlo pkname "${EFI_DEV}")
 
+    # Unlock all the partitions - cryptsetup luksOpen does not wait for udev processing
+    # of the DM device to complete, it just kicks off the process and returns.
+    # Since this is async, we can perform all the luksOpens here, note the device names
+    # and wait for them in a separate loop later
+    LUKS_UNLOCKED=""
     for LUKS_UUID in $(lsblk -nlo uuid,fstype "/dev/${BOOT_DEVICE}" | grep crypto_LUKS | cut -d " " -f 1); do
         cryptsetup luksOpen --key-file $PASSPHRASE_FILE UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
+        LUKS_UNLOCKED="${LUKS_UNLOCKED} luks-${LUKS_UUID}"
+    done
+
+    # Wait for udev processing of each unlocked device
+    for DM_NAME in ${LUKS_UNLOCKED}; do
+        wait4udev "/dev/mapper/${DM_NAME}"
     done
 
     rm -f "$PASSPHRASE_FILE"
