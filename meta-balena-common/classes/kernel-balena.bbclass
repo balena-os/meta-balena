@@ -150,6 +150,7 @@ BALENA_CONFIGS ?= " \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
     ${WIREGUARD} \
+    ${KERNEL_ZSTD} \
     "
 
 #
@@ -222,6 +223,11 @@ BALENA_CONFIGS[firmware_compress] = " \
 WIREGUARD = "${@configure_from_version("5.10", "wireguard", "", d)}"
 BALENA_CONFIGS[wireguard] = " \
     CONFIG_WIREGUARD=m \
+"
+
+KERNEL_ZSTD = "${@configure_from_version("5.9", "kernel_zstd", "", d)}"
+BALENA_CONFIGS[kernel_zstd] = " \
+    CONFIG_KERNEL_ZSTD=y \
 "
 
 BALENA_CONFIGS[aufs] = " \
