@@ -1,4 +1,28 @@
 - commits:
+    - subject: "kernel-balena: enable zstd compression"
+      hash: 0473815cdf1210936b2110bdafb5294ae527db50
+      body: |
+        Enabling CONFIG_KERNEL_ZSTD=y improves the compression ratio compared
+        to gzip while being faster to decompress. With kernel 5.15 in balenaOS
+        v2.105, we see the 24 MB kernel compress to approximately 19 MB.
+
+        Zstd support was added in commit 48f7ddf, first introduced in kernel
+        v5.9. Enable this config unconditionally in supported kernels.
+
+        Note that not every architecture and device support this option, but in
+        those cases, Kconfig will automatically disable it as HAVE_ZSTD is also
+        missing.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.107.20
+  title: ""
+  date: 2022-12-07T22:06:34.638Z
+- commits:
     - subject: "image_types_balena: generate bmap file"
       hash: 73541251086eeecf19ddfe89f84af432c137f1f1
       body: |

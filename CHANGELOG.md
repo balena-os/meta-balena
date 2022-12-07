@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.20
+## (2022-12-07)
+
+* kernel-balena: enable zstd compression [Joseph Kogut]
+
 # v2.107.19
 ## (2022-12-06)
 
