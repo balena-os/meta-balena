@@ -1,4 +1,29 @@
 - commits:
+    - subject: "tests/connectivity: Run the proxy tests with the actual redsocks uid
+        of the DUT"
+      hash: 17b49075804ea85aadfbb20d557025c1a4c2ee4f
+      body: >
+        Not all the boards we support have the redsocks uid as 995 in their rootfs
+        so let's
+
+        fetch the actual redsocks uid from the DUT before running the proxy tests and
+
+        update that in the docker-compose.yml. We do so because the REDSOCKS_UID value
+
+        isn't substituted in the compose if the variable, even if it is passed trough
+
+        the cli.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.107.21
+  title: ""
+  date: 2022-12-08T10:39:40.903Z
+- commits:
     - subject: "kernel-balena: enable zstd compression"
       hash: 0473815cdf1210936b2110bdafb5294ae527db50
       body: |

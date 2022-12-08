@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.21
+## (2022-12-08)
+
+* tests/connectivity: Run the proxy tests with the actual redsocks uid of the DUT [Florin Sarbu]
+
 # v2.107.20
 ## (2022-12-07)
 
