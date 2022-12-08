@@ -15,7 +15,8 @@
 'use strict';
 
 const URL_TEST = 'ipv4.google.com';
-
+const { join } = require('path');
+const fs = require('fs');
 module.exports = {
 	title: 'Connectivity tests',
 	tests: [
@@ -77,6 +78,12 @@ module.exports = {
 								this.link
 							);
 						};
+						let getRedsocksUid = async() => {
+							return this.worker.executeCommandInHostOS(
+								`id -u redsocks`,
+								this.link
+							);
+						};
 
 						return Promise.resolve(
 							this.worker.ip(this.link)
@@ -85,11 +92,25 @@ module.exports = {
 								// Ensure we only push and run the proxy container once
 								if (!containerId) {
 									test.comment('Running proxy in container');
-									return this.worker.pushContainerToDUT(
-										ip, __dirname, 'proxy'
-									).then((state) => {
-										test.comment(state);
+									return getRedsocksUid().then((redsocksUid) => {
+										const composeFile = join(__dirname, './docker-compose.yml');
+										try {
+											let composeContents = fs.readFileSync(composeFile, 'utf8');
+											let updatedCompose = composeContents.replace(/REDSOCKS_UID/g, redsocksUid.toString());
+											fs.writeFileSync(composeFile, updatedCompose, 'utf8');
+											test.comment("Updated docker-compose.yml with redsocks uid " + redsocksUid);
+										} catch (err) {
+											test.comment(`Failed to update docker-compose.yml - ` + err);
+										}
+
+										return this.worker.pushContainerToDUT(
+											ip, __dirname, 'proxy'
+										).then((state) => {
+											test.comment(state);
+										});
 									});
+								} else {
+									test.comment('continer id exists');
 								}
 							});
 						}).then(() => {
