@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.22
+## (2022-12-09)
+
+* tests: os: fsck: make compatible with old yocto releaes [rcooke-warwick]
+
 # v2.107.21
 ## (2022-12-08)
 

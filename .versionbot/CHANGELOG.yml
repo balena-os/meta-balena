@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: fsck: make compatible with old yocto releaes"
+      hash: 1e57154d1f3eedd82c20bbe463006783d63bc668
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.22
+  title: ""
+  date: 2022-12-09T12:55:20.054Z
+- commits:
     - subject: "tests/connectivity: Run the proxy tests with the actual redsocks uid
         of the DUT"
       hash: 17b49075804ea85aadfbb20d557025c1a4c2ee4f
