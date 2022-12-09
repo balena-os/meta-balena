@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.23
+## (2022-12-09)
+
+* patch: Add product documentation [Vipul Gupta (@vipulgupta2048)]
+
 # v2.107.22
 ## (2022-12-09)
 

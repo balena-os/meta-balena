@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add product documentation"
+      hash: a081ff2439838073afbaa28f38f3e7f6850dddfe
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.107.23
+  title: ""
+  date: 2022-12-09T14:41:44.836Z
+- commits:
     - subject: "tests: os: fsck: make compatible with old yocto releaes"
       hash: 1e57154d1f3eedd82c20bbe463006783d63bc668
       body: ""
