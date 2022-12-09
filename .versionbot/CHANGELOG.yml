@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.4.6
+      hash: 70a888685d33267af60e53ac70a6169b744416bd
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.107.24
+  title: ""
+  date: 2022-12-09T20:45:04.709Z
+- commits:
     - subject: "patch: Add product documentation"
       hash: a081ff2439838073afbaa28f38f3e7f6850dddfe
       body: ""
