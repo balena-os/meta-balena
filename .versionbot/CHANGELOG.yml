@@ -1,4 +1,33 @@
 - commits:
+    - subject: "image_types_balena: fix inconsistency with flasher image partition
+        naming"
+      hash: 795e2427821d28fcf894da1cba9afc245efc38b3
+      body: >
+        Partitions in flasher images are being created with different LABEL and
+
+        PARTLABEL, for example:
+
+        ```
+
+        /dev/sdd2: LABEL="flash-rootA" UUID="5585296a-c183-4b10-89ae-20607e5604be" TYPE="ext4" PARTLABEL="resin-rootA" PARTUUID="582478f2-be4b-4279-9124-536385c9551d"
+
+        ```
+
+
+        This commit fixes the inconsistency as the PARTLABEL is used as a fallback
+
+        method to identify devices.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.25
+  title: ""
+  date: 2022-12-11T20:05:22.123Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.4.6
       hash: 70a888685d33267af60e53ac70a6169b744416bd
       body: Update balena-supervisor

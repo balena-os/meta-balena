@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.25
+## (2022-12-11)
+
+* image_types_balena: fix inconsistency with flasher image partition naming [Alex Gonzalez]
+
 # v2.107.24
 ## (2022-12-09)
 
