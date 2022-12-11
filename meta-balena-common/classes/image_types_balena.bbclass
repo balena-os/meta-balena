@@ -233,7 +233,7 @@ IMAGE_CMD:balenaos-img () {
             OPTS="primary fat16"
         fi
     elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-        OPTS="resin-boot"
+        OPTS="${BALENA_BOOT_FS_LABEL}"
     fi
     START=${DEVICE_SPECIFIC_SPACE}
     END=$(expr ${START} \+ ${BALENA_BOOT_SIZE_ALIGNED})
@@ -245,7 +245,7 @@ IMAGE_CMD:balenaos-img () {
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
         OPTS="primary"
     elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-        OPTS="resin-rootA"
+        OPTS="${BALENA_ROOTA_FS_LABEL}"
     fi
     START=${END}
     END=$(expr ${START} \+ ${BALENA_ROOTA_SIZE_ALIGNED})
@@ -255,7 +255,7 @@ IMAGE_CMD:balenaos-img () {
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
         OPTS="primary"
     elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-        OPTS="resin-rootB"
+        OPTS="${BALENA_ROOTB_FS_LABEL}"
     fi
     START=${END}
     END=$(expr ${START} \+ ${BALENA_ROOTB_SIZE_ALIGNED})
@@ -273,7 +273,7 @@ IMAGE_CMD:balenaos-img () {
     if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
         OPTS="logical"
     elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-        OPTS="resin-state"
+        OPTS="${BALENA_STATE_FS_LABEL}"
     fi
     START=${END}
     END=$(expr ${START} \+ ${BALENA_STATE_SIZE_ALIGNED})
@@ -285,7 +285,7 @@ IMAGE_CMD:balenaos-img () {
         OPTS="logical"
         START=$(expr ${END} \+ ${BALENA_IMAGE_ALIGNMENT})
     elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-        OPTS="resin-data"
+        OPTS="${BALENA_DATA_FS_LABEL}"
         START=${END}
     fi
     parted -s ${BALENA_RAW_IMG} -- unit KiB mkpart ${OPTS} ${START} 100%
