@@ -5,7 +5,7 @@ set -o errexit
 . /usr/libexec/os-helpers-logging
 
 offline="true"
-sources=$(chronyc sources | tail -n +3 | awk '{ print $1 }')
+sources=$(chronyc -n sources | tail -n +3 | awk '{ print $1 }')
 for source in $sources; do
 	if [[ $source = *\** ]]; then
 		offline="false"
