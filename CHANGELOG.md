@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.27
+## (2022-12-12)
+
+* chrony: disable reverse dns lookups in healthcheck [Ken Bannister]
+
 # v2.107.26
 ## (2022-12-12)
 

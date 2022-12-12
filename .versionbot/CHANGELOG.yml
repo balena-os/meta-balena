@@ -1,4 +1,18 @@
 - commits:
+    - subject: "chrony: disable reverse dns lookups in healthcheck"
+      hash: aa303afe9e3528023e6986bf5ceccc8bf8b5433f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ken Bannister <kb2ma@runbox.com>
+        signed-off-by: Ken Bannister <kb2ma@runbox.com>
+      author: Ken Bannister
+      nested: []
+  version: 2.107.27
+  title: ""
+  date: 2022-12-12T13:55:20.224Z
+- commits:
     - subject: "connectivity: Add linux firmware for iwlwifi 9260"
       hash: 6857496c1a03282375f40a5621ea1ee39171cb0d
       body: |
