@@ -63,7 +63,9 @@ cryptsetup_run() {
         fail "Failed to unlock LUKS passphrase using the TPM"
     fi
 
-    for LUKS_UUID in $(lsblk -nlo uuid,fstype | grep crypto_LUKS | cut -d " " -f 1); do
+    BOOT_DEVICE=$(lsblk -nlo pkname "${EFI_DEV}")
+
+    for LUKS_UUID in $(lsblk -nlo uuid,fstype "/dev/${BOOT_DEVICE}" | grep crypto_LUKS | cut -d " " -f 1); do
         cryptsetup luksOpen --key-file $PASSPHRASE_FILE UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
     done
 
