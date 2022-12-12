@@ -8,5 +8,5 @@ timeout=@@TIMEOUT@@
 
 menuentry 'flash'{
 search --set=root --label flash-rootA
-linux /boot/@@KERNEL_IMAGETYPE@@ root=LABEL=flash-rootA flasher rootwait ${extra_os_cmdline}
+linux /boot/@@KERNEL_IMAGETYPE@@ root=LABEL=flash-rootA flasher @@KERNEL_CMDLINE@@  rootwait ${extra_os_cmdline}
 }

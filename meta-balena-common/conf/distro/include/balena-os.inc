@@ -26,6 +26,22 @@ python () {
         return
 }
 
+def set_default_kernel_cmdline(d):
+    cmdline = 'console=null quiet splash vt.global_cursor_default=0 consoleblank=0'
+    if d.getVar('OS_DEVELOPMENT', True) is '1':
+        cmdline = ""
+        for serial_console in d.getVar('SERIAL_CONSOLES', True).split():
+            try:
+                baudrate,port = serial_console.split(';')
+                console = "console=" + port + "," + baudrate + "n8"
+                if len(cmdline) is 0:
+                    cmdline = console
+                else:
+                    cmdline = cmdline + " " + console
+            except:
+                return
+    return cmdline
+
 MAINTAINER = "Balena <hello@balena.io>"
 
 # Strip down unneeded features
@@ -65,7 +81,7 @@ BALENA_IMAGE_FLAG_FILE = "balena-image"
 BALENA_FLASHER_FLAG_FILE = "balena-image-flasher"
 
 # Kernel command line
-OS_KERNEL_CMDLINE ?= "${@bb.utils.contains('OS_DEVELOPMENT','1','', 'console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)}"
+OS_KERNEL_CMDLINE ?= "${@set_default_kernel_cmdline(d)}"
 
 # Initramfs
 INITRAMFS_IMAGE = "balena-image-initramfs"
