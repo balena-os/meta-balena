@@ -1,4 +1,22 @@
 - commits:
+    - subject: "connectivity: Add linux firmware for iwlwifi 9260"
+      hash: 6857496c1a03282375f40a5621ea1ee39171cb0d
+      body: |
+        Some device types are being sold with this WiFi chipset so let's include
+        the firmware.
+
+        Fixes #2059
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.26
+  title: ""
+  date: 2022-12-12T06:07:30.516Z
+- commits:
     - subject: "image_types_balena: fix inconsistency with flasher image partition
         naming"
       hash: 795e2427821d28fcf894da1cba9afc245efc38b3

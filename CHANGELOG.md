@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.26
+## (2022-12-12)
+
+* connectivity: Add linux firmware for iwlwifi 9260 [Alex Gonzalez]
+
 # v2.107.25
 ## (2022-12-11)
 
