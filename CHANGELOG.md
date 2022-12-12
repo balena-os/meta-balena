@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.28
+## (2022-12-12)
+
+* initrdscripts: Only unlock LUKS partitions on the OS drive [Michal Toman]
+
 # v2.107.27
 ## (2022-12-12)
 

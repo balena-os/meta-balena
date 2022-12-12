@@ -1,4 +1,30 @@
 - commits:
+    - subject: "initrdscripts: Only unlock LUKS partitions on the OS drive"
+      hash: f5e8488e7b87c38829d241f788413433526d2f78
+      body: >
+        In the current state the cryptsetup initrd script tries to unlock all
+
+        LUKS volumes in the system using the TPM. This includes user-defined LUKS
+
+        volumes that, if present, fail to unlock and make the system unbootable.
+
+        We should also not touch user-defined volumes in the first place.
+
+
+        This patch modifies the cryptsetup script to only unlock LUKS volumes
+
+        that are on the OS drive (same block device as the EFI partition).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.107.28
+  title: ""
+  date: 2022-12-12T21:10:45.792Z
+- commits:
     - subject: "chrony: disable reverse dns lookups in healthcheck"
       hash: aa303afe9e3528023e6986bf5ceccc8bf8b5433f
       body: ""
