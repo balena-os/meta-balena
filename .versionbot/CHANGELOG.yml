@@ -1,4 +1,22 @@
 - commits:
+    - subject: "linux-firmware: Include RTL8192EU firmware"
+      hash: c8ec1fc56bc2fbcc3cd27765bc31e5f35dd62db8
+      body: >
+        The RTL8192EU WiFi driver fails to find its firmware, so it is included
+        now.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Backport-to: next
+        backport-to: next
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.107.31
+  title: ""
+  date: 2022-12-13T14:19:08.110Z
+- commits:
     - subject: "extra-udev-rules: Update teensy.rules"
       hash: 9d10e815e773e47f86decaac1358490c5f0959c7
       body: |
