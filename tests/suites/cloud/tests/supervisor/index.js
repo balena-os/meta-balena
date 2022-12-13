@@ -13,7 +13,7 @@ const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
       return (deviceServices.current_services[service][0].status === "Running") && (deviceServices.current_services[service][0].commit === commit)
     })
     return running;
-  }, false, 60, 5 * 1000);
+  }, false, 60 * 10, 1000);
 }
 
 module.exports = {
