@@ -81,10 +81,21 @@ const enableSerialConsole = async (imagePath) => {
 const doHUP = async (that, test, mode, target) => {
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
 	const hupLoadTmp = "/mnt/data/resin-data/tmp";
-	const inactiveStorage = "/mnt/sysroot/inactive/docker";
+	const inactiveStorage = "/mnt/sysroot/inactive/balena";
 
 	await that.worker.executeCommandInHostOS(
+		`systemctl stop balena-host`,
+		target,
+	);
+
+	test.comment(`Cleaning up inactive partition`);
+	await that.worker.executeCommandInHostOS(
 		`find "${inactiveStorage}" -mindepth 1 -maxdepth 1 -exec rm -r "{}" \\; || true`,
+		target,
+	)
+
+	await that.worker.executeCommandInHostOS(
+		`systemctl start balena-host`,
 		target,
 	);
 
