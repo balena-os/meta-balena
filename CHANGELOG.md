@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.29
+## (2022-12-13)
+
+* balena-image-initramfs: disable redundant compression [Joseph Kogut]
+
 # v2.107.28
 ## (2022-12-12)
 

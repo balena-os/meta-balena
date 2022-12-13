@@ -1,4 +1,21 @@
 - commits:
+    - subject: "balena-image-initramfs: disable redundant compression"
+      hash: 91213a65ab83794be274757c8598c4c3495ceece
+      body: |
+        Our initramfs is built into the kernel, which is always compressed.
+        Disable redundant initramfs compression, which should save some CPU
+        cycles during build and boot, as well as improving compression ratio.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.107.29
+  title: ""
+  date: 2022-12-13T07:13:16.319Z
+- commits:
     - subject: "initrdscripts: Only unlock LUKS partitions on the OS drive"
       hash: f5e8488e7b87c38829d241f788413433526d2f78
       body: >
