@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.107.30
+## (2022-12-13)
+
+* extra-udev-rules: Update teensy.rules [Alex Gonzalez]
+* extra-udev-rules: Rename recipe [Alex Gonzalez]
+
 # v2.107.29
 ## (2022-12-13)
 

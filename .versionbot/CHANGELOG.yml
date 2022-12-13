@@ -1,4 +1,32 @@
 - commits:
+    - subject: "extra-udev-rules: Update teensy.rules"
+      hash: 9d10e815e773e47f86decaac1358490c5f0959c7
+      body: |
+        Updated rules from https://www.pjrc.com/teensy/00-teensy.rules
+
+        Fixes #2247
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "extra-udev-rules: Rename recipe"
+      hash: dcc6f5c793982c04a9ca0235d6542334cbbf5431
+      body: |
+        Remove the resin prefix.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.30
+  title: ""
+  date: 2022-12-13T14:16:24.113Z
+- commits:
     - subject: "balena-image-initramfs: disable redundant compression"
       hash: 91213a65ab83794be274757c8598c4c3495ceece
       body: |
