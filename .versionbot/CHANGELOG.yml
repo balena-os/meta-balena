@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests/cloud: Increase the wait time for services to start"
+      hash: 99799e83e492f149ff30f956faead7cf34aeeea6
+      body: |
+        Also reduce the interval to 1s.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.107.32
+  title: ""
+  date: 2022-12-14T06:01:21.542Z
+- commits:
     - subject: Update tests/leviathan digest to 27b78a4
       hash: b3b219aae0e3aeed8ac72ce2c5ac9f156d1a4279
       body: Update tests/leviathan

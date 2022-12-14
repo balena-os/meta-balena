@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.32
+## (2022-12-14)
+
+* tests/cloud: Increase the wait time for services to start [Kyle Harding]
+
 # v2.107.31
 ## (2022-12-14)
 
