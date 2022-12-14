@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to 27b78a4
+      hash: b3b219aae0e3aeed8ac72ce2c5ac9f156d1a4279
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Enable external contributions via flowzone
+              hash: 8e2489e75fd2d750dec077699f2410335995a6b2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.10.10
+          title: ""
+          date: 2022-12-13T19:44:28.072Z
+  version: 2.107.31
+  title: ""
+  date: 2022-12-14T00:00:25.148Z
+- commits:
     - subject: "extra-udev-rules: Update teensy.rules"
       hash: 9d10e815e773e47f86decaac1358490c5f0959c7
       body: |
