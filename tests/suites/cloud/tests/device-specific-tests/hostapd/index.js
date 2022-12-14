@@ -36,8 +36,8 @@ const waitUntilServicesRunning = async (that, uuid, services, commit, test) => {
 			return running;
 		},
 		false,
-		60,
-		5 * 1000,
+		60 * 10,
+		1000,
 	);
 };
 
