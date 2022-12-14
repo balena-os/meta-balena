@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: hup: clean up inactive partition pre hup"
+      hash: 1356c4f244be8b67fac9da9e15d2dee8c3816611
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.33
+  title: ""
+  date: 2022-12-14T13:22:43.735Z
+- commits:
     - subject: "tests/cloud: Increase the wait time for services to start"
       hash: 99799e83e492f149ff30f956faead7cf34aeeea6
       body: |

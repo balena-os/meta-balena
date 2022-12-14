@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.33
+## (2022-12-14)
+
+* tests: hup: clean up inactive partition pre hup [rcooke-warwick]
+
 # v2.107.32
 ## (2022-12-14)
 
