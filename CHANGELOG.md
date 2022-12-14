@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.34
+## (2022-12-14)
+
+* initrdscripts: Wait for udev processing to complete when unlocking LUKS devices [Michal Toman]
+
 # v2.107.33
 ## (2022-12-14)
 

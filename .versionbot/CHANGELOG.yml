@@ -1,4 +1,31 @@
 - commits:
+    - subject: "initrdscripts: Wait for udev processing to complete when unlocking
+        LUKS devices"
+      hash: dc31885048db9a1ef5e1aaa705af9bf3d04052a3
+      body: >
+        When unlocking LUKS devices, udev events initializing the DM devices are
+        still
+
+        generated in the background even after cryptsetup luksOpen returns. We need to
+
+        wait for the udev processing to finish before killing udev and cleaning up
+
+        the udev database to avoid having to deal with partially initialized devices
+
+        or corrupted udev database in the target OS.
+      footer:
+        Fixes: "#2857"
+        fixes: "#2857"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.107.34
+  title: ""
+  date: 2022-12-14T18:02:58.755Z
+- commits:
     - subject: "tests: hup: clean up inactive partition pre hup"
       hash: 1356c4f244be8b67fac9da9e15d2dee8c3816611
       body: ""
