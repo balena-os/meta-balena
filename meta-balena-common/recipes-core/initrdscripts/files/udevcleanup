@@ -10,6 +10,7 @@ udevcleanup_enabled() {
 }
 
 udevcleanup_run() {
+    udevadm settle
     info "Stopping udevd daemon"
     killall udevd
     info "Cleaning up udev database"
