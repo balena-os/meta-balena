@@ -1,4 +1,20 @@
 - commits:
+    - subject: "balena-os.inc: Enable firmware compression by default"
+      hash: 09dee3e914a26d17fa62fbb66e6a3349763fbcc7
+      body: |
+        The only requirement is kernel >= 5.3, we should default to compressed
+        and opt-out on devices with older kernels.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.107.35
+  title: ""
+  date: 2022-12-14T19:45:46.425Z
+- commits:
     - subject: "initrdscripts: Wait for udev processing to complete when unlocking
         LUKS devices"
       hash: dc31885048db9a1ef5e1aaa705af9bf3d04052a3

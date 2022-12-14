@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.35
+## (2022-12-14)
+
+* balena-os.inc: Enable firmware compression by default [Michal Toman]
+
 # v2.107.34
 ## (2022-12-14)
 
