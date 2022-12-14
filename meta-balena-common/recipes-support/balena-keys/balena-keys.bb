@@ -25,7 +25,7 @@ fetch_key() {
     mkdir -p "${DEST_DIR}"
     RESPONSE_FILE=$(mktemp)
     export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
-    curl --fail --silent "${SIGN_API}/${1}" > "${RESPONSE_FILE}"
+    curl --fail "${SIGN_API}/${1}" -o "${RESPONSE_FILE}"
     if [ "${2}" = ".key" ]; then
         jq -r "${2}" < "${RESPONSE_FILE}" | gpg --dearmor > "${DEST_DIR}/${3}"
     else
