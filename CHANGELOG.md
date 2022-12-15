@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.35
+## (2022-12-15)
+
+* patch: Add default debug object to test config [Vipul Gupta (@vipulgupta2048)]
+
 # v2.107.34
 ## (2022-12-14)
 

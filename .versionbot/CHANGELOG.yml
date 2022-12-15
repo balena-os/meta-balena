@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add default debug object to test config"
+      hash: 3def4d69a63952eac4a5c3fb6bd94fe03b666eda
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.107.35
+  title: ""
+  date: 2022-12-15T00:03:58.037Z
+- commits:
     - subject: "initrdscripts: Wait for udev processing to complete when unlocking
         LUKS devices"
       hash: dc31885048db9a1ef5e1aaa705af9bf3d04052a3
