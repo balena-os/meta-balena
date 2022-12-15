@@ -1,0 +1,6 @@
+version: '2'
+services:
+  containerA:
+    build: ./containerA
+  containerB:
+    build: ./containerB

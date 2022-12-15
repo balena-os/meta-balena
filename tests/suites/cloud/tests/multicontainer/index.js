@@ -16,88 +16,11 @@
 "use strict";
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-
-const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
-  await that.utils.waitUntil(async () => {
-    test.comment(`Waiting for device: ${uuid} to run services: ${services} at commit: ${commit}`);
-    let deviceServices = await that.cloud.balena.models.device.getWithServiceDetails(
-      uuid
-      );
-    let running = false
-    running = services.every((service) => {
-      return (deviceServices.current_services[service][0].status === "Running") && (deviceServices.current_services[service][0].commit === commit)
-    })
-    return running;
-  }, false, 60 * 10, 1000)
-}
-
 module.exports = {
   title: "Multicontainer app tests",
-  run: async function (test) {
-    const moveApplicationName = `${
-      this.balena.application
-    }_MoveDevice`;
 
-    // create new application
-    await this.cloud.balena.models.application.create({
-      name: `${this.balena.name}_MoveDevice`,
-      deviceType: this.os.deviceType,
-      organization: this.balena.organization,
-    });
-
-    this.context.set({
-      moveApp: moveApplicationName,
-    });
-
-    this.suite.context.set({
-      moveApp: moveApplicationName,
-    });
-
-    // Remove this app at the end of the test suite
-    this.suite.teardown.register(() => {
-      this.log(`Removing application ${moveApplicationName}`);
-      try{
-        return this.cloud.balena.models.application.remove(moveApplicationName);
-      }catch(e){
-        this.log(`Error while removing application...`)
-      }
-    });
-
-    // push multicontainer app release to new app
-    test.comment(`Cloning repo...`);
-    await exec(
-      `git clone https://github.com/balena-io-examples/multicontainer-getting-started.git ${__dirname}/app`
-    );
-
-    test.comment(`Pushing release...`);
-    const initialCommit = await this.cloud.pushReleaseToApp(moveApplicationName, `${__dirname}/app`)
-    this.suite.context.set({
-      multicontainer: {
-        initialCommit: initialCommit
-      }
-    })
-  },
   tests: [
-    {
-      title: "Move device to multicontainer App",
-      run: async function (test) {
-        // move device to new app
-        await this.cloud.balena.models.device.move(
-            this.balena.uuid,
-            this.moveApp
-          );
 
-        await waitUntilServicesRunning(
-          this,
-          this.balena.uuid, 
-          [`frontend`, `proxy`, `data`], 
-          this.multicontainer.initialCommit,
-          test
-        )
-
-        test.ok(true, "All services running");
-      },
-    },
     {
       title: "Set device environment variables",
       run: async function (test) {
@@ -112,7 +35,7 @@ module.exports = {
           );
 
         // Check that device env variable is present in each service
-        let services  = [`frontend`, `proxy`, `data`]
+        let services  = [`containerA`, `containerB`];
         await this.utils.waitUntil(async () => {
           let results = {}
           for (let service of services){
@@ -144,7 +67,7 @@ module.exports = {
         // set device service variable for frontend service
         await this.cloud.balena.models.device.serviceVar.set(
             this.balena.uuid,
-            services.current_services.frontend[0].service_id,
+            services.current_services.containerA[0].service_id,
             key,
             value
           );
@@ -152,52 +75,11 @@ module.exports = {
         // Check to see if variable is present in front end service
         await this.utils.waitUntil(async () => {
           test.comment("Checking to see if variables are visible...");
-          let env = await this.cloud.executeCommandInContainer(`env`, `frontend`, this.balena.uuid)
+          let env = await this.cloud.executeCommandInContainer(`env`, `containerA`, this.balena.uuid)
 
           return env.includes(`${key}=${value}\n`);
         }, false, 60, 5 * 1000);
         test.ok(true, `Should service env var in service it was set for`);
-      },
-    },
-    {
-      title: "Move device back to original app",
-      run: async function (test) {
-        // move device to new app
-        await this.cloud.balena.models.device.move(
-            this.balena.uuid,
-            this.balena.application
-          );
-
-        // get latest commit
-        let commit = await this.cloud.balena.models.application.getTargetReleaseHash(
-          this.balena.application
-        )
-
-        await waitUntilServicesRunning(
-          this,
-          this.balena.uuid, 
-          [this.appServiceName], 
-          commit,
-          test
-        )
-
-        test.ok(
-          true,
-          `Device should have been moved back to original app, and be running its service`
-        );
-
-        // wait until cloud sees device as running original service release - this will allow us to delete the application after
-        await this.utils.waitUntil(async() => {
-          let deviceHash = await this.cloud.balena.models.device.getTargetReleaseHash(
-            this.balena.uuid
-          )
-          return deviceHash === commit
-        }, false, 180, 5 * 1000);
-
-        test.ok(
-          true,
-          `Device has original app release hash`
-        )
       },
     },
   ],

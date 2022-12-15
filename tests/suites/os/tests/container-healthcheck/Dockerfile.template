@@ -1,4 +1,4 @@
-FROM balenalib/%%BALENA_ARCH%%-alpine
+FROM balenalib/%%BALENA_ARCH%%-alpine:3.12-run
 
 HEALTHCHECK --interval=1s --retries=1 \
     CMD [ -f /tmp/health ] 
