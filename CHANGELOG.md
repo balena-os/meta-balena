@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.37
+## (2022-12-15)
+
+* tests: cloud: simplify apps to speedup suite [rcooke-warwick]
+
 # v2.107.36
 ## (2022-12-15)
 

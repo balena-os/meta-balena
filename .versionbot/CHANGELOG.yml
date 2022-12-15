@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: cloud: simplify apps to speedup suite"
+      hash: 9552f6ba4961e032fb3bd086548eec06b650609a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.37
+  title: ""
+  date: 2022-12-15T14:05:57.987Z
+- commits:
     - subject: Update tests/leviathan digest to 48ffd13
       hash: 71f0b808ee097643b9ea6f8572fb30b9e8c7e0c7
       body: Update tests/leviathan
