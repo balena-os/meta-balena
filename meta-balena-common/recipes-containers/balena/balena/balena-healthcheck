@@ -2,11 +2,29 @@
 
 set -o errexit
 
+. /usr/libexec/os-helpers-logging
+
 BALENAD_SOCKET="/run/balena.sock"
 CONTAINERD_SOCKET="/run/balena-engine/containerd/balena-engine-containerd.sock"
 
 # Check if balena-engine-daemon is responding.
 curl --fail --unix-socket $BALENAD_SOCKET http:/v1.40/_ping > /dev/null 2>&1
 
+# Due to a non-atomic file creation and writing operation in containerd, we
+# sometimes end up with an empty `uuid` file. This causes `ctr version` (and
+# hence the health check) to fail. We therefore remove this file if it is
+# present and empty. See https://github.com/balena-os/balena-engine/issues/322
+UUID_FILE="/mnt/data/docker/containerd/daemon/io.containerd.grpc.v1.introspection/uuid"
+if [ -f "$UUID_FILE" -a ! -s "$UUID_FILE" ]; then
+    warn "removing empty $UUID_FILE"
+    rm -f "$UUID_FILE"
+fi
+
 # Check if balena-engine-containerd is responding.
 balena-engine-containerd-ctr --address $CONTAINERD_SOCKET version > /dev/null 2>&1
+
+# The uuid file is expected to exist and be non-empty after `ctr version`. If
+# this is not the case, log the event.
+if [ -f "$UUID_FILE" -a ! -s "$UUID_FILE" ]; then
+    warn "$UUID_FILE empty after 'ctr version'"
+fi
