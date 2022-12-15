@@ -1,4 +1,23 @@
 - commits:
+    - subject: "os-helpers: split os-helpers-partition from os-helpers-fs"
+      hash: d02cbe9b4570e78ba2f53e28c876432dd3e11637
+      body: >
+        These provide two related though distinct sets of functionality and pull
+
+        different dependencies. In order to optimize image sizes, the device types
+
+        should be able to pull them individually.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.107.37
+  title: ""
+  date: 2022-12-15T07:24:35.010Z
+- commits:
     - subject: Update tests/leviathan digest to 48ffd13
       hash: 71f0b808ee097643b9ea6f8572fb30b9e8c7e0c7
       body: Update tests/leviathan
