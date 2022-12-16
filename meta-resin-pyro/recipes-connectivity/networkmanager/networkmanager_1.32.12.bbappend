@@ -1,8 +1,8 @@
-inherit deploy
+inherit deploy bluetooth
 
-FILESEXTRAPATHS:append := ":${THISDIR}/balena-files:${THISDIR}/${BPN}"
+FILESEXTRAPATHS_append := ":${THISDIR}/balena-files:${THISDIR}/${BPN}"
 
-SRC_URI:append = " \
+SRC_URI_append = " \
     file://NetworkManager.conf.systemd \
     file://NetworkManager.conf \
     file://98dhcp_ntp \
@@ -14,24 +14,24 @@ SRC_URI:append = " \
     file://remove-https-warning.patch \
     "
 
-RDEPENDS:${PN}:append = " \
+RDEPENDS_${PN}_append = " \
     bash \
     chrony \
     chronyc \
     balena-net-config \
     resolvconf \
     "
-FILES:${PN}:append = " ${sysconfdir}/*"
+FILES_${PN}_append = " ${sysconfdir}/*"
 
 EXTRA_OECONF += " \
     --with-resolvconf=/sbin/resolvconf \
     --disable-ovs \
     "
-PACKAGECONFIG:append = " modemmanager ppp"
+PACKAGECONFIG_append = " modemmanager ppp"
 
 # The external DHCP client doesn't work well with our `ipv4.dhcp-timeout`
 # configuration. Switch to the internal one.
-PACKAGECONFIG:remove = "dhclient"
+PACKAGECONFIG_remove = "dhclient"
 EXTRA_OECONF += " \
 	--with-config-dhcp-default=internal \
 	--with-dhclient=no \
@@ -42,7 +42,7 @@ EXTRA_OECONF += " \
     --enable-firewalld-zone=no \
     "
 
-do_install:append() {
+do_install_append() {
     install -d ${D}${sysconfdir}/tmpfiles.d
     install -m 0644 ${WORKDIR}/nm-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
 
