@@ -1,4 +1,30 @@
 - commits:
+    - subject: Add upstream resolvconf 1.91 recipe for kirkstone
+      hash: af89ddb51d7829dc045cd3434fb4cf0bec7fba37
+      body: >
+        Current resolvconf version is broken for kirkstone, which is fixed
+        upstream,
+
+        so we reuse the fixed version from upstream.
+
+
+        The symptom is that DNS servers provided by DHCP are not being used.
+
+
+        Closes #2907
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Add upstream resolvconf 1.91 recipe for kirkstone
+        changelog-entry: Add upstream resolvconf 1.91 recipe for kirkstone
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.107.40
+  title: ""
+  date: 2022-12-16T16:09:54.407Z
+- commits:
     - subject: Update tests/leviathan digest to f44bbbd
       hash: 1e766256fffb649856eced1e85bbfd5808999993
       body: Update tests/leviathan

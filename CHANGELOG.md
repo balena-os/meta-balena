@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.40
+## (2022-12-16)
+
+* Add upstream resolvconf 1.91 recipe for kirkstone [Zahari Petkov]
+
 # v2.107.39
 ## (2022-12-16)
 
