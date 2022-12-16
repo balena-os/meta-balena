@@ -1,0 +1,14 @@
+version: '2'
+services:
+  fan-control:
+      image: bh.cr/balena/fan_control_arm
+      privileged: true
+      restart: always
+      labels:
+         io.balena.features.sysfs: 1
+      environment:
+         - 'THERMAL_ZONE=1'
+         - 'REFRESH_DELAY=10'
+         - 'PWM="1,0"'
+         - 'PWM_TEMPS="0,40,50,70"'
+         - 'PWM_DUTY="0,100,1000,40000"'
