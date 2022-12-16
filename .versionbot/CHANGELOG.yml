@@ -1,4 +1,48 @@
 - commits:
+    - subject: Update NetworkManager to 1.40.4
+      hash: aeab6a6b030bd6d0047a92dcc8d41fd9e542ffe7
+      body: >
+        Main NetworkManager recipe was migrated to match latest one from
+
+        meta-openembedded, so that all improvements are merged now.
+
+
+        Excluded from it are `iwd` and `dhcpcd` daemon configurations that are
+
+        not used by us.
+
+
+        Default NM firewall in meta-openembedded is `nftables` where we are still
+
+        using `iptables`.
+
+
+        The new recipe relies on `meson` as a build system now.
+
+
+        The .bbapend file that contains modifications specific to balena is preserved.
+
+        Only `balena-client-id.patch` is removed as it references code that no longer
+
+        exists. This is because the internal systemd DHCPv4 client code that NM used
+
+        is now replaced by nettools' n-dhcp4 implementation.
+
+
+        Closes #2872
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update NetworkManager to 1.40.4
+        changelog-entry: Update NetworkManager to 1.40.4
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.108.0
+  title: ""
+  date: 2022-12-16T21:10:35.840Z
+- commits:
     - subject: Add upstream resolvconf 1.91 recipe for kirkstone
       hash: af89ddb51d7829dc045cd3434fb4cf0bec7fba37
       body: >
