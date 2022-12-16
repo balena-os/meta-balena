@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.4.8
+      hash: c17d172ab71504dc15cd9f25f5837000c15d86f9
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.107.38
+  title: ""
+  date: 2022-12-16T02:18:49.848Z
+- commits:
     - subject: "tests: cloud: simplify apps to speedup suite"
       hash: 9552f6ba4961e032fb3bd086548eec06b650609a
       body: ""
