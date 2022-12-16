@@ -1,4 +1,118 @@
 - commits:
+    - subject: Update tests/leviathan digest to f44bbbd
+      hash: 1e766256fffb649856eced1e85bbfd5808999993
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Disable renovate config for now
+              hash: f0dd47cafe9fe2addc506a9c3fc2295ef0f483a3
+              body: |
+                There is a conflict with the balena-os Renovate GitHub App
+                and the balena-io/renovate-config self-hosted job.
+
+                Disable this renovate config for now to stop the
+                GitHub App from processing this repo until the conflict
+                is resolved.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Restore worker release env var
+              hash: 83c46ab5d605f64f2cee2b42f460aa403e95f1e9
+              body: |
+                This env var is still used by the leviathan-worker project
+                for e3e tests against draft worker releases.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.11.3
+          title: ""
+          date: 2022-12-16T00:49:27.820Z
+        - commits:
+            - subject: Update Node.js to v12.22.12
+              hash: 5ad6ecf5568b267c8d020e559fd95f252d7047c5
+              body: |
+                Update node to 12.22.12
+
+                Update node from 12.22.7 to 12.22.12
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.11.2
+          title: ""
+          date: 2022-12-15T22:00:38.475Z
+        - commits:
+            - subject: Remove dependabot as renovate is enabled in balena-io/renovate-config
+              hash: a51b4d5ff26b3c770cf69237936aba2119bd5343
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Pin worker to a release and add renovate regex template
+              hash: ee8d737587d3ad511c75d0c986825dfa30bba35a
+              body: |
+                This will allow Renovate to bump the worker block reference
+                to point to the latest GitHub tag.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.11.1
+          title: ""
+          date: 2022-12-15T20:00:34.137Z
+        - commits:
+            - subject: Update core/contracts digest to 08f029b
+              hash: a71d3ec968e21f4e681bea08dfc317786dcd4fec
+              body: |
+                Update core/contracts to
+
+                Update core/contracts from  to
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.11.0
+          title: ""
+          date: 2022-12-15T19:23:14.566Z
+        - commits:
+            - subject: Revert "Avoid conflicting docker subnets"
+              hash: 1f7383da5580a31ee03d6f38de863e48dd047829
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Vipul Gupta
+              nested: []
+          version: leviathan-2.10.12
+          title: ""
+          date: 2022-12-15T17:21:51.118Z
+  version: 2.107.39
+  title: ""
+  date: 2022-12-16T09:09:09.759Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.4.8
       hash: c17d172ab71504dc15cd9f25f5837000c15d86f9
       body: Update balena-supervisor
