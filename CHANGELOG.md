@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.1
+## (2022-12-17)
+
+* kernel-balena.bbclass: make ip6tables built in [Michal Toman]
+
 # v2.108.0
 ## (2022-12-16)
 
