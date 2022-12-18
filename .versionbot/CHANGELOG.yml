@@ -1,4 +1,26 @@
 - commits:
+    - subject: "common: signing: improve debug output on failure"
+      hash: 18599bd74eacf844674f508c612014349575ba55
+      body: |
+        If the signing server's response is anything other than successful, such
+        as with an authentication failure or bad request, the HTTP status code
+        and response are hidden due to the --silent flag passed to cURL.
+
+        Drop the stdio redirect to the output file along with the --silent flag,
+        and instead use the -o parameter to output the response to the
+        appropriate file on success. This allows the status code and response to
+        be shown in the logs upon failure.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.1
+  title: ""
+  date: 2022-12-18T19:27:56.286Z
+- commits:
     - subject: Update NetworkManager to 1.40.4
       hash: aeab6a6b030bd6d0047a92dcc8d41fd9e542ffe7
       body: >

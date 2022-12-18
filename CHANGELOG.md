@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.1
+## (2022-12-18)
+
+* common: signing: improve debug output on failure [Joseph Kogut]
+
 # v2.108.0
 ## (2022-12-16)
 
