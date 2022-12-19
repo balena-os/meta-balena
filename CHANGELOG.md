@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.2
+## (2022-12-19)
+
+* tests: os: add ep fan block test [rcooke-warwick]
+
 # v2.108.1
 ## (2022-12-18)
 

@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: add ep fan block test"
+      hash: 52f3556b69814fa95315c2089550440a8b288e7c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.108.2
+  title: ""
+  date: 2022-12-19T10:38:09.306Z
+- commits:
     - subject: "common: signing: improve debug output on failure"
       hash: 18599bd74eacf844674f508c612014349575ba55
       body: |
