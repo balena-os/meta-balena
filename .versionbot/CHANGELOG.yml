@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/balena-supervisor to v14.4.9
+      hash: a56e178900a41a56e7f56b0f5964764f02e58932
+      body: Update balena-supervisor
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested: []
+  version: 2.108.2
+  title: ""
+  date: 2022-12-19T18:21:23.232Z
+- commits:
     - subject: "common: signing: improve debug output on failure"
       hash: 18599bd74eacf844674f508c612014349575ba55
       body: |

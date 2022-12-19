@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.2
+## (2022-12-19)
+
+* Update balena-os/balena-supervisor to v14.4.9 [renovate[bot]]
+
 # v2.108.1
 ## (2022-12-18)
 
