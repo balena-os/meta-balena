@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.4
+## (2022-12-20)
+
+* distro: For OS development, enable serial console [Alex Gonzalez]
+
 # v2.108.3
 ## (2022-12-20)
 

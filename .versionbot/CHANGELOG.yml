@@ -1,4 +1,20 @@
 - commits:
+    - subject: "distro: For OS development, enable serial console"
+      hash: 82df437d84bec2e2bb03c33b5f153bab82003d8a
+      body: |
+        Add graphical and serial console output when building in OS development
+        mode.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.4
+  title: ""
+  date: 2022-12-20T13:39:26.550Z
+- commits:
     - subject: Update tests/leviathan digest to f06d285
       hash: 424c0af78fd902d8109b28a77ac94ca6a3eed786
       body: Update tests/leviathan
