@@ -192,30 +192,28 @@ IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
 if [ -d /sys/firmware/efi ]; then
-    SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-    if [ "$SECUREBOOT_VAR" -eq "1" ]; then
+    SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot \
+        | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+    SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
+        | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+
+    if [ "${SECUREBOOT_VAR##+(0)}" = "1" ]; then
         LUKS=1
-    fi
-    SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-    if [ "$SETUPMODE_VAR" -eq "1" ]; then
-        inform "Secure boot setup mode detected - programming keys"
-        if ! mount | grep -q "type efivarfs"; then
-            mount -t efivarfs efivarfs "${EFIVARS_MOUNTDIR}"
-        fi
-        # Leave PK last
-        for e in db KEK PK; do
-            # Remove immutable attribute
-            chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
-            if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
-                /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
-            fi
-        done
-        # Re-read setup mode configuration
-        SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-        SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-        if [ "$SETUPMODE_VAR" -eq "1" ]; then
-            # Setting up keys hasn't disabled setup mode, try a reboot into flasher
-            if [ "$LUKS" -ne "1" ]; then
+	if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
+            inform "Secure boot setup mode detected - programming keys"
+            # Enroll PK last, as it should disable setup mode
+            for e in db KEK PK; do
+                # Remove immutable attribute
+                chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
+                if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
+                    /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
+                fi
+            done
+            # Check that we're in user mode
+            SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
+                | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+            if [ "$SETUPMODE_VAR" = "1" ]; then
+                # Setting up keys hasn't disabled setup mode, try a reboot into flasher
                 inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
                 # Make sure to reboot into the installer
                 bootcurrent=$(efibootmgr | grep BootCurrent | awk '{print $2}')
@@ -223,8 +221,6 @@ if [ -d /sys/firmware/efi ]; then
                 sync
                 reboot -f
             fi
-        else
-            LUKS=1
         fi
     fi
 fi
