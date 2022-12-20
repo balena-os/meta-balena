@@ -192,28 +192,36 @@ IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
 if [ -d /sys/firmware/efi ]; then
-    SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-    SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-    if [ "$SECUREBOOT_VAR" -eq "1" ]; then
-        LUKS=1
-    fi
-    if [ "$SETUPMODE_VAR" -eq "1" ]; then
-        inform "Secure boot setup mode detected - programming keys"
-        if ! mount | grep -q "type efivarfs"; then
-            mount -t efivarfs efivarfs "${EFIVARS_MOUNTDIR}"
+    # handle the edge case where the firmware supports secure boot, but the image
+    # is not signed
+    if [ -d ${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys ]; then
+        SECUREBOOT_VAR="$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot \
+            | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')"
+        SETUPMODE_VAR="$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
+            | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')"
+        if [ "$SECUREBOOT_VAR" -eq "1" ]; then
+            LUKS=1
         fi
-        # Leave PK last
-        for e in db KEK PK; do
-            # Remove immutable attribute
-            chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
-            if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
-                /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
+        if [ "$SETUPMODE_VAR" -eq "1" ]; then
+            inform "Secure boot setup mode detected - programming keys"
+            if ! mount | grep -q "type efivarfs"; then
+                mount -t efivarfs efivarfs "${EFIVARS_MOUNTDIR}"
             fi
-        done
-        if [ "$LUKS" -ne "1" ]; then
-            inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
-            reboot
+            # Leave PK last
+            for e in db KEK PK; do
+                # Remove immutable attribute
+                chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
+                if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
+                    /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
+                fi
+            done
+            if [ "$LUKS" -ne "1" ]; then
+                inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
+                reboot
+            fi
         fi
+    else
+        inform "Secure boot is supported in firmware, but the image is not signed"
     fi
 fi
 
