@@ -1,4 +1,58 @@
 - commits:
+    - subject: Update tests/leviathan digest to f06d285
+      hash: 424c0af78fd902d8109b28a77ac94ca6a3eed786
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Fix renovate extends syntax to include balena-io config
+              hash: 79cb0996fcb77d2211eba02d7221d059e98aba03
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.11.6
+          title: ""
+          date: 2022-12-16T17:23:34.994Z
+        - commits:
+            - subject: "renovate: Inherit settings from balena-io/renovate-config"
+              hash: 488ea00e558ba338d2b3abea74457a40686caafa
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.11.5
+          title: ""
+          date: 2022-12-16T16:17:01.461Z
+        - commits:
+            - subject: add logging and timeout to balena push
+              hash: fb354023beadff1151ed3b8acc24817312b68b86
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.11.4
+          title: ""
+          date: 2022-12-16T15:07:34.575Z
+  version: 2.108.3
+  title: ""
+  date: 2022-12-20T01:29:29.457Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.4.9
       hash: a56e178900a41a56e7f56b0f5964764f02e58932
       body: Update balena-supervisor

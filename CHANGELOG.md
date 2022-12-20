@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v2.108.3
+## (2022-12-20)
+
+
+<details>
+<summary> Update tests/leviathan digest to f06d285 [renovate[bot]] </summary>
+
+> ## leviathan-2.11.6
+> ### (2022-12-16)
+> 
+> * Fix renovate extends syntax to include balena-io config [Kyle Harding]
+> 
+> ## leviathan-2.11.5
+> ### (2022-12-16)
+> 
+> * renovate: Inherit settings from balena-io/renovate-config [Kyle Harding]
+> 
+> ## leviathan-2.11.4
+> ### (2022-12-16)
+> 
+> * add logging and timeout to balena push [rcooke-warwick]
+> 
+
+</details>
+
 # v2.108.2
 ## (2022-12-19)
 
