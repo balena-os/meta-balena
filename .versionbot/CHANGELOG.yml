@@ -1,4 +1,41 @@
 - commits:
+    - subject: "Engine healthcheck: deal with empty uuid file"
+      hash: 345d1440d34fe042f03884c4ae32f0ba7e7768e8
+      body: >
+        In rare cases (believed to be caused by a non-atomic file creation and
+
+        writing operation in containerd), we end up with an empty file at
+
+        `/mnt/data/docker/containerd/daemon/io.containerd.grpc.v1.introspection/uuid`.
+
+        This causes `ctr version` (and hence the health check) to fail. See
+
+        https://github.com/balena-os/balena-engine/issues/322
+
+
+        This commit addresses this issue in two ways:
+
+
+        1. Before running `ctr version`, we check if the uuid file exists and is
+           empty. If so, we remove it. (The subsequent execution of `ctr
+           version` by the healthcheck will create the file again.)
+        2. After running `ctr version`, we check if the uuid file was really
+           created and is not empty.
+
+        In both cases, when an empty uuid file is detected, we log the event to
+
+        help us confirm our hypothesis about the root cause.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.108.5
+  title: ""
+  date: 2022-12-21T21:36:44.680Z
+- commits:
     - subject: "distro: For OS development, enable serial console"
       hash: 82df437d84bec2e2bb03c33b5f153bab82003d8a
       body: |

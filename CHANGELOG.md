@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.5
+## (2022-12-21)
+
+* Engine healthcheck: deal with empty uuid file [Leandro Motta Barros]
+
 # v2.108.4
 ## (2022-12-20)
 
