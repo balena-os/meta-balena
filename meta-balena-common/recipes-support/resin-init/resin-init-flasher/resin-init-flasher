@@ -468,7 +468,7 @@ if [ "$LUKS" = "1" ]; then
     # Emulate a stage2 bootloader
     # At this point just copy the flasher kernel to EFI partition
     # TODO: Remove or replace by a proper stage2 bootloader when that is ready
-    cp -a /boot/bzImage /boot/bzImage.sig ${EFI_MOUNT_DIR}
+    find / -xdev -type f -name "bzImage*" -exec cp -a {} "${EFI_MOUNT_DIR}" +
 
     if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
         INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
