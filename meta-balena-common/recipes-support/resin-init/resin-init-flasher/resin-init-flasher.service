@@ -8,6 +8,9 @@ After=mnt-boot.mount resin-device-register.service
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-init-flasher
+StandardOutput=tty
+StandardError=tty
+TTYPath=/dev/ttyS0
 
 [Install]
 WantedBy=multi-user.target
