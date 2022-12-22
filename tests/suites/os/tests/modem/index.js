@@ -227,6 +227,11 @@ module.exports = {
                             `mmcli -m ${targetAddress} --simple-disconnect && mmcli -m ${targetAddress} --disable`,
                             this.link,
                         );
+                            
+                        await this.worker.executeCommandInHostOS(
+                            `route del -net default netmask 0.0.0.0 dev ${iface}`,
+                            this.link,
+                        );
                     });
                 }),
             );
