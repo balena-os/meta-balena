@@ -362,7 +362,12 @@ fi
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting internal device boot partition."
 
-BOOT_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" resin-boot)
+# Wait for the devices to be detected for a while
+BOOT_MOUNT="/dev/disk/by-label/resin-boot"
+if ! timeout 10 bash -c 'until test -L /dev/disk/by-label/resin-boot; do sleep 1; done'; then
+    BOOT_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" resin-boot)
+fi
+
 if [ -n "${BOOT_MOUNT}" ]; then
     if ! mount "${BOOT_MOUNT}"  "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"; then
         fail "Failed to mount disk labeled as 'resin-boot'."
