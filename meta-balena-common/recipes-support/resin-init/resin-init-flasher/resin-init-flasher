@@ -212,7 +212,8 @@ if [ -d /sys/firmware/efi ]; then
         done
         if [ "$LUKS" -ne "1" ]; then
             inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
-            reboot
+            sync
+            reboot -f
         fi
     fi
 fi
@@ -327,7 +328,7 @@ if [ "$LUKS" = "1" ]; then
 
         PART_DEV="$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         inform "Encrypting $PART_DEV"
-        cryptsetup luksFormat "$PART_DEV" "$PASSPHRASE_FILE"
+        echo 'YES' | cryptsetup luksFormat "$PART_DEV" "$PASSPHRASE_FILE"
         cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file "$PASSPHRASE_FILE"
         DM_DEV="/dev/mapper/$PART_NAME"
         if [ "$PART_NAME" = "resin-boot" ]; then
