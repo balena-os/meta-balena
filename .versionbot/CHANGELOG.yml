@@ -1,4 +1,89 @@
 - commits:
+    - subject: "resin-init-flasher: adapt for secure boot setup from initramfs"
+      hash: 24f6154ec012fbc55db4f546fe9ba7ed292504c8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "efitools: Package lock down EFI image into its own package"
+      hash: 503481ed2873d02dd169c570011735d76030371f
+      body: >
+        This EFI image contains the secure boot certificates and when executed it
+
+        is supposed to load the keys into the respective secure boot slots.
+
+
+        We don't use this binary in our secure boot implementation, but currently
+
+        the build breaks as the binary is installed but not packaged.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Fail if new keys are used"
+      hash: e61d53d88bf8985ef4f05f58bf400cb248d1de77
+      body: |
+        We currently have not found a way to use efi-updatevar to append new
+        keys, so this is not currently supported.
+
+        Still, abort the hostOS update if new keys are detected so the device is
+        not bricked.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Update balena keys when updating"
+      hash: a2b8477f7a2758f26ee4f839b0c863735bba2c7d
+      body: |
+        On UEFI systems with secure boot enabled, new keys may be shipped on
+        the new filesystem.
+      footer:
+        Relates-to: "#2444"
+        relates-to: "#2444"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: 0-signed-updates: Use logging helpers"
+      hash: a42bf3af683ec30a46915f4b7c309623b97c22e5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: In setupmode program new keys"
+      hash: 7a83a8e91a5030e8e5199d09ca254ead59305656
+      body: |
+        If the device has been configured in setupmode, make the flasher images
+        program the balena keys from the boot partition.
+      footer:
+        Relates-to: "#2444"
+        relates-to: "#2444"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.5
+  title: ""
+  date: 2022-12-22T17:31:01.443Z
+- commits:
     - subject: "distro: For OS development, enable serial console"
       hash: 82df437d84bec2e2bb03c33b5f153bab82003d8a
       body: |

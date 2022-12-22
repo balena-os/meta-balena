@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.108.5
+## (2022-12-22)
+
+* resin-init-flasher: adapt for secure boot setup from initramfs [Alex Gonzalez]
+* efitools: Package lock down EFI image into its own package [Alex Gonzalez]
+* hostapp-update-hooks: Fail if new keys are used [Alex Gonzalez]
+* hostapp-update-hooks: Update balena keys when updating [Alex Gonzalez]
+* hostapp-update-hooks: 0-signed-updates: Use logging helpers [Alex Gonzalez]
+* resin-init-flasher: In setupmode program new keys [Alex Gonzalez]
+
 # v2.108.4
 ## (2022-12-20)
 
