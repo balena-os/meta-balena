@@ -102,6 +102,9 @@ migrate_run() {
         # Copy the raw image to memory
         cp "${image}" "/tmp"
 
+        # Copy the flasher kernel images to memory
+        find "${ROOTFS_DIR}" -xdev -type f -name "bzImage*" -exec cp -a {} "/tmp" +
+
         # Copy the flasher boot partition into memory (contains configuration)
         mkdir -p "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
         cp -r "${FLASH_BOOT_MOUNT}"/* "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/"
