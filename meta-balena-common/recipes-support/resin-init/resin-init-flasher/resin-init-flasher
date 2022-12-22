@@ -202,7 +202,8 @@ if command -v efivar && [ -d /sys/firmware/efi ]; then
         done
         if [ "$LUKS" -ne "1" ]; then
             inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
-            reboot
+            sync
+            reboot -f
         fi
     fi
 fi
