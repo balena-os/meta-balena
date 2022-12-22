@@ -1,6 +1,32 @@
 Change log
 -----------
 
+# v2.109.0
+## (2022-12-22)
+
+* resin-init-flasher: search for images to copy instead of hardcoding paths [Alex Gonzalez]
+* [WIP] resin-init-flasher: wait for the by-label links to be created [Alex Gonzalez]
+* initrdscripts: migrate: copy flasher kernels to memory [Alex Gonzalez]
+* resin-init-flasher: adapt for running secure boot setup from initramfs [Alex Gonzalez]
+* resin-init-flasher: comply with recovery mode [Alex Gonzalez]
+* resin-init-flasher: do not report progress if unprovisioned [Alex Gonzalez]
+* resin-init-flasher: check splash configuration exists before copying [Alex Gonzalez]
+* resin-init-flasher: remove unused variable [Alex Gonzalez]
+* resin-init-flasher: Move configuration data definitions to config file [Alex Gonzalez]
+* resin-init-flasher: Use the default for the external boot partition mount [Alex Gonzalez]
+* resin-init-flasher: replace shutdonw for reboot in case of migration [Alex Gonzalez]
+* resin-init-flasher: Do not  hardcode the path to the internal boot device [Alex Gonzalez]
+* resin-init-flasher: Extract code that resolved internal device [Alex Gonzalez]
+* os-helpers-fs: Add shared code from resin-init-flasher [Alex Gonzalez]
+* resin-init-flasher: check for utilities before calling them [Alex Gonzalez]
+* resin-init-flasher: Do not hardcode path to the raw image [Alex Gonzalez]
+* initrdscript: prepare: expose path to initramfs logs [Alex Gonzalez]
+* initrdscritps: Move moving /run mountpoint from rootfs to migrate module [Alex Gonzalez]
+* initrdscripts: Add migration module [Alex Gonzalez]
+* initrdscript: resindataexpander: skip for flasher images [Alex Gonzalez]
+* initrdscripts: add recovery module [Alex Gonzalez]
+* docs: add initramfs overview [Alex Gonzalez]
+
 # v2.108.4
 ## (2022-12-20)
 

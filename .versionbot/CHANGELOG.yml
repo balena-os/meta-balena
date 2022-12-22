@@ -1,4 +1,288 @@
 - commits:
+    - subject: "resin-init-flasher: search for images to copy instead of hardcoding
+        paths"
+      hash: eb3a1bb1245f3d106bb9aa35c04e879d195e2b2a
+      body: |
+        The files will live in different places depending on whether the script
+        is run from a flasher image or from initramfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "[WIP] resin-init-flasher: wait for the by-label links to be created"
+      hash: c27b6c875e00dd727547b8a1bc0e2f391328139d
+      body: >
+        The by-label links can be used both for physical and mapper devices (used
+
+        in disk encryption).
+
+
+        Check whether the fallback to using lsblk is actually required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: migrate: copy flasher kernels to memory"
+      hash: d0906de18d0df2d6b3e73db660478e50189589e6
+      body: |
+        This are then copied into the EFI partition when setting up the secure
+        boot partitions - otherwise unused.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: adapt for running secure boot setup from initramfs"
+      hash: e236fa6dca3979407073dc1faf47e6e6c3c23f32
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: comply with recovery mode"
+      hash: 9e1efdb174b87d3d991ea4f4c777efc884769911
+      body: |
+        If booting in recovery mode, wait on adbd to exit before continuing.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: do not report progress if unprovisioned"
+      hash: 97f6a252c030acf49b4a58fb018274f3c7719044
+      body: |
+        If we know we have not provisioned, let's not print errors when the
+        report cannot be sent.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: check splash configuration exists before copying"
+      hash: 79e4d0c6b25456719eb94cc3d4d9fb09e8f63f62
+      body: |
+        Otherwise, if the flasher is configured without a splash configuration
+        directory, the boot partition content is overwritten.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: remove unused variable"
+      hash: 0f57c2c7108cd2d5a0d46e3c1cfb905a455c2616
+      body: |
+        The INTERNAL_DEVICE_CONF_PART_MOUNTPOINT is no longer used in the code.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Move configuration data definitions to config file"
+      hash: 2f4e0ad6a2a9c2767bee32d32b8dc496284ee17a
+      body: |
+        This exposes a file based interface for configuration sharing. The
+        clarity is needed while working on the migrator.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Use the default for the external boot partition
+        mount"
+      hash: 3e0b401618336f7cd6b032530858c317bc5848c7
+      body: |
+        This simplifies the code as we only set the boot partition mount in one
+        place.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: replace shutdonw for reboot in case of migration"
+      hash: 7523d6634324253e59c0531ad290476372313890
+      body: |
+        When migrating, we can't assume a device can be remotely powered on, so
+        finish the flashing with a reboot instead of a shutdown.
+
+        This is possible as the initramfs does not currently have a shutdown
+        command and avoids the complexity of having to detect whether we are
+        running from initramfs or not.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Do not  hardcode the path to the internal boot
+        device"
+      hash: c1e2a6cf6fcd7b85614ac08d5f8ea2d9510b4a33
+      body: |
+        Make sure the internal boot device we mount is the one we have just
+        programmed - using the resin-boot label might clash.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Extract code that resolved internal device"
+      hash: 8f291e73118e5b72b7f916e47c161e87a3831cdc
+      body: |
+        This is now also used from the migrator module.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: Add shared code from resin-init-flasher"
+      hash: fcd33874b409ec5203c82a6d9e22bf2656d4bf7c
+      body: |
+        As we work in the migrator there is some code we want to share.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: check for utilities before calling them"
+      hash: 39562a6569c0b2677b094d7e669eb16ceb80af81
+      body: |
+        Allow for the script to also be used from different environments, like
+        systems without systemd.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Do not hardcode path to the raw image"
+      hash: 00c1a9a9b3caabb50ca4910cf47279f2fc3ee000
+      body: |
+        Allow the script to search for the raw balena image in the rootfs. This
+        allows to use the raw image from different sources.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscript: prepare: expose path to initramfs logs"
+      hash: 6dd56c46b2991d49582e996df080f851ad9717f7
+      body: |
+        This allows other module to use it without hardcoding the value.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscritps: Move moving /run mountpoint from rootfs to migrate
+        module"
+      hash: 661399d5aceedc0f8fd94a7f781c118400fcf7de
+      body: >
+        The migrate module needs to umount the rootfs, so by moving the mountpoint
+
+        moving into the migrate module it's only done when not migrating.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: Add migration module"
+      hash: e673f7f18a65ba53d563aab69a89fbf1ab775e40
+      body: |
+        This module allows to program the internal storage from initramfs hence
+        making it possible to migrate an existing OS by booting from the same
+        disk.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscript: resindataexpander: skip for flasher images"
+      hash: 14f0fecaf693b9adb8fff8ac82c0c0cde2f9affc
+      body: |
+        The code outside of the enabled and run functions is not meant to be
+        executed for flasher images and it prints verbose errors.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: add recovery module"
+      hash: 241154b8e0ca751d14dc4f5dbdaf042c186fbd91
+      body: |
+        When `recovery` is passed in the kernel command line, the initramfs will
+        not boot into the OS but launch adbd.
+
+        A connection can then be established via the network (if a DHCP address
+        is provided) or using a USB gadget connection.
+
+        For a network connection, the client needs to install `adb` and run:
+        ```
+        adb connect $IPADDR:5555
+        adb shell
+        ```
+
+        Other adb commands, like pull/push of files are also available.
+
+        Resolves #2864
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docs: add initramfs overview"
+      hash: 131e1d02f0d25d5b88a42c0075b25efeec6799f6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.109.0
+  title: ""
+  date: 2022-12-22T17:28:12.498Z
+- commits:
     - subject: "distro: For OS development, enable serial console"
       hash: 82df437d84bec2e2bb03c33b5f153bab82003d8a
       body: |
