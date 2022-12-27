@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.6
+## (2022-12-27)
+
+* flasher: output logs to serial console [Joseph Kogut]
+
 # v2.108.5
 ## (2022-12-21)
 

@@ -1,4 +1,20 @@
 - commits:
+    - subject: "flasher: output logs to serial console"
+      hash: 131893e433ef64a1f3b05dfcd44b0e022f13646d
+      body: |
+        Improve debugging experience of flasher service by outputting logs to
+        serial console.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.6
+  title: ""
+  date: 2022-12-27T20:53:27.624Z
+- commits:
     - subject: "Engine healthcheck: deal with empty uuid file"
       hash: 345d1440d34fe042f03884c4ae32f0ba7e7768e8
       body: >
