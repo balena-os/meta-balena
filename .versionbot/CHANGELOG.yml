@@ -1,4 +1,30 @@
 - commits:
+    - subject: "common: linux-firmware: remove outdated recipe"
+      hash: f95de18f6ce632e4a73c1818958a71c1fa4135b4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: conf: unpin linux-firmware 20210511"
+      hash: 71c86c2d139e86310115101cf88163fddb643192
+      body: |
+        Upstream poky kirkstone contains linux-firmware 20220708, newer than our
+        recipe copied from hardknott. Switch back to the upstream recipe.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.7
+  title: ""
+  date: 2022-12-28T08:38:48.467Z
+- commits:
     - subject: "flasher: output logs to serial console"
       hash: 131893e433ef64a1f3b05dfcd44b0e022f13646d
       body: |

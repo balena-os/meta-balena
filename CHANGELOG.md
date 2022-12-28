@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.108.7
+## (2022-12-28)
+
+* common: linux-firmware: remove outdated recipe [Joseph Kogut]
+* common: conf: unpin linux-firmware 20210511 [Joseph Kogut]
+
 # v2.108.6
 ## (2022-12-27)
 
