@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: fix modem test teardown"
+      hash: e5f9b72eae7bcc88cb28d99f8b1bf7f2c1b65789
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.108.7
+  title: ""
+  date: 2022-12-28T16:06:50.921Z
+- commits:
     - subject: "flasher: output logs to serial console"
       hash: 131893e433ef64a1f3b05dfcd44b0e022f13646d
       body: |

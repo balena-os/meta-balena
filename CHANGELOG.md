@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.7
+## (2022-12-28)
+
+* tests: os: fix modem test teardown [rcooke-warwick]
+
 # v2.108.6
 ## (2022-12-27)
 
