@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to e09fae4
+      hash: 49c24a43ede0371c2c5a992e9197124492b55808
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "renovate: Remove v prefix from leviathan-worker github-tags"
+              hash: 80778c4b2ea6f2e225b903b6d0a43000a492701e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.11.7
+          title: ""
+          date: 2022-12-28T16:49:10.897Z
+  version: 2.108.8
+  title: ""
+  date: 2022-12-28T21:07:27.490Z
+- commits:
     - subject: "tests: os: fix modem test teardown"
       hash: e5f9b72eae7bcc88cb28d99f8b1bf7f2c1b65789
       body: ""

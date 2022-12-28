@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.108.8
+## (2022-12-28)
+
+
+<details>
+<summary> Update tests/leviathan digest to e09fae4 [renovate[bot]] </summary>
+
+> ## leviathan-2.11.7
+> ### (2022-12-28)
+> 
+> * renovate: Remove v prefix from leviathan-worker github-tags [Kyle Harding]
+> 
+
+</details>
+
 # v2.108.7
 ## (2022-12-28)
 
