@@ -47,6 +47,7 @@ SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 LUKS=0
+EFI=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 
 function clean {
@@ -192,6 +193,8 @@ IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
 if [ -d /sys/firmware/efi ]; then
+    EFI=1
+
     # handle the edge case where the firmware supports secure boot, but the image
     # is not signed
     if [ -d ${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys ]; then
@@ -225,10 +228,10 @@ if [ -d /sys/firmware/efi ]; then
     fi
 fi
 
-if [ "$LUKS" = "1" ]; then
-    # Include FS helpers for repartitioning
-    . /usr/libexec/os-helpers-fs
+# Include FS helpers for repartitioning
+. /usr/libexec/os-helpers-fs
 
+if [ "$LUKS" = "1" ]; then
     # Include TPM2 helpers
     . /usr/libexec/os-helpers-tpm2
 
@@ -506,6 +509,21 @@ sync
 
 inform "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
+
+EFIPART_LABEL="resin-boot"
+LOADER_PATH="/EFI/BOOT/bootx64.efi"
+BOOT_ENTRY_LABEL="balenaOS"
+if [ "$EFI" = "1" ]; then
+    if [ "$LUKS" = "1" ]; then
+        EFIPART_LABEL=balena-efi
+    fi
+
+    efibootmgr --create \
+               --disk "/dev/$(lsblk -ndo pkname "$(get_dev_path_from_label ${EFIPART_LABEL})")" \
+               --part "$(get_part_number_by_label "$(basename "${internal_dev}")" "${EFIPART_LABEL}")" \
+               --label "${BOOT_ENTRY_LABEL}" \
+               --loader "${LOADER_PATH}"
+fi
 
 if [ "$LUKS" = "1" ]; then
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
