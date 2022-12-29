@@ -3,6 +3,8 @@ Description=Resin init flasher service
 Requires=mnt-boot.mount
 Wants=resin-device-register.service
 After=mnt-boot.mount resin-device-register.service
+Before=serial-getty@ttyS0.service
+Conflicts=serial-getty@ttyS0.service
 
 [Service]
 Type=oneshot
