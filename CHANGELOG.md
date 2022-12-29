@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.108.9
+## (2022-12-29)
+
+
+<details>
+<summary> Update tests/leviathan digest to 1dcb432 [renovate[bot]] </summary>
+
+> ## leviathan-2.11.8
+> ### (2022-12-28)
+> 
+> * chore(deps): update dependency eslint-config-prettier to 8.5.0 [renovate[bot]]
+> 
+
+</details>
+
 # v2.108.8
 ## (2022-12-28)
 

@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update tests/leviathan digest to 1dcb432
+      hash: 830ab691c31d4e1ff3bacba743b43ee1c04235f3
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "chore(deps): update dependency eslint-config-prettier to 8.5.0"
+              hash: af17a52befb96751ed412770397be99609e02273
+              body: |
+                Update eslint-config-prettier to 8.5.0
+
+                Update eslint-config-prettier from 4.3.0 to 8.5.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.11.8
+          title: ""
+          date: 2022-12-28T23:03:27.783Z
+  version: 2.108.9
+  title: ""
+  date: 2022-12-29T03:03:57.328Z
+- commits:
     - subject: Update tests/leviathan digest to e09fae4
       hash: 49c24a43ede0371c2c5a992e9197124492b55808
       body: Update tests/leviathan
