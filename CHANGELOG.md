@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v2.108.10
+## (2022-12-30)
+
+
+<details>
+<summary> Update tests/leviathan digest to 7d6326d [renovate[bot]] </summary>
+
+> ## leviathan-2.12.3
+> ### (Invalid date)
+> 
+> * chore(deps): update dependency eslint-plugin-node to 11.1.0 [renovate[bot]]
+> 
+> ## leviathan-2.12.2
+> ### (2022-12-29)
+> 
+> * Run out-of-band e2e tests after Flowzone passes [Kyle Harding]
+> 
+> ## leviathan-2.12.1
+> ### (2022-12-29)
+> 
+> * chore(deps): update dependency eslint-plugin-jsdoc to 39.6.4 [renovate[bot]]
+> 
+> ## leviathan-2.12.0
+> ### (2022-12-29)
+> 
+> * chore(deps): update core/contracts digest to 4698e4e [renovate[bot]]
+> 
+> ## leviathan-2.11.9
+> ### (2022-12-29)
+> 
+> * chore(deps): update dependency balena-os/leviathan-worker to 2.6.13 [renovate[bot]]
+> 
+
+</details>
+
 # v2.108.9
 ## (2022-12-29)
 

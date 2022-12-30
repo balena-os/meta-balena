@@ -1,4 +1,93 @@
 - commits:
+    - subject: Update tests/leviathan digest to 7d6326d
+      hash: fa65ccab6f7b8fd3c55c8a1cd2947764da454770
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "chore(deps): update dependency eslint-plugin-node to 11.1.0"
+              hash: 4176dfc47d2dd7abe8c8f556f215481e3935d26b
+              body: |
+                Update eslint-plugin-node to 11.1.0
+
+                Update eslint-plugin-node from 6.0.1 to 11.1.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.12.3
+          title: ""
+          date: 2022-12-30T05:11:02.619Z
+        - commits:
+            - subject: Run out-of-band e2e tests after Flowzone passes
+              hash: 4c82cc453f44736e05b2917be7357ac24348c212
+              body: |
+                Custom actions can only use certain secrets and single-dimension
+                run matrices. By running an entirely separate job after Flowzone
+                is successful we have a lot more options.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.12.2
+          title: ""
+          date: 2022-12-29T23:20:01.166Z
+        - commits:
+            - subject: "chore(deps): update dependency eslint-plugin-jsdoc to 39.6.4"
+              hash: 5e184eaa1262cc9c333d0fc2fbc5a1d2ad30e78a
+              body: |
+                Update eslint-plugin-jsdoc to 39.6.4
+
+                Update eslint-plugin-jsdoc from 3.15.1 to 39.6.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.12.1
+          title: ""
+          date: 2022-12-29T10:36:24.073Z
+        - commits:
+            - subject: "chore(deps): update core/contracts digest to 4698e4e"
+              hash: 6c174fba4fe4c6020180db70ae56bee1108c50c1
+              body: |
+                Update core/contracts to 
+
+                Update core/contracts from  to 
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.12.0
+          title: ""
+          date: 2022-12-29T06:59:25.022Z
+        - commits:
+            - subject: "chore(deps): update dependency balena-os/leviathan-worker to 2.6.13"
+              hash: aeb38f8d70e9219dd40697172f25d153d579e474
+              body: |
+                Update balena-os/leviathan-worker to 2.6.13
+
+                Update balena-os/leviathan-worker from 2.6.11 to 2.6.13
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.11.9
+          title: ""
+          date: 2022-12-29T05:19:51.486Z
+  version: 2.108.10
+  title: ""
+  date: 2022-12-30T10:03:22.750Z
+- commits:
     - subject: Update tests/leviathan digest to 1dcb432
       hash: 830ab691c31d4e1ff3bacba743b43ee1c04235f3
       body: Update tests/leviathan
