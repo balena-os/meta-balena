@@ -45,6 +45,7 @@ fetch_key() {
 }
 
 do_get_public_keys() {
+    set -x
     fetch_key "gpg/key/${SIGN_GRUB_KEY_ID}" ".key" "grub.gpg"
     fetch_key "kmod/cert/${SIGN_KMOD_KEY_ID}" ".cert" "kmod.crt"
     fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".pk" "PK.auth"

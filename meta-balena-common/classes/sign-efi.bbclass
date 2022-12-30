@@ -6,6 +6,7 @@ do_sign_efi:class-native() {
 }
 
 do_sign_efi () {
+    set -x
     if [ "x${SIGN_API}" = "x" ]; then
         bbnote "Signing API not defined"
         return 0

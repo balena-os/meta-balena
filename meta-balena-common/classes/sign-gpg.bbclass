@@ -1,6 +1,7 @@
 inherit deploy
 
 do_sign_gpg () {
+    set -x
     if [ "x${SIGN_API}" = "x" ]; then
         bbnote "Signing API not defined"
         return 0
