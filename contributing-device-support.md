@@ -19,6 +19,12 @@ Contributing support for a new board is a process that involves the following st
 - [Send a Pull Request for a hardware contract which describes the board's capabilities](#step-3-hardware-contract)
 - [Maintaining the repository and OS updates](#step-4-maintaining-the-repository-and-os-updates)
 
+## Step 0: Build poky (optional)
+
+Poky is a reference distribution from the Yocto project. Building poky will ensure that you have a system that has enough memory, storage, and CPU cores to build a yocto image - like the balenaOS - on your laptop/PC.
+
+BalenaOS is currently based on Kirkstone version of Yocto. See the instructions to do a quick build in the yoctoproject [ref manual](https://docs.yoctoproject.org/4.0.5/brief-yoctoprojectqs/index.html)
+
 ## Step 1: Board Support Repository Breakout
 
 The following documentation walks you through creating such a Yocto package. Because of the substantial difference between the hardware of many boards, this document provides general directions,

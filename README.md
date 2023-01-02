@@ -57,6 +57,29 @@ OS_DEVELOPMENT = "1"
 
 This is a development only setting and no `OS_DEVELOPMENT` configured images are deployed.
 
+## Building
+
+1. Navigate your shell to the balena-os repo for your device. Configure the device using barys
+
+```./balena-yocto-scripts/build/barys -m <MACHINE_SLUG> -d --rm-work --shared-downloads ~/yocto-downloads/ --shared-sstate ~/yocto-state/<MACHINE_SLUG> -n```
+
+2. Run the source script to add required tools to your shell instance
+
+```source layers/poky/oe-init-build-env build```
+
+3. Run bitbake - and grab a coffee as this will take some time.
+
+```MACHINE=<MACHINE_SLUG> bitbake balena-image-flasher```
+
+The type of your image could be `balena-image-flasher` or `balena-image` - depending on whether the device has onboard storage like an eMMC or an SD card that it boots off of (like the Raspberry Pi 4)
+
+
+---
+
+- If you are within Balena Organization, you should also request access to our shared development device.
+- Make sure that you have setup your local environment by following the [Yocto ref manual](https://docs.yoctoproject.org/4.0.6/). 
+- Using the recommended operating systems as per the ref manual.
+
 ## The OS
 
 ### SSH and Avahi services
