@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.3
+## (2023-01-02)
+
+* Add instructions on how to build using barys and bitbake [Anuj Deshpande]
+
 # v2.108.2
 ## (2022-12-19)
 

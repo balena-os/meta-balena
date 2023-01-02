@@ -1,4 +1,16 @@
 - commits:
+    - subject: Add instructions on how to build using barys and bitbake
+      hash: 96dddd733350f331107d749b7c3b59405acf7aea
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Anuj Deshpande
+      nested: []
+  version: 2.108.3
+  title: ""
+  date: 2023-01-02T06:33:14.540Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.4.9
       hash: a56e178900a41a56e7f56b0f5964764f02e58932
       body: Update balena-supervisor
