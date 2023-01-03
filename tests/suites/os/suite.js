@@ -261,39 +261,6 @@ module.exports = {
 		// Unpack OS image .gz
 		await this.os.fetch();
 
-		// If this is a flasher image, and we are using qemu, unwrap
-		if (
-			this.suite.deviceType.data.storage.internal &&
-			this.workerContract.workerType === `qemu`
-		) {
-			const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
-			const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
-			console.log(`Unwrapping file ${this.os.image.path}`);
-			console.log(`Looking for ${RAW_IMAGE_PATH}`);
-			try {
-				await imagefs.interact(
-					this.os.image.path,
-					2,
-					async (fsImg) => {
-						await pipeline(
-							fsImg.createReadStream(RAW_IMAGE_PATH),
-							fse.createWriteStream(OUTPUT_IMG_PATH),
-						);
-					},
-				);
-
-				this.os.image.path = OUTPUT_IMG_PATH;
-				console.log(`Unwrapped flasher image!`);
-			} catch (e) {
-				// If the outer image doesn't contain an image for installation, ignore the error
-				if (e.code === 'ENOENT') {
-					console.log('Not a flasher image, skipping unwrap');
-				} else {
-					throw e;
-				}
-			}
-		}
-
 		if (supportsBootConfig(this.suite.deviceType.slug)) {
 			await enableSerialConsole(this.os.image.path);
 		}
