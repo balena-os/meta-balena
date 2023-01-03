@@ -3,17 +3,38 @@ const blockNTP = async (test, that, target) => {
 
 	return test.test(`Blocking NTP by stopping dnsmasq.service`, t =>
 		t.resolves(
+			/* Block NTP by adding a server entry for the domain that loops back to
+			 * our own DNS server
+			 */
 			that.worker.executeCommandInHostOS(
-				`journalctl --rotate --vacuum-time=1s`,
+				['dbus-send',
+					'--system',
+					'--dest=uk.org.thekelleys.dnsmasq',
+					'/uk/org/thekelleys/dnsmasq',
+					'uk.org.thekelleys.dnsmasq.SetServers',
+					'uint32:127.0.0.2',
+					'string:ntp.org',
+				],
 				target,
-			),
-			'Should rotate journal logs'
+			).then(() => {
+				return that.worker.executeCommandInHostOS(
+					['dbus-send',
+						'--system',
+						'--dest=uk.org.thekelleys.dnsmasq',
+						'/uk/org/thekelleys/dnsmasq',
+						'uk.org.thekelleys.dnsmasq.ClearCache',
+					],
+					target,
+				);
+			}),
+			'Should block ntp.org',
 		).then(() => {
 			return t.resolves(
 				that.worker.executeCommandInHostOS(
-					`systemctl stop dnsmasq.service`,
-					target
-				), `Should stop dnsmasq.service`
+					`journalctl --rotate --vacuum-time=1s`,
+					target,
+				),
+				'Should rotate journal logs',
 			);
 		}).then(() => {
 			// avoid hitting 'start request repeated too quickly'
@@ -38,16 +59,7 @@ const blockNTP = async (test, that, target) => {
 					target
 				),
 				'Should wait for chronyd.service to be active'
-			)
-		}).then(() => {
-			return t.resolves(
-				that.systemd.waitForServiceState(
-					'dnsmasq.service',
-					'inactive',
-					target
-				),
-				'Should wait for dnsmasq.service to be inactive'
-			)
+			);
 		})
 	);
 }
@@ -66,7 +78,7 @@ const restoreNTP = async (test, that, target) => {
 				that.worker.executeCommandInHostOS(
 					`systemctl restart dnsmasq.service`,
 					target
-				), `Should stop dnsmasq.service`
+				), `Should restart dnsmasq.service`
 			);
 		}).then(() => {
 			return t.resolves(
