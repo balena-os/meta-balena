@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.108.11
+## (2023-01-03)
+
+
+<details>
+<summary> Update tests/leviathan digest to d3485ab [renovate[bot]] </summary>
+
+> ## leviathan-2.13.0
+> ### (2023-01-03)
+> 
+> * Revert "minor: Add @balena/leviathan-test-helpers package" [Kyle Harding]
+> 
+> ## leviathan-2.12.4
+> ### (Invalid date)
+> 
+> * chore(deps): update dependency eslint-plugin-standard to 4.1.0 [renovate[bot]]
+> 
+
+</details>
+
 # v2.108.10
 ## (2022-12-30)
 
