@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.14
+## (2023-01-04)
+
+* tests: os: chrony: disable NTP w/ dnsmasq dbus API [Joseph Kogut]
+
 # v2.108.13
 ## (2023-01-04)
 

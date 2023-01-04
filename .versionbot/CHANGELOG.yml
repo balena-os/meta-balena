@@ -1,4 +1,25 @@
 - commits:
+    - subject: "tests: os: chrony: disable NTP w/ dnsmasq dbus API"
+      hash: 743e49deef0b99bff17b55510c69c359810892b2
+      body: |
+        The previous method of disabling NTP by stopping the nameserver
+        (dnsmasq) relied on the dnsmasq unit not being reactivated before the
+        test completed.
+
+        Instead, disable NTP by blocking ntp.org in the local dnsmasq instance
+        using a dbus method call. NTP is re-enabled as before, by restarting
+        dnsmasq.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.14
+  title: ""
+  date: 2023-01-04T18:26:07.691Z
+- commits:
     - subject: Update tests/leviathan digest to 44dceb4
       hash: 4180a3d2e17df753171d562017e1c7982d518e1b
       body: Update tests/leviathan
