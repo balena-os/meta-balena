@@ -68,6 +68,13 @@
                "echo Import ${balena_extra_env_file} in environment;" \
                "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
        \
+       "balena_import_scan_dev_extra_env_file=" \
+               "if fatload ${resin_scan_dev_type} ${resin_scan_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${balena_extra_env_file}; then " \
+                   "run balena_import_extra_env_file; " \
+                   "echo Imported ${balena_extra_env_file} from scanned device ${resin_scan_dev_type}:${resin_scan_dev_index} in environment;" \
+               "else " \
+                   "echo File ${balena_extra_env_file} not found on scanned device ${resin_scan_dev_type}:${resin_scan_dev_index}; " \
+               "fi; \0" \
        "os_import_bootcount_file=" \
                "echo Import ${os_bc_file} in environment;" \
                "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
@@ -98,6 +105,7 @@
                "echo Scanning ${resin_uboot_device_types} devices ${resin_uboot_devices}; " \
                "for resin_scan_dev_type in ${resin_uboot_device_types}; do " \
                        "for resin_scan_dev_index in ${resin_uboot_devices}; do " \
+                               "run balena_import_scan_dev_extra_env_file; " \
                                "if test ${resin_flasher_skip} = 0 && run resin_flasher_detect; then " \
                                        "setenv resin_flasher_dev_index ${resin_scan_dev_index}; " \
                                        "setenv resin_dev_type ${resin_scan_dev_type}; " \
