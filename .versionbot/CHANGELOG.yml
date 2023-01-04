@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests/hup: Avoid an old engine bug when pulling multiarch images on rpi"
+      hash: 6a47531bd8c1a3a032e57efe6b1c2d764d6d0570
+      body: >
+        This has since been fixed in the engine but since it impacts the HUP from
+
+        version we need to handle it in the test suite.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.108.12
+  title: ""
+  date: 2023-01-04T03:22:27.475Z
+- commits:
     - subject: Update tests/leviathan digest to d3485ab
       hash: 307ebcbf59876e199bb0fa3df3f1889ce426c681
       body: Update tests/leviathan

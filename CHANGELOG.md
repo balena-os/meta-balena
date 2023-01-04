@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.12
+## (2023-01-04)
+
+* tests/hup: Avoid an old engine bug when pulling multiarch images on rpi [Kyle Harding]
+
 # v2.108.11
 ## (2023-01-03)
 
