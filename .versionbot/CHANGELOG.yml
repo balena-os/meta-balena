@@ -1,4 +1,104 @@
 - commits:
+    - subject: Update tests/leviathan digest to e23c1bb
+      hash: d823c8af4587ac7ac7a776a60d75d4a18fa8b36c
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "chore(deps): update dependency eslint-config-standard to 17.0.0"
+              hash: 79b20a0922d590ac7fd9e8ed9507923a758975b5
+              body: |
+                Update eslint-config-standard to 17.0.0
+
+                Update eslint-config-standard from 11.0.0 to 17.0.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.14.8
+          title: ""
+          date: 2023-01-05T04:01:23.954Z
+        - commits:
+            - subject: "worker: Deprecate the WORKER_RELEASE env var"
+              hash: e2f450f44af3e07d516c0f5308908e2d8f1f46e6
+              body: |
+                Instead the worker e2e suite will use sed to replace
+                the worker release at runtime.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.14.7
+          title: ""
+          date: 2023-01-05T02:23:06.642Z
+        - commits:
+            - subject: "e2e: Switch from rpi4 to rpi3 for e2e tests"
+              hash: 455ccc7f13a0b69e54c48c836086de3df0136d6f
+              body: |
+                The rpi3 devices in the rig seemed more reliable
+                and there are more of them.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "core: Increase the default timeout for worker connections to 30s"
+              hash: 44002ac3e50fbbbf70bbb5abc325da4b92acbf02
+              body: |
+                This is a further attempt to avoid ETIMEOUT errors when running
+                on GH actions and connecting to real testbots.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.14.6
+          title: ""
+          date: 2023-01-05T01:59:02.020Z
+        - commits:
+            - subject: "renovate: Disable automerge for major and minor updates"
+              hash: fee3db4f57f2f10cb5e34605f59448d58306b387
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.14.5
+          title: ""
+          date: 2023-01-04T18:46:30.732Z
+        - commits:
+            - subject: "chore(deps): update dependency typedoc to 0.23.23"
+              hash: 503f7bf80dadb5a7b2e363987b9fe561c66dad39
+              body: |
+                Update typedoc to 0.23.23
+
+                Update typedoc from 0.21.9 to 0.23.23
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.14.4
+          title: ""
+          date: 2023-01-04T11:43:17.406Z
+  version: 2.108.15
+  title: ""
+  date: 2023-01-05T07:44:09.336Z
+- commits:
     - subject: "tests: os: chrony: disable NTP w/ dnsmasq dbus API"
       hash: 743e49deef0b99bff17b55510c69c359810892b2
       body: |
