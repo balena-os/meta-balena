@@ -29,10 +29,11 @@ python () {
 def set_default_kernel_cmdline(d):
     prod_cmdline = 'console=null quiet splash vt.global_cursor_default=0 consoleblank=0'
     serial_consoles = d.getVar('SERIAL_CONSOLES', True).split()
+    devmode_extra_args = ['verbose=true', 'debug=true']
     devmode_cmdline = ' '.join([
         'console={},{}s8'.format(port, baudrate)
         for (baudrate,port) in (console.split(';') for console in serial_consoles)
-    ])
+    ] + devmode_extra_args)
     return (devmode_cmdline
         if d.getVar('OS_DEVELOPMENT', True) == '1'
         else prod_cmdline)
