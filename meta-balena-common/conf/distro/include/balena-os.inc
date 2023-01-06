@@ -27,20 +27,15 @@ python () {
 }
 
 def set_default_kernel_cmdline(d):
-    cmdline = 'console=null quiet splash vt.global_cursor_default=0 consoleblank=0'
-    if d.getVar('OS_DEVELOPMENT', True) is '1':
-        cmdline = ""
-        for serial_console in d.getVar('SERIAL_CONSOLES', True).split():
-            try:
-                baudrate,port = serial_console.split(';')
-                console = "console=" + port + "," + baudrate + "n8"
-                if len(cmdline) is 0:
-                    cmdline = console
-                else:
-                    cmdline = cmdline + " " + console
-            except:
-                return
-    return cmdline
+    prod_cmdline = 'console=null quiet splash vt.global_cursor_default=0 consoleblank=0'
+    serial_consoles = d.getVar('SERIAL_CONSOLES', True).split()
+    devmode_cmdline = ' '.join([
+        'console={},{}s8'.format(port, baudrate)
+        for (baudrate,port) in (console.split(';') for console in serial_consoles)
+    ])
+    return (devmode_cmdline
+        if d.getVar('OS_DEVELOPMENT', True) == '1'
+        else prod_cmdline)
 
 MAINTAINER = "Balena <hello@balena.io>"
 
