@@ -7,6 +7,8 @@ require recipes-containers/balena-supervisor/balena-supervisor.inc
 
 LED_FILE ?= "/dev/null"
 
+PV = "${@d.getVar('SUPERVISOR_VERSION').replace('v', '')}"
+
 SRC_URI += " \
 	file://resin-data.mount \
 	file://start-balena-supervisor \
