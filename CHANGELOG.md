@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.18
+## (2023-01-09)
+
+* Revert "flasher: output logs to serial console" [Joseph Kogut]
+
 # v2.108.17
 ## (2023-01-09)
 

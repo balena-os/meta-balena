@@ -1,4 +1,22 @@
 - commits:
+    - subject: 'Revert "flasher: output logs to serial console"'
+      hash: 406317b15726798d0c11928851897a530c980170
+      body: |
+        In development mode, the flasher service is killed by getty. Revert this
+        change to unbreak the flasher when OS development is enabled.
+
+        This reverts commit 131893e433ef64a1f3b05dfcd44b0e022f13646d.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.18
+  title: ""
+  date: 2023-01-09T22:49:31.599Z
+- commits:
     - subject: Update balena-os/balena-supervisor to v14.4.10
       hash: ee049573aecb9004d53fd4134ec4aa8c21c99e6c
       body: Update balena-supervisor
