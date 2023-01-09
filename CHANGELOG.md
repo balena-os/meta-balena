@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.16
+## (2023-01-09)
+
+* balena-supervisor: Set the supervisor package version [Kyle Harding]
+
 # v2.108.15
 ## (2023-01-05)
 

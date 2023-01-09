@@ -1,4 +1,20 @@
 - commits:
+    - subject: "balena-supervisor: Set the supervisor package version"
+      hash: 950cbe5dd708511e37d707d4121032cc06376d1a
+      body: |
+        This should reflect the included supervisor version in the hostapp
+        manifest.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.108.16
+  title: ""
+  date: 2023-01-09T10:35:58.184Z
+- commits:
     - subject: Update tests/leviathan digest to e23c1bb
       hash: d823c8af4587ac7ac7a776a60d75d4a18fa8b36c
       body: Update tests/leviathan
