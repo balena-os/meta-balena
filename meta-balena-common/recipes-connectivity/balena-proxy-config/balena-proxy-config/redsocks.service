@@ -9,6 +9,7 @@ User=redsocks
 ExecStart=@BINDIR@/redsocks -c /mnt/boot/system-proxy/redsocks.conf
 Restart=on-failure
 RestartSec=10s
+LimitNOFILE=16384
 
 [Install]
 WantedBy=multi-user.target
