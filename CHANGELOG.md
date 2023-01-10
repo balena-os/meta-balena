@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.19
+## (2023-01-10)
+
+* redsocks: Increase maximum number of open files [Alex Gonzalez]
+
 # v2.108.18
 ## (2023-01-09)
 

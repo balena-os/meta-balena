@@ -1,4 +1,24 @@
 - commits:
+    - subject: "redsocks: Increase maximum number of open files"
+      hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
+      body: >
+        This increases the number of open connections that redsocks can support
+
+        to a new maximum of 2048.
+
+
+        See https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.19
+  title: ""
+  date: 2023-01-10T18:47:46.842Z
+- commits:
     - subject: 'Revert "flasher: output logs to serial console"'
       hash: 406317b15726798d0c11928851897a530c980170
       body: |
