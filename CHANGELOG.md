@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.108.20
+## (2023-01-10)
+
+
+<details>
+<summary> Update tests/leviathan digest to af8620c [renovate[bot]] </summary>
+
+> ## leviathan-2.14.9
+> ### (2023-01-05)
+> 
+> * compose: qemu: add swtpm service [Joseph Kogut]
+> 
+</details>
+
 # v2.108.19
 ## (2023-01-10)
 

@@ -1,4 +1,35 @@
 - commits:
+    - subject: Update tests/leviathan digest to af8620c
+      hash: c72b0db8a561736ea51ca218e4aac408629038c0
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "compose: qemu: add swtpm service"
+              hash: 302446a90ceedf0e406ed5edef7600925cf55c8c
+              body: >
+                QEMU is capable of using an emulated software TPM exposed via socket. A
+
+                TPM is necessary for full disk encryption (FDE), so add a service to
+
+                provide this to the QEMU worker.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.14.9
+          title: ""
+          date: 2023-01-05T23:53:03.325Z
+  version: 2.108.20
+  title: ""
+  date: 2023-01-10T21:53:16.681Z
+- commits:
     - subject: "redsocks: Increase maximum number of open files"
       hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
       body: >
