@@ -1,0 +1,26 @@
+From: Zahari Petkov <zahari@balena.io>
+Date: Tue, 10 Jan 2023 15:49:43 +0200
+Subject: [PATCH] Make iptables wait for xtables.lock
+
+Upstream-Status: Pending
+Signed-off-by: Zahari Petkov <zahari@balena.io>
+---
+ src/core/nm-firewall-utils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core/nm-firewall-utils.c b/src/core/nm-firewall-utils.c
+index e482ab9684..b0a4b3141d 100644
+--- a/src/core/nm-firewall-utils.c
++++ b/src/core/nm-firewall-utils.c
+@@ -147,7 +147,7 @@ _share_iptables_call_v(const char *const *argv)
+     return TRUE;
+ }
+ 
+-#define _share_iptables_call(...) _share_iptables_call_v(NM_MAKE_STRV(__VA_ARGS__))
++#define _share_iptables_call(...) _share_iptables_call_v(NM_MAKE_STRV(__VA_ARGS__, "-w"))
+ 
+ static gboolean
+ _share_iptables_chain_op(const char *table, const char *chain, const char *op)
+-- 
+2.39.0
+
