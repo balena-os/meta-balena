@@ -1,4 +1,19 @@
 - commits:
+    - subject: "networkmanager: Make iptables wait for xtables.lock"
+      hash: bfa2198a6873aabc60471bf992ed11d63ca1782a
+      body: |
+        TESTING
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.108.19
+  title: ""
+  date: 2023-01-10T15:31:15.917Z
+- commits:
     - subject: 'Revert "flasher: output logs to serial console"'
       hash: 406317b15726798d0c11928851897a530c980170
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.19
+## (2023-01-10)
+
+* networkmanager: Make iptables wait for xtables.lock [Zahari Petkov]
+
 # v2.108.18
 ## (2023-01-09)
 
