@@ -1,4 +1,23 @@
 - commits:
+    - subject: "tests: os: disable unwrapping"
+      hash: cebafe9ca7de05fbe7a1f5b16dd78dc61ab2b1c2
+      body: |
+        The QEMU leviathan-worker now simulates flashing from an external
+        device, which tests both flasher images, as well as
+        secure-boot/full-disk encryption setup.
+
+        Disable the ad-hoc unwrapping in the OS suite setup.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.20
+  title: ""
+  date: 2023-01-11T17:03:47.926Z
+- commits:
     - subject: "redsocks: Increase maximum number of open files"
       hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
       body: >
