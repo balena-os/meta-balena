@@ -518,6 +518,17 @@ if [ "$EFI" = "1" ]; then
         EFIPART_LABEL=balena-efi
     fi
 
+    # remove duplicate entries
+    for label in resinOS "${BOOT_ENTRY_LABEL}"; do
+        duplicates="$(efibootmgr \
+		| grep "${label}" \
+		| sed 's/Boot*//g' \
+		| sed "s/* ${label}//g")"
+        for entry in ${duplicates}; do
+            efibootmgr -B -b "${entry}"
+	done
+    done
+
     efibootmgr --create \
                --disk "/dev/$(lsblk -ndo pkname "$(get_dev_path_from_label ${EFIPART_LABEL})")" \
                --part "$(get_part_number_by_label "$(basename "${internal_dev}")" "${EFIPART_LABEL}")" \
