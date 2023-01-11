@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.108.20
+## (2023-01-11)
+
+* common: canonicalize links before flashing [Joseph Kogut]
+* flasher: remove duplicate EFI boot entries [Joseph Kogut]
+* flasher: create EFI boot entry [Joseph Kogut]
+* common: os-helpers-fs: fix get_dev_path_from_label w/ luks [Joseph Kogut]
+* resin-init-flasher: perform luksFormat w/ batch-mode flag [Joseph Kogut]
+* resin-init-flasher: ensure image is signed before enrollment [Joseph Kogut]
+* hostapp-update-hooks: Fail if new keys are used [Alex Gonzalez]
+* hostapp-update-hooks: Update balena keys when updating [Alex Gonzalez]
+* hostapp-update-hooks: 0-signed-updates: Use logging helpers [Alex Gonzalez]
+* resin-init-flasher: In setupmode program new keys [Alex Gonzalez]
+
 # v2.108.19
 ## (2023-01-10)
 
