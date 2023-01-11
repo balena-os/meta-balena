@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.20
+## (2023-01-11)
+
+* efitools: Package lock down EFI image into its own package [Alex Gonzalez]
+
 # v2.108.19
 ## (2023-01-10)
 

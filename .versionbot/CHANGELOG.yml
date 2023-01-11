@@ -1,4 +1,26 @@
 - commits:
+    - subject: "efitools: Package lock down EFI image into its own package"
+      hash: 2f8aff7fc8392c470ea88d310320cbf685c52327
+      body: >
+        This EFI image contains the secure boot certificates and when executed it
+
+        is supposed to load the keys into the respective secure boot slots.
+
+
+        We don't use this binary in our secure boot implementation, but currently
+
+        the build breaks as the binary is installed but not packaged.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.20
+  title: ""
+  date: 2023-01-11T18:06:57.328Z
+- commits:
     - subject: "redsocks: Increase maximum number of open files"
       hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
       body: >
