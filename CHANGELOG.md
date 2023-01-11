@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.20
+## (2023-01-11)
+
+* recipes-bsp/u-boot: Import extra uboot environment from scanned devices [Alexandru Costache]
+
 # v2.108.19
 ## (2023-01-10)
 

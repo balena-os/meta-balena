@@ -1,4 +1,28 @@
 - commits:
+    - subject: "recipes-bsp/u-boot: Import extra uboot environment from scanned devices"
+      hash: 8cfee2f6793ac06cd8f7be9007b329ba52a03a1d
+      body: |
+        This allows for the testbot to set resin_flasher_skip=0
+        in the extra_uEnv.txt file of the flasher image and
+        bypass the boot switch detection mechanisms used for
+        specific private device types.
+
+        The boot pins would otherwise prevent the flasher
+        from running if they were set to the eMMC position.
+
+        The flasher extra_uEnv.txt file overrides any resin_flasher_skip
+        value previously configured by the device integration layer.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.108.20
+  title: ""
+  date: 2023-01-11T11:42:16.640Z
+- commits:
     - subject: "redsocks: Increase maximum number of open files"
       hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
       body: >
