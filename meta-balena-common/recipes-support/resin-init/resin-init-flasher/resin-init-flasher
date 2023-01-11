@@ -176,7 +176,7 @@ for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
                 fi
             fi
 
-            internal_dev="${device}"
+            internal_dev="$(readlink -f "${device}")"
             break 2
 	else
 		inform "$device is not a block device, skipping"
