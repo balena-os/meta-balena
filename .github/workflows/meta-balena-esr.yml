@@ -99,7 +99,7 @@ jobs:
       - name: Install python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyyaml
+          pip install pyyaml semver
 
       - name: 'Create ESR branch'
         id: meta-balena-esr-branch
@@ -112,14 +112,17 @@ jobs:
           python3 <<-EOF
           import sys
           import yaml
+          import semver
           filePath = './repo.yml'
+          parsed_os_version = semver.VersionInfo.parse('${os_version}')
+          version = str(parsed_os_version.major) + '.' + str(parsed_os_version.minor)
           with open(filePath, 'r') as original:
               ydata = yaml.safe_load(original)
               if 'esr' in ydata:
                   # Nothing to do
                   print("ESR branch already configured")
                   sys.exit(1)
-              ydata['esr'] = {'version': '${os_version:0:-2}', 'bsp-branch-pattern': '${esr_version}.x'}
+              ydata['esr'] = {'version': version, 'bsp-branch-pattern': '${esr_version}.x'}
           with open(filePath, 'w') as modified:
               yaml.dump(ydata, modified)
           EOF
