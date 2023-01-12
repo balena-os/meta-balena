@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.20
+## (2023-01-12)
+
+* workflows: meta-balena-esr: Fix version calculation [Alex Gonzalez]
+
 # v2.108.19
 ## (2023-01-10)
 
