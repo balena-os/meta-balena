@@ -30,7 +30,7 @@ EXTRA_OEMESON += " \
     -Dresolvconf=/sbin/resolvconf \
     -Dovs=false \
     "
-PACKAGECONFIG:append = " modemmanager ppp resolvconf"
+PACKAGECONFIG:append = " modemmanager ppp resolvconf concheck"
 
 # The external DHCP client doesn't work well with our `ipv4.dhcp-timeout`
 # configuration. Switch to the internal one.
