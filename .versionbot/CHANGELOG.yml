@@ -1,4 +1,26 @@
 - commits:
+    - subject: "efitools: Package lock down EFI image into its own package"
+      hash: 461ad62f13732cd325f3f532fda4fac4b9ffb3da
+      body: >
+        This EFI image contains the secure boot certificates and when executed it
+
+        is supposed to load the keys into the respective secure boot slots.
+
+
+        We don't use this binary in our secure boot implementation, but currently
+
+        the build breaks as the binary is installed but not packaged.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.21
+  title: ""
+  date: 2023-01-14T11:56:57.966Z
+- commits:
     - subject: "workflows: meta-balena-esr: Fix version calculation"
       hash: b56da33230839f4af74bac954cf834c2116e6209
       body: |
