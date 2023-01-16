@@ -45,14 +45,14 @@ jobs:
         id: assert-esr-version
         run: |
           if [ "${{ inputs.esr-version }}" != "" ]; then
-            if ! [[ "${{ inputs.esr-version }}" =~ ^20[0-9][0-9].01|04|07|10$ ]]; then
+            if ! [[ "${{ inputs.esr-version }}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
               echo "Invalid ESR version ${{ inputs.esr-version }}"
               exit 1
             fi
             esr_version=${{ inputs.esr-version }}
           else
-            esr_version=$(date '+%Y.%m')
-            if ! [[ "${esr_version}" =~ ^20[0-9][0-9].01|04|07|10$ ]]; then
+            esr_version="$(date '+%Y').$(echo $(date '+%m') | sed "s/^0*//")"
+            if ! [[ "${esr_version}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
               echo "No scheduled ESR release for ${esr-version}."
               exit 1
             fi
