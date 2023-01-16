@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.22
+## (2023-01-16)
+
+* workflows: esr: use semver compatible versions [Alex Gonzalez]
+
 # v2.108.21
 ## (2023-01-14)
 

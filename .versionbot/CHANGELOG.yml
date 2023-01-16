@@ -1,4 +1,18 @@
 - commits:
+    - subject: "workflows: esr: use semver compatible versions"
+      hash: 36b9c035f5d7b55540c2190492f6e02af890bd13
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.22
+  title: ""
+  date: 2023-01-16T09:25:15.067Z
+- commits:
     - subject: "efitools: Package lock down EFI image into its own package"
       hash: 461ad62f13732cd325f3f532fda4fac4b9ffb3da
       body: >
