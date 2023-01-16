@@ -13,7 +13,6 @@ const { homedir } = require('os');
 const util = require('util');
 const zlib = require('zlib');
 
-// required for unwrapping images
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
@@ -291,31 +290,6 @@ module.exports = {
 		this.suite.context.set({
 			workerContract: await this.worker.getContract()
 		})
-		// if we are running qemu, and the device type is a flasher image, we need to unpack it from the flasher image to get it to boot
-		if (
-			this.suite.deviceType.data.storage.internal &&
-			this.workerContract.workerType === `qemu`
-		) {
-			try {
-				const RAW_IMAGE_PATH = `/opt/balena-image-${this.suite.deviceType.slug}.balenaos-img`;
-				const OUTPUT_IMG_PATH = '/data/downloads/unwrapped.img';
-				console.log(`Unwrapping flasher image ${path}`);
-				await imagefs.interact(path, 2, async (fsImg) => {
-					await pipeline(
-						fsImg.createReadStream(RAW_IMAGE_PATH),
-						fs.createWriteStream(OUTPUT_IMG_PATH),
-					);
-				});
-				path = OUTPUT_IMG_PATH;
-				console.log(`Unwrapped flasher image!`);
-			} catch (e) {
-				if (e.code === 'ENOENT') {
-					console.log('Not a flasher image, skipping unwrap');
-				} else {
-					throw e;
-				}
-			}
-		}
 
 		this.suite.context.set({
 			os: new BalenaOS(
