@@ -45,3 +45,8 @@ do_sign_gpg[depends] += " \
     coreutils-native:do_populate_sysroot \
     gnupg-native:do_populate_sysroot \
     "
+
+do_package[vardeps] += " \
+    SIGN_API \
+    SIGN_GRUB_KEY_ID \
+    "
