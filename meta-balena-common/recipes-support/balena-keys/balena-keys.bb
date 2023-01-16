@@ -81,3 +81,12 @@ deltask do_patch
 deltask do_configure
 deltask do_compile
 deltask do_install
+
+do_package[vardeps] += " \
+    SIGN_API \
+    SIGN_GRUB_KEY_ID \
+    SIGN_EFI_KEY_ID \
+    SIGN_KMOD_KEY_ID \
+    SIGN_EFI_PK_KEY_ID \
+    SIGN_EFI_KEK_KEY_ID \
+    "
