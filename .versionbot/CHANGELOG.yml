@@ -1,4 +1,28 @@
 - commits:
+    - subject: "balena-keys: rebuild if keys change"
+      hash: 64cc69a741568d2c2e95cd4197b18628310f34e2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: sign-*: resign if keys change"
+      hash: 1decda2966271638196840c04955ffa12a57158a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.23
+  title: ""
+  date: 2023-01-16T23:11:19.102Z
+- commits:
     - subject: "workflows: esr: use semver compatible versions"
       hash: 36b9c035f5d7b55540c2190492f6e02af890bd13
       body: ""

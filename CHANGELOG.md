@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.108.23
+## (2023-01-16)
+
+* balena-keys: rebuild if keys change [Alex Gonzalez]
+* classes: sign-*: resign if keys change [Alex Gonzalez]
+
 # v2.108.22
 ## (2023-01-16)
 
