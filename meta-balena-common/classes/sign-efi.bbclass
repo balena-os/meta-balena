@@ -49,3 +49,8 @@ do_sign_efi[depends] += " \
     coreutils-native:do_populate_sysroot \
     gnupg-native:do_populate_sysroot \
     "
+
+do_package[vardeps] += " \
+    SIGN_API \
+    SIGN_EFI_KEY_ID \
+    "
