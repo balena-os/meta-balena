@@ -1,0 +1,15 @@
+base {
+  log_debug = off;
+  log_info = on;
+  log = stderr;
+  daemon = off;
+  redirector = iptables;
+}
+
+redsocks {
+  type = socks5;
+  ip = <SERVER_IP>;
+  port = 8123;
+  local_ip = 127.0.0.1;
+  local_port = 12345;
+}
