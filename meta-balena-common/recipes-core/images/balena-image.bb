@@ -82,6 +82,12 @@ BALENA_BOOT_PARTITION_FILES:append = " \
     system-connections/README.ignore:/system-connections/README.ignore \
 "
 
+# example redsocks config file
+BALENA_BOOT_PARTITION_FILES:append = " \
+    system-proxy/redsocks.conf.ignore:/system-proxy/redsocks.conf.ignore \
+    system-proxy/README.ignore:/system-proxy/README.ignore \
+"
+
 BALENA_BOOT_PARTITION_FILES:append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') else ''}"
 
 # Resin image flag file
