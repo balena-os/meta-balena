@@ -50,7 +50,7 @@ do_sign_efi[depends] += " \
     gnupg-native:do_populate_sysroot \
     "
 
-do_package[vardeps] += " \
+do_sign_efi[vardeps] += " \
     SIGN_API \
     SIGN_KMOD_KEY_ID \
     "
