@@ -78,7 +78,7 @@ deltask do_configure
 deltask do_compile
 deltask do_install
 
-do_package[vardeps] += " \
+do_get_public_keys[vardeps] += " \
     SIGN_API \
     SIGN_GRUB_KEY_ID \
     SIGN_KMOD_KEY_ID \
