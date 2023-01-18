@@ -1,4 +1,27 @@
 - commits:
+    - subject: "networkmanager: Make iptables wait for xtables.lock"
+      hash: afebbcddeebdda9e5988507a5fcf5ad93cf79cab
+      body: |
+        iptables takes a file lock at /run/xtables.lock. By default, if
+        the file is locked, iptables will fail with error. When that happens,
+        the iptables rules won't be configured, and the shared mode
+        (for which we use iptables) will not be setup properly.
+
+        Instead, pass "--wait 2", to block.
+
+        The included patch has to be removed once we upgrade to next
+        NetworkManager version as it is already included upstream.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.108.24
+  title: ""
+  date: 2023-01-18T11:11:18.440Z
+- commits:
     - subject: "balena-keys: rebuild if keys change"
       hash: 64cc69a741568d2c2e95cd4197b18628310f34e2
       body: ""
