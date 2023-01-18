@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.25
+## (2023-01-18)
+
+* tests: os: add basic SB/FDE tests [Joseph Kogut]
+
 # v2.108.24
 ## (2023-01-18)
 

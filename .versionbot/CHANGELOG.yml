@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: os: add basic SB/FDE tests"
+      hash: f8ada0481cc159fd03ac1291c981e4dc0d03342d
+      body: |
+        Check for secureboot and full-disk encryption when supported by
+        firmware.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.25
+  title: ""
+  date: 2023-01-18T21:44:59.128Z
+- commits:
     - subject: "networkmanager: Make iptables wait for xtables.lock"
       hash: afebbcddeebdda9e5988507a5fcf5ad93cf79cab
       body: |
