@@ -11,6 +11,7 @@ SRC_URI:append = " \
     file://balena-sample.ignore \
     file://nm-tmpfiles.conf \
     file://remove-https-warning.patch \
+    file://iptables-wait-for-xtables-lock.patch \
     "
 
 NETWORKMANAGER_FIREWALL_DEFAULT = "iptables"

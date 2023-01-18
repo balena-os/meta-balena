@@ -1,0 +1,145 @@
+From 36ce2e11fbe02b8444b57a18762115b6f37fc338 Mon Sep 17 00:00:00 2001
+From: Thomas Haller <thaller@redhat.com>
+Date: Tue, 10 Jan 2023 19:42:43 +0100
+Subject: [PATCH] Make iptables wait for xtables.lock
+
+This is a combination of 2 upstream commits:
+
+53422c86931f6dbdc7b47f56b2c57574e242299f
+firewall: automatically add iptables path to _share_iptables_call() call
+
+84a71771d9761fdcb1dc2a991af71cbc874ea0f6
+No need to redundantly specify the path. Also, next we will specify the
+"--wait" option, so this will work better.
+
+firewall: pass "--wait 2" to iptables to wait for concurrent invocations
+
+iptables takes a file lock at /run/xtables.lock. By default, if
+the file is locked, iptables will fail with error. When that happens,
+the iptables rules won't be configured, and the shared mode
+(for which we use iptables) will not be setup properly.
+
+Instead, pass "--wait 2", to block. Yes, it's ugly that we use
+blocking program invocations, but that's how it is. Also, iptables
+should be fast to not be a problem in practice.
+
+Upstream-Status: Accepted
+Signed-off-by: Zahari Petkov <zahari@balena.io>
+
+---
+ src/core/nm-firewall-utils.c | 32 ++++++++++++--------------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
+
+diff --git a/src/core/nm-firewall-utils.c b/src/core/nm-firewall-utils.c
+index 7b5d2f47b6..f231583a21 100644
+--- a/src/core/nm-firewall-utils.c
++++ b/src/core/nm-firewall-utils.c
+@@ -212,12 +212,13 @@ _share_iptables_call_v(const char *const *argv)
+     return TRUE;
+ }
+ 
+-#define _share_iptables_call(...) _share_iptables_call_v(NM_MAKE_STRV(__VA_ARGS__))
++#define _share_iptables_call(...) \
++    _share_iptables_call_v(NM_MAKE_STRV("" IPTABLES_PATH "", "--wait", "2", __VA_ARGS__))
+ 
+ static gboolean
+ _share_iptables_chain_op(const char *table, const char *chain, const char *op)
+ {
+-    return _share_iptables_call("" IPTABLES_PATH "", "--table", table, op, chain);
++    return _share_iptables_call("--table", table, op, chain);
+ }
+ 
+ static gboolean
+@@ -246,8 +247,7 @@ _share_iptables_set_masquerade_sync(gboolean up, const char *ip_iface, in_addr_t
+     comment_name = _share_iptables_get_name(FALSE, "nm-shared", ip_iface);
+ 
+     _share_iptables_subnet_to_str(str_subnet, addr, plen);
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "nat",
+                          up ? "--insert" : "--delete",
+                          "POSTROUTING",
+@@ -297,8 +297,7 @@ _share_iptables_set_shared_chains_add(const char *chain_input,
+     _share_iptables_chain_add("filter", chain_input);
+ 
+     for (i = 0; i < (int) G_N_ELEMENTS(input_params); i++) {
+-        _share_iptables_call("" IPTABLES_PATH "",
+-                             "--table",
++        _share_iptables_call("--table",
+                              "filter",
+                              "--append",
+                              chain_input,
+@@ -312,8 +311,7 @@ _share_iptables_set_shared_chains_add(const char *chain_input,
+ 
+     _share_iptables_chain_add("filter", chain_forward);
+ 
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "filter",
+                          "--append",
+                          chain_forward,
+@@ -327,8 +325,7 @@ _share_iptables_set_shared_chains_add(const char *chain_input,
+                          "ESTABLISHED,RELATED",
+                          "--jump",
+                          "ACCEPT");
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "filter",
+                          "--append",
+                          chain_forward,
+@@ -338,8 +335,7 @@ _share_iptables_set_shared_chains_add(const char *chain_input,
+                          ip_iface,
+                          "--jump",
+                          "ACCEPT");
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "filter",
+                          "--append",
+                          chain_forward,
+@@ -349,8 +345,7 @@ _share_iptables_set_shared_chains_add(const char *chain_input,
+                          ip_iface,
+                          "--jump",
+                          "ACCEPT");
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "filter",
+                          "--append",
+                          chain_forward,
+@@ -358,8 +353,7 @@ _share_iptables_set_shared_chains_add(const char *chain_input,
+                          ip_iface,
+                          "--jump",
+                          "REJECT");
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "filter",
+                          "--append",
+                          chain_forward,
+@@ -390,8 +384,7 @@ _share_iptables_set_shared_sync(gboolean up, const char *ip_iface, in_addr_t add
+     if (up)
+         _share_iptables_set_shared_chains_add(chain_input, chain_forward, ip_iface, addr, plen);
+ 
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "filter",
+                          up ? "--insert" : "--delete",
+                          "INPUT",
+@@ -404,8 +397,7 @@ _share_iptables_set_shared_sync(gboolean up, const char *ip_iface, in_addr_t add
+                          "--comment",
+                          comment_name);
+ 
+-    _share_iptables_call("" IPTABLES_PATH "",
+-                         "--table",
++    _share_iptables_call("--table",
+                          "filter",
+                          up ? "--insert" : "--delete",
+                          "FORWARD",
+-- 
+2.39.0
+
