@@ -214,7 +214,7 @@ IMAGE_CMD:balenaos-img () {
     # Generate the raw image with partition table
     #
 
-    truncate -s "$(expr ${BALENA_RAW_IMG_SIZE} \* 1024)" "${BALENA_RAW_IMG}"
+    dd if=/dev/zero of=${BALENA_RAW_IMG} bs=1024 count=0 seek=${BALENA_RAW_IMG_SIZE}
 
     if [ "${PARTITION_TABLE_TYPE}" != "msdos" ] && [ "${PARTITION_TABLE_TYPE}" != "gpt" ]; then
         bbfatal "Unrecognized partition table: ${PARTITION_TABLE_TYPE}"
@@ -311,14 +311,14 @@ IMAGE_CMD:balenaos-img () {
     # resin-rootB
     BALENA_ROOTB_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_ROOTB_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
     rm -rf ${BALENA_ROOTB_FS}
-    truncate -s "$(expr ${BALENA_ROOTB_BLOCKS} \* 1024 )" "${BALENA_ROOTB_FS}"
+    dd if=/dev/zero of=${BALENA_ROOTB_FS} seek=${BALENA_ROOTB_BLOCKS} count=0 bs=1024
     mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -F -L "${BALENA_ROOTB_FS_LABEL}" ${BALENA_ROOTB_FS}
 
     # resin-state
     if [ -n "${BALENA_STATE_FS}" ]; then
         BALENA_STATE_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_STATE_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
         rm -rf ${BALENA_STATE_FS}
-        truncate -s "$(expr ${BALENA_STATE_BLOCKS} \* 1024 )" "${BALENA_STATE_FS}"
+        dd if=/dev/zero of=${BALENA_STATE_FS} count=${BALENA_STATE_BLOCKS} bs=1024
         mkfs.ext4 -F -L "${BALENA_STATE_FS_LABEL}" ${BALENA_STATE_FS}
     fi
 
@@ -336,28 +336,21 @@ IMAGE_CMD:balenaos-img () {
     #
     # Burn partitions
     #
-    offset=${DEVICE_SPECIFIC_SPACE}
-    dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
-    offset=$(expr ${offset} \+ ${BALENA_BOOT_SIZE_ALIGNED})
-    dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
-    offset=$(expr ${offset} \+ ${BALENA_ROOTA_SIZE_ALIGNED})
-    dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
-    offset=$(expr ${offset} \+ ${BALENA_ROOTB_SIZE_ALIGNED})
+    dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE})
+    dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED}))
+    dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED}))
     if [ -n "${BALENA_STATE_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
-            offset=$(expr ${offset} \+ ${BALENA_IMAGE_ALIGNMENT})
-            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
+            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
+            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED}))
         fi
     fi
     if [ -n "${BALENA_DATA_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
-            offset=$(expr ${offset} \+ ${BALENA_STATE_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT})
-            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
+            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT} \+ ${BALENA_STATE_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            offset=$(expr ${offset} \+ ${BALENA_STATE_SIZE_ALIGNED})
-            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=${offset} bs=1024
+            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_STATE_SIZE_ALIGNED}))
         fi
     fi
 
@@ -395,6 +388,6 @@ do_image_hostapp_ext4[depends] = " \
     "
 
 IMAGE_CMD:hostapp-ext4 () {
-    truncate -s "$(expr ${ROOTFS_SIZE} \* 1024)" "${BALENA_HOSTAPP_IMG}"
+    dd if=/dev/zero of=${BALENA_HOSTAPP_IMG} seek=$ROOTFS_SIZE count=0 bs=1024
     mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
 }
