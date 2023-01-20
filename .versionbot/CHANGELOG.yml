@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: fix tests that use glider on rpi0"
+      hash: 864b4ed84c7af438d61501a77996639f3af3499c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.108.27
+  title: ""
+  date: 2023-01-20T23:08:16.096Z
+- commits:
     - subject: Enable back connectivity check in NetworkManager
       hash: b4ae8c2df204107054316e8b9f78075155c1f606
       body: |
