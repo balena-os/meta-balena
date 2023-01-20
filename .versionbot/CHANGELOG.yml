@@ -1,4 +1,27 @@
 - commits:
+    - subject: Enable back connectivity check in NetworkManager
+      hash: b4ae8c2df204107054316e8b9f78075155c1f606
+      body: |
+        In v2.108.0 we did a major NetworkManager upgrade as we started using
+        meson as a build system. The connectivity check feature was left
+        disabled, which is a regression and it produces fake results.
+
+        This commit enables it back.
+
+        Fixes #2964.
+      footer:
+        Changelog-entry: Enable back connectivity check in NetworkManager
+        changelog-entry: Enable back connectivity check in NetworkManager
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.108.26
+  title: ""
+  date: 2023-01-20T10:35:50.736Z
+- commits:
     - subject: "tests: os: add basic SB/FDE tests"
       hash: f8ada0481cc159fd03ac1291c981e4dc0d03342d
       body: |

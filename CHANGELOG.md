@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.26
+## (2023-01-20)
+
+* Enable back connectivity check in NetworkManager [Zahari Petkov]
+
 # v2.108.25
 ## (2023-01-18)
 
