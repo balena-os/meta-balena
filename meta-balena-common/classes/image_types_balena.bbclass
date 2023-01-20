@@ -336,21 +336,21 @@ IMAGE_CMD:balenaos-img () {
     #
     # Burn partitions
     #
-    dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE})
-    dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED}))
-    dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED}))
+    dd if=${BALENA_BOOT_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=1 bs=$(expr 1024 \* ${DEVICE_SPECIFIC_SPACE})
+    dd if=${BALENA_ROOT_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED}))
+    dd if=${BALENA_ROOTB_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED}))
     if [ -n "${BALENA_STATE_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
-            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
+            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED}))
+            dd if=${BALENA_STATE_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED}))
         fi
     fi
     if [ -n "${BALENA_DATA_FS}" ]; then
         if [ "${PARTITION_TABLE_TYPE}" = "msdos" ]; then
-            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT} \+ ${BALENA_STATE_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
+            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT} \+ ${BALENA_STATE_SIZE_ALIGNED} \+ ${BALENA_IMAGE_ALIGNMENT}))
         elif [ "${PARTITION_TABLE_TYPE}" = "gpt" ]; then
-            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_STATE_SIZE_ALIGNED}))
+            dd if=${BALENA_DATA_FS} of=${BALENA_RAW_IMG} conv=notrunc,sparse seek=1 bs=$(expr 1024 \* $(expr ${DEVICE_SPECIFIC_SPACE} \+ ${BALENA_BOOT_SIZE_ALIGNED} \+ ${BALENA_ROOTA_SIZE_ALIGNED} \+ ${BALENA_ROOTB_SIZE_ALIGNED} \+ ${BALENA_STATE_SIZE_ALIGNED}))
         fi
     fi
 
