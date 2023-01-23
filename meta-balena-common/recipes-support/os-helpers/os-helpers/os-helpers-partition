@@ -1,0 +1,75 @@
+#!/bin/sh
+
+# Copyright 2022 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Find partition with a given label on a given block device and output its number
+# Arguments:
+#   1 - Block device to scan
+#   2 - Label to look for
+#   3 - Field that identifies the label type - defaults to 'label' (FS label)
+#       The default should work fine but it is handy to switch to 'partlabel'
+#       on GPT devices as this does not need to rely on the underlying FS
+#       being labelled correctly.
+function get_part_number_by_label {
+    DEVICE=$1
+    LABEL=$2
+    FIELD=${3:-label}
+
+    lsblk "/dev/${DEVICE}" -nlo "name,${FIELD}" | grep "${LABEL}" | sed -e "s,^${DEVICE}p\?\([0-9][0-9]*\)[ \t]*${LABEL}$,\1,"
+}
+
+# Find partition size of a particular partition on the given block device in bytes
+# Arguments:
+#   1 - Block device
+#   2 - Partition number
+#   3 - (optional) Alignment block size
+function get_part_size_by_number {
+    DEVICE=$1
+    PART_NUMBER=$2
+    ALIGN_BLOCK_SIZE=$3
+
+    RESULT=$(parted "/dev/${DEVICE}" unit B print | grep "^[ \t]*${PART_NUMBER}[ \t][ \t]*" | awk '{print $4}' | sed -e "s,B$,,")
+
+    # Align partition size if requested
+    if [ "x${ALIGN_BLOCK_SIZE}" != "x" ]; then
+        # This rounds down, if the partition size is unaligned
+        # multiplying back will be less than original.
+        # If that is the case add one more block
+        ALIGN_BLOCKS=$["${RESULT}" / "${ALIGN_BLOCK_SIZE}"]
+        if [ "$[${ALIGN_BLOCKS} * ${ALIGN_BLOCK_SIZE}]" -lt "${RESULT}" ]; then
+            RESULT="$[(${ALIGN_BLOCKS} + 1) * ${ALIGN_BLOCK_SIZE}]"
+        fi
+    fi
+
+    echo "${RESULT}"
+}
+
+# Find partition start of a particular partition on the given block device in bytes
+# Arguments:
+#   1 - Block device
+#   2 - Partition number
+function get_part_start_by_number {
+    DEVICE=$1
+    PART_NUMBER=$2
+
+    parted "/dev/${DEVICE}" unit B print | grep "^[ \t]*${PART_NUMBER}[ \t][ \t]*" | awk '{print $2}' | sed -e "s,B$,,"
+}
+
+# Find the partition table type of the given block device
+# Arguments:
+#    1 - Block device
+get_part_table_type() {
+    parted -s "$1" print | grep "Partition Table" | tr -d " " | cut -d ":" -f2
+}
