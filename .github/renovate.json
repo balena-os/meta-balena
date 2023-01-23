@@ -17,6 +17,16 @@
       "matchStrings": ["SUPERVISOR_VERSION \\?= \"(?<currentValue>.*?)\"\\n"],
       "depNameTemplate": "balena-os/balena-supervisor",
       "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/)balena_git.bb$"],
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "BALENA_VERSION = \"(?<currentValue>.*?)\"\\n",
+        "SRCREV = \"(?<currentDigest>.*?)\"\\n"
+      ],
+      "depNameTemplate": "balena-os/balena-engine",
+      "datasourceTemplate": "github-tags"
     }
   ],
   "packageRules": [
@@ -24,7 +34,20 @@
       "matchManagers": ["regex"],
       "matchPackagePatterns": [".*balena-supervisor"],
       "commitBody": "Update balena-supervisor\nChange-type: {{updateType}}",
-      "automerge": true
+      "automerge": true,
+      "platformAutomerge": true
+    },
+    {
+      "matchManagers": ["regex"],
+      "matchPackagePatterns": [".*balena-engine"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "commitBody": "Update balena-engine\nChange-type: {{updateType}}",
+      "automerge": true,
+      "platformAutomerge": true
     }
   ]
 }
