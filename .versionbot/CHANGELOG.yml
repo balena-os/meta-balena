@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests/hup: Avoid an old engine bug when pulling multiarch images on rpi"
+      hash: b89e344a1955aa0fc4ff2a3908d7be4a378a3711
+      body: >
+        This has since been fixed in the engine but since it impacts the HUP from
+
+        version we need to handle it in the test suite.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.107.41
+  title: ""
+  date: 2023-01-24T14:35:01.842Z
+- commits:
     - subject: Add upstream resolvconf 1.91 recipe for kirkstone
       hash: af89ddb51d7829dc045cd3434fb4cf0bec7fba37
       body: >
