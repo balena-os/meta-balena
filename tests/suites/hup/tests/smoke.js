@@ -42,24 +42,34 @@ async function runSmokeTest(that, test) {
 	// Check for under-voltage before HUP, in the old OS
 	await that.hup.checkUnderVoltage(that, test);
 
+	await test.resolves(
+		that.utils.waitUntil(async () => {
+			return (
+				(await that.worker.executeCommandInHostOS(
+					`balena volume create hello-world`,
+					that.link
+					)) === 'hello-world'
+			);
+		}, true),
+		"Should create hello-world volume"
+	)
 
-	test.comment(`Waiting to create volume on DUT`);
-	await that.utils.waitUntil(async () => {
-		return (
-			(await that.worker.executeCommandInHostOS(
-				`balena volume create hello-world`,
-				that.link
-				)) === 'hello-world'
-		);
-	}, true);
-	
-	test.ok(true, `Should create hello-world volume`);
+	// a bug in older engine versions incorrectly identified the architecture when pulling
+	// multiarch images on armv6
+	let baseImage = "alpine";
+	if (["rpi", "armv6"].includes(that.suite.deviceType.data.arch)) {
+		baseImage = "arm32v6/alpine"
+	}
 
-	test.comment('Creating files on the volume');
-	await that.worker.executeCommandInHostOS(
-		`balena run -v hello-world:/the-volume --entrypoint "/bin/sh" alpine -c 'echo "Howdy!" > /the-volume/the-file.txt' &&
-		balena run -v hello-world:/the-volume --entrypoint "/bin/sh" alpine -c 'md5sum /the-volume/the-file.txt > /the-volume/MD5.SUM'`,
-		that.link,
+	test.is(
+		await that.worker.executeCommandInHostOS(
+			`balena run -v hello-world:/the-volume --entrypoint "/bin/sh" ${baseImage} -c 'echo "Howdy!" > /the-volume/the-file.txt' &&
+			balena run -v hello-world:/the-volume --entrypoint "/bin/sh" ${baseImage} -c 'md5sum /the-volume/the-file.txt > /the-volume/MD5.SUM' &&
+			echo $?`,
+			that.link
+			),
+		'0',
+		"Should create files in the hello-world volume"
 	);
 
 	await that.hup.doHUP(
@@ -151,14 +161,16 @@ async function runSmokeTest(that, test) {
 		'Volume should not be lost during HUP',
 	);
 
-	test.comment('Checking files on the volume');
-	test.is(
-		await that.worker.executeCommandInHostOS(
-			`balena run -v hello-world:/the-volume alpine md5sum -c /the-volume/MD5.SUM &> /dev/null ; echo $?`,
-			that.link,
-		),
-		'0',
-		'Volume contents should have been preserved during HUP',
+	await test.resolves(
+		that.utils.waitUntil(async () => {
+			return (
+				(await that.worker.executeCommandInHostOS(
+					`balena run -v hello-world:/the-volume ${baseImage} md5sum -c /the-volume/MD5.SUM &> /dev/null ; echo $?`,
+					that.link
+					)) === '0'
+			);
+		}, true),
+		"Volume contents should have been preserved during HUP"
 	);
 
 	// Check for under-voltage after HUP, in the new OS
