@@ -48,6 +48,7 @@ BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 LUKS=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
+SECUREBOOT_ENABLED=0
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -192,18 +193,27 @@ IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
 if [ -d /sys/firmware/efi ]; then
+    SECUREBOOT_ENABLED=$(
+        [ "$(jq .installer.secureboot "${CONFIG_PATH}")" = "true" ] \
+        && echo 1)
     SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot \
         | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
     SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
         | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
 
-    if [ "${SECUREBOOT_VAR##+(0)}" = "1" ]; then
-        LUKS=1
+    if [ "${SECUREBOOT_ENABLED}" = "1" ]; then
+        if [ "${SECUREBOOT_VAR##+(0)}" = "1" ]; then
+            fail "Secure boot is configured, but is not supported in firmware."
+        fi
+
         if [ ! -d "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys" ]; then
             fail "Secure boot is supported in firmware, but the image is not signed"
         fi
 
-	if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
+        inform "Secure boot is enabled, proceeding with lockdown"
+        LUKS=1
+
+        if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
             inform "Secure boot setup mode detected - programming keys"
             # Enroll PK last, as it should disable setup mode
             for e in db KEK PK; do
@@ -216,7 +226,7 @@ if [ -d /sys/firmware/efi ]; then
             # Check that we're in user mode
             SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
                 | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-            if [ "$SETUPMODE_VAR" = "1" ]; then
+            if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
                 # Setting up keys hasn't disabled setup mode, try a reboot into flasher
                 inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
                 # Make sure to reboot into the installer
@@ -498,8 +508,10 @@ do
     fi
 done
 
-# Copy json configuration file from external (flasher) to the internal (booting) device
-cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
+# Copy json configuration file from external (flasher) to the internal
+# (booting) device, sans installer section
+jq 'del(.installer)' "${CONFIG_PATH}" \
+    > "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/$(basename "${CONFIG_PATH}")"
 
 if [ "$LUKS" = "1" ]; then
     umount "$EFI_MOUNT_DIR"
