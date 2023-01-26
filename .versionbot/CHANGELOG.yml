@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Update balenaOS docs title"
+      hash: ec4bb501c04430c0507e7b31d53b5c0eab25063f
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.108.28
+  title: ""
+  date: 2023-01-26T18:36:44.693Z
+- commits:
     - subject: "tests: os: fix tests that use glider on rpi0"
       hash: 864b4ed84c7af438d61501a77996639f3af3499c
       body: ""

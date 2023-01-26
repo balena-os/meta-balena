@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.28
+## (2023-01-26)
+
+* patch: Update balenaOS docs title [Vipul Gupta (@vipulgupta2048)]
+
 # v2.108.27
 ## (2023-01-20)
 
