@@ -15,6 +15,7 @@ const zlib = require('zlib');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
+const Bluebird = require('bluebird')
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 
@@ -273,6 +274,8 @@ module.exports = {
 			this.suite.options.balenaOS.download.version,
 			this.suite.deviceType.slug,
 		);
+
+		await Bluebird.delay(1000*10)
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
 		this.log("Logging into balena with balenaSDK");
