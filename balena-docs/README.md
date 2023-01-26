@@ -1,3 +1,7 @@
+---
+project_name: balenaOS
+---
+
 # Introduction
 
 ## What is balenaOS?
