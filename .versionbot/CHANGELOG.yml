@@ -1,4 +1,21 @@
 - commits:
+    - subject: "bluez: Update to v5.66"
+      hash: 00342a7702226dc071f6b690bd68fdab5c9996c2
+      body: |
+        Update from v5.64 to v5.66
+
+        Fixes #2981
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.29
+  title: ""
+  date: 2023-01-28T09:44:05.026Z
+- commits:
     - subject: "patch: Update balenaOS docs title"
       hash: ec4bb501c04430c0507e7b31d53b5c0eab25063f
       body: ""

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.29
+## (2023-01-28)
+
+* bluez: Update to v5.66 [Alex Gonzalez]
+
 # v2.108.28
 ## (2023-01-26)
 
