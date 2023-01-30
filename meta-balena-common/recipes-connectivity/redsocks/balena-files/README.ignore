@@ -1,0 +1,6 @@
+
+# Sample redsocks proxy configuration files
+
+The redsocks.conf.ignore file contains a sample socks5 proxy configuration.
+If you wish to enable this configuration then replace <SERVER_IP> with
+your actual proxy server IP and remove the file's .ignore suffix.
