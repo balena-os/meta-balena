@@ -1,4 +1,38 @@
 - commits:
+    - subject: "redsocks: Deploy README and sample configration file"
+      hash: caed40bf5a5d02a9a06e2a3fb0735dc45995994e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "recipes-bsp/u-boot: Import extra uboot environment from scanned devices"
+      hash: 14420225697fb7fb4b7bf7135ef7367631a92076
+      body: |
+        This allows for the testbot to set resin_flasher_skip=0
+        in the extra_uEnv.txt file of the flasher image and
+        bypass the boot switch detection mechanisms used for
+        specific private device types.
+
+        The boot pins would otherwise prevent the flasher
+        from running if they were set to the eMMC position.
+
+        The flasher extra_uEnv.txt file overrides any resin_flasher_skip
+        value previously configured by the device integration layer.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.108.30
+  title: ""
+  date: 2023-01-30T13:05:34.970Z
+- commits:
     - subject: "bluez: Update to v5.66"
       hash: 00342a7702226dc071f6b690bd68fdab5c9996c2
       body: |

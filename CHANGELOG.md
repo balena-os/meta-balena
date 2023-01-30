@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.108.30
+## (2023-01-30)
+
+* redsocks: Deploy README and sample configration file [Alexandru Costache]
+* recipes-bsp/u-boot: Import extra uboot environment from scanned devices [Alexandru Costache]
+
 # v2.108.29
 ## (2023-01-28)
 
