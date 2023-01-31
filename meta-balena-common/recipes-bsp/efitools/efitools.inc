@@ -43,12 +43,14 @@ EXTRA_OEMAKE = "\
     HELP2MAN='${STAGING_BINDIR_NATIVE}/help2man' \
     OPENSSL='${STAGING_BINDIR_NATIVE}/openssl' \
     SBSIGN='${STAGING_BINDIR_NATIVE}/sbsign' \
-    NM='${NM}' AR='${AR}' \
+    NM='${NM}' AR='${AR}' OBJCOPY='${OBJCOPY}' \
     OPENSSL_LIB='${STAGING_LIBDIR_NATIVE}' \
     EXTRA_LDFLAGS='${LDFLAGS}' \
 "
 EXTRA_OEMAKE:append:x86 = " ARCH=ia32"
 EXTRA_OEMAKE:append:x86-64 = " ARCH=x86_64"
+EXTRA_OEMAKE:append:arm = "ARCH=arm"
+EXTRA_OEMAKE:append:aarch64 = " ARCH=aarch64"
 
 EFI_BOOT_PATH = "/boot/efi/EFI/BOOT"
 
