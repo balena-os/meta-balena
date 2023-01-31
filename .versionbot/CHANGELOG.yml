@@ -1,4 +1,21 @@
 - commits:
+    - subject: "efitools: Allow builds for ARM architecture"
+      hash: 03962bda4860726332715df5fbdec05a475b6026
+      body: >
+        There are ARM systems that use UEFI, and for example the `efivar` package
+
+        can also be built for ARM architectures.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.32
+  title: ""
+  date: 2023-01-31T15:09:50.319Z
+- commits:
     - subject: "rollback-health: bind-mount EFI partition when split from boot"
       hash: 2ebbcd90b5e2b12ff44af0f85183329b3db773e7
       body: |

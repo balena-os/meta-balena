@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.32
+## (2023-01-31)
+
+* efitools: Allow builds for ARM architecture [Alex Gonzalez]
+
 # v2.108.31
 ## (2023-01-31)
 
