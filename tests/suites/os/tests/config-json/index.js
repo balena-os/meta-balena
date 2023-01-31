@@ -259,6 +259,17 @@ module.exports = {
 		},
 		{
 			title: 'persistentLogging configuration test',
+			deviceType:{
+				type: 'object',
+				required: ['slug'],
+				properties: {
+				  slug: {
+					not: {
+					  const: "raspberry-pi"
+					}
+				  }
+				}
+			},
 			run: async function(test) {
 				const context = this.context.get();
 
