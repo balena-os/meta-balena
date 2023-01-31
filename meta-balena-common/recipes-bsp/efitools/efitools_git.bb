@@ -12,7 +12,7 @@ SRC_URI:append = " \
     file://Fix-help2man-error.patch \
 "
 
-COMPATIBLE_HOST = '(i.86|x86_64).*-linux'
+COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 
 inherit deploy
 
