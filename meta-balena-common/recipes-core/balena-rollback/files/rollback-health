@@ -42,6 +42,14 @@ run_hooks_from_inactive () {
 	mount --bind /mnt/sysroot/inactive/ "${old_rootfs}/mnt/sysroot/inactive/"
 	mount -t sysfs sysfs "${old_rootfs}/sys/"
 
+	# In case of secure boot the boot and EFI partitions are split apart
+	# The EFI partition must be bind-mounted as well to be able to deploy
+	# files under /mnt/boot/EFI
+	if [ -L /mnt/boot/EFI ]; then
+		mkdir -p "${old_rootfs}/mnt/efi"
+		mount --bind /mnt/efi "${old_rootfs}/mnt/efi"
+	fi
+
 	# DURING_UPDATE tells hooks to use the boot files from inactive
 	# which are the good set of files in ROLLBACK_ALTBOOT mode
 	# also tells the bootloaders to switch roots
