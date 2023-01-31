@@ -1,4 +1,23 @@
 - commits:
+    - subject: "rollback-health: bind-mount EFI partition when split from boot"
+      hash: 2ebbcd90b5e2b12ff44af0f85183329b3db773e7
+      body: |
+        With secure boot enabled boot and EFI partition are split apart.
+        During rollback-health, when bind-mounting inactive root to run
+        old hooks from, the EFI partition must be bind-mounted as well
+        otherwise the /mnt/boot/EFI symlink is invalid and rollback fails
+        to deploy files into that directory.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.108.31
+  title: ""
+  date: 2023-01-31T07:07:29.232Z
+- commits:
     - subject: "redsocks: Deploy README and sample configration file"
       hash: caed40bf5a5d02a9a06e2a3fb0735dc45995994e
       body: ""

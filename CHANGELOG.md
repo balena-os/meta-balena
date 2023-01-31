@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.31
+## (2023-01-31)
+
+* rollback-health: bind-mount EFI partition when split from boot [Michal Toman]
+
 # v2.108.30
 ## (2023-01-30)
 
