@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: skip persistent logging test for pi0"
+      hash: 88b0dbd6ae4ced31d9babc3be40ea799c7e74f5d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.42
+  title: ""
+  date: 2023-01-31T21:15:18.321Z
+- commits:
     - subject: "tests/hup: Avoid an old engine bug when pulling multiarch images on rpi"
       hash: b89e344a1955aa0fc4ff2a3908d7be4a378a3711
       body: >

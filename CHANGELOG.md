@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.42
+## (2023-01-31)
+
+* tests: os: skip persistent logging test for pi0 [rcooke-warwick]
+
 # v2.107.41
 ## (2023-01-24)
 
