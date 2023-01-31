@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: skip persistent logging test for pi0"
+      hash: 2b35568f7d8743a59250dd7824858a42f8eb35fe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.108.33
+  title: ""
+  date: 2023-01-31T18:21:33.712Z
+- commits:
     - subject: "efitools: Allow builds for ARM architecture"
       hash: 03962bda4860726332715df5fbdec05a475b6026
       body: >
