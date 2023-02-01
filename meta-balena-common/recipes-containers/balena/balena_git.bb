@@ -15,8 +15,8 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "20.10.17"
-BALENA_BRANCH= "master"
+BALENA_VERSION = "v20.10.17"
+BALENA_BRANCH = "master"
 
 SRCREV = "13db38c82bdb056f013f5497b0662ad34ffb98f7"
 # NOTE: update patches when bumping major versions
@@ -37,7 +37,7 @@ SRC_URI = "\
 	"
 S = "${WORKDIR}/git"
 
-PV = "${BALENA_VERSION}+git${SRCREV}"
+PV = "${@d.getVar('BALENA_VERSION').replace('v', '')}+git${SRCREV}"
 
 SECURITY_CFLAGS = "${SECURITY_NOPIE_CFLAGS}"
 SECURITY_LDFLAGS = ""
