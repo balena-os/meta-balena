@@ -15,6 +15,8 @@ inherit allarch systemd
 
 SYSTEMD_SERVICE:${PN} = "resin-init-flasher.service"
 
+DEPENDS += "balena-keys"
+
 RDEPENDS:${PN} = " \
     bash \
     coreutils \
@@ -28,7 +30,11 @@ RDEPENDS:${PN} = " \
     util-linux-lsblk \
     "
 
-RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2',d)}"
+RDEPENDS:${PN}:x86-64 = " \
+    efitools-utils \
+"
+
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2 efivar',d)}"
 
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"

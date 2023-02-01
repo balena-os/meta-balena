@@ -53,6 +53,11 @@ RDEPENDS:${PN} = " \
     util-linux \
     "
 
+RDEPENDS:${PN}:x86-64 = " \
+    efivar \
+    efitools-utils \
+"
+
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/
 	for hdir in ${HOSTAPP_HOOKS_DIRS}; do
