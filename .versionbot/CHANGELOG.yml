@@ -1,4 +1,18 @@
 - commits:
+    - subject: "renovate: Add regex manager for balena-engine"
+      hash: 30e3fcdff7a2d02cbe6eb744f02e313471de9785
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.108.35
+  title: ""
+  date: 2023-02-01T17:18:53.825Z
+- commits:
     - subject: "docs: Add secure boot and disk encryption overview"
       hash: 2c808fd7ea1355f3aa9541970f836a978e1bb7c9
       body: ""

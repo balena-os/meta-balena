@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.35
+## (2023-02-01)
+
+* renovate: Add regex manager for balena-engine [Kyle Harding]
+
 # v2.108.34
 ## (2023-02-01)
 
