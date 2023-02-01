@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.108.34
+## (2023-02-01)
+
+* docs: Add secure boot and disk encryption overview [Alex Gonzalez]
+* hostapp-update-hooks: Fail if new keys are used [Alex Gonzalez]
+* resin-init-flasher: In setupmode program new keys [Alex Gonzalez]
+
 # v2.108.33
 ## (2023-01-31)
 

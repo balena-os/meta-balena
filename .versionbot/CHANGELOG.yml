@@ -1,4 +1,44 @@
 - commits:
+    - subject: "docs: Add secure boot and disk encryption overview"
+      hash: 2c808fd7ea1355f3aa9541970f836a978e1bb7c9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Fail if new keys are used"
+      hash: e61b8183fc046b733f18c55ae21cdde29ec28064
+      body: |
+        Abort the hostOS update if new keys are detected so the device is
+        not bricked until updating keys is supported.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: In setupmode program new keys"
+      hash: 46a0b3839eccb69e00d15fd69027b904a8613a89
+      body: |
+        If the device has been configured in setupmode, make the flasher images
+        program the balena keys from the boot partition.
+      footer:
+        Relates-to: "#2444"
+        relates-to: "#2444"
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.108.34
+  title: ""
+  date: 2023-02-01T13:14:46.064Z
+- commits:
     - subject: "tests: os: skip persistent logging test for pi0"
       hash: 2b35568f7d8743a59250dd7824858a42f8eb35fe
       body: ""
