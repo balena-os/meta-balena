@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-engine to v20.10.26
+      hash: 488f4d5888f7133ec70a3c41cff6289bb23ef05b
+      body: Update balena-engine
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested: []
+  version: 2.108.37
+  title: ""
+  date: 2023-02-02T17:29:34.078Z
+- commits:
     - subject: "flasher: remove duplicate EFI boot entries"
       hash: f93eb1a115a74af3a1875cbbd26306ddb76acd63
       body: ""

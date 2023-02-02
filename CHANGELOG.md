@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.37
+## (2023-02-02)
+
+* Update balena-engine to v20.10.26 [Renovate Bot]
+
 # v2.108.36
 ## (2023-02-02)
 
