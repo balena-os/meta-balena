@@ -197,7 +197,8 @@ if [ -d /sys/firmware/efi ]; then
     EFI=1
     SECUREBOOT_ENABLED=$(
         [ "$(jq .installer.secureboot "${CONFIG_PATH}")" = "true" ] \
-        && echo 1)
+        && echo 1 \
+        || echo 0)
     SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot \
         | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
     SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
