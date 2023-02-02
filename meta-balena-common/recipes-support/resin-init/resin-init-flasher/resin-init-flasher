@@ -216,7 +216,7 @@ if [ -d /sys/firmware/efi ]; then
         inform "Secure boot is enabled, proceeding with lockdown"
         LUKS=1
 
-        if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
+        if [ "${SETUPMODE_VAR}" -eq "1" ]; then
             inform "Secure boot setup mode detected - programming keys"
             # Enroll PK last, as it should disable setup mode
             for e in db KEK PK; do
@@ -229,7 +229,7 @@ if [ -d /sys/firmware/efi ]; then
             # Check that we're in user mode
             SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
                 | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-            if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
+            if [ "${SETUPMODE_VAR}" -eq "1" ]; then
                 # Setting up keys hasn't disabled setup mode, try a reboot into flasher
                 inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
                 # Make sure to reboot into the installer
