@@ -47,9 +47,7 @@ SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
 CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 LUKS=0
-EFI=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
-SECUREBOOT_ENABLED=0
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -177,7 +175,7 @@ for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
                 fi
             fi
 
-            internal_dev="$(readlink -f ${device})"
+            internal_dev="${device}"
             break 2
 	else
 		inform "$device is not a block device, skipping"
@@ -194,42 +192,30 @@ IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
 if [ -d /sys/firmware/efi ]; then
-    EFI=1
-    SECUREBOOT_ENABLED=$(
-        [ "$(jq .installer.secureboot "${CONFIG_PATH}")" = "true" ] \
-        && echo 1)
-    SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot \
-        | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-    SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
-        | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-
-    if [ "${SECUREBOOT_ENABLED}" = "1" ]; then
-        if [ "${SECUREBOOT_VAR##+(0)}" = "1" ]; then
-            fail "Secure boot is configured, but is not supported in firmware."
-        fi
-
-        if [ ! -d "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys" ]; then
-            fail "Secure boot is supported in firmware, but the image is not signed"
-        fi
-
-        inform "Secure boot is enabled, proceeding with lockdown"
+    SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+    if [ "$SECUREBOOT_VAR" -eq "1" ]; then
         LUKS=1
-
-        if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
-            inform "Secure boot setup mode detected - programming keys"
-            # Enroll PK last, as it should disable setup mode
-            for e in db KEK PK; do
-                # Remove immutable attribute
-                chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
-                if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
-                    /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
-                fi
-            done
-            # Check that we're in user mode
-            SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
-                | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-            if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
-                # Setting up keys hasn't disabled setup mode, try a reboot into flasher
+    fi
+    SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+    if [ "$SETUPMODE_VAR" -eq "1" ]; then
+        inform "Secure boot setup mode detected - programming keys"
+        if ! mount | grep -q "type efivarfs"; then
+            mount -t efivarfs efivarfs "${EFIVARS_MOUNTDIR}"
+        fi
+        # Leave PK last
+        for e in db KEK PK; do
+            # Remove immutable attribute
+            chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
+            if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
+                /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
+            fi
+        done
+        # Re-read setup mode configuration
+        SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+        SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+        if [ "$SETUPMODE_VAR" -eq "1" ]; then
+            # Setting up keys hasn't disabled setup mode, try a reboot into flasher
+            if [ "$LUKS" -ne "1" ]; then
                 inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
                 # Make sure to reboot into the installer
                 bootcurrent=$(efibootmgr | grep BootCurrent | awk '{print $2}')
@@ -237,14 +223,17 @@ if [ -d /sys/firmware/efi ]; then
                 sync
                 reboot -f
             fi
+        else
+            LUKS=1
         fi
     fi
 fi
 
-# Include FS helpers for repartitioning
-. /usr/libexec/os-helpers-fs
 
 if [ "$LUKS" = "1" ]; then
+    # Include FS helpers for repartitioning
+    . /usr/libexec/os-helpers-fs
+
     # Include TPM2 helpers
     . /usr/libexec/os-helpers-tpm2
 
@@ -509,10 +498,8 @@ do
     fi
 done
 
-# Copy json configuration file from external (flasher) to the internal
-# (booting) device, sans installer section
-jq 'del(.installer)' "${CONFIG_PATH}" \
-    > "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/$(basename "${CONFIG_PATH}")"
+# Copy json configuration file from external (flasher) to the internal (booting) device
+cp -rvf "$CONFIG_PATH" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT"
 
 if [ "$LUKS" = "1" ]; then
     umount "$EFI_MOUNT_DIR"
@@ -524,32 +511,6 @@ sync
 
 inform "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
-
-EFIPART_LABEL="resin-boot"
-LOADER_PATH="/EFI/BOOT/bootx64.efi"
-BOOT_ENTRY_LABEL="balenaOS"
-if [ "$EFI" = "1" ]; then
-    if [ "$LUKS" = "1" ]; then
-        EFIPART_LABEL=balena-efi
-    fi
-
-    # remove duplicate entries
-    for label in resinOS "${BOOT_ENTRY_LABEL}"; do
-        duplicates="$(efibootmgr \
-		| grep "${label}" \
-		| sed 's/Boot*//g' \
-		| sed "s/* ${label}//g")"
-        for entry in ${duplicates}; do
-            efibootmgr -B -b "${entry}"
-	done
-    done
-
-    efibootmgr --create \
-               --disk "/dev/$(lsblk -ndo pkname "$(get_dev_path_from_label ${EFIPART_LABEL})")" \
-               --part "$(get_part_number_by_label "${internal_dev#/dev/}" "${EFIPART_LABEL}")" \
-               --label "${BOOT_ENTRY_LABEL}" \
-               --loader "${LOADER_PATH}"
-fi
 
 if [ "$LUKS" = "1" ]; then
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do

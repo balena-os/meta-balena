@@ -52,7 +52,7 @@ get_dev_label() {
 # Arguments:
 #   1 - Filesystem label
 get_dev_path_from_label() {
-	dev=$(lsblk -nlo kname,label | grep "$1" | cut -d ' ' -f1)
+	dev=$(lsblk -nlo name,label | grep "$1" | cut -d ' ' -f1)
 	echo "/dev/$dev"
 }
 
