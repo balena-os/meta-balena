@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.108.36
+## (2023-02-02)
+
+* flasher: remove duplicate EFI boot entries [Joseph Kogut]
+* flasher: create EFI boot entry [Joseph Kogut]
+* common: os-helpers-fs: fix get_dev_path_from_label w/ luks [Joseph Kogut]
+* flasher: make secure boot opt-in [Joseph Kogut]
+* flasher: ensure image is signed before enrollment [Joseph Kogut]
+* flasher: refactor secure boot block [Joseph Kogut]
+
 # v2.108.35
 ## (2023-02-01)
 

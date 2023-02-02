@@ -1,4 +1,94 @@
 - commits:
+    - subject: "flasher: remove duplicate EFI boot entries"
+      hash: f93eb1a115a74af3a1875cbbd26306ddb76acd63
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "flasher: create EFI boot entry"
+      hash: 5979409faeaaa2b0df7503b408e202d87c6d2f7b
+      body: |
+        Some firmwares will not boot balenaOS by default without explicitly
+        creating a boot entry, so create one on EFI platforms after flashing.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: os-helpers-fs: fix get_dev_path_from_label w/ luks"
+      hash: 3b7ad68f938776db770a067de6b2973876cc7430
+      body: |
+        get_dev_path_from_label() calls lsblk to get the name and label of a
+        disk, then filters the list using the label and returns a /dev path.
+
+        The name returned when using a luks encrypted partition is the
+        /dev/mapper name, rather than the kernel's device mapper name under
+        /dev/dm-*. When assembling a path under /dev using the luks name, the
+        path is invalid, and the by-state links aren't created.
+
+        This leads to the rootfs hook failing to find and mount the resin-rootA
+        partition.
+
+        Change the attribute retrieved using lsblk to kname to fix this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "flasher: make secure boot opt-in"
+      hash: c6b84df2e571231bea8283e88750af949ca78df9
+      body: |
+        Opt-in to secure boot, full-disk encryption, and kernel lockdown with
+        the `secureboot` boolean in the `installer` object contained in
+        config.json.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "flasher: ensure image is signed before enrollment"
+      hash: 765ec79b9760a8822fab5801459398b798bd5e31
+      body: |
+        The flasher image enrolls the secure boot keys before rebooting into
+        secured user mode and creating the encrypted luks volumes on disk.
+
+        If the image is not signed, the key enrollment will fail, and the
+        flasher will enter a loop trying to enroll them and rebooting.
+
+        Instead, skip the key enrollment if the image is not signed, resulting
+        in a non secure-boot installation.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "flasher: refactor secure boot block"
+      hash: 7127247bdabe96827b13837a573fc0c3966b1557
+      body: |
+        Improve readability and formatting of secure boot configuration section
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.36
+  title: ""
+  date: 2023-02-02T10:23:47.357Z
+- commits:
     - subject: "renovate: Add regex manager for balena-engine"
       hash: 30e3fcdff7a2d02cbe6eb744f02e313471de9785
       body: ""
