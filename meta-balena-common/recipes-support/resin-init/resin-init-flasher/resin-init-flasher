@@ -204,7 +204,7 @@ if [ -d /sys/firmware/efi ]; then
         | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
 
     if [ "${SECUREBOOT_ENABLED}" = "1" ]; then
-        if [ "${SECUREBOOT_VAR##+(0)}" = "1" ]; then
+        if [ -z "${SECUREBOOT_VAR}" ]; then
             fail "Secure boot is configured, but is not supported in firmware."
         fi
 
