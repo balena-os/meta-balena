@@ -5,7 +5,7 @@ PR = "r1"
 
 inherit packagegroup
 
-BALENA_INIT_PACKAGE ?= "resin-init"
+BALENA_INIT_PACKAGE ?= "balena-init"
 BALENA_MOUNTS ?= "resin-mounts"
 BALENA_REGISTER ?= "balena-supervisor"
 BALENA_SUPERVISOR ?= "balena-supervisor"

@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-init
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/balena-init
 
 [Install]
 WantedBy=multi-user.target

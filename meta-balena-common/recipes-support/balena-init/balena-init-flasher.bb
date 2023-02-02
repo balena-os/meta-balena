@@ -6,14 +6,14 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 PR = "r2"
 
 SRC_URI = " \
-    file://resin-init-flasher \
-    file://resin-init-flasher.service \
+    file://balena-init-flasher \
+    file://balena-init-flasher.service \
     "
 S = "${WORKDIR}"
 
 inherit allarch systemd
 
-SYSTEMD_SERVICE:${PN} = "resin-init-flasher.service"
+SYSTEMD_SERVICE:${PN} = "balena-init-flasher.service"
 
 DEPENDS += "balena-keys"
 
@@ -24,9 +24,9 @@ RDEPENDS:${PN} = " \
     udev \
     resin-device-register \
     resin-device-progress \
-    resin-init-board \
+    balena-init-board \
     parted \
-    resin-init-flasher-board \
+    balena-init-flasher-board \
     util-linux-lsblk \
     "
 
@@ -49,17 +49,17 @@ do_install() {
     fi
 
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/resin-init-flasher ${D}${bindir}
+    install -m 0755 ${WORKDIR}/balena-init-flasher ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/resin-init-flasher.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/balena-init-flasher.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@BASE_SBINDIR@,${base_sbindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \
             -e 's,@SYS_CONFDIR@,${sysconfdir},g' \
-            ${D}${systemd_unitdir}/system/resin-init-flasher.service
+            ${D}${systemd_unitdir}/system/balena-init-flasher.service
     fi
 
     # If bootloader needs to be flashed, we require the bootloader name and write offset
@@ -69,25 +69,25 @@ do_install() {
         fi
     fi
 
-    # Construct resin-init-flasher.conf
+    # Construct balena-init-flasher.conf
     install -d ${D}${sysconfdir}
-    echo "INTERNAL_DEVICE_KERNEL=\"${INTERNAL_DEVICE_KERNEL}\"" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG=${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH=${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "INTERNAL_DEVICE_KERNEL=\"${INTERNAL_DEVICE_KERNEL}\"" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG=${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH=${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
     if [ -n "${INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH}" ]; then
-        echo "INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH=${INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+        echo "INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH=${INTERNAL_DEVICE_BOOTLOADER_LEGACY_CONFIG_PATH}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
     fi
-    echo "BALENA_IMAGE=${BALENA_IMAGE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_FLASH_DEVICE=${BOOTLOADER_FLASH_DEVICE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_IMAGE=${BOOTLOADER_IMAGE}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_BLOCK_SIZE_OFFSET=${BOOTLOADER_BLOCK_SIZE_OFFSET}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_FLASH_DEVICE_1=${BOOTLOADER_FLASH_DEVICE_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_IMAGE_1=${BOOTLOADER_IMAGE_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_BLOCK_SIZE_OFFSET_1=${BOOTLOADER_BLOCK_SIZE_OFFSET_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-    echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS_1=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "BALENA_IMAGE=${BALENA_IMAGE}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_FLASH_DEVICE=${BOOTLOADER_FLASH_DEVICE}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_IMAGE=${BOOTLOADER_IMAGE}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_BLOCK_SIZE_OFFSET=${BOOTLOADER_BLOCK_SIZE_OFFSET}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS=${BOOTLOADER_SKIP_OUTPUT_BLOCKS}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_FLASH_DEVICE_1=${BOOTLOADER_FLASH_DEVICE_1}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_IMAGE_1=${BOOTLOADER_IMAGE_1}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_BLOCK_SIZE_OFFSET_1=${BOOTLOADER_BLOCK_SIZE_OFFSET_1}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
+    echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS_1=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}" >> ${D}/${sysconfdir}/balena-init-flasher.conf
 
     if [ "x${SIGN_API}" != "x" ]; then
-        echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+        echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/balena-init-flasher.conf
     fi
 }

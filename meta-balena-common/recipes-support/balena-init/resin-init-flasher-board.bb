@@ -1,0 +1,1 @@
+balena-init-flasher-board.bb

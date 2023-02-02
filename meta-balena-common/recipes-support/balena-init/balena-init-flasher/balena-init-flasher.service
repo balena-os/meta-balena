@@ -7,7 +7,7 @@ After=mnt-boot.mount resin-device-register.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/bash @BINDIR@/resin-init-flasher
+ExecStart=@BASE_BINDIR@/bash @BINDIR@/balena-init-flasher
 
 [Install]
 WantedBy=multi-user.target
