@@ -197,14 +197,22 @@ if [ -d /sys/firmware/efi ]; then
     EFI=1
     SECUREBOOT_ENABLED=$(
         [ "$(jq .installer.secureboot "${CONFIG_PATH}")" = "true" ] \
-        && echo 1)
+        && echo 1 \
+        || echo 0)
     SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot \
         | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
     SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
         | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
 
-    if [ "${SECUREBOOT_ENABLED}" = "1" ]; then
-        if [ "${SECUREBOOT_VAR##+(0)}" = "1" ]; then
+    if [ "${SECUREBOOT_ENABLED}" != "1" ]; then
+        if [ "${SETUPMODE_VAR}" -ne "1" ]; then
+            # Bail out when keys are already enrolled but secure boot is not
+	    # enabled in config.json, as the installed system will not have
+	    # FDE, and it's ambiguous if the user wants secure boot
+            fail "Secure boot keys are enrolled but secure boot is not enabled"
+        fi
+    else
+        if [ -z "${SECUREBOOT_VAR}" ]; then
             fail "Secure boot is configured, but is not supported in firmware."
         fi
 
@@ -215,7 +223,7 @@ if [ -d /sys/firmware/efi ]; then
         inform "Secure boot is enabled, proceeding with lockdown"
         LUKS=1
 
-        if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
+        if [ "${SETUPMODE_VAR}" -eq "1" ]; then
             inform "Secure boot setup mode detected - programming keys"
             # Enroll PK last, as it should disable setup mode
             for e in db KEK PK; do
@@ -228,7 +236,7 @@ if [ -d /sys/firmware/efi ]; then
             # Check that we're in user mode
             SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
                 | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-            if [ "${SETUPMODE_VAR##+(0)}" = "1" ]; then
+            if [ "${SETUPMODE_VAR}" -eq "1" ]; then
                 # Setting up keys hasn't disabled setup mode, try a reboot into flasher
                 inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
                 # Make sure to reboot into the installer
