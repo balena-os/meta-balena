@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: fix tests that use glider on rpi0"
+      hash: 37107de6c05c09a01bb0730c91ac8d140b46b6cc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.43
+  title: ""
+  date: 2023-02-03T18:18:46.813Z
+- commits:
     - subject: "tests: os: skip persistent logging test for pi0"
       hash: 88b0dbd6ae4ced31d9babc3be40ea799c7e74f5d
       body: ""

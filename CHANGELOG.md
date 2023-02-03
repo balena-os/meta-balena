@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.107.43
+## (2023-02-03)
+
+* tests: os: fix tests that use glider on rpi0 [rcooke-warwick]
+
 # v2.107.42
 ## (2023-01-31)
 
