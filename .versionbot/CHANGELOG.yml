@@ -1,4 +1,76 @@
 - commits:
+    - subject: "flasher: handle user mode system w/out secure boot"
+      hash: 73ca2d64f9bc22764694f774898db02a6c9e9825
+      body: |
+        When a user runs the flasher with secure boot enabled in `config.json`,
+        the public keys used to validate the bootloader are enrolled. If any
+        other bootloader signature fails to validate against this public key, it
+        won't be executed.
+
+        If the user attempts to run the balenaOS flasher on that system again
+        without first enabling the secure boot option, the flasher won't enroll
+        keys, but the installed system will be signed. This will result in a
+        secure boot enabled system without full-disk encryption.
+
+        Bail out in this case so the user must choose to explicitly opt-in to
+        secure boot for the new installation, and full-disk encryption along
+        with it. Otherwise, the user must reset the enrolled keys to install
+        without secure boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "flasher: fix keys not enrolling with secure boot enabled"
+      hash: e9622bc5bb415d98bfd3c3277db96e5b585c583b
+      body: |
+        Extended globbing is not enabled by default, which makes the substring
+        match for trimming leading zeroes not work. This causes SETUPMODEVAR to
+        evaluate to "01", which fails comparison with the string "1", skipping
+        key enrollment when secure boot is enabled. Compare using an integer
+        expression instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "flasher: fix secure boot setup with enrolled keys"
+      hash: 2116dc08fbc8e0df3739fc1067a3884712a55ade
+      body: >
+        When refactoring secure boot setup, a logic mistake in the purpose and
+
+        use of SECUREBOOT_VAR meant that devices booting the flasher with keys already
+
+        enrolled would bail out with an incorrect message about secure boot not
+
+        being supported in firmware.
+
+
+        This variable is `00` on systems with secure boot support in firmware,
+
+        but not enabled and enforced, `01` on systems where secure boot is
+
+        enforced, and empty when secure boot is unsupported.
+
+
+        Change this conditional to bail out only when the variable is empty,
+
+        indicating that secure boot is unsupported.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.108.39
+  title: ""
+  date: 2023-02-03T23:26:11.949Z
+- commits:
     - subject: Update leviathan to v2.17.4
       hash: c1bae2e96f6cc4209899a31e7bdb85078135076d
       body: |

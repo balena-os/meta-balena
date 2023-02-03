@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.108.39
+## (2023-02-03)
+
+* flasher: handle user mode system w/out secure boot [Joseph Kogut]
+* flasher: fix keys not enrolling with secure boot enabled [Joseph Kogut]
+* flasher: fix secure boot setup with enrolled keys [Joseph Kogut]
+
 # v2.108.38
 ## (2023-02-03)
 
