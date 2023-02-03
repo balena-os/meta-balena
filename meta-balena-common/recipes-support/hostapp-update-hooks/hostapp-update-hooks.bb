@@ -53,10 +53,7 @@ RDEPENDS:${PN} = " \
     util-linux \
     "
 
-RDEPENDS:${PN}:x86-64 = " \
-    efivar \
-    efitools-utils \
-"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils', '',d)}"
 
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/
