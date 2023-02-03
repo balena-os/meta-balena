@@ -1,4 +1,167 @@
 - commits:
+    - subject: Update leviathan to v2.17.4
+      hash: c1bae2e96f6cc4209899a31e7bdb85078135076d
+      body: |
+        Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested:
+        - commits:
+            - subject: "patch: Upgrade client to v18"
+              hash: 4a29cfca1dc2176bf47d032cfd920b01ca4df3a8
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.17.4
+          title: ""
+          date: 2023-01-28T07:04:28.321Z
+        - commits:
+            - subject: "patch: Update client dependencies"
+              hash: 453e1b5bdd03b724bd8331faa3ea04243efbbfce
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.17.3
+          title: ""
+          date: 2023-01-26T20:41:43.701Z
+        - commits:
+            - subject: "chore(deps): update alpine docker tag to v3.17.1"
+              hash: 2de5aacb8b4ba86bf2392e23551f9e865138736e
+              body: |
+                Update alpine to 3.17.1
+
+                Update alpine from 3.17.0 to 3.17.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.17.2
+          title: ""
+          date: 2023-01-19T21:20:13.041Z
+        - commits:
+            - subject: "patch: Convert balenaCloudInteractor to JS"
+              hash: a8da6622d1ba6468f8130a51b260519847625583
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.17.1
+          title: ""
+          date: 2023-01-19T15:53:32.738Z
+        - commits:
+            - subject: "chore(deps): update dependency json5 [security]"
+              hash: 36d7967c770b7929948882f043f03c455416572f
+              body: |
+                Update json5 to 1.0.2
+
+                Update json5 from 1.0.1 to 1.0.2
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.17.0
+          title: ""
+          date: 2023-01-19T01:06:24.777Z
+        - commits:
+            - subject: split swtpm service into separate compose file
+              hash: 93d0160eb9a07c86c309cb2c0c2f1b709185884d
+              body: >
+                Not all platforms support secure boot, notably aarch64 using tianocore
+
+                firmware. Additionally, swtpm may not be available for all platforms.
+
+                Accordingly, move the swtpm service to a separate compose file that is
+
+                only used when secure boot is enabled.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.16.1
+          title: ""
+          date: 2023-01-19T00:41:15.836Z
+        - commits:
+            - subject: "chore(deps): update core/contracts digest to 8392bb2"
+              hash: ab31953ea1d8e8145be1ee27b876a838c21baa0a
+              body: |
+                Update core/contracts to 
+
+                Update core/contracts from  to 
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.16.0
+          title: ""
+          date: 2023-01-18T06:30:50.979Z
+        - commits:
+            - subject: "patch: Drop config NPM package"
+              hash: f4cdd63b1b2976a6699e710e96355250ab439343
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.15.1
+          title: ""
+          date: 2023-01-17T12:42:44.293Z
+        - commits:
+            - subject: "chore(deps): update dependency ansi-regex [security]"
+              hash: 795fabd9701bb10b46f80b931648a9ccc50f1a48
+              body: |
+                Update ansi-regex to 4.1.1
+
+                Update ansi-regex from 4.1.0 to 4.1.1
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: renovate[bot]
+              nested: []
+          version: leviathan-2.15.0
+          title: ""
+          date: 2023-01-14T15:28:50.892Z
+        - commits:
+            - subject: "compose: qemu: add swtpm service"
+              hash: 302446a90ceedf0e406ed5edef7600925cf55c8c
+              body: >
+                QEMU is capable of using an emulated software TPM exposed via socket. A
+
+                TPM is necessary for full disk encryption (FDE), so add a service to
+
+                provide this to the QEMU worker.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.14.9
+          title: ""
+          date: 2023-01-05T23:53:03.325Z
+  version: 2.108.38
+  title: ""
+  date: 2023-02-03T18:37:02.754Z
+- commits:
     - subject: Update balena-engine to v20.10.26
       hash: 488f4d5888f7133ec70a3c41cff6289bb23ef05b
       body: Update balena-engine

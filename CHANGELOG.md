@@ -1,6 +1,66 @@
 Change log
 -----------
 
+# v2.108.38
+## (2023-02-03)
+
+
+<details>
+<summary> Update leviathan to v2.17.4 [Kyle Harding] </summary>
+
+> ## leviathan-2.17.4
+> ### (2023-01-28)
+> 
+> * patch: Upgrade client to v18 [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.17.3
+> ### (2023-01-26)
+> 
+> * patch: Update client dependencies [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.17.2
+> ### (2023-01-19)
+> 
+> * chore(deps): update alpine docker tag to v3.17.1 [renovate[bot]]
+> 
+> ## leviathan-2.17.1
+> ### (2023-01-19)
+> 
+> * patch: Convert balenaCloudInteractor to JS [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.17.0
+> ### (2023-01-19)
+> 
+> * chore(deps): update dependency json5 [security] [renovate[bot]]
+> 
+> ## leviathan-2.16.1
+> ### (2023-01-19)
+> 
+> * split swtpm service into separate compose file [Joseph Kogut]
+> 
+> ## leviathan-2.16.0
+> ### (2023-01-18)
+> 
+> * chore(deps): update core/contracts digest to 8392bb2 [renovate[bot]]
+> 
+> ## leviathan-2.15.1
+> ### (2023-01-17)
+> 
+> * patch: Drop config NPM package [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.15.0
+> ### (2023-01-14)
+> 
+> * chore(deps): update dependency ansi-regex [security] [renovate[bot]]
+> 
+> ## leviathan-2.14.9
+> ### (2023-01-05)
+> 
+> * compose: qemu: add swtpm service [Joseph Kogut]
+> 
+
+</details>
+
 # v2.108.37
 ## (2023-02-02)
 
