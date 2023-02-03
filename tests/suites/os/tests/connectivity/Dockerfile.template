@@ -1,5 +1,0 @@
-FROM balenalib/%%BALENA_ARCH%%-golang as build
-
-RUN go get -u github.com/nadoo/glider@v0.14.0
-
-ENTRYPOINT ["/go/bin/glider"]
