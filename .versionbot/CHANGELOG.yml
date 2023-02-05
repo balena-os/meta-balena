@@ -1,4 +1,20 @@
 - commits:
+    - subject: "kernel-balena: Remove apparmor support"
+      hash: 18cd233a83554b58b3540164afd768fdeda60b03
+      body: |
+        Newer releases of moby expect appArmor userland tools when appArmor is
+        enabled in the kernel.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.109.0
+  title: ""
+  date: 2023-02-05T16:28:20.664Z
+- commits:
     - subject: "flasher: handle user mode system w/out secure boot"
       hash: 73ca2d64f9bc22764694f774898db02a6c9e9825
       body: |

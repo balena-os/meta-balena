@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.109.0
+## (2023-02-05)
+
+* kernel-balena: Remove apparmor support [Alex Gonzalez]
+
 # v2.108.39
 ## (2023-02-03)
 
