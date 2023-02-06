@@ -14,17 +14,19 @@
   "regexManagers": [
     {
       "fileMatch": ["(^|/)balena-supervisor.inc$"],
-      "matchStrings": ["SUPERVISOR_VERSION \\?= \"(?<currentValue>.*?)\"\\n"],
+      "matchStrings": ["SUPERVISOR_VERSION \\?= \"v?(?<currentValue>.*?)\"\\n"],
       "depNameTemplate": "balena-supervisor",
       "packageNameTemplate": "balena-os/balena-supervisor",
-      "datasourceTemplate": "github-tags"
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)$"
     },
     {
       "fileMatch": ["(^|/)balena_git.bb$"],
-      "matchStrings": ["BALENA_VERSION = \"(?<currentValue>.*?)\"\\n"],
+      "matchStrings": ["BALENA_VERSION = \"v?(?<currentValue>.*?)\"\\n"],
       "depNameTemplate": "balena-engine",
       "packageNameTemplate": "balena-os/balena-engine",
-      "datasourceTemplate": "github-tags"
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
     }
   ],
   "packageRules": [
@@ -34,12 +36,12 @@
         ".*balena-supervisor",
         ".*balena-engine"
       ],
-      "commitBody": "Update {{depName}}\nChange-type: {{updateType}}",
+      "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: {{updateType}}",
       "automerge": true,
       "platformAutomerge": true,
       "postUpgradeTasks": {
         "commands": [
-          "sed -r \"s|SRCREV = \\\"[0-9a-f]+\\\"|SRCREV = \\\"$(git ls-remote -t {{{sourceUrl}}} refs/tags/{{{newVersion}}} | awk '{print $1}')\\\"|\" -i {{{packageFile}}}"
+          "sed -r \"s|SRCREV = \\\"[0-9a-f]+\\\"|SRCREV = \\\"$(git ls-remote -t {{{sourceUrl}}} refs/tags/v{{{newVersion}}} | awk '{print $1}')\\\"|\" -i {{{packageFile}}}"
         ],
         "fileFilters": [
           "**/balena_git.bb"
