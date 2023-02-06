@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.109.1
+## (2023-02-06)
+
+* resin-extra-udev-rules: Remove after all device types have been updated [Alex Gonzalez]
+
 # v2.109.0
 ## (2023-02-05)
 

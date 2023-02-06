@@ -1,4 +1,20 @@
 - commits:
+    - subject: "resin-extra-udev-rules: Remove after all device types have been updated"
+      hash: 75dd55660bcb9e37f458b505e23acc3f19dfddc7
+      body: |
+        This recipe has now been renamed to extra-udev-rules across all device
+        types repositories.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.109.1
+  title: ""
+  date: 2023-02-06T20:35:12.019Z
+- commits:
     - subject: "kernel-balena: Remove apparmor support"
       hash: 18cd233a83554b58b3540164afd768fdeda60b03
       body: |
