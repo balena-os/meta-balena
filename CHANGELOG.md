@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.110.1
+## (2023-02-07)
+
+* renovate: Include to and from versions for supervisor and engine [Kyle Harding]
+
 # v2.110.0
 ## (2023-02-07)
 
