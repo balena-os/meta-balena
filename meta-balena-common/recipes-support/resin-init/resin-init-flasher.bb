@@ -30,9 +30,7 @@ RDEPENDS:${PN} = " \
     util-linux-lsblk \
     "
 
-RDEPENDS:${PN}:x86-64 = " \
-    efitools-utils \
-"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils', '',d)}"
 
 RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2 efivar',d)}"
 
