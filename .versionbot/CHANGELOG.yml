@@ -1,4 +1,75 @@
 - commits:
+    - subject: Update tests/leviathan digest to 4f63a2d
+      hash: 1c5a216f8e5eee8f1150db3838af2f32e04a510d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "patch: Automate docs deployment with Flowzone"
+              hash: 80e54cfbf70f33393e2727d244f02e29355d2da4
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.18.1
+          title: ""
+          date: 2023-02-07T17:39:20.063Z
+        - commits:
+            - subject: Update core/contracts digest to 7797750
+              hash: 397528cd30ec8bba1f65ab8ce4234204ab544bb4
+              body: |
+                Update core/contracts to
+
+                Update core/contracts from  to
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.18.0
+          title: ""
+          date: 2023-02-07T08:53:50.875Z
+        - commits:
+            - subject: "patch: Update client lockfile"
+              hash: 515a6883a0aa236ecdf3846721af4524205d70b7
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+            - subject: "patch: Update core lockfile"
+              hash: da7fd4ea8c75c41a02e542bbb56b907ebfdb0545
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.17.6
+          title: ""
+          date: 2023-02-07T07:44:52.573Z
+        - commits:
+            - subject: "patch: Update core dependencies"
+              hash: 2b91fb5147f662dfa11cd4413982c9427c06f37d
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.17.5
+          title: ""
+          date: 2023-02-06T14:27:06.833Z
+  version: 2.110.2
+  title: ""
+  date: 2023-02-07T22:31:50.564Z
+- commits:
     - subject: "renovate: Include to and from versions for supervisor and engine"
       hash: 3ae9703ba53a33e99e2ee81e588466f0e4665977
       body: |

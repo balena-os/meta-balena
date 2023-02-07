@@ -1,6 +1,37 @@
 Change log
 -----------
 
+# v2.110.2
+## (2023-02-07)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4f63a2d [Renovate Bot] </summary>
+
+> ## leviathan-2.18.1
+> ### (2023-02-07)
+> 
+> * patch: Automate docs deployment with Flowzone [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.18.0
+> ### (2023-02-07)
+> 
+> * Update core/contracts digest to 7797750 [Renovate Bot]
+> 
+> ## leviathan-2.17.6
+> ### (2023-02-07)
+> 
+> * patch: Update client lockfile [Vipul Gupta (@vipulgupta2048)]
+> * patch: Update core lockfile [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.17.5
+> ### (2023-02-06)
+> 
+> * patch: Update core dependencies [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
 # v2.110.1
 ## (2023-02-07)
 
