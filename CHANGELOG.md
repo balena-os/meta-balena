@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.110.0
+## (2023-02-07)
+
+* Update balena-supervisor to v14.7.1 [Renovate Bot]
+
 # v2.109.2
 ## (2023-02-07)
 

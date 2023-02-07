@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-supervisor to v14.7.1
+      hash: 53b0b2cf27a0460d80ef4a3881840ac9f2767353
+      body: Update balena-supervisor
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Renovate Bot
+      nested: []
+  version: 2.110.0
+  title: ""
+  date: 2023-02-07T12:28:37.194Z
+- commits:
     - subject: "efitools: backport patch to fix build failure"
       hash: 4497229d9d3435384564cde802a3d16cbc47300c
       body: |
