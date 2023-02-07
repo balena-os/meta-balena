@@ -1,4 +1,45 @@
 - commits:
+    - subject: "efitools: backport patch to fix build failure"
+      hash: 4497229d9d3435384564cde802a3d16cbc47300c
+      body: |
+        Copied from buildroot mailing list:
+        http://lists.busybox.net/pipermail/buildroot/2021-April/610255.html
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "efitools: fix cross-compilation on arm"
+      hash: 86887855e9023e56cd9c96fdfc29053f649366f5
+      body: |
+        efitools defaults ARCH to x86_64 when unset, leading to architecture
+        specific flags being misapplied, breaking the build
+
+        Set ARCH based on the target architecture, and override OBJCOPY to the
+        binary provided by the target architecture's toolchain.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: Only include EFI tools if the machine feature is defined
+      hash: ebeccdfa45e5e98215aa3b47429df1be82750021
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.109.2
+  title: ""
+  date: 2023-02-07T09:05:22.787Z
+- commits:
     - subject: "resin-extra-udev-rules: Remove after all device types have been updated"
       hash: 75dd55660bcb9e37f458b505e23acc3f19dfddc7
       body: |

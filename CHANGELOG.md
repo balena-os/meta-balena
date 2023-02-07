@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.109.2
+## (2023-02-07)
+
+* efitools: backport patch to fix build failure [Joseph Kogut]
+* efitools: fix cross-compilation on arm [Joseph Kogut]
+* Only include EFI tools if the machine feature is defined [Alex Gonzalez]
+
 # v2.109.1
 ## (2023-02-06)
 
