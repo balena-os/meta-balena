@@ -43,7 +43,7 @@ module.exports = {
 					'META_BALENA_VERSION',
 					'SLUG',
 				].forEach(field => {
-					test.includes(
+					test.match(
 						result,
 						{
 							[field]: /.*/,

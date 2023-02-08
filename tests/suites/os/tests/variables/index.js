@@ -47,7 +47,7 @@ module.exports = {
 			].forEach(variable => {
 				const fullVariable = `${prefix}${variable ? '_' + variable : ''}`;
 
-				test.includes(
+				test.match(
 					result,
 					{
 						[fullVariable]: /.*/,
@@ -58,7 +58,7 @@ module.exports = {
 		});
 
 		// This variable does not have a RESIN_ equivalent, so we will single it out
-		test.includes(
+		test.match(
 			result,
 			{ BALENA_SERVICE_HANDOVER_COMPLETE_PATH: /.*/ },
 			'Should find expected variable in env',

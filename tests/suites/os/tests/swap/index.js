@@ -40,7 +40,7 @@ module.exports = {
 		test.equal(swaps.length, 1, 'There should be one swap');
 
 		const swap = swaps[0];
-		test.has(swap.filename, /\/dev\/zram?/, 'Swap should be a zram device');
+		test.match(swap.filename, /\/dev\/zram?/, 'Swap should be a zram device');
 
 		const maxSwap = 4096000;
 		const expectedSwap = Math.min(totalMem / 2, maxSwap);
