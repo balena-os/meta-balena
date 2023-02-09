@@ -39,17 +39,16 @@
 set -e
 
 # Very long variables :)
-EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/mnt/boot # mounted by systemd
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
-INTERNAL_DEVICE_CONF_PART_MOUNTPOINT=/tmp/internal_conf
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 SPLASH_DIRNAME=splash
 BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt
-CURRENT_ROOT=$(findmnt --noheadings --canonicalize --output SOURCE / | xargs lsblk -no pkname)
 LUKS=0
 EFI=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 SECUREBOOT_ENABLED=0
+
+. /usr/libexec/os-helpers-fs
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -123,6 +122,14 @@ else
 fi
 inform "resin-init-flasher configuration found."
 
+# Find path to image
+_balena_image=$(find / -xdev -type f -name "${BALENA_IMAGE}")
+if [ ! -f "${_balena_image}" ]; then
+    fail "Raw image ${BALENA_IMAGE}  not found in rootfs"
+fi
+BALENA_IMAGE="${_balena_image}"
+EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT="/mnt/boot"
+
 # Balena configuration file
 if [ -f /usr/sbin/balena-config-vars ]; then
     source /usr/sbin/balena-config-vars
@@ -131,66 +138,42 @@ else
 fi
 inform "balena configuration found."
 
+# BALENA_BOOT_MOUNTPOINT should exist
+if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
+	fail "$BALENA_BOOT_MOUNTPOINT : No such directory."
+fi
+
 # CONFIG_PATH should exist
 if [ ! -f "$CONFIG_PATH" ]; then
     fail "$CONFIG_PATH : No such file."
-fi
-
-# BALENA_BOOT_MOUNTPOINT should exit
-if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
-	fail "$BALENA_BOOT_MOUNTPOINT : No such directory."
 fi
 
 # Give a chance to openvpn to come alive
 STARTTIME=$(date +%s)
 ENDTIME="$STARTTIME"
 TIMEOUT=15
-while [ "$(systemctl is-active openvpn)" != "active" ]
-do
-    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1 && ENDTIME=$((ENDTIME + 1))
-    else
-        inform "Timeout while waiting for openvpn to come alive. No network?"
-        break
-    fi
-done
+if command -v "systemctl"; then
+    while [ "$(systemctl is-active openvpn)" != "active" ]
+    do
+        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+            sleep 1 && ENDTIME=$((ENDTIME + 1))
+        else
+            inform "Timeout while waiting for openvpn to come alive. No network?"
+            break
+        fi
+    done
+fi
 
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
-internal_dev=""
-for device_pattern in ${INTERNAL_DEVICE_KERNEL}; do
-    inform "Searching for devices matching pattern /dev/${device_pattern}"
-    # shellcheck disable=SC2046
-    ! IFS=$'\n' read -rd '' -a devices <<< \
-	    "$(ls $(eval echo "/dev/${device_pattern}") 2>/dev/null)"
-    for device in "${devices[@]}"; do
-        if [[ "/dev/${CURRENT_ROOT}" = "${device}" ]]; then
-            inform "${device} is our install media, skip it..."
-            continue
-        fi
-        if test -b "$(readlink -f "${device}")"; then
-            if ! [[ "${device_pattern}" = md/* ]]; then
-                if mdadm --examine "${device}" | grep -q Array; then
-                    inform "${device} is part of an existing RAID array" \
-			    "that wasn't specified by name, skip it..."
-                    continue
-                fi
-            fi
-
-            internal_dev="$(readlink -f ${device})"
-            break 2
-	else
-		inform "$device is not a block device, skipping"
-        fi
-    done
-done
+internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
 if [ -z "$internal_dev" ]; then
     resin-device-progress --percentage 100 --state "Failed to find any block devices." || true
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
 inform "$internal_dev will be used for flashing."
 
-IMAGE_FILE_SIZE=$(wc -c /opt/"$BALENA_IMAGE" | awk '{print $1}')
+IMAGE_FILE_SIZE=$(wc -c "$BALENA_IMAGE" | awk '{print $1}')
 
 # Check for UEFI mode and set variables accordingly.
 if [ -d /sys/firmware/efi ]; then
@@ -249,9 +232,6 @@ if [ -d /sys/firmware/efi ]; then
     fi
 fi
 
-# Include FS helpers for repartitioning
-. /usr/libexec/os-helpers-fs
-
 if [ "$LUKS" = "1" ]; then
     # Include TPM2 helpers
     . /usr/libexec/os-helpers-tpm2
@@ -276,7 +256,7 @@ if [ "$LUKS" = "1" ]; then
     hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,2,3" "$TPM_RESULT_DIR"
 
     # Attach the image to a loop device
-    LOOP_DEVICE=$(losetup --find --show --partscan "/opt/$BALENA_IMAGE")
+    LOOP_DEVICE=$(losetup --find --show --partscan "$BALENA_IMAGE")
     LOOP_DEVICE_NAME="${LOOP_DEVICE#/dev/}"
 
     # Repartition the new drive
@@ -385,7 +365,7 @@ if [ "$LUKS" = "1" ]; then
     losetup -d "$LOOP_DEVICE"
 else
     resin-device-progress --percentage 0 --state "Starting flashing balenaOS on internal media" || true
-    dd_with_progress "/opt/$BALENA_IMAGE" "$internal_dev" 0 "$IMAGE_FILE_SIZE"
+    dd_with_progress "$BALENA_IMAGE" "$internal_dev" 0 "$IMAGE_FILE_SIZE"
 fi
 
 sync
@@ -422,8 +402,13 @@ fi
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 inform "Mounting internal device boot partition."
 
-if ! mount /dev/disk/by-label/resin-boot $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT; then
-    fail "Failed to mount disk labeled as 'resin-boot'."
+BOOT_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" resin-boot)
+if [ -n "${BOOT_MOUNT}" ]; then
+    if ! mount "${BOOT_MOUNT}"  "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"; then
+        fail "Failed to mount disk labeled as 'resin-boot'."
+    fi
+else
+    fail "Internal boot partition (resin-boot) not found in ${internal_dev}"
 fi
 
 if [ "$LUKS" = "1" ]; then
@@ -454,7 +439,7 @@ if [ "$LUKS" = "1" ]; then
     # Emulate a stage2 bootloader
     # At this point just copy the flasher kernel to EFI partition
     # TODO: Remove or replace by a proper stage2 bootloader when that is ready
-    cp -a /boot/bzImage /boot/bzImage.sig ${EFI_MOUNT_DIR}
+    find / -xdev -type f -name "bzImage*" -exec cp -a {} "${EFI_MOUNT_DIR}" +
 
     if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
         INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
@@ -465,7 +450,7 @@ fi
 mkdir -p "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME"
 cp -r $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME/* $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$SPLASH_DIRNAME
 # Copy Network Manager connection files
-CONFIG_NM="${BALENA_BOOT_MOUNTPOINT}/system-connections/"
+CONFIG_NM="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/system-connections/"
 if [ -d "$CONFIG_NM" ]; then
     inform "Transferring system connections on the internal device."
     rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-connections/"
@@ -474,7 +459,7 @@ else
     inform "No system connections found to transfer on the internal device."
 fi
 # Copy proxy configuration files
-CONFIG_PROXY="${BALENA_BOOT_MOUNTPOINT}/system-proxy/"
+CONFIG_PROXY="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/system-proxy/"
 if [ -d "$CONFIG_PROXY" ]; then
     inform "Transferring proxy configuration on the internal device."
     rm -rf "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/system-proxy/"
@@ -507,15 +492,17 @@ fi
 STARTTIME=$(date +%s)
 ENDTIME="$STARTTIME"
 TIMEOUT=10
-while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
-do
-    if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-        sleep 1 && ENDTIME=$((ENDTIME + 1))
-    else
-        inform "Timeout while waiting for register to finish. No network?"
-        break
-    fi
-done
+if command -v "systemctl"; then
+    while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
+    do
+        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
+            sleep 1 && ENDTIME=$((ENDTIME + 1))
+        else
+            inform "Timeout while waiting for register to finish. No network?"
+            break
+        fi
+    done
+fi
 
 # Copy json configuration file from external (flasher) to the internal
 # (booting) device, sans installer section

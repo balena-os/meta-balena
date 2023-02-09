@@ -4,20 +4,6 @@
 . /usr/libexec/os-helpers-fs
 
 FREESPACE_LIMIT=10
-datapart=$(get_state_path_from_label "resin-data")
-dataparttype=$(lsblk "${datapart}" -nlo type)
-datapartdev=$(basename $(readlink -f "${datapart}"))
-if [ "${dataparttype}" = "crypt" ]; then
-    if [ "$(ls /sys/class/block/${datapartdev}/slaves | wc -l)" != "1" ]; then
-        # This is just a disaster circuit breaker, it should never happen
-        fail "Unable to determine parent partition for ${datapartdev}"
-    fi
-
-    # We have asserted that there is a single slave device
-    datapartdev=$(ls "/sys/class/block/${datapartdev}/slaves")
-fi
-datadev=$(lsblk "/dev/${datapartdev}" -d -n -o PKNAME)
-pttype=$(get_part_table_type "/dev/${datadev}")
 
 resindataexpander_enabled() {
     # On flasher avoid expanding partition
@@ -27,19 +13,33 @@ resindataexpander_enabled() {
         return 1
     fi
 
+    datapart=$(get_state_path_from_label "resin-data")
+    dataparttype=$(lsblk "${datapart}" -nlo type)
+    datapartdev=$(basename $(readlink -f "${datapart}"))
+    if [ "${dataparttype}" = "crypt" ]; then
+        if [ "$(ls /sys/class/block/${datapartdev}/slaves | wc -l)" != "1" ]; then
+            # This is just a disaster circuit breaker, it should never happen
+            fail "Unable to determine parent partition for ${datapartdev}"
+        fi
+
+        # We have asserted that there is a single slave device
+        datapartdev=$(ls "/sys/class/block/${datapartdev}/slaves")
+    fi
+    datadev=$(lsblk "/dev/${datapartdev}" -d -n -o PKNAME)
+    pttype=$(get_part_table_type "/dev/${datadev}")
+
     if ! wait4file "$datapart" "300"; then
-	    error "Timeout while waiting for data partition to be detected. Data partition expansion will not be tried."
-	    return 1
+        error "Timeout while waiting for data partition to be detected. Data partition expansion will not be tried."
+        return 1
     fi
 
     # If the secondary GPT is not the end of the disk, parted will ask
     # to fix it. If GPT is already fixed, nothing else happens.
     # This currently only works in interactive mode
     if [ "${pttype}" = "gpt" ]; then
-	    echo "Fix" | parted  ---pretend-input-tty /dev/${datadev} print 2>&1 > /dev/null
-	    partprobe
-	    sync
-
+        echo "Fix" | parted  ---pretend-input-tty /dev/${datadev} print 2>&1 > /dev/null
+        partprobe
+        sync
             if sgdisk -v /dev/${datadev} 2>&1 | grep -q "corrupt GPT"; then
                 sgdisk --backup=/run/gpt.bkp /dev/${datadev}
                 sgdisk --load-backup=/run/gpt.bkp /dev/${datadev}
@@ -55,30 +55,29 @@ resindataexpander_run() {
     # lsblk works on block devices only
     for freespace in $(parted -m "/dev/$datadev" unit MiB print free | grep free | cut -d: -f4 | sed 's/MiB//g'); do
         if [ "$(echo "$freespace" \> $FREESPACE_LIMIT | bc -l)" = "1" ]; then
-		# msdos partition types with more than 4 partitions need to
-		# convert the 4th in an extended partition
-		if [ "${pttype}" = "msdos" ] && [ "${part_number}" -gt 4 ]; then
-	            info "resindataexpander: Expand extended partition... "
-	            parted -s "/dev/$datadev" -- resizepart 4 -1s
-	            info "resindataexpander: Finished expanding extended partition."
-	        fi
-	        info "resindataexpander: Expand data partition... "
-	        parted -s "/dev/$datadev" -- resizepart "${part_number}" 100%
-	        info "resindataexpander: Finished expanding data partition."
-	        partprobe
-	        sync
+            # msdos partition types with more than 4 partitions need to
+            # convert the 4th in an extended partition
+            if [ "${pttype}" = "msdos" ] && [ "${part_number}" -gt 4 ]; then
+                info "resindataexpander: Expand extended partition... "
+                parted -s "/dev/$datadev" -- resizepart 4 -1s
+                info "resindataexpander: Finished expanding extended partition."
+            fi
+            info "resindataexpander: Expand data partition... "
+            parted -s "/dev/$datadev" -- resizepart "${part_number}" 100%
+            info "resindataexpander: Finished expanding data partition."
+            partprobe
+            sync
 
-		if [ "${dataparttype}" = "crypt" ]; then
-			datapartmap=$(lsblk ${datapart} -nlo name)
-			info "resindataexpander: Expand LUKS volume for data partition..."
-			cryptsetup resize "${datapartmap}"
-			info "resindataexpander: Expanded LUKS volume for data partition"
-			sync
-               fi
-
-                # We return when we've done the expansion
-		info "Data partition at $datapart expanded."
-                break
+            if [ "${dataparttype}" = "crypt" ]; then
+                datapartmap=$(lsblk ${datapart} -nlo name)
+                info "resindataexpander: Expand LUKS volume for data partition..."
+                cryptsetup resize "${datapartmap}"
+                info "resindataexpander: Expanded LUKS volume for data partition"
+                sync
+            fi
+            # We return when we've done the expansion
+            info "Data partition at $datapart expanded."
+            break
         fi
     done
 
