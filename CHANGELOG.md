@@ -1,6 +1,23 @@
 Change log
 -----------
 
+# v2.110.3
+## (2023-02-09)
+
+* os-helpers: remove shebangs as these are not meant to be executed [Alex Gonzalez]
+* resindataexpander: Fix formatting [Alex Gonzalez]
+* resin-init-flasher: Extract code that resolved internal device [Alex Gonzalez]
+* os-helpers-fs: Add shared code from resin-init-flasher [Alex Gonzalez]
+* resin-init-flasher: remove unused variable [Alex Gonzalez]
+* resin-init-flasher: Use the default for the external boot partition mount [Alex Gonzalez]
+* resin-init-flasher: search for images to copy instead of hardcoding paths [Alex Gonzalez]
+* resin-init-flasher: Do not  hardcode the path to the internal boot device [Alex Gonzalez]
+* resin-init-flasher: remove systemd dependency [Alex Gonzalez]
+* resin-init-flasher: Do not hardcode path to the raw image [Alex Gonzalez]
+* initrdscript: prepare: expose path to initramfs logs [Alex Gonzalez]
+* initrdscript: resindataexpander: skip for flasher images [Alex Gonzalez]
+* docs: add initramfs overview [Alex Gonzalez]
+
 # v2.110.2
 ## (2023-02-07)
 

@@ -1,4 +1,162 @@
 - commits:
+    - subject: "os-helpers: remove shebangs as these are not meant to be executed"
+      hash: 5ffda998055973cb6f4cb68a355b1a73bdea7c48
+      body: |
+        The os-helpers scripts are meant to be sourced by other scripts, not
+        executed. When sourced, the shebang should be ignored.
+
+        However, we have seen instances where a bash script sourcing a sh
+        os-helper scripts triggers POSIX behaviour, specifically glob parsing
+        failures.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resindataexpander: Fix formatting"
+      hash: 58e3ee6755fac41e831fdf2b296c6e5f997b190b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Extract code that resolved internal device"
+      hash: f85631573b08efdc298a82d5e5471a3fe6606d66
+      body: |
+        This is now also used from the migrator module.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: Add shared code from resin-init-flasher"
+      hash: 59886212f4f73cac06bb3f62fd61878856a40536
+      body: |
+        As we work in the migrator there is some code we want to share.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: remove unused variable"
+      hash: 800db4f0ce54dcd9d2f9b1ef8300c1534a3a55c1
+      body: |
+        The INTERNAL_DEVICE_CONF_PART_MOUNTPOINT is no longer used in the code.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Use the default for the external boot partition
+        mount"
+      hash: 9599a70c6e7440dde993d847e1e1800f5f5d4409
+      body: |
+        This simplifies the code as we only set the boot partition mount in one
+        place.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: search for images to copy instead of hardcoding
+        paths"
+      hash: c261dbf4c96ee4204001be8e96654ebadf490516
+      body: |
+        The files will live in different places depending on whether the script
+        is run from a flasher image or from initramfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Do not  hardcode the path to the internal boot
+        device"
+      hash: 60f130fabd947f1d929213196419bc2153258b2c
+      body: |
+        Make sure the internal boot device we mount is the one we have just
+        programmed - using the resin-boot label might clash.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: remove systemd dependency"
+      hash: dbda0afade7c575f0b1f4ac3146e9760a5bcda26
+      body: |
+        Allow to run the script from initramfs where no systemd is installed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Do not hardcode path to the raw image"
+      hash: e48c090e1285ac03281c80d44644961d3f253d96
+      body: |
+        Allow the script to search for the raw balena image in the rootfs. This
+        allows to use the raw image from different sources.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscript: prepare: expose path to initramfs logs"
+      hash: b82c8deb415c0e83bc1fa393036c4f3259019f2d
+      body: |
+        This allows other module to use it without hardcoding the value.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscript: resindataexpander: skip for flasher images"
+      hash: f3448518b30f2cb41c4ee38e246b35f5ba7b77df
+      body: |
+        The code outside of the enabled and run functions is not meant to be
+        executed for flasher images and it prints verbose errors.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docs: add initramfs overview"
+      hash: 6bcfb867ef9c5381c7a07e6f595f13e7d15b66d0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.110.3
+  title: ""
+  date: 2023-02-09T11:41:04.136Z
+- commits:
     - subject: Update tests/leviathan digest to 4f63a2d
       hash: 1c5a216f8e5eee8f1150db3838af2f32e04a510d
       body: Update tests/leviathan
