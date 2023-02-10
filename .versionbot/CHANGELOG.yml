@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update tests/leviathan digest to 589449d
+      hash: 52969e49099d62c2138d0beb77e8d2e594cfac44
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 35f4223
+              hash: e961e26202498739b02e204ac20783b304274835
+              body: |
+                Update core/contracts to
+
+                Update core/contracts from  to
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.19.0
+          title: ""
+          date: 2023-02-10T06:55:02.463Z
+  version: 2.110.4
+  title: ""
+  date: 2023-02-10T16:27:06.148Z
+- commits:
     - subject: "os-helpers: remove shebangs as these are not meant to be executed"
       hash: 5ffda998055973cb6f4cb68a355b1a73bdea7c48
       body: |

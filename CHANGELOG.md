@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.110.4
+## (2023-02-10)
+
+
+<details>
+<summary> Update tests/leviathan digest to 589449d [Renovate Bot] </summary>
+
+> ## leviathan-2.19.0
+> ### (2023-02-10)
+> 
+> * Update core/contracts digest to 35f4223 [Renovate Bot]
+> 
+
+</details>
+
 # v2.110.3
 ## (2023-02-09)
 
