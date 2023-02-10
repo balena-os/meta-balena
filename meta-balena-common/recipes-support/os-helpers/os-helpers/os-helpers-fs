@@ -249,6 +249,10 @@ get_internal_device() {
           inform "${device} is our install media, skip it..."
           continue
       fi
+      if [ ! fdisk -l "${device}" ]; then
+        inform "${device} has no media attached"
+        continue
+      fi
       if test -b "$(readlink -f "${device}")"; then
           if ! [[ "${device_pattern}" = md/* ]]; then
               if mdadm --examine "${device}" | grep -q Array; then
