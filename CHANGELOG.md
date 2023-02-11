@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.111.0
+## (2023-02-11)
+
+
+<details>
+<summary> Update balena-supervisor to v14.8.0 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.8.0
+> ### (2023-02-10)
+> 
+> * Remove dependent devices content in codebase [Christina Ying Wang]
+> 
+
+</details>
+
 # v2.110.4
 ## (2023-02-10)
 

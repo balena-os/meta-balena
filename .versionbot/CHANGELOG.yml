@@ -1,4 +1,43 @@
 - commits:
+    - subject: Update balena-supervisor to v14.8.0
+      hash: 8b951dd95f2323524a7aab8a4a08182f31b43fc3
+      body: |
+        Update balena-supervisor from 14.7.1 to 14.8.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Remove dependent devices content in codebase
+              hash: c4f9d72172ef678c73ee05e8766c9bcfddd47073
+              body: >
+                This includes:
+
+                - proxyvisor.js
+
+                - references in docs
+
+                - references device-state, api-binder, compose modules, API
+
+                - references in tests
+
+
+                The commit also adds a migration to remove the 4 dependent device tables from the DB.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.8.0
+          title: ""
+          date: 2023-02-10T23:01:03.277Z
+  version: 2.111.0
+  title: ""
+  date: 2023-02-11T01:57:28.602Z
+- commits:
     - subject: Update tests/leviathan digest to 589449d
       hash: 52969e49099d62c2138d0beb77e8d2e594cfac44
       body: Update tests/leviathan
