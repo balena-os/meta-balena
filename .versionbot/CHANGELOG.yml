@@ -1,4 +1,42 @@
 - commits:
+    - subject: "resin-init-flasher: do not report progress if unprovisioned"
+      hash: c6e81823002c1b7f73373fc5eee9434c8805f5b5
+      body: |
+        If we know we have not provisioned, let's not print errors when the
+        report cannot be sent.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: check splash configuration exists before copying"
+      hash: 150bef07e330695cc2abcc1e46d533ed43b0a732
+      body: |
+        Otherwise, if the flasher is configured without a splash configuration
+        directory, the boot partition content is overwritten.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Move configuration data definitions to config file"
+      hash: be9f8c76eab4494d6dfaaca81ec2c695d9f78d8c
+      body: |
+        This exposes a file based interface for configuration sharing. The
+        clarity is needed while working on the migrator.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.111.1
+  title: ""
+  date: 2023-02-13T09:12:12.081Z
+- commits:
     - subject: Update balena-supervisor to v14.8.0
       hash: 8b951dd95f2323524a7aab8a4a08182f31b43fc3
       body: |

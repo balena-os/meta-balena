@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.111.1
+## (2023-02-13)
+
+* resin-init-flasher: do not report progress if unprovisioned [Alex Gonzalez]
+* resin-init-flasher: check splash configuration exists before copying [Alex Gonzalez]
+* resin-init-flasher: Move configuration data definitions to config file [Alex Gonzalez]
+
 # v2.111.0
 ## (2023-02-11)
 
