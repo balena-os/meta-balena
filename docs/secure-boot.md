@@ -14,9 +14,21 @@ Only TPM version 2 devices are currently supported.
 
 Public keys can be configured using the UEFI interface. `balenaOS` ships the public keys in DER format inside the `balena-keys` directory in the boot partition of the installer image. The PK, KEK and DB keys need to be manually setup, and other key slots ignored.
 
+### Installer configuration
+
+If the system boots in setup mode the `balenaOS` installer image is capable of automatically enrolling the keys required to enable secure boot user mode. However, this feature is opt-in with a boolean contained in `config.json`. In order to opt-in to secure boot installation, add the following section to your installer's `config.json`:
+
+```json
+"installer": {
+  "secureboot": true
+}
+```
+
+This option only affects installer behavior, and has no effect on an already installed system.
+
 ### Setup mode
 
-If the system boots in setup mode the `balenaOS` installer image will perform the keys configuration without user intervention. Setup mode can usually be configured by resetting the manufacturing keys in the UEFI user interface. Some systems will boot in setup mode when secure boot is enabled but no keys are configured.
+Setup mode can usually be configured by resetting the manufacturing keys in the UEFI user interface. Some systems will boot in setup mode when secure boot is enabled but no keys are configured. The device must both boot an installer image configured to opt-in to secure boot, as well as be in setup mode in order to enable secure boot and full-disk encryption. Failure to meet these conditions will result in the installer either flashing without secure boot and full-disk encryption, or simply bailing out.
 
 ### Disk encryption
 
