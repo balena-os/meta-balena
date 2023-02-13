@@ -47,6 +47,7 @@ EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 SECUREBOOT_ENABLED=0
 
 . /usr/libexec/os-helpers-fs
+. /usr/libexec/os-helpers-logging
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -54,15 +55,7 @@ function clean {
     umount $INTERNAL_DEVICE_CONF_PART_MOUNTPOINT > /dev/null 2>&1 || true
 }
 
-function fail {
-    echo "[resin-init-flasher] ERROR: $1"
-    clean
-    exit 1
-}
-
-function inform {
-    echo "[resin-init-flasher] INFO: $1"
-}
+trap clean ERR
 
 function report_progress() {
     _ratio="${1}"
@@ -119,7 +112,7 @@ if [ "$EUID" -ne 0 ]; then
     fail "Please run as root."
 fi
 
-inform "Board specific initialization..."
+info "Board specific initialization..."
 /usr/bin/resin-init-board
 
 # Configuration file
@@ -128,7 +121,7 @@ if [ -f $FLASHER_CONF_FILE ]; then
 else
     fail "No configuration for resin-init-flasher."
 fi
-inform "resin-init-flasher configuration found."
+info "resin-init-flasher configuration found."
 
 # Find path to image
 _balena_image=$(find / -xdev -type f -name "${BALENA_IMAGE}")
@@ -144,7 +137,7 @@ if [ -f /usr/sbin/balena-config-vars ]; then
 else
     fail "No balena configuration found."
 fi
-inform "balena configuration found."
+info "balena configuration found."
 
 # BALENA_BOOT_MOUNTPOINT should exist
 if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
@@ -166,7 +159,7 @@ if command -v "systemctl"; then
         if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
             sleep 1 && ENDTIME=$((ENDTIME + 1))
         else
-            inform "Timeout while waiting for openvpn to come alive. No network?"
+            info "Timeout while waiting for openvpn to come alive. No network?"
             break
         fi
     done
@@ -178,13 +171,13 @@ if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
 fi
 
 # Flash Resin image on internal device
-inform "Flash internal device... will take around 5 minutes... "
+info "Flash internal device... will take around 5 minutes... "
 internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
 if [ -z "$internal_dev" ]; then
     report_progress 100 "Failed to find any block devices."
     fail "Failed to find any block devices in $INTERNAL_DEVICE_KERNEL."
 fi
-inform "$internal_dev will be used for flashing."
+info "$internal_dev will be used for flashing."
 
 IMAGE_FILE_SIZE=$(wc -c "$BALENA_IMAGE" | awk '{print $1}')
 
@@ -216,11 +209,11 @@ if [ -d /sys/firmware/efi ]; then
             fail "Secure boot is supported in firmware, but the image is not signed"
         fi
 
-        inform "Secure boot is enabled, proceeding with lockdown"
+        info "Secure boot is enabled, proceeding with lockdown"
         LUKS=1
 
         if [ "${SETUPMODE_VAR}" -eq "1" ]; then
-            inform "Secure boot setup mode detected - programming keys"
+            info "Secure boot setup mode detected - programming keys"
             # Enroll PK last, as it should disable setup mode
             for e in db KEK PK; do
                 # Remove immutable attribute
@@ -234,7 +227,7 @@ if [ -d /sys/firmware/efi ]; then
                 | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
             if [ "${SETUPMODE_VAR}" -eq "1" ]; then
                 # Setting up keys hasn't disabled setup mode, try a reboot into flasher
-                inform "Rebooting flasher after secure mode setup to boot in secure boot mode."
+                info "Rebooting flasher after secure mode setup to boot in secure boot mode."
                 # Make sure to reboot into the installer
                 bootcurrent=$(efibootmgr | grep BootCurrent | awk '{print $2}')
                 efibootmgr -n "${bootcurrent}"
@@ -252,10 +245,10 @@ if [ "$LUKS" = "1" ]; then
     # Generate password and encrypt it using the TPM
     TPM="${TPM:-/dev/tpmrm0}"
     if [ -e "$TPM" ]; then
-        inform "$TPM will be used for LUKS operations"
+        info "$TPM will be used for LUKS operations"
         export TPM2TOOLS_TCTI="device:$TPM"
     else
-        inform "$TPM not found, falling back to autodetection"
+        info "$TPM not found, falling back to autodetection"
     fi
 
     # Generate a random passphrase
@@ -274,7 +267,7 @@ if [ "$LUKS" = "1" ]; then
 
     # Repartition the new drive
     report_progress 0 "Starting flashing balenaOS on internal media"
-    inform "Repartitioning $internal_dev for disk encryption"
+    info "Repartitioning $internal_dev for disk encryption"
 
     # Align partition sizes to multiples of 4MB
     PART_SIZE_ALIGN=$[4 * 1024 * 1024]
@@ -286,7 +279,7 @@ if [ "$LUKS" = "1" ]; then
     # and it is much harder to operate on due to the necessity of an extended partition
     parted "$internal_dev" mktable gpt
 
-    inform "Flashing boot partition"
+    info "Flashing boot partition"
     ORIGINAL_BOOT_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-boot)
     ORIGINAL_BOOT_PART_SIZE=$(get_part_size_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID" "$PART_SIZE_ALIGN")
     ORIGINAL_BOOT_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$ORIGINAL_BOOT_PART_ID")
@@ -351,7 +344,7 @@ if [ "$LUKS" = "1" ]; then
         INTERNAL_PART_ID=$(get_part_number_by_label "${internal_dev#/dev/}" "$PART_NAME" partlabel)
 
         PART_DEV="$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
-        inform "Encrypting $PART_DEV"
+        info "Encrypting $PART_DEV"
         cryptsetup -q luksFormat "$PART_DEV" "$PASSPHRASE_FILE"
         cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file "$PASSPHRASE_FILE"
         DM_DEV="/dev/mapper/$PART_NAME"
@@ -361,7 +354,7 @@ if [ "$LUKS" = "1" ]; then
             continue
         fi
 
-        inform "Flashing $PART_DEV"
+        info "Flashing $PART_DEV"
 
         dd_with_progress "${LOOP_DEVICE}p$LOOP_PART_ID" "$DM_DEV" "$FLASHED" "$IMAGE_FILE_SIZE"
 
@@ -392,28 +385,28 @@ udevadm settle
 if [ -n "$BOOTLOADER_FLASH_DEVICE" ]; then
     if [ -n "$BOOTLOADER_IMAGE" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET" ]; then
         dd if="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE}" of="/dev/${BOOTLOADER_FLASH_DEVICE}" bs="${BOOTLOADER_BLOCK_SIZE_OFFSET}" seek="${BOOTLOADER_SKIP_OUTPUT_BLOCKS}"
-        inform "Flashed ${BOOTLOADER_IMAGE} to internal flash"
+        info "Flashed ${BOOTLOADER_IMAGE} to internal flash"
     else
         fail "BOOTLOADER_IMAGE and/or BOOTLOADER_BLOCK_SIZE_OFFSET are not set."
     fi
 else
-    inform "No need to flash first stage bootloader to a specific device."
+    info "No need to flash first stage bootloader to a specific device."
 fi
 
 if [ -n "$BOOTLOADER_FLASH_DEVICE_1" ]; then
     if [ -n "$BOOTLOADER_IMAGE_1" ] && [ -n "$BOOTLOADER_BLOCK_SIZE_OFFSET_1" ]; then
         dd if="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BOOTLOADER_IMAGE_1}" of="/dev/${BOOTLOADER_FLASH_DEVICE_1}" bs="${BOOTLOADER_BLOCK_SIZE_OFFSET_1}" seek="${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}"
-        inform "Flashed ${BOOTLOADER_IMAGE_1} to internal flash"
+        info "Flashed ${BOOTLOADER_IMAGE_1} to internal flash"
     else
         fail "BOOTLOADER_IMAGE_1 and/or BOOTLOADER_BLOCK_SIZE_OFFSET_1 are not set."
     fi
 else
-    inform "No need to flash second stage bootloader to a specific device."
+    info "No need to flash second stage bootloader to a specific device."
 fi
 
 # Mount internal device boot partition
 mkdir -p $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
-inform "Mounting internal device boot partition."
+info "Mounting internal device boot partition."
 
 # Wait for the devices to be detected for a while
 BOOT_MOUNT="/dev/disk/by-label/resin-boot"
@@ -472,20 +465,20 @@ fi
 # Copy Network Manager connection files
 _nm_config="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_NM_CONFIG}"
 if [ -d "${_nm_config}" ]; then
-    inform "Transferring system connections on the internal device."
+    info "Transferring system connections on the internal device."
     rm -rf "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_NM_CONFIG}/"
     cp -rvf "${_nm_config}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
 else
-    inform "No system connections found to transfer on the internal device."
+    info "No system connections found to transfer on the internal device."
 fi
 # Copy proxy configuration files
 _proxy_config="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_PROXY_CONFIG}"
 if [ -d "${_proxy_config}" ]; then
-    inform "Transferring proxy configuration on the internal device."
+    info "Transferring proxy configuration on the internal device."
     rm -rf "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_PROXY_CONFIG}"
     cp -rvf "${_proxy_config}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
 else
-    inform "No proxy configuration found to transfer on the internal device."
+    info "No proxy configuration found to transfer on the internal device."
 fi
 # Copy bootloader config file
 if [ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ] && [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ]; then
@@ -518,7 +511,7 @@ if command -v "systemctl"; then
         if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
             sleep 1 && ENDTIME=$((ENDTIME + 1))
         else
-            inform "Timeout while waiting for register to finish. No network?"
+            info "Timeout while waiting for register to finish. No network?"
             break
         fi
     done
@@ -533,7 +526,7 @@ if [ "$LUKS" = "1" ]; then
     umount "$EFI_MOUNT_DIR"
 fi
 
-inform "Board specific flash procedure..."
+info "Board specific flash procedure..."
 /usr/bin/resin-init-flasher-board
 
 info "Log end"
@@ -589,10 +582,10 @@ report_progress 100 "Post-Provisioning"
 # After migration we want to reboot as the remote device might not be accesible otherwise
 # This is achieved because the shutdown command is not part of the initramfs
 if command -v shutdown; then
-    inform "Shutting down ..."
+    info "Shutting down ..."
     shutdown -h now
 elif command -v reboot; then
-    inform "Rebooting..."
+    info "Rebooting..."
     reboot -f
 fi
 
