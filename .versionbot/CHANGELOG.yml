@@ -1,4 +1,19 @@
 - commits:
+    - subject: "docs: add section for sb/fde opt-in"
+      hash: 0b6b034cbb0ca5a9cd7a13690d1f8b0b7485e674
+      body: |
+        Document the opt-in boolean for secure boot and full-disk encryption.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.111.2
+  title: ""
+  date: 2023-02-13T14:35:32.625Z
+- commits:
     - subject: "resin-init-flasher: do not report progress if unprovisioned"
       hash: c6e81823002c1b7f73373fc5eee9434c8805f5b5
       body: |

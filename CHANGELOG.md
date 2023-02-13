@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.111.2
+## (2023-02-13)
+
+* docs: add section for sb/fde opt-in [Joseph Kogut]
+
 # v2.111.1
 ## (2023-02-13)
 
