@@ -246,7 +246,7 @@ get_internal_device() {
         "$(ls $(eval echo "/dev/${device_pattern}") 2>/dev/null)"
     for device in "${devices[@]}"; do
       if [[ "/dev/${_current_root}" = "${device}" ]]; then
-          inform "${device} is our install media, skip it..."
+          info "${device} is our install media, skip it..."
           continue
       fi
       if [ ! fdisk -l "${device}" ]; then
