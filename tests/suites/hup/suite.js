@@ -334,6 +334,7 @@ module.exports = {
 						persistentLogging: true,
 						// Set local mode so we can perform local pushes of containers to the DUT
 						localMode: true,
+						apiEndpoint: 'https://api.balena-cloud.com',
 						developmentMode: true,
 					},
 				},
