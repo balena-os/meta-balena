@@ -172,6 +172,11 @@ if command -v "systemctl"; then
     done
 fi
 
+if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
+    report_progress 100 "Installer is not supported on this device type."
+    fail "Undefined target programming device - make sure INTERNAL_DEVICE_KERNEL is defined"
+fi
+
 # Flash Resin image on internal device
 inform "Flash internal device... will take around 5 minutes... "
 internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")

@@ -38,7 +38,8 @@ RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup d
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
 
 do_install() {
-    if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
+    # Make sure devices with internal storage, aka flasher device types define `INTERNAL_DEVICE_KERNEL` in integration layers
+    if [ "$(jq -r '.data.storage.internal' "${TOPDIR}/../contracts/contracts/hw.device-type/${MACHINE}/contract.json")" = "true" ] &&[ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
         bbfatal "INTERNAL_DEVICE_KERNEL must be defined."
     fi
 
