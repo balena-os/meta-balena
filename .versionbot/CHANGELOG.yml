@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to 975e8ca
+      hash: c20e74bf9f52eb6de9800938c1872fc7c12fbb32
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "docker-compose: qemu: remove dep on swtpm"
+              hash: 6d47df092a224b74251d6159f1e57796cc229c3d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.19.1
+          title: ""
+          date: 2023-02-14T01:24:14.769Z
+  version: 2.111.3
+  title: ""
+  date: 2023-02-14T03:29:04.625Z
+- commits:
     - subject: "docs: add section for sb/fde opt-in"
       hash: 0b6b034cbb0ca5a9cd7a13690d1f8b0b7485e674
       body: |

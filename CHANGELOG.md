@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.111.3
+## (2023-02-14)
+
+
+<details>
+<summary> Update tests/leviathan digest to 975e8ca [Renovate Bot] </summary>
+
+> ## leviathan-2.19.1
+> ### (2023-02-14)
+> 
+> * docker-compose: qemu: remove dep on swtpm [Joseph Kogut]
+> 
+
+</details>
+
 # v2.111.2
 ## (2023-02-13)
 
