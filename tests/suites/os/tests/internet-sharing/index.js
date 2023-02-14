@@ -72,9 +72,10 @@ module.exports = {
                 }
 
                 // Create a dummy NM connection with Internet sharing enabled. 
+                // Assigned 10.42.1.1/32 as unused by qemu and testbot - so no ip conflicts 
                 await this.worker.executeCommandInHostOS(
                     `nmcli c add type dummy ifname dummy0 con-name dummy \
-                    autoconnect no ipv4.method shared ipv6.method disabled`,
+                    autoconnect no ipv4.method shared ipv6.method disabled ipv4.addresses "10.42.1.1/32"`,
                     this.link,
                 );
 
