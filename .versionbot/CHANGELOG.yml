@@ -1,4 +1,89 @@
 - commits:
+    - subject: Update balena-supervisor to v14.9.0
+      hash: d436bcdd9aedb07602b7ac18008525312409fb82
+      body: |
+        Update balena-supervisor from 14.8.0 to 14.9.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Find and remove duplicate networks
+              hash: 89175432af9beb9f9765a6cfdbc8914a8eae251e
+              body: >
+                We have seen a few times devices with duplicated network names for some
+
+                reason. While we don't know the cause the networks get duplicates, this
+
+                can be disruptive for updates as trying to create a container referencing a duplicate
+
+                network results in a 400 error from the engine.
+
+
+                This commit finds and removes duplicate networks via the state engine,
+
+                this means that even if somehow a container could be referencing a
+
+                network that has been duplicated later somehow, this will remove the
+
+                container first.
+
+
+                While thies doesn't solve the problem of duplicate networks being
+
+                created in the first place, it will fix the state of the system to
+
+                correct the inconsistency.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Closes: "#590"
+                closes: "#590"
+              author: Felipe Lalanne
+              nested: []
+            - subject: Reference networks by Id instead of by name
+              hash: 180c4ff31ad719fb2b00217548514d42a4b5c4cf
+              body: >
+                We have seen a few times devices with duplicated network names for some
+
+                reason. While we don't know the cause the networks get duplicates,
+
+                this is disruptive of updates, as the supervisor usually queries
+
+                resource by name, resulting in a 400 error from the engine because of
+
+                the ambiguity.
+
+
+                This replaces those queries by name to queries by id. This includes
+
+                network removal. If a `removeNetwork` step is generated, the supervisor
+
+                opts to remove all instances of the network with the same name as it
+
+                cannot easily resolve the ambiguity.
+
+
+                This doesn't solve the problem of ambiguous networks, because even if
+
+                networks are referenced by id when creating a container, the engine will
+
+                throw an error (see https://github.com/balena-os/balena-supervisor/issues/590#issuecomment-1423557871)
+              footer:
+                Change-type: patch
+                change-type: patch
+                Relates-to: "#590"
+                relates-to: "#590"
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.9.0
+          title: ""
+          date: 2023-02-14T17:10:08.122Z
+  version: 2.112.0
+  title: ""
+  date: 2023-02-14T19:28:11.748Z
+- commits:
     - subject: "tests: hup: fix flashing for tx2"
       hash: 6e49511d7de1e88ba3a42e6b546cf5e0ebe9a7cf
       body: ""

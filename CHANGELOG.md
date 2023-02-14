@@ -1,6 +1,22 @@
 Change log
 -----------
 
+# v2.112.0
+## (2023-02-14)
+
+
+<details>
+<summary> Update balena-supervisor to v14.9.0 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.9.0
+> ### (2023-02-14)
+> 
+> * Find and remove duplicate networks [Felipe Lalanne]
+> * Reference networks by Id instead of by name [Felipe Lalanne]
+> 
+
+</details>
+
 # v2.111.4
 ## (2023-02-14)
 
