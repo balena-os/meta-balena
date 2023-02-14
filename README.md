@@ -259,6 +259,39 @@ The following example contains two custom udev rules that will create `/etc/udev
 }
 ```
 
+### installer
+
+An object that configures the behaviour of the balenaOS installer image.
+
+#### secureboot
+
+(boolean) Opt-in to installing a secure boot and encrypted disk system for
+supported device types.
+
+```json
+"installer": {
+  "secureboot": true
+}
+```
+
+#### migrator
+
+An object that configures the behaviour of the balenaOS installer migration
+module.
+
+##### migrator.force
+
+(boolean) Forces the migration to run. By default the migration only runs if
+the installer is booting in a single disk system.
+
+```json
+"installer": {
+  "migrator": {
+    "force": true
+  }
+}
+```
+
 ## Yocto version support
 
 The following Yocto versions are supported:
