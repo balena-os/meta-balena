@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: hup: fix flashing for tx2"
+      hash: 6e49511d7de1e88ba3a42e6b546cf5e0ebe9a7cf
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.111.4
+  title: ""
+  date: 2023-02-14T12:45:58.350Z
+- commits:
     - subject: Update tests/leviathan digest to 975e8ca
       hash: c20e74bf9f52eb6de9800938c1872fc7c12fbb32
       body: Update tests/leviathan

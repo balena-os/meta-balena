@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.111.4
+## (2023-02-14)
+
+* tests: hup: fix flashing for tx2 [rcooke-warwick]
+
 # v2.111.3
 ## (2023-02-14)
 
