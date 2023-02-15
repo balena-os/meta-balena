@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update backports with current 2.102.x
+      hash: 23f8f6428cecd2933800e3ae9f7cdc82f6bdebc7
+      body: |
+        Set current to 2.102.x, next to 2.107.x and sunset to 2.99.x
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: BalenaCI github workflow
+      nested: []
+  version: 2.112.4
+  title: ""
+  date: 2023-02-15T13:23:18.936Z
+- commits:
     - subject: "workflows: update-backports: remove skipping tests"
       hash: 36ee78634fdc2c95644fcf2ad303d48b6193b6f2
       body: |

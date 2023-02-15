@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.4
+## (2023-02-15)
+
+* Update backports with current 2.102.x [BalenaCI github workflow]
+
 # v2.112.3
 ## (2023-02-15)
 
