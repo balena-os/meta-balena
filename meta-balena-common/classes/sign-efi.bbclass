@@ -20,7 +20,9 @@ do_sign_efi () {
         fi
         REQUEST_FILE=$(mktemp)
         RESPONSE_FILE=$(mktemp)
-        echo "{\"key_id\": \"${SIGN_EFI_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
+        # SIGN_EFI_KEY_ID is a list, use the first key to perform the signing
+        FIRST_KEY_ID=$(echo "${SIGN_EFI_KEY_ID}" | cut -d "," -f 1)
+        echo "{\"key_id\": \"${FIRST_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
         CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt" \
             curl --fail "${SIGN_API}/secureboot/efi" \
                  -X POST \
