@@ -1,4 +1,22 @@
 - commits:
+    - subject: Update aufs5 kernel patches for 5.10 versions
+      hash: 525ae72f84fe7092dd642cb1068238e0593f9e2e
+      body: >
+        We update to the newest patch revisions for 5.10 kernel versions from
+        upstream
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update aufs5 kernel patches for 5.10 versions
+        changelog-entry: Update aufs5 kernel patches for 5.10 versions
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.112.1
+  title: ""
+  date: 2023-02-15T10:31:48.529Z
+- commits:
     - subject: Update balena-supervisor to v14.9.0
       hash: d436bcdd9aedb07602b7ac18008525312409fb82
       body: |

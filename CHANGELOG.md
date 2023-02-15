@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.1
+## (2023-02-15)
+
+* Update aufs5 kernel patches for 5.10 versions [Florin Sarbu]
+
 # v2.112.0
 ## (2023-02-14)
 
