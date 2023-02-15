@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.2
+## (2023-02-15)
+
+* workflows: add update-backports [Alex Gonzalez]
+
 # v2.112.1
 ## (2023-02-15)
 
