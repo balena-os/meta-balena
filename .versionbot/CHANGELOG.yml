@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: hup: fix flashing for tx2"
+      hash: 0f545fd5ad9ccd2d1981f2f7aac796715f18328d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.107.44
+  title: ""
+  date: 2023-02-15T14:41:40.106Z
+- commits:
     - subject: "tests: os: fix tests that use glider on rpi0"
       hash: 37107de6c05c09a01bb0730c91ac8d140b46b6cc
       body: ""
