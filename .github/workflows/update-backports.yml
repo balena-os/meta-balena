@@ -107,8 +107,7 @@ jobs:
 
           Set current to ${ESR_CURRENT}, next to ${ESR_NEXT} and sunset to ${ESR_SUNSET}
 
-          [no-ci]
-          Change-type: none
+          Change-type: patch
           EOF
           git push origin ${branch_name}
           gh pr create --fill
