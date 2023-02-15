@@ -1,4 +1,20 @@
 - commits:
+    - subject: "workflows: update-backports: remove skipping tests"
+      hash: 36ee78634fdc2c95644fcf2ad303d48b6193b6f2
+      body: |
+        It's not clear how the feature to skip tests work, so modify the commit
+        message to be of type patch to avoid balenaCI errors on type none.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.112.3
+  title: ""
+  date: 2023-02-15T13:15:45.445Z
+- commits:
     - subject: "workflows: add update-backports"
       hash: 04b6db97ced04eeae3204c9c88d162355abd297c
       body: |
