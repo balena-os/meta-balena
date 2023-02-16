@@ -255,11 +255,13 @@ get_internal_device() {
       fi
       if test -b "$(readlink -f "${device}")"; then
           if ! [[ "${device_pattern}" = md/* ]]; then
+            if command -v "mdadm" > /dev/null; then
               if mdadm --examine "${device}" | grep -q Array; then
                   info "${device} is part of an existing RAID array" \
         "that wasn't specified by name, skip it..."
                   continue
               fi
+            fi
           fi
 
           echo "${device}"

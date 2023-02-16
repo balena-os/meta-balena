@@ -145,7 +145,7 @@ BALENA_CONFIGS ?= " \
     task-accounting \
     ipv6_mroute \
     disable_hung_panic \
-    mdraid \
+    ${RAID} \
     dmcrypt \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
@@ -642,6 +642,7 @@ BALENA_CONFIGS[no_gcc_plugins] = " \
 "
 
 # enable rootfs on RAID1
+RAID = "${@bb.utils.contains('MACHINE_FEATURES','raid','mdraid','',d)}"
 BALENA_CONFIGS[mdraid] = " \
     CONFIG_MD=y \
     CONFIG_BLK_DEV_MD=y \

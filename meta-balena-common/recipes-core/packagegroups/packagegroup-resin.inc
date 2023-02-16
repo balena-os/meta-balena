@@ -19,7 +19,6 @@ RDEPENDS:${PN} = " \
     os-config \
     os-release \
     less \
-    mdadm \
     development-features \
     resin-device-progress \
     "
