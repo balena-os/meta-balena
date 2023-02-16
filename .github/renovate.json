@@ -10,7 +10,7 @@
     "**/tests/suites/**",
     "**/__fixtures__/**"
   ],
-  "commitBody": "Update {{depName}}\nChange-type: patch",
+  "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: {{updateType}}",
   "regexManagers": [
     {
       "fileMatch": ["(^|/)balena-supervisor.inc$"],
@@ -25,27 +25,28 @@
       "matchStrings": ["BALENA_VERSION = \"v?(?<currentValue>.*?)\"\\n"],
       "depNameTemplate": "balena-engine",
       "packageNameTemplate": "balena-os/balena-engine",
-      "datasourceTemplate": "github-tags",
+      "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v?(?<version>.*)$"
     }
   ],
   "packageRules": [
     {
+      "matchManagers": ["git-submodules"],
+      "commitBody": "Update {{depName}}\nChange-type: patch",
+      "automerge": true
+    },
+    {
       "matchManagers": ["regex"],
-      "matchPackagePatterns": [
-        ".*balena-supervisor",
-        ".*balena-engine"
-      ],
-      "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: {{updateType}}",
-      "automerge": true,
-      "platformAutomerge": true,
+      "automerge": true
+    },
+    {
+      "matchManagers": ["regex"],
+      "matchPackagePatterns": [".*balena-engine"],
       "postUpgradeTasks": {
         "commands": [
           "sed -r \"s|SRCREV = \\\"[0-9a-f]+\\\"|SRCREV = \\\"$(git ls-remote -t {{{sourceUrl}}} refs/tags/v{{{newVersion}}} | awk '{print $1}')\\\"|\" -i {{{packageFile}}}"
         ],
-        "fileFilters": [
-          "**/balena_git.bb"
-        ],
+        "fileFilters": ["**/balena_git.bb"],
         "executionMode": "update"
       }
     }
