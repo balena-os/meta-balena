@@ -1,4 +1,20 @@
 - commits:
+    - subject: "grub: Add chain module to support multiboot"
+      hash: 4bf5883849e869cfe3e166cd69e2db8e7861b492
+      body: |
+        This is used to support falling back into the original OS when
+        performing a brownfield migration into balenaOS from a flasher image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.112.5
+  title: ""
+  date: 2023-02-16T10:19:12.824Z
+- commits:
     - subject: Update backports with current 2.102.x
       hash: 23f8f6428cecd2933800e3ae9f7cdc82f6bdebc7
       body: |
