@@ -1,4 +1,43 @@
 - commits:
+    - subject: Update tests/leviathan digest to 92cb71a
+      hash: 029d02e0f656ed42fda0398a440741b7bf649f56
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 9b8811f
+              hash: 377606d77cee69fff7f272b58e597f111e99de78
+              body: |
+                Update core/contracts to
+
+                Update core/contracts from  to
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.20.0
+          title: ""
+          date: 2023-02-16T07:39:32.419Z
+        - commits:
+            - subject: "patch: Improve Getting Started instructions"
+              hash: 50dfd8d30591dfd7a513e8b135d8866413cf5982
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.19.2
+          title: ""
+          date: 2023-02-15T20:15:38.071Z
+  version: 2.112.6
+  title: ""
+  date: 2023-02-16T12:52:59.268Z
+- commits:
     - subject: "grub: Add chain module to support multiboot"
       hash: 4bf5883849e869cfe3e166cd69e2db8e7861b492
       body: |

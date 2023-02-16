@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.112.6
+## (2023-02-16)
+
+
+<details>
+<summary> Update tests/leviathan digest to 92cb71a [Renovate Bot] </summary>
+
+> ## leviathan-2.20.0
+> ### (2023-02-16)
+> 
+> * Update core/contracts digest to 9b8811f [Renovate Bot]
+> 
+> ## leviathan-2.19.2
+> ### (2023-02-15)
+> 
+> * patch: Improve Getting Started instructions [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
 # v2.112.5
 ## (2023-02-16)
 
