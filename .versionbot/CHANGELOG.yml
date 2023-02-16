@@ -1,4 +1,23 @@
 - commits:
+    - subject: "renovate: Only consider github releases when bumping engine"
+      hash: 3793f39f0081e2e7a4d3ce38a206771e618faf20
+      body: |
+        The engine is currently versioned in such a way that upstream
+        semver tags are added to branches before merging to master.
+
+        We don't want to try and pin to those commits so only
+        consider automated GitHub Releases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.112.7
+  title: ""
+  date: 2023-02-16T15:20:17.402Z
+- commits:
     - subject: Update tests/leviathan digest to 92cb71a
       hash: 029d02e0f656ed42fda0398a440741b7bf649f56
       body: Update tests/leviathan

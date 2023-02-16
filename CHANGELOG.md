@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.7
+## (2023-02-16)
+
+* renovate: Only consider github releases when bumping engine [Kyle Harding]
+
 # v2.112.6
 ## (2023-02-16)
 
