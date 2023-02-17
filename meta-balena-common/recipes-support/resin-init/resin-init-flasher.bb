@@ -21,8 +21,6 @@ RDEPENDS:${PN} = " \
     bash \
     coreutils \
     udev \
-    resin-device-register \
-    resin-device-progress \
     resin-init-board \
     parted \
     resin-init-flasher-board \
