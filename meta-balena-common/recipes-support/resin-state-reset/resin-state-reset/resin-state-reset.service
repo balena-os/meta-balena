@@ -1,8 +1,7 @@
 [Unit]
 Description=Resin reset OS state
 DefaultDependencies=no
-Requires=resin-state.service var-volatile.mount
-After=resin-state.service var-volatile.mount
+RequiresMountsFor=/var/volatile
 Before=umount.target
 Conflicts=umount.target
 ConditionPathExists=!@BALENA_STATE_MP@/remove_me_to_reset

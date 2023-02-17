@@ -8,7 +8,8 @@ SRC_URI += " \
 	file://balena-efi.service \
 	file://resin-boot.service \
 	file://resin-data.service \
-	file://resin-state.service \
+	file://mnt-state.automount \
+	file://mnt-state.mount \
 	file://mnt-sysroot-active.service \
 	file://mnt-sysroot-inactive.automount \
 	file://mnt-sysroot-inactive.mount \
@@ -20,7 +21,8 @@ SYSTEMD_SERVICE:${PN} += " \
 	balena-efi.service \
 	resin-boot.service \
 	resin-data.service \
-	resin-state.service \
+        mnt-data.mount \
+	mnt-state.mount \
 	mnt-sysroot-active.service \
 	mnt-sysroot-inactive.automount \
 	mnt-sysroot-inactive.mount \

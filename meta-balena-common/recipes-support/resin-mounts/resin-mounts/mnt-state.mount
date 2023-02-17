@@ -1,0 +1,8 @@
+[Unit]
+Description=mnt-state mount
+ConditionVirtualization=!docker
+
+[Mount]
+What=/dev/disk/by-state/resin-state
+Where=/mnt/state
+Options=noauto

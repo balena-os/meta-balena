@@ -1,0 +1,6 @@
+[Unit]
+Description=mnt-state automount
+ConditionVirtualization=!docker
+
+[Automount]
+Where=/mnt/state
