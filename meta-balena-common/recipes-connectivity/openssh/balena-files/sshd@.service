@@ -1,8 +1,8 @@
 [Unit]
 Description=OpenSSH Per-Connection Daemon
 Wants=sshdgenkeys.service os-sshkeys.service
-Requires=resin-state.service development-features.service os-sshkeys.service
-After=resin-state.service sshdgenkeys.service os-sshkeys.service development-features.service os-sshkeys.service
+Requires=mnt-state.mount development-features.service os-sshkeys.service
+After=mnt-state.mount sshdgenkeys.service os-sshkeys.service development-features.service os-sshkeys.service
 
 [Service]
 Environment="SSHD_OPTS="

@@ -1,0 +1,9 @@
+[Unit]
+Description=mnt-state automount
+ConditionVirtualization=!docker
+
+[Automount]
+Where=/mnt/state
+
+[Install]
+WantedBy=multi-user.target

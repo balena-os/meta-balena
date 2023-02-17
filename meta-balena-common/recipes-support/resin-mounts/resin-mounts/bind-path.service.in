@@ -1,8 +1,8 @@
 [Unit]
 Description=Bind mount for @target@
 DefaultDependencies=no
-Requires=resin-state.service resin-state-reset.service var-volatile-lib.service systemd-tmpfiles-setup.service
-After=resin-state.service resin-state-reset.service var-volatile-lib.service systemd-tmpfiles-setup.service
+Requires=mnt-state.mount resin-state-reset.service var-volatile-lib.service systemd-tmpfiles-setup.service
+After=mnt-state.mount resin-state-reset.service var-volatile-lib.service systemd-tmpfiles-setup.service
 Before=umount.target
 Conflicts=umount.target
 
