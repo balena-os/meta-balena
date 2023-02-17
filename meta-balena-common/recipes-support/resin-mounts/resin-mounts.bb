@@ -7,7 +7,8 @@ RDEPENDS:${PN} += "os-helpers-fs"
 SRC_URI += " \
 	file://balena-efi.service \
 	file://resin-boot.service \
-	file://resin-data.service \
+	file://mnt-data.automount \
+	file://mnt-data.mount \
 	file://mnt-state.automount \
 	file://mnt-state.mount \
 	file://mnt-sysroot-active.service \
@@ -20,8 +21,7 @@ SRC_URI += " \
 SYSTEMD_SERVICE:${PN} += " \
 	balena-efi.service \
 	resin-boot.service \
-	resin-data.service \
-        mnt-data.mount \
+	mnt-data.mount \
 	mnt-state.mount \
 	mnt-sysroot-active.service \
 	mnt-sysroot-inactive.automount \
