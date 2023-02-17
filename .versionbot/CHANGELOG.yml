@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update balena-supervisor to v14.9.1
+      hash: c9ea12209bd6427234012a624304439ff32ddb62
+      body: |
+        Update balena-supervisor from 14.9.0 to 14.9.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Always lower case the cpu id to avoid bouncing between casing when
+                reporting
+              hash: d356f979d3addbf8b08933694b9e80f66af8d9e2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.9.1
+          title: ""
+          date: 2023-02-15T14:13:57.161Z
+  version: 2.112.8
+  title: ""
+  date: 2023-02-17T11:27:28.794Z
+- commits:
     - subject: "renovate: Only consider github releases when bumping engine"
       hash: 3793f39f0081e2e7a4d3ce38a206771e618faf20
       body: |
