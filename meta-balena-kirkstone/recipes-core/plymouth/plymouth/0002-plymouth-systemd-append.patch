@@ -99,14 +99,13 @@ diff --git a/systemd-units/plymouth-start.service.in b/systemd-units/plymouth-st
 index c20aabeb9a8a..3ded9a2a2ca8 100644
 --- a/systemd-units/plymouth-start.service.in
 +++ b/systemd-units/plymouth-start.service.in
-@@ -1,15 +1,17 @@
+@@ -1,14 +1,16 @@
  [Unit]
  Description=Show Plymouth Boot Screen
  DefaultDependencies=no
--Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
+ Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
 -After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service
-+Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service systemd-udev-settle.service
-+After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service resin-boot.service
++After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service resin-boot.service
  Before=systemd-ask-password-plymouth.service
 +Requires=resin-boot.service
  ConditionKernelCommandLine=!plymouth.enable=0

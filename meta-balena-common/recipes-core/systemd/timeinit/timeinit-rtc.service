@@ -17,7 +17,6 @@ Description=Set the system clock from RTC
 ConditionVirtualization=!docker
 ConditionPathExists=/dev/rtc
 DefaultDependencies=no
-After=systemd-udev-settle.service
 Before=time-set.target
 
 [Service]

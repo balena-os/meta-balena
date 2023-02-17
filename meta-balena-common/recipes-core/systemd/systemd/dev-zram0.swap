@@ -1,6 +1,5 @@
 [Unit]
 Description=Enable compressed swap in memory using zram
-After=systemd-udev-settle.service
 DefaultDependencies=no
 ConditionVirtualization=!docker
 
