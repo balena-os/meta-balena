@@ -1,0 +1,9 @@
+[Unit]
+Description=mnt-sysroot-active mount
+ConditionVirtualization=!docker
+
+[Automount]
+Where=/mnt/sysroot/active
+
+[Install]
+WantedBy=multi-user.target

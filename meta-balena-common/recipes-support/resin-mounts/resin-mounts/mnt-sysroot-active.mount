@@ -1,0 +1,8 @@
+[Unit]
+Description=mnt-sysroot-active mount
+ConditionVirtualization=!docker
+
+[Mount]
+What=/dev/disk/by-state/active
+Where=/mnt/sysroot/active
+Options=noauto
