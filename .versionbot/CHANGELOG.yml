@@ -1,4 +1,53 @@
 - commits:
+    - subject: Update tests/leviathan digest to 8a7bdcc
+      hash: 128aa14588d7422beed6ffa68f5594910a394dd3
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 103037c
+              hash: 552aeee66ae5b0a1918e8ccd1c3e12203a602adc
+              body: |
+                Update core/contracts to
+
+                Update core/contracts from  to
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.21.0
+          title: ""
+          date: 2023-02-20T08:26:59.418Z
+        - commits:
+            - subject: "client: throw errors instead of blanket handling"
+              hash: 0f4b4b55b01bbfb023bcddba0ea585bcbe968a07
+              body: >
+                Remove try/catch block surrounding client code that blanket handles all
+
+                exceptions, and makes debugging and log messages worse.
+
+
+                When we don't have a valid way to handle an exception, just throw it.
+
+                The traceback is more useful than the handler.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.20.1
+          title: ""
+          date: 2023-02-20T06:55:01.314Z
+  version: 2.112.9
+  title: ""
+  date: 2023-02-20T10:31:10.153Z
+- commits:
     - subject: Update balena-supervisor to v14.9.1
       hash: c9ea12209bd6427234012a624304439ff32ddb62
       body: |

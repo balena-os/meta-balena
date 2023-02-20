@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.112.9
+## (2023-02-20)
+
+
+<details>
+<summary> Update tests/leviathan digest to 8a7bdcc [Renovate Bot] </summary>
+
+> ## leviathan-2.21.0
+> ### (2023-02-20)
+> 
+> * Update core/contracts digest to 103037c [Renovate Bot]
+> 
+> ## leviathan-2.20.1
+> ### (2023-02-20)
+> 
+> * client: throw errors instead of blanket handling [Joseph Kogut]
+> 
+
+</details>
+
 # v2.112.8
 ## (2023-02-17)
 
