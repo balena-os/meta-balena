@@ -1,4 +1,22 @@
 - commits:
+    - subject: "os-helpers-fs: get_internal_device() skip disks w/out media"
+      hash: 1da9ea7a3ea1fb87ce31c9281376c2ad5110c1dd
+      body: |
+        Block device nodes are sometimes created without attached media. These
+        devices can neither be read from, nor written to. In this case, the
+        flasher will attempt to install to the invalid disk and fail.  Detect
+        this case and skip the disk to allow flashing to continue.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.112.12
+  title: ""
+  date: 2023-02-20T23:28:32.426Z
+- commits:
     - subject: Update tests/leviathan digest to 84c2b96
       hash: 42f3b3d1fb78b411cf2438c178c13bad293c98a9
       body: Update tests/leviathan

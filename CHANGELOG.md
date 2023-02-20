@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.12
+## (2023-02-20)
+
+* os-helpers-fs: get_internal_device() skip disks w/out media [Joseph Kogut]
+
 # v2.112.11
 ## (2023-02-20)
 
