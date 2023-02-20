@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update tests/leviathan digest to 84c2b96
+      hash: 42f3b3d1fb78b411cf2438c178c13bad293c98a9
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 93ba80c
+              hash: af30f3eac9c532f57ddb2dc4abb5f06c63bc8877
+              body: |
+                Update core/contracts to
+
+                Update core/contracts from  to
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.22.0
+          title: ""
+          date: 2023-02-20T12:47:09.199Z
+  version: 2.112.11
+  title: ""
+  date: 2023-02-20T17:44:14.866Z
+- commits:
     - subject: "tests: os: secureboot: skip if system is not locked down"
       hash: 00ad363a00eef7805f9f0569d43b933b28504abb
       body: |
