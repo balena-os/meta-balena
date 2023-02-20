@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.10
+## (2023-02-20)
+
+* tests: os: secureboot: skip if system is not locked down [Joseph Kogut]
+
 # v2.112.9
 ## (2023-02-20)
 

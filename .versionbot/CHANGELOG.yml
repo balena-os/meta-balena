@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: os: secureboot: skip if system is not locked down"
+      hash: 00ad363a00eef7805f9f0569d43b933b28504abb
+      body: |
+        Secure boot is now opt-in, even in the case where the image is signed,
+        and it's supported in firmware. Skip the secure boot tests when it's not
+        enabled at runtime.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.112.10
+  title: ""
+  date: 2023-02-20T15:27:19.879Z
+- commits:
     - subject: Update tests/leviathan digest to 8a7bdcc
       hash: 128aa14588d7422beed6ffa68f5594910a394dd3
       body: Update tests/leviathan
