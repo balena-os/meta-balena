@@ -15,41 +15,41 @@ module.exports = {
 				).then(output => { return output === 'true'});
 
 				if (securebootSupported) {
-					return test.resolves(
-						Promise.all(
+						return this.worker.executeCommandInHostOS(
 							[
-								test.resolveMatch(
-									this.worker.executeCommandInHostOS(
+								'dmesg', '|', 'grep', '-q', '"Secure boot enabled"',
+								'&&', 'echo', 'true', '||', 'true'
+							],
+							this.link,
+						).then(securebootEnabled => {
+							if (!securebootEnabled) {
+								test.comment('Secure boot is not enabled');
+							} else {
+								return test.resolves(
+									Promise.all(
 										[
-											'dmesg', '|', 'grep', '-q', '"Secure boot enabled"',
-											'&&', 'echo', 'true', '||', 'true'
-										],
-										this.link,
+											{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
+											{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
+											{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
+											{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
+										].map(args => {
+											return test.resolveMatch(
+												this.worker.executeCommandInHostOS(
+													[
+														'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
+														'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
+													],
+													this.link,
+												),
+												/crypt/,
+												`${args.name} is encrypted`,
+											);
+										}),
 									),
-									/true/,
-									'Secure boot is enabled',
-								),
-							] + [
-								{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
-								{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
-								{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
-								{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
-							].map(args => {
-								return test.resolveMatch(
-									this.worker.executeCommandInHostOS(
-										[
-											'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
-											'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
-										],
-										this.link,
-									),
-									/crypt/,
-									`${args.name} is encrypted`,
+									'Secure boot is correctly configured'
 								);
-							}),
-						),
-						'Secure boot is correctly configured'
-					);
+							}
+						});
 				} else {
 					test.comment('Secure boot is not supported by firmware');
 				}
