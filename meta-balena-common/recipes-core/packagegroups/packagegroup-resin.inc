@@ -21,4 +21,5 @@ RDEPENDS:${PN} = " \
     less \
     mdadm \
     development-features \
+    resin-device-progress \
     "
