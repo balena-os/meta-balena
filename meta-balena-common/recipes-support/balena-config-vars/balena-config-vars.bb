@@ -24,7 +24,10 @@ SYSTEMD_UNIT_NAMES = "os-sshkeys os-udevrules os-networkmanager"
 inherit balena-configurable
 
 DEPENDS = "bash-native jq-native coreutils-native"
-RDEPENDS:${PN} = "bash jq udev coreutils fatrw"
+RDEPENDS:${PN} = "bash udev coreutils fatrw"
+PACKAGES =+ "${PN}-config"
+RDEPENDS:${PN}-config = "jq"
+RDEPENDS:${PN} += " ${PN}-config"
 
 do_patch[noexec] = "1"
 do_compile[noexec] = "1"
@@ -59,3 +62,5 @@ do_install() {
             ${D}${systemd_unitdir}/system/*.service
     fi
 }
+
+FILES:${PN}-config = "${sbindir}/balena-config-vars ${sbindir}/balena-config-defaults"

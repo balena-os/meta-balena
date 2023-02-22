@@ -20,25 +20,23 @@ DEPENDS += "balena-keys"
 RDEPENDS:${PN} = " \
     bash \
     coreutils \
-    util-linux \
     udev \
-    resin-device-register \
-    resin-device-progress \
     resin-init-board \
     parted \
     resin-init-flasher-board \
     util-linux-lsblk \
     "
 
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils', '',d)}"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils efibootmgr', '',d)}"
 
-RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2 efivar',d)}"
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2 efivar util-linux-mount util-linux-losetup',d)}"
 
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
 
 do_install() {
-    if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
+    # Make sure devices with internal storage, aka flasher device types define `INTERNAL_DEVICE_KERNEL` in integration layers
+    if [ "$(jq -r '.data.storage.internal' "${TOPDIR}/../contracts/contracts/hw.device-type/${MACHINE}/contract.json")" = "true" ] &&[ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
         bbfatal "INTERNAL_DEVICE_KERNEL must be defined."
     fi
 

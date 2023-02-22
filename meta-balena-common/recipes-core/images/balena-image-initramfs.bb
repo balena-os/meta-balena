@@ -20,7 +20,6 @@ PACKAGE_INSTALL = " \
     initramfs-module-udevcleanup \
     initramfs-framework-base \
     udev \
-    mdadm \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
     "
 

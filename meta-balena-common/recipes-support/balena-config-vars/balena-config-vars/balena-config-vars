@@ -68,8 +68,11 @@ if command -v "/usr/bin/fatrw" > /dev/null; then
     CAT=fatcat
     WR=fatwr
 else
-    echo "[ERROR] $0: Missing fatrw command"
-    exit 1
+    CP=cp
+    MV=mv
+    CAT=cat
+    WR=tee
+    echo "[WARN] $0: Missing fatrw command"
 fi
 
 if [ "${USE_CACHE}" -eq "1" ] && [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then

@@ -26,7 +26,6 @@ RDEPENDS:${PN} += " \
     balena-hostname \
     resin-state-reset \
     balena-data-reset \
-    resin-device-progress \
     balena-rollback \
     timeinit \
     systemd-zram-swap \
