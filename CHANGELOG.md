@@ -1,6 +1,58 @@
 Change log
 -----------
 
+# v2.107.45
+## (2023-02-22)
+
+
+<details>
+<summary> Update balena-engine to v20.10.25 [Alex Gonzalez] </summary>
+
+> ## balena-engine-20.10.25
+> ### (2022-12-21)
+> 
+> * Fix TestBuildUserNamespaceValidateCapabilitiesAreV2 [Leandro Motta Barros]
+> * Fix crash with PPP interface with nil dst address [Leandro Motta Barros]
+> 
+> ## balena-engine-20.10.24
+> ### (2022-12-12)
+> 
+> * Fix typo [Leandro Motta Barros]
+> 
+> ## balena-engine-20.10.23
+> ### (2022-12-09)
+> 
+> * patch: Revert "Fix balena-engine logo image" [Vipul Gupta]
+> 
+> ## balena-engine-20.10.22
+> ### (2022-12-07)
+> 
+> * patch: Add balena-engine documentation [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## balena-engine-20.10.21
+> ### (2022-11-22)
+> 
+> * Move GH publishing to core [ab77]
+> 
+> ## balena-engine-20.10.20
+> ### (2022-11-17)
+> 
+> * Improve docs for balenaEngine devs [Leandro Motta Barros]
+> 
+> ## balena-engine-20.10.19
+> ### (2022-11-17)
+> 
+> * Create balena symlinks during cross builds [Leandro Motta Barros]
+> * Switch to Flowzone [Leandro Motta Barros]
+> 
+> ## balena-engine-20.10.18
+> ### (2022-06-03)
+> 
+> * Improve error reporting for delta base image loading [Leandro Motta Barros]
+> 
+
+</details>
+
 # v2.107.44
 ## (2023-02-15)
 

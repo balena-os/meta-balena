@@ -1,4 +1,200 @@
 - commits:
+    - subject: Update balena-engine to v20.10.25
+      hash: 8abeed7cc3a3291d648dd3a2f27a89f25a73b7fa
+      body: |
+        Update balena-engine from 20.10.17 to 20.10.25
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update balena-engine to v20.10.25
+        changelog-entry: Update balena-engine to v20.10.25
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested:
+        - commits:
+            - subject: Fix TestBuildUserNamespaceValidateCapabilitiesAreV2
+              hash: a86030f1f4a7b93bef47bba721ac09fd8dc0332e
+              body: >
+                During the migration to Flowzone (the balena CI system) we brought
+
+                several changes from Moby's HEAD Dockerfile. Among those, we replaced
+
+                the `frozen-images` base image to a debian:bullseye-slim. This was a
+
+                mistake: the slim image doesn't contain the `setcap` binary we need by
+
+                the `TestBuildUserNamespaceValidateCapabilitiesAreV2` integration test.
+
+
+                So, this PR simply brings back the full-blown `debian:bullseye`.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Fix crash with PPP interface with nil dst address
+              hash: 67cc46a0ff1b9cc43fdb3f844cae9de8b379982f
+              body: >
+                balenaEngine initialization would fail on devices connected to the
+
+                network via PPP (Point-to-Point Protocol) and with a nil destination
+
+                address (0.0.0.0):
+
+                    panic: runtime error: invalid memory address or nil pointer dereference
+
+                This commit updates the netlink dependency to a fork where we
+
+                cherry-picked the correction. This correction wasn't available in any
+
+                stable release of netlink, so we opted to use this fork instead of
+
+                relying on a beta netlink version. We can obsolete our fork once Moby
+
+                starts using a netlink version that includes the fix.
+
+
+                Fixes #292
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.25
+          title: ""
+          date: 2022-12-21T11:58:08.290Z
+        - commits:
+            - subject: Fix typo
+              hash: 717ae207460417e67718e726adcadfc0b9b59edc
+              body: |
+                Also run `go fmt`.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.24
+          title: ""
+          date: 2022-12-12T12:53:38.376Z
+        - commits:
+            - subject: 'patch: Revert "Fix balena-engine logo image"'
+              hash: 9113dcecf6e884b032b0a767318cc0401c108679
+              body: ""
+              footer: {}
+              author: Vipul Gupta
+              nested: []
+          version: balena-engine-20.10.23
+          title: ""
+          date: 2022-12-09T11:50:59.017Z
+        - commits:
+            - subject: "patch: Add balena-engine documentation"
+              hash: 56387faffe910291771c592787ba1e6241dbbd5b
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: balena-engine-20.10.22
+          title: ""
+          date: 2022-12-07T10:39:34.781Z
+        - commits:
+            - subject: Move GH publishing to core
+              hash: a272cbd2dbf230f8c9cae1bbde047c6f4deea8df
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: ab77
+              nested: []
+          version: balena-engine-20.10.21
+          title: ""
+          date: 2022-11-22T15:39:24.570Z
+        - commits:
+            - subject: Improve docs for balenaEngine devs
+              hash: 70983b153cd2881862b2e74d03aa5bb104466e0c
+              body: >
+                Specifically:
+
+
+                * Describe the project organization.
+
+                * Include a list of commands commonly used during development.
+
+                * Update the documentation on how to merge upstream changes, based on my
+                  experience following the instructions for the first time.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.20
+          title: ""
+          date: 2022-11-17T20:12:45.139Z
+        - commits:
+            - subject: Create balena symlinks during cross builds
+              hash: bf3e052660f369aea88254f613aeed8eecad3355
+              body: >
+                ...instead of creating them in the installation script. This way, users
+
+                downloading the release package from GitHub will get the symlinks, too.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Switch to Flowzone
+              hash: 650602837d47529ead30ddc3437b2e9507dc7eaa
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.19
+          title: ""
+          date: 2022-11-17T19:23:15.607Z
+        - commits:
+            - subject: Improve error reporting for delta base image loading
+              hash: 8bb06fd928da2474a88a648137a47dfa5338997f
+              body: >
+                This adds some context to the error message when there's some error
+
+                loading the delta base image (for example, when the delta base image is
+
+                not found locally).
+
+
+                The error message we had before was generic and low-level, which didn't
+
+                give any clues about what lead to the error.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.18
+          title: "'Improve error reporting for delta base image loading'"
+          date: 2022-06-03T16:55:03.261Z
+  version: 2.107.45
+  title: ""
+  date: 2023-02-22T08:44:53.035Z
+- commits:
     - subject: "tests: hup: fix flashing for tx2"
       hash: 0f545fd5ad9ccd2d1981f2f7aac796715f18328d
       body: ""
