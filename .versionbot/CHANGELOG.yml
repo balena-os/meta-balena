@@ -1,4 +1,147 @@
 - commits:
+    - subject: "balena-config-vars: Remove dependency on fatrw"
+      hash: 57facfad07b7dd1de5687ab20258f6387575bd79
+      body: |
+        There is nothing in `balena-config-vars` itself that needs `fatrw`, so
+        change it so scripts don't exit if it is not available. For example,
+        `balena-config-vars` gets used in the initramfs but `fatrw` is not
+        required (and it is quite heavy).
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: split in two packages"
+      hash: f120d3fea123fc45be78fec0759cd3779c597959
+      body: |
+        Introduce a `${PN}-config` package that only contains the
+        balena-config scripts and not unit configuration dependencies.
+
+        This allows to include only the balena-config scripts in the initramfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Add raid support based on machine features
+      hash: 4f43052ba8fbd74fb5af92fd8d818ef2512d08ab
+      body: |
+        Not all device types need to support RAID, and its components increase
+        the images size significantly.
+
+        This commit introduces a `raid` machine feature that device types need
+        to define if RAID support is required.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "packagegroup-resin: add resin-device-progress dependency"
+      hash: deb0fd28613ef26a0bbe1f588b8ed152b01b90cd
+      body: |
+        As we removed the dependency from `resin-init-flasher` given that it
+        will also be used from the initramfs, move the dependency to
+        packagegroup-resin so that resin-device-progress is still included in
+        the flasher image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: remove device-register and device-progress
+        dependencies"
+      hash: da696aff03e0080d67c87f1b4d3e7e12904b8e48
+      body: |
+        These are not always required for the flasher to work, only when the
+        flasher is not running from initramfs.
+
+        These dependencies are already part of the corresponding packagegroups,
+        so listing them here is redundant and wrong as it increases the size of
+        the initramfs with no reason.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: reduce dependencies"
+      hash: b4b6dded00d2710f29f1bbef97dd6937a4766821
+      body: |
+        As we are pulling resin-init-flasher into the initramfs optimise the
+        dependencies by removing the whole util-linux package and adding
+        dependencies for the specific tools it uses.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: replace inform with info helper"
+      hash: c9863f14cf000586d9167ab9b3d1406630c60a85
+      body: |
+        `inform` will print to stdout which is used by calling functions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: Build time check on INTERNAL_DEVICE_KERNEL only
+        for flasher device types"
+      hash: 33e33381ce8353bc539a1c61eec75ade2447eddc
+      body: >
+        Now that the installer script is added to the initramfs and is included
+
+        both for flasher and non-flasher device types, limit the
+
+        `INTERNAL_DEVICE_KERNEL` existence check to flasher images as
+
+        it is only used in the installer script.
+
+
+        Also, make the resin-init-flasher script check for it's existance before using
+
+        it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: wait for the by-label links to be created"
+      hash: 21e7b74a4f8af7baf751859e5a5477c2ae99c8fa
+      body: >
+        The by-label links can be used both for physical and mapper devices (used
+
+        in disk encryption).
+
+
+        Adding a loop that waits for the links to be available adds robustness
+
+        in case there are device specific delays.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.112.14
+  title: ""
+  date: 2023-02-22T15:35:14.876Z
+- commits:
     - subject: "recipes-bsp/u-boot: Disable saveenv shell command"
       hash: 376e597c49c8b011559294501d9158184d4742f4
       body: |
