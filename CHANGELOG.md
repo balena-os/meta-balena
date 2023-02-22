@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.112.13
+## (2023-02-22)
+
+* recipes-bsp/u-boot: Disable saveenv shell command [Alexandru Costache]
+* Update tests/leviathan digest to 771bac8 [Renovate Bot]
+
 # v2.112.12
 ## (2023-02-20)
 
