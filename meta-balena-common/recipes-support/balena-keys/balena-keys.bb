@@ -33,8 +33,7 @@ fetch_key() {
     fi
     rm -f "${RESPONSE_FILE}"
     ext="${3#*.}"
-    if [ "${ext}" = "auth" ] || [ "${ext}" = "der" ] ||
-       [ "${ext}" = "esl" ]; then
+    if [ "${ext}" = "auth" ] || [ "${ext}" = "esl" ]; then
         if [ -f "${DEST_DIR}/${3}" ]; then
             tmpdir=$(mktemp -d)
             base64 -d "${DEST_DIR}/${3}" > "${tmpdir}/${3}"
@@ -48,13 +47,10 @@ do_get_public_keys() {
     fetch_key "gpg/key/${SIGN_GRUB_KEY_ID}" ".key" "grub.gpg"
     fetch_key "kmod/cert/${SIGN_KMOD_KEY_ID}" ".cert" "kmod.crt"
     fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".pk" "PK.auth"
-    fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".der" "PK.der"
     fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".kek" "KEK.auth"
     fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".esl" "KEK.esl"
-    fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".der" "KEK.der"
     fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".db" "db.auth"
     fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".esl" "db.esl"
-    fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".der" "db.der"
 }
 do_get_public_keys[cleandirs] = "${B}"
 do_get_public_keys[network] = "1"
