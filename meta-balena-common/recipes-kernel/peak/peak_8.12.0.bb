@@ -54,13 +54,20 @@ do_compile() {
 
 do_install() {
     MISC_DIR="${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/misc"
+    MODULE_FILENAME="pcan.ko"
 
     for FLAVOUR in ${FLAVOURS}
     do
-        cd "driver-${FLAVOUR}"
+        TMP_DIR=$(mktemp -d -p .)
+        cp -a "driver-${FLAVOUR}/"* "${TMP_DIR}/"
+        cd "${TMP_DIR}"
+        if [ -f "${MODULE_FILENAME}.signed" ]; then
+            mv "${MODULE_FILENAME}.signed" "${MODULE_FILENAME}"
+        fi
         oe_runmake install_module DEPMOD=echo DESTDIR=${D} KERNEL_VERSION=${KERNEL_VERSION}
-        mv "${MISC_DIR}/pcan.ko" "${MISC_DIR}/pcan_${FLAVOUR}.ko"
+        mv "${MISC_DIR}/${MODULE_FILENAME}" "${MISC_DIR}/pcan_${FLAVOUR}.ko"
         cd ..
+        rm -rf "${TMP_DIR}"
     done
 }
 
