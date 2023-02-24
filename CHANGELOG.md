@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.15
+## (2023-02-24)
+
+* os-helpers-fs: add dependency on util-linux fdisk [Alex Gonzalez]
+
 # v2.112.14
 ## (2023-02-22)
 

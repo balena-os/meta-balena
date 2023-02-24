@@ -1,4 +1,20 @@
 - commits:
+    - subject: "os-helpers-fs: add dependency on util-linux fdisk"
+      hash: f27132636f4dda10d51cf0e1a3eb13d3db67b1a2
+      body: |
+        The os-helpers-fs script uses functionality not available on busybox's
+        fdisk.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.112.15
+  title: ""
+  date: 2023-02-24T09:45:05.390Z
+- commits:
     - subject: "balena-config-vars: Remove dependency on fatrw"
       hash: 57facfad07b7dd1de5687ab20258f6387575bd79
       body: |
