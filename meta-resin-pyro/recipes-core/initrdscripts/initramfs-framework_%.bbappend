@@ -4,3 +4,4 @@ RDEPENDS_initramfs-module-kexec = " \
     kexec-tools \
     util-linux \
     "
+RDEPENDS_initramfs-module-recovery = "${PN}-base android-tools"

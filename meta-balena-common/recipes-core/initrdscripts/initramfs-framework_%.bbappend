@@ -12,6 +12,8 @@ SRC_URI:append = " \
     file://cryptsetup \
     file://kexec \
     file://udevcleanup \
+    file://recovery \
+    file://migrate \
     "
 
 do_install:append() {
@@ -19,6 +21,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
+    install -m 0755 ${WORKDIR}/migrate ${D}/init.d/92-migrate
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
 
     install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
@@ -27,6 +30,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
     install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
+    install -m 0755 ${WORKDIR}/recovery ${D}/init.d/00-recovery
 }
 
 PACKAGES:append = " \
@@ -39,6 +43,8 @@ PACKAGES:append = " \
     initramfs-module-cryptsetup \
     initramfs-module-kexec \
     initramfs-module-udevcleanup \
+    initramfs-module-recovery \
+    initramfs-module-migrate \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -85,3 +91,17 @@ FILES:initramfs-module-kexec = "/init.d/92-kexec"
 SUMMARY:initramfs-module-udevcleanaup = "Cleanup the udev database before transitioning to the rootfs"
 RDEPENDS:initramfs-module-udevcleanaup = "${PN}-base"
 FILES:initramfs-module-udevcleanup = "/init.d/98-udevcleanup"
+
+SUMMARY:initramfs-module-recovery = "Boot into a recovery shell"
+RDEPENDS:initramfs-module-recovery = "${PN}-base android-tools-adbd"
+FILES:initramfs-module-recovery = "/init.d/00-recovery"
+
+SUMMARY:initramfs-module-migrate = "OS Migration"
+RDEPENDS:initramfs-module-migrate = " \
+    util-linux-findmnt \
+    util-linux-mountpoint \
+    resin-init-flasher \
+    bash \
+    balena-config-vars-config \
+    "
+FILES:initramfs-module-migrate = "/init.d/92-migrate"

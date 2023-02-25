@@ -76,13 +76,4 @@ rootfs_run() {
         sleep $delay
         C=$(( $C + 1 ))
     done
-
-    # Move the /run mountpoint to the rootfs mountpoint
-    if [ -d "${ROOTFS_DIR}/run" ]; then
-        mount -n -o move /run "${ROOTFS_DIR}/run"
-    else
-        # Older releases do not create /run so use /tmp instead
-        mount -n -o move /run "${ROOTFS_DIR}/tmp"
-    fi
-
 }

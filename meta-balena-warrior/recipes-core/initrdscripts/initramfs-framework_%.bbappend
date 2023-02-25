@@ -15,3 +15,4 @@ PACKAGES_append = " \
 SUMMARY_initramfs-module-console-null-workaround = "Workaround needed for when console=null is passed in kernel cmdline"
 RDEPENDS_initramfs-module-console-null-workaround = "${PN}-base"
 FILES_initramfs-module-console-null-workaround = "/init.d/000-console_null_workaround"
+RDEPENDS_initramfs-module-recovery = "${PN}-base android-tools"
