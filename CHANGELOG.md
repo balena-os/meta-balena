@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v2.113.0
+## (2023-02-25)
+
+* resin-init-flasher: use logging helper [Alex Gonzalez]
+* resin-init-flasher: replace shutdown for reboot in case of migration [Alex Gonzalez]
+* README: add installer section [Alex Gonzalez]
+* initrdscripts: Add migration module [Alex Gonzalez]
+* integration layers: use `android-tools` from Yocto Dunfell and before [Alex Gonzalez]
+* resin-init-flasher: comply with recovery mode [Alex Gonzalez]
+* initrdscritps: Move moving /run mountpoint from rootfs to migrate module [Alex Gonzalez]
+* initrdscripts: add recovery module [Alex Gonzalez]
+
 # v2.112.15
 ## (2023-02-24)
 

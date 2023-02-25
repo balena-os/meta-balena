@@ -1,4 +1,120 @@
 - commits:
+    - subject: "resin-init-flasher: use logging helper"
+      hash: a34d154e494addc1f32a088909d56b7b237a731a
+      body: |
+        Replace custom logging with helper functions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: replace shutdown for reboot in case of migration"
+      hash: f5671f9514216c93b4770a20adc9ff71730f8f63
+      body: |
+        When migrating, we can't assume a device can be remotely powered on, so
+        finish the flashing with a reboot instead of a shutdown.
+
+        This is possible as the initramfs does not currently have a shutdown
+        command and avoids the complexity of having to detect whether we are
+        running from initramfs or not.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "README: add installer section"
+      hash: 736f12029c93427fb6fe75cbb18fe9a0a73768a9
+      body: |
+        Document the installer section of `config.json`
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: Add migration module"
+      hash: c59a7090f281a0b0e1602efded31816101c094b1
+      body: |
+        This module allows to program the internal storage from initramfs hence
+        making it possible to migrate an existing OS by booting from the same
+        disk.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "integration layers: use `android-tools` from Yocto Dunfell and before"
+      hash: 0d9e43d1133eb246aa6b220198264ff10e72e512
+      body: |
+        The `android-tools-adbd` package was only split after Dunfell.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: comply with recovery mode"
+      hash: b0e671fe8d1782bfdc38c277899be43ae0cab977
+      body: |
+        If booting in recovery mode, wait on adbd to exit before continuing.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscritps: Move moving /run mountpoint from rootfs to migrate
+        module"
+      hash: 7b3227c08f693131933fb9fea0d3796571837253
+      body: >
+        The migrate module needs to umount the rootfs, so by moving the mountpoint
+
+        moving into the migrate module it's only done when not migrating.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: add recovery module"
+      hash: 2431bc39dde12cab35f407423e4b57db3ec78aff
+      body: |
+        When `recovery` is passed in the kernel command line, the initramfs will
+        not boot into the OS but launch adbd.
+
+        A connection can then be established via the network (if a DHCP address
+        is provided) or using a USB gadget connection.
+
+        For a network connection, the client needs to install `adb` and run:
+        ```
+        adb connect $IPADDR:5555
+        adb shell
+        ```
+
+        Other adb commands, like pull/push of files are also available.
+
+        Resolves #2864
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.113.0
+  title: ""
+  date: 2023-02-25T14:46:47.829Z
+- commits:
     - subject: "os-helpers-fs: add dependency on util-linux fdisk"
       hash: f27132636f4dda10d51cf0e1a3eb13d3db67b1a2
       body: |
