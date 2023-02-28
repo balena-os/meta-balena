@@ -137,7 +137,7 @@ regenerate_uuid() {
             # mlabel doesn't work on file directly. It needs a drive to file
             # mapping in its configuration.
             drive=a:
-	    echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
+            echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
             new_uuid="BDEF$(hexdump -n 2 -e '"%02X" 1 "\n"' /dev/urandom)"
             cmd="mlabel -s -N ${new_uuid}"
             if ! eval "${cmd}" "${drive}"; then
@@ -157,9 +157,9 @@ regenerate_uuid() {
                     fi
             fi
             if ! e2fsck -fp "$dev"; then
-		return 1
+                return 1
             fi
-	    new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
+            new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
             cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
             if ! eval "${cmd}" "${dev}"; then
                 return 1
@@ -181,10 +181,10 @@ regenerate_uuid() {
 #       The default should work fine but it is handy to switch to 'partlabel'
 #       on GPT devices as this does not need to rely on the underlying FS
 #       being labelled correctly.
-function get_part_number_by_label {
-    DEVICE=$1
-    LABEL=$2
-    FIELD=${3:-label}
+get_part_number_by_label() {
+    DEVICE=${1}
+    LABEL=${2}
+    FIELD=${3:-"label"}
 
     lsblk "/dev/${DEVICE}" -nlo "name,${FIELD}" | grep "${LABEL}" | sed -e "s,^${DEVICE}p\?\([0-9][0-9]*\)[ \t]*${LABEL}$,\1,"
 }
@@ -194,7 +194,7 @@ function get_part_number_by_label {
 #   1 - Block device
 #   2 - Partition number
 #   3 - (optional) Alignment block size
-function get_part_size_by_number {
+get_part_size_by_number() {
     DEVICE=$1
     PART_NUMBER=$2
     ALIGN_BLOCK_SIZE=$3
@@ -219,7 +219,7 @@ function get_part_size_by_number {
 # Arguments:
 #   1 - Block device
 #   2 - Partition number
-function get_part_start_by_number {
+get_part_start_by_number() {
     DEVICE=$1
     PART_NUMBER=$2
 
