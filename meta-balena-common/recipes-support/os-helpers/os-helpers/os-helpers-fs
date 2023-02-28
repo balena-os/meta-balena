@@ -249,7 +249,7 @@ get_internal_device() {
           info "${device} is our install media, skip it..."
           continue
       fi
-      if [ ! fdisk -l "${device}" ]; then
+      if ! fdisk -l "${device}" > /dev/null 2>&1; then
         inform "${device} has no media attached"
         continue
       fi
