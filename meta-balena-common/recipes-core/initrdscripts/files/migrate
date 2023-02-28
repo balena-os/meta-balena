@@ -114,10 +114,10 @@ migrate_run() {
     if [ -n "${image}" ]; then
         EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
         if findmnt "${FLASH_BOOT_MOUNT}" > /dev/null; then
-            _image_size=$(wc -c "${image}" | awk '{print $1}')
-            _flash_boot_size=$(du -bs ${FLASH_BOOT_MOUNT} | awk '{print $1}')
+            _image_size=$(du -cb "${image}" | awk '/total/{print $1}')
+            _flash_boot_size=$(du -cb ${FLASH_BOOT_MOUNT} | awk '/total/{print $1}')
             # shellcheck disable=SC2086
-            _kernel_images_size=$(wc -c ${kernel_images} | awk '/total/{ print $1}')
+            _kernel_images_size=$(du -cb ${kernel_images} | awk '/total/{print $1}')
             _total_size=$(("$_image_size" + "$_flash_boot_size" + "$_kernel_images_size"))
             memory_check "${_total_size}"
         else
