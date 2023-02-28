@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.113.1
+## (2023-02-28)
+
+* os-helpers-fs: formatting and fixing lint warning [Alex Gonzalez]
+* os-helpers-fs: fix check for media attached [Alex Gonzalez]
+* initrdscripts: migrate: use du instead of wc to calculate byte sizes [Alex Gonzalez]
+
 # v2.113.0
 ## (2023-02-25)
 

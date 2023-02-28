@@ -1,4 +1,46 @@
 - commits:
+    - subject: "os-helpers-fs: formatting and fixing lint warning"
+      hash: 69878f0fa6c83dfc7d38921c364577f00c2a4461
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: fix check for media attached"
+      hash: 7f84a4220469f7324997488945ea2fd8eda45bb5
+      body: |
+        Fix the check for media attached to device that fails with:
+
+        sh: [: -l: binary operator expected
+
+        Also, redirect all output to use only the exit code.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: migrate: use du instead of wc to calculate byte sizes"
+      hash: 28eb87859810e0a9e43936b4fc893fc5893510b0
+      body: |
+        The `du` utility has the same output format for single or several files,
+        while the `wc` utility doesn't and does not display a total for single
+        files.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.113.1
+  title: ""
+  date: 2023-02-28T13:33:39.382Z
+- commits:
     - subject: "resin-init-flasher: use logging helper"
       hash: a34d154e494addc1f32a088909d56b7b237a731a
       body: |
