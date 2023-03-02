@@ -1,4 +1,22 @@
 - commits:
+    - subject: Refer to balenaEngine by its full name
+      hash: 74b747bd20bf906704b75058f43248f8a5f0c20c
+      body: |
+        Previously, it was being referred to only as "balena". Being explicit
+        that this is about balenaEngine makes it simpler to grep for
+        Engine-related portions of balenaOS. Might also help a tad bit when
+        looking at logs.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.113.2
+  title: ""
+  date: 2023-03-02T13:07:15.621Z
+- commits:
     - subject: "os-helpers-fs: formatting and fixing lint warning"
       hash: 69878f0fa6c83dfc7d38921c364577f00c2a4461
       body: ""

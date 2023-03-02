@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.2
+## (2023-03-02)
+
+* Refer to balenaEngine by its full name [Leandro Motta Barros]
+
 # v2.113.1
 ## (2023-02-28)
 
