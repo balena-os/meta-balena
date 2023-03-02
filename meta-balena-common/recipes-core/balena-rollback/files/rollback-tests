@@ -33,10 +33,10 @@ if [ -f /mnt/state/rollback-health-variables ]; then
 	fi
 fi
 
-# Balena health check
+# balenaEngine health check
 if /usr/lib/balena/balena-healthcheck ; then
-	echo "Rollback: Balena looks healthy"
+	echo "Rollback: balenaEngine looks healthy"
 else
-	echo "Rollback: ERROR: Balena is not healthy!"
+	echo "Rollback: ERROR: balenaEngine is not healthy!"
 	exit 1
 fi
