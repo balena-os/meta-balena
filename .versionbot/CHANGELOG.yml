@@ -1,4 +1,20 @@
 - commits:
+    - subject: "balena-units-conf: launch os-config on config changes"
+      hash: b3324272950bffa587963b8ce53d7111ebc04471
+      body: |
+        This allows to transition from unmanaged to managed by just writing
+        a config.json file, like it's the case with AWS cloud configuration.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.113.3
+  title: ""
+  date: 2023-03-02T21:55:35.239Z
+- commits:
     - subject: Refer to balenaEngine by its full name
       hash: 74b747bd20bf906704b75058f43248f8a5f0c20c
       body: |

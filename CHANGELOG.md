@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.3
+## (2023-03-02)
+
+* balena-units-conf: launch os-config on config changes [Alex Gonzalez]
+
 # v2.113.2
 ## (2023-03-02)
 
