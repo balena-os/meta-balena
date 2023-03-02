@@ -94,3 +94,4 @@ BALENA_BOOT_PARTITION_FILES:append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if 
 BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE_FLAG_FILE}"
 
 addtask image_size_check after do_image_balenaos_img before do_image_complete
+do_resin_boot_dirgen_and_deploy[depends] += "redsocks:do_deploy"
