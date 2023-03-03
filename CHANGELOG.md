@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.4
+## (2023-03-03)
+
+* balena-keys: do not ship certificates in DER format [Michal Toman]
+
 # v2.113.3
 ## (2023-03-02)
 

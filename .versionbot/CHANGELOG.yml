@@ -1,4 +1,26 @@
 - commits:
+    - subject: "balena-keys: do not ship certificates in DER format"
+      hash: bef02fa7e4800e8c2370b6323ddfc56fb9adec62
+      body: |
+        We have added DER certificates because it is the only format
+        that QEMU/TianoCore accepts in UEFI setup. Since we made setup mode
+        work properly, there is no need to program the QEMU keys manually
+        and therefore there is no reason to pollute the boot partition with
+        the DER files. If indeed necessary, they can always be extracted
+        from the ESL, which is still shipped. Shipping the DER files is also
+        not possible when db uses hashes instead of certificates, which we
+        want to move towards.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.113.4
+  title: ""
+  date: 2023-03-03T14:57:31.134Z
+- commits:
     - subject: "balena-units-conf: launch os-config on config changes"
       hash: b3324272950bffa587963b8ce53d7111ebc04471
       body: |
