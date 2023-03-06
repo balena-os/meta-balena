@@ -17,6 +17,7 @@ ALLOW_EMPTY:${PN} = "1"
 # $3: Output key name
 #
 fetch_key() {
+    set -x
     DEST_DIR="${B}/balena-keys"
     if [ "x${SIGN_API}" = "x" ]; then
         bbnote "Signing API not defined"
@@ -45,6 +46,7 @@ fetch_key() {
 }
 
 do_get_public_keys() {
+    set -x
     fetch_key "gpg/key/${SIGN_GRUB_KEY_ID}" ".key" "grub.gpg"
     fetch_key "kmod/cert/${SIGN_KMOD_KEY_ID}" ".cert" "kmod.crt"
     fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".pk" "PK.auth"
@@ -55,6 +57,7 @@ do_get_public_keys() {
     fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".db" "db.auth"
     fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".esl" "db.esl"
     fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".der" "db.der"
+    set +x
 }
 do_get_public_keys[cleandirs] = "${B}"
 do_get_public_keys[network] = "1"
