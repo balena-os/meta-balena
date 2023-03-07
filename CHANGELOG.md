@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.5
+## (2023-03-07)
+
+* image-balena.bbclass: deploy grub-conf before building the boot partition [Michal Toman]
+
 # v2.113.4
 ## (2023-03-03)
 

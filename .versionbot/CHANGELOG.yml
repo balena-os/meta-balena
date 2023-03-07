@@ -1,4 +1,24 @@
 - commits:
+    - subject: "image-balena.bbclass: deploy grub-conf before building the boot
+        partition"
+      hash: 22942a52bdf3f1cde6201c0bcc71cb72e3c899b9
+      body: |
+        do_resin_boot_dirgen_and_deploy needs all the partial files deployed
+        when it runs as it will be copying them to the actual boot partition.
+        There is a race condition between it and grub_conf:do_deploy,
+        we have seen builds fail when grub_conf:do_deploy does not execute
+        in time. This patch adds an explicit dependency to avoid such situation.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.113.5
+  title: ""
+  date: 2023-03-07T11:02:11.648Z
+- commits:
     - subject: "balena-keys: do not ship certificates in DER format"
       hash: bef02fa7e4800e8c2370b6323ddfc56fb9adec62
       body: |
