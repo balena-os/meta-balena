@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.6
+## (2023-03-07)
+
+* recipes-core/images: Ensure redsocks sample files are deployed [Alexandru Costache]
+
 # v2.113.5
 ## (2023-03-07)
 

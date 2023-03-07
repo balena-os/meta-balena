@@ -1,4 +1,20 @@
 - commits:
+    - subject: "recipes-core/images: Ensure redsocks sample files are deployed"
+      hash: fe8b2b248d6a65b26def40c9d374f04c813fd40c
+      body: |
+        ... before trying to include them in the boot partition, otherwise
+        the yocto build may fail sporadically.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.113.6
+  title: ""
+  date: 2023-03-07T14:25:45.437Z
+- commits:
     - subject: "image-balena.bbclass: deploy grub-conf before building the boot
         partition"
       hash: 22942a52bdf3f1cde6201c0bcc71cb72e3c899b9
