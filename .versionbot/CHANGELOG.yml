@@ -1,4 +1,18 @@
 - commits:
+    - subject: "conf: distro: balena-os: use lower case for signing key names"
+      hash: 177a88c334a43fb8959f842170d6cbd976a9e53d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.113.7
+  title: ""
+  date: 2023-03-07T18:26:31.574Z
+- commits:
     - subject: "recipes-core/images: Ensure redsocks sample files are deployed"
       hash: fe8b2b248d6a65b26def40c9d374f04c813fd40c
       body: |

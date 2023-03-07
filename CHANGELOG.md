@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.7
+## (2023-03-07)
+
+* conf: distro: balena-os: use lower case for signing key names [Alex Gonzalez]
+
 # v2.113.6
 ## (2023-03-07)
 
