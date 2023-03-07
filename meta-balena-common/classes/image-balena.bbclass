@@ -243,6 +243,7 @@ do_resin_boot_dirgen_and_deploy () {
 		fi
 	fi
 }
+do_resin_boot_dirgen_and_deploy[depends] += "${@bb.utils.contains_any('BALENA_IMAGE_BOOTLOADER', 'grub grub-efi', 'grub-conf:do_deploy', '', d)}"
 
 QUIRK_FILES ?= " \
     etc/hosts \
