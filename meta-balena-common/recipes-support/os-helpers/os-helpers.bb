@@ -44,4 +44,29 @@ FILES:${PN}-tpm2 = "${libexecdir}/os-helpers-tpm2"
 FILES:${PN}-config = "${libexecdir}/os-helpers-config"
 FILES:${PN}-api = "${libexecdir}/os-helpers-api"
 
+do_test_api() {
+    if [ "${BB_NO_NETWORK}" = "1" ]; then
+        bbnote "${PN}: Skipping test as bitbake is configured for no network"
+        return 0
+    fi
+    endpoint="https://api.${BALENA_API_ENV}"
+    export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
+    . ${WORKDIR}/os-helpers-api
+    # GET 200
+    if ! api_get_request "${endpoint}/ping"; then
+        bberror "${PN}: API request failed "
+    fi
+    # 404 Not found
+    if api_get_request "${endpoint}/notfound"; then
+        bberror "API request unexpectedly suceeded"
+    fi
+    # 401 Unauthorized
+    if api_get_request "${endpoint}/v6/device"; then
+        bberror "API request unexpectedly suceeded"
+    fi
+}
+addtask test_api before do_package after do_install
+do_test_api[network] = "1"
+do_test[depends] += "curl-native:do_populate_sysroot os-helpers-native:do_populate_sysroot ca-certificates-native:do_populate_sysroot"
+
 BBCLASSEXTEND = "native"
