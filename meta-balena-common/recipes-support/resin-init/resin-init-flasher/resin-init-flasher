@@ -194,7 +194,7 @@ if [ -d /sys/firmware/efi ]; then
         | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
 
     if [ "${SECUREBOOT_ENABLED}" != "1" ]; then
-        if [ "${SETUPMODE_VAR}" -ne "1" ]; then
+        if [ "${SECUREBOOT_VAR}" -eq "1" ] && [ "${SETUPMODE_VAR}" -ne "1" ]; then
             # Bail out when keys are already enrolled but secure boot is not
 	    # enabled in config.json, as the installed system will not have
 	    # FDE, and it's ambiguous if the user wants secure boot
