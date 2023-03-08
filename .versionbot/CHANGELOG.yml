@@ -1,4 +1,45 @@
 - commits:
+    - subject: fix ip for dummy interface to avoid ip conflicts
+      hash: e3fd7de4f5a61773a77cf33bd05a58c77186ecf2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: os: NetworkManager iptables rules test for Internet sharing"
+      hash: 90dbb8f414435c88e95a53535d003039ca7d42a4
+      body: >
+        Test for the NetworkManager patch done in
+
+        https://github.com/balena-os/meta-balena/pull/2963
+
+
+        A racing condition between balenaEngine and NetworkManager led to some Internet
+
+        connection sharing iptables rules not being applied when NM connection profile
+
+        with Internet sharing was activated at boot.
+
+
+        This test checks whether all necessary iptables rules are added by artificially
+
+        blocking iptables for 1 second and then for 3 seconds while a connection
+
+        profile with Internet sharing is activated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.113.8
+  title: ""
+  date: 2023-03-08T11:28:57.215Z
+- commits:
     - subject: "conf: distro: balena-os: use lower case for signing key names"
       hash: 177a88c334a43fb8959f842170d6cbd976a9e53d
       body: ""

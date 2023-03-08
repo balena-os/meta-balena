@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.113.8
+## (2023-03-08)
+
+* fix ip for dummy interface to avoid ip conflicts [rcooke-warwick]
+* tests: os: NetworkManager iptables rules test for Internet sharing [Zahari Petkov]
+
 # v2.113.7
 ## (2023-03-07)
 
