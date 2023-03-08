@@ -7,6 +7,7 @@ inherit allarch deploy
 EXCLUDE_FROM_WORLD = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 ALLOW_EMPTY:${PN} = "1"
+DEPENDS = "balena-db-hashes"
 
 # Fetch the specified public key from the signing server
 #
@@ -47,10 +48,9 @@ do_get_public_keys() {
     fetch_key "gpg/key/${SIGN_GRUB_KEY_ID}" ".key" "grub.gpg"
     fetch_key "kmod/cert/${SIGN_KMOD_KEY_ID}" ".cert" "kmod.crt"
     fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".pk" "PK.auth"
+    fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".esl" "PK.esl"
     fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".kek" "KEK.auth"
     fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".esl" "KEK.esl"
-    fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".db" "db.auth"
-    fetch_key "secureboot/db/${SIGN_EFI_KEY_ID}" ".esl" "db.esl"
 }
 do_get_public_keys[cleandirs] = "${B}"
 do_get_public_keys[network] = "1"
@@ -81,7 +81,6 @@ deltask do_install
 do_package[vardeps] += " \
     SIGN_API \
     SIGN_GRUB_KEY_ID \
-    SIGN_EFI_KEY_ID \
     SIGN_KMOD_KEY_ID \
     SIGN_EFI_PK_KEY_ID \
     SIGN_EFI_KEK_KEY_ID \

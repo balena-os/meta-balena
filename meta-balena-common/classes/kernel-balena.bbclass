@@ -1055,7 +1055,7 @@ do_configure:append () {
     fi
 
 }
-do_configure[depends] += "balena-keys:do_deploy"
+do_configure[depends] += "${@oe.utils.conditional('SIGN_API','','',' balena-keys:do_deploy',d)}"
 # Force compile to depend on the last resin task in the chain
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 
