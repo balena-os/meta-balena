@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.9
+## (2023-03-09)
+
+* flasher: fix installation when in user mode w/ sb disabled [Joseph Kogut]
+
 # v2.113.8
 ## (2023-03-08)
 

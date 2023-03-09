@@ -1,4 +1,29 @@
 - commits:
+    - subject: "flasher: fix installation when in user mode w/ sb disabled"
+      hash: 1592a4cfa4035892fcdc1484717bfcb5966221f3
+      body: |
+        Previously, we bailed out of the installer when the system was in user
+        mode (keys enrolled) but the user had not opted in to secure boot, as it
+        was ambiguous whether the user actually wanted SB/FDE.
+
+        However, some systems come with vendor keys pre-enrolled, and a user may
+        simply turn off secure boot in the firmware setup menu without erasing
+        the keys. This would result in the installer bailing out even though
+        secure boot is disabled in the firmware menu.
+
+        Check that secure boot is enabled in addition to having keys enrolled
+        before bailing out.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.113.9
+  title: ""
+  date: 2023-03-09T05:34:10.446Z
+- commits:
     - subject: fix ip for dummy interface to avoid ip conflicts
       hash: e3fd7de4f5a61773a77cf33bd05a58c77186ecf2
       body: ""
