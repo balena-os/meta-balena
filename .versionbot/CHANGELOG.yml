@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add balenaOS debugging docs"
+      hash: a091584f0ab6af190fd7ad18ab7f5db091ae90f0
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.113.10
+  title: ""
+  date: 2023-03-09T16:37:31.248Z
+- commits:
     - subject: "flasher: fix installation when in user mode w/ sb disabled"
       hash: 1592a4cfa4035892fcdc1484717bfcb5966221f3
       body: |

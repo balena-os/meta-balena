@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.10
+## (2023-03-09)
+
+* patch: Add balenaOS debugging docs [Vipul Gupta (@vipulgupta2048)]
+
 # v2.113.9
 ## (2023-03-09)
 
