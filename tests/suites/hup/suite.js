@@ -310,6 +310,7 @@ module.exports = {
 						localMode: true,
 						apiEndpoint: 'https://api.balena-cloud.com',
 						developmentMode: true,
+						installer: { secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT) },
 					},
 				},
 				this.getLogger(),

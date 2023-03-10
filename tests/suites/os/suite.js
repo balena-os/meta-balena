@@ -235,6 +235,7 @@ module.exports = {
 						// Set local mode so we can perform local pushes of containers to the DUT
 						localMode: true,
 						developmentMode: true,
+						installer: { secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT) },
 					},
 				},
 				this.getLogger(),
