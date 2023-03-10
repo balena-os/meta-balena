@@ -229,6 +229,7 @@ module.exports = {
     config.deviceId = deviceRegInfo.id;
     config.persistentLogging = true;
     config.developmentMode = true;
+    config.installer = { secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT) };
 
     // get ready to populate DUT image config.json with the attributes we just generated
     this.os.addCloudConfig(config);
