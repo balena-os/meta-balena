@@ -1,0 +1,13 @@
+# vi: ft=bash
+engine_req() {
+	_method=$1
+	_path=$2
+	_engine_sock=${DOCKER_SOCKET:-/var/run/balena-engine.sock}
+	shift 2
+
+	curl --silent \
+	     --unix-socket "${_engine_sock}" \
+	     -X "${_method}" \
+	     "http://docker/${_path}" \
+	     "$@"
+}
