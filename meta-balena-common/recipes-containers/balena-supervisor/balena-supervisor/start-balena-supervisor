@@ -2,6 +2,7 @@
 
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-engine
 
 # Handle apps.json existence
 # Keep this before computing SUPERVISOR_CONTAINER_IMAGE_ID
@@ -9,15 +10,15 @@ APPSJSON=/mnt/data/apps.json
 if [ ! -f "$APPSJSON" ]; then
     if [ -d "$APPSJSON" ]; then
         rm -rf "$APPSJSON"
-        balena rm -f balena_supervisor || true
+        engine_req DELETE containers/balena_supervisor?force=true
         echo '{}' > "$APPSJSON"
     elif [ ! -e "$APPSJSON" ]; then
         echo '{}' > "$APPSJSON"
     fi
 fi
 
-SUPERVISOR_IMAGE_ID=$(balena inspect --format='{{.Id}}' "$SUPERVISOR_IMAGE")
-SUPERVISOR_CONTAINER_IMAGE_ID=$(balena inspect --format='{{.Image}}' balena_supervisor || echo "")
+SUPERVISOR_IMAGE_ID=$(engine_req GET container/"${SUPERVISOR_IMAGE}" | jq --raw-output .Id)
+SUPERVISOR_CONTAINER_IMAGE_ID=$(engine_req GET container/balena_supervisor | jq --raw-output .Image)
 
 # If custom CA exists populate the NODE_EXTRA_CA_CERTS env variable as node ignores the system-wide CA bundle
 BALENA_ROOT_CA_FILE="/usr/share/ca-certificates/balena/balenaRootCA.crt"
@@ -40,7 +41,8 @@ hasValueChanged() {
 
 configIsUnchanged() {
 
-    SUPERVISOR_CONTAINER_ENV_JSON="$(balena inspect balena_supervisor | jq '.[0].Config.Env | map(.| { (.[0:index("=")]): .[index("=")+1:] }) | add')"
+    SUPERVISOR_CONTAINER_ENV_JSON="$(engine_req GET container/balena_supervisor \
+        | jq '.Config.Env | map(.| { (.[0:index("=")]): .[index("=")+1:] }) | add')"
 
     if hasValueChanged "BOOT_MOUNTPOINT"       "$BOOT_MOUNTPOINT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "MIXPANEL_TOKEN"        "$MIXPANEL_TOKEN" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
@@ -58,7 +60,10 @@ configIsUnchanged() {
 }
 
 runSupervisor() {
-    balena rm --force balena_supervisor resin_supervisor 2>/dev/null || true
+    for c in balena_supervisor resin_supervisor; do
+        engine_req DELETE containers/$c?force=true 2>/dev/null
+    done
+
     balena run --privileged --name balena_supervisor \
         --restart=always \
         --net=host \

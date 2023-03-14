@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-engine
+
 set -o pipefail
 
 # Help function
@@ -107,19 +110,6 @@ os_helpers_fetch_target_state() {
     fi
 }
 
-
-# Detect containers engine
-if which docker > /dev/null 2>&1; then
-    DOCKER=docker
-elif which rce > /dev/null 2>&1; then
-    DOCKER=rce
-elif which balena > /dev/null 2>&1; then
-    DOCKER=balena
-else
-    echo "ERROR: No container engine detected."
-    error_handler "no container engine detected"
-fi
-
 # Get target supervisor details from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
@@ -169,7 +159,7 @@ setSupervisorConfig() {
 }
 
 echo "Getting image id..."
-imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name") || imageid=""
+imageid=$(engine_req GET containers/"${image_name}"/json --fail | jq --raw-output .Id) || imageid=""
 
 if [ -n "$imageid" ]; then
     echo "Supervisor $image_name at version $version already downloaded."
@@ -186,9 +176,10 @@ fi
 
 # Pull target version.
 echo "Pulling supervisor $image_name at version $version..."
-if $DOCKER pull "$image_name"; then
-    image_id=$(balena images --filter=reference="${image_name%@*}" --format "{{.ID}}")
-    $DOCKER tag "${image_id}" "balena_supervisor:${version}"
+if engine_req POST images/create?fromImage="$image_name"\&tag=latest --fail; then
+    image_id=$(engine_req GET images/json --get \
+        --data-urlencode "filters={\"reference\": {\"${image_name%@*}\": true}}" | jq .Id)
+    engine_req POST images/"${image_id}"/tag --data-urlencode "tag=balena_supervisor:${version}"
 else
     error_handler "supervisor pull failed"
 fi

@@ -1,7 +1,11 @@
 #!/bin/sh
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-engine
+
 set -o errexit
 
-if [ "$(balena images -q $SUPERVISOR_IMAGE 2> /dev/null)" = "" ]; then
+if [ "$(engine_req GET images/json --get \
+	--data-urlencode "filters={\"reference\": {\"${SUPERVISOR_IMAGE}\": true}}")" = "[]" ]; then
     exit 1
 fi

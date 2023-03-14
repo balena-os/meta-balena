@@ -46,6 +46,7 @@ RDEPENDS:${PN} = " \
 	healthdog \
 	balena-unique-key \
 	balena-config-vars \
+        os-helpers-engine \
 	systemd \
 	"
 
