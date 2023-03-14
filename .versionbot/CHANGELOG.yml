@@ -1,4 +1,25 @@
 - commits:
+    - subject: "peak: Ship signed module when signing is enabled"
+      hash: 97d64167c1bcbb76d1638486aa3eb158f37785c9
+      body: >
+        At this moment, when module signing is enabled, the peak module is signed
+
+        but do_install ignores the signed variant and installs the original
+
+        unsigned file. With this patch do_install installs the signed file
+
+        if available.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.113.11
+  title: ""
+  date: 2023-03-14T01:03:28.843Z
+- commits:
     - subject: "patch: Add balenaOS debugging docs"
       hash: a091584f0ab6af190fd7ad18ab7f5db091ae90f0
       body: ""

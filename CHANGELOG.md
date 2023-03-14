@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.11
+## (2023-03-14)
+
+* peak: Ship signed module when signing is enabled [Michal Toman]
+
 # v2.113.10
 ## (2023-03-09)
 
