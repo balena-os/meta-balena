@@ -1,4 +1,34 @@
 - commits:
+    - subject: Remove a bad check in Internet connection sharing test
+      hash: 80d2c45d7318464935516acdc2dd884efaacf31a
+      body: |
+        In the Internet connection sharing test one of the checks may run
+        into a racing problem. The following command is holding the iptables
+        lock for 3 seconds while NetworkManager activates a connection with
+        sharing enabled:
+
+        `flock /run/xtables.lock sleep 3 & nmcli c up dummy & wait`
+
+        NetworkManager waits for 2 seconds for the lock to be released and
+        those three seconds should be enough for one of the iptables rules
+        to fail. However there is no guarantee that NetworkManager will start
+        adding the iptables rules that quickly - it may start adding those
+        after one out of those three seconds already passed, which will
+        lead to all iptables rules to be set at the end.
+
+        This check is non-essential for the test itself, so it is removed with
+        this commit.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 2.113.12
+  title: ""
+  date: 2023-03-14T10:35:04.209Z
+- commits:
     - subject: "peak: Ship signed module when signing is enabled"
       hash: 97d64167c1bcbb76d1638486aa3eb158f37785c9
       body: >

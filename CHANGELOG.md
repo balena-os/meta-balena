@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.12
+## (2023-03-14)
+
+* Remove a bad check in Internet connection sharing test [Zahari Petkov]
+
 # v2.113.11
 ## (2023-03-14)
 
