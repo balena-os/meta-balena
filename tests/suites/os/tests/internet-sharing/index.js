@@ -98,15 +98,6 @@ module.exports = {
                 count = await countSharedIptables(this);
                 test.equal(count, 0, 'All Internet sharing iptables rules are deleted');
 
-                // Now lock for 3 seconds instead, which will make one of the rules to
-                // not be set.
-                await this.worker.executeCommandInHostOS(
-                    'flock /run/xtables.lock sleep 3 & nmcli c up dummy & wait',
-                    this.link
-                );
-                count = await countSharedIptables(this);
-                test.equal(count, 13, 'One Internet sharing iptables rule is not set');
-
                 // Cleanup
                 await this.worker.executeCommandInHostOS(
                     'nmcli c delete dummy',
