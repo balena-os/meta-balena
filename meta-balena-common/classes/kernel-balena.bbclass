@@ -136,6 +136,7 @@ BALENA_CONFIGS ?= " \
     zram \
     ${BALENA_STORAGE} \
     fatfs \
+    nfsfs \
     apple_hfs \
     nf_tables \
     dummy \
@@ -241,6 +242,14 @@ BALENA_CONFIGS[apple_hfs] = " \
     CONFIG_HFSPLUS_FS=m \
     "
 
+BALENA_CONFIGS[nfsfs] = " \
+    CONFIG_NFS_FS=m \
+    CONFIG_NFS_V2=m \
+    CONFIG_NFS_V3=m \
+    CONFIG_NFS_V4=m \
+    CONFIG_NFSD_V3=y \
+    CONFIG_NFSD_V4=y \
+"
 #
 # systemd specific kernel configuration options
 # see https://github.com/systemd/systemd/blob/master/README for an up-to-date list
