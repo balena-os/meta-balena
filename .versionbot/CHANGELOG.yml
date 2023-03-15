@@ -1,4 +1,42 @@
 - commits:
+    - subject: "update-balena-supervisor: use API request helper"
+      hash: 91f8f7b6d77085614dace780997ff792c88b6ab2
+      body: |
+        Use an API request helper that checks the status code response before
+        trying to use the response itself.
+
+        Fixes #3052
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add test for os-helpers-api"
+      hash: 9c8612027020ba14fd0f9c0435d2e0b754594b81
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add os-helpers-api"
+      hash: 338edf9527652c467ad52046d75adfaf7a95ecf4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.113.13
+  title: ""
+  date: 2023-03-15T13:00:48.209Z
+- commits:
     - subject: Remove a bad check in Internet connection sharing test
       hash: 80d2c45d7318464935516acdc2dd884efaacf31a
       body: |

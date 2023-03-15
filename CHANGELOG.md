@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.113.13
+## (2023-03-15)
+
+* update-balena-supervisor: use API request helper [Alex Gonzalez]
+* os-helpers: add test for os-helpers-api [Alex Gonzalez]
+* os-helpers: add os-helpers-api [Alex Gonzalez]
+
 # v2.113.12
 ## (2023-03-14)
 
