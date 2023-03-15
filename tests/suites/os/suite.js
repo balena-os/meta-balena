@@ -343,6 +343,7 @@ module.exports = {
 		'./tests/fingerprint',
 		'./tests/fsck',
 		'./tests/os-release',
+		'./tests/migrate',
 		'./tests/issue',
 		'./tests/chrony',
 		'./tests/kernel-overlap',
