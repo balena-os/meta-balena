@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v2.113.14
+## (2023-03-15)
+
+
+<details>
+<summary> Update balena-supervisor to v14.9.4 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.9.4
+> ### (2023-03-13)
+> 
+> * Skip pin device step if release was deleted [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.9.3
+> ### (2023-03-10)
+> 
+> * Use single-arch in dockerfile [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.9.2
+> ### (2023-03-02)
+> 
+> * Replace BALENA-FIREWALL rule in INPUT chain instead of flushing [Christina Ying Wang]
+> 
+
+</details>
+
 # v2.113.13
 ## (2023-03-15)
 

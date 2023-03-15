@@ -1,4 +1,101 @@
 - commits:
+    - subject: Update balena-supervisor to v14.9.4
+      hash: 1220917cd334560a48faf580479e216b536dac42
+      body: |
+        Update balena-supervisor from 14.9.1 to 14.9.4
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Skip pin device step if release was deleted
+              hash: f6435814cd86380dd3b02416f6f2199b483bb33c
+              body: >
+                Preloaded devices can require that the device is pinned to the preloaded
+
+                release on provisioning. However if the provisioned release gets
+
+                released in the future, that would lead to the device remaining in "VPN
+
+                only" state forever as the provisioning process could not finish due to
+
+                pinning failure.
+
+
+                This commit changes the behavior so if the release does not exist, the
+
+                pinning step is skipped and the device follows the fleet pinning state.
+              footer:
+                Closes: "#2133"
+                closes: "#2133"
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.9.4
+          title: ""
+          date: 2023-03-13T20:49:30.509Z
+        - commits:
+            - subject: Use single-arch in dockerfile
+              hash: 17aa625d3b115103efa30bb98b83ee1fc54230c4
+              body: >
+                This is necessary since the builder no longer passes the platform flag
+
+                to the build. This would lead to dockerfiles that are mixing multi and single
+
+                arch stages to pull the wrong architecture images, particularly when
+
+                trying to build images in emulated builds (e.g. armv7hf built on aarch64).
+
+
+                Moving the full build to single-arch solves this as the docker engine is
+
+                capable of chosing the right architecture from the manifest. Once some
+
+                of the builder issues are fixed, we should move to #2141
+              footer:
+                Relates-to: balena-io/balena-builder#1010
+                relates-to: balena-io/balena-builder#1010
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.9.3
+          title: ""
+          date: 2023-03-10T22:26:07.185Z
+        - commits:
+            - subject: Replace BALENA-FIREWALL rule in INPUT chain instead of flushing
+              hash: 84a9e7e9acd803b6b49d58ae3040694a5e2f823d
+              body: >
+                The issue with the original Supervisor implementation of the firewall is
+                that
+
+                on Supervisor start, the Supervisor flushes the INPUT chain of the filter table.
+
+                This doesn't play well with services that add to the INPUT chain on startup that
+
+                may start up before the Supervisor, such as certain NetworkManager connection
+
+                profiles. This change only replaces the BALENA-FIREWALL rule in the INPUT chain,
+
+                preserving the other rules as well as their order.
+              footer:
+                Closes: "#1482"
+                closes: "#1482"
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.9.2
+          title: ""
+          date: 2023-03-02T21:48:06.727Z
+  version: 2.113.14
+  title: ""
+  date: 2023-03-15T17:11:34.345Z
+- commits:
     - subject: "update-balena-supervisor: use API request helper"
       hash: 91f8f7b6d77085614dace780997ff792c88b6ab2
       body: |
