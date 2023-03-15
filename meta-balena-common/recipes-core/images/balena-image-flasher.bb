@@ -8,8 +8,7 @@ REQUIRED_DISTRO_FEATURES += " systemd"
 
 BALENA_FLAG_FILE = "${BALENA_FLASHER_FLAG_FILE}"
 
-# Each machine should append this with their specific configuration
-IMAGE_FSTYPES = ""
+IMAGE_FSTYPES = "balenaos-img"
 
 BALENA_ROOT_FSTYPE = "ext4"
 
