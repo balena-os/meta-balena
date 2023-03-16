@@ -1,7 +1,6 @@
 FILESEXTRAPATHS:append := ":${BALENA_COREBASE}/recipes-bsp/u-boot/files"
 FILESEXTRAPATHS:append := ":${BALENA_COREBASE}/recipes-bsp/u-boot/patches"
 
-INTEGRATION_KCONFIG_PATCH = "file://resin-specific-env-integration-kconfig.patch"
 INTEGRATION_NON_KCONFIG_PATCH = "file://resin-specific-env-integration-non-kconfig.patch"
 
 # We require these uboot config options to be enabled for env_resin.h
@@ -13,7 +12,7 @@ SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'file://balen
 # Machine independent patches
 SRC_URI:append = " \
     file://env_resin.h \
-    ${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', '${INTEGRATION_KCONFIG_PATCH}', '${INTEGRATION_NON_KCONFIG_PATCH}', d)} \
+    ${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', '', '${INTEGRATION_NON_KCONFIG_PATCH}', d)} \
     "
 
 python __anonymous() {
@@ -38,6 +37,15 @@ do_configure:append() {
             bbfatal "Failed to patch u-boot for silencing console in production!"
         fi;
     fi;
+
+    # we use the following sed to replace the static patch resin-specific-env-integration-kconfig.patch
+    if ${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', 'true', 'false', d)}; then
+        if grep -qP "const u*char default_environment\[] = {" ${S}/include/env_default.h; then
+            sed -i "/^const u*char default_environment\[] = {/a #include <env_resin.h>\n\tBALENA_ENV" ${S}/include/env_default.h
+        else
+            bbfatal "Failed to patch u-boot for including the balena env"
+        fi
+    fi
 }
 
 
