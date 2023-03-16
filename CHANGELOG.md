@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.16
+## (2023-03-16)
+
+* balena-image-flasher: Default image type to balenaos-img [Florin Sarbu]
+
 # v2.113.15
 ## (2023-03-16)
 

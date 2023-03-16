@@ -1,4 +1,24 @@
 - commits:
+    - subject: "balena-image-flasher: Default image type to balenaos-img"
+      hash: 36750c1d0e75d82ec096faeff6d61579c075e0c4
+      body: >
+        This avoids device repositories having to specify it, and it can always
+
+        be overwritten in append files.
+
+
+        This change is an extension of https://github.com/balena-os/meta-balena/commit/a3c276a1058d05e66991871bf167079fc2824843
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.113.16
+  title: ""
+  date: 2023-03-16T10:00:27.471Z
+- commits:
     - subject: "resin-u-boot.bbclass: Replace static patch
         resin-specific-env-integration-kconfig.patch"
       hash: 281a2c8bd47bb77ccf1974ae05b9c42129094911
