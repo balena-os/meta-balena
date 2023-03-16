@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.18
+## (2023-03-16)
+
+* Enable CI for external contributions from forks [Kyle Harding]
+
 # v2.113.17
 ## (2023-03-16)
 

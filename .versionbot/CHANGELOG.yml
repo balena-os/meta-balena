@@ -1,4 +1,18 @@
 - commits:
+    - subject: Enable CI for external contributions from forks
+      hash: abb948565781160616f7b3982d066dd1cd8bbb22
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.113.18
+  title: ""
+  date: 2023-03-16T15:40:01.689Z
+- commits:
     - subject: Removed links to hub
       hash: 09b8567c43f9e3aff55d2c162c5ea35080bc55bc
       body: ""
