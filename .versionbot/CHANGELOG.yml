@@ -1,4 +1,18 @@
 - commits:
+    - subject: Removed links to hub
+      hash: 09b8567c43f9e3aff55d2c162c5ea35080bc55bc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+        signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+      author: Ryan H
+      nested: []
+  version: 2.113.17
+  title: ""
+  date: 2023-03-16T14:08:01.614Z
+- commits:
     - subject: "balena-image-flasher: Default image type to balenaos-img"
       hash: 36750c1d0e75d82ec096faeff6d61579c075e0c4
       body: >
