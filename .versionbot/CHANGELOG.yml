@@ -1,4 +1,27 @@
 - commits:
+    - subject: "resin-u-boot.bbclass: Replace static patch
+        resin-specific-env-integration-kconfig.patch"
+      hash: 281a2c8bd47bb77ccf1974ae05b9c42129094911
+      body: >
+        Because we use this patch with various u-boot versions it often happens
+        that this patch
+
+        does not apply so we then need to rework it in the device integration layer. Instead it
+
+        would be better to have some code at configure time parsing the same file and inserting
+
+        the balena env dynamically, so regardless of u-boot versions we use.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.113.15
+  title: ""
+  date: 2023-03-16T01:58:53.905Z
+- commits:
     - subject: Update balena-supervisor to v14.9.4
       hash: 1220917cd334560a48faf580479e216b536dac42
       body: |

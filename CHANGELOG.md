@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.15
+## (2023-03-16)
+
+* resin-u-boot.bbclass: Replace static patch resin-specific-env-integration-kconfig.patch [Florin Sarbu]
+
 # v2.113.14
 ## (2023-03-15)
 
