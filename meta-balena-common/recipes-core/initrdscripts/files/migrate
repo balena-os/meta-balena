@@ -74,7 +74,8 @@ migrate_enabled() {
             #   alternative disks
             #
             internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
-            FLASH_BOOT_DEVICE=$(get_dev_path_in_device_with_label "${internal_dev}" "flash-boot")
+            boot_dev=$(findmnt --noheadings --canonicalize --output SOURCE "${ROOTFS_DIR}" | xargs lsblk -no pkname)
+            FLASH_BOOT_DEVICE=$(get_dev_path_in_device_with_label "/dev/${boot_dev}" "flash-boot")
             if [ -n "${FLASH_BOOT_DEVICE}" ]; then
                 FLASH_BOOT_MOUNT="/tmp/flash-boot"
                 mkdir -p "${FLASH_BOOT_MOUNT}"
@@ -92,9 +93,8 @@ migrate_enabled() {
             # (excluding RAM and swap devices)
             if [[ ( -n "${_migrate}" && "${_migrate}" = "1" ) || $(lsblk -nde 251,1 | wc -l) -eq "1" ]]; then
                 # Check that we are booting from the same disk we want to program
-                device=$(findmnt --noheadings --canonicalize --output SOURCE "${ROOTFS_DIR}" | xargs lsblk -no pkname)
-                if [ "${internal_dev#/dev/}" = "${device}" ]; then
-                    info "Running migration on ${device}..."
+                if [ "${internal_dev#/dev/}" = "${boot_dev}" ]; then
+                    info "Running migration on ${internal_dev}..."
                     return 0
                 fi
             fi
