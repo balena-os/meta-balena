@@ -559,7 +559,7 @@ if [ "$EFI" = "1" ]; then
     done
 
     efibootmgr --create \
-               --disk "/dev/$(lsblk -ndo pkname "$(get_dev_path_from_label ${EFIPART_LABEL})")" \
+               --disk "/dev/$(lsblk -ndo pkname "$(get_dev_path_in_device_with_label ${internal_dev} ${EFIPART_LABEL})")" \
                --part "$(get_part_number_by_label "${internal_dev#/dev/}" "${EFIPART_LABEL}")" \
                --label "${BOOT_ENTRY_LABEL}" \
                --loader "${LOADER_PATH}"
