@@ -1,0 +1,36 @@
+From: Sebastian Panceac <sebastian@resin.io>
+Date: Wed, 17 Oct 2018 14:36:56 +0200
+Subject: [PATCH] Replace NM's DHCP request option "Client indentifier" with
+ udhcpc style option
+
+Signed-off-by: Sebastian Panceac <sebastian@balena.io>
+
+Upstream-Status: Pending
+---
+ src/libnm-systemd-core/src/systemd-network/sd-dhcp-client.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c b/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c
+index 2f531bc7b29f..13d73fdc21a5 100644
+--- a/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c
++++ b/src/libnm-systemd-core/src/libsystemd-network/sd-dhcp-client.c
+@@ -678,13 +678,17 @@ static int client_message_init(
+                 client->client_id_len = sizeof(client->client_id.type) + sizeof(client->client_id.ns.iaid) + duid_len;
+         }
+ 
++        uint8_t balena_client_id[7] = {0};
++        balena_client_id[0] = 1; /* Hardware type: Ethernet */
++        memcpy(balena_client_id + 1, client->mac_addr, 6); /* MAC addr */
++
+         /* Some DHCP servers will refuse to issue an DHCP lease if the Client
+            Identifier option is not set */
+         if (client->client_id_len) {
+                 r = dhcp_option_append(&packet->dhcp, optlen, &optoffset, 0,
+                                        SD_DHCP_OPTION_CLIENT_IDENTIFIER,
+-                                       client->client_id_len,
+-                                       &client->client_id);
++                                       sizeof(balena_client_id),
++                                       balena_client_id);
+                 if (r < 0)
+                         return r;
+         }
