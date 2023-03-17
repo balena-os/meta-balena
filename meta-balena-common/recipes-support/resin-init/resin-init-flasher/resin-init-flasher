@@ -532,7 +532,7 @@ info "Board specific flash procedure..."
 info "Log end"
 # Preserve logs when running from initramfs
 if [ -n "${INITRAMFS_LOGFILE}" ] && [ -f "${INITRAMFS_LOGFILE}" ]; then
-    cp "${INITRAMFS_LOGFILE}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/migration_$(date +"%Y%m%dT%H%M")"
+    cp -fv "${INITRAMFS_LOGFILE}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/migration_$(date +"%Y%m%dT%H%M")"
 fi
 
 umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
