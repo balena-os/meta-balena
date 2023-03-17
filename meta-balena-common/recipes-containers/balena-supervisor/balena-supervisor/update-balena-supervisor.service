@@ -4,13 +4,10 @@ Requires=\
     balena.service \
     bind-etc-balena-supervisor.service \
     tmp.mount
-Wants=\
-    mnt-boot.mount \
-    balena-supervisor.service
+Wants=balena-supervisor.service
 After=\
     balena.service \
     tmp.mount \
-    mnt-boot.mount \
     bind-etc-balena-supervisor.service \
     balena-supervisor.service
 

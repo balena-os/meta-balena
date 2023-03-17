@@ -9,7 +9,7 @@ Index: plymouth-0.9.2/systemd-units/plymouth-halt.service.in
 --- plymouth-0.9.2.orig/systemd-units/plymouth-halt.service.in
 +++ plymouth-0.9.2/systemd-units/plymouth-halt.service.in
 @@ -5,6 +5,7 @@ Before=systemd-halt.service
- PartOf=resin-boot.service
+ PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 +ConditionVirtualization=!docker
@@ -21,7 +21,7 @@ Index: plymouth-0.9.2/systemd-units/plymouth-kexec.service.in
 --- plymouth-0.9.2.orig/systemd-units/plymouth-kexec.service.in
 +++ plymouth-0.9.2/systemd-units/plymouth-kexec.service.in
 @@ -5,6 +5,7 @@ Before=systemd-kexec.service
- PartOf=resin-boot.service
+ PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 +ConditionVirtualization=!docker
@@ -33,7 +33,7 @@ Index: plymouth-0.9.2/systemd-units/plymouth-poweroff.service.in
 --- plymouth-0.9.2.orig/systemd-units/plymouth-poweroff.service.in
 +++ plymouth-0.9.2/systemd-units/plymouth-poweroff.service.in
 @@ -5,6 +5,7 @@ Before=systemd-poweroff.service
- PartOf=resin-boot.service
+ PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 +ConditionVirtualization=!docker
@@ -81,7 +81,7 @@ Index: plymouth-0.9.2/systemd-units/plymouth-reboot.service.in
 --- plymouth-0.9.2.orig/systemd-units/plymouth-reboot.service.in
 +++ plymouth-0.9.2/systemd-units/plymouth-reboot.service.in
 @@ -5,6 +5,7 @@ Before=systemd-reboot.service
- PartOf=resin-boot.service
+ PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
 +ConditionVirtualization=!docker
@@ -94,7 +94,7 @@ Index: plymouth-0.9.2/systemd-units/plymouth-start.service.in
 +++ plymouth-0.9.2/systemd-units/plymouth-start.service.in
 @@ -6,6 +6,7 @@ After=systemd-vconsole-setup.service sys
  Before=systemd-ask-password-plymouth.service
- Requires=resin-boot.service
+ Requires=mnt-boot.mount
  ConditionKernelCommandLine=!plymouth.enable=0
 +ConditionVirtualization=!docker
 

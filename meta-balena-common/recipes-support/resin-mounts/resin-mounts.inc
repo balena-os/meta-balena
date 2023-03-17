@@ -63,9 +63,6 @@ do_compile () {
 		elif [ "$bindmount" = "/etc/NetworkManager/conf.d" ]; then
 			# This bind mount needs to be running before the NetworkManager service starts for os-networkmanager
 			sed -i -e "/^Before=/s/\$/ NetworkManager.service/" "$servicefile"
-		elif [ "$bindmount" = "/etc/udev/rules.d" ]; then
-			# This bind mount needs to be running before the udev service starts for os-udevrules
-			sed -i -e "/^Before=/s/\$/ systemd-udevd.service/" "$servicefile"
 		elif [ "$bindmount" = "/etc/ssl/certs" ]; then
 			# This bind should only be started when a custom CA file exists
 			sed -i -e "/^Conflicts=/s,\$,\nConditionDirectoryNotEmpty=/usr/share/ca-certificates/balena," "$servicefile"

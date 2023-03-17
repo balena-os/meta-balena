@@ -1,8 +1,7 @@
 [Unit]
 Description=Temporary resin config in /mnt/boottmp/conf
 DefaultDependencies=no
-Requires=mnt-boot.mount mnt-boottmp.mount
-After=mnt-boot.mount mnt-boottmp.mount
+RequiresMountsFor=/mnt/boot /mnt/boottmp
 Before=umount.target
 Conflicts=umount.target
 

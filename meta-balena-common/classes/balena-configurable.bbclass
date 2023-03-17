@@ -43,7 +43,7 @@ EOF
     for SYSTEMD_UNIT_NAME in ${SYSTEMD_UNIT_NAMES}; do
         cat > "${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.conf" << EOF
 [Unit]
-After=resin-boot.service
+RequiresMountsFor=/mnt/boot
 [Service]
 ExecStartPre=/usr/sbin/gen-conf-unit ${SYSTEMD_UNIT_NAME}
 EOF

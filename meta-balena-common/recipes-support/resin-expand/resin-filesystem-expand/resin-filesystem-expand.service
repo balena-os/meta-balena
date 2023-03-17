@@ -2,7 +2,6 @@
 Description=Expand resin-data partition
 DefaultDependencies=no
 Before=mnt-data.mount umount.target
-After=resin-boot.service
 Conflicts=umount.target
 ConditionVirtualization=!docker
 

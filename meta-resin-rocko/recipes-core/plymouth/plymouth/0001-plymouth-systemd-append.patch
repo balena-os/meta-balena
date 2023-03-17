@@ -24,7 +24,7 @@ index 59a1912..bb977db 100644
  Description=Show Plymouth Halt Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-halt.service
-+PartOf=resin-boot.service
++PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
  
@@ -42,7 +42,7 @@ index 5a39037..7518ce1 100644
  Description=Show Plymouth Reboot with kexec Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-kexec.service
-+PartOf=resin-boot.service
++PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
  
@@ -60,7 +60,7 @@ index 8ebaf76..07baa67 100644
  Description=Show Plymouth Power Off Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-poweroff.service
-+PartOf=resin-boot.service
++PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
  
@@ -78,7 +78,7 @@ index 6d5309f..9e5a1a9 100644
  Description=Show Plymouth Reboot Screen
  After=getty@tty1.service display-manager.service plymouth-start.service
  Before=systemd-reboot.service
-+PartOf=resin-boot.service
++PartOf=mnt-boot.mount
  DefaultDependencies=no
  ConditionKernelCommandLine=!plymouth.enable=0
  
@@ -99,9 +99,9 @@ index ddfb08f..5735ffb 100644
 -Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service
 -After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service
 +Wants=systemd-ask-password-plymouth.path systemd-vconsole-setup.service systemd-udev-settle.service
-+After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service resin-boot.service
++After=systemd-vconsole-setup.service systemd-udev-trigger.service systemd-udevd.service systemd-udev-settle.service mnt-boot.mount
  Before=systemd-ask-password-plymouth.service
-+Requires=resin-boot.service
++Requires=mnt-boot.mount
  ConditionKernelCommandLine=!plymouth.enable=0
  
  [Service]

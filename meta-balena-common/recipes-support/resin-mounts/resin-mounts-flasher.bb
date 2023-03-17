@@ -5,14 +5,14 @@ include resin-mounts.inc
 SRC_URI += " \
 	file://mnt-boot.mount \
 	file://mnt-boottmp.mount \
-	file://resin-boot.service \
+	file://mnt-boot.mount \
 	file://temp-conf.service \
 	"
 
 SYSTEMD_SERVICE:${PN} += " \
 	mnt-boot.mount \
 	mnt-boottmp.mount \
-	resin-boot.service \
+	mnt-boot.mount \
 	temp-conf.service \
 	"
 

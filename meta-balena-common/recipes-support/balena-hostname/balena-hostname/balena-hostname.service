@@ -1,7 +1,8 @@
 [Unit]
 Description=Balena Hostname Configuration
-Requires=resin-boot.service balena-device-uuid.service bind-etc-hostname.service
-After=resin-boot.service balena-device-uuid.service bind-etc-hostname.service
+Requires=balena-device-uuid.service bind-etc-hostname.service
+After=balena-device-uuid.service bind-etc-hostname.service
+RequiresMountsFor=/mnt/boot
 
 [Service]
 Type=oneshot
