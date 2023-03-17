@@ -1,8 +1,7 @@
 [Unit]
 Description=OS configuration update service
-Requires=resin-boot.service
 Wants=os-config-devicekey.service NetworkManager.service
-After=os-config-devicekey.service resin-boot.service NetworkManager.service
+After=os-config-devicekey.service NetworkManager.service
 
 [Service]
 Type=simple

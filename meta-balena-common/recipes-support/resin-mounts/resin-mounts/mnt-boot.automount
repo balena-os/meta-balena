@@ -1,0 +1,6 @@
+[Unit]
+Description=mnt-boot automount
+ConditionVirtualization=!docker
+
+[Automount]
+Where=/mnt/boot

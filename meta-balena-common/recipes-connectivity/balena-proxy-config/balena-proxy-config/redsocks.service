@@ -1,7 +1,7 @@
 [Unit]
 Description=redsocks transparent proxy redirector
-Requires=resin-boot.service balena-proxy-config.service
-After=resin-boot.service balena-proxy-config.service dnsmasq.service
+Requires=balena-proxy-config.service
+After=balena-proxy-config.service dnsmasq.service
 ConditionPathExists=/mnt/boot/system-proxy/redsocks.conf
 
 [Service]

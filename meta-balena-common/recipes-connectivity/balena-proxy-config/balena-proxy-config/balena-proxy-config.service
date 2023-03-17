@@ -1,7 +1,6 @@
 [Unit]
 Description=Resin proxy configuration service
-Requires=resin-boot.service
-After=resin-boot.service dnsmasq.service
+After=dnsmasq.service
 
 [Service]
 Type=oneshot

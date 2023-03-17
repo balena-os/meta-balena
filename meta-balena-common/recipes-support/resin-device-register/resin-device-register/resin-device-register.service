@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin device register
-Requires=resin-boot.service balena-device-uuid.service os-config-devicekey.service
-After=resin-boot.service balena-device-uuid.service os-config-devicekey.service
+Requires=balena-device-uuid.service os-config-devicekey.service
+After=balena-device-uuid.service os-config-devicekey.service
 
 [Service]
 Type=oneshot

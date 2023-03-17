@@ -1,8 +1,6 @@
 [Unit]
 Description=Balena EFI partition mount service
 DefaultDependencies=no
-After=resin-boot.service
-Requires=resin-boot.service
 Before=umount.target
 Conflicts=umount.target
 ConditionVirtualization=!docker

@@ -1,7 +1,7 @@
 [Unit]
 Description=Balena persistent logs
-Requires=mnt-boot.mount systemd-journald.service
-After=mnt-boot.mount systemd-journald.service
+Requires=systemd-journald.service
+After=systemd-journald.service
 
 [Service]
 Type=oneshot

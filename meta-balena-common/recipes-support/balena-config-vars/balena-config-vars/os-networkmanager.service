@@ -1,7 +1,7 @@
 [Unit]
 Description=NetworkManager configuration fragments from config.json
-Requires=resin-boot.service bind-etc-NetworkManager-conf.d.service
-After=resin-boot.service bind-etc-NetworkManager-conf.d.service
+Requires=bind-etc-NetworkManager-conf.d.service
+After=bind-etc-NetworkManager-conf.d.service
 Before=NetworkManager.service
 
 [Service]
