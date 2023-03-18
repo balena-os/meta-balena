@@ -26,7 +26,6 @@ SYSTEMD_SERVICE:${PN} += " \
 	mnt-data.mount \
 	mnt-state.mount \
 	mnt-sysroot-active.mount \
-	mnt-sysroot-inactive.automount \
 	mnt-sysroot-inactive.mount \
 	"
 
