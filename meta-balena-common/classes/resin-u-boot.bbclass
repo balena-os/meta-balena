@@ -18,8 +18,12 @@ SRC_URI:append = " \
 python __anonymous() {
     # Use different integration patch based on u-boot Kconfig support
     kconfig_support = d.getVar('UBOOT_KCONFIG_SUPPORT', True)
-    if not kconfig_support or (kconfig_support != '0' and kconfig_support != '1'):
-        bb.error("UBOOT_KCONFIG_SUPPORT not defined or wrong value. Should be 0 or 1.")
+
+    # Let's default to 1 if the device repo does not specify it
+    if not kconfig_support:
+        d.setVar('UBOOT_KCONFIG_SUPPORT', '1')
+    elif (kconfig_support != '0' and kconfig_support != '1'):
+        bb.error("Wrong value for UBOOT_KCONFIG_SUPPORT. Should be 0 or 1.")
 }
 
 # A static patch won't apply to all u-boot versions, therefore
