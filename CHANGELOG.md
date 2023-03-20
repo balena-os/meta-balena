@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.113.21
+## (2023-03-20)
+
+* tests: os: secureboot: add integrity checks [Joseph Kogut]
+* tests: configure flasher secure boot opt-in [Joseph Kogut]
+
 # v2.113.20
 ## (2023-03-20)
 

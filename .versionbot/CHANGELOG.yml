@@ -1,4 +1,30 @@
 - commits:
+    - subject: "tests: os: secureboot: add integrity checks"
+      hash: c65d0cac90a47dfb8260a2bbdd4ca27e38c225d7
+      body: |
+        Verify secure boot integrity checks of bootloader binary and
+        configuration.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: configure flasher secure boot opt-in"
+      hash: 4abccf4929df3354a5b7b0c1912092aeef56aec2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.113.21
+  title: ""
+  date: 2023-03-20T20:17:03.365Z
+- commits:
     - subject: "tests: os: disable unwrapping"
       hash: d27b7a53763e0682f1a47865be24345fa52e58ff
       body: |
