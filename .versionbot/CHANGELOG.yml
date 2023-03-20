@@ -1,4 +1,49 @@
 - commits:
+    - subject: "tests: os: disable unwrapping"
+      hash: d27b7a53763e0682f1a47865be24345fa52e58ff
+      body: |
+        The QEMU leviathan-worker now simulates flashing from an external
+        device, which tests both flasher images, as well as
+        secure-boot/full-disk encryption setup.
+
+        Disable the ad-hoc unwrapping in the OS suite setup.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: hup: disable unwrapping"
+      hash: 7e99b96cdfc69b0251566e71f4f9a44ac8e50ac4
+      body: |
+        Disable ad-hoc unwrapping in the HUP test suite in favor of utilizing
+        the QEMU worker's new ability to bind a disk image to an emulated
+        external USB mass storage device. This runs the flasher in QEMU, and
+        installs to emulated internal storage.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: cloud: disable unwrapping"
+      hash: 609706e3e631e305dde86c8462fd9a474e5593ce
+      body: |
+        Utilize QEMU worker's new internal/external storage emulation to run
+        flasher in VM, rather than unwrapping image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.113.20
+  title: ""
+  date: 2023-03-20T16:43:02.693Z
+- commits:
     - subject: "resin-u-boot.bbclass: Default to u-boot Kconfig support"
       hash: ef248aa51635b08421ddd1a9ddf805ebeda47b43
       body: |
