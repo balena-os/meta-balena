@@ -88,7 +88,8 @@ do_compile() {
 	export CGO_CFLAGS="${CFLAGS} --sysroot=${STAGING_DIR_TARGET}"
 	export CGO_LDFLAGS="${LDFLAGS} --sysroot=${STAGING_DIR_TARGET}"
 	export DOCKER_BUILDTAGS="${BUILD_TAGS} ${PACKAGECONFIG_CONFARGS}"
-	export DOCKER_LDFLAGS="-s"
+	# LMB: just testing. Initially was -s. Want to test -s -w too.
+	export DOCKER_LDFLAGS=""
 	export GO111MODULE=off
 
 	export DISABLE_WARN_OUTSIDE_CONTAINER=1
