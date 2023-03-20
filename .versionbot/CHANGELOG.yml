@@ -1,4 +1,23 @@
 - commits:
+    - subject: "resin-u-boot.bbclass: Default to u-boot Kconfig support"
+      hash: ef248aa51635b08421ddd1a9ddf805ebeda47b43
+      body: |
+        It should be safe to assume that boards now use newer u-boot versions
+        that all have Kconfig support so we default to that. This allows for
+        device repos not to specify it and use Kconfig support or if for some
+        reason there are boards with old u-boot versions they can overwrite the
+        UBOOT_KCONFIG_SUPPORT variable to 0.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 2.113.19
+  title: ""
+  date: 2023-03-20T15:16:33.267Z
+- commits:
     - subject: Enable CI for external contributions from forks
       hash: abb948565781160616f7b3982d066dd1cd8bbb22
       body: ""

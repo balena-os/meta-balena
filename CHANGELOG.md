@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.19
+## (2023-03-20)
+
+* resin-u-boot.bbclass: Default to u-boot Kconfig support [Florin Sarbu]
+
 # v2.113.18
 ## (2023-03-16)
 
