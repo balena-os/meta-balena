@@ -1,4 +1,62 @@
 - commits:
+    - subject: Update tests/leviathan digest to ad4f908
+      hash: 92086f551ef3714f76432e66c09ce305a1de0e07
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "compose: qemu: add FLASHER_SECUREBOOT var"
+              hash: 51977e109069f08f0364eed208fab2e01c104284
+              body: >
+                This environment variable is passed through to the suite to preconfigure
+
+                a flasher image to enable secure boot for testing.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "swtpm: fix abort on exit"
+              hash: fc65360ae7896545bdcaad0d37f1345a447251f4
+              body: >
+                Some incoming tests require QEMU to exit, simulating a device powering
+
+                off, before starting QEMU again. This is used to "reflash" a virtualized
+
+                device before continuing with testing, for instance after tampering with
+
+                boot files on a secure boot enabled device to verify secure boot checks.
+
+
+                However, swtpm will exit when QEMU disconnects. The `--exit-code-from`
+
+                compose argument implies `--abort-on-container-exit`, so this results
+
+                in the test run aborting prematurely.
+
+
+                Adapt the entrypoint and command of the swtpm container to always
+
+                restart the program without exiting the container.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.23.1
+          title: ""
+          date: 2023-03-14T01:58:44.771Z
+  version: 2.113.22
+  title: ""
+  date: 2023-03-21T15:17:11.571Z
+- commits:
     - subject: "tests: os: secureboot: add integrity checks"
       hash: c65d0cac90a47dfb8260a2bbdd4ca27e38c225d7
       body: |

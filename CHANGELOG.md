@@ -1,6 +1,22 @@
 Change log
 -----------
 
+# v2.113.22
+## (2023-03-21)
+
+
+<details>
+<summary> Update tests/leviathan digest to ad4f908 [Renovate Bot] </summary>
+
+> ## leviathan-2.23.1
+> ### (2023-03-14)
+> 
+> * compose: qemu: add FLASHER_SECUREBOOT var [Joseph Kogut]
+> * swtpm: fix abort on exit [Joseph Kogut]
+> 
+
+</details>
+
 # v2.113.21
 ## (2023-03-20)
 
