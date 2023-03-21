@@ -282,6 +282,17 @@ module.exports = {
 			});
 		}
 
+		// Configure to use the flasher migrator
+		// Note that QEMU needs to be configured with no internal storage for tests
+		// to pass
+		let configJson = await this.context.get().os.configJson
+		if( await this.workerContract.workerType === `qemu` && this.suite.options.installerForceMigration === 'true'){
+				console.log("Forcing installer migration")
+				await this.context.set({
+					configJson: configJson["installer"]= {migrate: {force: 'true'}}
+				})
+		}
+
 		// Configure OS image
 		await this.os.configure();
 

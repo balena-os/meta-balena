@@ -21,8 +21,16 @@ module.exports = {
 		{
 			title: 'Installer used migrator module',
 			run: async function(test) {
-				if (this.context.get().os.configJson.installer.migrate.force !== 'true') {
-					test.comment("No migration requested - skipping")
+				let skip = true;
+				try {
+					if (this.context.get().os.configJson.installer.migrate.force === 'true') {
+						skip = false;
+					}
+				} catch (e) {
+					// will be skipped
+				}
+				if (skip) {
+						test.comment("No migration requested - skipping")
 				} else {
 						await test.resolves(
 							this.utils.waitUntil(async () => {
@@ -43,7 +51,7 @@ module.exports = {
 								'0',
 								'Migration execution confirmed in log file'
 						);
-					}
+				}
 			},
 		},
 	],
