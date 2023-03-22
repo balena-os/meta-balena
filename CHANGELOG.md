@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.113.23
+## (2023-03-22)
+
+* pyro/sumo: initrdscripts: fix migrate module for older Yocto versions [Alex Gonzalez]
+* networkmanager: do not update to latest version in sumo [Alex Gonzalez]
+
 # v2.113.22
 ## (2023-03-21)
 

@@ -1,4 +1,32 @@
 - commits:
+    - subject: "pyro/sumo: initrdscripts: fix migrate module for older Yocto versions"
+      hash: 4eca2991ce9433ad5291af6e17887815db068ca9
+      body: |
+        In old Yocto versions the util-linux recipe has not yet been split into
+        individual packages.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "networkmanager: do not update to latest version in sumo"
+      hash: 75311179f65172d2ca38f74b4487fe812b691a46
+      body: |
+        Hold the networkmanager update for older Yocto version as the new meson
+        based build system in newer versions is broken.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.113.23
+  title: ""
+  date: 2023-03-22T09:22:48.249Z
+- commits:
     - subject: Update tests/leviathan digest to ad4f908
       hash: 92086f551ef3714f76432e66c09ce305a1de0e07
       body: Update tests/leviathan
