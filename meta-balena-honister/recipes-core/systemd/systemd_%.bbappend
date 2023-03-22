@@ -1,11 +1,3 @@
-FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
-
-SRC_URI:append = " \
-	file://0001-core-Don-t-redirect-stdio-to-null-when-running-in-co.patch \
-	file://0002-remove_systemd-getty-generator.patch \
-	file://0003-Don-t-run-specific-services-in-container.patch \
-	"
-
 PACKAGECONFIG:remove = "nss-resolve"
 
 do_install:append() {
