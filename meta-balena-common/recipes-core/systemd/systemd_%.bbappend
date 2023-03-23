@@ -13,6 +13,7 @@ SRC_URI:append = " \
     file://zram-swap-init \
     file://dev-zram0.swap \
     file://resin_update_state_probe \
+    file://balena_regenerate_uuid \
     file://balena-os-sysctl.conf \
     file://getty-target-development-features.conf \
     file://getty-service-development-features.conf \
@@ -93,6 +94,7 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/vacuum.conf ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/vacuum.conf
 
     install -m 0755 ${WORKDIR}/resin_update_state_probe ${D}/lib/udev/resin_update_state_probe
+    install -m 0755 ${WORKDIR}/balena_regenerate_uuid ${D}/lib/udev/balena_regenerate_uuid
     install -m 0755 ${WORKDIR}/zram-swap-init ${D}/lib/udev/zram-swap-init
 
     # Move udev rules into /lib as /etc/udev/rules.d is bind mounted for custom rules
@@ -131,6 +133,7 @@ SYSTEMD_SERVICE:${PN}-zram-swap += "dev-zram0.swap"
 FILES:udev += "\
     ${rootlibexecdir}/udev/resin_update_state_probe \
     ${rootlibexecdir}/udev/zram-swap-init           \
+    ${rootlibexecdir}/udev/balena_regenerate_uuid   \
 "
 
 RDEPENDS:${PN}:append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"

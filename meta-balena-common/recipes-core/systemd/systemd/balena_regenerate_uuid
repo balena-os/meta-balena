@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
+uuid_prefix="$(get_dev_uuid "$1" | cut -d "-" -f1)"
+if [ "${uuid_prefix}" = "ba1eadef" ] || [ "${uuid_prefix}" = "BDEF" ]; then
+	exit
+fi
+
+uuid="$(get_dev_uuid "$1")"
+if new_uuid="$(regenerate_uuid "$1")"; then
+	if [ "${uuid}" = "$(get_cmdline_root_uuid)" ]; then
+		echo "UUID=${new_uuid}" > /run/initramfs/bootparam_root
+	fi
+fi
