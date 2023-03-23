@@ -1,4 +1,42 @@
 - commits:
+    - subject: "update-balena-supervisor: use API request helper"
+      hash: 31e0d0d2bafe3280bdf1424ff42988aefa7aa870
+      body: |
+        Use an API request helper that checks the status code response before
+        trying to use the response itself.
+
+        Fixes #3052
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add test for os-helpers-api"
+      hash: 3e094ecc21c83f1607e6dc2cd501b93dc63e2ec5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add os-helpers-api"
+      hash: 1370cb03af3bb2904f49b65f4fa1d58129998500
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.107.46
+  title: ""
+  date: 2023-03-23T17:12:45.046Z
+- commits:
     - subject: Update balena-engine to v20.10.25
       hash: 8abeed7cc3a3291d648dd3a2f27a89f25a73b7fa
       body: |
