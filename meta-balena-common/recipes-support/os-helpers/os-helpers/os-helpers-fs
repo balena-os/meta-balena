@@ -145,22 +145,11 @@ regenerate_uuid() {
             fi
             ;;
         ext*)
-            # tune2fs refuses to work when the filesystem was not
-            # freshly checked.
-            # Remount to update lastmount time to current time
-            # Otherwise in systems with no RTC lastmount could be in the future
-            # and e2fsck does not update the last filesystem check time
-            if [ -e /etc/e2fsck.conf ] && grep broken_system_clock /etc/e2fsck.conf > /dev/null; then
-                broken_system_clock=$(grep broken_system_clock /etc/e2fsck.conf | cut -d "=" -f2)
-                    if [ "${broken_system_clock}" = "1" ]; then
-                        update_mounttime "$dev"
-                    fi
-            fi
             if ! e2fsck -fp "$dev"; then
                 return 1
             fi
             new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
-            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
+            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -e continue -U ${new_uuid}"
             if ! eval "${cmd}" "${dev}"; then
                 return 1
             fi
