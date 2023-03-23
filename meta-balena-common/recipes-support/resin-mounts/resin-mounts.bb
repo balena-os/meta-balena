@@ -5,11 +5,12 @@ include resin-mounts.inc
 RDEPENDS:${PN} += "os-helpers-fs"
 
 SRC_URI += " \
-	file://balena-efi.service \
         file://mnt-boot.automount \
         file://mnt-boot.mount \
 	file://mnt-data.automount \
 	file://mnt-data.mount \
+        file://mnt-efi.automount \
+        file://mnt-efi.mount \
 	file://mnt-state.automount \
 	file://mnt-state.mount \
 	file://mnt-sysroot-active.automount \
@@ -21,9 +22,9 @@ SRC_URI += " \
 	"
 
 SYSTEMD_SERVICE:${PN} += " \
-	balena-efi.service \
         mnt-boot.mount \
 	mnt-data.mount \
+	mnt-efi.mount \
 	mnt-state.mount \
 	mnt-sysroot-active.mount \
 	mnt-sysroot-inactive.mount \
