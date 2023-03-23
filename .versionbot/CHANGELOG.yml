@@ -1,4 +1,21 @@
 - commits:
+    - subject: "kernel-balena: Include NFS V2, V3 and V4 client and server modules"
+      hash: 54c4090b518bccfdba0b635ead129502572685be
+      body: >
+        As per internal discussion thread
+
+        https://balena.zulipchat.com/#narrow/stream/345882-_help/topic/.E2.9C.94.20nfs.20.283.20or.204.29.20on.20jetson.20nano/near/342072698
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.113.25
+  title: ""
+  date: 2023-03-23T19:39:38.006Z
+- commits:
     - subject: "dunfell+: remove obsolete systemd patch"
       hash: f649288c2b284cb06081d296e52b4562f512107b
       body: >

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.25
+## (2023-03-23)
+
+* kernel-balena: Include NFS V2, V3 and V4 client and server modules [Alexandru Costache]
+
 # v2.113.24
 ## (2023-03-22)
 
