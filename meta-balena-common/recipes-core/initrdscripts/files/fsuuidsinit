@@ -56,8 +56,7 @@ fsuuidsinit_run() {
     # Generate new UUIDs - leave resin-rootA last as it will be used to decide re-runs
     for dev in /dev/disk/by-state/resin-rootB /dev/disk/by-state/resin-state /dev/disk/by-state/resin-data /dev/disk/by-state/resin-rootA; do
         uuid="$(get_dev_uuid "${dev}")"
-        fstype="$(get_dev_fstype "${dev}")"
-        if regenerate_uuid "${dev}" "${fstype}"; then
+        if regenerate_uuid "${dev}"; then
             if [ "${uuid}" = "$(get_cmdline_root_uuid)" ]; then
                 bootparam_root="UUID=$(get_dev_uuid "${dev}")"
                 echo "${bootparam_root}" > /run/initramfs/bootparam_root

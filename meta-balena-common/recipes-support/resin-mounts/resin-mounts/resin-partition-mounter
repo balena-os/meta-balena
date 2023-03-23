@@ -124,7 +124,7 @@ case $action in
         else
             uuid_prefix="$(get_dev_uuid "${target_path}" | cut -d "-" -f1)"
             if [ "${uuid_prefix}" != "ba1eadef" ] && [ "${uuid_prefix}" != "BDEF" ]; then
-                if ! new_uuid=$(regenerate_uuid "${target_path}" $(get_dev_fstype "${target_path}")); then
+                if ! new_uuid=$(regenerate_uuid "${target_path}"); then
                     echo "WARN: UUIDs not regenerated - retry on next boot"
                 else
                     echo "New UUID for ${target_path} is ${new_uuid}"

@@ -111,27 +111,16 @@ get_dev_fstype() {
 	lsblk -nlo fstype "${1}"
 }
 
-# Mount/unmount device to update mount time
-# Arguments
-#  1 - Target device
-update_mounttime() {
-    mkdir -p /run
-    tmpdir=$(mktemp -d -p /run)
-    mount "$1" "${tmpdir}"
-    umount "${tmpdir}"
-}
-
 # Set a Balena filesystem UUID to the specified device.
 # Arguments:
 #   1 - Target block device
-#   2 - Filesystem type
 # Returns:
 #   0 - Success, new UUID in stdout
 #   1 - Failure
 regenerate_uuid() {
     dev=$1
     # Filesystem type specific quirks
-    fstype=$2
+    fstype=$(get_dev_fstype $1)
     case $fstype in
         vfat)
             # mlabel doesn't work on file directly. It needs a drive to file
