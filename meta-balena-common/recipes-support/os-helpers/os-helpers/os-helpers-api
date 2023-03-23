@@ -1,0 +1,53 @@
+# Copyright 2023 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+if [ -f "/usr/libexec/os-helpers-logging" ]; then
+	#shellcheck disable=SC1091
+	. /usr/libexec/os-helpers-logging
+else
+	warn() {
+		echo "$1"
+	}
+fi
+
+# Perform an API request
+#
+# Arguments:
+# 1: URL to direct the GET request to
+#
+# Returns:
+#  - Sucess (0): Outputs the fetched contents for the specified request with the expected return code
+#  - Failed (1): For a failed request - prints a warning in stderr with the error message and returns nothing in stdout
+#
+api_get_request() {
+	_url="${1}"
+	_token="${2:-${DEVICE_API_KEY}}"
+	_ret=1
+
+	_outfile=$(mktemp)
+	_errfile=$(mktemp)
+	# Non-authenticated calls with empty token ignore bearer header
+	if _status_code=$(curl --compressed --silent --show-error -L -XGET --header "Authorization: Bearer ${_token}" -w "%{http_code}" -o "${_outfile}" "${_url}" 2> "${_errfile}"); then
+		if [[ "${_status_code}" = 2* ]]; then
+			cat "${_outfile}"
+			_ret=0
+		else
+			warn "[${_status_code}]: GET request to ${_url} failed."
+		fi
+	else
+		warn "${PN}: $(cat "${_errfile}")"
+	fi
+	rm "${_outfile}" "${_errfile}"
+	return "${_ret}"
+}
