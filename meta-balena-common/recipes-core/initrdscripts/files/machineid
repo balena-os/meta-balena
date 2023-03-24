@@ -13,10 +13,13 @@ machineid_enabled() {
 machineid_run() {
     # Mount the state partition - that's where we store the machine_id
     state_partition_path="$(get_state_path_from_label "resin-state")"
-    if ! wait4file "$state_partition_path" "300"; then
+    if [ ! -e "${state_partition_path}" ] \
+        && ! inotifywait -r /dev \
+                         --include "${state_partition_path#/dev/}" \
+                         --timeout 30; then
         error "Timeout while waiting for resin-state partition to be detected."
         error "Not able to mount resin-state, machine-id will not be persistent."
-	return
+        return
     fi
 
     info "Binding machine-id from ${state_partition_path}"

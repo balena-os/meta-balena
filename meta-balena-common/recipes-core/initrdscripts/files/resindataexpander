@@ -28,8 +28,12 @@ resindataexpander_enabled() {
     datadev=$(lsblk "/dev/${datapartdev}" -d -n -o PKNAME)
     pttype=$(get_part_table_type "/dev/${datadev}")
 
-    if ! wait4file "$datapart" "300"; then
-        error "Timeout while waiting for data partition to be detected. Data partition expansion will not be tried."
+    if [ ! -e "${datapart}" ] \
+        && ! inotifywait -r /dev \
+                         --include "${datapart#/dev/}" \
+                         --timeout 30; then
+        error "Timeout while waiting for data partition to be detected." \
+            "Data partition expansion will not be tried."
         return 1
     fi
 
