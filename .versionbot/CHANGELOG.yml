@@ -1,4 +1,81 @@
 - commits:
+    - subject: Update balena-supervisor to v14.9.7
+      hash: ff8a0471336b1c9f3dd0abe6f5c0af4a63121089
+      body: |
+        Update balena-supervisor from 14.9.4 to 14.9.7
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Add missing log backend field assignment in logger init
+              hash: 37371d89dcea3e1d713b9bb806fc6866cdd5ae9f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.9.7
+          title: ""
+          date: 2023-03-23T21:40:32.099Z
+        - commits:
+            - subject: Update deploy-to-balena action to 0.26.2
+              hash: 7cde98d7f7fb6a476dd14bbec5df7d45a1bfd3e8
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Use multi-arch in dockerfile
+              hash: 00e389e5f559dd10e49cfa411784b89498c3c0eb
+              body: >
+                This is necessary since the builder no longer passes the platform flag
+
+                to the build. This would lead to dockerfiles that are mixing multi and single
+
+                arch stages to pull the wrong architecture images, particularly when
+
+                trying to build images in emulated builds (e.g. armv7hf built on aarch64).
+
+
+                Moving the full build to multi-arch solves this as the docker engine is
+
+                capable of chosing the right architecture from the manifest.
+              footer:
+                Relatest-to: balena-io/balena-builder#1010
+                relatest-to: balena-io/balena-builder#1010
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.9.6
+          title: ""
+          date: 2023-03-23T20:18:31.098Z
+        - commits:
+            - subject: Use log endpoint subdomain if it exists in config.json
+              hash: 36e46d80a6f147b95664ac052fd01cd438388555
+              body: ""
+              footer:
+                See: https://github.com/balena-io/open-balena-api/pull/1288
+                see: https://github.com/balena-io/open-balena-api/pull/1288
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.9.5
+          title: ""
+          date: 2023-03-20T19:21:47.709Z
+  version: 2.113.27
+  title: ""
+  date: 2023-03-24T03:30:52.600Z
+- commits:
     - subject: Update balena-engine to v20.10.32
       hash: 47dd9486a7d306301119c5099bc8e3e0854ec21c
       body: |
