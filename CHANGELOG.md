@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.113.29
+## (2023-03-27)
+
+
+<details>
+<summary> Update balena-supervisor to v14.9.8 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.9.8
+> ### (2023-03-27)
+> 
+> * Revert "Use multi-arch in dockerfile" [Felipe Lalanne]
+> 
+
+</details>
+
 # v2.113.28
 ## (2023-03-27)
 

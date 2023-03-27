@@ -1,4 +1,35 @@
 - commits:
+    - subject: Update balena-supervisor to v14.9.8
+      hash: 52b8dee720722c0e917810676321a713075e09e1
+      body: |
+        Update balena-supervisor from 14.9.7 to 14.9.8
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Revert "Use multi-arch in dockerfile"
+              hash: 75eeac5ed4b7ec076482c0cace2d2cfca8b6b2d4
+              body: >
+                This reverts commit 00e389e5f559dd10e49cfa411784b89498c3c0eb.
+
+
+                Images generated using this dockerfile still don't have the right
+
+                architecture. More testing is needed
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.9.8
+          title: ""
+          date: 2023-03-27T08:05:44.148Z
+  version: 2.113.29
+  title: ""
+  date: 2023-03-27T14:11:59.453Z
+- commits:
     - subject: "README: modify migration documentation to match module"
       hash: f237b34bd6510d106202461b78da7fa0f2637ca0
       body: ""
