@@ -1,4 +1,18 @@
 - commits:
+    - subject: "README: modify migration documentation to match module"
+      hash: f237b34bd6510d106202461b78da7fa0f2637ca0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.113.28
+  title: ""
+  date: 2023-03-27T09:42:22.974Z
+- commits:
     - subject: Update balena-supervisor to v14.9.7
       hash: ff8a0471336b1c9f3dd0abe6f5c0af4a63121089
       body: |

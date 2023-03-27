@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.28
+## (2023-03-27)
+
+* README: modify migration documentation to match module [Alex Gonzalez]
+
 # v2.113.27
 ## (2023-03-24)
 
