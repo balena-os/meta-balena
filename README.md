@@ -274,19 +274,19 @@ supported device types.
 }
 ```
 
-#### migrator
+#### migrate
 
 An object that configures the behaviour of the balenaOS installer migration
 module.
 
-##### migrator.force
+##### migrate.force
 
 (boolean) Forces the migration to run. By default the migration only runs if
 the installer is booting in a single disk system.
 
 ```json
 "installer": {
-  "migrator": {
+  "migrate": {
     "force": true
   }
 }
