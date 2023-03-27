@@ -1,6 +1,24 @@
 Change log
 -----------
 
+# v2.113.30
+## (2023-03-27)
+
+
+<details>
+<summary> Update balena-engine to v20.10.33 [Renovate Bot] </summary>
+
+> ## balena-engine-20.10.33
+> ### (2023-03-27)
+> 
+> * Add integration tests for balena's "delta on load" [Leandro Motta Barros]
+> * Simplify and improve delta error handling [Leandro Motta Barros]
+> * Refactor the xfer portions of delta [Leandro Motta Barros]
+> * Refactor the distribution portions of delta [Leandro Motta Barros]
+> 
+
+</details>
+
 # v2.113.29
 ## (2023-03-27)
 

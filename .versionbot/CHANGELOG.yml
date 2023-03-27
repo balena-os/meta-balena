@@ -1,4 +1,109 @@
 - commits:
+    - subject: Update balena-engine to v20.10.33
+      hash: e902f495278255bdea5f341ac7634d5ec0238d5d
+      body: |
+        Update balena-engine from 20.10.32 to 20.10.33
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Add integration tests for balena's "delta on load"
+              hash: 47a0a065f8c28bfdcbac2f0e96d9cbc3adb1c3bb
+              body: ""
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Simplify and improve delta error handling
+              hash: 2c972dff108a153896116b07798bbc959c07ef01
+              body: >
+                The original delta code on the `xfer` package used to set `d.err` when
+
+                an unexpected EOF was found in the delta tar stream. Turns out `d.err`
+
+                would end up being overwritten before it was read, so that initial
+
+                assignment was effectively a no-op.
+
+
+                This commit simplifies the code a little bit by removing this bogus
+
+                assignment and also improves the error reporting a notch by adding more
+
+                context to the error messages.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Refactor the xfer portions of delta
+              hash: 8c9e6ec7c0efcb81c718c979ad45133f64679fc8
+              body: >
+                This factors out portions of the `xfer` package, so that we can
+
+                reuse this functionality between `balena pull` and `balena load`. There
+
+                was a good deal of duplication.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Refactor the distribution portions of delta
+              hash: 34dd5a92f29e85a77926b9c5983552054dd483c8
+              body: >
+                This factors out portions of the `distribution` package, so that we can
+
+                reuse this functionality between `balena pull` and `balena load`. There
+
+                was a good deal of duplication.
+
+
+                This piece of code is tricky to factor out into a separate function.
+
+                Basically we had two options:
+
+
+                1. Create a completely reusable, DRY function that encapsulates all the
+                   duplicate code. Sounds nice until you noticed that would be a
+                   horrendous function with 5 return values and overly obscure
+                   semantics.
+                2. We create a small set of functions with clearer interfaces and
+                   semantics, but which will still lead to some code duplication between
+                   the `pull` and `load` implementations.
+
+                I opted for the second alternative because the resulting code is much
+
+                easier to understand and maintain. Also, the remaining duplication is
+
+                mostly dumb, integration and error handling code that almost writes
+
+                itself as we call the new reusable functions -- so, this is sort of a
+
+                benign duplication.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.33
+          title: ""
+          date: 2023-03-27T18:46:44.671Z
+  version: 2.113.30
+  title: ""
+  date: 2023-03-27T21:30:24.970Z
+- commits:
     - subject: Update balena-supervisor to v14.9.8
       hash: 52b8dee720722c0e917810676321a713075e09e1
       body: |
