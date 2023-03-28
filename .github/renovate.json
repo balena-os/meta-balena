@@ -32,12 +32,7 @@
   "packageRules": [
     {
       "matchManagers": ["git-submodules"],
-      "commitBody": "Update {{depName}}\nChange-type: patch",
-      "automerge": true
-    },
-    {
-      "matchManagers": ["regex"],
-      "automerge": true
+      "commitBody": "Update {{depName}}\nChange-type: patch"
     },
     {
       "matchManagers": ["regex"],
