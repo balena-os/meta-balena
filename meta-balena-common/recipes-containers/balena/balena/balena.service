@@ -36,12 +36,16 @@ OOMScoreAdjust=-900
 MountFlags=slave
 LimitNOFILE=1048576
 LimitNPROC=1048576
-LimitCORE=infinity
+# Don't generate core dumps. This way, user apps that are crashlooping will not
+# fill up all storage space.
+LimitCORE=0
 WatchdogSignal=SIGTERM
 WatchdogSec=360
 Restart=always
 KillMode=process
 TimeoutStartSec=infinity
+# Let balenaEngine (instead of systemd) manage the containers cgroups.
+Delegate=yes
 
 [Install]
 Alias=balena-engine.service
