@@ -1,4 +1,18 @@
 - commits:
+    - subject: "renovate: Inherit automerge settings from org"
+      hash: 1db559de9180eaf96235bed661060b4b34d98ca4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 2.113.32
+  title: ""
+  date: 2023-03-28T16:06:51.691Z
+- commits:
     - subject: Don't create core dumps in containers by default
       hash: 1a78f2a1a27684bf244c881555b691d63a3247f6
       body: |

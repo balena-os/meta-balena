@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.32
+## (2023-03-28)
+
+* renovate: Inherit automerge settings from org [Kyle Harding]
+
 # v2.113.31
 ## (2023-03-28)
 
