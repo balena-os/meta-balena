@@ -1,4 +1,26 @@
 - commits:
+    - subject: Update tests/leviathan digest to e5dcbae
+      hash: a536523b56cbbfc50b9db7e356cd142bb674e9fd
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "patch: Update path to balena-io/renovate-config"
+              hash: 2698c25cb7bf70920b5025f941ea57b16532285c
+              body: ""
+              footer: {}
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.23.2
+          title: ""
+          date: 2023-03-28T17:08:00.960Z
+  version: 2.113.33
+  title: ""
+  date: 2023-03-28T20:47:58.221Z
+- commits:
     - subject: "renovate: Inherit automerge settings from org"
       hash: 1db559de9180eaf96235bed661060b4b34d98ca4
       body: ""

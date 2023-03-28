@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.113.33
+## (2023-03-28)
+
+
+<details>
+<summary> Update tests/leviathan digest to e5dcbae [Renovate Bot] </summary>
+
+> ## leviathan-2.23.2
+> ### (2023-03-28)
+> 
+> * patch: Update path to balena-io/renovate-config [Kyle Harding]
+> 
+
+</details>
+
 # v2.113.32
 ## (2023-03-28)
 
