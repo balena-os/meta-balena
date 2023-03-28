@@ -1,4 +1,54 @@
 - commits:
+    - subject: Don't create core dumps in containers by default
+      hash: 1a78f2a1a27684bf244c881555b691d63a3247f6
+      body: |
+        Setting `LimitCORE=0` will avoid the creation of core dump files on
+        containers. This will avoid cases in which a crashlooping user app ends
+        up filling up the entire storage with dump files.
+
+        Users can re-enable core dumps in their services by manually setting the
+        `ulimits.core`. For example:
+
+        ```
+        services:
+          my-service:
+            ulimits:
+              core: -1
+        ```
+
+        (Where -1 is used to mean "unlimited")
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+    - subject: Make sure balenaEngine owns the container cgroups
+      hash: 5efa793c5af63ef177de95b8b4251799b0de7f40
+      body: >
+        Setting `Delegate=yes` ensures that systemd will not change anything on
+
+        the cgroups created for running the containers.
+
+
+        This setting is used upstream since this commit:
+
+        https://github.com/moby/moby/commit/d16737f971092767c1b9d28302a3f5aedbe2f576
+
+
+        And also is recommended by systemd: https://systemd.io/CGROUP_DELEGATION/
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 2.113.31
+  title: ""
+  date: 2023-03-28T03:45:14.883Z
+- commits:
     - subject: Update balena-engine to v20.10.33
       hash: e902f495278255bdea5f341ac7634d5ec0238d5d
       body: |

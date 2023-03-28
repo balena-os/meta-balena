@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.113.31
+## (2023-03-28)
+
+* Don't create core dumps in containers by default [Leandro Motta Barros]
+* Make sure balenaEngine owns the container cgroups [Leandro Motta Barros]
+
 # v2.113.30
 ## (2023-03-27)
 
