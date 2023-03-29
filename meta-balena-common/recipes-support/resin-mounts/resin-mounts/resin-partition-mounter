@@ -103,6 +103,16 @@ if [ ! -d "$target_mountpoint" ]; then
     echo "ERROR: Target mountpoint $target_mountpoint not found."
     exit 1
 fi
+
+# Use resin-data-override instead of resin-data it available
+if [ "$target" = "resin-data" ]; then
+    overwriting_target_path="$(get_state_path_from_label "resin-data-override")"
+    if [ -z $overwriting_target_path ]; then
+        target="resin-data-override"
+        target_path=$overwriting_target_path
+    fi
+fi
+
 if ! wait4file "$target_path" "$TIMEOUT_LOOPS"; then
     echo "ERROR: Timeout while waiting for $target_path to come up."
     exit 1
