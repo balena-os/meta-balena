@@ -18,20 +18,26 @@ do_get_db() {
 
     hash-to-efi-sig-list "${DEPLOY_DIR_IMAGE}"/grub-efi-boot*.efi.secureboot "${DEST_DIR}/db.esl"
 
+    FIRST_KEK=$(echo "${SIGN_EFI_KEK_KEY_ID}" | cut -d, -f1)
+
     REQUEST_FILE=$(mktemp)
-    echo "{\"signing_key_id\": \"${SIGN_EFI_KEK_KEY_ID}\", \"esl\": \"$(base64 -w 0 ${DEST_DIR}/db.esl)\"}" > "${REQUEST_FILE}"
+    echo "{\"signing_key_id\": \"${FIRST_KEK}\", \"esl\": \"$(base64 -w 0 ${DEST_DIR}/db.esl)\", \"append\": true}" > "${REQUEST_FILE}"
 
-    RESPONSE_FILE=$(mktemp)
     export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
-    curl --fail "${SIGN_API}/secureboot/db" \
-        -X POST \
-        -H "Content-Type: application/json" \
-        -H "X-API-Key: ${SIGN_API_KEY}" \
-        -d "@${REQUEST_FILE}" \
-        -o "${RESPONSE_FILE}"
+    for EFI_VAR in db dbx; do
+        RESPONSE_FILE=$(mktemp)
+        curl --fail "${SIGN_API}/secureboot/${EFI_VAR}" \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-API-Key: ${SIGN_API_KEY}" \
+            -d "@${REQUEST_FILE}" \
+            -o "${RESPONSE_FILE}"
 
-    jq -r ".auth" < "${RESPONSE_FILE}" | base64 -d > "${DEST_DIR}/db.auth"
-    rm -f "${REQUEST_FILE}" "${RESPONSE_FILE}"
+        jq -r ".auth" < "${RESPONSE_FILE}" | base64 -d > "${DEST_DIR}/${EFI_VAR}.auth"
+        rm -f "${RESPONSE_FILE}"
+    done
+
+    rm -f "${REQUEST_FILE}"
 }
 do_get_db[cleandirs] = "${B}"
 do_get_db[network] = "1"
