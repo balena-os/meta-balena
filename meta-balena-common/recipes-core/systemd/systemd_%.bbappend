@@ -43,6 +43,7 @@ FILES:${PN} += " \
     /etc/mtab \
     ${sysconfdir}/systemd/journald.conf.d \
     "
+FILES:${PN}-extra-utils:remove = " ${bindir}/systemd-run"
 
 do_install:append() {
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
