@@ -6,15 +6,15 @@
 
 'use strict';
 
-const assert = require('assert');
 const fse = require('fs-extra');
 const { join } = require('path');
 const { homedir } = require('os');
-const util = require('util');
+const { Worker, BalenaOS, Sdk, utils } = require('@balena/leviathan-test-helpers');
 
 // required for unwrapping images
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
+const util = require('util');
 const pipeline = util.promisify(stream.pipeline);
 
 // copied from the SV
@@ -64,11 +64,11 @@ module.exports = {
 	title: 'Unmanaged BalenaOS release suite',
 	run: async function (test) {
 		// The worker class contains methods to interact with the DUT, such as flashing, or executing a command on the device
-		const Worker = this.require('common/worker');
-		const Balena = this.require("components/balena/sdk");
+		// const Worker = this.require('common/worker');
+		// const Balena = this.require("components/balena/sdk");
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
-		const BalenaOS = this.require('components/os/balenaos');
-		const utils = this.require('common/utils');
+		// const BalenaOS = this.require('components/os/balenaos');
+		// const utils = this.require('common/utils');
 		const worker = new Worker(
 			this.suite.deviceType.slug, 
 			this.getLogger(), 
@@ -77,7 +77,7 @@ module.exports = {
 			join(homedir(), 'id')
 		);
 
-		const cloud = new Balena(this.suite.options?.balena?.apiUrl, this.getLogger());
+		// const cloud = new Balena(this.suite.options?.balena?.apiUrl, this.getLogger());
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
@@ -184,7 +184,7 @@ module.exports = {
 
 		// The suite contex is an object that is shared across all tests. Setting something into the context makes it accessible by every test
 		this.suite.context.set({
-			cloud: cloud,
+			cloud: new Sdk(this.suite.options?.balena?.apiUrl, this.getLogger()),
 			utils: utils,
 			systemd: systemd,
 			sshKeyPath: join(homedir(), 'id'),
