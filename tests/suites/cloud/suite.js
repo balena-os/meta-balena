@@ -60,7 +60,7 @@ const enableSerialConsole = async (imagePath) => {
 
 module.exports = {
   title: "Managed BalenaOS release suite",
-  run: async function () {
+  run: async function (test) {
     const Worker = this.require("common/worker");
     const BalenaOS = this.require("components/os/balenaos");
     const Balena = this.require("components/balena/sdk");
@@ -281,16 +281,16 @@ module.exports = {
     );
 
     this.log('Waiting for device to be reachable');
-    await this.utils.waitUntil(async () => {
-      this.log("Trying to ssh into device");
-      let hostname = await this.context
-        .get()
-        .worker.executeCommandInHostOS(
-          "cat /etc/hostname",
-          this.link
-        )
-      return (hostname === `${this.balena.uuid.slice(0, 7)}`)
-    }, true, 60, 5 * 1000);
+    await test.resolves(
+			this.utils.waitUntil(async () => {
+				let hostname = await this.worker.executeCommandInHostOS(
+				"cat /etc/hostname",
+				this.link
+				)
+				return (hostname === this.link.split('.')[0])
+			}, true),
+			`Device ${this.link} be reachable over local SSH connection`
+		)
 
     // Retrieving journalctl logs: register teardown after device is reachable
     this.suite.teardown.register(async () => {
