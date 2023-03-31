@@ -154,10 +154,12 @@ const initDUT = async (that, test, target) => {
 	await that.worker.addSSHKey(that.sshKeyPath);
 
 	// create tunnels
-	console.log('Creating SSH tunnels to DUT');
-	await that.worker.createSSHTunnels(
-		that.link,
-	);
+	await test.resolves(
+		that.worker.createSSHTunnels(
+			that.link,
+		),
+		`Should detect ${that.link} on local network and establish tunnel`
+	)
 
 	await test.resolves(
 		that.utils.waitUntil(async () => {
