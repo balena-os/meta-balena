@@ -293,10 +293,12 @@ module.exports = {
 		await this.worker.addSSHKey(this.sshKeyPath);
 
 		// create tunnels
-		this.log('Creating SSH tunnels to DUT');
-		await this.worker.createSSHTunnels(
-			this.link,
-		);
+		await test.resolves(
+			this.worker.createSSHTunnels(
+				this.link,
+			),
+			`Should detect ${this.link} on local network and establish tunnel`
+		)
 
 		await test.resolves(
 			this.utils.waitUntil(async () => {
