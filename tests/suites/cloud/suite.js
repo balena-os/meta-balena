@@ -275,10 +275,12 @@ module.exports = {
     await this.worker.on();
 
     // create tunnels
-    this.log('Creating SSH tunnels to DUT');
-    await this.worker.createSSHTunnels(
-      this.link
-    );
+		await test.resolves(
+			this.worker.createSSHTunnels(
+				this.link,
+			),
+			`Should detect ${this.link} on local network and establish tunnel`
+		)
 
     this.log('Waiting for device to be reachable');
     await test.resolves(
