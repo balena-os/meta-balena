@@ -309,6 +309,24 @@ module.exports = {
 			`Device ${this.link} should be reachable over local SSH connection`
 		)
 
+		await test.resolves( 
+			systemd.waitForServiceState('balena', 'active', this.link),
+			'balena Engine should be running and healthy'
+		)
+		
+		// we want to waitUntil here as the supervisor may take some time to come online.
+		await test.resolves(
+			this.utils.waitUntil(async () => {
+				let healthy = await this.worker.executeCommandInHostOS(
+				`curl --max-time 10 "localhost:48484/v1/healthy"`,
+				this.link
+				)
+				return (healthy === 'OK')
+			}, true, 120, 250),
+			'Supervisor should be running and healthy'
+		)
+
+		
 		// Retrieving journalctl logs: register teardown after device is reachable
 		this.suite.teardown.register(async () => {
 			await this.context
