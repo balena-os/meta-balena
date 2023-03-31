@@ -1,5 +1,4 @@
 name: Flowzone
-
 on:
   pull_request:
     types: [opened, synchronize, closed]
@@ -13,11 +12,10 @@ on:
       - "main"
       - "master"
       - '[0-9]+.[0-9]+.x'
-
 jobs:
   flowzone:
     name: Flowzone
-    uses: product-os/flowzone/.github/workflows/flowzone.yml@master
+    uses: product-os/flowzone/.github/workflows/flowzone.yml@kyle/wiat-for-required # 4577413401-1
     # prevent duplicate workflow executions for pull_request and pull_request_target
     if: |
       (
