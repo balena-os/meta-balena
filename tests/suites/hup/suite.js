@@ -159,15 +159,17 @@ const initDUT = async (that, test, target) => {
 		that.link,
 	);
 
-	test.comment(`Waiting for DUT to be reachable`);
-	await that.utils.waitUntil(async () => {
-		return (
-			(await that.worker.executeCommandInHostOS(
-				'[[ -f /etc/hostname ]] && echo pass || echo fail',
-				target,
-			)) === 'pass'
-		);
-	}, true);
+	await test.resolves(
+		that.utils.waitUntil(async () => {
+			return (
+				(await that.worker.executeCommandInHostOS(
+					'[[ -f /etc/hostname ]] && echo pass || echo fail',
+					target,
+				)) === 'pass'
+			);
+		}, true),
+		`Device ${that.link} should be reachable over local SSH connection`
+	)
 	test.comment(`DUT flashed`);
 
 	// Retrieving journalctl logs
