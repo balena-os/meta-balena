@@ -90,7 +90,7 @@ module.exports = {
       waitForServiceState: async function (serviceName, state, target) {
         return utils.waitUntil(
           async () => {
-            return this.cloud
+            return this.worker
               .executeCommandInHostOS(
                 `systemctl is-active ${serviceName} || true`,
                 target,
@@ -290,6 +290,23 @@ module.exports = {
 				return (hostname === this.link.split('.')[0])
 			}, true),
 			`Device ${this.link} be reachable over local SSH connection`
+		)
+
+    await test.resolves( 
+			this.waitForServiceState('balena', 'active', this.link),
+			'balena Engine should be running and healthy'
+		)
+		
+		// we want to waitUntil here as the supervisor may take some time to come online.
+		await test.resolves(
+			this.utils.waitUntil(async () => {
+				let healthy = await this.worker.executeCommandInHostOS(
+				`curl --max-time 10 "localhost:48484/v1/healthy"`,
+				this.link
+				)
+				return (healthy === 'OK')
+			}, true, 120, 250),
+			'Supervisor should be running and healthy'
 		)
 
     // Retrieving journalctl logs: register teardown after device is reachable
