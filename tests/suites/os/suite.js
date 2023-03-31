@@ -298,17 +298,16 @@ module.exports = {
 			this.link,
 		);
 
-		this.log('Waiting for device to be reachable');
-		await this.utils.waitUntil(async () => {
-			this.log("Trying to ssh into device");
-			let hostname = await this.context
-			.get()
-			.worker.executeCommandInHostOS(
-			  "cat /etc/hostname",
-			  this.link
-			)
-			return (hostname === this.link.split('.')[0])
-		}, true);
+		await test.resolves(
+			this.utils.waitUntil(async () => {
+				let hostname = await this.worker.executeCommandInHostOS(
+				"cat /etc/hostname",
+				this.link
+				)
+				return (hostname === this.link.split('.')[0])
+			}, true),
+			`Device ${this.link} should be reachable over local SSH connection`
+		)
 
 		// Retrieving journalctl logs: register teardown after device is reachable
 		this.suite.teardown.register(async () => {
