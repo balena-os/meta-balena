@@ -5,6 +5,7 @@
 
 # Handle apps.json existence
 # Keep this before computing SUPERVISOR_CONTAINER_IMAGE_ID
+# TEST
 APPSJSON=/mnt/data/apps.json
 if [ ! -f "$APPSJSON" ]; then
     if [ -d "$APPSJSON" ]; then

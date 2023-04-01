@@ -76,7 +76,8 @@ api_fetch_supervisor_image() {
 
 do_install[network] = "1"
 do_install () {
-	SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
+	# SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
+	SUPERVISOR_IMAGE="registry2.balena-cloud.com/v2/0edbb4c97859339a70f9355edf16eb1c"
 	if [ -z "${SUPERVISOR_IMAGE}" ] || [ "${SUPERVISOR_IMAGE}" = "null" ]; then
 		bbfatal "Could not retrieve supervisor image for version ${SUPERVISOR_VERSION}"
 	fi
