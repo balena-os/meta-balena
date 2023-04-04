@@ -14,10 +14,10 @@ prepare_run() {
     if ! mount -t tmpfs -o "nosuid,nodev,strictatime,mode=0755" tmpfs /run; then
         warn "Couldn't mount /run so initramfs logs will not be persistent."
     fi
-    mkdir -m 0755 /run/initramfs
+    mkdir -m 0755 /run/log
 
     # shellcheck disable=SC2154
-    export INITRAMFS_LOGFILE="/run/initramfs/initramfs.debug"
+    export INITRAMFS_LOGFILE="/run/log/initramfs.debug"
     if [ -z "$bootparam_shell" ] && [ -z "${bootparam_shell_debug}" ]; then
         # Export stdout and stderr to file
         exec >"${INITRAMFS_LOGFILE}" 2>&1
