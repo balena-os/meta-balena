@@ -1,0 +1,26 @@
+From 720c029b9ab3aef3e14632f1ba7b9ed3b8ed6d7c Mon Sep 17 00:00:00 2001
+From: Joseph Kogut <joseph@balena.io>
+Date: Mon, 3 Apr 2023 14:42:48 -0700
+Subject: [PATCH 1/1] execute systemd-bootchart instead of init
+
+Signed-off-by: Joseph Kogut <joseph@balena.io>
+---
+ cmd/mobynit/main.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmd/mobynit/main.go b/cmd/mobynit/main.go
+index 94c1c20..8aa54db 100644
+--- a/cmd/mobynit/main.go
++++ b/cmd/mobynit/main.go
+@@ -220,7 +220,7 @@ func main() {
+ 		log.Fatal(err)
+ 	}
+ 
+-	if err := syscall.Exec("/sbin/init", os.Args, os.Environ()); err != nil {
++	if err := syscall.Exec("/lib/systemd/systemd-bootchart", os.Args, os.Environ()); err != nil {
+ 		log.Fatalln("error executing init:", err)
+ 	}
+ }
+-- 
+2.40.0
+

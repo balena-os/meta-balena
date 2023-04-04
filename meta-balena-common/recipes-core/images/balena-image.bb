@@ -40,6 +40,9 @@ IMAGE_INSTALL = " \
 # add packages for LUKS operations if necessary
 IMAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup lvm2-udevrules tpm2-tools libtss2-tcti-device',d)}"
 
+# boot profiling
+IMAGE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'systemd-bootchart', '', d)}"
+
 generate_rootfs_fingerprints () {
     # Generate fingerprints file for root filesystem
     # We exclude some entries that are bind mounted to state partition

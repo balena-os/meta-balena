@@ -14,6 +14,9 @@ SRCREV="0423d69ee52970bb8eeae46da8f1d5cf7a8c948c"
 
 S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
 
+# switch init to systemd-bootchart w/ osdev
+SRC_URI:append = "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', ' file://0001-execute-systemd-bootchart-instead-of-init.patch', '', d)}"
+
 do_compile[network] = "1"
 do_compile() {
     cd ${S}

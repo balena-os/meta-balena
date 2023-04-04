@@ -152,6 +152,7 @@ BALENA_CONFIGS ?= " \
     ${FIRMWARE_COMPRESS} \
     ${WIREGUARD} \
     ${KERNEL_ZSTD} \
+    ${BOOTCHART} \
     "
 
 #
@@ -230,6 +231,12 @@ BALENA_CONFIGS[wireguard] = " \
 KERNEL_ZSTD = "${@configure_from_version("5.9", "kernel_zstd", "", d)}"
 BALENA_CONFIGS[kernel_zstd] = " \
     CONFIG_KERNEL_ZSTD=y \
+"
+
+BOOTCHART = "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'bootchart', '', d)}"
+BALENA_CONFIGS[bootchart] = " \
+    CONFIG_SCHEDSTATS=y \
+    CONFIG_SCHED_DEBUG=y \
 "
 
 BALENA_CONFIGS[aufs] = " \
