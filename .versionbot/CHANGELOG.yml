@@ -1,4 +1,108 @@
 - commits:
+    - subject: Update tests/leviathan digest to 5785e44
+      hash: 47268fc3f69a0dc59d11d0ab1e12e7c229c5af24
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Deprecate worker release env var (again)
+              hash: cb7f600321dc11cc7481bc3ffd111155f763e621
+              body: |
+                This env var breaks Renovate parsing, and it is
+                no longer used by Jenkins or leviathan-worker e2e tests.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.24.1
+          title: ""
+          date: 2023-04-04T21:10:17.519Z
+        - commits:
+            - subject: "minor: Add Leviathan Test Helpers"
+              hash: f3f2752cb25fca9ad851de96cc246916f84012ce
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.24.0
+          title: ""
+          date: 2023-04-03T06:44:28.297Z
+        - commits:
+            - subject: "patch: Output final-result in the end"
+              hash: eacad86187f72586ddbcd36041f619fb40c5b7ad
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.23.6
+          title: ""
+          date: 2023-03-31T13:18:07.076Z
+        - commits:
+            - subject: update default worker version
+              hash: 5b659e8a3d0921f01f1cf493373a97f909d60d26
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.23.5
+          title: ""
+          date: 2023-03-31T12:49:09.258Z
+        - commits:
+            - subject: "swtpm: store state in tmpfs"
+              hash: 25460508d5477dd27a4743b4684e97e6d0f8529a
+              body: >
+                swtpm stores state in the directory specified in the --tpmstate argument
+
+
+                If the same state directory/files are used for multiple installations,
+
+                the available space can be filled, and the installer will fail with the
+
+                error "insufficient space for NV allocation".
+
+
+                Move swtpm state to tmpfs to create new state files every run.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.23.4
+          title: ""
+          date: 2023-03-29T22:31:39.865Z
+        - commits:
+            - subject: Update core/contracts digest to fa51fae
+              hash: 10e156b48610903182257493aea812f8d8893b84
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.23.3
+          title: ""
+          date: 2023-03-29T20:32:23.397Z
+  version: 2.113.34
+  title: ""
+  date: 2023-04-04T23:15:50.826Z
+- commits:
     - subject: Update tests/leviathan digest to e5dcbae
       hash: a536523b56cbbfc50b9db7e356cd142bb674e9fd
       body: Update tests/leviathan
