@@ -58,6 +58,72 @@ run_hooks_from_inactive () {
 EOF
 }
 
+secureboot_apply_dbx() {
+	EFI_DIR="/sys/firmware/efi"
+	EFIVARS_DIR="${EFI_DIR}/efivars"
+	EFIVAR_RE="s,^[^ ]*  *\([^ ]*\) .*$,\1,"
+	SECUREBOOT_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
+	DBX_SYSFS_FILE="dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f"
+	PENDING_DBX_DIR="/mnt/data/balenahup/pending-dbx"
+	CURRENT_DB_ESL="/resin-boot/balena-keys/db.esl"
+
+	if [ ! -d "${EFI_DIR}" ]; then
+		# Not an EFI system, nothing to do
+		return
+	fi
+
+	SECUREBOOT_VAL=$(efivar -p -n "${SECUREBOOT_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
+	if [ "${SECUREBOOT_VAL}" -ne 1 ]; then
+		# Secure boot disabled, nothing to do
+		return
+	fi
+
+	if [ ! -d "${PENDING_DBX_DIR}" ]; then
+		# Unexpected state - the directory should have been created by HUP
+		# With it missing, there is nothing we can do
+		echo "Rollback: Directory '${PENDING_DBX_DIR}' should exist but it does not"
+		return
+	fi
+
+	echo "Rollback: Applying pending DBX updates to prevent formerly allowed OS versions to boot"
+	TMPDIR=$(mktemp -d)
+	sig-list-to-certs "${CURRENT_DB_ESL}" "${TMPDIR}/current"
+	# When dbx is empty the immutable attribute is not set, chattr can safely fail
+	chattr -i "${EFIVARS_DIR}/${DBX_SYSFS_FILE}" || :
+	for PENDING_DBX_FILE in "${PENDING_DBX_DIR}/dbx-"*.auth; do
+		if [ "${PENDING_DBX_FILE}" = "${PENDING_DBX_DIR}/dbx-*.auth" ]; then
+			# Nothing matched the glob
+			break
+		fi
+
+		# Check whether any of the hashes we are about to blacklist overlap
+		# with the hashes of the new OS. If so, do not apply the update yet,
+		# otherwise the system would not be bootable on reboot. Leave the update
+		# pending and it will be applied once the hashes change.
+		OVERLAP=0
+		for PENDING_HASH in "${PENDING_DBX_FILE}-"*.hash; do
+			for CURRENT_HASH in "${TMPDIR}/current-"*.hash; do
+				if cmp -s "${PENDING_HASH}" "${CURRENT_HASH}"; then
+					OVERLAP=1
+				fi
+			done
+		done
+		if [ "${OVERLAP}" = "1" ]; then
+			echo "Rollback: Not applying ${PENDING_DBX_FILE} - hashes overlap"
+			continue
+		fi
+
+		echo "Rollback: Applying ${PENDING_DBX_FILE}"
+		if efi-updatevar -a -f "${PENDING_DBX_FILE}" dbx; then
+			rm -f "${PENDING_DBX_FILE}"*
+		else
+			echo "Rollback: Failed to apply ${PENDING_DBX_FILE}, keeping it pending"
+		fi
+	done
+	chattr +i "${EFIVARS_DIR}/${DBX_SYSFS_FILE}" || :
+	rm -rf "${TMPDIR}"
+}
+
 echo "Rollback: Health sanity check"
 
 if [ "$resin_root_part" = "$current_part_idx" ]; then
@@ -88,6 +154,7 @@ if [ "$resin_root_part" = "$current_part_idx" ]; then
 	    rollback-stop || true
 	    echo "Rollback: Running commit hooks"
 	    hostapp-update-hooks-v2 --commit || true
+	    secureboot_apply_dbx
 	else
 		echo "Rollback: Nothing to do. Looks like we are in ROLLBACK_HEALTHY state. Why is script running?"
 		rollback-stop || true
