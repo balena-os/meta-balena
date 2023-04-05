@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.113.35
+## (2023-04-05)
+
+
+<details>
+<summary> Update balena-engine to v20.10.34 [Renovate Bot] </summary>
+
+> ## balena-engine-20.10.34
+> ### (2023-04-05)
+> 
+> * Update librsync-go to v0.8.5, circbuf to v0.1.3 [Leandro Motta Barros]
+> 
+
+</details>
+
 # v2.113.34
 ## (2023-04-04)
 

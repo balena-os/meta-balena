@@ -1,4 +1,39 @@
 - commits:
+    - subject: Update balena-engine to v20.10.34
+      hash: 5400eacc4003ff9fdf7d9d6e8b60ffb96dde9d87
+      body: |
+        Update balena-engine from 20.10.33 to 20.10.34
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update librsync-go to v0.8.5, circbuf to v0.1.3
+              hash: a7c917a97048314e956d7264e97598465f88c1c7
+              body: >
+                Notable improvements these new versions bring:
+
+
+                * Optimized code path for generating deltas with blocks that are
+                  power-of-two-sized.
+                * Avoid allocating unbounded amounts of memory when the target differs
+                  completely from the source.
+                * Several bugfixes in edge cases that shall not affect balenaEngine.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.34
+          title: ""
+          date: 2023-04-05T13:06:06.674Z
+  version: 2.113.35
+  title: ""
+  date: 2023-04-05T15:18:23.115Z
+- commits:
     - subject: Update tests/leviathan digest to 5785e44
       hash: 47268fc3f69a0dc59d11d0ab1e12e7c229c5af24
       body: Update tests/leviathan
