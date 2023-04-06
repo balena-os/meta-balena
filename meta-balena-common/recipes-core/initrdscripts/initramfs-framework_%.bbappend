@@ -19,7 +19,7 @@ SRC_URI:append = " \
 
 do_install:append() {
     install -m 0755 ${WORKDIR}/console_null_workaround ${D}/init.d/000-console_null_workaround
-    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
+    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/00-prepare
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
@@ -80,7 +80,7 @@ FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY:initramfs-module-prepare = "Prepare initramfs console"
 RDEPENDS:initramfs-module-prepare = "${PN}-base os-helpers-logging os-helpers-fs"
-FILES:initramfs-module-prepare = "/init.d/70-prepare"
+FILES:initramfs-module-prepare = "/init.d/00-prepare"
 
 SUMMARY:initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
 RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
