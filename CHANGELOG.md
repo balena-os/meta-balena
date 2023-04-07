@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.114.1
+## (2023-04-07)
+
+
+<details>
+<summary> Update balena-supervisor to v14.10.2 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.10.2
+> ### (2023-04-07)
+> 
+> * backends: Add Jetson Orin NX custom device-tree support [Alexandru Costache]
+> 
+
+</details>
+
 # v2.114.0
 ## (2023-04-07)
 

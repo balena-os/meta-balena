@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update balena-supervisor to v14.10.2
+      hash: 822ccaddeb62a8cc732f6422566f1f3ec129c3a0
+      body: |
+        Update balena-supervisor from 14.10.1 to 14.10.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "backends: Add Jetson Orin NX custom device-tree support"
+              hash: 6b67db98e54cd7756d7e31d9676d31ab305c4d56
+              body: ""
+              footer:
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Alexandru Costache
+              nested: []
+          version: balena-supervisor-14.10.2
+          title: ""
+          date: 2023-04-07T18:35:17.559Z
+  version: 2.114.1
+  title: ""
+  date: 2023-04-07T21:27:08.879Z
+- commits:
     - subject: Update balena-supervisor to v14.10.1
       hash: 0bb69e86e973bf449539a942dec3ac82660ed37a
       body: |
