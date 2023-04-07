@@ -12,6 +12,9 @@ const { join, basename } = require('path');
 const { homedir } = require('os');
 const util = require('util');
 const zlib = require('zlib');
+const { Worker, BalenaOS, Sdk, utils } = require('@balena/leviathan-test-helpers');
+const { archiver } = require('@balena/leviathan-test-helpers');
+
 
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
@@ -134,7 +137,7 @@ const doHUP = async (that, test, mode, target) => {
 
 	const hupLogPath = join(that.suite.options.tmpdir, `hup.log`);
 	fs.writeFileSync(hupLogPath, hupLog);
-	await that.archiver.add(that.id, hupLogPath);
+	await archiver.add(that.id, hupLogPath);
 
 	test.comment(`Finished HUP`);
 };
@@ -209,15 +212,15 @@ module.exports = {
 	title: 'Hostapp update suite',
 
 	run: async function () {
-		const Worker = this.require('common/worker');
-		const BalenaOS = this.require('components/os/balenaos');
-		const Balena = this.require('components/balena/sdk');
+		// const Worker = this.require('common/worker');
+		// const BalenaOS = this.require('components/os/balenaos');
+		// const Balena = this.require('components/balena/sdk');
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
 		this.suite.context.set({
-			utils: this.require('common/utils'),
-			sdk: new Balena(this.suite.options.balena.apiUrl, this.getLogger()),
+			utils: utils,
+			sdk: new Sdk(this.suite.options.balena.apiUrl, this.getLogger()),
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,

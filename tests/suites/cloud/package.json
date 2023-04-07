@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@balena/leviathan-test-helpers": "1.4.1",
     "balena-image-fs": "^7.0.6",
     "balena-sdk": "^15.34.1",
     "dockerode": "^3.2.1",

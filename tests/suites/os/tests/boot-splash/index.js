@@ -18,7 +18,7 @@
 
 const fs = require('fs-extra');
 const { decode } = require('jpeg-js');
-
+const { archiver } = require('@balena/leviathan-test-helpers');
 const BOOT_SPLASH = `${__dirname}/assets/boot-splash.jpg`;
 
 module.exports = {
@@ -59,7 +59,7 @@ module.exports = {
 		{
 			title: 'Reboot test',
 			run: async function(test) {
-				const { hammingDistance, blockhash } = this.require('/common/graphics');
+				const { hammingDistance, blockhash } = require('@balena/leviathan-test-helpers');
 
 				test.comment(`Calculating reference hash`);
 				// Pull in the reference image
@@ -119,7 +119,7 @@ module.exports = {
 				}
 
 				test.comment(`Storing captured frames...`);
-				await this.archiver.add(this.id, `/tmp/capture`);
+				await archiver.add(this.id, `/tmp/capture`);
 				test.comment(`Frames stored`);
 
 				test.true(

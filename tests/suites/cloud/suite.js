@@ -11,6 +11,7 @@ const { join } = require("path");
 const { homedir } = require("os");
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const { Worker, BalenaOS, Sdk, utils, preload } = require('@balena/leviathan-test-helpers');
 
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
@@ -61,26 +62,26 @@ const enableSerialConsole = async (imagePath) => {
 module.exports = {
   title: "Managed BalenaOS release suite",
   run: async function () {
-    const Worker = this.require("common/worker");
-    const BalenaOS = this.require("components/os/balenaos");
-    const Balena = this.require("components/balena/sdk");
+    // const Worker = this.require("common/worker");
+    // const BalenaOS = this.require("components/os/balenaos");
+    // const Balena = this.require("components/balena/sdk");
     // used for `preload`
-    const CLI = this.require("components/balena/cli");
-    const utils = this.require('common/utils');
+    // const CLI = this.require("components/balena/cli");
+    // const utils = this.require('common/utils');
 
     await fse.ensureDir(this.suite.options.tmpdir);
 
     // add objects to the context, so that they can be used across all the tests in this suite
     this.suite.context.set({
-      cloud: new Balena(this.suite.options.balena.apiUrl, this.getLogger()),
+      cloud: new Sdk(this.suite.options.balena.apiUrl, this.getLogger()),
       balena: {
         name: this.suite.options.id,
         organization: this.suite.options.balena.organization,
         sshKey: { label: this.suite.options.id },
       },
-      cli: new CLI(this.suite.options.balena.apiUrl, this.getLogger()),
+      // cli: preload,
       sshKeyPath: join(homedir(), "id"),
-      utils: this.require("common/utils"),
+      utils: utils,
       worker: new Worker(
         this.suite.deviceType.slug,
         this.getLogger(),
@@ -250,7 +251,7 @@ module.exports = {
     // preload image with the single container application
     this.log(`Device uuid should be ${this.balena.uuid}`)
     await this.os.configure();
-    await this.cli.preload(this.os.image.path, {
+    await preload(this.os.image.path, {
       app: this.balena.application,
       commit: initialCommit,
       pin: true,
