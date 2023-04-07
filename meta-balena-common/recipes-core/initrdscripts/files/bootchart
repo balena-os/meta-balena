@@ -15,5 +15,11 @@ bootchart_run() {
 	# it
 	#
 	# https://freedesktop.org/wiki/Software/systemd/RootStorageDaemons/
+	[ -n "${bootparam_bootchart_frequency}" ] \
+		&& sed -i "/Frequency=/c\Frequency=${bootparam_bootchart_frequency}" \
+		/etc/systemd/bootchart.conf
+	[ -n "${bootparam_bootchart_samples}" ] \
+		&& sed -i "/Samples=/c\Samples=${bootparam_bootchart_samples}" \
+		/etc/systemd/bootchart.conf
 	( exec /lib/systemd/systemd-bootchart ) &
 }
