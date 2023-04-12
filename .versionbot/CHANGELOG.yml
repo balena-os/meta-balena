@@ -1,4 +1,63 @@
 - commits:
+    - subject: Update balena-supervisor to v14.10.4
+      hash: 8dc882977526603790280a7550985df3bce4db09
+      body: |
+        Update balena-supervisor from 14.10.2 to 14.10.4
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Log uncaught promise exceptions on the app entry
+              hash: 676464142690da2e36a810cb35e4ea4d0d751636
+              body: >
+                Node 15 [changed the way it treats unhandled promise
+                rejections](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V15.md#throw-on-unhandled-rejections---33021)
+                from a warning to a throw.
+
+                For this reason errors like a corrupt migration directory, that happens when trying to
+
+                roll back to a previous supervisor version were no longer showing a
+
+                message but dumping the full minimized code into the journal logs.
+
+
+                This PR adds a catchall on app.ts to log the exception and throw an exit
+
+                code of 1.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.10.4
+          title: ""
+          date: 2023-04-10T18:15:41.878Z
+        - commits:
+            - subject: Fix assertion error in restart-service
+              hash: b9e1464d96824f5332c71324d753d94ddbdecf90
+              body: >
+                From:
+                https://github.com/balena-os/balena-supervisor/pull/2153/commits/c0b4fafe842115933b1da9b4d68e601a19c3e4eb
+
+                Restart-service checks that both services have restarted in its test assertion, which is
+
+                incorrect as restart-service should only restart one service.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.10.3
+          title: ""
+          date: 2023-04-10T15:17:58.539Z
+  version: 2.114.3
+  title: ""
+  date: 2023-04-12T13:45:48.569Z
+- commits:
     - subject: "tests: cloud: convert ssh tunneling to test"
       hash: 248e90fc904bf6ebd5db30d9bb20b354292acf7f
       body: ""
