@@ -293,23 +293,42 @@ module.exports = {
 		await this.worker.addSSHKey(this.sshKeyPath);
 
 		// create tunnels
-		this.log('Creating SSH tunnels to DUT');
-		await this.worker.createSSHTunnels(
-			this.link,
-		);
+		await test.resolves(
+			this.worker.createSSHTunnels(
+				this.link,
+			),
+			`Should detect ${this.link} on local network and establish tunnel`
+		)
 
-		this.log('Waiting for device to be reachable');
-		await this.utils.waitUntil(async () => {
-			this.log("Trying to ssh into device");
-			let hostname = await this.context
-			.get()
-			.worker.executeCommandInHostOS(
-			  "cat /etc/hostname",
-			  this.link
-			)
-			return (hostname === this.link.split('.')[0])
-		}, true);
+		await test.resolves(
+			this.utils.waitUntil(async () => {
+				let hostname = await this.worker.executeCommandInHostOS(
+				"cat /etc/hostname",
+				this.link
+				)
+				return (hostname === this.link.split('.')[0])
+			}, true),
+			`Device ${this.link} should be reachable over local SSH connection`
+		)
 
+		await test.resolves( 
+			systemd.waitForServiceState('balena', 'active', this.link),
+			'balena Engine should be running and healthy'
+		)
+		
+		// we want to waitUntil here as the supervisor may take some time to come online.
+		await test.resolves(
+			this.utils.waitUntil(async () => {
+				let healthy = await this.worker.executeCommandInHostOS(
+				`curl --max-time 10 "localhost:48484/v1/healthy"`,
+				this.link
+				)
+				return (healthy === 'OK')
+			}, true, 120, 250),
+			'Supervisor should be running and healthy'
+		)
+
+		
 		// Retrieving journalctl logs: register teardown after device is reachable
 		this.suite.teardown.register(async () => {
 			await this.context

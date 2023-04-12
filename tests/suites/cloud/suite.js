@@ -60,7 +60,7 @@ const enableSerialConsole = async (imagePath) => {
 
 module.exports = {
   title: "Managed BalenaOS release suite",
-  run: async function () {
+  run: async function (test) {
     const Worker = this.require("common/worker");
     const BalenaOS = this.require("components/os/balenaos");
     const Balena = this.require("components/balena/sdk");
@@ -90,7 +90,7 @@ module.exports = {
       waitForServiceState: async function (serviceName, state, target) {
         return utils.waitUntil(
           async () => {
-            return this.cloud
+            return this.worker
               .executeCommandInHostOS(
                 `systemctl is-active ${serviceName} || true`,
                 target,
@@ -275,22 +275,41 @@ module.exports = {
     await this.worker.on();
 
     // create tunnels
-    this.log('Creating SSH tunnels to DUT');
-    await this.worker.createSSHTunnels(
-      this.link
-    );
+		await test.resolves(
+			this.worker.createSSHTunnels(
+				this.link,
+			),
+			`Should detect ${this.link} on local network and establish tunnel`
+		)
 
     this.log('Waiting for device to be reachable');
-    await this.utils.waitUntil(async () => {
-      this.log("Trying to ssh into device");
-      let hostname = await this.context
-        .get()
-        .worker.executeCommandInHostOS(
-          "cat /etc/hostname",
-          this.link
-        )
-      return (hostname === `${this.balena.uuid.slice(0, 7)}`)
-    }, true, 60, 5 * 1000);
+    await test.resolves(
+			this.utils.waitUntil(async () => {
+				let hostname = await this.worker.executeCommandInHostOS(
+				"cat /etc/hostname",
+				this.link
+				)
+				return (hostname === this.link.split('.')[0])
+			}, true),
+			`Device ${this.link} be reachable over local SSH connection`
+		)
+
+    await test.resolves( 
+			this.waitForServiceState('balena', 'active', this.link),
+			'balena Engine should be running and healthy'
+		)
+		
+		// we want to waitUntil here as the supervisor may take some time to come online.
+		await test.resolves(
+			this.utils.waitUntil(async () => {
+				let healthy = await this.worker.executeCommandInHostOS(
+				`curl --max-time 10 "localhost:48484/v1/healthy"`,
+				this.link
+				)
+				return (healthy === 'OK')
+			}, true, 120, 250),
+			'Supervisor should be running and healthy'
+		)
 
     // Retrieving journalctl logs: register teardown after device is reachable
     this.suite.teardown.register(async () => {
