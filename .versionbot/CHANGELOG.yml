@@ -1,4 +1,88 @@
 - commits:
+    - subject: "tests: cloud: convert ssh tunneling to test"
+      hash: 248e90fc904bf6ebd5db30d9bb20b354292acf7f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: hup: convert ssh tunneling to test"
+      hash: 7e5651325fc5350a6380f0725149223c93e2e48c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: os: convert ssh tunneling to test"
+      hash: cbf245f22c4726a8a89038c683efe0f0ae1e3f3f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: cloud: check engine+sv ok in suite"
+      hash: 6a3f7954003491513fd4e32d9f6cff2866dad202
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: os: check engine+sv ok in suite"
+      hash: 2d312e67a8d347083e3f036fcb488a4118b37f87
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests:cloud: convert initial SSH attempt into test"
+      hash: e14af621a3224979c5b50b36476a814ea4c5fbe1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: hup: convert initial SSH attempt into test"
+      hash: 6aa5127d328c798bc8d36f34fc96dba3dd845506
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: os: convert initial SSH attempt into test"
+      hash: 42de079f6adc8e2bf8bd1aaf1b8e36e7dca0056c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.114.2
+  title: ""
+  date: 2023-04-12T08:58:35.753Z
+- commits:
     - subject: Update balena-supervisor to v14.10.2
       hash: 822ccaddeb62a8cc732f6422566f1f3ec129c3a0
       body: |
