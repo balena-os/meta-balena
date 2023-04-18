@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v2.114.4
+## (2023-04-18)
+
+* initedscripts: recovery: do not use strings for timeout [Alex Gonzalez]
+* resin-init-flasher: limit boot device identification to booting disk [Alex Gonzalez]
+* resin-init-flasher: add verbose copy of migration log [Alex Gonzalez]
+* resin-init-flasher: fix EFI installation for multiple disks [Alex Gonzalez]
+* initrdscripts: migrate: correctly identify boot device [Alex Gonzalez]
+* distro: balena-os: update GRUB key id for signature [Alex Gonzalez]
+
 # v2.114.3
 ## (2023-04-12)
 

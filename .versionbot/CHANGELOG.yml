@@ -1,4 +1,86 @@
 - commits:
+    - subject: "initedscripts: recovery: do not use strings for timeout"
+      hash: c17da3802213251c69ba8a99ce6a8a63b358f022
+      body: |
+        Remove the `m` suffix to the timeout as they are supposed to be compared
+        as integer numbers.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: limit boot device identification to booting disk"
+      hash: 5ee9a12075c3c0a11455ccb342ce4499916395be
+      body: |
+        The installer is to copy configuration files into the boot partition on
+        the installer disk - searching by label needs to be restriced to the
+        booting disk to avoid clashes if there are other disks with matching
+        labels present.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: add verbose copy of migration log"
+      hash: 8fe29890b6e3c2caca1c603f1ecbe046d9cd1fc1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: fix EFI installation for multiple disks"
+      hash: 69459a964f62adbe4b9661b718994391c4a78363
+      body: |
+        Search for the installation disk on the same device the system is being
+        installed on. This avoids problems when there are more than one disk
+        with balena/resin labelling.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: migrate: correctly identify boot device"
+      hash: 27fd9e05d16d60a7340a16abcda5e93fd1fdb199
+      body: >
+        The internal target device to program is not always the device the system
+
+        is booting from. Make sure the `flash-boot` partition search is done
+
+        on the booting device.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "distro: balena-os: update GRUB key id for signature"
+      hash: f4242aa560e869892a7289ac8523bed055feffe3
+      body: |
+        Update the default Grub key id so it matches the currently configured
+        key. This avoids having to configure this in the build jobs.
+
+        [skip ci]
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.114.4
+  title: ""
+  date: 2023-04-18T12:20:45.009Z
+- commits:
     - subject: Update balena-supervisor to v14.10.4
       hash: 8dc882977526603790280a7550985df3bce4db09
       body: |
