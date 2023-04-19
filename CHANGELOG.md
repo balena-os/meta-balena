@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.5
+## (2023-04-19)
+
+* Ship separate GRUB images for secure boot [Michal Toman]
+
 # v2.114.4
 ## (2023-04-18)
 

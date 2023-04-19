@@ -1,4 +1,27 @@
 - commits:
+    - subject: Ship separate GRUB images for secure boot
+      hash: 1eb49acca051d7c34fa0e48bd673fc764320b2e9
+      body: |
+        Shipping a single image with signature checks enabled will enforce
+        the signatures on non-secure-boot systems as well. GRUB does not have
+        a simple method to check whether secure boot is enabled that could
+        be embedded with the default built-in config.
+
+        With this patch we build two separate images - one enforcing
+        the signatures and the other one not, keeping the original behavior.
+        HUP and flasher both can detect if secure boot is enabled so they
+        put the correct image in place when installing/updating GRUB.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.114.5
+  title: ""
+  date: 2023-04-19T10:14:40.931Z
+- commits:
     - subject: "initedscripts: recovery: do not use strings for timeout"
       hash: c17da3802213251c69ba8a99ce6a8a63b358f022
       body: |
