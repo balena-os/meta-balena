@@ -61,6 +61,25 @@ if [ ! -d /sys/firmware/efi ] ; then
 else
     # Remove legacy grub
     rm -rf "$BALENA_BOOT_MOUNTPOINT/grub" || true
+
+    # Put the secure boot GRUB variant in place or remove it when applicable
+    EFI_BOOT_DIR="${BALENA_BOOT_MOUNTPOINT}/EFI/BOOT/"
+    for EFI_BINARY in "${EFI_BOOT_DIR}/"*.efi; do
+        if [ "${EFI_BINARY}" = "${EFI_BOOT_DIR}/*.efi" ]; then
+            # Nothing matched the glob
+            break
+        fi
+
+        EFI_BINARY_SECUREBOOT="${EFI_BINARY}.secureboot"
+        if [ "${type}" = "crypt" ]; then
+            # If this fails it is a fatal error - the secure boot variant
+            # must be in place when LUKS is enabled
+            mv "${EFI_BINARY_SECUREBOOT}" "${EFI_BINARY}"
+        else
+            # This can safely fail if the secure boot variant does not exist
+            rm -f "${EFI_BINARY_SECUREBOOT}" || :
+        fi
+    done
 fi
 
 grub_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub.cfg)

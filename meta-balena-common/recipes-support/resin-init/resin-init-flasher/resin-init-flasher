@@ -498,6 +498,27 @@ if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_BOOTLOADER_CONFIG}" ];
         cp $EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$BALENA_BOOTLOADER_CONFIG $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 fi
 
+# Put the GRUB EFI binary in place or remove it when applicable
+if [ "${EFI}" = "1" ]; then
+    INTERNAL_BOOTLOADER_DIR=$(dirname "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}")
+    for EFI_BINARY in "${INTERNAL_BOOTLOADER_DIR}/"*.efi; do
+        if [ "${EFI_BINARY}" = "${INTERNAL_BOOTLOADER_DIR}/*.efi" ]; then
+            # Nothing matched the glob
+            break
+        fi
+
+        EFI_BINARY_SECUREBOOT="${EFI_BINARY}.secureboot"
+        if [ "${LUKS}" = "1" ]; then
+            # If this fails it is a fatal error - the secure boot variant
+            # must be in place when LUKS is enabled
+            mv "${EFI_BINARY_SECUREBOOT}" "${EFI_BINARY}"
+        else
+            # This can safely fail if the secure boot variant does not exist
+            rm -f "${EFI_BINARY_SECUREBOOT}" || :
+        fi
+    done
+fi
+
 # Give a chance for the device to register
 STARTTIME=$(date +%s)
 ENDTIME="$STARTTIME"

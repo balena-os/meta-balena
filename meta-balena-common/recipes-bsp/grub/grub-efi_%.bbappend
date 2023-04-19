@@ -25,29 +25,28 @@ do_install:append:class-target() {
     rm -rf ${D}${prefix}
 }
 
-# Modules are built into the grub image for speed and simplicity, but DTs still
-# expect the modules directory to exist in ${DEPLOYDIR}, so create it.
 do_deploy:append:class-target() {
+    # Modules are built into the grub image for speed and simplicity, but DTs still
+    # expect the modules directory to exist in ${DEPLOYDIR}, so create it.
     install -d ${DEPLOYDIR}/grub/${GRUB_TARGET}-efi/
-}
-
-do_mkimage() {
-    cd ${B}
 
     if [ -f "${DEPLOY_DIR_IMAGE}/balena-keys/grub.gpg" ]; then
-        GRUB_PUBKEY_ARG="--pubkey ${DEPLOY_DIR_IMAGE}/balena-keys/grub.gpg --disable-shim-lock"
+        install -m 644 ${B}/${GRUB_IMAGE_PREFIX}${GRUB_IMAGE}.secureboot ${DEPLOYDIR}
     fi
+}
 
-    # Search for the grub.cfg on the local boot media by using the
-    # built in cfg file provided via this recipe
-    grub-mkimage -c ../cfg -p ${EFIDIR} -d ./grub-core/ \
-           -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE_PREFIX}${GRUB_IMAGE} \
-           ${GRUB_BUILDIN} ${GRUB_PUBKEY_ARG}
+do_mkimage:append() {
+    PUBKEY_FILE="${DEPLOY_DIR_IMAGE}/balena-keys/grub.gpg"
+    if [ -f "${PUBKEY_FILE}" ]; then
+        grub-mkimage -c ../cfg -p ${EFIDIR} -d ./grub-core/ \
+               -O ${GRUB_TARGET}-efi -o ./${GRUB_IMAGE_PREFIX}${GRUB_IMAGE}.secureboot \
+               ${GRUB_BUILDIN} --pubkey "${PUBKEY_FILE}" --disable-shim-lock
+    fi
 }
 
 do_mkimage[depends] += " \
     balena-keys:do_deploy \
     "
 
-SIGNING_ARTIFACTS = "${B}/${GRUB_IMAGE_PREFIX}${GRUB_IMAGE}"
+SIGNING_ARTIFACTS = "${B}/${GRUB_IMAGE_PREFIX}${GRUB_IMAGE}.secureboot"
 addtask sign_efi after do_mkimage before do_install
