@@ -16,9 +16,9 @@ inherit pkgconfig
 inherit useradd
 
 BALENA_VERSION = "v20.10.34"
-BALENA_BRANCH = "master"
+BALENA_BRANCH = "lmb/libnetwork-sandbox-cleanup"
 
-SRCREV = "5888c560d6623b54e093aa87ab30d952f2eb1963"
+SRCREV = "0217c4fc531a949ee0276e34340ec89b3bb4b951"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
