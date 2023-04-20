@@ -1,4 +1,55 @@
 - commits:
+    - subject: Update db and dbx hashes during HUP when secure boot is enabled
+      hash: 775dc7dba7afe2674dc0ef84e00bb773495d4c98
+      body: |
+        After moving to hashes for authenticating the allowed OS list, we need
+        to update the db variable on each HUP to make sure the new OS
+        will be bootable. After confirming that the update went through,
+        we need to update the dbx variable to make sure the old OS is
+        no longer bootable.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-db-hashes: ship both db and dbx updates"
+      hash: c428010c83fd3a3ca1f4cdc72fc94a90f6be6ee4
+      body: |
+        In order to use hashes we can not use UEFI time-based authentication
+        for updates as this would prevent rollbacks. Instead we ship appendable
+        updates for both db and dbx that HUP can use.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: Use hashes instead of certificates for secure boot image validation
+      hash: c205b247c14cbdd132cb1bb335da2d17fa40caf5
+      body: |
+        This patch changes the validation of bootable images from certificate
+        signatures to a list of allowed hashes of binaries. This only applies
+        on db level, PK and KEK are still certificates.
+
+        The motivation is that certificates expire and we need to be sure
+        that even devices that have been lying on a shelf for several years
+        or whose CMOS battery has died and reset date to 1970-01-01 are still
+        bootable. Using hashes is more aligned with this use-case and also
+        more similar to the approach that embedded SoCs use.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.114.6
+  title: ""
+  date: 2023-04-20T04:15:18.461Z
+- commits:
     - subject: Ship separate GRUB images for secure boot
       hash: 1eb49acca051d7c34fa0e48bd673fc764320b2e9
       body: |
