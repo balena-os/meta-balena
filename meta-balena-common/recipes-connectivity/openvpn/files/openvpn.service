@@ -12,7 +12,7 @@ RestartSec=10s
 OOMScoreAdjust=-1000
 PIDFile=/run/openvpn/openvpn.pid
 ExecStartPre=-@BASE_BINDIR@/sh -c "@BASE_BINDIR@/systemctl is-active --quiet os-config || @BASE_BINDIR@/systemctl start os-config"
-ExecStart=/usr/sbin/openvpn --writepid /run/openvpn/openvpn.pid --cd /etc/openvpn/ --config /etc/openvpn/openvpn.conf --connect-retry 5 120
+ExecStart=/usr/sbin/openvpn --writepid /run/openvpn/openvpn.pid --cd /etc/openvpn/ --config /etc/openvpn/openvpn.conf --connect-retry 5 300
 
 [Install]
 Alias=openvpn-resin.service
