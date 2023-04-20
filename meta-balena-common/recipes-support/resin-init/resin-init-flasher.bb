@@ -15,7 +15,7 @@ inherit allarch systemd
 
 SYSTEMD_SERVICE:${PN} = "resin-init-flasher.service"
 
-DEPENDS += "balena-keys"
+DEPENDS += "${@oe.utils.conditional('SIGN_API','','',' balena-keys',d)}"
 
 RDEPENDS:${PN} = " \
     bash \

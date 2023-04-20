@@ -128,7 +128,6 @@ FIRMWARE_COMPRESSION ?= "0"
 SIGN_API ?= ""
 # Signing keys
 SIGN_GRUB_KEY_ID ?= "2EB29B4CE0132F6337897F5FB8A88D1C62FCC729"
-SIGN_EFI_KEY_ID ?= "balenaos-db"
 SIGN_KMOD_KEY_ID ?= "balenaos-kmod"
 SIGN_EFI_PK_KEY_ID ?= "balenaos-pk"
 SIGN_EFI_KEK_KEY_ID ?= "balenaos-kek"

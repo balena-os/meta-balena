@@ -42,7 +42,7 @@ do_deploy() {
 addtask deploy after do_install before do_build
 
 PACKAGES =+ "${PN}-utils"
-FILES:${PN}-utils = "/usr/bin/efi-updatevar /usr/bin/efi-readvar"
+FILES:${PN}-utils = "/usr/bin/efi-updatevar /usr/bin/efi-readvar /usr/bin/sig-list-to-certs"
 
 PACKAGES =+ "${PN}-lockdown"
 FILES:${PN}-lockdown = "/boot/efi/EFI/BOOT/LockDown.efi"

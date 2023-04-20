@@ -1,7 +1,5 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/grub-efi:"
 
-inherit sign-efi
-
 SRC_URI += " \
     file://0001-Add-dummyterm-module.patch \
     "
@@ -44,9 +42,4 @@ do_mkimage:append() {
     fi
 }
 
-do_mkimage[depends] += " \
-    balena-keys:do_deploy \
-    "
-
-SIGNING_ARTIFACTS = "${B}/${GRUB_IMAGE_PREFIX}${GRUB_IMAGE}.secureboot"
-addtask sign_efi after do_mkimage before do_install
+do_mkimage[depends] += "${@oe.utils.conditional('SIGN_API','','',' balena-keys:do_deploy',d)}"

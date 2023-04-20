@@ -20,7 +20,7 @@ do_sign_efi () {
         fi
         REQUEST_FILE=$(mktemp)
         RESPONSE_FILE=$(mktemp)
-        echo "{\"key_id\": \"${SIGN_EFI_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
+        echo "{\"key_id\": \"${SIGN_KMOD_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
         CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt" \
             curl --fail "${SIGN_API}/secureboot/efi" \
                  -X POST \
@@ -52,5 +52,5 @@ do_sign_efi[depends] += " \
 
 do_package[vardeps] += " \
     SIGN_API \
-    SIGN_EFI_KEY_ID \
+    SIGN_KMOD_KEY_ID \
     "
