@@ -1,4 +1,59 @@
 - commits:
+    - subject: Update balena-supervisor to v14.10.6
+      hash: ddd2e839ed3cab692488640cb98cdd6a795fcfba
+      body: |
+        Update balena-supervisor from 14.10.4 to 14.10.6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Do not restart balena-hostname on rename
+              hash: 7b68ee4c4f03f464c762afc0b3da06e3f4620440
+              body: >
+                The OS since v2.82.6 will monitor changes to config.json and restart
+
+                the relevant services to apply the changes. There is no need to trigger
+
+                restart of the services via the supervisor. Users on older OS versions
+
+                will need to update their OS or restart the services manually as OS
+
+                loses support after 2y.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: "#2160"
+                closes: "#2160"
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.10.6
+          title: ""
+          date: 2023-04-20T18:25:01.001Z
+        - commits:
+            - subject: Remove anonymous build volume from Dockerfile
+              hash: a3675651898f050eaefce0a9c4e02890ddc57b57
+              body: >
+                We don't need this anonymous volume as /data is bind mounted into
+
+                the container from host (legacy), and will soon be mounted by the
+
+                Supervisor itself on startup.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.10.5
+          title: ""
+          date: 2023-04-13T21:01:21.133Z
+  version: 2.114.7
+  title: ""
+  date: 2023-04-20T20:18:09.935Z
+- commits:
     - subject: Update db and dbx hashes during HUP when secure boot is enabled
       hash: 775dc7dba7afe2674dc0ef84e00bb773495d4c98
       body: |

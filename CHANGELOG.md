@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.114.7
+## (2023-04-20)
+
+
+<details>
+<summary> Update balena-supervisor to v14.10.6 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.10.6
+> ### (2023-04-20)
+> 
+> * Do not restart balena-hostname on rename [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.10.5
+> ### (2023-04-13)
+> 
+> * Remove anonymous build volume from Dockerfile [Christina Ying Wang]
+> 
+
+</details>
+
 # v2.114.6
 ## (2023-04-20)
 
