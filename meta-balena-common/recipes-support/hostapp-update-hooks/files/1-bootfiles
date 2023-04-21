@@ -57,7 +57,7 @@ isModified() {
 copyBootFile() {
 	local _file="$1"
 	mkdir -p "$boot_mountpoint/$(dirname "$_file")"
-	if ! "${CP}" "/resin-boot/$_file" "$boot_mountpoint/$_file"; then
+	if ! "${UCP}" "/resin-boot/$_file" "$boot_mountpoint/$_file"; then
 		if [ "$DURING_UPDATE" = "1" ]; then
 			# Cleanup all new files we deployed
 			for file in $new_deployed_files; do
