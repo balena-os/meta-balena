@@ -1,4 +1,30 @@
 - commits:
+    - subject: "tests: os: configure to use installer's migrator"
+      hash: 0715805137a721f6d551e3087f7eb5231036c004
+      body: |
+        Configuring the flasher image to force the migration. We use this to
+        skip migration tests when not configured.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "test: os: add installer migration test"
+      hash: fa327dce24a147846662ad110cc5b9d43f9a0604
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.114.9
+  title: ""
+  date: 2023-04-22T20:25:50.077Z
+- commits:
     - subject: Update balena-supervisor to v14.10.7
       hash: 05df5cf13d140f03365acd732bdca73bf48f09ff
       body: |

@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.114.9
+## (2023-04-22)
+
+* tests: os: configure to use installer's migrator [Alex Gonzalez]
+* test: os: add installer migration test [Alex Gonzalez]
+
 # v2.114.8
 ## (2023-04-22)
 
