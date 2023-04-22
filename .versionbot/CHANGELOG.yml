@@ -1,4 +1,197 @@
 - commits:
+    - subject: Update balena-supervisor to v14.10.7
+      hash: 05df5cf13d140f03365acd732bdca73bf48f09ff
+      body: |
+        Update balena-supervisor from 14.10.6 to 14.10.7
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Remove safeStateClone function
+              hash: 6c031299d686cca9bb89f950b105ab5bf62fae97
+              body: |
+                This function is no longer needed with the latest changes to
+                getCurrentState
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Get rid of targetVolatile in app manager
+              hash: 36311ef7a1b9192879c4951fb7e4521ef3c4840b
+              body: >
+                Target volatile doesn't make sense now that we can use the
+
+                current state as a target. It wasn't actually being used for anything
+
+                anymore apparently
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Make pausingApply a private member of device-state
+              hash: 1e0dd381f54efd31119454db592d5c047d829681
+              body: >
+                This simplifies this module interface and hides implementation details
+
+                from the rest of the code.
+
+
+                The function `applyIntermediateTarget` will now call `pausingApply`
+
+                before applying the target
+
+
+                API actions no longer need to call pausing apply
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Simplify doRestart and doPurge actions
+              hash: 3d43f7e3b367636f01ac9b6388c933bab5c896e5
+              body: >
+                The actions now work by passing an intermediate state to the state
+
+                engine.
+
+
+                - doPurge first removes the user app from the target state and passes
+                  that to the state engine for purging. Since intermediate state doesn't
+                  remove images, this will have the effect of basically re-installing
+                  the app.
+
+                - doRestart modifies the target state by first removing only the
+                  services from the current state but keeping volumes and networks. This
+                  has the same effect as before where services were stopped one by one
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Fix network appUuid inference in local mode
+              hash: 43630e52674e82bf32792e2d15db35a9af332865
+              body: >
+                Local mode uses a numeric `appUuid` which was messing up parsing the
+
+                network name. This fixes this issue so the current state can be used
+
+                as a target state
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Get image name from DB when getting the app current state
+              hash: b1fc4e1761e02edc84c1be344a91ef29e771aa28
+              body: >
+                The Service class in `compose/service.ts` cannot get the image name
+
+                from the image id when building the object from the container metadata.
+
+
+                We query the metadata in the application manager getCurrentApps method
+
+                so the current state can be used as target by API methods
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Improve net alias comparison to prevent unwanted restarts
+              hash: 27f0d2e655a5c11c89103847c485fa06babc1954
+              body: >
+                Network aliases are now compared checking that the target state is a
+
+                subset of the current state. This will prevent service restarts due to
+
+                additional aliases created by docker in the container.
+              footer:
+                Closes: "#2134"
+                closes: "#2134"
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Exclude containerId from service network aliases
+              hash: cb98133717b1c4c8f9e46c95ec7df996deae60e6
+              body: >
+                When getting the service from the docker container, remove the
+
+                containerId from the list of aliases (which gets added by docker). This
+
+                will make it easier to use the current service state as a target.
+
+
+                This will help us remove the `safeStateClone` function in the API in a
+
+                future commit
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Skip image delete when applying intermediate state
+              hash: f2ca7dbb6ae465f361fc05fb42dc5ff7cfc8de4c
+              body: >
+                This replaces the previous flag `isApplyingIntermediate` on application
+
+                manager and simplifies the interface of the state engine to make temporary changes to the
+
+                general app state.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Make local mode image management work as in cloud mode
+              hash: 967cb7747f187f70500f6393360df10b40fddebf
+              body: >
+                There were multiple places in the state engine that skipped some
+
+                operations while in local mode. In reality, all it's needed while in
+
+                local mode is to skip image and volume deletion.
+
+
+                This commit simplifies application-manager and compose app to be more
+
+                local mode agnostic and instead making the image deletion and volume
+
+                deletion configurable via function arguments.
+
+
+                This also has the benefit to make the treatment of local mode
+
+                applications more similar to cloud mode applications, allowing for
+
+                API endpoints to function the same way both modes.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Remove ignoreImages argument from getRequiredSteps
+              hash: 76d5be64e56c63c01474cee2ead43d02470c1389
+              body: >
+                The argument was unused and hence unnecesary. This is just a bit of
+
+                cleanup
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.10.7
+          title: ""
+          date: 2023-04-21T23:04:18.417Z
+  version: 2.114.8
+  title: ""
+  date: 2023-04-22T02:27:23.269Z
+- commits:
     - subject: Update balena-supervisor to v14.10.6
       hash: ddd2e839ed3cab692488640cb98cdd6a795fcfba
       body: |
