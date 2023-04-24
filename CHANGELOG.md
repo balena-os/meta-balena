@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.114.11
+## (2023-04-24)
+
+
+<details>
+<summary> Update balena-engine to v20.10.35 [Renovate Bot] </summary>
+
+> ## balena-engine-20.10.35
+> ### (2023-04-24)
+> 
+> * Update libnetwork to fix port binding issue [Leandro Motta Barros]
+> 
+
+</details>
+
 # v2.114.10
 ## (2023-04-24)
 

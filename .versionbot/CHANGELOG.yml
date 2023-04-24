@@ -1,4 +1,39 @@
 - commits:
+    - subject: Update balena-engine to v20.10.35
+      hash: eb6d64cc9f8cf9b429ae9047ffc6b5e5afa81e10
+      body: |
+        Update balena-engine from 20.10.34 to 20.10.35
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update libnetwork to fix port binding issue
+              hash: 56aa6337c29329e6100c24f6775840c47081cd06
+              body: >
+                This new version has a patch cherry-picked from here:
+
+                https://github.com/moby/libnetwork/pull/1805
+
+
+                This patch is meant to avoid cases in which libnetwork internal state
+
+                gets inconsistent in case of crashes.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.35
+          title: ""
+          date: 2023-04-24T13:11:04.337Z
+  version: 2.114.11
+  title: ""
+  date: 2023-04-24T19:52:26.600Z
+- commits:
     - subject: "mkfs-hostapp-native: Update base image in Dockerfile"
       hash: 5d0e8d90050ab0bf94911ab4e676cb529c70c56b
       body: |
