@@ -1,4 +1,22 @@
 - commits:
+    - subject: "mkfs-hostapp-native: Update base image in Dockerfile"
+      hash: 5d0e8d90050ab0bf94911ab4e676cb529c70c56b
+      body: |
+        Update Dockerfile base image from debian strech to the latest
+        stable debian bullseye to fix mkfs-hostapp-native build.
+
+        The old image has been moved in Dockerhub to debian/eol.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.10
+  title: ""
+  date: 2023-04-24T14:32:34.955Z
+- commits:
     - subject: "tests: os: configure to use installer's migrator"
       hash: 0715805137a721f6d551e3087f7eb5231036c004
       body: |
@@ -61,7 +79,8 @@
             - subject: Make pausingApply a private member of device-state
               hash: 1e0dd381f54efd31119454db592d5c047d829681
               body: >
-                This simplifies this module interface and hides implementation details
+                This simplifies this module interface and hides implementation
+                details
 
                 from the rest of the code.
 
@@ -80,7 +99,8 @@
             - subject: Simplify doRestart and doPurge actions
               hash: 3d43f7e3b367636f01ac9b6388c933bab5c896e5
               body: >
-                The actions now work by passing an intermediate state to the state
+                The actions now work by passing an intermediate state to the
+                state
 
                 engine.
 
@@ -101,7 +121,8 @@
             - subject: Fix network appUuid inference in local mode
               hash: 43630e52674e82bf32792e2d15db35a9af332865
               body: >
-                Local mode uses a numeric `appUuid` which was messing up parsing the
+                Local mode uses a numeric `appUuid` which was messing up parsing
+                the
 
                 network name. This fixes this issue so the current state can be used
 
@@ -114,7 +135,8 @@
             - subject: Get image name from DB when getting the app current state
               hash: b1fc4e1761e02edc84c1be344a91ef29e771aa28
               body: >
-                The Service class in `compose/service.ts` cannot get the image name
+                The Service class in `compose/service.ts` cannot get the image
+                name
 
                 from the image id when building the object from the container metadata.
 
@@ -130,7 +152,8 @@
             - subject: Improve net alias comparison to prevent unwanted restarts
               hash: 27f0d2e655a5c11c89103847c485fa06babc1954
               body: >
-                Network aliases are now compared checking that the target state is a
+                Network aliases are now compared checking that the target state
+                is a
 
                 subset of the current state. This will prevent service restarts due to
 
@@ -163,7 +186,8 @@
             - subject: Skip image delete when applying intermediate state
               hash: f2ca7dbb6ae465f361fc05fb42dc5ff7cfc8de4c
               body: >
-                This replaces the previous flag `isApplyingIntermediate` on application
+                This replaces the previous flag `isApplyingIntermediate` on
+                application
 
                 manager and simplifies the interface of the state engine to make temporary changes to the
 
@@ -203,7 +227,8 @@
             - subject: Remove ignoreImages argument from getRequiredSteps
               hash: 76d5be64e56c63c01474cee2ead43d02470c1389
               body: >
-                The argument was unused and hence unnecesary. This is just a bit of
+                The argument was unused and hence unnecesary. This is just a bit
+                of
 
                 cleanup
               footer:
@@ -231,7 +256,8 @@
             - subject: Do not restart balena-hostname on rename
               hash: 7b68ee4c4f03f464c762afc0b3da06e3f4620440
               body: >
-                The OS since v2.82.6 will monitor changes to config.json and restart
+                The OS since v2.82.6 will monitor changes to config.json and
+                restart
 
                 the relevant services to apply the changes. There is no need to trigger
 
@@ -254,7 +280,8 @@
             - subject: Remove anonymous build volume from Dockerfile
               hash: a3675651898f050eaefce0a9c4e02890ddc57b57
               body: >
-                We don't need this anonymous volume as /data is bind mounted into
+                We don't need this anonymous volume as /data is bind mounted
+                into
 
                 the container from host (legacy), and will soon be mounted by the
 
@@ -399,7 +426,8 @@
     - subject: "initrdscripts: migrate: correctly identify boot device"
       hash: 27fd9e05d16d60a7340a16abcda5e93fd1fdb199
       body: >
-        The internal target device to program is not always the device the system
+        The internal target device to program is not always the device the
+        system
 
         is booting from. Make sure the `flash-boot` partition search is done
 
@@ -628,8 +656,8 @@
             - subject: Mount boot partition into container on Supervisor start
               hash: 49ee1042a87ce0b101054e32b84afaa324a371de
               body: >
-                As the Supervisor is a privileged container, it has access to host /dev,
-                and therefore has access
+                As the Supervisor is a privileged container, it has access to
+                host /dev, and therefore has access
 
                 to boot, data, and state balenaOS partitions. This commit sets up the framework for the following:
 
@@ -764,7 +792,8 @@
             - subject: "swtpm: store state in tmpfs"
               hash: 25460508d5477dd27a4743b4684e97e6d0f8529a
               body: >
-                swtpm stores state in the directory specified in the --tpmstate argument
+                swtpm stores state in the directory specified in the --tpmstate
+                argument
 
 
                 If the same state directory/files are used for multiple installations,
@@ -911,7 +940,8 @@
             - subject: Simplify and improve delta error handling
               hash: 2c972dff108a153896116b07798bbc959c07ef01
               body: >
-                The original delta code on the `xfer` package used to set `d.err` when
+                The original delta code on the `xfer` package used to set
+                `d.err` when
 
                 an unexpected EOF was found in the delta tar stream. Turns out `d.err`
 
@@ -950,7 +980,8 @@
             - subject: Refactor the distribution portions of delta
               hash: 34dd5a92f29e85a77926b9c5983552054dd483c8
               body: >
-                This factors out portions of the `distribution` package, so that we can
+                This factors out portions of the `distribution` package, so that
+                we can
 
                 reuse this functionality between `balena pull` and `balena load`. There
 
@@ -1073,7 +1104,8 @@
             - subject: Use multi-arch in dockerfile
               hash: 00e389e5f559dd10e49cfa411784b89498c3c0eb
               body: >
-                This is necessary since the builder no longer passes the platform flag
+                This is necessary since the builder no longer passes the
+                platform flag
 
                 to the build. This would lead to dockerfiles that are mixing multi and single
 
@@ -1128,7 +1160,8 @@
             - subject: "Installer: Make the script POSIX-compliant"
               hash: cc0683f0aa5cdd5cae54cf278e060328e2c2595f
               body: >
-                There were various usages of Bash-specific features. As a result, the
+                There were various usages of Bash-specific features. As a
+                result, the
 
                 script would work correctly only on OSes that have `sh` as an alias to
 
@@ -1195,7 +1228,8 @@
             - subject: Remove the installation script from docs/
               hash: 5305ab263ffebd08d0346de2bdbed34585805f4f
               body: >
-                This is removing a duplicate, since the same script is also present
+                This is removing a duplicate, since the same script is also
+                present
 
                 under contrib/
               footer:
@@ -1257,7 +1291,8 @@
             - subject: Rename test functions for better clarity
               hash: f5b966a63503577b1b826dc23b95773fd073aacf
               body: >
-                Added an `Asserting` suffix to all functions that internally call
+                Added an `Asserting` suffix to all functions that internally
+                call
 
                 `assert.*()`. This makes clearer what is really going on at the point of
 
@@ -1282,7 +1317,8 @@
             - subject: Add dev-focused docs on some balenaEngine features
               hash: 75b62a76df57767fcc1ab86f0adb3a9f210480a7
               body: >
-                Most notably, on the "delta root" feature, which is important for HUPs,
+                Most notably, on the "delta root" feature, which is important
+                for HUPs,
 
                 not very well-known and not documented anywhere else I know.
               footer:
@@ -1295,7 +1331,8 @@
             - subject: Simplify test code by using new std lib function
               hash: 2d192ea16be1df569c86028128397515d6d3322d
               body: >
-                io.ReadAll() is available since Go 1.16 (to which we upgraded some time
+                io.ReadAll() is available since Go 1.16 (to which we upgraded
+                some time
 
                 ago).
               footer:
@@ -1308,7 +1345,8 @@
             - subject: Set the delta image store, fix delta-based HUPs
               hash: 9fe31eb8dad8dbcc35e48cb0f90a12b67256e490
               body: >
-                We apparently have broken this during the 20.10 merge. Not setting the
+                We apparently have broken this during the 20.10 merge. Not
+                setting the
 
                 delta image store breaks delta-based balenaOS updates (HUPs).
               footer:
@@ -1484,7 +1522,8 @@
             - subject: "compose: qemu: add FLASHER_SECUREBOOT var"
               hash: 51977e109069f08f0364eed208fab2e01c104284
               body: >
-                This environment variable is passed through to the suite to preconfigure
+                This environment variable is passed through to the suite to
+                preconfigure
 
                 a flasher image to enable secure boot for testing.
               footer:
@@ -1497,7 +1536,8 @@
             - subject: "swtpm: fix abort on exit"
               hash: fc65360ae7896545bdcaad0d37f1345a447251f4
               body: >
-                Some incoming tests require QEMU to exit, simulating a device powering
+                Some incoming tests require QEMU to exit, simulating a device
+                powering
 
                 off, before starting QEMU again. This is used to "reflash" a virtualized
 
@@ -1704,7 +1744,8 @@
             - subject: Skip pin device step if release was deleted
               hash: f6435814cd86380dd3b02416f6f2199b483bb33c
               body: >
-                Preloaded devices can require that the device is pinned to the preloaded
+                Preloaded devices can require that the device is pinned to the
+                preloaded
 
                 release on provisioning. However if the provisioned release gets
 
@@ -1732,7 +1773,8 @@
             - subject: Use single-arch in dockerfile
               hash: 17aa625d3b115103efa30bb98b83ee1fc54230c4
               body: >
-                This is necessary since the builder no longer passes the platform flag
+                This is necessary since the builder no longer passes the
+                platform flag
 
                 to the build. This would lead to dockerfiles that are mixing multi and single
 
@@ -1760,8 +1802,8 @@
             - subject: Replace BALENA-FIREWALL rule in INPUT chain instead of flushing
               hash: 84a9e7e9acd803b6b49d58ae3040694a5e2f823d
               body: >
-                The issue with the original Supervisor implementation of the firewall is
-                that
+                The issue with the original Supervisor implementation of the
+                firewall is that
 
                 on Supervisor start, the Supervisor flushes the INPUT chain of the filter table.
 
@@ -1859,7 +1901,8 @@
     - subject: "peak: Ship signed module when signing is enabled"
       hash: 97d64167c1bcbb76d1638486aa3eb158f37785c9
       body: >
-        At this moment, when module signing is enabled, the peak module is signed
+        At this moment, when module signing is enabled, the peak module is
+        signed
 
         but do_install ignores the signed variant and installs the original
 
@@ -2180,7 +2223,8 @@
         module"
       hash: 7b3227c08f693131933fb9fea0d3796571837253
       body: >
-        The migrate module needs to umount the rootfs, so by moving the mountpoint
+        The migrate module needs to umount the rootfs, so by moving the
+        mountpoint
 
         moving into the migrate module it's only done when not migrating.
       footer:
@@ -2359,7 +2403,8 @@
     - subject: "resin-init-flasher: wait for the by-label links to be created"
       hash: 21e7b74a4f8af7baf751859e5a5477c2ae99c8fa
       body: >
-        The by-label links can be used both for physical and mapper devices (used
+        The by-label links can be used both for physical and mapper devices
+        (used
 
         in disk encryption).
 
@@ -2498,7 +2543,8 @@
             - subject: "client: throw errors instead of blanket handling"
               hash: 0f4b4b55b01bbfb023bcddba0ea585bcbe968a07
               body: >
-                Remove try/catch block surrounding client code that blanket handles all
+                Remove try/catch block surrounding client code that blanket
+                handles all
 
                 exceptions, and makes debugging and log messages worse.
 
@@ -2696,7 +2742,8 @@
             - subject: Find and remove duplicate networks
               hash: 89175432af9beb9f9765a6cfdbc8914a8eae251e
               body: >
-                We have seen a few times devices with duplicated network names for some
+                We have seen a few times devices with duplicated network names
+                for some
 
                 reason. While we don't know the cause the networks get duplicates, this
 
@@ -2729,7 +2776,8 @@
             - subject: Reference networks by Id instead of by name
               hash: 180c4ff31ad719fb2b00217548514d42a4b5c4cf
               body: >
-                We have seen a few times devices with duplicated network names for some
+                We have seen a few times devices with duplicated network names
+                for some
 
                 reason. While we don't know the cause the networks get duplicates,
 
@@ -3410,7 +3458,8 @@
             - subject: split swtpm service into separate compose file
               hash: 93d0160eb9a07c86c309cb2c0c2f1b709185884d
               body: >
-                Not all platforms support secure boot, notably aarch64 using tianocore
+                Not all platforms support secure boot, notably aarch64 using
+                tianocore
 
                 firmware. Additionally, swtpm may not be available for all platforms.
 
@@ -3473,7 +3522,8 @@
             - subject: "compose: qemu: add swtpm service"
               hash: 302446a90ceedf0e406ed5edef7600925cf55c8c
               body: >
-                QEMU is capable of using an emulated software TPM exposed via socket. A
+                QEMU is capable of using an emulated software TPM exposed via
+                socket. A
 
                 TPM is necessary for full disk encryption (FDE), so add a service to
 
@@ -3665,7 +3715,8 @@
     - subject: "efitools: Allow builds for ARM architecture"
       hash: 03962bda4860726332715df5fbdec05a475b6026
       body: >
-        There are ARM systems that use UEFI, and for example the `efivar` package
+        There are ARM systems that use UEFI, and for example the `efivar`
+        package
 
         can also be built for ARM architectures.
       footer:
@@ -3878,7 +3929,8 @@
     - subject: "efitools: Package lock down EFI image into its own package"
       hash: 461ad62f13732cd325f3f532fda4fac4b9ffb3da
       body: >
-        This EFI image contains the secure boot certificates and when executed it
+        This EFI image contains the secure boot certificates and when executed
+        it
 
         is supposed to load the keys into the respective secure boot slots.
 
@@ -4152,7 +4204,8 @@
     - subject: "tests/hup: Avoid an old engine bug when pulling multiarch images on rpi"
       hash: 6a47531bd8c1a3a032e57efe6b1c2d764d6d0570
       body: >
-        This has since been fixed in the engine but since it impacts the HUP from
+        This has since been fixed in the engine but since it impacts the HUP
+        from
 
         version we need to handle it in the test suite.
       footer:
@@ -4743,7 +4796,8 @@
             - subject: Avoid conflicting docker networks
               hash: 5e04208a9f07567c6aa7fdc55dc95d2cacb6c8c3
               body: >
-                The `make subnet` command can be called on Jenkins and similar to generate
+                The `make subnet` command can be called on Jenkins and similar
+                to generate
 
                 a unique subnet that is not in use.
 
@@ -5033,8 +5087,8 @@
         of the DUT"
       hash: 17b49075804ea85aadfbb20d557025c1a4c2ee4f
       body: >
-        Not all the boards we support have the redsocks uid as 995 in their rootfs
-        so let's
+        Not all the boards we support have the redsocks uid as 995 in their
+        rootfs so let's
 
         fetch the actual redsocks uid from the DUT before running the proxy tests and
 
@@ -5174,8 +5228,8 @@
                 address of the DUT"
               hash: 02b270e1c55429c7316a9c65f70362185bbe3aec
               body: >
-                Instead of retrying to get the DUT IP address 120 times on a 1 seconds
-                interval,
+                Instead of retrying to get the DUT IP address 120 times on a 1
+                seconds interval,
 
                 let's reduce it to 30 times because the resolveLocalTarget which we call will
 
@@ -5200,7 +5254,8 @@
             - subject: "docker-compose: stop using the default docker bridge"
               hash: eb69ff445fe0cac4f2060e67fa6994e61c3ca4b9
               body: >
-                This causes problems for make-local tests when the user apps in the
+                This causes problems for make-local tests when the user apps in
+                the
 
                 DUT also uses the default docker bridge network range.
               footer:
@@ -6710,7 +6765,8 @@
             - subject: "core: Switch to debian base and install standalone balena-cli"
               hash: b6993366ce72f0c25f14dfeccdf42076fbf8dd50
               body: >
-                Unfortunately the standalone balena-cli package is linked to glibc
+                Unfortunately the standalone balena-cli package is linked to
+                glibc
 
                 and does not work with musl (alpine) so we need to switch to debian.
 
@@ -7462,7 +7518,8 @@
     - subject: "meta-balena-rust: Add compatibility layer"
       hash: 9242585678e1e9027483fedcbe1d3e795deb0ebf
       body: >
-        This layer will allow to use the same rust toolchain across all supported
+        This layer will allow to use the same rust toolchain across all
+        supported
 
         Yocto compatibility layers.
       footer:
@@ -8155,7 +8212,8 @@
             - subject: "core: worker: add retryOptions to executeCommand methods"
               hash: 2f2d7a8b99fcaffc22d0032f9102e194160f7e1f
               body: >
-                The executeCommand family of methods default to retrying on failure. In
+                The executeCommand family of methods default to retrying on
+                failure. In
 
                 some cases, such as in the ssh-auth test in the cloud test suite, we
 
@@ -8812,7 +8870,8 @@
             - subject: "core: worker: simplify rebootDut"
               hash: 55981700fb4c90a1f81192a44725f2c2d49e6135
               body: >
-                worker.rebootDut() contains retry logic using utils.waitUntil() wrapping
+                worker.rebootDut() contains retry logic using utils.waitUntil()
+                wrapping
 
                 this.executeCommandInHostOS(). The latter contains its own retry logic,
 
@@ -8831,7 +8890,8 @@
             - subject: "core: worker: reduce interval in executeCommandInHostOS"
               hash: 7f8b371b3035eed2b32011295768d5bec19ba1ba
               body: >
-                The default interval for retrying this command is 5s, with a total
+                The default interval for retrying this command is 5s, with a
+                total
 
                 timeout of 2m30s. Reduce the timeout to 1s to reduce latency for the
 
@@ -9050,7 +9110,8 @@
     - subject: "grub-efi: disable shim_lock when in secure boot mode"
       hash: dd0c128664a4b5cb004cd154f4dabc627d1f6e77
       body: >
-        Recent versions of GRUB default to use shim_lock when in secure boot mode.
+        Recent versions of GRUB default to use shim_lock when in secure boot
+        mode.
 
         We do not use shim and do not build the shim_lock module into GRUB EFI binary
 
@@ -9090,7 +9151,8 @@
             - subject: "core: worker: handle all local connections the same"
               hash: 7b6eee28e6d0db63ca3ec7f6046aad46a12b7eaa
               body: >
-                Create a directConnect variable that indicates whether we're connecting
+                Create a directConnect variable that indicates whether we're
+                connecting
 
                 to a local instance of the worker server, including if the connection is
 
@@ -9542,7 +9604,8 @@
             - subject: "worker: qemu: remove debug print statements"
               hash: c4f0b0c37fc7a7102f292db61a5271d7c3e23855
               body: >
-                Log statements for powerOn/powerOff were added for debugging when
+                Log statements for powerOn/powerOff were added for debugging
+                when
 
                 refactoring the QEMU worker to operate w/out libvirt. Remove these.
               footer:
@@ -9559,7 +9622,8 @@
             - subject: "core: worker: shorten getDutIp interval"
               hash: 37b7347bf63a1acb1b4efd7965e5b764a8f6ce84
               body: >
-                Waiting ten seconds between retries is onerous, shorten to one second
+                Waiting ten seconds between retries is onerous, shorten to one
+                second
 
                 interval with more retries.
               footer:
@@ -9572,7 +9636,8 @@
             - subject: "worker: helpers: memoize resolveLocalTarget"
               hash: eff95325a566502e522f7106053fab6d860c93e7
               body: >
-                Device addresses likely won't change during a single test run, and mDNS
+                Device addresses likely won't change during a single test run,
+                and mDNS
 
                 queries can be time consuming. Memoize the result of the query to save
 
@@ -9587,7 +9652,8 @@
             - subject: "worker: helpers: resolveLocalTarget: increase timeout"
               hash: 56cf5bb6b8a95b61c9143d6ddaa4edcd6bca852a
               body: >
-                mDNS resolution can take some time, increase the timeout from 4s -> 15s
+                mDNS resolution can take some time, increase the timeout from 4s
+                -> 15s
               footer:
                 Change-type: patch
                 change-type: patch
@@ -9724,7 +9790,8 @@
             - subject: Fix "slice bounds out of range" while applying deltas
               hash: 6f12d0abb3e438f26a18eee9bbaeca9c4702f7e7
               body: >
-                The root cause of this issue was an integer overflow in 32-bit platforms
+                The root cause of this issue was an integer overflow in 32-bit
+                platforms
 
                 -- specifically, when explicitly converting `io.Reader` offsets
 
@@ -10066,7 +10133,8 @@
             - subject: Avoid splash image failures if image is corrupt
               hash: a5ede01b18abd5e079361d24f2f8f5368d23da6d
               body: >
-                Splash image backend would throw if the image is not a valid png during
+                Splash image backend would throw if the image is not a valid png
+                during
 
                 the write step. This could prevent the device from provisioning if some
 
@@ -10083,7 +10151,8 @@
             - subject: Use write + sync when writing configs to /mnt/boot
               hash: c04955354a76ab32ab5dc52062fdf72d668f7c3b
               body: >
-                This commit updates all backends that write to /mnt/boot to do it
+                This commit updates all backends that write to /mnt/boot to do
+                it
 
                 through a new `lib/host-utils` module. Writes are now done using write +
 
@@ -10207,8 +10276,8 @@
             - subject: Explain /v2/state/status's status field in its response
               hash: 27249c278555c46154d1e917e769dd3fb9d2dcfc
               body: >
-                The status field does not indicate the current state of the Engine on the
-                device.
+                The status field does not indicate the current state of the
+                Engine on the device.
 
                 Rather, it only indicates whether the HTTP response returned successfully or not.
 
@@ -10242,8 +10311,8 @@
             - subject: Add lockfile binary and internal lib for interfacing with it
               hash: 51e63ea22b876580de276808eca891ff6ab2a6c5
               body: >
-                The linked issue describes the Supervisor not cleaning up locks it creates
-                due
+                The linked issue describes the Supervisor not cleaning up locks
+                it creates due
 
                 to crashing at just the wrong time. After internal discussion we decided to
 
@@ -10278,7 +10347,8 @@
             - subject: Add system id/model support for Compulab IOT-gate
               hash: e6fa22306b9e2b55480772560e62bb8e8988b529
               body: >
-                dmidecode for alpine 3.11 doesn't work in this device type. This change
+                dmidecode for alpine 3.11 doesn't work in this device type. This
+                change
 
                 moves to using `/proc/device-tree/product-sn` and
 
@@ -10313,7 +10383,8 @@
             - subject: Fix database migration for legacyApps
               hash: eee24604459440569dee455db918d6901ea86645
               body: >
-                Migration `M00008` had a bug with the check for legacy apps, which
+                Migration `M00008` had a bug with the check for legacy apps,
+                which
 
                 resulted in devices that had at some point been updated from a single
 
@@ -10797,7 +10868,8 @@
             - subject: Log more info upon when raising errRootFSMismatch
               hash: ab3db5c03663e0b2ee35213ceebf9038e4af6b62
               body: >
-                We currently do not log any information to help us understanding the
+                We currently do not log any information to help us understanding
+                the
 
                 underlying issue -- not even to identify what is the exact point in
 
@@ -11556,8 +11628,8 @@
             - subject: Add update lock check to PATCH /v1/device/host-config
               hash: 5f1a77da25b9d0bd07c2fbec85cb5deefae18884
               body: >
-                This is necessary with the changes as of balenaOS 2.82.6, which watches
-                config.json
+                This is necessary with the changes as of balenaOS 2.82.6, which
+                watches config.json
 
                 and will restart balena-hostname and some other services automatically on file change.
               footer:
@@ -11576,7 +11648,8 @@
             - subject: Add support for local ipv6 reporting
               hash: 72f6cbe4c7225623ed99083d20c4a2cb2f3b70ac
               body: >
-                With more and more devices in ipv6 only networks, this ensures the
+                With more and more devices in ipv6 only networks, this ensures
+                the
 
                 local addresses are reported to the cloud as part of the state patch.
               footer:
@@ -11639,7 +11712,8 @@
             - subject: "storagemigration: keep going if migration fails"
               hash: 2bde63c800b1df72fba7161d62b5b6da84a8d390
               body: >
-                the only hard error is if rollback (failcleanup) fails, in all other
+                the only hard error is if rollback (failcleanup) fails, in all
+                other
 
                 scenarios we want the daemon to continue starting with the new
 
@@ -11654,7 +11728,8 @@
             - subject: "graphdriver/copy: fix handling of sockets"
               hash: 17a198cb53a53da456c848bf303dc3917ca538c5
               body: >
-                previously switch would treat S_IFIFO and S_IFSOCK as the same, passing
+                previously switch would treat S_IFIFO and S_IFSOCK as the same,
+                passing
 
                 both of the to mkfifo, which lead to EINVAL errors when trying to create
 
@@ -11685,7 +11760,8 @@
             - subject: Prune Jenkinsfile
               hash: ea14e503181bbb248a4bed1b86a227d9c214cbfb
               body: >
-                we are not using it for our CI, and it confuses jenkins set up on the
+                we are not using it for our CI, and it confuses jenkins set up
+                on the
 
                 balena-os org
               footer:
@@ -11713,7 +11789,8 @@
             - subject: "storagemigration: capture failcleanup logs in logfile"
               hash: 4f7f543eff08766bc584024afdb57760dfb52130
               body: >
-                reorder the defer statements in the migrate function to only teardown
+                reorder the defer statements in the migrate function to only
+                teardown
 
                 the logger after the failcleanup function ran. otherwise errors logged
 
@@ -11753,7 +11830,8 @@
             - subject: Make layer download resuming more resilient
               hash: 582487f832c59c2f734a780ab0492833f29002c9
               body: >
-                This commit changes the way we retry layer downloads after failures with
+                This commit changes the way we retry layer downloads after
+                failures with
 
                 the goal of making it more resilient, especially for cases involving
 
@@ -11822,7 +11900,8 @@
             - subject: "storagemigration: defer commit to next start"
               hash: bd1628e67136b78ca7e7c83c5569666207d28a84
               body: >
-                With this change the aufs data is kept around until the next time we
+                With this change the aufs data is kept around until the next
+                time we
 
                 start. If we find both an aufs AND an overlay2 storage root, we cleanup
 
@@ -11837,7 +11916,8 @@
             - subject: Lock destination layers while delta is being processed
               hash: 0ad4281e11e4d3ef263010787aecd244c0ce333d
               body: >
-                During fingerpinting of the source image the destination layers are not
+                During fingerpinting of the source image the destination layers
+                are not
 
                 exepmt from being released (e.g. when `balena image rm <iid>`) is run
 
@@ -11858,7 +11938,8 @@
             - subject: Add aufs to overlay2 migrator
               hash: b3a976b1294469e75222752bdc1fdc06bfcc97b8
               body: >
-                The main logic is under pkg/storagemigration. This is able to seamlessly
+                The main logic is under pkg/storagemigration. This is able to
+                seamlessly
 
                 migrate images and containers from AUFS to overlay2.
               footer:
@@ -12051,7 +12132,8 @@
             - subject: "layer: Prune unused data on layer store creation"
               hash: 01e4688f8c4f42e769d319353accdc0c34ffcc0b
               body: >
-                When layer store is created, its tmp directory may contain information
+                When layer store is created, its tmp directory may contain
+                information
 
                 about transactions that were abruptly treminated during the previous process run.
 
@@ -12139,7 +12221,8 @@
             - subject: "contrib: Add balena-engine version of dind container"
               hash: ef813f867206df9ae6f3ddf1cb5d3915f8718cc5
               body: >
-                This modifies https://github.com/docker-library/docker for balena-engine
+                This modifies https://github.com/docker-library/docker for
+                balena-engine
               footer:
                 Change-type: patch
                 change-type: patch
@@ -12150,7 +12233,8 @@
             - subject: "build.sh: Disable btrfs,zfs,devicemapper graphdrivers"
               hash: 88a5416e94945bc6998ba00723da26b738eb5bcd
               body: >
-                We don't support these on balenaOS anyway and we are planning to drop
+                We don't support these on balenaOS anyway and we are planning to
+                drop
 
                 support for them once we move to the new balenaCI-based pipeline.
               footer:
@@ -12187,7 +12271,8 @@
             - subject: Allow passing container ID to container via environment variable
               hash: 635b48ca954c92ce7e35b2667c2001a52f43ef6d
               body: >
-                This adds a new ContainerIDEnv field to HostConfig that can pass an
+                This adds a new ContainerIDEnv field to HostConfig that can pass
+                an
 
                 environment variable name, which will be set to the container ID and
 
@@ -12204,7 +12289,8 @@
             - subject: "contrib/install.sh: Add details to the success message"
               hash: 876ea49bb8e948c97cd959fcb7413e84e33f7006
               body: >
-                First warn the user that balena-engine-daemon needs to be started.
+                First warn the user that balena-engine-daemon needs to be
+                started.
 
                 Including instructions on how to make the system ready for that:
 
@@ -12235,7 +12321,8 @@
             - subject: "contrib/install.sh: Fail on error"
               hash: f93ce1f5226a882b0115cf321fc40e7d55f0e583
               body: >
-                The install script should not print the success message if it didn't
+                The install script should not print the success message if it
+                didn't
 
                 actually succeed to install anything
               footer:
@@ -12267,8 +12354,8 @@
             - subject: "aufs,overlay2: Add driver opts for disk sync"
               hash: 4fed10dd3a66e37f0f128b2f9fa227a9a6800da2
               body: >
-                This patch adds a driver option to enalble/disable the to disk syncing
-                introduced in
+                This patch adds a driver option to enalble/disable the to disk
+                syncing introduced in
 
                 684d8ba6109c853b355bf11ca3733c4099f14b92.
 
@@ -12299,7 +12386,8 @@
                 constraints"
               hash: ff2ac4d6823dfc30c115499a5d6f908752ea9223
               body: >
-                The only test from integration/ that covers any resource constrained
+                The only test from integration/ that covers any resource
+                constrained
 
                 container scenarios is the OomKilled check in integration/container/kill_test.go
 
@@ -12331,7 +12419,8 @@
             - subject: "travis: Use the minimal machine"
               hash: 1f6ab50f0cc20d21a5719e4a00f5407f231ed6f2
               body: >
-                Since we build in docker anyway we can save the time it usually takes to
+                Since we build in docker anyway we can save the time it usually
+                takes to
 
                 set up the Go environment.
 
@@ -12358,7 +12447,8 @@
             - subject: Allow tagging of image deltas on creation
               hash: 7f569a1e2407800e1c5f5d94f715c4313c5c4300
               body: >
-                Similar to how the build command allows tagging of images this allows
+                Similar to how the build command allows tagging of images this
+                allows
 
                 specifying a repo:tag indentifier to tag the delta with
               footer:
@@ -12783,7 +12873,8 @@
         with LUKS"
       hash: ebd9c9b775cb82247c1cd9b5ed4fe44864aa2343
       body: >
-        In order to avoid the need to unlock encrypted partitions in GRUB we want
+        In order to avoid the need to unlock encrypted partitions in GRUB we
+        want
 
         to use a custom stage2 bootloader. Since that is not ready yet, emulate that
 
@@ -12879,8 +12970,8 @@
     - subject: "balena-supervisor: Update balena-supervisor to v12.11.32"
       hash: d222a1f6c84ff98f7698efd671063a0eeebb3ae3
       body: >
-        Includes improvements when writing to `config.json` to reduce the chances
-        of corruption.
+        Includes improvements when writing to `config.json` to reduce the
+        chances of corruption.
       footer:
         Change-type: patch
         change-type: patch
@@ -13609,7 +13700,8 @@
     - subject: "hostapp-update-hooks: Handle developmentMode updates"
       hash: adc76c0588a67705ae20a8c61517f549f2e8549e
       body: >
-        When updating from a legacy development image which has no developmentMode
+        When updating from a legacy development image which has no
+        developmentMode
 
         set in config.json to an image configured with development mode, the hooks
 
@@ -14029,7 +14121,8 @@
     - subject: "balena-os: make sure PAM support is not configured"
       hash: abb515f6a0bf5d274af873852ddd4e60cf4ee89e
       body: >
-        BalenaOS does not use PAM but some vendor BSPs enable it and misconfigure
+        BalenaOS does not use PAM but some vendor BSPs enable it and
+        misconfigure
 
         the hostOS authentication.
       footer:
@@ -14104,7 +14197,8 @@
     - subject: "0-signed-update HUP hook: mount efivarfs if necessary"
       hash: 1a6c772c9266d5fc219939e9304813356f85d34c
       body: >
-        The hook tries to read EFI variables from efivarfs but this is not always
+        The hook tries to read EFI variables from efivarfs but this is not
+        always
 
         mounted within the container. We have already validated that we are running
 
@@ -14152,7 +14246,8 @@
     - subject: "linux-firmware: Include MT7601U firmware"
       hash: 33980c8b9ba464c91f016f9cade4140c278e7037
       body: >
-        The MT7601U WiFi driver fails to find its firmware, so it is included now.
+        The MT7601U WiFi driver fails to find its firmware, so it is included
+        now.
       footer:
         Change-type: patch
         change-type: patch
@@ -14179,7 +14274,8 @@
     - subject: "grub-conf: Enforce module signing and integrity lockdown on luks config"
       hash: 1ba23869473faace427782d2aea07a0b46bfbc0c
       body: >
-        When booting in secure mode, enforce signed modules loading and integrity
+        When booting in secure mode, enforce signed modules loading and
+        integrity
 
         lockdown.
       footer:
@@ -14426,7 +14522,8 @@
     - subject: "initrdscripts: Use a 2nd stage bootloader to unlock LUKS partitions"
       hash: acbc384d527436e5d7382504dcf62f799b9490d5
       body: >
-        GRUB can not use the TPM easily to unlock the volumes and find the kernel
+        GRUB can not use the TPM easily to unlock the volumes and find the
+        kernel
 
         on an encrypted partition. Instead, we choose to store a linux kernel
 
@@ -14821,7 +14918,8 @@
             - subject: "storagemigration: keep going if migration fails"
               hash: 2bde63c800b1df72fba7161d62b5b6da84a8d390
               body: >
-                the only hard error is if rollback (failcleanup) fails, in all other
+                the only hard error is if rollback (failcleanup) fails, in all
+                other
 
                 scenarios we want the daemon to continue starting with the new
 
@@ -14836,7 +14934,8 @@
             - subject: "graphdriver/copy: fix handling of sockets"
               hash: 17a198cb53a53da456c848bf303dc3917ca538c5
               body: >
-                previously switch would treat S_IFIFO and S_IFSOCK as the same, passing
+                previously switch would treat S_IFIFO and S_IFSOCK as the same,
+                passing
 
                 both of the to mkfifo, which lead to EINVAL errors when trying to create
 
@@ -14928,7 +15027,8 @@
     - subject: "image-balena: Decouple boot directory generation from rootfs task"
       hash: 0a2a6bc11a0868c6cd858f28783eccfee5199ca9
       body: >
-        The boot partition needs to be generated before creating the balenaos-img
+        The boot partition needs to be generated before creating the
+        balenaos-img
 
         but is not part of the root filesystem generation.
 
@@ -15155,7 +15255,8 @@
             - subject: Prune Jenkinsfile
               hash: ea14e503181bbb248a4bed1b86a227d9c214cbfb
               body: >
-                we are not using it for our CI, and it confuses jenkins set up on the
+                we are not using it for our CI, and it confuses jenkins set up
+                on the
 
                 balena-os org
               footer:
@@ -15246,7 +15347,8 @@
             - subject: "api-keys: Remove os variant parameter for authentication check"
               hash: 9e0cbe04c6d1c533c3e66183eca1d3abfb8c381d
               body: >
-                The current code authenticates unmanaged production devices which makes
+                The current code authenticates unmanaged production devices
+                which makes
 
                 no sense. Unmanaged devices do not need to authenticate with the API.
               footer:
@@ -15260,7 +15362,8 @@
                 releases"
               hash: 1abd10a12947f05ae328496e98fcbcdc6a834ce1
               body: >
-                Newer BalenaOS releases have replaced OS variants for a developmentMode
+                Newer BalenaOS releases have replaced OS variants for a
+                developmentMode
 
                 configuration setting. This commit uses this variable to set the OS
 
@@ -15275,8 +15378,8 @@
             - subject: "config: Add developmentMode to schema"
               hash: 4ad7a3ae917c888f267463fd3d5b839439cf40e6
               body: >
-                Add a `developmentMode` configuration variable to the schema. Do not
-                expose
+                Add a `developmentMode` configuration variable to the schema. Do
+                not expose
 
                 this on the device target state until local key-based authentication is
 
@@ -15311,8 +15414,8 @@
             - subject: Bump path-parse from 1.0.6 to 1.0.7
               hash: 2e38356bf4f5157483017ea2e6670514cbca49c1
               body: >
-                Bumps [path-parse](https://github.com/jbgutierrez/path-parse) from 1.0.6
-                to 1.0.7.
+                Bumps [path-parse](https://github.com/jbgutierrez/path-parse)
+                from 1.0.6 to 1.0.7.
 
                 - [Release notes](https://github.com/jbgutierrez/path-parse/releases)
 
@@ -15339,7 +15442,8 @@
             - subject: Bump tar from 4.4.13 to 4.4.19
               hash: b7cb494602fbd050bb9e31b5e8293a080349562c
               body: >
-                Bumps [tar](https://github.com/npm/node-tar) from 4.4.13 to 4.4.19.
+                Bumps [tar](https://github.com/npm/node-tar) from 4.4.13 to
+                4.4.19.
 
                 - [Release notes](https://github.com/npm/node-tar/releases)
 
@@ -15507,7 +15611,8 @@
     - subject: "image-balena: Allow passwordless root logins"
       hash: 71aeea3652bf095544b1083023aa5d4e97448597
       body: >
-        Even without debug-tweaks, allow passwordless root logins. For production
+        Even without debug-tweaks, allow passwordless root logins. For
+        production
 
         builds there is no console available so this setting does not change current
 
@@ -15547,7 +15652,8 @@
         management"
       hash: 5227ba18d0fe81fabae2b33b3f0cd9f690f85973
       body: >
-        This service will adjust the filesystem with development features based on
+        This service will adjust the filesystem with development features based
+        on
 
         the `developmentMode` setting on `config.json`.
       footer:
@@ -15708,7 +15814,8 @@
             - subject: "storagemigration: capture failcleanup logs in logfile"
               hash: 4f7f543eff08766bc584024afdb57760dfb52130
               body: >
-                reorder the defer statements in the migrate function to only teardown
+                reorder the defer statements in the migrate function to only
+                teardown
 
                 the logger after the failcleanup function ran. otherwise errors logged
 
@@ -15848,7 +15955,8 @@
             - subject: Fix regression with local mode push
               hash: 6f5f3bc2f3aea1bf5e5772533be80c3bfbb4e3a9
               body: >
-                PR #1749 introduced a bug when pushing local target state. An update to
+                PR #1749 introduced a bug when pushing local target state. An
+                update to
 
                 the [image name normalization](https://github.com/balena-os/balena-supervisor/blob/f1bd4b8d9bcef29e326cbf97eaddd837c2704d19/src/lib/docker-utils.ts#L81)
 
@@ -15891,8 +15999,8 @@
             - subject: Remove comparison based on image, release, and service ids
               hash: b67f94802dd8c2e890121f6ca82eda8dff2c051c
               body: >
-                Preparing for the new v3 target state, where the supervisor will make
-                environment
+                Preparing for the new v3 target state, where the supervisor will
+                make environment
 
                 dependent ids optional and rely on using general UUIDs and user known identifiers
 
@@ -15924,7 +16032,8 @@
             - subject: Use tags to track supervised images in docker
               hash: f1bd4b8d9bcef29e326cbf97eaddd837c2704d19
               body: >
-                The image manager module now uses tags instead of docker IDs as the main
+                The image manager module now uses tags instead of docker IDs as
+                the main
 
                 way to identify docker images on the engine. That is, if the target
 
@@ -15988,7 +16097,8 @@
             - subject: Fix db-helper module for tests
               hash: 357d1baf6188d89b8552fd9068dbea9ac50aa008
               body: >
-                The previous module was using `rewire` to get the knex instance from the
+                The previous module was using `rewire` to get the knex instance
+                from the
 
                 db module but that was leading to issues when running tests using `test:fast`.
 
@@ -16419,7 +16529,8 @@
     - subject: "tests: Fix insecure registry error"
       hash: 647d683dbfd0461706e75291c5396752fdc1b2ce
       body: >
-        introduced when images including 8227a61f6bef6d93cc6a5acd0ef93a2012079964
+        introduced when images including
+        8227a61f6bef6d93cc6a5acd0ef93a2012079964
 
         made it to production.
 
@@ -16624,7 +16735,8 @@
             - subject: Make layer download resuming more resilient
               hash: 582487f832c59c2f734a780ab0492833f29002c9
               body: >
-                This commit changes the way we retry layer downloads after failures with
+                This commit changes the way we retry layer downloads after
+                failures with
 
                 the goal of making it more resilient, especially for cases involving
 
@@ -16674,7 +16786,8 @@
             - subject: Lock destination layers while delta is being processed
               hash: 0ad4281e11e4d3ef263010787aecd244c0ce333d
               body: >
-                During fingerpinting of the source image the destination layers are not
+                During fingerpinting of the source image the destination layers
+                are not
 
                 exepmt from being released (e.g. when `balena image rm <iid>`) is run
 
@@ -16726,7 +16839,8 @@
             - subject: "storagemigration: defer commit to next start"
               hash: bd1628e67136b78ca7e7c83c5569666207d28a84
               body: >
-                With this change the aufs data is kept around until the next time we
+                With this change the aufs data is kept around until the next
+                time we
 
                 start. If we find both an aufs AND an overlay2 storage root, we cleanup
 
@@ -17889,7 +18003,8 @@
             - subject: Update balena-register-device and send extra info at provision time
               hash: 9e52bb33ac931a035b4cd0fd80173bf10db771c0
               body: >
-                This extra info will mean the API is able to immediately set default
+                This extra info will mean the API is able to immediately set
+                default
 
                 config vars based on the os/supervisor version so that they are
 
@@ -17999,7 +18114,8 @@
             - subject: Log error responses from API when reporting state
               hash: 2203f78d517a9edf75a261dd3c77cdf5b609548c
               body: >
-                This adds the error message from the API to journal logs to better
+                This adds the error message from the API to journal logs to
+                better
 
                 identify those cases where patching to the API fails.
               footer:
@@ -18030,7 +18146,8 @@
             - subject: Remove version tag from livepush generated image
               hash: 9c1d10dc318bb7c207608ed197c5713960642af3
               body: >
-                The `start-resin-supervisor` script in newer OS version no longer uses the
+                The `start-resin-supervisor` script in newer OS version no
+                longer uses the
 
                 SUPERVISOR_TAG environment variable setup on supervisor.conf and
 
@@ -18071,8 +18188,8 @@
             - subject: Bump dockerode types to 2.5.34
               hash: 95fb568aaeb0d5a0fa8b4b88f650b51d3b96786d
               body: >
-                This commit updates dockerode types to the latest 2.x version, removing
-                the need
+                This commit updates dockerode types to the latest 2.x version,
+                removing the need
 
                 for custom composer types for network.
 
@@ -18576,7 +18693,8 @@
     - subject: "image_types_balena: make agnostic to root fstype"
       hash: 71553d47174d8dc28777b0d0a6723418192ad8e4
       body: >
-        Build BALENA_HOSTAPP_IMG path using BALENA_ROOT_FSTYPE instead of assuming
+        Build BALENA_HOSTAPP_IMG path using BALENA_ROOT_FSTYPE instead of
+        assuming
 
         the root is ext4.
       footer:
@@ -18874,7 +18992,8 @@
     - subject: Update PR template to specify test coverage in more detail
       hash: ce0bb95e1d045ef32c377d4fc9de959c6ebbfd88
       body: >
-        All PRs should include details about test coverage, including whether the
+        All PRs should include details about test coverage, including whether
+        the
 
         tests are automated on manually recorded.
       footer:
@@ -19286,7 +19405,8 @@
     - subject: Respect custom CA in supervisor
       hash: 4cf82392c78d804a18737de80dcfa6f8f34d0494
       body: >
-        This is necessary because node has its own built-in CA bundle and ignores
+        This is necessary because node has its own built-in CA bundle and
+        ignores
 
         the system-wide bundle. Bind-mount the system-wide bundle to the supervisor
 
@@ -19384,7 +19504,8 @@
     - subject: "u-boot: Add required configuration for BalenaOS environment"
       hash: 401345c86a3a017dc548a94c7afa3977d547fc21
       body: >
-        The BalenaOS u-boot environment patch requires u-boot to support importing
+        The BalenaOS u-boot environment patch requires u-boot to support
+        importing
 
         and exporting of the environment as well as the fsuuid command.
       footer:
@@ -20117,7 +20238,8 @@
             - subject: Attempt a state report once every maxReportFrequency
               hash: 0e3c0263922043b9d53a7eb3545622106f10100c
               body: >
-                With the addition of the system information feature (CPU temp) etc if
+                With the addition of the system information feature (CPU temp)
+                etc if
 
                 there wasn't any changes in the docker or config state of the device,
 
@@ -20166,7 +20288,8 @@
             - subject: "version: drop SUPERVISOR_VERSION env var"
               hash: 8e65466f2d8540918b1fa8d8af88d0c21fcbf7f8
               body: >
-                In order to make supervisor upgrades more transparent, lets move away
+                In order to make supervisor upgrades more transparent, lets move
+                away
 
                 from this env var since it requires a container restart any time the supervisor
 
@@ -20188,7 +20311,8 @@
             - subject: Fix supervisor deadlock during migration
               hash: adffde932ec28b114a5821b9ae332a42bb330be2
               body: >
-                Due to the singleton work, when performing migration M00005 and there
+                Due to the singleton work, when performing migration M00005 and
+                there
 
                 are apps with services created in the database, a deadlock occurs
 
@@ -20225,7 +20349,8 @@
             - subject: Fix config checks for ConfigFS backend
               hash: a5f3002e708c949b6de3c8ba495b2a89c13214fc
               body: >
-                When trying to apply SSDT overlays in Up Board, the supervisor currently
+                When trying to apply SSDT overlays in Up Board, the supervisor
+                currently
 
                 gets stuck in a loop trying to apply target state. See #1465
 
@@ -20977,7 +21102,8 @@
                 - commits:
                     - author: Paulo Castro
                       body: >-
-                        The change type is considered 'major' because, by default, errors are
+                        The change type is considered 'major' because, by
+                        default, errors are
 
                         now thrown for relatively common occurrences such as authentication
 
@@ -21592,7 +21718,8 @@
                     - subject: Remove handlebars-helpers to shrink bundle size
                       hash: 1305553f48747e0e450c89254790e67674c252b7
                       body: >
-                        We can re-add specific helpers as necessary without needing to bloat
+                        We can re-add specific helpers as necessary without
+                        needing to bloat
 
                         with the entirety of the helpers package
                       footer:
@@ -21702,7 +21829,8 @@
                         - commits:
                             - author: Juan Cruz Viotti
                               body: >-
-                                This is very similar to the cache class they use by default, with the
+                                This is very similar to the cache class they use
+                                by default, with the
 
                                 difference that it has a limit and won't grow indefinitely, causing
 
@@ -21747,7 +21875,8 @@
                         - commits:
                             - author: Lucian Buzzo
                               body: >-
-                                Only match elements with .filter() if the base schema (the schema with no
+                                Only match elements with .filter() if the base
+                                schema (the schema with no
 
                                 anyOf branches) matches the element.
                               footers:
@@ -21867,7 +21996,8 @@
                         - commits:
                             - author: Giovanni Garufi
                               body: >-
-                                Merge multiple anyOf subschemas that match into a single one.
+                                Merge multiple anyOf subschemas that match into
+                                a single one.
 
                                 Add axioms in test
                               footers:
@@ -21891,7 +22021,8 @@
                         - commits:
                             - author: Juan Cruz Viotti
                               body: >-
-                                This is a hack, and should be reverted once we get to the bottom of it.
+                                This is a hack, and should be reverted once we
+                                get to the bottom of it.
 
                                 It will impact performance, but right now there are things that should
 
@@ -21962,8 +22093,8 @@
                 - commits:
                     - author: Stevche Radevski
                       body: >-
-                        Handlebars supports very basic if condition checking, but it only checks
-                        for
+                        Handlebars supports very basic if condition checking,
+                        but it only checks for
 
                         existence of a field. There are times when we want to combine conditions in order
 
@@ -21985,7 +22116,8 @@
             - subject: Bump elliptic from 6.5.2 to 6.5.3
               hash: c11004cd24fe66e6af7f16a79c0cc9e8847eb415
               body: >
-                Bumps [elliptic](https://github.com/indutny/elliptic) from 6.5.2 to 6.5.3.
+                Bumps [elliptic](https://github.com/indutny/elliptic) from 6.5.2
+                to 6.5.3.
 
                 - [Release notes](https://github.com/indutny/elliptic/releases)
 
@@ -22030,7 +22162,8 @@
                             - subject: Drop unnecessary async from request()
                               hash: dfd4c8c39327fe2e1706a8180e3c3f56d4229b77
                               body: >
-                                This allows consumers like pinejs-client-supertest
+                                This allows consumers like
+                                pinejs-client-supertest
 
                                 to have all the methods returning different Promise
 
@@ -22246,8 +22379,8 @@
         supervisor state"
       hash: 6208f065e59d9c15e10e872bff788c0b80020983
       body: >
-        Recently the supervisor added a codepath that assumes no files underneath
-        it will change during runtime.
+        Recently the supervisor added a codepath that assumes no files
+        underneath it will change during runtime.
 
         OS update hooks can trigger a condition whereby the supervisor reboots the device during a HUP,
 
@@ -22284,7 +22417,8 @@
             - subject: "common: Fix bug where aliases might be undefined"
               hash: 60132134deffd770a40d1e6f18fdd87cb2f9f52e
               body: >
-                Should handle the scenario where the network aliases are undefined.
+                Should handle the scenario where the network aliases are
+                undefined.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -22336,7 +22470,8 @@
             - subject: Bump lodash from 4.17.15 to 4.17.19
               hash: 01655b595555ae63ea1b70d623451c9ad3ec03dd
               body: >
-                Bumps [lodash](https://github.com/lodash/lodash) from 4.17.15 to 4.17.19.
+                Bumps [lodash](https://github.com/lodash/lodash) from 4.17.15 to
+                4.17.19.
 
                 - [Release notes](https://github.com/lodash/lodash/releases)
 
@@ -23069,7 +23204,8 @@
                             - subject: "🐛: Fix missing `deprecated.getStringParams` function"
                               hash: 53edb7e7485acd4310e9b04291894f6ab746285a
                               body: >
-                                The function `deprecated.getStringParams` was used, but
+                                The function `deprecated.getStringParams` was
+                                used, but
 
                                 not defined.
                               footer:
@@ -23201,7 +23337,8 @@
                             - subject: Add 'upsert' method supporting natural keys, requires Pinejs ^10.19.1
                               hash: c8ebfceec3ecc1cc57ee6942db35730c6d993192
                               body: >
-                                Detects unique constrain errors by 409 statusCodes.
+                                Detects unique constrain errors by 409
+                                statusCodes.
 
                                 Because of this, the upsert() method is only
 
@@ -23474,8 +23611,8 @@
             - subject: Add label to expose gpu to container
               hash: ae646a07ec6a6c96f7cb91f1d37898a94dbab47a
               body: >
-                In the absence of an upstream implementation of the DeviceRequest API
-                introduced
+                In the absence of an upstream implementation of the
+                DeviceRequest API introduced
 
                 as part of Docker API v1.40 we roll our own using a feature label.
 
@@ -23508,7 +23645,8 @@
             - subject: Move database app processing out to its own module
               hash: b31d5007fba001fcb71f5103447823f9a27bbfaa
               body: >
-                This is part of the work to make the application-manager module much
+                This is part of the work to make the application-manager module
+                much
 
                 less monolithic, in preperation for system apps and more generally
 
@@ -23560,7 +23698,8 @@
             - subject: "fix: API auth missing on state GET/PATCH"
               hash: b89425c6079b74c709ef9872c6fc53726ffda6d3
               body: >
-                When performing a state GET/PATCH the authentication header was being
+                When performing a state GET/PATCH the authentication header was
+                being
 
                 missed off.
               footer:
@@ -23711,8 +23850,8 @@
             - subject: Make the db module a singleton
               hash: 1d7381327e3114c0d005316846429d26b01a3e4c
               body: >
-                We were treating the database class as a singleton, but still having to
-                pass
+                We were treating the database class as a singleton, but still
+                having to pass
 
                 around the db instance. Now we can simply require the db module and have
 
@@ -23898,7 +24037,8 @@
     - subject: "kernel-resin: Built-in zram configuration"
       hash: 2fcf092e08349bc66a2a90172668024e8a589d22
       body: >
-        In preparation to using zram swap drives make this configuration built-in
+        In preparation to using zram swap drives make this configuration
+        built-in
 
         so it is available in the initramfs.
       footer:
@@ -24051,7 +24191,8 @@
     - subject: "openvpn: Add runtime dependency on bash"
       hash: f84dcfdd4493ee23c84940348dbbffff9ced48a2
       body: >
-        The dependency is introduced by the upstream.sh and downstream.sh scripts.
+        The dependency is introduced by the upstream.sh and downstream.sh
+        scripts.
 
         Bash is also a dependency not only for internal packages but for external
 
@@ -24435,7 +24576,8 @@
             - subject: "versionbot: Add changelog yml file"
               hash: 9b35f5e9cb6b27b92f7dc578a92532ade36c7a36
               body: >
-                This file allows other components to uniquely parse the information that
+                This file allows other components to uniquely parse the
+                information that
 
                 is contained in the changelog. It will be automatically managed by
 
@@ -24637,7 +24779,8 @@
             - subject: Remove legacy fallback to DROP rule in iptables
               hash: 31957566e5f5b21910988319472721ce2a931a38
               body: >
-                This has not been necessary for a long time, and wwe can now remove it.
+                This has not been necessary for a long time, and wwe can now
+                remove it.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -24647,7 +24790,8 @@
             - subject: Add an ESTABLISHED flag to API iptables rules
               hash: 7b1f03ced509cdbdbea950e079ba2fab5c3699bb
               body: >
-                This allows a response to an input with dport=`supevisor api port` and
+                This allows a response to an input with dport=`supevisor api
+                port` and
 
                 is required when the host OS is doing stateful firewalling.
 
@@ -24719,7 +24863,8 @@
             - subject: Remove coverage running and modules
               hash: 6c360c2273ad2ab66ed254a1172f138d4c1430d8
               body: >
-                The coverage no longer works with es2020, and nobody really pays any
+                The coverage no longer works with es2020, and nobody really pays
+                any
 
                 attention to the coverage as it is.
               footer:
@@ -25015,7 +25160,8 @@
             - subject: ⚡ Update synchronisation scripts for supervisor development
               hash: 8ab63656bd483645fe0238fee2a1824158f3f453
               body: >
-                We move the old sync.js script to tools/, and delete the now-broken
+                We move the old sync.js script to tools/, and delete the
+                now-broken
 
                 sync-debug.js.
 
@@ -25032,7 +25178,8 @@
             - subject: 🔧 Move to an alpine base image and drop i386-nlp support
               hash: 3690acbd70df726030b648a1c32a9b2b21015232
               body: >
-                We also remove the Makefile to go to a simpler build system, as long with
+                We also remove the Makefile to go to a simpler build system, as
+                long with
 
                 the retry_docker_push.sh file. We remove the rest of the automation tools
 
@@ -25173,8 +25320,8 @@
                 signed-off-by: Zahari Petkov <zahari@balena.io>
               subject: Block on random until success
               body: >-
-                On Raspberry Pi Zero W sometimes getrandom is not ready yet at the moment
-                of
+                On Raspberry Pi Zero W sometimes getrandom is not ready yet at
+                the moment of
 
                 os-config launch:
 
@@ -25201,7 +25348,8 @@
     - subject: "balena-host: Ignore environment file if it does not exist"
       hash: 692a06a70536b9fcda79d5a0b28b23f384b9bb78
       body: >
-        Instruct the service to ignore the environment file if it does not exist.
+        Instruct the service to ignore the environment file if it does not
+        exist.
 
         This avoids the service failing if the file does not exist.
       footer:
@@ -25565,7 +25713,8 @@
             - subject: Bump acorn from 5.7.3 to 5.7.4
               hash: f8363fc72b21386cc3561be576d8f21ec0463c89
               body: >
-                Bumps [acorn](https://github.com/acornjs/acorn) from 5.7.3 to 5.7.4.
+                Bumps [acorn](https://github.com/acornjs/acorn) from 5.7.3 to
+                5.7.4.
 
                 - [Release notes](https://github.com/acornjs/acorn/releases)
 
@@ -25592,7 +25741,8 @@
             - subject: Allow semver comparison on l4t versions in contracts
               hash: 5c50f656c33954de6f4c07f8b6c892b4bf9953cf
               body: >
-                We add an implicit .0 to the end of l4t versions which do not fulfill
+                We add an implicit .0 to the end of l4t versions which do not
+                fulfill
 
                 semver, which allows us to always match using comparison operators, such
 
@@ -25978,7 +26128,8 @@
     - subject: Increase DNS clients timeout to 15 seconds
       hash: b4122eeea971dfc9325885cc7c896c733cf60920
       body: >
-        The DNS clients (applications) resolver libraries use the timeout value in
+        The DNS clients (applications) resolver libraries use the timeout value
+        in
 
         /etc/resolv.conf to set the time between DNS attempts. The default is 5
 
@@ -26553,7 +26704,8 @@
     - subject: "resin-supervisor: Expose container ID via env variable"
       hash: 27d76cd9441ad427342f53b7e5b865129dd05557
       body: >
-        The supervisor needs to know its container ID on the context of different
+        The supervisor needs to know its container ID on the context of
+        different
 
         engine objects cleanup tasks, so it can understand what objects are
 

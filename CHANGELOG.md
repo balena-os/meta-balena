@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.10
+## (2023-04-24)
+
+* mkfs-hostapp-native: Update base image in Dockerfile [Alexandru Costache]
+
 # v2.114.9
 ## (2023-04-22)
 
