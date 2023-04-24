@@ -15,10 +15,10 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "v20.10.34"
+BALENA_VERSION = "v20.10.35"
 BALENA_BRANCH = "master"
 
-SRCREV = "5888c560d6623b54e093aa87ab30d952f2eb1963"
+SRCREV = "f244ea652c642089353e9abc222931815a208549"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
