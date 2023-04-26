@@ -1,4 +1,44 @@
 - commits:
+    - subject: "classes: kernel-balena: force recompilation if signing variables change"
+      hash: ed976cd342d7f70236a683bdf179a8490862f747
+      body: |
+        If they signing variables change, we need to rebuild and resign kernel
+        and modules.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-keys: make tasks depends on signing variables"
+      hash: 421d737c200915787e5bc6c6829254cf5b4976f1
+      body: |
+        To avoid unneeded rebuilds, just make the actual key fetching tags
+        depend on the signing variables.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: sign: make signing task depends on signing variables"
+      hash: a17f312bea7302577b7c739d57474e9014d4b8d1
+      body: |
+        The signing process order depends on the package to be signed, so let's
+        make sure the re-signing happens.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.114.12
+  title: ""
+  date: 2023-04-26T10:01:38.568Z
+- commits:
     - subject: Update balena-engine to v20.10.35
       hash: eb6d64cc9f8cf9b429ae9047ffc6b5e5afa81e10
       body: |

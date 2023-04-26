@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.114.12
+## (2023-04-26)
+
+* classes: kernel-balena: force recompilation if signing variables change [Alex Gonzalez]
+* balena-keys: make tasks depends on signing variables [Alex Gonzalez]
+* classes: sign: make signing task depends on signing variables [Alex Gonzalez]
+
 # v2.114.11
 ## (2023-04-24)
 
