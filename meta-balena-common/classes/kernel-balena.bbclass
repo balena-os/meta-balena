@@ -1058,6 +1058,11 @@ do_configure:append () {
 do_configure[depends] += "${@oe.utils.conditional('SIGN_API','','',' balena-keys:do_deploy',d)}"
 # Force compile to depend on the last resin task in the chain
 do_compile[deptask] += "do_kernel_resin_checkconfig"
+# Remove kernel module certificates generated during previous build
+do_configure[cleandirs] += "${@oe.utils.conditional('SIGN_API','','','${B}',d)}"
+do_configure[vardeps] += " \
+    SIGN_API \
+    "
 
 # Because we chain signatures here, the signed artifact is different for each
 # and defined in :prepend for each task

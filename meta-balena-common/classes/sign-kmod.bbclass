@@ -31,7 +31,7 @@ do_sign_kmod[depends] += " \
     gnupg-native:do_populate_sysroot \
     "
 
-do_package[vardeps] += " \
+do_sign_kmod[vardeps] += " \
     SIGN_API \
     SIGN_KMOD_KEY_ID \
     "

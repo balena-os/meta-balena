@@ -67,7 +67,7 @@ deltask do_configure
 deltask do_compile
 deltask do_install
 
-do_package[vardeps] += " \
+do_get_db[vardeps] += " \
     SIGN_API \
     SIGN_EFI_KEK_KEY_ID \
     "
