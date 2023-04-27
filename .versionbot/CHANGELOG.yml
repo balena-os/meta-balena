@@ -1,4 +1,44 @@
 - commits:
+    - subject: "hostapp-update-hooks: use unsafe fatrw copy for bootfiles"
+      hash: 71d1fa57f88e73a39cc95cca41ee148c0a2bd8c7
+      body: >
+        A safe copy would only work for files that are read by fatrw also and
+        that is
+
+        not the case for boot files. Still, some file like `config.json` would
+
+        benefit from a safe copy so we still try that first.
+
+
+        Fixes #2998
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: introduce unsafe fatrw copy"
+      hash: df43a753c7d191b715101fd107da93fcdb7085cb
+      body: |
+        If a safe copy is preferred but non-critical, the unsafe fatrw command
+        can be used and if fatrw does not have enough resources to make a safe
+        copy it will fallback to a standard cp.
+
+        This is useful when performing hostOS updates for example where a safe
+        copy would only work for files that are read by fatrw also and that is
+        not the case for boot files for example.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.114.13
+  title: ""
+  date: 2023-04-27T12:25:49.566Z
+- commits:
     - subject: "classes: kernel-balena: force recompilation if signing variables change"
       hash: ed976cd342d7f70236a683bdf179a8490862f747
       body: |

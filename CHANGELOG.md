@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.114.13
+## (2023-04-27)
+
+* hostapp-update-hooks: use unsafe fatrw copy for bootfiles [Alex Gonzalez]
+* balena-config-vars: introduce unsafe fatrw copy [Alex Gonzalez]
+
 # v2.114.12
 ## (2023-04-26)
 
