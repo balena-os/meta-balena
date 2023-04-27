@@ -50,6 +50,10 @@ fatcp() {
     /usr/bin/fatrw copy "${1}" "${2}"
 }
 
+unsafe_fatcp() {
+    /usr/bin/fatrw -u copy "${1}" "${2}"
+}
+
 fatmv() {
     fatcp "${1}" "${2}" && rm -f "${1}" && sync
 }
@@ -64,11 +68,13 @@ fatwr() {
 
 if command -v "/usr/bin/fatrw" > /dev/null; then
     CP=fatcp
+    UCP=unsafe_fatcp
     MV=fatmv
     CAT=fatcat
     WR=fatwr
 else
     CP=cp
+    UCP=cp
     MV=mv
     CAT=cat
     WR=tee
