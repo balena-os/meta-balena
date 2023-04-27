@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.114.14
+## (2023-04-27)
+
+
+<details>
+<summary> Update balena-supervisor to v14.10.8 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.10.8
+> ### (2023-04-26)
+> 
+> * Fix service comparison when creating component steps [Felipe Lalanne]
+> * Create tests with recovery from #1576 [Felipe Lalanne]
+> * Skip updateMetadata step if there are network changes [Felipe Lalanne]
+> * Add replication of issue using unit tests [Felipe Lalanne]
+> * Add integration tests for state-engine [Felipe Lalanne]
+> * Do not pass auth to images with no registry [Felipe Lalanne]
+> 
+
+</details>
+
 # v2.114.13
 ## (2023-04-27)
 

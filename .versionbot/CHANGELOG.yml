@@ -1,4 +1,118 @@
 - commits:
+    - subject: Update balena-supervisor to v14.10.8
+      hash: d454cdb1145c80128cc280f40e6633d862ae0086
+      body: |
+        Update balena-supervisor from 14.10.7 to 14.10.8
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Fix service comparison when creating component steps
+              hash: 5fdd689590d048685cc11e32a14ccf7faf3887ee
+              body: >
+                A bug in service comparison would make it that a device already
+                running
+
+                a service from a new release with network changes would never stop the
+
+                running service so remaining services would forever get stuck in
+
+                `Downloaded` state.
+
+
+                This fixes the comparison so the service will get killed in this case,
+
+                particularly allowing devices to recover from #1576
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: "Create tests with recovery from #1576"
+              hash: 7b8b187c749c3390243b2246ba20d60ccc40db1f
+              body: >
+                Devices affected by the bug described in 1576, are also stuck
+                with some
+
+                services in the `Downloaded` state, because the state engine does not
+
+                detect that the running services should be killed on a network change
+
+                even if they belong to a new release. This is a bug, which can be
+
+                replicated by the tests in this commit
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Skip updateMetadata step if there are network changes
+              hash: 7aecaae8b02832afca3d52d233ecf5eaa8fa9ab8
+              body: >
+                Previous behavior would make it that an `updateMetadata` step
+                would take
+
+                precedence over a `kill` step when network changes are present. This
+
+                would lead to an inconsistent state if an update included a
+
+                network and a container change.
+              footer:
+                Closes: "#1576"
+                closes: "#1576"
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Add replication of issue using unit tests
+              hash: 0a358a4463717b53c3619432781a0ab568fb74c1
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Add integration tests for state-engine
+              hash: 138aec5de418c7673285303d66d35b8cea43e4a8
+              body: >
+                These tests use the supervisor API to check that applying a
+                target state
+
+                allows the device to eventually get to the desired target configuration.
+
+
+                This are high-level tests that work with real images and containers
+
+                using dind.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Do not pass auth to images with no registry
+              hash: c1207cbbff836f99fadb33dd5cf65baa2da0ecf8
+              body: >
+                The supervisor allows the target image to be an image without a
+
+                registry (e.g. `alpine:latest`), while this really only happens while in
+
+                local mode, we don't want to pass credentials to the default registry as
+
+                those credentials are meant for balena registry and will otherwise fail.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.10.8
+          title: ""
+          date: 2023-04-26T18:49:41.754Z
+  version: 2.114.14
+  title: ""
+  date: 2023-04-27T17:45:02.161Z
+- commits:
     - subject: "hostapp-update-hooks: use unsafe fatrw copy for bootfiles"
       hash: 71d1fa57f88e73a39cc95cca41ee148c0a2bd8c7
       body: >
