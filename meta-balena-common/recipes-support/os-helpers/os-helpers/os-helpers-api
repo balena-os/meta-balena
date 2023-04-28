@@ -39,12 +39,10 @@ api_get_request() {
 	_errfile=$(mktemp)
 	# Non-authenticated calls with empty token ignore bearer header
 	if _status_code=$(curl --compressed --silent --show-error -L -XGET --header "Authorization: Bearer ${_token}" -w "%{http_code}" -o "${_outfile}" "${_url}" 2> "${_errfile}"); then
-		if [[ "${_status_code}" = 2* ]]; then
-			cat "${_outfile}"
-			_ret=0
-		else
-			warn "[${_status_code}]: GET request to ${_url} failed."
-		fi
+		case "${_status_code}" in
+			2*) cat "${_outfile}"; _ret=0;;
+			*) warn "[${_status_code}]: GET request to ${_url} failed.";;
+		esac
 	else
 		warn "${PN}: $(cat "${_errfile}")"
 	fi
