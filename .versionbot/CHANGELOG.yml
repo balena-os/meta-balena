@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add additional logs when logging in using balenaSDK"
+      hash: 2c607e878de285f30baab3c94605ca8d151ac597
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 2.114.15
+  title: ""
+  date: 2023-04-28T13:49:31.011Z
+- commits:
     - subject: Update balena-supervisor to v14.10.8
       hash: d454cdb1145c80128cc280f40e6633d862ae0086
       body: |

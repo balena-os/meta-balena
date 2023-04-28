@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.15
+## (2023-04-28)
+
+* patch: Add additional logs when logging in using balenaSDK [Vipul Gupta (@vipulgupta2048)]
+
 # v2.114.14
 ## (2023-04-27)
 
