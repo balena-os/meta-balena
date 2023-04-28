@@ -235,7 +235,11 @@ module.exports = {
 						// Set local mode so we can perform local pushes of containers to the DUT
 						localMode: true,
 						developmentMode: true,
-						installer: { secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT) },
+						installer: {
+							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
+							// Note that QEMU needs to be configured with no internal storage
+							migrate: { force: this.suite.options.installerForceMigration }
+						},
 					},
 				},
 				this.getLogger(),
@@ -284,15 +288,17 @@ module.exports = {
 			});
 		}
 
-		// Configure to use the flasher migrator
-		// Note that QEMU needs to be configured with no internal storage for tests
-		// to pass
 		let configJson = await this.context.get().os.configJson
-		if( await this.workerContract.workerType === `qemu` && this.suite.options.installerForceMigration == true){
-				console.log("Forcing installer migration")
-				await this.context.set({
-					configJson: configJson["installer"]= {migrate: {force: 'true'}}
-				})
+		if ( this.workerContract.workerType === `qemu` && configJson.installer.migrate.force ) {
+			console.log("Forcing installer migration")
+		} else {
+			console.log("No migration requested")
+		}
+
+		if ( configJson.installer.secureboot ) {
+			console.log("Opting-in secure boot and full disk encryption")
+		} else {
+			console.log("No secure boot requested")
 		}
 
 		// Configure OS image

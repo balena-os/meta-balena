@@ -207,6 +207,7 @@ module.exports = {
     this.suite.context.set({
 			workerContract: await this.worker.getContract()
 		})
+
 		// Unpack OS image .gz
 		await this.os.fetch();
     await this.os.readOsRelease();
@@ -231,7 +232,22 @@ module.exports = {
     config.deviceId = deviceRegInfo.id;
     config.persistentLogging = true;
     config.developmentMode = true;
-    config.installer = { secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT) };
+    config.installer = {
+      secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
+      migrate: { force: this.suite.options.installerForceMigration }
+    };
+
+    if( this.workerContract.workerType === `qemu` && config.installer.migrate.force ) {
+        console.log("Forcing installer migration")
+    } else {
+        console.log("No migration requested")
+    }
+
+    if ( config.installer.secureboot ) {
+        console.log("Opting-in secure boot and full disk encryption")
+    } else {
+        console.log("No secure boot requested")
+    }
 
     // get ready to populate DUT image config.json with the attributes we just generated
     this.os.addCloudConfig(config);
