@@ -62,7 +62,8 @@ trap clean ERR
 function report_progress() {
     _ratio="${1}"
     _msg="${2}"
-    if [ -n "${API_ENDPOINT}" ]; then
+
+    if command -v "resin-device-progress"  > /dev/null && [ -n "${API_ENDPOINT}" ]; then
         resin-device-progress --percentage "${_ratio}" --state "${_msg}" || true
     else
         info "Unprovisioned: Percentage ${_ratio}, status ${_msg}"
