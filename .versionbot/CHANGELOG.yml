@@ -1,4 +1,30 @@
 - commits:
+    - subject: "initrdscripts: give the root device a chance to come up before
+        cryptsetup"
+      hash: 23b87079d424fa52753949d46a89d872360ee4ff
+      body: |
+        At this moment if the cryptsetup initrd script executes before the root
+        device comes up (e.g. when booting off a USB disk), it assumes
+        that encryption is not in place because it was not able to find
+        the EFI partition.
+
+        This patch adds a wait4file loop to the script that waits
+        for the /dev/disk/by-state directory. This is not tied to any particular
+        partition or device but since the directory does not exist by default
+        and is only created by a custom balenaOS udev rule, its existence
+        implies that the rule fired and a device with balenaOS partitions
+        is present in the system.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.114.16
+  title: ""
+  date: 2023-05-02T23:16:09.725Z
+- commits:
     - subject: "patch: Add additional logs when logging in using balenaSDK"
       hash: 2c607e878de285f30baab3c94605ca8d151ac597
       body: ""

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.16
+## (2023-05-02)
+
+* initrdscripts: give the root device a chance to come up before cryptsetup [Michal Toman]
+
 # v2.114.15
 ## (2023-04-28)
 
