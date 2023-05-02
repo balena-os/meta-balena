@@ -5,6 +5,13 @@
 . /usr/libexec/os-helpers-fs
 . /usr/libexec/os-helpers-tpm2
 
+# Give a chance to the by-state directory to appear
+# We do not expect any particular device or partition to come up
+# but if balenaOS is correctly configured on the device the by-state
+# directory will eventually be created by the custom udev rule.
+# This is useful if the rootfs is on a device that takes a while
+# to initialize such as a USB disk.
+wait4file "/dev/disk/by-state" "50"
 EFI_DEV=$(get_state_path_from_label "balena-efi")
 
 wait4udev() {
