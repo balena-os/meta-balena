@@ -423,7 +423,8 @@ if [ "$LUKS" = "1" ]; then
     # Split EFI and boot partitions
     EFI_MOUNT_DIR="$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/../efi"
     mkdir -p "$EFI_MOUNT_DIR"
-    if ! mount /dev/disk/by-label/balena-efi "$EFI_MOUNT_DIR"; then
+    EFI_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" balena-efi)
+    if ! mount "${EFI_MOUNT}" "$EFI_MOUNT_DIR"; then
         fail "Failed to mount disk labeled as 'balena-efi'."
     fi
 
