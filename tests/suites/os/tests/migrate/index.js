@@ -23,7 +23,7 @@ module.exports = {
 			run: async function(test) {
 				let skip = true;
 				try {
-					if (this.context.get().os.configJson.installer.migrate.force === 'true') {
+					if (this.os.configJson.installer.migrate.force === 'true') {
 						skip = false;
 					}
 				} catch (e) {
