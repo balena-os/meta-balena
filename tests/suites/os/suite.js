@@ -238,7 +238,7 @@ module.exports = {
 						installer: {
 							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
 							// Note that QEMU needs to be configured with no internal storage
-							migrate: { force: this.suite.options.installerForceMigration }
+							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
 						},
 					},
 				},

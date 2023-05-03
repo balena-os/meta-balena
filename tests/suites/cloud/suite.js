@@ -234,7 +234,7 @@ module.exports = {
     config.developmentMode = true;
     config.installer = {
       secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-      migrate: { force: this.suite.options.installerForceMigration }
+      migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
     };
 
     if( this.workerContract.workerType === `qemu` && config.installer.migrate.force ) {
