@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v2.114.18
+## (2023-05-03)
+
+
+<details>
+<summary> Update balena-supervisor to v14.10.10 [Renovate Bot] </summary>
+
+> ## balena-supervisor-14.10.10
+> ### (2023-05-03)
+> 
+> * mount-partitions.sh: Add support for encrypted partitions [Michal Toman]
+> 
+> ## balena-supervisor-14.10.9
+> ### (2023-05-03)
+> 
+> * Run test supervisor under a different service name [Kyle Harding]
+> 
+
+</details>
+
 # v2.114.17
 ## (2023-05-03)
 

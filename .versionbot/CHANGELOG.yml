@@ -1,4 +1,80 @@
 - commits:
+    - subject: Update balena-supervisor to v14.10.10
+      hash: 2db66def0ea9273503ce9169142d7b6e66449cd1
+      body: |
+        Update balena-supervisor from 14.10.8 to 14.10.10
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "mount-partitions.sh: Add support for encrypted partitions"
+              hash: 004592894474676e3d024e5636b9fccce9f173f9
+              body: >
+                After a recent change enforcing all the partitions to be on the
+                same
+
+                block device, encrypted partitions are no longer being detected
+
+                correctly. This is because the assumption that the parent block device
+
+                is a substring of the actually mounted block device does not work
+
+                for LUKS devices - the mount will either be /dev/mapper/luks-XXX
+
+                or /dev/dm-X while the parent device is still e.g. /dev/sda.
+
+
+                The usual balenaOS boot partition is also split in two - boot and efi.
+
+                The boot partition (mounted under /mnt/boot) is encrypted and the efi
+
+                partition (mounted under /mnt/efi) is not.
+
+
+                This patch generalizes the detection of the parent device so that
+
+                it works with both encrypted and unencrypted partitions.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: balena-supervisor-14.10.10
+          title: ""
+          date: 2023-05-03T16:01:37.089Z
+        - commits:
+            - subject: Run test supervisor under a different service name
+              hash: 33b29cfa225959dd0a58564128017e04d019ea5f
+              body: >
+                The docker compose V2 spec no longer accepts `network_mode:
+                bridge`,
+
+                which means we can no longer override the network configuration of
+
+                the `balena-supervisor` service for tests.
+
+
+                For this reason we now create a separate service to run the built
+
+                supervisor `balena-supervisor-sut` and run API tests against this
+
+                service instead of the default `balena-supervisor`.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Kyle Harding
+              nested: []
+          version: balena-supervisor-14.10.9
+          title: ""
+          date: 2023-05-03T14:26:36.360Z
+  version: 2.114.18
+  title: ""
+  date: 2023-05-03T18:08:17.355Z
+- commits:
     - subject: "test: append installer configuration instead of replacing it"
       hash: 2844d312784f2bf452fb547f2a4418814217ded1
       body: |
