@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.114.17
+## (2023-05-03)
+
+* test: append installer configuration instead of replacing it [Alex Gonzalez]
+* test: os: use boolean for installer migration flag [Alex Gonzalez]
+
 # v2.114.16
 ## (2023-05-02)
 

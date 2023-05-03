@@ -1,4 +1,32 @@
 - commits:
+    - subject: "test: append installer configuration instead of replacing it"
+      hash: 2844d312784f2bf452fb547f2a4418814217ded1
+      body: |
+        Both the migrator and secureboot tests assumed they were creating an
+        installer config.json section. Modify the code so both settings are
+        included.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "test: os: use boolean for installer migration flag"
+      hash: e2a4555c035ddd90c22afbf2150769175c6fb2f1
+      body: |
+        The installerForceMigration is a boolean, so let's use the proper type.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.114.17
+  title: ""
+  date: 2023-05-03T13:25:15.091Z
+- commits:
     - subject: "initrdscripts: give the root device a chance to come up before
         cryptsetup"
       hash: 23b87079d424fa52753949d46a89d872360ee4ff
