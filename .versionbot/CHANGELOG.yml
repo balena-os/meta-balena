@@ -1,4 +1,18 @@
 - commits:
+    - subject: Updated the CDS link
+      hash: c3614eaa6e757f6e8276f87ecefc1af4d0314150
+      body: Updated CDS link to the balena.io subdomain one
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+        signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+      author: Ryan
+      nested: []
+  version: 2.114.20
+  title: ""
+  date: 2023-05-04T22:20:34.357Z
+- commits:
     - subject: Update tests/leviathan digest to e6180e9
       hash: 315d127dc824089da1eb4392c7d8361bbbbd3766
       body: Update tests/leviathan
