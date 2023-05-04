@@ -1,6 +1,66 @@
 Change log
 -----------
 
+# v2.114.19
+## (2023-05-04)
+
+
+<details>
+<summary> Update tests/leviathan digest to e6180e9 [Renovate Bot] </summary>
+
+> ## leviathan-2.25.5
+> ### (2023-05-03)
+> 
+> * Update core/contracts digest to 75cd5e9 [Renovate Bot]
+> 
+> ## leviathan-2.25.4
+> ### (2023-05-01)
+> 
+> * Update balena-os/leviathan-worker to v2.9.6 [Renovate Bot]
+> 
+> ## leviathan-2.25.3
+> ### (2023-05-01)
+> 
+> * Update core/contracts digest to 6c6ed28 [Renovate Bot]
+> 
+> ## leviathan-2.25.2
+> ### (2023-04-26)
+> 
+> * suite: add installerForceMigration configuration [Alex Gonzalez]
+> 
+> ## leviathan-2.25.1
+> ### (2023-04-25)
+> 
+> * Update balena-os/leviathan-worker to v2.9.4 [Renovate Bot]
+> 
+> ## leviathan-2.25.0
+> ### (2023-04-20)
+> 
+> * Update Node.js to v18.16.0 [Renovate Bot]
+> 
+> ## leviathan-2.24.5
+> ### (2023-04-20)
+> 
+> * Update alpine Docker tag to v3.17.3 [Renovate Bot]
+> 
+> ## leviathan-2.24.4
+> ### (2023-04-20)
+> 
+> * Update core/contracts digest to 777cd35 [Renovate Bot]
+> 
+> ## leviathan-2.24.3
+> ### (2023-04-17)
+> 
+> * Update balena-os/leviathan-worker to v2.9.2 [Renovate Bot]
+> 
+> ## leviathan-2.24.2
+> ### (2023-04-15)
+> 
+> * docker-compose-qemu: allow to configure internal disk [Alex Gonzalez]
+> 
+
+</details>
+
 # v2.114.18
 ## (2023-05-03)
 

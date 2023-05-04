@@ -1,4 +1,167 @@
 - commits:
+    - subject: Update tests/leviathan digest to e6180e9
+      hash: 315d127dc824089da1eb4392c7d8361bbbbd3766
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 75cd5e9
+              hash: 6b45662a5ec0dde4d499ecaf7a4ef3d119e626c6
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.25.5
+          title: ""
+          date: 2023-05-03T11:00:17.452Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.6
+              hash: b5bf6d376cfe1f99eb55f4ed7f8b179205dfacf0
+              body: |
+                Update balena-os/leviathan-worker from 2.9.4 to 2.9.6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.25.4
+          title: ""
+          date: 2023-05-01T19:03:59.596Z
+        - commits:
+            - subject: Update core/contracts digest to 6c6ed28
+              hash: 940ba252779573f7dcef0b99d163de94ca934e3d
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.25.3
+          title: ""
+          date: 2023-05-01T18:07:18.096Z
+        - commits:
+            - subject: "suite: add installerForceMigration configuration"
+              hash: 70674774a7652a9e7766710bc74a829cd1156aa0
+              body: >
+                Read the suite configuration for the force migration flag which
+                configures
+
+                the flasher image to force an installer migration.
+
+
+                With the current QEMU setting, `installerForceMigration` alone is not
+
+                enough and the QEMU_INTERNAL_STORAGE also needs to be set to false in
+
+                the worker's environment so only a single external disk is attached to
+
+                the emulator.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: leviathan-2.25.2
+          title: ""
+          date: 2023-04-26T12:24:07.524Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.4
+              hash: 669aa2e1cb3ebc3286483912981eac3a25a9b7e0
+              body: |
+                Update balena-os/leviathan-worker from 2.9.2 to 2.9.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.25.1
+          title: ""
+          date: 2023-04-25T18:48:00.802Z
+        - commits:
+            - subject: Update Node.js to v18.16.0
+              hash: 2f2d14f3919f306c1ff3add08caff08ee7b7a8e9
+              body: |
+                Update node from 18.13.0 to 18.16.0
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.25.0
+          title: ""
+          date: 2023-04-20T23:53:28.826Z
+        - commits:
+            - subject: Update alpine Docker tag to v3.17.3
+              hash: 0b2f18af6469d216a003c2ac8078b035064160cc
+              body: |
+                Update alpine from 3.17.1 to 3.17.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.24.5
+          title: ""
+          date: 2023-04-20T22:45:55.982Z
+        - commits:
+            - subject: Update core/contracts digest to 777cd35
+              hash: 997f3e27ac0dc6143f5dc7371078e8e3b5e796ae
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.24.4
+          title: ""
+          date: 2023-04-20T21:54:11.743Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.2
+              hash: 6028bb0b206db9fbb4b796058867e3496af54cbd
+              body: |
+                Update balena-os/leviathan-worker from 2.9.1 to 2.9.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested: []
+          version: leviathan-2.24.3
+          title: ""
+          date: 2023-04-17T13:55:54.890Z
+        - commits:
+            - subject: "docker-compose-qemu: allow to configure internal disk"
+              hash: 24778477fe25c36558d36e619f14e2755f8d1eab
+              body: >
+                Whether the internal disk is attached or not will be defined by
+                the
+
+                environment. This allows to test the migrator that requires booting only
+
+                the external disk.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: leviathan-2.24.2
+          title: ""
+          date: 2023-04-15T14:20:36.020Z
+  version: 2.114.19
+  title: ""
+  date: 2023-05-04T09:05:39.686Z
+- commits:
     - subject: Update balena-supervisor to v14.10.10
       hash: 2db66def0ea9273503ce9169142d7b6e66449cd1
       body: |
