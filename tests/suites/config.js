@@ -9,7 +9,6 @@ module.exports = [
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
 		organization: process.env.BALENACLOUD_ORG,
-		installerForceMigration: true
 	},
 	image: `${__dirname}/balena-image.docker`,
 	debug: {
@@ -36,7 +35,6 @@ module.exports = [
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
 		organization: process.env.BALENACLOUD_ORG,
-		installerForceMigration: true
 	},
 	image: `${__dirname}/balena.img.gz`,
 	debug: {
@@ -63,7 +61,6 @@ module.exports = [
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
 		organization: process.env.BALENACLOUD_ORG,
-		installerForceMigration: true
 	},
 	image: `${__dirname}/balena.img.gz`,
 	debug: {
