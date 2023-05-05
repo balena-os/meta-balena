@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to 256b844
+      hash: e9c98147c26054bff79cd5dee1638a3ba4c2d611
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "suite: move installer configuration to balenaOS configuration section"
+              hash: 342f30a9f5665ac70fcc648af28e6751c50c6ef5
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: leviathan-2.25.6
+          title: ""
+          date: 2023-05-04T10:24:35.420Z
+  version: 2.114.21
+  title: ""
+  date: 2023-05-05T02:33:12.010Z
+- commits:
     - subject: Updated the CDS link
       hash: c3614eaa6e757f6e8276f87ecefc1af4d0314150
       body: Updated CDS link to the balena.io subdomain one
