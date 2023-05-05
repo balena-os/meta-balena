@@ -1,4 +1,62 @@
 - commits:
+    - subject: Update balena-engine to v20.10.36
+      hash: 192ab1d65bcfb50495378f0b7a1481827cc1ae10
+      body: |
+        Update balena-engine from 20.10.35 to 20.10.36
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Further improve resilience of image pulls
+              hash: d864e340bfe050144252db8b0de9c66a3a40fa20
+              body: >
+                Previously, we'd time-out a pull operation after unsuccessfully
+                retrying
+
+                for about 17 minutes (for details see commit
+
+                582487f832c59c2f734a780ab0492833f29002c9). This worked fine in most
+
+                situations, but we have seen at least one case of a particularly
+
+                unreliable network connection that would not be able to finish a large
+
+                pull when operating under this policy.
+
+
+                This commit:
+
+
+                * Completely removes timeouts from image pulls. We'll keep retrying
+                  forever, or until users cancel the pull. (From the perspective of the
+                  REST API, "canceling" mean closing the HTTP connection. This is what
+                  happens when a user Ctrl+C during a pull in the CLI, or, say, we kill
+                  a curl process that was using the REST API to pull image.)
+                * Still uses exponential back-off, but we now limit the interval between
+                  retries to 5 minutes. The rationale is that some very unreliable
+                  networks may be up only for relatively small time windows. Therefore,
+                  using intervals that are too long would increase the risk of missing
+                  these windows.
+                * Tries to avoid flooding the log stream with messages about retries.
+                  We'll log every retry attempt up to the 10th. After that, we'll log
+                  retries only once about every 2h. This retry count is reset every time
+                  we successfully download any amount of data.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.36
+          title: ""
+          date: 2023-05-04T10:15:21.705Z
+  version: 2.114.22
+  title: ""
+  date: 2023-05-05T07:14:09.662Z
+- commits:
     - subject: Update tests/leviathan digest to 256b844
       hash: e9c98147c26054bff79cd5dee1638a3ba4c2d611
       body: Update tests/leviathan
