@@ -1060,6 +1060,7 @@ do_configure[depends] += "${@oe.utils.conditional('SIGN_API','','',' balena-keys
 do_compile[deptask] += "do_kernel_resin_checkconfig"
 # Remove kernel module certificates generated during previous build
 do_configure[cleandirs] += "${@oe.utils.conditional('SIGN_API','','','${B}',d)}"
+do_compile_kernelmodules[file-checksums] += "${@oe.utils.conditional('SIGN_API','','','${STAGING_KERNEL_BUILDDIR}/certs/signing_key.pem:True',d)}"
 do_configure[vardeps] += " \
     SIGN_API \
     "
