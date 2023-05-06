@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v2.114.23
+## (2023-05-06)
+
+* tests: suites: remove default migration force configuration [Alex Gonzalez]
+* resin-init-flasher: avoid partition labels clashes [Alex Gonzalez]
+* initrdscripts: recovery: set adb default timeouts in minutes [Alex Gonzalez]
+* tests: move installerForceMigration suite configuration to balenaOS section [Alex Gonzalez]
+* tests: simplify accessing config.json data [Alex Gonzalez]
+
 # v2.114.22
 ## (2023-05-05)
 

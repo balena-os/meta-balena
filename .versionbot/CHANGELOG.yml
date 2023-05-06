@@ -1,4 +1,64 @@
 - commits:
+    - subject: "tests: suites: remove default migration force configuration"
+      hash: 6cbb6a983574158cb8531b24e3baeff8518ebe1a
+      body: |
+        Instead we will configure this on specific Jenkins jobs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: avoid partition labels clashes"
+      hash: 6af87bf9a3cae40ab7b9cad844b8ed71f6d004f8
+      body: |
+        When using labels to mount partitions, restrict it to a specific drive
+        to avoid clashes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: recovery: set adb default timeouts in minutes"
+      hash: ecb720889cc870670b2e683913f28251f7ccbd88
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: move installerForceMigration suite configuration to balenaOS
+        section"
+      hash: 020f7da433b0743e5c045239a24e3ed00445b8dc
+      body: |
+        The balenaOS section is the logical place for this configuration to be.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: simplify accessing config.json data"
+      hash: 831c12fd9bd49fec048cb20509fe5ac6255e8da8
+      body: |
+        There is no longer need to go through the context for this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.114.23
+  title: ""
+  date: 2023-05-06T19:31:19.959Z
+- commits:
     - subject: Update balena-engine to v20.10.36
       hash: 192ab1d65bcfb50495378f0b7a1481827cc1ae10
       body: |
