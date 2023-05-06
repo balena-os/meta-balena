@@ -37,8 +37,8 @@ recovery_run() {
     fi
     mkdir /dev/pts
     mount -t devpts devpts /dev/pts
-    ADBD_TIMEOUT="${bootparam_adbdtimeout:-10}"
-    ADBD_KILLTIMEOUT="${bootparam_adbdkilltimeout:-15}"
+    ADBD_TIMEOUT="${bootparam_adbdtimeout:-10m}"
+    ADBD_KILLTIMEOUT="${bootparam_adbdkilltimeout:-15m}"
     if [ "${ADBD_TIMEOUT}" -gt "${ADBD_KILLTIMEOUT}" ]; then
         ADBD_KILLTIMEOUT="${ADBD_TIMEOUT}"
     fi

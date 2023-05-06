@@ -238,7 +238,7 @@ module.exports = {
 						installer: {
 							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
 							// Note that QEMU needs to be configured with no internal storage
-							migrate: { force: this.suite.options.installerForceMigration }
+							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
 						},
 					},
 				},
@@ -288,14 +288,13 @@ module.exports = {
 			});
 		}
 
-		let configJson = await this.context.get().os.configJson
-		if ( this.workerContract.workerType === `qemu` && configJson.installer.migrate.force ) {
+		if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
 			console.log("Forcing installer migration")
 		} else {
 			console.log("No migration requested")
 		}
 
-		if ( configJson.installer.secureboot ) {
+		if ( this.os.configJson.installer.secureboot ) {
 			console.log("Opting-in secure boot and full disk encryption")
 		} else {
 			console.log("No secure boot requested")
