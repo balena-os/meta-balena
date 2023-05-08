@@ -1,0 +1,44 @@
+#!/bin/sh
+# Copyright 2023 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# vi: ft=sh
+
+# shellcheck disable=SC1091
+[ -f "/usr/libexec/os-helpers-logging" ] && . /usr/libexec/os-helpers-logging
+
+EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
+
+parse_efivar_val() {
+	od --address-radix=n --format=u1 "$1" \
+		| tr -s "' '" \
+		| cut -d ' ' -f6
+}
+
+# return zero if secure boot is enabled
+secureboot_enabled() {
+	test "$(parse_efivar_val \
+			/sys/firmware/efi/efivars/SecureBoot-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1
+}
+
+# return zero if system is in setup mode
+setup_mode_enabled() {
+	test "$(parse_efivar_val \
+			/sys/firmware/efi/efivars/SetupMode-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1
+}
+
+# return zero if system is in user mode
+user_mode_enabled() {
+	secureboot_enabled && ! setup_mode_enabled
+}
