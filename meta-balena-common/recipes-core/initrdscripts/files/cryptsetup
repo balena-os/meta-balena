@@ -4,6 +4,7 @@
 . /usr/libexec/os-helpers-logging
 . /usr/libexec/os-helpers-fs
 . /usr/libexec/os-helpers-tpm2
+. /usr/libexec/os-helpers-secureboot
 
 # Give a chance to the by-state directory to appear
 # We do not expect any particular device or partition to come up
@@ -61,6 +62,11 @@ cryptsetup_enabled() {
     # Flasher should not try to unlock the partitions
     if [ "$bootparam_flasher" = "true" ]; then
         return 1
+    fi
+
+    # Ensure that secure boot is enabled and in user mode before unlocking
+    if ! user_mode_enabled; then
+	    return 1
     fi
 
     # Only run if the EFI partition is split
