@@ -238,26 +238,6 @@ if [ -d /sys/firmware/efi ]; then
                     /usr/bin/efi-updatevar ${EXTRA_ARGS} -f "${KEY_FILE}" "${e}"
                 fi
             done
-            # Check that we're in user mode
-            SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
-                | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
-            if [ "${SETUPMODE_VAR}" -eq "1" ]; then
-                # Setting up keys hasn't disabled setup mode, try a reboot into flasher
-                info "Rebooting flasher after secure mode setup to boot in secure boot mode."
-
-                # Create a one-time boot entry for signed flasher
-                # By default flasher is unsigned, after programming the keys we want to boot
-                # into a properly signed flasher as we expect secure boot to be enabled.
-                flasher_boot=$(findmnt --noheadings --canonicalize --output SOURCE /mnt/boot)
-                efibootmgr --create \
-                   --disk "/dev/$(lsblk -nlo pkname ${flasher_boot})" \
-                   --part "$(lsblk -nlo maj:min ${flasher_boot} | cut -d: -f2)" \
-                   --label "${BOOT_ENTRY_LABEL} installer with secure boot" \
-                   --loader "${LOADER_PATH}.secureboot"
-
-                sync
-                reboot -f
-            fi
         fi
     fi
 fi
