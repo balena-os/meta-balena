@@ -444,6 +444,12 @@ fi
 
 if [ "$LUKS" = "1" ]; then
     # Split EFI and boot partitions
+
+    # We want to keep the paths identical with the devices that do not have
+    # the split. On the newly provisioned OS the efi and boot partitions will
+    # be mounted under /mnt/efi and /mnt/boot respectively, but OS tools
+    # expect everything to be under /mnt/boot. Symlink /mnt/boot/EFI to
+    # ../efi/EFI so that /mnt/boot/EFI/ points to the correct directory.
     EFI_MOUNT_DIR="$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/../efi"
     mkdir -p "$EFI_MOUNT_DIR"
     EFI_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" balena-efi)
@@ -454,6 +460,9 @@ if [ "$LUKS" = "1" ]; then
     ln -s "../efi/EFI" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI"
 
     # Move all non-EFI files to boot partition
+    # Only keep /EFI directory on the efi partition, everything else
+    # e.g. config.json, system-connections etc. goes to the encrypted
+    # boot partition
     for FILE in "$EFI_MOUNT_DIR/"*; do
         if [ "$FILE" = "$EFI_MOUNT_DIR/EFI" ]; then
             continue
@@ -461,6 +470,9 @@ if [ "$LUKS" = "1" ]; then
 
         mv "$FILE" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/"
     done
+
+    # At this point the efi partition should only have the /EFI directory,
+    # let's add the rest of the files necessary to boot and unlock the partitions
 
     # Store files necessary for TPM decryption to the EFI partitions
     mv "$TPM_RESULT_DIR/persistent.ctx" "$EFI_MOUNT_DIR/balena-luks.ctx" && sync
@@ -473,6 +485,7 @@ if [ "$LUKS" = "1" ]; then
     # TODO: Remove or replace by a proper stage2 bootloader when that is ready
     find / -xdev -type f -name "bzImage*" -exec cp -a {} "${EFI_MOUNT_DIR}" +
 
+    # We have a separate grub.cfg for encrypted devices, use it
     if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
         INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
     fi
