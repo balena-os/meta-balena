@@ -218,8 +218,21 @@ if [ -d /sys/firmware/efi ]; then
             for e in db KEK PK; do
                 # Remove immutable attribute
                 chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
-                if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
-                    /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
+
+                # Use the .esl format for db. This only works in setup mode and above we have confirmed
+                # it is enabled. The .auth files are signed for appending during updates
+                # and while most UEFI implementations don't care, some of them will only allow
+                # to actually append. Here we want to replace the existing keys by ours.
+                FORMAT="auth"
+                EXTRA_ARGS=""
+                if [ "${e}" = "db" ]; then
+                    FORMAT="esl"
+                    EXTRA_ARGS="-e"
+                fi
+
+                KEY_FILE="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.${FORMAT}"
+                if [ -f "${KEY_FILE}" ]; then
+                    /usr/bin/efi-updatevar ${EXTRA_ARGS} -f "${KEY_FILE}" "${e}"
                 fi
             done
             # Check that we're in user mode
