@@ -45,6 +45,8 @@ LUKS=0
 EFI=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 SECUREBOOT_ENABLED=0
+BOOT_ENTRY_LABEL="balenaOS"
+LOADER_PATH="/EFI/BOOT/bootx64.efi"
 
 . /usr/libexec/os-helpers-fs
 . /usr/libexec/os-helpers-logging
@@ -241,9 +243,17 @@ if [ -d /sys/firmware/efi ]; then
             if [ "${SETUPMODE_VAR}" -eq "1" ]; then
                 # Setting up keys hasn't disabled setup mode, try a reboot into flasher
                 info "Rebooting flasher after secure mode setup to boot in secure boot mode."
-                # Make sure to reboot into the installer
-                bootcurrent=$(efibootmgr | grep BootCurrent | awk '{print $2}')
-                efibootmgr -n "${bootcurrent}"
+
+                # Create a one-time boot entry for signed flasher
+                # By default flasher is unsigned, after programming the keys we want to boot
+                # into a properly signed flasher as we expect secure boot to be enabled.
+                flasher_boot=$(findmnt --noheadings --canonicalize --output SOURCE /mnt/boot)
+                efibootmgr --create \
+                   --disk "/dev/$(lsblk -nlo pkname ${flasher_boot})" \
+                   --part "$(lsblk -nlo maj:min ${flasher_boot} | cut -d: -f2)" \
+                   --label "${BOOT_ENTRY_LABEL} installer with secure boot" \
+                   --loader "${LOADER_PATH}.secureboot"
+
                 sync
                 reboot -f
             fi
@@ -572,22 +582,18 @@ umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 sync
 
 EFIPART_LABEL="resin-boot"
-LOADER_PATH="/EFI/BOOT/bootx64.efi"
-BOOT_ENTRY_LABEL="balenaOS"
 if [ "$EFI" = "1" ]; then
     if [ "$LUKS" = "1" ]; then
         EFIPART_LABEL=balena-efi
     fi
 
     # remove duplicate entries
+    # this will also remove the temporary secure boot installer entry
     for label in resinOS "${BOOT_ENTRY_LABEL}"; do
-        duplicates="$(efibootmgr \
-		| grep "${label}" \
-		| sed 's/Boot*//g' \
-		| sed "s/* ${label}//g")"
+        duplicates="$(efibootmgr | grep "${label}" | sed -e "s/^Boot\([0-9a-fA-F]*\).*$/\1/")"
         for entry in ${duplicates}; do
             efibootmgr -B -b "${entry}"
-	done
+        done
     done
 
     efibootmgr --create \
