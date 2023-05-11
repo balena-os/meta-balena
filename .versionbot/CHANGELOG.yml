@@ -1,4 +1,66 @@
 - commits:
+    - subject: "resin-init-flasher: add more comments around efi/boot partition split"
+      hash: 63663b30f8962be8b6d8070340fe89e435f8915b
+      body: |
+        This is hard to follow when reading the code without context.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: reboot into signed flasher when provisioning
+        secure boot"
+      hash: ceedc55646898e4eacb840f89710f39c58674323
+      body: |
+        When programming keys for secure boot, some devices do not clear
+        the setup mode flag after a new PK is installed. In this case
+        flasher will reboot in order to ensure the keys are actually saved
+        and the device comes back with secure boot enabled. Since we changed
+        flasher to be unsigned by default, this reboot causes a security
+        violation.
+
+        With this patch flasher will add a new boot entry before issuing
+        the reboot so that signed flasher comes up and the installation process
+        can continue.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "resin-init-flasher: Fill db EFI variable from esl file instead of auth"
+      hash: d1e045b826c48168d75163cf9bb9fb1a387ed4f2
+      body: >
+        Currently the db.auth file is signed as "append" in order to make HUP
+        work.
+
+        Most UEFI firmwares will accept such file even for "replace", which we do
+
+        during the initial provisioning, however we have seen devices that will
+
+        only allow appending, which makes flasher fail.
+
+
+        With this patch flasher will use the esl file for initial programming
+
+        of the db variable.
+
+
+        PK and KEK are unaffected.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.114.24
+  title: ""
+  date: 2023-05-11T20:31:43.765Z
+- commits:
     - subject: "tests: suites: remove default migration force configuration"
       hash: 6cbb6a983574158cb8531b24e3baeff8518ebe1a
       body: |

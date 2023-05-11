@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.114.24
+## (2023-05-11)
+
+* resin-init-flasher: add more comments around efi/boot partition split [Michal Toman]
+* resin-init-flasher: reboot into signed flasher when provisioning secure boot [Michal Toman]
+* resin-init-flasher: Fill db EFI variable from esl file instead of auth [Michal Toman]
+
 # v2.114.23
 ## (2023-05-06)
 
