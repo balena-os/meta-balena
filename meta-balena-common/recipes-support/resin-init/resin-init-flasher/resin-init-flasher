@@ -45,6 +45,8 @@ LUKS=0
 EFI=0
 EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
 SECUREBOOT_ENABLED=0
+BOOT_ENTRY_LABEL="balenaOS"
+LOADER_PATH="/EFI/BOOT/bootx64.efi"
 
 . /usr/libexec/os-helpers-fs
 . /usr/libexec/os-helpers-logging
@@ -218,8 +220,21 @@ if [ -d /sys/firmware/efi ]; then
             for e in db KEK PK; do
                 # Remove immutable attribute
                 chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
-                if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" ]; then
-                    /usr/bin/efi-updatevar -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.auth" "${e}"
+
+                # Use the .esl format for db. This only works in setup mode and above we have confirmed
+                # it is enabled. The .auth files are signed for appending during updates
+                # and while most UEFI implementations don't care, some of them will only allow
+                # to actually append. Here we want to replace the existing keys by ours.
+                FORMAT="auth"
+                EXTRA_ARGS=""
+                if [ "${e}" = "db" ]; then
+                    FORMAT="esl"
+                    EXTRA_ARGS="-e"
+                fi
+
+                KEY_FILE="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.${FORMAT}"
+                if [ -f "${KEY_FILE}" ]; then
+                    /usr/bin/efi-updatevar ${EXTRA_ARGS} -f "${KEY_FILE}" "${e}"
                 fi
             done
             # Check that we're in user mode
@@ -228,9 +243,17 @@ if [ -d /sys/firmware/efi ]; then
             if [ "${SETUPMODE_VAR}" -eq "1" ]; then
                 # Setting up keys hasn't disabled setup mode, try a reboot into flasher
                 info "Rebooting flasher after secure mode setup to boot in secure boot mode."
-                # Make sure to reboot into the installer
-                bootcurrent=$(efibootmgr | grep BootCurrent | awk '{print $2}')
-                efibootmgr -n "${bootcurrent}"
+
+                # Create a one-time boot entry for signed flasher
+                # By default flasher is unsigned, after programming the keys we want to boot
+                # into a properly signed flasher as we expect secure boot to be enabled.
+                flasher_boot=$(findmnt --noheadings --canonicalize --output SOURCE /mnt/boot)
+                efibootmgr --create \
+                   --disk "/dev/$(lsblk -nlo pkname ${flasher_boot})" \
+                   --part "$(lsblk -nlo maj:min ${flasher_boot} | cut -d: -f2)" \
+                   --label "${BOOT_ENTRY_LABEL} installer with secure boot" \
+                   --loader "${LOADER_PATH}.secureboot"
+
                 sync
                 reboot -f
             fi
@@ -421,6 +444,12 @@ fi
 
 if [ "$LUKS" = "1" ]; then
     # Split EFI and boot partitions
+
+    # We want to keep the paths identical with the devices that do not have
+    # the split. On the newly provisioned OS the efi and boot partitions will
+    # be mounted under /mnt/efi and /mnt/boot respectively, but OS tools
+    # expect everything to be under /mnt/boot. Symlink /mnt/boot/EFI to
+    # ../efi/EFI so that /mnt/boot/EFI/ points to the correct directory.
     EFI_MOUNT_DIR="$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/../efi"
     mkdir -p "$EFI_MOUNT_DIR"
     EFI_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" balena-efi)
@@ -431,6 +460,9 @@ if [ "$LUKS" = "1" ]; then
     ln -s "../efi/EFI" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI"
 
     # Move all non-EFI files to boot partition
+    # Only keep /EFI directory on the efi partition, everything else
+    # e.g. config.json, system-connections etc. goes to the encrypted
+    # boot partition
     for FILE in "$EFI_MOUNT_DIR/"*; do
         if [ "$FILE" = "$EFI_MOUNT_DIR/EFI" ]; then
             continue
@@ -438,6 +470,9 @@ if [ "$LUKS" = "1" ]; then
 
         mv "$FILE" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/"
     done
+
+    # At this point the efi partition should only have the /EFI directory,
+    # let's add the rest of the files necessary to boot and unlock the partitions
 
     # Store files necessary for TPM decryption to the EFI partitions
     mv "$TPM_RESULT_DIR/persistent.ctx" "$EFI_MOUNT_DIR/balena-luks.ctx" && sync
@@ -450,6 +485,7 @@ if [ "$LUKS" = "1" ]; then
     # TODO: Remove or replace by a proper stage2 bootloader when that is ready
     find / -xdev -type f -name "bzImage*" -exec cp -a {} "${EFI_MOUNT_DIR}" +
 
+    # We have a separate grub.cfg for encrypted devices, use it
     if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
         INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
     fi
@@ -559,22 +595,18 @@ umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 sync
 
 EFIPART_LABEL="resin-boot"
-LOADER_PATH="/EFI/BOOT/bootx64.efi"
-BOOT_ENTRY_LABEL="balenaOS"
 if [ "$EFI" = "1" ]; then
     if [ "$LUKS" = "1" ]; then
         EFIPART_LABEL=balena-efi
     fi
 
     # remove duplicate entries
+    # this will also remove the temporary secure boot installer entry
     for label in resinOS "${BOOT_ENTRY_LABEL}"; do
-        duplicates="$(efibootmgr \
-		| grep "${label}" \
-		| sed 's/Boot*//g' \
-		| sed "s/* ${label}//g")"
+        duplicates="$(efibootmgr | grep "${label}" | sed -e "s/^Boot\([0-9a-fA-F]*\).*$/\1/")"
         for entry in ${duplicates}; do
             efibootmgr -B -b "${entry}"
-	done
+        done
     done
 
     efibootmgr --create \
