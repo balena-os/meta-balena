@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.114.25
+## (2023-05-12)
+
+* tests: hup: enable boot-switch skip [rcooke-warwick]
+* tests: cloud: enable boot-switch skip Commit body [rcooke-warwick]
+* tests: os: enable boot-switch skip [rcooke-warwick]
+
 # v2.114.24
 ## (2023-05-11)
 

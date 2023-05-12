@@ -1,4 +1,38 @@
 - commits:
+    - subject: "tests: hup: enable boot-switch skip"
+      hash: f8f0b66b5a9d9f93c61f19f6998a57a7214ffe3a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: cloud: enable boot-switch skip Commit body"
+      hash: 9a724ff741b0ad0f873b031108535f3cf4e99b15
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: os: enable boot-switch skip"
+      hash: 25094a479849cccf743c97f55f81a5c8dff17933
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.114.25
+  title: ""
+  date: 2023-05-12T17:21:39.646Z
+- commits:
     - subject: "resin-init-flasher: add more comments around efi/boot partition split"
       hash: 63663b30f8962be8b6d8070340fe89e435f8915b
       body: |
