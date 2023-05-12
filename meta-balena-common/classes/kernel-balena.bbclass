@@ -1109,6 +1109,10 @@ do_sign_gpg:append () {
     done
 }
 
+# Parallel builds sharing state cache will mismatch singed kernel and modules
+# Avoid using cache for signed kernel modules to avoid this
+do_compile_kernelmodules[nostamp] = "${@oe.utils.conditional('SIGN_API','','','1',d)}"
+
 do_deploy:prepend () {
     SIGNING_ARTIFACTS="${SIGNING_ARTIFACTS_BASE}"
 }
