@@ -34,6 +34,14 @@ const supportsBootConfig = (deviceType) => {
 	);
 };
 
+const flasherConfig = (deviceType) => {
+	return (
+		[
+			'imx8mmebcrs08a2',
+		].includes(deviceType)
+	);
+}
+
 const checkUnderVoltage = async (that, test) => {
 	test.comment(`checking for under-voltage reports in kernel logs...`);
 	let result = '';
@@ -75,6 +83,20 @@ const enableSerialConsole = async (imagePath) => {
 		});
 	}
 };
+
+// For device types that support it, this enables skipping boot switch selection, to simplify the automated flashing
+const setFlasher = async(imagePath) => {
+	await imagefs.interact(imagePath, 1, async (_fs) => {
+		const value = 'resin_flasher_skip=0';
+
+		console.log(`Setting ${value} in extra_uEnv.txt...`);
+
+		await util.promisify(_fs.writeFile)(
+			'/extra_uEnv.txt',
+			`${value}\n\n`,
+		);
+	});
+}
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, target) => {
@@ -144,6 +166,10 @@ const initDUT = async (that, test, target) => {
 
 	if (supportsBootConfig(that.suite.deviceType.slug)) {
 		await enableSerialConsole(that.os.image.path);
+	}
+
+	if(flasherConfig(that.suite.deviceType.slug)){
+		await setFlasher(that.os.image.path);
 	}
 
 	test.comment(`Flashing DUT`);

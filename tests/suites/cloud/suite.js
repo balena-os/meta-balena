@@ -33,6 +33,14 @@ const supportsBootConfig = (deviceType) => {
 	);
 };
 
+const flasherConfig = (deviceType) => {
+	return (
+		[
+			'imx8mmebcrs08a2',
+		].includes(deviceType)
+	);
+}
+
 const enableSerialConsole = async (imagePath) => {
 	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
 		return util.promisify(_fs.readFile)('/config.txt')
@@ -57,6 +65,20 @@ const enableSerialConsole = async (imagePath) => {
 		});
 	}
 };
+
+// For device types that support it, this enables skipping boot switch selection, to simplify the automated flashing
+const setFlasher = async(imagePath) => {
+	await imagefs.interact(imagePath, 1, async (_fs) => {
+		const value = 'resin_flasher_skip=0';
+
+		console.log(`Setting ${value} in extra_uEnv.txt...`);
+
+		await util.promisify(_fs.writeFile)(
+			'/extra_uEnv.txt',
+			`${value}\n\n`,
+		);
+	});
+}
 
 module.exports = {
   title: "Managed BalenaOS release suite",
@@ -280,6 +302,10 @@ module.exports = {
     if (supportsBootConfig(this.suite.deviceType.slug)) {
       await enableSerialConsole(this.os.image.path);
     }
+
+    if(flasherConfig(this.suite.deviceType.slug)){
+			await setFlasher(this.os.image.path);
+		}
 
     // disable port forwarding on the testbot - disables the DUT internet access.
     if (
