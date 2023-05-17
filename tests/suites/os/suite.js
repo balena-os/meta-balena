@@ -64,23 +64,16 @@ module.exports = {
 	title: 'Unmanaged BalenaOS release suite',
 	run: async function (test) {
 		// The worker class contains methods to interact with the DUT, such as flashing, or executing a command on the device
-		const Worker = this.require('common/worker');
 		const Balena = this.require("components/balena/sdk");
 		// The balenaOS class contains information on the OS image to be flashed, and methods to configure it
 		const BalenaOS = this.require('components/os/balenaos');
 		const utils = this.require('common/utils');
-		const worker = new Worker(
-			this.suite.deviceType.slug, 
-			this.getLogger(), 
-			this.suite.options.workerUrl, 
-			this.suite.options.balena.organization, 
-			join(homedir(), 'id')
-		);
 
 		const cloud = new Balena(this.suite.options?.balena?.apiUrl, this.getLogger());
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
+		const worker = this.worker;
 		let systemd = {
 			/**
 			 * Wait for a service to be active/inactive
@@ -193,32 +186,11 @@ module.exports = {
 			worker: worker,
 		});
 
-		// Network definitions - here we check what network configuration is selected for the DUT for the suite, and add the appropriate configuration options (e.g wifi credentials)
-		if (this.suite.options.balenaOS.network.wired === true) {
-			this.suite.options.balenaOS.network.wired = {
-				nat: true,
-			};
-		} else {
-			delete this.suite.options.balenaOS.network.wired;
-		}
-		if (this.suite.options.balenaOS.network.wireless === true) {
-			this.suite.options.balenaOS.network.wireless = {
-				ssid: this.suite.options.id,
-				psk: `${this.suite.options.id}_psk`,
-				nat: true,
-			};
-		} else {
-			delete this.suite.options.balenaOS.network.wireless;
-		}
-
-
-		const keys = await this.context
-		.get()
-		.utils.createSSHKey(this.sshKeyPath);
 		// Create an instance of the balenOS object, containing information such as device type, and config.json options
 		this.suite.context.set({
 			os: new BalenaOS(
 				{
+					image: this.suite.image,
 					deviceType: this.suite.deviceType.slug,
 					network: this.suite.options.balenaOS.network,
 					configJson: {
@@ -252,19 +224,11 @@ module.exports = {
 			return this.worker.teardown();
 		});
 
-		this.log('Setting up worker');
-
-		// Create network AP on testbot
-		await this.context
-			.get()
-			.worker.network(this.suite.options.balenaOS.network);
-
+		console.log(this.worker);
 
 		this.suite.context.set({
 			workerContract: await this.worker.getContract()
 		})
-		// Unpack OS image .gz
-		await this.os.fetch();
 
 		if (supportsBootConfig(this.suite.deviceType.slug)) {
 			await enableSerialConsole(this.os.image.path);
@@ -311,13 +275,6 @@ module.exports = {
 		await this.worker.addSSHKey(this.sshKeyPath);
 
 		// create tunnels
-		await test.resolves(
-			this.worker.createSSHTunnels(
-				this.link,
-			),
-			`Should detect ${this.link} on local network and establish tunnel`
-		)
-
 		await test.resolves(
 			this.utils.waitUntil(async () => {
 				let hostname = await this.worker.executeCommandInHostOS(
