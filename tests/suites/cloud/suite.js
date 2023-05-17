@@ -131,22 +131,41 @@ module.exports = {
     });
 
     // Network definitions - these are given to the testbot via the config sent via the config.js
-    if (this.suite.options.balenaOS.network.wired === true) {
-      this.suite.options.balenaOS.network.wired = {
-        nat: true,
-      };
-    } else {
-      delete this.suite.options.balenaOS.network.wired;
-    }
-    if (this.suite.options.balenaOS.network.wireless === true) {
-      this.suite.options.balenaOS.network.wireless = {
-        ssid: this.suite.options.id,
-        psk: `${this.suite.options.id}_psk`,
-        nat: true,
-      };
-    } else {
-      delete this.suite.options.balenaOS.network.wireless;
-    }
+    // If suites config.js has networkWired: true, override the device contract
+		if (this.suite.options.balenaOS.network.wired === true) {
+			this.suite.options.balenaOS.network.wired = {
+				nat: true,
+			};
+		} else if(this.suite.deviceType.data.connectivity.wifi === false){
+			// DUT has no wifi - use wired ethernet sharing to connect to DUT
+			this.suite.options.balenaOS.network.wired = {
+				nat: true,
+			};
+		} 
+		else {
+			// device has wifi, use wifi hotspot to connect to DUT
+			delete this.suite.options.balenaOS.network.wired;
+		}
+
+		// If suites config.js has networkWireless: true, override the device contract
+		if (this.suite.options.balenaOS.network.wireless === true) {
+			this.suite.options.balenaOS.network.wireless = {
+				ssid: this.suite.options.id,
+				psk: `${this.suite.options.id}_psk`,
+				nat: true,
+			};
+		} else if(this.suite.deviceType.data.connectivity.wifi === true){
+			// device has wifi, use wifi hotspot to connect to DUT
+			this.suite.options.balenaOS.network.wireless = {
+				ssid: this.suite.options.id,
+				psk: `${this.suite.options.id}_psk`,
+				nat: true,
+			};
+		} 
+		else {
+			// no wifi on DUT
+			delete this.suite.options.balenaOS.network.wireless;
+		}
 
     // Authenticating balenaSDK
     await this.context

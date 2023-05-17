@@ -4,7 +4,7 @@ module.exports = [
 	suite: `${__dirname}/../suites/hup`,
 	config: {
 		networkWired: false,
-		networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
+		networkWireless: false,
 		downloadVersion: 'latest',
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
@@ -31,7 +31,7 @@ module.exports = [
 	suite: `${__dirname}/../suites/cloud`,
 	config: {
 		networkWired: false,
-		networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
+		networkWireless: false,
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
 		organization: process.env.BALENACLOUD_ORG,
@@ -57,7 +57,7 @@ module.exports = [
 	suite: `${__dirname}/../suites/os`,
 	config: {
 		networkWired: false,
-		networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
+		networkWireless: false,
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
 		balenaApiUrl: 'balena-cloud.com',
 		organization: process.env.BALENACLOUD_ORG,
