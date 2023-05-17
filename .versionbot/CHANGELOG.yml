@@ -1,4 +1,48 @@
 - commits:
+    - subject: "tests: config: set both network options to false"
+      hash: 3715edcd98aaadb983419d6389d666c10391afc9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: hup: use contract to configure network"
+      hash: c054e184f2dd96c9c878008d9f16d96928e5dff3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: cloud: use contract to configure network"
+      hash: 5c81d124453159a6bb7374a68d27275bb1141fa0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: os: use contract to configure network"
+      hash: 81c0c7c5df0727df3979db20a6a4a6b00c82b12a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 2.115.1
+  title: ""
+  date: 2023-05-17T08:32:52.294Z
+- commits:
     - subject: Update balena-supervisor to v14.11.1
       hash: 1222c7adec29b958dec4277ea5b716cad3f6a9b1
       body: |

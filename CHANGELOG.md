@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v2.115.1
+## (2023-05-17)
+
+* tests: config: set both network options to false [rcooke-warwick]
+* tests: hup: use contract to configure network [rcooke-warwick]
+* tests: cloud: use contract to configure network [rcooke-warwick]
+* tests: os: use contract to configure network [rcooke-warwick]
+
 # v2.115.0
 ## (2023-05-12)
 
