@@ -407,6 +407,7 @@ module.exports = {
 		'./tests/fingerprint',
 		'./tests/fsck',
 		'./tests/os-release',
+		'./tests/serial-number',
 		'./tests/migrate',
 		'./tests/issue',
 		'./tests/chrony',
