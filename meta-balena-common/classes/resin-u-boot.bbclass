@@ -13,6 +13,7 @@ SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'file://balen
 SRC_URI:append = " \
     file://env_resin.h \
     ${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', '', '${INTEGRATION_NON_KCONFIG_PATCH}', d)} \
+    file://balena_check_crc32.c \
     "
 
 python __anonymous() {
@@ -59,6 +60,8 @@ BALENA_ENV_FILE = "resinOS_uEnv.txt"
 BALENA_EXTRA_ENV_FILE = "extra_uEnv.txt"
 BALENA_UBOOT_DEVICES ?= "0 1 2"
 BALENA_UBOOT_DEVICE_TYPES ?= "mmc"
+BALENA_DEVICE_KERNEL_ADDR_VAR ?= "loadaddr"
+BALENA_DEVICE_FDT_ADDR_VAR ?= "fdt_addr"
 
 # OS_KERNEL_CMDLINE is a distro wide variable intended to be used in all the
 # supported bootloaders
@@ -66,16 +69,23 @@ BASE_OS_CMDLINE ?= "${OS_KERNEL_CMDLINE}"
 OS_BOOTCOUNT_FILE ?= "bootcount.env"
 OS_BOOTCOUNT_SKIP ?= "0"
 OS_BOOTCOUNT_LIMIT ?= "3"
+OS_OVERLAP_FILE ?= "overlap_detected"
+
+# Some older u-boot versions may
+# not support these checks
+OS_OVERLAP_CHECK_ENABLED ?= "1"
 
 # These options go into the device headerfile via config_resin.h
 CONFIG_RESET_TO_RETRY ?= "1"
 CONFIG_BOOT_RETRY_TIME ?= "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', '-1', '15', d)}"
 
 CONFIG_CMD_FS_UUID = "1"
-
+CONFIG_CMD_HASH = "1"
 UBOOT_VARS = "BALENA_UBOOT_DEVICES \
               BALENA_UBOOT_DEVICE_TYPES \
               BALENA_BOOT_PART BALENA_DEFAULT_ROOT_PART \
+              BALENA_DEVICE_KERNEL_ADDR_VAR \
+              BALENA_DEVICE_FDT_ADDR_VAR \
               BALENA_IMAGE_FLAG_FILE \
               BALENA_FLASHER_FLAG_FILE \
               BALENA_ENV_FILE \
@@ -84,9 +94,35 @@ UBOOT_VARS = "BALENA_UBOOT_DEVICES \
               OS_BOOTCOUNT_FILE \
               OS_BOOTCOUNT_SKIP \
               OS_BOOTCOUNT_LIMIT \
+              OS_OVERLAP_FILE \
               CONFIG_RESET_TO_RETRY \
               CONFIG_BOOT_RETRY_TIME \
-              CONFIG_CMD_FS_UUID "
+              CONFIG_CMD_FS_UUID \
+"
+
+UBOOT_VARS += "${@bb.utils.contains('OS_OVERLAP_CHECK_ENABLED', '1', 'CONFIG_CMD_HASH', '', d)}"
+
+do_inject_check_crc32_cmd() {
+    if ${@bb.utils.contains('OS_OVERLAP_CHECK_ENABLED', '1', 'true', 'false', d)}; then
+	# upstream commit 09140113108 removes the cmd_tbl_t typedef
+        if ! grep -q -r "cmd_tbl_t" ${S}/cmd/ ; then
+            sed -i 's/cmd_tbl_t/struct cmd_tbl/g' ${WORKDIR}/balena_check_crc32.c
+        fi
+        # Older u-boot versions do not have env.h
+        if [ ! -f ${S}/include/env.h ]; then
+            sed -i 's/env.h/common.h/g' ${WORKDIR}/balena_check_crc32.c
+        fi
+        cp ${WORKDIR}/balena_check_crc32.c ${S}/cmd/
+        if ! grep -q "balena_check_crc32" ${S}/cmd/Makefile ; then
+            cat >> ${S}/cmd/Makefile << EOF
+ifndef CONFIG_SPL_BUILD
+obj-y += balena_check_crc32.o
+endif
+EOF
+        fi
+    fi
+}
+addtask do_inject_check_crc32_cmd after do_patch before do_configure
 
 python do_generate_resin_uboot_configuration () {
     vars = d.getVar('UBOOT_VARS').split()
