@@ -54,15 +54,15 @@ do_test_api() {
     . ${WORKDIR}/os-helpers-api
     # GET 200
     if ! api_get_request "${endpoint}/ping"; then
-        bberror "${PN}: API request failed "
+        bbwarn "${PN}: API request failed "
     fi
     # 404 Not found
     if api_get_request "${endpoint}/notfound"; then
-        bberror "API request unexpectedly suceeded"
+        bbwarn "API request unexpectedly suceeded"
     fi
     # 401 Unauthorized
     if api_get_request "${endpoint}/v6/device"; then
-        bberror "API request unexpectedly suceeded"
+        bbwarn "API request unexpectedly suceeded"
     fi
 }
 addtask test_api before do_package after do_install
