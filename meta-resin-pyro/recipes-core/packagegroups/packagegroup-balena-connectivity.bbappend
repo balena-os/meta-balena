@@ -3,9 +3,7 @@ CONNECTIVITY_PACKAGES_append = " crda"
 CONNECTIVITY_FIRMWARES_append = " \
     linux-firmware-bcm43143 \
     linux-firmware-iwlwifi-135-6 \
-    linux-firmware-iwlwifi-3160-7 \
-    linux-firmware-iwlwifi-3160-8 \
-    linux-firmware-iwlwifi-3160-9 \
+    linux-firmware-iwlwifi-3160 \
     linux-firmware-iwlwifi-6000-4 \
     linux-firmware-iwlwifi-6000g2a-5 \
     linux-firmware-iwlwifi-6000g2a-6 \

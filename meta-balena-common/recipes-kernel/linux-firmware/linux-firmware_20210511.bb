@@ -274,9 +274,7 @@ PACKAGES =+ "${PN}-ralink-license ${PN}-ralink \
              \
              ${PN}-iwlwifi-license ${PN}-iwlwifi \
              ${PN}-iwlwifi-135-6 \
-             ${PN}-iwlwifi-3160-7 ${PN}-iwlwifi-3160-8 ${PN}-iwlwifi-3160-9 \
-             ${PN}-iwlwifi-3160-10 ${PN}-iwlwifi-3160-12 ${PN}-iwlwifi-3160-13 \
-             ${PN}-iwlwifi-3160-16 ${PN}-iwlwifi-3160-17 \
+             ${PN}-iwlwifi-3160-17 \
              ${PN}-iwlwifi-6000-4 ${PN}-iwlwifi-6000g2a-5 ${PN}-iwlwifi-6000g2a-6 \
              ${PN}-iwlwifi-6000g2b-5 ${PN}-iwlwifi-6000g2b-6 \
              ${PN}-iwlwifi-6050-4 ${PN}-iwlwifi-6050-5 \
@@ -788,13 +786,6 @@ RDEPENDS:${PN}-imx-sdma-imx7d += "${PN}-imx-sdma-license"
 # For iwlwifi
 LICENSE:${PN}-iwlwifi           = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-135-6     = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-7    = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-8    = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-9    = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-10   = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-12   = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-13   = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-16   = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-3160-17   = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-6000-4    = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-6000g2a-5 = "Firmware-iwlwifi_firmware"
@@ -815,13 +806,6 @@ LICENSE:${PN}-iwlwifi-license   = "Firmware-iwlwifi_firmware"
 
 FILES:${PN}-iwlwifi-license = "${nonarch_base_libdir}/firmware/LICENCE.iwlwifi_firmware*"
 FILES:${PN}-iwlwifi-135-6 = "${nonarch_base_libdir}/firmware/iwlwifi-135-6.ucode*"
-FILES:${PN}-iwlwifi-3160-7 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-7.ucode*"
-FILES:${PN}-iwlwifi-3160-8 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-8.ucode*"
-FILES:${PN}-iwlwifi-3160-9 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-9.ucode*"
-FILES:${PN}-iwlwifi-3160-10 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-10.ucode*"
-FILES:${PN}-iwlwifi-3160-12 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-12.ucode*"
-FILES:${PN}-iwlwifi-3160-13 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-13.ucode*"
-FILES:${PN}-iwlwifi-3160-16 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-16.ucode*"
 FILES:${PN}-iwlwifi-3160-17 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-17.ucode*"
 FILES:${PN}-iwlwifi-6000-4 = "${nonarch_base_libdir}/firmware/iwlwifi-6000-4.ucode*"
 FILES:${PN}-iwlwifi-6000g2a-5 = "${nonarch_base_libdir}/firmware/iwlwifi-6000g2a-5.ucode*"
@@ -839,13 +823,6 @@ FILES:${PN}-iwlwifi-9000   = "${nonarch_base_libdir}/firmware/iwlwifi-9000-*.uco
 FILES:${PN}-iwlwifi-misc   = "${nonarch_base_libdir}/firmware/iwlwifi-*.ucode*"
 
 RDEPENDS:${PN}-iwlwifi-135-6     = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-7    = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-8    = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-9    = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-10   = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-12   = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-13   = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-16   = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-3160-17   = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000-4    = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000g2a-5 = "${PN}-iwlwifi-license"
