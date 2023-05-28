@@ -1,4 +1,23 @@
 - commits:
+    - subject: "os-helpers: do not fail build if API tests fail"
+      hash: 933f265da4a6919183a28d6ca8e0cfb0f1811fee
+      body: |
+        The purpose of testing the API calls is to detect breaking changes, not
+        to fail builds because of temporary network or API access problems.
+
+        Printing a warning instead should be enough for developers to detect
+        breaking changes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.115.2
+  title: ""
+  date: 2023-05-28T13:40:24.584Z
+- commits:
     - subject: "tests: config: set both network options to false"
       hash: 3715edcd98aaadb983419d6389d666c10391afc9
       body: ""

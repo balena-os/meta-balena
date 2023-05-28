@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.2
+## (2023-05-28)
+
+* os-helpers: do not fail build if API tests fail [Alex Gonzalez]
+
 # v2.115.1
 ## (2023-05-17)
 
