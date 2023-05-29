@@ -1,4 +1,24 @@
 - commits:
+    - subject: "resin-init-flasher: check that commands exist before calling"
+      hash: 6782f81954dd6e5ca6e848603ea0153ded2f7dd0
+      body: |
+        When running in the initramfs, the resin-device-progress package is not
+        installed as we cannot guarantee that the initramfs would be able to
+        bring up all types of network interfaces.
+
+        This commit adds a check for the script to exists instead of getting a
+        `command not found` when an API endpoint is defined.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.115.3
+  title: ""
+  date: 2023-05-29T14:28:02.605Z
+- commits:
     - subject: "os-helpers: do not fail build if API tests fail"
       hash: 933f265da4a6919183a28d6ca8e0cfb0f1811fee
       body: |

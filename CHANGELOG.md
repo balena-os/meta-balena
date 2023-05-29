@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.3
+## (2023-05-29)
+
+* resin-init-flasher: check that commands exist before calling [Alex Gonzalez]
+
 # v2.115.2
 ## (2023-05-28)
 
