@@ -87,7 +87,7 @@ When an RTC is available (`/dev/rtc`), a `timeinit-rtc` service is started that 
 
 #### HTTPs time
 
-After a network connectivity event, an HTTPs time synchronization service `timesync-https`, is then used to correct the time from HTTP headers timestamps, assuming the correct system time has not been set from the RTC previously. This guarantees the time is broadly correct and certificates expiration checks won't fail. Other network services are held until this time synchronization happens. By default, the time synchronization uses the NetworkManager connectivity URL defined in the `connectivity` section of `config.json`.
+After a network connectivity event, an HTTPs time synchronization service `timesync-https`, is then used to correct the time from HTTP headers timestamps, assuming the correct system time has not been set from the RTC previously. This guarantees the time is broadly correct and certificates expiration checks won't fail. Other network services are held until this time synchronization happens. By default, the time synchronization uses the NetworkManager connectivity URL defined in the `connectivity` section of `config.json`. To disable the HTTPs time sync and allow other services to run, set the connectivity check URI to 'null'. This will also disable [connectivity checks](#connectivity) too.
 
 #### Network time
 
