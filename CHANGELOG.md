@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.112.16
+## (2023-05-30)
+
+* mkfs-hostapp-native: Update base image in Dockerfile [Alexandru Costache]
+* update-balena-supervisor: use API request helper [Alex Gonzalez]
+* os-helpers: add os-helpers-api [Alex Gonzalez]
+
 # v2.112.15
 ## (2023-02-24)
 
