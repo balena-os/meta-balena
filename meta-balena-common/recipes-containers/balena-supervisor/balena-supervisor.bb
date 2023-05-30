@@ -47,6 +47,7 @@ RDEPENDS:${PN} = " \
 	balena-unique-key \
 	balena-config-vars \
 	systemd \
+	os-helpers-api \
 	"
 
 python () {

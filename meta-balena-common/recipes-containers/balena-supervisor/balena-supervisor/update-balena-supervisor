@@ -95,16 +95,24 @@ trap error_handler EXIT
 # $3: Balena API token
 #
 # Outputs:
-# Space separated supervisor version and image name, or "null null"
+# On success (0), space separated supervisor version and image name, or "null null" if there is no match
+# On failure (1), no output
 #
 os_helpers_fetch_target_state() {
     _device_uuid="$1"
     _api_env="$2"
     _token="$3"
-    _target_state_json=$(curl --silent --header "Authorization: Bearer ${_token}" --header "User-Agent: --compressed" "${_api_env}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${_device_uuid}')" | jq -e -r '.d[0].supervisor_version,.d[0].image_name')
-    if [ $? -eq 0 ]; then
-        echo "${_target_state_json}" | tr "\n" " "
+
+    # shellcheck disable=SC1091
+    . /usr/libexec/os-helpers-api
+
+    if _response=$(api_get_request "${_api_env}/v6/supervisor_release?\$select=supervisor_version,image_name&\$filter=should_manage__device/any(d:d/uuid%20eq%20'${_device_uuid}')" "${_token}"); then
+        if _target_state_json=$(echo "${_response}" | jq -e -r '.d[0].supervisor_version,.d[0].image_name'); then
+            echo "${_target_state_json}" | tr "\n" " "
+            return 0
+        fi
     fi
+    return 1
 }
 
 
@@ -125,12 +133,13 @@ fi
 # Getting data separately before reading it fixes error handling.
 echo "Getting image name and version..."
 if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ]; then
-    _target_state=$(os_helpers_fetch_target_state "${UUID}" "${API_ENDPOINT}" "${_device_api_key}")
-    if [ -n "${_target_state}" ]; then
-        read -r version image_name <<< "${_target_state}"
-        if [ -z "$version" ] || [ -z "$image_name" ]; then
-            echo "ERROR: Unexpected API data."
-            error_handler "unexpected API data"
+    if _target_state=$(os_helpers_fetch_target_state "${UUID}" "${API_ENDPOINT}" "${_device_api_key}"); then
+        if [ -n "${_target_state}" ]; then
+            read -r version image_name <<< "${_target_state}"
+            if [ -z "$version" ] || [ -z "$image_name" ]; then
+                echo "ERROR: Unexpected API data."
+                error_handler "unexpected API data"
+            fi
         fi
     fi
 fi
