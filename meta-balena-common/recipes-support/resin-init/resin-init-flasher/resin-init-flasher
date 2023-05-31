@@ -255,6 +255,14 @@ if [ -d /sys/firmware/efi ]; then
                    --label "${BOOT_ENTRY_LABEL} installer with secure boot" \
                    --loader "${LOADER_PATH}.secureboot"
 
+                # Find the newly created entry and set it as BootNext
+                # Some systems do not respect the UEFI boot order so even if "efibootmgr --create"
+                # makes the new entry first in the boot order, such systems will still try to boot
+                # something else. Because we enabled secure boot, this would trigger a security violation.
+                boot_uuid="$(lsblk -nlo partuuid "${flasher_boot}")"
+                new_entry="$(efibootmgr -v | grep "${boot_uuid}" | grep -i "${LOADER_PATH}.secureboot" | head -n 1 | sed -e "s/^Boot\([0-9a-fA-F]*\).*$/\1/")"
+                efibootmgr -n "${new_entry}"
+
                 sync
                 reboot -f
             fi
