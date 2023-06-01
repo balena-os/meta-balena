@@ -63,7 +63,7 @@ FILES:${PN}-iwlwifi-3160 = " \
 PACKAGES =+ "${PN}-iwlwifi-cc-a0"
 
 FILES:${PN}-iwlwifi-cc-a0 = " \
-    ${nonarch_base_libdir}/firmware/iwlwifi-cc-a0-48.ucode* \
+    ${nonarch_base_libdir}/firmware/iwlwifi-cc-a0-*.ucode* \
 "
 
 # Skylake/6th Gen Core processors
