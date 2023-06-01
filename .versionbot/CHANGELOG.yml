@@ -1,4 +1,20 @@
 - commits:
+    - subject: "docs: Make secure boot docs more detailed"
+      hash: 96ec764b245197380d58a556949011ab444ce96e
+      body: |
+        This patch extends secure boot documentation with more details about
+        how the feature works and tries to explain why some decisions were made.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.115.4
+  title: ""
+  date: 2023-06-01T09:37:58.007Z
+- commits:
     - subject: "resin-init-flasher: check that commands exist before calling"
       hash: 6782f81954dd6e5ca6e848603ea0153ded2f7dd0
       body: |

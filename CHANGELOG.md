@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.4
+## (2023-06-01)
+
+* docs: Make secure boot docs more detailed [Michal Toman]
+
 # v2.115.3
 ## (2023-05-29)
 
