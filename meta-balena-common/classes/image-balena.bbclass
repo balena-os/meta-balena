@@ -6,7 +6,7 @@ inherit image_types_balena kernel-balena-noimage
 
 # When building a Balena OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build
-DEPENDS += "coreutils-native jq-native ${@bb.utils.contains('BALENA_DISABLE_KERNEL_HEADERS', '1', '', 'kernel-modules-headers kernel-devsrc kernel-headers-test', d)}"
+DEPENDS += "${@bb.utils.contains('BALENA_DISABLE_KERNEL_HEADERS', '1', '', 'coreutils-native jq-native ${KERNEL_HEADERS_PACKAGES}', d)}"
 
 # Deploy the license.manifest of the current image we baked
 deploy_image_license_manifest () {
