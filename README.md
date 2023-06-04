@@ -77,6 +77,32 @@ The first one is `timeinit-rtc`. This service, when a RTC is available (`/etc/rt
 
 The order of the services is as stated above and provides a robust time initialization at boot in both cases where RTC is or not available.
 
+### Bootloader
+
+balenaOS relies on the device's bootloader to select the active root filesystem. Several bootloaders are used accross the supported devices line-up:
+* U-boot
+  * Is used on most of the supported ARM device-types
+  * Only block devices can be used with BalenaOS, RAW flash devices are not supported
+  * Common functionality is implemented in the [u-boot environment](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/recipes-bsp/u-boot/patches/env_resin.h), which is provided by the [common OS Yocto layer](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common)
+  * The environment is embedded in the u-boot binary. This allows for the intended configuration to be used with the matching version of BalenaOS and avoids interference from any pre-programmed environment
+  * Device-specific functions are provided by the device repository, either in a [u-boot script](https://github.com/balena-os/balena-raspberrypi/blob/master/layers/meta-balena-raspberrypi/recipes-bsp/rpi-u-boot-scr/rpi-u-boot-scr/raspberrypi4-64/boot.cmd.in) or in the enviroment defined by the [board configuration files](https://github.com/balena-os/balena-iot-gate-imx8plus/blob/master/layers/meta-balena-imx8mplus/recipes-bsp/u-boot/patches/0003-integrate-with-balenaOS.patch)
+  * Specific Jetson modules (TX2, Nano) use an extra extlinux.conf file, which is loaded and parsed by u-boot
+  * Three environment files are stored and loaded by u-boot from the BalenaOS boot partition. [resinOS_uEnv.txt](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/classes/resin-u-boot.bbclass#L58) is used for storing the active root partition index, [extra_uEnv.txt](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/classes/resin-u-boot.bbclass#L59) stores device-specific configuration elements like optional kernel command-line parameters as well as any custom selected device-tree while [bootcount.env](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/classes/resin-u-boot.bbclass#L66) stores the number of failed attempted boot retries during an OS update. NOTE: Custom device-tree selection is supported only on [specific devices](https://docs.balena.io/learn/develop/hardware/i2c-and-spi/#custom-device-trees)
+  * Applies the kernel device-tree overlays specified in [uEnv.txt_internal/uEnv.txt](https://github.com/balena-os/balena-beaglebone/blob/master/layers/meta-balena-beaglebone/recipes-core/images/balena-image-flasher.bbappend) on Beaglebone devices
+* Grub
+  * Is used for the supported x86 device-types
+  * Common functionality is implemented by the OS layer in the [grub configuration template](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/recipes-bsp/grub/grub-conf/grub.cfg_internal_template)
+* Cboot
+  * Is used on Jetson Xavier devices running L4T 32.X
+  * Loads device-trees from device-specific A/B partitions
+  * Unlike the rest of the bootloaders, it does not support FAT filesystems
+  * The current active root filesystem label is defined in the kernel command line provided by the kernel device-tree. The active rootfs is selected at boot time based on the active device-tree
+* UEFI L4Tlauncher
+  * Is used on the Jetson Orin platforms
+  * Obtains the kernel image path and kernel cmdline arguments from extlinux.conf files
+  * Rollbacks and active root filesystem selection are implemented in [bootloader patches](https://github.com/balena-os/balena-jetson-orin/blob/master/layers/meta-balena-jetson/recipes-bsp/uefi/edk2-firmware-tegra/0005-L4TLauncher-hup-rollback-support-orin-nx.patch) provided bythe balena-jetson-orin [device repository](https://github.com/balena-os/balena-jetson-orin)
+  * Employs the same rollback mechanisms used by balenaOS in u-boot by storing and reading environment variables from the resinOS_uEnv.txt, extra_uEnv.txt and bootcount.env files
+
 ### Rollback framework
 
 Check [docs/rollbacks.md](docs/rollbacks.md) for the rollback documentation
