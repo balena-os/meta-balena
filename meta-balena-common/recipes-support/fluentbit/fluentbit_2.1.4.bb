@@ -11,18 +11,16 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2ee41112a44fe7014dce33e26468ba93"
 SECTION = "net"
 
-SRCREV = "v${PV}"
-SRC_URI = "git://github.com/fluent/fluent-bit;nobranch=1"
+#SRCREV = "3fdd42c6f2ec732ee7107cd1dfa0d3193750ac1d"
+SRCREV = "4854f38c7c8095f29718071535e73a0a5d4e6694"
+SRC_URI = "git://github.com/fluent/fluent-bit;nobranch=1;protocol=https"
 
 S = "${WORKDIR}/git"
 DEPENDS = "zlib bison-native flex-native"
-INSANE_SKIP_${PN}-dev += "dev-elf"
+INSANE_SKIP:${PN}-dev += "dev-elf"
 
 # Use CMake 'Unix Makefiles' generator
 OECMAKE_GENERATOR ?= "Unix Makefiles"
-
-# Fluent Bit build options
-# ========================
 
 # Host related setup
 EXTRA_OECMAKE += "-DGNU_HOST=${HOST_SYS} "
@@ -33,14 +31,9 @@ EXTRA_OECMAKE += "-DFLB_LUAJIT=Off -DFLB_FILTER_LUA=Off "
 # Disable Library and examples
 EXTRA_OECMAKE += "-DFLB_SHARED_LIB=Off -DFLB_EXAMPLES=Off "
 
-# Kafka Output plugin (disabled by default): note that when
-# enabling Kafka output plugin, the backend library librdkafka
-# requires 'openssl' as a dependency.
-#
-# DEPENDS += "openssl "
-# EXTRA_OECMAKE += "-DFLB_OUT_KAFKA=On "
+DEPENDS += "libyaml openssl curl zstd "
 
 inherit cmake systemd
 
-SYSTEMD_SERVICE_${PN} = "fluent-bit.service"
-TARGET_CC_ARCH_append = " ${SELECTED_OPTIMIZATION}"
+SYSTEMD_SERVICE:${PN} = "fluent-bit.service"
+TARGET_CC_ARCH:append = " ${SELECTED_OPTIMIZATION}"
