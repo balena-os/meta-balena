@@ -1,4 +1,69 @@
 - commits:
+    - subject: Update balena-supervisor to v14.11.2
+      hash: e1361fa5dc3f18733cb07b24ad9e6aaa0f5984e4
+      body: |
+        Update balena-supervisor from 14.11.1 to 14.11.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Handle Engine-host race condition for "always" and "unless-stopped"
+                restart policy
+              hash: 7f3214195838a8bf3242ef7540b4487338687e4c
+              body: >
+                There exists a race condition between Engine and a host resource
+                that may not
+
+                be immediately created. In this race condition, if a container's compose config
+
+                depends on the existence of that host resource, such as a network interface, and the
+
+                Engine tries to create & start the container before the host resource is created, the
+
+                Engine will not reattempt to start the container, regardless of the restart policy.
+
+                This is undesireable behavior but seems to be the behavior as implemented by Docker.
+
+
+                To rectify this, the Supervisor state funnel noops for a grace period of 1 minute
+
+                after starting a container to see that the container's status has become 'running`.
+
+                If the container exits because of the race condition, the status becomes 'exited' and the
+
+                Supervisor will attempt to generate another start step. This noop-wait-start step loop
+
+                will repeat until the container is able to start.
+
+
+                If the container is never able to start, there was a problem in the host in the creation of the
+
+                host resource, and that should be fixed at the host level.
+
+
+                This commit does not handle the case of services with restart policies "no" or "on-failure"
+
+                which encounter this host race, as metadata from container inspects needs to be introduced
+
+                during step calculation in order to figure out whether services with those restart policies
+
+                need to be started. This will be fixed in a future PR.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.11.2
+          title: ""
+          date: 2023-06-05T18:53:18.287Z
+  version: 2.115.5
+  title: ""
+  date: 2023-06-08T10:17:55.709Z
+- commits:
     - subject: "docs: Make secure boot docs more detailed"
       hash: 96ec764b245197380d58a556949011ab444ce96e
       body: |

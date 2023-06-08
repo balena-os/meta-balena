@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.115.5
+## (2023-06-08)
+
+
+<details>
+<summary> Update balena-supervisor to v14.11.2 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.11.2
+> ### (2023-06-05)
+> 
+> * Handle Engine-host race condition for "always" and "unless-stopped" restart policy [Christina Ying Wang]
+> 
+
+</details>
+
 # v2.115.4
 ## (2023-06-01)
 
