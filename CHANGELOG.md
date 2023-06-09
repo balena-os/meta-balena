@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.7
+## (2023-06-09)
+
+* README: Add bootloader section [Alexandru Costache]
+
 # v2.115.6
 ## (2023-06-08)
 
