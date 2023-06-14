@@ -32,6 +32,7 @@
 #define BALENA_ENV \
        "resin_env_file=" __stringify(BALENA_ENV_FILE) "\0" \
        "balena_extra_env_file=" __stringify(BALENA_EXTRA_ENV_FILE) "\0" \
+       "os_overlap_file=" __stringify(OS_OVERLAP_FILE) "\0" \
        "os_bc_file=" __stringify(OS_BOOTCOUNT_FILE) "\0" \
        "os_bc_skip=" __stringify(OS_BOOTCOUNT_SKIP) "\0" \
        "os_bc_inced=0 \0" \
@@ -45,6 +46,8 @@
        "resin_boot_part=" __stringify(BALENA_BOOT_PART) "\0" \
        "resin_root_part=" __stringify(BALENA_DEFAULT_ROOT_PART) "\0" \
        "base_os_cmdline=" __stringify(BASE_OS_CMDLINE) "\0" \
+       "balena_device_kernel_addr_var=" __stringify(BALENA_DEVICE_KERNEL_ADDR_VAR) "\0"\
+       "balena_device_fdt_addr_var=" __stringify(BALENA_DEVICE_FDT_ADDR_VAR) "\0"\
        "resin_flasher_skip=0 \0" \
        \
        "resin_find_root_part_uuid=" \
@@ -75,6 +78,11 @@
                "else " \
                    "echo File ${balena_extra_env_file} not found on scanned device ${resin_scan_dev_type}:${resin_scan_dev_index}; " \
                "fi; \0" \
+       "balena_save_overlap_file=if fatwrite ${resin_dev_type} ${resin_dev_index}:${resin_boot_part} ${resin_kernel_load_addr} ${os_overlap_file} 0xd; then; else; echo OVERLAP FILE WRITE FAILED ; fi;\0" \
+       "balena_kernel_load_crc_save=if balena_crc32 save ${balena_device_kernel_addr_var}; then; else run balena_save_overlap_file; fi;\0" \
+       "balena_kernel_load_crc_check=if balena_crc32 check ${balena_device_kernel_addr_var}; then; else run balena_save_overlap_file; fi;\0" \
+       "balena_fdt_load_crc_save=if balena_crc32 save ${balena_device_fdt_addr_var}; then; else run balena_save_overlap_file; fi;\0" \
+       "balena_fdt_load_crc_check=if balena_crc32 check ${balena_device_fdt_addr_var}; then; else run balena_save_overlap_file; fi;\0" \
        "os_import_bootcount_file=" \
                "echo Import ${os_bc_file} in environment;" \
                "env import -t ${resin_kernel_load_addr} ${filesize}\0" \
