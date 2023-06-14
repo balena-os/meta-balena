@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.8
+## (2023-06-14)
+
+* balena_check_crc: Add helper u-boot command for crc manipulation [Alexandru Costache]
+
 # v2.115.7
 ## (2023-06-09)
 

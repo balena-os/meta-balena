@@ -1,4 +1,23 @@
 - commits:
+    - subject: "balena_check_crc: Add helper u-boot command for crc manipulation"
+      hash: 770cbdbb2c961a06dfb887b0898cae362e680947
+      body: |
+        This helper command saves and compares crc32 sum for a memory
+        area where the kernel image or the device-tree is loaded.
+
+        Can be used after loading the kernel and the dtb, and also prior
+        to calling booti.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Alexandru Costache
+      nested: []
+  version: 2.115.8
+  title: ""
+  date: 2023-06-14T12:41:03.634Z
+- commits:
     - subject: "README: Add bootloader section"
       hash: c27e2989052871033c414bed5042948da91533de
       body: |
