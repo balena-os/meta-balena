@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.115.9
+## (2023-06-15)
+
+
+<details>
+<summary> Update balena-supervisor to v14.11.3 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.11.3
+> ### (2023-06-15)
+> 
+> * Update balena-io/deploy-to-balena-action to v0.27.0 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v2.115.8
 ## (2023-06-14)
 

@@ -1,4 +1,32 @@
 - commits:
+    - subject: Update balena-supervisor to v14.11.3
+      hash: 1d9f52fee5040b952077846bef79ea99bdf465e0
+      body: |
+        Update balena-supervisor from 14.11.2 to 14.11.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action to v0.27.0
+              hash: 1675c16622d861ce6e6e445400b5440a447688f7
+              body: |
+                Update balena-io/deploy-to-balena-action
+              footer:
+                Change-type: patch
+                change-type: patch
+                Changelog-entry: Update balena-io/deploy-to-balena-action to v0.27.0
+                changelog-entry: Update balena-io/deploy-to-balena-action to v0.27.0
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-14.11.3
+          title: ""
+          date: 2023-06-15T19:49:42.493Z
+  version: 2.115.9
+  title: ""
+  date: 2023-06-15T23:43:34.815Z
+- commits:
     - subject: "balena_check_crc: Add helper u-boot command for crc manipulation"
       hash: 770cbdbb2c961a06dfb887b0898cae362e680947
       body: |
