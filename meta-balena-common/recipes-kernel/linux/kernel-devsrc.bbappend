@@ -1,9 +1,9 @@
 do_install:append() {
-   tar -czf ${WORKDIR}/kernel_source.tar.gz -C "$kerneldir/../" .
+   tar -czf ${WORKDIR}/kernel_modules_headers.tar.gz -C "$kerneldir/../" .
 }
 
 do_deploy() {
-    cp ${WORKDIR}/kernel_source.tar.gz ${DEPLOYDIR}/
+    cp ${WORKDIR}/kernel_modules_headers.tar.gz ${DEPLOYDIR}/
 }
 inherit deploy
 addtask do_deploy before do_package after do_install
@@ -13,7 +13,5 @@ addtask do_deploy before do_package after do_install
 # QA errors
 INSANE_SKIP:${PN} = "arch debug-files"
 
-# kernel-modules-headers recipe does some work on the kernel tree.
-# We'd like to make sure that we dont tarball at the same time as that
-# recipe is working on the tree
-DEPENDS += "kernel-modules-headers"
+# Keep compatibility with device repositories that use the older headers
+PROVIDES = "kernel-modules-headers"
