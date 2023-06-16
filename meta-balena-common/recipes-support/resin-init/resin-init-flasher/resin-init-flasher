@@ -370,7 +370,10 @@ if [ "$LUKS" = "1" ]; then
         PART_DEV="$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         info "Encrypting $PART_DEV"
         cryptsetup -q luksFormat "$PART_DEV" "$PASSPHRASE_FILE"
-        cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file "$PASSPHRASE_FILE"
+        cryptsetup luksOpen --perf-no_read_workqueue \
+                            --perf-no_write_workqueue \
+                            --key-file "$PASSPHRASE_FILE" \
+                            "$PART_DEV" "$PART_NAME"
         DM_DEV="/dev/mapper/$PART_NAME"
         if [ "$PART_NAME" = "resin-boot" ]; then
             # Just create the FS, we will split boot and efi below

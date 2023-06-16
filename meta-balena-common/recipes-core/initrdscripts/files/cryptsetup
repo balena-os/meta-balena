@@ -110,7 +110,10 @@ cryptsetup_run() {
     # and wait for them in a separate loop later
     LUKS_UNLOCKED=""
     for LUKS_UUID in $(lsblk -nlo uuid,fstype "/dev/${BOOT_DEVICE}" | grep crypto_LUKS | cut -d " " -f 1); do
-        cryptsetup luksOpen --key-file $PASSPHRASE_FILE UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
+        cryptsetup luksOpen --perf-no_read_workqueue \
+                            --perf-no_write_workqueue \
+                            --key-file $PASSPHRASE_FILE \
+                            UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
         LUKS_UNLOCKED="${LUKS_UNLOCKED} luks-${LUKS_UUID}"
     done
 
