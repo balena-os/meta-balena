@@ -44,3 +44,4 @@ do_compile() {
 
 # Explicitly depend on the do_deploy step as we use the deployed artefacts. DEPENDS doesn't cover that
 do_compile[depends] += "kernel-devsrc:do_deploy"
+do_compile[network] = "1"
