@@ -43,6 +43,7 @@ do_compile () {
 
     sed -i "s/@IMAGE@/${IMAGETAG}/" ${B}/work/mkfs.hostapp
 }
+do_compile[network] = "1"
 
 do_install () {
     install -d ${D}/${bindir}
