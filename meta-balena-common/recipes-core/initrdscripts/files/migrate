@@ -109,11 +109,44 @@ migrate_run() {
         else
             fail "Flash boot partition not found in ${internal_dev}"
         fi
-        # Copy the raw image to memory
+
+        # Setup zram to contain large, compressible installation images to
+        # reduce memory requirements
+        #
+        # round the zram dev size up to the nearest multiple of $zram_dev_size_mul_b
+        zram_dev_size_mul_b=$((128 * 1024 * 1024))
+        zram_dev_size_b=$(( ( _total_size / zram_dev_size_mul_b + 1 ) * zram_dev_size_mul_b ))
+        zram_alg=zstd
+
+        # zramctl will occasionally fail the first time with EBUSY
+        for _ in $(seq 1 5); do
+            zram_dev=$(zramctl --find \
+                               --algorithm "${zram_alg}" \
+                               --size "${zram_dev_size_b}") \
+                        && break
+            sleep 0.1
+        done
+
+        if [ -n "${zram_dev}" ]; then
+            zram_dev_alg=$(awk -F '[][]' '{print $2}' "/sys/class/block/$(basename "${zram_dev}")/comp_algorithm")
+            zram_dev_size_gb=$(echo ${zram_dev_size_b} | awk '{print $1/1024/1024/1024}')
+
+            info "Created ${zram_dev_size_gb} GB zram device using ${zram_dev_alg} alg"
+
+            mke2fs -O ^has_journal "${zram_dev}"
+            mkdir -p /mnt/zram "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+            mount "${zram_dev}" /mnt/zram
+
+            mount -o bind /mnt/zram /tmp
+            mount -o bind /mnt/zram "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+        else
+            fail "Unable to create zram device"
+        fi
+
+        # Copy the raw image to zram
         cp "${image}" "/tmp"
 
         # Copy the flasher boot partition into memory (contains configuration)
-        mkdir -p "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
         cp -r "${FLASH_BOOT_MOUNT}"/* "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/"
 
         # Copy the flasher kernel images to memory
