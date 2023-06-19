@@ -60,7 +60,7 @@ migrate_enabled() {
             boot_dev=$(findmnt --noheadings --canonicalize --output SOURCE "${ROOTFS_DIR}" | xargs lsblk -no pkname)
             FLASH_BOOT_DEVICE=$(get_dev_path_in_device_with_label "/dev/${boot_dev}" "flash-boot")
             if [ -n "${FLASH_BOOT_DEVICE}" ]; then
-                FLASH_BOOT_MOUNT="/tmp/flash-boot"
+                FLASH_BOOT_MOUNT="/mnt/flash-boot"
                 mkdir -p "${FLASH_BOOT_MOUNT}"
                 mount "${FLASH_BOOT_DEVICE}" "${FLASH_BOOT_MOUNT}"
                 if [ "$bootparam_migrate" = "true" ] || jq -re '.installer.migrate.force' "${FLASH_BOOT_MOUNT}/config.json" > /dev/null; then
