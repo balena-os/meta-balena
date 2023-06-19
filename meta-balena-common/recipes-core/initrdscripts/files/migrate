@@ -26,16 +26,13 @@
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-defaults
 
-memory_check() {
-    _size="${1}"
-    sync && echo 3 > /proc/sys/vm/drop_caches
-    swapoff -a && swapon -a
-    _memfree=$(awk '/MemFree/{free=$2} END{print (free*1024)}' /proc/meminfo)
-    if [ "${_memfree}" -lt "${_size}" ]; then
-        fail "Not enough memory: requested ${_size}, available ${_memfree}"
-    fi
-    return 0
+# ensure logs are written and filesystems are unmounted before exiting
+cleanup() {
+    sync
+    umount -a
 }
+
+trap cleanup EXIT
 
 # Enable module function
 migrate_enabled() {
@@ -92,6 +89,34 @@ migrate_enabled() {
     return 1
 }
 
+# When copying to zram, we're unable to use traditional methods of limiting
+# memory usage such as ulimits and control groups. Memory used by zram is used
+# by the kernel. We can't just let the copy process cause an OOM, as we'd be
+# unable to effectively write anything to the logs for debugging afterwards.
+#
+# We also can't reliably predict how much memory we need to copy a given file
+# to zram, as the compression ratio varies at runtime depending on the file's
+# content.
+#
+# Instead, let's run the copy operation as a background job and keep an eye on
+# available memory. If it drops below the reserve we set, we'll kill the
+# operation and write a message to the log before bailing out.
+cp_memsafe() {
+    cp "${@}" &
+    pid=$!
+    available_reserve=$(( 64 * 1024 )) # 64 MB
+
+    while kill -0 $pid 2>/dev/null; do
+        mem_available=$(awk '/MemAvailable/{ print $2 }' /proc/meminfo)
+        if [ "${mem_available}" -lt "${available_reserve}" ]; then
+            kill $pid 2>/dev/null
+            fail "Unable to copy files, not enough memory"
+        fi
+    done
+
+    wait $pid
+}
+
 # Main module function
 migrate_run() {
     # Find the raw image in the rootfs partition
@@ -104,21 +129,53 @@ migrate_run() {
             _flash_boot_size=$(du -cb ${FLASH_BOOT_MOUNT} | awk '/total/{print $1}')
             # shellcheck disable=SC2086
             _kernel_images_size=$(du -cb ${kernel_images} | awk '/total/{print $1}')
-            _total_size=$(("$_image_size" + "$_flash_boot_size" + "$_kernel_images_size"))
-            memory_check "${_total_size}"
+            total_size=$(("$_image_size" + "$_flash_boot_size" + "$_kernel_images_size"))
         else
             fail "Flash boot partition not found in ${internal_dev}"
         fi
-        # Copy the raw image to memory
-        cp "${image}" "/tmp"
+
+        # Setup zram to contain large, compressible installation images to
+        # reduce memory requirements
+        #
+        # round the zram dev size up to the nearest multiple of $zram_dev_size_mul_b
+        zram_dev_size_mul_b=$((128 * 1024 * 1024))
+        zram_dev_size_b=$(( ( total_size / zram_dev_size_mul_b + 1 ) * zram_dev_size_mul_b ))
+        zram_alg=zstd
+
+        # zramctl will occasionally fail the first time with EBUSY
+        for _ in $(seq 1 5); do
+            zram_dev=$(zramctl --find \
+                               --algorithm "${zram_alg}" \
+                               --size "${zram_dev_size_b}") \
+                        && break
+            sleep 0.1
+        done
+
+        if [ -n "${zram_dev}" ]; then
+            zram_dev_alg=$(awk -F '[][]' '{print $2}' "/sys/class/block/$(basename "${zram_dev}")/comp_algorithm")
+            zram_dev_size_gb=$(echo ${zram_dev_size_b} | awk '{print $1/1024/1024/1024}')
+
+            info "Created ${zram_dev_size_gb} GB zram device using ${zram_dev_alg} alg"
+
+            mke2fs -O ^has_journal "${zram_dev}"
+            mkdir -p /mnt/zram "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+            mount "${zram_dev}" /mnt/zram
+
+            mount -o bind /mnt/zram /tmp
+            mount -o bind /mnt/zram "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+        else
+            fail "Unable to create zram device"
+        fi
+
+        # Copy the raw image to zram
+        cp_memsafe "${image}" "/tmp"
 
         # Copy the flasher boot partition into memory (contains configuration)
-        mkdir -p "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
-        cp -r "${FLASH_BOOT_MOUNT}"/* "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/"
+        cp_memsafe -r "${FLASH_BOOT_MOUNT}"/* "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/"
 
         # Copy the flasher kernel images to memory
         # shellcheck disable=SC2086
-        cp -a ${kernel_images} "/tmp"
+        cp_memsafe -a ${kernel_images} "/tmp"
 
         # Need to source this again to set CONFIG_PATH correctly
         unset CONFIG_PATH
