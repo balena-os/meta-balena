@@ -158,9 +158,15 @@ fi
 info "resin-init-flasher configuration found."
 
 # Find path to image
-_balena_image=$(find / -xdev -type f -name "${BALENA_IMAGE}")
+#
+# Check /tmp separately from /, as when migrating, we have the image copied to
+# a separate filesystem, and -xdev prohibits crossing filesystem boundaries
+_balena_image=$(find /tmp -xdev -type f -name "${BALENA_IMAGE}")
 if [ ! -f "${_balena_image}" ]; then
-    fail "Raw image ${BALENA_IMAGE}  not found in rootfs"
+    _balena_image=$(find / -xdev -type f -name "${BALENA_IMAGE}")
+    if [ ! -f "${_balena_image}" ]; then
+        fail "Raw image ${BALENA_IMAGE}  not found in rootfs"
+    fi
 fi
 BALENA_IMAGE="${_balena_image}"
 EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT="/mnt/boot"
