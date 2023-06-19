@@ -100,6 +100,7 @@ SUMMARY:initramfs-module-migrate = "OS Migration"
 RDEPENDS:initramfs-module-migrate = " \
     util-linux-findmnt \
     util-linux-mountpoint \
+    util-linux-zramctl \
     resin-init-flasher \
     bash \
     balena-config-vars-config \
