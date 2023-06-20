@@ -1,4 +1,388 @@
 - commits:
+    - subject: Update balena-engine to v20.10.35
+      hash: 9fcf5bb22e07a4041d60cce9d14103a35e02734b
+      body: |
+        Update balena-engine from 20.10.26 to 20.10.35
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested:
+        - commits:
+            - subject: Update libnetwork to fix port binding issue
+              hash: 56aa6337c29329e6100c24f6775840c47081cd06
+              body: >
+                This new version has a patch cherry-picked from here:
+
+                https://github.com/moby/libnetwork/pull/1805
+
+
+                This patch is meant to avoid cases in which libnetwork internal state
+
+                gets inconsistent in case of crashes.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.35
+          title: ""
+          date: 2023-04-24T13:11:04.337Z
+        - commits:
+            - subject: Update librsync-go to v0.8.5, circbuf to v0.1.3
+              hash: a7c917a97048314e956d7264e97598465f88c1c7
+              body: >
+                Notable improvements these new versions bring:
+
+
+                * Optimized code path for generating deltas with blocks that are
+                  power-of-two-sized.
+                * Avoid allocating unbounded amounts of memory when the target differs
+                  completely from the source.
+                * Several bugfixes in edge cases that shall not affect balenaEngine.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.34
+          title: ""
+          date: 2023-04-05T13:06:06.674Z
+        - commits:
+            - subject: Add integration tests for balena's "delta on load"
+              hash: 47a0a065f8c28bfdcbac2f0e96d9cbc3adb1c3bb
+              body: ""
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Simplify and improve delta error handling
+              hash: 2c972dff108a153896116b07798bbc959c07ef01
+              body: >
+                The original delta code on the `xfer` package used to set
+                `d.err` when
+
+                an unexpected EOF was found in the delta tar stream. Turns out `d.err`
+
+                would end up being overwritten before it was read, so that initial
+
+                assignment was effectively a no-op.
+
+
+                This commit simplifies the code a little bit by removing this bogus
+
+                assignment and also improves the error reporting a notch by adding more
+
+                context to the error messages.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Refactor the xfer portions of delta
+              hash: 8c9e6ec7c0efcb81c718c979ad45133f64679fc8
+              body: >
+                This factors out portions of the `xfer` package, so that we can
+
+                reuse this functionality between `balena pull` and `balena load`. There
+
+                was a good deal of duplication.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Refactor the distribution portions of delta
+              hash: 34dd5a92f29e85a77926b9c5983552054dd483c8
+              body: >
+                This factors out portions of the `distribution` package, so that
+                we can
+
+                reuse this functionality between `balena pull` and `balena load`. There
+
+                was a good deal of duplication.
+
+
+                This piece of code is tricky to factor out into a separate function.
+
+                Basically we had two options:
+
+
+                1. Create a completely reusable, DRY function that encapsulates all the
+                   duplicate code. Sounds nice until you noticed that would be a
+                   horrendous function with 5 return values and overly obscure
+                   semantics.
+                2. We create a small set of functions with clearer interfaces and
+                   semantics, but which will still lead to some code duplication between
+                   the `pull` and `load` implementations.
+
+                I opted for the second alternative because the resulting code is much
+
+                easier to understand and maintain. Also, the remaining duplication is
+
+                mostly dumb, integration and error handling code that almost writes
+
+                itself as we call the new reusable functions -- so, this is sort of a
+
+                benign duplication.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.33
+          title: ""
+          date: 2023-03-27T18:46:44.671Z
+        - commits:
+            - subject: "Installer: Make the script POSIX-compliant"
+              hash: cc0683f0aa5cdd5cae54cf278e060328e2c2595f
+              body: >
+                There were various usages of Bash-specific features. As a
+                result, the
+
+                script would work correctly only on OSes that have `sh` as an alias to
+
+                `bash`. It would fail on Ubuntu, for example.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: "Installer: Improve handling of su/sudo"
+              hash: 0a46c1fbce94daff87799074a8243dbdd75b39c2
+              body: >
+                A couple of changes here:
+
+
+                * Check for sudo necessity and availability before doing any real work.
+                  Better to warn and exit quick and early!
+                * Remove the support for using `su`. It was broken for two reasons.
+                  First, unlike `sudo`, `su -c` expects the command as a single
+                  argument. Second, `su`, unlike `sudo`, reads the password from stdin
+                  which in this case "contains" the tarball being downloaded. The second
+                  point is particularly tricky to solve without saving the tarball to
+                  storage (and we want to avoid extra storage space and wear). And,
+                  anyway, users that can `su -c` can also `su` manually before
+                  installing.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: "Installer: Improve checking for dependencies"
+              hash: a0a285599586bd6167c7eb4b73c7a2a2c0b3be1c
+              body: >
+                A couple of changes here:
+
+
+                * Check for missing dependencies before doing any real work. Better to
+                  warn and exit quick and early!
+                * Fix the actual check. We previously used `[ $abort ] && exit 1` which
+                  caused the script to always exit (`abort` is never empty).
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: "Installer: remove support for the 386 architecture"
+              hash: 7403e49d04e41907d89d81054ee4d6a14bb32b9b
+              body: |
+                We disabled builds for linux/386 in v20.10.28 (commit
+                ae2500b7e254b91f4a8f86e44d1ac6f2679c953a).
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Remove the installation script from docs/
+              hash: 5305ab263ffebd08d0346de2bdbed34585805f4f
+              body: >
+                This is removing a duplicate, since the same script is also
+                present
+
+                under contrib/
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.32
+          title: ""
+          date: 2023-03-21T20:13:28.900Z
+        - commits:
+            - subject: Remove references to deprecated build targets
+              hash: 9e72257bf1ced842076f4df8d488c10580561711
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Kyle Harding
+              nested: []
+            - subject: Revert "Cross-build the dynbinary target"
+              hash: 9562704af9213870b7f861dcd394a06be6782678
+              body: |
+                This reverts commit 0240d94e35a43be595cd5e79b0653440c228229f.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: balena-engine-20.10.31
+          title: ""
+          date: 2023-03-20T20:13:05.215Z
+        - commits:
+            - subject: Fix typos in the masterclass docs
+              hash: 0633e148120feffef1d2d13aece801a4d43d4a49
+              body: ""
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: "patch: Migrate balenaEngine Debugging docs from masterclass"
+              hash: 8a5f98ef25b951ed3108ff6e12cf23841508d9ec
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipul@balena.io>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: balena-engine-20.10.30
+          title: ""
+          date: 2023-03-13T17:03:36.999Z
+        - commits:
+            - subject: Rename test functions for better clarity
+              hash: f5b966a63503577b1b826dc23b95773fd073aacf
+              body: >
+                Added an `Asserting` suffix to all functions that internally
+                call
+
+                `assert.*()`. This makes clearer what is really going on at the point of
+
+                call, without needing to look under the hood.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Add test case for the delta image store
+              hash: aecb27a8dc6af5a39bb882f2c2f30894ed0b2abd
+              body: ""
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Add dev-focused docs on some balenaEngine features
+              hash: 75b62a76df57767fcc1ab86f0adb3a9f210480a7
+              body: >
+                Most notably, on the "delta root" feature, which is important
+                for HUPs,
+
+                not very well-known and not documented anywhere else I know.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Simplify test code by using new std lib function
+              hash: 2d192ea16be1df569c86028128397515d6d3322d
+              body: >
+                io.ReadAll() is available since Go 1.16 (to which we upgraded
+                some time
+
+                ago).
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Set the delta image store, fix delta-based HUPs
+              hash: 9fe31eb8dad8dbcc35e48cb0f90a12b67256e490
+              body: >
+                We apparently have broken this during the 20.10 merge. Not
+                setting the
+
+                delta image store breaks delta-based balenaOS updates (HUPs).
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.29
+          title: ""
+          date: 2023-02-20T13:34:08.745Z
+        - commits:
+            - subject: Disable builds for linux/386
+              hash: ae2500b7e254b91f4a8f86e44d1ac6f2679c953a
+              body: |
+                This is currently broken (apparently also upstream).
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.28
+          title: ""
+          date: 2023-02-20T12:32:22.989Z
+        - commits:
+            - subject: Merge upstream v20.10.17
+              hash: 013d0279ce25791b87a0a0d77686e2cd74f6462a
+              body: "For full changelog see:
+                https://github.com/balena-os/balena-engine/blob/20.10.17-balena\
+                /CHANGELOG.md#2023-02-07-upstream-release"
+              footers:
+                change-type: patch
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.27
+          date: 2023-02-07T12:00:00.000Z
+  version: 2.112.17
+  title: ""
+  date: 2023-06-20T09:18:43.490Z
+- commits:
     - subject: "mkfs-hostapp-native: Update base image in Dockerfile"
       hash: 391afed462725243c39b0a240c33ad2d27acd58f
       body: |
