@@ -1,4 +1,102 @@
 - commits:
+    - subject: Update tests/leviathan digest to 09eff9c
+      hash: 7826281aa5efacde91b68ee468a65d0cf12a56cd
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.7
+              hash: 2c1ab4511f9c1f65460ac182527b99a25681a27e
+              body: |
+                Update balena-os/leviathan-worker from 2.9.6 to 2.9.7
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.27.6
+          title: ""
+          date: 2023-06-19T15:04:05.885Z
+        - commits:
+            - subject: "tests: only do serial file read with testbot"
+              hash: a947d2a02aed6125d3ec406152c7ee2d670ee2aa
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+            - subject: "core: enable serial executeCommandinHostOS"
+              hash: 95d11c34f427479c5adee718029169af3db3e68c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.27.5
+          title: ""
+          date: 2023-06-19T13:36:32.892Z
+        - commits:
+            - subject: Update alpine Docker tag to v3.18.2
+              hash: a25d1904ff9ecc703d5b5ed17253bf7c153b1083
+              body: |
+                Update alpine from 3.18.0 to 3.18.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.27.4
+          title: ""
+          date: 2023-06-16T12:09:58.840Z
+        - commits:
+            - subject: Update core/contracts digest to c777910
+              hash: 4e53b2c01825ba15b9da03b3d76c8b19da7d4a94
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.27.3
+          title: ""
+          date: 2023-06-16T11:05:22.184Z
+        - commits:
+            - subject: 'patch: Revert "minor: Add Leviathan Test Helpers"'
+              hash: 691f2b21428bc9920c2bf03f982e3f1e2b6963fd
+              body: ""
+              footer: {}
+              author: Vipul Gupta
+              nested: []
+          version: leviathan-2.27.2
+          title: ""
+          date: 2023-06-16T09:59:06.250Z
+        - commits:
+            - subject: Update Pin dependencies
+              hash: 1a8858c782269f69ae99a3984eeaa4f91d70efe9
+              body: |
+                Pin actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.27.1
+          title: ""
+          date: 2023-06-09T16:29:10.820Z
+  version: 2.115.11
+  title: ""
+  date: 2023-06-21T14:16:09.680Z
+- commits:
     - subject: "resin-init-flasher: Format encrypted partitions as LUKS2"
       hash: 9e01a5d485ee93975b531b9dbd304db9b73de3fa
       body: |

@@ -1,6 +1,47 @@
 Change log
 -----------
 
+# v2.115.11
+## (2023-06-21)
+
+
+<details>
+<summary> Update tests/leviathan digest to 09eff9c [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.27.6
+> ### (2023-06-19)
+> 
+> * Update balena-os/leviathan-worker to v2.9.7 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.27.5
+> ### (2023-06-19)
+> 
+> * tests: only do serial file read with testbot [rcooke-warwick]
+> * core: enable serial executeCommandinHostOS [rcooke-warwick]
+> 
+> ## leviathan-2.27.4
+> ### (2023-06-16)
+> 
+> * Update alpine Docker tag to v3.18.2 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.27.3
+> ### (2023-06-16)
+> 
+> * Update core/contracts digest to c777910 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.27.2
+> ### (2023-06-16)
+> 
+> * patch: Revert "minor: Add Leviathan Test Helpers" [Vipul Gupta]
+> 
+> ## leviathan-2.27.1
+> ### (2023-06-09)
+> 
+> * Update Pin dependencies [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v2.115.10
 ## (2023-06-21)
 
