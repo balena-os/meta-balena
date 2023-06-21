@@ -369,7 +369,7 @@ if [ "$LUKS" = "1" ]; then
 
         PART_DEV="$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         info "Encrypting $PART_DEV"
-        cryptsetup -q luksFormat "$PART_DEV" "$PASSPHRASE_FILE"
+        cryptsetup -q luksFormat --type luks2 "$PART_DEV" "$PASSPHRASE_FILE"
         cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file "$PASSPHRASE_FILE"
         DM_DEV="/dev/mapper/$PART_NAME"
         if [ "$PART_NAME" = "resin-boot" ]; then

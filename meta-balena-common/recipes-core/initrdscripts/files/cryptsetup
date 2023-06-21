@@ -46,6 +46,17 @@ wait4udev() {
     return 0
 }
 
+ensure_luks2() {
+    LUKS_DEVICE="$1"
+
+    LUKS_VERSION=$(cryptsetup luksDump "${LUKS_DEVICE}" | grep "^Version:" | cut -f 2)
+
+    if [ "${LUKS_VERSION}" = 1 ]; then
+        info "Converting ${LUKS_DEVICE} to LUKS2"
+        cryptsetup convert -q --type luks2 "${LUKS_DEVICE}"
+    fi
+}
+
 cryptsetup_enabled() {
     # Flasher should not try to unlock the partitions
     if [ "$bootparam_flasher" = "true" ]; then
@@ -110,6 +121,7 @@ cryptsetup_run() {
     # and wait for them in a separate loop later
     LUKS_UNLOCKED=""
     for LUKS_UUID in $(lsblk -nlo uuid,fstype "/dev/${BOOT_DEVICE}" | grep crypto_LUKS | cut -d " " -f 1); do
+        ensure_luks2 "/dev/disk/by-uuid/${LUKS_UUID}"
         cryptsetup luksOpen --key-file $PASSPHRASE_FILE UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
         LUKS_UNLOCKED="${LUKS_UNLOCKED} luks-${LUKS_UUID}"
     done
