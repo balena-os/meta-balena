@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.10
+## (2023-06-21)
+
+* resin-init-flasher: Format encrypted partitions as LUKS2 [Michal Toman]
+
 # v2.115.9
 ## (2023-06-15)
 

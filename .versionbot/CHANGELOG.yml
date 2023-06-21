@@ -1,4 +1,22 @@
 - commits:
+    - subject: "resin-init-flasher: Format encrypted partitions as LUKS2"
+      hash: 9e01a5d485ee93975b531b9dbd304db9b73de3fa
+      body: |
+        This should be the default but with no explicit argument we still
+        end up with LUKS1 partitions. This patch adds the parameter to enforce
+        LUKS2 formatting and adds conversion to LUKS2 to the cryptsetup
+        initrd script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.115.10
+  title: ""
+  date: 2023-06-21T05:08:09.995Z
+- commits:
     - subject: Update balena-supervisor to v14.11.3
       hash: 1d9f52fee5040b952077846bef79ea99bdf465e0
       body: |
