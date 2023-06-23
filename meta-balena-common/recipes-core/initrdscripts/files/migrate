@@ -28,6 +28,8 @@
 
 # ensure logs are written and filesystems are unmounted before exiting
 cleanup() {
+    disable_persistent_logging
+
     sync
     umount -a
 }
@@ -117,8 +119,21 @@ cp_memsafe() {
     wait $pid
 }
 
+disable_persistent_logging() {
+    # stop redirection and kill tee before unmounting
+    exec 1>&3 2>&4
+    # shellcheck disable=SC2009
+    kill "$(ps | grep "${logfile}" | awk 'NR==1{print $1}')"
+}
+
 # Main module function
 migrate_run() {
+    # create a migration logfile in boot partition
+    logfile=migration_$(date +"%Y%m%dT%H%M").log
+    # duplicate stdout/stderr descriptors for later restoration
+    exec 3>&1 4>&2
+    exec &> >(tee "${FLASH_BOOT_MOUNT}/${logfile}")
+
     # Find the raw image in the rootfs partition
     image=$(find "${ROOTFS_DIR}" -xdev -type f -name "${BALENA_IMAGE}")
     kernel_images=$(find "${ROOTFS_DIR}" -xdev -type f -name "@@KERNEL_IMAGETYPE@@*")
@@ -186,7 +201,16 @@ migrate_run() {
         _config_json_name=$(basename "${CONFIG_PATH}")
         cp "${FLASH_BOOT_MOUNT}/${_config_json_name}" "${CONFIG_PATH}"
 
-        umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
+        # disable writing of persistent log to flasher boot partition and
+        # unmount before migrating, as any block level writes while the
+        # partition is mounted can leave the filesystem in an inconsistent
+        # state
+        disable_persistent_logging
+        # attempt unmount several times, as it may not succeed immediately, but
+        # don't try forever, as it may leave the device unreachable
+        if ! timeout 10 bash -c "until umount ${FLASH_BOOT_MOUNT}; do sleep 1; done"; then
+            fail "Failed to umount ${FLASH_BOOT_MOUNT}"
+        fi
         sync "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
         # Unmount the rootfs as we are going to program over
         umount "${ROOTFS_DIR}"
