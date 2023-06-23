@@ -1,4 +1,105 @@
 - commits:
+    - subject: Update balena-supervisor to v14.11.7
+      hash: d2277092cfb2f61f7fcd1197f0b431f45fe169d7
+      body: |
+        Update balena-supervisor from 14.11.3 to 14.11.7
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Fix /v2/applications/state endpoint
+              hash: 12eac04484e3c0a347b6f31783ed7973991046fa
+              body: >
+                It was returning stale information, particularly the download
+                progress
+
+                of the target release images never got updated.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: "#2174"
+                closes: "#2174"
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.11.7
+          title: ""
+          date: 2023-06-19T21:54:56.093Z
+        - commits:
+            - subject: Add fail-safe to test the image architecture
+              hash: 1cf325d5c55bfb9d2ebb4cde7b9c448a6cfb2067
+              body: >
+                Verify that the target image architecture matches what is
+                expected
+
+                according to the balena app architecture.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Use multi-arch in dockerfile
+              hash: c1b157971d5fe15f9b85cdc6f0eed90b8d2eb22f
+              body: >
+                This is necessary since the builder no longer passes the
+                platform flag
+
+                to the build. This would lead to dockerfiles that are mixing multi and single
+
+                arch stages to pull the wrong architecture images, particularly when
+
+                trying to build images in emulated builds (e.g. armv7hf built on aarch64).
+
+
+                Moving the full build to multi-arch solves this as the docker engine is
+
+                capable of chosing the right architecture from the manifest.
+              footer:
+                Relatest-to: balena-io/balena-builder#1010
+                relatest-to: balena-io/balena-builder#1010
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.11.6
+          title: ""
+          date: 2023-06-19T20:53:34.395Z
+        - commits:
+            - subject: Improve tests surrounding Engine-host race patch
+              hash: 7eba48f8b832ec16465565f210e659a9f822e5b3
+              body: ""
+              footer:
+                See: "#2170"
+                see: "#2170"
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.11.5
+          title: ""
+          date: 2023-06-19T19:01:19.323Z
+        - commits:
+            - subject: Specify fs type when mounting partitions to prevent "Can't open
+                blockdev" warnings
+              hash: e6662f664c15a16e4f36fa128510c5367b20a09f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.11.4
+          title: ""
+          date: 2023-06-19T07:56:33.558Z
+  version: 2.115.12
+  title: ""
+  date: 2023-06-23T09:04:04.118Z
+- commits:
     - subject: Update tests/leviathan digest to 09eff9c
       hash: 7826281aa5efacde91b68ee468a65d0cf12a56cd
       body: Update tests/leviathan

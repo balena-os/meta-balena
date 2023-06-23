@@ -1,6 +1,37 @@
 Change log
 -----------
 
+# v2.115.12
+## (2023-06-23)
+
+
+<details>
+<summary> Update balena-supervisor to v14.11.7 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.11.7
+> ### (2023-06-19)
+> 
+> * Fix /v2/applications/state endpoint [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.11.6
+> ### (2023-06-19)
+> 
+> * Add fail-safe to test the image architecture [Felipe Lalanne]
+> * Use multi-arch in dockerfile [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.11.5
+> ### (2023-06-19)
+> 
+> * Improve tests surrounding Engine-host race patch [Christina Ying Wang]
+> 
+> ## balena-supervisor-14.11.4
+> ### (2023-06-19)
+> 
+> * Specify fs type when mounting partitions to prevent "Can't open blockdev" warnings [Christina Ying Wang]
+> 
+
+</details>
+
 # v2.115.11
 ## (2023-06-21)
 
