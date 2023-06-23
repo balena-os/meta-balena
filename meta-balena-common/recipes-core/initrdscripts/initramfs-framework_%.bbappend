@@ -70,7 +70,7 @@ RDEPENDS:initramfs-module-rootfs = "${PN}-base"
 FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY:initramfs-module-prepare = "Prepare initramfs console"
-RDEPENDS:initramfs-module-prepare = "${PN}-base os-helpers-logging os-helpers-fs"
+RDEPENDS:initramfs-module-prepare = "${PN}-base bash os-helpers-logging os-helpers-fs"
 FILES:initramfs-module-prepare = "/init.d/70-prepare"
 
 SUMMARY:initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
