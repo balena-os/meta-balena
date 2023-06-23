@@ -26,24 +26,10 @@
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-defaults
 
-relocate_log_mount() {
-    # Preserve log file in rootfs
-    # Move the /run mountpoint to the rootfs mountpoint
-    if [ -d "${ROOTFS_DIR}/run" ]; then
-        if mountpoint '/run' > /dev/null; then
-            mount -n -o move /run "${ROOTFS_DIR}/run"
-        fi
-    else
-        # Older releases do not create /run so use /tmp instead
-        if mountpoint '/run' > /dev/null; then
-            mount -n -o move /run "${ROOTFS_DIR}/tmp"
-        fi
-    fi
-    sync "${ROOTFS_DIR}/run" "${ROOTFS_DIR}/tmp" || true
-}
-
 # ensure logs are written and filesystems are unmounted before exiting
 cleanup() {
+    disable_persistent_logging
+
     sync
     umount -a
 }
@@ -81,7 +67,6 @@ migrate_enabled() {
                     info "Migration requested in configuration"
                 fi
             else
-                relocate_log_mount
                 fail "Flash boot partition not found in ${internal_dev}"
             fi
 
@@ -98,7 +83,6 @@ migrate_enabled() {
     fi
     # Booting from external media - leave flashing after pivot-rooting
     umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
-    relocate_log_mount
     return 1
 }
 
@@ -130,8 +114,21 @@ cp_memsafe() {
     wait $pid
 }
 
+disable_persistent_logging() {
+    # stop redirection and kill tee before unmounting
+    exec 1>&3 2>&4
+    # shellcheck disable=SC2009
+    kill "$(ps | grep "${logfile}" | awk 'NR==1{print $1}')"
+}
+
 # Main module function
 migrate_run() {
+    # create a migration logfile in boot partition
+    logfile=migration_$(date +"%Y%m%dT%H%M").log
+    # duplicate stdout/stderr descriptors for later restoration
+    exec 3>&1 4>&2
+    exec &> >(tee "${FLASH_BOOT_MOUNT}/${logfile}")
+
     # Find the raw image in the rootfs partition
     image=$(find "${ROOTFS_DIR}" -xdev -type f -name "${BALENA_IMAGE}")
     kernel_images=$(find "${ROOTFS_DIR}" -xdev -type f -name "bzImage*")
@@ -144,7 +141,6 @@ migrate_run() {
             _kernel_images_size=$(du -cb ${kernel_images} | awk '/total/{print $1}')
             total_size=$(("$_image_size" + "$_flash_boot_size" + "$_kernel_images_size"))
         else
-            relocate_log_mount
             fail "Flash boot partition not found in ${internal_dev}"
         fi
 
@@ -200,14 +196,22 @@ migrate_run() {
         _config_json_name=$(basename "${CONFIG_PATH}")
         cp "${FLASH_BOOT_MOUNT}/${_config_json_name}" "${CONFIG_PATH}"
 
-        umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
+        # disable writing of persistent log to flasher boot partition and
+        # unmount before migrating, as any block level writes while the
+	# partition is mounted can leave the filesystem in an inconsistent
+	# state
+        disable_persistent_logging
+        # attempt unmount several times, as it may not succeed immediately, but
+        # don't try forever, as it may leave the device unreachable
+        if ! timeout 10 bash -c "until umount ${FLASH_BOOT_MOUNT}"; do sleep 1; done; then
+            fail "Failed to umount ${FLASH_BOOT_MOUNT}"
+        fi
         sync "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
         # Unmount the rootfs as we are going to program over
         umount "${ROOTFS_DIR}"
         # Run flasher - should not return
         /usr/bin/resin-init-flasher || fail "Flasher exited with $?"
     else
-        relocate_log_mount
         # If recovery mode, wait for adbd to exit
         if [ -n "${ADBD_PID}" ]; then
             # adbd is not a child process so cannot wait
