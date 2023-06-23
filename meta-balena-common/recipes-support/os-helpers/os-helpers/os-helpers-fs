@@ -16,26 +16,6 @@ if [ -f "/usr/libexec/os-helpers-logging" ]; then
 . /usr/libexec/os-helpers-logging
 fi
 
-# Wait for a file to appear with loop count limit.
-# Use-case example: wait for udev to create a filesystem symlink.
-# Arguments:
-#   1 - target path
-#   2 - number of loops (each loop sleeps for 100ms)
-wait4file() {
-	_lpath="$1"
-	_lloops="$2"
-
-	while [ ! -e "$_lpath" ]; do
-		if [ "$_lloops" -gt 0 ]; then
-			sleep 0.1
-			_lloops=$((_lloops-1))
-		else
-			return 1
-		fi
-	done
-	return 0
-}
-
 # Output the UUID for the specified block device.
 # Arguments:
 #   1 - Target block device

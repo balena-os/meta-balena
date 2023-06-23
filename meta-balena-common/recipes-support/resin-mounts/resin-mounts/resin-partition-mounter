@@ -20,8 +20,6 @@
 
 set -e
 
-TIMEOUT_LOOPS=300 # ~ 100ms/loop * 300loops = 30000ms = 30s
-
 #
 # Help message
 #
@@ -103,7 +101,10 @@ if [ ! -d "$target_mountpoint" ]; then
     echo "ERROR: Target mountpoint $target_mountpoint not found."
     exit 1
 fi
-if ! wait4file "$target_path" "$TIMEOUT_LOOPS"; then
+if [ ! -e "${target_path}" ] \
+    && ! inotifywait -r /dev \
+                     --include "${target_path#/dev/}" \
+                     --timeout 30; then
     echo "ERROR: Timeout while waiting for $target_path to come up."
     exit 1
 fi

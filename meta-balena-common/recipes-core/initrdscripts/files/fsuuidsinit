@@ -30,12 +30,11 @@ fsuuidsinit_enabled() {
         return 1
     fi
 
-    # Wait for balena by-state symlinks to come up
-    # We only wait for resin-rootA here as we use it right away
-    # but we in fact assume the other symlinks are created as well
-    # wait4file does $2 loops of 100ms, therefore use 10 * roottimeout
     timeout=${bootparam_roottimeout:-5}
-    if ! wait4file "/dev/disk/by-state/resin-rootA" "$((timeout * 10))"; then
+    if ! ls /dev/disk/by-state/* \
+        && ! inotifywait -r /dev \
+                         --include 'disk/by-state/resin-+(boot|data|root[AB]|state)$' \
+                         --timeout "${timeout}"; then
         error "Timeout while waiting for resin-root partition to be detected"
         return 1
     fi
