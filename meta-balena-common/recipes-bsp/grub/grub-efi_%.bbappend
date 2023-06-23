@@ -7,6 +7,7 @@ SRC_URI += " \
 # build in additional required modules
 GRUB_BUILDIN:append = " gcry_sha256 gcry_sha512 gcry_rijndael gcry_rsa regexp probe gzio chain"
 GRUB_BUILDIN:append = "${@oe.utils.conditional('SIGN_API','','',' dummyterm',d)}"
+GRUB_BUILDIN:append = "${@bb.utils.contains('DISTRO_FEATURES', 'btrfs', ' btrfs', '', d)}"
 
 do_configure:append() {
     if [ "x${SIGN_API}" != "x" ] && [ "${OS_DEVELOPMENT}" != "1" ]; then

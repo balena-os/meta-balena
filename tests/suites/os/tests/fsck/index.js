@@ -24,24 +24,22 @@ module.exports = {
 			title: 'ext4 filesystems are checked on boot',
 			run: async function(test) {
 				async function markDirty(context, label) {
-					return context.get()
-						.worker.executeCommandInHostOS(
+					return context.worker.executeCommandInHostOS(
 							['tune2fs', '-E', 'force_fsck',
 								`/dev/disk/by-label/${label}`
-							].join(' '),
-							context.get().link
+							],
+							context.link
 						);
 				}
 
 				async function getFilesystemState(context, label) {
-					return context.get()
-						.worker.executeCommandInHostOS(
+					return context.worker.executeCommandInHostOS(
 							['tune2fs', '-l', `/dev/disk/by-label/${label}`,
 								'|', 'grep', '"Filesystem state"',
 								'|', 'cut', '-d:', '-f2',
 								'|', 'xargs'
-							].join(' '),
-							context.get().link
+							],
+							context.link
 						);
 				}
 
@@ -57,6 +55,12 @@ module.exports = {
 						let version = tune2fs[0].split(' ')[1];
 						return semver.satisfies(version, '>=1.45.0')
 					})
+
+				async function getFilesystemType(context, label) {
+					return context.worker.executeCommandInHostOS(
+						['blkid', '-s', 'TYPE', '-o', 'value', '-t', `LABEL=${label}`],
+						context.link
+					);
 				}
 
 				// Exclude the boot partition for now, as it doesn't have metadata to
@@ -69,25 +73,34 @@ module.exports = {
 					'resin-data',
 				];
 
+				let dirty = [];
 				return checkTune2fsVersion(this.context).then((valid) => {
 					if (valid){
 						return Promise.map(diskLabels, (label) => {
-							return markDirty(this.context, label).then(() => {
-								return getFilesystemState(this.context, label).then((state) => {
-									let expectedState = 'clean with errors';
-									test.is(
-										state,
-										expectedState,
-										`Filesystem state for ${label} should be '${expectedState}'`
-									);
-								});
-							});
+							return getFilesystemType(this, label).then(fsType => {
+								if (fsType === 'ext4') {
+									return markDirty(this.context, label).then(() => {
+										return getFilesystemState(this.context, label).then((state) => {
+											let expectedState = 'clean with errors';
+											test.is(
+												state,
+												expectedState,
+												`Filesystem state for ${label} should be '${expectedState}'`
+											);
+
+											dirty.push(label);
+										});
+									});
+								} else {
+									test.comment(`Skipping unsupported filesystem ${fsType} on ${label}`);
+								}
+							})
 						}).then(() => {
 							test.comment('Filesystems have been marked dirty');
 							return this.context.get()
 								.worker.rebootDut(this.link);
 						}).then(() => {
-							return Promise.map(diskLabels, (label) => {
+							return Promise.map(dirty, (label) => {
 								return getFilesystemState(this.context, label).then((state) => {
 									let expectedState = 'clean';
 									test.is(

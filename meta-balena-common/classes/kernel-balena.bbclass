@@ -335,6 +335,13 @@ BALENA_CONFIGS[brcmfmac] ?= " \
     CONFIG_BRCMFMAC=m \
     "
 
+BALENA_CONFIGS[btrfs] ?= " \
+    CONFIG_BTRFS_FS=y \
+    CONFIG_BTRFS_FS_POSIX_ACL=y \
+    "
+
+BALENA_CONFIGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'btrfs', 'btrfs', '', d)}"
+
 #
 # Most of the resin supported boards have user controllable LEDs
 #
