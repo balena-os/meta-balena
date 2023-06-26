@@ -3,7 +3,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-DEPENDS = "time-native"
+DEPENDS = "time-native curl-native"
 RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk"
 RDEPENDS:${PN}-fs:append = "${@bb.utils.contains('MACHINE_FEATURES','raid',' mdadm','',d)}"
 RDEPENDS:${PN}-tpm2 = "libtss2-tcti-device tpm2-tools"
@@ -67,6 +67,6 @@ do_test_api() {
 }
 addtask test_api before do_package after do_install
 do_test_api[network] = "1"
-do_test[depends] += "curl-native:do_populate_sysroot os-helpers-native:do_populate_sysroot ca-certificates-native:do_populate_sysroot"
+do_test_api[depends] += "curl-native:do_populate_sysroot os-helpers-native:do_populate_sysroot ca-certificates-native:do_populate_sysroot"
 
 BBCLASSEXTEND = "native"
