@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.13
+## (2023-06-26)
+
+* os-helpers: Fix os-helpers-api build warnings [Alex Gonzalez]
+
 # v2.115.12
 ## (2023-06-23)
 

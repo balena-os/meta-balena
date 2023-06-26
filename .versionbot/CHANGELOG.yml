@@ -1,4 +1,21 @@
 - commits:
+    - subject: "os-helpers: Fix os-helpers-api build warnings"
+      hash: 46e6802ee5e8abf5eea4c8fd9ab737115382b033
+      body: |
+        * Add curl as a native dependency
+        * Add package dependencies to test api
+        * Replace status code check for a POSIX compliant version
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 2.115.13
+  title: ""
+  date: 2023-06-26T13:15:57.968Z
+- commits:
     - subject: Update balena-supervisor to v14.11.7
       hash: d2277092cfb2f61f7fcd1197f0b431f45fe169d7
       body: |
