@@ -1,4 +1,54 @@
 - commits:
+    - subject: Update tests/leviathan digest to a19d6ef
+      hash: 2283326d55c288889a02f04c471fe058576fd9b4
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.8
+              hash: 2a3757973579a8beeaa1aca0f226a58857d28e32
+              body: |
+                Update balena-os/leviathan-worker from 2.9.7 to 2.9.8
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.27.9
+          title: ""
+          date: 2023-06-27T15:57:35.158Z
+        - commits:
+            - subject: Update core/contracts digest to 6c4386a
+              hash: 18ddcf64b3db0ac97051e86e9efaf63f5a183d2a
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.27.8
+          title: ""
+          date: 2023-06-27T12:08:02.856Z
+        - commits:
+            - subject: "patch: Update QEMU getting started guide"
+              hash: 04333e2ffabf3044ad288c6588470373d6a97b6f
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.27.7
+          title: ""
+          date: 2023-06-22T12:30:58.563Z
+  version: 2.115.14
+  title: ""
+  date: 2023-06-27T20:32:39.974Z
+- commits:
     - subject: "os-helpers: Fix os-helpers-api build warnings"
       hash: 46e6802ee5e8abf5eea4c8fd9ab737115382b033
       body: |

@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v2.115.14
+## (2023-06-27)
+
+
+<details>
+<summary> Update tests/leviathan digest to a19d6ef [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.27.9
+> ### (2023-06-27)
+> 
+> * Update balena-os/leviathan-worker to v2.9.8 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.27.8
+> ### (2023-06-27)
+> 
+> * Update core/contracts digest to 6c4386a [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.27.7
+> ### (2023-06-22)
+> 
+> * patch: Update QEMU getting started guide [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
 # v2.115.13
 ## (2023-06-26)
 
