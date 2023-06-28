@@ -146,6 +146,8 @@ Each OS build ships update files for `db` and `dbx` in the `/resin-boot` directo
 
 To protect the encryption keys in the TPM we lock against PCRs 0, 1, 2 and 3. Namely PCR0 is the checksum of the UEFI image, which would change by a BIOS/UEFI update. PCR1 is the checksum of the UEFI configuration which would generally change by updating anything in the UEFI configuration (e.g. disabling secure boot or changing boot order). That said, if users updates BIOS/UEFI or changes settings, the device needs to be reprovisioned afterwards.
 
+*Note: While we assume PCR1 will change when BIOS/UEFI settings are changed, the actual implementation of what PCR1 measures is very device-specific. We are aware that on some devices the PCR1 value will not change even when boot order is changed or secure boot is disabled via BIOS/UEFI setup. We therefore strongly recommend to protect the entry to BIOS/UEFI setup with a strong password and, if possible, disable shortcuts in user interaction with the firmware, such as using F-keys for temporary boot order override.*
+
 ### Hardware updates
 
 To protect the encryption keys in the TPM we lock against PCRs 0, 1, 2 and 3. Namely PCRs 2 and 3 contain checksums of the loaded UEFI drivers for devices plugged in, their firmware and configuration. These would change if e.g. a PCIe device is replaced, its firmware is updated or even the same card is moved into a different slot. That said if hardware changes are necessary, the device needs to be reprovisioned afterwards.
