@@ -51,6 +51,25 @@ do_get_public_keys() {
     fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".esl" "PK.esl"
     fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".kek" "KEK.auth"
     fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".esl" "KEK.esl"
+
+    if [ -n "${SIGN_KMOD_KEY_APPEND}" ]; then
+        bbnote "Appending additional module signing key(s) to trusted keys"
+        # remove trailing newline, otherwise appended keys will be ignored
+        sed -i '/^$/d' "${DEST_DIR}/kmod.crt"
+        # PEM formatted x509 certs contain base64 encoded data between headers
+        # and footers with dashes, which are troublesome to escape and parse properly.
+        #
+        # Certs are stripped of the headers and footers and joined by
+        # semicolons before being accepted as a parameter. We parse that string
+        # for certificates, reinserting the headers and footers before
+        # appending to the trusted keys.
+        #
+        # As a final step, wrap to the same width that openssl uses when
+        # generating certs for consistency
+        (IFS=\;; for cert in "${SIGN_KMOD_KEY_APPEND}"; do
+            printf -- "-----BEGIN CERTIFICATE-----\n%s\n-----END CERTIFICATE-----\n" "${cert}"
+        done) | fold -w 64 >> "${DEST_DIR}/kmod.crt"
+    fi
 }
 do_get_public_keys[cleandirs] = "${B}"
 do_get_public_keys[network] = "1"
@@ -82,6 +101,7 @@ do_get_public_keys[vardeps] += " \
     SIGN_API \
     SIGN_GRUB_KEY_ID \
     SIGN_KMOD_KEY_ID \
+    SIGN_KMOD_KEY_APPEND \
     SIGN_EFI_PK_KEY_ID \
     SIGN_EFI_KEK_KEY_ID \
     "
