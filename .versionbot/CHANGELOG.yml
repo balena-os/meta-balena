@@ -1,4 +1,52 @@
 - commits:
+    - subject: Update balena-supervisor to v14.11.8
+      hash: ff30642b741a2bd44091fa41e7b2d0f5c13470fd
+      body: |
+        Update balena-supervisor from 14.11.7 to 14.11.8
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Parse container exit error message instead of status
+              hash: 71d24d6e3366b28e1466e99322d58420b5ebbb67
+              body: >
+                The previous implementation in #2170 of parsing the container
+                status was too general,
+
+                because it relied on the mistaken assumption that a container would have a status of
+
+                `Stopped` if it was manually stopped. This turned out to be untrue, as manually stopped
+
+                containers were also getting restarted by the Supervisor due to their inspect status of
+
+                `exited`. With this, parsing the exit message became unavoidable as there are no other
+
+                clear ways to discern a container that has been manually stopped and shouldn't be started
+
+                from a container experiencing the Engine-host race condition issue (again, see #2170).
+
+
+                Since we're just parsing the exit error message, we don't need to worry about different behaviors
+
+                amongst restart policies, as any container with the error message on exit should be started.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: "#2178"
+                closes: "#2178"
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina W
+              nested: []
+          version: balena-supervisor-14.11.8
+          title: ""
+          date: 2023-06-23T18:46:22.881Z
+  version: 2.115.16
+  title: ""
+  date: 2023-06-28T07:37:09.027Z
+- commits:
     - subject: Update balena-engine to v20.10.37
       hash: c607d7be4d740802ab5e27b67f5e6714e1407855
       body: |
