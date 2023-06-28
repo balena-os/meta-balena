@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.17
+## (2023-06-28)
+
+* balena-keys: add SIGN_KMOD_KEY_APPEND [Joseph Kogut]
+
 # v2.115.16
 ## (2023-06-28)
 

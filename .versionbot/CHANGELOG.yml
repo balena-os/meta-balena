@@ -1,4 +1,33 @@
 - commits:
+    - subject: "balena-keys: add SIGN_KMOD_KEY_APPEND"
+      hash: 981a4eec5106bc41643dc708bd64470093ad741c
+      body: |
+        This variable accepts the base64 encoded public key of a kernel module
+        signing keypair and appends it to the list of trusted keys the kernel
+        will use to validate signed modules. Multiple keys may be appended,
+        delimited with a semicolon.
+
+        A PEM file can be used like so:
+
+        SIGN_KMOD_KEY_APPEND="$( sed -e '/-----BEGIN CERTIFICATE-----/d' \
+                                     -e 's/-----END CERTIFICATE-----/;/g' \
+                                     -e '$d' signing_key.pem \
+                                 | tr -d '\n' )"
+
+        balena-yocto-scripts/build/balena-build.sh \
+            -g "-a SIGN_KMOD_KEY_APPEND=${SIGN_KMOD_KEY_APPEND}" \
+            ...
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 2.115.17
+  title: ""
+  date: 2023-06-28T20:35:09.852Z
+- commits:
     - subject: Update balena-supervisor to v14.11.8
       hash: ff30642b741a2bd44091fa41e7b2d0f5c13470fd
       body: |
