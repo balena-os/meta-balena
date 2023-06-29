@@ -1,4 +1,23 @@
 - commits:
+    - subject: "resin-init-flasher: Increase size of LUKS header to 16MB"
+      hash: 024a6dfc244247f739f5c6bf72c8bf55cbe8b6e1
+      body: |
+        After switching to LUKS2, the header size increased from 2MB to 16MB.
+        While HUP of older systems works, it is impossible to provision
+        new encrypted systems.
+
+        This patch fixes the header size in flasher.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 2.115.18
+  title: ""
+  date: 2023-06-29T08:26:11.052Z
+- commits:
     - subject: "balena-keys: add SIGN_KMOD_KEY_APPEND"
       hash: 981a4eec5106bc41643dc708bd64470093ad741c
       body: |

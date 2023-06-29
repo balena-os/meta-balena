@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.18
+## (2023-06-29)
+
+* resin-init-flasher: Increase size of LUKS header to 16MB [Michal Toman]
+
 # v2.115.17
 ## (2023-06-28)
 
