@@ -345,8 +345,8 @@ if [ "$LUKS" = "1" ]; then
     FIRST_PART_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$FIRST_PART_ID")
 
     # Create new partitions with extra space for LUKS headers
-    # LUKS header size is 2MiB
-    LUKS_HEADER_SIZE=$[2 * 1024 * 1024]
+    # LUKS2 header size is 16MiB
+    LUKS_HEADER_SIZE=$[16 * 1024 * 1024]
 
     BOOT_PART_END=$["$FIRST_PART_START" + "$BOOT_PART_SIZE" + "$LUKS_HEADER_SIZE" - 1]
     parted -s "$internal_dev" -- unit B mkpart resin-boot "$FIRST_PART_START" "$BOOT_PART_END"
