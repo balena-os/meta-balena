@@ -97,10 +97,11 @@ module.exports = {
 			this.getLogger(), 
 			this.suite.options.workerUrl, 
 			this.suite.options.balena.organization, 
-			join(homedir(), 'id')
+			join(homedir(), 'id'),
+			this.suite.options.config.sshConfig
 		);
 
-		const cloud = new Balena(this.suite.options?.balena?.apiUrl, this.getLogger());
+		const cloud = new Balena(this.suite.options?.balena?.apiUrl, this.getLogger(), this.suite.options.config.sshConfig);
 
 		await fse.ensureDir(this.suite.options.tmpdir);
 
