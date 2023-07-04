@@ -36,12 +36,14 @@ do_compile () {
         sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" $i
     done
 
-    IMAGE_ID=$(DOCKER_API_VERSION=1.22 docker build ${B}/work | grep -o -E '[a-z0-9]{12}' | tail -n1)
-    DOCKER_API_VERSION=1.22 docker save "$IMAGE_ID" > ${B}/work/mkfs-hostapp-image.tar
-    DOCKER_API_VERSION=1.22 docker rmi "$IMAGE_ID"
+    IMAGETAG="${PN}:$(date +%s)"
+    DOCKER_API_VERSION=1.22 docker build --tag ${IMAGETAG} ${B}/work
+    DOCKER_API_VERSION=1.22 docker save "$IMAGETAG" > ${B}/work/mkfs-hostapp-image.tar
+    DOCKER_API_VERSION=1.22 docker rmi "$IMAGETAG"
 
-    sed -i "s/@IMAGE@/${IMAGE_ID}/" ${B}/work/mkfs.hostapp
+    sed -i "s/@IMAGE@/${IMAGETAG}/" ${B}/work/mkfs.hostapp
 }
+do_compile[network] = "1"
 
 do_install () {
     install -d ${D}/${bindir}
