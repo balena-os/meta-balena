@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v3.0.0
+## (2023-07-04)
+
+* mkfs-hostapp-native: Allow the compile task to access the network [Alex Gonzalez]
+* mkfs-hostapp-native: Use image tags instead of parsing docker output [Alex Gonzalez]
+* kernel-headers-test: Use image tags instead of parsing docker output [Alex Gonzalez]
+* kernel-headers-test: Allow network access for compile task [Alex Gonzalez]
+* kernel-modules-headers: use kernel-devsrc to provide kernel headers [Alex Gonzalez]
+
 # v2.115.18
 ## (2023-06-29)
 

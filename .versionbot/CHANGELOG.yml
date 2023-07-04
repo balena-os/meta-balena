@@ -1,4 +1,99 @@
 - commits:
+    - subject: "mkfs-hostapp-native: Allow the compile task to access the network"
+      hash: 92fe10a9db2eb32ca1ac1909e37a1ab2f4b3328d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "mkfs-hostapp-native: Use image tags instead of parsing docker output"
+      hash: 2597705df7f8a153f878075a5373c45d28b624b8
+      body: |
+        From docker 23.0 `docker build` is an alias to `docker buildkit build`
+        and the output is not parseable in the same way.
+
+        To avoid using unstable outputs as API, use image tags instead.
+
+        Fixes #3035
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-headers-test: Use image tags instead of parsing docker output"
+      hash: b69d24466bd973e08224d9238f748dd117262d82
+      body: |
+        From docker 23.0 `docker build` is an alias to `docker buildkit build`
+        and the output is not parseable in the same way.
+
+        To avoid using unstable outputs as API, use image tags instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-headers-test: Allow network access for compile task"
+      hash: 12d8df5344b017ee1ddce568870f31e32974e51b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-modules-headers: use kernel-devsrc to provide kernel headers"
+      hash: 9143fbe4f99fdfd5d61502b1ca630f6055027dce
+      body: >
+        Both `kernel-modules-headers` and `kernel-devsrc` provide kernel headers
+
+        since Yocto Thud switched `kernel-devsrc` from full source to just
+
+        kernel headers.
+
+
+        The only difference between them is that `kernel-modules-headers` builds
+
+        some target binaries which need to be built with `make modules_prepare`
+
+        when using `kernel-devsrc` headers. These binaries depend on libc version
+
+        matching though so they have shown to be problematic.
+
+
+        This commit removes the `kernel-modules-headers` recipe and modifies
+
+        `kernel-devsrc` to replace it. The deployed artifact remains named as
+
+        `kernel-modules-headers` as it's a more descriptive name.
+
+
+        This introduces a breaking change in the balenaOS API as customers that
+
+        are using `kernel-modules-headers` to build external kernel modules will
+
+        now need to issue a `make modules_prepare` as part of their build scripts.
+
+
+        Fixes #1822
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.0.0
+  title: ""
+  date: 2023-07-04T12:58:06.352Z
+- commits:
     - subject: "resin-init-flasher: Increase size of LUKS header to 16MB"
       hash: 024a6dfc244247f739f5c6bf72c8bf55cbe8b6e1
       body: |
