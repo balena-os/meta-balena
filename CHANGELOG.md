@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v3.0.1
+## (2023-07-04)
+
+* docs: Explain TPM ownership and possible TPM fill-up with secure boot [Michal Toman]
+* docs: Recommend BIOS password and no F-key shortcuts with secure boot [Michal Toman]
+
 # v3.0.0
 ## (2023-07-04)
 

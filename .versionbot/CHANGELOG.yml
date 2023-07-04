@@ -1,4 +1,38 @@
 - commits:
+    - subject: "docs: Explain TPM ownership and possible TPM fill-up with secure boot"
+      hash: 3770f5898cef8fc5ba70276056bf534e8c197186
+      body: |
+        Explain that balenaOS does not take control of the TPM and that it
+        is possible to fill all the key slots with enough provisioning cycles.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "docs: Recommend BIOS password and no F-key shortcuts with secure boot"
+      hash: 586a46f447f859ec5866a78abddb85e6a2441451
+      body: |
+        We have seen devices that won't change PCR1 hash when a temporary boot
+        order override was applied or secure boot was disabled via BIOS setup.
+        The implementation of what PCR1 actually measures is very
+        device-specific, but many of the risks can be mitigated by setting up
+        a BIOS password and disabling F-key shortcuts for interacting with
+        the firmware.
+
+        [skip ci]
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 3.0.1
+  title: ""
+  date: 2023-07-04T20:47:23.997Z
+- commits:
     - subject: "mkfs-hostapp-native: Allow the compile task to access the network"
       hash: 92fe10a9db2eb32ca1ac1909e37a1ab2f4b3328d
       body: ""
