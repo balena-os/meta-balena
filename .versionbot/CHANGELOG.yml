@@ -1,4 +1,39 @@
 - commits:
+    - subject: Update balena-supervisor to v14.11.9
+      hash: ea7301f6c8a24b2090adec21074598f9bd644dda
+      body: |
+        Update balena-supervisor from 14.11.8 to 14.11.9
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Remove the 'Stopped' status for services
+              hash: 38fe8dae75cd05bf313626b968e208dcfb6f307c
+              body: >
+                It's not an official status from container inspects, and the
+                Supervisor
+
+                doesn't set it internally anywhere. It's better to remove it entirely as the
+
+                method by which Supervisor sets internal service statuses is by using a global
+
+                event emitter (reportNewStatus) which makes things difficult to test.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.11.9
+          title: ""
+          date: 2023-06-28T21:01:03.352Z
+  version: 3.0.3
+  title: ""
+  date: 2023-07-05T17:50:36.341Z
+- commits:
     - subject: Update tests/leviathan digest to 498d4cb
       hash: f4a1b8bd1c044e3a49d66bb3a820bc03cfc6faeb
       body: Update tests/leviathan
