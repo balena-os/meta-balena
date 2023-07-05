@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update balena-engine to v20.10.38
+      hash: 74c07c2f4979b78eac4bc95a70fe6988bcd44590
+      body: |
+        Update balena-engine from 20.10.37 to 20.10.38
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Document a couple of troubleshooting tips
+              hash: c8cc7e6e22d65ece306d125fee17e65b51bde84a
+              body: |
+                These are some smaller things I do every now and then when
+                troubleshooting and are worth documenting.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.38
+          title: ""
+          date: 2023-07-03T14:00:04.969Z
+  version: 3.0.4
+  title: ""
+  date: 2023-07-05T21:55:41.168Z
+- commits:
     - subject: Update balena-supervisor to v14.11.9
       hash: ea7301f6c8a24b2090adec21074598f9bd644dda
       body: |
