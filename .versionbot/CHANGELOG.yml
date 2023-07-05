@@ -1,4 +1,66 @@
 - commits:
+    - subject: Update tests/leviathan digest to 498d4cb
+      hash: f4a1b8bd1c044e3a49d66bb3a820bc03cfc6faeb
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.9
+              hash: 637c10800ffbd5c514f11b83768178716ab110ad
+              body: |
+                Update balena-os/leviathan-worker from 2.9.8 to 2.9.9
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.3
+          title: ""
+          date: 2023-07-05T11:03:27.568Z
+        - commits:
+            - subject: Update core/contracts digest to 6e3d563
+              hash: cf53ba6f0d58dce5b6d8e94a799600f52dbfe75d
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.2
+          title: ""
+          date: 2023-07-05T10:03:26.492Z
+        - commits:
+            - subject: "patch: Pass env variables to client"
+              hash: 09086c9c1c3471c8c803e6a91cbd72b09f1c9210
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.1
+          title: ""
+          date: 2023-07-05T09:00:56.929Z
+        - commits:
+            - subject: "minor: Make client work with different balenaCloud environments"
+              hash: d975cfff5f15cfdffffa81202de5ad6fd8d41d87
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.0
+          title: ""
+          date: 2023-06-30T15:07:41.244Z
+  version: 3.0.2
+  title: ""
+  date: 2023-07-05T13:49:59.489Z
+- commits:
     - subject: "docs: Explain TPM ownership and possible TPM fill-up with secure boot"
       hash: 3770f5898cef8fc5ba70276056bf534e8c197186
       body: |

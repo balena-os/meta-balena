@@ -1,6 +1,36 @@
 Change log
 -----------
 
+# v3.0.2
+## (2023-07-05)
+
+
+<details>
+<summary> Update tests/leviathan digest to 498d4cb [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.3
+> ### (2023-07-05)
+> 
+> * Update balena-os/leviathan-worker to v2.9.9 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.2
+> ### (2023-07-05)
+> 
+> * Update core/contracts digest to 6e3d563 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.1
+> ### (2023-07-05)
+> 
+> * patch: Pass env variables to client [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.28.0
+> ### (Invalid date)
+> 
+> * minor: Make client work with different balenaCloud environments [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
 # v3.0.1
 ## (2023-07-04)
 
