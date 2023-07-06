@@ -1,4 +1,23 @@
 - commits:
+    - subject: bail out in kexec initramfs hook on failure
+      hash: 87e9fad4dc9e6954c9edc36a233e849c8adb6d41
+      body: |
+        Kexec is used to boot into the decrypted kernel in the hostapp on
+        systems with secure boot and full-disk encryption.
+
+        If kexec fails, we don't want to continue with the rest of the boot
+        process in the first stage kernel, so bail out on failure.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 3.0.7
+  title: ""
+  date: 2023-07-06T19:15:08.317Z
+- commits:
     - subject: "kernel-devsrc: fix for v6.1+"
       hash: 1687110706cbde4a4d968afb04b3abc07e5c7eaa
       body: >
