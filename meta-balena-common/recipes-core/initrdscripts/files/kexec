@@ -34,5 +34,5 @@ kexec_run() {
 
     umount "${ROOTFS_DIR}"
 
-    kexec -e
+    kexec -e || fail "kexec failed with $?, abort"
 }
