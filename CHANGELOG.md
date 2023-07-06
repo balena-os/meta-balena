@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v3.0.5
+## (2023-07-06)
+
+
+<details>
+<summary> Update balena-supervisor to v14.11.10 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.11.10
+> ### (2023-07-05)
+> 
+> * Add revpi-connect-s to Raspberry Pi variants [Florin Sarbu]
+> 
+
+</details>
+
 # v3.0.4
 ## (2023-07-05)
 

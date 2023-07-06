@@ -1,4 +1,35 @@
 - commits:
+    - subject: Update balena-supervisor to v14.11.10
+      hash: ff0ccecb9211bccf482105bc40d453f82a44d3f9
+      body: |
+        Update balena-supervisor from 14.11.9 to 14.11.10
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Add revpi-connect-s to Raspberry Pi variants
+              hash: 8d2b310af840d86ed9b96ac5bb4c5bc74e52e7ff
+              body: >
+                We need the supervisor to be able to manage config.txt changes
+                for the
+
+                Revolution Pi Connect S.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: balena-supervisor-14.11.10
+          title: ""
+          date: 2023-07-05T19:00:39.117Z
+  version: 3.0.5
+  title: ""
+  date: 2023-07-06T01:55:50.942Z
+- commits:
     - subject: Update balena-engine to v20.10.38
       hash: 74c07c2f4979b78eac4bc95a70fe6988bcd44590
       body: |
