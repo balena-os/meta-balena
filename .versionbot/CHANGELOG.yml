@@ -1,4 +1,33 @@
 - commits:
+    - subject: "kernel-devsrc: fix for v6.1+"
+      hash: 1687110706cbde4a4d968afb04b3abc07e5c7eaa
+      body: >
+        Adapted as a bbappend from:
+
+        https://git.yoctoproject.org/poky/commit/meta/recipes-kernel/linux/kernel-devsrc.bb?id=2be1b5d7d38d72c35ec593b98366d128fe5ce12c
+
+
+        The 6.1 kernel has a number of Kbuild and architecture changes
+
+        that required us to update our devsrc recipe. With these changes
+
+        we are once again able to build on target modules for all
+
+        supported archectures.
+
+
+        (From OE-Core rev: a3972b3f919400a12bb9a546ae98092cbfdcdbb8)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.0.6
+  title: ""
+  date: 2023-07-06T09:59:05.261Z
+- commits:
     - subject: Update balena-supervisor to v14.11.10
       hash: ff0ccecb9211bccf482105bc40d453f82a44d3f9
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.6
+## (2023-07-06)
+
+* kernel-devsrc: fix for v6.1+ [Alex Gonzalez]
+
 # v3.0.5
 ## (2023-07-06)
 
