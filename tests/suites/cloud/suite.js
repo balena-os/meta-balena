@@ -331,7 +331,7 @@ module.exports = {
 
     // disable port forwarding on the testbot - disables the DUT internet access.
     if (
-			this.workerContract.workerType === `testbot`
+			this.workerContract.workerType !== `qemu`
 		){
       await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
     }
