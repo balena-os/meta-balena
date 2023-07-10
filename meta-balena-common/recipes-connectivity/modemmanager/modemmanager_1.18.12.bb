@@ -15,7 +15,7 @@ SRC_URI = " \
     http://www.freedesktop.org/software/ModemManager/ModemManager-${PV}.tar.xz \
     file://core-switch-bash-shell-scripts-to-use-bin-sh-for-use.patch \
 "
-SRC_URI[sha256sum] = "11fb970f63e2da88df4b6d8759e4ee649944c515244b979bf50a7a6df1d7f199"
+SRC_URI[sha256sum] = "b464e4925d955a6ca86dd08616e763b26ae46d7fd37dbe281678e34065b1e430"
 
 
 S = "${WORKDIR}/ModemManager-${PV}"
