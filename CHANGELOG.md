@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v3.0.9
+## (2023-07-13)
+
+
+<details>
+<summary> Update tests/leviathan digest to b1581a2 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.6
+> ### (2023-07-13)
+> 
+> * Update balena-os/leviathan-worker to v2.9.12 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.5
+> ### (2023-07-13)
+> 
+> * Update balena-os/leviathan-worker to v2.9.11 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v3.0.8
 ## (2023-07-10)
 

@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to b1581a2
+      hash: 4db34bf47ba5a581d427d6c897e7b57424c2485b
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.12
+              hash: 5cf43a3e84d16110d16df6a9d740781294a10879
+              body: |
+                Update balena-os/leviathan-worker from 2.9.11 to 2.9.12
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.6
+          title: ""
+          date: 2023-07-13T13:06:30.963Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.11
+              hash: 94444ca4ab7b5878c2b02981a80b633b17e5d1ac
+              body: |
+                Update balena-os/leviathan-worker from 2.9.10 to 2.9.11
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.5
+          title: ""
+          date: 2023-07-13T11:59:23.815Z
+  version: 3.0.9
+  title: ""
+  date: 2023-07-13T17:21:31.286Z
+- commits:
     - subject: Update tests/leviathan digest to e081190
       hash: c45feeb0b15c8aeb0fc91376c39bbff9ea94bc00
       body: Update tests/leviathan
