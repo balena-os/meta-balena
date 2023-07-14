@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.11
+## (2023-07-14)
+
+* .github/workflows: Replace GitHub PAT with ephemeral app tokens [Kyle Harding]
+
 # v3.0.10
 ## (2023-07-14)
 

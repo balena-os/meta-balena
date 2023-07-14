@@ -1,4 +1,23 @@
 - commits:
+    - subject: ".github/workflows: Replace GitHub PAT with ephemeral app tokens"
+      hash: d62f8a2d4450b588147c3065e1437af741185418
+      body: |
+        GitHub App installation tokens are short-lived and do not
+        need to be rotated the same way PATs do.
+
+        The default app ID and installation ID correspond to
+        flowzone-bot[app] installed in the balena-os Org.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 3.0.11
+  title: ""
+  date: 2023-07-14T12:47:33.615Z
+- commits:
     - subject: "initrdscripts: make initramfs-module-cryptsetup pull libgcc in"
       hash: 046a17ec1494fe15da45e3accb1de562ff7e976e
       body: |
