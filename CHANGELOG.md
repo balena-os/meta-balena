@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.10
+## (2023-07-14)
+
+* initrdscripts: make initramfs-module-cryptsetup pull libgcc in [Michal Toman]
+
 # v3.0.9
 ## (2023-07-13)
 

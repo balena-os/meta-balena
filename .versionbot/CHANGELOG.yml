@@ -1,4 +1,24 @@
 - commits:
+    - subject: "initrdscripts: make initramfs-module-cryptsetup pull libgcc in"
+      hash: 046a17ec1494fe15da45e3accb1de562ff7e976e
+      body: |
+        cryptsetup lazily depends on libgcc. With libgcc missing, certain
+        operations, especially luksOpen will fail with
+        `libgcc_s.so.1 must be installed for pthread_exit to work`
+        which panics the kernel and triggers a reboot loop indistinguishable
+        from a "device has been tampered with" state on regular builds
+        with no console output.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 3.0.10
+  title: ""
+  date: 2023-07-14T11:06:57.107Z
+- commits:
     - subject: Update tests/leviathan digest to b1581a2
       hash: 4db34bf47ba5a581d427d6c897e7b57424c2485b
       body: Update tests/leviathan
