@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.12
+## (2023-07-16)
+
+* tests/os: skip boot switch during provisioning [Alexandru Costache]
+
 # v3.0.11
 ## (2023-07-14)
 

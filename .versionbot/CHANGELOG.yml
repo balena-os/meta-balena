@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tests/os: skip boot switch during provisioning"
+      hash: 7320af76d0a64561ff563384e5710f37c27a5852
+      body: |
+        The imx8mm-var-dart-plt also uses a custom implementation
+        for detecting the boot switch, so let's make use of the
+        existing support in meta-balena for the testbot provisioning
+        use-case and add this DT in the Autokit.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io
+        signed-off-by: Alexandru Costache <alexandru@balena.io
+      author: Alexandru Costache
+      nested: []
+  version: 3.0.12
+  title: ""
+  date: 2023-07-16T10:42:23.885Z
+- commits:
     - subject: ".github/workflows: Replace GitHub PAT with ephemeral app tokens"
       hash: d62f8a2d4450b588147c3065e1437af741185418
       body: |
