@@ -37,13 +37,14 @@ module.exports = {
 							`systemctl status os-config.timer | grep "Trigger:" | awk '{print $4}'`,
 							this.balena.uuid
 						  );
-						  return trigger !== "";
+						  return (trigger !== "" && !trigger.includes('error'));
 						}, false, 20, 500)
 						return trigger;
 					  })
 					);
 					samples = samples + 1;
 				} while (samples < 3);
+				console.log(nextTriggers)
 				test.ok (
 					// check that all results are unique
 					(new Set(nextTriggers)).size === nextTriggers.length,
