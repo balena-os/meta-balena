@@ -1,0 +1,8 @@
+[Unit]
+Description=mnt-data mount
+ConditionVirtualization=!docker
+
+[Mount]
+What=/dev/disk/by-state/resin-data
+Where=/mnt/data
+Options=noauto
