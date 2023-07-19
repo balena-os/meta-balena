@@ -1,6 +1,27 @@
 Change log
 -----------
 
+# v3.0.13
+## (2023-07-19)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4e4c1bb [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.8
+> ### (2023-07-19)
+> 
+> * Update balena-os/leviathan-worker to v2.9.13 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.7
+> ### (2023-07-18)
+> 
+> * update e2e tests to use sshconfig [rcooke-warwick]
+> * core: allow configurable ssh target [rcooke-warwick]
+> 
+
+</details>
+
 # v3.0.12
 ## (2023-07-16)
 
