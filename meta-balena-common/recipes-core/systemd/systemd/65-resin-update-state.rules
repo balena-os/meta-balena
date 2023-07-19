@@ -7,6 +7,16 @@ ENV{ID_FS_LABEL_ENC}=="resin-*|balena-*", IMPORT{program}="/lib/udev/resin_updat
 ENV{ID_FS_LABEL_ENC}=="resin-*|balena-*", ENV{BALENA_FS_USE}=="?*", SYMLINK+="disk/by-state/$env{BALENA_FS_USE}"
 ENV{ID_FS_LABEL_ENC}=="resin-root*|balena-root*", ENV{BALENA_UPDATE_STATE}=="?*", SYMLINK+="disk/by-state/$env{BALENA_UPDATE_STATE}"
 
+IMPORT{cmdline}="flasher"
+ENV{flasher}=="?*", GOTO="balena_uuid_regen_end"
+# save the newly generated root UUID to override the original value passed on the cmdline
+ENV{BALENA_UPDATE_STATE}=="active", ENV{ID_FS_UUID}!="ba1eadef*|BDEF*", \
+        RUN+="/bin/sh -c \". /usr/libexec/os-helpers-fs && regenerate_uuid $devnode $env{ID_FS_TYPE} > /run/initramfs/bootparam_root \""
+# generate unique UUIDs for the remaining balenaOS filesystems
+ENV{ID_FS_LABEL_ENC}=="resin-*|balena-*", ENV{BALENA_UPDATE_STATE}!="active", ENV{ID_FS_UUID}!="ba1eadef*|BDEF*", \
+        RUN+="/bin/sh -c \". /usr/libexec/os-helpers-fs && regenerate_uuid $devnode $env{ID_FS_TYPE}\""
+LABEL="balena_uuid_regen_end"
+
 # Identify extra partitions by their partition name - for example the jetson BSP partitions
 ENV{ID_PART_ENTRY_NAME}=="", GOTO="resin_update_state_end"
 
