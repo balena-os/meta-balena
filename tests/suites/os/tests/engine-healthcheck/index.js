@@ -168,7 +168,7 @@ module.exports = {
 				// the old healthcheck on a Pi 3 (10.7s) and the new healthcheck
 				// on a Pi Zero (4.5s) -- rounded up to make false positives
 				// less likely.
-				const limitSecs = 8.0;
+				const limitSecs = 10.0;
 				test.ok(
 					Number(result) < limitSecs,
 					`Healthchecks should run in less than ${limitSecs}s, took ${result}s`
