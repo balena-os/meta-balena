@@ -1,4 +1,48 @@
 - commits:
+    - subject: "tests: cloud: sv-timer: account for conn. error"
+      hash: 11464aad53779c62199efb0b19f835835e332c72
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: cloud: use local ssh for sv timer test"
+      hash: d7ece01f84ebec41fe094cf5dbf8175e043c38e3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: cloud: remove preload log check"
+      hash: 4d0a75a4dab16efe919ad040578b19bc7de19439
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: allow for configurable BC env"
+      hash: be732d8955e661116477a8aca59697bec748f306
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 3.0.15
+  title: ""
+  date: 2023-07-20T15:06:12.237Z
+- commits:
     - subject: Update balena-supervisor to v14.11.12
       hash: dd6b9c93a5cfc4f4a04e190700284c79d4bd9f9a
       body: |

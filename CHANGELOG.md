@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v3.0.15
+## (2023-07-20)
+
+* tests: cloud: sv-timer: account for conn. error [rcooke-warwick]
+* tests: cloud: use local ssh for sv timer test [rcooke-warwick]
+* tests: cloud: remove preload log check [rcooke-warwick]
+* tests: allow for configurable BC env [rcooke-warwick]
+
 # v3.0.14
 ## (2023-07-20)
 
