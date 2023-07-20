@@ -7,8 +7,12 @@ module.exports = [
 		networkWireless: false,
 		downloadVersion: 'latest',
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
-		balenaApiUrl: 'balena-cloud.com',
+		balenaApiUrl: process.env.BALENACLOUD_API_URL,
 		organization: process.env.BALENACLOUD_ORG,
+		sshConfig: {
+			host: process.env.BALENACLOUD_SSH_URL,
+			port: process.env.BALENACLOUD_SSH_PORT,
+		}
 	},
 	image: `${__dirname}/balena-image.docker`,
 	debug: {
@@ -33,8 +37,12 @@ module.exports = [
 		networkWired: false,
 		networkWireless: false,
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
-		balenaApiUrl: 'balena-cloud.com',
+		balenaApiUrl: process.env.BALENACLOUD_API_URL,
 		organization: process.env.BALENACLOUD_ORG,
+		sshConfig: {
+			host: process.env.BALENACLOUD_SSH_URL,
+			port: process.env.BALENACLOUD_SSH_PORT,
+		}
 	},
 	image: `${__dirname}/balena.img.gz`,
 	debug: {
@@ -59,8 +67,12 @@ module.exports = [
 		networkWired: false,
 		networkWireless: false,
 		balenaApiKey: process.env.BALENACLOUD_API_KEY,
-		balenaApiUrl: 'balena-cloud.com',
+		balenaApiUrl: process.env.BALENACLOUD_API_URL,
 		organization: process.env.BALENACLOUD_ORG,
+		sshConfig: {
+			host: process.env.BALENACLOUD_SSH_URL,
+			port: process.env.BALENACLOUD_SSH_PORT,
+		}
 	},
 	image: `${__dirname}/balena.img.gz`,
 	debug: {

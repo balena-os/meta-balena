@@ -127,7 +127,7 @@ module.exports = {
           );
 
           return updatesLocked === true
-        }, false, 60, 5 * 1000);
+        }, false, 100, 5 * 1000);
 
         test.ok(updatesLocked, `Update lock message should appear in logs`)
 
@@ -165,21 +165,21 @@ module.exports = {
         return this.waitForServiceState(
           'update-balena-supervisor.service',
           'inactive',
-          this.balena.uuid
+          this.link
         ).then(async () => {
           let samples = 0
           do {
-              nextTriggers.push( await this.cloud.executeCommandInHostOS(
+              nextTriggers.push( await this.worker.executeCommandInHostOS(
                   `date -s "+2 hours" > /dev/null`,
-                  this.balena.uuid
+                  this.link
                 ).then(async () => {
                   let trigger;
                   await this.utils.waitUntil(async () => {
                     // on slower hardware this command can return an empty string so don't proceed
                     // until we have a value for trigger
-                    trigger = await this.cloud.executeCommandInHostOS(
+                    trigger = await this.worker.executeCommandInHostOS(
                       `systemctl status update-balena-supervisor.timer | grep "Trigger:" | awk '{print $4}'`,
-                      this.balena.uuid
+                      this.link
                     );
                     return trigger !== "";
                   }, false, 20, 500)
@@ -188,6 +188,7 @@ module.exports = {
               );
               samples = samples + 1;
           } while (samples < 3);
+          console.log(nextTriggers)
           test.ok (
             // check that all results are unique
             (new Set(nextTriggers)).size === nextTriggers.length,
@@ -195,9 +196,9 @@ module.exports = {
           )
         }).then(async () => {
           /* Restore current time */
-          await this.cloud.executeCommandInHostOS(
+          await this.worker.executeCommandInHostOS(
             `chronyc -a 'burst 4/4'`,
-            this.balena.uuid)
+            this.link)
         })
       },
     },

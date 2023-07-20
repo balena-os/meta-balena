@@ -95,7 +95,7 @@ module.exports = {
 
     // add objects to the context, so that they can be used across all the tests in this suite
     this.suite.context.set({
-      cloud: new Balena(this.suite.options.balena.apiUrl, this.getLogger()),
+      cloud: new Balena(this.suite.options.balena.apiUrl, this.getLogger(), this.suite.options.config.sshConfig),
       balena: {
         name: this.suite.options.id,
         organization: this.suite.options.balena.organization,
@@ -109,7 +109,9 @@ module.exports = {
         this.getLogger(),
         this.suite.options.workerUrl,
         this.suite.options.balena.organization,
-        join(homedir(), 'id')),
+        join(homedir(), 'id'),
+        this.suite.options.config.sshConfig
+      ),
       waitForServiceState: async function (serviceName, state, target) {
         return utils.waitUntil(
           async () => {
@@ -329,7 +331,7 @@ module.exports = {
 
     // disable port forwarding on the testbot - disables the DUT internet access.
     if (
-			this.workerContract.workerType === `testbot`
+			this.workerContract.workerType !== `qemu`
 		){
       await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
     }

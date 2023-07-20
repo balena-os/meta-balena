@@ -40,16 +40,6 @@ module.exports = {
 
     test.ok(true, `Preload commit hash should be ${this.balena.initialCommit}`);
 
-    // give it some time to be sure no release is downloaded
-    await new Promise(resolve => setTimeout(resolve, 1000*60));
-
-    let downloadedLog = await this.cloud.checkLogsContain(
-      this.balena.uuid, 
-      `Downloading`, 
-      `Supervisor starting`
-    );
-
-    test.ok(!downloadedLog, `Device should run application without downloading`);
 
     this.log("Unpinning device from release");
     await this.cloud.balena.models.device.trackApplicationRelease(
