@@ -2,6 +2,17 @@
 
 set -eu
 
+if [ -f "/usr/libexec/os-helpers-fs" ]; then
+	# shellcheck disable=SC1091
+	. /usr/libexec/os-helpers-fs
+fi
+
+BALENA_BOOT_MOUNTPOINT=
+if [ -f "/usr/sbin/balena-config-defaults" ]; then
+	# shellcheck disable=SC1091
+	. /usr/sbin/balena-config-defaults
+fi
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
@@ -21,14 +32,16 @@ remote_image=""
 reboot=0
 hooks=1
 hooks_rollback=1
+force=0
 
-while getopts 'f:i:rnx' flag; do
+while getopts 'f:i:rnxy' flag; do
 	case "${flag}" in
 	f) local_image=$(realpath "${OPTARG}") ;;
 	i) remote_image="${OPTARG}" ;;
 	r) reboot=1 ;;
 	n) hooks=0 ;;
 	x) hooks_rollback=0 ;;
+	y) force=1 ;;
 	*) error "Unexpected option ${flag}" ;;
 	esac
 done
@@ -41,6 +54,25 @@ fi
 export DOCKER_HOST="unix:///var/run/balena-host.sock"
 SYSROOT="/mnt/sysroot/inactive"
 LOADTMP="/mnt/data/resin-data/tmp"
+
+bootloader_env=
+if [ -n "${BALENA_BOOT_MOUNTPOINT}" ]; then
+	bootloader_env="${BALENA_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
+	if [ ! -f "${bootloader_env}" ] ; then
+		bootloader_env=$(find -L $BALENA_BOOT_MOUNTPOINT -name grubenv)
+	fi
+fi
+
+# Avoid updates without switching root filesystems
+# This prevents consecutive updates without reboots that could program both partitions with unbootable software
+if [ "${force}" == "0" ] && [ -n "${bootloader_env}" ]; then
+	next_boot_partition=$(awk '/resin_root_part/ { print $2 }' FS=\= "${bootloader_env}")
+	upgrade_available=$(awk '/upgrade_available/ { print $2 }' FS=\= "${bootloader_env}")
+	if [ "${upgrade_available}" == "1" ] && [ "${next_boot_partition}" == "$(get_mount_partition_index "${SYSROOT}")" ]; then
+		echo "Pending update detected, please reboot to apply. Aborting."
+		exit 1
+	fi
+fi
 
 if [ -d /mnt/state ]; then
 	# Save VPN state for rollbacks
