@@ -272,3 +272,22 @@ get_internal_device() {
     done
   done
 }
+
+# Output the partition index of a given mount in hex
+# Arguments:
+#   1 - Mount path
+get_mount_partition_index() {
+	local mpath="${1}"
+	[ -z "${mpath}" ] && error "Mount path is required" && return 1
+	# --uniq here because findmnt could return the same device twice if
+	# bind-mounted over itself like when running old hooks
+	part=$(findmnt --noheadings --canonicalize --uniq --output SOURCE "$mpath")
+	type=$(lsblk -no TYPE "${part}")
+	if [ "${type}" = "crypt" ]; then
+		blockdev=$(lsblk -sJ "${part}" | jq -r '.blockdevices[].children[].name')
+	else
+		blockdev=$(lsblk -sJ "${part}" | jq -r '.blockdevices[].name')
+	fi
+	part_idx=$(printf "%x" $(cat "/sys/class/block/$blockdev/partition"))
+	echo "${part_idx}"
+}
