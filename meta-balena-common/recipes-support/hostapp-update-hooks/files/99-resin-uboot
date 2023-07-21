@@ -7,6 +7,7 @@
 set -o errexit
 
 . /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-fs
 
 DURING_UPDATE=${DURING_UPDATE:-0}
 
@@ -16,12 +17,7 @@ else
 	SYSROOT="/mnt/sysroot/active"
 fi
 
-new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT -t ext4)
-blockdev=$(basename "$new_part")
-new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
-
-# Convert to hex as u-boot expects hex partition numbers. Especially needed for jetson devices
-new_part_idx=$(printf "%x" $new_part_idx)
+new_part_idx=$(get_mount_partition_index "${SYSROOT}")
 
 printf "[INFO] Switching uboot root partition index to %s..." "$new_part_idx..."
 tmpfile="$(mktemp)"

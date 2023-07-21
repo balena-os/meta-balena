@@ -7,6 +7,7 @@
 set -o errexit
 
 . /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-fs
 
 verifyMd5sum() {
   if [ "$1" = "$3" ] ; then return 1; fi
@@ -24,14 +25,7 @@ else
     SYSROOT="/mnt/sysroot/active"
 fi
 
-new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT -t ext4)
-type=$(lsblk -no TYPE "${new_part}")
-if [ "${type}" = "crypt" ]; then
-    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].children[].name')
-else
-    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].name')
-fi
-new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
+new_part_idx=$(get_mount_partition_index "${SYSROOT}")
 new_part_label=$(blkid "$new_part" | awk '{print $2}' | cut -d'"' -f 2)
 
 printf "[INFO] Switching root partition to %s...\n" "$new_part_label..."
