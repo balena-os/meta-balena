@@ -1,0 +1,33 @@
+From 0376210a81c19b48499fc613fe3dbe49855e5264 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Wed, 12 Jul 2023 11:08:54 +0200
+Subject: [PATCH] increase qmi port open timeout
+
+The SIM7600G modem will fail to connect using
+QMI and the default 45s timeout, nor will it work
+with a 65s one. The value we found to work consistently
+with this modem connected over pcie is 95s.
+
+Upstream-status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+
+---
+ src/mm-port-qmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mm-port-qmi.c b/src/mm-port-qmi.c
+index fa09f32df..31e762527 100644
+--- a/src/mm-port-qmi.c
++++ b/src/mm-port-qmi.c
+@@ -2438,7 +2438,7 @@ port_open_step (GTask *task)
+             mm_obj_dbg (self, "Opening device with flags: %s...", open_flags_str);
+             qmi_device_open (ctx->device,
+                              open_flags,
+-                             45,
++                             95,
+                              g_task_get_cancellable (task),
+                              (GAsyncReadyCallback) qmi_device_open_first_ready,
+                              task);
+-- 
+2.37.2
+
