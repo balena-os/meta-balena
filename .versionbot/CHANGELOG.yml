@@ -1,4 +1,35 @@
 - commits:
+    - subject: "modemmanager: increase qmi port open timeout"
+      hash: d3358a33b29cf1c8404f2a0c266bbb2023235f84
+      body: |
+        The SIM7600G modem will fail to connect using
+        QMI and the default 45s timeout, nor will it work
+        with a 65s one. The value we found to work consistently
+        with this modem connected over pcie is 95s.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Update ModemManager to v1.20.6
+      hash: 0d629552a0caf3745e9e3738b3e74bbf802b020c
+      body: |
+        Also updated are the dependencies libqmi and libmbim.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update ModemManager to v1.20.6
+        changelog-entry: Update ModemManager to v1.20.6
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 3.0.16
+  title: ""
+  date: 2023-07-22T05:19:59.203Z
+- commits:
     - subject: "tests: cloud: sv-timer: account for conn. error"
       hash: 11464aad53779c62199efb0b19f835835e332c72
       body: ""

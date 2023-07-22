@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v3.0.16
+## (2023-07-22)
+
+* modemmanager: increase qmi port open timeout [Alexandru Costache]
+* Update ModemManager to v1.20.6 [Zahari Petkov]
+
 # v3.0.15
 ## (2023-07-20)
 
