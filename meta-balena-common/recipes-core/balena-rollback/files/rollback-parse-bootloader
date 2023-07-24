@@ -17,6 +17,7 @@
 set -o errexit
 
 . /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-fs
 
 echo "Rollback: Parsing bootloader configuration"
 
@@ -51,14 +52,4 @@ fi
 
 # --uniq here because findmnt returns the same device twice because /mnt/sysroot/active
 # is bind-mounted over itself while running old hooks from the inactive partition
-current_part=$(findmnt --noheadings --canonicalize --uniq --output SOURCE /mnt/sysroot/active)
-type=$(lsblk -no TYPE "${current_part}")
-if [ "${type}" = "crypt" ]; then
-    blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].children[].name')
-else
-    blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].name')
-fi
-current_part_idx=$(cat "/sys/class/block/$blockdev/partition")
-
-# Partition numbers are in hex.
-current_part_idx=$(printf "%x" $current_part_idx)
+current_part_idx=$(get_mount_partition_index /mnt/sysroot/active)
