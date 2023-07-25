@@ -1,4 +1,67 @@
 - commits:
+    - subject: "linux-firmware: upgrade 20210511 -> 20230404"
+      hash: 6035e749c4bd989f7b8d23a5f48848af7d75efd8
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: firmware: repackage iwlwifi-quz-a0-hr-b0"
+      hash: 1bf5489acc3e4c3696bccdae98ea95653ec0d8b7
+      body: |
+        Package all subversions of this firmware
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: firmware: repackage iwlwifi-cc-a0"
+      hash: 1336cb0802c8589439557afca0c28d2aee248e60
+      body: |
+        Repackage iwlwifi-cc-a0 to include all firmware versions shipped
+        upstream, rather than only an older version (48) that's no longer
+        shipped as of 20230404.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "compat: connectivity: drop deprecated iwlwifi files"
+      hash: daef22bbb706898721eee131872862a5e2d7709e
+      body: |
+        linux-firmware-20230404 no longer ships several older firmware versions,
+        remove them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "compat: install linux-firmware-iwlwifi-3160"
+      hash: 9442d98a51bb0ef62991bd4292717e2052cd39ef
+      body: |
+        Replace older versioned iwlwifi packages with
+        linux-firmware-iwlwifi-3160 package that includes all versions shipped
+        in linux-firmware.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 3.1.0
+  title: ""
+  date: 2023-07-25T21:09:07.177Z
+- commits:
     - subject: "balena-image: Install extra_uEnv for all boards that use u-boot"
       hash: c9d665f0c2a0454a84d9890d56e4d93f57bf93ad
       body: |
