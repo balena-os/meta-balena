@@ -11,6 +11,7 @@ PACKAGE_INSTALL = " \
     glibc-gconv-ibm850 \
     initramfs-module-debug \
     initramfs-module-prepare \
+    initramfs-module-fslinks \
     initramfs-module-fsck \
     initramfs-module-machineid \
     initramfs-module-recovery \

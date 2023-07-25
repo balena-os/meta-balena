@@ -5,6 +5,7 @@ SRC_URI:append = " \
     file://prepare \
     file://fsck \
     file://machineid \
+    file://fslinks \
     file://resindataexpander \
     file://rorootfs \
     file://rootfs \
@@ -19,6 +20,7 @@ SRC_URI:append = " \
 do_install:append() {
     install -m 0755 ${WORKDIR}/console_null_workaround ${D}/init.d/000-console_null_workaround
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/00-prepare
+    install -m 0755 ${WORKDIR}/fslinks ${D}/init.d/75-fslinks
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/migrate ${D}/init.d/92-migrate
@@ -39,6 +41,7 @@ PACKAGES:append = " \
     initramfs-module-console-null-workaround \
     initramfs-module-fsck \
     initramfs-module-machineid \
+    initramfs-module-fslinks \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
@@ -62,6 +65,10 @@ FILES:initramfs-module-fsck = "/init.d/87-fsck"
 SUMMARY:initramfs-module-machineid = "Bind mount machine-id to rootfs"
 RDEPENDS:initramfs-module-machineid = "${PN}-base initramfs-module-udev"
 FILES:initramfs-module-machineid = "/init.d/91-machineid"
+
+SUMMARY:initramfs-module-fslinks = "Wait for udev rules to populate by-state fs links"
+RDEPENDS:initramfs-module-fslinks = "${PN}-base"
+FILES:initramfs-module-fslinks = "/init.d/75-fslinks"
 
 SUMMARY:initramfs-module-resindataexpander = "Expand the data partition to the end of device"
 RDEPENDS:initramfs-module-resindataexpander = "${PN}-base initramfs-module-udev busybox parted util-linux-lsblk e2fsprogs-resize2fs os-helpers-fs"
