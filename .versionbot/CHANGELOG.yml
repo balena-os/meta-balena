@@ -1,4 +1,21 @@
 - commits:
+    - subject: "balena-image: Install extra_uEnv for all boards that use u-boot"
+      hash: c9d665f0c2a0454a84d9890d56e4d93f57bf93ad
+      body: |
+        Some board BSPs may define UBOOT_MACHINE, others UBOOT_CONFIG,
+        let's make sure we include the extra_uEnv.txt file in the non-flasher
+        image for both cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.0.17
+  title: ""
+  date: 2023-07-25T13:45:11.862Z
+- commits:
     - subject: "modemmanager: increase qmi port open timeout"
       hash: d3358a33b29cf1c8404f2a0c266bbb2023235f84
       body: |

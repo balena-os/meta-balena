@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.17
+## (2023-07-25)
+
+* balena-image: Install extra_uEnv for all boards that use u-boot [Alexandru Costache]
+
 # v3.0.16
 ## (2023-07-22)
 
