@@ -99,13 +99,41 @@ module.exports = {
 		{
 			// Detects major performance regressions. This test was introduced
 			// along with an order-of-magnitude performance improvement to the
-			// performance of health checks. Running times of health checks are
-			// of course hardware-dependent. This test was tuned in a Pi Zero
-			// and a Pi 3, so that the old healthcheck fails and the new one
-			// succeeds in both of these device types. It was also tuned so that
-			// false positives should be extremely rare, even on Pi Zeros.
+			// health checks.
 			title: 'Engine healthcheck performance',
 			run: async function (test) {
+				// Performance of healthchecks varies greatly between device
+				// types. We thus run the test only for a few device types we
+				// have collected execution data for, and skip for the rest.
+
+				// This is the limit for running the health check 3 times.
+				let limitSecs = 0.0;
+
+				const deviceType = this.suite.deviceType.slug;
+				switch (deviceType) {
+					case 'raspberry-pi':
+						// On an idle Pi Zero W, 150 executions:
+						// - Old check: average of 17.1s per execution, max of 28.7s
+						// - New check: average of 0.8s per execution, max of 1.8s
+						limitSecs = 10.0;
+						break;
+					case 'raspberrypi0-2w-64':
+						// On a idle Pi Zero 2 W, 150 executions:
+						// - Old check: average of 4.1s per execution, max of 5.8s
+						// - New check: average of 0.4s per execution, max of 0.9s
+						limitSecs = 6.0;
+						break;
+					case 'raspberrypi3-64':
+						// Don't have the full results for the Pi 3 at hand, but
+						// (as expected) they were just a bit better than the Pi
+						// Zero 2 W.
+						limitSecs = 5.0;
+						break;
+					default:
+						test.comment(`Skipping test on this device type: ${deviceType}`);
+						return;
+				}
+
 				// Disable healthchecks to avoid interference with the "fake"
 				// executions we'll do next.
 				await this.utils.waitUntil(async() => {
@@ -164,14 +192,9 @@ module.exports = {
 					'Healthchecks are expected to succeed',
 				);
 
-				// This value of 8s is about the midpoint between the runtime of
-				// the old healthcheck on a Pi 3 (10.7s) and the new healthcheck
-				// on a Pi Zero (4.5s) -- rounded up to make false positives
-				// less likely.
-				const limitSecs = 8.0;
 				test.ok(
 					Number(result) < limitSecs,
-					`Healthchecks should run in less than ${limitSecs}s, took ${result}s`
+					`Healthchecks on a ${deviceType} should run in less than ${limitSecs}s, took ${result}s`
 				);
 			},
 		},
