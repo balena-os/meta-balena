@@ -1,4 +1,26 @@
 - commits:
+    - subject: "linux/kernel-devsrc: Fix aarch64 kernel-headers-test build"
+      hash: 65abb381ec266066b24f53fa3119dd47ec8af1a3
+      body: >
+        This fix has been ported from the following upstream
+
+        change: https://patchwork.yoctoproject.org/project/oe-core/patch/002c31d6add77e1002fb1ccd4050ce826a654170.1659653543.git.bruce.ashfield@gmail.com/
+
+        and fixes the following compilation error on generic-aarch64:
+
+            make[1]: *** No rule to make target 'arch/arm64/tools/gen-sysreg.awk',
+            needed by 'arch/arm64/include/generated/asm/sysreg-defs.h'.  Stop.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.1.1
+  title: ""
+  date: 2023-07-26T18:12:23.719Z
+- commits:
     - subject: "linux-firmware: upgrade 20210511 -> 20230404"
       hash: 6035e749c4bd989f7b8d23a5f48848af7d75efd8
       body: ""

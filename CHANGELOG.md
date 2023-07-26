@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.1
+## (2023-07-26)
+
+* linux/kernel-devsrc: Fix aarch64 kernel-headers-test build [Alexandru Costache]
+
 # v3.1.0
 ## (2023-07-25)
 
