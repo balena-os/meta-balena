@@ -8,6 +8,11 @@ do_install:append() {
 	if [ "${ARCH}" = "arm64" ]; then
 	    # v6.1+
 	    cp -a --parents arch/arm64/kernel/asm-offsets.c $kerneldir/build/
+            cp -a --parents arch/arm64/tools/gen-sysreg.awk $kerneldir/build/ 2>/dev/null || :
+            cp -a --parents arch/arm64/tools/sysreg $kerneldir/build/ 2>/dev/null || :
+            if [ -e $kerneldir/build/arch/arm64/tools/gen-sysreg.awk ]; then
+                 sed -i -e "s,#!.*awk.*,#!${USRBINPATH}/env awk," $kerneldir/build/arch/arm64/tools/gen-sysreg.awk
+            fi
 	fi
 
 	if [ "${ARCH}" = "powerpc" ]; then
@@ -25,6 +30,7 @@ do_install:append() {
             # v6.1+
             cp -a --parents arch/arm/kernel/asm-offsets.c $kerneldir/build/ 2>/dev/null || :
             cp -a --parents arch/arm/kernel/signal.h $kerneldir/build/ 2>/dev/null || :
+            cp -a --parents arch/arm/tools/gen-sysreg.awk $kerneldir/build/ 2>/dev/null || :
 	fi
 
 	if [ "${ARCH}" = "x86" ]; then
