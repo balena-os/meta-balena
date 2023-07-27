@@ -11,7 +11,7 @@ insmod configfile
 timeout=@@TIMEOUT@@
 
 load_env --skip-sig bootcount resin_root_part upgrade_available
-source /grub/grub_extraenv
+source ${prefix}/grub_extraenv
 
 if [ ${upgrade_available} = 1 ] ; then
  if [ ${bootcount} = 1 ] ; then
