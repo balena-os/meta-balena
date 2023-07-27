@@ -1,4 +1,26 @@
 - commits:
+    - subject: "grub-conf: Do not hardcode the path for grub_extraenv"
+      hash: f7ec67bd53e0998c12bcbdcaccea99f1f6856bcf
+      body: |
+        At this moment grub.cfg sources /grub/grub_extraenv which works fine
+        on MBR systems, however on EFI systems this does not work because GRUB
+        is installed in /EFI/BOOT/ rather than /grub/.
+
+        This patch replaces the hardcoded /grub with ${prefix} which should
+        expand to the appropriate directory regardless of the platform. It also
+        removes the loading of grub_extraenv from the secure boot variant
+        of the GRUB config since this would not load without a signature anyway.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 3.1.2
+  title: ""
+  date: 2023-07-27T15:15:34.234Z
+- commits:
     - subject: "linux/kernel-devsrc: Fix aarch64 kernel-headers-test build"
       hash: 65abb381ec266066b24f53fa3119dd47ec8af1a3
       body: >
