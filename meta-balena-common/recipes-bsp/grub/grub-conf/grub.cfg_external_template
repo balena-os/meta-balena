@@ -2,7 +2,7 @@
 serial --unit=0 --speed=115200 --word=8 --parity=no --stop=1
 insmod ext2
 insmod configfile
-source /grub/grub_extraenv
+source ${prefix}/grub_extraenv
 default=boot
 timeout=@@TIMEOUT@@
 
