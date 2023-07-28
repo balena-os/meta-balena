@@ -1,4 +1,47 @@
 - commits:
+    - subject: "resin-init-flasher: Install the dispatcher scripts to installation
+        media"
+      hash: 77d61290946ed69f348f05887334b28fc2aa0435
+      body: |
+        The flasher/installer image can be configured by the user and that
+        configuration finishes up in the installed image. Add the dispatcher
+        scripts to this existing mechanim.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-net-config: populate the dispatcher bind mount"
+      hash: 0d1798d8742f34d92fd0d98314d349ba4b5dc54a
+      body: |
+        On boot, the dispatcher script are copied from the boot partition where
+        the user has configured them, to the bind mount used by the running
+        applications.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-mounts: add dispatcher.d bind mount"
+      hash: 32abffb44d74fc0be6949ed6e893ee3476ffcf2e
+      body: |
+        This allows for user configuration of NetworkManager's dispatcher
+        scripts.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.1.3
+  title: ""
+  date: 2023-07-28T11:36:17.599Z
+- commits:
     - subject: "grub-conf: Do not hardcode the path for grub_extraenv"
       hash: f7ec67bd53e0998c12bcbdcaccea99f1f6856bcf
       body: |

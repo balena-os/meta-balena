@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v3.1.3
+## (2023-07-28)
+
+* resin-init-flasher: Install the dispatcher scripts to installation media [Alex Gonzalez]
+* balena-net-config: populate the dispatcher bind mount [Alex Gonzalez]
+* resin-mounts: add dispatcher.d bind mount [Alex Gonzalez]
+
 # v3.1.2
 ## (2023-07-27)
 
