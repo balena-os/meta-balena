@@ -52,9 +52,14 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/nm-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
 
     install -m 0644 ${WORKDIR}/NetworkManager.conf ${D}${sysconfdir}/NetworkManager/
-    mkdir -p "${D}${sysconfdir}/NetworkManager/dispatcher.d/"
-    install -m 0755 ${WORKDIR}/98dhcp_ntp ${D}${sysconfdir}/NetworkManager/dispatcher.d/
-    install -m 0755 ${WORKDIR}/99onoffline_ntp ${D}${sysconfdir}/NetworkManager/dispatcher.d/
+
+    # Install balena dispatch scripts in /usr/lib/NetworkManager/dispatcher.d/ as
+    # /etc/NetworkManager/dispatcher.d/ is used for user-provided scripts
+    install -m 0755 ${WORKDIR}/98dhcp_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
+    install -m 0755 ${WORKDIR}/99onoffline_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
+
+    # Cleanup /etc/NetworkManager/dispatcher.d/, so that it is empty when bindmounted
+    rm -rdf ${D}${sysconfdir}/NetworkManager/dispatcher.d/*
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system/NetworkManager.service.d

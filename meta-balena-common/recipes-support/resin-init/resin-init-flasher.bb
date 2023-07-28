@@ -90,5 +90,6 @@ do_install() {
     echo "BALENA_SPLASH_CONFIG=splash" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BALENA_NM_CONFIG=system-connections" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+    echo "BALENA_NM_DISPATCHER=dispatcher.d" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BALENA_PROXY_CONFIG=system-proxy" >> ${D}/${sysconfdir}/resin-init-flasher.conf
 }

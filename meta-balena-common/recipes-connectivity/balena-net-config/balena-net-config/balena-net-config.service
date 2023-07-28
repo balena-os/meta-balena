@@ -1,7 +1,7 @@
 [Unit]
 Description=Resin network configure service
-Requires=resin-boot.service bind-etc-NetworkManager-system-connections.service
-After=resin-boot.service bind-etc-NetworkManager-system-connections.service
+Requires=resin-boot.service bind-etc-NetworkManager-system-connections.service bind-etc-NetworkManager-dispatcher.d.service
+After=resin-boot.service bind-etc-NetworkManager-system-connections.service bind-etc-NetworkManager-dispatcher.d.service
 
 [Service]
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/balena-net-config

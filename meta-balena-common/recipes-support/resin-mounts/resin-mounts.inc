@@ -21,6 +21,7 @@ BINDMOUNTS += " \
 	/etc/openvpn \
 	/etc/NetworkManager/conf.d \
 	/etc/NetworkManager/system-connections \
+	/etc/NetworkManager/dispatcher.d \
 	/etc/udev/rules.d \
 	/etc/ssl/certs \
 	/usr/share/ca-certificates/balena \

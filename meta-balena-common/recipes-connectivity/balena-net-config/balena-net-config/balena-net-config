@@ -27,6 +27,13 @@ if [ -d "$CONFIG_NM" ]; then
 	sync -f "/etc/NetworkManager/"
 fi
 
+DISPATCHER_NM=${BALENA_BOOT_MOUNTPOINT}/dispatcher.d/
+if [ -d "$DISPATCHER_NM" ]; then
+	cp -r "$DISPATCHER_NM" /etc/NetworkManager/
+	chmod 600 /etc/NetworkManager/dispatcher.d/*
+	sync -f "/etc/NetworkManager/"
+fi
+
 # set the wifi regulatory domain; keep the devices default if unset
 if [ ! -z "$COUNTRY" ]; then
 	iw reg set "$COUNTRY"

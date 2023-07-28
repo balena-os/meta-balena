@@ -24,6 +24,7 @@ FILES:${PN} += " \
 BINDMOUNTS += " \
 	/etc/hostname \
 	/etc/NetworkManager/system-connections \
+	/etc/NetworkManager/dispatcher.d \
 	/home/root/.rnd \
 	"
 

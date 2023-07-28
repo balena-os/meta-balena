@@ -506,6 +506,15 @@ if [ -d "${_nm_config}" ]; then
 else
     info "No system connections found to transfer on the internal device."
 fi
+# Copy Network Manager dispatcher scripts
+_nm_dispatcher="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_NM_DISPATCHER}"
+if [ -d "${_nm_dispatcher}" ]; then
+    info "Transferring dispatcher scripts on the internal device."
+    rm -rf "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_NM_DISPATCHER}/"
+    cp -rvf "${_nm_dispatcher}" "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+else
+    info "No dispatcher scripts found to transfer on the internal device."
+fi
 # Copy proxy configuration files
 _proxy_config="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_PROXY_CONFIG}"
 if [ -d "${_proxy_config}" ]; then
