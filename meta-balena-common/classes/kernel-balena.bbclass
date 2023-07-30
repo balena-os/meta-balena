@@ -449,7 +449,6 @@ BALENA_CONFIGS[xtables] = " \
 # Deactivate the audit susbsystem and the audit syscall
 BALENA_CONFIGS_DEPS[audit] = " \
     CONFIG_HAVE_AUDITSYSCALL=n \
-    CONIFG_SECURITY=n \
     "
 
 BALENA_CONFIGS[audit] = " \
