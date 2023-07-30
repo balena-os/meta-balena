@@ -1,4 +1,52 @@
 - commits:
+    - subject: "kernel-balena: remove mispelled config setting"
+      hash: c73973972067d5c1afeb133ed7868684c054a0d9
+      body: >
+        The kernel-balena class contains:
+
+        CONIFG_SECURITY=n
+
+
+        which is mispelled and not being applied. The commit where this was
+
+        introduced claims it's needed to completely disable the audit logs, and
+
+        also that the security framework is unused.
+
+
+        I disagree in that it's unused - the hostOS is not using any security
+
+        framework, but applications may, so luckily the security framework was
+
+        never disabled.
+
+
+        Removing this mispelled entry should have no functional effect. Whether
+
+        the audit subsystem is disabled will depend on the final kernel
+
+        configuration. Definitely we have not seen a need to disable it recently,
+
+        and we have not seen the kernel log flooded with messages.
+
+
+        I'd argue the disabling of the audit subsystem in meta-balena serves no
+
+        need but I also have no specific reason to remove it at the moment.
+
+
+        Fixes #2947
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.1.4
+  title: ""
+  date: 2023-07-30T14:26:53.310Z
+- commits:
     - subject: "resin-init-flasher: Install the dispatcher scripts to installation
         media"
       hash: 77d61290946ed69f348f05887334b28fc2aa0435

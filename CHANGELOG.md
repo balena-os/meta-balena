@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.4
+## (2023-07-30)
+
+* kernel-balena: remove mispelled config setting [Alex Gonzalez]
+
 # v3.1.3
 ## (2023-07-28)
 
