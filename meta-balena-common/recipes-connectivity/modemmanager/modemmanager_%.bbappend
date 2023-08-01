@@ -13,6 +13,8 @@ SRC_URI:append = " \
 
 PACKAGECONFIG:remove = "polkit"
 
+PACKAGECONFIG:append = "at"
+
 do_install:append() {
     install -d ${D}${base_libdir}/udev/rules.d/
     install -m 0644 ${WORKDIR}/77-mm-huawei-configuration.rules ${D}${base_libdir}/udev/rules.d/
