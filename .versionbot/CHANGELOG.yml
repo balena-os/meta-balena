@@ -1,4 +1,20 @@
 - commits:
+    - subject: Reduce scope of app token used for backports and ESR
+      hash: 331589395a0dbbb16fc9d9491c5c43c2ca68c1fa
+      body: |
+        These permissions have already been removed from flowzone-app[bot]
+        so they cannot be requested at runtime.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 3.1.5
+  title: ""
+  date: 2023-08-01T21:53:05.189Z
+- commits:
     - subject: "kernel-balena: remove mispelled config setting"
       hash: c73973972067d5c1afeb133ed7868684c054a0d9
       body: >

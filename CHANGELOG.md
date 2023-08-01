@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.5
+## (2023-08-01)
+
+* Reduce scope of app token used for backports and ESR [Kyle Harding]
+
 # v3.1.4
 ## (2023-07-30)
 
