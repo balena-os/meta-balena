@@ -152,7 +152,7 @@ module.exports = {
 									this.link,
 								)
 						}).then((redsocksStatus) => {
-							test.is(
+							test.equal(
 								redsocksStatus,
 								'active',
 								'Redsocks proxy service should be active',

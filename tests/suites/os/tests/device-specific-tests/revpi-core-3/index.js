@@ -62,7 +62,7 @@ module.exports = {
 						this.link,
 				);
 
-		test.is(
+		test.equal(
 				output.includes('Bit value: 1'),
 				true,
 				'Test binary should return: Bit value: 1',
@@ -83,7 +83,7 @@ module.exports = {
 						this.link,
 				);
 
-		test.is(
+		test.equal(
 				output.includes('Bit value: 0'),
 				true,
 				'Test binary should return: Bit value: 0',

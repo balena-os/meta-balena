@@ -53,7 +53,7 @@ module.exports = {
 						return scan.includes(btNameParsed[2]);
 					});
 
-					test.is(
+					test.equal(
 						scan.includes(btNameParsed[2]),
 						true,
 						'DUT should be able to see testbot when scanning for bluetooth devices',
@@ -67,7 +67,7 @@ module.exports = {
 								this.link,
 							);
 
-					test.is(
+					test.equal(
 						devMac.includes('AA:AA:AA:AA:AA:AA'),
 						false,
 						'BD Address should not be AA:AA:AA:AA:AA:AA',

@@ -19,7 +19,7 @@ module.exports = {
 				this.context.get().link,
 			);
 
-		test.is(
+		test.equal(
 			resp_init.includes('overlays'),
 			false,
 			'u-boot overlays are disabled (overlay directory is not present in /proc/device-tree/chosen/)',
@@ -41,7 +41,7 @@ module.exports = {
 				this.link,
 			);
 
-		test.is(
+		test.equal(
 			resp_before.includes('BB-HDMI-TDA998x-00A0'),
 			true,
 			'HDMI enabled (overlay present in /proc/device-tree/chosen/overlays/)',
@@ -65,7 +65,7 @@ module.exports = {
 				this.link,
 			);
 
-		test.is(
+		test.equal(
 			resp_after.includes('BB-HDMI-TDA998x-00A0'),
 			false,
 			'HDMI is now disabled (overlay not present in /proc/device-tree/chosen/overlays/)',
@@ -88,7 +88,7 @@ module.exports = {
 				this.context.get().link,
 			);
 
-		test.is(
+		test.equal(
 			resp_final.includes('overlays'),
 			false,
 			'u-boot overlays have been disabled (overlay directory is not present in /proc/device-tree/chosen/)',

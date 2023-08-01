@@ -54,7 +54,7 @@ module.exports = {
 				}, false, 60, 1000);
 
 				// Just in case, ensure the watchdog hasn't killed the Engine yet.
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`journalctl -u balena | grep -q "balena.service: Failed with result 'watchdog'" ; echo $?`,
 						this.link,
@@ -64,7 +64,7 @@ module.exports = {
 				);
 
 				// Stop containerd to force a watchdog timeout.
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`kill -STOP $(pidof balena-engine-containerd) ; echo $?`,
 						this.link,
@@ -109,7 +109,7 @@ module.exports = {
 				// Disable healthchecks to avoid interference with the "fake"
 				// executions we'll do next.
 				test.comment('Disabling the Engine healthchecks');
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`mkdir -p /run/systemd/system/balena.service.d &&
 						{

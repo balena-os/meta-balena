@@ -75,7 +75,7 @@ module.exports = {
 							return markDirty(this.context, label).then(() => {
 								return getFilesystemState(this.context, label).then((state) => {
 									let expectedState = 'clean with errors';
-									test.is(
+									test.equal(
 										state,
 										expectedState,
 										`Filesystem state for ${label} should be '${expectedState}'`
@@ -90,7 +90,7 @@ module.exports = {
 							return Promise.map(diskLabels, (label) => {
 								return getFilesystemState(this.context, label).then((state) => {
 									let expectedState = 'clean';
-									test.is(
+									test.equal(
 										state,
 										expectedState,
 										`Filesystem state for ${label} should be '${expectedState}'`

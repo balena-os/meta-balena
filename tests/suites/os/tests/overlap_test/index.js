@@ -16,6 +16,6 @@ module.exports = {
 			test.comment(`ok - no overlap detected`);
 		}
 
-		test.is(result.includes('OK'), true, 'Kernel - dtb overlap check completed');
+		test.equal(result.includes('OK'), true, 'Kernel - dtb overlap check completed');
 	},
 };

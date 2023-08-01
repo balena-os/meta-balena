@@ -222,7 +222,7 @@ module.exports = {
 				/* Static binary currently shared by RPI maintainer in gdrive only
 				 * See: https://github.com/raspberrypi/Raspberry-Pi-OS-64bit/issues/67#issuecomment-653209729
 				 */
-				test.is(
+				test.equal(
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
@@ -233,7 +233,7 @@ module.exports = {
 						'0',
 						'vcdbg static binary should be downloaded and run successfuly'
 				);
-				test.is(
+				test.equal(
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(

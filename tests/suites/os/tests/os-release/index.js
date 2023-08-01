@@ -53,7 +53,7 @@ module.exports = {
 				});
 
 				// check slug
-				test.is(
+				test.equal(
 					result['SLUG'],
 					`"${this.os.deviceType}"`,
 					`SLUG field should contain ${this.os.deviceType}`,

@@ -46,13 +46,13 @@ module.exports = {
 				});
 
 				// check distro
-				test.is(
+				test.equal(
 					result['distro'],
 					`${distroName}`,
 					`issue should contain distribution ${result['distro']}`,
 				);
 				// Check version
-				test.is(
+				test.equal(
 					result['version'],
 					`${osReleaseVersion}`,
 					`issue should contain version ${result['version']}`,
@@ -88,13 +88,13 @@ module.exports = {
 				});
 
 				// check distro
-				test.is(
+				test.equal(
 					result['distro'],
 					`${distroName}`,
 					`issue.net should contain distribution ${result['distro']}`,
 				);
 				// Check version
-				test.is(
+				test.equal(
 					result['version'],
 					`${osReleaseVersion}`,
 					`issue.net should contain version ${result['version']}`,

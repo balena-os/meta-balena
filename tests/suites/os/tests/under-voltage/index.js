@@ -16,6 +16,6 @@ module.exports = {
 			test.comment(`ok - No under-voltage reports in the kernel logs`);
 		}
 
-		test.is(true, true, 'Under-voltage check completed');
+		test.equal(true, true, 'Under-voltage check completed');
 	},
 };

@@ -14,7 +14,7 @@ module.exports = {
 		if (script.includes('skipped')) {
 			test.comment('DUT runs a kernel older than 4.13, this test will be skipped');
 		}
-		test.is(
+		test.equal(
 			script.includes('ok'),
 			true,
 			'kernel-overlap script should return ok',
