@@ -1,5 +1,11 @@
 #!/bin/sh
 
+
+if [ -e "/usr/sbin/balena-config-vars" ]; then
+    # shellcheck disable=SC2086
+    . /usr/sbin/balena-config-vars
+fi
+
 set -eu
 
 run_current_hooks_and_recover () {
@@ -14,6 +20,38 @@ run_current_hooks_and_recover () {
 	umount $new_rootfs || true
 	echo "Update failed."
 	exit 1
+}
+
+RETRY_COUNT=3
+TIMEOUT_SECONDS=15
+
+# TODO: PING_ENDPOINT and REBOOT_ENDPOINT shouldn't be relying on
+# the API, replace this with a local supervisor call e.g
+# PING_ENDPOINT="http://127.0.0.1:48484/ping"
+REBOOT_ENDPOINT="$API_ENDPOINT/supervisor/v1/reboot"
+PING_ENDPOINT="$API_ENDPOINT/supervisor/ping"
+
+call_supervisor_api() {
+    api_endpoint="$1"
+    retry_count=$RETRY_COUNT
+    while [ "$retry_count" -gt 0 ]; do
+        response=$(curl -s -X POST --header "Content-Type:application/json" \
+          --header "Authorization: Bearer $DEVICE_API_KEY" \
+          --data '{"uuid": "'$UUID'", "method": "GET"}' \
+          -w "%{http_code}" \
+          -o /dev/null \
+          "$api_endpoint")
+        if [ "$response" = "200" ]; then
+            return 0
+        fi
+
+        echo "Retry remaining: $retry_count"
+        sleep "$TIMEOUT_SECONDS"
+        retry_count=$((retry_count - 1))
+    done
+
+    echo "$api_endpoint is not responding after multiple retries."
+    return 1
 }
 
 local_image=""
@@ -156,5 +194,16 @@ mv "$SYSROOT/counter.new" "$SYSROOT/counter"
 sync -f "$SYSROOT"
 
 if [ "$reboot" = 1 ]; then
-	reboot
+  # do a supervisor reboot so that we check for update locks after HUP,
+  # failure to reboot will be a failure in the HUP procedure
+  if [ -n "${API_ENDPOINT}" ]; then
+    if ! call_supervisor_api "$PING_ENDPOINT"; then
+        exit 1
+    fi
+    if ! call_supervisor_api "$REBOOT_ENDPOINT"; then
+        exit 1
+    fi
+  fi
+
+  echo "Waiting for the supervisor to reboot the device..."
 fi
