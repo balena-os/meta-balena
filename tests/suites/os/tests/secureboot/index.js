@@ -64,6 +64,28 @@ module.exports = {
 					)
 				);
 
+				const testModuleVerification = async() => {
+					await test.resolves(
+						this.worker.executeCommandInHostOS('modprobe pcan_netdev', this.link),
+						'Module with valid signature loads',
+					);
+
+					await this.worker.pushContainerToDUT(
+						this.link,
+						`${__dirname}/kernel-module-build`,
+						'load',
+					);
+
+					return test.resolveMatch(
+						this.worker.executeCommandInHostOS(
+							'balena logs $(balena ps -aqf NAME=load)',
+							this.link,
+						),
+						/Key was rejected by service/,
+						'Unsigned module does not load',
+					);
+				}
+
 				const testBootloaderIntegrity = async() => {
 					return this.worker.executeCommandInHostOS(
 						['balena', 'run', '--rm', '-v', '/mnt:/mnt', 'alpine', '/bin/sh', '-c',
@@ -108,6 +130,7 @@ module.exports = {
 				if (securebootSupported) {
 					if (securebootEnabled) {
 						await testFullDiskEncryption();
+						await testModuleVerification();
 						await testBootloaderIntegrity();
 						await testBootloaderConfigIntegrity();
 					} else {
