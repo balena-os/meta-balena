@@ -29,15 +29,9 @@ jobs:
           private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           permissions: >-
             {
-              "actions": "read",
-              "administration": "read",
-              "checks": "read",
               "contents": "write",
-              "members": "read",
               "metadata": "read",
-              "pull_requests": "write",
-              "statuses": "read",
-              "workflows": "read"
+              "pull_requests": "write"
             }
 
       - uses: actions/checkout@v3
