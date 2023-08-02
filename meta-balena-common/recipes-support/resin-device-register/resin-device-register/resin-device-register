@@ -48,7 +48,7 @@ if [ -z "$API_ENDPOINT" ] || [ -z "$CONFIG_PATH" ]; then
     exit 1
 fi
 
-for retries in {1..3}; do
+while true; do
     if curl -sL -w '%{http_code}' "$API_ENDPOINT"/ping -o /dev/null | egrep "20[0-9]|30[0-9]" >/dev/null
     then
         if [ -n "${REGISTERED_AT}" ]; then

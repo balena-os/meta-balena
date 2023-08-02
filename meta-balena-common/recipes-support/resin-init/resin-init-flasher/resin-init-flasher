@@ -157,12 +157,12 @@ STARTTIME=$(date +%s)
 ENDTIME="$STARTTIME"
 TIMEOUT=15
 if command -v "systemctl"; then
-    while [ "$(systemctl is-active openvpn)" != "active" ]
+    while [ "$(systemctl is-active openvpn)" != "active" ] && [ "$(systemctl is-active resin-device-register)" != "active" ]
     do
         if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
             sleep 1 && ENDTIME=$((ENDTIME + 1))
         else
-            info "Timeout while waiting for openvpn to come alive. No network?"
+            info "Timeout while waiting for openvpn to come alive and the device to register. No network?"
             break
         fi
     done
@@ -562,22 +562,6 @@ if [ "${EFI}" = "1" ]; then
         else
             # This can safely fail if the secure boot variant does not exist
             rm -f "${EFI_BINARY_SECUREBOOT}" || :
-        fi
-    done
-fi
-
-# Give a chance for the device to register
-STARTTIME=$(date +%s)
-ENDTIME="$STARTTIME"
-TIMEOUT=10
-if command -v "systemctl"; then
-    while [ "$(systemctl is-active resin-device-register.service)" != "active" ]
-    do
-        if [ $((ENDTIME - STARTTIME)) -le $TIMEOUT ]; then
-            sleep 1 && ENDTIME=$((ENDTIME + 1))
-        else
-            info "Timeout while waiting for register to finish. No network?"
-            break
         fi
     done
 fi
