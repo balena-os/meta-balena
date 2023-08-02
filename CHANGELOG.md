@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.6
+## (2023-08-02)
+
+* resin-init-flasher: Allow background device registration [Michal Toman]
+
 # v3.1.5
 ## (2023-08-01)
 

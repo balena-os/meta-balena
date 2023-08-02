@@ -1,4 +1,31 @@
 - commits:
+    - subject: "resin-init-flasher: Allow background device registration"
+      hash: 0b246409da5359741138a81b552fcc6bb3ecc24e
+      body: |
+        314047e and b5c5214 made flasher block until the resin-device-register
+        service exits and made resin-device-register give up after 6 seconds
+        not to block infinitely when no network is available. This effectively
+        means that if the device fails to register within first 6 seconds,
+        it will never retry, flasher will not report status to the dashboard
+        and the device will only register on first boot.
+
+        This patch changes the logic back to resin-device-register trying
+        in the background in an infinite loop and moves the "give the device
+        a chance to register" delay to flasher itself. It also extends
+        the wait to openvpn as flasher already does that and wants VPN to run
+        to be debuggable - in case flashing fails, it would be possible
+        to SSH in via the VPN and look at the logs remotely.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 3.1.6
+  title: ""
+  date: 2023-08-02T08:37:52.265Z
+- commits:
     - subject: Reduce scope of app token used for backports and ESR
       hash: 331589395a0dbbb16fc9d9491c5c43c2ca68c1fa
       body: |
