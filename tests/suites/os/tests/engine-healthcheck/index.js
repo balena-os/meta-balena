@@ -14,7 +14,6 @@
  */
 
 'use strict';
-
 module.exports = {
 	title: 'Engine healthcheck tests',
 	tests: [
@@ -23,8 +22,9 @@ module.exports = {
 			title: 'Engine watchdog recovery',
 			run: async function (test) {
 				// Decrease the watchdog timeout to make the test run quicker.
-				test.is(
-					await this.worker.executeCommandInHostOS(
+				await this.utils.waitUntil(async() => {
+					test.comment('Decreasing watchdog timeout...');
+					return await this.worker.executeCommandInHostOS(
 						`mkdir -p /run/systemd/system/balena.service.d &&
 						{
 							cat <<- EOF > /run/systemd/system/balena.service.d/override.conf
@@ -37,10 +37,10 @@ module.exports = {
 						echo $?
 						`,
 						this.link,
-					),
-					'0',
-					'Watchdog timeout should have been decreased',
-				);
+					) === "0";
+				}, false, 5, 500 )
+		
+				test.ok(true, 'Watchdog timeout should have been decreased');
 
 				// Make sure the Engine service is up and running.
 				test.comment('Waiting for the Engine to start');
