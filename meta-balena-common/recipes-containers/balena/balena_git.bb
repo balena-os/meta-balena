@@ -15,10 +15,10 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "v20.10.38"
-BALENA_BRANCH = "master"
+BALENA_VERSION = "v20.10.171"
+BALENA_BRANCH = "lmb/v2runtime"
 
-SRCREV = "8f374c29395adff1f6f7796b06418e593a479a7d"
+SRCREV = "7df09a3308b77ea5f2c986482fe7889e2e791692"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
@@ -103,14 +103,13 @@ do_install() {
 	ln -sf balena-engine ${D}/${bindir}/balena
 	ln -sf balena-engine ${D}/${bindir}/balenad
 	ln -sf balena-engine ${D}/${bindir}/balena-containerd
-	ln -sf balena-engine ${D}/${bindir}/balena-containerd-shim
+	ln -sf balena-engine ${D}/${bindir}/balena-containerd-shim-runc-v2
 	ln -sf balena-engine ${D}/${bindir}/balena-containerd-ctr
 	ln -sf balena-engine ${D}/${bindir}/balena-runc
 	ln -sf balena-engine ${D}/${bindir}/balena-proxy
 
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-daemon
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-containerd
-	ln -sf balena-engine ${D}/${bindir}/balena-engine-containerd-shim
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-containerd-ctr
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-runc
 	ln -sf balena-engine ${D}/${bindir}/balena-engine-proxy
