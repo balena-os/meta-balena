@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.7
+## (2023-08-08)
+
+* tests: os: eng. healthcheck: retry timeout change [rcooke-warwick]
+
 # v3.1.6
 ## (2023-08-02)
 

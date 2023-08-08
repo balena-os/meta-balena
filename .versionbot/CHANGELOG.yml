@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: eng. healthcheck: retry timeout change"
+      hash: 288ccf608306695c7a709ca682726e82282918f0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 3.1.7
+  title: ""
+  date: 2023-08-08T12:49:13.321Z
+- commits:
     - subject: "resin-init-flasher: Allow background device registration"
       hash: 0b246409da5359741138a81b552fcc6bb3ecc24e
       body: |
