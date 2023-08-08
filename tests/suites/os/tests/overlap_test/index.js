@@ -10,7 +10,7 @@ module.exports = {
 				this.link,
 			);
 
-		if (result.includes('OK')) {
+		if (!result.includes('OK')) {
 			test.comment(`not ok! - kernel - dtb overlap detected`);
 		} else {
 			test.comment(`ok - no overlap detected`);
