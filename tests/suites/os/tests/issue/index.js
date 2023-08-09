@@ -19,13 +19,10 @@ module.exports = {
 	tests: [
 		{
 			title: 'issue file check',
-			run: async function(test) {
+			run: async function (test) {
 				const file = await this.context
 					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/issue',
-						this.link,
-					);
+					.worker.executeCommandInHostOS('cat /etc/issue', this.link);
 
 				const distroName = await this.context
 					.get()
@@ -36,38 +33,35 @@ module.exports = {
 
 				const osReleaseVersion = await this.context
 					.get()
-					.worker.getOSVersion(this.link)
+					.worker.getOSVersion(this.link);
 
 				const result = {};
-				file.split('\n').forEach(element => {
+				file.split('\n').forEach((element) => {
 					const parse = /(\S*)\s(\S*)/.exec(element);
-					result['distro'] = parse[1];
-					result['version'] = parse[2];
+					result.distro = parse[1];
+					result.version = parse[2];
 				});
 
 				// check distro
 				test.is(
-					result['distro'],
+					result.distro,
 					`${distroName}`,
-					`issue should contain distribution ${result['distro']}`,
+					`issue should contain distribution ${result.distro}`,
 				);
 				// Check version
 				test.is(
-					result['version'],
+					result.version,
 					`${osReleaseVersion}`,
-					`issue should contain version ${result['version']}`,
+					`issue should contain version ${result.version}`,
 				);
 			},
 		},
 		{
 			title: 'issue.net file check',
-			run: async function(test) {
+			run: async function (test) {
 				const file = await this.context
 					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/issue.net',
-						this.link,
-					);
+					.worker.executeCommandInHostOS('cat /etc/issue.net', this.link);
 
 				const distroName = await this.context
 					.get()
@@ -78,26 +72,26 @@ module.exports = {
 
 				const osReleaseVersion = await this.context
 					.get()
-					.worker.getOSVersion(this.link)
+					.worker.getOSVersion(this.link);
 
 				const result = {};
-				file.split('\n').forEach(element => {
+				file.split('\n').forEach((element) => {
 					const parse = /(\S*)\s(\S*)/.exec(element);
-					result['distro'] = parse[1];
-					result['version'] = parse[2];
+					result.distro = parse[1];
+					result.version = parse[2];
 				});
 
 				// check distro
 				test.is(
-					result['distro'],
+					result.distro,
 					`${distroName}`,
-					`issue.net should contain distribution ${result['distro']}`,
+					`issue.net should contain distribution ${result.distro}`,
 				);
 				// Check version
 				test.is(
-					result['version'],
+					result.version,
 					`${osReleaseVersion}`,
-					`issue.net should contain version ${result['version']}`,
+					`issue.net should contain version ${result.version}`,
 				);
 			},
 		},

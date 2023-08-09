@@ -17,7 +17,7 @@
 
 module.exports = {
 	title: 'Container exposed variables test',
-	run: async function(test) {
+	run: async function (test) {
 		const ip = await this.worker.ip(this.link);
 
 		await this.context
@@ -28,12 +28,12 @@ module.exports = {
 			.worker.executeCommandInContainer('env', 'variables', this.link);
 
 		const result = {};
-		env.split('\n').forEach(element => {
+		env.split('\n').forEach((element) => {
 			const parse = /(.*)=(.*)/.exec(element);
 			result[parse[1]] = parse[2];
 		});
 
-		['BALENA', 'RESIN'].forEach(prefix => {
+		['BALENA', 'RESIN'].forEach((prefix) => {
 			[
 				'DEVICE_NAME_AT_INIT',
 				'APP_ID',
@@ -44,7 +44,7 @@ module.exports = {
 				'HOST_OS_VERSION',
 				'APP_LOCK_PATH',
 				'',
-			].forEach(variable => {
+			].forEach((variable) => {
 				const fullVariable = `${prefix}${variable ? '_' + variable : ''}`;
 
 				test.match(

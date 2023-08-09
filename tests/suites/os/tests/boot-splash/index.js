@@ -58,7 +58,7 @@ module.exports = {
 	tests: [
 		{
 			title: 'Reboot test',
-			run: async function(test) {
+			run: async function (test) {
 				const { hammingDistance, blockhash } = this.require('/common/graphics');
 
 				test.comment(`Calculating reference hash`);
@@ -68,7 +68,7 @@ module.exports = {
 					const buffer = [];
 
 					stream.on('error', reject);
-					stream.on('data', data => {
+					stream.on('data', (data) => {
 						buffer.push(data);
 					});
 					stream.on('end', () => {
@@ -90,14 +90,14 @@ module.exports = {
 
 				let pass = false;
 				test.comment(`Comparing captured images to reference image...`);
-				for (let image of captured.reverse()) {
+				for (const image of captured.reverse()) {
 					const capturedHash = await new Promise((resolve, reject) => {
 						try {
 							const stream = fs.createReadStream(`/tmp/capture/` + image);
 							const buffer = [];
 
 							stream.on('error', reject);
-							stream.on('data', data => {
+							stream.on('data', (data) => {
 								buffer.push(data);
 							});
 							stream.on('end', () => {
@@ -108,7 +108,7 @@ module.exports = {
 						}
 					});
 
-					let testDistance = hammingDistance(referenceHash, capturedHash);
+					const testDistance = hammingDistance(referenceHash, capturedHash);
 					if (testDistance < 23) {
 						test.comment(
 							`Found match, image ${image}, hamming distance from reference: ${testDistance}`,

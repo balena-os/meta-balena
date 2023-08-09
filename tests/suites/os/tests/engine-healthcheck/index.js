@@ -22,10 +22,12 @@ module.exports = {
 			title: 'Engine watchdog recovery',
 			run: async function (test) {
 				// Decrease the watchdog timeout to make the test run quicker.
-				await this.utils.waitUntil(async() => {
-					test.comment('Decreasing watchdog timeout...');
-					return await this.worker.executeCommandInHostOS(
-						`mkdir -p /run/systemd/system/balena.service.d &&
+				await this.utils.waitUntil(
+					async () => {
+						test.comment('Decreasing watchdog timeout...');
+						return (
+							(await this.worker.executeCommandInHostOS(
+								`mkdir -p /run/systemd/system/balena.service.d &&
 						{
 							cat <<- EOF > /run/systemd/system/balena.service.d/override.conf
 							[Service]
@@ -36,22 +38,34 @@ module.exports = {
 						systemctl restart balena &&
 						echo $?
 						`,
-						this.link,
-					) === "0";
-				}, false, 5, 500 )
-		
+								this.link,
+							)) === '0'
+						);
+					},
+					false,
+					5,
+					500,
+				);
+
 				test.ok(true, 'Watchdog timeout should have been decreased');
 
 				// Make sure the Engine service is up and running.
 				test.comment('Waiting for the Engine to start');
-				await this.utils.waitUntil(async () => {
-					return await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`systemctl is-active balena`,
-							this.link,
-						) === 'active';
-				}, false, 60, 1000);
+				await this.utils.waitUntil(
+					async () => {
+						return (
+							(await this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									`systemctl is-active balena`,
+									this.link,
+								)) === 'active'
+						);
+					},
+					false,
+					60,
+					1000,
+				);
 
 				// Just in case, ensure the watchdog hasn't killed the Engine yet.
 				test.is(
@@ -75,25 +89,39 @@ module.exports = {
 
 				// Wait for the watchdog to kill the balenaEngine service.
 				test.comment('Waiting for the watchdog to kill balenaEngine');
-				await this.utils.waitUntil(async () => {
-					return await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`journalctl -u balena | grep -q "balena.service: Failed with result 'watchdog'" ; echo $?`,
-							this.link,
-						) === '0';
-				}, false, 60, 1000);
+				await this.utils.waitUntil(
+					async () => {
+						return (
+							(await this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									`journalctl -u balena | grep -q "balena.service: Failed with result 'watchdog'" ; echo $?`,
+									this.link,
+								)) === '0'
+						);
+					},
+					false,
+					60,
+					1000,
+				);
 
 				// Wait until balenaEngine is up and running again.
 				test.comment('Waiting for balenaEngine to be healthy again');
-				await this.utils.waitUntil(async () => {
-					return await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`systemctl is-active balena`,
-							this.link,
-						) === 'active';
-				}, false, 60, 1000);
+				await this.utils.waitUntil(
+					async () => {
+						return (
+							(await this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									`systemctl is-active balena`,
+									this.link,
+								)) === 'active'
+						);
+					},
+					false,
+					60,
+					1000,
+				);
 			},
 		},
 		{
@@ -130,14 +158,21 @@ module.exports = {
 
 				// Make sure the Engine service is up and running.
 				test.comment('Waiting for the Engine to start');
-				await this.utils.waitUntil(async () => {
-					return await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							`systemctl is-active balena`,
-							this.link,
-						) === 'active';
-				}, false, 30, 1000);
+				await this.utils.waitUntil(
+					async () => {
+						return (
+							(await this.context
+								.get()
+								.worker.executeCommandInHostOS(
+									`systemctl is-active balena`,
+									this.link,
+								)) === 'active'
+						);
+					},
+					false,
+					30,
+					1000,
+				);
 
 				// Time healthcheck execution. We measure multiple executions to
 				// avoid false positives caused by unusually slow cases on the
@@ -157,12 +192,9 @@ module.exports = {
 					fi
 					`,
 					this.link,
-				)
-
-				test.ok(
-					result != 'error',
-					'Healthchecks are expected to succeed',
 				);
+
+				test.ok(result != 'error', 'Healthchecks are expected to succeed');
 
 				// This value of 8s is about the midpoint between the runtime of
 				// the old healthcheck on a Pi 3 (10.7s) and the new healthcheck
@@ -171,9 +203,9 @@ module.exports = {
 				const limitSecs = 8.0;
 				test.ok(
 					Number(result) < limitSecs,
-					`Healthchecks should run in less than ${limitSecs}s, took ${result}s`
+					`Healthchecks should run in less than ${limitSecs}s, took ${result}s`,
 				);
 			},
 		},
-	]
+	],
 };

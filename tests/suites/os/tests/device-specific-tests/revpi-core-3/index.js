@@ -14,9 +14,9 @@
 
 /* NOTE: Ensure DIO module ports O1 and I1 are connected together with a jumper wire */
 
-test_repository = 'https://raw.githubusercontent.com/balena-io-playground/revpi-core3-test/master/'
-config_file = 'config.rsc'
-dio_binary = 'piTest'
+const test_repository = 'https://raw.githubusercontent.com/balena-io-playground/revpi-core3-test/master/';
+const config_file = 'config.rsc';
+const dio_binary = 'piTest';
 
 module.exports = {
 	deviceType: {
@@ -30,63 +30,57 @@ module.exports = {
 		},
 	},
 	title: 'RevPi Core 3 DIO module test',
-	run: async function(test) {
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-								`cd /mnt/boot/ && wget ${test_repository}${config_file} -O ${config_file}`,
-								this.link,
-						);
+	run: async function (test) {
+		await this.context
+			.get()
+			.worker.executeCommandInHostOS(
+				`cd /mnt/boot/ && wget ${test_repository}${config_file} -O ${config_file}`,
+				this.link,
+			);
 
 		await this.worker.rebootDut(this.link);
 
 		await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-						`cd /tmp/ && wget ${test_repository}bin/${dio_binary} -O ${dio_binary} && chmod +x ./${dio_binary}`,
-						this.link,
-				);
+			.get()
+			.worker.executeCommandInHostOS(
+				`cd /tmp/ && wget ${test_repository}bin/${dio_binary} -O ${dio_binary} && chmod +x ./${dio_binary}`,
+				this.link,
+			);
 
 		// Set output O1 to 1 and ensure input I1 reads the value 1
 		await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-						`/tmp/${dio_binary} -w O_1,1`,
-						this.link,
-				);
+			.get()
+			.worker.executeCommandInHostOS(`/tmp/${dio_binary} -w O_1,1`, this.link);
 
-		output = await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-						`sleep 1 && /tmp/${dio_binary} -1r I_1`,
-						this.link,
-				);
+		let output = await this.context
+			.get()
+			.worker.executeCommandInHostOS(
+				`sleep 1 && /tmp/${dio_binary} -1r I_1`,
+				this.link,
+			);
 
 		test.is(
-				output.includes('Bit value: 1'),
-				true,
-				'Test binary should return: Bit value: 1',
+			output.includes('Bit value: 1'),
+			true,
+			'Test binary should return: Bit value: 1',
 		);
 
 		// Set output O1 to 0 and ensure input I1 reads this value
 		await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-						`/tmp/${dio_binary} -w O_1,0`,
-						this.link,
-				);
+			.get()
+			.worker.executeCommandInHostOS(`/tmp/${dio_binary} -w O_1,0`, this.link);
 
 		output = await this.context
-				.get()
-				.worker.executeCommandInHostOS(
-						`sleep 1 && /tmp/${dio_binary} -1r I_1`,
-						this.link,
-				);
+			.get()
+			.worker.executeCommandInHostOS(
+				`sleep 1 && /tmp/${dio_binary} -1r I_1`,
+				this.link,
+			);
 
 		test.is(
-				output.includes('Bit value: 0'),
-				true,
-				'Test binary should return: Bit value: 0',
+			output.includes('Bit value: 0'),
+			true,
+			'Test binary should return: Bit value: 0',
 		);
 	},
 };

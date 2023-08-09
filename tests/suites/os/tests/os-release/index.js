@@ -19,16 +19,13 @@ module.exports = {
 	tests: [
 		{
 			title: 'OS-release file check',
-			run: async function(test) {
+			run: async function (test) {
 				const file = await this.context
 					.get()
-					.worker.executeCommandInHostOS(
-						'cat /etc/os-release',
-						this.link,
-					);
+					.worker.executeCommandInHostOS('cat /etc/os-release', this.link);
 
 				const result = {};
-				file.split('\n').forEach(element => {
+				file.split('\n').forEach((element) => {
 					const parse = /(.*)=(.*)/.exec(element);
 					result[parse[1]] = parse[2];
 				});
@@ -42,7 +39,7 @@ module.exports = {
 					'MACHINE',
 					'META_BALENA_VERSION',
 					'SLUG',
-				].forEach(field => {
+				].forEach((field) => {
 					test.match(
 						result,
 						{
@@ -54,7 +51,7 @@ module.exports = {
 
 				// check slug
 				test.is(
-					result['SLUG'],
+					result.SLUG,
 					`"${this.os.deviceType}"`,
 					`SLUG field should contain ${this.os.deviceType}`,
 				);

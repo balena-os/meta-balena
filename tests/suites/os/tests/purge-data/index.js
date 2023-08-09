@@ -43,7 +43,7 @@ async function runResetTest(that, test, testFile, resetFile) {
 			that.link,
 		),
 		'0',
-		`Should write test file ${testFile}`
+		`Should write test file ${testFile}`,
 	);
 
 	test.is(
@@ -52,7 +52,7 @@ async function runResetTest(that, test, testFile, resetFile) {
 			that.link,
 		),
 		'0',
-		`Should clear reset file ${resetFile}`
+		`Should clear reset file ${resetFile}`,
 	);
 
 	// reboot
@@ -60,47 +60,58 @@ async function runResetTest(that, test, testFile, resetFile) {
 
 	await test.resolves(
 		Promise.all([
-			that.systemd.waitForServiceState('balena-supervisor.service','active',that.link), 
-			that.systemd.waitForServiceState('balena.service','active',that.link)
+			that.systemd.waitForServiceState(
+				'balena-supervisor.service',
+				'active',
+				that.link,
+			),
+			that.systemd.waitForServiceState('balena.service', 'active', that.link),
 		]),
-		'Should wait for balena.service and balena-supervisor.service to be active'
+		'Should wait for balena.service and balena-supervisor.service to be active',
 	);
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
-				`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
-				that.link,
-			),
+			`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
+			that.link,
+		),
 		'0',
 		'The engine healthcheck should pass',
 	);
 
 	await test.resolves(
-		that.utils.waitUntil(async () => {
-			return that.worker.executeCommandInHostOS(
-				`curl -fs http://127.0.0.1:48484/ping || true`,
-				that.link,
-			).then((response) => {
-				return Promise.resolve(response === 'OK');
-			});
-		}, false, 10 * 60 * 4, 250), // 10 min
-		'The supervisor should respond to the ping endpoint'
+		that.utils.waitUntil(
+			async () => {
+				return that.worker
+					.executeCommandInHostOS(
+						`curl -fs http://127.0.0.1:48484/ping || true`,
+						that.link,
+					)
+					.then((response) => {
+						return Promise.resolve(response === 'OK');
+					});
+			},
+			false,
+			10 * 60 * 4,
+			250,
+		), // 10 min
+		'The supervisor should respond to the ping endpoint',
 	);
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
-				`test -f ${testFile} ; echo $?`,
-				that.link,
-			),
+			`test -f ${testFile} ; echo $?`,
+			that.link,
+		),
 		'1',
 		`Should clear test file ${testFile}`,
 	);
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
-				`test -f ${resetFile} ; echo $?`,
-				that.link,
-			),
+			`test -f ${resetFile} ; echo $?`,
+			that.link,
+		),
 		'0',
 		`Should restore reset file ${resetFile}`,
 	);

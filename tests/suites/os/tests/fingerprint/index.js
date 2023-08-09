@@ -19,18 +19,20 @@ module.exports = {
 	tests: [
 		{
 			title: 'fingerprint file test',
-			run: async function(test) {
+			run: async function (test) {
 				return test.resolves(
-					this.worker.executeCommandInHostOS(
-						'md5sum --quiet -c /balenaos.fingerprint',
-						this.link,
-					).catch(
-						() => this.worker.executeCommandInHostOS(
-							'md5sum --quiet -c /resinos.fingerprint',
+					this.worker
+						.executeCommandInHostOS(
+							'md5sum --quiet -c /balenaos.fingerprint',
 							this.link,
 						)
-					),
-					'resinos.fingerprint/balenaos.fingerprint file passed md5sum, no OS corruption detected.'
+						.catch(() =>
+							this.worker.executeCommandInHostOS(
+								'md5sum --quiet -c /resinos.fingerprint',
+								this.link,
+							),
+						),
+					'resinos.fingerprint/balenaos.fingerprint file passed md5sum, no OS corruption detected.',
 				);
 			},
 		},

@@ -10,7 +10,7 @@ module.exports = {
 		},
 	},
 	title: 'BeagleBone Black u-boot overlay test: deactivate HDMI',
-	run: async function(test) {
+	run: async function (test) {
 		test.comment('Checking that overlays are not enabled ...');
 		const resp_init = await this.context
 			.get()
@@ -27,9 +27,9 @@ module.exports = {
 
 		test.comment('Enabling u-boot overlays ...');
 		await this.worker.executeCommandInHostOS(
-				`echo "enable_uboot_overlays=1" >> /mnt/boot/uEnv.txt`,
-				this.link,
-			);
+			`echo "enable_uboot_overlays=1" >> /mnt/boot/uEnv.txt`,
+			this.link,
+		);
 
 		// Reboot the DUT to pick up the changes
 		await this.worker.rebootDut(this.link);
