@@ -19,18 +19,18 @@ module.exports = {
 	tests: [
 		{
 			title: 'Engine socket is exposed in development images',
-			run: async function(test) {
+			run: async function (test) {
 				const Docker = require('dockerode');
-				let ip = await this.worker.ip(this.link)
-				const docker = new Docker({host: `http://${ip}`, port: 2375})
-				test.comment(`Setting system in development mode...`)
+				const ip = await this.worker.ip(this.link);
+				const docker = new Docker({ host: `http://${ip}`, port: 2375 });
+				test.comment(`Setting system in development mode...`);
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="true"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
 						this.link,
-				);
-				test.comment(`Waiting for engine to restart...`)
+					);
+				test.comment(`Waiting for engine to restart...`);
 				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
@@ -38,44 +38,49 @@ module.exports = {
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena.service`,
 								this.link,
-						)) == 'active'
+							)) == 'active'
 					);
 				}, false);
-				test.comment(`Verify engine socket is exposed`)
+				test.comment(`Verify engine socket is exposed`);
 
 				await test.resolves(
-					this.utils.waitUntil(async () => {
-						await new Promise((resolve, reject) => {
-							docker.info(function (err, info) {
-								if (err){
-									reject(`Docker info failed: ${err}`);
-								} else {
-									console.log('got response, resolving!')
-									resolve(info)
-								}
-							})
-						})
-						
-						return true
-					}, false, 5, 500),
-					"Engine socket should be exposed in development images"
+					this.utils.waitUntil(
+						async () => {
+							await new Promise((resolve, reject) => {
+								docker.info(function (err, info) {
+									if (err) {
+										reject(`Docker info failed: ${err}`);
+									} else {
+										console.log('got response, resolving!');
+										resolve(info);
+									}
+								});
+							});
+
+							return true;
+						},
+						false,
+						5,
+						500,
+					),
+					'Engine socket should be exposed in development images',
 				);
 			},
 		},
 		{
 			title: 'Engine socket is not exposed in production images',
-			run: async function(test) {
+			run: async function (test) {
 				const Docker = require('dockerode');
-				let ip = await this.worker.ip(this.link)
-				const docker = new Docker({host: `http://${ip}`, port: 2375})
-				test.comment(`Setting system in production mode...`)
+				const ip = await this.worker.ip(this.link);
+				const docker = new Docker({ host: `http://${ip}`, port: 2375 });
+				test.comment(`Setting system in production mode...`);
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="false"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
 						this.link,
-				);
-				test.comment(`Waiting for engine to restart...`)
+					);
+				test.comment(`Waiting for engine to restart...`);
 				await this.utils.waitUntil(async () => {
 					return (
 						(await this.context
@@ -83,26 +88,27 @@ module.exports = {
 							.worker.executeCommandInHostOS(
 								`systemctl is-active balena.service`,
 								this.link,
-						)) == 'active'
+							)) == 'active'
 					);
 				}, false);
-				test.comment(`Verify engine socket is not exposed`)
+				test.comment(`Verify engine socket is not exposed`);
 
 				await test.throws(
-						docker.info(function (err, info) {
-							if (!err && info && info.lenght) {
-								throw new Error(`Docker info succeeded: ${info}`)
-							}
-						}), {},
-					"Engine socket should not be exposed in production images"
+					docker.info(function (err, info) {
+						if (!err && info && info.lenght) {
+							throw new Error(`Docker info succeeded: ${info}`);
+						}
+					}),
+					{},
+					'Engine socket should not be exposed in production images',
 				);
-				test.comment(`Leaving system in development mode...`)
+				test.comment(`Leaving system in development mode...`);
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
 						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="true"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
 						this.link,
-				);
+					);
 			},
 		},
 	],

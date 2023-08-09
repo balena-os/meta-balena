@@ -36,13 +36,8 @@ const supportsBootConfig = (deviceType) => {
 };
 
 const flasherConfig = (deviceType) => {
-	return (
-		[
-			'imx8mmebcrs08a2',
-			'imx8mm-var-dart-plt',
-		].includes(deviceType)
-	);
-}
+	return ['imx8mmebcrs08a2', 'imx8mm-var-dart-plt'].includes(deviceType);
+};
 
 const checkUnderVoltage = async (that, test) => {
 	test.comment(`checking for under-voltage reports in kernel logs...`);
@@ -53,18 +48,20 @@ const checkUnderVoltage = async (that, test) => {
 	);
 
 	if (result.includes('0')) {
-		test.comment(`not ok! - Under-voltage detected on device, please check power source and cable!`);
+		test.comment(
+			`not ok! - Under-voltage detected on device, please check power source and cable!`,
+		);
 	} else {
 		test.comment(`ok - No under-voltage reports in the kernel logs`);
 	}
 };
-
 
 const enableSerialConsole = async (imagePath) => {
 	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
 		return util
 			.promisify(_fs.readFile)('/config.txt')
 			.catch((err) => {
+				// eslint-disable-line
 				return undefined;
 			});
 	});
@@ -73,7 +70,6 @@ const enableSerialConsole = async (imagePath) => {
 		await imagefs.interact(imagePath, 1, async (_fs) => {
 			const regex = /^enable_uart=.*$/m;
 			const value = 'enable_uart=1';
-
 			console.log(`Setting ${value} in config.txt...`);
 
 			// delete any existing instances before appending to the file
@@ -87,24 +83,21 @@ const enableSerialConsole = async (imagePath) => {
 };
 
 // For device types that support it, this enables skipping boot switch selection, to simplify the automated flashing
-const setFlasher = async(imagePath) => {
+const setFlasher = async (imagePath) => {
 	await imagefs.interact(imagePath, 1, async (_fs) => {
 		const value = 'resin_flasher_skip=0';
 
 		console.log(`Setting ${value} in extra_uEnv.txt...`);
 
-		await util.promisify(_fs.writeFile)(
-			'/extra_uEnv.txt',
-			`${value}\n\n`,
-		);
+		await util.promisify(_fs.writeFile)('/extra_uEnv.txt', `${value}\n\n`);
 	});
-}
+};
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, target) => {
-	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
-	const hupLoadTmp = "/mnt/data/resin-data/tmp";
-	const inactiveStorage = "/mnt/sysroot/inactive/balena";
+	const balenaHostTmpPath = '/mnt/sysroot/inactive/balena/tmp';
+	const hupLoadTmp = '/mnt/data/resin-data/tmp';
+	const inactiveStorage = '/mnt/sysroot/inactive/balena';
 
 	await that.worker.executeCommandInHostOS(
 		`systemctl stop balena-host`,
@@ -115,7 +108,7 @@ const doHUP = async (that, test, mode, target) => {
 	await that.worker.executeCommandInHostOS(
 		`find "${inactiveStorage}" -mindepth 1 -maxdepth 1 -exec rm -r "{}" \\; || true`,
 		target,
-	)
+	);
 
 	await that.worker.executeCommandInHostOS(
 		`systemctl start balena-host`,
@@ -133,7 +126,9 @@ const doHUP = async (that, test, mode, target) => {
 					target,
 				)) !== 'exists'
 			) {
-				throw new Error(`Target image doesn't exists at location "${that.hostappPath}"`);
+				throw new Error(
+					`Target image doesn't exists at location "${that.hostappPath}"`,
+				);
 			}
 
 			// bind mount the data partition for temporary extract & load files
@@ -143,13 +138,19 @@ const doHUP = async (that, test, mode, target) => {
 			);
 
 			test.comment(`Running: hostapp-update -f ${that.hostappPath}`);
-			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -f ${that.hostappPath}`, target);
+			hupLog = await that.worker.executeCommandInHostOS(
+				`hostapp-update -f ${that.hostappPath}`,
+				target,
+			);
 
 			break;
 
 		case 'image':
 			test.comment(`Running: hostapp-update -i ${that.hupOs.image.path}`);
-			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -i ${that.hupOs.image.path}`, target);
+			hupLog = await that.worker.executeCommandInHostOS(
+				`hostapp-update -i ${that.hupOs.image.path}`,
+				target,
+			);
 			break;
 
 		default:
@@ -170,7 +171,7 @@ const initDUT = async (that, test, target) => {
 		await enableSerialConsole(that.os.image.path);
 	}
 
-	if(flasherConfig(that.suite.deviceType.slug)){
+	if (flasherConfig(that.suite.deviceType.slug)) {
 		await setFlasher(that.os.image.path);
 	}
 
@@ -183,11 +184,9 @@ const initDUT = async (that, test, target) => {
 
 	// create tunnels
 	await test.resolves(
-		that.worker.createSSHTunnels(
-			that.link,
-		),
-		`Should detect ${that.link} on local network and establish tunnel`
-	)
+		that.worker.createSSHTunnels(that.link),
+		`Should detect ${that.link} on local network and establish tunnel`,
+	);
 
 	await test.resolves(
 		that.utils.waitUntil(async () => {
@@ -198,8 +197,8 @@ const initDUT = async (that, test, target) => {
 				)) === 'pass'
 			);
 		}, true),
-		`Device ${that.link} should be reachable over local SSH connection`
-	)
+		`Device ${that.link} should be reachable over local SSH connection`,
+	);
 	test.comment(`DUT flashed`);
 
 	// Retrieving journalctl logs
@@ -211,16 +210,16 @@ const initDUT = async (that, test, target) => {
 		);
 	});
 
-	let hupOsName = basename(that.hupOs.image.path);
-	console.log(hupOsName)
+	const hupOsName = basename(that.hupOs.image.path);
+	console.log(hupOsName);
 
 	// compress hostapp before sending
-	test.comment('Compressing image...')
-	let hostAppGzipped = `${that.hupOs.image.path}.gz`
+	test.comment('Compressing image...');
+	const hostAppGzipped = `${that.hupOs.image.path}.gz`;
 	await pipeline(
 		fs.createReadStream(that.hupOs.image.path),
 		zlib.createGzip(),
-		fs.createWriteStream(hostAppGzipped)
+		fs.createWriteStream(hostAppGzipped),
 	);
 
 	test.comment('Sending image to DUT');
@@ -242,7 +241,7 @@ const initDUT = async (that, test, target) => {
 		}
 	}
 
-	that.suite.context.set({ hostappPath: `/mnt/data/resin-data/${hupOsName}` })
+	that.suite.context.set({ hostappPath: `/mnt/data/resin-data/${hupOsName}` });
 	console.log(that.hostappPath);
 
 	// unzip hostapp
@@ -264,20 +263,25 @@ module.exports = {
 
 		this.suite.context.set({
 			utils: this.require('common/utils'),
-			sdk: new Balena(this.suite.options.balena.apiUrl, this.getLogger(), this.suite.options.config.sshConfig),
+			sdk: new Balena(
+				this.suite.options.balena.apiUrl,
+				this.getLogger(),
+				this.suite.options.config.sshConfig,
+			),
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
 			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
-			worker: new Worker(this.suite.deviceType.slug,
+			worker: new Worker(
+				this.suite.deviceType.slug,
 				this.getLogger(),
 				this.suite.options.workerUrl,
 				this.suite.options.balena.organization,
 				join(homedir(), 'id'),
-				this.suite.options.config.sshConfig
+				this.suite.options.config.sshConfig,
 			),
 		});
 
-		console.log(this.suite.options)
+		console.log(this.suite.options);
 
 		// Network definitions
 		// If suites config.js has networkWired: true, override the device contract
@@ -285,13 +289,12 @@ module.exports = {
 			this.suite.options.balenaOS.network.wired = {
 				nat: true,
 			};
-		} else if(this.suite.deviceType.data.connectivity.wifi === false){
+		} else if (this.suite.deviceType.data.connectivity.wifi === false) {
 			// DUT has no wifi - use wired ethernet sharing to connect to DUT
 			this.suite.options.balenaOS.network.wired = {
 				nat: true,
 			};
-		} 
-		else {
+		} else {
 			// device has wifi, use wifi hotspot to connect to DUT
 			delete this.suite.options.balenaOS.network.wired;
 		}
@@ -303,65 +306,70 @@ module.exports = {
 				psk: `${this.suite.options.id}_psk`,
 				nat: true,
 			};
-		} else if(this.suite.deviceType.data.connectivity.wifi === true){
+		} else if (this.suite.deviceType.data.connectivity.wifi === true) {
 			// device has wifi, use wifi hotspot to connect to DUT
 			this.suite.options.balenaOS.network.wireless = {
 				ssid: this.suite.options.id,
 				psk: `${this.suite.options.id}_psk`,
 				nat: true,
 			};
-		} 
-		else {
+		} else {
 			// no wifi on DUT
 			delete this.suite.options.balenaOS.network.wireless;
 		}
 
 		this.suite.context.set({
 			hup: {
-				checkUnderVoltage: checkUnderVoltage,
-				doHUP: doHUP,
-				initDUT: initDUT,
+				checkUnderVoltage,
+				doHUP,
+				initDUT,
 			},
 		});
 
 		// Downloads the balenaOS image we hup from
 		// It can't accept invalid deviceType because we check contracts already in the start
 		// If there are no releases found for a deviceType then skip the HUP suite
-		if (((await this.sdk.balena.models.os.getAvailableOsVersions(this.suite.deviceType.slug)).length) === 0) {
+		if (
+			(
+				await this.sdk.balena.models.os.getAvailableOsVersions(
+					this.suite.deviceType.slug,
+				)
+			).length === 0
+		) {
 			// Concat method not working so pushing one test suite at a time to skip
 			// Also, can't access the tests object using `this.tests` to keep this from becoming hard-coded
-			this.suite.options.debug.unstable.push('Rollback tests')
-			this.suite.options.debug.unstable.push('Smoke tests')
-			return
+			this.suite.options.debug.unstable.push('Rollback tests');
+			this.suite.options.debug.unstable.push('Smoke tests');
+			return;
 		}
 
-		let path = await this.sdk.fetchOS(
+		const path = await this.sdk.fetchOS(
 			this.suite.options.balenaOS.download.version,
 			this.suite.deviceType.slug,
 		);
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
-		
+
 		// Authenticating balenaSDK
-    await this.context
-    .get()
-    .sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-    this.log(`Logged in with ${await this.context.get().sdk.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
-		
-		await this.sdk.balena.models.key.create(
-			this.sshKeyLabel,
-			keys.pubKey
+		await this.context
+			.get()
+			.sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		this.log(
+			`Logged in with ${await this.context
+				.get()
+				.sdk.balena.auth.whoami()}'s account on ${
+				this.suite.options.balena.apiUrl
+			} using balenaSDK`,
 		);
+
+		await this.sdk.balena.models.key.create(this.sshKeyLabel, keys.pubKey);
 		this.suite.teardown.register(() => {
-			return Promise.resolve(
-				this.sdk.removeSSHKey(this.sshKeyLabel)
-			);
+			return Promise.resolve(this.sdk.removeSSHKey(this.sshKeyLabel));
 		});
 
-
 		this.suite.context.set({
-			workerContract: await this.worker.getContract()
-		})
+			workerContract: await this.worker.getContract(),
+		});
 
 		this.suite.context.set({
 			os: new BalenaOS(
@@ -372,9 +380,7 @@ module.exports = {
 					configJson: {
 						uuid: this.suite.options.balenaOS.config.uuid,
 						os: {
-							sshKeys: [
-								keys.pubKey
-							],
+							sshKeys: [keys.pubKey],
 						},
 						// persistentLogging is managed by the supervisor and only read at first boot
 						persistentLogging: true,
@@ -383,8 +389,13 @@ module.exports = {
 						apiEndpoint: 'https://api.balena-cloud.com',
 						developmentMode: true,
 						installer: {
-							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
+							secureboot: ['1', 'true'].includes(
+								process.env.FLASHER_SECUREBOOT,
+							),
+							migrate: {
+								force:
+									this.suite.options.balenaOS.config.installerForceMigration,
+							},
 						},
 					},
 				},
@@ -397,16 +408,19 @@ module.exports = {
 			return this.worker.teardown();
 		});
 
-		if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
-			console.log("Forcing installer migration")
+		if (
+			this.workerContract.workerType === `qemu` &&
+			this.os.configJson.installer.migrate.force
+		) {
+			console.log('Forcing installer migration');
 		} else {
-			console.log("No migration requested")
+			console.log('No migration requested');
 		}
 
-		if ( this.os.configJson.installer.secureboot ) {
-			console.log("Opting-in secure boot and full disk encryption")
+		if (this.os.configJson.installer.secureboot) {
+			console.log('Opting-in secure boot and full disk encryption');
 		} else {
-			console.log("No secure boot requested")
+			console.log('No secure boot requested');
 		}
 
 		this.log('Setting up worker');
@@ -423,8 +437,5 @@ module.exports = {
 			await this.worker.archiveLogs(this.id, this.link);
 		});
 	},
-	tests: [
-		'./tests/rollbacks',
-		'./tests/smoke',
-	],
+	tests: ['./tests/rollbacks', './tests/smoke'],
 };

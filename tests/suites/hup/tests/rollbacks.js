@@ -6,7 +6,6 @@
 
 'use strict';
 
-
 module.exports = {
 	title: 'Rollback tests',
 	run: async function (test) {
@@ -23,20 +22,15 @@ module.exports = {
 					this.link,
 				);
 
-				await this.hup.doHUP(
-					this,
-					test,
-					'local',
-					this.link,
-				);
+				await this.hup.doHUP(this, test, 'local', this.link);
 
 				test.is(
 					await this.worker.executeCommandInHostOS(
 						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 						this.link,
 					),
-					'0',	// does not confirm that sed replaced the values, only that the command did not fail
-					'Should reduce rollback-health timeout to 3x10s'
+					'0', // does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s',
 				);
 
 				test.is(
@@ -45,34 +39,48 @@ module.exports = {
 						this.link,
 					),
 					'0',
-					'Should replace balena-engine with a null link to trigger rollback-health'
+					'Should replace balena-engine with a null link to trigger rollback-health',
 				);
 
 				await this.worker.rebootDut(this.link);
 
 				await test.resolves(
-					this.utils.waitUntil(async () => {
-						return this.worker.executeCommandInHostOS(
-							`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
-							this.link,
-						).then(out => {
-							return out === activePartition;
-						})
-					}, false, 5 * 60, 1000),	// 5 min
-					'Should have rolled back to the original root partition'
+					this.utils.waitUntil(
+						async () => {
+							return this.worker
+								.executeCommandInHostOS(
+									`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+									this.link,
+								)
+								.then((out) => {
+									return out === activePartition;
+								});
+						},
+						false,
+						5 * 60,
+						1000,
+					), // 5 min
+					'Should have rolled back to the original root partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
 				await test.resolves(
-					this.utils.waitUntil(async () => {
-						return this.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
-							this.link,
-						).then(out => {
-							return out === '1';
-						})
-					}, false, 5 * 60, 1000),	// 5 min
-					'Should not have rollback-health-breadcrumb in the state partition'
+					this.utils.waitUntil(
+						async () => {
+							return this.worker
+								.executeCommandInHostOS(
+									`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+									this.link,
+								)
+								.then((out) => {
+									return out === '1';
+								});
+						},
+						false,
+						5 * 60,
+						1000,
+					), // 5 min
+					'Should not have rollback-health-breadcrumb in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -122,20 +130,15 @@ module.exports = {
 					this.link,
 				);
 
-				await this.hup.doHUP(
-					this,
-					test,
-					'local',
-					this.link,
-				);
+				await this.hup.doHUP(this, test, 'local', this.link);
 
 				test.is(
 					await this.worker.executeCommandInHostOS(
 						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 						this.link,
 					),
-					'0',	// does not confirm that sed replaced the values, only that the command did not fail
-					'Should reduce rollback-health timeout to 3x10s'
+					'0', // does not confirm that sed replaced the values, only that the command did not fail
+					'Should reduce rollback-health timeout to 3x10s',
 				);
 
 				test.is(
@@ -144,7 +147,7 @@ module.exports = {
 						this.link,
 					),
 					'0',
-					'Should replace openvpn with a null link to trigger rollback-health'
+					'Should replace openvpn with a null link to trigger rollback-health',
 				);
 
 				test.is(
@@ -152,35 +155,49 @@ module.exports = {
 						`sed 's/BALENAOS_ROLLBACK_VPNONLINE=0/BALENAOS_ROLLBACK_VPNONLINE=1/' -i /mnt/state/rollback-health-variables && sync -f /mnt/state ; echo $?`,
 						this.link,
 					),
-					'0',	// does not confirm that sed replaced the values, only that the command did not fail
-					'Should override vpn online status so failed openvpn is not ignored'
+					'0', // does not confirm that sed replaced the values, only that the command did not fail
+					'Should override vpn online status so failed openvpn is not ignored',
 				);
 
 				await this.worker.rebootDut(this.link);
 
 				await test.resolves(
-					this.utils.waitUntil(async () => {
-						return this.worker.executeCommandInHostOS(
-							`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
-							this.link,
-						).then(out => {
-							return out === activePartition;
-						})
-					}, false, 5 * 60, 1000),	// 5 min
-					'Should have rolled back to the original root partition'
+					this.utils.waitUntil(
+						async () => {
+							return this.worker
+								.executeCommandInHostOS(
+									`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+									this.link,
+								)
+								.then((out) => {
+									return out === activePartition;
+								});
+						},
+						false,
+						5 * 60,
+						1000,
+					), // 5 min
+					'Should have rolled back to the original root partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
 				await test.resolves(
-					this.utils.waitUntil(async () => {
-						return this.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
-							this.link,
-						).then(out => {
-							return out === '1';
-						})
-					}, false, 5 * 60, 1000),	// 5 min
-					'Should not have rollback-health-breadcrumb in the state partition'
+					this.utils.waitUntil(
+						async () => {
+							return this.worker
+								.executeCommandInHostOS(
+									`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+									this.link,
+								)
+								.then((out) => {
+									return out === '1';
+								});
+						},
+						false,
+						5 * 60,
+						1000,
+					), // 5 min
+					'Should not have rollback-health-breadcrumb in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -240,12 +257,7 @@ module.exports = {
 					this.link,
 				);
 
-				await this.hup.doHUP(
-					this,
-					test,
-					'local',
-					this.link,
-				);
+				await this.hup.doHUP(this, test, 'local', this.link);
 
 				test.is(
 					await this.worker.executeCommandInHostOS(
@@ -253,34 +265,48 @@ module.exports = {
 						this.link,
 					),
 					'0',
-					'Should delete mobynit to trigger rollback-altboot'
+					'Should delete mobynit to trigger rollback-altboot',
 				);
 
 				await this.worker.rebootDut(this.link);
 
 				await test.resolves(
-					this.utils.waitUntil(async () => {
-						return this.worker.executeCommandInHostOS(
-							`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
-							this.link,
-						).then(out => {
-							return out === activePartition;
-						})
-					}, false, 5 * 60, 1000),	// 5 min
-					'Should have rolled back to the original root partition'
+					this.utils.waitUntil(
+						async () => {
+							return this.worker
+								.executeCommandInHostOS(
+									`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+									this.link,
+								)
+								.then((out) => {
+									return out === activePartition;
+								});
+						},
+						false,
+						5 * 60,
+						1000,
+					), // 5 min
+					'Should have rolled back to the original root partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
 				await test.resolves(
-					this.utils.waitUntil(async () => {
-						return this.worker.executeCommandInHostOS(
-							`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
-							this.link,
-						).then(out => {
-							return out === '1';
-						})
-					}, false, 5 * 60, 1000),	// 5 min
-					'Should not have rollback-health-breadcrumb in the state partition'
+					this.utils.waitUntil(
+						async () => {
+							return this.worker
+								.executeCommandInHostOS(
+									`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+									this.link,
+								)
+								.then((out) => {
+									return out === '1';
+								});
+						},
+						false,
+						5 * 60,
+						1000,
+					), // 5 min
+					'Should not have rollback-health-breadcrumb in the state partition',
 				);
 
 				// 0 means file exists, 1 means file does not exist
@@ -329,6 +355,6 @@ module.exports = {
 					`Should have rolled back to the original OS version`,
 				);
 			},
-		}
+		},
 	],
 };

@@ -23,11 +23,10 @@ const waitUntilServicesRunning = async (that, uuid, services, commit, test) => {
 			test.comment(
 				`Waiting for device: ${uuid} to run services: ${services} at commit: ${commit}`,
 			);
-			let deviceServices = await that.cloud.balena.models.device.getWithServiceDetails(
-				uuid,
-			);
+			const deviceServices =
+				await that.cloud.balena.models.device.getWithServiceDetails(uuid);
 			let running = false;
-			running = services.every(service => {
+			running = services.every((service) => {
 				return (
 					deviceServices.current_services[service][0].status === 'Running' &&
 					deviceServices.current_services[service][0].commit === commit
@@ -48,7 +47,7 @@ const waitUntilHotspotCreated = async (that, uuid, test) => {
 			test.comment(
 				`Waiting for device: ${uuid} to create hotspot in container`,
 			);
-			let output = await that.cloud.executeCommandInHostOS(
+			const output = await that.cloud.executeCommandInHostOS(
 				`if [[ -n "$(nmcli dev wifi list ifname wlan0 | grep -i test_eus)" ]]; then echo "PASSED"; else echo "FAILED"; fi`,
 				uuid,
 			);
@@ -75,7 +74,7 @@ module.exports = {
 		},
 	},
 	title: 'Hostapd access-point test for EUS chipset',
-	run: async function(test) {
+	run: async function (test) {
 		const hostapdAppName = `${this.balena.application}_Hostapd`;
 
 		// create new application
@@ -116,7 +115,7 @@ module.exports = {
 		);
 		this.suite.context.set({
 			hostapd: {
-				initialCommit: initialCommit,
+				initialCommit,
 			},
 		});
 		test.comment(`Release pushed succesfully...`);
@@ -124,7 +123,7 @@ module.exports = {
 	tests: [
 		{
 			title: 'Move device to hostapd test App',
-			run: async function(test) {
+			run: async function (test) {
 				await this.cloud.balena.models.device.move(
 					this.balena.uuid,
 					this.moveApp,
@@ -138,7 +137,7 @@ module.exports = {
 					test,
 				);
 
-				let hotspotCreated = await waitUntilHotspotCreated(
+				const hotspotCreated = await waitUntilHotspotCreated(
 					this,
 					this.balena.uuid,
 					test,
@@ -153,7 +152,7 @@ module.exports = {
 		},
 		{
 			title: 'Move device back to original app',
-			run: async function(test) {
+			run: async function (test) {
 				test.comment(
 					`Will move device back to original app ${this.balena.application} `,
 				);
@@ -165,9 +164,10 @@ module.exports = {
 				test.comment(
 					`Moved device back to original app ${this.balena.application}, will now get commit`,
 				);
-				let commit = await this.cloud.balena.models.application.getTargetReleaseHash(
-					this.balena.application,
-				);
+				const commit =
+					await this.cloud.balena.models.application.getTargetReleaseHash(
+						this.balena.application,
+					);
 				await waitUntilServicesRunning(
 					this,
 					this.balena.uuid,

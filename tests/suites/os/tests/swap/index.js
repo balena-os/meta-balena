@@ -16,21 +16,25 @@
 
 module.exports = {
 	title: 'zram is enabled and configured as swap',
-	run: async function(test) {
-		const swaps = await this.worker.executeCommandInHostOS(
-			'cat /proc/swaps',
-			this.link,
-		).then((output) => {
-			// Convert the output of /proc/swaps into a list of objects
-			return output
-				.trim().split('\n').slice(1).map((entry) => {
-				const swapKeys = ['filename', 'type', 'size', 'used', 'priority'];
-				const swapValues = entry.split(/(\s+)/).filter(e => e.trim().length > 0);
-				return Object.assign(
-					...swapKeys.map((k, i) => ({[k]: swapValues[i]}))
-				);
+	run: async function (test) {
+		const swaps = await this.worker
+			.executeCommandInHostOS('cat /proc/swaps', this.link)
+			.then((output) => {
+				// Convert the output of /proc/swaps into a list of objects
+				return output
+					.trim()
+					.split('\n')
+					.slice(1)
+					.map((entry) => {
+						const swapKeys = ['filename', 'type', 'size', 'used', 'priority'];
+						const swapValues = entry
+							.split(/(\s+)/)
+							.filter((e) => e.trim().length > 0);
+						return Object.assign(
+							...swapKeys.map((k, i) => ({ [k]: swapValues[i] })),
+						);
+					});
 			});
-		});
 
 		const totalMem = await this.worker.executeCommandInHostOS(
 			`cat /proc/meminfo | head -1 | awk '{print $2}'`,
@@ -48,7 +52,7 @@ module.exports = {
 		const delta = Math.abs(expectedSwap - swap.size);
 		test.ok(
 			delta < 10,
-			'Swap should be the lesser of either half the total memory, or 4 GB'
+			'Swap should be the lesser of either half the total memory, or 4 GB',
 		);
 	},
-}
+};

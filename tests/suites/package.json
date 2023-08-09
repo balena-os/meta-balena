@@ -1,21 +1,20 @@
 {
 	"scripts": {
 		"lockfiles": "for component in 'os' 'hup' 'cloud'; do npm --prefix $component install --package-lock-only; done",
-		"prettify": "prettier --config ./.prettierrc --write \"{os,hup}/**/*.js\"",
-		"lint": "eslint --fix -c ./.eslintrc.* os hup"
+		"prettify": "prettier --config ./.prettierrc --write \"{os,hup,cloud}/**/*.js\"",
+		"lint": "eslint --fix -c ./.eslintrc.* os hup cloud"
 	},
 	"devDependencies": {
-		"eslint": "^4.19.1",
-		"eslint-config-prettier": "^4.0.0",
-		"eslint-config-standard": "^11.0.0",
-		"eslint-plugin-import": "^2.16.0",
-		"eslint-plugin-jsdoc": "^3.9.1",
-		"eslint-plugin-lodash": "^2.6.1",
-		"eslint-plugin-node": "^6.0.0",
-		"eslint-plugin-prettier": "^3.0.1",
-		"eslint-plugin-promise": "^3.6.0",
-		"eslint-plugin-standard": "^3.0.1",
-		"prettier": "^1.16.4"
+		"eslint": "^8.46.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-config-standard": "^17.1.0",
+		"eslint-plugin-import": "^2.28.0",
+		"eslint-plugin-jsdoc": "^46.4.6",
+		"eslint-plugin-lodash": "^7.4.0",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-prettier": "^5.0.0",
+		"eslint-plugin-promise": "^6.1.1",
+		"prettier": "^3.0.1"
 	},
 	"dependencies": {}
 }

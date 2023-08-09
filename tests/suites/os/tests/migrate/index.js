@@ -13,14 +13,13 @@
  */
 
 'use strict';
-let migrateRequested = false
 
 module.exports = {
 	title: 'Installer migrate tests',
 	tests: [
 		{
 			title: 'Installer used migrator module',
-			run: async function(test) {
+			run: async function (test) {
 				let skip = true;
 				try {
 					if (this.os.configJson.installer.migrate.force) {
@@ -30,27 +29,34 @@ module.exports = {
 					// will be skipped
 				}
 				if (skip) {
-						test.comment("No migration requested - skipping")
+					test.comment('No migration requested - skipping');
 				} else {
-						await test.resolves(
-							this.utils.waitUntil(async () => {
-								return this.worker.executeCommandInHostOS(
-									`test /mnt/boot/migration_* ; echo $?`,
-									this.link,
-								).then(out => {
-									return out === '0';
-							})
-						}, false, 5 * 60, 1000),  // 5 min
-							'Should have a single migration log file in boot partition'
-						);
-						test.equal(
-							await this.worker.executeCommandInHostOS(
-									'find /mnt/boot -maxdepth 1 -name migration_* | xargs grep -q "Running migration"; echo $?',
-									this.link,
-								),
-								'0',
-								'Migration execution confirmed in log file'
-						);
+					await test.resolves(
+						this.utils.waitUntil(
+							async () => {
+								return this.worker
+									.executeCommandInHostOS(
+										`test /mnt/boot/migration_* ; echo $?`,
+										this.link,
+									)
+									.then((out) => {
+										return out === '0';
+									});
+							},
+							false,
+							5 * 60,
+							1000,
+						), // 5 min
+						'Should have a single migration log file in boot partition',
+					);
+					test.equal(
+						await this.worker.executeCommandInHostOS(
+							'find /mnt/boot -maxdepth 1 -name migration_* | xargs grep -q "Running migration"; echo $?',
+							this.link,
+						),
+						'0',
+						'Migration execution confirmed in log file',
+					);
 				}
 			},
 		},

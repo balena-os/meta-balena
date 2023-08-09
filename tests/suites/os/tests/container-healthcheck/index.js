@@ -19,41 +19,43 @@ const { delay } = require('bluebird');
 
 module.exports = {
 	title: 'Container healthcheck test',
-	run: async function(test) {
+	run: async function (test) {
 		const ip = await this.worker.ip(this.link);
 
 		const state = await this.context
 			.get()
 			.worker.pushContainerToDUT(ip, __dirname, 'healthcheck');
 
-
 		// wait until status of container is "healthy"
 		await this.utils.waitUntil(async () => {
-			test.comment("Waiting to container to report as healthy...");
+			test.comment('Waiting to container to report as healthy...');
 			// retrieve healthcheck events
-			let health = JSON.parse(await this.context
-			  .get()
-			  .worker.executeCommandInHostOS(
-				`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
-				this.link
-			  )
-			)
-			let status = health.reduce(function (result, element) {
-			  if (element.status != null) {
-				result.push(element.status);
-			  }
-			  return result;
-			}, [])
-	  
-			return status.includes("health_status: healthy")
-	  
-		  }, false);
+			const health = JSON.parse(
+				await this.context
+					.get()
+					.worker.executeCommandInHostOS(
+						`printf '["null"'; balena events --filter container=${state.services.healthcheck} --filter event=health_status --since 1 --until "$(date +%Y-%m-%dT%H:%M:%S.%NZ)" --format '{{json .}}' | while read LINE; do printf ",$LINE"; done; printf ']'`,
+						this.link,
+					),
+			);
+			const status = health.reduce(function (result, element) {
+				if (element.status != null) {
+					result.push(element.status);
+				}
+				return result;
+			}, []);
 
+			return status.includes('health_status: healthy');
+		}, false);
 
 		// cause the container healthcheck to fail
 		await this.context
 			.get()
-			.worker.executeCommandInContainer('rm /tmp/health', 'healthcheck', this.link);
+			.worker.executeCommandInContainer(
+				'rm /tmp/health',
+				'healthcheck',
+				this.link,
+			);
 
 		// wait for 5s before checking for health status to give
 		await delay(1000 * 5);
@@ -63,7 +65,7 @@ module.exports = {
 		await this.utils.waitUntil(async () => {
 			test.comment('Waiting to container to report as unhealthy...');
 			// retrieve healthcheck events
-			let events = JSON.parse(
+			const events = JSON.parse(
 				await this.context
 					.get()
 					.worker.executeCommandInHostOS(
@@ -73,7 +75,7 @@ module.exports = {
 			);
 
 			// extract "health status: X" and add to an array
-			status = events.reduce(function(result, element) {
+			status = events.reduce(function (result, element) {
 				if (element.status != null) {
 					result.push(element.status);
 				}

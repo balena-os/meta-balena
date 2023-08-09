@@ -33,12 +33,12 @@ module.exports = {
 					led: {
 						type: 'boolean',
 						const: true,
-					}
-				}
-			}
-		}
+					},
+				},
+			},
+		},
 	},
-	run: async function(test) {
+	run: async function (test) {
 		const serviceName = 'collector';
 		const ip = await this.worker.ip(this.link);
 
@@ -86,10 +86,10 @@ module.exports = {
 		).split('\n');
 
 		const extractedLines = lines.slice(
-			lines.findIndex(line => {
+			lines.findIndex((line) => {
 				return /^Started.*/.test(line);
 			}) + 1,
-			lines.findIndex(line => {
+			lines.findIndex((line) => {
 				return /^Stopping.*/.test(line);
 			}),
 		);
@@ -112,7 +112,7 @@ module.exports = {
 				++count;
 			}
 		}
-		test.comment(`Count is: ${count}`)
+		test.comment(`Count is: ${count}`);
 		test.is(count > 10, true, `Led should have blinked multiple times`);
 	},
 };

@@ -26,7 +26,7 @@ module.exports = {
 		},
 	},
 	title: '243390-rpi3 - CUS/EUS chipsets test',
-	run: async function(test) {
+	run: async function (test) {
 		const testHelpers = fs
 			.readFileSync(`${__dirname}/assets/helpers.sh`)
 			.toString();
@@ -63,17 +63,27 @@ module.exports = {
 
 		await this.utils.waitUntil(
 			async () => {
-				output = await this.context.get().worker.executeCommandInHostOS(`${testHelpers} test_hotspot`, this.link);
+				output = await this.context
+					.get()
+					.worker.executeCommandInHostOS(
+						`${testHelpers} test_hotspot`,
+						this.link,
+					);
 				return output.includes('passed');
 			},
 			true,
 			10,
-			5 * 1000
+			5 * 1000,
 		);
 
 		test.is(output.includes('passed'), true, 'Wifi hotspot is active');
 
-		await this.context.get().worker.executeCommandInHostOS(`${testHelpers} cleanup_hotspot_connections`, this.link);
+		await this.context
+			.get()
+			.worker.executeCommandInHostOS(
+				`${testHelpers} cleanup_hotspot_connections`,
+				this.link,
+			);
 		await this.worker.rebootDut(this.link);
 	},
 };

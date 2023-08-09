@@ -40,40 +40,42 @@ module.exports = {
 		{
 			title: 'DToverlay & DTparam tests',
 			run: async function (test) {
-				let ip = await this.worker.ip(this.link);
-				let targetState
+				const ip = await this.worker.ip(this.link);
+				let targetState;
 
 				// Export the GPIO pin
 				const exportPin = async () => {
 					return await this.worker.executeCommandInHostOS(
 						`echo 4 >/sys/class/gpio/export`,
-						this.link
-					)
-				}
+						this.link,
+					);
+				};
 
 				// Check value of GPIO pin and unexport the GPIO pin
 				const getPinValue = async () => {
-					const pinValue =  await this.worker.executeCommandInHostOS(
+					const pinValue = await this.worker.executeCommandInHostOS(
 						`cat /sys/class/gpio/gpio4/value`,
-						this.link
-					)
+						this.link,
+					);
 
 					await this.worker.executeCommandInHostOS(
 						`echo 4 >/sys/class/gpio/unexport`,
-						this.link
-					)
-					return pinValue
-				}
+						this.link,
+					);
+					return pinValue;
+				};
 
 				// After applying Dtoverlay, the GPIO pins becomes unavailable as drivers take control over the pin
 				// Hence, sysfs can't be used to query the value of the GPIO pin hence the user of /sys/kernel/debug/gpio
 				const getPinValueThroughDebug = async () => {
-					const getValue = fs.readFileSync(`${__dirname}/getValue.sh`).toString();
+					const getValue = fs
+						.readFileSync(`${__dirname}/getValue.sh`)
+						.toString();
 					return await this.worker.executeCommandInHostOS(
-							`cd /tmp && ${getValue}`,
-							this.link,
-						);
-				}
+						`cd /tmp && ${getValue}`,
+						this.link,
+					);
+				};
 
 				const applySupervisorConfig = async (direction) => {
 					// Wait for supervisor API to start
@@ -144,7 +146,7 @@ module.exports = {
 
 					// IP of the device sometimes change after reboots, hence initalising again
 					// Commenting this to check if the IP really changes or not after reboot
-					// If it does, then it's a bug, because the IP shouldn't change. 
+					// If it does, then it's a bug, because the IP shouldn't change.
 					// If not, then remove the snippet
 					// Leviathan issue: https://github.com/balena-os/leviathan/issues/781
 					// ip = await this.worker.ip(this.link);
@@ -159,19 +161,27 @@ module.exports = {
 						);
 					}, false);
 
-					return targetState
-				}
+					return targetState;
+				};
 
 				// Start of the device-tree practical test
-				await exportPin(4)
-				if (await getPinValue(4) === "0") {
-					test.true(true, "Pin 4 was Low when the test started")
-					const targetState = await applySupervisorConfig("up")
-					test.equal(await getPinValueThroughDebug(4), '"hi"', "Pin 4 set to High after applying dtoverlay")
+				await exportPin(4);
+				if ((await getPinValue(4)) === '0') {
+					test.true(true, 'Pin 4 was Low when the test started');
+					const targetState = await applySupervisorConfig('up');
+					test.equal(
+						await getPinValueThroughDebug(4),
+						'"hi"',
+						'Pin 4 set to High after applying dtoverlay',
+					);
 				} else {
-					test.true(true, "Pin 4 is High as expected")
-					const targetState = await applySupervisorConfig("down")
-					test.equal(await getPinValueThroughDebug(4), '"lo"', "Pin 4 set to Low after applying dtoverlay")
+					test.true(true, 'Pin 4 is High as expected');
+					const targetState = await applySupervisorConfig('down');
+					test.equal(
+						await getPinValueThroughDebug(4),
+						'"lo"',
+						'Pin 4 set to Low after applying dtoverlay',
+					);
 				}
 
 				// Get the current target state of device
@@ -181,7 +191,7 @@ module.exports = {
 					json: true,
 				});
 
-				// Making sure currentState of the DUT matches the target state that was being set. 
+				// Making sure currentState of the DUT matches the target state that was being set.
 				test.equal(
 					currentState.state.local.config.HOST_CONFIG_dtoverlay,
 					targetState.local.config.HOST_CONFIG_dtoverlay,
@@ -193,15 +203,14 @@ module.exports = {
 					'DTparam successfully set in target state',
 				);
 
-				const dtoverlay = fs.readFileSync(`${__dirname}/dtoverlay.sh`).toString();
+				const dtoverlay = fs
+					.readFileSync(`${__dirname}/dtoverlay.sh`)
+					.toString();
 				const dtparam = fs.readFileSync(`${__dirname}/dtparam.sh`).toString();
 
 				const dtOverlayConfigTxt = await this.context
 					.get()
-					.worker.executeCommandInHostOS(
-						`cd /tmp && ${dtoverlay}`,
-						this.link,
-					);
+					.worker.executeCommandInHostOS(`cd /tmp && ${dtoverlay}`, this.link);
 
 				test.equal(
 					dtOverlayConfigTxt,
@@ -210,10 +219,7 @@ module.exports = {
 				);
 				const dtParamConfigTxt = await this.context
 					.get()
-					.worker.executeCommandInHostOS(
-						`cd /tmp && ${dtparam}`,
-						this.link,
-					);
+					.worker.executeCommandInHostOS(`cd /tmp && ${dtparam}`, this.link);
 				test.equal(
 					dtParamConfigTxt,
 					targetState.local.config.HOST_CONFIG_dtparam,
@@ -223,15 +229,13 @@ module.exports = {
 				 * See: https://github.com/raspberrypi/Raspberry-Pi-OS-64bit/issues/67#issuecomment-653209729
 				 */
 				test.is(
-					await this.context
-						.get()
-						.worker.executeCommandInHostOS(
-							'cd /tmp/ && curl -L "https://drive.google.com/uc?export=download&id=1HS9E5vnxxNqrizB4mEYrnFoQQ1axSRKm" -o vcdbg && chmod +x ./vcdbg && \
+					await this.context.get().worker.executeCommandInHostOS(
+						'cd /tmp/ && curl -L "https://drive.google.com/uc?export=download&id=1HS9E5vnxxNqrizB4mEYrnFoQQ1axSRKm" -o vcdbg && chmod +x ./vcdbg && \
 							./vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?',
-							this.link,
-						),
-						'0',
-						'vcdbg static binary should be downloaded and run successfuly'
+						this.link,
+					),
+					'0',
+					'vcdbg static binary should be downloaded and run successfuly',
 				);
 				test.is(
 					await this.context
@@ -240,8 +244,8 @@ module.exports = {
 							'cd /tmp/ && ./vcdbg log msg 2>&1 | grep -q -i "Failed to load" ; echo $?',
 							this.link,
 						),
-						'1',
-						'vcdbg logs should be clean of device-tree or overlay load failures'
+					'1',
+					'vcdbg logs should be clean of device-tree or overlay load failures',
 				);
 			},
 		},
