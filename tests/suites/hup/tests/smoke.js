@@ -14,7 +14,7 @@ module.exports = {
 			title: 'HUP from previous release',
 			run: async function (test) {
 				// a check to see if there is a hostapp on the DUT already
-				if(!this.hostappPath){
+				if (!this.hostappPath) {
 					await this.hup.initDUT(this, test, this.link);
 				}
 				await runSmokeTest(this, test);
@@ -32,7 +32,6 @@ module.exports = {
 	],
 };
 
-
 async function runSmokeTest(that, test) {
 	const activePartition = await that.worker.executeCommandInHostOS(
 		`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
@@ -47,18 +46,18 @@ async function runSmokeTest(that, test) {
 			return (
 				(await that.worker.executeCommandInHostOS(
 					`balena volume create hello-world`,
-					that.link
-					)) === 'hello-world'
+					that.link,
+				)) === 'hello-world'
 			);
 		}, true),
-		"Should create hello-world volume"
-	)
+		'Should create hello-world volume',
+	);
 
 	// a bug in older engine versions incorrectly identified the architecture when pulling
 	// multiarch images on armv6
-	let baseImage = "alpine";
-	if (["rpi", "armv6"].includes(that.suite.deviceType.data.arch)) {
-		baseImage = "arm32v6/alpine"
+	let baseImage = 'alpine';
+	if (['rpi', 'armv6'].includes(that.suite.deviceType.data.arch)) {
+		baseImage = 'arm32v6/alpine';
 	}
 
 	test.is(
@@ -66,41 +65,43 @@ async function runSmokeTest(that, test) {
 			`balena run -v hello-world:/the-volume --entrypoint "/bin/sh" ${baseImage} -c 'echo "Howdy!" > /the-volume/the-file.txt' &&
 			balena run -v hello-world:/the-volume --entrypoint "/bin/sh" ${baseImage} -c 'md5sum /the-volume/the-file.txt > /the-volume/MD5.SUM' &&
 			echo $?`,
-			that.link
-			),
+			that.link,
+		),
 		'0',
-		"Should create files in the hello-world volume"
+		'Should create files in the hello-world volume',
 	);
 
-	await that.hup.doHUP(
-		that,
-		test,
-		'local',
-		that.link,
-	);
+	await that.hup.doHUP(that, test, 'local', that.link);
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
 			`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 			that.link,
 		),
-		'0',	// does not confirm that sed replaced the values, only that the command did not fail
-		'Should reduce rollback-health timeout to 3x10s'
+		'0', // does not confirm that sed replaced the values, only that the command did not fail
+		'Should reduce rollback-health timeout to 3x10s',
 	);
 
 	await that.worker.rebootDut(that.link);
 
 	// 0 means file exists, 1 means file does not exist
 	await test.resolves(
-		that.utils.waitUntil(async () => {
-			return that.worker.executeCommandInHostOS(
-				`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
-				that.link,
-			).then(out => {
-				return out === '1';
-			})
-		}, false, 5 * 60, 1000),	// 5 min
-		'Should not have rollback-health-breadcrumb in the state partition'
+		that.utils.waitUntil(
+			async () => {
+				return that.worker
+					.executeCommandInHostOS(
+						`test -f /mnt/state/rollback-health-breadcrumb ; echo $?`,
+						that.link,
+					)
+					.then((out) => {
+						return out === '1';
+					});
+			},
+			false,
+			5 * 60,
+			1000,
+		), // 5 min
+		'Should not have rollback-health-breadcrumb in the state partition',
 	);
 
 	// 0 means file exists, 1 means file does not exist
@@ -166,11 +167,11 @@ async function runSmokeTest(that, test) {
 			return (
 				(await that.worker.executeCommandInHostOS(
 					`balena run -v hello-world:/the-volume ${baseImage} md5sum -c /the-volume/MD5.SUM &> /dev/null ; echo $?`,
-					that.link
-					)) === '0'
+					that.link,
+				)) === '0'
 			);
 		}, true),
-		"Volume contents should have been preserved during HUP"
+		'Volume contents should have been preserved during HUP',
 	);
 
 	// Check for under-voltage after HUP, in the new OS
