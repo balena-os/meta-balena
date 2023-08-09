@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: hup: retry sending image if fails"
+      hash: 22466325860a1de70724c4bbbb45a8458d3cf8dd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 3.1.8
+  title: ""
+  date: 2023-08-09T13:34:42.388Z
+- commits:
     - subject: "tests: os: eng. healthcheck: retry timeout change"
       hash: 288ccf608306695c7a709ca682726e82282918f0
       body: ""

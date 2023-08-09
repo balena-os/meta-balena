@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.8
+## (2023-08-09)
+
+* tests: hup: retry sending image if fails [rcooke-warwick]
+
 # v3.1.7
 ## (2023-08-08)
 
