@@ -15,6 +15,7 @@ const zlib = require('zlib');
 
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
+const { attempt } = require('bluebird');
 const pipeline = util.promisify(stream.pipeline);
 
 // copied from the SV
@@ -224,7 +225,22 @@ const initDUT = async (that, test, target) => {
 
 	test.comment('Sending image to DUT');
 	// send hostapp to DUT
-	await that.worker.sendFile(hostAppGzipped, `/mnt/data/resin-data/`, target);
+	let attempts = 0;
+	let sent = false;
+	while(!sent){
+		try{
+			await that.worker.sendFile(hostAppGzipped, `/mnt/data/resin-data/`, target);
+			console.log('Hostapp successfully sent!')
+			sent = true
+		}catch(e){
+			if(attempts < 5){
+				console.log(`Error while sending image... Retrying`);
+				attempts++;
+			} else {
+				throw new Error (`Failed to send hostapp image to dut: ${e.message}`)
+			}
+		}
+	}
 
 	that.suite.context.set({ hostappPath: `/mnt/data/resin-data/${hupOsName}` })
 	console.log(that.hostappPath);
