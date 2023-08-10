@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: secureboot: add test for module signing"
+      hash: 20120b58d1d3ac5eba164862df7405b226efee92
+      body: |
+        Verify kernel lockdown prohibits loading of unsigned modules, and still
+        loads modules with a signature that validates against a trusted key.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 3.1.9
+  title: ""
+  date: 2023-08-10T20:10:05.348Z
+- commits:
     - subject: "tests: hup: retry sending image if fails"
       hash: 22466325860a1de70724c4bbbb45a8458d3cf8dd
       body: ""

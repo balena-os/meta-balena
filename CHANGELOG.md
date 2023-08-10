@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.9
+## (2023-08-10)
+
+* tests: secureboot: add test for module signing [Joseph Kogut]
+
 # v3.1.8
 ## (2023-08-09)
 
