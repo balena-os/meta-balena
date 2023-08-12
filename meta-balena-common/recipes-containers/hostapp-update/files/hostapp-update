@@ -127,7 +127,7 @@ if [ "$hooks" = 1 ]; then
 	umount $new_rootfs
 
 	# Run the defined hooks in the host OS we update to in new OS environment
-	if balena run --privileged --rm -v /dev:/dev -v /mnt:/mnt -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
+	if balena run --privileged --rm -v /dev:/dev -v /mnt:/mnt -v /sys:/sys -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
 		echo "New/Forward hooks (new os container) ran successfully."
 	else
 		run_current_hooks_and_recover
