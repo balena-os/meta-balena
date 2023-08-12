@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update balena-supervisor to v14.11.13
+      hash: dd37dc33373fed3295dd64658a8728ddd6a3998e
+      body: |
+        Update balena-supervisor from 14.11.12 to 14.11.13
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "patch: Remove reference of override_lock variable"
+              hash: 7560c70a085d27d8b44eb0dab8b3fa40ab0c9e94
+              body: This is being done to keep the source of truth for this variable in one
+                place and reduce confusion since it's better for dashboard users
+                to reference the dashboard option rather than the actual
+                variable name
+              footer: {}
+              author: Vipul Gupta
+              nested: []
+          version: balena-supervisor-14.11.13
+          title: ""
+          date: 2023-08-10T16:51:23.863Z
+  version: 3.1.11
+  title: ""
+  date: 2023-08-12T05:34:05.584Z
+- commits:
     - subject: "hostapp-update: bind-mount /sys for Jetson efivars"
       hash: 5e0dbce7a08ec04a281e21a7df8c03affafeb8f2
       body: |
