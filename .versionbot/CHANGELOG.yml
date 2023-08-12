@@ -1,4 +1,24 @@
 - commits:
+    - subject: "hostapp-update: bind-mount /sys for Jetson efivars"
+      hash: 5e0dbce7a08ec04a281e21a7df8c03affafeb8f2
+      body: |
+        The hostapp-update hooks for UEFI capsule updates
+        need to create and update the contents of some platform
+        specific efi variables inside the /sys directory, and thus
+        we need to bindmount this directory in the hostapp-update
+        script for internal testing, as well as in balenahup for
+        api triggered updates.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.1.10
+  title: ""
+  date: 2023-08-12T00:14:11.652Z
+- commits:
     - subject: "tests: secureboot: add test for module signing"
       hash: 20120b58d1d3ac5eba164862df7405b226efee92
       body: |

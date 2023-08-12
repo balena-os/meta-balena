@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.10
+## (2023-08-12)
+
+* hostapp-update: bind-mount /sys for Jetson efivars [Alexandru Costache]
+
 # v3.1.9
 ## (2023-08-10)
 
