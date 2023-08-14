@@ -1,1 +1,2 @@
 PREFERRED_VERSION_tpm2-tss = "3.0.3"
+PREFERRED_VERSION_libmbim = "1.24.2"
