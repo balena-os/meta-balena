@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.13
+## (2023-08-16)
+
+* Integration layers: mobile-broadband-provider: fix fetch failure [Alex Gonzalez]
+
 # v3.1.12
 ## (2023-08-15)
 

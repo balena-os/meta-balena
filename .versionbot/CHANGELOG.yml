@@ -1,4 +1,21 @@
 - commits:
+    - subject: "Integration layers: mobile-broadband-provider: fix fetch failure"
+      hash: 38cd8393b4a69b78a348e15176c232244e67bdb2
+      body: |
+        mobile-broadband-provider-info 'master' branch was renamed to 'main',
+        causing do_fetch() to fail before it was changes in Yocto Kirkstone
+        commit e4795393c4882cf38273521539cc255a4ffcb34a.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.1.13
+  title: ""
+  date: 2023-08-16T13:31:36.723Z
+- commits:
     - subject: Update balena-supervisor to v14.11.14
       hash: f42a9345171daeb1834ec50edae5a60cfac4f1c7
       body: |
