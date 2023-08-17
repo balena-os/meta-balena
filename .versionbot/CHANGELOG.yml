@@ -1,4 +1,20 @@
 - commits:
+    - subject: "meta-balena-thud: adapt migrate module dependencies"
+      hash: 5ff9a0c1077ef3c2ff3ff2a2ba678944fb0073a2
+      body: |
+        On Thud, the util-linux recipe had still not split components into
+        different packages.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.1
+  title: ""
+  date: 2023-08-17T14:35:32.390Z
+- commits:
     - subject: Update balena-supervisor to v14.12.0
       hash: 4f2c41743c27ea27d6eaedd5b4516427d9157d10
       body: |

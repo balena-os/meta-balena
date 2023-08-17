@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.1
+## (2023-08-17)
+
+* meta-balena-thud: adapt migrate module dependencies [Alex Gonzalez]
+
 # v3.2.0
 ## (2023-08-17)
 
