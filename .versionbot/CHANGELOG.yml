@@ -1,4 +1,64 @@
 - commits:
+    - subject: Update balena-supervisor to v14.12.0
+      hash: 4f2c41743c27ea27d6eaedd5b4516427d9157d10
+      body: |
+        Update balena-supervisor from 14.11.14 to 14.12.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update README
+              hash: c88d557aafc3088e4048a8cd9b9fc5fea8a45e01
+              body: |
+                Add the new dependency on RUST, reorganize the documentation
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Replace node-dbus with @balena/systemd
+              hash: 327dc31ef02caa365e5a0c03597ba18d121c32a3
+              body: >
+                The node-dbus module is unmaintained and a blocker for the
+                update to
+
+                Node 18. Switching to our own node bindings for systemd solves this
+
+                issue
+              footer:
+                Relates-to: Shouqun/node-dbus#241
+                relates-to: Shouqun/node-dbus#241
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Replace dbus test service with mock-systemd-bus
+              hash: 8f17c30de68f62477a52dd16a268e1d003c666ea
+              body: >
+                This avoids unnecessary mocking and tests against the real
+                systemd API
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update to nodejs 18
+              hash: 2da691bcd5dd5ee8d8ee9460d93c895b73b4e2f4
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.12.0
+          title: ""
+          date: 2023-08-17T00:38:30.372Z
+  version: 3.2.0
+  title: ""
+  date: 2023-08-17T04:33:51.281Z
+- commits:
     - subject: "Integration layers: mobile-broadband-provider: fix fetch failure"
       hash: 38cd8393b4a69b78a348e15176c232244e67bdb2
       body: |

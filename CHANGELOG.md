@@ -1,6 +1,24 @@
 Change log
 -----------
 
+# v3.2.0
+## (2023-08-17)
+
+
+<details>
+<summary> Update balena-supervisor to v14.12.0 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.12.0
+> ### (2023-08-17)
+> 
+> * Update README [Felipe Lalanne]
+> * Replace node-dbus with @balena/systemd [Felipe Lalanne]
+> * Replace dbus test service with mock-systemd-bus [Felipe Lalanne]
+> * Update to nodejs 18 [Pagan Gazzard]
+> 
+
+</details>
+
 # v3.1.13
 ## (2023-08-16)
 
