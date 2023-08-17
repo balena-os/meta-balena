@@ -229,6 +229,9 @@ because this creates issues with outdated PRs and repositories diverging due to 
 all pull requests need to be done against this new board repository from [balena-os](https://github.com/balena-os). Depending on your needs and upon agreeing with balena, this new repository can be hosted either as a public
 repository for everyone to access or hosted privately with access only to selected users.
 
+If you want the repository to be created as private in [balena-os GitHub organization](https://github.com/balena-os) and want to transfer the repository yourself then supply balena with the repository name to be created by balena
+for you. Furthermore, for private repositories you also need to supply balena a list with github usernames of the contributors to the future private repository and balena will add them as outside collaborators.
+
 ## Step 3: Hardware contract
 
 Having a board supported by balena also means having a hardware contract describing that device type.  
