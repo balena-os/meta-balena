@@ -41,5 +41,9 @@
 		"deviceId",
 		"balenaRootCA"
 	],
-	"schema_version": "1.0.0"
+	"config": {
+		"whitelist": [
+			"logsEndpoint"
+		]
+	}
 }
