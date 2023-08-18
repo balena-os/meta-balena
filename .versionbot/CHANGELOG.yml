@@ -1,4 +1,43 @@
 - commits:
+    - subject: "modemmanager: hold ModemManager 1.14.2 on Thud"
+      hash: a13370eb1f57c42aaf78364b09e3424c8d801049
+      body: |
+        Latest stable ModemManager does not compile anymore on Thud, so we
+        there use the previous version 1.14.2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-thud: libqmi: Use v1.26.0"
+      hash: c0f6308d2308551e2bf9b51c1512cfd1ad3ef6b9
+      body: |
+        Newer versions are incompatible with the libc available in sumo.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-thud: libmbim: use v 1.24.2"
+      hash: 2dc7b072896e9793fa9292e9dcdc06de54f2ce4d
+      body: |
+        The current meta-balena libmbim is not compatible with thud's libc
+        version.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.2
+  title: ""
+  date: 2023-08-18T12:38:52.035Z
+- commits:
     - subject: "meta-balena-thud: adapt migrate module dependencies"
       hash: 5ff9a0c1077ef3c2ff3ff2a2ba678944fb0073a2
       body: |
