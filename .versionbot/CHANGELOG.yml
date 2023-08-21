@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: cloud: lockfile: change test order"
+      hash: 3134d64124c6dbbcd34f54874a1f4eaee09a4c6f
+      body: |
+        Change the test order to make things more consistent.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 3.2.4
+  title: ""
+  date: 2023-08-21T17:51:32.589Z
+- commits:
     - subject: Update tests/leviathan digest to 26e6cea
       hash: 59254670dbe87a26764f9264e5a2d2839deb245d
       body: Update tests/leviathan

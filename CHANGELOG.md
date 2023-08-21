@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.4
+## (2023-08-21)
+
+* tests: cloud: lockfile: change test order [rcooke-warwick]
+
 # v3.2.3
 ## (2023-08-21)
 
