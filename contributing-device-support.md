@@ -54,6 +54,8 @@ and files:
 └── <board-name-x>.coffee
 ```
 
+For versioning checks to pass, it is mandatory that the root directory structure reflects the given example and for each commit message body to adhere to the Yocto Contribution Guidelines. Please refer to the device repository [Pull Requests example](https://github.com/balena-os/balena-raspberrypi#pull-requests) for valid commit log formats.
+
 ### About coffee file(s)
 
 One or more files named `<board-name>.coffee`, where `<board-name>` is the corresponding yocto machine name. Should add one for each of the boards that the repository adds support for (eg. [raspberrypi3.coffee](https://github.com/balena-os/balena-raspberrypi/blob/master/raspberrypi3.coffee) or [rockpi-4b-rk3399.coffee](https://github.com/balena-os/balena-rockpi/blob/master/rockpi-4b-rk3399.coffee)). This file contains information on the Yocto build for the specific board, in [CoffeeScript](http://coffeescript.org/) format.
