@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenSSH Key Generation
+RequiresMountsFor=/var /run
+
+[Service]
+ExecStart=@LIBEXECDIR@/sshd_check_keys
+Type=oneshot
+RemainAfterExit=yes
+Nice=10

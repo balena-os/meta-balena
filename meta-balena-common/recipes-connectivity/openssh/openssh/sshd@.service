@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenSSH Per-Connection Daemon
+After=sshdgenkeys.service
+
+[Service]
+Environment="SSHD_OPTS="
+EnvironmentFile=-/etc/default/ssh
+ExecStart=-@SBINDIR@/sshd -i $SSHD_OPTS
+StandardInput=socket
+KillMode=process
