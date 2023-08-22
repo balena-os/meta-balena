@@ -1,4 +1,19 @@
 - commits:
+    - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org
+        for private device types"
+      hash: 2e4da2fdd63a1eb0328ffd12209d90a9fdeb6545
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 3.2.5
+  title: ""
+  date: 2023-08-22T15:55:05.868Z
+- commits:
     - subject: "tests: cloud: lockfile: change test order"
       hash: 3134d64124c6dbbcd34f54874a1f4eaee09a4c6f
       body: |

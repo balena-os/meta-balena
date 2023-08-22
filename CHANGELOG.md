@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.5
+## (2023-08-22)
+
+* contributing-device-support.md: Clarify repo set-up in balenaOS org for private device types [Florin Sarbu]
+
 # v3.2.4
 ## (2023-08-21)
 
