@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.6
+## (2023-08-23)
+
+* resin-u-boot.class: Fix for older u-boot versions [Alex Gonzalez]
+
 # v3.2.5
 ## (2023-08-22)
 

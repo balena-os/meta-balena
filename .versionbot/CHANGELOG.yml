@@ -1,4 +1,24 @@
 - commits:
+    - subject: "resin-u-boot.class: Fix for older u-boot versions"
+      hash: 8da86ebc124eacda1a1bf22d183f13a112c22158
+      body: |
+        The env_get() function was renamed from getenv() in commit
+        00caae6d47645e68d6e5277aceb69592b49381a6
+        env: Rename getenv/_f() to env_get()
+
+        Fix the balena_check_crc32 function to build for those older
+        u-boots too.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.6
+  title: ""
+  date: 2023-08-23T19:20:53.089Z
+- commits:
     - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org
         for private device types"
       hash: 2e4da2fdd63a1eb0328ffd12209d90a9fdeb6545
