@@ -1,6 +1,7 @@
 `use strict`;
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const retry = require('async-retry');
 
 const waitUntilServicesRunning = async(that, uuid, services, commit, test) => {
   test.comment(`Waiting for device: ${uuid} to run services: ${services} at commit: ${commit}`);
@@ -31,13 +32,20 @@ module.exports = {
         
         // add a comment to the end of the server.js file, to trigger a delta when pushing
         await exec(`echo "#comment" >> ${this.appPath}/containerA/Dockerfile.template`);
-        test.comment(`Pushing release...`);
-
-        let secondCommit = await this.cloud.pushReleaseToApp(
-          this.balena.application, 
-          `${this.appPath}`
-        );
-
+        
+        let secondCommit = '';
+        await retry(async() => {
+          test.comment(`Pushing release...`);
+          secondCommit = await this.cloud.pushReleaseToApp(
+            this.balena.application, 
+            `${this.appPath}`
+          );
+          return 
+        },
+        {
+          retries: 5,
+        });
+        
         await waitUntilServicesRunning(
           this,
           this.balena.uuid, 

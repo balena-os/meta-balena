@@ -11,6 +11,7 @@ const { join } = require("path");
 const { homedir } = require("os");
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
+const retry = require('async-retry');
 
 const imagefs = require('balena-image-fs');
 const stream = require('stream');
@@ -207,13 +208,21 @@ module.exports = {
       appPath: `${__dirname}/test-app`,
       appServiceName: `containerA`
     })
-    this.log(`Pushing release to app...`);
-    const initialCommit = await this.cloud.pushReleaseToApp(this.balena.application, `${__dirname}/test-app`)
-    this.suite.context.set({
-      balena: {
-        initialCommit: initialCommit
-      }
-    })
+    
+    await retry(async () => { 
+      this.log(`Pushing release to app...`);
+      let initialCommit = await this.cloud.pushReleaseToApp(this.balena.application, `${__dirname}/test-app`);
+      this.suite.context.set({
+        balena: {
+          initialCommit: initialCommit
+        }
+      })
+      return
+    }, 
+    {
+      retries: 5,
+    });
+   
 
     // create an ssh key, so we can ssh into DUT later
     const keys = await this.utils.createSSHKey(this.sshKeyPath);
@@ -314,7 +323,7 @@ module.exports = {
     await this.os.configure();
     await this.cli.preload(this.os.image.path, {
       app: this.balena.application,
-      commit: initialCommit,
+      commit: this.balena.initialCommit,
       pin: true,
     });
 
