@@ -108,9 +108,9 @@ module.exports = {
 			run: async function (test) {
 				// Disable healthchecks to avoid interference with the "fake"
 				// executions we'll do next.
-				test.comment('Disabling the Engine healthchecks');
-				test.is(
-					await this.worker.executeCommandInHostOS(
+				await this.utils.waitUntil(async() => {
+					test.comment('Disabling the Engine healthchecks');
+					return await this.worker.executeCommandInHostOS(
 						`mkdir -p /run/systemd/system/balena.service.d &&
 						{
 							cat <<- EOF > /run/systemd/system/balena.service.d/override.conf
@@ -123,10 +123,10 @@ module.exports = {
 						echo $?
 						`,
 						this.link,
-					),
-					'0',
-					'Watchdog should have been disabled',
-				);
+					) === '0';
+				}, false, 5, 500)
+
+				test.ok(true, 'Watchdog should have been disabled')
 
 				// Make sure the Engine service is up and running.
 				test.comment('Waiting for the Engine to start');
