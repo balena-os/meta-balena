@@ -111,6 +111,10 @@ do_inject_check_crc32_cmd() {
         # Older u-boot versions do not have env.h
         if [ ! -f ${S}/include/env.h ]; then
             sed -i 's/env.h/common.h/g' ${WORKDIR}/balena_check_crc32.c
+            if ! grep -q env_get "${S}/include/common.h"; then
+                sed -i 's/env_get/getenv/g' "${WORKDIR}/balena_check_crc32.c"
+                sed -i 's/env_set/setenv/g' "${WORKDIR}/balena_check_crc32.c"
+            fi
         fi
         cp ${WORKDIR}/balena_check_crc32.c ${S}/cmd/
         if ! grep -q "balena_check_crc32" ${S}/cmd/Makefile ; then
