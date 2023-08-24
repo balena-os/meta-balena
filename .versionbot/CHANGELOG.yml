@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to e7622aa
+      hash: 0734600358fedd609c76d95ac14067584c4643c9
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.18
+              hash: 2b27e7a539bd30b96ffb02e0491f720095e0c484
+              body: |
+                Update balena-os/leviathan-worker from 2.9.13 to 2.9.18
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.12
+          title: ""
+          date: 2023-08-23T21:00:04.376Z
+  version: 3.2.7
+  title: ""
+  date: 2023-08-24T02:00:02.949Z
+- commits:
     - subject: "resin-u-boot.class: Fix for older u-boot versions"
       hash: 8da86ebc124eacda1a1bf22d183f13a112c22158
       body: |

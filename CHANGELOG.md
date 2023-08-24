@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v3.2.7
+## (2023-08-24)
+
+
+<details>
+<summary> Update tests/leviathan digest to e7622aa [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.12
+> ### (2023-08-23)
+> 
+> * Update balena-os/leviathan-worker to v2.9.18 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v3.2.6
 ## (2023-08-23)
 
