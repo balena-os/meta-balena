@@ -1,4 +1,44 @@
 - commits:
+    - subject: "meta-balena-warrior: modemmanager: use v 1.18.4"
+      hash: d02bb9abe2705f30f8a94c58787c8b03a32ff3c4
+      body: |
+        The current meta-balena modemmanager is not compatible with Meson older
+        than 0.53.0.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-warrior: libmqmi: use v 1.30.2"
+      hash: 789d7f313c58183ed2c60c27b42e3fce8eb7e5ea
+      body: |
+        The current meta-balena libqmi is not compatible with Meson
+        older than 0.53.0.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-warrior: libmbim: use v 1.26.2"
+      hash: 627bfe3196c30e0b1c742a3b1e2252acd1f97d47
+      body: |
+        The current meta-balena libmbim version won't work with
+        Meson older than 0.53.0.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.8
+  title: ""
+  date: 2023-08-24T14:57:02.794Z
+- commits:
     - subject: Update tests/leviathan digest to e7622aa
       hash: 0734600358fedd609c76d95ac14067584c4643c9
       body: Update tests/leviathan

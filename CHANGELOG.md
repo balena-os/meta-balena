@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v3.2.8
+## (2023-08-24)
+
+* meta-balena-warrior: modemmanager: use v 1.18.4 [Alex Gonzalez]
+* meta-balena-warrior: libmqmi: use v 1.30.2 [Alex Gonzalez]
+* meta-balena-warrior: libmbim: use v 1.26.2 [Alex Gonzalez]
+
 # v3.2.7
 ## (2023-08-24)
 
