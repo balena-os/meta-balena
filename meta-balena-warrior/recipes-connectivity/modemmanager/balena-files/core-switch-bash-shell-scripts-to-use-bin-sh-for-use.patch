@@ -1,0 +1,53 @@
+From 91ed72aa29ede06d3a5115128e2267793ca611d4 Mon Sep 17 00:00:00 2001
+From: "Bruce A. Johnson" <waterfordtrack@gmail.com>
+Date: Wed, 22 Dec 2021 14:24:02 -0500
+Subject: [PATCH] core: switch bash shell scripts to use /bin/sh for use
+ w/Busybox.
+
+Fixes https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/issues/483
+---
+ data/fcc-unlock/105b           | 2 +-
+ data/fcc-unlock/1199           | 2 +-
+ data/fcc-unlock/1eac           | 2 +-
+ test/mmcli-test-sms            | 2 +-
+ tools/tests/test-wrapper.sh.in | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/data/fcc-unlock/105b b/data/fcc-unlock/105b
+index 21fe5329..f276050f 100644
+--- a/data/fcc-unlock/105b
++++ b/data/fcc-unlock/105b
+@@ -1 +1 @@
+-#!/bin/bash
++#!/bin/sh
+diff --git a/data/fcc-unlock/1199 b/data/fcc-unlock/1199
+index 0109c6ab..e1d3804c 100644
+--- a/data/fcc-unlock/1199
++++ b/data/fcc-unlock/1199
+@@ -1 +1 @@
+-#!/bin/bash
++#!/bin/sh
+diff --git a/data/fcc-unlock/1eac b/data/fcc-unlock/1eac
+index 1068d9c2..d9342852 100644
+--- a/data/fcc-unlock/1eac
++++ b/data/fcc-unlock/1eac
+@@ -1 +1 @@
+-#!/bin/bash
++#!/bin/sh
+diff --git a/test/mmcli-test-sms b/test/mmcli-test-sms
+index 038d777d..8229d36a 100755
+--- a/test/mmcli-test-sms
++++ b/test/mmcli-test-sms
+@@ -1 +1 @@
+-#!/bin/bash
++#!/bin/sh
+diff --git a/tools/tests/test-wrapper.sh.in b/tools/tests/test-wrapper.sh.in
+index d64ea4cb..fcdb56de 100644
+--- a/tools/tests/test-wrapper.sh.in
++++ b/tools/tests/test-wrapper.sh.in
+@@ -1 +1 @@
+-#!/bin/bash
++#!/bin/sh
+-- 
+2.35.1
+
