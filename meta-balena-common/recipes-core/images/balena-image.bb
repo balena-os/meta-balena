@@ -35,6 +35,7 @@ IMAGE_INSTALL = " \
     packagegroup-resin-debugtools \
     packagegroup-balena-connectivity \
     packagegroup-resin \
+    kexecboot-cfg \
     "
 
 # add packages for LUKS operations if necessary
