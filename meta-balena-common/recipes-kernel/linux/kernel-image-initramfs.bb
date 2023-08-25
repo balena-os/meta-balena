@@ -15,6 +15,15 @@ do_install() {
             install -m 0644 "${DEPLOY_DIR_IMAGE}/${type}.initramfs.sig" "${D}/boot/${type}.sig"
         fi
     done
+    for dtbf in ${KERNEL_DEVICETREE}; do
+        dtb_ext=${dtbf##*.}
+            if [ "${dtb_ext}" = "dtb" ]; then
+                dtb_base_name=$(basename $dtbf)
+                if [ -e ${DEPLOY_DIR_IMAGE}/${dtb_base_name} ]; then
+                    install -m 0644 ${DEPLOY_DIR_IMAGE}/${dtb_base_name} ${D}/boot
+                fi
+            fi
+    done
 }
 do_install[depends] += "virtual/kernel:do_deploy"
 
