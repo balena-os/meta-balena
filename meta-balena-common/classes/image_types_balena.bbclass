@@ -138,6 +138,7 @@ do_image_balenaos_img[depends] = " \
     parted-native:do_populate_sysroot \
     bmap-tools-native:do_populate_sysroot \
     virtual/kernel:do_deploy \
+    virtual/balena-kboot:do_deploy \
     ${BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
 
