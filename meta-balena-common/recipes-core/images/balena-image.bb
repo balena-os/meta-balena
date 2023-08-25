@@ -89,7 +89,7 @@ BALENA_BOOT_PARTITION_FILES:append = " \
     system-proxy/README.ignore:/system-proxy/README.ignore \
 "
 
-BALENA_BOOT_PARTITION_FILES:append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') or d.getVar('UBOOT_CONFIG') else ''}"
+#BALENA_BOOT_PARTITION_FILES:append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') or d.getVar('UBOOT_CONFIG') else ''}"
 
 # Resin image flag file
 BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE_FLAG_FILE}"
