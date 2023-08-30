@@ -22,7 +22,7 @@ do_sign_efi () {
         RESPONSE_FILE=$(mktemp)
         echo "{\"key_id\": \"${SIGN_KMOD_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
         CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt" \
-            curl --fail "${SIGN_API}/secureboot/efi" \
+            curl --fail --retry 5  "${SIGN_API}/secureboot/efi" \
                  -X POST \
                  -H "Content-Type: application/json" \
                  -H "X-API-Key: ${SIGN_API_KEY}" \
