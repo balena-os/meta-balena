@@ -1,4 +1,182 @@
 - commits:
+    - subject: Update tests/leviathan digest to b353754
+      hash: fc8f12ca01cfa5f3a1bc06b0132b0044fca51ab7
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.21
+              hash: c622ef70e804d2dc41e6fdfa21d05162f00dcf34
+              body: |
+                Update balena-os/leviathan-worker from 2.9.20 to 2.9.21
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.25
+          title: ""
+          date: 2023-08-30T14:59:49.181Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.20
+              hash: 7ec82aa36d60cbd31148a08631cc5fac14618b7c
+              body: |
+                Update balena-os/leviathan-worker from 2.9.19 to 2.9.20
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.24
+          title: ""
+          date: 2023-08-30T12:51:16.148Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.19
+              hash: 9e9ac1ed9ff9ee53d6dd05c5c2bebfb801d48b05
+              body: |
+                Update balena-os/leviathan-worker from 2.9.18 to 2.9.19
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.23
+          title: ""
+          date: 2023-08-30T10:43:49.886Z
+        - commits:
+            - subject: add nocache flash to balena push
+              hash: daf54b5efbbbd66dd71a3c9478c813b8780293ee
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.28.22
+          title: ""
+          date: 2023-08-30T09:42:49.965Z
+        - commits:
+            - subject: "patch: Update client dependencies"
+              hash: 1a152c49d67f4760cfcac68a4fa945a722ba836c
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.21
+          title: ""
+          date: 2023-08-30T09:07:01.984Z
+        - commits:
+            - subject: "patch: Clarify env variables in Documentation"
+              hash: 892fca0c46d1aa8746042c61b505a8b00d5392c6
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.20
+          title: ""
+          date: 2023-08-30T07:40:12.502Z
+        - commits:
+            - subject: "patch: Add .nojekyll file to docs"
+              hash: 9673e6b5415ca80148ddca294715a3bbc8458db7
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.19
+          title: ""
+          date: 2023-08-30T07:17:29.891Z
+        - commits:
+            - subject: "patch: Resolve dead links in README"
+              hash: 2ad20d6b91a9dd8e0201343f2bc63b9d39c9793f
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.18
+          title: ""
+          date: 2023-08-29T15:54:14.475Z
+        - commits:
+            - subject: Update core/contracts digest to ca46c34
+              hash: aac3e01e14b350ad08b4c31bc24b3a4a4648634a
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.17
+          title: ""
+          date: 2023-08-29T12:55:26.515Z
+        - commits:
+            - subject: Update core/contracts digest to d61d911
+              hash: 1fef7b7887f11162aa2d1a36b874bb4742dcb44f
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.16
+          title: ""
+          date: 2023-08-25T18:47:20.503Z
+        - commits:
+            - subject: Update actions/checkout digest to f43a0e5
+              hash: 7228ba0840a92298b9b223c7841b595c5b7265ae
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.15
+          title: ""
+          date: 2023-08-25T17:51:45.085Z
+        - commits:
+            - subject: Remove custom automerge rules and use the inherited rules
+              hash: 3741d840df1870084acc68ade63ef0d36dc49aee
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.28.14
+          title: ""
+          date: 2023-08-25T16:34:19.155Z
+        - commits:
+            - subject: "patch: Exit GH job if tests fails"
+              hash: ecadbe90faa5b52f2b643f4d5293ec4954980772
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.13
+          title: ""
+          date: 2023-08-25T07:43:04.108Z
+  version: 3.2.9
+  title: ""
+  date: 2023-08-31T14:48:00.950Z
+- commits:
     - subject: "meta-balena-warrior: modemmanager: use v 1.18.4"
       hash: d02bb9abe2705f30f8a94c58787c8b03a32ff3c4
       body: |
