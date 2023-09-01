@@ -70,9 +70,26 @@ fi
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
 
-curl -s -X PATCH "${API_ENDPOINT}/v6/device(uuid='${UUID}')" \
-     --header "Authorization: Bearer $_device_api_key" \
-     -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
-     --data-urlencode "provisioning_progress=$PERCENTAGE" \
-     --data-urlencode "provisioning_state=$STATE" \
-     --data-urlencode "status=configuring"
+_outfile="/var/log/provisioning-progress-curl-$PERCENTAGE.log"
+_errfile=$(mktemp)
+if _status_code=$(\
+        curl -s -X PATCH "${API_ENDPOINT}/v6/device(uuid='${UUID}')" \
+            --show-error \
+            -w "%{http_code}" \
+            -L \
+            --retry 3 \
+            --header "Authorization: Bearer $_device_api_key" \
+            -o "/var/log/provisioning-progress-curl-$PERCENTAGE.log" \
+            --data-urlencode "provisioning_progress=$PERCENTAGE" \
+            --data-urlencode "provisioning_state=$STATE" \
+            --data-urlencode "status=configuring" 2> "${_errfile}"
+    ); then
+    case "${_status_code}" in
+      2*) rm -f "${_errfile}"; exit 0;;
+      *) echo "[WARN] [${_status_code}]: Request failed.";rm -f "${_errfile}"; exit 1;;
+    esac
+else
+   echo "[WARN] $(cat "${_errfile}")"
+   rm -f "${_errfile}"
+   exit 1
+fi
