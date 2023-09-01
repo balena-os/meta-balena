@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.10
+## (2023-09-01)
+
+* meta-resin-pyro: do not apply further modemmanager updates [Alex Gonzalez]
+
 # v3.2.9
 ## (2023-08-31)
 

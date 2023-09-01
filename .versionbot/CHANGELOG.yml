@@ -1,4 +1,20 @@
 - commits:
+    - subject: "meta-resin-pyro: do not apply further modemmanager updates"
+      hash: 03d4aea5e8e846fe83ad8aa8369992beba8d0180
+      body: |
+        The meta-balena version of modemmanager is no longer compatible with
+        Yocto Pyro, so stop trying to apply bbappend to it from meta-balena.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.10
+  title: ""
+  date: 2023-09-01T09:41:04.904Z
+- commits:
     - subject: Update tests/leviathan digest to b353754
       hash: fc8f12ca01cfa5f3a1bc06b0132b0044fca51ab7
       body: Update tests/leviathan
