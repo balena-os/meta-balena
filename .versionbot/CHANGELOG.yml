@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update tibdex/github-app-token action to v1.8.2
+      hash: 2c08fe375d06ae4421cb234dec3ddd6a61953256
+      body: |
+        Update tibdex/github-app-token from v1.8.0 to v1.8.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 3.2.11
+  title: ""
+  date: 2023-09-01T17:32:58.971Z
+- commits:
     - subject: "meta-resin-pyro: do not apply further modemmanager updates"
       hash: 03d4aea5e8e846fe83ad8aa8369992beba8d0180
       body: |
