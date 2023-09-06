@@ -40,7 +40,7 @@ jobs:
               "pull_requests": "write"
             }
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # The default GITHUB_TOKEN does not have workflow scope
           # This is needed to push a new branch with workflow files
