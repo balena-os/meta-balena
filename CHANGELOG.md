@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.0
+## (2023-09-06)
+
+* Update actions/checkout action to v4 [Self-hosted Renovate Bot]
+
 # v3.2.12
 ## (2023-09-06)
 

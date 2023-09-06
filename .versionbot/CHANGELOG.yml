@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/checkout action to v4
+      hash: 9b6169bbff3de4d637969f1305bf88ad23d86c09
+      body: |
+        Update actions/checkout from v3 to v4
+      footer:
+        Change-type: major
+        change-type: major
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 4.0.0
+  title: ""
+  date: 2023-09-06T14:51:51.368Z
+- commits:
     - subject: "timesync-https: skip time sync if connectivity URI is null"
       hash: c9e8e50d0595bac83bb815e58d61aa0ba82d442c
       body: |
