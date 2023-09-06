@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v3.2.12
+## (2023-09-06)
+
+* timesync-https: skip time sync if connectivity URI is null [Alex Gonzalez]
+* README: update time in the OS section [Alex Gonzalez]
+
 # v3.2.11
 ## (2023-09-01)
 

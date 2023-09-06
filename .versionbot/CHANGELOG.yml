@@ -1,4 +1,29 @@
 - commits:
+    - subject: "timesync-https: skip time sync if connectivity URI is null"
+      hash: c9e8e50d0595bac83bb815e58d61aa0ba82d442c
+      body: |
+        This allows to still launch network services in isolated environments.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "README: update time in the OS section"
+      hash: 5f1009db2d45ab294a8ed7fdbe49ceff13730607
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.12
+  title: ""
+  date: 2023-09-06T08:03:14.463Z
+- commits:
     - subject: Update tibdex/github-app-token action to v1.8.2
       hash: 2c08fe375d06ae4421cb234dec3ddd6a61953256
       body: |
