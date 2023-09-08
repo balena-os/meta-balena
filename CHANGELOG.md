@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.1
+## (2023-09-08)
+
+* classes: sign: add a retry to the signing call [Alex Gonzalez]
+
 # v4.0.0
 ## (2023-09-06)
 

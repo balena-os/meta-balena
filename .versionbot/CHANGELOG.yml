@@ -1,4 +1,20 @@
 - commits:
+    - subject: "classes: sign: add a retry to the signing call"
+      hash: 0f6d0ccf27f9a356fef918bccf8d328d42af0859
+      body: |
+        When the signed artifacts are big we see closed connections because
+        of timeouts in the front caches. A retry should help.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.1
+  title: ""
+  date: 2023-09-08T12:59:39.384Z
+- commits:
     - subject: Update actions/checkout action to v4
       hash: 9b6169bbff3de4d637969f1305bf88ad23d86c09
       body: |
