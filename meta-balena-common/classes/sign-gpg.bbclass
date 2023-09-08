@@ -17,7 +17,7 @@ do_sign_gpg () {
         RESPONSE_FILE=$(mktemp)
         echo "{\"key_id\": \"${SIGN_GRUB_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
         CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt" \
-            curl --fail "${SIGN_API}/gpg/sign" \
+            curl --retry 5 --fail "${SIGN_API}/gpg/sign" \
                  -X POST \
                  -H "Content-Type: application/json" \
                  -H "X-API-Key: ${SIGN_API_KEY}" \
