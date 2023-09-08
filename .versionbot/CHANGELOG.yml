@@ -1,4 +1,40 @@
 - commits:
+    - subject: Update balena-engine to v20.10.39
+      hash: ebfeada3a7dcb52e19d7dcbea6ca2acca8e61edb
+      body: |
+        Update balena-engine from 20.10.38 to 20.10.39
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Don't enable AppArmor if `apparmor_parser` is not present
+              hash: ed8ba18e8776a7bf37b3326baeca8196b4ea76b0
+              body: >
+                This commit updates balena-containerd to a new version in which
+                we
+
+                cherry-picked the change from here: https://github.com/containerd/containerd/pull/8086
+
+
+                This change avoids enabling AppArmor if the `/sbin/apparmor_parser`
+
+                binary is not found in the system.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.39
+          title: ""
+          date: 2023-08-30T20:39:38.647Z
+  version: 4.0.2
+  title: ""
+  date: 2023-09-08T20:00:23.639Z
+- commits:
     - subject: "classes: sign: add a retry to the signing call"
       hash: 0f6d0ccf27f9a356fef918bccf8d328d42af0859
       body: |
