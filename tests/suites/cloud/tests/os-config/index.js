@@ -9,7 +9,7 @@ module.exports = {
 							'inactive',
 							this.balena.uuid
 				).then(async () => {
-					test.is(
+					test.equal(
 						 await this.cloud.executeCommandInHostOS(
 							`journalctl -u os-config.service | grep -q "Service configuration retrieved" >/dev/null 2>&1 && echo "pass"`,
 							this.balena.uuid),

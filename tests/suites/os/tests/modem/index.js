@@ -125,7 +125,7 @@ module.exports = {
                             return JSON.parse(data);
                         });
 
-                    test.is(
+                    test.equal(
                         modemData.modem.generic.state,
                         'connected',
                         'check modem is connected to network',

@@ -30,7 +30,7 @@ module.exports = {
 					this.link,
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 						this.link,
@@ -39,7 +39,7 @@ module.exports = {
 					'Should reduce rollback-health timeout to 3x10s'
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$") ; echo $?`,
 						this.link,
@@ -76,7 +76,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-health-triggered ; echo $?`,
 						this.link,
@@ -86,7 +86,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-altboot-triggered ; echo $?`,
 						this.link,
@@ -96,7 +96,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-health-failed ; echo $?`,
 						this.link,
@@ -105,7 +105,7 @@ module.exports = {
 					'Should not have rollback-health-failed in the state partition',
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.getOSVersion(this.link),
 					origVersion,
 					`Should have rolled back to the original OS version`,
@@ -129,7 +129,7 @@ module.exports = {
 					this.link,
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 						this.link,
@@ -138,7 +138,7 @@ module.exports = {
 					'Should reduce rollback-health timeout to 3x10s'
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`ln -sf /dev/null $(find /mnt/sysroot/inactive/ | grep "bin/openvpn$") ; echo $?`,
 						this.link,
@@ -147,7 +147,7 @@ module.exports = {
 					'Should replace openvpn with a null link to trigger rollback-health'
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`sed 's/BALENAOS_ROLLBACK_VPNONLINE=0/BALENAOS_ROLLBACK_VPNONLINE=1/' -i /mnt/state/rollback-health-variables && sync -f /mnt/state ; echo $?`,
 						this.link,
@@ -184,7 +184,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
 						this.link,
@@ -194,7 +194,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-health-triggered ; echo $?`,
 						this.link,
@@ -204,7 +204,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-altboot-triggered ; echo $?`,
 						this.link,
@@ -214,7 +214,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-health-failed ; echo $?`,
 						this.link,
@@ -223,7 +223,7 @@ module.exports = {
 					'Should not have rollback-health-failed in the state partition',
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.getOSVersion(this.link),
 					origVersion,
 					`Should have rolled back to the original OS version`,
@@ -247,7 +247,7 @@ module.exports = {
 					this.link,
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`rm /mnt/sysroot/inactive/current/boot/init ; echo $?`,
 						this.link,
@@ -284,7 +284,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
 						this.link,
@@ -294,7 +294,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-altboot-triggered ; echo $?`,
 						this.link,
@@ -304,7 +304,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-health-triggered ; echo $?`,
 						this.link,
@@ -314,7 +314,7 @@ module.exports = {
 				);
 
 				// 0 means file exists, 1 means file does not exist
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 						`test -f /mnt/state/rollback-health-failed ; echo $?`,
 						this.link,
@@ -323,7 +323,7 @@ module.exports = {
 					'Should not have rollback-health-failed in the state partition',
 				);
 
-				test.is(
+				test.equal(
 					await this.worker.getOSVersion(this.link),
 					origVersion,
 					`Should have rolled back to the original OS version`,

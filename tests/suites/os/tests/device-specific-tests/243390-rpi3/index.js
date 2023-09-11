@@ -39,7 +39,7 @@ module.exports = {
 				this.link,
 			);
 
-		test.is(
+		test.equal(
 			output.includes('passed'),
 			true,
 			'Wireless interfaces are named correctly',
@@ -53,7 +53,7 @@ module.exports = {
 				this.link,
 			);
 
-		test.is(
+		test.equal(
 			output.includes('added'),
 			true,
 			'NetworkManager hotspot connection added',
@@ -71,7 +71,7 @@ module.exports = {
 			5 * 1000
 		);
 
-		test.is(output.includes('passed'), true, 'Wifi hotspot is active');
+		test.equal(output.includes('passed'), true, 'Wifi hotspot is active');
 
 		await this.context.get().worker.executeCommandInHostOS(`${testHelpers} cleanup_hotspot_connections`, this.link);
 		await this.worker.rebootDut(this.link);

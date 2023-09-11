@@ -64,7 +64,7 @@ module.exports = {
 			uri: `http://${ip}:${SUPERVISOR_PORT}/v1/blink`,
 		});
 
-		test.is(body, 'OK', 'Response should be expected');
+		test.equal(body, 'OK', 'Response should be expected');
 
 		// Wait for the blink action to complete
 		await delay(BLINK_DURATION);
@@ -113,6 +113,6 @@ module.exports = {
 			}
 		}
 		test.comment(`Count is: ${count}`)
-		test.is(count > 10, true, `Led should have blinked multiple times`);
+		test.equal(count > 10, true, `Led should have blinked multiple times`);
 	},
 };

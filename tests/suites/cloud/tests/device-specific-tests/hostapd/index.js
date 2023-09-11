@@ -144,7 +144,7 @@ module.exports = {
 					test,
 				);
 
-				test.is(
+				test.equal(
 					hotspotCreated,
 					true,
 					'hostapd access point created successfuly',

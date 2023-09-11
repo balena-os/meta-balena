@@ -53,7 +53,7 @@ module.exports = {
           `Applied configuration change {"SUPERVISOR_DELTA":"0"}`
         );
 
-        test.is(
+        test.equal(
           !usedDeltas,
           true,
           `Device shouldn't use deltas to download new release`

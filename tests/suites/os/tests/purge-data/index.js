@@ -37,7 +37,7 @@ module.exports = {
 };
 
 async function runResetTest(that, test, testFile, resetFile) {
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`touch ${testFile} ; echo $?`,
 			that.link,
@@ -46,7 +46,7 @@ async function runResetTest(that, test, testFile, resetFile) {
 		`Should write test file ${testFile}`
 	);
 
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`rm ${resetFile} ; echo $?`,
 			that.link,
@@ -66,7 +66,7 @@ async function runResetTest(that, test, testFile, resetFile) {
 		'Should wait for balena.service and balena-supervisor.service to be active'
 	);
 
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 				`/usr/lib/balena/balena-healthcheck >/dev/null 2>&1 ; echo $?`,
 				that.link,
@@ -87,7 +87,7 @@ async function runResetTest(that, test, testFile, resetFile) {
 		'The supervisor should respond to the ping endpoint'
 	);
 
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 				`test -f ${testFile} ; echo $?`,
 				that.link,
@@ -96,7 +96,7 @@ async function runResetTest(that, test, testFile, resetFile) {
 		`Should clear test file ${testFile}`,
 	);
 
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 				`test -f ${resetFile} ; echo $?`,
 				that.link,

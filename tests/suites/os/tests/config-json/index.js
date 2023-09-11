@@ -119,7 +119,7 @@ module.exports = {
 						].join(' '),
 						context.link
 					).then((output) => {
-						return test.is(output, '1', 'Active dnsmasq service should not log "bad address".');
+						return test.equal(output, '1', 'Active dnsmasq service should not log "bad address".');
 					});
 				}).then(() => {
 					return this.systemd.writeConfigJsonProp(test, 'dnsServers', null, context.link);
@@ -250,7 +250,7 @@ module.exports = {
 						`readlink -e /dev/disk/by-label/resin-boot`,
 						context.link,
 					).then((deviceLink) => {
-						test.is(linkTarget, deviceLink, 'Dev link should point to the correct device');
+						test.equal(linkTarget, deviceLink, 'Dev link should point to the correct device');
 					});
 				}).then(() => {
 					return this.systemd.writeConfigJsonProp(test, 'os.udevRules', null, context.link);
@@ -285,7 +285,7 @@ module.exports = {
 				return getBootCount().then((bootCount) => {
 					return context.worker.rebootDut(context.link).then(() => {
 						return getBootCount().then((testcount) => {
-							test.is(
+							test.equal(
 								testcount === bootCount + 1,
 								true,
 								`Device should show previous boot records, showed ${testcount} boots`,

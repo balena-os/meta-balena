@@ -106,7 +106,7 @@ module.exports = {
 						'systemctl status chronyd | grep running',
 						this.link,
 					);
-				test.is(result !== '', true, 'Chronyd service should be running');
+				test.equal(result !== '', true, 'Chronyd service should be running');
 			},
 		},
 		{
@@ -125,7 +125,7 @@ module.exports = {
 					'timedatectl | grep System',
 					this.link,
 				);
-				test.is(
+				test.equal(
 					result,
 					'System clock synchronized: yes',
 					'System clock should be synchronized',
@@ -140,7 +140,7 @@ module.exports = {
 						`chronyc sources -n | fgrep '^*'`,
 						this.link,
 					);
-				test.is(result !== '', true, 'Should see ^* next to chrony source');
+				test.equal(result !== '', true, 'Should see ^* next to chrony source');
 			},
 		},
 		{

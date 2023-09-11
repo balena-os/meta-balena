@@ -25,7 +25,7 @@ module.exports = {
 				// This waits for the engine to start which should mean the system is up and running.
 				await this.systemd.waitForServiceState('balena.service', 'active', this.link);
 
-				test.is(
+				test.equal(
 					await this.worker.executeCommandInHostOS(
 							[
 								`journalctl`, `-u`, `systemd-udevd.service`,

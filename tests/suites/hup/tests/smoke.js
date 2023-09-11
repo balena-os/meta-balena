@@ -61,7 +61,7 @@ async function runSmokeTest(that, test) {
 		baseImage = "arm32v6/alpine"
 	}
 
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`balena run -v hello-world:/the-volume --entrypoint "/bin/sh" ${baseImage} -c 'echo "Howdy!" > /the-volume/the-file.txt' &&
 			balena run -v hello-world:/the-volume --entrypoint "/bin/sh" ${baseImage} -c 'md5sum /the-volume/the-file.txt > /the-volume/MD5.SUM' &&
@@ -79,7 +79,7 @@ async function runSmokeTest(that, test) {
 		that.link,
 	);
 
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 			that.link,
@@ -104,7 +104,7 @@ async function runSmokeTest(that, test) {
 	);
 
 	// 0 means file exists, 1 means file does not exist
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`test -f /mnt/state/rollback-altboot-breadcrumb ; echo $?`,
 			that.link,
@@ -114,7 +114,7 @@ async function runSmokeTest(that, test) {
 	);
 
 	// 0 means file exists, 1 means file does not exist
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`test -f /mnt/state/rollback-altboot-triggered ; echo $?`,
 			that.link,
@@ -124,7 +124,7 @@ async function runSmokeTest(that, test) {
 	);
 
 	// 0 means file exists, 1 means file does not exist
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`test -f /mnt/state/rollback-health-triggered ; echo $?`,
 			that.link,
@@ -134,7 +134,7 @@ async function runSmokeTest(that, test) {
 	);
 
 	// 0 means file exists, 1 means file does not exist
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`test -f /mnt/state/rollback-health-failed ; echo $?`,
 			that.link,
@@ -152,7 +152,7 @@ async function runSmokeTest(that, test) {
 		`Should not have rolled back to the original root partition`,
 	);
 
-	test.is(
+	test.equal(
 		await that.worker.executeCommandInHostOS(
 			`balena volume inspect hello-world 1>/dev/null 2>&1; echo $?`,
 			that.link,
