@@ -1,4 +1,15 @@
 - commits:
+    - subject: renovate updates patch only
+      hash: 1a0b95602763304669ddaffe1cb67cc026723244
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 4.0.4
+  title: ""
+  date: 2023-09-11T18:49:51.206Z
+- commits:
     - subject: Update tests/leviathan digest to 0acfe61
       hash: 411e0b19183a2d6177872ac56623c9a509a584bf
       body: Update tests/leviathan
