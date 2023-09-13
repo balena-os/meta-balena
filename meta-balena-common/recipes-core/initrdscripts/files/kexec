@@ -3,7 +3,7 @@
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 
-KERNEL_IMAGE="${ROOTFS_DIR}/boot/bzImage"
+KERNEL_IMAGE="${ROOTFS_DIR}/boot/@@KERNEL_IMAGETYPE@@"
 
 kexec_enabled() {
     if [ "$bootparam_balena_stage2" != "true" ]
@@ -29,8 +29,12 @@ kexec_enabled() {
 kexec_run() {
     ROOT_UUID=$(findmnt "${ROOTFS_DIR}" -n -o UUID)
 
-    BOOT_PARAMS="$(cat /proc/cmdline | sed -e s,balena_stage2,, | sed -e s,root=[^\ ]*,root=UUID=${ROOT_UUID},)"
-    kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS}"
+    # Remove the following kernel arguments:
+    # * balena_stage2 - not to enter this script again after kexec
+    # * root=XXX - will be replaced by the UUID
+    # * maxcpus=0 - enable SMP after reboot if the 2nd stage bootloader has it disabled
+    BOOT_PARAMS="$(cat /proc/cmdline | sed -e s,balena_stage2,, | sed -e s,root=[^\ ]*,, | sed -e s,maxcpus=0,,)"
+    kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS} root=UUID=${ROOT_UUID}"
 
     umount "${ROOTFS_DIR}"
 
