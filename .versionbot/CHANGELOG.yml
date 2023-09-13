@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: retry healthcheck disable"
+      hash: 19e9d67b642ca815b5da5315fcab84701a54c985
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 4.0.5
+  title: ""
+  date: 2023-09-13T14:15:00.133Z
+- commits:
     - subject: renovate updates patch only
       hash: 1a0b95602763304669ddaffe1cb67cc026723244
       body: ""
