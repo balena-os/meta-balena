@@ -1,4 +1,37 @@
 - commits:
+    - subject: Update balena-supervisor to v14.12.1
+      hash: e24c7a84c64b4fe1465303987c898268a22cb73f
+      body: |
+        Update balena-supervisor from 14.12.0 to 14.12.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Bump sqlite3 to 5.1.6
+              hash: 99962dc94f2356008c063ede08a2a71b4ef21630
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Bump knex to v2.5.1
+              hash: 06e258ecad2e91f40c2b1602a59b0120bc5639c3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.12.1
+          title: ""
+          date: 2023-08-21T16:17:32.755Z
+  version: 4.0.6
+  title: ""
+  date: 2023-09-13T20:19:59.968Z
+- commits:
     - subject: "tests: os: retry healthcheck disable"
       hash: 19e9d67b642ca815b5da5315fcab84701a54c985
       body: ""
