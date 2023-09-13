@@ -66,7 +66,7 @@ RDEPENDS:initramfs-module-rorootfs = "${PN}-base"
 FILES:initramfs-module-rorootfs = "/init.d/89-rorootfs"
 
 SUMMARY:initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
-RDEPENDS:initramfs-module-rootfs = "${PN}-base"
+RDEPENDS:initramfs-module-rootfs = "${PN}-base os-helpers-fs os-helpers-logging"
 FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY:initramfs-module-prepare = "Prepare initramfs console"
