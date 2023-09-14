@@ -42,7 +42,7 @@ HTTPS_POLL_DELAY=$INITIAL_HTTPS_POLL_DELAY
 # Note that this period can be extended as curl DNS lookup timeouts do
 # not obey the -m (--max-time) parameter.
 
-if [ -z "$OS_NET_CONN_URI" ]; then
+if [ -z "$OS_NET_CONN_URI" ] || [ "$OS_NET_CONN_URI" = "null" ]; then
 	warn "Connectivity URL not defined - skipping HTTPS synchronisation."
 	exit 0
 fi

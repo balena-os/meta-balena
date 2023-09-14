@@ -1,6 +1,285 @@
 Change log
 -----------
 
+# v4.0.7
+## (2023-09-14)
+
+* Update tibdex/github-app-token action to v2 [Self-hosted Renovate Bot]
+
+# v4.0.6
+## (2023-09-13)
+
+
+<details>
+<summary> Update balena-supervisor to v14.12.1 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.12.1
+> ### (2023-08-21)
+> 
+> * Bump sqlite3 to 5.1.6 [Felipe Lalanne]
+> * Bump knex to v2.5.1 [Felipe Lalanne]
+> 
+
+</details>
+
+# v4.0.5
+## (2023-09-13)
+
+* tests: os: retry healthcheck disable [rcooke-warwick]
+
+# v4.0.4
+## (2023-09-11)
+
+* renovate updates patch only [ab77]
+
+# v4.0.3
+## (2023-09-09)
+
+
+<details>
+<summary> Update tests/leviathan digest to 0acfe61 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.27
+> ### (2023-09-06)
+> 
+> * Update actions/upload-artifact digest to a8a3f3a [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.26
+> ### (2023-09-04)
+> 
+> * Update core/contracts digest to 518a1d4 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
+# v4.0.2
+## (2023-09-08)
+
+
+<details>
+<summary> Update balena-engine to v20.10.39 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-engine-20.10.39
+> ### (Invalid date)
+> 
+> * Don't enable AppArmor if `apparmor_parser` is not present [Leandro Motta Barros]
+> 
+
+</details>
+
+# v4.0.1
+## (2023-09-08)
+
+* classes: sign: add a retry to the signing call [Alex Gonzalez]
+
+# v4.0.0
+## (2023-09-06)
+
+* Update actions/checkout action to v4 [Self-hosted Renovate Bot]
+
+# v3.2.12
+## (2023-09-06)
+
+* timesync-https: skip time sync if connectivity URI is null [Alex Gonzalez]
+* README: update time in the OS section [Alex Gonzalez]
+
+# v3.2.11
+## (2023-09-01)
+
+* Update tibdex/github-app-token action to v1.8.2 [Self-hosted Renovate Bot]
+
+# v3.2.10
+## (2023-09-01)
+
+* meta-resin-pyro: do not apply further modemmanager updates [Alex Gonzalez]
+
+# v3.2.9
+## (2023-08-31)
+
+
+<details>
+<summary> Update tests/leviathan digest to b353754 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.25
+> ### (Invalid date)
+> 
+> * Update balena-os/leviathan-worker to v2.9.21 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.24
+> ### (Invalid date)
+> 
+> * Update balena-os/leviathan-worker to v2.9.20 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.23
+> ### (Invalid date)
+> 
+> * Update balena-os/leviathan-worker to v2.9.19 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.22
+> ### (Invalid date)
+> 
+> * add nocache flash to balena push [rcooke-warwick]
+> 
+> ## leviathan-2.28.21
+> ### (Invalid date)
+> 
+> * patch: Update client dependencies [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.28.20
+> ### (Invalid date)
+> 
+> * patch: Clarify env variables in Documentation [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.28.19
+> ### (Invalid date)
+> 
+> * patch: Add .nojekyll file to docs [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.28.18
+> ### (2023-08-29)
+> 
+> * patch: Resolve dead links in README [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.28.17
+> ### (2023-08-29)
+> 
+> * Update core/contracts digest to ca46c34 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.16
+> ### (2023-08-25)
+> 
+> * Update core/contracts digest to d61d911 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.15
+> ### (2023-08-25)
+> 
+> * Update actions/checkout digest to f43a0e5 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.28.14
+> ### (2023-08-25)
+> 
+> * Remove custom automerge rules and use the inherited rules [Kyle Harding]
+> 
+> ## leviathan-2.28.13
+> ### (2023-08-25)
+> 
+> * patch: Exit GH job if tests fails [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
+# v3.2.8
+## (2023-08-24)
+
+* meta-balena-warrior: modemmanager: use v 1.18.4 [Alex Gonzalez]
+* meta-balena-warrior: libmqmi: use v 1.30.2 [Alex Gonzalez]
+* meta-balena-warrior: libmbim: use v 1.26.2 [Alex Gonzalez]
+
+# v3.2.7
+## (2023-08-24)
+
+
+<details>
+<summary> Update tests/leviathan digest to e7622aa [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.12
+> ### (2023-08-23)
+> 
+> * Update balena-os/leviathan-worker to v2.9.18 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
+# v3.2.6
+## (2023-08-23)
+
+* resin-u-boot.class: Fix for older u-boot versions [Alex Gonzalez]
+
+# v3.2.5
+## (2023-08-22)
+
+* contributing-device-support.md: Clarify repo set-up in balenaOS org for private device types [Florin Sarbu]
+
+# v3.2.4
+## (2023-08-21)
+
+* tests: cloud: lockfile: change test order [rcooke-warwick]
+
+# v3.2.3
+## (2023-08-21)
+
+
+<details>
+<summary> Update tests/leviathan digest to 26e6cea [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.11
+> ### (2023-08-18)
+> 
+> * improve autokit quickstart [rcooke-warwick]
+> 
+> ## leviathan-2.28.10
+> ### (2023-08-18)
+> 
+> * patch: Update suites dependencies to latest [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.28.9
+> ### (2023-08-18)
+> 
+> * patch: Add balenaCloud configurable environments to e2e [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
+# v3.2.2
+## (2023-08-18)
+
+* modemmanager: hold ModemManager 1.14.2 on Thud [Alex Gonzalez]
+* meta-balena-thud: libqmi: Use v1.26.0 [Alex Gonzalez]
+* meta-balena-thud: libmbim: use v 1.24.2 [Alex Gonzalez]
+
+# v3.2.1
+## (2023-08-17)
+
+* meta-balena-thud: adapt migrate module dependencies [Alex Gonzalez]
+
+# v3.2.0
+## (2023-08-17)
+
+
+<details>
+<summary> Update balena-supervisor to v14.12.0 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.12.0
+> ### (2023-08-17)
+> 
+> * Update README [Felipe Lalanne]
+> * Replace node-dbus with @balena/systemd [Felipe Lalanne]
+> * Replace dbus test service with mock-systemd-bus [Felipe Lalanne]
+> * Update to nodejs 18 [Pagan Gazzard]
+> 
+
+</details>
+
+# v3.1.13
+## (2023-08-16)
+
+* Integration layers: mobile-broadband-provider: fix fetch failure [Alex Gonzalez]
+
+# v3.1.12
+## (2023-08-15)
+
+
+<details>
+<summary> Update balena-supervisor to v14.11.14 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.11.14
+> ### (2023-08-14)
+> 
+> * Update balena-io/deploy-to-balena-action to v0.28.0 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v3.1.11
 ## (2023-08-12)
 

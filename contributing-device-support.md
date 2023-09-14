@@ -54,6 +54,8 @@ and files:
 └── <board-name-x>.coffee
 ```
 
+For versioning checks to pass, it is mandatory that the root directory structure reflects the given example and for each commit message body to adhere to the Yocto Contribution Guidelines. Please refer to the device repository [Pull Requests example](https://github.com/balena-os/balena-raspberrypi#pull-requests) for valid commit log formats.
+
 ### About coffee file(s)
 
 One or more files named `<board-name>.coffee`, where `<board-name>` is the corresponding yocto machine name. Should add one for each of the boards that the repository adds support for (eg. [raspberrypi3.coffee](https://github.com/balena-os/balena-raspberrypi/blob/master/raspberrypi3.coffee) or [rockpi-4b-rk3399.coffee](https://github.com/balena-os/balena-rockpi/blob/master/rockpi-4b-rk3399.coffee)). This file contains information on the Yocto build for the specific board, in [CoffeeScript](http://coffeescript.org/) format.
@@ -228,6 +230,9 @@ transfer can be done from the github UI under Settings -> General and scroll all
 because this creates issues with outdated PRs and repositories diverging due to renovatebot auto-merge of balena-yocto-scripts, meta-balena and VersionBot updates to CHANGELOG.md, VERSION). Please note that from this point forward,
 all pull requests need to be done against this new board repository from [balena-os](https://github.com/balena-os). Depending on your needs and upon agreeing with balena, this new repository can be hosted either as a public
 repository for everyone to access or hosted privately with access only to selected users.
+
+If you want the repository to be created as private in [balena-os GitHub organization](https://github.com/balena-os) and want to transfer the repository yourself then supply balena with the repository name to be created by balena
+for you. Furthermore, for private repositories you also need to supply balena a list with github usernames of the contributors to the future private repository and balena will add them as outside collaborators.
 
 ## Step 3: Hardware contract
 

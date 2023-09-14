@@ -1,4 +1,734 @@
 - commits:
+    - subject: Update tibdex/github-app-token action to v2
+      hash: c0ba7aaea9cd960d9066822d5319cafac93b57d0
+      body: |
+        Update tibdex/github-app-token from v1.8.2 to v2.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 4.0.7
+  title: ""
+  date: 2023-09-14T01:20:50.000Z
+- commits:
+    - subject: Update balena-supervisor to v14.12.1
+      hash: e24c7a84c64b4fe1465303987c898268a22cb73f
+      body: |
+        Update balena-supervisor from 14.12.0 to 14.12.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Bump sqlite3 to 5.1.6
+              hash: 99962dc94f2356008c063ede08a2a71b4ef21630
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Bump knex to v2.5.1
+              hash: 06e258ecad2e91f40c2b1602a59b0120bc5639c3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.12.1
+          title: ""
+          date: 2023-08-21T16:17:32.755Z
+  version: 4.0.6
+  title: ""
+  date: 2023-09-13T20:19:59.968Z
+- commits:
+    - subject: "tests: os: retry healthcheck disable"
+      hash: 19e9d67b642ca815b5da5315fcab84701a54c985
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 4.0.5
+  title: ""
+  date: 2023-09-13T14:15:00.133Z
+- commits:
+    - subject: renovate updates patch only
+      hash: 1a0b95602763304669ddaffe1cb67cc026723244
+      body: ""
+      footer:
+        change-type: patch
+      author: ab77
+      nested: []
+  version: 4.0.4
+  title: ""
+  date: 2023-09-11T18:49:51.206Z
+- commits:
+    - subject: Update tests/leviathan digest to 0acfe61
+      hash: 411e0b19183a2d6177872ac56623c9a509a584bf
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update actions/upload-artifact digest to a8a3f3a
+              hash: a0872927995592524673167c1bc33ad587ff50a6
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.27
+          title: ""
+          date: 2023-09-06T19:51:32.877Z
+        - commits:
+            - subject: Update core/contracts digest to 518a1d4
+              hash: 10a961344aeff9113d7674cd7a98a0e493f115e5
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.26
+          title: ""
+          date: 2023-09-04T07:57:26.710Z
+  version: 4.0.3
+  title: ""
+  date: 2023-09-09T03:01:22.296Z
+- commits:
+    - subject: Update balena-engine to v20.10.39
+      hash: ebfeada3a7dcb52e19d7dcbea6ca2acca8e61edb
+      body: |
+        Update balena-engine from 20.10.38 to 20.10.39
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Don't enable AppArmor if `apparmor_parser` is not present
+              hash: ed8ba18e8776a7bf37b3326baeca8196b4ea76b0
+              body: >
+                This commit updates balena-containerd to a new version in which
+                we
+
+                cherry-picked the change from here: https://github.com/containerd/containerd/pull/8086
+
+
+                This change avoids enabling AppArmor if the `/sbin/apparmor_parser`
+
+                binary is not found in the system.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+          version: balena-engine-20.10.39
+          title: ""
+          date: 2023-08-30T20:39:38.647Z
+  version: 4.0.2
+  title: ""
+  date: 2023-09-08T20:00:23.639Z
+- commits:
+    - subject: "classes: sign: add a retry to the signing call"
+      hash: 0f6d0ccf27f9a356fef918bccf8d328d42af0859
+      body: |
+        When the signed artifacts are big we see closed connections because
+        of timeouts in the front caches. A retry should help.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.1
+  title: ""
+  date: 2023-09-08T12:59:39.384Z
+- commits:
+    - subject: Update actions/checkout action to v4
+      hash: 9b6169bbff3de4d637969f1305bf88ad23d86c09
+      body: |
+        Update actions/checkout from v3 to v4
+      footer:
+        Change-type: major
+        change-type: major
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 4.0.0
+  title: ""
+  date: 2023-09-06T14:51:51.368Z
+- commits:
+    - subject: "timesync-https: skip time sync if connectivity URI is null"
+      hash: c9e8e50d0595bac83bb815e58d61aa0ba82d442c
+      body: |
+        This allows to still launch network services in isolated environments.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "README: update time in the OS section"
+      hash: 5f1009db2d45ab294a8ed7fdbe49ceff13730607
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.12
+  title: ""
+  date: 2023-09-06T08:03:14.463Z
+- commits:
+    - subject: Update tibdex/github-app-token action to v1.8.2
+      hash: 2c08fe375d06ae4421cb234dec3ddd6a61953256
+      body: |
+        Update tibdex/github-app-token from v1.8.0 to v1.8.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 3.2.11
+  title: ""
+  date: 2023-09-01T17:32:58.971Z
+- commits:
+    - subject: "meta-resin-pyro: do not apply further modemmanager updates"
+      hash: 03d4aea5e8e846fe83ad8aa8369992beba8d0180
+      body: |
+        The meta-balena version of modemmanager is no longer compatible with
+        Yocto Pyro, so stop trying to apply bbappend to it from meta-balena.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.10
+  title: ""
+  date: 2023-09-01T09:41:04.904Z
+- commits:
+    - subject: Update tests/leviathan digest to b353754
+      hash: fc8f12ca01cfa5f3a1bc06b0132b0044fca51ab7
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.21
+              hash: c622ef70e804d2dc41e6fdfa21d05162f00dcf34
+              body: |
+                Update balena-os/leviathan-worker from 2.9.20 to 2.9.21
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.25
+          title: ""
+          date: 2023-08-30T14:59:49.181Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.20
+              hash: 7ec82aa36d60cbd31148a08631cc5fac14618b7c
+              body: |
+                Update balena-os/leviathan-worker from 2.9.19 to 2.9.20
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.24
+          title: ""
+          date: 2023-08-30T12:51:16.148Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.19
+              hash: 9e9ac1ed9ff9ee53d6dd05c5c2bebfb801d48b05
+              body: |
+                Update balena-os/leviathan-worker from 2.9.18 to 2.9.19
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.23
+          title: ""
+          date: 2023-08-30T10:43:49.886Z
+        - commits:
+            - subject: add nocache flash to balena push
+              hash: daf54b5efbbbd66dd71a3c9478c813b8780293ee
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.28.22
+          title: ""
+          date: 2023-08-30T09:42:49.965Z
+        - commits:
+            - subject: "patch: Update client dependencies"
+              hash: 1a152c49d67f4760cfcac68a4fa945a722ba836c
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.21
+          title: ""
+          date: 2023-08-30T09:07:01.984Z
+        - commits:
+            - subject: "patch: Clarify env variables in Documentation"
+              hash: 892fca0c46d1aa8746042c61b505a8b00d5392c6
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.20
+          title: ""
+          date: 2023-08-30T07:40:12.502Z
+        - commits:
+            - subject: "patch: Add .nojekyll file to docs"
+              hash: 9673e6b5415ca80148ddca294715a3bbc8458db7
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.19
+          title: ""
+          date: 2023-08-30T07:17:29.891Z
+        - commits:
+            - subject: "patch: Resolve dead links in README"
+              hash: 2ad20d6b91a9dd8e0201343f2bc63b9d39c9793f
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.18
+          title: ""
+          date: 2023-08-29T15:54:14.475Z
+        - commits:
+            - subject: Update core/contracts digest to ca46c34
+              hash: aac3e01e14b350ad08b4c31bc24b3a4a4648634a
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.17
+          title: ""
+          date: 2023-08-29T12:55:26.515Z
+        - commits:
+            - subject: Update core/contracts digest to d61d911
+              hash: 1fef7b7887f11162aa2d1a36b874bb4742dcb44f
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.16
+          title: ""
+          date: 2023-08-25T18:47:20.503Z
+        - commits:
+            - subject: Update actions/checkout digest to f43a0e5
+              hash: 7228ba0840a92298b9b223c7841b595c5b7265ae
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.15
+          title: ""
+          date: 2023-08-25T17:51:45.085Z
+        - commits:
+            - subject: Remove custom automerge rules and use the inherited rules
+              hash: 3741d840df1870084acc68ade63ef0d36dc49aee
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.28.14
+          title: ""
+          date: 2023-08-25T16:34:19.155Z
+        - commits:
+            - subject: "patch: Exit GH job if tests fails"
+              hash: ecadbe90faa5b52f2b643f4d5293ec4954980772
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.13
+          title: ""
+          date: 2023-08-25T07:43:04.108Z
+  version: 3.2.9
+  title: ""
+  date: 2023-08-31T14:48:00.950Z
+- commits:
+    - subject: "meta-balena-warrior: modemmanager: use v 1.18.4"
+      hash: d02bb9abe2705f30f8a94c58787c8b03a32ff3c4
+      body: |
+        The current meta-balena modemmanager is not compatible with Meson older
+        than 0.53.0.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-warrior: libmqmi: use v 1.30.2"
+      hash: 789d7f313c58183ed2c60c27b42e3fce8eb7e5ea
+      body: |
+        The current meta-balena libqmi is not compatible with Meson
+        older than 0.53.0.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-warrior: libmbim: use v 1.26.2"
+      hash: 627bfe3196c30e0b1c742a3b1e2252acd1f97d47
+      body: |
+        The current meta-balena libmbim version won't work with
+        Meson older than 0.53.0.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.8
+  title: ""
+  date: 2023-08-24T14:57:02.794Z
+- commits:
+    - subject: Update tests/leviathan digest to e7622aa
+      hash: 0734600358fedd609c76d95ac14067584c4643c9
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.18
+              hash: 2b27e7a539bd30b96ffb02e0491f720095e0c484
+              body: |
+                Update balena-os/leviathan-worker from 2.9.13 to 2.9.18
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.12
+          title: ""
+          date: 2023-08-23T21:00:04.376Z
+  version: 3.2.7
+  title: ""
+  date: 2023-08-24T02:00:02.949Z
+- commits:
+    - subject: "resin-u-boot.class: Fix for older u-boot versions"
+      hash: 8da86ebc124eacda1a1bf22d183f13a112c22158
+      body: |
+        The env_get() function was renamed from getenv() in commit
+        00caae6d47645e68d6e5277aceb69592b49381a6
+        env: Rename getenv/_f() to env_get()
+
+        Fix the balena_check_crc32 function to build for those older
+        u-boots too.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.6
+  title: ""
+  date: 2023-08-23T19:20:53.089Z
+- commits:
+    - subject: "contributing-device-support.md: Clarify repo set-up in balenaOS org
+        for private device types"
+      hash: 2e4da2fdd63a1eb0328ffd12209d90a9fdeb6545
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 3.2.5
+  title: ""
+  date: 2023-08-22T15:55:05.868Z
+- commits:
+    - subject: "tests: cloud: lockfile: change test order"
+      hash: 3134d64124c6dbbcd34f54874a1f4eaee09a4c6f
+      body: |
+        Change the test order to make things more consistent.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 3.2.4
+  title: ""
+  date: 2023-08-21T17:51:32.589Z
+- commits:
+    - subject: Update tests/leviathan digest to 26e6cea
+      hash: 59254670dbe87a26764f9264e5a2d2839deb245d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: improve autokit quickstart
+              hash: fb7005cb55d91ce5b0713af9e534803d0841ff57
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.28.11
+          title: ""
+          date: 2023-08-18T14:21:19.299Z
+        - commits:
+            - subject: "patch: Update suites dependencies to latest"
+              hash: 6b20fa345404169da50b3b9bd853c41105448e67
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.10
+          title: ""
+          date: 2023-08-18T14:00:30.655Z
+        - commits:
+            - subject: "patch: Add balenaCloud configurable environments to e2e"
+              hash: e1858f52a46fc154644352ae9d85d22959523e22
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.28.9
+          title: ""
+          date: 2023-08-18T10:12:14.545Z
+  version: 3.2.3
+  title: ""
+  date: 2023-08-21T11:51:01.752Z
+- commits:
+    - subject: "modemmanager: hold ModemManager 1.14.2 on Thud"
+      hash: a13370eb1f57c42aaf78364b09e3424c8d801049
+      body: |
+        Latest stable ModemManager does not compile anymore on Thud, so we
+        there use the previous version 1.14.2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-thud: libqmi: Use v1.26.0"
+      hash: c0f6308d2308551e2bf9b51c1512cfd1ad3ef6b9
+      body: |
+        Newer versions are incompatible with the libc available in sumo.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-thud: libmbim: use v 1.24.2"
+      hash: 2dc7b072896e9793fa9292e9dcdc06de54f2ce4d
+      body: |
+        The current meta-balena libmbim is not compatible with thud's libc
+        version.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.2
+  title: ""
+  date: 2023-08-18T12:38:52.035Z
+- commits:
+    - subject: "meta-balena-thud: adapt migrate module dependencies"
+      hash: 5ff9a0c1077ef3c2ff3ff2a2ba678944fb0073a2
+      body: |
+        On Thud, the util-linux recipe had still not split components into
+        different packages.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.1
+  title: ""
+  date: 2023-08-17T14:35:32.390Z
+- commits:
+    - subject: Update balena-supervisor to v14.12.0
+      hash: 4f2c41743c27ea27d6eaedd5b4516427d9157d10
+      body: |
+        Update balena-supervisor from 14.11.14 to 14.12.0
+      footer:
+        Change-type: minor
+        change-type: minor
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update README
+              hash: c88d557aafc3088e4048a8cd9b9fc5fea8a45e01
+              body: |
+                Add the new dependency on RUST, reorganize the documentation
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Replace node-dbus with @balena/systemd
+              hash: 327dc31ef02caa365e5a0c03597ba18d121c32a3
+              body: >
+                The node-dbus module is unmaintained and a blocker for the
+                update to
+
+                Node 18. Switching to our own node bindings for systemd solves this
+
+                issue
+              footer:
+                Relates-to: Shouqun/node-dbus#241
+                relates-to: Shouqun/node-dbus#241
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Replace dbus test service with mock-systemd-bus
+              hash: 8f17c30de68f62477a52dd16a268e1d003c666ea
+              body: >
+                This avoids unnecessary mocking and tests against the real
+                systemd API
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update to nodejs 18
+              hash: 2da691bcd5dd5ee8d8ee9460d93c895b73b4e2f4
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.12.0
+          title: ""
+          date: 2023-08-17T00:38:30.372Z
+  version: 3.2.0
+  title: ""
+  date: 2023-08-17T04:33:51.281Z
+- commits:
+    - subject: "Integration layers: mobile-broadband-provider: fix fetch failure"
+      hash: 38cd8393b4a69b78a348e15176c232244e67bdb2
+      body: |
+        mobile-broadband-provider-info 'master' branch was renamed to 'main',
+        causing do_fetch() to fail before it was changes in Yocto Kirkstone
+        commit e4795393c4882cf38273521539cc255a4ffcb34a.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.1.13
+  title: ""
+  date: 2023-08-16T13:31:36.723Z
+- commits:
+    - subject: Update balena-supervisor to v14.11.14
+      hash: f42a9345171daeb1834ec50edae5a60cfac4f1c7
+      body: |
+        Update balena-supervisor from 14.11.13 to 14.11.14
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action to v0.28.0
+              hash: 4f54395be2cbbb7bcd1d0c1a9acef3b707f34691
+              body: Update balena-io/deploy-to-balena-action
+              footer:
+                Changelog-entry: Update balena-io/deploy-to-balena-action to v0.28.0
+                changelog-entry: Update balena-io/deploy-to-balena-action to v0.28.0
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-14.11.14
+          title: ""
+          date: 2023-08-14T23:47:06.985Z
+  version: 3.1.12
+  title: ""
+  date: 2023-08-15T04:26:33.597Z
+- commits:
     - subject: Update balena-supervisor to v14.11.13
       hash: dd37dc33373fed3295dd64658a8728ddd6a3998e
       body: |

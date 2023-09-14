@@ -80,43 +80,11 @@ module.exports = {
           this.appServiceName,
           this.balena.uuid)
 
+        console.log('Lockfile has been created...')
         //pin to a previous, different commit
         await this.cloud.balena.models.device.pinToRelease(
           this.balena.uuid, 
           this.balena.initialCommit
-        );
-
-        // check original application is downloaded - shouldn't be installed
-        await this.utils.waitUntil(async () => {
-          test.comment(
-            "Checking if release is downloaded, but not installed..."
-          );
-          let services = await this.cloud.balena.models.device.getWithServiceDetails(
-              this.balena.uuid
-            );
-          let downloaded = false;
-          let originalRunning = false;
-          services.current_services[this.appServiceName].forEach((service) => {
-            if (
-              service.commit === this.balena.initialCommit &&
-              service.status === "Downloaded"
-            ) {
-              downloaded = true;
-            }
-
-            if (
-              service.commit === firstCommit &&
-              service.status === "Running"
-            ) {
-              originalRunning = true;
-            }
-          });
-          return downloaded && originalRunning;
-        }, false, 60, 5 * 1000);
-
-        test.ok(
-          true,
-          `Release should be downloaded, but not running due to lockfile`
         );
 
         let updatesLocked = false;
@@ -130,6 +98,31 @@ module.exports = {
         }, false, 100, 5 * 1000);
 
         test.ok(updatesLocked, `Update lock message should appear in logs`)
+
+        // check original application is downloaded - shouldn't be installed
+        await this.utils.waitUntil(async () => {
+          test.comment(
+            "Checking if old release is still running..."
+          );
+          let services = await this.cloud.balena.models.device.getWithServiceDetails(
+              this.balena.uuid
+            );
+          let originalRunning = false;
+          services.current_services[this.appServiceName].forEach((service) => {
+            if (
+              service.commit === firstCommit &&
+              service.status === "Running"
+            ) {
+              originalRunning = true;
+            }
+          });
+          return originalRunning;
+        }, false, 60, 5 * 1000);
+
+        test.ok(
+          true,
+          `Original release should still be running due to lockfile`
+        );
 
         // enable lock override
         await this.cloud.balena.models.device.configVar.set(
