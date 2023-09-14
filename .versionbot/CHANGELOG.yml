@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update tibdex/github-app-token action to v2
+      hash: c0ba7aaea9cd960d9066822d5319cafac93b57d0
+      body: |
+        Update tibdex/github-app-token from v1.8.2 to v2.0.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 4.0.7
+  title: ""
+  date: 2023-09-14T01:20:50.000Z
+- commits:
     - subject: Update balena-supervisor to v14.12.1
       hash: e24c7a84c64b4fe1465303987c898268a22cb73f
       body: |

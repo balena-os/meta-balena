@@ -5,7 +5,7 @@ include conf/distro/include/balena-os-rust-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
-DISTRO_VERSION = "4.0.6"
+DISTRO_VERSION = "4.0.7"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''
