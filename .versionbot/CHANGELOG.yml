@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to 397a10f
+      hash: b8421872d45f16e654fde0e1d1e240968c475422
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.23
+              hash: 7c2d1e6651350949eafa17fd038018bae40df8d7
+              body: |
+                Update balena-os/leviathan-worker from 2.9.22 to 2.9.23
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.29
+          title: ""
+          date: 2023-09-14T10:54:52.758Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.22
+              hash: 3d8c8a9c5c8e3d9d8b09300a4d65af8bb42db05c
+              body: |
+                Update balena-os/leviathan-worker from 2.9.21 to 2.9.22
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.28
+          title: ""
+          date: 2023-09-12T16:58:45.014Z
+  version: 4.0.9
+  title: ""
+  date: 2023-09-15T23:27:58.821Z
+- commits:
     - subject: Enable back ModemManager AT commands through D-Bus and	mmcli
       hash: da1a6c0dd2e74fc8b98aafb109eed5aed7e95c43
       body: |
