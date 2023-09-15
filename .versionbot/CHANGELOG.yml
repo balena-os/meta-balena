@@ -1,4 +1,21 @@
 - commits:
+    - subject: Enable back ModemManager AT commands through D-Bus and	mmcli
+      hash: da1a6c0dd2e74fc8b98aafb109eed5aed7e95c43
+      body: |
+        That feature was lost when transitioning from autotools to meson.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Enable back ModemManager AT commands through D-Bus and	mmcli
+        changelog-entry: Enable back ModemManager AT commands through D-Bus and	mmcli
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 4.0.8
+  title: ""
+  date: 2023-09-15T17:27:00.202Z
+- commits:
     - subject: Update tibdex/github-app-token action to v2
       hash: c0ba7aaea9cd960d9066822d5319cafac93b57d0
       body: |

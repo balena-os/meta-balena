@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.8
+## (2023-09-15)
+
+* Enable back ModemManager AT commands through D-Bus and	mmcli [Zahari Petkov]
+
 # v4.0.7
 ## (2023-09-14)
 
