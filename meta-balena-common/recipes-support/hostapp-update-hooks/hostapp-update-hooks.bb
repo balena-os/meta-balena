@@ -55,7 +55,7 @@ RDEPENDS:${PN} = " \
     os-helpers-sb \
     "
 
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils', '',d)}"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils tcgtool', '',d)}"
 
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/
