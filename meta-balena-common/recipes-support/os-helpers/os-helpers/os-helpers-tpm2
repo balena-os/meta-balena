@@ -18,6 +18,62 @@
 # implementations are expected in the future
 #
 
+EFI_IMAGE_SECURITY_DATABASE_GUID="d719b2cb-3d3a-4596-a3bc-dad00e67656f"
+EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
+
+# busybox's implementation of xxd lacks the -cols option, so remove line breaks
+_hexencode() {
+    xxd -p | tr -d '[:space:]'
+}
+
+_hexdecode() {
+    xxd -r -p
+}
+
+_sha256() {
+    sha256sum | cut -d' ' -f1
+}
+
+compute_pcr7() {
+    efivars_path="/sys/firmware/efi/efivars"
+    # the digest starts as all zeros
+    digest="$(dd if=/dev/zero bs=1 count=32 status=none | _hexencode)"
+    # these variables are always measured
+    inputs=$(cat <<-EOF
+        SecureBoot-${EFI_GLOBAL_VARIABLE_GUID}
+        PK-${EFI_GLOBAL_VARIABLE_GUID}
+        KEK-${EFI_GLOBAL_VARIABLE_GUID}
+        db-${EFI_IMAGE_SECURITY_DATABASE_GUID}
+        dbx-${EFI_IMAGE_SECURITY_DATABASE_GUID}
+EOF
+)
+    for i in $inputs; do
+        var="${efivars_path}/${i}"
+        extend=$(
+            case $i in
+                "SecureBoot-${EFI_GLOBAL_VARIABLE_GUID}") override="${1}" ;;
+                "PK-${EFI_GLOBAL_VARIABLE_GUID}") override="${2}" ;;
+                "KEK-${EFI_GLOBAL_VARIABLE_GUID}") override="${3}" ;;
+                "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}") override="${4}" ;;
+                "dbx-${EFI_IMAGE_SECURITY_DATABASE_GUID}") override="${5}" ;;
+            esac
+
+            if [ -n "${override}" ]; then
+                    echo "${override}" | _hexdecode | tcgtool "$var" | _sha256
+            else
+                    tcgtool "$var" | _sha256
+            fi
+        )
+
+        digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
+    done
+
+    separator=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
+    digest=$(printf '%s%s' "$digest" "$separator" | _hexdecode | _sha256)
+
+    printf '%s' "$digest"
+}
+
 hw_gen_passphrase() {
     tpm2_getrandom 32
 }

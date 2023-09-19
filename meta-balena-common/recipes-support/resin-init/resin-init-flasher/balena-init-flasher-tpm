@@ -23,11 +23,74 @@ diskenc_setup() {
         PASSPHRASE_FILE="$(mktemp)"
         hw_gen_passphrase > "$PASSPHRASE_FILE"
 
-        # Since we tamper with boot order at the very end (putting balenaOS first), we omit PCR1 here
-        # PCR1 is added on first boot since this is the setup we want to lock against
-        # It is therefore important to boot the device at least once after provisioning in secure environment to enable the protection
+        # Create two policies to ensure the newly flashed system boots. One with
+        # the EFI binaries measured into PCR7 as specified in the TCG spec, one
+        # without. We've seen firmwares do both. These will be logically ORed for
+        # authentication, either digest will satisfy the policy and unlock the
+        # passphrase.
+        #
+        # Note that we can't check the TPM event log to see if the firmware
+        # measures EFI binaries here because they won't be measured regardless
+        # until secure boot is in user mode.
         TPM_RESULT_DIR=$(mktemp -d)
-        POLICY=$(mktemp)
-        tpm2_createpolicy --policy-pcr -l "sha256:0,2,3" -L "$POLICY"
-        hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$TPM_RESULT_DIR"
+        POLICY_DIR="$(mktemp -d policies.XXXXX -p "${TPM_RESULT_DIR}")"
+        PCR_VAL_BIN_PRIMARY=$(mktemp -t)
+        PCR_VAL_BIN_SECONDARY=$(mktemp -t)
+        EFI_BINARIES=" \
+                $(find / -name bootx64.efi.secureboot -print -quit) \
+                $(find / -name bzImage -print -quit)"
+        PCRS="0,2,3,7"
+        for pcr in ${PCRS//,/ }; do
+                case "$pcr" in
+                        # PCR7 is computed at boot, and we must recompute the hash at
+                        # runtime after modifying secure boot configuration before creating
+                        # a new policy
+                        7)
+				cp "${PCR_VAL_BIN_PRIMARY}" "${PCR_VAL_BIN_SECONDARY}"
+				# Force secure boot on when calculating PCR7 hash
+				secureboot_override="01"
+				primary_digest="$(compute_pcr7 ${secureboot_override})"
+				secondary_digest="${primary_digest}"
+				for bin in ${EFI_BINARIES}; do
+					extend="$(tcgtool -s "$bin" \
+						| tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+						| _sha256 )"
+					secondary_digest=$(printf '%s%s' "$secondary_digest" "$extend" \
+						| _hexdecode | _sha256)
+				done
+
+				printf "%s" "$secondary_digest" | _hexdecode \
+					| dd of="${PCR_VAL_BIN_SECONDARY}" \
+					     status=none \
+					     bs=1 \
+					     seek="$(du -b "${PCR_VAL_BIN_SECONDARY}" | cut -f1)"
+				digest="$primary_digest"
+                                ;;
+                        *)
+                                digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
+				;;
+                esac
+
+		printf "%s" "$digest" | _hexdecode \
+		        | dd of="${PCR_VAL_BIN_PRIMARY}" \
+			     status=none \
+			     bs=1 \
+			     seek="$(du -b "${PCR_VAL_BIN_PRIMARY}" | cut -f1)"
+	done
+
+	tpm2_createpolicy --policy-pcr \
+		-l "sha256:${PCRS}" \
+		-f "${PCR_VAL_BIN_PRIMARY}" \
+		-L "$POLICY_DIR/policy.primary"
+	tpm2_createpolicy --policy-pcr \
+		-l "sha256:${PCRS}" \
+		-f "${PCR_VAL_BIN_SECONDARY}" \
+		-L "$POLICY_DIR/policy.secondary"
+	COMBINED_POLICY=$(mktemp -t)
+	SESSION_CTX=$(mktemp -t)
+	tpm2_startauthsession -S "${SESSION_CTX}"
+	tpm2_policyor -S "${SESSION_CTX}" -L "${COMBINED_POLICY}" \
+		"sha256:${POLICY_DIR}/policy.primary,${POLICY_DIR}/policy.secondary"
+	tpm2_flushcontext "${SESSION_CTX}"
+	hw_encrypt_passphrase "$PASSPHRASE_FILE" "$COMBINED_POLICY" "$TPM_RESULT_DIR"
 }
