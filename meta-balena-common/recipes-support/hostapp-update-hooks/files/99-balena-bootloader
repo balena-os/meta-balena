@@ -1,0 +1,31 @@
+#!/bin/sh
+
+#
+# Script which configures bootenv to use an updated root partition
+#
+
+set -o errexit
+
+. /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-logging
+
+DURING_UPDATE=${DURING_UPDATE:-0}
+
+if [ "${DURING_UPDATE}" = "1" ]; then
+	SYSROOT="/mnt/sysroot/inactive"
+else
+	SYSROOT="/mnt/sysroot/active"
+fi
+
+NEW_ROOT_PART=$(findmnt --noheadings --canonicalize --output SOURCE ${SYSROOT} -t ext4)
+NEW_ROOT_LABEL=$(lsblk -nlo label "${NEW_ROOT_PART}")
+NEW_ROOT=$(echo "${NEW_ROOT_LABEL}" | sed -e "s,^\(resin\|balena\)-root\([AB]\)$,\2,")
+
+info "Switching root partition to ${NEW_ROOT}"
+
+BOOTENV_FILE="/mnt/boot/bootenv"
+
+grub-editenv "${BOOTENV_FILE}" set "resin_root_part=${NEW_ROOT}"
+grub-editenv "${BOOTENV_FILE}" set "upgrade_available=${DURING_UPDATE}"
+
+info "Will use root ${NEW_ROOT} during next boot"
