@@ -1,4 +1,34 @@
 - commits:
+    - subject: Update balena-supervisor to v14.12.2
+      hash: 3a0ac5e503021781f9b9af8c5cd592cecc9e4ea1
+      body: |
+        Update balena-supervisor from 14.12.1 to 14.12.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Dump target-state to hostOS tmp dir
+              hash: ab513cc021d90b1337bd79b58e6bb9e0c91e11d0
+              body: |
+                This change is mainly for the hostOS
+                to know if update locks should be ignored
+                when updating to a newer version.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: jaomaloy <jao.maloy@balena.io>
+                signed-off-by: jaomaloy <jao.maloy@balena.io>
+              author: jaomaloy
+              nested: []
+          version: balena-supervisor-14.12.2
+          title: ""
+          date: 2023-09-15T01:57:40.718Z
+  version: 4.0.10
+  title: ""
+  date: 2023-09-20T14:01:36.751Z
+- commits:
     - subject: Update tests/leviathan digest to 397a10f
       hash: b8421872d45f16e654fde0e1d1e240968c475422
       body: Update tests/leviathan

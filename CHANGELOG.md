@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v4.0.10
+## (2023-09-20)
+
+
+<details>
+<summary> Update balena-supervisor to v14.12.2 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.12.2
+> ### (2023-09-15)
+> 
+> * Dump target-state to hostOS tmp dir [jaomaloy]
+> 
+
+</details>
+
 # v4.0.9
 ## (2023-09-15)
 
