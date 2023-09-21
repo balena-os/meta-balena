@@ -1,4 +1,48 @@
 - commits:
+    - subject: Update balena-engine to v20.10.40
+      hash: aae06988f0dcfda16c63f62521ed63bbcf757ae2
+      body: |
+        Update balena-engine from 20.10.39 to 20.10.40
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested:
+        - commits:
+            - subject: Re-vendor to get the containerd-shim-runc-v2 sources
+              hash: 155b7771ff14a9dc9abf65f34bdf716baac04481
+              body: >
+                Including changes we did to make it work with balenaEngine's
+                amalgamated
+
+                binary.
+              footer:
+                Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                signed-off-by: Leandro Motta Barros <leandro@balena.io>
+                Change-type: patch
+                change-type: patch
+              author: Leandro Motta Barros
+              nested: []
+            - subject: Default to io.containerd.runc.v2
+              hash: cd0ca50fe417e59f2e2345e12b9ba43a694bf74e
+              body: |
+                runc.v1 was deprecated with the 20.10 major release of moby
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Robert Günzler <robertg@balena.io>
+                signed-off-by: Robert Günzler <robertg@balena.io>
+              author: Robert Günzler
+              nested: []
+          version: balena-engine-20.10.40
+          title: ""
+          date: 2023-09-11T19:02:17.939Z
+  version: 4.0.11
+  title: ""
+  date: 2023-09-21T15:09:12.808Z
+- commits:
     - subject: Update balena-supervisor to v14.12.2
       hash: 3a0ac5e503021781f9b9af8c5cd592cecc9e4ea1
       body: |
