@@ -1,4 +1,32 @@
 - commits:
+    - subject: Check if SUPERVISOR_OVERRIDE_LOCK is set
+      hash: 02c52347758feb3214990ef6d83be5d804b6e6f2
+      body: |
+        This is so that we respect user's decision
+        to skip update locks on HUP as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: jaomaloy <jaomaloy@balena.io>
+        signed-off-by: jaomaloy <jaomaloy@balena.io>
+      author: jaomaloy
+      nested: []
+    - subject: Check and get service lockfiles on HUP reboot
+      hash: 0ab1230d19f4f60cb780d9d1495eb9062b5ec5e0
+      body: |
+        This is so that the HUP reboot doesn't interrupt
+        any user service processes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: jaomaloy <jao.maloy@balena.io>
+        signed-off-by: jaomaloy <jao.maloy@balena.io>
+      author: jaomaloy
+      nested: []
+  version: 4.0.12
+  title: ""
+  date: 2023-09-25T12:04:56.750Z
+- commits:
     - subject: Update balena-engine to v20.10.40
       hash: aae06988f0dcfda16c63f62521ed63bbcf757ae2
       body: |

@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v4.0.12
+## (2023-09-25)
+
+* Check if SUPERVISOR_OVERRIDE_LOCK is set [jaomaloy]
+* Check and get service lockfiles on HUP reboot [jaomaloy]
+
 # v4.0.11
 ## (2023-09-21)
 
