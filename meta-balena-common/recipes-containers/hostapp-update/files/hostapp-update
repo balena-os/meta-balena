@@ -16,6 +16,32 @@ run_current_hooks_and_recover () {
 	exit 1
 }
 
+check_override_locks() {
+  # Check the target state config dump given by the supervisor for
+  # SUPERVISOR_OVERRIDE_LOCK or .RESIN_OVERRIDE_LOCK
+  override_locks=$(jq -r '.SUPERVISOR_OVERRIDE_LOCK // .RESIN_OVERRIDE_LOCK' "/tmp/balena-supervisor/target-state-config")
+
+  test "$override_locks" = true
+}
+
+check_locks_and_reboot() {
+  locks=$(find /tmp/balena-supervisor/services -name updates.lock)
+  # Check all user service locks in their directories, if none exists
+  # lock for each service directory.
+  for lock in ${locks}; do
+    exec {FD}<"${lock}"
+    if ! flock -nx $FD; then
+      echo "${lock} exists, cannot proceed with hostOS update."
+      exec {FD}>&-
+      return 1
+    fi
+    exec {FD}>&-
+  done
+
+  echo "No user service lock exists, rebooting now..."
+  reboot
+}
+
 local_image=""
 remote_image=""
 reboot=0
@@ -156,5 +182,14 @@ mv "$SYSROOT/counter.new" "$SYSROOT/counter"
 sync -f "$SYSROOT"
 
 if [ "$reboot" = 1 ]; then
-	reboot
+  if check_override_locks; then
+    # Reboot immediately if user would like to override update locks
+    reboot
+  else
+    # Check all user service locks so that we are not interrupting any
+    # user process. If there are no locks, get the locks and then perform
+    # a reboot.
+    echo "Checking all user services for present locks..."
+    until check_locks_and_reboot; do sleep 1; done
+  fi
 fi
