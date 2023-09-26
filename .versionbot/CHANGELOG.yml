@@ -1,4 +1,87 @@
 - commits:
+    - subject: "balena-rollback: Add support for balena bootloader"
+      hash: 3175beaa5cc1e8685bc56e528f3b74f6974e3384
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "hostapp-update-hooks: Add hook for balena bootloader"
+      hash: c0a1e5f003ea49455056e11d480357bdb028c8c6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "initrdscripts: add a script that switches between rootA and rootB"
+      hash: 7aa14b6887da279c0b7bb6f665eebb83e2ec12df
+      body: |
+        This is done by the bootloader (uboot/grub) at this moment but as we
+        are moving towards the balena 2nd stage bootloader, it needs to be
+        moved into the initramfs.
+
+        This adds a standalone recipe - by default yocto tries to build all
+        modules defined in the initramfs-framework recipe, which breaks
+        on armv7 when abroot is defined there. This is because it depends
+        on grub-editenv which is not supported on armv7.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "initrdscripts: make kexec script more robust"
+      hash: a075c7b89e888edb7575fc72b56d29be8eecfa09
+      body: |
+        * Do not hardcode bzImage kernel type
+        * Do not assume root=XXX kernel parameter is always defined
+        * Remove maxcpus=0 kernel parameter if defined for compatibility
+        * Add missing dependency on os-helpers-logging
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "initrdscripts: add missing dependencies to rootfs script"
+      hash: 6be16523780ef5d0eedccd5a6f3f75c53748c5f5
+      body: |
+        The rootfs script uses both os-helpers-fs and os-helpers-logging
+        though the package depends on neither. This seems to work now because
+        in most cases something else pulls in the dependencies or the code
+        on a particular device does not fall under the branches that use
+        the missing functions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-image-bootloader-initramfs: Add balena bootloader"
+      hash: 32982ff3e2958dd17b27b06b1b847f1b40ce0617
+      body: |
+        This minimal image is executed by a vendor provided bootloader and will
+        kexec into BalenaOS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.13
+  title: ""
+  date: 2023-09-26T12:05:37.168Z
+- commits:
     - subject: Check if SUPERVISOR_OVERRIDE_LOCK is set
       hash: 02c52347758feb3214990ef6d83be5d804b6e6f2
       body: |
