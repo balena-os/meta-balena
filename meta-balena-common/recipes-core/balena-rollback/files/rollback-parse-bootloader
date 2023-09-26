@@ -29,10 +29,13 @@ fi
 if [ -f "${BALENA_BOOT_MOUNTPOINT}/resinOS_uEnv.txt" ]; then
 	BOOTLOADER_FILE="${BALENA_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
 else
-	grub_env=$(find -L "${BALENA_BOOT_MOUNTPOINT}" -name grubenv)
-	if [ -f "${grub_env}" ]; then
-		BOOTLOADER_FILE="${grub_env}"
-	fi
+	for ENV_FILE_NAME in bootenv grubenv; do
+		ENV_FILE=$(find -L "${BALENA_BOOT_MOUNTPOINT}" -name "${ENV_FILE_NAME}")
+		if [ -f "${ENV_FILE}" ]; then
+			BOOTLOADER_FILE="${ENV_FILE}"
+			break
+		fi
+	done
 fi
 
 # Parse bootloader config file for key variables
@@ -62,3 +65,7 @@ current_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 
 # Partition numbers are in hex.
 current_part_idx=$(printf "%x" $current_part_idx)
+
+# Parse A or B from root filesystem label
+current_part_label=$(lsblk -nlo label "$current_part")
+current_part_name=$(echo "${current_part_label}" | sed -e "s,^\(resin\|balena\)-root\([AB]\)$,\2,")

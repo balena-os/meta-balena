@@ -29,8 +29,10 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
     install -m 0755 ${WORKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
     install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
-    install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
     install -m 0755 ${WORKDIR}/recovery ${D}/init.d/00-recovery
+
+    install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
+    sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-kexec"
 }
 
 PACKAGES:append = " \
@@ -66,7 +68,7 @@ RDEPENDS:initramfs-module-rorootfs = "${PN}-base"
 FILES:initramfs-module-rorootfs = "/init.d/89-rorootfs"
 
 SUMMARY:initramfs-module-rootfs = "initramfs support for locating and mounting the root partition"
-RDEPENDS:initramfs-module-rootfs = "${PN}-base"
+RDEPENDS:initramfs-module-rootfs = "${PN}-base os-helpers-fs os-helpers-logging"
 FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY:initramfs-module-prepare = "Prepare initramfs console"
@@ -84,6 +86,7 @@ FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
 SUMMARY:initramfs-module-kexec = "Find and start a new kernel if in stage2"
 RDEPENDS:initramfs-module-kexec = " \
     kexec-tools \
+    os-helpers-logging \
     util-linux-findmnt \
     "
 FILES:initramfs-module-kexec = "/init.d/92-kexec"

@@ -2,6 +2,10 @@
 # Copyright (C) 2011 O.S. Systems Software LTDA.
 # Licensed on MIT
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+. /usr/libexec/os-helpers-logging
+
 rootfs_enabled() {
     return 0
 }

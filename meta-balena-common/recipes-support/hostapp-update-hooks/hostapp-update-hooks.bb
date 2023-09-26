@@ -29,6 +29,7 @@ BALENA_BOOTFILES_BLACKLIST="\
 	/grub_extraenv \
 	/configfs.json \
 	/hw_intfc.conf \
+	/bootenv \
 	"
 
 python __anonymous() {
