@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to b4e68c8
+      hash: f772b9dde29bd43c1baf88edc0abc954a32040af
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update actions/checkout action to v4
+              hash: eb892035fb8c34e2a87ebf37f2b7f8bd8b00a61c
+              body: |
+                Update actions/checkout from 3 to 4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.30
+          title: ""
+          date: 2023-09-25T14:25:17.184Z
+  version: 4.0.15
+  title: ""
+  date: 2023-09-27T20:13:31.640Z
+- commits:
     - subject: "patch: Add custom build docs"
       hash: 1d5f8ba92d5bd5b7a1fd26fa25473febc8e097d2
       body: ""
