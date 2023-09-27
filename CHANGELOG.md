@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.14
+## (2023-09-27)
+
+* patch: Add custom build docs [Vipul Gupta (@vipulgupta2048)]
+
 # v4.0.13
 ## (2023-09-26)
 

@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add custom build docs"
+      hash: 1d5f8ba92d5bd5b7a1fd26fa25473febc8e097d2
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 4.0.14
+  title: ""
+  date: 2023-09-27T13:13:37.324Z
+- commits:
     - subject: "balena-rollback: Add support for balena bootloader"
       hash: 3175beaa5cc1e8685bc56e528f3b74f6974e3384
       body: ""
