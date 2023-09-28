@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v4.0.16
+## (2023-09-28)
+
+
+<details>
+<summary> Update tests/leviathan digest to 04a53d3 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.28.31
+> ### (2023-09-28)
+> 
+> * Update core/contracts digest to 27ea28b [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v4.0.15
 ## (2023-09-27)
 

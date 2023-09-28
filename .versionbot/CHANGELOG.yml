@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 04a53d3
+      hash: 0be7bf36487912ce1c82aa8ec53013f849bf4463
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 27ea28b
+              hash: f0c4b6939f15d10dd359589f52066ecd0b55711d
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.28.31
+          title: ""
+          date: 2023-09-28T07:41:51.643Z
+  version: 4.0.16
+  title: ""
+  date: 2023-09-28T11:16:09.515Z
+- commits:
     - subject: Update tests/leviathan digest to b4e68c8
       hash: f772b9dde29bd43c1baf88edc0abc954a32040af
       body: Update tests/leviathan
