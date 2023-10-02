@@ -10,6 +10,14 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  # get the user id of the GitHub App
+  # gh api /users/balenaos-esr%5Bbot%5D
+  GIT_AUTHOR_NAME: balenaos-esr-bot[bot]
+  GIT_AUTHOR_EMAIL: 146746583+balenaos-esr-bot[bot]@users.noreply.github.com
+  GIT_COMMITTER_NAME: balenaos-esr-bot[bot]
+  GIT_COMMITTER_EMAIL: 146746583+balenaos-esr-bot[bot]@users.noreply.github.com
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
@@ -21,18 +29,14 @@ jobs:
     steps:
       - name: Generate GitHub App installation token
         uses: tibdex/github-app-token@0914d50df753bbc42180d982a6550f195390069f # v2.0.0
-        continue-on-error: true
         id: gh_app_token
         with:
-          app_id: ${{ vars.APP_ID || '291899' }}
-          installation_id: ${{ vars.INSTALLATION_ID || '34046907' }}
-          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          permissions: >-
-            {
-              "contents": "write",
-              "metadata": "read",
-              "pull_requests": "write"
-            }
+          app_id: ${{ vars.ESR_BOT_APP_ID || '400859' }}
+          installation_retrieval_mode: organization
+          installation_retrieval_payload: ${{ github.event.repository.owner.login }}
+          private_key: ${{ secrets.ESR_BOT_PRIVATE_KEY }}
+          repositories: >
+            ["${{ github.event.repository.name }}"]
 
       - uses: actions/checkout@v4
         with:
@@ -112,8 +116,6 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.gh_app_token.outputs.token }}
         run: |
-          git config --global user.name 'flowzone-app[bot]'
-          git config --global user.email '124931076+flowzone-app[bot]@users.noreply.github.com'
           branch_name="balenaci/update-backports"
           git checkout -b ${branch_name} HEAD
           git add repo.yml
