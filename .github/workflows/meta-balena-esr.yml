@@ -4,9 +4,11 @@ name: "Creates ESR branch and tag"
 # of the last minor version
 
 on:
-  # Run at 00:00 the first day every 3rd month (quarterly)
+  # Run at 00:06 the first day every 3rd month (quarterly)
+  # Run weekly too to keep the workflow enabled
   schedule:
-    - cron: "0 0 1 */3 *"
+    - cron: "6 0 1 */3 *"
+    - cron: "6 0 * * 1"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -33,6 +35,10 @@ jobs:
     outputs:
       status: ${{ join(steps.*.conclusion) }}
     steps:
+      - name: "Exit on weekly runs"
+        if: github.event_name == 'schedule' && github.event.schedule != '6 0 1 */3 *'
+        run: exit 1
+
       - name: Generate GitHub App installation token
         uses: tibdex/github-app-token@0914d50df753bbc42180d982a6550f195390069f # v2.0.0
         id: gh_app_token
