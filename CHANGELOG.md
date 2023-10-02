@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.17
+## (2023-10-02)
+
+* workflows: Switch to balenaOS ESR [bot] for authentication [Kyle Harding]
+
 # v4.0.16
 ## (2023-09-28)
 

@@ -1,4 +1,27 @@
 - commits:
+    - subject: "workflows: Switch to balenaOS ESR [bot] for authentication"
+      hash: 6cb9379a3055da7811215ad6572f2205658ec986
+      body: >
+        Flowzone App no longer has workflow:write permissions for security
+        reasons.
+
+
+        This new balenaOS ESR bot has contents:write and workflows:write permissions
+
+        but is only available on balenaOS repositories.
+      footer:
+        See: https://github.com/apps/balenaos-esr
+        see: https://github.com/apps/balenaos-esr
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 4.0.17
+  title: ""
+  date: 2023-10-02T20:32:23.925Z
+- commits:
     - subject: Update tests/leviathan digest to 04a53d3
       hash: 0be7bf36487912ce1c82aa8ec53013f849bf4463
       body: Update tests/leviathan
