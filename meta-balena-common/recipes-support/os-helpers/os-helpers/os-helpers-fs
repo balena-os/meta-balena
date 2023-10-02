@@ -265,7 +265,7 @@ get_internal_device() {
           fi
 
           echo "${device}"
-          break
+          break 2
         else
         info "$device is not a block device, skipping"
       fi
