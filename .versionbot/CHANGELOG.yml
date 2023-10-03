@@ -1,4 +1,101 @@
 - commits:
+    - subject: Update balena-supervisor to v14.13.4
+      hash: 5d0cd299c2ee51c73e4165df5681ab9ef9fcba81
+      body: |
+        Update balena-supervisor from 14.12.2 to 14.13.4
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Add tmpfs for /mnt/root/tmp in test env
+              hash: 5564a51acf4897c7981808d8bdd28e1c016caca1
+              body: >
+                This is to prevent the target state cache from getting written
+                to host
+
+                during tests.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.13.4
+          title: ""
+          date: 2023-10-02T21:38:10.350Z
+        - commits:
+            - subject: Use `~=` to specify alpine package versions
+              hash: 4a4a8a59bfd664e9683f60d4681a0c6583c68dd1
+              body: >
+                Alpine allows the `~=` syntax to match a part of the package
+                version
+
+                when installing. In this case we want to use it to specify node and
+
+                npm major versions
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.13.3
+          title: ""
+          date: 2023-10-02T14:22:18.491Z
+        - commits:
+            - subject: Use native structuredClone instead of _.cloneDeep
+              hash: 06d4775178af40264d0dfe476ee11815235fc52e
+              body: >
+                Memory tests have shown performance improvements to using the
+                native method.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.13.2
+          title: ""
+          date: 2023-09-30T00:37:03.496Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action to v1.0.3
+              hash: aa07a160e9fb7b94576b428064ff61b6de193170
+              body: Update balena-io/deploy-to-balena-action
+              footer:
+                Changelog-entry: Update balena-io/deploy-to-balena-action to v1.0.3
+                changelog-entry: Update balena-io/deploy-to-balena-action to v1.0.3
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-14.13.1
+          title: ""
+          date: 2023-09-28T20:17:05.922Z
+        - commits:
+            - subject: Update runtime-base image to alpine:3.18
+              hash: 3766013cbdbb8864abf2f353332b27713c357818
+              body: |
+                We were still on 3.16, where the nodejs package was
+                pointed at Node 16. 3.18 moves the pointer to Node 18.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.13.0
+          title: ""
+          date: 2023-09-28T18:13:11.954Z
+  version: 4.0.18
+  title: ""
+  date: 2023-10-03T10:09:53.629Z
+- commits:
     - subject: "workflows: Switch to balenaOS ESR [bot] for authentication"
       hash: 6cb9379a3055da7811215ad6572f2205658ec986
       body: >
