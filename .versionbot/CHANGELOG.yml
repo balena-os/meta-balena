@@ -1,4 +1,18 @@
 - commits:
+    - subject: "flowzone: meta-balena-esr: add weekly run to keep workflow enabled"
+      hash: 858161349540531fb1554be2ca3bcf1468f57dea
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.19
+  title: ""
+  date: 2023-10-03T10:42:46.377Z
+- commits:
     - subject: Update balena-supervisor to v14.13.4
       hash: 5d0cd299c2ee51c73e4165df5681ab9ef9fcba81
       body: |

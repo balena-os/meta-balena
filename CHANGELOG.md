@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.19
+## (2023-10-03)
+
+* flowzone: meta-balena-esr: add weekly run to keep workflow enabled [Alex Gonzalez]
+
 # v4.0.18
 ## (2023-10-03)
 
