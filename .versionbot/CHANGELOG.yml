@@ -1,4 +1,21 @@
 - commits:
+    - subject: "balena-net-config: Ensure NM dispatcher scripts are executable"
+      hash: ee6083ce3c690aff7c617af1455e19144d3048fc
+      body: >
+        This commit fixes the following error:
+            nm-dispatcher[4209]: req:1 hostname: find-scripts:
+                Cannot execute ... 50-example-script.sh: not executable by owner.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 4.0.20
+  title: ""
+  date: 2023-10-05T14:41:28.636Z
+- commits:
     - subject: "flowzone: meta-balena-esr: add weekly run to keep workflow enabled"
       hash: 858161349540531fb1554be2ca3bcf1468f57dea
       body: ""

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.20
+## (2023-10-05)
+
+* balena-net-config: Ensure NM dispatcher scripts are executable [Alexandru Costache]
+
 # v4.0.19
 ## (2023-10-03)
 
