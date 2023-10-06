@@ -2,24 +2,47 @@
 
 There are several ways for enabling balenaOS support for your hardware:
 
-1. Checking out if balenaOS doesn't already provide support for your board through our [supported devices list](https://docs.balena.io/reference/hardware/devices/).
+1. Check if balenaOS doesn't already provide support for your board through our [supported devices list](https://docs.balena.io/reference/hardware/devices/).
+2. Use an existing balenaOS image and add a custom device tree.This can be a useful approach if you intend to use a custom carrier board with a supported NVIDIA Jetson Orin module or a supported Variscite i.MX8 module.  You will need a custom device tree (DTB) that balena can add to an existing Device Type
 2. Consider our [Custom Device Support (CDS) service](https://cds.balena.io/). This is a paid service where we create a custom balenaOS build for you and maintain it for a monthly fee.
-3. Building and maintaining balenaOS yourselves using our Customer Board Support (CBS) documentation. This will require knowledge of the Yocto project and familiarity with tools used to build custom images. Follow along the documentation for CBS below:
+3. Building and maintaining balenaOS yourselves using our Customer Board Support (CBS) documentation. This will require knowledge of the Yocto project and familiarity with tools used to build custom images. Follow along the documentation for CBS below
 
-## Pre-requisites
+## Adding a Custom Device Tree
 
-A [Yocto](https://www.yoctoproject.org) Board Support Package (BSP) layer for your particular board. It should be compatible with the Yocto releases balenaOS supports.
+A Device Tree describes hardware components and configurations that cannot be automatically detected by the operating system at boot time. Not all architectures or platforms in Linux use Device Trees. They are most commonly found in the ARM and ARM64 world, although they're also used in other architectures where hardware variability is high and auto-detection isn't feasible.
 
-The repositories used to build the balenaOS host Operating System (OS) are typically called balena-`<board-family>`. For example, consider [balena-raspberrypi](https://github.com/balena-os/balena-raspberrypi) which is used for building the OS for [Raspberryi Pi](https://raspberrypi.org), or [balena-intel][balena-intel repo] repository which can be used to build a balenaOS image for the Intel NUC boards.
+The steps to achieve this are:
 
-Contributing support for a new board is a process that involves the following steps:
+1. Make sure that you are using a device type that supports custom device trees. 
+2. Make sure you have a Device Tree (DT), or request it to your hardware manufacturer.Compile the DT to produce a Device Tree Blob (DTB) that will be loaded in the next steps
+3. Place your custom compiled device tree in the host operating system of your device, in the following path: /mnt/sysroot/active/current/boot/ 
+4. Navigate to the Device Configuration tab in the balenaCloud dashboard, activate the following configuration with the description Define the file name of the DTB to be used, and specify the file name of the custom device tree. The value of this configuration should contain the file name only.
+5. After the change is applied, the device will automatically reboot and load the new device tree.
+6. If you require additional kernel modules, contact us using this [form](https://www.balena.io/contact).
 
-- [Create the board support repository](#step-1-board-support-repository-breakout)
-- [Contact balena to have the repository transferred/cloned and the build system jobs created](#step-2-contact-balena)
-- [Send a Pull Request for a hardware contract which describes the board's capabilities](#step-3-hardware-contract)
-- [Maintaining the repository and OS updates](#step-4-maintaining-the-repository-and-os-updates)
+After the custom device tree has been validated, it can be included in newer releases of balenaOS images. Open a pull request in the corresponding repository following this [example](https://github.com/balena-os/balena-jetson/commit/3dbf9c96e5986c2138f318d1ee9f0d5c1a2fc3c8) commit. Once your PR is approved and merged, a new release of balenaOS that includes your custom device tree will become available.
 
-## Step 1: Board Support Repository Breakout
+## Build your own Device Type
+
+Contributing support for a new board is a process that involves the following steps, and deep Yocto experience:
+
+- __Create the board support repository__: You will use Yocto tools to merge your BSP with meta-balena to have a booting balenaOS image
+- __Setup your testing environment__: You will set the automated hardware tool, autoKit, connected to your devices,  and setup the testing framework to run the tests, Leviathan
+- [Contact balena](https://www.balena.io/contact) to have the repository transferred/cloned and the build system jobs created
+- Send a Pull Request for a hardware contract which describes the board’s capabilities
+- Maintaining the repository and OS updates
+
+Before you start, there are several ways for enabling balenaOS support for your hardware:
+
+- Checking out if balenaOS doesn’t already provide support for your board through our supported devices list.
+- Consider our Custom Device Support (CDS) service. This is a paid service where we create a custom balenaOS build for you and maintain it for a monthly fee.
+- Building and maintaining balenaOS yourselves using our Customer Board Support (CBS) documentation. This will require knowledge of the Yocto project, familiarity with tools used to build custom images, and the use of the testing toolkit (AutoKit and Leviathan). Follow along the documentation for CBS below:
+
+__Important__: You will need a [Yocto](https://www.yoctoproject.org) Board Support Package (BSP) layer for your particular board. It must be compatible with the Yocto releases balenaOS supports.
+
+
+
+### Step 1: Board Support Repository Breakout
 
 The following documentation walks you through creating such a Yocto package. Because of the substantial difference between the hardware of many boards, this document provides general directions,
 and often it might be helpful to see the examples of already supported boards. The list of the relevant repositories is found at the end of this document.
@@ -56,11 +79,11 @@ and files:
 
 For versioning checks to pass, it is mandatory that the root directory structure reflects the given example and for each commit message body to adhere to the Yocto Contribution Guidelines. Please refer to the device repository [Pull Requests example](https://github.com/balena-os/balena-raspberrypi#pull-requests) for valid commit log formats.
 
-### About coffee file(s)
+#### About coffee file(s)
 
 One or more files named `<board-name>.coffee`, where `<board-name>` is the corresponding yocto machine name. Should add one for each of the boards that the repository adds support for (eg. [raspberrypi3.coffee](https://github.com/balena-os/balena-raspberrypi/blob/master/raspberrypi3.coffee) or [rockpi-4b-rk3399.coffee](https://github.com/balena-os/balena-rockpi/blob/master/rockpi-4b-rk3399.coffee)). This file contains information on the Yocto build for the specific board, in [CoffeeScript](http://coffeescript.org/) format.
 
-### Layers directory breakout
+#### Layers directory breakout
 
 The typical layout for the `layers` directory is:
 
@@ -86,7 +109,7 @@ All git submodules need to be cloned using the https protocol. This normally mea
 
 In addition to the above git submodules, the `layers` directory requires a meta-balena-`<board-family>` directory (please note this directory is _not_ a git submodule). This directory contains the required customization for making a board balena.io enabled. For example, the [balena-raspberrypi](https://github.com/balena-os/balena-raspberrypi) repository contains the directory `layers/meta-balena-raspberrypi` to supplement the BSP from `layers/meta-raspberrypi` git submodule, with any changes that might be required by balenaOS.
 
-### meta-balena-`<board-family>` breakout
+#### meta-balena-`<board-family>` breakout
 
 We call this directory the balena integration directory. It is a Yocto layer that includes:
 
@@ -103,17 +126,17 @@ This directory contains optional and mandatory directories:
 |             `recipes-kernel/linux directory`              |                                  |
 |                     `recipes-support`                     |                                  |
 
-### `conf` directory - contains the following files:
+#### `conf` directory - contains the following files:
 
 1. `layer.conf`, see the [layer.conf](https://github.com/balena-os/balena-raspberrypi/blob/master/layers/meta-balena-raspberrypi/conf/layer.conf) from `meta-balena-raspberrypi` for an example, and see [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#bsp-filelayout-layer)
 2. `samples/bblayers.conf.sample` file in which all the required Yocto layers are listed, see this [bblayers.conf.sample](https://github.com/balena-os/balena-raspberrypi/blob/master/layers/meta-balena-raspberrypi/conf/samples/bblayers.conf.sample), and see the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#var-BBLAYERS)
 3. `samples/local.conf.sample` file which defines part of the build configuration (see the meta-balena [README.md][meta-balena-readme] for an overview of some of the variables use in the `local.conf.sample` file). You can use as guide an existing sample (e.g. [local.conf.sample](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/conf/samples/local.conf.sample)) but making sure the "Supported machines" area lists the appropriate machines this repository is used for. See also the [Yocto documentation](http://www.yoctoproject.org/docs/2.0/mega-manual/mega-manual.html#structure-build-conf-local.conf).
 
-### `recipes-bsp`
+#### `recipes-bsp`
 
 This directory should contain the changes to the bootloader recipes used by your board. For example, for u-boot based boards, it must define the [following](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-bsp/u-boot/u-boot-rockpi-4.bbappend#L3-L5), and it must include at least a patch to the u-boot bootcmd that changes the default boot command to include balena required setup. See this [example](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-bsp/u-boot/files/0001-Integrate-with-Balena-u-boot-environment.patch), or if you use a newer u-boot you can simply use config fragments to alter the bootcmd like done [here](https://github.com/balena-os/balena-nanopi-r2c/blob/master/layers/meta-balena-nanopi-r2c/recipes-bsp/u-boot/files/balenaos_bootcommand.cfg).
 
-### `recipes-core/images` directory
+#### `recipes-core/images` directory
 
 This directory contains at least a `balena-image.bbappend` file. Depending on the type of board you are adding support for, you should have your device support either just `balena-image` or both `balena-image-flasher` and `balena-image`. Generally, `balena-image` is for boards that run directly from external storage (these boards do not have internal storage to install balenaOS on). `balena-image-flasher` is used when the targeted board has internal storage, so this flasher image is burned onto an SD card or USB stick that is used for the initial boot. When booted, this flasher image will automatically install balenaOS on internal storage.
 
@@ -131,11 +154,11 @@ The `balena-image-flasher.bbappend` file shall define the following variable(s):
 
 - `BALENA_BOOT_PARTITION_FILES_<yocto-machine-name>` (see above). For example, if the board uses different bootloader configuration files for booting from SD/USB and internal storage (see below for the use of `INTERNAL_DEVICE_BOOTLOADER_CONFIG` variable), then make sure these files end up in the boot partition (i.e. they should be listed in this `BALENA_BOOT_PARTITION_FILES_<yocto-machine-name>` variable)
 
-### `recipes-kernel/linux directory`
+#### `recipes-kernel/linux directory`
 
 Shall contain a `.bbappend` to the kernel recipe used by the respective board. This kernel `.bbappend` must "inherit kernel-balena" in order to add the necessary kernel configs for balenaOS
 
-### `recipes-support/resin-init` directory
+#### `recipes-support/resin-init` directory
 
 Shall contain a `resin-init-flasher.bbappend` file if you intend to install balenaOS to internal storage and hence use the flasher image.
 
@@ -175,13 +198,13 @@ For example, setting:
 
 will result that the file `u-boot.imx` from the resin-boot partition is written to /dev/mtdblock0 with a block size of 1024 bytes and after the first 3 \* 1024 bytes of /dev/mtdblock0.
 
-### `recipes-support/hostapp-update-hooks` directory
+#### `recipes-support/hostapp-update-hooks` directory
 
 Shall contain a `hostapp-update-hooks.bbappend` with content based on if your board uses [u-boot](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-support/hostapp-update-hooks/hostapp-update-hooks.bbappend#L5) or [grub](https://github.com/balena-os/balena-intel/blob/master/layers/meta-balena-genericx86/recipes-support/hostapp-update-hooks/hostapp-update-hooks.bbappend#L4). Then it may also need to include an additional [hook](https://github.com/balena-os/balena-rockpi/blob/master/layers/meta-balena-rockpi/recipes-support/hostapp-update-hooks/files/99-flash-bootloader) for writing the bootloader(s) binary in the right place(s) when doing hostOS updates.
 
 The optional directories in meta-balena-\<board-family\> are:
 
-### `recipes-containers/docker-disk` directory
+#### `recipes-containers/docker-disk` directory
 
 Which contains `balena-supervisor.bbappend` that can define the following variable(s):
 
@@ -218,85 +241,93 @@ The directory structure then looks similar to this:
         └── resin-init-flasher.bbappend
 ```
 
-### Building
+#### Building
 
 See the [meta-balena Readme](https://github.com/balena-os/meta-balena/blob/master/README.md) on building the new balenaOS image after setting up the new board package as defined above.
 
-## Step 2: Contact balena
+### Step 2: Setup your testing environment: Autokit and Leviathan
 
-When you have completed the development of the yocto board support repository as detailed in the previous step, please get in touch with balena to finish the process of having your board available in the balena dashboard.  
+Once your balenaOS image is botting in your device, it is time to do some tests and make the image available in balenaCloud once these tests are passed.
+The tests are automated and they will run against your real devices, so there are some steps required:
+
+- Some hardware (Autokit) to connect the device, the tests and balenaCloud
+- A testing framework (Leviathan) used to run the tests
+
+#### About the automated testing
+
+BalenaOS is tested on individual device types before being released to production. This directory contains these tests.
+
+The tests are split into 3 test suites:
+
+- os: this test suite verifies that an unmanaged balenaOS works as intended.
+- cloud: this test suite verifies that a balenaOS version integrates correctly with balena cloud features
+- HUP: this test suite verifies that host app update (HUP) features of balenaOS work correctly
+
+You will find the tests in [this repo](https://github.com/balena-os/meta-balena/blob/master/tests/README.md). Each directory contains a readme with more details about each individual test suite.
+
+#### How are the tests ran
+
+On each PR in meta-balena, build jobs create a "draft" OS image from the contents of the branch in that PR. The test suites are then run against virtualised QEMU devices `forvaarch64` and `amd64` architectures. Once a meta-balena PR is merged, a wave of PRs are automatically opened on the device repos, bumping the meta-balena version. The same test suites are then executed on the physical hardware corresponding to that device type.
+
+If the tests pass, and the PR is merged - then the new version of the OS is released to production.
+
+#### balenaOS testing framework
+
+We use our testing framework to run these tests, called Leviathan. This framework allows us to run the same tests on all device types, and on both virtualised and physical environments. It provides a common layer of abstraction that is shared by both the physical device setup, and the virtual.
+
+All tests in the `suites/<SUITE_NAME>` directories are executed by the Leviathan framework.
+
+In order to set up Leviathan, follow the instructions in its [repo](https://github.com/balena-os/leviathan).
+
+#### Testing on virtualised devices
+
+Leviathan simplifies the setup of a virtual device, running via QEMU.
+
+#### Testing on physical devices
+
+In order to run tests of new OS versions on real hardware, you will need a hardware tool to automated the provisioning of these devices, and to be able to automatically interact with its interfaces. To this end, we designed a tool composed of entirely Commercial off-the-shelf (CotS) hardware and open source software, called the AutoKit. It allows for:
+
+- multiplexing SD cards between a USB host and the device under test (DUT)
+- controlling the power to the DUT
+- capturing video output
+- providing a serial terminal
+- providing a wifi AP or an ethernet connection to the DUT
+- bluetooth
+- a relay that can automate toggling of a jumper or switch
+
+You will find all the information about the hardware you need to setup and the instructions to do it, in the AutoKit repo.
+
+All autokits are balena devices, and are part of a fleet of tester devices. This means that you will need a balenaCloud account (either free or paid subscription), to be able to interact and run the framework.
+
+The leviathan framework handles finding available autokits in this fleet, sending them artifacts to be tested, running the tests, and collecting the logs.
+
+
+### Step 2: Contact balena
+
+When you have completed the development of the yocto board support repository as detailed in the previous step, please [get in touch](https://www.balena.io/contact) with balena to finish the process of having your board available in the balena dashboard.  
 This will mean your board repository would need to be hosted in [balena-os GitHub organization](https://github.com/balena-os). Your repository can either be transferred to the balenaOS github organization (repository ownership
-transfer can be done from the github UI under Settings -> General and scroll all the way to the botton over to `Danger Zone`) or balena will clone your repository under the balenaOS github organization (we avoid to use forking
-because this creates issues with outdated PRs and repositories diverging due to renovatebot auto-merge of balena-yocto-scripts, meta-balena and VersionBot updates to CHANGELOG.md, VERSION). Please note that from this point forward,
-all pull requests need to be done against this new board repository from [balena-os](https://github.com/balena-os). Depending on your needs and upon agreeing with balena, this new repository can be hosted either as a public
-repository for everyone to access or hosted privately with access only to selected users.
+transfer can be done from the github UI under Settings -> General and scroll all the way to the botton over to `Danger Zone`) or balena will clone your repository under the balenaOS github organization (Forks are not supported).
+Please note that from this point forward, all pull requests need to be done against this new board public repository from [balena-os](https://github.com/balena-os). 
 
-If you want the repository to be created as private in [balena-os GitHub organization](https://github.com/balena-os) and want to transfer the repository yourself then supply balena with the repository name to be created by balena
-for you. Furthermore, for private repositories you also need to supply balena a list with github usernames of the contributors to the future private repository and balena will add them as outside collaborators.
-
-## Step 3: Hardware contract
+### Step 3: Hardware contract
 
 Having a board supported by balena also means having a hardware contract describing that device type.  
 balena allows for public or private device types. Public device types can be used by all users while private device types are only accessible to selected users upon agreeing with balena.
-Note that public/private device type visibility mentioned here is independent of the GitHub repository visibility (you can choose to have any combination of these two).
 
-For publicly available device types, the hardware contracts are located [here](https://github.com/balena-io/contracts/tree/master/contracts/hw.device-type)
-and you must send a Pull Request to this public contract repository with the appropriate contract.
-See [this](https://github.com/balena-io/contracts/pull/296) as an example to base on.
+For publicly available device types, the hardware contracts are located [here](https://github.com/balena-io/contracts/tree/master/contracts/hw.device-type) and you must send a Pull Request to this public contract repository with the appropriate contract. See [this](https://github.com/balena-io/contracts/pull/296) as an example to base on.
 
 For private device types, balena will make the necessary changes when supplied with the hardware contract.
 
-## Step 4: Maintaining the repository and OS updates
+__Important:__ All repos will be public, but device types (downloadable images in balena's dashboard) may be public for any user, or private for one organization.
+
+### Step 4: Maintaining the repository and OS updates
 
 Once the board is supported in balena, it will receive automatic pull requests with updates of meta-balena as new releases of meta-balena get done.
 These automatic pull requests get merged if the CI builds succeed, so care must be taken from time to time to check that your code is still compatible with the latest meta-balena releases.
 
 Maintaining / pushing updates to the code other than meta-balena updates need to be done through pull requests in the appropriate board repository in the balena-os GitHub org and will be reviewed by balena prior to merging.
-However, after new code gets merged (either through the automatic meta-balena updates or through contribution pull requests), in order for the new releases to be available in the dashboard,
-balena needs to be contacted about deploying the new releases.
 
-## Currently Supported Hardware Families
+However, after new code gets merged (either through the automatic meta-balena updates or through contribution pull requests), in order for the new releases to be available in the dashboard, balena will review the auto-kit certification, and make sure that device types will be added to the test rack for new releases to be deployed automatically.
 
-See the repositories below for specific examples on how board support is provided for existing devices.
 
-### ARM
 
-- [Beaglebone](http://beagleboard.org/bone): [balena-beaglebone](https://github.com/balena-os/balena-beaglebone)
-- [Raspberry Pi](https://raspberrypi.org): [balena-raspberrypi](https://github.com/balena-os/balena-raspberrypi)
-- [Freescale/NXP](http://www.nxp.com/): [balena-fsl-arm](https://github.com/balena-os/balena-fsl-arm)
-- [ODROID](http://www.hardkernel.com/main/main.php): [balena-odroid](https://github.com/balena-os/balena-odroid)
-- [Parallella](https://www.parallella.org/): [balena-parallella](https://github.com/balena-os/balena-parallella)
-- [Technologic Systems](https://www.embeddedarm.com/): [balena-ts](https://github.com/balena-os/balena-ts)
-- [Toradex](https://www.toradex.com/): [balena-toradex](https://github.com/balena-os/balena-toradex)
-- [VIA](http://www.viatech.com/en/): [balena-via-arm](https://github.com/balena-os/balena-via-arm)
-- [Zynq](http://www.xilinx.com/products/silicon-devices/soc/zynq-7000.html): [balena-zc702](https://github.com/balena-os/balena-zc702)
-- [Samsung Artik](https://www.artik.io/): [balena-artik](https://github.com/balena-os/balena-artik)
-
-### x86
-
-- [Intel Edison](http://www.intel.com/content/www/us/en/do-it-yourself/edison.html): [balena-edison](https://github.com/balena-os/balena-edison)
-- [Intel NUC](http://www.intel.com/content/www/us/en/nuc/overview.html): [balena-intel](https://github.com/balena-os/balena-intel)
-
-### Other
-
-- [QEMU](http://wiki.qemu.org/Main_Page): [balena-qemu](https://github.com/balena-os/balena-qemu)
-
-## Troubleshooting
-
-### Kernel complains that CONFIG_AUFS was not activated
-
-The versions before v2.0-beta.3 didn't support kernel sources that were not git repositories. Starting with this version, aufs patches will get applied on kernel recipes that use tar archives, for example as well. For the older version, this is considered a limitation.
-
-[balena-intel repo]: https://github.com/balena-os/balena-intel
-[balena-intel grub append]: https://github.com/balena-os/balena-intel/tree/master/layers/meta-balena-genericx86/recipes-bsp/grub
-[meta-intel repo]: http://git.yoctoproject.org/cgit/cgit.cgi/meta-intel
-[intel-corei7-64 coffee]: https://github.com/balena-os/balena-intel/blob/master/intel-corei7-64.coffee
-[balena-yocto-scripts]: https://github.com/balena-os/balena-yocto-scripts
-[poky]: https://github.com/balena-os/poky
-[meta-openembedded]: https://github.com/openembedded/meta-openembedded
-[meta-balena]: https://github.com/balena-os/meta-balena
-[meta-rust]: https://github.com/meta-rust/meta-rust
-[layer.conf intel]: https://github.com/balena-os/balena-intel/blob/master/layers/meta-balena-genericx86/conf/layer.conf
-[meta-balena-readme]: https://github.com/balena-os/meta-balena/blob/master/README.md
-[local.conf.sample intel]: https://github.com/balena-os/balena-intel/blob/master/layers/meta-balena-genericx86/conf/samples/local.conf.sample
-[bblayers.conf.sample intel]: https://github.com/balena-os/balena-intel/blob/master/layers/meta-balena-genericx86/conf/samples/bblayers.conf.sample
