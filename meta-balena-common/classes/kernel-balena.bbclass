@@ -214,7 +214,6 @@ BALENA_CONFIGS[balena] ?= " \
     CONFIG_MEMCG=y \
     CONFIG_MEMCG_SWAP=y \
     CONFIG_OVERLAY_FS=y \
-    CONFIG_DEFAULT_SECURITY_APPARMOR=n \
     "
 
 FIRMWARE_COMPRESS = "${@configure_from_version("5.3", "firmware_compress", "", d)}"
