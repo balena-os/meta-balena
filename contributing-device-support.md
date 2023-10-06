@@ -32,12 +32,6 @@ Contributing support for a new board is a process that involves the following st
 - Send a Pull Request for a hardware contract which describes the board’s capabilities
 - Maintaining the repository and OS updates
 
-Before you start, there are several ways for enabling balenaOS support for your hardware:
-
-- Checking out if balenaOS doesn’t already provide support for your board through our supported devices list.
-- Consider our Custom Device Support (CDS) service. This is a paid service where we create a custom balenaOS build for you and maintain it for a monthly fee.
-- Building and maintaining balenaOS yourselves using our Customer Board Support (CBS) documentation. This will require knowledge of the Yocto project, familiarity with tools used to build custom images, and the use of the testing toolkit (AutoKit and Leviathan). Follow along the documentation for CBS below:
-
 __Important__: You will need a [Yocto](https://www.yoctoproject.org) Board Support Package (BSP) layer for your particular board. It must be compatible with the Yocto releases balenaOS supports.
 
 
