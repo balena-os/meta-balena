@@ -213,80 +213,8 @@ module.exports = {
 			systemd: systemd,
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
-			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
+			link: this.suite.options.config.dutUuid ||`${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
 			worker: worker,
-		});
-
-		// Network definitions - here we check what network configuration is selected for the DUT for the suite, and add the appropriate configuration options (e.g wifi credentials)
-		// If suites config.js has networkWired: true, override the device contract
-		if (this.suite.options.balenaOS.network.wired === true) {
-			this.suite.options.balenaOS.network.wired = {
-				nat: true,
-			};
-		} else if(this.suite.deviceType.data.connectivity.wifi === false){
-			// DUT has no wifi - use wired ethernet sharing to connect to DUT
-			this.suite.options.balenaOS.network.wired = {
-				nat: true,
-			};
-		} 
-		else {
-			// device has wifi, use wifi hotspot to connect to DUT
-			delete this.suite.options.balenaOS.network.wired;
-		}
-
-		// If suites config.js has networkWireless: true, override the device contract
-		if (this.suite.options.balenaOS.network.wireless === true) {
-			this.suite.options.balenaOS.network.wireless = {
-				ssid: this.suite.options.id,
-				psk: `${this.suite.options.id}_psk`,
-				nat: true,
-			};
-		} else if(this.suite.deviceType.data.connectivity.wifi === true){
-			// device has wifi, use wifi hotspot to connect to DUT
-			this.suite.options.balenaOS.network.wireless = {
-				ssid: this.suite.options.id,
-				psk: `${this.suite.options.id}_psk`,
-				nat: true,
-			};
-		} 
-		else {
-			// no wifi on DUT
-			delete this.suite.options.balenaOS.network.wireless;
-		}
-
-
-		const keys = await this.context
-		.get()
-		.utils.createSSHKey(this.sshKeyPath);
-		// Create an instance of the balenOS object, containing information such as device type, and config.json options
-		this.suite.context.set({
-			os: new BalenaOS(
-				{
-					deviceType: this.suite.deviceType.slug,
-					network: this.suite.options.balenaOS.network,
-					configJson: {
-						uuid: this.suite.options.balenaOS.config.uuid,
-						os: {
-							sshKeys: [
-								keys.pubKey
-							],
-						},
-						// Set an API endpoint for the HTTPS time sync service.
-						apiEndpoint: 'https://api.balena-cloud.com',
-						// persistentLogging is managed by the supervisor and only read at first boot
-						persistentLogging: true,
-						// Set local mode so we can perform local pushes of containers to the DUT
-						localMode: true,
-						developmentMode: true,
-						installer: {
-							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-							// Note that QEMU needs to be configured with no internal storage
-							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
-						},
-					},
-				},
-				this.getLogger(),
-			),
 		});
 
 		// Register a teardown function execute at the end of the test, regardless of a pass or fail
@@ -295,86 +223,163 @@ module.exports = {
 			return this.worker.teardown();
 		});
 
-		this.log('Setting up worker');
+		if(!this.suite.options.config.manual){
+			// Network definitions - here we check what network configuration is selected for the DUT for the suite, and add the appropriate configuration options (e.g wifi credentials)
+			// If suites config.js has networkWired: true, override the device contract
+			if (this.suite.options.balenaOS.network.wired === true) {
+				this.suite.options.balenaOS.network.wired = {
+					nat: true,
+				};
+			} else if(this.suite.deviceType.data.connectivity.wifi === false){
+				// DUT has no wifi - use wired ethernet sharing to connect to DUT
+				this.suite.options.balenaOS.network.wired = {
+					nat: true,
+				};
+			} 
+			else {
+				// device has wifi, use wifi hotspot to connect to DUT
+				delete this.suite.options.balenaOS.network.wired;
+			}
 
-		// Create network AP on testbot
-		await this.context
-			.get()
-			.worker.network(this.suite.options.balenaOS.network);
-
-
-		this.suite.context.set({
-			workerContract: await this.worker.getContract()
-		})
-		// Unpack OS image .gz
-		await this.os.fetch();
-
-		if (supportsBootConfig(this.suite.deviceType.slug)) {
-			await enableSerialConsole(this.os.image.path);
-		}
-
-		if(flasherConfig(this.suite.deviceType.slug)){
-			await setFlasher(this.os.image.path);
-		}
-
-		if (this.suite.options?.balena?.apiKey) {
-			// Authenticating balenaSDK
-			await this.context
-			.get()
-			.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-			this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
-			
-			await this.cloud.balena.models.key.create(
-				this.sshKeyLabel,
-				keys.pubKey
-			);
-			this.suite.teardown.register(() => {
-				return Promise.resolve(
-					this.cloud.removeSSHKey(this.sshKeyLabel)
-				);
-			});
-		}
-
-		if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
-			console.log("Forcing installer migration")
-		} else {
-			console.log("No migration requested")
-		}
-
-		if ( this.os.configJson.installer.secureboot ) {
-			console.log("Opting-in secure boot and full disk encryption")
-		} else {
-			console.log("No secure boot requested")
-		}
-
-		// Configure OS image
-		await this.os.configure();
-
-		// Flash the DUT
-		await this.worker.off(); // Ensure DUT is off before starting tests
-		await this.worker.flash(this.os.image.path);
-		await this.worker.on();
+			// If suites config.js has networkWireless: true, override the device contract
+			if (this.suite.options.balenaOS.network.wireless === true) {
+				this.suite.options.balenaOS.network.wireless = {
+					ssid: this.suite.options.id,
+					psk: `${this.suite.options.id}_psk`,
+					nat: true,
+				};
+			} else if(this.suite.deviceType.data.connectivity.wifi === true){
+				// device has wifi, use wifi hotspot to connect to DUT
+				this.suite.options.balenaOS.network.wireless = {
+					ssid: this.suite.options.id,
+					psk: `${this.suite.options.id}_psk`,
+					nat: true,
+				};
+			} 
+			else {
+				// no wifi on DUT
+				delete this.suite.options.balenaOS.network.wireless;
+			}
 		
-		await this.worker.addSSHKey(this.sshKeyPath);
 
-		// create tunnels
-		await test.resolves(
-			this.worker.createSSHTunnels(
-				this.link,
-			),
-			`Should detect ${this.link} on local network and establish tunnel`
-		)
 
-		await test.resolves(
-			this.utils.waitUntil(async () => {
-				let hostname = await this.worker.executeCommandInHostOS(
-				"cat /etc/hostname",
-				this.link
-				)
-				return (hostname === this.link.split('.')[0])
-			}, true),
-			`Device ${this.link} should be reachable over local SSH connection`
-		)
+			const keys = await this.context
+			.get()
+			.utils.createSSHKey(this.sshKeyPath);
+			// Create an instance of the balenOS object, containing information such as device type, and config.json options
+			this.suite.context.set({
+				os: new BalenaOS(
+					{
+						deviceType: this.suite.deviceType.slug,
+						network: this.suite.options.balenaOS.network,
+						configJson: {
+							uuid: this.suite.options.balenaOS.config.uuid,
+							os: {
+								sshKeys: [
+									keys.pubKey
+								],
+							},
+							// Set an API endpoint for the HTTPS time sync service.
+							apiEndpoint: 'https://api.balena-cloud.com',
+							// persistentLogging is managed by the supervisor and only read at first boot
+							persistentLogging: true,
+							// Set local mode so we can perform local pushes of containers to the DUT
+							localMode: true,
+							developmentMode: true,
+							installer: {
+								secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
+								// Note that QEMU needs to be configured with no internal storage
+								migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
+							},
+						},
+					},
+					this.getLogger(),
+				),
+			});
+
+			this.log('Setting up worker');
+
+			// Create network AP on testbot
+			await this.context
+				.get()
+				.worker.network(this.suite.options.balenaOS.network);
+
+			// Unpack OS image .gz
+			await this.os.fetch();
+
+			if (supportsBootConfig(this.suite.deviceType.slug)) {
+				await enableSerialConsole(this.os.image.path);
+			}
+
+			if(flasherConfig(this.suite.deviceType.slug)){
+				await setFlasher(this.os.image.path);
+			}
+
+			if (this.suite.options?.balena?.apiKey) {
+				// Authenticating balenaSDK
+				await this.context
+				.get()
+				.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+				this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+				
+				await this.cloud.balena.models.key.create(
+					this.sshKeyLabel,
+					keys.pubKey
+				);
+				this.suite.teardown.register(() => {
+					return Promise.resolve(
+						this.cloud.removeSSHKey(this.sshKeyLabel)
+					);
+				});
+			}
+		
+			this.suite.context.set({
+				workerContract: await this.worker.getContract()
+			})
+			if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
+				console.log("Forcing installer migration")
+			} else {
+				console.log("No migration requested")
+			}
+
+			if ( this.os.configJson.installer.secureboot ) {
+				console.log("Opting-in secure boot and full disk encryption")
+			} else {
+				console.log("No secure boot requested")
+			}
+
+
+			// Configure OS image
+			await this.os.configure();
+
+			// Flash the DUT
+			await this.worker.off(); // Ensure DUT is off before starting tests
+			await this.worker.flash(this.os.image.path);
+			await this.worker.on();
+			
+			await this.worker.addSSHKey(this.sshKeyPath);
+
+			// create tunnels
+			await test.resolves(
+				this.worker.createSSHTunnels(
+					this.link,
+				),
+				`Should detect ${this.link} on local network and establish tunnel`
+			)
+
+			await test.resolves(
+				this.utils.waitUntil(async () => {
+					let hostname = await this.worker.executeCommandInHostOS(
+					"cat /etc/hostname",
+					this.link
+					)
+					return (hostname === this.link.split('.')[0])
+				}, true),
+				`Device ${this.link} should be reachable over local SSH connection`
+			)
+		}
+
+		
 
 		await test.resolves( 
 			systemd.waitForServiceState('balena', 'active', this.link),

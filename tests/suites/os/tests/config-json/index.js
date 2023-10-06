@@ -20,28 +20,32 @@ module.exports = {
 		{
 			title: 'hostname configuration test',
 			run: async function(test) {
-				const hostname = Math.random()
-					.toString(36)
-					.substring(2, 10);
+				if(!this.suite.options.config.manual){
+					const hostname = Math.random()
+						.toString(36)
+						.substring(2, 10);
 
-				const context = this.context.get();
+					const context = this.context.get();
 
-				return this.systemd.writeConfigJsonProp(test, 'hostname', hostname, context.link)
-				.then(() => {
-					return test.resolves(
-						this.utils.waitUntil(async () => {
-							return context.worker.executeCommandInHostOS(
-								'cat /etc/hostname',
-								`${hostname}.local`,
-							).then((result) => {
-								return Promise.resolve(hostname === result);
-							});
-						}, false, 20, 500),
-						`${hostname}.local should resolve and /etc/hostname should contain ${hostname}`
-					);
-				}).then(() => {
-					return this.systemd.writeConfigJsonProp(test, 'hostname', null, context.link);
-				});
+					return this.systemd.writeConfigJsonProp(test, 'hostname', hostname, context.link)
+					.then(() => {
+						return test.resolves(
+							this.utils.waitUntil(async () => {
+								return context.worker.executeCommandInHostOS(
+									'cat /etc/hostname',
+									`${hostname}.local`,
+								).then((result) => {
+									return Promise.resolve(hostname === result);
+								});
+							}, false, 20, 500),
+							`${hostname}.local should resolve and /etc/hostname should contain ${hostname}`
+						);
+					}).then(() => {
+						return this.systemd.writeConfigJsonProp(test, 'hostname', null, context.link);
+					});
+				} else {
+					test.comment(`Skipping hostname configuration test`)
+				}
 			},
 		},
 		{
