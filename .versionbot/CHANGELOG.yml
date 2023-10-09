@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update tibdex/github-app-token action to v2.1.0
+      hash: 033be56bc0ff464afb21488430dfea7d0d16c847
+      body: |
+        Update tibdex/github-app-token from v2.0.0 to v2.1.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 4.0.22
+  title: ""
+  date: 2023-10-09T23:14:49.240Z
+- commits:
     - subject: Update backports with current 2.112.x
       hash: 5e933611adce56c0028507838b8582635b4421e4
       body: |

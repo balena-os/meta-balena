@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.22
+## (2023-10-09)
+
+* Update tibdex/github-app-token action to v2.1.0 [Self-hosted Renovate Bot]
+
 # v4.0.21
 ## (2023-10-09)
 
