@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update backports with current 2.112.x
+      hash: 5e933611adce56c0028507838b8582635b4421e4
+      body: |
+        Set current to 2.112.x, next to 2.114.x and sunset to 2.107.x
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: BalenaCI github workflow
+      nested: []
+  version: 4.0.21
+  title: ""
+  date: 2023-10-09T17:57:35.519Z
+- commits:
     - subject: "balena-net-config: Ensure NM dispatcher scripts are executable"
       hash: ee6083ce3c690aff7c617af1455e19144d3048fc
       body: >
