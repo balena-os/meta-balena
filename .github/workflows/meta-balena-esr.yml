@@ -160,3 +160,68 @@ jobs:
           git push origin refs/heads/${os_esr_branch}
           git tag -a -m "" ${os_esr_branch} ${os_esr_branch}
           git push origin refs/tags/${os_esr_branch}
+
+      - name: "Update backports"
+        id: update-backports
+        run: |
+          git fetch origin > /dev/null 2>&1
+          esr_branches=$(git branch -r --sort=v:refname --list "origin/*.*.x")
+          esr_branches=$(echo ${esr_branches} | tr '\n' ' ')
+          if [ -z "${esr_branches}" ]; then
+            echo "[ERROR] No ESR branches available"
+            exit 1
+          fi
+          # Modify repo.yml
+          python3 <<-EOF
+          import sys
+          import yaml
+          import re
+          import os
+          esr_branches=[str(v).replace('origin/', '') for v in "${esr_branches}".split()]
+          next = esr_branches[-1]
+          current = esr_branches[-2]
+          sunset = esr_branches[-3]
+          print("Identified ESR branches as:\n\n" +
+                 "next: %s\ncurrent: %s\nsunset: %s\n" %
+                 (next, current, sunset))
+          for esr in [current, sunset, next]:
+            if esr is not None and not re.compile("^[0-9]+\.[0-9]+\.x$").match(esr):
+              print("Invalid ESR branch " + esr)
+              sys.exit(1)
+          filePath = './repo.yml'
+          with open(filePath, 'r') as original:
+            ydata = yaml.safe_load(original)
+          if 'esr' in ydata:
+            print("Refusing to set backport on ESR branch")
+            sys.exit(1)
+          if 'backports' not in ydata:
+            print("No backports found on branch")
+            sys.exit(1)
+          if ydata['backports']['current'] is current:
+            print("Current backport is already %s, nothing to do" % (current) )
+            sys.exit(1)
+          ydata['backports'] = {'current': current, 'sunset': sunset, 'next': next}
+          with open(filePath, 'w') as modified:
+            yaml.dump(ydata, modified)
+          with open(os.environ['GITHUB_ENV'], 'a') as e:
+            for name,value in { "ESR_CURRENT": current, "ESR_NEXT": next, "ESR_SUNSET": sunset}.items():
+              print(f'{name}={value}', file=e)
+          EOF
+
+      - name: "Push backports"
+        id: push-backports
+        env:
+          GH_TOKEN: ${{ steps.gh_app_token.outputs.token }}
+        run: |
+          branch_name="balenaci/update-backports"
+          git checkout -b ${branch_name} HEAD
+          git add repo.yml
+          git commit -F- <<-EOF
+          Update backports with current ${ESR_CURRENT}
+
+          Set current to ${ESR_CURRENT}, next to ${ESR_NEXT} and sunset to ${ESR_SUNSET}
+
+          Change-type: patch
+          EOF
+          git push origin ${branch_name}
+          gh pr create --fill
