@@ -1,4 +1,26 @@
 - commits:
+    - subject: "os-helpers-fs: fix returning multiple matching devices"
+      hash: 3d99028daf1f9bfb0513f4e0702f3863aed3a205
+      body: |
+        When searching for devices matching the glob list in
+        get_internal_device(), a glob match breaks from a nested loop rather
+        than the parent loop, allowing the function to output multiple matches.
+
+        When running the flasher, this results in the script failing with an
+        incorrect path to the internal disk.
+
+        Break from the parent loop to fix this behavior.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 4.0.23
+  title: ""
+  date: 2023-10-10T20:22:32.072Z
+- commits:
     - subject: Update tibdex/github-app-token action to v2.1.0
       hash: 033be56bc0ff464afb21488430dfea7d0d16c847
       body: |

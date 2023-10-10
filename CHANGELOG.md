@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.23
+## (2023-10-10)
+
+* os-helpers-fs: fix returning multiple matching devices [Joseph Kogut]
+
 # v4.0.22
 ## (2023-10-09)
 
