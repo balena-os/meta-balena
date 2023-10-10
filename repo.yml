@@ -1,7 +1,7 @@
 backports:
-  current: 2.112.x
-  next: 2.114.x
-  sunset: 2.107.x
+  current: 2.114.x
+  next: 3.2.x
+  sunset: 2.112.x
 reviewers: 1
 type: yocto layer
 upstream:
