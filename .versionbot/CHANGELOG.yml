@@ -1,4 +1,20 @@
 - commits:
+    - subject: "classes: image_types_balena: do not hardcode path to data image"
+      hash: 68365fdf211485e4a9694192cf10899136ce75ce
+      body: |
+        Use the `DEPLOY_DIR_IMAGES` variable which is filled by the deploy
+        class from the docker-disk recipe deploy task.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.24
+  title: ""
+  date: 2023-10-11T16:21:53.282Z
+- commits:
     - subject: "os-helpers-fs: fix returning multiple matching devices"
       hash: 3d99028daf1f9bfb0513f4e0702f3863aed3a205
       body: |

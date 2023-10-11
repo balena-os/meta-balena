@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.24
+## (2023-10-11)
+
+* classes: image_types_balena: do not hardcode path to data image [Alex Gonzalez]
+
 # v4.0.23
 ## (2023-10-10)
 
