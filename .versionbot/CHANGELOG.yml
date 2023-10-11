@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update Pin dependencies
+      hash: 52aec8faecdffd8c957d75bef99bb632ab79aceb
+      body: |
+        Update actions/checkout
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 4.0.25
+  title: ""
+  date: 2023-10-11T21:28:49.290Z
+- commits:
     - subject: "classes: image_types_balena: do not hardcode path to data image"
       hash: 68365fdf211485e4a9694192cf10899136ce75ce
       body: |

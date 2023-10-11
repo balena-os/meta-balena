@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.25
+## (2023-10-11)
+
+* Update Pin dependencies [Self-hosted Renovate Bot]
+
 # v4.0.24
 ## (2023-10-11)
 
