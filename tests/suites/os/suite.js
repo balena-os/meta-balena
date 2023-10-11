@@ -213,7 +213,7 @@ module.exports = {
 			systemd: systemd,
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
-			link: this.suite.options.config.dutUuid ||`${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
+			link: (typeof this.suite.options.config.dutIp !== undefined) ? this.suite.options.config.dutIp : `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
 			worker: worker,
 		});
 
@@ -222,6 +222,31 @@ module.exports = {
 			this.log('Worker teardown');
 			return this.worker.teardown();
 		});
+
+		const keys = await this.context
+			.get()
+			.utils.createSSHKey(this.sshKeyPath);
+		if (this.suite.options?.balena?.apiKey) {
+			// Authenticating balenaSDK
+			await this.context
+			.get()
+			.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+			this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+			
+			await this.cloud.balena.models.key.create(
+				this.sshKeyLabel,
+				keys.pubKey
+			);
+			this.suite.teardown.register(() => {
+				return Promise.resolve(
+					this.cloud.removeSSHKey(this.sshKeyLabel)
+				);
+			});
+		}
+
+		this.suite.context.set({
+			workerContract: await this.worker.getContract()
+		})
 
 		if(!this.suite.options.config.manual){
 			// Network definitions - here we check what network configuration is selected for the DUT for the suite, and add the appropriate configuration options (e.g wifi credentials)
@@ -263,9 +288,6 @@ module.exports = {
 		
 
 
-			const keys = await this.context
-			.get()
-			.utils.createSSHKey(this.sshKeyPath);
 			// Create an instance of the balenOS object, containing information such as device type, and config.json options
 			this.suite.context.set({
 				os: new BalenaOS(
@@ -315,27 +337,8 @@ module.exports = {
 				await setFlasher(this.os.image.path);
 			}
 
-			if (this.suite.options?.balena?.apiKey) {
-				// Authenticating balenaSDK
-				await this.context
-				.get()
-				.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-				this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
-				
-				await this.cloud.balena.models.key.create(
-					this.sshKeyLabel,
-					keys.pubKey
-				);
-				this.suite.teardown.register(() => {
-					return Promise.resolve(
-						this.cloud.removeSSHKey(this.sshKeyLabel)
-					);
-				});
-			}
 		
-			this.suite.context.set({
-				workerContract: await this.worker.getContract()
-			})
+		
 			if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
 				console.log("Forcing installer migration")
 			} else {
