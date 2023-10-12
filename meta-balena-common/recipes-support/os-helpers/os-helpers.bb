@@ -8,6 +8,7 @@ RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk"
 RDEPENDS:${PN}-fs:append = "${@bb.utils.contains('MACHINE_FEATURES','raid',' mdadm','',d)}"
 RDEPENDS:${PN}-tpm2 = "libtss2-tcti-device tpm2-tools"
 RDEPENDS:${PN}-config = "bash"
+RDEPENDS:${PN}-reboot = "bash jq"
 RDEPENDS:${PN}-api = "curl"
 
 SRC_URI = " \
@@ -17,12 +18,13 @@ SRC_URI = " \
     file://os-helpers-tpm2 \
     file://os-helpers-config \
     file://os-helpers-api \
+    file://safe_reboot \
 "
 S = "${WORKDIR}"
 
 inherit allarch
 
-PACKAGES = "${PN}-fs ${PN}-logging ${PN}-time ${PN}-tpm2 ${PN}-config ${PN}-api"
+PACKAGES = "${PN}-fs ${PN}-logging ${PN}-time ${PN}-tpm2 ${PN}-config ${PN}-api ${PN}-reboot"
 
 do_install() {
     install -d ${D}${libexecdir}
@@ -33,6 +35,7 @@ do_install() {
         ${WORKDIR}/os-helpers-tpm2 \
         ${WORKDIR}/os-helpers-config \
         ${WORKDIR}/os-helpers-api \
+        ${WORKDIR}/safe_reboot \
         ${D}${libexecdir}
         sed -i "s,@@BALENA_CONF_UNIT_STORE@@,${BALENA_CONF_UNIT_STORE},g" ${D}${libexecdir}/os-helpers-config
 }
@@ -43,6 +46,7 @@ FILES:${PN}-time = "${libexecdir}/os-helpers-time"
 FILES:${PN}-tpm2 = "${libexecdir}/os-helpers-tpm2"
 FILES:${PN}-config = "${libexecdir}/os-helpers-config"
 FILES:${PN}-api = "${libexecdir}/os-helpers-api"
+FILES:${PN}-reboot = "${libexecdir}/safe_reboot"
 
 do_test_api() {
     if [ "${BB_NO_NETWORK}" = "1" ]; then
