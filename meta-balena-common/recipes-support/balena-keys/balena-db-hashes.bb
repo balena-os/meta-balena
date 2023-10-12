@@ -16,7 +16,16 @@ do_get_db() {
     fi
     mkdir -p "${DEST_DIR}"
 
-    hash-to-efi-sig-list "${DEPLOY_DIR_IMAGE}"/grub-efi-boot*.efi.secureboot "${DEST_DIR}/db.esl"
+    hash-to-efi-sig-list \
+        "${DEPLOY_DIR_IMAGE}"/grub-efi-boot*.efi.secureboot \
+        "${DEST_DIR}/db-loader.esl"
+
+    hash-to-efi-sig-list \
+        "${DEPLOY_DIR_IMAGE}/bzImage.initramfs" \
+        "${DEST_DIR}/db-kernel.esl"
+
+    cat "${DEST_DIR}/db-loader.esl" "${DEST_DIR}/db-kernel.esl" \
+        > "${DEST_DIR}/db.esl"
 
     FIRST_KEK=$(echo "${SIGN_EFI_KEK_KEY_ID}" | cut -d, -f1)
 
@@ -50,6 +59,7 @@ do_get_db[depends] += " \
     gnupg-native:do_populate_sysroot \
     efitools-native:do_populate_sysroot \
     grub-efi:do_deploy \
+    virtual/kernel:do_deploy \
     "
 
 do_deploy() {

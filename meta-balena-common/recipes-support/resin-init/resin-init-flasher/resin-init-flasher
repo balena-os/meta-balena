@@ -218,24 +218,30 @@ if [ -d /sys/firmware/efi ]; then
         if [ "${SETUPMODE_VAR}" -eq "1" ]; then
             info "Secure boot setup mode detected - programming keys"
             # Enroll PK last, as it should disable setup mode
-            for e in db KEK PK; do
-                # Remove immutable attribute
-                chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
-
+            for e in db-loader db-kernel KEK PK; do
+                var="$(echo "${e}" | cut -d- -f1)"
                 # Use the .esl format for db. This only works in setup mode and above we have confirmed
                 # it is enabled. The .auth files are signed for appending during updates
                 # and while most UEFI implementations don't care, some of them will only allow
                 # to actually append. Here we want to replace the existing keys by ours.
                 FORMAT="auth"
                 EXTRA_ARGS=""
-                if [ "${e}" = "db" ]; then
-                    FORMAT="esl"
-                    EXTRA_ARGS="-e"
-                fi
-
+                case "${e}" in
+                    db-loader)
+                        FORMAT="esl"
+                        EXTRA_ARGS="-e"
+                        ;;
+                    db-kernel)
+                        FORMAT="esl"
+                        EXTRA_ARGS="-a -e"
+                        ;;
+                esac
+		
                 KEY_FILE="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.${FORMAT}"
                 if [ -f "${KEY_FILE}" ]; then
-                    /usr/bin/efi-updatevar ${EXTRA_ARGS} -f "${KEY_FILE}" "${e}"
+                    # Remove immutable attribute
+                    chattr -i ${EFIVARS_MOUNTDIR}/${var}* > /dev/null || true
+                    /usr/bin/efi-updatevar ${EXTRA_ARGS} -f "${KEY_FILE}" "${var}"
                 fi
             done
             # Check that we're in user mode
