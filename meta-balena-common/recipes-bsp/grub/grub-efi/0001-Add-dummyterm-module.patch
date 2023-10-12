@@ -1,7 +1,7 @@
-From 8c231b09bcd8742506e6511009573bd24c46dfc6 Mon Sep 17 00:00:00 2001
+From dbc0ac6617a91ad8b37c40fc0e1ea3e429650541 Mon Sep 17 00:00:00 2001
 From: Michal Toman <michalt@balena.io>
 Date: Tue, 23 Nov 2021 19:37:18 +0100
-Subject: [PATCH] Add dummyterm module
+Subject: [PATCH 1/1] Add dummyterm module
 
 We want GRUB to output nothing and accept no input under specific. By default
 GRUB has no such option and will require at least one input and one output
@@ -9,6 +9,7 @@ to be configured. This patch adds a dummy terminal module that throws away
 any input or output that goes through it.
 
 Signed-off-by: Michal Toman <michalt@balena.io>
+Signed-off-by: Joseph Kogut <joseph@balena.io>
 ---
  grub-core/Makefile.core.def |  5 +++
  grub-core/term/dummy.c      | 65 +++++++++++++++++++++++++++++++++++++
@@ -16,10 +17,10 @@ Signed-off-by: Michal Toman <michalt@balena.io>
  create mode 100644 grub-core/term/dummy.c
 
 diff --git a/grub-core/Makefile.core.def b/grub-core/Makefile.core.def
-index 8022e1c0a..0c0a344ec 100644
+index d2cf29584..00d6c04a4 100644
 --- a/grub-core/Makefile.core.def
 +++ b/grub-core/Makefile.core.def
-@@ -1042,6 +1042,11 @@ module = {
+@@ -1071,6 +1071,11 @@ module = {
    enable = x86;
  };
  
@@ -103,5 +104,5 @@ index 000000000..e204a4e3a
 +  grub_term_unregister_output (&grub_dummy_term_output);
 +}
 -- 
-2.31.1
+2.42.0
 
