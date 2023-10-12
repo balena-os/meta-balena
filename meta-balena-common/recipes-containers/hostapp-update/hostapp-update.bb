@@ -13,9 +13,11 @@ BBCLASSEXTEND = "native"
 
 FILES:${PN} = "${bindir}"
 
-RDEPENDS:${PN} = " \
+RDEPENDS:${PN} += " \
     balena \
     "
+
+RDEPENDS:${PN}:class-target += "os-helpers-reboot"
 
 do_install() {
     install -d ${D}${bindir}
