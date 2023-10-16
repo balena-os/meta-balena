@@ -430,5 +430,6 @@ module.exports = {
 		'./tests/device-specific-tests/revpi-core-3',
 		'./tests/swap',
 		'./tests/internet-sharing',
+		'./tests/safe-reboot',
 	],
 };
