@@ -17,11 +17,15 @@
 #
 
 ME=$(basename "$0")
+PRIORITY=6
 
 log () {
     _level="$1"
     _message="$2"
     printf "[%s][%s] %s\n" "$ME" "$_level" "$_message" >&2
+    if command -v systemd-cat > /dev/null; then
+       echo "${_message}" | systemd-cat --level-prefix=0 --identifier="$ME" --priority="${PRIORITY}" 2> /dev/null || true
+    fi
 }
 
 fail () {
@@ -30,10 +34,12 @@ fail () {
 }
 
 error () {
+    PRIORITY=3
     log "ERROR" "$1"
 }
 
 warn () {
+    PRIORITY=4
     log "WARN" "$1"
 }
 
