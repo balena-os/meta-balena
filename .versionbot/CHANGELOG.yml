@@ -1,4 +1,280 @@
 - commits:
+    - subject: Update balena-supervisor to v14.13.13
+      hash: 0e98377b4e1d35b6fc7391782f8a3f8ee3a21fca
+      body: |
+        Update balena-supervisor from 14.13.4 to 14.13.13
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Switch some _.includes usage to native versions
+              hash: e15205301c345398873097b07869c191d1f09d08
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.assign usage to native versions
+              hash: a4a9a17c1aba1a7611b000b2b440600331349a07
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.isNaN usage to native versions
+              hash: d0cb54537f74c19f5262a6b1515e13cfb476dfd3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.isFunction usage to native versions
+              hash: c9f032e13ad0f2b31b8316c8334f2175f3af4014
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.isUndefined usage to native versions
+              hash: 3bfdc4454e90732f17e8adaaadfe60c21a8f3748
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.isNull usage to native versions
+              hash: 8e23091aa9c997dbcbce8faacd34c275239a746e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.isNumber usage to native versions
+              hash: ca3faebfc9ade3b720380b5f002a747ba4817b92
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.isArray usage to native versions
+              hash: 20df54668ce12790320ec78cbc8044a4065f6a16
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Switch _.isString usage to native versions
+              hash: 3fe8a22fb0158bf456bf3eba1b0a0b27ce004c8a
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.13.13
+          title: ""
+          date: 2023-10-16T21:43:19.070Z
+        - commits:
+            - subject: Revert "Do not expose ports from image if service network mode"
+              hash: 3e828dcc5262528639a7a039d62855d9607d1779
+              body: >
+                This reverts commit 0c7bad779291e15e419166a2c66c2a21dd06aa83, as
+                that
+
+                change causes a service restart loop. The supervisor cannot distinguish
+
+                between ports exposed via the `EXPOSE` directive and the docker-compose
+
+                `expose` property. Because of this, in the case of `network-mode:
+
+                service:<...>` the current state and target state never match, leading
+
+                to a service restart loop.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.13.12
+          title: ""
+          date: 2023-10-16T16:59:13.864Z
+        - commits:
+            - subject: Fix husky config for automatic linting on commit
+              hash: 23d5311a515755ba3171fc5d26dc4c6486eff9a2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.13.11
+          title: ""
+          date: 2023-10-16T15:43:25.738Z
+        - commits:
+            - subject: Convert multiple bluebird uses to native promises
+              hash: 766cce89c772440d86472ff0a0a0efd884261188
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.13.10
+          title: ""
+          date: 2023-10-16T13:50:17.934Z
+        - commits:
+            - subject: Do not expose ports from image if service network mode
+              hash: 0c7bad779291e15e419166a2c66c2a21dd06aa83
+              body: >
+                The supervisor exposes ports configured using the `EXPOSE`
+                directive in
+
+                the dockerfile when configuring the container for runtime. This can
+
+                cause issues if using `network_mode: service:<service name>` as the
+
+                expose configuration is not compatible with that network mode. This
+
+                fix now skips image exposed ports for that particular network mode.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Relates-to: "#2211"
+                relates-to: "#2211"
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.13.9
+          title: ""
+          date: 2023-10-16T02:14:30.242Z
+        - commits:
+            - subject: Move mdns-resolver to devDependencies
+              hash: eb485cfde4a0a2adcbe00a1e107156e0711c1c67
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move got to devDependencies
+              hash: c3832cf06157eb93777a4d2c996ff8ac5dd308f9
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move semver to dev-dependencies
+              hash: dcef2ec78b8556a22c076fd7550e93394b8690b0
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move happy-eyeballs to dev-dependencies
+              hash: 50d2d59cd149475c9778bb8860b9988b1efe1e1a
+              body: |
+                This allows it to be tree-shaken
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move systeminformation to devDependencies
+              hash: a67a5a0f8f06856645bc54fd8c79ddc8950e75cb
+              body: >
+                devDependencies are tree-shaked, while dependencies are stored
+                in the
+
+                image. We reserve dependencies just for those that contain binary
+
+                bindings
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.13.8
+          title: ""
+          date: 2023-10-12T19:28:38.969Z
+        - commits:
+            - subject: Use mutation for adding service/image ids to logs to reduce allocations
+              hash: 3d73bf3e915e9a33e7d9dbb2635d8a626df51ab3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Keep the container lock for the entire duration of attaching logs
+              hash: d685ccacb245f0f0e4e2c8cd04d5c202da0d551b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Remove unnecessary async on handling journald stderr entries
+              hash: 74d374b5ad974d8baf004d7378d151d226ff06a6
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Avoid unnecessary work in systemd log row handling for invalid logs
+              hash: e3806ec018bd7d29bec15074a5c09494fe5e9d6b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.13.7
+          title: ""
+          date: 2023-10-12T01:34:01.769Z
+        - commits:
+            - subject: Remove unused docker logs logging code
+              hash: 894bdeeeb66ff997c7e16157d932024ece5bea09
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-14.13.6
+          title: ""
+          date: 2023-10-11T14:12:02.642Z
+        - commits:
+            - subject: Revert os-release path to /mnt/root
+              hash: bc1d251e66b863abbd7829fecc4b618fca71d2c3
+              body: >
+                /mnt/boot/os-release isn't always accurate so /mnt/root should
+                be the source of truth.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-14.13.5
+          title: ""
+          date: 2023-10-10T18:54:18.074Z
+  version: 4.0.27
+  title: ""
+  date: 2023-10-18T16:33:59.568Z
+- commits:
     - subject: Update tests/leviathan digest to 62974d9
       hash: 9f29eda9c04b60dc4b89cb502eb055095424171d
       body: Update tests/leviathan

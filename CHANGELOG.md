@@ -1,6 +1,76 @@
 Change log
 -----------
 
+# v4.0.27
+## (2023-10-18)
+
+
+<details>
+<summary> Update balena-supervisor to v14.13.13 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-14.13.13
+> ### (2023-10-16)
+> 
+> * Switch some _.includes usage to native versions [Pagan Gazzard]
+> * Switch _.assign usage to native versions [Pagan Gazzard]
+> * Switch _.isNaN usage to native versions [Pagan Gazzard]
+> * Switch _.isFunction usage to native versions [Pagan Gazzard]
+> * Switch _.isUndefined usage to native versions [Pagan Gazzard]
+> * Switch _.isNull usage to native versions [Pagan Gazzard]
+> * Switch _.isNumber usage to native versions [Pagan Gazzard]
+> * Switch _.isArray usage to native versions [Pagan Gazzard]
+> * Switch _.isString usage to native versions [Pagan Gazzard]
+> 
+> ## balena-supervisor-14.13.12
+> ### (2023-10-16)
+> 
+> * Revert "Do not expose ports from image if service network mode" [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.13.11
+> ### (2023-10-16)
+> 
+> * Fix husky config for automatic linting on commit [Pagan Gazzard]
+> 
+> ## balena-supervisor-14.13.10
+> ### (2023-10-16)
+> 
+> * Convert multiple bluebird uses to native promises [Pagan Gazzard]
+> 
+> ## balena-supervisor-14.13.9
+> ### (2023-10-16)
+> 
+> * Do not expose ports from image if service network mode [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.13.8
+> ### (2023-10-12)
+> 
+> * Move mdns-resolver to devDependencies [Felipe Lalanne]
+> * Move got to devDependencies [Felipe Lalanne]
+> * Move semver to dev-dependencies [Felipe Lalanne]
+> * Move happy-eyeballs to dev-dependencies [Felipe Lalanne]
+> * Move systeminformation to devDependencies [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.13.7
+> ### (2023-10-12)
+> 
+> * Use mutation for adding service/image ids to logs to reduce allocations [Pagan Gazzard]
+> * Keep the container lock for the entire duration of attaching logs [Pagan Gazzard]
+> * Remove unnecessary async on handling journald stderr entries [Pagan Gazzard]
+> * Avoid unnecessary work in systemd log row handling for invalid logs [Pagan Gazzard]
+> 
+> ## balena-supervisor-14.13.6
+> ### (2023-10-11)
+> 
+> * Remove unused docker logs logging code [Pagan Gazzard]
+> 
+> ## balena-supervisor-14.13.5
+> ### (2023-10-10)
+> 
+> * Revert os-release path to /mnt/root [Christina Ying Wang]
+> 
+
+</details>
+
 # v4.0.26
 ## (2023-10-17)
 
