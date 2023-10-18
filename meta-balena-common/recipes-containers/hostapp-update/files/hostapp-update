@@ -2,17 +2,38 @@
 
 set -eu
 
+if [ -f "/usr/libexec/os-helpers-logging" ]; then
+	# shellcheck disable=SC1091
+	. /usr/libexec/os-helpers-logging
+fi
+
+INFO() {
+	if command -v info > /dev/null; then
+		info "$@"
+	else
+		echo "$@"
+	fi
+}
+
+ERROR() {
+	if command -v error > /dev/null; then
+		error "$@"
+	else
+		echo "$@"
+	fi
+}
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
-		echo "Failed to run the new hooks. Running current hooks... "
+		ERROR "Failed to run the new hooks. Running current hooks... "
 		DURING_UPDATE=0 hostapp-update-hooks || true
 	else
-		echo "Failed to run the new hooks... "
+		ERROR "Failed to run the new hooks... "
 	fi
 	# unmount if we have mounted the new rootfs
 	umount $new_rootfs || true
-	echo "Update failed."
+	ERROR "Update failed."
 	exit 1
 }
 
@@ -34,9 +55,11 @@ while getopts 'f:i:rnx' flag; do
 done
 
 if [ "$local_image" =  "" ] && [ "$remote_image" = "" ]; then
-	echo "At least one of -f or -i is required"
+	ERROR "At least one of -f or -i is required"
 	exit 1
 fi
+
+INFO "Running hostapp update..."
 
 export DOCKER_HOST="unix:///var/run/balena-host.sock"
 SYSROOT="/mnt/sysroot/inactive"
@@ -69,10 +92,12 @@ fi
 
 # Remove previous hostapp
 for container in $(balena ps --all --quiet); do
-	balena rm --force --volumes "$container"
+	_out="$(balena rm --force --volumes "$container" 2>&1)"
+	INFO "${_out}"
 done
 for image in $(balena images --all --quiet); do
-	balena rmi --force "$image"
+	_out="$(balena rmi --force "$image" 2>&1)"
+	INFO "${_out}"
 done
 for hostapp in "$SYSROOT/hostapps/"*; do
 	[ -e "$hostapp" ] || break
@@ -95,7 +120,8 @@ if [ "$local_image" != "" ]; then
 	rm -rf "${LOADTMP}" || true
 elif [ "$remote_image" != "" ]; then
 	HOSTAPP_IMAGE="$remote_image"
-	balena pull "$HOSTAPP_IMAGE"
+	_out="$(balena pull "$HOSTAPP_IMAGE" 2>&1)"
+	INFO "${_out}"
 fi
 CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
 BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
@@ -119,7 +145,7 @@ if [ "$hooks" = 1 ]; then
 	new_rootfs=$($SYSROOT/current/boot/init -sysroot $SYSROOT)
 	if [ -f "$new_rootfs/usr/bin/hostapp-update-hooks-v2" ]; then
 		if DURING_UPDATE=1 $new_rootfs/usr/bin/hostapp-update-hooks-v2 --before --dir "$new_rootfs/etc/hostapp-update-hooks.d/" ; then
-			echo "Before hooks (old os) ran successfully"
+			INFO "Before hooks (old os) ran successfully"
 		else
 			run_current_hooks_and_recover
 		fi
@@ -127,9 +153,11 @@ if [ "$hooks" = 1 ]; then
 	umount $new_rootfs
 
 	# Run the defined hooks in the host OS we update to in new OS environment
-	if balena run --privileged --rm -v /dev:/dev -v /mnt:/mnt -v /sys:/sys -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks; then
-		echo "New/Forward hooks (new os container) ran successfully."
+	if _out=$(balena run --privileged --rm -v /dev:/dev -v /mnt:/mnt -v /sys:/sys -e DURING_UPDATE=1 "$HOSTAPP_IMAGE" hostapp-update-hooks 2>&1); then
+		INFO "${_out}"
+		INFO "New/Forward hooks (new os container) ran successfully."
 	else
+		ERROR "Failed running new/forward hooks in new os container: ${_out}"
 		run_current_hooks_and_recover
 	fi
 
@@ -137,7 +165,7 @@ if [ "$hooks" = 1 ]; then
 	new_rootfs=$($SYSROOT/current/boot/init -sysroot $SYSROOT)
 	if [ -f "$new_rootfs/usr/bin/hostapp-update-hooks-v2" ]; then
 		if DURING_UPDATE=1 $new_rootfs/usr/bin/hostapp-update-hooks-v2 --after --dir "$new_rootfs/etc/hostapp-update-hooks.d/"; then
-			echo "After hooks (old os) ran successfully"
+			INFO "After hooks (old os) ran successfully"
 		else
 			run_current_hooks_and_recover
 		fi
@@ -154,6 +182,8 @@ echo $((cur_counter + 1)) > "$SYSROOT/counter.new"
 sync -f "$SYSROOT"
 mv "$SYSROOT/counter.new" "$SYSROOT/counter"
 sync -f "$SYSROOT"
+
+INFO "Finished running hostapp update"
 
 if [ "$reboot" = 1 ]; then
 	if [ -x "/usr/libexec/safe_reboot" ]; then
