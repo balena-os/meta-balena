@@ -6,7 +6,10 @@
 
 set -o errexit
 
+# shellcheck disable=SC1091
 . /usr/sbin/balena-config-vars
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
 
 DURING_UPDATE=${DURING_UPDATE:-0}
 
@@ -23,7 +26,7 @@ new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 # Convert to hex as u-boot expects hex partition numbers. Especially needed for jetson devices
 new_part_idx=$(printf "%x" $new_part_idx)
 
-printf "[INFO] Switching uboot root partition index to %s..." "$new_part_idx..."
+info "Switching uboot root partition index to $new_part_idx..."
 tmpfile="$(mktemp)"
 echo "resin_root_part=$new_part_idx" > ${tmpfile}
 echo "upgrade_available=$DURING_UPDATE" >> ${tmpfile}
@@ -31,4 +34,4 @@ echo "upgrade_available=$DURING_UPDATE" >> ${tmpfile}
 # It is possible to get into a strange state with multiple bootcount.env files so use a delimiter to delete them all.
 # See https://github.com/snapcore/snapd/pull/5145 for more detail
 rm -f /mnt/boot/*bootcount.env* || true
-printf " done.\n"
+info "Done."

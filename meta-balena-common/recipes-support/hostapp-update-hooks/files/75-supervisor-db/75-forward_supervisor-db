@@ -20,6 +20,9 @@
 
 set -e
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
 #
 # MAIN
 #
@@ -37,7 +40,7 @@ if [ -f "${SUPERVISOR_DB_PATH_B}" ]; then
 		last_modified_a=$(stat -c %Y "${SUPERVISOR_DB_PATH_A}")
 		last_modified_b=$(stat -c %Y "${SUPERVISOR_DB_PATH_B}")
 		if [ "${last_modified_a}" -gt "${last_modified_b}" ]; then
-			echo "[WARN] forward_supervisor-db: ${SUPERVISOR_DB_PATH_A} is newer - bailing out."
+			warn "forward_supervisor-db: ${SUPERVISOR_DB_PATH_A} is newer - bailing out."
 			exit
 		fi
 	fi
@@ -45,6 +48,6 @@ if [ -f "${SUPERVISOR_DB_PATH_B}" ]; then
 		mkdir -p "${SUPERVISOR_DB_DIR_A}"
 	fi
 	cp "${SUPERVISOR_DB_PATH_B}" "${SUPERVISOR_DB_PATH_A}"
-	echo "[INFO] forward_supervisor-db: Copied ${SUPERVISOR_DB_PATH_B} to ${SUPERVISOR_DB_PATH_A}"
+	info "forward_supervisor-db: Copied ${SUPERVISOR_DB_PATH_B} to ${SUPERVISOR_DB_PATH_A}"
 	sync -f "${SUPERVISOR_DB_PATH_A}"
 fi

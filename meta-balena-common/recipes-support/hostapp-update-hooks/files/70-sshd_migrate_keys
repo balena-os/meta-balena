@@ -20,24 +20,22 @@
 
 set -e
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
 DROPBEAR_RSA_KEY="/mnt/state/root-overlay/etc/dropbear/dropbear_rsa_host_key"
 OPENSSH_RSA_KEY="/mnt/state/root-overlay/etc/ssh/hostkeys/ssh_host_rsa_key"
-
-fatal() {
-	echo "sshd_migrate_keys: $1"
-	exit 1
-}
 
 #
 # MAIN
 #
 
 if [ ! -f "$OPENSSH_RSA_KEY" ] && [ -f "$DROPBEAR_RSA_KEY" ]; then
-	echo "[INFO] sshd_migrate_keys: Converting dropbear host key..."
+	info "sshd_migrate_keys: Converting dropbear host key..."
 	mkdir -p "$(dirname $OPENSSH_RSA_KEY)"
 	dropbearconvert dropbear openssh "$DROPBEAR_RSA_KEY" "$OPENSSH_RSA_KEY" \
-		|| fatal "Failed to convert dropbear host private key."
+		|| fail "Failed to convert dropbear host private key."
 	ssh-keygen -f "$OPENSSH_RSA_KEY" -y > "$OPENSSH_RSA_KEY.pub" \
-		|| fatal "Failed to generate the openssh public key."
-	echo "[INFO] sshd_migrate_keys: Migrated dropbear host RSA key to openssh."
+		|| fail "Failed to generate the openssh public key."
+	info "sshd_migrate_keys: Migrated dropbear host RSA key to openssh."
 fi

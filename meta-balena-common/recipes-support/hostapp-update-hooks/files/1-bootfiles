@@ -8,7 +8,10 @@
 
 set -o errexit
 
+# shellcheck disable=SC1091
 . /usr/sbin/balena-config-vars
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
 
 # Variables
 boot_fingerprint="@BALENA_BOOT_FINGERPRINT@"
@@ -73,23 +76,23 @@ copyBootFile() {
 # 	$1: file path relative to boot partition's root
 deploy() {
 	local _file="$1"
-	printf "[INFO] Deploying %s%s..." "${boot_mountpoint}" "${_file}"
+	info "Deploying ${boot_mountpoint}${_file}"
 	if isBlacklisted "$_file"; then
 		if [ "$_file" = "/splash/balena-logo.png" ]; then
 			if [ -f "$boot_mountpoint/splash/resin-logo.png" ]; then
 				if isModified "/splash/resin-logo.png"; then
 					# Keep custom logo
-					printf "renaming resin-logo to balena-logo..."
+					info "renaming resin-logo to balena-logo..."
 					sync -f $boot_mountpoint
 					"${MV}" $boot_mountpoint/splash/resin-logo.png $boot_mountpoint/splash/balena-logo.png
 					sync -f $boot_mountpoint
 				else
 					# This rebrands from old resin logo
-					printf "replacing resin-logo with balena-logo..."
+					info "replacing resin-logo with balena-logo..."
 					copyBootFile "$_file"
 					rm "$boot_mountpoint/splash/resin-logo.png"
 				fi
-				printf " done.\n"
+				info "Deployed ${boot_mountpoint}${_file}.\n"
 				return
 			fi
 		elif [ "$_file" = "/config.json" ]; then
@@ -99,26 +102,23 @@ deploy() {
 				old_os_os_release=$(find "/mnt/sysroot/active" -path "*/etc/os-release")
 				if grep -i -q 'VARIANT="Development"' "${old_os_os_release}"; then
 					"${CAT}" "${boot_mountpoint}/config.json" | jq -S ".developmentMode=true" | "${WR}" "${boot_mountpoint}/config.json"
-					printf "Development mode set in new OS... "
+					info "Development mode set in new OS... "
 				fi
 			fi
 		fi
-		printf "file blacklisted. Ignoring.\n"
+		info "${boot_mountpoint}${_file} blacklisted. Ignoring."
 	else
 		if [ -f "$boot_mountpoint/$_file" ]; then
 			if isModified "$_file"; then
-				printf " overwriting modified file..."
+				info " overwriting modified file ${_file}..."
 				copyBootFile "$_file"
-				printf " done.\n"
 			else
 				copyBootFile "$_file"
-				printf " done.\n"
 			fi
 		else
 			new_deployed_files="$new_deployed_files $_file"
-			printf " new file..."
+			info " new file ${_file}..."
 			copyBootFile "$_file"
-			printf " done.\n"
 		fi
 	fi
 }
@@ -133,7 +133,6 @@ deploy() {
 boot_space="$(df -B1 --output=avail $boot_mountpoint | grep -v Avail)"
 available="$boot_space"
 available_threshold="524288" # All sizes in bytes
-printf "[INFO] Checking if boot partition can accommodate the new update... "
 for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 	if isBlacklisted "$filepath"; then
 		continue
@@ -141,8 +140,7 @@ for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 	filesize=$(stat --format %s "/resin-boot${filepath}")
 	available="$((available - filesize))"
 	if [ "$available" -lt "$available_threshold" ]; then
-		echo "fail."
-		echo "[ERROR] Boot files copy operations will fail with out of space error."
+		error "Boot files copy operations will fail with out of space error."
 		if [ "$DURING_UPDATE" = "1" ]; then
 			exit 1
 		fi
@@ -151,11 +149,10 @@ for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 		available="$((available + $(stat --format %s "${boot_mountpoint}${filepath}")))"
 	fi
 done
-echo "success."
+info "Boot partition can accomodate the new update."
 
-printf "[INFO] Updating timestamps for all files in ${boot_mountpoint}..."
 find -L /mnt/boot/ $(printf "! -name %s " $(for blacklisted_file in  $bootfiles_blacklist; do echo $blacklisted_file | awk -F'/' '{print $NF}'; done)) -exec touch {} +
-echo " done"
+info "Updated timestamps for all files in ${boot_mountpoint}"
 
 # Deploy all files in the bootfiles list except fingerprint
 new_deployed_files=""
