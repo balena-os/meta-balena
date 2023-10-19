@@ -119,7 +119,7 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 PREFERRED_VERSION_linux-firmware = "20230404"
 
 # balena-engine go version requirement
-GOVERSION = "1.16.2"
+GOVERSION = "1.17.13"
 PREFERRED_PROVIDER_go-native = "go-native"
 
 # Firmware compression support
