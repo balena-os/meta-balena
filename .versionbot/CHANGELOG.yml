@@ -1,4 +1,68 @@
 - commits:
+    - subject: Update tests/leviathan digest to cd38f4a
+      hash: 9850216225e8c140b710e8a5f8454b5a7b2264c4
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 42e712d
+              hash: 1853c343fcb27ff2a287880dcf4906a1012a7ae3
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.4
+          title: ""
+          date: 2023-10-20T07:21:37.849Z
+        - commits:
+            - subject: Update core/contracts digest to 2d44c9c
+              hash: bffd6dae100a692c10ec1afcef775d908e57ed11
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.3
+          title: ""
+          date: 2023-10-19T13:43:36.969Z
+        - commits:
+            - subject: Update actions/checkout digest to b4ffde6
+              hash: d04f4cc5cc497173cae45b5538abbc1e21cb7564
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.2
+          title: ""
+          date: 2023-10-19T11:21:08.816Z
+        - commits:
+            - subject: Update core/contracts digest to 97f176d
+              hash: 72ad2ce2a67767be53aa94b920fc6314e2ae86b5
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.1
+          title: ""
+          date: 2023-10-19T08:49:38.251Z
+  version: 4.0.28
+  title: ""
+  date: 2023-10-20T11:37:25.753Z
+- commits:
     - subject: Update balena-supervisor to v14.13.13
       hash: 0e98377b4e1d35b6fc7391782f8a3f8ee3a21fca
       body: |
