@@ -118,7 +118,7 @@ balenaOS relies on the device's bootloader to select the active root filesystem.
 * UEFI L4Tlauncher
   * Is used on the Jetson Orin platforms
   * Obtains the kernel image path and kernel cmdline arguments from extlinux.conf files
-  * Rollbacks and active root filesystem selection are implemented in [bootloader patches](https://github.com/balena-os/balena-jetson-orin/blob/master/layers/meta-balena-jetson/recipes-bsp/uefi/edk2-firmware-tegra/0005-L4TLauncher-hup-rollback-support-orin-nx.patch) provided bythe balena-jetson-orin [device repository](https://github.com/balena-os/balena-jetson-orin)
+  * Rollbacks and active root filesystem selection are implemented in [bootloader patches](https://github.com/balena-os/balena-jetson-orin/blob/master/layers/meta-balena-jetson/recipes-bsp/uefi/edk2-firmware-tegra/0005-L4TLauncher-hup-rollback-support-orin-nx.patch) provided by the balena-jetson-orin [device repository](https://github.com/balena-os/balena-jetson-orin)
   * Employs the same rollback mechanisms used by balenaOS in u-boot by storing and reading environment variables from the resinOS_uEnv.txt, extra_uEnv.txt and bootcount.env files
 
 ### Rollback framework
