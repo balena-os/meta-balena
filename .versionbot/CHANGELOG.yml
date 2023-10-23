@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: retry healthcheck disable"
+      hash: 93b8067972df8c6bc6b94751887c1af1b2f9f72c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 3.2.13
+  title: ""
+  date: 2023-10-23T08:32:52.544Z
+- commits:
     - subject: "timesync-https: skip time sync if connectivity URI is null"
       hash: c9e8e50d0595bac83bb815e58d61aa0ba82d442c
       body: |

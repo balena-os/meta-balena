@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.13
+## (2023-10-23)
+
+* tests: os: retry healthcheck disable [rcooke-warwick]
+
 # v3.2.12
 ## (2023-09-06)
 
