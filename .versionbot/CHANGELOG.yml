@@ -1,4 +1,21 @@
 - commits:
+    - subject: "resin-device-progress: Add status code check and error reporting"
+      hash: 43ad69ed6a770c90e43a9ea844a32d7308a8ad45
+      body: |
+        This script is used by balenaHup to report provisioning failures to
+        the cloud. Adding retries, return status code check and error output
+        should make it more resilient and easier to debug.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.29
+  title: ""
+  date: 2023-10-23T13:07:12.186Z
+- commits:
     - subject: Update tests/leviathan digest to cd38f4a
       hash: 9850216225e8c140b710e8a5f8454b5a7b2264c4
       body: Update tests/leviathan

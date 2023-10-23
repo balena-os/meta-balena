@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.29
+## (2023-10-23)
+
+* resin-device-progress: Add status code check and error reporting [Alex Gonzalez]
+
 # v4.0.28
 ## (2023-10-20)
 
