@@ -47,6 +47,7 @@ SYSTEMD_SERVICE:${PN} = "balena.service balena-host.socket var-lib-docker.mount"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM:${PN} = "-r balena-engine"
+USERADD_PARAM:${PN} = "--system -M -d /mnt/data/be-user/ -s /bin/sh -g balena-engine balena-engine"
 
 DEPENDS:append:class-target = " systemd"
 RDEPENDS:${PN}:class-target = "curl util-linux iptables tini systemd healthdog bash procps-ps"
