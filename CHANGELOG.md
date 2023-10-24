@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.31
+## (2023-10-24)
+
+* Revert "kernel-balena: Remove apparmor support" [Alex Gonzalez]
+
 # v4.0.30
 ## (2023-10-23)
 

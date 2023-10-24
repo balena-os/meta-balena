@@ -1,4 +1,27 @@
 - commits:
+    - subject: 'Revert "kernel-balena: Remove apparmor support"'
+      hash: ddc94ae58072323cf94ac39d6c2d16c78ff794d8
+      body: >
+        This is no longer needed after the balena_os/balena-engine commit:
+
+        https://github.com/balena-os/balena-engine/commit/ed8ba18e8776a7bf37b3326baeca8196b4ea76b0
+
+
+        released in balena-engine v20.10.39
+
+
+        This reverts commit 18cd233a83554b58b3540164afd768fdeda60b03.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.31
+  title: ""
+  date: 2023-10-24T16:20:53.918Z
+- commits:
     - subject: Update tests/leviathan digest to 5a3ce72
       hash: 0216b1316a6d264dbea12fa127f46b53eaa4e020
       body: Update tests/leviathan
