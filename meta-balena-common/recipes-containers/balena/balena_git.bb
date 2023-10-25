@@ -47,7 +47,10 @@ SYSTEMD_SERVICE:${PN} = "balena.service balena-host.socket var-lib-docker.mount"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM:${PN} = "-r balena-engine"
-USERADD_PARAM:${PN} = "--system -M -d /mnt/data/be-user/ -s /bin/sh -g balena-engine balena-engine"
+
+# The user that will run balenaEngine and containers
+GROUPADD_PARAM:${PN} = "-r stevedore"
+USERADD_PARAM:${PN} = "--system -M -d /mnt/data/stevedore -s /bin/sh -g stevedore stevedore"
 
 DEPENDS:append:class-target = " systemd"
 RDEPENDS:${PN}:class-target = "curl util-linux iptables tini systemd healthdog bash procps-ps"
@@ -140,6 +143,9 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/tmpfiles.d
 	install -m 0644 ${WORKDIR}/balena-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
+
+	# [TEST] Rootless
+	install -m 0644 ${WORKDIR}/balenad-rootless.sh ${D}/${bindir}/balenad-rootless.sh
 }
 
 BBCLASSEXTEND = " native"

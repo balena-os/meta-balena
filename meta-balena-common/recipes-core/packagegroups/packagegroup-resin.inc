@@ -21,4 +21,5 @@ RDEPENDS:${PN} = " \
     less \
     development-features \
     resin-device-progress \
+    shadow \
     "
