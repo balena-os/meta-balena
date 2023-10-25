@@ -1,4 +1,23 @@
 - commits:
+    - subject: "plymouth: Remove --retain-splash flag from plymouth quit"
+      hash: 01a0cc9a3116274fd6e6e6c999705e6e5a8acfec
+      body: |
+        This flag isn't needed on balenaOS as the splash screen
+        remains even after plymouthd is stopped.
+
+        Having the flag in place prevents user apps from writing to
+        tty consoles after stopping plymouth via dbus.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 4.1.1
+  title: ""
+  date: 2023-10-25T19:07:25.710Z
+- commits:
     - subject: "tests: add safe reboot checks"
       hash: 8d99048a3e2218d4cfdbbf9e27e2a3e04c1aa700
       body: |

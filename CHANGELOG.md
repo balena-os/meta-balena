@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.1.1
+## (2023-10-25)
+
+* plymouth: Remove --retain-splash flag from plymouth quit [Kyle Harding]
+
 # v4.1.0
 ## (2023-10-25)
 
