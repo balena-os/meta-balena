@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+_progress() {
+  percentage="$1"
+  message="$2"
+  resin-device-progress --percentage "${percentage}" --state "${message}" > /dev/null || true
+}
+
+_check_locks_and_reboot() {
+  if _check_override_locks; then
+    # Reboot immediately if user would like to override update locks
+    info "Override lock detected"
+    do_reboot
+  fi
+
+  if [ -d "/tmp/balena-supervisor/services" ]; then
+    locks=$(find /tmp/balena-supervisor/services -name updates.lock)
+    # Check all user service locks in their directories, if none exists
+    # lock for each service directory.
+    for lock in ${locks}; do
+      exec {FD}<"${lock}"
+      if ! flock -nx $FD; then
+        warn "${lock} exists, busy waiting on unlocking for reboot."
+        _progress "100" "Reboot waiting on application lock"
+        exec {FD}>&-
+        return 1
+      fi
+      exec {FD}>&-
+    done
+  fi
+
+  info "No user service lock exists."
+  do_reboot
+}
+
+_check_override_locks() {
+  # Check the target state config dump given by the supervisor for
+  # SUPERVISOR_OVERRIDE_LOCK or .RESIN_OVERRIDE_LOCK
+  if [ -f "/tmp/balena-supervisor/target-state-config" ]; then
+    override_locks=$(jq -r '.SUPERVISOR_OVERRIDE_LOCK // .RESIN_OVERRIDE_LOCK' "/tmp/balena-supervisor/target-state-config")
+
+    test "$override_locks" = true
+  else
+    info "No target state config dump found, cannot check for override lock."
+    return 1
+  fi
+}
+
+do_reboot() {
+  info "Rebooting now..."
+  _progress "100" "Reboot in progress"
+  systemctl reboot
+  (sleep 120 && systemctl reboot --force > /dev/null 2>&1) &
+  # If the previous reboot commands have failed for any reason, let's try differently
+  (sleep 300 && reboot --force > /dev/null 2>&1) &
+  # If the previous 2 reboot commands have failed for any reason, try the Magic SysRq
+  # enable and send reboot request
+  (sleep 600 && echo 1 > /proc/sys/kernel/sysrq && echo b > /proc/sysrq-trigger) &
+  while true; do sleep 60; done
+}
+
+do_safe_reboot() {
+  info "Safe reboot requested, checking for user service locks..."
+  # Check all user service locks so that we are not interrupting any
+  # user process. If there are no locks, get the locks and then perform
+  # a reboot.
+  info "Checking all user services for present locks..."
+  until _check_locks_and_reboot; do sleep 5; done
+}
+
+do_safe_reboot
