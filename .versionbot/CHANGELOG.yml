@@ -1,4 +1,54 @@
 - commits:
+    - subject: "tests: add safe reboot checks"
+      hash: 8d99048a3e2218d4cfdbbf9e27e2a3e04c1aa700
+      body: |
+        This check tests the safe_reboot script used in hostOS updates to
+        make sure application locks are respected.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update: move lock checking to helper function"
+      hash: 8cf977610619687e5958c66b430585cd91f0dbe2
+      body: |
+        The helper function can then be called both from hostapp-update and
+        from the actions server hup script.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-logging: output script logging to journald"
+      hash: e0f1c60cf6eaf668c4c5714d525da17df58073e5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add safe_reboot function"
+      hash: 18ebc142a761b798fe3b08bc93baf52a11702a2c
+      body: |
+        This script performs a safe system reboot with application update
+        locks checks.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.1.0
+  title: ""
+  date: 2023-10-25T08:06:44.556Z
+- commits:
     - subject: 'Revert "kernel-balena: Remove apparmor support"'
       hash: ddc94ae58072323cf94ac39d6c2d16c78ff794d8
       body: >
