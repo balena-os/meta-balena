@@ -2,6 +2,9 @@
 
 set -o pipefail
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
 # Help function
 update_balena_supervisor_help() {
     cat << EOF
@@ -35,8 +38,7 @@ while [ $# -gt 0 ]; do
             ;;
         -i|--supervisor-image)
             if [ -z "$2" ]; then
-                echo "ERROR: \"$1\" argument needs a value."
-                exit 1
+                fail "\"$1\" argument needs a value."
             fi
             # Matches <[sub.]domain.tld>/<fleet|translation>/<digest|semver>
             # For example:
@@ -46,8 +48,7 @@ while [ $# -gt 0 ]; do
             if [[ "$2" =~ ${_regex} ]]; then
                   TARGET_SUPERVISOR_IMAGE=$2
             else
-                echo "ERROR: \"$2\" invalid value - should be of the form <[sub.]domain.tld>/<fleet|translation/<digest|semver>."
-                exit 1
+                fail "\"$2\" invalid value - should be of the form <[sub.]domain.tld>/<fleet|translation/<digest|semver>."
             fi
             shift
             ;;
@@ -57,7 +58,7 @@ while [ $# -gt 0 ]; do
             shift
             ;;
         *)
-            echo "ERROR: Unrecognized option $1."
+            error "Unrecognized option $1."
             ;;
     esac
     shift
@@ -77,6 +78,7 @@ error_handler() {
     # shellcheck disable=SC2181
     [ $? -eq 0 ] && exit 0
 
+    error "${1}"
     # If docker pull fails, start the old supervisor again and exit
     rm -rf $UPDATECONF
     if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
@@ -124,20 +126,18 @@ elif which rce > /dev/null 2>&1; then
 elif which balena > /dev/null 2>&1; then
     DOCKER=balena
 else
-    echo "ERROR: No container engine detected."
     error_handler "no container engine detected"
 fi
 
 # Get target supervisor details from API.
 # The script will exit if curl does not get a valid response.
 # Getting data separately before reading it fixes error handling.
-echo "Getting image name and version..."
+info "Getting image name and version..."
 if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ]; then
     if _target_state=$(os_helpers_fetch_target_state "${UUID}" "${API_ENDPOINT}" "${_device_api_key}"); then
         if [ -n "${_target_state}" ]; then
             read -r version image_name <<< "${_target_state}"
             if [ -z "$version" ] || [ -z "$image_name" ]; then
-                echo "ERROR: Unexpected API data."
                 error_handler "unexpected API data"
             fi
         fi
@@ -149,22 +149,20 @@ fi
 
 # If no API version is set, use preloaded values
 if [ -z "$version" ] || [ -z "$image_name" ] || [ "$version" = "null" ] || [ "$image_name" = "null" ]; then
-    echo "No supervisor configuration found from API."
+    info "No supervisor configuration found from API."
     if [ -n "${TARGET_SUPERVISOR_IMAGE}" ]; then
-        echo "Using command line image argument $TARGET_SUPERVISOR_IMAGE."
+        info "Using command line image argument $TARGET_SUPERVISOR_IMAGE."
         image_name="${TARGET_SUPERVISOR_IMAGE}"
         version=$(basename "${image_name}")
     else
-        echo "Using preloaded values."
+        info "Using preloaded values."
         if [ -z "$SUPERVISOR_VERSION" ]; then
-            echo "ERROR: No preloaded version found."
             error_handler "no preloaded version found"
         fi
         if [ -z "$SUPERVISOR_IMAGE" ]; then
-            echo "ERROR: No preloaded image found."
             error_handler "no preloaded image found."
         fi
-        echo "Set based on preloaded values image=$SUPERVISOR_IMAGE and version=$SUPERVISOR_VERSION."
+        info "Set based on preloaded values image=$SUPERVISOR_IMAGE and version=$SUPERVISOR_VERSION."
         image_name="$SUPERVISOR_IMAGE"
         version="$SUPERVISOR_VERSION"
     fi
@@ -177,11 +175,11 @@ setSupervisorConfig() {
     sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG|SUPERVISOR_VERSION|" -e "s|SUPERVISOR_VERSION=.*|SUPERVISOR_VERSION=$version|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
 }
 
-echo "Getting image id..."
+info "Getting image id..."
 imageid=$($DOCKER inspect -f '{{.Id}}' "$image_name") || imageid=""
 
 if [ -n "$imageid" ]; then
-    echo "Supervisor $image_name at version $version already downloaded."
+    info "Supervisor $image_name at version $version already downloaded."
     # Since target Supervisor version is downloaded ensure the device is configured to use it
     setSupervisorConfig
     exit 0
@@ -189,16 +187,18 @@ fi
 
 if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     # Try to stop old supervisor to prevent it deleting the intermediate images while downloading the new one
-    echo "Stop supervisor..."
+    info "Stop supervisor..."
     systemctl stop balena-supervisor
 fi
 
 # Pull target version.
-echo "Pulling supervisor $image_name at version $version..."
-if $DOCKER pull "$image_name"; then
+info "Pulling supervisor $image_name at version $version..."
+if _out=$($DOCKER pull "$image_name"); then
+    info "${_out}"
     image_id=$(balena images --filter=reference="${image_name%@*}" --format "{{.ID}}")
     $DOCKER tag "${image_id}" "balena_supervisor:${version}"
 else
+    error "${_out}"
     error_handler "supervisor pull failed"
 fi
 
@@ -208,7 +208,7 @@ setSupervisorConfig
 # Run supervisor with the device-type-specific options.
 # We give a specific name to the container to guarantee only one running.
 if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
-    echo "Start supervisor..."
+    info "Start supervisor..."
     systemctl start balena-supervisor
 fi
 
