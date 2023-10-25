@@ -34,6 +34,7 @@ SRC_URI = "\
 	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
 	file://0001-dynbinary-use-go-cross-compiler.patch \
+	file://balenad-rootless.sh \
 	"
 S = "${WORKDIR}/git"
 
