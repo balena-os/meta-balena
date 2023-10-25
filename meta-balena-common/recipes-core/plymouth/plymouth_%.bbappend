@@ -9,6 +9,10 @@ SRC_URI:append = " \
     file://plymouth-start-balena-os.conf \
     "
 
+# remove patch that adds the retain splash option, as it's not needed
+# and prevents user apps from writing to tty consoles even after stopping plymouth
+SRC_URI:remove = "file://0001-plymouth-Add-the-retain-splash-option.patch"
+
 # install our theme, and remove some extra files to save a significant
 # amount of space
 do_install:append() {
