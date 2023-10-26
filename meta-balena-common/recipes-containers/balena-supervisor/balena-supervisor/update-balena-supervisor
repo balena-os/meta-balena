@@ -182,6 +182,14 @@ if [ -n "$imageid" ]; then
     info "Supervisor $image_name at version $version already downloaded."
     # Since target Supervisor version is downloaded ensure the device is configured to use it
     setSupervisorConfig
+    # Check if it's already running
+    if [ -z "$(balena container ls --filter=ancestor="${imageid}" --format "{{.ID}}")" ]; then
+        if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
+            systemctl restart balena-supervisor
+        else
+            warn "Target supervisor downloaded but not running and no supervisor restart was specified."
+        fi
+    fi
     exit 0
 fi
 
