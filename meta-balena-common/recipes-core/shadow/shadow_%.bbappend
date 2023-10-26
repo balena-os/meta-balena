@@ -1,2 +1,2 @@
 # Needed for newuidmap/newgidmap
-PACKAGECONFIG:append = " subids"
+PACKAGECONFIG:append = " subordinate-ids"
