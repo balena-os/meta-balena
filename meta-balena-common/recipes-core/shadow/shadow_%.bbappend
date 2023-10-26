@@ -1,2 +1,2 @@
-# Needed for newuidmap/newgidmap
-PACKAGECONFIG:append = " subordinate-ids"
+# Needed to get newuidmap/newgidmap built.
+PACKAGECONFIG:append = " --enable-subordinate-ids"
