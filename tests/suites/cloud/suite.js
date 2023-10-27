@@ -133,87 +133,11 @@ module.exports = {
       }
     });
 
-    // Network definitions - these are given to the testbot via the config sent via the config.js
-    // If suites config.js has networkWired: true, override the device contract
-		if (this.suite.options.balenaOS.network.wired === true) {
-			this.suite.options.balenaOS.network.wired = {
-				nat: true,
-			};
-		} else if(this.suite.deviceType.data.connectivity.wifi === false){
-			// DUT has no wifi - use wired ethernet sharing to connect to DUT
-			this.suite.options.balenaOS.network.wired = {
-				nat: true,
-			};
-		} 
-		else {
-			// device has wifi, use wifi hotspot to connect to DUT
-			delete this.suite.options.balenaOS.network.wired;
-		}
-
-		// If suites config.js has networkWireless: true, override the device contract
-		if (this.suite.options.balenaOS.network.wireless === true) {
-			this.suite.options.balenaOS.network.wireless = {
-				ssid: this.suite.options.id,
-				psk: `${this.suite.options.id}_psk`,
-				nat: true,
-			};
-		} else if(this.suite.deviceType.data.connectivity.wifi === true){
-			// device has wifi, use wifi hotspot to connect to DUT
-			this.suite.options.balenaOS.network.wireless = {
-				ssid: this.suite.options.id,
-				psk: `${this.suite.options.id}_psk`,
-				nat: true,
-			};
-		} 
-		else {
-			// no wifi on DUT
-			delete this.suite.options.balenaOS.network.wireless;
-		}
-
     // Authenticating balenaSDK
     await this.context
     .get()
     .cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
     this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
-
-    // create a balena application
-    this.log("Creating application in cloud...");
-    const app = await this.cloud.balena.models.application.create({
-      name: this.balena.name,
-      deviceType: this.suite.deviceType.slug,
-      organization: this.balena.organization,
-    });
-
-    this.suite.context.set({
-      balena: {
-        name: app.app_name,
-        application: app.slug,
-      }
-    });
-
-    // remove application when tests are done
-    this.suite.teardown.register(() => {
-      this.log("Removing application");
-      try {
-        return this.cloud.balena.models.application.remove(
-          this.balena.application
-        );
-      } catch(e){
-        this.log(`Error while removing application...`)
-      }
-    });
-
-    this.suite.context.set({
-      appPath: `${__dirname}/test-app`,
-      appServiceName: `containerA`
-    })
-    this.log(`Pushing release to app...`);
-    const initialCommit = await this.cloud.pushReleaseToApp(this.balena.application, `${__dirname}/test-app`)
-    this.suite.context.set({
-      balena: {
-        initialCommit: initialCommit
-      }
-    })
 
     // create an ssh key, so we can ssh into DUT later
     const keys = await this.utils.createSSHKey(this.sshKeyPath);
@@ -233,9 +157,83 @@ module.exports = {
     // generate a uuid
     this.suite.context.set({
       balena: {
-        uuid: this.cloud.balena.models.device.generateUniqueKey(),
+        uuid: (typeof this.suite.options.config.dutUuid !== undefined) ? this.suite.options.config.dutUuid : this.cloud.balena.models.device.generateUniqueKey(),
       },
     });
+
+    // add DUT local hostname to context
+    this.suite.context.set({
+      link: (typeof this.suite.options.config.dutIp !== undefined) ? this.suite.options.config.dutIp : `${this.balena.uuid.slice(0, 7)}.local`
+    })
+
+    // create a balena application
+    this.log("Creating application in cloud...");
+    const app = await this.cloud.balena.models.application.create({
+      name: this.balena.name,
+      deviceType: this.suite.deviceType.slug,
+      organization: this.balena.organization,
+    });
+
+    this.suite.context.set({
+      balena: {
+        name: app.app_name,
+        application: app.slug,
+      }
+    });
+
+    
+    this.suite.context.set({
+      appPath: `${__dirname}/test-app`,
+      appServiceName: `containerA`
+    })
+    this.log(`Pushing release to app...`);
+    const initialCommit = await this.cloud.pushReleaseToApp(this.balena.application, `${__dirname}/test-app`)
+    this.suite.context.set({
+      balena: {
+        initialCommit: initialCommit
+      }
+    })
+
+    this.suite.context.set({
+      workerContract: await this.worker.getContract()
+    })
+
+    // Network definitions - these are given to the testbot via the config sent via the config.js
+    // If suites config.js has networkWired: true, override the device contract
+    if (this.suite.options.balenaOS.network.wired === true) {
+      this.suite.options.balenaOS.network.wired = {
+        nat: true,
+      };
+    } else if(this.suite.deviceType.data.connectivity.wifi === false){
+      // DUT has no wifi - use wired ethernet sharing to connect to DUT
+      this.suite.options.balenaOS.network.wired = {
+        nat: true,
+      };
+    } 
+    else {
+      // device has wifi, use wifi hotspot to connect to DUT
+      delete this.suite.options.balenaOS.network.wired;
+    }
+
+    // If suites config.js has networkWireless: true, override the device contract
+    if (this.suite.options.balenaOS.network.wireless === true) {
+      this.suite.options.balenaOS.network.wireless = {
+        ssid: this.suite.options.id,
+        psk: `${this.suite.options.id}_psk`,
+        nat: true,
+      };
+    } else if(this.suite.deviceType.data.connectivity.wifi === true){
+      // device has wifi, use wifi hotspot to connect to DUT
+      this.suite.options.balenaOS.network.wireless = {
+        ssid: this.suite.options.id,
+        psk: `${this.suite.options.id}_psk`,
+        nat: true,
+      };
+    } 
+    else {
+      // no wifi on DUT
+      delete this.suite.options.balenaOS.network.wireless;
+    }
 
     this.suite.context.set({
       os: new BalenaOS(
@@ -247,118 +245,131 @@ module.exports = {
       ),
     });
 
-
-    this.suite.context.set({
-			workerContract: await this.worker.getContract()
-		})
-
-		// Unpack OS image .gz
-		await this.os.fetch();
-    await this.os.readOsRelease();
-
-    // get config.json for application
-    this.log("Getting application config.json...");
-    const config = await this.cloud.balena.models.os.getConfig(this.balena.application, {
-        version: this.os.contract.version,
+    if(!this.suite.options.config.manual){ 
+      // remove application when tests are done
+      this.suite.teardown.register(() => {
+        this.log("Removing application");
+        try {
+          return this.cloud.balena.models.application.remove(
+            this.balena.application
+          );
+        } catch(e){
+          this.log(`Error while removing application...`)
+        }
       });
 
-    config.uuid = this.balena.uuid;
+      
+      // Unpack OS image .gz
+      await this.os.fetch();
+      await this.os.readOsRelease();
 
-    //register the device with the application, add the api key to the config.json
-    this.log("Pre-registering a new device...");
-    const deviceRegInfo = await this.cloud.balena.models.device.register(
-        this.balena.application,
-        this.balena.uuid
-      );
+      // get config.json for application
+      this.log("Getting application config.json...");
+      const config = await this.cloud.balena.models.os.getConfig(this.balena.application, {
+          version: this.os.contract.version,
+        });
+
+      config.uuid = this.balena.uuid;
+
+      //register the device with the application, add the api key to the config.json
+      this.log("Pre-registering a new device...");
+      const deviceRegInfo = await this.cloud.balena.models.device.register(
+          this.balena.application,
+          this.balena.uuid
+        );
+      
+      // Add registered device's id and api key to config.json
+      config.deviceApiKey = deviceRegInfo.api_key;
+      config.deviceId = deviceRegInfo.id;
+      config.persistentLogging = true;
+      config.developmentMode = true;
+      config.installer = {
+        secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
+        migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
+      };
+
+      if( this.workerContract.workerType === `qemu` && config.installer.migrate.force ) {
+          console.log("Forcing installer migration")
+      } else {
+          console.log("No migration requested")
+      }
+
+      if ( config.installer.secureboot ) {
+          console.log("Opting-in secure boot and full disk encryption")
+      } else {
+          console.log("No secure boot requested")
+      }
+
+      // get ready to populate DUT image config.json with the attributes we just generated
+      this.os.addCloudConfig(config);
     
-    // Add registered device's id and api key to config.json
-    config.deviceApiKey = deviceRegInfo.api_key;
-    config.deviceId = deviceRegInfo.id;
-    config.persistentLogging = true;
-    config.developmentMode = true;
-    config.installer = {
-      secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-      migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
-    };
+    
+      // Teardown the worker when the tests end
+      this.suite.teardown.register(() => {
+        this.log("Worker teardown");
+        return this.worker.teardown();
+      });
 
-    if( this.workerContract.workerType === `qemu` && config.installer.migrate.force ) {
-        console.log("Forcing installer migration")
+      console.log('--config.json--')
+      console.log(this.os.configJson);
+      // preload image with the single container application
+      this.log(`Device uuid should be ${this.balena.uuid}`)
+      await this.os.configure();
+      await this.cli.preload(this.os.image.path, {
+        app: this.balena.application,
+        commit: initialCommit,
+        pin: true,
+      });
+
+      this.log("Setting up worker");
+      await this.worker.network(this.suite.options.balenaOS.network);
+
+      if (supportsBootConfig(this.suite.deviceType.slug)) {
+        await enableSerialConsole(this.os.image.path);
+      }
+
+      if(flasherConfig(this.suite.deviceType.slug)){
+        await setFlasher(this.os.image.path);
+      }
+
+      // disable port forwarding on the testbot - disables the DUT internet access.
+      if (
+        this.workerContract.workerType !== `qemu`
+      ){
+        await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
+      }
+
+      await this.worker.off();
+      await this.worker.flash(this.os.image.path);
+      await this.worker.on();
+
+      // create tunnels
+      await test.resolves(
+        this.worker.createSSHTunnels(
+          this.link,
+        ),
+        `Should detect ${this.link} on local network and establish tunnel`
+      )
+
+      this.log('Waiting for device to be reachable');
+      await test.resolves(
+        this.utils.waitUntil(async () => {
+          let hostname = await this.worker.executeCommandInHostOS(
+          "cat /etc/hostname",
+          this.link
+          )
+          return (hostname === this.link.split('.')[0])
+        }, true),
+        `Device ${this.link} be reachable over local SSH connection`
+      )
     } else {
-        console.log("No migration requested")
+      // move device to app instead of flashing it
+      await this.cloud.balena.models.device.move(
+        this.balena.uuid,
+        this.balena.application
+      );
+
     }
-
-    if ( config.installer.secureboot ) {
-        console.log("Opting-in secure boot and full disk encryption")
-    } else {
-        console.log("No secure boot requested")
-    }
-
-    // get ready to populate DUT image config.json with the attributes we just generated
-    this.os.addCloudConfig(config);
-
-    // add DUT local hostname to context
-    this.suite.context.set({
-      link: `${this.balena.uuid.slice(0, 7)}.local`
-    })
-
-    // Teardown the worker when the tests end
-    this.suite.teardown.register(() => {
-      this.log("Worker teardown");
-      return this.worker.teardown();
-    });
-
-    console.log('--config.json--')
-    console.log(this.os.configJson);
-    // preload image with the single container application
-    this.log(`Device uuid should be ${this.balena.uuid}`)
-    await this.os.configure();
-    await this.cli.preload(this.os.image.path, {
-      app: this.balena.application,
-      commit: initialCommit,
-      pin: true,
-    });
-
-    this.log("Setting up worker");
-    await this.worker.network(this.suite.options.balenaOS.network);
-
-    if (supportsBootConfig(this.suite.deviceType.slug)) {
-      await enableSerialConsole(this.os.image.path);
-    }
-
-    if(flasherConfig(this.suite.deviceType.slug)){
-			await setFlasher(this.os.image.path);
-		}
-
-    // disable port forwarding on the testbot - disables the DUT internet access.
-    if (
-			this.workerContract.workerType !== `qemu`
-		){
-      await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
-    }
-
-    await this.worker.off();
-    await this.worker.flash(this.os.image.path);
-    await this.worker.on();
-
-    // create tunnels
-		await test.resolves(
-			this.worker.createSSHTunnels(
-				this.link,
-			),
-			`Should detect ${this.link} on local network and establish tunnel`
-		)
-
-    this.log('Waiting for device to be reachable');
-    await test.resolves(
-			this.utils.waitUntil(async () => {
-				let hostname = await this.worker.executeCommandInHostOS(
-				"cat /etc/hostname",
-				this.link
-				)
-				return (hostname === this.link.split('.')[0])
-			}, true),
-			`Device ${this.link} be reachable over local SSH connection`
-		)
 
     await test.resolves( 
 			this.waitForServiceState('balena', 'active', this.link),
