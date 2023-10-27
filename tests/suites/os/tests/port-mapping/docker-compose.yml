@@ -1,0 +1,7 @@
+version: '2'
+services:
+  port-map:
+    build: .
+    restart: on-failure
+    ports: 
+      - 1337:1337
