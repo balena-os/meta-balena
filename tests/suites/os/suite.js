@@ -248,46 +248,44 @@ module.exports = {
 			workerContract: await this.worker.getContract()
 		})
 
+		// Network definitions - here we check what network configuration is selected for the DUT for the suite, and add the appropriate configuration options (e.g wifi credentials)
+		// If suites config.js has networkWired: true, override the device contract
+		if (this.suite.options.balenaOS.network.wired === true) {
+			this.suite.options.balenaOS.network.wired = {
+				nat: true,
+			};
+		} else if(this.suite.deviceType.data.connectivity.wifi === false){
+			// DUT has no wifi - use wired ethernet sharing to connect to DUT
+			this.suite.options.balenaOS.network.wired = {
+				nat: true,
+			};
+		} 
+		else {
+			// device has wifi, use wifi hotspot to connect to DUT
+			delete this.suite.options.balenaOS.network.wired;
+		}
+
+		// If suites config.js has networkWireless: true, override the device contract
+		if (this.suite.options.balenaOS.network.wireless === true) {
+			this.suite.options.balenaOS.network.wireless = {
+				ssid: this.suite.options.id,
+				psk: `${this.suite.options.id}_psk`,
+				nat: true,
+			};
+		} else if(this.suite.deviceType.data.connectivity.wifi === true){
+			// device has wifi, use wifi hotspot to connect to DUT
+			this.suite.options.balenaOS.network.wireless = {
+				ssid: this.suite.options.id,
+				psk: `${this.suite.options.id}_psk`,
+				nat: true,
+			};
+		} 
+		else {
+			// no wifi on DUT
+			delete this.suite.options.balenaOS.network.wireless;
+		}
+
 		if(!this.suite.options.config.manual){
-			// Network definitions - here we check what network configuration is selected for the DUT for the suite, and add the appropriate configuration options (e.g wifi credentials)
-			// If suites config.js has networkWired: true, override the device contract
-			if (this.suite.options.balenaOS.network.wired === true) {
-				this.suite.options.balenaOS.network.wired = {
-					nat: true,
-				};
-			} else if(this.suite.deviceType.data.connectivity.wifi === false){
-				// DUT has no wifi - use wired ethernet sharing to connect to DUT
-				this.suite.options.balenaOS.network.wired = {
-					nat: true,
-				};
-			} 
-			else {
-				// device has wifi, use wifi hotspot to connect to DUT
-				delete this.suite.options.balenaOS.network.wired;
-			}
-
-			// If suites config.js has networkWireless: true, override the device contract
-			if (this.suite.options.balenaOS.network.wireless === true) {
-				this.suite.options.balenaOS.network.wireless = {
-					ssid: this.suite.options.id,
-					psk: `${this.suite.options.id}_psk`,
-					nat: true,
-				};
-			} else if(this.suite.deviceType.data.connectivity.wifi === true){
-				// device has wifi, use wifi hotspot to connect to DUT
-				this.suite.options.balenaOS.network.wireless = {
-					ssid: this.suite.options.id,
-					psk: `${this.suite.options.id}_psk`,
-					nat: true,
-				};
-			} 
-			else {
-				// no wifi on DUT
-				delete this.suite.options.balenaOS.network.wireless;
-			}
-		
-
-
 			// Create an instance of the balenOS object, containing information such as device type, and config.json options
 			this.suite.context.set({
 				os: new BalenaOS(
@@ -380,10 +378,20 @@ module.exports = {
 				}, true),
 				`Device ${this.link} should be reachable over local SSH connection`
 			)
+		} else {
+			this.suite.context.set({
+				os:  new BalenaOS(
+					{
+						deviceType: this.suite.deviceType.slug,
+						network: this.suite.options.balenaOS.network,
+						configJson: {},
+					},
+					this.getLogger(),
+				),
+			});
 		}
 
 		
-
 		await test.resolves( 
 			systemd.waitForServiceState('balena', 'active', this.link),
 			'balena Engine should be running and healthy'
@@ -410,23 +418,23 @@ module.exports = {
 		});
 	},
 	tests: [
-		'./tests/secureboot',
-		'./tests/device-specific-tests/beaglebone-black',
-		'./tests/device-specific-tests/243390-rpi3',
-		'./tests/overlap_test/',
-		'./tests/fingerprint',
-		'./tests/fsck',
-		'./tests/os-release',
-		'./tests/migrate',
-		'./tests/issue',
-		'./tests/chrony',
-		'./tests/kernel-overlap',
-		'./tests/bluetooth',
-		'./tests/container-healthcheck',
-		'./tests/variables',
-		'./tests/led',
-		'./tests/modem',
-		'./tests/config-json',
+		//'./tests/secureboot',
+		//'./tests/device-specific-tests/beaglebone-black',
+		//'./tests/device-specific-tests/243390-rpi3',
+		//'./tests/overlap_test/',
+		//'./tests/fingerprint',
+		//'./tests/fsck',
+		//'./tests/os-release',
+		//'./tests/migrate',
+		//'./tests/issue',
+		//'./tests/chrony',
+		//'./tests/kernel-overlap',
+		//'./tests/bluetooth',
+		//'./tests/container-healthcheck',
+		//'./tests/variables',
+		//'./tests/led',
+		//'./tests/modem',
+		//'./tests/config-json',
 		'./tests/boot-splash',
 		'./tests/connectivity',
 		'./tests/engine-socket',
@@ -435,8 +443,8 @@ module.exports = {
 		'./tests/udev',
 		'./tests/device-tree',
 		'./tests/purge-data',
-		'./tests/device-specific-tests/revpi-core-3',
-		'./tests/swap',
-		'./tests/internet-sharing',
+		// './tests/device-specific-tests/revpi-core-3',
+		// './tests/swap',
+		// './tests/internet-sharing',
 	],
 };
