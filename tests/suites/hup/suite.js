@@ -166,41 +166,44 @@ const doHUP = async (that, test, mode, target) => {
 const initDUT = async (that, test, target) => {
 	test.comment(`Initializing DUT for HUP test`);
 
-	if (supportsBootConfig(that.suite.deviceType.slug)) {
-		await enableSerialConsole(that.os.image.path);
+	if(!this.suite.options.config.manual){
+
+		if (supportsBootConfig(that.suite.deviceType.slug)) {
+			await enableSerialConsole(that.os.image.path);
+		}
+
+		if(flasherConfig(that.suite.deviceType.slug)){
+			await setFlasher(that.os.image.path);
+		}
+
+		test.comment(`Flashing DUT`);
+		await that.worker.off();
+		await that.worker.flash(that.os.image.path);
+		await that.worker.on();
+
+		await that.worker.addSSHKey(that.sshKeyPath);
+
+		// create tunnels
+		await test.resolves(
+			that.worker.createSSHTunnels(
+				that.link,
+			),
+			`Should detect ${that.link} on local network and establish tunnel`
+		)
+
+		await test.resolves(
+			that.utils.waitUntil(async () => {
+				return (
+					(await that.worker.executeCommandInHostOS(
+						'[[ -f /etc/hostname ]] && echo pass || echo fail',
+						target,
+					)) === 'pass'
+				);
+			}, true),
+			`Device ${that.link} should be reachable over local SSH connection`
+		)
+		test.comment(`DUT flashed`);
 	}
-
-	if(flasherConfig(that.suite.deviceType.slug)){
-		await setFlasher(that.os.image.path);
-	}
-
-	test.comment(`Flashing DUT`);
-	await that.worker.off();
-	await that.worker.flash(that.os.image.path);
-	await that.worker.on();
-
-	await that.worker.addSSHKey(that.sshKeyPath);
-
-	// create tunnels
-	await test.resolves(
-		that.worker.createSSHTunnels(
-			that.link,
-		),
-		`Should detect ${that.link} on local network and establish tunnel`
-	)
-
-	await test.resolves(
-		that.utils.waitUntil(async () => {
-			return (
-				(await that.worker.executeCommandInHostOS(
-					'[[ -f /etc/hostname ]] && echo pass || echo fail',
-					target,
-				)) === 'pass'
-			);
-		}, true),
-		`Device ${that.link} should be reachable over local SSH connection`
-	)
-	test.comment(`DUT flashed`);
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
@@ -267,7 +270,7 @@ module.exports = {
 			sdk: new Balena(this.suite.options.balena.apiUrl, this.getLogger(), this.suite.options.config.sshConfig),
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
-			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
+			link: (typeof this.suite.options.config.dutIp !== undefined) ? this.suite.options.config.dutIp : `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
 			worker: new Worker(this.suite.deviceType.slug,
 				this.getLogger(),
 				this.suite.options.workerUrl,
@@ -278,6 +281,44 @@ module.exports = {
 		});
 
 		console.log(this.suite.options)
+
+		this.suite.context.set({
+			hup: {
+				checkUnderVoltage: checkUnderVoltage,
+				doHUP: doHUP,
+				initDUT: initDUT,
+			},
+		});
+
+		// Downloads the balenaOS image we hup from
+		// It can't accept invalid deviceType because we check contracts already in the start
+		// If there are no releases found for a deviceType then skip the HUP suite
+		if (((await this.sdk.balena.models.os.getAvailableOsVersions(this.suite.deviceType.slug)).length) === 0) {
+			// Concat method not working so pushing one test suite at a time to skip
+			// Also, can't access the tests object using `this.tests` to keep this from becoming hard-coded
+			this.suite.options.debug.unstable.push('Rollback tests')
+			this.suite.options.debug.unstable.push('Smoke tests')
+			return
+		}
+
+
+		const keys = await this.utils.createSSHKey(this.sshKeyPath);
+		
+		// Authenticating balenaSDK
+		await this.context
+		.get()
+		.sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		this.log(`Logged in with ${await this.context.get().sdk.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+			
+		await this.sdk.balena.models.key.create(
+			this.sshKeyLabel,
+			keys.pubKey
+		);
+		this.suite.teardown.register(() => {
+			return Promise.resolve(
+				this.sdk.removeSSHKey(this.sshKeyLabel)
+			);
+		});
 
 		// Network definitions
 		// If suites config.js has networkWired: true, override the device contract
@@ -317,111 +358,84 @@ module.exports = {
 		}
 
 		this.suite.context.set({
-			hup: {
-				checkUnderVoltage: checkUnderVoltage,
-				doHUP: doHUP,
-				initDUT: initDUT,
-			},
-		});
-
-		// Downloads the balenaOS image we hup from
-		// It can't accept invalid deviceType because we check contracts already in the start
-		// If there are no releases found for a deviceType then skip the HUP suite
-		if (((await this.sdk.balena.models.os.getAvailableOsVersions(this.suite.deviceType.slug)).length) === 0) {
-			// Concat method not working so pushing one test suite at a time to skip
-			// Also, can't access the tests object using `this.tests` to keep this from becoming hard-coded
-			this.suite.options.debug.unstable.push('Rollback tests')
-			this.suite.options.debug.unstable.push('Smoke tests')
-			return
-		}
-
-		let path = await this.sdk.fetchOS(
-			this.suite.options.balenaOS.download.version,
-			this.suite.deviceType.slug,
-		);
-
-		const keys = await this.utils.createSSHKey(this.sshKeyPath);
-		
-		// Authenticating balenaSDK
-    await this.context
-    .get()
-    .sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-    this.log(`Logged in with ${await this.context.get().sdk.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
-		
-		await this.sdk.balena.models.key.create(
-			this.sshKeyLabel,
-			keys.pubKey
-		);
-		this.suite.teardown.register(() => {
-			return Promise.resolve(
-				this.sdk.removeSSHKey(this.sshKeyLabel)
-			);
-		});
-
-
-		this.suite.context.set({
 			workerContract: await this.worker.getContract()
 		})
 
-		this.suite.context.set({
-			os: new BalenaOS(
-				{
-					deviceType: this.suite.deviceType.slug,
-					network: this.suite.options.balenaOS.network,
-					image: `${path}`,
-					configJson: {
-						uuid: this.suite.options.balenaOS.config.uuid,
-						os: {
-							sshKeys: [
-								keys.pubKey
-							],
-						},
-						// persistentLogging is managed by the supervisor and only read at first boot
-						persistentLogging: true,
-						// Set local mode so we can perform local pushes of containers to the DUT
-						localMode: true,
-						apiEndpoint: 'https://api.balena-cloud.com',
-						developmentMode: true,
-						installer: {
-							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
+
+		if(!this.suite.options.config.manual){
+			let path = await this.sdk.fetchOS(
+				this.suite.options.balenaOS.download.version,
+				this.suite.deviceType.slug,
+			);
+
+			this.suite.context.set({
+				os: new BalenaOS(
+					{
+						deviceType: this.suite.deviceType.slug,
+						network: this.suite.options.balenaOS.network,
+						image: `${path}`,
+						configJson: {
+							uuid: this.suite.options.balenaOS.config.uuid,
+							os: {
+								sshKeys: [
+									keys.pubKey
+								],
+							},
+							// persistentLogging is managed by the supervisor and only read at first boot
+							persistentLogging: true,
+							// Set local mode so we can perform local pushes of containers to the DUT
+							localMode: true,
+							apiEndpoint: 'https://api.balena-cloud.com',
+							developmentMode: true,
+							installer: {
+								secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
+								migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
+							},
 						},
 					},
-				},
-				this.getLogger(),
-			),
-			hupOs: new BalenaOS({}, this.getLogger()),
-		});
-		this.suite.teardown.register(() => {
-			this.log('Worker teardown');
-			return this.worker.teardown();
-		});
+					this.getLogger(),
+				),
+				hupOs: new BalenaOS({}, this.getLogger()),
+			});
 
-		if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
-			console.log("Forcing installer migration")
+			this.suite.teardown.register(() => {
+				this.log('Worker teardown');
+				return this.worker.teardown();
+			});
+
+			if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
+				console.log("Forcing installer migration")
+			} else {
+				console.log("No migration requested")
+			}
+
+			if ( this.os.configJson.installer.secureboot ) {
+				console.log("Opting-in secure boot and full disk encryption")
+			} else {
+				console.log("No secure boot requested")
+			}
+
+			this.log('Setting up worker');
+			await this.worker.network(this.suite.options.balenaOS.network);
+
+			// Unpack both base and target OS images
+			await this.os.fetch();
+			await this.hupOs.fetch();
+			// configure the image
+			await this.os.configure();
+
+			// Retrieving journalctl logs
+			this.suite.teardown.register(async () => {
+				await this.worker.archiveLogs(this.id, this.link);
+			});
 		} else {
-			console.log("No migration requested")
+			this.suite.context.set({
+				hupOs: new BalenaOS({}, this.getLogger()),
+				
+			})
+			await this.hupOs.fetch();
 		}
 
-		if ( this.os.configJson.installer.secureboot ) {
-			console.log("Opting-in secure boot and full disk encryption")
-		} else {
-			console.log("No secure boot requested")
-		}
-
-		this.log('Setting up worker');
-		await this.worker.network(this.suite.options.balenaOS.network);
-
-		// Unpack both base and target OS images
-		await this.os.fetch();
-		await this.hupOs.fetch();
-		// configure the image
-		await this.os.configure();
-
-		// Retrieving journalctl logs
-		this.suite.teardown.register(async () => {
-			await this.worker.archiveLogs(this.id, this.link);
-		});
 	},
 	tests: [
 		'./tests/rollbacks',
