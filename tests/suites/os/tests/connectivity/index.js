@@ -42,7 +42,7 @@ module.exports = {
 						},
 					},
 					run: async function(test) {
-						let connection = adaptor === 'wireless' ? 'balena-wifi' : 'Wired';
+						let connection = adaptor === 'wireless' ? '-wifi' : 'Wired';
 						return this.worker.executeCommandInHostOS(
 							`nmcli d  | grep ' ${connection} ' | grep connected | awk '{print $1}'`,
 							this.link,
@@ -53,7 +53,7 @@ module.exports = {
 
 							test.comment(`Attempting to connect to ${URL_TEST} over interface ${iface}`)
 							return this.worker.executeCommandInHostOS(
-								`ping -c 10 -i 0.002 -I ${iface} ${URL_TEST}`,
+								`ping -c 10 -i 0.2 -I ${iface} ${URL_TEST}`,
 								this.link,
 							);
 						}).then((ping) => {
