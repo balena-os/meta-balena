@@ -71,7 +71,7 @@ resindataexpander_run() {
             if [ "${dataparttype}" = "crypt" ]; then
                 datapartmap=$(lsblk ${datapart} -nlo name)
                 info "resindataexpander: Expand LUKS volume for data partition..."
-                cryptsetup resize "${datapartmap}"
+                cryptsetup resize "${datapartmap}" --key-file "$PASSPHRASE_FILE"
                 info "resindataexpander: Expanded LUKS volume for data partition"
                 sync
             fi

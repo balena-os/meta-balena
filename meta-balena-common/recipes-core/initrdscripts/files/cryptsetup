@@ -137,7 +137,6 @@ cryptsetup_run() {
         wait4udev "/dev/mapper/${DM_NAME}"
     done
 
-    rm -f "$PASSPHRASE_FILE"
     umount "$EFI_MOUNT_DIR"
     rmdir "$EFI_MOUNT_DIR"
 
