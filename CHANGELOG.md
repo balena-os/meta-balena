@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v4.1.2
+## (2023-11-01)
+
+* flasher: remove user mode check after programming keys [Joseph Kogut]
+* initrdscripts: unlock LUKS partitions only in user mode [Joseph Kogut]
+* os-helpers: add secure boot helpers [Joseph Kogut]
+
 # v4.1.1
 ## (2023-10-25)
 

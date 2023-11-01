@@ -1,4 +1,51 @@
 - commits:
+    - subject: "flasher: remove user mode check after programming keys"
+      hash: 05d3d41323c20f557a773229766afaef1dbf1eb5
+      body: |
+        This check is now done in the cryptsetup initramfs hook rather than
+        during installation, which obviates the need to perform it during setup.
+        Remove it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "initrdscripts: unlock LUKS partitions only in user mode"
+      hash: 63672541fefde9643040a555ba125e0bd021dc46
+      body: |
+        During installation, some firmwares may allow keys to be enrolled but
+        fail to tip the system into user mode until the system is rebooted. We
+        don't want to mislead users with only full-disk encryption into thinking
+        their system also has secure boot enabled when it doesn't.
+
+        Disable the hook to unlock encrypted partitions if the firmware fails to
+        boot into user mode.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers: add secure boot helpers"
+      hash: c8e0369c239b229366278d5d7725bfcd2e8ac86d
+      body: |
+        We now have several places where secure boot specific configuration is
+        checked. Create an os-helpers-secureboot package to consolidate and
+        reuse this code.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 4.1.2
+  title: ""
+  date: 2023-11-01T08:29:33.877Z
+- commits:
     - subject: "plymouth: Remove --retain-splash flag from plymouth quit"
       hash: 01a0cc9a3116274fd6e6e6c999705e6e5a8acfec
       body: |
