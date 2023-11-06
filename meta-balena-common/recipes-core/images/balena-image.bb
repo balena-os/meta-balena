@@ -71,7 +71,7 @@ BALENA_BOOT_PARTITION_FILES:append = " \
 BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','','balena-keys:/balena-keys/',d)}"
 
 # add the LUKS variant of GRUB config if needed
-BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','',' grub.cfg_internal_luks:/EFI/BOOT/grub-luks.cfg',d)}"
+BALENA_BOOT_PARTITION_FILES:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' grub.cfg_internal_luks:/EFI/BOOT/grub-luks.cfg','',d)}"
 
 # add the generated <machine-name>.json to the resin-boot partition, renamed as device-type.json
 BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
