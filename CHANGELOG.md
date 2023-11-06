@@ -1,6 +1,36 @@
 Change log
 -----------
 
+# v4.1.3
+## (2023-11-06)
+
+
+<details>
+<summary> Update tests/leviathan digest to 2a64939 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.9
+> ### (2023-11-06)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.8
+> ### (Invalid date)
+> 
+> * patch: Update Learn More docs content [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.29.7
+> ### (Invalid date)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.6
+> ### (2023-10-26)
+> 
+> * Update core/contracts digest to 1091793 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v4.1.2
 ## (2023-11-01)
 
