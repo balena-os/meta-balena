@@ -123,6 +123,34 @@ read_only_rootfs_hook:append () {
         ${IMAGE_ROOTFS}/etc/default/ssh
 }
 
+# This is a sanity check
+# When updating the hostOS we are using atomic operations for copying new
+# files in the boot partition. This requires twice the size of a file with
+# every copy operation. This means that the boot partition needs to have
+# available at least free space as much as the largest file deployed.
+hup_sanity_check() {
+	# First Calculate size of the data
+	DATA_SECTORS=$(expr $(du --apparent-size -ks ${BALENA_BOOT_WORKDIR} | cut -f 1) \* 2)
+	# Calculate fs overhead
+	DIR_BYTES=$(expr $(find ${BALENA_BOOT_WORKDIR} | tail -n +2 | wc -l) \* 32)
+	DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${BALENA_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 32))
+	FAT_BYTES=$(expr $DATA_SECTORS \* 4)
+	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${BALENA_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 4))
+	DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
+	FAT_SECTORS=$(expr $(expr $FAT_BYTES + 511) / 512 \* 2)
+	FAT_OVERHEAD_SECTORS=$(expr $DIR_SECTORS + $FAT_SECTORS)
+	# Find the largest file and calculate the size in sectors
+	LARGEST_FILE_SECTORS=$(expr $(find ${BALENA_BOOT_WORKDIR} -type f -exec du --apparent-size -k {} + | sort -n -r | head -n1 | cut -f1) \* 2)
+	if [ -n "$LARGEST_FILE_SECTORS" ]; then
+		TOTAL_SECTORS=$(expr $DATA_SECTORS \+ $FAT_OVERHEAD_SECTORS \+ $LARGEST_FILE_SECTORS)
+		BOOT_SIZE_SECTORS=$(expr ${BALENA_BOOT_SIZE} \* 2)
+		bbnote "resin-boot: FAT overhead $FAT_OVERHEAD_SECTORS sectors, data $DATA_SECTORS sectors, largest file $LARGEST_FILE_SECTORS sectors, boot size $BOOT_SIZE_SECTORS sectors."
+		if [ $TOTAL_SECTORS -gt $BOOT_SIZE_SECTORS ]; then
+			bbfatal "resin-boot: Not enough space for atomic copy operations."
+		fi
+	fi
+}
+
 # Generate the boot partition directory and deploy it to rootfs
 do_resin_boot_dirgen_and_deploy () {
     echo "Generating work directory for resin-boot partition..."
@@ -217,31 +245,7 @@ do_resin_boot_dirgen_and_deploy () {
     echo "Install resin-boot in the rootfs..."
     cp -rvf ${BALENA_BOOT_WORKDIR} ${IMAGE_ROOTFS}/${BALENA_BOOT_FS_LABEL}
 
-	# This is a sanity check
-	# When updating the hostOS we are using atomic operations for copying new
-	# files in the boot partition. This requires twice the size of a file with
-	# every copy operation. This means that the boot partition needs to have
-	# available at least free space as much as the largest file deployed.
-	# First Calculate size of the data
-	DATA_SECTORS=$(expr $(du --apparent-size -ks ${BALENA_BOOT_WORKDIR} | cut -f 1) \* 2)
-	# Calculate fs overhead
-	DIR_BYTES=$(expr $(find ${BALENA_BOOT_WORKDIR} | tail -n +2 | wc -l) \* 32)
-	DIR_BYTES=$(expr $DIR_BYTES + $(expr $(find ${BALENA_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 32))
-	FAT_BYTES=$(expr $DATA_SECTORS \* 4)
-	FAT_BYTES=$(expr $FAT_BYTES + $(expr $(find ${BALENA_BOOT_WORKDIR} -type d | tail -n +2 | wc -l) \* 4))
-	DIR_SECTORS=$(expr $(expr $DIR_BYTES + 511) / 512)
-	FAT_SECTORS=$(expr $(expr $FAT_BYTES + 511) / 512 \* 2)
-	FAT_OVERHEAD_SECTORS=$(expr $DIR_SECTORS + $FAT_SECTORS)
-	# Find the largest file and calculate the size in sectors
-	LARGEST_FILE_SECTORS=$(expr $(find ${BALENA_BOOT_WORKDIR} -type f -exec du --apparent-size -k {} + | sort -n -r | head -n1 | cut -f1) \* 2)
-	if [ -n "$LARGEST_FILE_SECTORS" ]; then
-		TOTAL_SECTORS=$(expr $DATA_SECTORS \+ $FAT_OVERHEAD_SECTORS \+ $LARGEST_FILE_SECTORS)
-		BOOT_SIZE_SECTORS=$(expr ${BALENA_BOOT_SIZE} \* 2)
-		bbnote "resin-boot: FAT overhead $FAT_OVERHEAD_SECTORS sectors, data $DATA_SECTORS sectors, largest file $LARGEST_FILE_SECTORS sectors, boot size $BOOT_SIZE_SECTORS sectors."
-		if [ $TOTAL_SECTORS -gt $BOOT_SIZE_SECTORS ]; then
-			bbfatal "resin-boot: Not enough space for atomic copy operations."
-		fi
-	fi
+    hup_sanity_check
 }
 do_resin_boot_dirgen_and_deploy[depends] += "${@bb.utils.contains_any('BALENA_IMAGE_BOOTLOADER', 'grub grub-efi', 'grub-conf:do_deploy', '', d)}"
 
