@@ -24,14 +24,8 @@ hw_gen_passphrase() {
 
 hw_encrypt_passphrase() {
     PASSPHRASE_FILE="$1"
-    PCRS="$2"
+    POLICY="$2"
     OUT_DIR="$3"
-
-    # Create a PCR protection policy
-    # We are using PCRs 0, 1, 2 and 3
-    # This ensures secure boot is enabled and no UEFI configuration has been tampered with
-    POLICY="${OUT_DIR}/pcr.policy"
-    tpm2_createpolicy --policy-pcr -l "sha256:${PCRS}" -L "${POLICY}"
 
     # Create a primary key pair within the TPM
     PRIMARY_CTX="${OUT_DIR}/primary.ctx"
@@ -58,13 +52,16 @@ hw_encrypt_passphrase() {
     tpm2_rsaencrypt -c "${PERSISTENT_KEY_HANDLE}" -o "${ENCRYPTED_PASSPHRASE}" < "${PASSPHRASE_FILE}"
 
     # Remove unnecessary files
-    rm -f "${PRIMARY_CTX}" "${PRIVATE_KEY}" "${PUBLIC_KEY}" "${KEY_CTX}" "${POLICY}"
+    rm -f "${PRIMARY_CTX}" "${PRIVATE_KEY}" "${PUBLIC_KEY}" "${KEY_CTX}"
 }
 
 hw_decrypt_passphrase() {
     EFI_DIR="$1"
-    PCRS="$2"
+    AUTH="$2"
     OUTPUT_FILE="$3"
 
-    tpm2_rsadecrypt -c "${EFI_DIR}/balena-luks.ctx" -p "pcr:sha256:${PCRS}" -o "${OUTPUT_FILE}" "${EFI_DIR}/balena-luks.enc"
+    tpm2_rsadecrypt -c "${EFI_DIR}/balena-luks.ctx" \
+                    -p "${AUTH}" \
+                    -o "${OUTPUT_FILE}" \
+                    "${EFI_DIR}/balena-luks.enc"
 }

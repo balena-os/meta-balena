@@ -27,5 +27,7 @@ diskenc_setup() {
         # PCR1 is added on first boot since this is the setup we want to lock against
         # It is therefore important to boot the device at least once after provisioning in secure environment to enable the protection
         TPM_RESULT_DIR=$(mktemp -d)
-        hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,2,3" "$TPM_RESULT_DIR"
+        POLICY=$(mktemp)
+        tpm2_createpolicy --policy-pcr -l "sha256:0,2,3" -L "$POLICY"
+        hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$TPM_RESULT_DIR"
 }

@@ -60,9 +60,9 @@ cryptsetup_run() {
     mount "$EFI_DEV" "$EFI_MOUNT_DIR"
 
     PASSPHRASE_FILE=/balena-luks.pwd
-    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,1,2,3" "$PASSPHRASE_FILE"; then
+    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "pcr:sha256:0,1,2,3" "$PASSPHRASE_FILE"; then
         info "Successfully unlocked LUKS passphrase using the TPM"
-    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,2,3" "$PASSPHRASE_FILE"; then
+    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "pcr:sha256:0,2,3" "$PASSPHRASE_FILE"; then
         info "Unlocked LUKS passphrase without UEFI config protection, re-locking"
 
         RESULT_DIR="/balena-luks"
@@ -71,7 +71,9 @@ cryptsetup_run() {
         # Create a PCR protection policy
         # We are using PCRs 0, 1, 2 and 3
         # This ensures secure boot is enabled and no UEFI configuration has been tampered with
-        hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,1,2,3" "$RESULT_DIR"
+        POLICY="$(mktemp)"
+        tpm2_createpolicy --policy-pcr -l "sha256:0,1,2,3" -L "${POLICY}"
+        hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
 
         # Ditch the old key pair from the TPM and replace existing files with new ones
         tpm2_evictcontrol -c "$EFI_MOUNT_DIR/balena-luks.ctx"
