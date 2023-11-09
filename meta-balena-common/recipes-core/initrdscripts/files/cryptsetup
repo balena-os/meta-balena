@@ -4,7 +4,7 @@
 . /usr/libexec/os-helpers-logging
 . /usr/libexec/os-helpers-fs
 . /usr/libexec/os-helpers-tpm2
-. /usr/libexec/os-helpers-secureboot
+. /usr/libexec/os-helpers-efi
 
 # Give a chance to the by-state directory to appear
 # We do not expect any particular device or partition to come up

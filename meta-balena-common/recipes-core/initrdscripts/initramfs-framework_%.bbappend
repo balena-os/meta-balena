@@ -87,7 +87,9 @@ RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
 FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
 
 SUMMARY:initramfs-module-cryptsetup = "Unlock encrypted partitions"
-RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libgcc lvm2-udevrules os-helpers-logging os-helpers-fs os-helpers-tpm2 os-helpers-secureboot"
+RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libgcc lvm2-udevrules os-helpers-logging os-helpers-fs"
+RDEPENDS:initramfs-module-cryptsetup:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' os-helpers-tpm2', '',d)}"
+RDEPENDS:initramfs-module-cryptsetup:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' os-helpers-efi', '',d)}"
 FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
 
 SUMMARY:initramfs-module-kexec = "Find and start a new kernel if in stage2"
