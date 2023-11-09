@@ -27,9 +27,10 @@ RDEPENDS:${PN} = " \
     util-linux-lsblk \
     "
 
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils efibootmgr', '',d)}"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils efibootmgr efivar', '',d)}"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' os-helpers-tpm2', '',d)}"
 
-RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs os-helpers-tpm2 efivar util-linux-mount util-linux-losetup',d)}"
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs util-linux-mount util-linux-losetup',d)}"
 
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
@@ -84,7 +85,9 @@ do_install() {
     echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS_1=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
 
     if [ "x${SIGN_API}" != "x" ]; then
-        echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+        if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
+            echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+        fi
     fi
     # Configuration data
     echo "BALENA_SPLASH_CONFIG=splash" >> ${D}/${sysconfdir}/resin-init-flasher.conf
