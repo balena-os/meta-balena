@@ -2,6 +2,9 @@
 
 set -o errexit
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
 old_os_before_hooks=0
 old_os_after_hooks=0
 forward_hooks=1
@@ -67,7 +70,7 @@ while [ "$#" -gt "0" ]; do
 			exit 0
 			;;
 		*)
-			echo "[WARNING] $0 : Argument '$1' unknown. Ignoring."
+			warn "Argument '$1' unknown. Ignoring."
 			;;
 	esac
     shift

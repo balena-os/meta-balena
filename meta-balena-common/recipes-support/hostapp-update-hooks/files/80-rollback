@@ -6,15 +6,17 @@
 
 set -o errexit
 
+# shellcheck disable=SC1091
 . /usr/sbin/balena-config-vars
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
 
-printf "[INFO] Running rollback hook \n"
+info "Running rollback hook"
 
 DURING_UPDATE=${DURING_UPDATE:-0}
 
 if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
-        echo "hostapp rollback: $BALENA_BOOT_MOUNTPOINT doesn't exist."
-        exit 1
+        fail "hostapp rollback: $BALENA_BOOT_MOUNTPOINT doesn't exist."
 fi
 
 # Are we updating or falling back?
