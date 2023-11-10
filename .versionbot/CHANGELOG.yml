@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to af50e8d
+      hash: c2f33c50ca7e24e74afed1bd8490b1c49d67ddfa
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "core: remove request timeout on flashing"
+              hash: 8c8ff58cfd7d2c93cda7735cb48f92556445e053
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.29.10
+          title: ""
+          date: 2023-11-08T10:24:24.736Z
+  version: 4.1.4
+  title: ""
+  date: 2023-11-10T09:57:20.312Z
+- commits:
     - subject: Update tests/leviathan digest to 2a64939
       hash: 44b9074caa94ce8704c2caeac46269338ec30466
       body: Update tests/leviathan
