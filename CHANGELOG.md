@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v4.1.5
+## (2023-11-10)
+
+* update-balena-supervisor: ensure target supervisor is running [Alex Gonzalez]
+* update-balena-supervisor: use os-helpers logging [Alex Gonzalez]
+* hostapp-update: surface logs to journal [Alex Gonzalez]
+* hostapp-update-hooks: surface logs to journal [Alex Gonzalez]
+* os-helpers-logging: skip logging to journal from a container [Alex Gonzalez]
+
 # v4.1.4
 ## (2023-11-10)
 
