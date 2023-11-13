@@ -35,6 +35,8 @@ SRC_URI = "\
 	file://balena-tmpfiles.conf \
 	file://0001-dynbinary-use-go-cross-compiler.patch \
 	file://balenad-rootless.sh \
+	file://newgidmap \
+	file://newuidmap \
 	"
 S = "${WORKDIR}/git"
 
@@ -145,8 +147,12 @@ do_install() {
 	install -d ${D}${sysconfdir}/tmpfiles.d
 	install -m 0644 ${WORKDIR}/balena-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
 
-	# [TEST] Rootless
+	# [TEST] Rootless. Including copying some binaries compiled for x86_64. Not
+	# exactly portable, but I couldn't do a proper shadow build. This will do
+	# for a PoC.
 	install -m 0644 ${WORKDIR}/balenad-rootless.sh ${D}/${bindir}/balenad-rootless.sh
+	install -m 0755 ${WORKDIR}/newgidmap ${D}/${bindir}/newgidmap
+	install -m 0755 ${WORKDIR}/newuidmap ${D}/${bindir}/newuidmap
 }
 
 BBCLASSEXTEND = " native"
