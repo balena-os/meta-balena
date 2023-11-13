@@ -49,7 +49,7 @@ BALENA_DATA_FS_LABEL = "flash-data"
 BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','','balena-keys:/balena-keys/',d)}"
 
 # add the LUKS variant of GRUB config if needed
-BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','',' grub.cfg_internal_luks:',d)}"
+BALENA_BOOT_PARTITION_FILES:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' grub.cfg_internal_luks:','',d)}"
 
 # Put the resin logo, uEnv.txt files inside the boot partition
 BALENA_BOOT_PARTITION_FILES:append = " balena-logo.png:/splash/balena-logo.png"
