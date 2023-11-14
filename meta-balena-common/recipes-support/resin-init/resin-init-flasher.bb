@@ -9,6 +9,12 @@ SRC_URI = " \
     file://resin-init-flasher \
     file://resin-init-flasher.service \
     "
+
+SRC_URI:append = " \
+           ${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' file://balena-init-flasher-efi', '',d)} \
+           ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' file://balena-init-flasher-tpm', '',d)} \
+"
+
 S = "${WORKDIR}"
 
 inherit allarch systemd
@@ -87,9 +93,16 @@ do_install() {
 
     if [ "x${SIGN_API}" != "x" ]; then
         if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
+            install -d ${D}${libexecdir}
             echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+            install -m 0755 ${WORKDIR}/balena-init-flasher-efi ${D}${libexecdir}/balena-init-flasher-secureboot
+        fi
+        if ${@bb.utils.contains('MACHINE_FEATURES','tpm','true','false',d)}; then
+            install -d ${D}${libexecdir}
+            install -m 0755 ${WORKDIR}/balena-init-flasher-tpm ${D}${libexecdir}/balena-init-flasher-diskenc
         fi
     fi
+
     # Configuration data
     echo "BALENA_SPLASH_CONFIG=splash" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt" >> ${D}/${sysconfdir}/resin-init-flasher.conf
