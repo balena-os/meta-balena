@@ -25,6 +25,7 @@ PACKAGE_INSTALL = " \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
     "
 
+PACKAGE_INSTALL:append = " initramfs-module-console-null-workaround"
 PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-kexec',d)}"
 PACKAGE_INSTALL:append = "${@oe.utils.conditional('PARTITION_TABLE_TYPE','gpt',' gptfdisk ','',d)}"
 
