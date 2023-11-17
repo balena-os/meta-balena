@@ -1,6 +1,36 @@
 Change log
 -----------
 
+# v4.1.6
+## (2023-11-17)
+
+
+<details>
+<summary> Update tests/leviathan digest to 30c115d [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.14
+> ### (2023-11-15)
+> 
+> * patch: Add support for local autokit support [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.29.13
+> ### (2023-11-13)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.12
+> ### (2023-11-13)
+> 
+> * Update balena-os/leviathan-worker to v2.9.25 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.11
+> ### (2023-11-13)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v4.1.5
 ## (2023-11-10)
 

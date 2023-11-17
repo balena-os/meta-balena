@@ -1,4 +1,67 @@
 - commits:
+    - subject: Update tests/leviathan digest to 30c115d
+      hash: 910c9b89c2c867b48b2e47a9a3775249e0211329
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "patch: Add support for local autokit support"
+              hash: 0c9fa8af880987316dbb0ca096ae15522784735b
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.29.14
+          title: ""
+          date: 2023-11-15T19:24:24.674Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 1bd306de3510c8da83b42f87f49905fc532cfaf5
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.13
+          title: ""
+          date: 2023-11-13T03:35:12.022Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.25
+              hash: 0e6357d94d2e05d8cef28dfc5f09e8fceea49114
+              body: |
+                Update balena-os/leviathan-worker from 2.9.24 to 2.9.25
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.12
+          title: ""
+          date: 2023-11-13T01:58:28.069Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 4699166b073f9a6912b51e2814a38f1c9d8955d7
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.11
+          title: ""
+          date: 2023-11-13T00:59:30.237Z
+  version: 4.1.6
+  title: ""
+  date: 2023-11-17T10:10:54.558Z
+- commits:
     - subject: "update-balena-supervisor: ensure target supervisor is running"
       hash: bb56c90dd91913773bb838ee5361731ab65fc754
       body: |
