@@ -11,6 +11,7 @@ SRC_URI:append = " \
     file://rootfs \
     file://finish \
     file://cryptsetup \
+    file://cryptsetup-efi-tpm \
     file://kexec \
     file://udevcleanup \
     file://recovery \
@@ -30,7 +31,13 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
     install -m 0755 ${WORKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
-    install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
+    if [ ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'true', 'false',d)} = 'true' ] &&
+       [ ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', 'true', 'false',d)} = 'true' ]; then
+        install -m 0755 ${WORKDIR}/cryptsetup-efi-tpm ${D}/init.d/72-cryptsetup
+        sed -i -e "s/@@BALENA_NONENC_BOOT_LABEL@@/${BALENA_NONENC_BOOT_LABEL}/g" ${D}/init.d/72-cryptsetup
+    else
+        install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
+    fi
     install -m 0755 ${WORKDIR}/recovery ${D}/init.d/00-recovery
 
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
