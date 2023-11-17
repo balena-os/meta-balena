@@ -1,4 +1,26 @@
 - commits:
+    - subject: "meta-balena-common: Move code from meta-balena-kirkstone"
+      hash: a8098360caf7ec3c6ede8aa953361fab2004b766
+      body: |
+        The code moved from meta-balena-kirkstone was not really specific to
+        kirkstone so let's move it here so that future branches for newer yocto
+        releases which we'll base off kirkstone don't continue to add this
+        unneeded  duplication.
+        There are other meta-balena-* directories that still contain the
+        duplication we moved from meta-balena-kirkstone but we're not really
+        concerned with that because going forward those old directories will
+        naturally get deprecated.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 4.1.7
+  title: ""
+  date: 2023-11-17T10:23:11.798Z
+- commits:
     - subject: Update tests/leviathan digest to 30c115d
       hash: 910c9b89c2c867b48b2e47a9a3775249e0211329
       body: Update tests/leviathan

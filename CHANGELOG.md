@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.1.7
+## (2023-11-17)
+
+* meta-balena-common: Move code from meta-balena-kirkstone [Florin Sarbu]
+
 # v4.1.6
 ## (2023-11-17)
 
