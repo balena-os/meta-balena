@@ -20,6 +20,8 @@ SRC_URI:append = " \
     file://condition-virtualization-not-docker.conf \
     "
 
+PACKAGECONFIG:remove = "nss-resolve"
+
 python() {
     import re
 
@@ -45,6 +47,9 @@ FILES:${PN} += " \
     "
 
 do_install:append() {
+    # avoid file conflict with timeinit package
+    rm -f ${D}${systemd_unitdir}/system/time-set.target
+
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
     install -m 06444 ${WORKDIR}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
 
@@ -129,6 +134,9 @@ FILES:${PN}-zram-swap = "\
 SYSTEMD_SERVICE:${PN}-zram-swap += "dev-zram0.swap"
 
 FILES:udev += "\
+    ${rootlibexecdir}/udev/rules.d/touchscreen.rules \
+    ${rootlibexecdir}/udev/rules.d/10-zram.rules \
+    ${rootlibexecdir}/udev/rules.d/65-resin-update-state.rules \
     ${rootlibexecdir}/udev/resin_update_state_probe \
     ${rootlibexecdir}/udev/zram-swap-init           \
 "
