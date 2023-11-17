@@ -79,7 +79,7 @@ RDEPENDS:initramfs-module-rootfs = "${PN}-base os-helpers-fs os-helpers-logging"
 FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY:initramfs-module-prepare = "Prepare initramfs console"
-RDEPENDS:initramfs-module-prepare = "${PN}-base os-helpers-logging os-helpers-fs"
+RDEPENDS:initramfs-module-prepare = "${PN}-base bash os-helpers-logging os-helpers-fs"
 FILES:initramfs-module-prepare = "/init.d/70-prepare"
 
 SUMMARY:initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
@@ -110,6 +110,7 @@ SUMMARY:initramfs-module-migrate = "OS Migration"
 RDEPENDS:initramfs-module-migrate = " \
     util-linux-findmnt \
     util-linux-mountpoint \
+    util-linux-zramctl \
     resin-init-flasher \
     bash \
     balena-config-vars-config \

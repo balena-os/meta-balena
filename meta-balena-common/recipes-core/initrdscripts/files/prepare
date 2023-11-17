@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-fs
@@ -16,10 +16,12 @@ prepare_run() {
     fi
     mkdir -m 0755 /run/initramfs
 
-    # shellcheck disable=SC2154
+    # enable process substitution
+    ln -s /proc/self/fd /dev/fd
+
     export INITRAMFS_LOGFILE="/run/initramfs/initramfs.debug"
-    if [ -z "$bootparam_shell" ] && [ -z "${bootparam_shell_debug}" ]; then
+    if [ -z "$bootparam_shell" ]; then
         # Export stdout and stderr to file
-        exec >"${INITRAMFS_LOGFILE}" 2>&1
+        exec &> >(tee "${INITRAMFS_LOGFILE}")
     fi
 }
