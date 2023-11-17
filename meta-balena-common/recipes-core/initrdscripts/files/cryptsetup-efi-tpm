@@ -1,0 +1,115 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-fs
+. /usr/libexec/os-helpers-tpm2
+. /usr/libexec/os-helpers-efi
+. /usr/sbin/balena-config-defaults
+
+# Give a chance to the by-state directory to appear
+# We do not expect any particular device or partition to come up
+# but if balenaOS is correctly configured on the device the by-state
+# directory will eventually be created by the custom udev rule.
+# This is useful if the rootfs is on a device that takes a while
+# to initialize such as a USB disk.
+wait4file "/dev/disk/by-state" "50"
+EFI_DEV=$(get_state_path_from_label "${BALENA_NONENC_BOOT_LABEL}")
+
+ensure_luks2() {
+    LUKS_DEVICE="$1"
+
+    LUKS_VERSION=$(cryptsetup luksDump "${LUKS_DEVICE}" | grep "^Version:" | cut -f 2)
+
+    if [ "${LUKS_VERSION}" = 1 ]; then
+        info "Converting ${LUKS_DEVICE} to LUKS2"
+        cryptsetup convert -q --type luks2 "${LUKS_DEVICE}"
+    fi
+}
+
+cryptsetup_enabled() {
+    # Flasher should not try to unlock the partitions
+    if [ "$bootparam_flasher" = "true" ]; then
+        return 1
+    fi
+
+    # Ensure that secure boot is enabled and in user mode before unlocking
+    if ! user_mode_enabled; then
+	    return 1
+    fi
+
+    # Only run if the EFI partition is split
+    if [ ! -e "$EFI_DEV" ]; then
+        return 1
+    fi
+
+    # Check whether there are any LUKS partitions
+    if ! lsblk -nlo fstype | grep -q crypto_LUKS; then
+        return 1
+    fi
+
+    return 0
+}
+
+cryptsetup_run() {
+    # Die if anything fails here
+    set -e
+
+    EFI_MOUNT_DIR="/efi"
+    mkdir "$EFI_MOUNT_DIR"
+    mount "$EFI_DEV" "$EFI_MOUNT_DIR"
+
+    PASSPHRASE_FILE=/balena-luks.pwd
+    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,1,2,3" "$PASSPHRASE_FILE"; then
+        info "Successfully unlocked LUKS passphrase using the TPM"
+    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,2,3" "$PASSPHRASE_FILE"; then
+        info "Unlocked LUKS passphrase without UEFI config protection, re-locking"
+
+        RESULT_DIR="/balena-luks"
+        mkdir -p "$RESULT_DIR"
+
+        # Create a PCR protection policy
+        # We are using PCRs 0, 1, 2 and 3
+        # This ensures secure boot is enabled and no UEFI configuration has been tampered with
+        hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,1,2,3" "$RESULT_DIR"
+
+        # Ditch the old key pair from the TPM and replace existing files with new ones
+        tpm2_evictcontrol -c "$EFI_MOUNT_DIR/balena-luks.ctx"
+        mv "$RESULT_DIR/persistent.ctx" "$EFI_MOUNT_DIR/balena-luks.ctx" && sync
+        mv "$RESULT_DIR/passphrase.enc" "$EFI_MOUNT_DIR/balena-luks.enc" && sync
+
+        rm -rf "$RESULT_DIR"
+
+        sync
+
+        info "Passphrase lock includes UEFI configuration now"
+    else
+        umount "$EFI_MOUNT_DIR"
+        fail "Failed to unlock LUKS passphrase using the TPM"
+    fi
+
+    BOOT_DEVICE=$(lsblk -nlo pkname "${EFI_DEV}")
+
+    # Unlock all the partitions - cryptsetup luksOpen does not wait for udev processing
+    # of the DM device to complete, it just kicks off the process and returns.
+    # Since this is async, we can perform all the luksOpens here, note the device names
+    # and wait for them in a separate loop later
+    LUKS_UNLOCKED=""
+    for LUKS_UUID in $(lsblk -nlo uuid,fstype "/dev/${BOOT_DEVICE}" | grep crypto_LUKS | cut -d " " -f 1); do
+        ensure_luks2 "/dev/disk/by-uuid/${LUKS_UUID}"
+        cryptsetup luksOpen --key-file $PASSPHRASE_FILE UUID="${LUKS_UUID}" luks-"${LUKS_UUID}"
+        LUKS_UNLOCKED="${LUKS_UNLOCKED} luks-${LUKS_UUID}"
+    done
+
+    # Wait for udev processing of each unlocked device
+    for DM_NAME in ${LUKS_UNLOCKED}; do
+        wait4udev "/dev/mapper/${DM_NAME}"
+    done
+
+    rm -f "$PASSPHRASE_FILE"
+    umount "$EFI_MOUNT_DIR"
+    rmdir "$EFI_MOUNT_DIR"
+
+    # Revert dying on error
+    set +e
+}

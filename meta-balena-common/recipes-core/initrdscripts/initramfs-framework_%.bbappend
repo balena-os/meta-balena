@@ -11,6 +11,7 @@ SRC_URI:append = " \
     file://rootfs \
     file://finish \
     file://cryptsetup \
+    file://cryptsetup-efi-tpm \
     file://kexec \
     file://udevcleanup \
     file://recovery \
@@ -30,7 +31,12 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
     install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
     install -m 0755 ${WORKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
-    install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
+    if [ ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'true', 'false',d)} = 'true' ] &&
+       [ ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', 'true', 'false',d)} = 'true' ]; then
+        install -m 0755 ${WORKDIR}/cryptsetup-efi-tpm ${D}/init.d/72-cryptsetup
+    else
+        install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
+    fi
     install -m 0755 ${WORKDIR}/recovery ${D}/init.d/00-recovery
 
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
@@ -87,7 +93,7 @@ RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
 FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
 
 SUMMARY:initramfs-module-cryptsetup = "Unlock encrypted partitions"
-RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libgcc lvm2-udevrules os-helpers-logging os-helpers-fs"
+RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libgcc lvm2-udevrules os-helpers-logging os-helpers-fs balena-config-vars-config"
 RDEPENDS:initramfs-module-cryptsetup:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' os-helpers-tpm2', '',d)}"
 RDEPENDS:initramfs-module-cryptsetup:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' os-helpers-efi', '',d)}"
 FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
