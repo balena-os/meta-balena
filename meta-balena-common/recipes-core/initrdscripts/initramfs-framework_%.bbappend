@@ -2,6 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI:append = " \
     file://prepare \
+    file://bootchart \
     file://fsck \
     file://fsuuidsinit \
     file://machineid \
@@ -17,7 +18,8 @@ SRC_URI:append = " \
     "
 
 do_install:append() {
-    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
+    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/00-prepare
+    install -m 0755 ${WORKDIR}/bootchart ${D}/init.d/000-bootchart
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
@@ -36,6 +38,7 @@ do_install:append() {
 }
 
 PACKAGES:append = " \
+    initramfs-module-bootchart \
     initramfs-module-fsck \
     initramfs-module-machineid \
     initramfs-module-resindataexpander \
@@ -50,6 +53,10 @@ PACKAGES:append = " \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
+
+SUMMARY:initramfs-module-bootchart = "Boot profiling"
+RDEPENDS:initramfs-module-bootchart = "${PN}-base systemd-bootchart"
+FILES:initramfs-module-bootchart = "/init.d/000-bootchart"
 
 SUMMARY:initramfs-module-fsck = "Filesystem check for partitions"
 RDEPENDS:initramfs-module-fsck = "${PN}-base e2fsprogs-e2fsck dosfstools-fsck"
@@ -73,7 +80,7 @@ FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY:initramfs-module-prepare = "Prepare initramfs console"
 RDEPENDS:initramfs-module-prepare = "${PN}-base os-helpers-logging os-helpers-fs"
-FILES:initramfs-module-prepare = "/init.d/70-prepare"
+FILES:initramfs-module-prepare = "/init.d/00-prepare"
 
 SUMMARY:initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
 RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
