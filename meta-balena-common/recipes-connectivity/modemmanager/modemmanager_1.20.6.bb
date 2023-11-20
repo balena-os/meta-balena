@@ -24,7 +24,7 @@ PACKAGECONFIG ??= "mbim qmi \
     ${@bb.utils.filter('DISTRO_FEATURES', 'systemd polkit', d)} \
 "
 
-PACKAGECONFIG[at] = "-Dat_command_via_dbus=true"
+PACKAGECONFIG[at] = "-Dwith_at_command_via_dbus=true"
 PACKAGECONFIG[systemd] = " \
     -Dsystemdsystemunitdir=${systemd_unitdir}/system/, \
     -Dsystemdsystemunitdir=no -Dsystemd_journal=false -Dsystemd_suspend_resume=false \
