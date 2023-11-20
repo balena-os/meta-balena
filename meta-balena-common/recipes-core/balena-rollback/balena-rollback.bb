@@ -27,6 +27,7 @@ SRC_URI = " \
     file://rollback-stop \
     file://rollback-tests \
     file://rollback-parse-bootloader \
+    file://rollback-board-healthcheck \
     "
 S = "${WORKDIR}"
 
@@ -48,6 +49,7 @@ do_install() {
     install -m 0775 ${S}/rollback-stop ${D}${bindir}
     install -m 0775 ${S}/rollback-tests ${D}${bindir}
     install -m 0775 ${S}/rollback-parse-bootloader ${D}${bindir}
+    install -m 0775 ${S}/rollback-board-healthcheck ${D}${bindir}
     install -c -m 0644 ${S}/rollback-altboot.service ${D}${systemd_unitdir}/system
     install -c -m 0644 ${S}/rollback-clear-bootcount.service ${D}${systemd_unitdir}/system
     install -c -m 0644 ${S}/rollback-health.service ${D}${systemd_unitdir}/system
