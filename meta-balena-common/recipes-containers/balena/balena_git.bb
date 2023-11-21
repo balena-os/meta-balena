@@ -151,8 +151,10 @@ do_install() {
 	# exactly portable, but I couldn't do a proper shadow build. This will do
 	# for a PoC.
 	install -m 0644 ${WORKDIR}/balenad-rootless.sh ${D}/${bindir}/balenad-rootless.sh
-	install -m 0755 ${WORKDIR}/newgidmap ${D}/${bindir}/newgidmap
-	install -m 0755 ${WORKDIR}/newuidmap ${D}/${bindir}/newuidmap
+
+	# NOPE, this somwhoe breaks the build. Will copy manually after the device is running...
+	# install -m 0755 ${WORKDIR}/newgidmap ${D}/${bindir}/newgidmap
+	# install -m 0755 ${WORKDIR}/newuidmap ${D}/${bindir}/newuidmap
 }
 
 BBCLASSEXTEND = " native"
