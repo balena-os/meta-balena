@@ -17,7 +17,6 @@ SRC_URI += " \
 	"
 
 SYSTEMD_SERVICE:${PN} += " \
-	balena-efi.service \
 	resin-boot.service \
 	resin-data.service \
 	resin-state.service \
@@ -26,10 +25,12 @@ SYSTEMD_SERVICE:${PN} += " \
 	mnt-sysroot-inactive.mount \
 	"
 
+SYSTEMD_SERVICE:${PN} += "${@oe.utils.conditional('SIGN_API','','','${BALENA_NONENC_BOOT_LABEL}.service',d)}"
+
 FILES:${PN} += " \
 	/mnt/boot \
 	/mnt/data \
-	/mnt/efi \
+	/mnt/${BALENA_NONENC_BOOT_LABEL#balena-} \
 	/mnt/state \
 	/mnt/sysroot/active \
 	/mnt/sysroot/inactive \
@@ -51,13 +52,17 @@ do_install:prepend () {
 	ln -sf docker ${D}/etc/balena-engine
 	install -d ${D}/mnt/boot
 	install -d ${D}/mnt/data
-	install -d ${D}/mnt/efi
+	if ${@oe.utils.conditional('SIGN_API', '', 'false', 'true', d)}; then
+		install -d ${D}/mnt/${BALENA_NONENC_BOOT_LABEL#balena-}
+	fi
 	install -d ${D}/mnt/state
 	install -d ${D}/mnt/sysroot/active
 	install -d ${D}/mnt/sysroot/inactive
 
 	install -d ${D}${bindir}
 	install -m 755 ${WORKDIR}/resin-partition-mounter ${D}${bindir}
+	sed -i -e "s/%%BALENA_NONENC_BOOT_LABEL%%/${BALENA_NONENC_BOOT_LABEL}/g" ${D}${bindir}/resin-partition-mounter
+	sed -i -e "s/%%BALENA_NONENC_BOOT_MOUNT%%/$(echo ${BALENA_NONENC_BOOT_LABEL} | cut -d - -f2)/g" ${D}${bindir}/resin-partition-mounter
 
 	install -d ${D}${systemd_unitdir}/system
 	for service in ${SYSTEMD_SERVICE:resin-mounts}; do
