@@ -138,3 +138,11 @@ BALENA_API_ENV ?= "balena-cloud.com"
 
 # Default storage of configuration units
 BALENA_CONF_UNIT_STORE ?= "/var/volatile"
+
+# For systems that encrypt disks, label for the non-encrypted boot partition
+BALENA_BOOT_LABEL ?= "balena-boot"
+BALENA_BOOT_MOUNT ?= "/mnt/${@'${BALENA_BOOT_LABEL}'.replace('balena-','')}"
+BALENA_SIGN_LABEL ?= "${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'balena-efi', "${BALENA_BOOT_LABEL}",d)}"
+BALENA_NONENC_BOOT_LABEL ?= "${@oe.utils.conditional('SIGN_API','','${BALENA_BOOT_LABEL}','${BALENA_SIGN_LABEL}',d)}"
+BALENA_NONENC_BOOT_MOUNT ?= "/mnt/${@'${BALENA_NONENC_BOOT_LABEL}'.replace('balena-','')}"
+
