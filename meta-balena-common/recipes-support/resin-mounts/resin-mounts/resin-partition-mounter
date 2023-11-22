@@ -86,10 +86,12 @@ fi
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-fs
+# shellcheck disable=SC1091
+. /usr/sbin/balena-config-defaults
 
 # Figure out what (target_path) and where (target_mountpoint)
-if [ "$target" = "balena-efi" ]; then
-    target_mountpoint="/mnt/efi"
+if [ "$target" = "${BALENA_NONENC_BOOT_LABEL}" ]; then
+    target_mountpoint="${BALENA_NONENC_BOOT_MOUNTPOINT}"
     target_path="$(get_state_path_from_label "$target")"
 elif [ -z "$sysroot" ]; then
     target_mountpoint="/mnt/${target#resin-}"
