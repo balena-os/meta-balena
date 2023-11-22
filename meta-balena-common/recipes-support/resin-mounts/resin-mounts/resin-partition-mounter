@@ -88,8 +88,8 @@ fi
 . /usr/libexec/os-helpers-fs
 
 # Figure out what (target_path) and where (target_mountpoint)
-if [ "$target" = "balena-efi" ]; then
-    target_mountpoint="/mnt/efi"
+if [ "$target" = "%%BALENA_NONENC_BOOT_LABEL%%" ]; then
+    target_mountpoint="%%BALENA_NONENC_BOOT_MOUNT%%"
     target_path="$(get_state_path_from_label "$target")"
 elif [ -z "$sysroot" ]; then
     target_mountpoint="/mnt/${target#resin-}"
