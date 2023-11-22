@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to 935f8ef
+      hash: 8b9f83c774bd7df17714dfa5443cf41822702ad6
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 3a19b6a005b2354d247e43ee63f374fd2822e4ef
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.16
+          title: ""
+          date: 2023-11-22T11:32:22.495Z
+        - commits:
+            - subject: Update core/contracts digest to c45079c
+              hash: 1d890adc096a64d8a7766ca22ffe4e11d8933434
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.15
+          title: ""
+          date: 2023-11-22T10:35:34.292Z
+  version: 4.1.8
+  title: ""
+  date: 2023-11-22T15:44:31.064Z
+- commits:
     - subject: "meta-balena-common: Move code from meta-balena-kirkstone"
       hash: a8098360caf7ec3c6ede8aa953361fab2004b766
       body: |
