@@ -13,6 +13,7 @@ S = "${WORKDIR}"
 do_install() {
     install -d ${D}/init.d
     install -m 0755 ${WORKDIR}/abroot ${D}/init.d/73-abroot
+    sed -i "s/@@BALENA_NONENC_BOOT_LABEL@@/${BALENA_NONENC_BOOT_LABEL}/g" ${D}/init.d/73-abroot
 }
 
 FILES:${PN} = "/init.d/73-abroot"

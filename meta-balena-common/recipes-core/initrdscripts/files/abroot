@@ -1,7 +1,7 @@
 #!/bin/sh
 
 BOOT_MOUNT="/bootfs"
-BOOT_LABEL_CANDIDATES="balena-efi balena-boot resin-boot"
+BOOT_LABEL_CANDIDATES="@@BALENA_NONENC_BOOT_LABEL@@ balena-boot resin-boot"
 BOOTENV_FILENAME="bootenv"
 
 find_boot_partition() {
