@@ -1,10 +1,17 @@
 #!/bin/sh
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+. /usr/sbin/balena-config-defaults
+
 BOOT_MOUNT="/bootfs"
-BOOT_LABEL_CANDIDATES="balena-efi balena-boot resin-boot"
 BOOTENV_FILENAME="bootenv"
 
 find_boot_partition() {
+    BOOT_LABEL_CANDIDATES="${BALENA_BOOT_LABEL} resin-boot"
+    if [ "${BALENA_NONENC_BOOT_LABEL}" != "${BALENA_BOOT_LABEL}" ]; then
+        BOOT_LABEL_CANDIDATES="${BALENA_NONENC_BOOT_LABEL} ${BOOT_LABEL_CANDIDATES}"
+    fi
     for LABEL in ${BOOT_LABEL_CANDIDATES}; do
         BY_LABEL_PATH="/dev/disk/by-label/${LABEL}"
         if [ -L "${BY_LABEL_PATH}" ]; then
