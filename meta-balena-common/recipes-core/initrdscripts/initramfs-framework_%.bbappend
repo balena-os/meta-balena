@@ -42,6 +42,7 @@ do_install:append() {
 
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-kexec"
+    sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-migrate"
 }
 
 PACKAGES:append = " \
