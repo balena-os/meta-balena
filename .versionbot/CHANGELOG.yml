@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: allow for multiple worker fleets"
+      hash: 7797aa081ab0a5339eea6e2fd326947d9e6ec6f1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 4.1.9
+  title: ""
+  date: 2023-11-24T15:52:04.744Z
+- commits:
     - subject: Update tests/leviathan digest to 935f8ef
       hash: 8b9f83c774bd7df17714dfa5443cf41822702ad6
       body: Update tests/leviathan
