@@ -51,15 +51,15 @@ EOF
 )
     for i in $inputs; do
         var="${efivars_path}/${i}"
-        extend=$(
-            case $i in
-                "SecureBoot-${EFI_GLOBAL_VARIABLE_GUID}") override="${1}" ;;
-                "PK-${EFI_GLOBAL_VARIABLE_GUID}") override="${2}" ;;
-                "KEK-${EFI_GLOBAL_VARIABLE_GUID}") override="${3}" ;;
-                "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}") override="${4}" ;;
-                "dbx-${EFI_IMAGE_SECURITY_DATABASE_GUID}") override="${5}" ;;
-            esac
+        case $i in
+            "SecureBoot-${EFI_GLOBAL_VARIABLE_GUID}") override="${1}" ;;
+            "PK-${EFI_GLOBAL_VARIABLE_GUID}") override="${2}" ;;
+            "KEK-${EFI_GLOBAL_VARIABLE_GUID}") override="${3}" ;;
+            "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}") override="${4}" ;;
+            "dbx-${EFI_IMAGE_SECURITY_DATABASE_GUID}") override="${5}" ;;
+        esac
 
+        extend=$(
             if [ -n "${override}" ]; then
                     echo "${override}" | _hexdecode | tcgtool "$var" | _sha256
             else
