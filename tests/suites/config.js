@@ -26,7 +26,7 @@ module.exports = [
 		unstable: ['']
 	},
 	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
-		balenaApplication: process.env.BALENACLOUD_APP_NAME,
+		balenaApplication: process.env.BALENACLOUD_APP_NAME.split(','),
 		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
 },
@@ -56,7 +56,7 @@ module.exports = [
 		unstable: ['']
 	},
 	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
-		balenaApplication: process.env.BALENACLOUD_APP_NAME,
+		balenaApplication: process.env.BALENACLOUD_APP_NAME.split(','),
 		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
 },
@@ -86,7 +86,7 @@ module.exports = [
 		unstable: ['']
 	},
 	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
-		balenaApplication: process.env.BALENACLOUD_APP_NAME,
+		balenaApplication: process.env.BALENACLOUD_APP_NAME.split(','),
 		apiKey: process.env.BALENACLOUD_API_KEY,
 	},
 }
