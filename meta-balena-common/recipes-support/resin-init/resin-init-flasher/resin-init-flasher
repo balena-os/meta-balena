@@ -264,6 +264,9 @@ if [ "$LUKS" = "1" ]; then
     # Relabel former boot partition
     fatlabel "${internal_dev}${PART_PREFIX}${NONENC_BOOT_PART_ID}" "${BALENA_NONENC_BOOT_LABEL}"
 
+    # And set as bootable
+    parted "$internal_dev" set "${NONENC_BOOT_PART_ID}" boot on
+
     # Find parition IDs
     ROOTA_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-rootA)
     ROOTB_PART_ID=$(get_part_number_by_label "$LOOP_DEVICE_NAME" resin-rootB)
