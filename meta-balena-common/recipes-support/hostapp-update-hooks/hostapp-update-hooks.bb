@@ -21,6 +21,7 @@ HOSTAPP_HOOKS = " \
 SECUREBOOT_HOOKS = " \
     0-signed-update \
     95-secureboot/1-fwd_commit_apply-dbx \
+    95-secureboot/2-fwd_commit_update-policy \
     "
 SECUREBOOT_HOOK_DIRS = " \
     95-secureboot \

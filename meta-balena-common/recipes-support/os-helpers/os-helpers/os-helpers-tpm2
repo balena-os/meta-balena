@@ -21,6 +21,8 @@
 EFI_IMAGE_SECURITY_DATABASE_GUID="d719b2cb-3d3a-4596-a3bc-dad00e67656f"
 EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
+TPM_EVENTLOG_PATH="/sys/kernel/security/tpm0/binary_bios_measurements"
+
 # busybox's implementation of xxd lacks the -cols option, so remove line breaks
 _hexencode() {
     xxd -p | tr -d '[:space:]'
@@ -73,6 +75,23 @@ EOF
 
     printf '%s' "$digest"
 }
+
+
+parse_pcr7_eventtypes() {
+    awk '
+        /PCRIndex: 7/ {flag=1; next}
+        /EventNum:/ {flag=0}
+        flag && /EventType:/ {gsub("\"", "")print $2}'
+}
+
+firmware_measures_efibins() {
+    [ -f "${TPM_EVENTLOG_PATH}" ] || exit 2
+    tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
+        | parse_pcr7_eventtypes \
+        | grep -e EV_EFI_VARIABLE_AUTHORITY
+}
+
+
 
 hw_gen_passphrase() {
     tpm2_getrandom 32
