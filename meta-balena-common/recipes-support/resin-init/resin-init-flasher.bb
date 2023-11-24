@@ -96,6 +96,7 @@ do_install() {
             install -d ${D}${libexecdir}
             echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
             install -m 0755 ${WORKDIR}/balena-init-flasher-efi ${D}${libexecdir}/balena-init-flasher-secureboot
+            sed -i -e 's,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE},' ${D}${libexecdir}/balena-init-flasher-secureboot
         fi
         if ${@bb.utils.contains('MACHINE_FEATURES','tpm','true','false',d)}; then
             install -d ${D}${libexecdir}
