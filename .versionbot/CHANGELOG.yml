@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to c8d2f66
+      hash: 374a90c8dc7a7eb20cc9f7a22019ca81f24b0f2d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 5fb29e0cb00d6a8167d19ef6b2db812f7dce0b28
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.18
+          title: ""
+          date: 2023-11-27T00:49:28.576Z
+        - commits:
+            - subject: Update core/contracts digest to 9a88055
+              hash: 1b2b778dd3f1d9cc1f6784f82f119131564215b4
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.17
+          title: ""
+          date: 2023-11-24T10:35:06.748Z
+  version: 4.1.10
+  title: ""
+  date: 2023-11-27T05:11:30.909Z
+- commits:
     - subject: "tests: allow for multiple worker fleets"
       hash: 7797aa081ab0a5339eea6e2fd326947d9e6ec6f1
       body: ""
