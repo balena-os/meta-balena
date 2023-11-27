@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.1.11
+## (2023-11-27)
+
+* tests: os: safe-reboot: wait for SV to start [rcooke-warwick]
+
 # v4.1.10
 ## (2023-11-27)
 

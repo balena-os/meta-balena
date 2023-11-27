@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: safe-reboot: wait for SV to start"
+      hash: 7f301ec876ad361ea0f355e1976c92d83a661d3b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 4.1.11
+  title: ""
+  date: 2023-11-27T14:31:02.562Z
+- commits:
     - subject: Update tests/leviathan digest to c8d2f66
       hash: 374a90c8dc7a7eb20cc9f7a22019ca81f24b0f2d
       body: Update tests/leviathan
