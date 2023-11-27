@@ -87,6 +87,17 @@ module.exports = {
 			title: 'Override update locks',
 			run: async function(test) {
 				let ip = await this.worker.ip(this.link);
+
+				// Wait for supervisor API to start
+				await this.utils.waitUntil(async () => {
+					return (
+						(await request({
+							method: 'GET',
+							uri: `http://${ip}:${SUPERVISOR_PORT}/ping`,
+						})) === 'OK'
+					);
+				}, false);
+
 				let targetState
 				let result = '';
 				await this.worker.executeCommandInHostOS(
