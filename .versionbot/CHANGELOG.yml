@@ -1,4 +1,95 @@
 - commits:
+    - subject: Update balena-supervisor to v15
+      hash: c41b110760f510d97ed4244bf39531a0f5bf562b
+      body: |
+        Update balena-supervisor from 14.13.13 to 15.0.1
+      footer:
+        Change-type: major
+        change-type: major
+      author: Felipe Lalanne
+      nested:
+        - commits:
+            - subject: Expose ports from port mappings on services
+              hash: 9bd216327fda4526cd60ccf98178960242383769
+              body: >
+                PR #2217 removed the expose configuration but also caused a
+                regresion
+
+                where ports set via the `ports` configuration would no longer get
+
+                exposed to the host, despite portmappings being set. This fixes that
+
+                issue by exposing only those ports comming from port mappings.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-15.0.1
+          title: ""
+          date: 2023-10-25T13:04:05.171Z
+        - commits:
+            - subject: Ignore `expose` service compose configuration
+              hash: 416170bc05a9a725f5a7f8ecbab4f8b1c8da5ddf
+              body: >
+                The docker EXPOSE directive and corresponding docker-compose
+                `expose`
+
+                service configuration serves as documentation/metadata that a container
+
+                listens on a certain port that may be used for service discovery but it doesn't
+
+                have any real impact on the ability for
+
+                other containers on the same network to access the exposed service via
+
+                the port. In newer engine implementations, this property may conflict
+
+                with other network configurations, and prevent the container from being
+
+                started by the docker engine (see #2211).
+
+
+                This PR removes code that would manage the expose property and takes the
+
+                property out of the whitelist. A composition with the `expose` property
+
+                will result in the log message `Ignoring unsupported or unknown compose fields: expose`.
+
+
+                While this change should not have operational impact, it still removes
+
+                a previously supported configuration and as such there is a chance of it
+
+                being a breaking change for some applications. For this reason it is
+
+                being published as a new major version.
+              footer:
+                Change-type: major
+                change-type: major
+                Closes: "#2211"
+                closes: "#2211"
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-15.0.0
+          title: ""
+          date: 2023-10-23T17:31:08.436Z
+        - commits:
+            - subject: Add note regading API jitter on target state poll
+              hash: b107868765563e26ec04746f84d1bc15dd211723
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-14.13.14
+          title: ""
+          date: 2023-10-23T13:34:41.452Z
+  version: 5.0.0
+  title: ""
+  date: 2023-11-28T14:07:17.302Z
+- commits:
     - subject: "tests: os: safe-reboot: wait for SV to start"
       hash: 7f301ec876ad361ea0f355e1976c92d83a661d3b
       body: ""

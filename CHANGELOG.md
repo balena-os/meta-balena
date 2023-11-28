@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v5.0.0
+## (2023-11-28)
+
+
+<details>
+<summary> Update balena-supervisor to v15 [Felipe Lalanne] </summary>
+
+> ## balena-supervisor-15.0.1
+> ### (2023-10-25)
+> 
+> * Expose ports from port mappings on services [Felipe Lalanne]
+> 
+> ## balena-supervisor-15.0.0
+> ### (2023-10-23)
+> 
+> * Ignore `expose` service compose configuration [Felipe Lalanne]
+> 
+> ## balena-supervisor-14.13.14
+> ### (2023-10-23)
+> 
+> * Add note regading API jitter on target state poll [Felipe Lalanne]
+> 
+
+</details>
+
 # v4.1.11
 ## (2023-11-27)
 
