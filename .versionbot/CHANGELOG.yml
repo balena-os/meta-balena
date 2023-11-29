@@ -1,4 +1,29 @@
 - commits:
+    - subject: Make Engine healthcheck performance test aware of device type
+      hash: def871a2cc2e35076ba5d57e0885b05ae80a6bd9
+      body: |
+        We previously tried to use a single time limit for the execution of the
+        healthcheck test on all device types. This was causing occasional false
+        positives in our Continuous Integration pipeline, though -- especially
+        on slow devices like Pi Zeros and the generic-aarch64, which runs on
+        emulated hardware.
+
+        This commit addresses this issue, this commit:
+
+        1. Limits execution for device types for which we have collected enough
+           data to have a good idea of how long the test should take.
+        2. Uses time limits specific for each device type.
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 5.0.1
+  title: ""
+  date: 2023-11-29T14:34:44.373Z
+- commits:
     - subject: Update balena-supervisor to v15
       hash: c41b110760f510d97ed4244bf39531a0f5bf562b
       body: |
