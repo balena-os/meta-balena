@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.0.2
+## (2023-11-30)
+
+* balena-rollback: If applicable, run device specific healthchecks [Alexandru Costache]
+
 # v5.0.1
 ## (2023-11-29)
 

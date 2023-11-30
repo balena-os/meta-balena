@@ -1,4 +1,22 @@
 - commits:
+    - subject: "balena-rollback: If applicable, run device specific healthchecks"
+      hash: 58315e05dc6624eb393fc9e5e3d8b35541755bc3
+      body: |
+        We add a script which can be replaced by device repositories
+        to implement device-specific healthchecks. One usecase for this
+        test is the Jetson UEFI firmware update check,
+        but can be extended to all other devices as needed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.0.2
+  title: ""
+  date: 2023-11-30T16:33:10.689Z
+- commits:
     - subject: Make Engine healthcheck performance test aware of device type
       hash: def871a2cc2e35076ba5d57e0885b05ae80a6bd9
       body: |
