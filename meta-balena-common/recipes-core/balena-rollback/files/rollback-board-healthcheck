@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# This file can be overriden in the device integration repository,
+# with any board specific healthchecks necessary.
+#
+set -o errexit
+
+exit 0

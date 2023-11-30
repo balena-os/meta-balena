@@ -40,3 +40,13 @@ else
 	echo "Rollback: ERROR: balenaEngine is not healthy!"
 	exit 1
 fi
+
+# The following script can be overriden by device integration
+# repositories with board specific healthchecks
+echo "Rollback: Running board specific healthchecks..."
+if /usr/bin/rollback-board-healthcheck ; then
+	echo "Rollback: No issues detected."
+else
+	echo "Rollback: ERROR: Board specific healthchecks failed!"
+	exit 1
+fi
