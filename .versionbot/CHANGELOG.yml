@@ -1,4 +1,63 @@
 - commits:
+    - subject: Update balena-supervisor to v15.0.4
+      hash: 16a85aa4e2fc58f61b189585969872f7b7566946
+      body: |
+        Update balena-supervisor from 15.0.2 to 15.0.4
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Only build sqlite3 from source
+              hash: d18292f68e09d5846eb0fa254d5205f07052dea8
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update @balena/systemd to 0.5.0
+              hash: 7981e6becd6b6d7e5317979277ab02eb7a24840a
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-15.0.4
+          title: ""
+          date: 2023-11-22T17:10:54.919Z
+        - commits:
+            - subject: Cache last reported current state to /mnt/root/tmp
+              hash: eb8ad11cd702e7d5ffba499c6b2d2fcadc030dd4
+              body: >
+                Whenever the Supervisor reports current state, it diffs the
+                current state
+
+                with its last reported current state. However, when the Supervisor starts
+
+                up, there is no last reported state, since that last report is stored in
+
+                process memory. Caching the last report in a location that survives
+
+                Supervisor restarts will reduce the current report bandwidth used on startup.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-15.0.3
+          title: ""
+          date: 2023-11-22T00:32:48.806Z
+  version: 5.0.3
+  title: ""
+  date: 2023-11-30T23:16:20.736Z
+- commits:
     - subject: "balena-rollback: If applicable, run device specific healthchecks"
       hash: 58315e05dc6624eb393fc9e5e3d8b35541755bc3
       body: |
