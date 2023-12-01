@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.0.4
+## (2023-12-01)
+
+
+<details>
+<summary> Update balena-engine to v20.10.41 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-engine-20.10.41
+> ### (2023-12-01)
+> 
+> * Simplified development doc 'Build and run' instructions [Ken Bannister]
+> 
+
+</details>
+
 # v5.0.3
 ## (2023-11-30)
 
