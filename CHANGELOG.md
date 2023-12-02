@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.0.5
+## (2023-12-02)
+
+
+<details>
+<summary> Update tests/leviathan digest to eaf8774 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.19
+> ### (2023-12-01)
+> 
+> * add jetson-agx-orin-devkit resin-boot index [rcooke-warwick]
+> 
+
+</details>
+
 # v5.0.4
 ## (2023-12-01)
 

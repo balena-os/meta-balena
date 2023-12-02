@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to eaf8774
+      hash: 12d2ce997733de80dc89c6d0d84a4cb67a5c2da2
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: add jetson-agx-orin-devkit resin-boot index
+              hash: 2a27941b65cc163899016fddf12339e1073e2e97
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.29.19
+          title: ""
+          date: 2023-12-01T12:13:53.767Z
+  version: 5.0.5
+  title: ""
+  date: 2023-12-02T05:21:14.848Z
+- commits:
     - subject: Update balena-engine to v20.10.41
       hash: 791d6306a9b33554606977fd1a8252a90a6a1235
       body: |
