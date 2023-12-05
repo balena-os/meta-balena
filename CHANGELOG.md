@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.0.6
+## (2023-12-05)
+
+* os-helpers-logging: replace broken container check [Alex Gonzalez]
+
 # v5.0.5
 ## (2023-12-02)
 
