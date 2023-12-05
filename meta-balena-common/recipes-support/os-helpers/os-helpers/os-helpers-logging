@@ -26,7 +26,7 @@ log () {
     # Only print to journal if we are running in the hostOS
     # and not running in a container (like HUP hooks)
     # as container output already ends up in the journal
-    if [ "$(awk 'NR==1 {print $1; exit}' /proc/1/sched)" == "systemd" ]; then
+    if [ ! -f '/.dockerenv' ] && [ ! -f '/run/.containerenv' ]; then
        echo "${_message}" |  systemd-cat --level-prefix=0 --identifier="$ME" --priority="${PRIORITY}" 2> /dev/null || true
     fi
 }
