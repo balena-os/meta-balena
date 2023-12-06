@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python action to v5
+      hash: 964061a70249cd4dabc99ae98083be5f1e650bc3
+      body: |
+        Update actions/setup-python from v4 to v5
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 5.0.7
+  title: ""
+  date: 2023-12-06T16:38:31.017Z
+- commits:
     - subject: "os-helpers-logging: replace broken container check"
       hash: 2dc4f8eb88dc51304cca55498b4bd5ceb7127d98
       body: >

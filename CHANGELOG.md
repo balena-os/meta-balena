@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.0.7
+## (2023-12-06)
+
+* Update actions/setup-python action to v5 [Self-hosted Renovate Bot]
+
 # v5.0.6
 ## (2023-12-05)
 
