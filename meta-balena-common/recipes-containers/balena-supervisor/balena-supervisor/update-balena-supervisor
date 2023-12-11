@@ -70,6 +70,8 @@ done
 
 # A temporary file used until next reboot
 UPDATECONF=/tmp/update-supervisor.conf
+# The supervisor state configuration directory
+SVCONFIGDIR=$(basename "$(find /etc -type d -name "*supervisor")")
 
 # If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
 _device_api_key=${PROVISIONING_API_KEY:-$DEVICE_API_KEY}
@@ -144,8 +146,8 @@ if [ -n "$API_ENDPOINT" ] && [ -n "${UUID}" ] && [ -n "$_device_api_key" ]; then
     fi
 fi
 
-# shellcheck disable=SC1091
-. /etc/balena-supervisor/supervisor.conf
+# shellcheck disable=SC1090
+. "/etc/${SVCONFIGDIR}/supervisor.conf"
 
 # If no API version is set, use preloaded values
 if [ -z "$version" ] || [ -z "$image_name" ] || [ "$version" = "null" ] || [ "$image_name" = "null" ]; then
@@ -169,10 +171,13 @@ if [ -z "$version" ] || [ -z "$image_name" ] || [ "$version" = "null" ] || [ "$i
 fi
 
 setSupervisorConfig() {
-    svconfigdir=$(basename "$(ls -d /etc/*-supervisor)")
-
     # Store the tagged image string so balena-supervisor.service can pick it up
-    sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG|SUPERVISOR_VERSION|" -e "s|SUPERVISOR_VERSION=.*|SUPERVISOR_VERSION=$version|" "/etc/${svconfigdir}/supervisor.conf" > $UPDATECONF
+    sed -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG|SUPERVISOR_VERSION|" -e "s|SUPERVISOR_VERSION=.*|SUPERVISOR_VERSION=$version|" "/etc/${SVCONFIGDIR}/supervisor.conf" > $UPDATECONF
+}
+
+modifySupervisorConfig() {
+    sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG|SUPERVISOR_VERSION|" -e "s|SUPERVISOR_VERSION=.*|SUPERVISOR_VERSION=$version|" "/etc/${SVCONFIGDIR}/supervisor.conf"
+    sync -f /mnt/state
 }
 
 info "Getting image id..."
@@ -189,6 +194,11 @@ if [ -n "$imageid" ]; then
         else
             warn "Target supervisor downloaded but not running and no supervisor restart was specified."
         fi
+    fi
+    # Make sure supervisor.conf has been updated
+    if ! grep -q "SUPERVISOR_IMAGE=$image_name" "/etc/${SVCONFIGDIR}/supervisor.conf"; then
+        warn "Setting supervisor.conf to use $image_name at $version."
+        modifySupervisorConfig
     fi
     exit 0
 fi
@@ -220,7 +230,5 @@ if [ "${START_STOP_SUPERVISOR}" -eq 1 ]; then
     systemctl start balena-supervisor
 fi
 
-sed -i -e "s|SUPERVISOR_IMAGE=.*|SUPERVISOR_IMAGE=$image_name|" -e "s|SUPERVISOR_TAG|SUPERVISOR_VERSION|" -e "s|SUPERVISOR_VERSION=.*|SUPERVISOR_VERSION=$version|" /etc/balena-supervisor/supervisor.conf
-
-# Sync cached writes to disk 
-sync -f /mnt/state
+# Make sure supervisor.conf has been updated
+modifySupervisorConfig
