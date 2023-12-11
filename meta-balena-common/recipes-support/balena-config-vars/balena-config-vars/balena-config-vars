@@ -81,14 +81,12 @@ else
     echo "[WARN] $0: Missing fatrw command"
 fi
 
-if [ "${USE_CACHE}" -eq "1" ] && [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then
-        . "${BALENA_CONFIG_VARS_CACHE}"
-else
-    [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ] && rm -f "${BALENA_CONFIG_VARS_CACHE}"
-
-    # If config.json provides redefinitions for our vars let us rewrite their
-    # runtime value
-    if [ -f $CONFIG_PATH ]; then
+# Parse the configuration path into the CONFIG_PARAMS variable
+#
+# Returns: 0 if CONFIG_PARAMS is not empty, 1 if it is empty
+#
+read_config() {
+    if [ -f "$CONFIG_PATH" ]; then
         CONFIG_PARAMS=$("${CAT}" "${CONFIG_PATH}" | jq -r '@sh "
              API_ENDPOINT=\(.apiEndpoint // "")
              APPLICATION_ID=\(.applicationId // "")
@@ -117,18 +115,35 @@ else
         if [ "$RESULT" = "4" ]; then
             echo "[ERROR] $0: Failed to parse '$CONFIG_PATH'."
             exit 1
-        else
-            if [ -n "${BALENA_CONFIG_VARS_CACHE}" ]; then
-                tmpfile=$(mktemp)
-                echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
-                chmod a+rx "${tmpfile}"
-                mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
-            fi
-            eval "$CONFIG_PARAMS"
         fi
+        test -n "${CONFIG_PARAMS}"
     else
-        echo "[WARNING] $0 : '$CONFIG_PATH' not found."
+        echo "[ERROR] $0 : '$CONFIG_PATH' not found."
+        exit 1
     fi
+}
+
+if [ "${USE_CACHE}" -eq "1" ] && [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ]; then
+        . "${BALENA_CONFIG_VARS_CACHE}"
+else
+    [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ] && rm -f "${BALENA_CONFIG_VARS_CACHE}"
+
+    # If config.json provides redefinitions for our vars let us rewrite their
+    # runtime value
+    if ! read_config; then
+        # Re-try once
+        if ! read_config; then
+            echo "[ERROR] $0: Failed to read '$CONFIG_PATH'."
+            exit 1
+        fi
+    fi
+    if [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -n "${CONFIG_PARAMS}" ]; then
+        tmpfile=$(mktemp)
+        echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
+        chmod a+rx "${tmpfile}"
+        mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
+    fi
+    eval "$CONFIG_PARAMS"
 fi
 
 # "null" is a valid setting in config.json that should write
