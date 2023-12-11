@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v5.0.8
+## (2023-12-11)
+
+
+<details>
+<summary> Update tests/leviathan digest to c681ee1 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.22
+> ### (2023-12-11)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.21
+> ### (2023-12-04)
+> 
+> * Update balena-os/leviathan-worker to v2.9.26 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.20
+> ### (2023-12-04)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.0.7
 ## (2023-12-06)
 

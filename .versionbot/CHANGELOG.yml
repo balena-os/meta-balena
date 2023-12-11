@@ -1,4 +1,55 @@
 - commits:
+    - subject: Update tests/leviathan digest to c681ee1
+      hash: 6e1450efaad2cad10e16251d46c98566f750bc6b
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 56b11b13ea28cb9370f43cf834399bb71fa609ee
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.22
+          title: ""
+          date: 2023-12-11T00:48:58.323Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.26
+              hash: 7dc880e73bf2fb125c4dd842ac8e5636f2fa04e3
+              body: |
+                Update balena-os/leviathan-worker from 2.9.25 to 2.9.26
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.21
+          title: ""
+          date: 2023-12-04T11:32:45.776Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 54dc38c908a7a40a3abe2f360c652e134359f28a
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.20
+          title: ""
+          date: 2023-12-04T00:52:55.581Z
+  version: 5.0.8
+  title: ""
+  date: 2023-12-11T05:56:11.919Z
+- commits:
     - subject: Update actions/setup-python action to v5
       hash: 964061a70249cd4dabc99ae98083be5f1e650bc3
       body: |
