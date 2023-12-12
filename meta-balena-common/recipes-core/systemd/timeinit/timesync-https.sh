@@ -49,7 +49,7 @@ fi
 
 while [ true  ]; do
 	SYS_TIME=$(get_system_time_as_timestamp)
-	readarray -t https_header <<<$(curl -m5 -k -I -s $OS_NET_CONN_URI | sed 's/\r$//'  | awk '/HTTP/{printf $2"\n"} /[Dd]ate/{print $2, $3, $4, $5, $6, $7"\n"}')
+	readarray -t https_header <<<$(curl -m10 -k -I -s $OS_NET_CONN_URI | sed 's/\r$//'  | awk '/HTTP/{printf $2"\n"} /[Dd]ate/{print $2, $3, $4, $5, $6, $7"\n"}')
 	SERVER_CODE=${https_header[0]}
 	SERVER_TIME_STRING=${https_header[1]}
 	if [ "$SERVER_CODE" = "$EXPECTED_SERVER_CODE" ]; then
