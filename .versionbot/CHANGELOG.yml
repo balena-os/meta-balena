@@ -1,4 +1,22 @@
 - commits:
+    - subject: "timesync-https: increase default connection max time to 10s"
+      hash: 7f350447206a1a531a18c3628e7ee72d0d1d35f2
+      body: |
+        We have seen cases of networks that were not able to receive a response
+        in the current 5s.
+
+        Increasing the default to 10s should have no negative effect.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.0.9
+  title: ""
+  date: 2023-12-12T18:01:57.596Z
+- commits:
     - subject: Update tests/leviathan digest to c681ee1
       hash: 6e1450efaad2cad10e16251d46c98566f750bc6b
       body: Update tests/leviathan

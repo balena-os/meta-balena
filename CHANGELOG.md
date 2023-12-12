@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.0.9
+## (2023-12-12)
+
+* timesync-https: increase default connection max time to 10s [Alex Gonzalez]
+
 # v5.0.8
 ## (2023-12-11)
 
