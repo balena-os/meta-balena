@@ -4,6 +4,8 @@ set -o errexit
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/sbin/balena-config-defaults
 
 old_os_before_hooks=0
 old_os_after_hooks=0
@@ -38,6 +40,15 @@ Options:
 	-h, --help
 		Display this help and exit.
 EOF
+}
+
+DEBUG=$(jq -r '.debug // empty' "${CONFIG_PATH}")
+run_hook () {
+	if [ "${DEBUG}" = "1" ]; then
+		/bin/sh -x "$1"
+	else
+		"$1"
+	fi
 }
 
 # Parse arguments
@@ -85,13 +96,13 @@ list_of_old_os_after_hooks=$(find "${HOOKS_DIR}" -type f | grep after | sort)
 
 if [ "$old_os_before_hooks" = "1" ] ; then
 	for hook in $list_of_old_os_before_hooks; do
-		"$hook"
+		run_hook "$hook"
 	done
 fi
 
 if [ "$forward_hooks" = "1" ] ; then
 	for hook in $list_of_forward_hooks; do
-		if ! "$hook" ; then
+		if ! run_hook "$hook" ; then
 			forward_cleanup=1
 			break
 		fi
@@ -100,19 +111,19 @@ fi
 
 if [ "$old_os_after_hooks" = "1" ] ; then
 	for hook in $list_of_old_os_after_hooks; do
-		"$hook"
+		run_hook "$hook"
 	done
 fi
 
 if [ "$commit_hooks" = "1" ] ; then
 	for hook in $list_of_forward_commit_hooks; do
-		"$hook"
+		run_hook "$hook"
 	done
 fi
 
 if [ "$forward_cleanup" = "1" ] ; then
 	for hook in $list_of_forward_cleanup_hooks; do
-		"$hook"
+		run_hook "$hook"
 	done
 	exit 1
 fi
