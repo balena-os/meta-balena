@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.0.10
+## (2023-12-13)
+
+* hostapp-update-hooks: add debug mode [Alex Gonzalez]
+
 # v5.0.9
 ## (2023-12-12)
 

@@ -1,4 +1,29 @@
 - commits:
+    - subject: "hostapp-update-hooks: add debug mode"
+      hash: a203bcdfd567c0cc4b4ed9de493513142cd7463f
+      body: |
+        This provides an easy switch to enable tracing on HUP hooks that works
+        both on old and new OS hooks as enabling it depends on a config.json
+        setting.
+
+        It is meant to debug field issues with HUP failure where all we see is:
+        ```
+        Before hooks (old os) ran successfully
+        Failed to run the new hooks. Running current hooks..
+        ```
+        For example:
+        https://jel.ly.fish/support-thread-1-0-0-front-cnv-eq6ipvx
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.0.10
+  title: ""
+  date: 2023-12-13T22:06:14.967Z
+- commits:
     - subject: "timesync-https: increase default connection max time to 10s"
       hash: 7f350447206a1a531a18c3628e7ee72d0d1d35f2
       body: |
