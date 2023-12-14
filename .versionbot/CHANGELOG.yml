@@ -1,4 +1,25 @@
 - commits:
+    - subject: "update-balena-supervisor: fix supervisor.conf when image already
+        downloaded"
+      hash: cdd6cbb7007a1b614bfaa337e3027562c05429e7
+      body: >
+        If update-balena-supervisor runs and finds the image is already
+        downloaded
+
+        it will run the specified supervisor but will not check that supervisor.conf
+
+        is updated so the version will revert on the next update.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.0.11
+  title: ""
+  date: 2023-12-14T14:32:01.902Z
+- commits:
     - subject: "hostapp-update-hooks: add debug mode"
       hash: a203bcdfd567c0cc4b4ed9de493513142cd7463f
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.0.11
+## (2023-12-14)
+
+* update-balena-supervisor: fix supervisor.conf when image already downloaded [Alex Gonzalez]
+
 # v5.0.10
 ## (2023-12-13)
 
