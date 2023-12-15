@@ -109,9 +109,10 @@ FILES:initramfs-module-recovery = "/init.d/00-recovery"
 SUMMARY:initramfs-module-migrate = "OS Migration"
 RDEPENDS:initramfs-module-migrate = " \
     util-linux-findmnt \
-    util-linux-mountpoint \
     resin-init-flasher \
     bash \
     balena-config-vars-config \
     "
 FILES:initramfs-module-migrate = "/init.d/92-migrate"
+
+RDEPENDS:${PN}-base:append = " util-linux-mountpoint"
