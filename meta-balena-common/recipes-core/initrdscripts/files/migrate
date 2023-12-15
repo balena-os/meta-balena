@@ -83,7 +83,9 @@ migrate_enabled() {
         fi
     fi
     # Booting from external media - leave flashing after pivot-rooting
-    umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
+    if mountpoint "${FLASH_BOOT_MOUNT}"; then
+        umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
+    fi
     return 1
 }
 
