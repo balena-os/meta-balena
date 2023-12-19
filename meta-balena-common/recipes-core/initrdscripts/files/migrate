@@ -32,26 +32,9 @@ memory_check() {
     swapoff -a && swapon -a
     _memfree=$(awk '/MemFree/{free=$2} END{print (free*1024)}' /proc/meminfo)
     if [ "${_memfree}" -lt "${_size}" ]; then
-        relocate_log_mount
         fail "Not enough memory: requested ${_size}, available ${_memfree}"
     fi
     return 0
-}
-
-relocate_log_mount() {
-    # Preserve log file in rootfs
-    # Move the /run mountpoint to the rootfs mountpoint
-    if [ -d "${ROOTFS_DIR}/run" ]; then
-        if mountpoint '/run' > /dev/null; then
-            mount -n -o move /run "${ROOTFS_DIR}/run"
-        fi
-    else
-        # Older releases do not create /run so use /tmp instead
-        if mountpoint '/run' > /dev/null; then
-            mount -n -o move /run "${ROOTFS_DIR}/tmp"
-        fi
-    fi
-    sync "${ROOTFS_DIR}/run" "${ROOTFS_DIR}/tmp" || true
 }
 
 # Enable module function
@@ -85,7 +68,6 @@ migrate_enabled() {
                     info "Migration requested in configuration"
                 fi
             else
-                relocate_log_mount
                 fail "Flash boot partition not found in ${internal_dev}"
             fi
 
@@ -101,8 +83,9 @@ migrate_enabled() {
         fi
     fi
     # Booting from external media - leave flashing after pivot-rooting
-    umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
-    relocate_log_mount
+    if mountpoint "${FLASH_BOOT_MOUNT}"; then
+        umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
+    fi
     return 1
 }
 
@@ -121,7 +104,6 @@ migrate_run() {
             _total_size=$(("$_image_size" + "$_flash_boot_size" + "$_kernel_images_size"))
             memory_check "${_total_size}"
         else
-            relocate_log_mount
             fail "Flash boot partition not found in ${internal_dev}"
         fi
         # Copy the raw image to memory
@@ -151,7 +133,6 @@ migrate_run() {
         # Run flasher - should not return
         /usr/bin/resin-init-flasher
     else
-        relocate_log_mount
         # If recovery mode, wait for adbd to exit
         if [ -n "${ADBD_PID}" ]; then
             # adbd is not a child process so cannot wait
