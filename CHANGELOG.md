@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.1.0
+## (2023-12-19)
+
+* migrate: check for mount point before umounting [Alex Gonzalez]
+* initrdscripts: move mounting of log mounts to finish module [Alex Gonzalez]
+
 # v5.0.11
 ## (2023-12-14)
 
