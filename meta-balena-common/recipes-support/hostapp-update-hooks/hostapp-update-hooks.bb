@@ -52,6 +52,7 @@ RDEPENDS:${PN} = " \
     dropbear \
     openssh-keygen \
     util-linux \
+    os-helpers-sb \
     "
 
 RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils', '',d)}"

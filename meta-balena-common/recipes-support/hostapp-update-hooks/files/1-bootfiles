@@ -1,10 +1,15 @@
 #!/bin/sh
+#
 
 #
 # Script to deploy the boot files from rootfs to the boot partition
 #
 # This hook is meant to run in the `next` resinOS container
 #
+# Will skip files that are either blacklisted, or are flagged by the do_skip()
+# function. The latter is typically defined in the `os-helpers-sb` script
+# used in secure boot enabled systems to discriminate the destination boot
+# partition to install into.
 
 set -o errexit
 
@@ -12,11 +17,19 @@ set -o errexit
 . /usr/sbin/balena-config-vars
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-sb
+# shellcheck disable=SC1091
+. /usr/sbin/balena-config-defaults
+
+# Define the boot partition mountpoint depending on the calling script name
+# On secure boot systems that split the boot partition the script is called with different names
+boot_mountpoint="${BALENA_BOOT_MOUNTPOINT}"
+[ $(basename "$0") != "1-bootfiles" ] && boot_mountpoint="${BALENA_NONENC_BOOT_MOUNTPOINT}"
 
 # Variables
 boot_fingerprint="@BALENA_BOOT_FINGERPRINT@"
 bootfiles_blacklist="@BALENA_BOOTFILES_BLACKLIST@"
-boot_mountpoint="/mnt/boot"
 DURING_UPDATE=${DURING_UPDATE:-0}
 
 # Checks if a file is present in the blacklist
@@ -76,6 +89,9 @@ copyBootFile() {
 # 	$1: file path relative to boot partition's root
 deploy() {
 	local _file="$1"
+	if type do_skip >/dev/null 2>&1 && do_skip "$_file"; then
+		return
+	fi
 	info "Deploying ${boot_mountpoint}${_file}"
 	if isBlacklisted "$_file"; then
 		if [ "$_file" = "/splash/balena-logo.png" ]; then
@@ -110,14 +126,14 @@ deploy() {
 	else
 		if [ -f "$boot_mountpoint/$_file" ]; then
 			if isModified "$_file"; then
-				info " overwriting modified file ${_file}..."
+				info " overwriting modified file ${boot_mountpoint}${_file}..."
 				copyBootFile "$_file"
 			else
 				copyBootFile "$_file"
 			fi
 		else
 			new_deployed_files="$new_deployed_files $_file"
-			info " new file ${_file}..."
+			info " new file ${boot_mountpoint}${_file}..."
 			copyBootFile "$_file"
 		fi
 	fi
@@ -134,6 +150,9 @@ boot_space="$(df -B1 --output=avail $boot_mountpoint | grep -v Avail)"
 available="$boot_space"
 available_threshold="524288" # All sizes in bytes
 for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
+	if type do_skip >/dev/null 2>&1 && do_skip "$filepath"; then
+		continue
+	fi
 	if isBlacklisted "$filepath"; then
 		continue
 	fi
@@ -151,7 +170,7 @@ for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 done
 info "Boot partition can accomodate the new update."
 
-find -L /mnt/boot/ $(printf "! -name %s " $(for blacklisted_file in  $bootfiles_blacklist; do echo $blacklisted_file | awk -F'/' '{print $NF}'; done)) -exec touch {} +
+find -L "${boot_mountpoint}" $(printf "! -name %s " $(for blacklisted_file in  $bootfiles_blacklist; do echo $blacklisted_file | awk -F'/' '{print $NF}'; done)) -exec touch {} +
 info "Updated timestamps for all files in ${boot_mountpoint}"
 
 # Deploy all files in the bootfiles list except fingerprint
