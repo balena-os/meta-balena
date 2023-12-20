@@ -20,6 +20,7 @@ SRC_URI = " \
     file://os-helpers-config \
     file://os-helpers-api \
     file://os-helpers-efi \
+    file://os-helpers-sb \
     file://safe_reboot \
 "
 S = "${WORKDIR}"
@@ -35,6 +36,7 @@ PACKAGES = " \
         ${PN}-api \
         ${PN}-reboot \
         ${PN}-efi \
+        ${PN}-sb \
         "
 
 do_install() {
@@ -47,6 +49,7 @@ do_install() {
         ${WORKDIR}/os-helpers-config \
         ${WORKDIR}/os-helpers-api \
         ${WORKDIR}/os-helpers-efi \
+        ${WORKDIR}/os-helpers-sb \
         ${WORKDIR}/safe_reboot \
         ${D}${libexecdir}
         sed -i "s,@@BALENA_CONF_UNIT_STORE@@,${BALENA_CONF_UNIT_STORE},g" ${D}${libexecdir}/os-helpers-config
@@ -60,6 +63,7 @@ FILES:${PN}-config = "${libexecdir}/os-helpers-config"
 FILES:${PN}-api = "${libexecdir}/os-helpers-api"
 FILES:${PN}-reboot = "${libexecdir}/safe_reboot"
 FILES:${PN}-efi = "${libexecdir}/os-helpers-efi"
+FILES:${PN}-sb = "${libexecdir}/os-helpers-sb"
 
 do_test_api() {
     if [ "${BB_NO_NETWORK}" = "1" ]; then
