@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update balena-engine to v20.10.42
+      hash: 49900e8b33eb6a7a3dcb1b8557a6092219abb13d
+      body: |
+        Update balena-engine from 20.10.41 to 20.10.42
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update actions/upload-artifact to v4 and generate unique artifacts
+              hash: 8326bf0a7eda3214b4b9c0641b81d0d717a2d15d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: balena-engine-20.10.42
+          title: ""
+          date: 2023-12-19T19:09:00.979Z
+  version: 5.1.1
+  title: ""
+  date: 2023-12-20T00:30:08.191Z
+- commits:
     - subject: "migrate: check for mount point before umounting"
       hash: 5e1165213e086efdecabd3dbd8d8a5c9c5d4d2ea
       body: |

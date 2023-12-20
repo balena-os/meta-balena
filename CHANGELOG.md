@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.1.1
+## (2023-12-20)
+
+
+<details>
+<summary> Update balena-engine to v20.10.42 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-engine-20.10.42
+> ### (2023-12-19)
+> 
+> * Update actions/upload-artifact to v4 and generate unique artifacts [Kyle Harding]
+> 
+
+</details>
+
 # v5.1.0
 ## (2023-12-19)
 
