@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.2
+## (2023-12-21)
+
+* balena-config-vars: increase config.json parsing resilience [Alex Gonzalez]
+
 # v5.1.1
 ## (2023-12-20)
 

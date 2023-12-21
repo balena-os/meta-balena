@@ -1,4 +1,23 @@
 - commits:
+    - subject: "balena-config-vars: increase config.json parsing resilience"
+      hash: 42faa76d97f6ca4eeadbc648e44d19737740eb8c
+      body: |
+        There have been reports of an empty config vars cache file - probably
+        because of a race condition when the reading of config.json happens just
+        as the file is being replaced.
+
+        Add some checks and retries to avoid this errors from happening.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.2
+  title: ""
+  date: 2023-12-21T13:35:27.955Z
+- commits:
     - subject: Update balena-engine to v20.10.42
       hash: 49900e8b33eb6a7a3dcb1b8557a6092219abb13d
       body: |
