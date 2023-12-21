@@ -82,6 +82,7 @@ BALENA_FLASHER_FLAG_FILE = "balena-image-flasher"
 
 # Kernel command line
 OS_KERNEL_CMDLINE ?= "${@set_default_kernel_cmdline(d)}"
+OS_KERNEL_SECUREBOOT_CMDLINE ?= "module.sig_enforce lockdown=integrity"
 
 # Initramfs
 INITRAMFS_IMAGE = "balena-image-initramfs"
