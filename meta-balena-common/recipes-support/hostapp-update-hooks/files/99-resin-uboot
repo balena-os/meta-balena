@@ -20,7 +20,12 @@ else
 fi
 
 new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT -t ext4)
-blockdev=$(basename "$new_part")
+type=$(lsblk -no TYPE "${new_part}")
+if [ "${type}" = "crypt" ]; then
+    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].children[].name')
+else
+    blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].name')
+fi
 new_part_idx=$(cat "/sys/class/block/$blockdev/partition")
 
 # Convert to hex as u-boot expects hex partition numbers. Especially needed for jetson devices
@@ -30,8 +35,8 @@ info "Switching uboot root partition index to $new_part_idx..."
 tmpfile="$(mktemp)"
 echo "resin_root_part=$new_part_idx" > ${tmpfile}
 echo "upgrade_available=$DURING_UPDATE" >> ${tmpfile}
-"${MV}" "${tmpfile}" "/mnt/boot/resinOS_uEnv.txt"
+"${MV}" "${tmpfile}" "${BALENA_NONENC_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
 # It is possible to get into a strange state with multiple bootcount.env files so use a delimiter to delete them all.
 # See https://github.com/snapcore/snapd/pull/5145 for more detail
-rm -f /mnt/boot/*bootcount.env* || true
+rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}"/*bootcount.env* || true
 info "Done."
