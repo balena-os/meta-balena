@@ -47,13 +47,16 @@ run_hooks_from_inactive () {
 		mount -t efivarfs efivarfs "${old_rootfs}/sys/firmware/efi/efivars" || true
 	fi
 
-	# In case of secure boot the boot and EFI partitions are split apart
-	# The EFI partition must be bind-mounted as well to be able to deploy
-	# files under /mnt/boot/EFI
-	if [ -L /mnt/boot/EFI ]; then
-		mkdir -p "${old_rootfs}/mnt/efi"
-		mount --bind /mnt/efi "${old_rootfs}/mnt/efi"
+	# In case of secure boot the boot partition is encrypted and the
+	# boot essentials are split into a non-encrypted partition.
+	# The non-enc partition must be bind-mounted as well to be able to deploy
+	# files
+	# On non-secure boot systems, both partitions are the same
+	if [ "${BALENA_NONENC_BOOT_MOUNTPOINT}" != "${BALENA_BOOT_MOUNTPOINT}" ]; then
+		mkdir -p "${old_rootfs}${BALENA_NONENC_BOOT_MOUNTPOINT}"
+		mount --bind "${BALENA_NONENC_BOOT_MOUNTPOINT}" "${old_rootfs}${BALENA_NONENC_BOOT_MOUNTPOINT}"
 	fi
+
 
 	# DURING_UPDATE tells hooks to use the boot files from inactive
 	# which are the good set of files in ROLLBACK_ALTBOOT mode

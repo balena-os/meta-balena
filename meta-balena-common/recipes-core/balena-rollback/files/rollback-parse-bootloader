@@ -20,17 +20,17 @@ set -o errexit
 
 echo "Rollback: Parsing bootloader configuration"
 
-if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
-        echo "Rollback: $BALENA_BOOT_MOUNTPOINT doesn't exist."
+if [ ! -d "$BALENA_NONENC_BOOT_MOUNTPOINT" ]; then
+        echo "Rollback: $BALENA_NONENC_BOOT_MOUNTPOINT doesn't exist."
         exit 1
 fi
 
 # Fetch bootloader variables into environment
-if [ -f "${BALENA_BOOT_MOUNTPOINT}/resinOS_uEnv.txt" ]; then
-	BOOTLOADER_FILE="${BALENA_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
+if [ -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/resinOS_uEnv.txt" ]; then
+	BOOTLOADER_FILE="${BALENA_NONENC_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
 else
 	for ENV_FILE_NAME in bootenv grubenv; do
-		ENV_FILE=$(find -L "${BALENA_BOOT_MOUNTPOINT}" -name "${ENV_FILE_NAME}")
+		ENV_FILE=$(find -L "${BALENA_NONENC_BOOT_MOUNTPOINT}" -name "${ENV_FILE_NAME}")
 		if [ -f "${ENV_FILE}" ]; then
 			BOOTLOADER_FILE="${ENV_FILE}"
 			break
