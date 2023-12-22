@@ -1,4 +1,81 @@
 - commits:
+    - subject: Update tests/leviathan digest to 57546f9
+      hash: 4735bceb5946999f9b5c768863eafdfb6904cbb9
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.27
+              hash: 4505a657334e331bcdeaa40a0d7e61115d98208d
+              body: |
+                Update balena-os/leviathan-worker from 2.9.26 to 2.9.27
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.27
+          title: ""
+          date: 2023-12-22T15:30:59.290Z
+        - commits:
+            - subject: Update core/contracts digest to 31188f5
+              hash: acea4799e23c4ee3573fb7b8af9085ca6d13267e
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.26
+          title: ""
+          date: 2023-12-21T15:41:39.414Z
+        - commits:
+            - subject: Update actions/upload-artifact action to v4
+              hash: 574a3002a43599b67507d826ab6f7165fec32d66
+              body: |
+                Update actions/upload-artifact from 3 to 4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.25
+          title: ""
+          date: 2023-12-18T01:58:03.248Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: e0fafec6d5a551889c2b9b92887b4ec3714ee36d
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.24
+          title: ""
+          date: 2023-12-18T00:52:00.697Z
+        - commits:
+            - subject: Update core/contracts digest to 591fda9
+              hash: 4b0abbb41eeb4956a7abcf722fd74bc3cfd4e8c3
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.23
+          title: ""
+          date: 2023-12-13T16:32:48.778Z
+  version: 5.1.3
+  title: ""
+  date: 2023-12-22T21:40:29.567Z
+- commits:
     - subject: "balena-config-vars: increase config.json parsing resilience"
       hash: 42faa76d97f6ca4eeadbc648e44d19737740eb8c
       body: |
