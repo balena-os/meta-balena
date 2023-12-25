@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 5068028
+      hash: 2ab7461531b08bf32e7db61b4b46e5ed2cda5fef
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 004b6152f13c18a1a498c2d6c035b74a6e8ffe56
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.28
+          title: ""
+          date: 2023-12-25T00:47:40.061Z
+  version: 5.1.4
+  title: ""
+  date: 2023-12-25T05:03:30.910Z
+- commits:
     - subject: Update tests/leviathan digest to 57546f9
       hash: 4735bceb5946999f9b5c768863eafdfb6904cbb9
       body: Update tests/leviathan

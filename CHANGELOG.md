@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.1.4
+## (2023-12-25)
+
+
+<details>
+<summary> Update tests/leviathan digest to 5068028 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.28
+> ### (2023-12-25)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.1.3
 ## (2023-12-22)
 
