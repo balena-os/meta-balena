@@ -2,6 +2,9 @@ backports:
   current: 2.112.x
   next: 2.114.x
   sunset: 2.107.x
+esr:
+  bsp-branch-pattern: 2024.1.x
+  version: '5.0'
 reviewers: 1
 type: yocto layer
 upstream:
