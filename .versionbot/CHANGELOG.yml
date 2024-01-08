@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to 5163c31
+      hash: 490c8d2f72d0caca055d776702b8738e91a18879
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 00fd1164a17d8416f9c2d8fdd85ec4beb9313ac2
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.32
+          title: ""
+          date: 2024-01-08T00:49:02.459Z
+        - commits:
+            - subject: Update core/contracts digest to b469f31
+              hash: 70b223f36468f7e5831bc8d7529ec911bb0f162e
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.31
+          title: ""
+          date: 2024-01-05T11:31:48.601Z
+  version: 5.1.6
+  title: ""
+  date: 2024-01-08T05:44:12.539Z
+- commits:
     - subject: Update tests/leviathan digest to 70db044
       hash: 0498c1ee79993731af3393075c9b38661d3e9003
       body: Update tests/leviathan
