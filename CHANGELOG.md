@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.1.8
+## (2024-01-09)
+
+
+<details>
+<summary> Update tests/leviathan digest to dbcacdb [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.33
+> ### (2024-01-09)
+> 
+> * timeout netcat process [rcooke-warwick]
+> 
+
+</details>
+
 # v5.1.7
 ## (2024-01-09)
 
