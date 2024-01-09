@@ -1,4 +1,91 @@
 - commits:
+    - subject: Update balena-supervisor to v15.2.0
+      hash: f3df642e9f4e6525d68fe00b3141b1fa4cdf4fef
+      body: |
+        Update balena-supervisor from 15.0.4 to 15.2.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Try MDNS lookup only if regular DNS lookup fails
+              hash: dec39a35d40532a82ac2f2bbcaa2c179b67d3d4a
+              body: >
+                This is meant to allow users to configure their device to
+
+                resolve `.local` queries via dnsmasq by modifying config.json, e.g. `dnsServers":
+
+                "/bob.local/172.17.0.33`.
+
+
+                This would fail before as MDNS lookups would always come first
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+            - subject: Refactor mdns lookup code in app entry
+              hash: 7a39da92b7bb1537a6df3dec6ad665d35e891bcc
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-15.2.0
+          title: ""
+          date: 2024-01-08T13:25:37.100Z
+        - commits:
+            - subject: "docs: api: start-service: specify this endpoint affects the device"
+              hash: 096fdbc74ab4ca9a58603eec5774435ff07bedb1
+              body: >
+                The description incorrectly states the endpoint would start a
+                service
+
+                in the whole fleet while it only affects the device.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: balena-supervisor-15.1.1
+          title: ""
+          date: 2024-01-02T18:35:24.583Z
+        - commits:
+            - subject: Force remove container if updateMetadata fails
+              hash: 3ea8d4727a4f4b068b308d1f407b7cf0dae2733b
+              body: >
+                The `updateMetadata` step renames the container to match the
+                target
+
+                release when the service doesn't change between releases. We have seen
+
+                this step fail because of an engine bug that seems to relate to the
+
+                engine keeping stale references after container restarts. The only way
+
+                around this issue is to remove the old container and create it again.
+
+                This implements that workaround during the updateMetadata step to deal
+
+                with that issue.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Relates-to: balena-os/balena-engine#261
+                relates-to: balena-os/balena-engine#261
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-15.1.0
+          title: ""
+          date: 2023-11-22T20:12:13.595Z
+  version: 5.1.7
+  title: ""
+  date: 2024-01-09T11:48:54.597Z
+- commits:
     - subject: Update tests/leviathan digest to 5163c31
       hash: 490c8d2f72d0caca055d776702b8738e91a18879
       body: Update tests/leviathan
