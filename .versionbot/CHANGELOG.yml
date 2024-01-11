@@ -1,4 +1,43 @@
 - commits:
+    - subject: Update tests/leviathan digest to 0210c02
+      hash: 50e34dfc6013518a459c1be749804fbf837803d9
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: change to ssh tunnel
+              hash: c15d5183a61e4ed9d437642560c2db071b1d7672
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.29.35
+          title: ""
+          date: 2024-01-11T12:51:52.503Z
+        - commits:
+            - subject: Update core/contracts digest to 14a10d9
+              hash: bd5f29abd2bbe194df6f7657b69b860f435b1ef7
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.34
+          title: ""
+          date: 2024-01-10T11:32:06.062Z
+  version: 5.1.9
+  title: ""
+  date: 2024-01-11T18:57:27.371Z
+- commits:
     - subject: Update tests/leviathan digest to dbcacdb
       hash: 708458487d1cb01362ca28310b4b67ca847f4a0f
       body: Update tests/leviathan
