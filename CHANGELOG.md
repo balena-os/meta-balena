@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.10
+## (2024-01-12)
+
+* tests/bluetooth: Leave Autokit host discoverable on BT for a longer period of time [Alexandru Costache]
+
 # v5.1.9
 ## (2024-01-11)
 

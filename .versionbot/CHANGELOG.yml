@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tests/bluetooth: Leave Autokit host discoverable on BT for a longer
+        period of time"
+      hash: a4f57877b7582b0e36672269471c178a7511d18f
+      body: >
+        We've noticed that leaving the host discoverable indefinitely on Pi3
+        Autokit hosts solves sporadic scan failures. Thus, leaving the host
+        discoverable for 20 minutes should be sufficient to prevent these cases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.1.10
+  title: ""
+  date: 2024-01-12T15:29:12.742Z
+- commits:
     - subject: Update tests/leviathan digest to 0210c02
       hash: 50e34dfc6013518a459c1be749804fbf837803d9
       body: Update tests/leviathan
