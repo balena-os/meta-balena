@@ -37,7 +37,10 @@ module.exports = {
 					// get the testbot bluetooth name
 					let btName = await this.worker.executeCommandInWorker('bluetoothctl show | grep Name');
 					let btNameParsed = /(.*): (.*)/.exec(btName); // the bluetoothctl command returns "Name: <btname>", so extract the <btname here>
-					// make testbot bluetooth discoverable
+
+          // leave the host discoverable for a longer period of time to prevent sporadic discover failures with Pi3
+          await this.worker.executeCommandInWorker('bluetoothctl discoverable-timeout 1200');
+          // make testbot bluetooth discoverable
 					await this.worker.executeCommandInWorker('bluetoothctl discoverable on');
 
 					// scan for bluetooth devices on DUT, we retry a couple of times
