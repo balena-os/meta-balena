@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: update leviathan to v2.28.33"
+      hash: 5623b91919d7272ac995792a304f9b954bd6518a
+      body: |
+        Update leviathan from v2.28.25 to v2.28.33
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.15
+  title: ""
+  date: 2024-01-12T13:05:10.225Z
+- commits:
     - subject: "hostapp-update-hooks: add debug mode"
       hash: d2ec43cd87fecf3118e160309a0713c97c5a96ef
       body: |

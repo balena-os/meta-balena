@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.15
+## (2024-01-12)
+
+* tests: update leviathan to v2.28.33 [Alex Gonzalez]
+
 # v3.2.14
 ## (2023-12-23)
 
