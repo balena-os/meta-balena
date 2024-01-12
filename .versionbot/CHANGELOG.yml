@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: update leviathan to v2.28.35"
+      hash: 9aab5d690daaa86197cc92390328a287db1d9ff5
+      body: |
+        Update leviathan from v2.28.33 to v2.28.35
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 3.2.16
+  title: ""
+  date: 2024-01-12T19:02:27.170Z
+- commits:
     - subject: "tests: update leviathan to v2.28.33"
       hash: 5623b91919d7272ac995792a304f9b954bd6518a
       body: |
