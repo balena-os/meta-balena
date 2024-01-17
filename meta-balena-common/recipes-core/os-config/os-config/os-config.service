@@ -2,6 +2,7 @@
 Description=OS configuration update service
 Requires=resin-boot.service
 Wants=os-config-devicekey.service NetworkManager.service
+Before=extract-balena-ca.service
 After=os-config-devicekey.service resin-boot.service NetworkManager.service
 
 [Service]
