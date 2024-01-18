@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v5.1.11
+## (2024-01-18)
+
+* kernel-balena: Only sign initramfs for EFI machines [Alex Gonzalez]
+* balena-image: Add TPM tools conditionally on tpm machine feature [Alex Gonzalez]
+* initrdscripts: Add TPM/EFI tools conditionally on tpm machine feature [Alex Gonzalez]
+* os-helpers: rename os-helpers-secureboot to os-helpers-efi [Alex Gonzalez]
+* image-balena: extract hup boot partition checks into a function [Alex Gonzalez]
+* balena-keys: Distinguish EFI devices [Alex Gonzalez]
+* balena-image-flasher: only add grub configuration for EFI devices [Alex Gonzalez]
+* balena-image: only add grub configuration for EFI machines [Alex Gonzalez]
+
 # v5.1.10
 ## (2024-01-12)
 

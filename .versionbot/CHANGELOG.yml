@@ -1,4 +1,96 @@
 - commits:
+    - subject: "kernel-balena: Only sign initramfs for EFI machines"
+      hash: 5e56bc8cace0b71bcbf8e216dfe2a194144ba783
+      body: |
+        UEFI firmware in secure boot needs to authenticate the kernel plus
+        initramfs in the chain of trust. Other firmware implements secure boot
+        differently and does not need this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-image: Add TPM tools conditionally on tpm machine feature"
+      hash: 28ec059dd898de5c61ab314475f620d8c979e0d4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: Add TPM/EFI tools conditionally on tpm machine feature"
+      hash: 090e79747eb1344d056cfd406d672c194dcb3bbb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: rename os-helpers-secureboot to os-helpers-efi"
+      hash: 3f03b92c533e7c77f72128a6c5b0f345ceaf53eb
+      body: |
+        Secure boot is device specific, this helper contains EFI specific
+        helper functions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "image-balena: extract hup boot partition checks into a function"
+      hash: 4caceb149848091203c1328c843cc7ce4ad4cccb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-keys: Distinguish EFI devices"
+      hash: dc78e4ff39bbebf11706e52c77895b6403f0730c
+      body: |
+        Non EFI devices do not need the UEFI secure boot keys.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-image-flasher: only add grub configuration for EFI devices"
+      hash: 0c0966bc40a632945f22a2fb04c505ff42fd44e2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-image: only add grub configuration for EFI machines"
+      hash: 25be7ade2fbb272101047629f8f9d0378b370cc3
+      body: |
+        Only EFI systems need grub configuration added to the boot partition -
+        other device types that also use the signing API do not.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.11
+  title: ""
+  date: 2024-01-18T19:25:25.796Z
+- commits:
     - subject: "tests/bluetooth: Leave Autokit host discoverable on BT for a longer
         period of time"
       hash: a4f57877b7582b0e36672269471c178a7511d18f
