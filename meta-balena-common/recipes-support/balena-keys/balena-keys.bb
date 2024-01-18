@@ -7,7 +7,7 @@ inherit allarch deploy
 EXCLUDE_FROM_WORLD = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 ALLOW_EMPTY:${PN} = "1"
-DEPENDS = "balena-db-hashes"
+DEPENDS = "${@bb.utils.contains("MACHINE_FEATURES","efi","balena-db-hashes","",d)}"
 
 # Fetch the specified public key from the signing server
 #
@@ -27,7 +27,7 @@ fetch_key() {
     RESPONSE_FILE=$(mktemp)
     export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
     curl --fail "${SIGN_API}/${1}" -o "${RESPONSE_FILE}"
-    if [ "${2}" = ".key" ]; then
+    if echo "${1}" | grep -q -w 'gpg/key' && [ "${2}" = ".key" ]; then
         jq -r "${2}" < "${RESPONSE_FILE}" | gpg --dearmor > "${DEST_DIR}/${3}"
     else
         jq -r "${2}" < "${RESPONSE_FILE}" > "${DEST_DIR}/${3}"
@@ -45,12 +45,14 @@ fetch_key() {
 }
 
 do_get_public_keys() {
-    fetch_key "gpg/key/${SIGN_GRUB_KEY_ID}" ".key" "grub.gpg"
     fetch_key "kmod/cert/${SIGN_KMOD_KEY_ID}" ".cert" "kmod.crt"
-    fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".pk" "PK.auth"
-    fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".esl" "PK.esl"
-    fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".kek" "KEK.auth"
-    fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".esl" "KEK.esl"
+    if ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'true', 'false', d)}; then
+        fetch_key "gpg/key/${SIGN_GRUB_KEY_ID}" ".key" "grub.gpg"
+        fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".pk" "PK.auth"
+        fetch_key "secureboot/pk/${SIGN_EFI_PK_KEY_ID}" ".esl" "PK.esl"
+        fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".kek" "KEK.auth"
+        fetch_key "secureboot/kek/${SIGN_EFI_KEK_KEY_ID}" ".esl" "KEK.esl"
+    fi
 
     if [ -n "${SIGN_KMOD_KEY_APPEND}" ]; then
         bbnote "Appending additional module signing key(s) to trusted keys"

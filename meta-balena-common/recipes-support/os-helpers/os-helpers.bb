@@ -10,7 +10,7 @@ RDEPENDS:${PN}-tpm2 = "libtss2-tcti-device tpm2-tools"
 RDEPENDS:${PN}-config = "bash"
 RDEPENDS:${PN}-reboot = "bash jq"
 RDEPENDS:${PN}-api = "curl"
-RDEPENDS:${PN}-secureboot = "coreutils"
+RDEPENDS:${PN}-efi = "coreutils"
 
 SRC_URI = " \
     file://os-helpers-fs \
@@ -19,7 +19,7 @@ SRC_URI = " \
     file://os-helpers-tpm2 \
     file://os-helpers-config \
     file://os-helpers-api \
-    file://os-helpers-secureboot \
+    file://os-helpers-efi \
     file://safe_reboot \
 "
 S = "${WORKDIR}"
@@ -34,7 +34,7 @@ PACKAGES = " \
         ${PN}-config \
         ${PN}-api \
         ${PN}-reboot \
-        ${PN}-secureboot \
+        ${PN}-efi \
         "
 
 do_install() {
@@ -46,7 +46,7 @@ do_install() {
         ${WORKDIR}/os-helpers-tpm2 \
         ${WORKDIR}/os-helpers-config \
         ${WORKDIR}/os-helpers-api \
-        ${WORKDIR}/os-helpers-secureboot \
+        ${WORKDIR}/os-helpers-efi \
         ${WORKDIR}/safe_reboot \
         ${D}${libexecdir}
         sed -i "s,@@BALENA_CONF_UNIT_STORE@@,${BALENA_CONF_UNIT_STORE},g" ${D}${libexecdir}/os-helpers-config
@@ -59,7 +59,7 @@ FILES:${PN}-tpm2 = "${libexecdir}/os-helpers-tpm2"
 FILES:${PN}-config = "${libexecdir}/os-helpers-config"
 FILES:${PN}-api = "${libexecdir}/os-helpers-api"
 FILES:${PN}-reboot = "${libexecdir}/safe_reboot"
-FILES:${PN}-secureboot = "${libexecdir}/os-helpers-secureboot"
+FILES:${PN}-efi = "${libexecdir}/os-helpers-efi"
 
 do_test_api() {
     if [ "${BB_NO_NETWORK}" = "1" ]; then
