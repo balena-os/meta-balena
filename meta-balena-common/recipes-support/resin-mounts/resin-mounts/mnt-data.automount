@@ -1,0 +1,6 @@
+[Unit]
+Description=mnt-data automount
+ConditionVirtualization=!docker
+
+[Automount]
+Where=/mnt/data

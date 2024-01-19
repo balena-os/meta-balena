@@ -1,7 +1,6 @@
 [Unit]
 Description=Config.json path watch
-Requires=resin-boot.service
-After=resin-boot.service
+RequiresMountsFor=/mnt/boot
 
 [Path]
 PathChanged=/mnt/boot/config.json

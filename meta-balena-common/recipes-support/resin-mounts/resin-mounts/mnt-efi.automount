@@ -1,0 +1,6 @@
+[Unit]
+Description=mnt-efi automount
+ConditionVirtualization=!docker
+
+[Automount]
+Where=/mnt/efi

@@ -5,24 +5,27 @@ include resin-mounts.inc
 RDEPENDS:${PN} += "os-helpers-fs"
 
 SRC_URI += " \
-	file://balena-efi.service \
-	file://resin-boot.service \
-	file://resin-data.service \
-	file://resin-state.service \
-	file://mnt-sysroot-active.service \
+	file://mnt-boot.automount \
+	file://mnt-boot.mount \
+	file://mnt-data.automount \
+	file://mnt-data.mount \
+	file://mnt-efi.automount \
+	file://mnt-efi.mount \
+	file://mnt-state.automount \
+	file://mnt-state.mount \
+	file://mnt-sysroot-active.automount \
+	file://mnt-sysroot-active.mount \
 	file://mnt-sysroot-inactive.automount \
 	file://mnt-sysroot-inactive.mount \
-	file://resin-partition-mounter \
 	file://etc-fake-hwclock.mount \
 	"
 
 SYSTEMD_SERVICE:${PN} += " \
-	balena-efi.service \
-	resin-boot.service \
-	resin-data.service \
-	resin-state.service \
-	mnt-sysroot-active.service \
-	mnt-sysroot-inactive.automount \
+	mnt-boot.mount \
+	mnt-data.mount \
+	mnt-efi.mount \
+	mnt-state.mount \
+	mnt-sysroot-active.mount \
 	mnt-sysroot-inactive.mount \
 	"
 
@@ -55,9 +58,6 @@ do_install:prepend () {
 	install -d ${D}/mnt/state
 	install -d ${D}/mnt/sysroot/active
 	install -d ${D}/mnt/sysroot/inactive
-
-	install -d ${D}${bindir}
-	install -m 755 ${WORKDIR}/resin-partition-mounter ${D}${bindir}
 
 	install -d ${D}${systemd_unitdir}/system
 	for service in ${SYSTEMD_SERVICE:resin-mounts}; do

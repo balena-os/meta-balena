@@ -1,8 +1,7 @@
 [Unit]
 Description=OS configuration device key service
 DefaultDependencies=no
-Requires=resin-boot.service
-After=resin-boot.service
+RequiresMountsFor=/mnt/boot
 
 [Service]
 Type=oneshot

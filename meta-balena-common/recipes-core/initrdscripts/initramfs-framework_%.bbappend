@@ -4,8 +4,8 @@ SRC_URI:append = " \
     file://console_null_workaround \
     file://prepare \
     file://fsck \
-    file://fsuuidsinit \
     file://machineid \
+    file://fslinks \
     file://resindataexpander \
     file://rorootfs \
     file://rootfs \
@@ -19,8 +19,8 @@ SRC_URI:append = " \
 
 do_install:append() {
     install -m 0755 ${WORKDIR}/console_null_workaround ${D}/init.d/000-console_null_workaround
-    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
-    install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
+    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/00-prepare
+    install -m 0755 ${WORKDIR}/fslinks ${D}/init.d/75-fslinks
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
     install -m 0755 ${WORKDIR}/migrate ${D}/init.d/92-migrate
@@ -41,10 +41,10 @@ PACKAGES:append = " \
     initramfs-module-console-null-workaround \
     initramfs-module-fsck \
     initramfs-module-machineid \
+    initramfs-module-fslinks \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
-    initramfs-module-fsuuidsinit \
     initramfs-module-cryptsetup \
     initramfs-module-kexec \
     initramfs-module-udevcleanup \
@@ -66,6 +66,10 @@ SUMMARY:initramfs-module-machineid = "Bind mount machine-id to rootfs"
 RDEPENDS:initramfs-module-machineid = "${PN}-base initramfs-module-udev"
 FILES:initramfs-module-machineid = "/init.d/91-machineid"
 
+SUMMARY:initramfs-module-fslinks = "Wait for udev rules to populate by-state fs links"
+RDEPENDS:initramfs-module-fslinks = "${PN}-base"
+FILES:initramfs-module-fslinks = "/init.d/75-fslinks"
+
 SUMMARY:initramfs-module-resindataexpander = "Expand the data partition to the end of device"
 RDEPENDS:initramfs-module-resindataexpander = "${PN}-base initramfs-module-udev busybox parted util-linux-lsblk e2fsprogs-resize2fs os-helpers-fs"
 FILES:initramfs-module-resindataexpander = "/init.d/88-resindataexpander"
@@ -80,11 +84,7 @@ FILES:initramfs-module-rootfs = "/init.d/90-rootfs"
 
 SUMMARY:initramfs-module-prepare = "Prepare initramfs console"
 RDEPENDS:initramfs-module-prepare = "${PN}-base os-helpers-logging os-helpers-fs"
-FILES:initramfs-module-prepare = "/init.d/70-prepare"
-
-SUMMARY:initramfs-module-fsuuidsinit = "Regenerate default filesystem UUIDs"
-RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
-FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
+FILES:initramfs-module-prepare = "/init.d/00-prepare"
 
 SUMMARY:initramfs-module-cryptsetup = "Unlock encrypted partitions"
 RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libgcc lvm2-udevrules os-helpers-logging os-helpers-fs"

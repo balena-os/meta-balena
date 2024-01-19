@@ -1,7 +1,8 @@
 [Unit]
 Description=Balena persistent logs
-Requires=resin-boot.service resin-state.service systemd-journald.service
-After=resin-boot.service resin-state.service systemd-journald.service
+Requires=systemd-journald.service
+After=systemd-journald.service
+RequiresMountsFor=/mnt/state /mnt/boot
 
 [Service]
 Type=oneshot

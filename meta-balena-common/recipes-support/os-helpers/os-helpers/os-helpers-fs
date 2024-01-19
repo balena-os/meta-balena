@@ -140,7 +140,7 @@ regenerate_uuid() {
             echo "drive ${drive} file=\"$dev\" exclusive" > /etc/mtools.conf
             new_uuid="BDEF$(hexdump -n 2 -e '"%02X" 1 "\n"' /dev/urandom)"
             cmd="mlabel -s -N ${new_uuid}"
-            if ! eval "${cmd}" "${drive}"; then
+            if ! eval "${cmd}" "${drive}" 1>&2; then
                 return 1
             fi
             ;;
@@ -156,12 +156,12 @@ regenerate_uuid() {
                         update_mounttime "$dev"
                     fi
             fi
-            if ! e2fsck -fp "$dev"; then
+            if ! e2fsck -fp "$dev" 1>&2; then
                 return 1
             fi
             new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
             cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
-            if ! eval "${cmd}" "${dev}"; then
+            if ! eval "${cmd}" "${dev}" 1>&2; then
                 return 1
             fi
             ;;

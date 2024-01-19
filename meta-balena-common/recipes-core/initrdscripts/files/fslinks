@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Copyright 2023 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-fs
+
+fslinks_enabled() {
+	# shellcheck disable=SC2154
+	test "${bootparam_flasher}" != "true"
+}
+
+fslinks_run() {
+	# Wait for balena by-state symlinks to come up and UUIDs to be
+	# regenerated if necessary, as tune2fs and fsck running on the same
+	# device will cause inconsistency and filesystem corruption
+	timeout=${bootparam_roottimeout:-5}
+	links="resin-boot resin-rootA resin-rootB resin-state resin-data"
+
+	complete=""
+	start=$(date '+%s')
+	while [ $((start + timeout)) -gt "$(date '+%s')" ]; do
+		for l in $links; do
+			[ -L "/dev/disk/by-state/$l" ] || continue 2
+			fs="$(lsblk -no FSTYPE "/dev/disk/by-state/$l")"
+			uuid="$(lsblk -no UUID "/dev/disk/by-state/$l")"
+			case "$fs" in
+				vfat) case "${uuid}" in "BDEF"*) ;; *) continue 2 ;; esac ;;
+				*) case "${uuid}" in "ba1eadef"*) ;; *) continue 2 ;; esac ;;
+			esac
+		done
+
+		complete=1
+		break
+	done
+
+	[ -z "$complete" ] \
+		&& fatal "Timeout while waiting for balenaOS disk to be detected"
+}

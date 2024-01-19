@@ -1,8 +1,7 @@
 [Unit]
 Description=balena reset OS data
 DefaultDependencies=no
-Requires=resin-data.service var-volatile.mount
-After=resin-data.service var-volatile.mount
+RequiresMountsFor=/mnt/data /var/volatile
 Before=umount.target
 Conflicts=umount.target
 ConditionPathExists=!@BALENA_DATA_MP@/remove_me_to_reset

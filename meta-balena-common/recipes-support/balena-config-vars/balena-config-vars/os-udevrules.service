@@ -1,7 +1,8 @@
 [Unit]
 Description=udev rules configuration from config.json
-Requires=resin-boot.service systemd-udev-settle.service bind-etc-udev-rules.d.service
-After=resin-boot.service systemd-udev-settle.service bind-etc-udev-rules.d.service
+Requires=bind-etc-udev-rules.d.service
+After=bind-etc-udev-rules.d.service
+RequiresMountsFor=/mnt/boot
 
 [Service]
 Type=oneshot

@@ -1,8 +1,7 @@
 [Unit]
 Description=Expand resin-data partition
 DefaultDependencies=no
-Before=resin-data.service umount.target
-After=resin-boot.service
+Before=mnt-data.mount umount.target
 Conflicts=umount.target
 ConditionVirtualization=!docker
 

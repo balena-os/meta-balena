@@ -1,0 +1,10 @@
+[Unit]
+Description=mnt-boot mount
+ConditionVirtualization=!docker
+After=systemd-udevd.service
+Requires=systemd-udevd.service
+
+[Mount]
+What=/dev/disk/by-state/resin-boot
+Where=/mnt/boot
+Options=noauto

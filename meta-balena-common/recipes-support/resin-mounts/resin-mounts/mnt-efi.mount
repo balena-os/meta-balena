@@ -1,0 +1,9 @@
+[Unit]
+Description=mnt-efi mount
+ConditionVirtualization=!docker
+ConditionPathIsSymbolicLink=/mnt/boot/EFI
+
+[Mount]
+What=/dev/disk/by-state/balena-efi
+Where=/mnt/efi
+Options=noauto
