@@ -1,4 +1,55 @@
 - commits:
+    - subject: Update tests/leviathan digest to 6be4049
+      hash: 889c23e5e8134f4e456681fc8a2bacc6d126271c
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update actions/upload-artifact digest to 694cdab
+              hash: e8ac025c685a10b02c074d34f6321bfa9a85715e
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.38
+          title: ""
+          date: 2024-01-18T22:30:12.106Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 1eb3cb2
+              hash: fdc77c10964cd4ad712773ce9c67ded83e5dbd58
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.37
+          title: ""
+          date: 2024-01-15T01:57:42.562Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 526e3b151506e979ad587f31c07aa5734609a796
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.36
+          title: ""
+          date: 2024-01-15T00:50:36.593Z
+  version: 5.1.12
+  title: ""
+  date: 2024-01-19T03:26:08.587Z
+- commits:
     - subject: "kernel-balena: Only sign initramfs for EFI machines"
       hash: 5e56bc8cace0b71bcbf8e216dfe2a194144ba783
       body: |
