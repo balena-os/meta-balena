@@ -1,4 +1,19 @@
 - commits:
+    - subject: Start extract-balena-ca before os-config update
+      hash: 1b43e70a712145abe11c6fe6332d29b4dde50c49
+      body: |
+        For os-config to use the OS wide ca certificate
+        instead of an existing balenaRootCA in the
+        config.json
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: jaomaloy
+      nested: []
+  version: 5.1.13
+  title: ""
+  date: 2024-01-23T10:52:48.191Z
+- commits:
     - subject: Update tests/leviathan digest to 6be4049
       hash: 889c23e5e8134f4e456681fc8a2bacc6d126271c
       body: Update tests/leviathan

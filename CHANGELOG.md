@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.13
+## (2024-01-23)
+
+* Start extract-balena-ca before os-config update [jaomaloy]
+
 # v5.1.12
 ## (2024-01-19)
 
