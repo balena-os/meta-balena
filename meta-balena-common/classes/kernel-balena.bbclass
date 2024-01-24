@@ -123,6 +123,7 @@ BALENA_CONFIGS ?= " \
     ip_set \
     seccomp \
     wd-nowayout \
+    wd \
     xtables \
     audit \
     governor \
@@ -434,6 +435,10 @@ BALENA_CONFIGS[seccomp] = " \
 #
 BALENA_CONFIGS[wd-nowayout] = " \
     CONFIG_WATCHDOG_NOWAYOUT=n \
+    "
+
+BALENA_CONFIGS[wd] = " \
+    CONFIG_WATCHDOG_SYSFS=y \
     "
 
 BALENA_CONFIGS_DEPS[xtables] = " \
