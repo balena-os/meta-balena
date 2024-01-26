@@ -1,4 +1,28 @@
 - commits:
+    - subject: "networkmanager: make FORWARD rules for shared interfaces last in chain"
+      hash: 089f4d639383a4981d4840f9e22cccc97270b339
+      body: |
+        At this moment there is a race condition between NetworkManager
+        and the engine when a shared interface is configured. If the interface
+        is configured first and the engine second, the containers are allowed
+        to access DHCP hosts behind the shared interface. If the engine comes
+        up first and the shared interface second, access will be denied.
+
+        This patch adds a dispatcher script that always configures the firewall
+        rules as if the engine came up last. This does not really address
+        the underlying issue but it overcomes the race condition and makes
+        the behavior deterministic, which is good enough at this point.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.1.15
+  title: ""
+  date: 2024-01-26T20:11:41.626Z
+- commits:
     - subject: Update tests/leviathan digest to e618772
       hash: 134b8f2e7f8f75c67e4aa49feb8d0d38c0e5121b
       body: Update tests/leviathan

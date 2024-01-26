@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.15
+## (2024-01-26)
+
+* networkmanager: make FORWARD rules for shared interfaces last in chain [Michal Toman]
+
 # v5.1.14
 ## (2024-01-24)
 
