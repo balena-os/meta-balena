@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Copyright 2024 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+# This script hooks to the "up" event of every interface
+# It checks whether there is a rule commented "nm-shared-$IFNAME"
+# in the FORWARD chain and if it is, removes it from its current
+# position and appends to the end.
+#
+# This is necessary because of a race condition between NetworkManager
+# and the balenaEngine when setting up their respective sets of firewall
+# rules. If the balenaEngine sets up its rules last (IOW on top
+# of the FORWARD chain), containers are allowed to route to the DHCP
+# clients behind the shared interface. If NetworkManager sets its rules
+# last, the containers will be denied access to the shared network.
+#
+# While the latter seems cleaner, some users actually benefit from
+# the containers being able to route behind the shared interface,
+# so we choose to prefer that behavior. This script overcomes
+# the race condition and always sets the FORWARD rules
+# as if balenaEngine came up last.
+
+. /usr/libexec/os-helpers-logging
+
+if [ "$2" != "up" ]
+then
+  exit 0
+fi
+
+IFNAME="$1"
+
+# Look for the FORWARD rule that NetworkManager adds for interfaces
+# configured as shared. This will have a comment "nm-shared-$IFNAME"
+# and jump into a chain named "sh-fw-$IFNAME"
+FW_RULE_NO=$(iptables -L FORWARD --line-number | grep "sh-fw-${IFNAME}" | grep "nm-shared-${IFNAME}" | cut -d " " -f 1)
+if [ "x${FW_RULE_NO}" = "x" ]
+then
+  exit 0
+fi
+
+# Safeguard, this should never happen
+# Exactly 0 or 1 rule should match, bail out if there are more & investigate
+if [ "$(echo ${FW_RULE_NO} | wc -w)" -gt 1 ]
+then
+  fail "More than one rule matched when looking for 'nm-shared-${IFNAME}', bailing out"
+fi
+
+info "Found shared FORWARD rule 'nm-shared-${IFNAME}' at index ${FW_RULE_NO}, moving down"
+
+FW_RULE_ARGS="$(iptables -S FORWARD ${FW_RULE_NO})"
+
+# Append the rule to the bottom
+# Do not quote ${FW_RULE_ARGS}, this needs to expand
+iptables ${FW_RULE_ARGS}
+
+# Remove the rule from its original position
+iptables -D FORWARD "${FW_RULE_NO}"

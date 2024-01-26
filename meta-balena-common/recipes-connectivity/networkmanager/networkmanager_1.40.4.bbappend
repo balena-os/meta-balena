@@ -5,6 +5,7 @@ FILESEXTRAPATHS:append := ":${THISDIR}/balena-files:${THISDIR}/${BPN}"
 SRC_URI:append = " \
     file://NetworkManager.conf.systemd \
     file://NetworkManager.conf \
+    file://90shared \
     file://98dhcp_ntp \
     file://99onoffline_ntp \
     file://README.ignore \
@@ -24,6 +25,7 @@ RDEPENDS:${PN}:append = " \
     chronyc \
     balena-net-config \
     resolvconf \
+    os-helpers-logging \
     "
 FILES:${PN}:append = " ${sysconfdir}/*"
 
@@ -55,6 +57,7 @@ do_install:append() {
 
     # Install balena dispatch scripts in /usr/lib/NetworkManager/dispatcher.d/ as
     # /etc/NetworkManager/dispatcher.d/ is used for user-provided scripts
+    install -m 0755 ${WORKDIR}/90shared ${D}${libdir}/NetworkManager/dispatcher.d/
     install -m 0755 ${WORKDIR}/98dhcp_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
     install -m 0755 ${WORKDIR}/99onoffline_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
 
