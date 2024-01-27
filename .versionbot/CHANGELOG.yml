@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 7c94243
+      hash: fe9fcfac3f90fd78c8e704a268a16d9b93527a0f
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.28
+              hash: 756cd0253d0e061e7fa7eaba8d64e9356558dde7
+              body: |
+                Update balena-os/leviathan-worker from 2.9.27 to 2.9.28
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.41
+          title: ""
+          date: 2024-01-26T15:03:05.906Z
+  version: 5.1.16
+  title: ""
+  date: 2024-01-27T02:56:42.770Z
+- commits:
     - subject: "networkmanager: make FORWARD rules for shared interfaces last in chain"
       hash: 089f4d639383a4981d4840f9e22cccc97270b339
       body: |
