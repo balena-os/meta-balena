@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.18
+## (2024-01-29)
+
+* classes: kernel-balena: expose watchdog in sysfs [Alex Gonzalez]
+
 # v5.1.17
 ## (2024-01-29)
 

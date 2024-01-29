@@ -1,4 +1,19 @@
 - commits:
+    - subject: "classes: kernel-balena: expose watchdog in sysfs"
+      hash: 1c56e8e1cb2bb9c871ce3fe805b97e9e2a7c867b
+      body: |
+        This helps debugging watchdog related issues.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.18
+  title: ""
+  date: 2024-01-29T18:06:47.257Z
+- commits:
     - subject: Update tests/leviathan digest to 01e65ec
       hash: d7a8acd5f4dd65be92cc84e2bfd9b94a5ae303a0
       body: Update tests/leviathan
