@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.17
+## (2024-01-30)
+
+* tests: allow for multiple worker fleets [rcooke-warwick]
+
 # v3.2.16
 ## (2024-01-12)
 
