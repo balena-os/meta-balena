@@ -616,3 +616,5 @@ do_configure[vardeps] += " \
 
 SIGNING_ARTIFACTS = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
 addtask sign_efi before do_deploy after do_bundle_initramfs
+
+DESTDIR = "${DEPLOYDIR}/${KERNEL_PACKAGE_NAME}"
