@@ -1,5 +1,7 @@
 inherit deploy
 
+DESTDIR ?= "${DEPLOYDIR}"
+
 # Do not run on native recipes
 do_sign_efi:class-native() {
     :
@@ -48,7 +50,7 @@ do_sign_efi () {
 do_deploy:append:class-target() {
     for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}; do
         if [ -f "${SIGNING_ARTIFACT}.signed" ]; then
-            install -m 0644 "${SIGNING_ARTIFACT}.signed" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT})"
+            install -m 0644 "${SIGNING_ARTIFACT}.signed" "${DESTDIR}/$(basename ${SIGNING_ARTIFACT})"
         fi
     done
 }
