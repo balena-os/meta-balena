@@ -1083,7 +1083,7 @@ do_configure[vardeps] += " \
 
 # Because we chain signatures here, the signed artifact is different for each
 # and defined in :prepend for each task
-SIGNING_ARTIFACTS_BASE = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs", '', d)}" 
+SIGNING_ARTIFACTS_BASE = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
 addtask sign_efi before do_deploy after do_bundle_initramfs
 addtask sign_gpg before do_deploy after do_sign_efi
 
