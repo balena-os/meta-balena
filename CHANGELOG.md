@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.1.19
+## (2024-01-31)
+
+* Add balena bootloader class [Michal Toman]
+* initrdscripts: remove nr_cpus kernel arg before kexec [Michal Toman]
+
 # v5.1.18
 ## (2024-01-29)
 

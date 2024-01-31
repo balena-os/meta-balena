@@ -1,4 +1,35 @@
 - commits:
+    - subject: Add balena bootloader class
+      hash: 196e586cf4e9379f554aed5d956e580686f70cd3
+      body: |
+        The class will perform a basic configuration of a linux kernel
+        to be used as the balena bootloader. Device types are expected
+        to inherit it and perform additional device-specific configuration.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "initrdscripts: remove nr_cpus kernel arg before kexec"
+      hash: 3a7b5308dfa9f7449d835c1858a15a8d0477784f
+      body: |
+        The kexec initrd script currently removes the maxcpus=0 kernel arg
+        which we use to put the system into non-SMP mode. This however does
+        not work on all platforms and nr_cpus=1 seems to be a more robust
+        solution, so with this patch nr_cpus will be removed as well.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.1.19
+  title: ""
+  date: 2024-01-31T21:43:14.605Z
+- commits:
     - subject: "classes: kernel-balena: expose watchdog in sysfs"
       hash: 1c56e8e1cb2bb9c871ce3fe805b97e9e2a7c867b
       body: |
