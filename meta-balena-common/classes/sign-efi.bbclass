@@ -18,6 +18,14 @@ do_sign_efi () {
         if [ -z "${SIGNING_ARTIFACT}" ] || [ ! -f "${SIGNING_ARTIFACT}" ]; then
             bbfatal "Nothing to sign"
         fi
+        GZIP_PAYLOAD=0
+        _filetype=$(file --mime-type -b "${SIGNING_ARTIFACT}")
+        if [ "${_filetype}" = "application/gzip" ]; then
+            GZIP_PAYLOAD=1
+            bbnote "Uncompressing compressed payload"
+            mv "${SIGNING_ARTIFACT}" "${SIGNING_ARTIFACT}.gz"
+            gunzip "${SIGNING_ARTIFACT}.gz"
+        fi
         REQUEST_FILE=$(mktemp)
         RESPONSE_FILE=$(mktemp)
         echo "{\"key_id\": \"${SIGN_KMOD_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
@@ -30,6 +38,10 @@ do_sign_efi () {
                  -o "${RESPONSE_FILE}"
         jq -r ".signed" < "${RESPONSE_FILE}" | base64 -d > "${SIGNING_ARTIFACT}.signed"
         rm -f "${REQUEST_FILE}" "${RESPONSE_FILE}"
+        if [ "${GZIP_PAYLOAD}" = "1" ]; then
+            gzip "${SIGNING_ARTIFACT}.signed"
+            mv "${SIGNING_ARTIFACT}.signed.gz" "${SIGNING_ARTIFACT}.signed"
+        fi
     done
 }
 
