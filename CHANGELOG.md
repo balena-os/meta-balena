@@ -1,6 +1,25 @@
 Change log
 -----------
 
+# v5.1.20
+## (2024-02-01)
+
+
+<details>
+<summary> Update balena-supervisor to v15.3.0 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-15.3.0
+> ### (2024-01-26)
+> 
+> * Pin docker version to v24 for tests [Felipe Lalanne]
+> * Fix docker utils tests for docker v25 [Felipe Lalanne]
+> * Enable nodemon when using test:env [Felipe Lalanne]
+> * Improve test:compose and test:env commands [Felipe Lalanne]
+> * Add prettierrc for editor compatibility [Felipe Lalanne]
+> 
+
+</details>
+
 # v5.1.19
 ## (2024-01-31)
 

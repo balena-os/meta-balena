@@ -1,4 +1,95 @@
 - commits:
+    - subject: Update balena-supervisor to v15.3.0
+      hash: 8b1e69874e07597b410c093a814d5968dd83991f
+      body: |
+        Update balena-supervisor from 15.2.0 to 15.3.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Pin docker version to v24 for tests
+              hash: 0500fe10bb1c35b01a4a46713c98165685a93433
+              body: >
+                Moby v25 adds the dynamically generated MAC address to the
+                Config field,
+
+                which breaks the state engine, preventing the state from settling as the
+
+                current state never matches the target state (empty mac address). This
+
+                seems to be a bug in Moby that we reported in moby/moby#47228
+
+
+                The issue won't affect Balena devices until balenaEngine is updated, and this
+
+                change fixes testing for now.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Fix docker utils tests for docker v25
+              hash: 6ee606806d5bb7b1805baa67051eaa4d132e5a39
+              body: >
+                From docker 25, the engine will validate IPAM config. This would
+                cause
+
+                the docker utils test to fail since the network/subnet configuration was
+
+                incorrect.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Enable nodemon when using test:env
+              hash: 23fae633ca2351b37befbf1870e8749c7b03d906
+              body: >
+                This avoids the need to rebuild the environment when making code
+                changes
+
+                and running integration tests
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+            - subject: Improve test:compose and test:env commands
+              hash: 2f3e3d2e610160b7111024b597df6f2f6844ce9a
+              body: >
+                The commands now use docker-compose run instead of docker
+                compose up
+
+                for simplicity and also to match what flowzone does.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Add prettierrc for editor compatibility
+              hash: e2f54e29faba4f74a59971fd66d64b7c38e9eb0f
+              body: >
+                The tsserver lsp doesn't seem to work well with .editorconfig.
+                Using
+
+                prettierrc will allow formatting to work correctly with editor plugins
+
+
+                This also updates editorconfig to work well with json
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-15.3.0
+          title: ""
+          date: 2024-01-26T14:51:00.446Z
+  version: 5.1.20
+  title: ""
+  date: 2024-02-01T04:15:55.799Z
+- commits:
     - subject: Add balena bootloader class
       hash: 196e586cf4e9379f554aed5d956e580686f70cd3
       body: |
