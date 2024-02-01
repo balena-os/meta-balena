@@ -1,4 +1,68 @@
 - commits:
+    - subject: Update tests/leviathan digest to dd2285a
+      hash: 98ff3b7ce4aff6c441313aec505b6c04e4c96a8d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 75a9764
+              hash: 19eb050d554bcec7ad4019b9f56c87cbe9ed980a
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.46
+          title: ""
+          date: 2024-02-01T11:30:01.804Z
+        - commits:
+            - subject: Update core/contracts digest to 8dfe06b
+              hash: ff3d56371204568e12fd29165cdf71792cea4410
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.45
+          title: ""
+          date: 2024-01-31T12:10:06.956Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.30
+              hash: fa16ab27ffbada5c1e462510045ecb956b8b872a
+              body: |
+                Update balena-os/leviathan-worker from 2.9.29 to 2.9.30
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.44
+          title: ""
+          date: 2024-01-30T01:27:20.366Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.29
+              hash: 023256fcb3c4d5ad3c32445e3ca5ab6713e64073
+              body: |
+                Update balena-os/leviathan-worker from 2.9.28 to 2.9.29
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.43
+          title: ""
+          date: 2024-01-29T18:31:03.729Z
+  version: 5.1.21
+  title: ""
+  date: 2024-02-01T18:17:57.543Z
+- commits:
     - subject: Update balena-supervisor to v15.3.0
       hash: 8b1e69874e07597b410c093a814d5968dd83991f
       body: |
