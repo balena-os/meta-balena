@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
 BOOT_MOUNT="/bootfs"
 BOOT_LABEL_CANDIDATES="@@BALENA_NONENC_BOOT_LABEL@@ balena-boot resin-boot"
 BOOTENV_FILENAME="bootenv"
