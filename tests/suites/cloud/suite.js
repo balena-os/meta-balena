@@ -329,15 +329,22 @@ module.exports = {
 			await setFlasher(this.os.image.path);
 		}
 
-    // disable port forwarding on the testbot - disables the DUT internet access.
+    await this.worker.off();
+    await this.worker.flash(this.os.image.path);
+
+    // disable port forwarding on the testbot - disables the DUT internet access. We do this after flashing is completed
+    // in case the flashing requires internet access - e.g jetson-flash container build
     if (
 			this.workerContract.workerType !== `qemu`
 		){
       await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
     }
 
-    await this.worker.off();
-    await this.worker.flash(this.os.image.path);
+    this.suite.teardown.register(async () => {
+      //re - enable port forwarding in case something flaked between us disabling it and re-enabling it
+      await this.worker.executeCommandInWorker('sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"');
+    });
+    
     await this.worker.on();
 
     // create tunnels
