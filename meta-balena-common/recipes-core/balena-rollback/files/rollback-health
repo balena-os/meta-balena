@@ -42,6 +42,11 @@ run_hooks_from_inactive () {
 	mount --bind /mnt/sysroot/inactive/ "${old_rootfs}/mnt/sysroot/inactive/"
 	mount -t sysfs sysfs "${old_rootfs}/sys/"
 
+	# Allow old OS hooks to access efivars
+	if [ -d /sys/firmware/efi/efivars ]; then
+		mount -t efivarfs efivarfs "${old_rootfs}/sys/firmware/efi/efivars" || true
+	fi
+
 	# In case of secure boot the boot and EFI partitions are split apart
 	# The EFI partition must be bind-mounted as well to be able to deploy
 	# files under /mnt/boot/EFI
