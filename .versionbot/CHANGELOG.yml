@@ -1,4 +1,25 @@
 - commits:
+    - subject: "balena-rollback/rollback-health: Allow old OS hooks to access efivars"
+      hash: df9d9986ab6965b653abd8d5d06dbfc3beb285e9
+      body: |
+        This fixes rollback-health failures for boards like the Jetson Seeeed
+        J4012, which updates efivars for capsule updates from container hooks
+        and not from the current OS hooks.
+
+        While the actual HUP works because of /sys being bindmounted by
+        hostapp-update, rollbacks will fail to run the old OS hooks unless
+        efivarfs is mounted.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.1.22
+  title: ""
+  date: 2024-02-02T16:21:23.127Z
+- commits:
     - subject: Update tests/leviathan digest to dd2285a
       hash: 98ff3b7ce4aff6c441313aec505b6c04e4c96a8d
       body: Update tests/leviathan

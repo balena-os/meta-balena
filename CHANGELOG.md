@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.22
+## (2024-02-02)
+
+* balena-rollback/rollback-health: Allow old OS hooks to access efivars [Alexandru Costache]
+
 # v5.1.21
 ## (2024-02-01)
 
