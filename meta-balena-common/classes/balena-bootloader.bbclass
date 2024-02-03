@@ -77,6 +77,7 @@ BALENA_CONFIGS ?= " \
     media \
     nls \
     misc \
+    ${@oe.utils.conditional('SIGN_API','','',' crypto',d)} \
     "
 
 #
@@ -88,6 +89,23 @@ BALENA_CONFIGS[kexec] = " \
     CONFIG_KEXEC=y \
     CONFIG_KEXEC_FILE=y \
     "
+
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
+BALENA_CONFIGS_DEPS[secureboot] = " \
+    CONFIG_INTEGRITY_SIGNATURE=y \
+    CONFIG_INTEGRITY_ASYMMETRIC_KEYS=y \
+    CONFIG_SYSTEM_BLACKLIST_KEYRING=y \
+    CONFIG_SECURITY_LOCKDOWN_LSM=y \
+    CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y \
+"
+BALENA_CONFIGS[secureboot] = " \
+    CONFIG_KEXEC_SIG=y \
+    CONFIG_MODULE_SIG=y \
+    CONFIG_MODULE_SIG_ALL=y \
+    CONFIG_MODULE_SIG_SHA512=y \
+    CONFIG_SYSTEM_TRUSTED_KEYS="certs/kmod.crt" \
+    CONFIG_INTEGRITY_PLATFORM_KEYRING=y \
+"
 
 # We only support RAID1
 BALENA_CONFIGS[raid] = " \
@@ -462,6 +480,15 @@ BALENA_CONFIGS[misc] = " \
     CONFIG_TRACING=n \
     CONFIG_KGDB=n \
     CONFIG_STAGING=n \
+    "
+
+# We need crypto support to mount LUKS encrypted drives
+BALENA_CONFIGS[crypto] = " \
+    CONFIG_CRYPTO_LIB_AES=y \
+    CONFIG_CRYPTO_MD5=y \
+    CONFIG_CRYPTO_CBC=y \
+    CONFIG_CRYPTO_AES=y \
+    CONFIG_CRYPTO_SHA256=y \
     "
 
 ###########
