@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to 57ba19b
+      hash: 95914f064319b07f4fffaea99acba403371f8552
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.32
+              hash: 9b77f33362ad96fbcb16144d1ced8f55b1ae229b
+              body: |
+                Update balena-os/leviathan-worker from 2.9.30 to 2.9.32
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.48
+          title: ""
+          date: 2024-02-05T14:50:14.058Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: aaaa5b9d3cbdc934492b3198be0f589878bb2556
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.47
+          title: ""
+          date: 2024-02-05T00:45:07.492Z
+  version: 5.1.24
+  title: ""
+  date: 2024-02-05T21:33:40.827Z
+- commits:
     - subject: "tests: cloud: disable dut internet after flashing"
       hash: d2862583495343999f413f2279e0a560c4f85036
       body: ""
