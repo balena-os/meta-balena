@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: cloud: disable dut internet after flashing"
+      hash: d2862583495343999f413f2279e0a560c4f85036
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 5.1.23
+  title: ""
+  date: 2024-02-05T08:28:03.676Z
+- commits:
     - subject: "balena-rollback/rollback-health: Allow old OS hooks to access efivars"
       hash: df9d9986ab6965b653abd8d5d06dbfc3beb285e9
       body: |

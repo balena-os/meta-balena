@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.23
+## (2024-02-05)
+
+* tests: cloud: disable dut internet after flashing [rcooke-warwick]
+
 # v5.1.22
 ## (2024-02-02)
 
