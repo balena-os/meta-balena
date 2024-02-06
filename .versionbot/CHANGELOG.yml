@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to a708a7f
+      hash: 42a7b84459eb3cf7d1de83e87a7cea3dc62166ba
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update actions/upload-artifact digest to 5d5d22a
+              hash: b59bb24d6b31119cd35b8bcce0f4c43c33cdc33f
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.49
+          title: ""
+          date: 2024-02-05T22:46:54.576Z
+  version: 5.1.25
+  title: ""
+  date: 2024-02-06T05:41:01.955Z
+- commits:
     - subject: Update tests/leviathan digest to 57ba19b
       hash: 95914f064319b07f4fffaea99acba403371f8552
       body: Update tests/leviathan
