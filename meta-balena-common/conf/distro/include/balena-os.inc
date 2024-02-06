@@ -118,9 +118,11 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 # let's pin linux-firmware to the version we imported from Poky kirkstone release
 PREFERRED_VERSION_linux-firmware = "20230404"
 
-# balena-engine go version requirement
-GOVERSION = "1.16.2"
-PREFERRED_PROVIDER_go-native = "go-native"
+# Bootstrap Go using a binary release from golang.org.  If you want to bootstrap
+# from source using the C-implemented Go 1.4 (only supports x86-64 hosts) then use
+# go-native.
+GOVERSION = "1.20.13"
+PREFERRED_PROVIDER_go-native = "go-binary-native"
 
 # Firmware compression support
 FIRMWARE_COMPRESSION ?= "0"
