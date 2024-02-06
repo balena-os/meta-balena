@@ -30,6 +30,9 @@ IMAGE_LINGUAS = ""
 LICENSE = "MIT"
 
 IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
-inherit image
+inherit image kernel-balena-noimage
+
+# Pulled in via PREFERRED_PROVIDER_virtual/kernel
+PACKAGE_EXCLUDE += "kernel-module-* "
 
 IMAGE_ROOTFS_SIZE = "8192"
