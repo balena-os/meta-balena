@@ -1,0 +1,51 @@
+From 20176b390e28daa86b4552965cb7bd9181983c4d Mon Sep 17 00:00:00 2001
+From: Chaitanya Vadrevu <chaitanya.vadrevu@ni.com>
+Date: Mon, 6 Nov 2023 20:11:19 -0600
+Subject: [PATCH] net: Fix issue with DNS not being updated
+
+When dns requests are made, go's native DNS resolver only reads
+/etc/resolv.conf if the previous request is older than 5 seconds.
+
+On first network call, an initialization code runs that is
+supposed to initialize DNS data and set lastChecked time. There is a bug
+in this code that causes /etc/resolv.conf to not be read during
+initialization and the DNS data from program startup ends up being used
+until the next 5 seconds. This means that if /etc/resolv.conf changed
+between program startup and the first network call, old DNS data is
+still used until the next 5 seconds.
+
+This causes "docker pull" to fail the first time if docker daemon is
+started before networking is up.
+
+Upstream commit d52883f443e1d564b0300acdd382af1769bf0477 made lot of
+improvements to DNS resolver to fix some issues which also fixes this
+issue.
+This patch picks the relevant changes from it to fix this particular
+issue.
+
+Upstream-Status: Backport [https://github.com/golang/go/commit/d52883f443e1d564b0300acdd382af1769bf0477]
+
+Signed-off-by: Chaitanya Vadrevu <chaitanya.vadrevu@ni.com>
+---
+ src/net/dnsclient_unix.go | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/src/net/dnsclient_unix.go b/src/net/dnsclient_unix.go
+index 6dfd4af..520ffe6 100644
+--- a/src/net/dnsclient_unix.go
++++ b/src/net/dnsclient_unix.go
+@@ -337,10 +337,7 @@ var resolvConf resolverConfig
+ func (conf *resolverConfig) init() {
+ 	// Set dnsConfig and lastChecked so we don't parse
+ 	// resolv.conf twice the first time.
+-	conf.dnsConfig = systemConf().resolv
+-	if conf.dnsConfig == nil {
+-		conf.dnsConfig = dnsReadConfig("/etc/resolv.conf")
+-	}
++	conf.dnsConfig = dnsReadConfig("/etc/resolv.conf")
+ 	conf.lastChecked = time.Now()
+ 
+ 	// Prepare ch so that only one update of resolverConfig may
+-- 
+2.34.1
+
