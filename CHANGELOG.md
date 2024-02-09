@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.1.27
+## (2024-02-09)
+
+* patch: upgrade recipes/devtools/go to 1.17.13 [JOASSART Edwin]
+* patch: removes recipes/devtools/go to 1.16 [JOASSART Edwin]
+
 # v5.1.26
 ## (2024-02-06)
 
