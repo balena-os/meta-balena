@@ -39,8 +39,7 @@ do_install() {
 
 PACKAGES = "${PN} ${PN}-dev"
 FILES:${PN} = "${libdir}/go/bin ${libdir}/go/pkg/tool/${TARGET_GOTUPLE} ${bindir}"
-FILES:${PN}-dev = "${libdir}/go"
-RDEPENDS:${PN}-dev = "perl bash"
+RDEPENDS:${PN} = "go-runtime"
 INSANE_SKIP:${PN} = "ldflags"
 
 BBCLASSEXTEND = "nativesdk"
