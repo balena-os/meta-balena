@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
 fsck_enabled() {
     # On flasher we don't run fsck
     # shellcheck disable=SC2154
