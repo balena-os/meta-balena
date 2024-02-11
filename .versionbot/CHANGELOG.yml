@@ -1,4 +1,35 @@
 - commits:
+    - subject: Update balena-engine to v20.10.43
+      hash: 2f47cdb1996b3ab4421a22fd0b36917899bf77b4
+      body: |
+        Update balena-engine from 20.10.42 to 20.10.43
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update runc component to v1.1.12 from balena-runc repo
+              hash: 9cdf0321cbb1dee0b1712f4e537f1b90caad45ea
+              body: >
+                Also update containerd component from balena-containerd to also
+                use
+
+                runc v1.1.12. Also update dependencies as indicated from balena-runc go.mod.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ken Bannister <kb2ma@runbox.com>
+                signed-off-by: Ken Bannister <kb2ma@runbox.com>
+              author: Ken Bannister
+              nested: []
+          version: balena-engine-20.10.43
+          title: ""
+          date: 2024-02-06T08:42:31.660Z
+  version: 5.1.28
+  title: ""
+  date: 2024-02-11T11:59:55.024Z
+- commits:
     - subject: "patch: upgrade recipes/devtools/go to 1.17.13"
       hash: 0845ea2914e0b784a022d3c9414168d8a2212c4b
       body: ""
