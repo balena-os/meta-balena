@@ -1,4 +1,50 @@
 - commits:
+    - subject: "balena-image-bootloader-initramfs.bb: Add fsck module"
+      hash: 4b1bc7244ab21a9952ea7569c0c0e1bc9a11e2e0
+      body: >
+        The balena bootloader initramfs contains the rootfs module and that
+
+        will get the rootfs mounted but not checked first for errors. This is
+
+        problematic because at first boot with network connectivity available,
+
+        time will sync but the rootfs will still have the last mount time in
+
+        1970. If at that point the rootfs gets corrupted then at next boot
+
+        the rootfs' initramfs module from balena-bootloader will try to mount
+
+        the rootfs without checking it first and then after that the filesystem
+
+        check triggered by the fsck module from the actual kernel initramfs will
+
+        fail like this:
+
+
+        [init][INFO] Running filesystem checks on partition resin-rootA (/dev/disk/by-state/resin-rootA)
+
+        resin-rootA contains a file system with errors, check forced.
+
+        resin-rootA: Inodes that were part of a corrupted orphan linked list found.
+
+
+        resin-rootA: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
+                (i.e., without -a or -p options)
+
+        This commit will add the fsck module to balena bootloader's initramfs
+
+        which will trigger filesystem checks before the rootfs module runs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 5.1.30
+  title: ""
+  date: 2024-02-12T19:58:46.698Z
+- commits:
     - subject: Update tests/leviathan digest to f6a3391
       hash: 0df90f0d2a1105bb3d0e8db6a28ce9bc76d8e1b0
       body: Update tests/leviathan

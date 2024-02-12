@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.30
+## (2024-02-12)
+
+* balena-image-bootloader-initramfs.bb: Add fsck module [Florin Sarbu]
+
 # v5.1.29
 ## (2024-02-12)
 
