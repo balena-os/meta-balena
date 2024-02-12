@@ -1,4 +1,80 @@
 - commits:
+    - subject: Update tests/leviathan digest to f6a3391
+      hash: 0df90f0d2a1105bb3d0e8db6a28ce9bc76d8e1b0
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 4f7dba1
+              hash: 55fdb70de51b296b56752e79375ef5932c294de2
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.54
+          title: ""
+          date: 2024-02-12T01:49:14.116Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 174797e7ff00c3cec8912d63cc5debfbfadbb3ce
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.53
+          title: ""
+          date: 2024-02-12T00:49:17.031Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.34
+              hash: 676c345f8f2bd4eb14270817774fa9f6d32552eb
+              body: |
+                Update balena-os/leviathan-worker from 2.9.33 to 2.9.34
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.52
+          title: ""
+          date: 2024-02-08T09:34:59.187Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.33
+              hash: 9eeb44be296aaeb17654afa51d6757242dd9da38
+              body: |
+                Update balena-os/leviathan-worker from 2.9.32 to 2.9.33
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.51
+          title: ""
+          date: 2024-02-06T12:48:22.014Z
+        - commits:
+            - subject: "patch: Add config.js validator"
+              hash: 740c4bfbe01703ed694b227e5c6ccebf096cb297
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.29.50
+          title: ""
+          date: 2024-02-06T10:02:47.800Z
+  version: 5.1.29
+  title: ""
+  date: 2024-02-12T06:15:56.841Z
+- commits:
     - subject: Update balena-engine to v20.10.43
       hash: 2f47cdb1996b3ab4421a22fd0b36917899bf77b4
       body: |

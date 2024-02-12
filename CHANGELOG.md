@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v5.1.29
+## (2024-02-12)
+
+
+<details>
+<summary> Update tests/leviathan digest to f6a3391 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.54
+> ### (2024-02-12)
+> 
+> * Update core/contracts digest to 4f7dba1 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.53
+> ### (2024-02-12)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.52
+> ### (2024-02-08)
+> 
+> * Update balena-os/leviathan-worker to v2.9.34 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.51
+> ### (2024-02-06)
+> 
+> * Update balena-os/leviathan-worker to v2.9.33 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.50
+> ### (2024-02-06)
+> 
+> * patch: Add config.js validator [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
 # v5.1.28
 ## (2024-02-11)
 
