@@ -1,4 +1,28 @@
 - commits:
+    - subject: Update tests/leviathan digest to 4b9de7e
+      hash: b4f6a28c7c7f0f9636417b5e06c16a8ddc3ce2e9
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "patch: Authenticate the validator before validation"
+              hash: 03ef1b01b99d921fe99b834001de26d4c760f3b8
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.29.57
+          title: ""
+          date: 2024-02-13T10:45:34.666Z
+  version: 5.1.32
+  title: ""
+  date: 2024-02-13T16:01:45.214Z
+- commits:
     - subject: Update tests/leviathan digest to 00ee51c
       hash: e19942dc9ca040d48f3b8e2ab36a03bb31f4bc74
       body: Update tests/leviathan

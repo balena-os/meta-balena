@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.1.32
+## (2024-02-13)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4b9de7e [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.57
+> ### (2024-02-13)
+> 
+> * patch: Authenticate the validator before validation [Vipul Gupta (@vipulgupta2048)]
+> 
+
+</details>
+
 # v5.1.31
 ## (2024-02-13)
 
