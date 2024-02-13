@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to 00ee51c
+      hash: e19942dc9ca040d48f3b8e2ab36a03bb31f4bc74
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.36
+              hash: 0b7b82ac9044c230b2384c67e2a2f1000e018991
+              body: |
+                Update balena-os/leviathan-worker from 2.9.35 to 2.9.36
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.56
+          title: ""
+          date: 2024-02-12T17:06:43.126Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.35
+              hash: 52a3095506b23f4024e79e887675f3b45b4db945
+              body: |
+                Update balena-os/leviathan-worker from 2.9.34 to 2.9.35
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.55
+          title: ""
+          date: 2024-02-12T14:57:32.329Z
+  version: 5.1.31
+  title: ""
+  date: 2024-02-13T02:11:21.643Z
+- commits:
     - subject: "balena-image-bootloader-initramfs.bb: Add fsck module"
       hash: 4b1bc7244ab21a9952ea7569c0c0e1bc9a11e2e0
       body: >
