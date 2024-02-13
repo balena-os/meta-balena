@@ -226,8 +226,7 @@ module.exports = {
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							'cd /tmp/ && curl -L "https://drive.google.com/uc?export=download&id=1HS9E5vnxxNqrizB4mEYrnFoQQ1axSRKm" -o vcdbg && chmod +x ./vcdbg && \
-							./vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?',
+							`chmod +x ${__dirname}/vcdbg && ./vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?`,
 							this.link,
 						),
 						'0',
