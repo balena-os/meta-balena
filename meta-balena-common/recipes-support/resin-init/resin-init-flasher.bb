@@ -35,6 +35,7 @@ RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup d
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
 
+do_install[depends] += "jq-native:do_populate_sysroot"
 do_install() {
     # Make sure devices with internal storage, aka flasher device types define `INTERNAL_DEVICE_KERNEL` in integration layers
     if [ "$(jq -r '.data.storage.internal' "${TOPDIR}/../contracts/contracts/hw.device-type/${MACHINE}/contract.json")" = "true" ] &&[ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
