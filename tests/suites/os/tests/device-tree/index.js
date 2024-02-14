@@ -221,12 +221,30 @@ module.exports = {
 				);
 				/* Static binary currently shared by RPI maintainer in gdrive only
 				 * See: https://github.com/raspberrypi/Raspberry-Pi-OS-64bit/issues/67#issuecomment-653209729
+				 * and https://github.com/raspberrypi/utils/issues/70#issuecomment-1940952517
 				 */
+				test.comment('Sending vcdbg to DUT');
+				let attempts = 0;
+				let sent = false;
+				while(!sent){
+					try{
+						await this.context.get().worker.sendFile(`${__dirname}/vcdbg`, `/tmp/vcdbg`, this.link);
+						console.log('vcdbg was successfully to the target')
+						sent = true
+					}catch(e){
+						if(attempts < 5){
+							console.log(`Error while sending vcdbg to dut... Retrying`);
+							attempts++;
+						} else {
+							throw new Error (`Failed to send vcdbg to dut: ${e.message}`);
+						}
+					}
+				}
 				test.is(
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							`chmod +x ${__dirname}/vcdbg && ./vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?`,
+							`chmod +x /tmp/vcdbg && /tmp/vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?`,
 							this.link,
 						),
 						'0',
@@ -236,7 +254,7 @@ module.exports = {
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							'cd /tmp/ && ./vcdbg log msg 2>&1 | grep -q -i "Failed to load" ; echo $?',
+							'/tmp/vcdbg log msg 2>&1 | grep -q -i "Failed to load" ; echo $?',
 							this.link,
 						),
 						'1',
