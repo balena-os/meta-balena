@@ -178,9 +178,19 @@ module.exports = {
 
     // create a balena application
     this.log("Creating application in cloud...");
+
+    let appDeviceType = this.suite.deviceType.slug;
+    // check to see if there is an existing release for this device type in balena cloud - if not, create a generic-arch fleet
+    // This is required for new device types with no existing balena cloud releases, as the fleet creation fails if there are no releases yet
+    // It can't accept invalid deviceType because we check contracts already in the start
+    if (((await this.cloud.balena.models.os.getAvailableOsVersions(this.suite.deviceType.slug)).length) === 0) {
+      appDeviceType = `generic-${this.suite.deviceType.data.arch}`;
+      this.log(`No existing releases found for ${this.suite.deviceType.slug}... creating fleet with ${appDeviceType}`)
+    }
+
     const app = await this.cloud.balena.models.application.create({
       name: this.balena.name,
-      deviceType: this.suite.deviceType.slug,
+      deviceType: appDeviceType,
       organization: this.balena.organization,
     });
 
