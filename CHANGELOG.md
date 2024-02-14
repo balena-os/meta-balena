@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.33
+## (2024-02-14)
+
+* tests: cloud: if no existing release, create generic fleet [rcooke-warwick]
+
 # v5.1.32
 ## (2024-02-13)
 

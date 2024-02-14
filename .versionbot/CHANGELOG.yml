@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: cloud: if no existing release, create generic fleet"
+      hash: 5b63019d327a1b8ebe1871fd6bc85b0790f40f81
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 5.1.33
+  title: ""
+  date: 2024-02-14T07:31:35.324Z
+- commits:
     - subject: Update tests/leviathan digest to 4b9de7e
       hash: b4f6a28c7c7f0f9636417b5e06c16a8ddc3ce2e9
       body: Update tests/leviathan
