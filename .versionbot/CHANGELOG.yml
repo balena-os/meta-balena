@@ -1,4 +1,23 @@
 - commits:
+    - subject: "resin-init-flasher: add jq dependency"
+      hash: 87aa01801d193a893f10367ba71b9cc824bf7e69
+      body: |
+        Without this dependency, the call to `jq` does not happen and the check
+        for INTERNAL_DEVICE_KERNEL is not performed.
+
+        Several devices that define internal storage but do not define
+        INTERNAL_DEVICE_KERNEL will now fail and need to be fixed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.34
+  title: ""
+  date: 2024-02-14T23:11:49.455Z
+- commits:
     - subject: "tests: cloud: if no existing release, create generic fleet"
       hash: 5b63019d327a1b8ebe1871fd6bc85b0790f40f81
       body: ""

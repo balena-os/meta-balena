@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.34
+## (2024-02-14)
+
+* resin-init-flasher: add jq dependency [Alex Gonzalez]
+
 # v5.1.33
 ## (2024-02-14)
 
