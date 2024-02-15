@@ -233,7 +233,7 @@ module.exports = {
 					attempt++
 					test.comment(`Sending vcdbg to DUT ${attempt}`);
 					await this.context.get().worker.sendFile(`${__dirname}/vcdbg`, `/tmp/vcdbg`, this.link);
-					console.log('vcdbg was successfully to the target')
+					console.log('vcdbg was successfully sent to the target')
 				}, { retries: 5, interval: 2000 });
 
 				test.is(
@@ -244,7 +244,7 @@ module.exports = {
 							this.link,
 						),
 						'0',
-					'vcdbg static binary runs successfuly'
+					'vcdbg static binary runs successfully'
 				);
 				test.is(
 					await this.context
