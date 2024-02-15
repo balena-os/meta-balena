@@ -17,6 +17,7 @@
 const request = require('request-promise');
 const SUPERVISOR_PORT = 48484;
 const fs = require('fs');
+const retry = require('bluebird-retry');
 
 module.exports = {
 	title: 'Device Tree tests',
@@ -219,27 +220,22 @@ module.exports = {
 					targetState.local.config.HOST_CONFIG_dtparam,
 					'DTparams successfully configured in config.txt',
 				);
-				/* Static binary currently shared by RPI maintainer in gdrive only
+				
+				/* Static binary currently shared by RPI maintainer
 				 * See: https://github.com/raspberrypi/Raspberry-Pi-OS-64bit/issues/67#issuecomment-653209729
-				 * and https://github.com/raspberrypi/utils/issues/70#issuecomment-1940952517
+				 * and https://github.com/raspberrypi/utils/issues/70#issuecomment-1940952517 for the way ahead
+				 * 
+				 * vcdbg has been deprecated, needs to be replaced with vclog
+				 * Related: https://balena.fibery.io/Work/Project/Replace-vcdbg-with-vclog-in-BalenaOS-device-Tree-tests-330
 				 */
-				test.comment('Sending vcdbg to DUT');
-				let attempts = 0;
-				let sent = false;
-				while(!sent){
-					try{
-						await this.context.get().worker.sendFile(`${__dirname}/vcdbg`, `/tmp/vcdbg`, this.link);
-						console.log('vcdbg was successfully to the target')
-						sent = true
-					}catch(e){
-						if(attempts < 5){
-							console.log(`Error while sending vcdbg to dut... Retrying`);
-							attempts++;
-						} else {
-							throw new Error (`Failed to send vcdbg to dut: ${e.message}`);
-						}
-					}
-				}
+				let attempt = 0
+				await retry(async () => {
+					attempt++
+					test.comment(`Sending vcdbg to DUT ${attempt}`);
+					await this.context.get().worker.sendFile(`${__dirname}/vcdbg`, `/tmp/vcdbg`, this.link);
+					console.log('vcdbg was successfully to the target')
+				}, { retries: 5, interval: 2000 });
+
 				test.is(
 					await this.context
 						.get()
@@ -248,7 +244,7 @@ module.exports = {
 							this.link,
 						),
 						'0',
-						'vcdbg static binary should be downloaded and run successfuly'
+					'vcdbg static binary runs successfuly'
 				);
 				test.is(
 					await this.context
