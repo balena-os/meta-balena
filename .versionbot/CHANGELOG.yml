@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to 95a9d72
+      hash: 16d56c258da245227711868d61df9b49b29842cb
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 491d5df14d6197c1acae3542d4e950869e710309
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.59
+          title: ""
+          date: 2024-02-19T00:47:50.443Z
+        - commits:
+            - subject: Update core/contracts digest to 0c54ce2
+              hash: bfb9b6bd67bf8bfe6a337ebcb439aa7f3852fb5c
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.58
+          title: ""
+          date: 2024-02-14T12:19:16.753Z
+  version: 5.1.35
+  title: ""
+  date: 2024-02-19T05:22:59.235Z
+- commits:
     - subject: "resin-init-flasher: add jq dependency"
       hash: 87aa01801d193a893f10367ba71b9cc824bf7e69
       body: |
