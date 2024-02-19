@@ -1,5 +1,6 @@
 [Unit]
 Description=Config.json watcher service
+Before=extract-balena-ca.service
 
 [Service]
 Type=oneshot
