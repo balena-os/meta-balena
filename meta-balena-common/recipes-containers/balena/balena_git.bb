@@ -16,9 +16,9 @@ inherit pkgconfig
 inherit useradd
 
 BALENA_VERSION = "v20.10.43"
-BALENA_BRANCH = "master"
+BALENA_BRANCH = "enable-macvlan"
 
-SRCREV = "0be8046a1c191ad789a65d7d8429d899d6bc9fbe"
+SRCREV = "ee925a558eb8af009b7cf602b87d4817d85a8237"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
