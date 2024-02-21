@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.36
+## (2024-02-21)
+
+* tests: hup: test breadcrumbs after rollback services [Joseph Kogut]
+
 # v5.1.35
 ## (2024-02-19)
 

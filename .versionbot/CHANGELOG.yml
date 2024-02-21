@@ -1,4 +1,27 @@
 - commits:
+    - subject: "tests: hup: test breadcrumbs after rollback services"
+      hash: dde3e48743fc32349d1a1a33cfdf9b061c804e04
+      body: |
+        During HUP, rollback-health-breadcrumb and rollback-altboot-breadcrumb
+        are created in the state partition to trigger rollback-health and
+        rollback-altboot respectively on the next boot. After these services
+        complete, they will remove these breadcrumbs.
+
+        Make the broken init fallback tests wait for these services to become
+        inactive before testing the state of the breadcrumbs. Otherwise, a race
+        condition can make these tests fail. Most notably on slower systems,
+        such as emulated generic-aarch64.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 5.1.36
+  title: ""
+  date: 2024-02-21T16:31:08.117Z
+- commits:
     - subject: Update tests/leviathan digest to 95a9d72
       hash: 16d56c258da245227711868d61df9b49b29842cb
       body: Update tests/leviathan
