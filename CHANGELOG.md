@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v5.1.37
+## (2024-02-22)
+
+* tests/device-tree: Minor spelling fixes [Alexandru]
+* test/device-tree: Send vcdbg to DUT [Alexandru Costache]
+* patch: Add vcdbg binary to tests [Vipul Gupta (@vipulgupta2048)]
+
 # v5.1.36
 ## (2024-02-21)
 

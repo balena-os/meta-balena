@@ -1,4 +1,36 @@
 - commits:
+    - subject: "tests/device-tree: Minor spelling fixes"
+      hash: 928fa031f794d09ce603795acc224fcb61e855d9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+    - subject: "test/device-tree: Send vcdbg to DUT"
+      hash: aab7e1390f9f1181a47905328ef5fba1b5e509f6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "patch: Add vcdbg binary to tests"
+      hash: db56a276b23ba900bbbb1b4944a6a8fd4ca2f55f
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 5.1.37
+  title: ""
+  date: 2024-02-22T20:38:47.969Z
+- commits:
     - subject: "tests: hup: test breadcrumbs after rollback services"
       hash: dde3e48743fc32349d1a1a33cfdf9b061c804e04
       body: |
