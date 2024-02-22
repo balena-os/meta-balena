@@ -17,6 +17,7 @@
 const request = require('request-promise');
 const SUPERVISOR_PORT = 48484;
 const fs = require('fs');
+const retry = require('bluebird-retry');
 
 module.exports = {
 	title: 'Device Tree tests',
@@ -219,25 +220,37 @@ module.exports = {
 					targetState.local.config.HOST_CONFIG_dtparam,
 					'DTparams successfully configured in config.txt',
 				);
-				/* Static binary currently shared by RPI maintainer in gdrive only
+				
+				/* Static binary currently shared by RPI maintainer
 				 * See: https://github.com/raspberrypi/Raspberry-Pi-OS-64bit/issues/67#issuecomment-653209729
+				 * and https://github.com/raspberrypi/utils/issues/70#issuecomment-1940952517 for the way ahead
+				 * 
+				 * vcdbg has been deprecated, needs to be replaced with vclog
+				 * Related: https://balena.fibery.io/Work/Project/Replace-vcdbg-with-vclog-in-BalenaOS-device-Tree-tests-330
 				 */
+				let attempt = 0
+				await retry(async () => {
+					attempt++
+					test.comment(`Sending vcdbg to DUT ${attempt}`);
+					await this.context.get().worker.sendFile(`${__dirname}/vcdbg`, `/tmp/vcdbg`, this.link);
+					console.log('vcdbg was successfully sent to the target')
+				}, { retries: 5, interval: 2000 });
+
 				test.is(
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							'cd /tmp/ && curl -L "https://drive.google.com/uc?export=download&id=1HS9E5vnxxNqrizB4mEYrnFoQQ1axSRKm" -o vcdbg && chmod +x ./vcdbg && \
-							./vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?',
+							`chmod +x /tmp/vcdbg && /tmp/vcdbg log msg 2>&1 | grep -q -i "File read:" ; echo $?`,
 							this.link,
 						),
 						'0',
-						'vcdbg static binary should be downloaded and run successfuly'
+					'vcdbg static binary runs successfully'
 				);
 				test.is(
 					await this.context
 						.get()
 						.worker.executeCommandInHostOS(
-							'cd /tmp/ && ./vcdbg log msg 2>&1 | grep -q -i "Failed to load" ; echo $?',
+							'/tmp/vcdbg log msg 2>&1 | grep -q -i "Failed to load" ; echo $?',
 							this.link,
 						),
 						'1',
