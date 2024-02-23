@@ -1,4 +1,243 @@
 - commits:
+    - subject: "balena-rollback: adapt to secure boot support"
+      hash: 3f5f5c71288551569522c321fb5f808706ce93c0
+      body: |
+        Make sure the rollback scripts know to use the non-encrypted boot
+        partition to update A/B variables.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: Adapt resin-uboot hook to secure boot"
+      hash: 727559886b6ebc6a0cbea6226826e454ff0ba023
+      body: |
+        This is required for devices that use u-boot in their secure boot
+        trust chain.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: u-boot: use global secure boot kernel command line instead of
+        hardcoding"
+      hash: 7457aec1b3efa2a5bf350c7046f165bcf2e08c3d
+      body: |
+        Use the new OS_KERNEL_SECUREBOOT_CMDLINE global variable instead of
+        hardcoding the values for the secure boot command line.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "grub: use global secure boot kernel command line instead of hardcoding"
+      hash: af66b4184899c4c909979a065d57e178278569ec
+      body: |
+        Use the new OS_KERNEL_SECUREBOOT_CMDLINE global variable instead of
+        hardcoding the values for the secure boot command line.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "conf: distro: define kernel command line for secure boot"
+      hash: 2b5aa3f348c92e0ff4f83db6d8e4002f3c84bb3d
+      body: |
+        This can then be used in both grub and u-boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resindataexpander: encrypted partitions will auto-expand on unlock"
+      hash: 4e7ff432425672068f7b7430e416239a6b987fc0
+      body: |
+        Calling `cryptsetup resize` on LUKS2 actually prompts for a password
+        and it is not needed as the partition will auto-expand on unlock.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: migrate: replace hardcoded kernel image names"
+      hash: 66083abb5bee31c9efd230c69cae322021f85c63
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-mounts: generalize secure boot mounts"
+      hash: 522800093a2271b8814b78a3eb25b09d0a125441
+      body: |
+        Use the global BALENA_NONENC_BOOT_LABEL to define the name of the
+        non-encrypted boot partition to mount.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: abroot: Use the global label for non-encrypted boot
+        partitions"
+      hash: 69093e694e806bd91fa3f275a075adabe587ef35
+      body: |
+        Avoid having to redefine this in individual recipes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: allow for cryptsetup to support different secure boot
+        implementations"
+      hash: 3d932c8a8034fa0bafa6651f3b381823a3e738ff
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: add shared wait4udev function"
+      hash: 10b435b81e49f24943ca89d6624199ecf82a3195
+      body: |
+        This allows to share this function between the different device
+        integration cryptsetup implementations.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-image-flasher: fix appended variable with a leading space"
+      hash: a7c9dd924bb754d49fe57f8c262592f707fc076b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: customize for secure boot support"
+      hash: d55ed33746e8ebeeee524f556ce0fb7cc9d1dad7
+      body: |
+        Specify defaults for both the encrypted and non-encrypted boot mount
+        points. On a non-secure boot system these will be set the same.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add dummy os-helpers-sb"
+      hash: 8ca3bd996b78360b669417a4efd4e31b64ac1084
+      body: |
+        This helper file is to be overwritten by device integration layers
+        to provide hostOS update customizations for secure boot devices that
+        split the boot partition into encrypted and non-encrypted.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: allow flasher image use in devices without
+        internal storage"
+      hash: b0dc10609d9a6333cb43f137b73a88798c59b86a
+      body: |
+        The flasher image is now able to self-install when launched from an
+        external storage. This is useful for use cases where an installation
+        steps that re-partitions/encrypts disk is required for example.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: flag non-encrypted boot partition as bootable"
+      hash: 60377c9a3073698ede0722ba6773a0bf223d881f
+      body: |
+        Non-EFI systems need this to identify the boot partition and it won't
+        affect EFI systems.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: replace hardcoded kernel image names"
+      hash: 6c60a5270af3936ec68a21cddf77ff4d330343fe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: split secureboot and disk encryption interfaces"
+      hash: e85a14f22d50745e495bac0b431e942afad79b78
+      body: |
+        Provide hooks in the flasher script to call out to device specific
+        secureboot and disk encryption interfaces.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "distro: balena-os: define the boot labels as global"
+      hash: 4254f27f6cd00282710929b314017222a22bb0cd
+      body: |
+        This allows to use the same values in several recipes without having to
+        re-define them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "distro: balena-os: Specify full GO version"
+      hash: 2506468771bffb84c3c507f8e50427b10177a8de
+      body: |
+        This avoids building warnings.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.38
+  title: ""
+  date: 2024-02-23T12:41:11.397Z
+- commits:
     - subject: "tests/device-tree: Minor spelling fixes"
       hash: 928fa031f794d09ce603795acc224fcb61e855d9
       body: ""
