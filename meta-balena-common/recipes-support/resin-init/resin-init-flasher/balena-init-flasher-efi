@@ -1,0 +1,174 @@
+#
+# Device interface for secure boot programming
+#
+#
+
+# secureboot_setup
+#   * Secure boot setup mode
+#   * Key enrollment
+#   * Secure boot mode checks
+# bootpart_split
+#   * Split boot partition into encrypted and non-encrypted partitions
+# secureboot_bootloader_setup
+#   * Hook for secureboot bootloader setup
+# secureboot_bootloader_postsetup
+#   * Hook for secureboot bootloader post-setup
+
+LOADER_PATH="/EFI/BOOT/bootx64.efi"
+
+secureboot_setup() {
+    EFIVARS_MOUNTDIR="/sys/firmware/efi/efivars"
+    SECUREBOOT_ENABLED=0
+    # Check for UEFI mode and set variables accordingly.
+    if [ -d /sys/firmware/efi ]; then
+        SECUREBOOT_ENABLED=$(
+            [ "$(jq .installer.secureboot "${CONFIG_PATH}")" = "true" ] \
+            && echo 1 \
+            || echo 0)
+        SECUREBOOT_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot \
+            | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+        SETUPMODE_VAR=$(efivar -p -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode \
+            | awk 'NR==1, $1 == "Value:" {next}; NF {print $2}')
+
+        if [ "${SECUREBOOT_ENABLED}" != "1" ]; then
+            if [ "${SECUREBOOT_VAR}" -eq "1" ] && [ "${SETUPMODE_VAR}" -ne "1" ]; then
+                # Bail out when keys are already enrolled but secure boot is not
+                # enabled in config.json, as the installed system will not have
+                # FDE, and it's ambiguous if the user wants secure boot
+                fail "Secure boot keys are enrolled but secure boot is not enabled"
+            fi
+        else
+            if [ -z "${SECUREBOOT_VAR}" ]; then
+                fail "Secure boot is configured, but is not supported in firmware."
+            fi
+
+            if [ ! -d "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys" ]; then
+                fail "Secure boot is supported in firmware, but the image is not signed"
+            fi
+
+            if [ "${SETUPMODE_VAR}" -eq "1" ]; then
+                info "Secure boot setup mode detected - programming keys"
+                # Enroll PK last, as it should disable setup mode
+                for e in db KEK PK; do
+                    # Remove immutable attribute
+                    chattr -i ${EFIVARS_MOUNTDIR}/${e}* > /dev/null || true
+
+                    # Use the .esl format for db. This only works in setup mode and above we have confirmed
+                    # it is enabled. The .auth files are signed for appending during updates
+                    # and while most UEFI implementations don't care, some of them will only allow
+                    # to actually append. Here we want to replace the existing keys by ours.
+                    FORMAT="auth"
+                    EXTRA_ARGS=""
+                    if [ "${e}" = "db" ]; then
+                        FORMAT="esl"
+                        EXTRA_ARGS="-e"
+                    fi
+
+                    KEY_FILE="${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/balena-keys/${e}.${FORMAT}"
+                    if [ -f "${KEY_FILE}" ]; then
+                        /usr/bin/efi-updatevar ${EXTRA_ARGS} -f "${KEY_FILE}" "${e}"
+                    fi
+                done
+                return 0
+            fi
+        fi
+    fi
+    return 1
+}
+
+bootpart_split() {
+    # Split EFI and boot partitions
+
+    # We want to keep the paths identical with the devices that do not have
+    # the split. On the newly provisioned OS the efi and boot partitions will
+    # be mounted under /mnt/efi and /mnt/boot respectively, but OS tools
+    # expect everything to be under /mnt/boot. Symlink /mnt/boot/EFI to
+    # ../efi/EFI so that /mnt/boot/EFI/ points to the correct directory.
+    NONENC_BOOT_MOUNT_DIR="$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/../efi"
+    mkdir -p "$NONENC_BOOT_MOUNT_DIR"
+    NONENC_BOOT_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" "${BALENA_NONENC_BOOT_LABEL}")
+    if ! mount "${NONENC_BOOT_MOUNT}" "$NONENC_BOOT_MOUNT_DIR"; then
+        fail "Failed to mount disk labeled as ${BALENA_NONENC_BOOT_LABEL}."
+    fi
+
+    ln -s "../efi/EFI" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/EFI"
+
+    # Move all non-EFI files to boot partition
+    # Only keep /EFI directory on the efi partition, everything else
+    # e.g. config.json, system-connections etc. goes to the encrypted
+    # boot partition
+    for FILE in "$NONENC_BOOT_MOUNT_DIR/"*; do
+        if [ "$FILE" = "$NONENC_BOOT_MOUNT_DIR/EFI" ]; then
+            continue
+        fi
+
+        mv "$FILE" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/"
+    done
+
+    # At this point the efi partition should only have the /EFI directory,
+    # let's add the rest of the files necessary to boot and unlock the partitions
+
+    # Store files necessary for TPM decryption to the EFI partitions
+    mv "$TPM_RESULT_DIR/persistent.ctx" "$NONENC_BOOT_MOUNT_DIR/balena-luks.ctx" && sync
+    mv "$TPM_RESULT_DIR/passphrase.enc" "$NONENC_BOOT_MOUNT_DIR/balena-luks.enc" && sync
+
+    rm -rf "$TPM_RESULT_DIR"
+
+    # Emulate a stage2 bootloader
+    # At this point just copy the flasher kernel to EFI partition
+    # TODO: Remove or replace by a proper stage2 bootloader when that is ready
+    find / -xdev -type f -name "@@KERNEL_IMAGETYPE@@*" -exec cp -a {} "${NONENC_BOOT_MOUNT_DIR}" +
+
+    # We have a separate grub.cfg for encrypted devices, use it
+    if [ -f "$EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS" ]; then
+        INTERNAL_DEVICE_BOOTLOADER_CONFIG="$INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS"
+    fi
+}
+
+secureboot_bootloader_setup() {
+    # Put the GRUB EFI binary in place or remove it when applicable
+    if [ -d /sys/firmware/efi ]; then
+        INTERNAL_BOOTLOADER_DIR=$(dirname "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}")
+        for EFI_BINARY in "${INTERNAL_BOOTLOADER_DIR}/"*.efi; do
+            if [ "${EFI_BINARY}" = "${INTERNAL_BOOTLOADER_DIR}/*.efi" ]; then
+                # Nothing matched the glob
+                break
+            fi
+
+            EFI_BINARY_SECUREBOOT="${EFI_BINARY}.secureboot"
+            if [ "${LUKS}" = "1" ]; then
+                # If this fails it is a fatal error - the secure boot variant
+                # must be in place when LUKS is enabled
+                mv "${EFI_BINARY_SECUREBOOT}" "${EFI_BINARY}"
+            else
+                # This can safely fail if the secure boot variant does not exist
+                rm -f "${EFI_BINARY_SECUREBOOT}" || :
+            fi
+        done
+    fi
+}
+
+secureboot_bootloader_postsetup() {
+    EFIPART_LABEL="resin-boot"
+    if [ -d /sys/firmware/efi ]; then
+        if [ "$LUKS" = "1" ]; then
+            EFIPART_LABEL="${BALENA_NONENC_BOOT_LABEL}"
+        fi
+
+        # remove duplicate entries
+        # this will also remove the temporary secure boot installer entry
+        for label in resinOS "${BOOT_ENTRY_LABEL}"; do
+            duplicates="$(efibootmgr | grep "${label}" | sed -e "s/^Boot\([0-9a-fA-F]*\).*$/\1/")"
+            for entry in ${duplicates}; do
+                efibootmgr -B -b "${entry}"
+            done
+        done
+
+        efibootmgr --create \
+                   --disk "/dev/$(lsblk -ndo pkname "$(get_dev_path_in_device_with_label ${internal_dev} ${EFIPART_LABEL})")" \
+                   --part "$(get_part_number_by_label "${internal_dev#/dev/}" "${EFIPART_LABEL}")" \
+                   --label "${BOOT_ENTRY_LABEL}" \
+                   --loader "${LOADER_PATH}"
+    fi
+}
+

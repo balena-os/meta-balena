@@ -18,6 +18,9 @@ DURING_UPDATE=${DURING_UPDATE:-0}
 if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
         fail "hostapp rollback: $BALENA_BOOT_MOUNTPOINT doesn't exist."
 fi
+if [ ! -d "$BALENA_NONENC_BOOT_MOUNTPOINT" ]; then
+        fail "hostapp rollback: $BALENA_NONENC_BOOT_MOUNTPOINT doesn't exist."
+fi
 
 # Are we updating or falling back?
 if [ "$DURING_UPDATE" = 1 ]; then

@@ -93,7 +93,7 @@ migrate_enabled() {
 migrate_run() {
     # Find the raw image in the rootfs partition
     image=$(find "${ROOTFS_DIR}" -xdev -type f -name "${BALENA_IMAGE}")
-    kernel_images=$(find "${ROOTFS_DIR}" -xdev -type f -name "bzImage*")
+    kernel_images=$(find "${ROOTFS_DIR}" -xdev -type f -name "@@KERNEL_IMAGETYPE@@*")
     if [ -n "${image}" ]; then
         EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
         if findmnt "${FLASH_BOOT_MOUNT}" > /dev/null; then

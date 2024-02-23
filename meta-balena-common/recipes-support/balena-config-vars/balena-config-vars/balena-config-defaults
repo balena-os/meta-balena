@@ -1,7 +1,20 @@
 #!/bin/sh
 
+# shellcheck disable=SC1091
+[ -f "/usr/libexec/os-helpers-sb" ] && . /usr/libexec/os-helpers-sb
+
 # Default values
-BALENA_BOOT_MOUNTPOINT="/mnt/boot"
+BALENA_BOOT_MOUNTPOINT="@@BALENA_BOOT_MOUNT@@"
+BALENA_BOOT_LABEL="@@BALENA_BOOT_LABEL@@"
+BALENA_NONENC_BOOT_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
+BALENA_NONENC_BOOT_LABEL="${BALENA_BOOT_LABEL}"
+if type is_secured >/dev/null 2>&1; then
+    # LUKS only defined if sourced from flasher script
+    if is_secured || [ "${LUKS}" = "1" ]; then
+        BALENA_NONENC_BOOT_MOUNTPOINT="@@BALENA_NONENC_BOOT_MOUNT@@"
+        BALENA_NONENC_BOOT_LABEL="@@BALENA_NONENC_BOOT_LABEL@@"
+    fi
+fi
 # Do not use - left here for backwards compatibility - use BALENA_BOOT_MOUNTPOINT instead
 BOOT_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
 FLASHER_FILEFLAG="$BALENA_BOOT_MOUNTPOINT/balena-image-flasher"

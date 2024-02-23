@@ -82,6 +82,7 @@ BALENA_FLASHER_FLAG_FILE = "balena-image-flasher"
 
 # Kernel command line
 OS_KERNEL_CMDLINE ?= "${@set_default_kernel_cmdline(d)}"
+OS_KERNEL_SECUREBOOT_CMDLINE ?= "module.sig_enforce lockdown=integrity"
 
 # Initramfs
 INITRAMFS_IMAGE = "balena-image-initramfs"
@@ -119,7 +120,7 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 PREFERRED_VERSION_linux-firmware = "20230404"
 
 # balena-engine go version requirement
-GOVERSION = "1.17"
+GOVERSION = "1.17.13"
 PREFERRED_PROVIDER_go-native = "go-native"
 
 # Firmware compression support
@@ -138,3 +139,11 @@ BALENA_API_ENV ?= "balena-cloud.com"
 
 # Default storage of configuration units
 BALENA_CONF_UNIT_STORE ?= "/var/volatile"
+
+# For systems that encrypt disks, label for the non-encrypted boot partition
+BALENA_BOOT_LABEL ?= "balena-boot"
+BALENA_BOOT_MOUNT ?= "/mnt/${@'${BALENA_BOOT_LABEL}'.replace('balena-','')}"
+BALENA_SIGN_LABEL ?= "${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'balena-efi', "${BALENA_BOOT_LABEL}",d)}"
+BALENA_NONENC_BOOT_LABEL ?= "${@oe.utils.conditional('SIGN_API','','${BALENA_BOOT_LABEL}','${BALENA_SIGN_LABEL}',d)}"
+BALENA_NONENC_BOOT_MOUNT ?= "/mnt/${@'${BALENA_NONENC_BOOT_LABEL}'.replace('balena-','')}"
+

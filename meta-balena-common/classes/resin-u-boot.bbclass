@@ -65,7 +65,7 @@ BALENA_DEVICE_FDT_ADDR_VAR ?= "fdt_addr"
 
 # OS_KERNEL_CMDLINE is a distro wide variable intended to be used in all the
 # supported bootloaders
-BASE_OS_CMDLINE ?= "${OS_KERNEL_CMDLINE}"
+BASE_OS_CMDLINE ?= "${OS_KERNEL_CMDLINE} ${@oe.utils.conditional('SIGN_API','','',"${OS_KERNEL_SECUREBOOT_CMDLINE}",d)}"
 OS_BOOTCOUNT_FILE ?= "bootcount.env"
 OS_BOOTCOUNT_SKIP ?= "0"
 OS_BOOTCOUNT_LIMIT ?= "3"

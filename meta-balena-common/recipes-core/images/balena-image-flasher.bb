@@ -46,7 +46,7 @@ BALENA_STATE_FS_LABEL = "flash-state"
 BALENA_DATA_FS_LABEL = "flash-data"
 
 # add the secure boot keys if needed
-BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','','balena-keys:/balena-keys/',d)}"
+BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','',' balena-keys:/balena-keys/',d)}"
 
 # add the LUKS variant of GRUB config if needed
 BALENA_BOOT_PARTITION_FILES:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' grub.cfg_internal_luks:','',d)}"

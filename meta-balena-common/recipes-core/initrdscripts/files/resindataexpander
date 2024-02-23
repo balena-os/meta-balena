@@ -68,13 +68,6 @@ resindataexpander_run() {
             partprobe
             sync
 
-            if [ "${dataparttype}" = "crypt" ]; then
-                datapartmap=$(lsblk ${datapart} -nlo name)
-                info "resindataexpander: Expand LUKS volume for data partition..."
-                cryptsetup resize "${datapartmap}"
-                info "resindataexpander: Expanded LUKS volume for data partition"
-                sync
-            fi
             # We return when we've done the expansion
             info "Data partition at $datapart expanded."
             break

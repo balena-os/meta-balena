@@ -1,7 +1,7 @@
 SUMMARY = "Switch between rootA and rootB"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
-RDEPENDS:${PN} = "initramfs-framework-base grub-editenv util-linux-lsblk"
+RDEPENDS:${PN} = "initramfs-framework-base grub-editenv util-linux-lsblk os-helpers-logging"
 
 inherit allarch
 

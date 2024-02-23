@@ -9,6 +9,12 @@ SRC_URI = " \
     file://resin-init-flasher \
     file://resin-init-flasher.service \
     "
+
+SRC_URI:append = " \
+           ${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' file://balena-init-flasher-efi', '',d)} \
+           ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' file://balena-init-flasher-tpm', '',d)} \
+"
+
 S = "${WORKDIR}"
 
 inherit allarch systemd
@@ -37,9 +43,13 @@ BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
 
 do_install[depends] += "jq-native:do_populate_sysroot"
 do_install() {
-    # Make sure devices with internal storage, aka flasher device types define `INTERNAL_DEVICE_KERNEL` in integration layers
-    if [ "$(jq -r '.data.storage.internal' "${TOPDIR}/../contracts/contracts/hw.device-type/${MACHINE}/contract.json")" = "true" ] &&[ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
-        bbfatal "INTERNAL_DEVICE_KERNEL must be defined."
+    if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
+        # Make sure devices with internal storage, aka flasher device types define `INTERNAL_DEVICE_KERNEL` in integration layers.
+        if [ "$(jq -r '.data.storage.internal' "${TOPDIR}/../contracts/contracts/hw.device-type/${MACHINE}/contract.json")" = "true" ] && [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
+            bbfatal "INTERNAL_DEVICE_KERNEL must be defined for devices with internal storage."
+        else
+            bbwarn "INTERNAL_DEVICE_KERNEL is not defined - some features like migration will not work."
+        fi
     fi
 
     if [ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ] && [ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]; then
@@ -87,9 +97,17 @@ do_install() {
 
     if [ "x${SIGN_API}" != "x" ]; then
         if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
+            install -d ${D}${libexecdir}
             echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
+            install -m 0755 ${WORKDIR}/balena-init-flasher-efi ${D}${libexecdir}/balena-init-flasher-secureboot
+            sed -i -e 's,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE},' ${D}${libexecdir}/balena-init-flasher-secureboot
+        fi
+        if ${@bb.utils.contains('MACHINE_FEATURES','tpm','true','false',d)}; then
+            install -d ${D}${libexecdir}
+            install -m 0755 ${WORKDIR}/balena-init-flasher-tpm ${D}${libexecdir}/balena-init-flasher-diskenc
         fi
     fi
+
     # Configuration data
     echo "BALENA_SPLASH_CONFIG=splash" >> ${D}/${sysconfdir}/resin-init-flasher.conf
     echo "BALENA_BOOTLOADER_CONFIG=resinOS_uEnv.txt" >> ${D}/${sysconfdir}/resin-init-flasher.conf

@@ -17,7 +17,6 @@ SRC_URI += " \
 	"
 
 SYSTEMD_SERVICE:${PN} += " \
-	balena-efi.service \
 	resin-boot.service \
 	resin-data.service \
 	resin-state.service \
@@ -26,10 +25,12 @@ SYSTEMD_SERVICE:${PN} += " \
 	mnt-sysroot-inactive.mount \
 	"
 
+SYSTEMD_SERVICE:${PN} += "${@oe.utils.conditional('SIGN_API','','','${BALENA_NONENC_BOOT_LABEL}.service',d)}"
+
 FILES:${PN} += " \
-	/mnt/boot \
+	${BALENA_BOOT_MOUNT} \
+	${@oe.utils.conditional('SIGN_API','','','${BALENA_NONENC_BOOT_MOUNT}',d)} \
 	/mnt/data \
-	/mnt/efi \
 	/mnt/state \
 	/mnt/sysroot/active \
 	/mnt/sysroot/inactive \
@@ -49,9 +50,11 @@ do_install:prepend () {
 	install -d ${D}/etc/docker
 	ln -sf docker ${D}/etc/balena
 	ln -sf docker ${D}/etc/balena-engine
-	install -d ${D}/mnt/boot
+	install -d ${D}${BALENA_BOOT_MOUNT}
 	install -d ${D}/mnt/data
-	install -d ${D}/mnt/efi
+	if [ "x${SIGN_API}" != "x" ]; then
+		install -d "${D}${BALENA_NONENC_BOOT_MOUNT}"
+	fi
 	install -d ${D}/mnt/state
 	install -d ${D}/mnt/sysroot/active
 	install -d ${D}/mnt/sysroot/inactive

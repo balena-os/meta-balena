@@ -27,6 +27,7 @@ DEPENDS = "bash-native jq-native coreutils-native"
 RDEPENDS:${PN} = "bash udev coreutils fatrw"
 PACKAGES =+ "${PN}-config"
 RDEPENDS:${PN}-config = "jq"
+RDEPENDS:${PN}-config:append = "${@oe.utils.conditional('SIGN_API','','',' os-helpers-sb',d)}"
 RDEPENDS:${PN} += " ${PN}-config"
 
 do_patch[noexec] = "1"
@@ -45,6 +46,10 @@ do_install() {
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/balena-config-vars ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/balena-config-defaults ${D}${sbindir}/
+    sed -i -e 's:@@BALENA_NONENC_BOOT_MOUNT@@:${BALENA_NONENC_BOOT_MOUNT}:g' ${D}${sbindir}/balena-config-defaults
+    sed -i -e 's:@@BALENA_NONENC_BOOT_LABEL@@:${BALENA_NONENC_BOOT_LABEL}:g' ${D}${sbindir}/balena-config-defaults
+    sed -i -e 's:@@BALENA_BOOT_MOUNT@@:${BALENA_BOOT_MOUNT}:g' ${D}${sbindir}/balena-config-defaults
+    sed -i -e 's:@@BALENA_BOOT_LABEL@@:${BALENA_BOOT_LABEL}:g' ${D}${sbindir}/balena-config-defaults
     install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/
