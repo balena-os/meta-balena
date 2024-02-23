@@ -44,6 +44,14 @@ const flasherConfig = (deviceType) => {
 	);
 }
 
+const externalAnt = (deviceType) => {
+	return (
+		[
+			'revpi-connect-4'
+		]
+	).includes(deviceType)
+}
+
 const checkUnderVoltage = async (that, test) => {
 	test.comment(`checking for under-voltage reports in kernel logs...`);
 	let result = '';
@@ -99,6 +107,30 @@ const setFlasher = async(imagePath) => {
 		);
 	});
 }
+
+// For use with device types (e.g revpi connect 4) where an external antenna needs to be configured throuhg config.txt to work
+const enableExternalAntenna  = async (imagePath) => {
+	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
+		return util
+			.promisify(_fs.readFile)('/config.txt')
+			.catch((err) => {
+				return undefined;
+			});
+	});
+
+	if (bootConfig) {
+		await imagefs.interact(imagePath, 1, async (_fs) => {
+			const value = 'dtparam=ant2';
+
+			console.log(`Setting ${value} in config.txt...`);
+
+			await util.promisify(_fs.writeFile)(
+				'/config.txt',
+				bootConfig.toString().concat(`\n\n${value}\n\n`),
+			);
+		});
+	}
+};
 
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, target) => {
@@ -173,6 +205,11 @@ const initDUT = async (that, test, target) => {
 	if(flasherConfig(that.suite.deviceType.slug)){
 		await setFlasher(that.os.image.path);
 	}
+
+	if(externalAnt(that.suite.deviceType.slug)){
+		await enableExternalAntenna(that.os.image.path);
+	}
+
 
 	test.comment(`Flashing DUT`);
 	await that.worker.off();
