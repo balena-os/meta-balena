@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.1.40
+## (2024-02-26)
+
+
+<details>
+<summary> Update tests/leviathan digest to d71ce8f [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.62
+> ### (2024-02-26)
+> 
+> * ad extra autokit setup information, and basic troubleshooting [rcooke-warwick]
+> 
+
+</details>
+
 # v5.1.39
 ## (2024-02-26)
 

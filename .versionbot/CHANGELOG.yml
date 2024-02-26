@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to d71ce8f
+      hash: 813e7442dad72eb0dc8994a1ff09b4cc3f1e717a
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: ad extra autokit setup information, and basic troubleshooting
+              hash: 8245d549f586330a1805ea4ad998622f735c347b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.29.62
+          title: ""
+          date: 2024-02-26T11:59:24.765Z
+  version: 5.1.40
+  title: ""
+  date: 2024-02-26T17:53:35.831Z
+- commits:
     - subject: Update tests/leviathan digest to ef8cbac
       hash: fbef3a28eeddce84e055ddeb50e4b36c564b7a3c
       body: Update tests/leviathan
