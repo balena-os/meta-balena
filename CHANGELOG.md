@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v5.1.39
+## (2024-02-26)
+
+
+<details>
+<summary> Update tests/leviathan digest to ef8cbac [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.61
+> ### (2024-02-26)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.60
+> ### (2024-02-26)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.1.38
 ## (2024-02-23)
 

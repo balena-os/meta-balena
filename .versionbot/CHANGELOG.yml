@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to ef8cbac
+      hash: fbef3a28eeddce84e055ddeb50e4b36c564b7a3c
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: c8c6536316c5e96b0bbb59a9eb10fa0fe62fb9c8
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.61
+          title: ""
+          date: 2024-02-26T02:35:53.616Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 79b98f494241bda4121ad477a2de87296e7d44fb
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.60
+          title: ""
+          date: 2024-02-26T00:46:26.338Z
+  version: 5.1.39
+  title: ""
+  date: 2024-02-26T07:52:12.767Z
+- commits:
     - subject: "balena-rollback: adapt to secure boot support"
       hash: 3f5f5c71288551569522c321fb5f808706ce93c0
       body: |
