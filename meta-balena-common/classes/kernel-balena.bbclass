@@ -152,7 +152,6 @@ BALENA_CONFIGS ?= " \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
     ${WIREGUARD} \
-    ${KERNEL_ZSTD} \
     "
 
 #
@@ -228,6 +227,7 @@ BALENA_CONFIGS[wireguard] = " \
 "
 
 KERNEL_ZSTD = "${@configure_from_version("5.9", "kernel_zstd", "", d)}"
+BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi'," ${KERNEL_ZSTD}",'',d)}"
 BALENA_CONFIGS[kernel_zstd] = " \
     CONFIG_KERNEL_ZSTD=y \
 "
