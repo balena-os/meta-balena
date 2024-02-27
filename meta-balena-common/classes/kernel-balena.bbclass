@@ -673,10 +673,7 @@ BALENA_CONFIGS[dmcrypt] = " \
 BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
 BALENA_CONFIGS[secureboot] = " \
     CONFIG_KEXEC_SIG=y \
-    CONFIG_KEXEC_SIG_FORCE=y \
-    CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y \
     CONFIG_INTEGRITY_PLATFORM_KEYRING=y \
-    CONFIG_LOAD_UEFI_KEYS=y \
     CONFIG_MODULE_SIG=y \
     CONFIG_MODULE_SIG_ALL=y \
     CONFIG_MODULE_SIG_SHA512=y \
@@ -684,6 +681,12 @@ BALENA_CONFIGS[secureboot] = " \
     CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y \
     CONFIG_SYSTEM_TRUSTED_KEYS="certs/kmod.crt" \
 "
+BALENA_CONFIGS[efi-secureboot] = " \
+    CONFIG_LOAD_UEFI_KEYS=y \
+    CONFIG_KEXEC_SIG_FORCE=y \
+    CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y \
+"
+BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' efi-secureboot','',d)}"
 
 ###########
 # HELPERS #
