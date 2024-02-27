@@ -570,7 +570,6 @@ BALENA_CONFIGS[fatfs] = " \
 
 BALENA_CONFIGS[nf_tables] = " \
     CONFIG_NF_TABLES=m \
-    CONFIG_NF_TABLES_SET=m \
     CONFIG_NF_TABLES_INET=y \
     CONFIG_NF_TABLES_NETDEV=y \
     CONFIG_NFT_NUMGEN=m \
@@ -614,6 +613,8 @@ BALENA_CONFIGS[nf_tables] = " \
     CONFIG_NFT_FIB_IPV6=m \
     CONFIG_NF_DUP_IPV6=m \
     "
+BALENA_CONFIGS:append = " ${@configure_from_version("5.10", "", " nf_tables_set", d)}"
+BALENA_CONFIGS[nf_tables_set] = "CONFIG_NF_TABLES_SET=m"
 
 BALENA_CONFIGS[task-accounting] = " \
     CONFIG_TASKSTATS=y \
