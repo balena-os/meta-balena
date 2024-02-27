@@ -670,9 +670,15 @@ BALENA_CONFIGS[dmcrypt] = " \
     CONFIG_DM_CRYPT=y \
 "
 
+BALENA_CONFIGS[kexec] = " \
+    CONFIG_KEXEC=y \
+    CONFIG_KEXEC_FILE=y \
+    CONFIG_KEXEC_SIG=y \
+"
+BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' kexec','',d)}"
+
 BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
 BALENA_CONFIGS[secureboot] = " \
-    CONFIG_KEXEC_SIG=y \
     CONFIG_INTEGRITY_PLATFORM_KEYRING=y \
     CONFIG_MODULE_SIG=y \
     CONFIG_MODULE_SIG_ALL=y \
