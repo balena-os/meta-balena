@@ -34,6 +34,14 @@ const supportsBootConfig = (deviceType) => {
 	);
 };
 
+const externalAnt = (deviceType) => {
+	return (
+		[
+			'revpi-connect-4'
+		]
+	).includes(deviceType)
+}
+
 const flasherConfig = (deviceType) => {
 	return (
 		[
@@ -64,6 +72,30 @@ const enableSerialConsole = async (imagePath) => {
 			await util.promisify(_fs.writeFile)(
 				'/config.txt',
 				newConfig.concat(`\n\n${value}\n\n`),
+			);
+		});
+	}
+};
+
+// For use with device types (e.g revpi connect 4) where an external antenna needs to be configured throuhg config.txt to work
+const enableExternalAntenna  = async (imagePath) => {
+	const bootConfig = await imagefs.interact(imagePath, 1, async (_fs) => {
+		return util
+			.promisify(_fs.readFile)('/config.txt')
+			.catch((err) => {
+				return undefined;
+			});
+	});
+
+	if (bootConfig) {
+		await imagefs.interact(imagePath, 1, async (_fs) => {
+			const value = 'dtparam=ant2';
+
+			console.log(`Setting ${value} in config.txt...`);
+
+			await util.promisify(_fs.writeFile)(
+				'/config.txt',
+				bootConfig.toString().concat(`\n\n${value}\n\n`),
 			);
 		});
 	}
@@ -315,6 +347,10 @@ module.exports = {
 
 		if(flasherConfig(this.suite.deviceType.slug)){
 			await setFlasher(this.os.image.path);
+		}
+
+		if(externalAnt(this.suite.deviceType.slug)){
+			await enableExternalAntenna(this.os.image.path);
 		}
 
 		if (this.suite.options?.balena?.apiKey) {
