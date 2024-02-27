@@ -1,4 +1,38 @@
 - commits:
+    - subject: "tests: hup: use secondary antenna for revpi4"
+      hash: d353a984983e58ca187a678b03bf5420672940a5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: cloud : use secondary antenna for revpi4"
+      hash: 1bbf59431281805b88303dce2747922c0a78eb97
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: "tests: os: use secondary antenna for revpi4"
+      hash: 67f34c93af43420199e729956d8b47d5e32a0601
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 5.1.41
+  title: ""
+  date: 2024-02-27T12:56:34.503Z
+- commits:
     - subject: Update tests/leviathan digest to d71ce8f
       hash: 813e7442dad72eb0dc8994a1ff09b4cc3f1e717a
       body: Update tests/leviathan

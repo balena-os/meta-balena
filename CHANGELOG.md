@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v5.1.41
+## (2024-02-27)
+
+* tests: hup: use secondary antenna for revpi4 [rcooke-warwick]
+* tests: cloud : use secondary antenna for revpi4 [rcooke-warwick]
+* tests: os: use secondary antenna for revpi4 [rcooke-warwick]
+
 # v5.1.40
 ## (2024-02-26)
 
