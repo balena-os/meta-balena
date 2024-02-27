@@ -665,6 +665,9 @@ BALENA_CONFIGS[mdraid] = " \
 "
 
 # Enable dmcrypt/LUKS
+BALENA_CONFIGS_DEPS[dmcrypt] = " \
+    CONFIG_BLK_DEV_DM=y \
+"
 BALENA_CONFIGS[dmcrypt] = " \
     CONFIG_CRYPTO_XTS=y \
     CONFIG_DM_CRYPT=y \
