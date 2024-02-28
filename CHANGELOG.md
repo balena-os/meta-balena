@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.43
+## (2024-02-28)
+
+* Start os-config service after extracting CA [jaomaloy]
+
 # v5.1.42
 ## (2024-02-28)
 

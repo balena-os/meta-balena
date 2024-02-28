@@ -1,4 +1,18 @@
 - commits:
+    - subject: Start os-config service after extracting CA
+      hash: 0a531b5787e9dfd11a851fa36babd5374135e935
+      body: |
+        OS-config should always run after extracting balena CA
+        to prevent race conditions
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: jaomaloy
+      nested: []
+  version: 5.1.43
+  title: ""
+  date: 2024-02-28T09:12:11.684Z
+- commits:
     - subject: Update balena-supervisor to v16
       hash: 2fe4e273e180d68a6eb756ce046352dc6a818f44
       body: |
