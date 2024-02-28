@@ -28,8 +28,6 @@ Additionally, UEFI must be configured properly prior to provisioning - at this m
 
 Manually loading the keys is not possible at this moment as the installer is unsigned by default.
 
-The system must be provisioned and booted at least once in a trusted environment - the full protection is only enabled on first boot, not immediately after the installer powers the device down.
-
 ## Chain of Trust
 
 Multiple system components are involved in the validation of a "trusted operating system":
@@ -107,10 +105,28 @@ The above is commonly referred to as the "chain of trust". For `balenaOS`, the t
 * **Format:** 32 bytes long random string
 * **Stored in:** Encrypted in the EFI partition (`balena-luks.enc`), encryption key in the TPM (TPM key slot is indicated by `balena-luks.ctx` in the EFI partition)
 * **Updated by:** `balenaOS` installer during provisioning
-* **Verified by:** `cryptsetup` initrd script (verified by GRUB as a part of kernel+initrd bundle), encryption key locked to PCRs 0,1,2,3
+* **Verified by:** `cryptsetup` initrd script (verified by GRUB as a part of kernel+initrd bundle), encryption key locked to PCRs 0,2,3,7
 * **Verifies:** Nothing, only used for encryption
 
-*Note:* When the installer exits, the TPM key is only protected using PCRs 0,2,3. PCR 1 contains UEFI configuration, which the installer tampers with (by changing the boot order). The system is only fully locked to PCRs 0,1,2,3 on first boot after provisioning.
+
+## TPM
+
+The TPM is a hardware peripheral that performs a number of security related functions, most relevant being generating and storing cryptographic keys.
+
+### PCRs
+
+The TPM stores state during boot in so-called platform configuration registers (PCRs). Several PCRs are extended by the firmware at boot with various boot time measurements.
+
+| PCR | Measurement   |
+| --- | ------------- |
+| 0   | Firmware code |
+| 2   | Pluggable code (OpRom/UEFI driver) |
+| 3   | Pluggable firmware data (e.g. RAID configuration) |
+| 7   | Secure Boot configuration |
+
+Of note is PCR7, which measures all UEFI variables that affect the state of the secure boot configuration on the affected system, including whether secure boot is enabled, and all secure boot variables and keys (PK, KEK, db, dbx, etc.).
+
+When installing balenaOS with secure boot, the passphrase is sealed using a policy that requires the PCRs to match certain known good values. As long as the digests of the PCRs haven't changed, we can be assured that the system is still secure, and the disk can be unlocked. However, tampering with the secure boot configuration, such as through the firmware menu, will change the value of PCR7. This renders the disk un-decryptable, and the operating system unbootable until the known good configuration is restored.
 
 ## boot and EFI partition split
 
@@ -144,13 +160,11 @@ Each OS build ships update files for `db` and `dbx` in the `/resin-boot` directo
 
 ### BIOS/UEFI updates
 
-To protect the encryption keys in the TPM we lock against PCRs 0, 1, 2 and 3. Namely PCR0 is the checksum of the UEFI image, which would change by a BIOS/UEFI update. PCR1 is the checksum of the UEFI configuration which would generally change by updating anything in the UEFI configuration (e.g. disabling secure boot or changing boot order). That said, if users updates BIOS/UEFI or changes settings, the device needs to be reprovisioned afterwards.
-
-*Note: While we assume PCR1 will change when BIOS/UEFI settings are changed, the actual implementation of what PCR1 measures is very device-specific. We are aware that on some devices the PCR1 value will not change even when boot order is changed or secure boot is disabled via BIOS/UEFI setup. We therefore strongly recommend to protect the entry to BIOS/UEFI setup with a strong password and, if possible, disable shortcuts in user interaction with the firmware, such as using F-keys for temporary boot order override.*
+As previously mentioned, the encryption passphrase is sealed using several PCRs, including PCR0. A firmware/BIOS upgrade will change the digest of PCR0, leaving the system unbootable. It is advised that any necessary firmware upgrades be performed before installing balenaOS.
 
 ### Hardware updates
 
-To protect the encryption keys in the TPM we lock against PCRs 0, 1, 2 and 3. Namely PCRs 2 and 3 contain checksums of the loaded UEFI drivers for devices plugged in, their firmware and configuration. These would change if e.g. a PCIe device is replaced, its firmware is updated or even the same card is moved into a different slot. That said if hardware changes are necessary, the device needs to be reprovisioned afterwards.
+PCRs 2 and 3 contain checksums of the loaded UEFI drivers for devices plugged in, their firmware and configuration. These would change if e.g. a PCIe device is replaced, its firmware is updated or even the same card is moved into a different slot. If hardware changes are necessary, the device needs to be reprovisioned afterwards.
 
 ## Debugging
 
