@@ -1,4 +1,196 @@
 - commits:
+    - subject: Update balena-supervisor to v16
+      hash: 2fe4e273e180d68a6eb756ce046352dc6a818f44
+      body: |
+        Update balena-supervisor from 15.3.1 to 16.1.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Add support for repeated overlays
+              hash: bda1bac04c708ea0c35318604f926c035ff0883b
+              body: >
+                RPI firmware configuration allows repeating overlays to define
+
+                configurations on multiple devices. For instance, for configuring
+
+                multiple `ads` devices, `config.txt` needs to be setup this way
+
+
+                ```
+
+                dtoverlay=ads1115,addr=0x48
+
+                dtoverlay=ads1115,addr=0x49
+
+                ```
+
+
+                Before this change, the supervisor would interpret both lines as
+
+                belonging to the same overlay, preventing users from configuring multiple
+
+                devices, and leading to a loop when trying to apply configurations with
+
+                repeated overlays coming from the cloud side.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.1.0
+          title: ""
+          date: 2024-02-27T19:30:49.055Z
+        - commits:
+            - subject: Fix support for rsync deltas
+              hash: 24e222045ac511cd4fbb3be66e57eb678a29d854
+              body: >
+                Rsync (v2) deltas have been broken since [Supervisor
+                v14](https://github.com/balena-os/balena-supervisor/commit/460c3ba0aab31d18a02e3f5dda1838691768c494).
+                While considered legacy,
+
+                they are still used by a few customers with devices running OS < 2.47.1.
+
+                This should fix v2 delta support for those devices until we can
+
+                completely remove rsync deltas from the supervisor
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.0.4
+          title: ""
+          date: 2024-02-27T15:06:23.251Z
+        - commits:
+            - subject: Patch default dtparam handling in config.txt
+              hash: 3fd035c5bdc88993af66c5f2bc3a6300c44f4ed4
+              body: |
+                This commit completes the list of default / board-wide dtparams
+                to include some `baudrate` and `vc` i2c params.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.0.3
+          title: ""
+          date: 2024-02-21T21:03:18.619Z
+        - commits:
+            - subject: Patch config.txt backend to return array configs correctly
+              hash: e22253ce6ebc40e865b5bc26844901026f04ec4e
+              body: >
+                Previously, getBootConfig() of the config.txt backend was
+                omitting
+
+                array configurations such as gpio settings, thus resulting in the SV
+
+                mistakenly assuming that boot config had not been applied, since gpio
+
+                would not be in current config.txt config but would be in target config.
+
+                This resulted in SV entering an infinite loop of attempting to apply the
+
+                gpio config when it wasn't necessary.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.0.2
+          title: ""
+          date: 2024-02-17T02:44:51.708Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action to v2.0.27
+              hash: ac12d9a50c1569229ff97459b7306cd5f7f4faad
+              body: Update balena-io/deploy-to-balena-action
+              footer:
+                Changelog-entry: Update balena-io/deploy-to-balena-action to v2.0.27
+                changelog-entry: Update balena-io/deploy-to-balena-action to v2.0.27
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.0.1
+          title: ""
+          date: 2024-02-12T19:56:17.362Z
+        - commits:
+            - subject: Add special case for base DTO params on RPI config
+              hash: 6e6a796da5ecc846248eae4c8495bc626964c038
+              body: >
+                While ordering is important in the RPI firmware configuration
+                file (config.txt),
+
+                some dt params are by default considered part of the base dt overlay
+
+                if they are not used by other overlays.
+
+                Unfortunately the [list of dtparams](https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README#L133)
+
+                is too long to add all of them as exceptions, but we can add the params
+
+                used in the default config.txt provided in OS images, to avoid reboots
+
+                when updating to this new supervisor and correctly parsing the
+
+                provisioning config.txt as variables.
+
+
+                While this addition handles most common scenarios, there is still a
+
+                chance a user may have use other base overlay dt params in the initial
+
+                config, in which case those will be interpreted according to the
+
+                relative ordering
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Fix processing of dtoverlay/dtparams on config.txt
+              hash: 9546a1a3b1b919649dc401b63f0ff0dedad918b0
+              body: >
+                DT overlays and DT params need to be consumed in the order that
+                they
+
+                appear on the file. DT params apply to the last dtoverlay defined on the
+
+                file, or to the base overlay.
+
+
+                This commit updates config.txt parsing to consider this ordering, and it
+
+                also ensures global dtparams are written first so they cannot be
+
+                overriden by later overlays.
+
+
+                Because of the more strict parsing method, it is possible that existing
+
+                HOST_CONFIG vars do not match the interpretation of the parser. If
+
+                that's the case, the supervisor will re-apply the target state which
+
+                will cause the device to reboot.
+              footer:
+                Change-type: major
+                change-type: major
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.0.0
+          title: ""
+          date: 2024-02-08T21:45:41.648Z
+  version: 5.1.42
+  title: ""
+  date: 2024-02-28T00:23:42.396Z
+- commits:
     - subject: "tests: hup: use secondary antenna for revpi4"
       hash: d353a984983e58ca187a678b03bf5420672940a5
       body: ""
