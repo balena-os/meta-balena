@@ -70,12 +70,27 @@ EOF
         digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
     done
 
-    separator=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
-    digest=$(printf '%s%s' "$digest" "$separator" | _hexdecode | _sha256)
+    # Extend our digest with any additional random events that may have been logged
+    if [ -f "${TPM_EVENTLOG_PATH}" ]; then
+        for extend in $(tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
+                | parse_pcr7_digests \
+                | sed '1,5d'); do
+            digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
+        done
+    else
+        separator=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
+        digest=$(printf '%s%s' "$digest" "$separator" | _hexdecode | _sha256)
+    fi
 
     printf '%s' "$digest"
 }
 
+parse_pcr7_digests() {
+    awk -F': ' '
+        $1 ~ /PCRIndex/ { pcr = $2 }
+        $1 ~ /AlgorithmId/ && pcr == 7 && $2 == "sha256" { digestFlag = 1 }
+        $1 ~ /Digest/ && digestFlag { print $2; digestFlag = 0 }'
+}
 
 parse_pcr7_eventtypes() {
     awk '
