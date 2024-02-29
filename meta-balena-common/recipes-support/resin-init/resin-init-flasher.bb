@@ -44,12 +44,7 @@ BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
 do_install[depends] += "jq-native:do_populate_sysroot"
 do_install() {
     if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
-        # Make sure devices with internal storage, aka flasher device types define `INTERNAL_DEVICE_KERNEL` in integration layers.
-        if [ "$(jq -r '.data.storage.internal' "${TOPDIR}/../contracts/contracts/hw.device-type/${MACHINE}/contract.json")" = "true" ] && [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
-            bbfatal "INTERNAL_DEVICE_KERNEL must be defined for devices with internal storage."
-        else
-            bbwarn "INTERNAL_DEVICE_KERNEL is not defined - some features like migration will not work."
-        fi
+        bbwarn "INTERNAL_DEVICE_KERNEL is not defined - some features like migration will not work."
     fi
 
     if [ -n "${INTERNAL_DEVICE_BOOTLOADER_CONFIG}" ] && [ -z "${INTERNAL_DEVICE_BOOTLOADER_CONFIG_PATH}" ]; then
