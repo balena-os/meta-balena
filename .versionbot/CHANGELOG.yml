@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 2b34fec
+      hash: 695bd2b086a94945e80d9d677a6019462dd9e35f
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to f3ba2ee
+              hash: 2334fd02530b6669a3fb5275421543c0a66bca2f
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.63
+          title: ""
+          date: 2024-02-27T17:34:15.697Z
+  version: 5.1.45
+  title: ""
+  date: 2024-02-29T23:05:05.727Z
+- commits:
     - subject: "resin-init-flasher: Allow building images for non-flasher devices that
         have internal storage"
       hash: 3a887512b343b80208196f6792a48f81d1a8c8f9
