@@ -219,7 +219,7 @@ fi
 
 if [ "$LUKS" = "1" ]; then
     if type diskenc_setup >/dev/null 2>&1 && ! diskenc_setup; then
-        fatal "Failed to setup disk encryption"
+        fail "Failed to setup disk encryption"
     fi
 
     # Attach the image to a loop device
@@ -385,7 +385,7 @@ fi
 
 if [ "$LUKS" = "1" ]; then
     if type bootpart_split >/dev/null 2>&1 && ! bootpart_split; then
-        fatal "Failed to split boot partition."
+        fail "Failed to split boot partition."
     fi
 fi
 
@@ -443,7 +443,7 @@ if [ -f "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/${BALENA_BOOTLOADER_CONFIG}" ];
 fi
 
 if type secureboot_bootloader_setup >/dev/null 2>&1 && ! secureboot_bootloader_setup; then
-    fatal "Failed to run secureboot post installation steps."
+    fail "Failed to run secureboot post installation steps."
 fi
 
 # Copy json configuration file from external (flasher) to the internal
@@ -469,7 +469,7 @@ umount $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
 sync
 
 if type secureboot_bootloader_postsetup >/dev/null 2>&1 && ! secureboot_bootloader_postsetup; then
-    fatal "Failed to run secureboot post installation steps."
+    fail "Failed to run secureboot post installation steps."
 fi
 
 if [ "$LUKS" = "1" ]; then
