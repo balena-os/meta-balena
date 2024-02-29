@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.44
+## (2024-02-29)
+
+* resin-init-flasher: Allow building images for non-flasher devices that have internal storage [Alexandru]
+
 # v5.1.43
 ## (2024-02-28)
 

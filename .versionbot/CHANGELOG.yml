@@ -1,4 +1,24 @@
 - commits:
+    - subject: "resin-init-flasher: Allow building images for non-flasher devices that
+        have internal storage"
+      hash: 3a887512b343b80208196f6792a48f81d1a8c8f9
+      body: >
+        As per the internal thread:
+        https://balena.zulipchat.com/#narrow/stream/360838-balena-io.2Fos.2Fdevices/topic/balena-raspberrypi.20jenkins.20build.20failures/near/423970246
+
+
+        Currently devices with on-board storage fail to build in jenkins, if they don't provide a flasher image. One example is the CM4. Since there are multiple devices using this configuration, let's re-enable builds for all of them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 5.1.44
+  title: ""
+  date: 2024-02-29T16:16:34.376Z
+- commits:
     - subject: Start os-config service after extracting CA
       hash: 0a531b5787e9dfd11a851fa36babd5374135e935
       body: |
