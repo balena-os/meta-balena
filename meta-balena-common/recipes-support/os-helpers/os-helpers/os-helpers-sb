@@ -21,5 +21,9 @@
 [ -f "/usr/libexec/os-helpers-efi" ] && . /usr/libexec/os-helpers-efi
 
 is_secured() {
+	if ! command -v user_mode_enabled; then
+		return 1
+	fi
+
 	user_mode_enabled
 }
