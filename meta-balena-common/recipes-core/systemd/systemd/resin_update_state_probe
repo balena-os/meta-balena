@@ -50,7 +50,25 @@ else
 	ruuid=$(get_cmdline_root_uuid)
 fi
 # Determine if the partition is on the same drive as root
-rpdev=$(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1) || true
+rpdev=""
+
+# Look for the filesystem by UUID
+# lsblk returns multiple entries when the root is on RAID1
+# (the virtual MD device and each of the members).
+# Loop through the candidates and ignore RAID members.
+# This will also randomly choose the first device that matches the UUID
+# if multiple devices with the same filesystem UUID are connected
+# (e.g. a cloned drive).
+for cand in $(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1); do
+	cand_fstype=$(lsblk "/dev/${cand}" -ndlo fstype) || true
+	if [ "${cand_fstype}" = "linux_raid_member" ]; then
+		continue
+	fi
+
+	rpdev="${cand}"
+	break
+done
+
 if [ -n "${rpdev}" ]; then
 	rptype=$(lsblk -nlo type,uuid | grep "${ruuid}" | cut -d " " -f1) || true
 	if [ "${rptype}" = "crypt" ]; then
