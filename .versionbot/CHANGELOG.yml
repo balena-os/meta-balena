@@ -1,4 +1,27 @@
 - commits:
+    - subject: "resin_update_state_probe: ignore RAID members when looking for root"
+      hash: e984b21b0270729784735d99f222294be65afd20
+      body: |
+        At this moment resin_update_state_probe looks for the root partition
+        by UUID and assumes that only a single device is returned. This
+        assumption breaks when the root is on a MD RAID1 device as not only
+        the virtual MD device holds a filesystem with the given UUID,
+        each member does as well.
+
+        This patch makes resin_update_state_probe ignore devices
+        that are RAID members which in that case will only return
+        the MD device as expected.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.1.46
+  title: ""
+  date: 2024-03-02T01:20:54.562Z
+- commits:
     - subject: Update tests/leviathan digest to 2b34fec
       hash: 695bd2b086a94945e80d9d677a6019462dd9e35f
       body: Update tests/leviathan

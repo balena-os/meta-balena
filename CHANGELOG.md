@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.46
+## (2024-03-02)
+
+* resin_update_state_probe: ignore RAID members when looking for root [Michal Toman]
+
 # v5.1.45
 ## (2024-02-29)
 
