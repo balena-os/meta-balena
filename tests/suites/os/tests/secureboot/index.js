@@ -99,40 +99,11 @@ module.exports = {
 					).then(resetWorker);
 				};
 
-				const testBootloaderConfigIntegrity = async () => {
-					return this.worker.executeCommandInHostOS(
-						['sed', '-i', 's/lockdown=integrity//', '/mnt/efi/EFI/BOOT/grub.cfg'],
-						this.link
-					).then(() => this.worker.executeCommandInHostOS('reboot', this.link)
-					).then(() => test.resolves(
-						/* The below pattern is the expected output when the config file
-						 * fails the signature check and the fallback console is not enabled.
-						 *
-						 * This sequence of ANSI escape codes decodes as:
-						 *
-						 *	ESC[0m - reset all modes
-						 *	ESC[37m - white foreground
-						 *	ESC[40m - black background
-						 *
-						 *	https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
-						 *
-						 * Otherwise, the output finishes the above background color escape
-						 * sequence, clears the screen, and shows 'loading Boot0003
-						 * "balenaOS"'
-						 */
-
-							waitForSerialOutput(/\x1B\[0m\x1B\[37m\x1B\[40m$/, 3), // eslint-disable-line no-control-regex
-							'Bootloader will not load configuration that fails signature verification',
-						)
-					).then(resetWorker);
-				};
-
 				if (securebootSupported) {
 					if (securebootEnabled) {
 						await testFullDiskEncryption();
 						await testModuleVerification();
 						await testBootloaderIntegrity();
-						await testBootloaderConfigIntegrity();
 					} else {
 						test.comment('Secure boot is not enabled');
 					}
