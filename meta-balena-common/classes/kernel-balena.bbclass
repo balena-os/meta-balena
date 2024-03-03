@@ -680,7 +680,7 @@ BALENA_CONFIGS[kexec] = " \
 "
 BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' kexec','',d)}"
 
-BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' secureboot',d)}"
 BALENA_CONFIGS[secureboot] = " \
     CONFIG_INTEGRITY_PLATFORM_KEYRING=y \
     CONFIG_MODULE_SIG=y \
