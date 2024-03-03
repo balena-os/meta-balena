@@ -1,4 +1,90 @@
 - commits:
+    - subject: "classes: kernel-balena: fix secureboot append"
+      hash: 78a00ffdbebfccabbbb2e891a4b50fa421117cac
+      body: |
+        Add missing space.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: kernel-balena: correct dmcrypt dependencies"
+      hash: 7ee3a14c01b3fdb6a21a3a4b4758e719e9378d5f
+      body: |
+        Fixes the dm_crypt setting check config warning.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: kernel-balena: separate kexec configuration"
+      hash: 693cd55fe098cc4675db28e76d7a174cbcbd8d3f
+      body: |
+        Only the EFI secure boot mechanism currently needs kexec support, other
+        implementation will use the balena bootloader instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena: remove EFI specific settings"
+      hash: a5e3f7b25914e3b5b128675c7ca3df2eb7a3ccd8
+      body: >
+        The ZSTD support is not supported for all machines - restrict it to
+        those
+
+        that define EFI.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena: separate EFI specific secure boot configurations"
+      hash: 4f1dc09e6fb2de97f12302cb90b19a759e231277
+      body: |
+        These settings are specific to EFI and fail to apply for other
+        secure boot enabled platforms.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena: remove deprecated kernel configuration"
+      hash: 3c44c1417f7cfbe1ff8414f8e5845544167a5388
+      body: |
+        The NF_TABLES_SET module has been dropped from v5.10.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena: add nfsd kernel setting"
+      hash: 625c4021beba360662127d8ed4f929bb866dc9d6
+      body: |
+        This setting is moved from a device repository so it is common.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.47
+  title: ""
+  date: 2024-03-03T20:18:56.488Z
+- commits:
     - subject: "resin_update_state_probe: ignore RAID members when looking for root"
       hash: e984b21b0270729784735d99f222294be65afd20
       body: |

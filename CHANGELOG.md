@@ -1,6 +1,17 @@
 Change log
 -----------
 
+# v5.1.47
+## (2024-03-03)
+
+* classes: kernel-balena: fix secureboot append [Alex Gonzalez]
+* classes: kernel-balena: correct dmcrypt dependencies [Alex Gonzalez]
+* classes: kernel-balena: separate kexec configuration [Alex Gonzalez]
+* kernel-balena: remove EFI specific settings [Alex Gonzalez]
+* kernel-balena: separate EFI specific secure boot configurations [Alex Gonzalez]
+* kernel-balena: remove deprecated kernel configuration [Alex Gonzalez]
+* kernel-balena: add nfsd kernel setting [Alex Gonzalez]
+
 # v5.1.46
 ## (2024-03-02)
 
