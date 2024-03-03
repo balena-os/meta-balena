@@ -152,7 +152,6 @@ BALENA_CONFIGS ?= " \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
     ${WIREGUARD} \
-    ${KERNEL_ZSTD} \
     "
 
 #
@@ -228,6 +227,7 @@ BALENA_CONFIGS[wireguard] = " \
 "
 
 KERNEL_ZSTD = "${@configure_from_version("5.9", "kernel_zstd", "", d)}"
+BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi'," ${KERNEL_ZSTD}",'',d)}"
 BALENA_CONFIGS[kernel_zstd] = " \
     CONFIG_KERNEL_ZSTD=y \
 "
@@ -247,6 +247,7 @@ BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_V2=m \
     CONFIG_NFS_V3=m \
     CONFIG_NFS_V4=m \
+    CONFIG_NFSD=m \
     CONFIG_NFSD_V3=y \
     CONFIG_NFSD_V4=y \
 "
@@ -569,7 +570,6 @@ BALENA_CONFIGS[fatfs] = " \
 
 BALENA_CONFIGS[nf_tables] = " \
     CONFIG_NF_TABLES=m \
-    CONFIG_NF_TABLES_SET=m \
     CONFIG_NF_TABLES_INET=y \
     CONFIG_NF_TABLES_NETDEV=y \
     CONFIG_NFT_NUMGEN=m \
@@ -613,6 +613,8 @@ BALENA_CONFIGS[nf_tables] = " \
     CONFIG_NFT_FIB_IPV6=m \
     CONFIG_NF_DUP_IPV6=m \
     "
+BALENA_CONFIGS:append = " ${@configure_from_version("5.10", "", " nf_tables_set", d)}"
+BALENA_CONFIGS[nf_tables_set] = "CONFIG_NF_TABLES_SET=m"
 
 BALENA_CONFIGS[task-accounting] = " \
     CONFIG_TASKSTATS=y \
@@ -663,18 +665,24 @@ BALENA_CONFIGS[mdraid] = " \
 "
 
 # Enable dmcrypt/LUKS
+BALENA_CONFIGS_DEPS[dmcrypt] = " \
+    CONFIG_BLK_DEV_DM=y \
+"
 BALENA_CONFIGS[dmcrypt] = " \
     CONFIG_CRYPTO_XTS=y \
     CONFIG_DM_CRYPT=y \
 "
 
-BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
-BALENA_CONFIGS[secureboot] = " \
+BALENA_CONFIGS[kexec] = " \
+    CONFIG_KEXEC=y \
+    CONFIG_KEXEC_FILE=y \
     CONFIG_KEXEC_SIG=y \
-    CONFIG_KEXEC_SIG_FORCE=y \
-    CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y \
+"
+BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' kexec','',d)}"
+
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' secureboot',d)}"
+BALENA_CONFIGS[secureboot] = " \
     CONFIG_INTEGRITY_PLATFORM_KEYRING=y \
-    CONFIG_LOAD_UEFI_KEYS=y \
     CONFIG_MODULE_SIG=y \
     CONFIG_MODULE_SIG_ALL=y \
     CONFIG_MODULE_SIG_SHA512=y \
@@ -682,6 +690,12 @@ BALENA_CONFIGS[secureboot] = " \
     CONFIG_SECURITY_LOCKDOWN_LSM_EARLY=y \
     CONFIG_SYSTEM_TRUSTED_KEYS="certs/kmod.crt" \
 "
+BALENA_CONFIGS[efi-secureboot] = " \
+    CONFIG_LOAD_UEFI_KEYS=y \
+    CONFIG_KEXEC_SIG_FORCE=y \
+    CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y \
+"
+BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' efi-secureboot','',d)}"
 
 ###########
 # HELPERS #
