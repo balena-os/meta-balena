@@ -5,7 +5,7 @@ set -o errexit
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 # shellcheck disable=SC1091
-. /usr/sbin/balena-config-defaults
+[ -f "/usr/sbin/balena-config-defaults" ] && . /usr/sbin/balena-config-defaults
 
 old_os_before_hooks=0
 old_os_after_hooks=0
@@ -42,7 +42,10 @@ Options:
 EOF
 }
 
-DEBUG=$(jq -r '.debug // empty' "${CONFIG_PATH}")
+DEBUG="0"
+if [ -n "${CONFIG_PATH}" ]; then
+	DEBUG=$(jq -r '.debug // empty' "${CONFIG_PATH}")
+fi
 run_hook () {
 	if [ "${DEBUG}" = "1" ]; then
 		/bin/sh -x "$1"
