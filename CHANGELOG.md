@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.1.49
+## (2024-03-06)
+
+
+<details>
+<summary> Update tests/leviathan digest to a677d89 [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.29.64
+> ### (2024-03-04)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.1.48
 ## (2024-03-06)
 
