@@ -1,4 +1,28 @@
 - commits:
+    - subject: "hostapp-update-hooks: Soft include balena-config-defaults"
+      hash: a6cd568a3b3aec127e2ef5b9b480b657a3ea246e
+      body: |
+        a203bcdfd567c0cc4b4ed9de493513142cd7463f introduced a dependency
+        on /usr/sbin/balena-config-defaults to hostapp-update-hooks, however
+        during HUP the script is not only executed in the "new" OS container
+        but directly in the context of the "old" OS as well, so
+        /usr/sbin/balena-config-defaults needs to exist there.
+        The file was introduced in balenaOS v2.99.28, so trying to HUP
+        from anything before that will fail.
+
+        This patch changes this to a soft dependency so even if the file
+        is missing HUP will continue.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.1.48
+  title: ""
+  date: 2024-03-06T08:25:08.800Z
+- commits:
     - subject: "classes: kernel-balena: fix secureboot append"
       hash: 78a00ffdbebfccabbbb2e891a4b50fa421117cac
       body: |

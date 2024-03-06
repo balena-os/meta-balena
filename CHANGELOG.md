@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.48
+## (2024-03-06)
+
+* hostapp-update-hooks: Soft include balena-config-defaults [Michal Toman]
+
 # v5.1.47
 ## (2024-03-03)
 
