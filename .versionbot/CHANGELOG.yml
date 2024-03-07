@@ -1,4 +1,31 @@
 - commits:
+    - subject: "tests/device-tree: Rework to account for new form of setting dtoverlay
+        in config.txt by the supervisor"
+      hash: 12a0940ce31031e203364dd6c76a4fc07697133b
+      body: |
+        The supervisor will now write the following dtoverlay setting
+
+        "gpio-key,gpio=4,active_low=0,gpio_pull=down"
+
+        into config.txt in the following form:
+
+        dtoverlay=gpio-key
+        dtparam=gpio=4
+        dtparam=active_low=0
+        dtparam=gpio_pull=down
+
+        So we need to rework the test to account for these changes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 5.1.50
+  title: ""
+  date: 2024-03-07T11:28:39.221Z
+- commits:
     - subject: Update tests/leviathan digest to a677d89
       hash: cb9142269bc348e6c0dbe99dfc8b95d4215c0cf4
       body: Update tests/leviathan

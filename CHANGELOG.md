@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.50
+## (2024-03-07)
+
+* tests/device-tree: Rework to account for new form of setting dtoverlay in config.txt by the supervisor [Florin Sarbu]
+
 # v5.1.49
 ## (2024-03-06)
 
