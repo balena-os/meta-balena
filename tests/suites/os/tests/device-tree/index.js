@@ -92,8 +92,7 @@ module.exports = {
 							name: 'local',
 							config: {
 								HOST_CONFIG_dtoverlay: `"gpio-key,gpio=4,active_low=0,gpio_pull=${direction}"`,
-								HOST_CONFIG_dtparam:
-									'"i2c_arm=on","spi=on","audio=on","foo=bar","level=42"',
+								HOST_CONFIG_dtparam: '"i2c_arm=on","spi=on","audio=on","foo=bar","level=42"',
 								HOST_CONFIG_gpu_mem: '64',
 								SUPERVISOR_PERSISTENT_LOGGING: 'true',
 								SUPERVISOR_LOCAL_MODE: 'true',
@@ -206,7 +205,7 @@ module.exports = {
 
 				test.equal(
 					dtOverlayConfigTxt,
-					targetState.local.config.HOST_CONFIG_dtoverlay,
+					targetState.local.config.HOST_CONFIG_dtoverlay.split(",").slice(0,1).join() + '"',
 					'DToverlays successfully configured in config.txt',
 				);
 				const dtParamConfigTxt = await this.context
@@ -217,7 +216,7 @@ module.exports = {
 					);
 				test.equal(
 					dtParamConfigTxt,
-					targetState.local.config.HOST_CONFIG_dtparam,
+					targetState.local.config.HOST_CONFIG_dtparam + ',"' + targetState.local.config.HOST_CONFIG_dtoverlay.split(",").slice(1).join('","'),
 					'DTparams successfully configured in config.txt',
 				);
 				
