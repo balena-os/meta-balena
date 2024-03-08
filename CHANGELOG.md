@@ -1,6 +1,37 @@
 Change log
 -----------
 
+# v5.1.51
+## (2024-03-08)
+
+
+<details>
+<summary> Update balena-supervisor to v16.1.4 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-16.1.4
+> ### (2024-03-08)
+> 
+> * Update balena-register-device and its deps [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.1.3
+> ### (2024-03-07)
+> 
+> * Remove dependency on @balena/happy-eyeballs [Felipe Lalanne]
+> * Update Node to v20 [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.1.2
+> ### (2024-03-06)
+> 
+> * Update typescript to v5 [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.1.1
+> ### (2024-03-04)
+> 
+> * Update @balena/lint to v7 [Felipe Lalanne]
+> 
+
+</details>
+
 # v5.1.50
 ## (2024-03-07)
 
