@@ -148,7 +148,6 @@ BALENA_CONFIGS ?= " \
     ipv6_mroute \
     disable_hung_panic \
     ${RAID} \
-    dmcrypt \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
     ${WIREGUARD} \
@@ -665,6 +664,7 @@ BALENA_CONFIGS[mdraid] = " \
 "
 
 # Enable dmcrypt/LUKS
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' dmcrypt',d)}"
 BALENA_CONFIGS_DEPS[dmcrypt] = " \
     CONFIG_BLK_DEV_DM=y \
 "
