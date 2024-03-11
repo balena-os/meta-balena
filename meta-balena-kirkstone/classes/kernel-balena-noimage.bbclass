@@ -5,5 +5,5 @@
 #    the initramfs bundled kernel image
 python __anonymous() {
     kernel_image_type = d.getVar('KERNEL_IMAGETYPE')
-    d.appendVar('PACKAGE_EXCLUDE', 'kernel-image-%s-*' % kernel_image_type.lower())
+    d.appendVar('PACKAGE_EXCLUDE', ' kernel-image-%s-*' % kernel_image_type.lower())
 }
