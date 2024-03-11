@@ -1,4 +1,31 @@
 - commits:
+    - subject: "images: balena-image-initramfs: remove uneeded kernel image"
+      hash: f1ac14d114955678b62a0cbe661f71297e32a621
+      body: |
+        Remove the kernel image from the initramfs to save space.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: kernel-balena-noimage: add extra space"
+      hash: 3696a0d8ad5f6d67903e3918bbe186300a2245ff
+      body: |
+        When appending a variable a space needs to be prefixed to create a
+        space separated list.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.52
+  title: ""
+  date: 2024-03-11T15:55:46.939Z
+- commits:
     - subject: Update balena-supervisor to v16.1.4
       hash: 932d20360314f8297c9b34f5940a95847cc48f58
       body: |

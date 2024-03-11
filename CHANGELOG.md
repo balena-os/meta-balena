@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.1.52
+## (2024-03-11)
+
+* images: balena-image-initramfs: remove uneeded kernel image [Alex Gonzalez]
+* classes: kernel-balena-noimage: add extra space [Alex Gonzalez]
+
 # v5.1.51
 ## (2024-03-08)
 
