@@ -1,4 +1,4 @@
-inherit deploy
+inherit deploy meson
 
 FILESEXTRAPATHS:append := ":${THISDIR}/balena-files:${THISDIR}/${BPN}"
 
@@ -12,7 +12,6 @@ SRC_URI:append = " \
     file://balena-sample.ignore \
     file://nm-tmpfiles.conf \
     file://remove-https-warning.patch \
-    file://iptables-wait-for-xtables-lock.patch \
     "
 
 NETWORKMANAGER_FIREWALL_DEFAULT = "iptables"
@@ -43,6 +42,7 @@ EXTRA_OEMESON += " \
 	"
 
 PACKAGECONFIG:remove = "vala"
+GNOMEBASEBUILDCLASS = "meson"
 EXTRA_OEMESON += " \
     -Dvapi=false \
     -Dintrospection=false \
