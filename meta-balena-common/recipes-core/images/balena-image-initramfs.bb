@@ -46,7 +46,7 @@ IMAGE_FSTYPES = "${@bb.utils.contains_any( \
                         '${INITRAMFS_FSTYPES}', \
                  d)}"
 
-inherit core-image
+inherit core-image kernel-balena-noimage
 
 IMAGE_ROOTFS_SIZE = "8192"
 IMAGE_OVERHEAD_FACTOR = "1.0"
