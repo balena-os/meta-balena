@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update balena-supervisor to v16.1.5
+      hash: b15d808d021e647afc8c4da22f64dc9e7c929310
+      body: |
+        Update balena-supervisor from 16.1.4 to 16.1.5
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update fatrw to v0.2.21
+              hash: 772702793c3ebf9bf3ac8119934436f2caa44bef
+              body: |
+                Update fatrw from 0.2.9 to 0.2.21
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.1.5
+          title: ""
+          date: 2024-03-12T13:33:05.116Z
+  version: 5.1.53
+  title: ""
+  date: 2024-03-12T18:48:47.631Z
+- commits:
     - subject: "images: balena-image-initramfs: remove uneeded kernel image"
       hash: f1ac14d114955678b62a0cbe661f71297e32a621
       body: |

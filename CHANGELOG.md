@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v5.1.53
+## (2024-03-12)
+
+
+<details>
+<summary> Update balena-supervisor to v16.1.5 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-16.1.5
+> ### (2024-03-12)
+> 
+> * Update fatrw to v0.2.21 [Felipe Lalanne]
+> 
+
+</details>
+
 # v5.1.52
 ## (2024-03-11)
 
