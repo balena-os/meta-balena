@@ -1,6 +1,81 @@
 Change log
 -----------
 
+# v5.0.12
+## (2024-03-12)
+
+
+<details>
+<summary> Update leviathan to v2.29.35 [Alex Gonzalez] </summary>
+
+> ## leviathan-2.29.35
+> ### (2024-01-11)
+> 
+> * change to ssh tunnel [rcooke-warwick]
+> 
+> ## leviathan-2.29.34
+> ### (2024-01-10)
+> 
+> * Update core/contracts digest to 14a10d9 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.33
+> ### (2024-01-09)
+> 
+> * timeout netcat process [rcooke-warwick]
+> 
+> ## leviathan-2.29.32
+> ### (2024-01-08)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.31
+> ### (2024-01-05)
+> 
+> * Update core/contracts digest to b469f31 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.30
+> ### (2024-01-01)
+> 
+> * Update core/contracts digest to dd3614e [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.29
+> ### (2024-01-01)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.28
+> ### (2023-12-25)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.27
+> ### (2023-12-22)
+> 
+> * Update balena-os/leviathan-worker to v2.9.27 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.26
+> ### (2023-12-21)
+> 
+> * Update core/contracts digest to 31188f5 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.25
+> ### (2023-12-18)
+> 
+> * Update actions/upload-artifact action to v4 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.24
+> ### (2023-12-18)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.23
+> ### (2023-12-13)
+> 
+> * Update core/contracts digest to 591fda9 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.0.11
 ## (2023-12-14)
 
