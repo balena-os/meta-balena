@@ -18,11 +18,17 @@ HOSTAPP_HOOKS = " \
     80-rollback \
     "
 
-SECUREBOOT_HOOKS= " \
-    0-signed-update
+SECUREBOOT_HOOKS = " \
+    0-signed-update \
+    95-secureboot/1-fwd_commit_apply-dbx \
     "
-HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ${SECUREBOOT_HOOKS}, '', d)}"
+SECUREBOOT_HOOK_DIRS = " \
+    95-secureboot \
+    "
+HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUREBOOT_HOOKS}', '', d)}"
+
 HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
+HOSTAPP_HOOKS_DIRS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUREBOOT_HOOK_DIRS}', '', d)}"
 
 BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
 BALENA_BOOTFILES_BLACKLIST="\
