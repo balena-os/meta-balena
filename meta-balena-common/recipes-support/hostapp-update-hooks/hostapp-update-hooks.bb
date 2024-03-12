@@ -8,7 +8,6 @@ S = "${WORKDIR}"
 inherit allarch
 
 HOSTAPP_HOOKS = " \
-    0-signed-update \
     1-bootfiles \
     60-data-breadcrumb \
     70-sshd_migrate_keys \
@@ -18,6 +17,11 @@ HOSTAPP_HOOKS = " \
     76-supervisor-db/76-fwd_commit_supervisor-db \
     80-rollback \
     "
+
+SECUREBOOT_HOOKS= " \
+    0-signed-update
+    "
+HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ${SECUREBOOT_HOOKS}, '', d)}"
 HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
 
 BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
