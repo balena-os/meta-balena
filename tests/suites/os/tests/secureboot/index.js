@@ -123,6 +123,7 @@ module.exports = {
 
 							waitForSerialOutput(/\x1B\[0m\x1B\[37m\x1B\[40m$/, 3), // eslint-disable-line no-control-regex
 							'Bootloader will not load configuration that fails signature verification',
+						{ todo: 'This needs reworked for GRUB 2.12' },
 						)
 					).then(resetWorker);
 				};
