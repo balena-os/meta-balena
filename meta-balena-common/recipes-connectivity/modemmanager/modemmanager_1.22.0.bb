@@ -12,15 +12,15 @@ inherit gnomebase gettext systemd gobject-introspection bash-completion
 
 DEPENDS = "glib-2.0 libgudev libxslt-native dbus"
 
-SRCREV = "6aa0ff583d04aea88b4da7a1c20049f57062dab6"
-SRC_URI = "git://gitlab.freedesktop.org/mobile-broadband/ModemManager.git;protocol=https;branch=mm-1-20"
+SRCREV = "03f786ce66360d67c669f4f122f8aa458e6f01ea"
+SRC_URI = "git://gitlab.freedesktop.org/mobile-broadband/ModemManager.git;protocol=https;branch=mm-1-22"
 
 S = "${WORKDIR}/git"
 
 # strict, permissive
 MODEMMANAGER_POLKIT_TYPE ??= "permissive"
 
-PACKAGECONFIG ??= "mbim qmi \
+PACKAGECONFIG ??= "vala mbim qmi \
     ${@bb.utils.filter('DISTRO_FEATURES', 'systemd polkit', d)} \
 "
 
@@ -35,6 +35,9 @@ PACKAGECONFIG[mbim] = "-Dmbim=true,-Dmbim=false -Dplugin_dell=disabled -Dplugin_
 # Support WWAN modems and devices which speak the Qualcomm MSM Interface (QMI) protocol.
 PACKAGECONFIG[qmi] = "-Dqmi=true,-Dqmi=false,libqmi"
 PACKAGECONFIG[qrtr] = "-Dqrtr=true,-Dqrtr=false,libqrtr-glib"
+PACKAGECONFIG[vala] = "-Dvapi=true,-Dvapi=false"
+
+inherit ${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}
 
 EXTRA_OEMESON = " \
     -Dudevdir=${nonarch_base_libdir}/udev \
