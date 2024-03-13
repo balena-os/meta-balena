@@ -1,4 +1,24 @@
 - commits:
+    - subject: "mkfs-hostapp-native: Disable iptables features in yocto balena daemon"
+      hash: 1e563863caf75fc88a8e7c7f2ab15f65ad21ebe8
+      body: |
+        We don't need any iptables features in order to perform
+        hostapp-update in this build recipe, and it has no impact
+        on build output.
+
+        It does, however, improve compatbility with build environments and
+        reduces the dependencies of the build host kernel.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 5.1.54
+  title: ""
+  date: 2024-03-13T06:45:02.830Z
+- commits:
     - subject: Update balena-supervisor to v16.1.5
       hash: b15d808d021e647afc8c4da22f64dc9e7c929310
       body: |

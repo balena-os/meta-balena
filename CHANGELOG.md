@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.54
+## (2024-03-13)
+
+* mkfs-hostapp-native: Disable iptables features in yocto balena daemon [Kyle Harding]
+
 # v5.1.53
 ## (2024-03-12)
 
