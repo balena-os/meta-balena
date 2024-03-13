@@ -4,7 +4,7 @@ set -ex
 
 SYSROOT="/mnt/sysroot/inactive"
 
-balenad -s=@BALENA_STORAGE@ --data-root="$SYSROOT/balena" -H unix:///var/run/balena-host.sock &
+balenad -s=@BALENA_STORAGE@ --data-root="$SYSROOT/balena" -H unix:///var/run/balena-host.sock --iptables=false &
 pid=$!
 sleep 5
 
