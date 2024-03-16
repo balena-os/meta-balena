@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.0
+## (2024-03-16)
+
+* Update NetworkManager to version 1.46.0 [Florin Sarbu]
+
 # v5.1.54
 ## (2024-03-13)
 

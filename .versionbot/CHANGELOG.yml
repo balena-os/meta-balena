@@ -1,4 +1,32 @@
 - commits:
+    - subject: Update NetworkManager to version 1.46.0
+      hash: 9d88a4566b7a9afc7226df97b40d266f0ece64b6
+      body: >
+        This recipe is taken from meta-openembedded commit
+
+        f240c5cecf3d7ee75d5ec1ece4c412c94434a879 with the only changes being
+        that
+
+        we removed from it the init.d, iwd, and dhcpcd daemon configurations
+        which
+
+        are not used by us.
+
+
+        This is the latest stable version available.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update NetworkManager to version 1.46.0
+        changelog-entry: Update NetworkManager to version 1.46.0
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 5.2.0
+  title: ""
+  date: 2024-03-16T12:02:30.009Z
+- commits:
     - subject: "mkfs-hostapp-native: Disable iptables features in yocto balena daemon"
       hash: 1e563863caf75fc88a8e7c7f2ab15f65ad21ebe8
       body: |
