@@ -249,14 +249,27 @@ See [this](https://github.com/balena-io/contracts/pull/296) as an example to bas
 
 For private device types, balena will make the necessary changes when supplied with the hardware contract.
 
-## Step 4: Maintaining the repository and OS updates
+## Step 4: Setting up Hardware in the Loop Testing Pipeline
+
+In order to have the balenaOS image deployed to balenaCloud, it must first pass the [balenaOS automated test suite](./tests).
+This involves the following steps:
+
+1. Order [parts to build](https://github.com/balena-io-hardware/autokit-assembly-doc/blob/master/source/bom/bom.csv) the autokit test harness, [set it up](https://github.com/balena-io-hardware/autokit-assembly-doc/blob/master/README.md), and connect it to the board for which the the device support is being done for. With the autokit setup, you would be able to run the automated test suite and test your balenaOS image on the board.
+2. Follow the [getting started guide](https://balena-os.github.io/leviathan/pages/Getting-Started/quickstart.html#quick-start-guides) to set up our test environment, firstly run the tests with a [virtual device](https://balena-os.github.io/leviathan/pages/Getting-Started/quickstart/quickstart-qemu.html) and then the [guide to running the tests with the autokit](https://balena-os.github.io/leviathan/pages/Getting-Started/quickstart/quickstart-autokit.html)
+3. Once the autokit setup with your device under test is confirmed to be working locally, it must be incorporated into the BalenaOS CI/CD pipeline. This requires contacting the balena team, and provisioning the autokit setup into Balena's autokit fleet.  
+4. After the autokit has been added to the BalenaOS CI/CD pipeline, the board support repository will have required tests run on your autokit setup for each pull request of the board support repository.
+5. The board support repository being part of `balena-os` GitHub org means it would effectively receive automatic updates from meta-balena to keep BalenaOS updated. Each update PR will run the tests on the autokit, which will merge when the tests pass. On merge, the balenaOS release will then be automatically deployed to the balenaCloud production environment.
+
+## Step 5: Maintaining the repository and OS updates
 
 Once the board is supported in balena, it will receive automatic pull requests with updates of meta-balena as new releases of meta-balena get done.
-These automatic pull requests get merged if the CI builds succeed, so care must be taken from time to time to check that your code is still compatible with the latest meta-balena releases.
+It will also receive automatic pull request updates to other balena related sub modules. 
+These automatic pull requests get merged if the CI builds succeed and automated tests pass.
+As long as the autokit setup is still active, tests will be run on the test device, and pull requests tested.
+Any merged PR with passing tests will result in a new release being deployed to production automatically.
 
 Maintaining / pushing updates to the code other than meta-balena updates need to be done through pull requests in the appropriate board repository in the balena-os GitHub org and will be reviewed by balena prior to merging.
-However, after new code gets merged (either through the automatic meta-balena updates or through contribution pull requests), in order for the new releases to be available in the dashboard,
-balena needs to be contacted about deploying the new releases.
+
 
 ## Currently Supported Hardware Families
 
