@@ -181,6 +181,10 @@ Shall contain a `hostapp-update-hooks.bbappend` with content based on if your bo
 
 The optional directories in meta-balena-\<board-family\> are:
 
+### `recipes-support/balena-info` directory
+
+Should contain a `balena-info.bbappend` file which specifies the list of virtual consoles where the balena ascii art should be displayed. For example: `TTYS=tty1 ttymxc0` would display the ascii art on the framebuffer and UART consoles of an iMX board.
+
 ### `recipes-containers/docker-disk` directory
 
 Which contains `balena-supervisor.bbappend` that can define the following variable(s):
