@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update contributing-device-support with balena-info documentation
+      hash: a42c71a14701a2d06d3025abfbbbc869c52b062d
+      body: |
+        Info on the ascii art for consoles was missing, so we add that
+        in this commit.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 5.2.2
+  title: ""
+  date: 2024-03-20T03:17:05.884Z
+- commits:
     - subject: "networkmanager: Wait for iptables lock in shared dispatcher script"
       hash: 374c4c32df59cc00e0b04d0c619f6fb98a69f1a5
       body: |

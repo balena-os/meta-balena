@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.2
+## (2024-03-20)
+
+* Update contributing-device-support with balena-info documentation [Alexandru]
+
 # v5.2.1
 ## (2024-03-18)
 
