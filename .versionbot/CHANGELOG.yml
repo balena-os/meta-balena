@@ -1,4 +1,252 @@
 - commits:
+    - subject: mv docs/{,uefi-}secure-boot.md
+      hash: 18e35c55cb486d93aadc43df1f5e0db0ef840c03
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "docs: secure-boot: update for PCR7 sealing"
+      hash: e3c6131e6979390292c72e5e18c96d83165096fe
+      body: |
+        Update secure boot docs to reflect changes made for PCR7 sealing,
+        including:
+
+        * No first boot needed anymore to reach secure state
+        * PCR roles
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers: compute_pcr7: merge event log digests"
+      hash: e10d67084621e5ce10f14557f2466e91ff684b41
+      body: >
+        The main variables measured into PCR7 to ensure secure boot
+
+        configuration integrity are the state and EFI vars, including PK, KEK,
+
+        db, dbx, etc.
+
+
+        However, some systems have firmware that will measure other, unexpected
+
+        events, such as "DMA Protection Disabled" (related to a Windows feature
+
+        [0]), or "Unknown event type" with strange data.
+
+
+        These events can't be predicted, and other devices may have different
+
+        measured events that aren't compliant with the TCG spec, so attempt to
+
+        check the TPM event log and extend our digest with any unknown events
+
+        that fit the bill.
+
+
+        [0]
+        https://learn.microsoft.com/en-us/windows/security/hardware-security/kernel-dma-protection-for-thunderbolt
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: Update policy's PCR7 value in hostapp-update hook
+      hash: f05deea2cd1003e186fa7756eecf8f113db26a7f
+      body: |
+        When performing a hostapp-update, we may touch file and efivars that are
+        measured into PCR7. Re-generate the predicted value and reseal the LUKS
+        passphrase using this new digest.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: compute_pcr7: allow overriding efivars"
+      hash: 3e0911a5c4317ea4b9ca03a7816ce600e5b202c5
+      body: |
+        When computing the digest of PCR7, it may be necessary to override the
+        input variables used, in order to predict the value on the next boot.
+        Allow these inputs to be overridden using function parameters.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: Move policy update to HUP commit hook
+      hash: 80f9bd84de394aa728ed802a2d4c02f3a87f370b
+      body: |
+        When migrating the TPM2 policy used to secure the LUKS passphrase to use
+        different PCRs, we temporarily want to maintain fallback capability in
+        case the newly installed hostapp doesn't pass healthchecks. This allows
+        the system to boot back into the original OS and try again.
+
+        In order to do so, we leave the passphrase in place with the old PCR
+        authentication policy. The cryptsetup hook in the initramfs will try
+        PCRs 0,2,3,7 and if those don't work we fallback to the original PCRs.
+
+        Once the new system successfully boots, we'll re-encrypt the passphrase
+        and use the new PCRs to create a policy to secure the key.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "rollback-health: move apply-dbx to HUP commit hook"
+      hash: 3d78d26366b284313ea718adb8d5498ac4f27e1f
+      body: |
+        This operation is done after rollback-health completes and the new OS is
+        running to ensure the OS is healthy before appending to the forbidden
+        signatures list.
+
+        Move this out of rollback-health and into a HUP commit hook, which
+        allows it to be excluded from OS images that don't use EFI or support
+        secure boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hostapp-hooks: include 0-signed-update only for efi"
+      hash: 328222014146f0116e0208443f3e255d0e85ef15
+      body: |
+        This hook is only applicable for EFI machines. Include it in the build
+        only when MACHINE_FEATURES includes EFI.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "secure boot: seal luks passphrase w/ PCR7"
+      hash: 86460d1fa00e40caa1e3edd3ebed5d2098dafe31
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: separate authentication from crypto"
+      hash: 6a4e3cd2f48dc7e48acc35f04200317397d6d0b1
+      body: |
+        When encrypting the LUKS passphrase, we need the ability to construct a
+        policy that can logically OR together multiple policies, such as when
+        the machine may or may not measure binaries loaded through EFI boot
+        services into PCR7.
+
+        We also need the ability to update the sealing policy to revoke
+        previously valid configurations, such as after hostapp-healthcheck
+        completes successfully. Ideally, this should be completed before
+        modifying any efi variables, to prevent the system from becoming
+        unbootable in the event of an interrupted update.
+
+        These requirements necessitate the ability to create sealing policies
+        and authenticate against them outside of the hw_{en,de}crypt_passphrase
+        functions.
+
+        This commit allows the caller to setup the sealing policy when
+        encrypting, and choose what kind of authentication to use when
+        decrypting.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tcgtool: new recipe"
+      hash: 5217a6c8e8599f18ef84d319fb41049c476be265
+      body: |
+        Create recipe for tcgtool, a program that replicates the structures used
+        to represent data measured and hashed to extend TPM PCRs.
+
+        This is useful to compute a PCR hash at runtime, which is normally
+        computed by the firmware before the OS boots. This allows for adjusting
+        a TPM2 policy to unlock the disk encryption passphrase with the updated
+        state on the next boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "recipes-bsp: add recipe for GRUB 2.12"
+      hash: 27808e2da6740bcd17d435aa15d644fef7b2b69c
+      body: >
+        This version changes how kernel images are booted, passing them to the
+        EFI
+
+        boot services LoadImage method, which uses EFISTUB and retains the TPM
+
+        event log in memory.
+
+
+        Copy this recipe from Poky rev 43f9098. This may be removed once Poky is
+
+        bumped to Scarthgap (5.0).
+
+
+        More info: https://edk2.groups.io/g/devel/topic/93730585
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "tests: skip bootloader config integrity check"
+      hash: ad70f51fcc899dd3ec521c280c0a074302f7498f
+      body: |
+        GRUB 2.12 no longer outputs the escape codes the previous version did.
+        Skip this test until we can patch the bootloader to output a string we
+        can match against.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "secureboot: enroll kernel hash in db for EFISTUB"
+      hash: 45fe30fcc01bb2f3c423c11e2ea244546da30d57
+      body: |
+        Generate hash for second stage bootloader and enroll in db efivar to
+        allow the firmware to verify the image for booting when using EFISTUB.
+
+        This is necessary to update to GRUB 2.12, which passes the EFI image to
+        the EFI boot services LoadImage method, which then validates the image
+        when secure boot is enabled.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 5.2.3
+  title: ""
+  date: 2024-03-22T08:48:01.071Z
+- commits:
     - subject: Update contributing-device-support with balena-info documentation
       hash: a42c71a14701a2d06d3025abfbbbc869c52b062d
       body: |
