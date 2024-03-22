@@ -59,30 +59,26 @@ cryptsetup_run() {
     mkdir "$EFI_MOUNT_DIR"
     mount "$EFI_DEV" "$EFI_MOUNT_DIR"
 
+    PCRS="sha256:0,2,3,7"
+    printf "Attempting to unlock LUKS passphrase with PCRS %s\n" "$PCRS"
+    tpm2_pcrread "${PCRS}"
+
     PASSPHRASE_FILE=/balena-luks.pwd
-    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,1,2,3" "$PASSPHRASE_FILE"; then
+    SESSION_CTX="$(mktemp -t)"
+    POLICY_PATH="$(find "$EFI_MOUNT_DIR" -name "policies.*")"
+    tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
+    tpm2_policypcr -S "${SESSION_CTX}" -l "${PCRS}"
+
+    # combined multiple policies with tpm2_policyor
+    POLICIES="$(find "${POLICY_PATH}" -type f | sort | xargs)"
+    if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
+        tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
+    fi
+
+    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "session:${SESSION_CTX}" "$PASSPHRASE_FILE"; then
         info "Successfully unlocked LUKS passphrase using the TPM"
-    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "0,2,3" "$PASSPHRASE_FILE"; then
-        info "Unlocked LUKS passphrase without UEFI config protection, re-locking"
-
-        RESULT_DIR="/balena-luks"
-        mkdir -p "$RESULT_DIR"
-
-        # Create a PCR protection policy
-        # We are using PCRs 0, 1, 2 and 3
-        # This ensures secure boot is enabled and no UEFI configuration has been tampered with
-        hw_encrypt_passphrase "$PASSPHRASE_FILE" "0,1,2,3" "$RESULT_DIR"
-
-        # Ditch the old key pair from the TPM and replace existing files with new ones
-        tpm2_evictcontrol -c "$EFI_MOUNT_DIR/balena-luks.ctx"
-        mv "$RESULT_DIR/persistent.ctx" "$EFI_MOUNT_DIR/balena-luks.ctx" && sync
-        mv "$RESULT_DIR/passphrase.enc" "$EFI_MOUNT_DIR/balena-luks.enc" && sync
-
-        rm -rf "$RESULT_DIR"
-
-        sync
-
-        info "Passphrase lock includes UEFI configuration now"
+    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "pcr:sha256:0,1,2,3" "$PASSPHRASE_FILE"; then
+        info "Unlocked LUKS passphrase without PCR7, will re-encrypt after rollback-health"
     else
         umount "$EFI_MOUNT_DIR"
         fail "Failed to unlock LUKS passphrase using the TPM"

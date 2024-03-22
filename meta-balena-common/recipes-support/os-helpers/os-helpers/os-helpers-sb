@@ -19,6 +19,8 @@
 [ -f "/usr/libexec/os-helpers-logging" ] && . /usr/libexec/os-helpers-logging
 # shellcheck disable=SC1091
 [ -f "/usr/libexec/os-helpers-efi" ] && . /usr/libexec/os-helpers-efi
+# shellcheck disable=SC1091
+[ -f "/usr/libexec/os-helpers-tpm2" ] && . /usr/libexec/os-helpers-tpm2
 
 is_secured() {
 	if ! command -v user_mode_enabled; then

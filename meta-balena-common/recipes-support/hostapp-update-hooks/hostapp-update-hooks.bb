@@ -8,7 +8,6 @@ S = "${WORKDIR}"
 inherit allarch
 
 HOSTAPP_HOOKS = " \
-    0-signed-update \
     1-bootfiles \
     60-data-breadcrumb \
     70-sshd_migrate_keys \
@@ -18,7 +17,19 @@ HOSTAPP_HOOKS = " \
     76-supervisor-db/76-fwd_commit_supervisor-db \
     80-rollback \
     "
+
+SECUREBOOT_HOOKS = " \
+    0-signed-update \
+    95-secureboot/1-fwd_commit_apply-dbx \
+    95-secureboot/2-fwd_commit_update-policy \
+    "
+SECUREBOOT_HOOK_DIRS = " \
+    95-secureboot \
+    "
+HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUREBOOT_HOOKS}', '', d)}"
+
 HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
+HOSTAPP_HOOKS_DIRS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUREBOOT_HOOK_DIRS}', '', d)}"
 
 BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
 BALENA_BOOTFILES_BLACKLIST="\
@@ -55,7 +66,7 @@ RDEPENDS:${PN} = " \
     os-helpers-sb \
     "
 
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils', '',d)}"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils tcgtool', '',d)}"
 
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/
