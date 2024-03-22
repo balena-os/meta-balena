@@ -18,7 +18,7 @@ set -o errexit
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 # shellcheck disable=SC1091
-. /usr/libexec/os-helpers-sb
+[ -f /usr/libexec/os-helpers-sb ] && . /usr/libexec/os-helpers-sb
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-defaults
 

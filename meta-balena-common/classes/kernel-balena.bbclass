@@ -148,7 +148,6 @@ BALENA_CONFIGS ?= " \
     ipv6_mroute \
     disable_hung_panic \
     ${RAID} \
-    dmcrypt \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
     ${WIREGUARD} \
@@ -665,6 +664,7 @@ BALENA_CONFIGS[mdraid] = " \
 "
 
 # Enable dmcrypt/LUKS
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' dmcrypt',d)}"
 BALENA_CONFIGS_DEPS[dmcrypt] = " \
     CONFIG_BLK_DEV_DM=y \
 "
@@ -681,6 +681,11 @@ BALENA_CONFIGS[kexec] = " \
 BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' kexec','',d)}"
 
 BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' secureboot',d)}"
+BALENA_CONFIGS_DEPS[secureboot] = " \
+    CONFIG_INTEGRITY_SIGNATURE=y \
+    CONFIG_INTEGRITY_ASYMMETRIC_KEYS=y \
+    CONFIG_SYSTEM_BLACKLIST_KEYRING=y \
+"
 BALENA_CONFIGS[secureboot] = " \
     CONFIG_INTEGRITY_PLATFORM_KEYRING=y \
     CONFIG_MODULE_SIG=y \
@@ -1083,7 +1088,7 @@ do_configure[vardeps] += " \
 
 # Because we chain signatures here, the signed artifact is different for each
 # and defined in :prepend for each task
-SIGNING_ARTIFACTS_BASE = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs", '', d)}" 
+SIGNING_ARTIFACTS_BASE = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
 addtask sign_efi before do_deploy after do_bundle_initramfs
 addtask sign_gpg before do_deploy after do_sign_efi
 
