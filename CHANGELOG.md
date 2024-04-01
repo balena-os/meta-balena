@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v5.1.55
+## (2024-04-01)
+
+
+<details>
+<summary> Update balena-supervisor to v16.1.10 [Alex Gonzalez] </summary>
+
+> ## balena-supervisor-16.1.10
+> ### (2024-03-28)
+> 
+> * Add revpi-connect-4 to RPi variants We need the supervisor to be able to manage config.txt changes for the RevPi Connect 4. [Shreya Patel]
+> 
+> ## balena-supervisor-16.1.9
+> ### (2024-03-25)
+> 
+> * Log the full error on device state report failure as it is more useful [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.1.8
+> ### (2024-03-25)
+> 
+> * Set @balena/es-version to es2022 to match tsconfig.json [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.1.7
+> ### (2024-03-25)
+> 
+> * Increase the timeout for auto select family to 5000ms to avoid issues [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.1.6
+> ### (2024-03-18)
+> 
+> * Pin iptables to 1.8.9 (legacy) [Christina Ying Wang]
+> 
+
+</details>
+
 # v5.1.54
 ## (2024-03-13)
 
