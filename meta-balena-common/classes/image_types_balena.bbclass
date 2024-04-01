@@ -137,7 +137,7 @@ do_image_balenaos_img[depends] = " \
     e2fsprogs-native:do_populate_sysroot \
     mtools-native:do_populate_sysroot \
     parted-native:do_populate_sysroot \
-    bmap-tools-native:do_populate_sysroot \
+    bmaptool-native:do_populate_sysroot \
     virtual/kernel:do_deploy \
     ${BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "
