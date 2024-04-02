@@ -3,7 +3,7 @@
 ## This class is used by any recipes that are built using
 ## Cargo.
 
-inherit cargo_common
+inherit balena_cargo_common
 
 # the binary we will use
 CARGO = "cargo"
