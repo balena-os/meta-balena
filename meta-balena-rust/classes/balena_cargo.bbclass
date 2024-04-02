@@ -3,7 +3,7 @@
 ## This class is used by any recipes that are built using
 ## Cargo.
 
-inherit cargo_common
+inherit balena_cargo_common
 
 # the binary we will use
 CARGO = "cargo"
@@ -48,12 +48,12 @@ oe_cargo_build () {
 }
 
 do_compile[progress] = "outof:\s+(\d+)/(\d+)"
-cargo_do_compile () {
+balena_cargo_do_compile () {
 	oe_cargo_fix_env
 	oe_cargo_build
 }
 
-cargo_do_install () {
+balena_cargo_do_install () {
 	local have_installed=false
 	for tgt in "${B}/target/${CARGO_TARGET_SUBDIR}/"*; do
 		case $tgt in
