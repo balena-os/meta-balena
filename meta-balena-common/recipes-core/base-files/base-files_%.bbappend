@@ -13,7 +13,7 @@ do_install:append () {
 
 	# Supervisor depends on the existance of /lib/modules even if we don't
 	# deploy any kernel modules (ex.: resinOS in container)
-	install -d -m 755 ${D}/lib/modules
+	install -d -m 755 ${D}/usr/lib/modules
 }
 
 do_install_basefilesissue:append () {
