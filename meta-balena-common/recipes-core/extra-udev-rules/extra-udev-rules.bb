@@ -12,11 +12,11 @@ SRC_URI = " \
 
 do_install:append() {
 	# Rules to prevent ModemManager attempting to use Teensy boards as a modem
-	install -D -m 0644 ${WORKDIR}/00-teensy.rules ${D}/lib/udev/rules.d/00-teensy.rules
+	install -D -m 0644 ${WORKDIR}/00-teensy.rules ${D}/usr/lib/udev/rules.d/00-teensy.rules
 
 	# Install miscellaneous rules file
-	install -D -m 0644 ${WORKDIR}/99-misc.rules ${D}/lib/udev/rules.d/99-misc.rules
+	install -D -m 0644 ${WORKDIR}/99-misc.rules ${D}/usr/lib/udev/rules.d/99-misc.rules
 
 	# Install wlan rules file
-	install -D -m 0644 ${WORKDIR}/79-wlan-power.rules ${D}/lib/udev/rules.d/79-wlan-power.rules
+	install -D -m 0644 ${WORKDIR}/79-wlan-power.rules ${D}/usr/lib/udev/rules.d/79-wlan-power.rules
 }
