@@ -4,8 +4,8 @@ SECTION = "devel"
 LICENSE = "MIT | Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=93a95682d51b4cb0a633a97046940ef0"
 
-inherit rust
-inherit cargo_common
+inherit balena_rust
+inherit balena_cargo_common
 
 DEPENDS += "file-native python3-native"
 DEPENDS:append:class-native = " rust-llvm-native"
@@ -33,7 +33,7 @@ setup_cargo_environment () {
     # these are build for the same target as the snapshot, e.g.
     # x86_64-unknown-linux-gnu.
     # Later stages are build for the native target (i.e. target.x86_64-linux)
-    cargo_common_do_configure
+    balena_cargo_common_do_configure
 
     printf '[target.%s]\n' "${SNAPSHOT_BUILD_SYS}" >> ${CARGO_HOME}/config
     printf "linker = '%s'\n" "${RUST_BUILD_CCLD}" >> ${CARGO_HOME}/config
