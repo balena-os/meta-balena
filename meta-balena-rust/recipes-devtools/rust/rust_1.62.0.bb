@@ -4,6 +4,14 @@ require rust-snapshot.inc
 
 INSANE_SKIP:${PN}:class-native = "already-stripped"
 
+SRC_URI += " \
+    file://0001-bootstrap-replace-references-to-distutils.patch \
+"
+
+DEPENDS += " \
+        python3-packaging \
+        "
+
 do_compile () {
     rust_runx build --stage 2
 }
