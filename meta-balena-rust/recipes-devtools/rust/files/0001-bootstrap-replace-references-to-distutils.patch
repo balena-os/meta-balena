@@ -1,0 +1,47 @@
+From 294f80f61670847ad28f7513d1fffc5ad583bd64 Mon Sep 17 00:00:00 2001
+From: Joseph Kogut <joseph.kogut@gmail.com>
+Date: Tue, 2 Apr 2024 11:23:09 -0700
+Subject: [PATCH 1/1] bootstrap: replace references to distutils
+
+Replace references to deprecated distutils package.
+
+Signed-off-by: Joseph Kogut <joseph@balena.io>
+Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+---
+ src/bootstrap/bootstrap.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/bootstrap/bootstrap.py b/src/bootstrap/bootstrap.py
+index ab4338e1c85..521e48604f0 100644
+--- a/src/bootstrap/bootstrap.py
++++ b/src/bootstrap/bootstrap.py
+@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
+ import argparse
+ import contextlib
+ import datetime
+-import distutils.version
++import packaging.version
+ import hashlib
+ import json
+ import os
+@@ -933,7 +933,7 @@ class RustBuild(object):
+             cwd=self.rust_root, verbose=self.verbose)
+ 
+         update_args = ["git", "submodule", "update", "--init", "--recursive", "--depth=1"]
+-        if self.git_version >= distutils.version.LooseVersion("2.11.0"):
++        if self.git_version >= packaging.version.Version("2.11.0"):
+             update_args.append("--progress")
+         update_args.append(module)
+         try:
+@@ -972,7 +972,7 @@ class RustBuild(object):
+ 
+         # check the existence and version of 'git' command
+         git_version_str = require(['git', '--version']).split()[2].decode(default_encoding)
+-        self.git_version = distutils.version.LooseVersion(git_version_str)
++        self.git_version = packaging.version.Version(git_version_str)
+ 
+         slow_submodules = self.get_toml('fast-submodules') == "false"
+         start_time = time()
+-- 
+2.44.0
+
