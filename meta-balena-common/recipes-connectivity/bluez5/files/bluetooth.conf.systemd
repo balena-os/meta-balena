@@ -1,7 +1,0 @@
-[Unit]
-Requires=bind-var-lib-bluetooth.service
-After=bind-var-lib-bluetooth.service
-
-[Service]
-ExecStart=
-ExecStart=@pkglibexecdir@/bluetooth/bluetoothd --experimental
