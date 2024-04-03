@@ -160,5 +160,5 @@ GROUPADD_PARAM:${PN} += "; -r wheel; -r nobody;"
 # Clean up udev hardware database source files
 pkg_postinst:udev-hwdb:append () {
     # These files have already been used to generate /etc/udev/hwdb.bin which is the only file used at runtime
-    rm ${D}${prefix}/lib/udev/hwdb.d/*
+    rm $D${prefix}/lib/udev/hwdb.d/*
 }
