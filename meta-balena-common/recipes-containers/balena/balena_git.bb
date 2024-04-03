@@ -15,10 +15,10 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "v20.10.43"
-BALENA_BRANCH = "master"
+BALENA_VERSION = "v20.10.44"
+BALENA_BRANCH = "enable-vlan"
 
-SRCREV = "0be8046a1c191ad789a65d7d8429d899d6bc9fbe"
+SRCREV = "ba272913d08a0850a956b63373feb7799c07729e"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
