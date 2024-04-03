@@ -1,4 +1,110 @@
 - commits:
+    - subject: Update balena-supervisor to v16.1.10
+      hash: fab3d6cf5bfe10546dbafba54f3c6955da8f10c4
+      body: |
+        Update balena-supervisor from 16.1.5 to 16.1.10
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Add revpi-connect-4 to RPi variants We need the supervisor to be able
+                to manage config.txt changes for the RevPi Connect 4.
+              hash: b5dbef82d75a701cc2accb8f52e5865641e416fc
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Shreya Patel <shreya@dynamicdevices.co.uk>
+                signed-off-by: Shreya Patel <shreya@dynamicdevices.co.uk>
+              author: Shreya Patel
+              nested: []
+          version: balena-supervisor-16.1.10
+          title: ""
+          date: 2024-03-28T16:51:48.764Z
+        - commits:
+            - subject: Log the full error on device state report failure as it is more useful
+              hash: 20e57f7f168884ccbc048911be15cedc91334192
+              body: >
+                The message can be an empty string or similarly unhelpful,
+                therefore
+
+                logging the entire error means that we will have whatever the
+                message
+
+                may be along with the stack trace and other info that will be
+                helpful
+
+                even when the message is not
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-16.1.9
+          title: ""
+          date: 2024-03-25T18:36:42.735Z
+        - commits:
+            - subject: Set @balena/es-version to es2022 to match tsconfig.json
+              hash: 6b0500cdbcd24b718460f35f6f9412ba6093389c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-16.1.8
+          title: ""
+          date: 2024-03-25T18:11:08.037Z
+        - commits:
+            - subject: Increase the timeout for auto select family to 5000ms to avoid issues
+              hash: 5cd37e73acb63a3bd705aea8e5edb4d255cd1c37
+              body: >
+                On slower networks the default of 250ms can cause problems as
+                all
+
+                attempts will fail rather than only the ones for interfaces that
+                do not
+
+                actually work correctly. Increasing this timeout to 5000ms will
+                help to
+
+                avoid these issues
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-16.1.7
+          title: ""
+          date: 2024-03-25T15:25:23.860Z
+        - commits:
+            - subject: Pin iptables to 1.8.9 (legacy)
+              hash: 3d881347e7d9721b00bcc41411996bd40b48d781
+              body: >
+                With Alpine 3.19, iptables gets bumped to 1.8.10 which uses
+                nftables.
+
+                The host OS still uses iptables 1.8.7 (legacy), and we should
+
+                use legacy as well until the OS uses nftables.
+              footer:
+                See: https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/iptables.20host.20vs.2E.20nftables.20Supervisor
+                see: https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/iptables.20host.20vs.2E.20nftables.20Supervisor
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.1.6
+          title: ""
+          date: 2024-03-18T21:37:24.676Z
+  version: 5.2.4
+  title: ""
+  date: 2024-04-03T17:13:37.301Z
+- commits:
     - subject: mv docs/{,uefi-}secure-boot.md
       hash: 18e35c55cb486d93aadc43df1f5e0db0ef840c03
       body: ""
