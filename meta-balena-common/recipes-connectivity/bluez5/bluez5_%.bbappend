@@ -7,7 +7,7 @@ SRC_URI += " \
     "
 
 do_install:append() {
-    install -D -m 0755 ${WORKDIR}/10-local-bt-hci-up.rules ${D}/lib/udev/rules.d/10-local-bt-hci-up.rules
+    install -D -m 0755 ${WORKDIR}/10-local-bt-hci-up.rules ${D}/${nonarch_base_libdir}/udev/rules.d/10-local-bt-hci-up.rules
 
     install -d ${D}${sysconfdir}/systemd/system/bluetooth.service.d
     install -m 0644 ${WORKDIR}/bluetooth.conf.systemd ${D}${sysconfdir}/systemd/system/bluetooth.service.d/bluetooth.conf
