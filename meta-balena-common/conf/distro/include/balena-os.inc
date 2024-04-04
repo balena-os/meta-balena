@@ -87,6 +87,7 @@ OS_KERNEL_SECUREBOOT_CMDLINE ?= "module.sig_enforce lockdown=integrity"
 # Initramfs
 INITRAMFS_IMAGE = "balena-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
+INITRAMFS_IMAGE_NAME = "balena-image-initramfs-${MACHINE}.rootfs"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
 
