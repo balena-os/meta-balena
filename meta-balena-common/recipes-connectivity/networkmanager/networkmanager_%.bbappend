@@ -12,11 +12,14 @@ SRC_URI:append = " \
     file://balena-sample.ignore \
     file://nm-tmpfiles.conf \
     file://remove-https-warning.patch \
+    file://enable-dhcpcd.conf \
     "
 
 NETWORKMANAGER_FIREWALL_DEFAULT = "iptables"
 
 NETWORKMANAGER_DNS_RC_MANAGER_DEFAULT = "resolvconf"
+
+NETWORKMANAGER_DHCP_DEFAULT = "dhcpcd"
 
 RDEPENDS:${PN}:append = " \
     bash \
@@ -32,7 +35,7 @@ EXTRA_OEMESON += " \
     -Dresolvconf=/sbin/resolvconf \
     -Dovs=false \
     "
-PACKAGECONFIG:append = " modemmanager ppp resolvconf concheck"
+PACKAGECONFIG:append = " modemmanager ppp resolvconf concheck dhcpcd"
 
 # The external DHCP client doesn't work well with our `ipv4.dhcp-timeout`
 # configuration. Switch to the internal one.
@@ -72,7 +75,6 @@ do_install:append() {
     ln -s /var/run/resolvconf/interface/NetworkManager ${D}/etc/resolv.dnsmasq
 
     # remove these empty not-used (at this moment) directories so we don't have to package them
-    rmdir ${D}${libdir}/NetworkManager/conf.d
     rmdir ${D}${libdir}/NetworkManager/VPN
 }
 
