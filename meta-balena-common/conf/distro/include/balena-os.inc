@@ -70,6 +70,9 @@ SPLASH = "plymouth"
 
 IMAGE_CLASSES += "image_types_balena"
 
+IMAGE_NAME ?= "${IMAGE_LINK_NAME}${IMAGE_VERSION_SUFFIX}"
+IMAGE_LINK_NAME ?= "${IMAGE_BASENAME}${IMAGE_MACHINE_SUFFIX}${IMAGE_NAME_SUFFIX}"
+
 # Define the URL where resin exposes source or prebuilt packages
 AMAZON_BALENA_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
 
@@ -87,7 +90,7 @@ OS_KERNEL_SECUREBOOT_CMDLINE ?= "module.sig_enforce lockdown=integrity"
 # Initramfs
 INITRAMFS_IMAGE = "balena-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
-INITRAMFS_IMAGE_NAME = "balena-image-initramfs-${MACHINE}.rootfs"
+INITRAMFS_IMAGE_NAME = "${INITRAMFS_IMAGE}-${MACHINE}${IMAGE_NAME_SUFFIX}"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
 

@@ -10,11 +10,23 @@ DEPENDS += "coreutils-native jq-native ${@bb.utils.contains('BALENA_DISABLE_KERN
 
 # Deploy the license.manifest of the current image we baked
 deploy_image_license_manifest () {
-    IMAGE_LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest"
-    if [ ! -f "${IMAGE_LICENSE_MANIFEST}" ]; then
-        # Pyro and above have renamed this file
-        IMAGE_LICENSE_MANIFEST="${LICENSE_DIRECTORY}/${IMAGE_NAME}/image_license.manifest"
+    # Pre-Pyro
+    # Post-Pyro
+    # Post-Nanbield
+    for manifest_path in \
+        "${LICENSE_DIRECTORY}/${IMAGE_NAME}/image_license.manifest" \
+        "${LICENSE_DIRECTORY}/${IMAGE_NAME}/license.manifest" \
+        "${LICENSE_DIRECTORY}/${SSTATE_PKGARCH}/${IMAGE_NAME}/license.manifest"; do
+        if [ -f "${manifest_path}" ]; then
+            IMAGE_LICENSE_MANIFEST="${manifest_path}"
+            break
+        fi
+    done
+
+    if [ -z "${IMAGE_LICENSE_MANIFEST}" ]; then
+        bbfatal "Unable to locate license for for image '${IMAGE_NAME}'"
     fi
+
     # XXX support for post morty yocto versions
     # Check if we are running on a poky version which deploys to IMGDEPLOYDIR instead
     # of DEPLOY_DIR_IMAGE (poky morty introduced this change)
@@ -26,7 +38,7 @@ deploy_image_license_manifest () {
         DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST="${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.license.manifest"
     fi
     cp -f ${IMAGE_LICENSE_MANIFEST} ${DEPLOY_IMAGE_LICENSE_MANIFEST}
-    ln -sf ${IMAGE_NAME}.rootfs.license.manifest ${DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST}
+    ln -sf ${IMAGE_NAME}.license.manifest ${DEPLOY_SYMLINK_IMAGE_LICENSE_MANIFEST}
 }
 do_populate_lic_deploy[nostamp] = "1"
 
