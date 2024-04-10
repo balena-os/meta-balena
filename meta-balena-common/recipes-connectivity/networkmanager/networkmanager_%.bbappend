@@ -18,6 +18,8 @@ NETWORKMANAGER_FIREWALL_DEFAULT = "iptables"
 
 NETWORKMANAGER_DNS_RC_MANAGER_DEFAULT = "resolvconf"
 
+NETWORKMANAGER_DHCP_DEFAULT = "dhclient"
+
 RDEPENDS:${PN}:append = " \
     bash \
     chrony \
@@ -32,14 +34,7 @@ EXTRA_OEMESON += " \
     -Dresolvconf=/sbin/resolvconf \
     -Dovs=false \
     "
-PACKAGECONFIG:append = " modemmanager ppp resolvconf concheck"
-
-# The external DHCP client doesn't work well with our `ipv4.dhcp-timeout`
-# configuration. Switch to the internal one.
-PACKAGECONFIG:remove = "dhclient"
-EXTRA_OEMESON += " \
-	-Ddhclient=false \
-	"
+PACKAGECONFIG:append = " modemmanager ppp resolvconf concheck dhclient"
 
 PACKAGECONFIG:remove = "vala"
 GNOMEBASEBUILDCLASS = "meson"
