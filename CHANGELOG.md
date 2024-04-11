@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.56
+## (2024-04-11)
+
+* networkmanager: Wait for iptables lock in shared dispatcher script [Michal Toman]
+
 # v5.1.55
 ## (2024-04-01)
 

@@ -1,4 +1,32 @@
 - commits:
+    - subject: "networkmanager: Wait for iptables lock in shared dispatcher script"
+      hash: 7a0110a2dd02e6604b158214ea998e9de282b65e
+      body: |
+        The dispatcher script that moves around FORWARD rules of shared
+        interfaces currently calls iptables assuming it will always work
+        but in practice two iptables commands can not run in parallel
+        and we have occasionally seen the script fail with:
+
+        Another app is currently holding the xtables lock.
+        Perhaps you want to use the -w option?
+
+        This patch adds the -w option to make the script wait for the lock
+        when necessary.
+
+        It also makes the script exit with an error code if anything fails,
+        which will log the output as WARN instead of INFO as the errors
+        are easy to overlook at this moment.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.1.56
+  title: ""
+  date: 2024-04-11T12:35:21.670Z
+- commits:
     - subject: Update balena-supervisor to v16.1.10
       hash: 689528d2354d809f476acdfd8f4cd2ce058c0bd4
       body: |
