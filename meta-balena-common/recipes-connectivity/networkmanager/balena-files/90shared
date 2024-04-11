@@ -33,6 +33,8 @@
 # the race condition and always sets the FORWARD rules
 # as if balenaEngine came up last.
 
+set -e
+
 . /usr/libexec/os-helpers-logging
 
 if [ "$2" != "up" ]
@@ -42,10 +44,15 @@ fi
 
 IFNAME="$1"
 
+# Use -w 5 to wait for the lock file if necessary
+# 5 seconds is ridiculously high but this is just a sanity limit
+# to prevent it from hanging infinitely if nothing removes the lock
+IPTABLES="iptables -w 5"
+
 # Look for the FORWARD rule that NetworkManager adds for interfaces
 # configured as shared. This will have a comment "nm-shared-$IFNAME"
 # and jump into a chain named "sh-fw-$IFNAME"
-FW_RULE_NO=$(iptables -L FORWARD --line-number | grep "sh-fw-${IFNAME}" | grep "nm-shared-${IFNAME}" | cut -d " " -f 1)
+FW_RULE_NO=$(${IPTABLES} -L FORWARD --line-number | grep "sh-fw-${IFNAME}" | grep "nm-shared-${IFNAME}" | cut -d " " -f 1)
 if [ "x${FW_RULE_NO}" = "x" ]
 then
   exit 0
@@ -60,11 +67,11 @@ fi
 
 info "Found shared FORWARD rule 'nm-shared-${IFNAME}' at index ${FW_RULE_NO}, moving down"
 
-FW_RULE_ARGS="$(iptables -S FORWARD ${FW_RULE_NO})"
+FW_RULE_ARGS="$(${IPTABLES} -S FORWARD ${FW_RULE_NO})"
 
 # Append the rule to the bottom
 # Do not quote ${FW_RULE_ARGS}, this needs to expand
-iptables ${FW_RULE_ARGS}
+${IPTABLES} ${FW_RULE_ARGS}
 
 # Remove the rule from its original position
-iptables -D FORWARD "${FW_RULE_NO}"
+${IPTABLES} -D FORWARD "${FW_RULE_NO}"
