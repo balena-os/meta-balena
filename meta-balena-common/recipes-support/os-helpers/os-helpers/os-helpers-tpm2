@@ -100,10 +100,15 @@ parse_pcr7_eventtypes() {
 }
 
 firmware_measures_efibins() {
-    [ -f "${TPM_EVENTLOG_PATH}" ] || exit 2
-    tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
-        | parse_pcr7_eventtypes \
-        | grep -e EV_EFI_VARIABLE_AUTHORITY
+    if [ ! -f "${TPM_EVENTLOG_PATH}" ]; then
+        echo "unknown"
+    elif tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
+            | parse_pcr7_eventtypes \
+            | grep -e EV_EFI_VARIABLE_AUTHORITY; then
+        echo "measured"
+    else
+        echo "unmeasured"
+    fi
 }
 
 

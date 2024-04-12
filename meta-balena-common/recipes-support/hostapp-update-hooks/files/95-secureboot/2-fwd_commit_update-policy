@@ -70,7 +70,7 @@ for pcr in $(echo ${PCRS} | sed 's/,/ /g'); do
 		7)
 			digest="$(compute_pcr7)"
 
-			if firmware_measures_efibins; then
+			if [ "$(firmware_measures_efibins)" = "measured" ]; then
 				for bin in ${EFI_BINARIES}; do
 					extend="$(tcgtool -s "$bin" \
 						| tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \

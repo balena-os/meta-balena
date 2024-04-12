@@ -151,26 +151,28 @@ updateKeys() {
                           -L "${POLICY_EFIBIN}"
         tpm2_startauthsession -S "${SESSION_CTX}"
 
-	if firmware_measures_efibins; then
-		info "Using PCR7 digest with EFI binary measurements"
-		POLICY="${POLICY_EFIBIN}"
-	else
-		if [ $? = 1 ]; then
-			info "Using PCR7 digest without EFI binary measurements"
-			POLICY="${POLICY_UPDATED}"
-		# exit code 2 means we don't have access to the TPM event log,
-		# and can't definitively tell whether or not EFI binaries are
-		# measured into PCR7, so unlock with both digests
-		elif [ $? = 2 ]; then
-			info "Creating combined policy"
-			tpm2_policyor -S "${SESSION_CTX}" \
-				      -L "${POLICY_COMBINED}" \
-				      "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')"
-			POLICY="${POLICY_COMBINED}"
-			cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
-			rm -rf "${CURRENT_POLICY_PATH}"
-		fi
-	fi
+        case "$(firmware_measures_efibins)" in
+            measured)
+                info "Using PCR7 digest with EFI binary measurements"
+                POLICY="${POLICY_EFIBIN}"
+                ;;
+            unmeasured)
+                info "Using PCR7 digest without EFI binary measurements"
+                POLICY="${POLICY_UPDATED}"
+                ;;
+            unknown)
+                # we don't have access to the TPM event log, and can't
+                # definitively tell whether or not EFI binaries are measured
+                # into PCR7, so unlock with both digests
+                info "Creating combined policy"
+                tpm2_policyor -S "${SESSION_CTX}" \
+                              -L "${POLICY_COMBINED}" \
+                              "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')"
+                POLICY="${POLICY_COMBINED}"
+                cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
+                rm -rf "${CURRENT_POLICY_PATH}"
+                ;;
+        esac
 
         tpm2_flushcontext "${SESSION_CTX}"
         hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
