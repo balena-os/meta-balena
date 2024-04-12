@@ -1,4 +1,18 @@
 - commits:
+    - subject: "classes: sign-rsa: add class for RSA artifact signing"
+      hash: 65a73907c12f03599cec6aed5d83b4f0f4538f84
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.2.5
+  title: ""
+  date: 2024-04-12T15:16:52.502Z
+- commits:
     - subject: Update balena-supervisor to v16.1.10
       hash: fab3d6cf5bfe10546dbafba54f3c6955da8f10c4
       body: |

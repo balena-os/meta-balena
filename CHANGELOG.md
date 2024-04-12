@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.5
+## (2024-04-12)
+
+* classes: sign-rsa: add class for RSA artifact signing [Alex Gonzalez]
+
 # v5.2.4
 ## (2024-04-03)
 
