@@ -96,7 +96,7 @@ parse_pcr7_eventtypes() {
     awk '
         /PCRIndex: 7/ {flag=1; next}
         /EventNum:/ {flag=0}
-        flag && /EventType:/ {gsub("\"", "")print $2}'
+        flag && /EventType:/ {gsub("\"", ""); print $2}'
 }
 
 firmware_measures_efibins() {
