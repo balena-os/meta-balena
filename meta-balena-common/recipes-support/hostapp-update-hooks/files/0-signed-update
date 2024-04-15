@@ -123,13 +123,16 @@ updateKeys() {
     RESULT_DIR="$(mktemp -d)"
     CURRENT_POLICY_PATH="$(find /mnt/efi -name "policies.*")"
     for UNLOCK_PCRS in  0,2,3,7 0,1,2,3; do
-        [ -f "${SESSION_CTX}" ] && tpm2_flushcontext "${SESSION_CTX}" || true
-        tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
-	    tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
-	    POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
-	    if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
-            tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
-	    fi
+        {
+            [ -f "${SESSION_CTX}" ] && tpm2_flushcontext "${SESSION_CTX}"  2>&1 || true
+            tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
+            tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
+            POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
+            if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
+                tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
+            fi
+
+        } >/dev/null
 
         if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "session:${SESSION_CTX}" "$PASSPHRASE_FILE"; then
             UNLOCK_PCRS_SUCCESS="${UNLOCK_PCRS}"
@@ -141,15 +144,17 @@ updateKeys() {
     POLICY_EFIBIN="${POLICY_PATH}/policy.efibin"
     POLICY_COMBINED="$(mktemp -t)"
     if [ "${UNLOCK_PCRS_SUCCESS}" = "0,2,3,7" ]; then
-        tpm2_createpolicy --policy-pcr \
-                          -l "sha256:${PCRS}" \
-                          -f "${PCR_VAL_BIN_UPDATED}" \
-                          -L "${POLICY_UPDATED}"
-        tpm2_createpolicy --policy-pcr \
-                          -l "sha256:${PCRS}" \
-                          -f "${PCR_VAL_BIN_EFIBIN}" \
-                          -L "${POLICY_EFIBIN}"
-        tpm2_startauthsession -S "${SESSION_CTX}"
+        {
+            tpm2_createpolicy --policy-pcr \
+                              -l "sha256:${PCRS}" \
+                              -f "${PCR_VAL_BIN_UPDATED}" \
+                              -L "${POLICY_UPDATED}"
+            tpm2_createpolicy --policy-pcr \
+                              -l "sha256:${PCRS}" \
+                              -f "${PCR_VAL_BIN_EFIBIN}" \
+                              -L "${POLICY_EFIBIN}"
+            tpm2_startauthsession -S "${SESSION_CTX}"
+        } >/dev/null
 
         case "$(firmware_measures_efibins)" in
             measured)
@@ -169,7 +174,8 @@ updateKeys() {
                 info "Creating combined policy"
                 tpm2_policyor -S "${SESSION_CTX}" \
                               -L "${POLICY_COMBINED}" \
-                              "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')"
+                              "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')" \
+                              >/dev/null
                 POLICY="${POLICY_COMBINED}"
                 cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
 
@@ -179,13 +185,17 @@ updateKeys() {
                 ;;
         esac
 
-        tpm2_flushcontext "${SESSION_CTX}"
-        hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
-        rm -rf "${CURRENT_POLICY_PATH}"
+        {
+            tpm2_flushcontext "${SESSION_CTX}"
 
-        tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
-        mv "${RESULT_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx"
-        mv "${RESULT_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc"
+            hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
+            rm -rf "${CURRENT_POLICY_PATH}"
+
+            tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
+            mv "${RESULT_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx"
+            mv "${RESULT_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc"
+        } >/dev/null
+
     elif [ "${UNLOCK_PCRS_SUCCESS}" = "0,1,2,3" ]; then
         warn "Unlocked passphrase without PCR7, delaying policy update until rollback-health success"
     else
@@ -218,7 +228,7 @@ updateKeys() {
 
     mkdir -p "${PENDING_DBX_DIR}"
     cp -a "${ACTIVE_DBX_FILE}" "${DEST_FILE}"
-    sig-list-to-certs "${ACTIVE_ESL_FILE}" "${DEST_FILE}"
+    sig-list-to-certs "${ACTIVE_ESL_FILE}" "${DEST_FILE}" >/dev/null
 }
 
 # Only applicable in the new OS container
