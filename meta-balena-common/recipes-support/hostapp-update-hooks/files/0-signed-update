@@ -155,10 +155,12 @@ updateKeys() {
             measured)
                 info "Using PCR7 digest with EFI binary measurements"
                 POLICY="${POLICY_EFIBIN}"
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
                 ;;
             unmeasured)
                 info "Using PCR7 digest without EFI binary measurements"
                 POLICY="${POLICY_UPDATED}"
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_UPDATED}"
                 ;;
             unknown)
                 # we don't have access to the TPM event log, and can't
@@ -170,6 +172,10 @@ updateKeys() {
                               "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')"
                 POLICY="${POLICY_COMBINED}"
                 cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
+
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
+                printf "\nOR\n"
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_UPDATED}"
                 ;;
         esac
 

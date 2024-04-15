@@ -125,7 +125,19 @@ firmware_measures_efibins() {
     fi
 }
 
-
+print_pcr_val_bin() {
+    PCRS=$1
+    PCR_VAL_BIN=$2
+    DIGEST_SIZE=32
+    SKIP=0
+    printf " %s:\n" "sha256"
+    for pcr in $(echo "${PCRS}" | sed 's/,/ /g'); do
+        digest=$(dd if="${PCR_VAL_BIN}" bs=1 count=$DIGEST_SIZE status=none skip=$SKIP | _hexencode)
+        SKIP=$((SKIP + DIGEST_SIZE))
+        printf "   %s : %s\n" "$pcr" "$digest"
+    done
+    printf "\n"
+}
 
 hw_gen_passphrase() {
     tpm2_getrandom 32
