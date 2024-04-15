@@ -117,7 +117,8 @@ firmware_measures_efibins() {
         echo "unknown"
     elif tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
             | parse_pcr7_eventtypes \
-            | grep -e EV_EFI_VARIABLE_AUTHORITY; then
+            | grep -e EV_EFI_VARIABLE_AUTHORITY \
+            >/dev/null; then
         echo "measured"
     else
         echo "unmeasured"
