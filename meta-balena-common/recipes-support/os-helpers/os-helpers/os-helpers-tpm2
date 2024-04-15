@@ -23,6 +23,13 @@ EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
 TPM_EVENTLOG_PATH="/sys/kernel/security/tpm0/binary_bios_measurements"
 
+# silence errors messages from trying unsupported TCTI backends
+#
+# tpmrm0 is for kernel managed access by multiple clients, and should be
+# preferred over the default tpm0 device, which can only be used by a single
+# process at a time
+export TPM2TOOLS_TCTI=device:/dev/tpmrm0
+
 # busybox's implementation of xxd lacks the -cols option, so remove line breaks
 _hexencode() {
     xxd -p | tr -d '[:space:]'
