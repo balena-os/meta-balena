@@ -23,7 +23,7 @@
 [ -f "/usr/libexec/os-helpers-tpm2" ] && . /usr/libexec/os-helpers-tpm2
 
 is_secured() {
-	if ! command -v user_mode_enabled; then
+	if ! command -v user_mode_enabled >/dev/null; then
 		return 1
 	fi
 
