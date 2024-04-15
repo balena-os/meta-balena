@@ -71,15 +71,21 @@ EOF
     done
 
     # Extend our digest with any additional random events that may have been logged
+    EV_SEPARATOR=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
     if [ -f "${TPM_EVENTLOG_PATH}" ]; then
         for extend in $(tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
                 | parse_pcr7_digests \
-                | sed '1,5d'); do
+                | sed '1,5d' \
+                | tr -d '"'); do
             digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
+
+            # stop merging before EV_EFI_VARIABLE_AUTHORITY events (EFI binary digests)
+            if [ "$extend" == "$EV_SEPARATOR" ]; then
+                break
+            fi
         done
     else
-        separator=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
-        digest=$(printf '%s%s' "$digest" "$separator" | _hexdecode | _sha256)
+        digest=$(printf '%s%s' "$digest" "$EV_SEPARATOR" | _hexdecode | _sha256)
     fi
 
     printf '%s' "$digest"
