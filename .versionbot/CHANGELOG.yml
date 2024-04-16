@@ -1,4 +1,24 @@
 - commits:
+    - subject: "packagegroup-resin: Install ldd script in balenaOS images"
+      hash: 9ef3aea59fdcc2909ab4d42e7bf7986c75ff14ca
+      body: >
+        The takeover project currently relies on the ldd script being present in
+        the hostOS pre-migration.
+
+
+        While takeover can be adapted to use this script from a different
+        location, it wouldn't hurt to have ldd in the hostOS from this point on.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 5.2.7
+  title: ""
+  date: 2024-04-16T21:04:47.973Z
+- commits:
     - subject: Update tests/leviathan digest to 0c2f44d
       hash: 8e362ab8c82719b5d18909f8295d5641cbd02170
       body: Update tests/leviathan

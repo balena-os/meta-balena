@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.7
+## (2024-04-16)
+
+* packagegroup-resin: Install ldd script in balenaOS images [Alexandru]
+
 # v5.2.6
 ## (2024-04-16)
 
