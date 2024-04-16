@@ -182,14 +182,16 @@ updateKeys() {
         mv "${RESULT_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc"
     elif [ "${UNLOCK_PCRS_SUCCESS}" = "0,1,2,3" ]; then
         warn "Unlocked passphrase without PCR7, delaying policy update until rollback-health success"
-        # update the second stage bootloader kernel binary, as the hash of the
-        # original may not be present in the signature database
-        cp "${KERNEL_BIN}"{,.sig} "${EFI_MOUNT_DIR}/"
-        cp "${GRUB_BIN}" "${EFI_MOUNT_DIR}/EFI/BOOT/bootx64.efi"
     else
         fail "Failed to update policy sealing LUKS passphrase"
     fi
 
+    # update the second stage bootloader kernel binary, as the hash of the
+    # original may not be present in the signature database
+    rsync --checksum --inplace "${KERNEL_BIN}"{,.sig} "${EFI_MOUNT_DIR}/"
+
+    # update GRUB if necessary
+    rsync --checksum --inplace "${GRUB_BIN}" "${EFI_MOUNT_DIR}/EFI/BOOT/bootx64.efi"
     sync
 
     # This only updates db at this moment
