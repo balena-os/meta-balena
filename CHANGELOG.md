@@ -1,6 +1,81 @@
 Change log
 -----------
 
+# v5.2.6
+## (2024-04-16)
+
+
+<details>
+<summary> Update tests/leviathan digest to 0c2f44d [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.30.9
+> ### (2024-04-15)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.8
+> ### (2024-04-11)
+> 
+> * Update core/contracts digest to d06ad25 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.7
+> ### (2024-04-11)
+> 
+> * Update core/contracts digest to bdc5ec8 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.6
+> ### (2024-04-10)
+> 
+> * Update core/contracts digest to 619554d [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.5
+> ### (2024-04-08)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.4
+> ### (2024-04-08)
+> 
+> * Update core/contracts digest to cb7b222 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.3
+> ### (2024-04-04)
+> 
+> * Update balena-os/leviathan-worker to v2.9.37 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.2
+> ### (2024-04-04)
+> 
+> * core/lib/components: Specify Jetson Xavier boot partition indexes [Alexandru Costache]
+> 
+> ## leviathan-2.30.1
+> ### (2024-04-01)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.0
+> ### (2024-03-26)
+> 
+> * minor: Add general FAQ to Leviathan [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.29.67
+> ### (2024-03-26)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.66
+> ### (2024-03-26)
+> 
+> * Update core/contracts digest to 8631765 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.29.65
+> ### (2024-03-21)
+> 
+> * Update core/contracts digest to 2de3526 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.2.5
 ## (2024-04-12)
 

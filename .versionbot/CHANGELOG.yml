@@ -1,4 +1,186 @@
 - commits:
+    - subject: Update tests/leviathan digest to 0c2f44d
+      hash: 8e362ab8c82719b5d18909f8295d5641cbd02170
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 9b54072506553292307ca9096a6cb7a8cbeb00b5
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.9
+          title: ""
+          date: 2024-04-15T03:06:11.003Z
+        - commits:
+            - subject: Update core/contracts digest to d06ad25
+              hash: 15fd9358b8b78b140f67180472e339d8a089e678
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.8
+          title: ""
+          date: 2024-04-11T13:32:23.711Z
+        - commits:
+            - subject: Update core/contracts digest to bdc5ec8
+              hash: dd2e237ba8805ba88d98e0ab40c0ce47d22adc6e
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.7
+          title: ""
+          date: 2024-04-11T11:33:17.144Z
+        - commits:
+            - subject: Update core/contracts digest to 619554d
+              hash: 12a9383b4cc99f91f27626995c52b9838bd558a5
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.6
+          title: ""
+          date: 2024-04-10T10:33:42.221Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: d6ed71f5ec59715663a4ee736f40520b00d28ff4
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.5
+          title: ""
+          date: 2024-04-08T02:00:38.626Z
+        - commits:
+            - subject: Update core/contracts digest to cb7b222
+              hash: c17d66a976d9e9f0c0cba108e1c972bf12d822fc
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.4
+          title: ""
+          date: 2024-04-08T00:51:21.605Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.37
+              hash: d9209f59fe962434d45dec77c4f3aa0ef5ccdf47
+              body: |
+                Update balena-os/leviathan-worker from 2.9.36 to 2.9.37
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.3
+          title: ""
+          date: 2024-04-04T15:33:01.233Z
+        - commits:
+            - subject: "core/lib/components: Specify Jetson Xavier boot partition indexes"
+              hash: 6388fbbfb04c27fe4a1337d41481d6a55b2f432c
+              body: |
+                so that the config.json can be injected in the right partition
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.30.2
+          title: ""
+          date: 2024-04-04T14:20:05.216Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 55b1560c8b3543a0041809f18ee3cf834a054895
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.1
+          title: ""
+          date: 2024-04-01T00:51:30.207Z
+        - commits:
+            - subject: "minor: Add general FAQ to Leviathan"
+              hash: 2ee9236585807f16959ecbc2f24983b0abe0d8f4
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.30.0
+          title: ""
+          date: 2024-03-26T19:12:11.114Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 427bab2b42a128fa0cb067c99f122d2bc1e743b1
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.67
+          title: ""
+          date: 2024-03-26T14:30:08.265Z
+        - commits:
+            - subject: Update core/contracts digest to 8631765
+              hash: 431288192a1bbbe6a75e847d94268f34342caa34
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.66
+          title: ""
+          date: 2024-03-26T13:35:15.787Z
+        - commits:
+            - subject: Update core/contracts digest to 2de3526
+              hash: dbd017ddf87ab36e3f10dfb09c5e82edad3b9703
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.29.65
+          title: ""
+          date: 2024-03-21T08:29:35.853Z
+  version: 5.2.6
+  title: ""
+  date: 2024-04-16T14:13:33.263Z
+- commits:
     - subject: "classes: sign-rsa: add class for RSA artifact signing"
       hash: 65a73907c12f03599cec6aed5d83b4f0f4538f84
       body: ""
