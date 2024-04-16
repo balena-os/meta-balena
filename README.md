@@ -326,7 +326,8 @@ module.
 ##### migrate.force
 
 (boolean) Forces the migration to run. By default the migration only runs if
-the installer is booting in a single disk system.
+the installer is booting in a single disk system or the `migrate` argument
+is passed in the kernel command line.
 
 ```json
 "installer": {

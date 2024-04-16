@@ -63,7 +63,7 @@ migrate_enabled() {
                 FLASH_BOOT_MOUNT="/tmp/flash-boot"
                 mkdir -p "${FLASH_BOOT_MOUNT}"
                 mount "${FLASH_BOOT_DEVICE}" "${FLASH_BOOT_MOUNT}"
-                if jq -re '.installer.migrate.force' "${FLASH_BOOT_MOUNT}/config.json" > /dev/null; then
+                if [ "$bootparam_migrate" = "true" ] || jq -re '.installer.migrate.force' "${FLASH_BOOT_MOUNT}/config.json" > /dev/null; then
                     _migrate=1
                     info "Migration requested in configuration"
                 fi
