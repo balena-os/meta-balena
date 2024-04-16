@@ -15,4 +15,5 @@ do_install() {
     install -m 0755 ${WORKDIR}/abroot ${D}/init.d/73-abroot
 }
 
+RDEPENDS:${PN}:append = " balena-config-vars-config"
 FILES:${PN} = "/init.d/73-abroot"
