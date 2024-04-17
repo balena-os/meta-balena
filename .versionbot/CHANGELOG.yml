@@ -1,4 +1,26 @@
 - commits:
+    - subject: "Test: Unmanaged: Replace ping command in tests with curl"
+      hash: 071c0180a03203cb34fc80b127501dc1385dbb3d
+      body: >
+        This change is required to migrate existing tests to run QEMU worker
+        tests on GitHub Actions.
+
+        GitHub hosted runners can't run the `ping` command:
+        https://github.com/actions/runner-images/issues/1519 by design.
+
+        If we still intend to use `ping`, the solution would be running QEMU
+        worker tests on self-hosted runners which allow ICMP packets
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 5.2.8
+  title: ""
+  date: 2024-04-17T15:22:20.514Z
+- commits:
     - subject: "packagegroup-resin: Install ldd script in balenaOS images"
       hash: 9ef3aea59fdcc2909ab4d42e7bf7986c75ff14ca
       body: >

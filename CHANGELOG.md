@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.8
+## (2024-04-17)
+
+* Test: Unmanaged: Replace ping command in tests with curl [Vipul Gupta (@vipulgupta2048)]
+
 # v5.2.7
 ## (2024-04-16)
 
