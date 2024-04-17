@@ -170,13 +170,12 @@ updateKeys() {
                               "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')"
                 POLICY="${POLICY_COMBINED}"
                 cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
-                rm -rf "${CURRENT_POLICY_PATH}"
                 ;;
         esac
 
         tpm2_flushcontext "${SESSION_CTX}"
         hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
-
+        rm -rf "${CURRENT_POLICY_PATH}"
 
         tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
         mv "${RESULT_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx"
