@@ -7,24 +7,46 @@ set -o errexit
 BALENAD_SOCKET="/run/balena.sock"
 CONTAINERD_SOCKET="/run/balena-engine/containerd/balena-engine-containerd.sock"
 
+# Checks if the file $1 contains an UUID in any of the formats described here:
+# https://github.com/google/uuid/blob/6e10cd1027e225e3ad7bfcc13c896abd165b02ef/uuid.go#L189
+contains_valid_uuid()
+{
+    # This matches xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx, which is the one format
+    # we have seen in practice, and is also the base for most other supported
+    # formats.
+    BASE_UUID_REGEX="[[:xdigit:]]{8}-([[:xdigit:]]{4}-){3}[[:xdigit:]]{12}"
+
+    # Check for all the possible formats, starting with the most common one, to
+    # benefit from the short-circuited evaluation. The contents of the uuid file
+    # must match these formats exactly, so we anchor the regexes both at the
+    # beginning (^) and the end ($).
+    grep -E          "^${BASE_UUID_REGEX}$"   "$1" > /dev/null || \
+    grep -E        "^\{${BASE_UUID_REGEX}\}$" "$1" > /dev/null || \
+    grep -E "^urn:uuid:${BASE_UUID_REGEX}$"   "$1" > /dev/null || \
+    grep -E "^[[:xdigit:]]{32}$"              "$1" > /dev/null
+}
+
+
 # Check if balena-engine-daemon is responding.
 curl --fail --unix-socket $BALENAD_SOCKET http:/v1.40/_ping > /dev/null 2>&1
 
 # Due to a non-atomic file creation and writing operation in containerd, we
-# sometimes end up with an empty `uuid` file. This causes `ctr version` (and
-# hence the health check) to fail. We therefore remove this file if it is
-# present and empty. See https://github.com/balena-os/balena-engine/issues/322
+# sometimes end up with an empty or corrupted `uuid` file. This causes
+# `ctr version` (and hence the health check) to fail. We therefore remove this
+# file if it is present not valid. See
+# https://github.com/balena-os/balena-engine/issues/322
+
 UUID_FILE="/mnt/data/docker/containerd/daemon/io.containerd.grpc.v1.introspection/uuid"
-if [ -f "$UUID_FILE" -a ! -s "$UUID_FILE" ]; then
-    warn "removing empty $UUID_FILE"
+if [ -f "$UUID_FILE" ] && ! contains_valid_uuid "$UUID_FILE"; then
+    warn "removing invalid $UUID_FILE"
     rm -f "$UUID_FILE"
 fi
 
 # Check if balena-engine-containerd is responding.
 balena-engine-containerd-ctr --address $CONTAINERD_SOCKET version > /dev/null 2>&1
 
-# The uuid file is expected to exist and be non-empty after `ctr version`. If
+# The uuid file is expected to exist and be valid after `ctr version`. If
 # this is not the case, log the event.
-if [ -f "$UUID_FILE" -a ! -s "$UUID_FILE" ]; then
-    warn "$UUID_FILE empty after 'ctr version'"
+if [ -f "$UUID_FILE" ] && ! contains_valid_uuid "$UUID_FILE"; then
+    warn "$UUID_FILE invalid after 'ctr version'"
 fi
