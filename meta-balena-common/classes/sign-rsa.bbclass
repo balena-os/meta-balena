@@ -37,3 +37,4 @@ do_sign_rsa() {
     rm -f "${REQUEST_FILE}" "${RESPONSE_FILE}"
 }
 
+DEPENDS:append = " curl-native jq-native coreutils-native ca-certificates-native"
