@@ -2,8 +2,33 @@
 
 set -o errexit
 
-# shellcheck disable=SC1091
-. /usr/libexec/os-helpers-logging
+if [ -f "/usr/libexec/os-helpers-logging" ]; then
+	# shellcheck disable=SC1091
+	. /usr/libexec/os-helpers-logging
+else
+	log () {
+		_level="$1"
+		_message="$2"
+		printf "[%s][%s] %s\n" "$ME" "$_level" "$_message" >&2
+		echo "$@"
+	}
+	fail () {
+		error "$1"
+		exit 1
+	}
+
+	error () {
+		log "ERROR" "$1"
+	}
+
+	warn () {
+		log "WARN" "$1"
+	}
+
+	info () {
+		log "INFO" "$1"
+	}
+fi
 # shellcheck disable=SC1091
 [ -f "/usr/sbin/balena-config-defaults" ] && . /usr/sbin/balena-config-defaults
 
