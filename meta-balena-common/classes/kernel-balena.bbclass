@@ -150,6 +150,7 @@ BALENA_CONFIGS ?= " \
     ${RAID} \
     no_gcc_plugins \
     ${FIRMWARE_COMPRESS} \
+    ${MODULE_COMPRESS} \
     ${WIREGUARD} \
     "
 
@@ -218,6 +219,11 @@ BALENA_CONFIGS[balena] ?= " \
 FIRMWARE_COMPRESS = "${@configure_from_version("5.3", "firmware_compress", "", d)}"
 BALENA_CONFIGS[firmware_compress] = " \
     CONFIG_FW_LOADER_COMPRESS=y \
+"
+
+MODULE_COMPRESS = "${@configure_from_version("5.13", "module_compress", "", d)}"
+BALENA_CONFIGS[module_compress] = " \
+    CONFIG_MODULE_COMPRESS_ZSTD=y \
 "
 
 WIREGUARD = "${@configure_from_version("5.10", "wireguard", "", d)}"
