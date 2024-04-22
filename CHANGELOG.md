@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v5.2.9
+## (2024-04-22)
+
+
+<details>
+<summary> Update tests/leviathan digest to 5984adc [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.30.11
+> ### (2024-04-22)
+> 
+> * Update actions/upload-artifact digest to 1746f4a [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.10
+> ### (2024-04-22)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.2.8
 ## (2024-04-17)
 
