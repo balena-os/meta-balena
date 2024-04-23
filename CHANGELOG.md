@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.10
+## (2024-04-23)
+
+* hostapp-update-hooks: check for logging helper [Alex Gonzalez]
+
 # v5.2.9
 ## (2024-04-22)
 

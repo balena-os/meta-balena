@@ -1,4 +1,23 @@
 - commits:
+    - subject: "hostapp-update-hooks: check for logging helper"
+      hash: 8561f0f7d92702a0d374846555904d6f2e01c697
+      body: |
+        Older balenaOS version (before v2.58) do not contain the logging helper
+        in the rootfs and the new OS hooks fail to execute.
+
+        This commit checks for the file existence before using it, and defines
+        the logging functions when not detected.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.2.10
+  title: ""
+  date: 2024-04-23T10:14:54.964Z
+- commits:
     - subject: Update tests/leviathan digest to 5984adc
       hash: d620600db09f2215dbfc43748fcc493023809bf2
       body: Update tests/leviathan
