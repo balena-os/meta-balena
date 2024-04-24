@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tests: os: address race in internet con. sharing tests"
+      hash: c8fccaef7c48dcccb150f46d0bedb48460ead445
+      body: >
+        For some device types it's been noted that it takes longer than the time
+        it takes do do one check of the iptables rules for the intended rules to
+        appear, leading to a failure. This aims to make the check more
+        consistent by checking 5 times before failing.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 5.3.1
+  title: ""
+  date: 2024-04-24T15:34:48.717Z
+- commits:
     - subject: "hup: signed-update: silence tpm2-tools output"
       hash: 877b7b39f2ac3dbab0cc806916ef2c13dbdfd885
       body: |

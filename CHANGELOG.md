@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.1
+## (2024-04-24)
+
+* tests: os: address race in internet con. sharing tests [rcooke-warwick]
+
 # v5.3.0
 ## (2024-04-24)
 
