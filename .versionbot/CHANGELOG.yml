@@ -1,4 +1,165 @@
 - commits:
+    - subject: "hup: signed-update: silence tpm2-tools output"
+      hash: 877b7b39f2ac3dbab0cc806916ef2c13dbdfd885
+      body: |
+        The output of these tools doesn't need logged. Silence them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hup: silence mountpoint"
+      hash: d9a477b706ffc8ba4d8126e9665a2142bb705719
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hup: signed-update: print predicted PCR values after creating a policy"
+      hash: a3b2b9ba45470b4ff6b35c56c13e2400c51c95c7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: firmware_measures_efibins: silence grep"
+      hash: cd7b142195cd7cd33126e0dfbd75ee00e6b03aa3
+      body: |
+        The firmware_measures_efibins function outputs different strings
+        depending on whether the TPM event log is available, and whether or not
+        EFI binaries are measured into PCR 7 as indicated in the event log.
+
+        We don't need to print the output of the parsed event log, so redirect
+        it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: specify TCTI backend"
+      hash: c4eb9d7f6ad412bd74d77ece0e534c8dd2dd6fac
+      body: >
+        Specify the TCTI backend [0], which also silences error messages from
+
+        trying unsupported backends
+
+
+        [0]
+        https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/tcti.md
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-sb: silence 'command -v'"
+      hash: 0cc0e51ec48fd90c7164cf458c6a2b583319999d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hup: signed-update: update boot files as needed"
+      hash: c08e732e0a678bce9cf48774fabd9016325fcaa7
+      body: |
+        Unconditionally update the kernel and second stage bootloader when the
+        content on disk doesn't match the binaries shipped in the hostapp.
+
+        Previously this was only done when migrating, but the kernel, and
+        consequently the second stage bootloader, change every build. This means
+        firmwares which measure EFI binaries into PCR 7 won't boot unless the
+        second stage bootloader is updated to match the digests enrolled in the
+        security database.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hup: signed-update: always remove policy directory"
+      hash: 7c4032d4596c72a85902c91bd48845543f3651b3
+      body: |
+        After creating a new policy, always remove any previous policy directory
+        that was found.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: append event log digests before separator"
+      hash: 1c19ebb6b7c9b47ae81a3d67fc5526ea3ed55caf
+      body: |
+        Don't continue appending event log digests after the separator. This
+        fixes creating a TPM policy on machines that measure EFI binaries into
+        PCR 7 double appending the EFI binary hashes, which will cause boot
+        failures.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hostapp-update-hooks: signed-update: fix exit code conditional"
+      hash: 06ef101cf68056c348f4c6810b522f2bbdbb7e55
+      body: |
+        Shellcheck warning SC2319 indicates that the condition being checked
+        here may be overwritten by subsequent commands.
+
+        Replace this conditional with a switch statement that directly evaluates
+        the output.
+
+        Also bump the minor version to make it more obvious that PCR 7 sealing
+        brings a new feature, which should've happened previously.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: fix awk syntax error causing unbootable machines"
+      hash: 6c21f43c49361dac28f432083122a3ee35704a6f
+      body: |
+        A missing semi-colon caused the firmware_measures_efibins function to
+        return an exit code of one, which the 0-signed-update hostapp-update
+        hook interpreted as "this firmware does not measure EFI binaries into
+        PCR 7", as opposed to zero, indicating "this firmware *does* measure EFI
+        binaries into PCR 7", or two, indicating "the TPM event log is
+        unavailable and it's impossible to tell."
+
+        Taking the wrong branch in this conditional led to an inappropriate
+        policy being created to seal the LUKS passphrase, which could not be
+        unlocked on the next boot, as in QEMU with edk2, EFI binaries *are*
+        measured into PCR 7.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 5.3.0
+  title: ""
+  date: 2024-04-24T06:33:36.925Z
+- commits:
     - subject: "hostapp-update-hooks: check for logging helper"
       hash: 8561f0f7d92702a0d374846555904d6f2e01c697
       body: |
