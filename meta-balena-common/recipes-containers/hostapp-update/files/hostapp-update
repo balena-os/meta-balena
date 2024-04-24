@@ -107,7 +107,7 @@ done
 # Load new hostapp
 if [ "$local_image" != "" ]; then
 	# bind mount the data partition for temporary extract/load files
-	if ! mountpoint "${SYSROOT}/balena/tmp"; then
+	if ! mountpoint "${SYSROOT}/balena/tmp" >/dev/null; then
 		mkdir -p "${LOADTMP}"
 		mount --bind "${LOADTMP}" "${SYSROOT}/balena/tmp"
 	fi

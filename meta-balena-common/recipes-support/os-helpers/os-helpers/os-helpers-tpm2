@@ -23,6 +23,13 @@ EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
 TPM_EVENTLOG_PATH="/sys/kernel/security/tpm0/binary_bios_measurements"
 
+# silence errors messages from trying unsupported TCTI backends
+#
+# tpmrm0 is for kernel managed access by multiple clients, and should be
+# preferred over the default tpm0 device, which can only be used by a single
+# process at a time
+export TPM2TOOLS_TCTI=device:/dev/tpmrm0
+
 # busybox's implementation of xxd lacks the -cols option, so remove line breaks
 _hexencode() {
     xxd -p | tr -d '[:space:]'
@@ -71,15 +78,21 @@ EOF
     done
 
     # Extend our digest with any additional random events that may have been logged
+    EV_SEPARATOR=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
     if [ -f "${TPM_EVENTLOG_PATH}" ]; then
         for extend in $(tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
                 | parse_pcr7_digests \
-                | sed '1,5d'); do
+                | sed '1,5d' \
+                | tr -d '"'); do
             digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
+
+            # stop merging before EV_EFI_VARIABLE_AUTHORITY events (EFI binary digests)
+            if [ "$extend" == "$EV_SEPARATOR" ]; then
+                break
+            fi
         done
     else
-        separator=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
-        digest=$(printf '%s%s' "$digest" "$separator" | _hexdecode | _sha256)
+        digest=$(printf '%s%s' "$digest" "$EV_SEPARATOR" | _hexdecode | _sha256)
     fi
 
     printf '%s' "$digest"
@@ -96,17 +109,35 @@ parse_pcr7_eventtypes() {
     awk '
         /PCRIndex: 7/ {flag=1; next}
         /EventNum:/ {flag=0}
-        flag && /EventType:/ {gsub("\"", "")print $2}'
+        flag && /EventType:/ {gsub("\"", ""); print $2}'
 }
 
 firmware_measures_efibins() {
-    [ -f "${TPM_EVENTLOG_PATH}" ] || exit 2
-    tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
-        | parse_pcr7_eventtypes \
-        | grep -e EV_EFI_VARIABLE_AUTHORITY
+    if [ ! -f "${TPM_EVENTLOG_PATH}" ]; then
+        echo "unknown"
+    elif tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
+            | parse_pcr7_eventtypes \
+            | grep -e EV_EFI_VARIABLE_AUTHORITY \
+            >/dev/null; then
+        echo "measured"
+    else
+        echo "unmeasured"
+    fi
 }
 
-
+print_pcr_val_bin() {
+    PCRS=$1
+    PCR_VAL_BIN=$2
+    DIGEST_SIZE=32
+    SKIP=0
+    printf " %s:\n" "sha256"
+    for pcr in $(echo "${PCRS}" | sed 's/,/ /g'); do
+        digest=$(dd if="${PCR_VAL_BIN}" bs=1 count=$DIGEST_SIZE status=none skip=$SKIP | _hexencode)
+        SKIP=$((SKIP + DIGEST_SIZE))
+        printf "   %s : %s\n" "$pcr" "$digest"
+    done
+    printf "\n"
+}
 
 hw_gen_passphrase() {
     tpm2_getrandom 32

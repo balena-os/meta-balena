@@ -123,13 +123,16 @@ updateKeys() {
     RESULT_DIR="$(mktemp -d)"
     CURRENT_POLICY_PATH="$(find /mnt/efi -name "policies.*")"
     for UNLOCK_PCRS in  0,2,3,7 0,1,2,3; do
-        [ -f "${SESSION_CTX}" ] && tpm2_flushcontext "${SESSION_CTX}" || true
-        tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
-	    tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
-	    POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
-	    if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
-            tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
-	    fi
+        {
+            [ -f "${SESSION_CTX}" ] && tpm2_flushcontext "${SESSION_CTX}"  2>&1 || true
+            tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
+            tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
+            POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
+            if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
+                tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
+            fi
+
+        } >/dev/null
 
         if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "session:${SESSION_CTX}" "$PASSPHRASE_FILE"; then
             UNLOCK_PCRS_SUCCESS="${UNLOCK_PCRS}"
@@ -141,54 +144,70 @@ updateKeys() {
     POLICY_EFIBIN="${POLICY_PATH}/policy.efibin"
     POLICY_COMBINED="$(mktemp -t)"
     if [ "${UNLOCK_PCRS_SUCCESS}" = "0,2,3,7" ]; then
-        tpm2_createpolicy --policy-pcr \
-                          -l "sha256:${PCRS}" \
-                          -f "${PCR_VAL_BIN_UPDATED}" \
-                          -L "${POLICY_UPDATED}"
-        tpm2_createpolicy --policy-pcr \
-                          -l "sha256:${PCRS}" \
-                          -f "${PCR_VAL_BIN_EFIBIN}" \
-                          -L "${POLICY_EFIBIN}"
-        tpm2_startauthsession -S "${SESSION_CTX}"
+        {
+            tpm2_createpolicy --policy-pcr \
+                              -l "sha256:${PCRS}" \
+                              -f "${PCR_VAL_BIN_UPDATED}" \
+                              -L "${POLICY_UPDATED}"
+            tpm2_createpolicy --policy-pcr \
+                              -l "sha256:${PCRS}" \
+                              -f "${PCR_VAL_BIN_EFIBIN}" \
+                              -L "${POLICY_EFIBIN}"
+            tpm2_startauthsession -S "${SESSION_CTX}"
+        } >/dev/null
 
-	if firmware_measures_efibins; then
-		info "Using PCR7 digest with EFI binary measurements"
-		POLICY="${POLICY_EFIBIN}"
-	else
-		if [ $? = 1 ]; then
-			info "Using PCR7 digest without EFI binary measurements"
-			POLICY="${POLICY_UPDATED}"
-		# exit code 2 means we don't have access to the TPM event log,
-		# and can't definitively tell whether or not EFI binaries are
-		# measured into PCR7, so unlock with both digests
-		elif [ $? = 2 ]; then
-			info "Creating combined policy"
-			tpm2_policyor -S "${SESSION_CTX}" \
-				      -L "${POLICY_COMBINED}" \
-				      "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')"
-			POLICY="${POLICY_COMBINED}"
-			cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
-			rm -rf "${CURRENT_POLICY_PATH}"
-		fi
-	fi
+        case "$(firmware_measures_efibins)" in
+            measured)
+                info "Using PCR7 digest with EFI binary measurements"
+                POLICY="${POLICY_EFIBIN}"
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
+                ;;
+            unmeasured)
+                info "Using PCR7 digest without EFI binary measurements"
+                POLICY="${POLICY_UPDATED}"
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_UPDATED}"
+                ;;
+            unknown)
+                # we don't have access to the TPM event log, and can't
+                # definitively tell whether or not EFI binaries are measured
+                # into PCR7, so unlock with both digests
+                info "Creating combined policy"
+                tpm2_policyor -S "${SESSION_CTX}" \
+                              -L "${POLICY_COMBINED}" \
+                              "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')" \
+                              >/dev/null
+                POLICY="${POLICY_COMBINED}"
+                cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
 
-        tpm2_flushcontext "${SESSION_CTX}"
-        hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
+                printf "\nOR\n"
+                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_UPDATED}"
+                ;;
+        esac
 
+        {
+            tpm2_flushcontext "${SESSION_CTX}"
 
-        tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
-        mv "${RESULT_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx"
-        mv "${RESULT_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc"
+            hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
+            rm -rf "${CURRENT_POLICY_PATH}"
+
+            tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
+            mv "${RESULT_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx"
+            mv "${RESULT_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc"
+        } >/dev/null
+
     elif [ "${UNLOCK_PCRS_SUCCESS}" = "0,1,2,3" ]; then
         warn "Unlocked passphrase without PCR7, delaying policy update until rollback-health success"
-        # update the second stage bootloader kernel binary, as the hash of the
-        # original may not be present in the signature database
-        cp "${KERNEL_BIN}"{,.sig} "${EFI_MOUNT_DIR}/"
-        cp "${GRUB_BIN}" "${EFI_MOUNT_DIR}/EFI/BOOT/bootx64.efi"
     else
         fail "Failed to update policy sealing LUKS passphrase"
     fi
 
+    # update the second stage bootloader kernel binary, as the hash of the
+    # original may not be present in the signature database
+    rsync --checksum --inplace "${KERNEL_BIN}"{,.sig} "${EFI_MOUNT_DIR}/"
+
+    # update GRUB if necessary
+    rsync --checksum --inplace "${GRUB_BIN}" "${EFI_MOUNT_DIR}/EFI/BOOT/bootx64.efi"
     sync
 
     # This only updates db at this moment
@@ -209,7 +228,7 @@ updateKeys() {
 
     mkdir -p "${PENDING_DBX_DIR}"
     cp -a "${ACTIVE_DBX_FILE}" "${DEST_FILE}"
-    sig-list-to-certs "${ACTIVE_ESL_FILE}" "${DEST_FILE}"
+    sig-list-to-certs "${ACTIVE_ESL_FILE}" "${DEST_FILE}" >/dev/null
 }
 
 # Only applicable in the new OS container
