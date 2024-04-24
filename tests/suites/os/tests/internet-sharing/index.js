@@ -66,8 +66,6 @@ module.exports = {
                         that,
                     );
 
-                    that.log(`iptables count ${count}`);
-
                     return count;
                 }
 
@@ -87,15 +85,22 @@ module.exports = {
                     'flock /run/xtables.lock sleep 1 & nmcli c up dummy & wait',
                     this.link
                 );
-                let count = await countSharedIptables(this);
-                test.equal(count, 14, 'Internet sharing iptables rules are all set');
+                
+                // Check more than once that all iptables rules are set - some device types it takes longer
+                // for them to appear, and having a single check can lead to a false negative
+				await this.utils.waitUntil(async () => {
+                    test.comment(`Checking iptables rules are set`);
+					return (await countSharedIptables(this) === 14);
+				}, false, 5, 1000);
+                // if we fail to see the approprate number of iptables rules the above will fail, and cause the tests to fail
+                test.pass('Internet sharing iptables rules are all set');
 
                 // Now deactivate the connection - all iptables rules should be deleted.
                 await this.worker.executeCommandInHostOS(
                     'nmcli c down dummy',
                     this.link
                 );
-                count = await countSharedIptables(this);
+                let count = await countSharedIptables(this);
                 test.equal(count, 0, 'All Internet sharing iptables rules are deleted');
 
                 // Cleanup
