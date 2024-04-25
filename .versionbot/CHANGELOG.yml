@@ -1,4 +1,19 @@
 - commits:
+    - subject: "contributing-device-support.md: Rework repo transfer and autokit
+        requirement steps"
+      hash: d9b9d5e0f084ab9370ff69468f8a14b25148fb47
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 5.3.2
+  title: ""
+  date: 2024-04-25T00:38:23.057Z
+- commits:
     - subject: "tests: os: address race in internet con. sharing tests"
       hash: c8fccaef7c48dcccb150f46d0bedb48460ead445
       body: >

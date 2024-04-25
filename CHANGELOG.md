@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.2
+## (2024-04-25)
+
+* contributing-device-support.md: Rework repo transfer and autokit requirement steps [Florin Sarbu]
+
 # v5.3.1
 ## (2024-04-24)
 
