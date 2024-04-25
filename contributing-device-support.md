@@ -228,15 +228,14 @@ See the [meta-balena Readme](https://github.com/balena-os/meta-balena/blob/maste
 
 ## Step 2: Contact balena
 
-When you have completed the development of the yocto board support repository as detailed in the previous step, please get in touch with balena to finish the process of having your board available in the balena dashboard.  
-This will mean your board repository would need to be hosted in [balena-os GitHub organization](https://github.com/balena-os). Your repository can either be transferred to the balenaOS github organization (repository ownership
-transfer can be done from the github UI under Settings -> General and scroll all the way to the botton over to `Danger Zone`) or balena will clone your repository under the balenaOS github organization (we avoid to use forking
-because this creates issues with outdated PRs and repositories diverging due to renovatebot auto-merge of balena-yocto-scripts, meta-balena and VersionBot updates to CHANGELOG.md, VERSION). Please note that from this point forward,
-all pull requests need to be done against this new board repository from [balena-os](https://github.com/balena-os). Depending on your needs and upon agreeing with balena, this new repository can be hosted either as a public
-repository for everyone to access or hosted privately with access only to selected users.
+When you have completed the development of the yocto board support repository as detailed in the previous step, please get in touch with balena to finish the process of having your board available in the balenaCloud dashboard.  
+Your board repository needs to be hosted in the [balena-os GitHub organization](https://github.com/balena-os). The repository transfer needs to be made to a balena team member. To transfer, go to your yocto board GitHub repository and click the
+`Settings` button on the top. On the `General` page scroll to the bottom, over to `Danger Zone` and click on `Transfer` then select `Specify an organization or username` and fill in the balena team member username that you agreed on with balena.
+Depending on your needs and upon agreeing with balena, this new repository can be hosted either as a public repository for everyone to access or hosted privately with access provided to selected users.
+For private repositories, you would also have to supply balena a list of GitHub usernames of contributors that need to be provided access to the future private repository. Balena will add them as outside collaborators.
 
-If you want the repository to be created as private in [balena-os GitHub organization](https://github.com/balena-os) and want to transfer the repository yourself then supply balena with the repository name to be created by balena
-for you. Furthermore, for private repositories you also need to supply balena a list with github usernames of the contributors to the future private repository and balena will add them as outside collaborators.
+The next step is automated testing support. In order to have automated OS deploys, you need to have your new hardware integrated with balena's automated testing rig. Contact balena for the details on how
+to have your autokit setup moved to balena's testing fleet.
 
 ## Step 3: Hardware contract
 
