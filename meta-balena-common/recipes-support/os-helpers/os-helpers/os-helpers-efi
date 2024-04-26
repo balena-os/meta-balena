@@ -21,7 +21,7 @@
 EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
 parse_efivar_val() {
-	od --address-radix=n --format=u1 "$1" \
+	od --address-radix=n --format=u1 "$1" 2>/dev/null \
 		| tr -s "' '" \
 		| cut -d ' ' -f6
 }
