@@ -29,13 +29,15 @@ parse_efivar_val() {
 # return zero if secure boot is enabled
 secureboot_enabled() {
 	test "$(parse_efivar_val \
-			/sys/firmware/efi/efivars/SecureBoot-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1
+			/sys/firmware/efi/efivars/SecureBoot-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1 \
+			2>/dev/null
 }
 
 # return zero if system is in setup mode
 setup_mode_enabled() {
 	test "$(parse_efivar_val \
-			/sys/firmware/efi/efivars/SetupMode-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1
+			/sys/firmware/efi/efivars/SetupMode-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1 \
+			2>/dev/null
 }
 
 # return zero if system is in user mode
