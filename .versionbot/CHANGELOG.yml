@@ -1,4 +1,18 @@
 - commits:
+    - subject: "docs: elaborate automated testing requirement in board support guide"
+      hash: aad242195fb191cbe9c8230b9cf36aa4b0679fbe
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 5.3.3
+  title: ""
+  date: 2024-05-01T12:04:46.013Z
+- commits:
     - subject: "contributing-device-support.md: Rework repo transfer and autokit
         requirement steps"
       hash: d9b9d5e0f084ab9370ff69468f8a14b25148fb47

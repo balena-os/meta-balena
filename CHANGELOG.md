@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.3
+## (2024-05-01)
+
+* docs: elaborate automated testing requirement in board support guide [rcooke-warwick]
+
 # v5.3.2
 ## (2024-04-25)
 
