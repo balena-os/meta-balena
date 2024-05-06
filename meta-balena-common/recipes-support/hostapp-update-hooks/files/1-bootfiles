@@ -21,6 +21,8 @@ set -o errexit
 [ -f /usr/libexec/os-helpers-sb ] && . /usr/libexec/os-helpers-sb
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-defaults
+# shellcheck disable=SC1091
+command -v generate_bootpart_fingerprint > /dev/null || . /usr/libexec/os-helpers-fs
 
 # Define the boot partition mountpoint depending on the calling script name
 # On secure boot systems that split the boot partition the script is called with different names
@@ -59,7 +61,8 @@ isModified() {
 	local _current_md5
 	_current_md5=$("${CAT}" "$boot_mountpoint/$_file" | md5sum | awk '{print $1}')
 	local _initial_md5
-	_initial_md5=$("${CAT}" "$boot_mountpoint/$boot_fingerprint" | grep "$_file" | awk '{print $1}')
+	# Boot partition fingerprint use relative paths
+	_initial_md5=$("${CAT}" "$boot_mountpoint/$boot_fingerprint" | grep "$(echo "${_file}" | sed 's/^\///')" | awk '{print $1}')
 	if [ "$_current_md5" != "$_initial_md5" ]; then
 		return 0
 	else
@@ -180,5 +183,5 @@ for filepath in $(find /resin-boot -type f | sed 's#^/resin-boot##g'); do
 		deploy "$filepath"
 	fi
 done
-# Deploy fingerprint last
-deploy "/$boot_fingerprint"
+
+generate_bootpart_fingerprint "${boot_mountpoint}"
