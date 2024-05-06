@@ -313,3 +313,24 @@ wait4udev() {
 
     return 0
 }
+
+# Generates a fingerprint file on the fly for boot partitions,
+# ignoring config.json files.
+# Arguments:
+#   Directoty path - trailing slashes are removed
+# Output:
+#   A ${BALENA_FINGERPRINT_FILENAME}/${BALENA_FINGERPRINT_EXT} file where
+#   entries have no path prefix.
+generate_bootpart_fingerprint() {
+    FSDIR="${1%/}"
+    tmpfp=$(mktemp)
+    info "Generating fingerprint file for $FSDIR"
+    rm -rf ${FSDIR}/@@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@
+    find ${FSDIR} -xdev -type f \
+        ! -name @@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@ \
+        ! -name config.json \
+        -exec md5sum {} \; | sed "s#${FSDIR}/##g" | \
+        sort -k2 > "${tmpfp}"
+        mv "${tmpfp}" ${FSDIR}/@@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@
+        sync -f "${FSDIR}"
+}
