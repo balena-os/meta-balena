@@ -240,7 +240,7 @@ do_resin_boot_dirgen_and_deploy () {
     find ${BALENA_BOOT_WORKDIR} -xdev -type f \
         ! -name ${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT} \
         ! -name config.json \
-        -exec md5sum {} \; | sed "s#${BALENA_BOOT_WORKDIR}##g" | \
+        -exec md5sum {} \; | sed "s#${BALENA_BOOT_WORKDIR}/##g" | \
         sort -k2 > ${BALENA_BOOT_WORKDIR}/${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}
 
     echo "Install resin-boot in the rootfs..."
