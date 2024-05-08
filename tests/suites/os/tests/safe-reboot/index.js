@@ -125,21 +125,15 @@ module.exports = {
 					"Safe reboot waiting on application locks"
 				);
 
-				targetState = {
-					local: {
-						name: 'local',
-						config: {
-							SUPERVISOR_PERSISTENT_LOGGING: 'true',
-							SUPERVISOR_LOCAL_MODE: 'true',
-							SUPERVISOR_OVERRIDE_LOCK: 'true',
-						},
-						apps: {},
-					},
-					dependent: {
-						apps: [],
-						devices: [],
-					},
-				};
+				// Get the current state first - we need this as we must append it, rather than just blindly post a new
+				// target state, to avoid overwriting any existing configuration
+				let state = await request({
+					method: 'GET',
+					json: true,
+					uri: `http://${ip}:${SUPERVISOR_PORT}/v2/local/target-state`,
+				});
+
+				state.state.local.config.SUPERVISOR_OVERRIDE_LOCK = "true"
 
 				result = await this.worker.executeCommandInHostOS(
 					'[[ -f /tmp/reboot-check ]] && echo "pass"',
@@ -157,7 +151,7 @@ module.exports = {
 						'Content-Type': 'application/json',
 					},
 					json: true,
-					body: targetState,
+					body: state.state,
 					uri: `http://${ip}:${SUPERVISOR_PORT}/v2/local/target-state`,
 				});
 
