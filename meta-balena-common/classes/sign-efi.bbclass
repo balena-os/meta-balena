@@ -1,5 +1,7 @@
 inherit deploy
 
+DESTDIR ?= "${DEPLOYDIR}"
+
 # Do not run on native recipes
 do_sign_efi:class-native() {
     :
@@ -18,6 +20,14 @@ do_sign_efi () {
         if [ -z "${SIGNING_ARTIFACT}" ] || [ ! -f "${SIGNING_ARTIFACT}" ]; then
             bbfatal "Nothing to sign"
         fi
+        GZIP_PAYLOAD=0
+        _filetype=$(file --mime-type -b "${SIGNING_ARTIFACT}")
+        if [ "${_filetype}" = "application/gzip" ]; then
+            GZIP_PAYLOAD=1
+            bbnote "Uncompressing compressed payload"
+            mv "${SIGNING_ARTIFACT}" "${SIGNING_ARTIFACT}.gz"
+            gunzip "${SIGNING_ARTIFACT}.gz"
+        fi
         REQUEST_FILE=$(mktemp)
         RESPONSE_FILE=$(mktemp)
         echo "{\"key_id\": \"${SIGN_KMOD_KEY_ID}\", \"payload\": \"$(base64 -w 0 ${SIGNING_ARTIFACT})\"}" > "${REQUEST_FILE}"
@@ -30,13 +40,17 @@ do_sign_efi () {
                  -o "${RESPONSE_FILE}"
         jq -r ".signed" < "${RESPONSE_FILE}" | base64 -d > "${SIGNING_ARTIFACT}.signed"
         rm -f "${REQUEST_FILE}" "${RESPONSE_FILE}"
+        if [ "${GZIP_PAYLOAD}" = "1" ]; then
+            gzip "${SIGNING_ARTIFACT}.signed"
+            mv "${SIGNING_ARTIFACT}.signed.gz" "${SIGNING_ARTIFACT}.signed"
+        fi
     done
 }
 
 do_deploy:append:class-target() {
     for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}; do
         if [ -f "${SIGNING_ARTIFACT}.signed" ]; then
-            install -m 0644 "${SIGNING_ARTIFACT}.signed" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT})"
+            install -m 0644 "${SIGNING_ARTIFACT}.signed" "${DESTDIR}/$(basename ${SIGNING_ARTIFACT})"
         fi
     done
 }

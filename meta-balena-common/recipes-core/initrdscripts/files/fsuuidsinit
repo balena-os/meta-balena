@@ -57,10 +57,14 @@ fsuuidsinit_run() {
     for dev in /dev/disk/by-state/resin-rootB /dev/disk/by-state/resin-state /dev/disk/by-state/resin-data /dev/disk/by-state/resin-rootA; do
         uuid="$(get_dev_uuid "${dev}")"
         fstype="$(get_dev_fstype "${dev}")"
+        if [ "${uuid}" = "$(get_cmdline_root_uuid)" ]; then
+            touch "/run/initramfs/bootparam_root.mux"
+        fi
         if regenerate_uuid "${dev}" "${fstype}"; then
-            if [ "${uuid}" = "$(get_cmdline_root_uuid)" ]; then
+            if [ -f "/run/initramfs/bootparam_root.mux" ]; then
                 bootparam_root="UUID=$(get_dev_uuid "${dev}")"
                 echo "${bootparam_root}" > /run/initramfs/bootparam_root
+                rm -f "/run/initramfs/bootparam_root.mux"
                 info "Using new root UUID: ${bootparam_root}"
             fi
         else

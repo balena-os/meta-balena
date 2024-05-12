@@ -36,6 +36,26 @@ wait4file() {
 	return 0
 }
 
+# Wait for a file to be removed with loop count limit.
+# Use-case example: wait for udev to create a filesystem symlink.
+# Arguments:
+#   1 - target path
+#   2 - number of loops (each loop sleeps for 100ms)
+wait4rm() {
+	_lpath="$1"
+	_lloops="$2"
+
+	while [ -e "$_lpath" ]; do
+		if [ "$_lloops" -gt 0 ]; then
+			sleep 0.1
+			_lloops=$((_lloops-1))
+		else
+			return 1
+		fi
+	done
+	return 0
+}
+
 # Output the UUID for the specified block device.
 # Arguments:
 #   1 - Target block device
@@ -145,22 +165,11 @@ regenerate_uuid() {
             fi
             ;;
         ext*)
-            # tune2fs refuses to work when the filesystem was not
-            # freshly checked.
-            # Remount to update lastmount time to current time
-            # Otherwise in systems with no RTC lastmount could be in the future
-            # and e2fsck does not update the last filesystem check time
-            if [ -e /etc/e2fsck.conf ] && grep broken_system_clock /etc/e2fsck.conf > /dev/null; then
-                broken_system_clock=$(grep broken_system_clock /etc/e2fsck.conf | cut -d "=" -f2)
-                    if [ "${broken_system_clock}" = "1" ]; then
-                        update_mounttime "$dev"
-                    fi
-            fi
             if ! e2fsck -fp "$dev"; then
                 return 1
             fi
             new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
-            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -U ${new_uuid}"
+            cmd="echo y | EXT2FS_NO_MTAB_OK=1  tune2fs -e continue -U ${new_uuid}"
             if ! eval "${cmd}" "${dev}"; then
                 return 1
             fi
@@ -303,4 +312,25 @@ wait4udev() {
     done
 
     return 0
+}
+
+# Generates a fingerprint file on the fly for boot partitions,
+# ignoring config.json files.
+# Arguments:
+#   Directoty path - trailing slashes are removed
+# Output:
+#   A ${BALENA_FINGERPRINT_FILENAME}/${BALENA_FINGERPRINT_EXT} file where
+#   entries have no path prefix.
+generate_bootpart_fingerprint() {
+    FSDIR="${1%/}"
+    tmpfp=$(mktemp)
+    info "Generating fingerprint file for $FSDIR"
+    rm -rf ${FSDIR}/@@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@
+    find ${FSDIR} -xdev -type f \
+        ! -name @@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@ \
+        ! -name config.json \
+        -exec md5sum {} \; | sed "s#${FSDIR}/##g" | \
+        sort -k2 > "${tmpfp}"
+        mv "${tmpfp}" ${FSDIR}/@@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@
+        sync -f "${FSDIR}"
 }

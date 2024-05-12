@@ -16,6 +16,9 @@ PACKAGE_INSTALL = " \
     initramfs-framework-base \
     udev \
 "
+
+PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-resindataexpander',d)}"
+
 BAD_RECOMMENDATIONS += "busybox-syslog"
 
 # Do not pollute the initrd image with rootfs features
@@ -27,6 +30,9 @@ IMAGE_LINGUAS = ""
 LICENSE = "MIT"
 
 IMAGE_FSTYPES = "${INITRAMFS_FSTYPES}"
-inherit image
+inherit image kernel-balena-noimage
+
+# Pulled in via PREFERRED_PROVIDER_virtual/kernel
+PACKAGE_EXCLUDE += "kernel-module-* "
 
 IMAGE_ROOTFS_SIZE = "8192"

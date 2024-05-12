@@ -55,6 +55,7 @@ do_install() {
         ${WORKDIR}/safe_reboot \
         ${D}${libexecdir}
         sed -i "s,@@BALENA_CONF_UNIT_STORE@@,${BALENA_CONF_UNIT_STORE},g" ${D}${libexecdir}/os-helpers-config
+        sed -i -e "s,@@BALENA_FINGERPRINT_FILENAME@@,${BALENA_FINGERPRINT_FILENAME},g" -e "s,@@BALENA_FINGERPRINT_EXT@@,${BALENA_FINGERPRINT_EXT},g" ${D}${libexecdir}/os-helpers-fs
 }
 
 FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"

@@ -23,7 +23,7 @@ NEW_ROOT=$(echo "${NEW_ROOT_LABEL}" | sed -e "s,^\(resin\|balena\)-root\([AB]\)$
 
 info "Switching root partition to ${NEW_ROOT}"
 
-BOOTENV_FILE="/mnt/boot/bootenv"
+BOOTENV_FILE="${BALENA_NONENC_BOOT_MOUNTPOINT}/bootenv"
 
 grub-editenv "${BOOTENV_FILE}" set "resin_root_part=${NEW_ROOT}"
 grub-editenv "${BOOTENV_FILE}" set "upgrade_available=${DURING_UPDATE}"

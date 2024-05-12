@@ -63,8 +63,8 @@ RDEPENDS:${PN} = " \
     dropbear \
     openssh-keygen \
     util-linux \
-    os-helpers-sb \
     "
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' os-helpers-sb',d)}"
 
 RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils tcgtool', '',d)}"
 
