@@ -1,4 +1,324 @@
 - commits:
+    - subject: "hostapp-update-hooks: 99-balena-bootloader: Adapt to secure boot"
+      hash: 241caa3243c23363841e7aa6f89cc116cf24d200
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: fix linter warnings"
+      hash: a35ae938fd981e4e2bd84031352f1417f07b1a01
+      body: |
+        Remove some of the low-risk linter warnings.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: image-balena: use relative path to generate boot fingerprint"
+      hash: b30ce236a9e8f6229d5af527d853e6e3fc090d72
+      body: >
+        Ideally we would re-use the function is the target os-helpers-fs file,
+
+        but Yocto's recipe bash support is not completely compatible with POSIX
+        syntax.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add a helper function to generate fingerprint files"
+      hash: 487b4f4dbc62de77f6b76f27f80bab69a192bee1
+      body: |
+        This function will be re-used as it's called from the HUP hooks and
+        from the flasher image for secure boot devices that split boot
+        partitions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: sign-rsa: add dependencies"
+      hash: eafbc411e99430ade0d4e141e4c3e7f59ae0feb9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: migrate: allow command line argument configuration"
+      hash: c8de15a999aec50915c7cf829e7ec3886aaa3182
+      body: >
+        The migrate module is currently only enabled if specified in
+        config.json.
+
+        This commit introduces a command line argument override for board
+
+        integration layers to use. This allows for example for non-flasher
+        device
+
+        types to force the migration.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: image-balena: provide board configuration hook"
+      hash: cda7d24207d736bc8fe4f58ed47489ecc2db2db3
+      body: |
+        Add a hook for boards to initialize boot partition configuration.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: abroot: add missing dependency"
+      hash: 593ce8db2c2de1b6b92e3e57af932a4d3eefe14f
+      body: |
+        The abroot script sources balena-config-defaults so let's make sure
+        it's included in the build.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: kernel-balena: selectively include dmcrypt for signed images"
+      hash: 1bdb0d2be57c2f7697c5af6d3bdc76cf873ddd06
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: only include os-helpers-sb for signed builds"
+      hash: bfe9204622793b6afb0879c0fce0aad2d0cb7de6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: 1-bootfiles: Check for os-helpers-sb before
+        including"
+      hash: 55ea286a40181f0e809280f4e8f2c9ed743d4bb7
+      body: |
+        The `os-helpers-sb` file is only included for signed builds.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docs: add secure boot abstractions details"
+      hash: 91dad6cdb1b4e9e10a9ac4017d4b975256d9186c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: fsuuidinit: use file based mutex to avoid race condition"
+      hash: 3f6a302bf53c6c0a609015c92ff927c7575412d9
+      body: |
+        As soon as the UUID is regenerated udev runs the correspondign rules.
+
+        However, the rules expect the new UUID to be cached in a file, so there
+        is a race condition between the creation of the file and the udev rule.
+
+        This commit avoid the race condition by using a file mutex that the
+        udev rule can wait on.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "systemd: update_state_probe: Use a file mutex to avoid race condition"
+      hash: ef51b29b330e77b2111644fa4dbae156ca753e6c
+      body: >
+        As soon as the UUID is modified udev re-runs the rules for the
+        partition.
+
+        However, the rule expects the new root UUID to be cached in a file, and
+
+        if the udev rule gets there before the file is created it fails.
+
+
+        This commit waits on a lock file mutex before accessing said file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: extend filesystem helper with wait4rm"
+      hash: bb77f62506329bb4f09a480b5ef1239742e71294
+      body: |
+        This function waits until a file is removed or times out - useful to
+        implement basic file based mutexes.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: regenerate_uuid: skip remounting"
+      hash: 7674716ffd7472f7a487c027ba756803e1d446fb
+      body: |
+        Remounting filesystems is done on systems with a broken clock in order
+        to prevent tune2fs from bailing out when the last mounted time is in the
+        future. This resets the last mounted time to now.
+
+        However, the filesystem is immediately unmounted again without being
+        utilized, and the mount and unmount process is time consuming. Instead,
+        use `-e continue` to tell tune2fs to continue after an error, which
+        achieves the same result with less time and complexity.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "resin-init-flasher: replace fatal with fail"
+      hash: 53e995bfc70dcea70b476cb26a5e68df0e2a53a8
+      body: |
+        The fatal() function is only defined while running in the initramfs
+        while fail() is provided by the OS helper logging which is available
+        in both the OS and flasher image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-image-bootloader-initramfs: add modules needed for secure boot"
+      hash: dfa88cfb6cf195c9748a41fe5bdad4954a72f27d
+      body: >
+        The balena bootloader needs to mount encrypted disks to kexec the final
+
+        kernel which is stored in the encrypted root partitions.
+
+
+        It also needs to run the data partition expander twice on boot, once in
+        the
+
+        balena bootloader that expands the disk, and later on the final
+
+        initramfs to expand the file system.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: balena-bootloader: add support for encrypted disks mount and
+        kexec"
+      hash: dccf18856d3198ed2bb3394792b859de12aad407
+      body: |
+        The kernel needs crypto support to mount encrypted disks at boot and
+        kexec image authentication.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: balena-bootloader: specify a deployment subfolder"
+      hash: 1e1c465dc899377dd10350038f20a653eea95325
+      body: |
+        This prevents overwritting deployment files that are also deployed
+        by the standard linux recipe.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: kernel-balena: add secureboot configuration dependencies"
+      hash: f8eca19e9180b7d4f2d80ae87ef4074be7a81ff5
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: kernel-balena: non-efi device types also use EFI signing for
+        kexec"
+      hash: 8b4f5dd0f5e806954897f3dbac3da00f0487ba88
+      body: |
+        Remove the conditional to signing the kernel initramfs on EFI machine
+        features as kexec also requires this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: sign-efi: allow to configure deployment directory"
+      hash: fc36626aeedfe681e5198083112c4f17e8688596
+      body: |
+        This is needed for systems that build and deploy two different linux
+        kernels like is the case when using the balena bootloader so that
+        different recipes do not try to deploy the same files.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: sign-efi: support compressed payloads"
+      hash: ac9955350690d0f044a9e15469a93819c3591f27
+      body: |
+        The EFI class is used to sign Linux kernel binaries, and these can come
+        in a zImage (compressed) format that needs to be decompressed before
+        signing.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.3.4
+  title: ""
+  date: 2024-05-12T17:56:11.300Z
+- commits:
     - subject: "docs: elaborate automated testing requirement in board support guide"
       hash: aad242195fb191cbe9c8230b9cf36aa4b0679fbe
       body: ""

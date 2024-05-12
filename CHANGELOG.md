@@ -1,6 +1,34 @@
 Change log
 -----------
 
+# v5.3.4
+## (2024-05-12)
+
+* hostapp-update-hooks: 99-balena-bootloader: Adapt to secure boot [Alex Gonzalez]
+* hostapp-update-hooks: fix linter warnings [Alex Gonzalez]
+* classes: image-balena: use relative path to generate boot fingerprint [Alex Gonzalez]
+* os-helpers: add a helper function to generate fingerprint files [Alex Gonzalez]
+* classes: sign-rsa: add dependencies [Alex Gonzalez]
+* initrdscripts: migrate: allow command line argument configuration [Alex Gonzalez]
+* classes: image-balena: provide board configuration hook [Alex Gonzalez]
+* initrdscripts: abroot: add missing dependency [Alex Gonzalez]
+* classes: kernel-balena: selectively include dmcrypt for signed images [Alex Gonzalez]
+* hostapp-update-hooks: only include os-helpers-sb for signed builds [Alex Gonzalez]
+* hostapp-update-hooks: 1-bootfiles: Check for os-helpers-sb before including [Alex Gonzalez]
+* docs: add secure boot abstractions details [Alex Gonzalez]
+* initrdscripts: fsuuidinit: use file based mutex to avoid race condition [Alex Gonzalez]
+* systemd: update_state_probe: Use a file mutex to avoid race condition [Alex Gonzalez]
+* os-helpers: extend filesystem helper with wait4rm [Alex Gonzalez]
+* os-helpers-fs: regenerate_uuid: skip remounting [Joseph Kogut]
+* resin-init-flasher: replace fatal with fail [Alex Gonzalez]
+* balena-image-bootloader-initramfs: add modules needed for secure boot [Alex Gonzalez]
+* classes: balena-bootloader: add support for encrypted disks mount and kexec [Alex Gonzalez]
+* classes: balena-bootloader: specify a deployment subfolder [Alex Gonzalez]
+* classes: kernel-balena: add secureboot configuration dependencies [Alex Gonzalez]
+* classes: kernel-balena: non-efi device types also use EFI signing for kexec [Alex Gonzalez]
+* classes: sign-efi: allow to configure deployment directory [Alex Gonzalez]
+* classes: sign-efi: support compressed payloads [Alex Gonzalez]
+
 # v5.3.3
 ## (2024-05-01)
 
