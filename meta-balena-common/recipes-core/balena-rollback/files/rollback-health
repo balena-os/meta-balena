@@ -45,6 +45,9 @@ run_hooks_from_inactive () {
 	# Allow old OS hooks to access efivars
 	if [ -d /sys/firmware/efi/efivars ]; then
 		mount -t efivarfs efivarfs "${old_rootfs}/sys/firmware/efi/efivars" || true
+
+		# mount securityfs on EFI systems, used for secure boot
+		mount none -t securityfs "${old_rootfs}/sys/kernel/security"
 	fi
 
 	# In case of secure boot the boot partition is encrypted and the
