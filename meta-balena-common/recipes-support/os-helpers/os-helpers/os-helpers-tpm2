@@ -70,7 +70,15 @@ EOF
             if [ -n "${override}" ]; then
                     echo "${override}" | _hexdecode | tcgtool "$var" | _sha256
             else
-                    tcgtool "$var" | _sha256
+		    # this is a workaround for tcgtool erroneously reading in
+		    # zero bytes from EFI variables during HUP -- we're not
+		    # sure what the cause is yet, but reading in with dd seems
+		    # to work fine
+                    dd if="${var}" \
+                       status=none \
+                       skip=4 \
+                       bs=1 \
+                    | tcgtool "$var" | _sha256
             fi
         )
 
