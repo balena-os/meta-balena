@@ -52,12 +52,12 @@ PACKAGES:append = " \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
     initramfs-module-fsuuidsinit \
-    initramfs-module-cryptsetup \
     initramfs-module-kexec \
     initramfs-module-udevcleanup \
     initramfs-module-recovery \
     initramfs-module-migrate \
     "
+PACKAGES:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup',d)}"
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
 
