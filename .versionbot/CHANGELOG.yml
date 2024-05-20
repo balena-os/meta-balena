@@ -1,4 +1,20 @@
 - commits:
+    - subject: "peak: Update to version 8.17.0"
+      hash: 2ab3cb2eb859d0a8658fda0739e6d287adc0bc6d
+      body: |
+        This is needed to have it compiled against kernel version 6.6.23,
+        which we will include in balena-generic.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 5.3.6
+  title: ""
+  date: 2024-05-20T08:35:07.780Z
+- commits:
     - subject: Update balena-supervisor to v16.3.5
       hash: 982ac50fe144182b53ab00fd5ebe8e0f8bec7a89
       body: |
