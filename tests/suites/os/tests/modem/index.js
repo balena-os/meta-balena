@@ -204,7 +204,7 @@ module.exports = {
 
                     await this.utils.waitUntil(async () => {
                         curl = await this.worker.executeCommandInHostOS(
-                            `curl -I -sS -o /dev/null -w "%{http_code}" --keepalive-time 5 --connect-timeout 5 --interface ${iface} ${URL_TEST}`,
+                            `curl -I -sS -o /dev/null -w "%{http_code}" --keepalive-time 5 --connect-timeout 5 --interface ${iface} ${config.network.testUrl}`,
                             this.link,
                         );
                         return curl.includes(200);
