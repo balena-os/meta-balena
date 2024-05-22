@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.7
+## (2024-05-22)
+
+* tests: os: modem: fix curl command [rcooke-warwick]
+
 # v5.3.6
 ## (2024-05-20)
 

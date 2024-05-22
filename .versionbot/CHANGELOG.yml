@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: os: modem: fix curl command"
+      hash: 6a62c9fea1611658504e3ccdff29bd8ae7467b3d
+      body: >
+        The modem test was broken when changing from ping to curl as part of
+        071c018. Here it is fixed
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 5.3.7
+  title: ""
+  date: 2024-05-22T07:06:53.156Z
+- commits:
     - subject: "peak: Update to version 8.17.0"
       hash: 2ab3cb2eb859d0a8658fda0739e6d287adc0bc6d
       body: |
