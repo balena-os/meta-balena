@@ -35,6 +35,7 @@
 
 set -e
 
+# shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 
 if [ "$2" != "up" ]
@@ -52,26 +53,50 @@ IPTABLES="iptables -w 5"
 # Look for the FORWARD rule that NetworkManager adds for interfaces
 # configured as shared. This will have a comment "nm-shared-$IFNAME"
 # and jump into a chain named "sh-fw-$IFNAME"
-FW_RULE_NO=$(${IPTABLES} -L FORWARD --line-number | grep "sh-fw-${IFNAME}" | grep "nm-shared-${IFNAME}" | cut -d " " -f 1)
-if [ "x${FW_RULE_NO}" = "x" ]
+get_rule_no() {
+  ${IPTABLES} -L FORWARD --line-number | grep "sh-fw-${IFNAME}" | grep "nm-shared-${IFNAME}" | cut -d " " -f 1
+}
+
+# Move the rule to the bottom of the forward chain
+demote_rule() {
+  local _last_rule_no
+  local _fw_rule_args
+
+  # Safeguard, this should never happen
+  # Exactly 0 or 1 rule should match, bail out if there are more & investigate
+  if [ "$(get_rule_no | wc -w)" -gt 1 ]; then
+    fail "More than one rule matched when looking for 'nm-shared-${IFNAME}', bailing out"
+  fi
+
+  _fw_rule_args="$(${IPTABLES} -S FORWARD "$(get_rule_no)")"
+
+  # Remove the rule
+  # shellcheck disable=SC2086
+  ${IPTABLES} -D ${_fw_rule_args#-A }
+
+  # Append the rule to the bottom
+  # Do not quote ${_fw_rule_args}, this needs to expand
+  # shellcheck disable=SC2086
+  ${IPTABLES} ${_fw_rule_args}
+
+  _last_rule_no=$(${IPTABLES} -L FORWARD --line-number | tail -1 | cut -d " " -f 1)
+  if [ "$(get_rule_no)" != "${_last_rule_no}" ]; then
+    return 1
+  fi
+}
+
+if [ -z "$(get_rule_no)" ]
 then
   exit 0
 fi
 
-# Safeguard, this should never happen
-# Exactly 0 or 1 rule should match, bail out if there are more & investigate
-if [ "$(echo ${FW_RULE_NO} | wc -w)" -gt 1 ]
-then
-  fail "More than one rule matched when looking for 'nm-shared-${IFNAME}', bailing out"
-fi
+_ctr=0
+until demote_rule; do
+  sleep 1
+  _ctr=$((_ctr + 1))
+  if [ "${_ctr}" -ge 10 ]; then
+    fail "Failed to demote rule 'nm-shared-${IFNAME}'"
+  fi
+done
 
 info "Found shared FORWARD rule 'nm-shared-${IFNAME}' at index ${FW_RULE_NO}, moving down"
-
-FW_RULE_ARGS="$(${IPTABLES} -S FORWARD ${FW_RULE_NO})"
-
-# Append the rule to the bottom
-# Do not quote ${FW_RULE_ARGS}, this needs to expand
-${IPTABLES} ${FW_RULE_ARGS}
-
-# Remove the rule from its original position
-${IPTABLES} -D FORWARD "${FW_RULE_NO}"
