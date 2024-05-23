@@ -1,4 +1,23 @@
 - commits:
+    - subject: "tests: safe-reboot: fetch and modify target state"
+      hash: af4d36646c2c301fceadcd10143096b187b67bd1
+      body: >
+        This is a fix targeted for the revpi-connect-4 which requires a
+        config.txt param to be present to connect to wifi. The old way we did
+        this test results in the config.txt being wiped - so now we fetch and
+        change the current state to maintain the existing configuration and
+        avoid this
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 5.3.8
+  title: ""
+  date: 2024-05-23T11:43:26.464Z
+- commits:
     - subject: "tests: os: modem: fix curl command"
       hash: 6a62c9fea1611658504e3ccdff29bd8ae7467b3d
       body: >

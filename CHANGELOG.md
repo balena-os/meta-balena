@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.8
+## (2024-05-23)
+
+* tests: safe-reboot: fetch and modify target state [rcooke-warwick]
+
 # v5.3.7
 ## (2024-05-22)
 
