@@ -1,4 +1,56 @@
 - commits:
+    - subject: Update balena-supervisor to v16.3.8
+      hash: ca994c7c5d3598b0f1844e3c98bc37b756d056c6
+      body: |
+        Update balena-supervisor from 16.3.5 to 16.3.8
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.68
+              hash: 8a7972c783845576741c626f7ac543671ebf868b
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.67 to 2.0.68
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.8
+          title: ""
+          date: 2024-05-24T14:29:17.821Z
+        - commits:
+            - subject: Update sinon to v18
+              hash: 6b47c3572dea75c161e3931f05f37c46828d90a2
+              body: |
+                Update sinon from 17.0.1 to 18.0.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.7
+          title: ""
+          date: 2024-05-24T13:45:20.892Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.67
+              hash: 21f72b0ce9fd977517df3bf0ee5c186a17d432c9
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.66 to 2.0.67
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.6
+          title: ""
+          date: 2024-05-20T01:54:04.811Z
+  version: 5.3.10
+  title: ""
+  date: 2024-05-24T22:52:04.637Z
+- commits:
     - subject: "NetworkManager: do not use FW rule numbers in shared dispatcher script"
       hash: ab8d61194d84045e4b74f60e4172a69dd52a3509
       body: |
