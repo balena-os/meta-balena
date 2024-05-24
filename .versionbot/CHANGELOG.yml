@@ -1,4 +1,27 @@
 - commits:
+    - subject: "NetworkManager: do not use FW rule numbers in shared dispatcher script"
+      hash: c374bcd6f0c6c8caa74ae43b6af09012aec18f49
+      body: |
+        Manipulating the firewall rules by index introduces a race condition.
+        Both NetworkManager and balenaEngine add the rules to the top
+        of the FORWARD chain instead of appending, so if we first look up
+        a rule by number and then use the number to refer to it, we can not
+        guarantee that the rule number has not changed (iow the rule has not
+        been moved down) in the meantime.
+
+        This patch removes the use of rule numbers completely and makes
+        the "shared" dispatcher script refer to the rules by definition.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.1.57
+  title: ""
+  date: 2024-05-24T20:32:22.654Z
+- commits:
     - subject: "networkmanager: Wait for iptables lock in shared dispatcher script"
       hash: 7a0110a2dd02e6604b158214ea998e9de282b65e
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.57
+## (2024-05-24)
+
+* NetworkManager: do not use FW rule numbers in shared dispatcher script [Michal Toman]
+
 # v5.1.56
 ## (2024-04-11)
 
