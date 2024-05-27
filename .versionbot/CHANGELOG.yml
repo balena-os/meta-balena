@@ -1,4 +1,43 @@
 - commits:
+    - subject: Update balena-supervisor to v16.3.10
+      hash: a500fccd65e2cf7d31ed6730cc6fd12e0220b757
+      body: |
+        Update balena-supervisor from 16.3.8 to 16.3.10
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update got to v14.3.0
+              hash: 4764bca2c4122a37f1f4c684e673ddca3812b4c9
+              body: |
+                Update got from 14.2.1 to 14.3.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.10
+          title: ""
+          date: 2024-05-27T02:41:46.106Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.69
+              hash: 9cdb363e4cf274e5506247cc55cebef0c676de7e
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.68 to 2.0.69
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.9
+          title: ""
+          date: 2024-05-27T01:59:21.096Z
+  version: 5.3.11
+  title: ""
+  date: 2024-05-27T06:50:02.553Z
+- commits:
     - subject: Update balena-supervisor to v16.3.8
       hash: ca994c7c5d3598b0f1844e3c98bc37b756d056c6
       body: |
