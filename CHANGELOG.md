@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.12
+## (2024-05-31)
+
+* patch: Add Test Suite specific config for GHA [Vipul Gupta (@vipulgupta2048)]
+
 # v5.3.11
 ## (2024-05-27)
 

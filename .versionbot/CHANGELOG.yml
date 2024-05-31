@@ -1,4 +1,16 @@
 - commits:
+    - subject: "patch: Add Test Suite specific config for GHA"
+      hash: 4ecd7852f4eb0cd204e31cf3b8634c168782ce46
+      body: ""
+      footer:
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 5.3.12
+  title: ""
+  date: 2024-05-31T16:03:25.568Z
+- commits:
     - subject: Update balena-supervisor to v16.3.10
       hash: a500fccd65e2cf7d31ed6730cc6fd12e0220b757
       body: |
