@@ -4,3 +4,6 @@
 [submodule "tests/suites/os/tests/secureboot/kernel-module-build"]
 	path = tests/suites/os/tests/secureboot/kernel-module-build
 	url = https://github.com/balena-os/kernel-module-build
+[submodule "meta-clang"]
+	path = meta-clang
+	url = https://github.com/kraj/meta-clang.git
