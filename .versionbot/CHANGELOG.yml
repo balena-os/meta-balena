@@ -1,4 +1,112 @@
 - commits:
+    - subject: Update balena-supervisor to v16.3.11
+      hash: 55af41dcebb294ea9ebeeb2fd759d79065dc3bf2
+      body: |
+        Update balena-supervisor from 16.3.10 to 16.3.11
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Move OS variant retrieval to config module
+              hash: 027c2575b1147b5395c61e3d824f9dff95e7f1d0
+              body: >
+                This also deprecates the `getOSVariant` function of the
+                `os-release`
+
+                module, as the OS variant are no longer defined in
+                `/etc/os-release`.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Do not export balenaApi on api-binder
+              hash: 59689b27892a0bb3e6ec692c158070b6defb48a9
+              body: >
+                Instead, add `getBalenaApi` function to api-helper so other
+                modules can
+
+                access a balena API instance.
+
+
+                Further reduces circular dependencies to 5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move api-keys module to src/lib
+              hash: ac2db38742962a31af63549f0d9f257e6a1331f3
+              body: >
+                This removes circular dependencies between the device-api module
+                and
+
+                the compose module, reducing total circular dependencies to 15
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Do not re-export ContractObject on lib/contracts
+              hash: 48f75e61b8c53c532c27eb0c3f0d878312b4f2e7
+              body: |
+                Further reduce circular dependencies to 10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move Compose(Network|Volume)Config to top level types
+              hash: bef5e784400d13d2788748e059e36c761d956f23
+              body: |
+                This reduces dependencies from 80 to 47
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move composition types to compose/types
+              hash: 234e0de07599c1033d04c77d2df9a000d38f60dd
+              body: >
+                This reduces circular dependencies from 250 to 80 by ensuring
+                that
+
+                modules that only require types do not import the full module
+                with all
+
+                its dependencies.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Split compose types into interface and implementation
+              hash: 94de4006a07baada9336721c4084a00f885a6572
+              body: >
+                This splits `App`, `Network`, `Service` and `Volume` which used
+                to be
+
+                defined as classes into an interface and a class implementation
+                that is
+
+                not exported. This will allow to work with just the types in
+                some cases
+
+                and prevent circular dependencies when importing.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.3.11
+          title: ""
+          date: 2024-05-27T20:04:25.017Z
+  version: 5.3.13
+  title: ""
+  date: 2024-05-31T23:09:30.017Z
+- commits:
     - subject: "patch: Add Test Suite specific config for GHA"
       hash: 4ecd7852f4eb0cd204e31cf3b8634c168782ce46
       body: ""
