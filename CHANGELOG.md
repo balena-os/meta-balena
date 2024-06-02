@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.14
+## (2024-06-02)
+
+* rtl8192cu: Remove this unmaintained out-of-tree kernel driver [Florin Sarbu]
+
 # v5.3.13
 ## (2024-05-31)
 

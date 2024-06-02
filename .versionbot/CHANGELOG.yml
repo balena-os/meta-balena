@@ -1,4 +1,26 @@
 - commits:
+    - subject: "rtl8192cu: Remove this unmaintained out-of-tree kernel driver"
+      hash: e3b7a1555542e6b1381f1a5f7131b935d1f66f22
+      body: >
+        The source code for this driver hasn't been updated in 9 years so
+
+        let's remove it by also considering we were not using it. Instead,
+
+        machines that need to use a driver for this WiFi chipset can selectively
+
+        enable the in-tree kernel driver which has been improved in the last
+        years.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 5.3.14
+  title: ""
+  date: 2024-06-02T18:07:03.720Z
+- commits:
     - subject: Update balena-supervisor to v16.3.11
       hash: 55af41dcebb294ea9ebeeb2fd759d79065dc3bf2
       body: |
