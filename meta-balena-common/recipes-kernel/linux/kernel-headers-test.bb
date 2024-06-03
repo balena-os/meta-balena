@@ -37,8 +37,8 @@ do_compile() {
     cp -r "${WORKDIR}"/example_module ${B}/work/
 
     IMAGETAG="${PN}:$(date +%s)"
-    DOCKER_API_VERSION=1.22 docker build --tag ${IMAGETAG} --build-arg kernel_arch=${ARCH} --build-arg cross_compile_prefix=${DEBIAN_TUPLE} ${B}/work
-    DOCKER_API_VERSION=1.22 docker rmi "$IMAGETAG"
+    DOCKER_API_VERSION=${BALENA_API_VERSION} docker build --tag ${IMAGETAG} --build-arg kernel_arch=${ARCH} --build-arg cross_compile_prefix=${DEBIAN_TUPLE} ${B}/work
+    DOCKER_API_VERSION=${BALENA_API_VERSION} docker rmi "$IMAGETAG"
 }
 
 # Explicitly depend on the do_deploy step as we use the deployed artefacts. DEPENDS doesn't cover that
