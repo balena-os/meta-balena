@@ -16,7 +16,7 @@ class secureBoot {
 		this.tmpDir = suite.options.tmpdir;
 	}
 
-	async resetWorker() {
+	async resetDUT() {
 		await this.worker.off();
 		await this.worker.flash(this.imagePath);
 		await this.worker.on();
@@ -151,7 +151,7 @@ class uefiSecureBoot extends secureBoot {
 			this.waitForSerialOutput(/bootx64.efi: Access Denied/),
 			'Firmware will not load bootloader that fails verification',
 		)
-		).then( () => this.resetWorker() );
+		).then( () => this.resetDUT() );
 	};
 
 	async testBootloaderConfigIntegrity() {
@@ -180,7 +180,7 @@ class uefiSecureBoot extends secureBoot {
 			'Bootloader will not load configuration that fails signature verification',
 			{ todo: 'This needs reworked for GRUB 2.12' },
 		)
-		).then( () => this.resetWorker() );
+		).then( () => this.resetDUT() );
 	};
 }
 
