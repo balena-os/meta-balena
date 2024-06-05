@@ -70,27 +70,52 @@ EOF
             if [ -n "${override}" ]; then
                     echo "${override}" | _hexdecode | tcgtool "$var" | _sha256
             else
-                    tcgtool "$var" | _sha256
+		    # this is a workaround for tcgtool erroneously reading in
+		    # zero bytes from EFI variables during HUP -- we're not
+		    # sure what the cause is yet, but reading in with dd seems
+		    # to work fine
+                    dd if="${var}" \
+                       status=none \
+                       skip=4 \
+                       bs=1 \
+                    | tcgtool "$var" | _sha256
             fi
         )
 
         digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
     done
 
-    # Extend our digest with any additional random events that may have been logged
     EV_SEPARATOR=$(dd if=/dev/zero bs=1 count=4 status=none | _sha256)
     if [ -f "${TPM_EVENTLOG_PATH}" ]; then
-        for extend in $(tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
-                | parse_pcr7_digests \
-                | sed '1,5d' \
-                | tr -d '"'); do
-            digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
+        # Extend our digest with any additional random events that may have been logged
+        #
+        # Some systems will log unexpected events before EV_SEPARATOR, some after,
+        # but always before EV_EFI_VARIABLE_AUTHORITY events, so stop there
+        eventlog_output="$(tpm2_eventlog $TPM_EVENTLOG_PATH)"
+        digests="$(mktemp)"
+        eventtypes="$(mktemp)"
+        # to remain compatible with POSIX sh, avoid process substitution
+        #
+        # Instead, parse the event log for PCR 7 digests and event types,
+        # trimming the first five events (SecureBoot, PK, KEK, db, dbx), and
+        # outputting to temporary files to be read in later
+        echo "$eventlog_output" | parse_pcr7_digests | tail -n +6 > "$digests"
+        echo "$eventlog_output" | parse_pcr7_eventtypes | tail -n +6 > "$eventtypes"
 
-            # stop merging before EV_EFI_VARIABLE_AUTHORITY events (EFI binary digests)
-            if [ "$extend" == "$EV_SEPARATOR" ]; then
-                break
-            fi
+        # attach file descriptors to the temp files for reading
+        exec 3<"$digests"
+        exec 4<"$eventtypes"
+        # loop through digests and event types, appending events until we get
+        # one that's an EFI binary signature
+        while IFS= read -r extend <&3 && IFS= read -r eventtype <&4; do \
+            if [ "$eventtype" = "EV_EFI_VARIABLE_AUTHORITY" ]; then break; fi
+            digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
         done
+
+        # close fds and cleanup
+        exec 3<&-
+        exec 4<&-
+        rm "$digests" "$eventtypes"
     else
         digest=$(printf '%s%s' "$digest" "$EV_SEPARATOR" | _hexdecode | _sha256)
     fi
@@ -102,7 +127,7 @@ parse_pcr7_digests() {
     awk -F': ' '
         $1 ~ /PCRIndex/ { pcr = $2 }
         $1 ~ /AlgorithmId/ && pcr == 7 && $2 == "sha256" { digestFlag = 1 }
-        $1 ~ /Digest/ && digestFlag { print $2; digestFlag = 0 }'
+        $1 ~ /Digest/ && digestFlag { gsub("\"", "", $2); print $2; digestFlag = 0 }'
 }
 
 parse_pcr7_eventtypes() {
