@@ -236,6 +236,11 @@ if [ "${DURING_UPDATE}" != 1 ]; then
     exit 0
 fi
 
+# Only applicable on UEFI systems
+if [ ! -d "/sys/firmware/efi" ]; then
+    exit 0
+fi
+
 mountEfiVars
 
 # Read EFI variables
