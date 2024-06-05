@@ -1,4 +1,133 @@
 - commits:
+    - subject: "os-helpers-tpm2: fix empty efivar reads"
+      hash: 3f9d048f964f922c9bfaeee4939197cb31c8eef6
+      body: |
+        When reading from efi variables in hostapp-update hooks during rollback,
+        tcgtool will improperly read zero bytes from efivar files. This results
+        in an improper calculation of the PCR 7 digest, and an unbootable
+        system.
+
+        Read the file contents, skipping the first four bytes that are
+        attributes, and pipe the data directly to tcgtool to work around this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "rollback-health: bind mount EFI partition in old_rootfs"
+      hash: 8761c1d6536d86249757f37925ae40d905716cc3
+      body: |
+        Some hooks, such as 0-signed-update, will attempt to read files from the
+        EFI system partition, such as combined policy binaries.
+
+        Bind mount the EFI partition into old_rootfs before running hooks to
+        ensure this is available.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "rollback-health: mount securityfs in old_rootfs"
+      hash: e87838103af3c5ee05c60b7105353f987af47e61
+      body: |
+        When rollback-health runs, a failing healthcheck causes the
+        hostapp-update hooks to be run from the inactive partition, to make the
+        inactive system bootable again.
+
+        The 0-signed-update hook, which updates the sealing policy for secure
+        boot enabled systems, reads from the securityfs mounted at
+        /sys/kernel/security in order to parse the TPM event log.
+
+        If this filesystem isn't mounted, the hook will improperly detect that
+        the TPM event log isn't available, and unneccessarily create a combined
+        policy when a single PCR policy would suffice.
+
+        Mount this filesystem in old_rootfs before chrooting to fix this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: compute_pcr7 w/ events post separator"
+      hash: e4f8f6f9c79f994f873bc930bfa028f2161a29d9
+      body: |
+        In commit 1c19ebb, we append digests from the TPM event log
+        corresponding to events that are logged before EV_SEPARATOR. For
+        instance, parsing the event log on a typical system for event types, the
+        output looks like this:
+
+        EV_EFI_VARIABLE_DRIVER_CONFIG (SecureBoot)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (PK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (KEK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (db)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (dbx)
+        EV_SEPARATOR
+
+        This system requires no merging of event log digests.
+
+        On systems that measure EFI binaries (mostly only QEMU w/ edk2), we also
+        get this:
+
+        EV_EFI_VARIABLE_DRIVER_CONFIG (SecureBoot)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (PK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (KEK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (db)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (dbx)
+        EV_SEPARATOR
+        EV_EFI_VARIABLE_AUTHORITY (bootx64.efi)
+        EV_EFI_VARIABLE_AUTHORITY (bzImage)
+
+        Again, this requires no merging. We compute the signature of the
+        relevant EFI binaries ourselves, as they're subject to change during
+        hostapp-update.
+
+        However, we've also seen event logs like this:
+
+        EV_EFI_VARIABLE_DRIVER_CONFIG (SecureBoot)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (PK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (KEK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (db)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (dbx)
+        EV_EFI_ACTION (DMA Protection Disabled)
+        EV_SEPARATOR
+
+        This case is the one we've handled previously, by reading from the event
+        log and appending event digests before EV_SEPARATOR. We stopped at
+        EV_SEPARATOR because we weren't parsing event types previously, and this
+        digest is a constant that's easily recognized. However, we've since
+        encountered systems that have unexpected events *after* EV_SEPARATOR, as
+        shown below.
+
+        EV_EFI_VARIABLE_DRIVER_CONFIG (SecureBoot)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (PK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (KEK)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (db)
+        EV_EFI_VARIABLE_DRIVER_CONFIG (dbx)
+        EV_SEPARATOR
+        Unknown event type (?!)
+
+        In order to handle this, parse digests and event types into temporary
+        files and iterate through them together. We only stop appending digests
+        from the event log when the next event type is EV_EFI_VARIABLE_AUTHORITY
+        (EFI binary signature) or we hit the end of the list. This should
+        account for all possible variations.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 5.3.15
+  title: ""
+  date: 2024-06-05T00:15:59.506Z
+- commits:
     - subject: "rtl8192cu: Remove this unmaintained out-of-tree kernel driver"
       hash: e3b7a1555542e6b1381f1a5f7131b935d1f66f22
       body: >

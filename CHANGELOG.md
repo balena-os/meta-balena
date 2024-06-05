@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v5.3.15
+## (2024-06-05)
+
+* os-helpers-tpm2: fix empty efivar reads [Joseph Kogut]
+* rollback-health: bind mount EFI partition in old_rootfs [Joseph Kogut]
+* rollback-health: mount securityfs in old_rootfs [Joseph Kogut]
+* os-helpers-tpm2: compute_pcr7 w/ events post separator [Joseph Kogut]
+
 # v5.3.14
 ## (2024-06-02)
 
