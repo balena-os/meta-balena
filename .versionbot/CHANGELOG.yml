@@ -1,4 +1,26 @@
 - commits:
+    - subject: Work around uuid file corruption in balenaEngine health check
+      hash: e3696fc97f5553f138c92947c5f080ccdef5c6e5
+      body: |
+        We have detected one more way in which the uuid file used by containerd
+        can get corrupted. This time, the file is not empty, but doesn't contain
+        a valid UUID either.
+
+        This commit thus extends the existing workaround to also handle this
+        case.
+
+        See https://github.com/balena-os/balena-engine/issues/322
+      footer:
+        Signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        signed-off-by: Leandro Motta Barros <leandro@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Leandro Motta Barros
+      nested: []
+  version: 5.3.16
+  title: ""
+  date: 2024-06-06T22:28:17.347Z
+- commits:
     - subject: "os-helpers-tpm2: fix empty efivar reads"
       hash: 3f9d048f964f922c9bfaeee4939197cb31c8eef6
       body: |

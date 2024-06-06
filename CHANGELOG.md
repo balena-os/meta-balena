@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.16
+## (2024-06-06)
+
+* Work around uuid file corruption in balenaEngine health check [Leandro Motta Barros]
+
 # v5.3.15
 ## (2024-06-05)
 
