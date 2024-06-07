@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.58
+## (2024-06-07)
+
+* hostapp-update-hooks: 1-bootfiles: Check for os-helpers-sb before including [Alex Gonzalez]
+
 # v5.1.57
 ## (2024-05-24)
 

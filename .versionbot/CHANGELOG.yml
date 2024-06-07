@@ -1,4 +1,20 @@
 - commits:
+    - subject: "hostapp-update-hooks: 1-bootfiles: Check for os-helpers-sb before
+        including"
+      hash: 03b348fbbfebbde45dc0cd7269dbdc6384240981
+      body: |
+        The `os-helpers-sb` file is only included for signed builds.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.58
+  title: ""
+  date: 2024-06-07T13:25:50.444Z
+- commits:
     - subject: "NetworkManager: do not use FW rule numbers in shared dispatcher script"
       hash: c374bcd6f0c6c8caa74ae43b6af09012aec18f49
       body: |
