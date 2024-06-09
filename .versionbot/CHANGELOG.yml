@@ -1,4 +1,82 @@
 - commits:
+    - subject: Update balena-supervisor to v16.3.14
+      hash: 30faae36bf1a000b2aa0ca6a0d99bf374426354a
+      body: |
+        Update balena-supervisor from 16.3.11 to 16.3.14
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update got to v14.4.1
+              hash: 11628cda16986b76f67969970fe708e24d3ab125
+              body: |
+                Update got from 14.3.0 to 14.4.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.14
+          title: ""
+          date: 2024-06-09T13:29:56.248Z
+        - commits:
+            - subject: Split target state set/get into separate module
+              hash: 45d1f1f964e777b5168b089858af0cec33f98c68
+              body: >
+                This removes the circular dependency between device state index
+                and
+
+                preloading and cleans up the device state module code
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move device-state.ts into the device-state/index.ts
+              hash: fedeb518e5315a7cb593818c2e80a5d8e459cefa
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move device-state/target state to api-binder/poll
+              hash: 9497eed380e63f3b5d794071879ad9e8e4369178
+              body: >
+                This goes in the direction of grouping modules by
+                responsibility. The
+
+                api-binder module is the middleware between the device and the
+                backend,
+
+                thus the target state polling code makes more sense there.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.3.13
+          title: ""
+          date: 2024-06-05T20:43:08.205Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.70
+              hash: d7a325b80a5c79d290b7bb232dabb4a7ac2737f9
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.69 to 2.0.70
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.12
+          title: ""
+          date: 2024-06-03T01:55:57.227Z
+  version: 5.3.17
+  title: ""
+  date: 2024-06-09T18:34:28.024Z
+- commits:
     - subject: Work around uuid file corruption in balenaEngine health check
       hash: e3696fc97f5553f138c92947c5f080ccdef5c6e5
       body: |
