@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.19
+## (2024-06-10)
+
+* kernel-balena: do not use cache for signed kernel modules [Alex Gonzalez]
+
 # v5.3.18
 ## (2024-06-10)
 

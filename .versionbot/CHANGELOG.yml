@@ -1,4 +1,21 @@
 - commits:
+    - subject: "kernel-balena: do not use cache for signed kernel modules"
+      hash: 389054e84c0b1fd382d737c39fb2bb02c2b3e9b2
+      body: |
+        On parallel builds that share a state cache there are mismatches between
+        a signed kernel and modules. Avoid using the cache when building signed
+        modules to avoid this mismatch.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.3.19
+  title: ""
+  date: 2024-06-10T16:38:00.806Z
+- commits:
     - subject: Update balena-supervisor to v16.3.15
       hash: c2d302e736ee35a65ccb57094aac780ddecd48cd
       body: |
