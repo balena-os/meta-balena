@@ -1,4 +1,32 @@
 - commits:
+    - subject: "hostapp-update-hooks: Re-add check for UEFI to signed-update hook"
+      hash: 972ef5f6090fc48a94a313bf01d8d59c6a3570d9
+      body: |
+        In 328222014146f0116e0208443f3e255d0e85ef15 we have removed
+        the signed-update hook from systems that do not have EFI
+        in MACHINE_FEATURES. This on its own makes sense, however together
+        with it we have also removed the runtime check for whether the running
+        system is actually booted in UEFI mode.
+
+        This effectively means it is no longer possible to update the host OS
+        on a device type able to boot in both UEFI and BIOS modes
+        (intel-nuc and genericx86-64-ext) when booted in BIOS mode,
+        as the signed-update hook is executed unconditionally and fails
+        if the device is not running UEFI.
+
+        This patch re-adds the runtime check to only execute the hook
+        if the system is actually booted in UEFI mode.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.3.20
+  title: ""
+  date: 2024-06-11T12:55:22.727Z
+- commits:
     - subject: "kernel-balena: do not use cache for signed kernel modules"
       hash: 389054e84c0b1fd382d737c39fb2bb02c2b3e9b2
       body: |

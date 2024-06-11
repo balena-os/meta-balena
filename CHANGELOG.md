@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.20
+## (2024-06-11)
+
+* hostapp-update-hooks: Re-add check for UEFI to signed-update hook [Michal Toman]
+
 # v5.3.19
 ## (2024-06-10)
 
