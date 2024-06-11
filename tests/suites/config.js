@@ -15,6 +15,10 @@ module.exports = [
 		}
 	},
 	image: `${__dirname}/balena-image.docker`,
+	// This is the name of a folder or file containing extra artifacts needed for the test suite
+	// E.g for the cm4-io-board provisioning the `secure-boot-msd` folder is required
+	// This artifact/artifact must be copied into the `suites` folder before running the test
+	artifacts: process.env.ARTIFACTS,
 	debug: {
 		// Exit the ongoing test suite if a test fails
 		failFast: true,
@@ -55,6 +59,10 @@ module.exports = [
 		// Mark unstable tests to be skipped
 		unstable: ['']
 	},
+	// This is the name of a folder or file containing extra artifacts needed for the test suite
+	// E.g for the cm4-io-board provisioning the `secure-boot-msd` folder is required
+	// This artifact/artifact must be copied into the `suites` folder before running the test
+	artifacts: process.env.ARTIFACTS,
 	workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
 		balenaApplication: process.env.BALENACLOUD_APP_NAME.split(','),
 		apiKey: process.env.BALENACLOUD_API_KEY,
@@ -75,6 +83,10 @@ module.exports = [
 		}
 	},
 	image: `${__dirname}/balena.img.gz`,
+	// This is the name of a folder or file containing extra artifacts needed for the test suite
+	// E.g for the cm4-io-board provisioning the `secure-boot-msd` folder is required
+	// This artifact/artifact must be copied into the `suites` folder before running the test
+	artifacts: process.env.ARTIFACTS,
 	debug: {
 		// Exit the ongoing test suite if a test fails
 		failFast: true,
