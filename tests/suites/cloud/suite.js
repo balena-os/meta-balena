@@ -233,6 +233,14 @@ module.exports = {
       }
     });
 
+    if(this.suite.options.artifacts !== undefined){
+      // extra artifacts "artifacts" are defined in the config.js of the suite
+      // these artifacts must be in the "suites" directory in the config.js - so you must copy them into suites before
+      // running the tests if these are build time artifacts
+      console.log(`Sending extra artifact folder: ${this.suite.options.artifacts} to worker...`)
+      await this.worker.sendFile(`${__dirname}/${this.suite.options.artifacts}`,'/data/', 'worker');
+    }
+
     // remove application when tests are done
     this.suite.teardown.register(() => {
       this.log("Removing application");

@@ -361,6 +361,14 @@ module.exports = {
 			},
 		});
 
+		if(this.suite.options.artifacts !== undefined){
+			// extra artifacts "artifacts" are defined in the config.js of the suite
+			// these artifacts must be in the "suites" directory in the config.js - so you must copy them into suites before
+			// running the tests if these are build time artifacts
+			console.log(`Sending extra artifact folder: ${this.suite.options.artifacts} to worker...`)
+			await this.worker.sendFile(`${__dirname}/${this.suite.options.artifacts}`,'/data/', 'worker');
+		}
+
 		// Downloads the balenaOS image we hup from
 		// It can't accept invalid deviceType because we check contracts already in the start
 		// If there are no releases found for a deviceType then skip the HUP suite

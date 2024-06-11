@@ -15,6 +15,7 @@ module.exports = [
       }
     },
     image: `${__dirname}/balena-image.docker`,
+	  artifacts: process.env.ARTIFACTS,
     debug: {
       // Exit the ongoing test suite if a test fails
       failFast: true,
