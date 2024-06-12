@@ -34,7 +34,7 @@ kexec_run() {
     # * root=XXX - will be replaced by the UUID
     # * maxcpus=0 - enable SMP after reboot if the 2nd stage bootloader has it disabled
     BOOT_PARAMS="$(cat /proc/cmdline | sed -e s,balena_stage2,, | sed -e s,root=[^\ ]*,, | sed -e s,maxcpus=0,, | sed -e s,nr_cpus=[^\ ]*,,)"
-    kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS} root=UUID=${ROOT_UUID}"
+    kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS} root=UUID=${ROOT_UUID} ${KEXEC_EXTRA_ARGS}"
 
     umount "${ROOTFS_DIR}"
 
