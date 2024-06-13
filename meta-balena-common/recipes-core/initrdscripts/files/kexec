@@ -27,7 +27,10 @@ kexec_enabled() {
 }
 
 kexec_run() {
-    ROOT_UUID=$(findmnt "${ROOTFS_DIR}" -n -o UUID)
+    ROOT_UUID=$(findmnt "${ROOTFS_DIR}" -n -o UUID -t "%%ROOTFS_TYPE%%")
+    if [ -z "${ROOT_UUID}" ]; then
+        fail "No valid root filesystem found"
+    fi
 
     # Remove the following kernel arguments:
     # * balena_stage2 - not to enter this script again after kexec

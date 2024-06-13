@@ -18,6 +18,7 @@ SRC_URI:append = " \
     file://migrate \
     "
 
+ROOTFS_TYPE = "${@oe.utils.conditional('SIGN_API','','auto','crypto_LUKS',d)}"
 do_install:append() {
     install -m 0755 ${WORKDIR}/console_null_workaround ${D}/init.d/000-console_null_workaround
     install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
@@ -41,6 +42,7 @@ do_install:append() {
 
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-kexec"
+    sed -i -e "s,@@ROOTFS_TYPE@@,${ROOTFS_TYPE}," "${D}/init.d/92-kexec"
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-migrate"
 }
 
