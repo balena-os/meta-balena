@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.21
+## (2024-06-13)
+
+* initrdscripts: Allow passing extra kernel arguments to kexec [Michal Toman]
+
 # v5.3.20
 ## (2024-06-11)
 

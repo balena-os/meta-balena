@@ -1,4 +1,25 @@
 - commits:
+    - subject: "initrdscripts: Allow passing extra kernel arguments to kexec"
+      hash: 02d42d3cc887fb761da348f86bf5e13f1dacaeb2
+      body: |
+        At this moment the kexec initrd script just takes the original kernel
+        command line, replaces root with UUID and removes bootloader args.
+
+        We have found at least one use-case (on the Pi4 and firmware GPIOs),
+        where a different initrd script needs to pass extra arguments
+        to the kexec'd kernel. With this patch it will append the contents
+        of the KEXEC_EXTRA_ARGS variable to the kernel command line.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.3.21
+  title: ""
+  date: 2024-06-13T10:02:03.824Z
+- commits:
     - subject: "hostapp-update-hooks: Re-add check for UEFI to signed-update hook"
       hash: 972ef5f6090fc48a94a313bf01d8d59c6a3570d9
       body: |
