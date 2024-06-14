@@ -133,7 +133,7 @@ case $action in
                 fi
             fi
             echo "INFO: Mounting $target_path ($target) in $target_mountpoint."
-            mount "$target_path" "$target_mountpoint"
+            mount -t "%%ROOTFS_TYPE%%" "$target_path" "$target_mountpoint"
         fi
         ;;
     umount)

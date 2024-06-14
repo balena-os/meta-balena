@@ -45,6 +45,7 @@ BINDMOUNTS += " \
 	/var/lib/chrony \
 	"
 
+ROOTFS_TYPE = "${@oe.utils.conditional('SIGN_API','','auto','crypto_LUKS',d)}"
 do_install:prepend () {
 	# These are mountpoints for various mount services/units
 	install -d ${D}/etc/docker
@@ -61,7 +62,7 @@ do_install:prepend () {
 
 	install -d ${D}${bindir}
 	install -m 755 ${WORKDIR}/resin-partition-mounter ${D}${bindir}
-
+	sed -i 's,@@ROOTFS_TYPE@@,${ROOTFS_TYPE},' "${D}${bindir}/resin-partition-mounter"
 	install -d ${D}${systemd_unitdir}/system
 	for service in ${SYSTEMD_SERVICE:resin-mounts}; do
 		install -m 0644 $service ${D}${systemd_unitdir}/system/
