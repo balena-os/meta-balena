@@ -69,7 +69,7 @@ init_config_json() {
 def check_for_compressed_kernel_modules(modules_dir):
     for root, dirs, files in os.walk(modules_dir, topdown=True):
         for name in files:
-            found_ko = name.endswith(".ko.gz") or name.endswith(".ko.xz")
+            found_ko = name.endswith(".ko.gz") or name.endswith(".ko.xz") or name.endswith('.ko.zst')
             if found_ko:
                 return found_ko
     return False
