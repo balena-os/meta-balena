@@ -2,6 +2,12 @@ SUMMARY = "LLVM compiler framework (packaged with rust)"
 LICENSE ?= "Apache-2.0-with-LLVM-exception"
 HOMEPAGE = "http://www.rust-lang.org"
 
+# check src/llvm-project/llvm/CMakeLists.txt for llvm version in use
+#
+LLVM_RELEASE = "17.0.6"
+
+require rust-source.inc
+
 SRC_URI += "file://0002-llvm-allow-env-override-of-exe-path.patch;striplevel=2 \
             file://0001-AsmMatcherEmitter-sort-ClassInfo-lists-by-name-as-we.patch;striplevel=2 \
 	    file://0003-llvm-fix-include-benchmarks.patch;striplevel=2"
@@ -10,7 +16,7 @@ S = "${RUSTSRC}/src/llvm-project/llvm"
 
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=8a15a0759ef07f2682d2ba4b893c9afe"
 
-inherit cmake python3native
+inherit cmake
 
 DEPENDS += "ninja-native rust-llvm-native"
 
@@ -24,12 +30,15 @@ CXXFLAGS:remove = "-g"
 
 LLVM_DIR = "llvm${LLVM_RELEASE}"
 
+RUST_LLVM_TARGETS ?= "ARM;AArch64;Mips;PowerPC;RISCV;X86"
+
 EXTRA_OECMAKE = " \
     -DCMAKE_BUILD_TYPE=Release \
-    -DLLVM_TARGETS_TO_BUILD='ARM;AArch64;Mips;PowerPC;RISCV;X86' \
+    -DLLVM_TARGETS_TO_BUILD='${RUST_LLVM_TARGETS}' \
     -DLLVM_BUILD_DOCS=OFF \
     -DLLVM_ENABLE_TERMINFO=OFF \
     -DLLVM_ENABLE_ZLIB=OFF \
+    -DLLVM_ENABLE_ZSTD=OFF \
     -DLLVM_ENABLE_LIBXML2=OFF \
     -DLLVM_ENABLE_FFI=OFF \
     -DLLVM_INSTALL_UTILS=ON \
@@ -40,8 +49,22 @@ EXTRA_OECMAKE = " \
     -DLLVM_TARGET_ARCH=${TARGET_ARCH} \
     -DCMAKE_INSTALL_PREFIX:PATH=${libdir}/llvm-rust \
 "
+
+# Forcibly disable the detection of these packages as otherwise
+# it will look at the host Python install
+EXTRA_OECMAKE += "\
+    -DPY_PYGMENTS_FOUND=OFF \
+    -DPY_PYGMENTS_LEXERS_C_CPP_FOUND=OFF \
+    -DPY_YAML_FOUND=OFF \
+"
+
 EXTRA_OECMAKE:append:class-target = "\
-    -DCMAKE_CROSSCOMPILING:BOOL=ON \
+    -DLLVM_BUILD_TOOLS=OFF \
+    -DLLVM_TABLEGEN=${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-tblgen \
+    -DLLVM_CONFIG_PATH=${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config \
+"
+
+EXTRA_OECMAKE:append:class-nativesdk = "\
     -DLLVM_BUILD_TOOLS=OFF \
     -DLLVM_TABLEGEN=${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-tblgen \
     -DLLVM_CONFIG_PATH=${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config \
@@ -68,4 +91,4 @@ FILES:${PN}-staticdev =+ "${libdir}/llvm-rust/*/*.a"
 FILES:${PN} += "${libdir}/libLLVM*.so.* ${libdir}/llvm-rust/lib/*.so.* ${libdir}/llvm-rust/bin"
 FILES:${PN}-dev += "${datadir}/llvm ${libdir}/llvm-rust/lib/*.so ${libdir}/llvm-rust/include ${libdir}/llvm-rust/share ${libdir}/llvm-rust/lib/cmake"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

@@ -33,7 +33,7 @@ class Crate(Wget):
         return ud.type in ['crate']
 
     def recommends_checksum(self, urldata):
-        return False
+        return True
 
     def urldata_init(self, ud, d):
         """
@@ -56,12 +56,14 @@ class Crate(Wget):
         if len(parts) < 5:
             raise bb.fetch2.ParameterError("Invalid URL: Must be crate://HOST/NAME/VERSION", ud.url)
 
-        # last field is version
-        version = parts[len(parts) - 1]
+        # version is expected to be the last token
+        # but ignore possible url parameters which will be used
+        # by the top fetcher class
+        version = parts[-1].split(";")[0]
         # second to last field is name
-        name = parts[len(parts) - 2]
+        name = parts[-2]
         # host (this is to allow custom crate registries to be specified
-        host = '/'.join(parts[2:len(parts) - 2])
+        host = '/'.join(parts[2:-2])
 
         # if using upstream just fix it up nicely
         if host == 'crates.io':
@@ -69,9 +71,10 @@ class Crate(Wget):
 
         ud.url = "https://%s/%s/%s/download" % (host, name, version)
         ud.parm['downloadfilename'] = "%s-%s.crate" % (name, version)
-        ud.parm['name'] = name
+        if 'name' not in ud.parm:
+            ud.parm['name'] = '%s-%s' % (name, version)
 
-        logger.debug(2, "Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
+        logger.debug2("Fetching %s to %s" % (ud.url, ud.parm['downloadfilename']))
 
     def unpack(self, ud, rootdir, d):
         """
@@ -95,11 +98,13 @@ class Crate(Wget):
         save_cwd = os.getcwd()
         os.chdir(rootdir)
 
-        pn = d.getVar('BPN')
-        if pn == ud.parm.get('name'):
+        bp = d.getVar('BP')
+        if bp == ud.parm.get('name'):
             cmd = "tar -xz --no-same-owner -f %s" % thefile
+            ud.unpack_tracer.unpack("crate-extract", rootdir)
         else:
             cargo_bitbake = self._cargo_bitbake_path(rootdir)
+            ud.unpack_tracer.unpack("cargo-extract", cargo_bitbake)
 
             cmd = "tar -xz --no-same-owner -f %s -C %s" % (thefile, cargo_bitbake)
 
