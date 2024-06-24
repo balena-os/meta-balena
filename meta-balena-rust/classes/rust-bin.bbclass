@@ -1,4 +1,4 @@
-inherit balena_rust
+inherit rust
 
 RDEPENDS:${PN}:append:class-target = " ${RUSTLIB_DEP}"
 

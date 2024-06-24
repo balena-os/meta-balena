@@ -4,8 +4,8 @@ SECTION = "devel"
 LICENSE = "MIT | Apache-2.0"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=93a95682d51b4cb0a633a97046940ef0"
 
-inherit balena_rust
-inherit balena_cargo_common
+inherit rust
+inherit cargo_common
 
 DEPENDS += "file-native python3-native"
 DEPENDS:append:class-native = " rust-llvm-native"

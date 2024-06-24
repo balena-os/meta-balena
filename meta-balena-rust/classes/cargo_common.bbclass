@@ -16,7 +16,7 @@ def set_crate_fetcher(d):
 
 # add crate fetch support
 inherit ${@set_crate_fetcher(d)}
-inherit balena_rust-common
+inherit rust-common
 
 # Where we download our registry and dependencies to
 export CARGO_HOME = "${WORKDIR}/cargo_home"

@@ -1,4 +1,4 @@
-inherit balena_rust-common
+inherit rust-common
 
 RUSTC = "rustc"
 
