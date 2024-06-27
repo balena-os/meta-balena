@@ -74,18 +74,21 @@ migrate_enabled() {
             # Migrate if configured to do so or if there is only one disk
             # (excluding RAM and swap devices)
             if [[ ( -n "${_migrate}" && "${_migrate}" = "1" ) || $(lsblk -nde 251,1 | wc -l) -eq "1" ]]; then
-                # Check that we are booting from the same disk we want to program
-                if [ "${internal_dev#/dev/}" = "${boot_dev}" ]; then
-                    info "Running migration on ${internal_dev}..."
-                    return 0
-                fi
+                info "Running migration on ${internal_dev}..."
+                return 0
             fi
         fi
+
+        if is_secured && [ "${_migrate}" != "1" ]; then
+            fail "Locked devices can only be installed from memory"
+        fi
+
+        # Leave flashing after pivot-rooting
+        if mountpoint "${FLASH_BOOT_MOUNT}"; then
+            umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
+        fi
     fi
-    # Booting from external media - leave flashing after pivot-rooting
-    if mountpoint "${FLASH_BOOT_MOUNT}"; then
-        umount "${FLASH_BOOT_MOUNT}" > /dev/null || true
-    fi
+    # standard boot
     return 1
 }
 
@@ -130,6 +133,16 @@ migrate_run() {
         sync "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
         # Unmount the rootfs as we are going to program over
         umount "${ROOTFS_DIR}"
+
+        # If booting from the same disk we want to program, reboot after flashing
+        if [ "${internal_dev#/dev/}" = "${boot_dev}" ]; then
+            if [ -f "/etc/resin-init-flasher.conf" ]; then
+                echo "POSTINSTALL_REBOOT=1" >> "/etc/resin-init-flasher.conf"
+            else
+                fail "Flasher configuration not found"
+            fi
+        fi
+
         # Run flasher - should not return
         /usr/bin/resin-init-flasher
     else
