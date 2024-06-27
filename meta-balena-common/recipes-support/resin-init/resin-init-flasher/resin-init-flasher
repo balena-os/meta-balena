@@ -28,6 +28,8 @@
 #  BOOTLOADER_BLOCK_SIZE_OFFSET           - offset at which we write u-boot binary
 #  BOOTLOADER_SKIP_OUTPUT_BLOCKS          - number of blocks to skip when writing bootloader
 #                                             * this is the seek param to dd
+#  POSTINSTALL_REBOOT                      - The default flasher behaviour is to shutdown after install,
+#                                           but some use cases like migration requires a reboot.
 #
 #  Certain hardware requires that the bootloader is split into MLO and u-boot.img rather than having
 # it all bundled in a u-boot.img binary. To address this requirement, this flashing script will further
@@ -66,8 +68,12 @@ FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 LUKS=0
 BOOT_ENTRY_LABEL="balenaOS"
 
+# shellcheck disable=SC1091
 . /usr/libexec/os-helpers-fs
+# shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+[ -f /usr/libexec/os-helpers-power ] && . /usr/libexec/os-helpers-power
 
 function clean {
     echo "[resin-init-flasher] Cleanup."
@@ -486,14 +492,39 @@ fi
 
 report_progress 100 "Post-Provisioning"
 
-# After migration we want to reboot as the remote device might not be accesible otherwise
-# This is achieved because the shutdown command is not part of the initramfs
-if command -v shutdown; then
-    info "Shutting down ..."
-    shutdown -h now
-elif command -v reboot; then
+_a='o'
+if [ "${POSTINSTALL_REBOOT}" = "1" ]; then
     info "Rebooting..."
-    reboot -f
+    _a='b'
+    if command -v os_helpers_reboot > /dev/null; then
+        os_helpers_reboot
+    elif command -v reboot > /dev/null; then
+        if ! reboot; then
+            reboot -f
+        fi
+    fi
 fi
 
+info "Shutting down ..."
+if command -v os_helpers_shutdown > /dev/null; then
+    os_helpers_shutdown
+else
+	if command -v shutdown > /dev/null; then
+		shutdown -h now
+	elif command -v poweroff > /dev/null; then
+		if ! poweroff; then
+		    poweroff -f
+		fi
+	elif command -v halt > /dev/null; then
+		if ! halt; then
+		    halt -f
+		fi
+	elif command -v reboot > /dev/null; then
+		if ! reboot -p; then
+		    reboot -p -f
+		fi
+	fi
+fi
+
+echo "${_a}" > /proc/sysrq-trigger
 fail "Unable to shutdown or reboot"
