@@ -28,6 +28,8 @@
 #  BOOTLOADER_BLOCK_SIZE_OFFSET           - offset at which we write u-boot binary
 #  BOOTLOADER_SKIP_OUTPUT_BLOCKS          - number of blocks to skip when writing bootloader
 #                                             * this is the seek param to dd
+#  POSTINSTALL_REBOOT                      - The default flasher behaviour is to shutdown after install,
+#                                           but some use cases like migration requires a reboot.
 #
 #  Certain hardware requires that the bootloader is split into MLO and u-boot.img rather than having
 # it all bundled in a u-boot.img binary. To address this requirement, this flashing script will further
@@ -486,14 +488,20 @@ fi
 
 report_progress 100 "Post-Provisioning"
 
-# After migration we want to reboot as the remote device might not be accesible otherwise
-# This is achieved because the shutdown command is not part of the initramfs
-if command -v shutdown; then
-    info "Shutting down ..."
-    shutdown -h now
-elif command -v reboot; then
+if [ "${POSTINSTALL_REBOOT}" = "1" ]; then
     info "Rebooting..."
     reboot -f
+fi
+
+# Try shutdown fist, but fallback to poweroff
+# as initramfs does not have shutdown
+info "Shutting down ..."
+if command -v shutdown > /dev/null; then
+    shutdown -h now
+elif command -v poweroff > /dev/null; then
+        poweroff -f
+else
+    fail "Unable to shutdown"
 fi
 
 fail "Unable to shutdown or reboot"
