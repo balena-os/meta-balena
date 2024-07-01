@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.22
+## (2024-07-01)
+
+* initrdscripts: make the kexec script fail hard in unexpected states [Michal Toman]
+
 # v5.3.21
 ## (2024-06-13)
 

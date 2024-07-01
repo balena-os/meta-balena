@@ -1,4 +1,27 @@
 - commits:
+    - subject: "initrdscripts: make the kexec script fail hard in unexpected states"
+      hash: 0b6199dddbb52e963d7b6e5feb5771f2b61a0f35
+      body: |
+        At this moment the kexec initrd script is skipped when ROOTFS_DIR
+        is not defined or if the new rootfs is mounted, but does not contain
+        a kernel image in the expected place. This is undesirable as we
+        assume this is the last script executed by the balena bootloader.
+
+        This patch makes the kexec script always execute in the balena
+        bootloader and makes it fail hard in unexpected states, which means
+        the script is always an exit point for the balena bootloader,
+        whether the actual kexec call succeeds or not.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.3.22
+  title: ""
+  date: 2024-07-01T15:01:00.393Z
+- commits:
     - subject: "initrdscripts: Allow passing extra kernel arguments to kexec"
       hash: 02d42d3cc887fb761da348f86bf5e13f1dacaeb2
       body: |
