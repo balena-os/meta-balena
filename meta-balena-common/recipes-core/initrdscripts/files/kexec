@@ -6,27 +6,31 @@
 KERNEL_IMAGE="${ROOTFS_DIR}/boot/@@KERNEL_IMAGETYPE@@"
 
 kexec_enabled() {
-    if [ "$bootparam_balena_stage2" != "true" ]
+    # The script is enabled if and only if we are in balena bootloader.
+    # Any additional pre-conditions should be handled by runtime checks
+    # in kexec_run(). This is because this script serves as exit point
+    # for the balena bootloader, regardless of whether the actual kexec
+    # call succeeds or not. Running any further initrd scripts
+    # is undesirable and considered undefined behavior.
+    if [ "$bootparam_balena_stage2" = "true" ]
     then
-        return 1
+        return 0
     fi
 
-    if [ "x${ROOTFS_DIR}" = "x" ]
+    return 1
+}
+
+kexec_run() {
+    if [ -z "${ROOTFS_DIR}" ]
     then
-        info "ROOTFS_DIR undefined, skipping kexec"
-        return 1
+        fail "ROOTFS_DIR undefined, can not kexec"
     fi
 
     if [ ! -f "${KERNEL_IMAGE}" ]
     then
-        info "${KERNEL_IMAGE} not found, skipping kexec"
-        return 1
+        fail "${KERNEL_IMAGE} not found, can not kexec"
     fi
 
-    return 0
-}
-
-kexec_run() {
     ROOT_UUID=$(findmnt "${ROOTFS_DIR}" -n -o UUID)
 
     # Remove the following kernel arguments:
@@ -38,5 +42,10 @@ kexec_run() {
 
     umount "${ROOTFS_DIR}"
 
-    kexec -e || fail "kexec failed with $?, abort"
+    kexec -e
+
+    # The `kexec -e` above should be the only exit point from this script
+    # If the code has somehow reached all the way down here, it means
+    # kexec had failed and we must bail out immediately.
+    fail "kexec failed with $?, abort"
 }
