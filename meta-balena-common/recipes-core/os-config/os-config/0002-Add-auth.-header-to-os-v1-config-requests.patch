@@ -1,0 +1,96 @@
+From 1cbf6ea951cc44c08c81e37b77536d7583a4bb14 Mon Sep 17 00:00:00 2001
+From: Anton Belodedenko <2033996+ab77@users.noreply.github.com>
+Date: Mon, 10 Jun 2024 12:03:36 -0700
+Subject: [PATCH] Add auth. header to /os/v1/config requests
+
+* this allows the API to identify devices requesting configuration and
+  apply routing logic (e.g. switch from TCP to UDP OpenVPN configuration)
+
+change-type: minor
+---
+ src/args.rs        |  2 +-
+ src/config_json.rs |  2 +-
+ src/remote.rs      | 14 +++++++++-----
+ 3 files changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/src/args.rs b/src/args.rs
+index 04d9d53..d28ee82 100644
+--- a/src/args.rs
++++ b/src/args.rs
+@@ -89,7 +89,7 @@ pub fn get_os_config_path() -> PathBuf {
+     path_buf(&try_redefined(OS_CONFIG_PATH, OS_CONFIG_PATH_REDEFINE))
+ }
+ 
+-fn get_config_json_path() -> PathBuf {
++pub fn get_config_json_path() -> PathBuf {
+     if get_flasher_flag_path().exists() {
+         get_config_json_flasher_path()
+     } else {
+diff --git a/src/config_json.rs b/src/config_json.rs
+index 3d33669..8d79b54 100644
+--- a/src/config_json.rs
++++ b/src/config_json.rs
+@@ -181,7 +181,7 @@ fn strip_api_endpoint(api_endpoint: &str) -> String {
+     }
+ }
+ 
+-fn get_api_key(config_json: &ConfigMap) -> Result<Option<String>> {
++pub fn get_api_key(config_json: &ConfigMap) -> Result<Option<String>> {
+     if let Some(value) = config_json.get("deviceApiKey") {
+         if let Some(api_key) = value.as_str() {
+             Ok(Some(api_key.to_string()))
+diff --git a/src/remote.rs b/src/remote.rs
+index 7b82d21..b566beb 100644
+--- a/src/remote.rs
++++ b/src/remote.rs
+@@ -8,6 +8,8 @@ use serde_json;
+ 
+ use anyhow::{anyhow, Context, Result};
+ use schema::validate_schema_version;
++use config_json::{read_config_json, get_api_key};
++use args::get_config_json_path;
+ 
+ #[derive(Debug, Serialize, Deserialize, PartialEq)]
+ pub struct Configuration {
+@@ -56,6 +58,8 @@ fn fetch_configuration_impl(
+     root_certificate: Option<reqwest::Certificate>,
+     retry: bool,
+ ) -> Result<Configuration> {
++    let config_json = read_config_json(&get_config_json_path())?;
++    let api_key = get_api_key(&config_json)?.unwrap_or("".to_string());
+     let client = build_reqwest_client(root_certificate)?;
+ 
+     let request_fn = if retry {
+@@ -66,7 +70,7 @@ fn fetch_configuration_impl(
+ 
+     info!("Fetching service configuration from {}...", config_url);
+ 
+-    let json_data = request_fn(config_url, &client)?.text()?;
++    let json_data = request_fn(config_url, &api_key, &client)?.text()?;
+ 
+     info!("Service configuration retrieved");
+ 
+@@ -75,17 +79,17 @@ fn fetch_configuration_impl(
+     Ok(serde_json::from_str(&json_data)?)
+ }
+ 
+-fn request_config(url: &str, client: &reqwest::Client) -> Result<reqwest::Response> {
+-    Ok(client.get(url).send()?)
++fn request_config(url: &str, token: &str, client: &reqwest::Client) -> Result<reqwest::Response> {
++    Ok(client.get(url).bearer_auth(token).send()?)
+ }
+ 
+-fn retry_request_config(url: &str, client: &reqwest::Client) -> Result<reqwest::Response> {
++fn retry_request_config(url: &str, token: &str, client: &reqwest::Client) -> Result<reqwest::Response> {
+     let mut sleeped = 0;
+ 
+     let mut last_err = String::new();
+ 
+     loop {
+-        match client.get(url).send() {
++        match client.get(url).bearer_auth(token).send() {
+             Ok(response) => {
+                 return Ok(response);
+             }
+-- 
+2.43.0
