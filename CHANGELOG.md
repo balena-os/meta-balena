@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v5.3.23
+## (2024-07-02)
+
+
+<details>
+<summary> Update balena-supervisor to v16.3.17 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-16.3.17
+> ### (2024-06-25)
+> 
+> * Fix engine deadlock on network+service change [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.3.16
+> ### (2024-06-17)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.72 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.3.22
 ## (2024-07-01)
 
