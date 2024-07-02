@@ -37,9 +37,9 @@ do_compile () {
     done
 
     IMAGETAG="${PN}:$(date +%s)"
-    DOCKER_API_VERSION=1.22 docker build --tag ${IMAGETAG} ${B}/work
-    DOCKER_API_VERSION=1.22 docker save "$IMAGETAG" > ${B}/work/mkfs-hostapp-image.tar
-    DOCKER_API_VERSION=1.22 docker rmi "$IMAGETAG"
+    DOCKER_API_VERSION=${BALENA_API_VERSION} docker build --tag ${IMAGETAG} ${B}/work
+    DOCKER_API_VERSION=${BALENA_API_VERSION} docker save "$IMAGETAG" > ${B}/work/mkfs-hostapp-image.tar
+    DOCKER_API_VERSION=${BALENA_API_VERSION} docker rmi "$IMAGETAG"
 
     sed -i "s/@IMAGE@/${IMAGETAG}/" ${B}/work/mkfs.hostapp
 }
