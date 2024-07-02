@@ -16,10 +16,13 @@ prepare_run() {
     fi
     mkdir -m 0755 /run/initramfs
 
-    # shellcheck disable=SC2154
     export INITRAMFS_LOGFILE="/run/initramfs/initramfs.debug"
-    if [ -z "$bootparam_shell" ] && [ -z "${bootparam_shell_debug}" ]; then
+    if [ -z "$bootparam_shell" ]; then
         # Export stdout and stderr to file
-        exec >"${INITRAMFS_LOGFILE}" 2>&1
+        LOGPIPE=log.pipe
+        mkfifo $LOGPIPE
+        tee < $LOGPIPE $INITRAMFS_LOGFILE &
+        exec >$LOGPIPE 2>&1
+        rm $LOGPIPE
     fi
 }
