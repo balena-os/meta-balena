@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.24
+## (2024-07-04)
+
+* workflows: fix linter errors [Alex Gonzalez]
+
 # v5.3.23
 ## (2024-07-02)
 

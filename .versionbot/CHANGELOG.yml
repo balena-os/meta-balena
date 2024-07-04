@@ -1,4 +1,18 @@
 - commits:
+    - subject: "workflows: fix linter errors"
+      hash: cd2e5faba65a6598952999953fcd4eb64520ac3a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.3.24
+  title: ""
+  date: 2024-07-04T17:12:37.404Z
+- commits:
     - subject: Update balena-supervisor to v16.3.17
       hash: 521d51db1023846cf95e40a9f2b0a514ec8aea6d
       body: |
