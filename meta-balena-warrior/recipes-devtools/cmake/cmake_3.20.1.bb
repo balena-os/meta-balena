@@ -1,6 +1,6 @@
 require cmake.inc
 
-inherit cmake
+inherit cmake bash-completion
 
 DEPENDS += "curl expat zlib libarchive xz ncurses bzip2"
 
@@ -46,7 +46,7 @@ do_install_append_class-nativesdk() {
 
 FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}"
 
-FILES_${PN} += "${datadir}/cmake-${CMAKE_MAJOR_VERSION} ${datadir}/cmake ${datadir}/aclocal"
+FILES_${PN} += "${datadir}/cmake-${CMAKE_MAJOR_VERSION} ${datadir}/cmake ${datadir}/aclocal ${datadir}/emacs ${datadir}/vim"
 FILES_${PN}-doc += "${docdir}/cmake-${CMAKE_MAJOR_VERSION}"
 FILES_${PN}-dev = ""
 
