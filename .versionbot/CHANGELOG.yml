@@ -1,4 +1,103 @@
 - commits:
+    - subject: Update balena-supervisor to v16.4.1
+      hash: e7a2723b8a0d0707574605462c8be396a9321e13
+      body: |
+        Update balena-supervisor from 16.3.17 to 16.4.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Remove custom typings for docker-delta
+              hash: 28706510da4f3f09a12c4db6250dfe8f2a12eaa3
+              body: >
+                This are no longer needed since docker-delta migrated to
+                typescript in
+
+                v4 and the custom typings were actually masking some bugs
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.4.1
+          title: ""
+          date: 2024-07-05T21:13:40.384Z
+        - commits:
+            - subject: Refactor host-config to be its own module
+              hash: 53f5641ef1cd2e5374f55a50a601fb80d4872511
+              body: >
+                The host-config module exposes the following interfaces: get,
+
+                patch, and parse.
+
+
+                `get` gets host configuration such as redsocks proxy
+                configuration
+
+                and hostname and returns it in an object of type
+                HostConfiguration.
+
+
+                `patch` takes an object of type HostConfiguration or
+                LegacyHostConfiguration
+
+                and updates the hostname and redsocks proxy configuration,
+                optionally
+
+                forcing the patch through update locks.
+
+
+                `parse` takes a user input of unknown type and parses it into
+                type
+
+                HostConfiguration or LegacyHostConfiguration for patching,
+                erroring if
+
+                parse was unsuccessful.
+
+
+                LegacyHostConfiguration is a looser typing of the user input
+                which does
+
+                not validate values of the five known proxy fields of type, ip,
+                port,
+
+                username, and password. We should stop supporting it in the next
+
+                major Supervisor API release.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Add HostConfig.parse method
+              hash: be986a62a5835116d58903fac9ffcf5c7d1fd0e1
+              body: |
+                Parses input from PATCH /v1/device/host-config into either
+                type HostConfiguration, or if LegacyHostConfiguration if
+                input is of an acceptable shape (for backwards compatibility).
+
+                Once input has been determined to be of type HostConfiguration,
+                we can easily extract ProxyConfig from the object for patching,
+                stringifying, and writing to redsocks.conf.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.4.0
+          title: ""
+          date: 2024-07-04T20:25:36.036Z
+  version: 5.3.25
+  title: ""
+  date: 2024-07-06T02:24:59.802Z
+- commits:
     - subject: "workflows: fix linter errors"
       hash: cd2e5faba65a6598952999953fcd4eb64520ac3a
       body: ""
