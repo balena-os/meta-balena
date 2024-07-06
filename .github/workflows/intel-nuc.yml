@@ -1,0 +1,54 @@
+name: Intel NUC
+
+on:
+  # With these triggers the Yocto jobs will run
+  # in parallel with the Flowzone jobs, which is fine for now
+  # and allows us to better control what we want to test and when.
+  # It is expected that Flowzone could fail, but yocto jobs will run.
+  pull_request:
+    branches:
+      - "main"
+      - "master"
+  pull_request_target:
+    branches:
+      - "main"
+      - "master"
+  # push:
+  #   tags:
+  #     - v[0-9]+.[0-9]+.[0-9]+\+?r?e?v?*
+  #     - v20[0-9][0-9].[0-1]?[1470].[0-9]+
+  # # Allows you to run this workflow manually from the Actions tab
+  # workflow_dispatch:
+
+jobs:
+  yocto:
+    name: Yocto
+    # FIXME: This workflow has dependencies on scripts in the balena-yocto-scripts repository
+    # which is pinned separately as a submodule in the device repo. Expect some drift but try to retain compatibility.
+    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@v1.25.3
+    # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
+    # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
+    # This condition will prevent the workflow from running twice for the same pull request while
+    # still allowing it to run for all other event types.
+    if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
+    secrets: inherit
+    with:
+      machine: genericx86-64
+      # Needed for testing - defaults to production
+      environment: balena-staging.com
+      device-repo: balena-os/balena-intel
+      device-repo-ref: master
+      # Pin to the current commit
+      meta-balena-ref: ${{ github.sha }}
+      # Don't deploy any artifacts for meta-balena build sanity workflows
+      deploy-s3: false
+      deploy-hostapp: false
+      deploy-ami: false
+      # Use autokit workers for testing and run on free hosted runners
+      test_matrix: >
+        {
+          "test_suite": ["os","cloud","hup"],
+          "environment": ["bm.balena-dev.com"],
+          "worker_type": ["testbot"],
+          "runs_on": [["ubuntu-latest"]]
+        }
