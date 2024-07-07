@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.3.26
+## (2024-07-07)
+
+* tests: secureboot: rename resetWorker() to resetDUT() [Alex Gonzalez]
+* tests: secureboot: refactor to facilitate extension [Alex Gonzalez]
+
 # v5.3.25
 ## (2024-07-06)
 

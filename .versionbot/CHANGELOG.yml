@@ -1,4 +1,30 @@
 - commits:
+    - subject: "tests: secureboot: rename resetWorker() to resetDUT()"
+      hash: 22091c584523ce1255836530f3e4192a4cacbfb7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: refactor to facilitate extension"
+      hash: b0ee0abd0dbd483fc60ca0ba96afd00da44c7c6f
+      body: |
+        As the secure boot feature is extended to more device types, the test
+        needs to be easy to extend.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.3.26
+  title: ""
+  date: 2024-07-07T00:24:51.531Z
+- commits:
     - subject: Update balena-supervisor to v16.4.1
       hash: e7a2723b8a0d0707574605462c8be396a9321e13
       body: |
