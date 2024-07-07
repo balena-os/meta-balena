@@ -1,4 +1,393 @@
 - commits:
+    - subject: Update tests/leviathan digest to 60b559c
+      hash: ce164c99859f0a63bd989c12a79fe5383222ec94
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update actions/upload-artifact digest to 0b2256b
+              hash: 634605505991815b37365613d3f65462b7f7f117
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.17
+          title: ""
+          date: 2024-07-05T16:35:55.914Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to 4fd8129
+              hash: c7d16dc7200e15f5f233b42d928b93ad2ec5421b
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.16
+          title: ""
+          date: 2024-07-04T08:59:03.246Z
+        - commits:
+            - subject: "patch: Remove internal presentation link to testbot"
+              hash: 6c463f8b491d0888da8f945e67267768837c61c1
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.31.15
+          title: ""
+          date: 2024-06-24T10:24:09.683Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 6548d2e71ede53c8898c87f64a4d036b769583b2
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.14
+          title: ""
+          date: 2024-06-24T00:51:12.941Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.41
+              hash: 58b9d5d14c10731f278acac23a4e3a4795c2f80c
+              body: |
+                Update balena-os/leviathan-worker from 2.9.40 to 2.9.41
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.13
+          title: ""
+          date: 2024-06-19T14:31:11.330Z
+        - commits:
+            - subject: "Docs: Fix endpoint name from s/status/state"
+              hash: dd947ed4a48352fcc5eec2bd83f6a7472af8db2e
+              body: >
+                Fixing the endpoint name in debugging docs that queries state of
+                the autokit at any given time.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Vipul Gupta
+              nested: []
+          version: leviathan-2.31.12
+          title: ""
+          date: 2024-06-19T11:04:59.485Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: b590ee109467cf2f980e2313dafe0f20464fc8c2
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.11
+          title: ""
+          date: 2024-06-17T01:35:29.787Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 7453b7e2f8df73448b5e6f18e8fc2d6370175c11
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.10
+          title: ""
+          date: 2024-06-14T21:10:23.800Z
+        - commits:
+            - subject: Update core/contracts digest to 8adfb6d
+              hash: c83ac6f8d44f43cadc96e9f512b2f70b1214c014
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.9
+          title: ""
+          date: 2024-06-14T18:51:36.751Z
+        - commits:
+            - subject: Update actions/checkout digest to 692973e
+              hash: e3909ff2f7de84e0e737ec80ae7a43e28dc106f9
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.8
+          title: ""
+          date: 2024-06-14T17:28:40.011Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.40
+              hash: d0f907b4f1c37b3bf9273027adc18e3d385a5150
+              body: |
+                Update balena-os/leviathan-worker from 2.9.39 to 2.9.40
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.7
+          title: ""
+          date: 2024-06-14T16:29:26.061Z
+        - commits:
+            - subject: allow for secureboot flasher env var for non-qemu runs
+              hash: b345ee183b5d59e2e7db6829a2aafb3be45f47e3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.31.6
+          title: ""
+          date: 2024-06-14T15:20:02.197Z
+        - commits:
+            - subject: Update core/contracts digest to 94c4f90
+              hash: 790c99d390ba0245431ae4ad1e44dfea4611b734
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.5
+          title: ""
+          date: 2024-06-02T05:30:12.262Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 5617fa831e769036ecdb5793499c64b9e834055a
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.4
+          title: ""
+          date: 2024-05-27T00:54:27.981Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 6546280
+              hash: 4df25074b0281634fa3a5e16c8ac18b8309fe2ae
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.3
+          title: ""
+          date: 2024-05-24T11:46:00.261Z
+        - commits:
+            - subject: Update Pin docker/setup-buildx-action action to d70bba7
+              hash: bf08c8334e173fbfd3f2a9140e4f3afc37cd82c4
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.2
+          title: ""
+          date: 2024-05-23T17:31:49.642Z
+        - commits:
+            - subject: "Client: Update alpine packages before installing packages"
+              hash: 88ed7504ed0d3ac55e35dcccc47022fc1cf93e45
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.31.1
+          title: ""
+          date: 2024-05-23T16:28:47.291Z
+        - commits:
+            - subject: "minor: Add leviathan GitHub Action"
+              hash: 7f12b2f4f5aa7b8f1606b6371e9d912d23d05297
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.31.0
+          title: ""
+          date: 2024-05-23T15:51:18.879Z
+        - commits:
+            - subject: Update actions/checkout digest to a5ac7e5
+              hash: 3c340b68afb1350d4c70822f8be762d546bcf0c2
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.22
+          title: ""
+          date: 2024-05-20T14:53:19.824Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 5775a6a6344431666750c6da3bb5fe3339e81f85
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.21
+          title: ""
+          date: 2024-05-20T00:49:54.576Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 64d09ca585cd78bb190609736cfe3be95187b3e3
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.20
+          title: ""
+          date: 2024-05-13T00:49:52.608Z
+        - commits:
+            - subject: Update actions/checkout digest to 44c2b7a
+              hash: e3a3ec99b4d6db66a3e96cf590b6465d1b8588c6
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.19
+          title: ""
+          date: 2024-05-08T20:30:26.900Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.39
+              hash: 9ad6bc06f1a8a958471d2426c7e6d8129e3d3df3
+              body: |
+                Update balena-os/leviathan-worker from 2.9.38 to 2.9.39
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.18
+          title: ""
+          date: 2024-05-07T12:53:41.157Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.38
+              hash: 4753f547d9bde9b3d8a78909e4de1f3a4d9acc25
+              body: |
+                Update balena-os/leviathan-worker from 2.9.37 to 2.9.38
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.17
+          title: ""
+          date: 2024-05-06T17:30:19.575Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: ed2e76c3ca10c30f726b7551a634265331243884
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.16
+          title: ""
+          date: 2024-05-06T14:33:32.489Z
+        - commits:
+            - subject: "patch: Replace environment switcher in e2e config.js"
+              hash: 75f42b3b0a8da9b0507f270c301cb085c77f7225
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.30.15
+          title: ""
+          date: 2024-05-06T13:23:51.937Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 08bf2f6129c3f0c6affadf2fb0e911537918a1ca
+              body: |
+                Update
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.14
+          title: ""
+          date: 2024-04-29T00:49:40.498Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 6546280
+              hash: 22810bf7023d730a71a975d1f8aec81f76f82c41
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.13
+          title: ""
+          date: 2024-04-25T16:30:40.539Z
+        - commits:
+            - subject: Update actions/checkout digest to 0ad4b8f
+              hash: f710b126338558cf7cd57e005fc962de6fa208af
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.30.12
+          title: ""
+          date: 2024-04-25T15:30:54.349Z
+  version: 5.3.27
+  title: ""
+  date: 2024-07-07T06:33:56.377Z
+- commits:
     - subject: "tests: secureboot: rename resetWorker() to resetDUT()"
       hash: 22091c584523ce1255836530f3e4192a4cacbfb7
       body: ""

@@ -1,6 +1,161 @@
 Change log
 -----------
 
+# v5.3.27
+## (2024-07-07)
+
+
+<details>
+<summary> Update tests/leviathan digest to 60b559c [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.31.17
+> ### (2024-07-05)
+> 
+> * Update actions/upload-artifact digest to 0b2256b [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.16
+> ### (2024-07-04)
+> 
+> * Update docker/setup-buildx-action digest to 4fd8129 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.15
+> ### (2024-06-24)
+> 
+> * patch: Remove internal presentation link to testbot [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.31.14
+> ### (2024-06-24)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.13
+> ### (2024-06-19)
+> 
+> * Update balena-os/leviathan-worker to v2.9.41 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.12
+> ### (2024-06-19)
+> 
+> * Docs: Fix endpoint name from s/status/state [Vipul Gupta]
+> 
+> ## leviathan-2.31.11
+> ### (2024-06-17)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.10
+> ### (2024-06-14)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.9
+> ### (2024-06-14)
+> 
+> * Update core/contracts digest to 8adfb6d [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.8
+> ### (2024-06-14)
+> 
+> * Update actions/checkout digest to 692973e [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.7
+> ### (2024-06-14)
+> 
+> * Update balena-os/leviathan-worker to v2.9.40 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.6
+> ### (2024-06-14)
+> 
+> * allow for secureboot flasher env var for non-qemu runs [rcooke-warwick]
+> 
+> ## leviathan-2.31.5
+> ### (2024-06-02)
+> 
+> * Update core/contracts digest to 94c4f90 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.4
+> ### (2024-05-27)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.3
+> ### (2024-05-24)
+> 
+> * Update actions/upload-artifact digest to 6546280 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.2
+> ### (2024-05-23)
+> 
+> * Update Pin docker/setup-buildx-action action to d70bba7 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.1
+> ### (2024-05-23)
+> 
+> * Client: Update alpine packages before installing packages [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.31.0
+> ### (2024-05-23)
+> 
+> * minor: Add leviathan GitHub Action [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.30.22
+> ### (2024-05-20)
+> 
+> * Update actions/checkout digest to a5ac7e5 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.21
+> ### (2024-05-20)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.20
+> ### (2024-05-13)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.19
+> ### (2024-05-08)
+> 
+> * Update actions/checkout digest to 44c2b7a [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.18
+> ### (2024-05-07)
+> 
+> * Update balena-os/leviathan-worker to v2.9.39 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.17
+> ### (2024-05-06)
+> 
+> * Update balena-os/leviathan-worker to v2.9.38 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.16
+> ### (2024-05-06)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.15
+> ### (2024-05-06)
+> 
+> * patch: Replace environment switcher in e2e config.js [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.30.14
+> ### (2024-04-29)
+> 
+> * Update Lock file maintenance [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.13
+> ### (2024-04-25)
+> 
+> * Update actions/upload-artifact digest to 6546280 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.30.12
+> ### (2024-04-25)
+> 
+> * Update actions/checkout digest to 0ad4b8f [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v5.3.26
 ## (2024-07-07)
 
