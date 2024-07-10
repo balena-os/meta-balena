@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.28
+## (2024-07-10)
+
+* Add GHA yocto workflows for common device types [Kyle Harding]
+
 # v5.3.27
 ## (2024-07-07)
 

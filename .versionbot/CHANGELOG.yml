@@ -1,4 +1,19 @@
 - commits:
+    - subject: Add GHA yocto workflows for common device types
+      hash: 261e54604908c6d55ae7ac0b8e7502c76663c58e
+      body: |
+        These workflows are for testing the build steps only.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 5.3.28
+  title: ""
+  date: 2024-07-10T22:33:19.858Z
+- commits:
     - subject: Update tests/leviathan digest to 60b559c
       hash: ce164c99859f0a63bd989c12a79fe5383222ec94
       body: Update tests/leviathan
