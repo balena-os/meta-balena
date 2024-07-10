@@ -76,23 +76,24 @@ jobs:
             fi
             esr_version=${{ inputs.esr-version }}
           else
-            esr_version="$(date '+%Y').$(echo $(date '+%m') | sed "s/^0*//")"
+           # shellcheck disable=SC2001
+            esr_version="$(date '+%Y').$("$(date '+%m')" | sed "s/^0*//")"
             if ! [[ "${esr_version}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
               echo "No scheduled ESR release for ${esr-version}."
               exit 1
             fi
           fi
           echo "ESR version: ${esr_version}"
-          echo "esr_version=${esr_version}" >> $GITHUB_OUTPUT
+          echo "esr_version=${esr_version}" >> "$GITHUB_OUTPUT"
 
       - name: "Calculate versions"
         id: calculate-versions
         run: |
           # The ESR branch starts at the HEAD of the latest minor version
           git fetch --tags origin
-          current_os_version=$(git describe --abbrev=0 $(git rev-list --tags --max-count=1))
-          current_os_version=${current_os_version:1}
-          va=(${current_os_version//./ })
+          current_os_version=$(git describe --abbrev=0 "$(git rev-list --tags --max-count=1)")
+          current_os_version="${current_os_version:1}"
+          va=("${current_os_version//./ }")
           if [ ${#va[@]} -ne 3 ]; then
             echo "Invalid current version: ${current_os_version}"
             exit 1
@@ -104,15 +105,15 @@ jobs:
             ((va[0]--))
             os_version=$(git tag --sort -version:refname | grep "v${va[0]}\." | head -n1)
           fi
-          os_version=${os_version:1}
-          ov_arr=( ${os_version//./ } )
+          os_version="${os_version:1}"
+          ov_arr=( "${os_version//./ }" )
           os_esr_branch=${ov_arr[0]}.${ov_arr[1]}.x
-          if git ls-remote --exit-code --heads origin ${os_esr_branch} > /dev/null; then
+          if git ls-remote --exit-code --heads origin "${os_esr_branch}" > /dev/null; then
             echo "Branch ${os_esr_branch} already exists"
             exit 1
           fi
-          echo "os_version=${os_version}" >> $GITHUB_OUTPUT
-          echo "os_esr_branch=${os_esr_branch}" >> $GITHUB_OUTPUT
+          echo "os_version=${os_version}" >> "$GITHUB_OUTPUT"
+          echo "os_esr_branch=${os_esr_branch}" >> "$GITHUB_OUTPUT"
           echo "OS version is ${os_version} and branch ${os_esr_branch}"
           exit 0
 
