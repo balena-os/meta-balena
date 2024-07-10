@@ -1,4 +1,18 @@
 - commits:
+    - subject: "kirkstone: openssh: CVE-2024-6387"
+      hash: b2c59fde9610235d0b47c26304414458c53d919e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.60
+  title: ""
+  date: 2024-07-10T11:33:53.984Z
+- commits:
     - subject: "workflows: fix linter errors"
       hash: 0416b0c5c885a347f30dd461c0a0c6973a95e5d1
       body: ""
