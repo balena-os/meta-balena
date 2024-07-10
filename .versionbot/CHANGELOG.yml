@@ -1,4 +1,18 @@
 - commits:
+    - subject: "workflows: fix linter errors"
+      hash: c5695b140fd5b2732e533820f9a5a7aecfa38a54
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.2.11
+  title: ""
+  date: 2024-07-10T09:27:24.257Z
+- commits:
     - subject: "hostapp-update-hooks: check for logging helper"
       hash: 8561f0f7d92702a0d374846555904d6f2e01c697
       body: |
