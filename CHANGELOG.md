@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.12
+## (2024-07-10)
+
+* kirkstone: openssh: CVE-2024-6387 [Alex Gonzalez]
+
 # v5.2.11
 ## (2024-07-10)
 
