@@ -1,4 +1,18 @@
 - commits:
+    - subject: "workflows: fix linter errors"
+      hash: 0416b0c5c885a347f30dd461c0a0c6973a95e5d1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.1.59
+  title: ""
+  date: 2024-07-10T09:28:37.901Z
+- commits:
     - subject: "hostapp-update-hooks: 1-bootfiles: Check for os-helpers-sb before
         including"
       hash: 03b348fbbfebbde45dc0cd7269dbdc6384240981
