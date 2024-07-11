@@ -58,11 +58,21 @@ then
   exit 0
 fi
 
-# Safeguard, this should never happen
-# Exactly 0 or 1 rule should match, bail out if there are more & investigate
-if [ "$(echo "${FW_RULE_ARGS}" | wc -l)" -gt 1 ]
+# Sometimes on NetworkManager restart a new rule is added
+# but the old one is not properly cleand up
+# Remove the duplicates here as the rules are all the same
+DUPS=0
+while [ "$(echo "${FW_RULE_ARGS}" | wc -l)" -gt 1 ]
+do
+  DUPS=$(("${DUPS}" + 1))
+  FIRST_FW_RULE_ARGS="$(echo "${FW_RULE_ARGS}" | head -n 1)"
+  ${IPTABLES} -D ${FIRST_FW_RULE_ARGS#-A }
+  FW_RULE_ARGS=$(${IPTABLES} -S FORWARD | grep "sh-fw-${IFNAME}" | grep "${FW_RULE_COMMENT}")
+done
+
+if [ "${DUPS}" -gt 0 ]
 then
-  fail "More than one rule matched when looking for '${FW_RULE_COMMENT}', bailing out"
+  info "Removed ${DUPS} duplicate '${FW_RULE_COMMENT}' rules"
 fi
 
 # If the rule is already last, this will do nothing
