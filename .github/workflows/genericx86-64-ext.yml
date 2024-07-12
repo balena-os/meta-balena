@@ -1,4 +1,4 @@
-name: Generic x86_64 (GPT)
+name: Generic x86_64 (legacy MBR)
 
 on:
   # With these triggers the Yocto jobs will run
@@ -27,8 +27,8 @@ jobs:
     if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
     secrets: inherit
     with:
-      machine: generic-amd64
-      device-repo: balena-os/balena-generic
+      machine: genericx86-64-ext
+      device-repo: balena-os/balena-intel
       device-repo-ref: master
       # Pin to the current commit
       meta-balena-ref: ${{ github.sha }}
