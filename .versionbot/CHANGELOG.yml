@@ -1,4 +1,111 @@
 - commits:
+    - subject: "classes: kernel-balena: remove configuration warnings for 6.1"
+      hash: f5b822dc97248625933d5b6a2ad4c6c53bf3381d
+      body: |
+        * MEMCG_SWAP has been removed in v6.1 in 023223dfbfb34fcc
+        * NFSD_V3 is enabled by default since v5.18 in 5f9a62ff7d2808c
+        * 88EU_AP_MODE has been removed since v5.16 in 102243f893ecdef
+        * NFT_COUNTER has been removed since v5.17 in e6007b85dfa284c
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: balena-bootloader: add USB configuration dependencies"
+      hash: cdd36189676b67f8a7d5d7a5fe3aa695bc809bd6
+      body: >
+        The intention was to allow the balena bootloader to use USB disks but
+
+        the current configuration does not work as it misses needed
+        dependencies.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrscripts: migrate: use configuration file to specify post-install
+        action"
+      hash: 4efe68ae68e4c5c4346d654eb462db837d9fd5f8
+      body: |
+        Use the flasher configuration file to specify the post-install action.
+
+        This is to shutdown (the default) when the flasher runs from an external
+        media, or to reboot when running from the same media as is the case for
+        the migrator tool.
+
+        Also, assert that a locked device can only install from memory.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: use configuration file to specify post-install
+        action"
+      hash: 9f9f552d02001cddec262eb5db670946c1380b4d
+      body: >
+        Traditionally after programming the flasher image would shutdown the
+
+        device to allow for the removal of the external device and booting from
+
+        the internal storage.
+
+
+        As more use case appeared, like programming from the initramfs when the
+
+        flasher image runs on the same target device it will program, the post
+
+        install action needs to support rebooting instead as physical access to
+
+        the device to power on cannot be expected. This is the case for remote
+
+        migration, AMI VM installs and also secure boot installs.
+
+
+        The current code just checks for the existence of the `shutdown` command
+
+        which is not present on the initramfs to decide whether to shutdown or
+
+        reboot.
+
+
+        This commit improves that logic by defaulting to shutdown but allowing
+        the
+
+        configuration file to specify a reboot instead.
+
+
+        Also, it improves the robustness of the reboot/shutdown by falling down
+
+        to sys-rq, and provides a way to override the reboot/shutdown by device
+
+        layers that require it.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: add RPI specialization"
+      hash: e645c1959ba011b30c4a7bcb15558475edb51343
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.4.0
+  title: ""
+  date: 2024-07-13T12:45:59.968Z
+- commits:
     - subject: Add GHA yocto workflows for common device types
       hash: 261e54604908c6d55ae7ac0b8e7502c76663c58e
       body: |
