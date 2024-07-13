@@ -232,6 +232,15 @@ BALENA_CONFIGS[net] = " \
     "
 
 # We need USB for keybaords and USB sticks but not much else
+BALENA_CONFIGS_DEPS[usb] = " \
+    CONFIG_SCSI=y \
+    CONFIG_BLK_DEV_SD=y \
+    CONFIG_USB_EHCI_HCD=y \
+    CONFIG_USB_EHCI_PCI=y \
+    CONFIG_USB_XHCI_HCD=y \
+    CONFIG_USB_XHCI_PCI=y \
+"
+
 BALENA_CONFIGS[usb] = " \
     CONFIG_USB_STORAGE=y \
     CONFIG_USB_UAS=y \

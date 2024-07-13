@@ -1,6 +1,5 @@
 'use strict';
 
-const fs = require('fs');
 const fse = require('fs-extra');
 const securebootEfiVarPath = '/sys/firmware/efi/efivars/SecureBoot-*';
 
@@ -20,8 +19,6 @@ class secureBoot {
 		await this.worker.off();
 		await this.worker.flash(this.imagePath);
 		await this.worker.on();
-
-		await this.worker.addSSHKey(this.sshKeyPath);
 	}
 
 	async waitForSerialOutput(pattern, slice=0, retries=60, delay=1000) {
@@ -79,17 +76,9 @@ class secureBoot {
 		if (this.module.headersVersion.length != 0) {
 			const srcDir = `${__dirname}/kernel-module-build/`
 			await fse.copy(srcDir, this.tmpDir);
-			fs.readFile(`${this.tmpDir}/docker-compose.yml`, 'utf-8', (err,data) => {
-				if (err) {
-					throw new Error(`Unable to find ${this.tmpDir}/docker-compose.yml`)
-				}
-				const result = data.replace(/os_version:\s*\S+/, `os_version: ${this.module.headersVersion}`);
-				fs.writeFile( `${this.tmpDir}/docker-compose.yaml`, result, 'utf-8', (err) => {
-					if (err) {
-						throw new Error(`Unable to write ${this.tmpDir}/docker-compose.yml`)
-					}
-				})
-			})
+			let data = await fse.readFile(`${this.tmpDir}/docker-compose.yml`, 'utf-8')
+			const result = data.replace(/os_version:\s*\S+/, `os_version: ${this.module.headersVersion}`);
+			await fse.writeFile( `${this.tmpDir}/docker-compose.yaml`, result, 'utf-8')
 			this.test.comment(`Using kernel headers version ${this.module.headersVersion}`)
 		}
 
@@ -184,6 +173,117 @@ class uefiSecureBoot extends secureBoot {
 	};
 }
 
+class rpiSecureBoot extends secureBoot {
+	async isSecureBootSupported() {
+		let out = await this.worker.executeCommandInHostOS(
+			'if command -v vcgencmd > /dev/null; then echo "pass"; fi',
+			this.link
+		)
+		return out === 'pass';
+	}
+
+	async readPrivateKey() {
+		let reg = await this.worker.executeCommandInHostOS(
+			['vcmailbox', '0x00030081', '40 40 0 8 0 0 0 0 0 0 0 0'],
+			this.link
+		)
+		const key = reg
+			.replace(/0x/g, '') // remove 0x prefix
+			.trim()							// remove extra spaces
+			.split(/\s+/)				// split by whitespace
+			.slice(7, 15)				// take elements 8 to 15
+			.join('');          // concatenate
+		return key;
+	}
+
+	async readOTPReg(reg) {
+		let out = await this.worker.executeCommandInHostOS(
+			['vcgencmd', 'otp_dump', '2>/dev/null'],
+			this.link
+		)
+		for ( const line of out.split('\n')) {
+			if (line.startsWith(reg)) {
+				return line.split(':')[1].trim();
+			}
+		}
+	}
+
+	async checkRSAkey() {
+		for (let reg = 47; reg <= 54; reg++) {
+			let out = await this.readOTPReg(reg)
+			if ( out && out != "00000000") {
+				return true
+			}
+		}
+		return false
+	}
+
+	async isSecureBootEnabled() {
+		// OTP is programmed with customer key digest and private key
+		if ( await this.checkRSAkey() ) {
+			const key = await this.readPrivateKey();
+			if ( key.replace(/0/g, '').trim().length > 0 ) {
+				return true;
+			}
+		}
+	}
+
+	async waitForFailedBoot(){
+		// confirm that eth link is high
+		// we don't know what the ethernet interface connecting worker to DUT is, so first find that, using the autokit WIRED_IFACE var
+		let iface = await this.worker.executeCommandInWorker(`env | grep WIRED | awk -F'=' '{print $2}'`);
+
+		console.log(`Watching interface: ${iface}`)
+		// confirm that the link is high - confirming that the board is on
+		await this.utils.waitUntil(async() => {
+			console.log('Confirming eth link is present...')
+			let ethLink = await this.worker.executeCommandInWorker(`cat /sys/class/net/${iface}/carrier`);
+			console.log(`Eth link is: ${ethLink}`)
+			return ethLink === '1';
+		})
+
+		// SSH access shouldn't be possible - as the device shouldn't be booting?
+		// the CM4 takes a while to get into a state where we can SSH into it anyway after powering on - so we want to try a good number of times.
+		try {
+			await this.worker.executeCommandInHostOS('echo -n pass',this.link, { max_tries: 20, interval: 1000 });
+			// if we manage to SSH into the DUT, then something has gone wrong - so throw an error which will fail the test
+			throw new Error(`DUT was still reachable over SSH`)
+		} catch (e){
+			// we want / are expecting a failure here, so if the SSH fails after the specified number of retries, we want to return
+			console.log(`DUT was not reachable over SSH`)
+			return
+		}
+	}
+
+	async testBootloaderIntegrity() {
+		/* Modify boot.sig to fail authentication */
+		await this.worker.executeCommandInHostOS(
+			"sed -i -e '1s/^.\\(.*\\)$/\\1/' /mnt/rpi/boot.sig",
+			this.link
+		)
+		await this.worker.executeCommandInHostOS('reboot', this.link)
+	    await this.test.resolves(
+			this.waitForFailedBoot(),
+			'Bootloader will not load configuration that fails signature verification',
+		)
+		await this.resetDUT();
+	}
+
+	async testBootloaderConfigIntegrity() {
+		/* Modify config.txt inside boot.img */
+		await this.worker.executeCommandInHostOS(
+			"tmpDir=$(mktemp -d) && mount -o loop /mnt/rpi/boot.img ${tmpDir} && sed -i 's/$/#comment/' ${tmpDir}/config.txt && umount ${tmpDir} && rm -rf ${tmpDir}",
+			this.link
+		)
+		await this.worker.executeCommandInHostOS('reboot', this.link)
+		await this.test.resolves(
+			this.waitForFailedBoot(),
+			'Bootloader will not load configuration that fails signature verification',
+		)
+		await this.resetDUT();
+	}
+}
+
 class testSecureBoot {
 	constructor(impl) {
 		this.impl = impl;
@@ -215,6 +315,16 @@ module.exports = {
 					this.worker,
 					this.suite, this.os.image.path,
 					{"name": "pcan_netdev", "headersVersion": "2.108.6"}));
+				await impl.run(test);
+			},
+		},
+		{
+			title: 'check RPI secure boot',
+			run: async function(test) {
+				const impl = new testSecureBoot(new rpiSecureBoot(test,
+					this.worker,
+					this.suite, this.os.image.path,
+					{"name": "", "headersVersion": "4.0.16"}));
 				await impl.run(test);
 			},
 		},

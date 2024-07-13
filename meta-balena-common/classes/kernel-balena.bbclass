@@ -211,10 +211,12 @@ BALENA_CONFIGS[balena] ?= " \
     CONFIG_EXT4_FS_SECURITY=y \
     CONFIG_KEYS=y \
     CONFIG_MEMCG=y \
-    CONFIG_MEMCG_SWAP=y \
     CONFIG_OVERLAY_FS=y \
     "
 
+
+BALENA_CONFIGS:append = " ${@configure_from_version("6.1", "", " memcfg_swap", d)}"
+BALENA_CONFIGS[memcfg_swap] = "CONFIG_MEMCG_SWAP=y"
 FIRMWARE_COMPRESS = "${@configure_from_version("5.3", "firmware_compress", "", d)}"
 BALENA_CONFIGS[firmware_compress] = " \
     CONFIG_FW_LOADER_COMPRESS=y \
@@ -247,9 +249,11 @@ BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_V3=m \
     CONFIG_NFS_V4=m \
     CONFIG_NFSD=m \
-    CONFIG_NFSD_V3=y \
     CONFIG_NFSD_V4=y \
 "
+
+BALENA_CONFIGS:append = " ${@configure_from_version("5.18", "", " nfsd_v3", d)}"
+BALENA_CONFIGS[nfsd_v3] = "CONFIG_NFSD_V3=y"
 #
 # systemd specific kernel configuration options
 # see https://github.com/systemd/systemd/blob/master/README for an up-to-date list
@@ -307,8 +311,10 @@ BALENA_CONFIGS_DEPS[r8188eu] ?= "\
     "
 BALENA_CONFIGS[r8188eu] ?= "\
     CONFIG_R8188EU=m \
-    CONFIG_88EU_AP_MODE=y \
     "
+
+BALENA_CONFIGS:append = " ${@configure_from_version("5.16", "", " 88eu_ap_mode", d)}"
+BALENA_CONFIGS[88eu_ap_mode] = "CONFIG_88EU_AP_MODE=y"
 
 # rt53xx wireless chipset family to the rt2800usb driver.
 # Supported chips: RT5370 RT5572
@@ -573,7 +579,6 @@ BALENA_CONFIGS[nf_tables] = " \
     CONFIG_NF_TABLES_NETDEV=y \
     CONFIG_NFT_NUMGEN=m \
     CONFIG_NFT_CT=m \
-    CONFIG_NFT_COUNTER=m \
     CONFIG_NFT_CONNLIMIT=m \
     CONFIG_NFT_LOG=m \
     CONFIG_NFT_LIMIT=m \
@@ -614,6 +619,9 @@ BALENA_CONFIGS[nf_tables] = " \
     "
 BALENA_CONFIGS:append = " ${@configure_from_version("5.10", "", " nf_tables_set", d)}"
 BALENA_CONFIGS[nf_tables_set] = "CONFIG_NF_TABLES_SET=m"
+
+BALENA_CONFIGS:append = " ${@configure_from_version("5.17", "", " nft_counter", d)}"
+BALENA_CONFIGS[nft_counter] = "CONFIG_NFT_COUNTER=m"
 
 BALENA_CONFIGS[task-accounting] = " \
     CONFIG_TASKSTATS=y \
