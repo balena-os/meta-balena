@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.4.1
+## (2024-07-17)
+
+* Add build-only GHA workflows for missing devices [Kyle Harding]
+
 # v5.4.0
 ## (2024-07-13)
 

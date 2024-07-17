@@ -1,4 +1,20 @@
 - commits:
+    - subject: Add build-only GHA workflows for missing devices
+      hash: af70358b6b17b309cb043a3f15e1cca8084b1976
+      body: |
+        For meta-balena PRs we only want to test virtual devices,
+        but we will do a sanity build for many types.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 5.4.1
+  title: ""
+  date: 2024-07-17T18:02:25.707Z
+- commits:
     - subject: "classes: kernel-balena: remove configuration warnings for 6.1"
       hash: f5b822dc97248625933d5b6a2ad4c6c53bf3381d
       body: |
