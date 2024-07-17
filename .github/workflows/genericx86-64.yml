@@ -1,4 +1,4 @@
-name: Generic x86_64 (legacy MBR)
+name: Intel NUC
 
 on:
   # With these triggers the Yocto jobs will run
@@ -13,19 +13,13 @@ on:
     branches:
       - "main"
       - "master"
-  # push:
-  #   tags:
-  #     - v[0-9]+.[0-9]+.[0-9]+\+?r?e?v?*
-  #     - v20[0-9][0-9].[0-1]?[1470].[0-9]+
-  # # Allows you to run this workflow manually from the Actions tab
-  # workflow_dispatch:
 
 jobs:
   yocto:
     name: Yocto
     # FIXME: This workflow has dependencies on scripts in the balena-yocto-scripts repository
     # which is pinned separately as a submodule in the device repo. Expect some drift but try to retain compatibility.
-    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@v1.25.3
+    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@v1.25.7
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
@@ -33,9 +27,7 @@ jobs:
     if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
     secrets: inherit
     with:
-      machine: genericx86-64-ext
-      # Needed for testing - defaults to production
-      environment: balena-staging.com
+      machine: genericx86-64
       device-repo: balena-os/balena-intel
       device-repo-ref: master
       # Pin to the current commit
@@ -44,11 +36,3 @@ jobs:
       deploy-s3: false
       deploy-hostapp: false
       deploy-ami: false
-      # Use qemu workers for testing
-      test_matrix: >
-        {
-          "test_suite": ["os","cloud","hup"],
-          "environment": ["bm.balena-dev.com"],
-          "worker_type": ["qemu"],
-          "runs_on": [["self-hosted", "X64", "kvm"]]
-        }

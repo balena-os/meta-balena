@@ -1,4 +1,4 @@
-name: Generic x86_64 (GPT)
+name: Raspberry Pi 3 (using 64bit OS)
 
 on:
   # With these triggers the Yocto jobs will run
@@ -27,8 +27,8 @@ jobs:
     if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
     secrets: inherit
     with:
-      machine: generic-amd64
-      device-repo: balena-os/balena-generic
+      machine: raspberrypi3-64
+      device-repo: balena-os/balena-raspberrypi
       device-repo-ref: master
       # Pin to the current commit
       meta-balena-ref: ${{ github.sha }}
@@ -36,11 +36,3 @@ jobs:
       deploy-s3: false
       deploy-hostapp: false
       deploy-ami: false
-      # Use QEMU workers for testing and run cloud suite against balenaCloud production
-      test_matrix: >
-        {
-          "test_suite": ["os","cloud","hup"],
-          "environment": ["balena-cloud.com"],
-          "worker_type": ["qemu"],
-          "runs_on": [["self-hosted", "X64", "kvm"]]
-        }
