@@ -1,4 +1,4 @@
-name: Raspberry Pi 3
+name: BananaPi-M1+
 
 on:
   pull_request:
@@ -17,9 +17,7 @@ on:
 jobs:
   yocto:
     name: Yocto
-    # FIXME: This workflow has dependencies on scripts in the balena-yocto-scripts repository
-    # which is pinned separately as a submodule in the device repo. Expect some drift but try to retain compatibility.
-    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@v1.25.7
+    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@58b4dd401dd6dd27262675b8061c7fddf5a593d4 # v1.25.25
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
@@ -29,8 +27,8 @@ jobs:
     with:
       # Needed for testing - defaults to production
       deploy-environment: balena-staging.com
-      machine: raspberrypi3
-      device-repo: balena-os/balena-raspberrypi
+      machine: bananapi-m1-plus
+      device-repo: balena-os/balena-allwinner
       device-repo-ref: master
       # Pin to the current commit
       meta-balena-ref: ${{ github.sha }}
