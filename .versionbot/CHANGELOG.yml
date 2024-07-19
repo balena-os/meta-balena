@@ -1,4 +1,54 @@
 - commits:
+    - subject: "common: remove module compression bbclass"
+      hash: fbb35d54e5833db8a05b37e6cbce4bf1ca6ec1b7
+      body: |
+        This class is no longer necessary, as the kernel is configured to use
+        module compression and in-kernel decompression when available.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "kernel-balena: enable zstd module compression"
+      hash: 3aa66ff60a50af2fa21714223f390f09114dbb1d
+      body: |
+        Enable zstandard module compression in kernels > v5.13, as this feature
+        was introduced in commit c3d7ef377eb25, first published in that release.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "image-balena: support zst compressed modules"
+      hash: 77ce253c9593b0d25e94d72e295a71e484a3b55e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "kmod: enable zstd"
+      hash: df352c7fcd132871842326023bf61f8da80d5a22
+      body: |
+        Enable zstd support for kmod to allow modprobe to load compressed
+        modules.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.0.0
+  title: ""
+  date: 2024-07-19T00:08:00.449Z
+- commits:
     - subject: Add build-only GHA workflows for missing devices
       hash: af70358b6b17b309cb043a3f15e1cca8084b1976
       body: |

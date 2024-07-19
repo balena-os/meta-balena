@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v6.0.0
+## (2024-07-19)
+
+* common: remove module compression bbclass [Joseph Kogut]
+* kernel-balena: enable zstd module compression [Joseph Kogut]
+* image-balena: support zst compressed modules [Joseph Kogut]
+* kmod: enable zstd [Joseph Kogut]
+
 # v5.4.1
 ## (2024-07-17)
 
