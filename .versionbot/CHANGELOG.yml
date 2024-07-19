@@ -1,4 +1,70 @@
 - commits:
+    - subject: Update tests/leviathan digest to 081cbeb
+      hash: 1440f5c245ed251c5677cc72ec9de6e120b41c38
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 17b44ca
+              hash: c889b407e4ad56080c98850022def0d122108863
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.20
+          title: ""
+          date: 2024-07-15T14:07:29.332Z
+        - commits:
+            - subject: Update core/contracts digest to 773c77c
+              hash: 2e512d7f1aac17346613962564293e78a0ecd971
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.19
+          title: ""
+          date: 2024-07-12T10:30:54.239Z
+        - commits:
+            - subject: "client: use /start endpoint of worker to reserve worker if IDLE
+                immediately"
+              hash: 41b535e9ad160a6c663cf39137da562b4843829a
+              body: >
+                There is a problem where if the multiple jobs are running at the
+                same time, all waiting for a worker to be IDLE, multiple jobs
+                start using the worker at the same time. The reason was that
+                first, the state of the worker is polled using /state - then,
+                after some delay, it is reserved using the /start endpoint.
+                Problem 1 was that there is a delay between checking and
+                reserving - leading to a window of time where another job could
+                do the same thing. Problem 2 is that once /start was used, there
+                was nothing to stop the client from continuing, even if the
+                worker was BUSY. This commit forgoes the /state endpoint, and
+                just skips to trying /start - if the worker is IDLE, its
+                instanly reserved, if its BUSY, the reponse is actually checked
+                and nothing happens.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.31.18
+          title: ""
+          date: 2024-07-12T09:25:30.846Z
+  version: 6.0.2
+  title: ""
+  date: 2024-07-19T23:27:39.748Z
+- commits:
     - subject: "NetworkManager: remove duplicate rules in shared dispatcher script"
       hash: 90093d5d780bb236e21add3a55f270c08623768a
       body: |

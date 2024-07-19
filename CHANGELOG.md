@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v6.0.2
+## (2024-07-19)
+
+
+<details>
+<summary> Update tests/leviathan digest to 081cbeb [Self-hosted Renovate Bot] </summary>
+
+> ## leviathan-2.31.20
+> ### (2024-07-15)
+> 
+> * Update core/contracts digest to 17b44ca [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.19
+> ### (2024-07-12)
+> 
+> * Update core/contracts digest to 773c77c [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.18
+> ### (2024-07-12)
+> 
+> * client: use /start endpoint of worker to reserve worker if IDLE immediately [rcooke-warwick]
+> 
+
+</details>
+
 # v6.0.1
 ## (2024-07-19)
 
