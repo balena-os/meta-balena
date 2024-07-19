@@ -1,4 +1,22 @@
 - commits:
+    - subject: "NetworkManager: remove duplicate rules in shared dispatcher script"
+      hash: 90093d5d780bb236e21add3a55f270c08623768a
+      body: |
+        Sometimes on NetworkManager restart a new rule for a shared interface
+        is added, but the old rule is not cleaned up properly, so the rules
+        are just piling up. This patch makes the shared dispatcher script
+        clean up duplicates if it finds any.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.0.1
+  title: ""
+  date: 2024-07-19T16:09:46.427Z
+- commits:
     - subject: "common: remove module compression bbclass"
       hash: fbb35d54e5833db8a05b37e6cbce4bf1ca6ec1b7
       body: |

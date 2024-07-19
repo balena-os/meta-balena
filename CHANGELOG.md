@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.1
+## (2024-07-19)
+
+* NetworkManager: remove duplicate rules in shared dispatcher script [Michal Toman]
+
 # v6.0.0
 ## (2024-07-19)
 
