@@ -1,4 +1,22 @@
 - commits:
+    - subject: "NetworkManager: remove duplicate rules in shared dispatcher script"
+      hash: 3c477c0e081ab216d66e4443b118a228d333e7e3
+      body: |
+        Sometimes on NetworkManager restart a new rule for a shared interface
+        is added, but the old rule is not cleaned up properly, so the rules
+        are just piling up. This patch makes the shared dispatcher script
+        clean up duplicates if it finds any.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 5.1.62
+  title: ""
+  date: 2024-07-21T08:16:51.545Z
+- commits:
     - subject: Update balena-supervisor to v16.4.1
       hash: 0690c5d74dfcbaa5e047c671e3826d7da2051f96
       body: |
