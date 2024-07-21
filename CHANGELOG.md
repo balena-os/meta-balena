@@ -1,6 +1,329 @@
 Change log
 -----------
 
+# v5.2.13
+## (2024-07-21)
+
+* NetworkManager: remove duplicate rules in shared dispatcher script [Michal Toman]
+
+<details>
+<summary> Update balena-supervisor to v16.4.1 [Alex Gonzalez] </summary>
+
+> ## balena-supervisor-16.4.1
+> ### (2024-07-05)
+> 
+> * Remove custom typings for docker-delta [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.4.0
+> ### (2024-07-04)
+> 
+> * Refactor host-config to be its own module [Christina Ying Wang]
+> * Add HostConfig.parse method [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.3.17
+> ### (2024-06-25)
+> 
+> * Fix engine deadlock on network+service change [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.3.16
+> ### (2024-06-17)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.72 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.15
+> ### (2024-06-10)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.71 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.14
+> ### (2024-06-09)
+> 
+> * Update got to v14.4.1 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.13
+> ### (2024-06-05)
+> 
+> * Split target state set/get into separate module [Felipe Lalanne]
+> * Move device-state.ts into the device-state/index.ts [Felipe Lalanne]
+> * Move device-state/target state to api-binder/poll [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.3.12
+> ### (2024-06-03)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.70 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.11
+> ### (2024-05-27)
+> 
+> * Move OS variant retrieval to config module [Felipe Lalanne]
+> * Do not export balenaApi on api-binder [Felipe Lalanne]
+> * Move api-keys module to src/lib [Felipe Lalanne]
+> * Do not re-export ContractObject on lib/contracts [Felipe Lalanne]
+> * Move Compose(Network|Volume)Config to top level types [Felipe Lalanne]
+> * Move composition types to compose/types [Felipe Lalanne]
+> * Split compose types into interface and implementation [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.3.10
+> ### (2024-05-27)
+> 
+> * Update got to v14.3.0 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.9
+> ### (2024-05-27)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.69 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.8
+> ### (2024-05-24)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.68 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.7
+> ### (2024-05-24)
+> 
+> * Update sinon to v18 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.6
+> ### (2024-05-20)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.67 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.5
+> ### (2024-05-13)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.66 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.4
+> ### (2024-05-12)
+> 
+> * Update semver to v7.6.2 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.3
+> ### (2024-05-10)
+> 
+> * Update semver to v7.6.1 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.2
+> ### (2024-05-06)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.65 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.3.1
+> ### (2024-05-01)
+> 
+> * Update @balena/contrato to 0.9.4 [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.3.0
+> ### (Invalid date)
+> 
+> * Add rpi support to balenaOS secure boot [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.37
+> ### (2024-04-29)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.63 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.36
+> ### (2024-04-29)
+> 
+> * Remove unused event-stream dependency [Christina Ying Wang]
+> * Update io-ts to 2.2.20, io-ts-reporters to 2.0.1, fp-ts to 2.16.5 [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.35
+> ### (2024-04-29)
+> 
+> * Update @types dependencies [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.2.34
+> ### (2024-04-29)
+> 
+> * Dev: update husky to v9 [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.2.33
+> ### (2024-04-26)
+> 
+> * Update docker related dependencies [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.2.32
+> ### (2024-04-26)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.62 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.31
+> ### (2024-04-26)
+> 
+> * Move lib/fs-utils tests to testfs [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.30
+> ### (2024-04-24)
+> 
+> * Update supertest to v7 [Christina Ying Wang]
+> * Update fork-ts-checker-webpack-plugin to v9 [Christina Ying Wang]
+> * Update yargs to v17, tar-stream to v3 [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.29
+> ### (2024-04-24)
+> 
+> * Refactor MDNS resolver into a module [Felipe Lalanne]
+> * Fix mdnsResolver import [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.2.28
+> ### (2024-04-23)
+> 
+> * Gracefully handle multiple reboot/shutdown requests [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.27
+> ### (2024-04-23)
+> 
+> * Update ts-node to v10 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.26
+> ### (2024-04-23)
+> 
+> * Remove unnecessary @types packages [Christina Ying Wang]
+> * Update knex to 3.1.0 [Christina Ying Wang]
+> * Update json-mask to 2.0.0 [Christina Ying Wang]
+> * Update lint-staged to 15.2.2 [Christina Ying Wang]
+> * Update mocha-pod to 2.0.5 [Christina Ying Wang]
+> * Update mocha to 10.4.0 [Christina Ying Wang]
+> * Update rewire to 7, @balena/lint to 8 [Christina Ying Wang]
+> * Update nodemon to 3.1.0 [Christina Ying Wang]
+> * Update sinon to 17 [Christina Ying Wang]
+> * Update systeminformation to 5.22.7 [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.25
+> ### (2024-04-19)
+> 
+> * Update copy-webpack-plugin to v12 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.24
+> ### (2024-04-19)
+> 
+> * Update webpack-cli to v5 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.23
+> ### (2024-04-19)
+> 
+> * Update got to v14 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.22
+> ### (2024-04-19)
+> 
+> * Update @types/supertest to v6 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.21
+> ### (2024-04-18)
+> 
+> * Remove unused `tmp` dependency [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.2.20
+> ### (2024-04-17)
+> 
+> * Update rimraf [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.19
+> ### (2024-04-17)
+> 
+> * Update semver to v7.6.0 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.18
+> ### (2024-04-15)
+> 
+> * Update event-stream to v3.3.5 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.17
+> ### (2024-04-15)
+> 
+> * Add additional update lock tests for lockOverride & force [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.16
+> ### (2024-04-15)
+> 
+> * Update @types/chai-things to v0.0.38 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.15
+> ### (2024-04-15)
+> 
+> * Update webpack to v5.76.0 [SECURITY] [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.14
+> ### (2024-04-15)
+> 
+> * Disable automerge for major npm devDependencies [Kyle Harding]
+> 
+> ## balena-supervisor-16.2.13
+> ### (2024-04-15)
+> 
+> * Update shell-quote to v1.7.3 [SECURITY] [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.12
+> ### (2024-04-15)
+> 
+> * Update express to v4.19.2 [SECURITY] [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.11
+> ### (2024-04-15)
+> 
+> * Enable npm package management via Renovate [Kyle Harding]
+> 
+> ## balena-supervisor-16.2.10
+> ### (2024-04-15)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.58 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.9
+> ### (2024-04-12)
+> 
+> * Don't follow symlinks when checking for lockfiles [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.8
+> ### (2024-04-12)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.57 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.7
+> ### (2024-04-12)
+> 
+> * Add memory usage healthcheck [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.6
+> ### (2024-04-10)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.55 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.5
+> ### (2024-04-09)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.54 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.4
+> ### (2024-04-09)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.53 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.3
+> ### (2024-04-09)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.52 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.2.2
+> ### (2024-04-08)
+> 
+> * Inherit Renovate settings from balena-io [Kyle Harding]
+> 
+> ## balena-supervisor-16.2.1
+> ### (2024-04-06)
+> 
+> * Fix some RegEx io-ts types [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.2.0
+> ### (2024-04-05)
+> 
+> * Take lock before updating service metadata [Christina Ying Wang]
+> 
+
+</details>
+
 # v5.2.12
 ## (2024-07-10)
 

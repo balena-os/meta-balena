@@ -1,4 +1,1216 @@
 - commits:
+    - subject: "NetworkManager: remove duplicate rules in shared dispatcher script"
+      hash: ab9c0d8fe11c436a8ebed63247fc79b4b5c7f788
+      body: |
+        Sometimes on NetworkManager restart a new rule for a shared interface
+        is added, but the old rule is not cleaned up properly, so the rules
+        are just piling up. This patch makes the shared dispatcher script
+        clean up duplicates if it finds any.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: Update balena-supervisor to v16.4.1
+      hash: 59b43cc2ced82af3e71b4098a80821eb2423386b
+      body: |
+        Update balena-supervisor from 16.1.10 to 16.4.1
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested:
+        - commits:
+            - subject: Remove custom typings for docker-delta
+              hash: 28706510da4f3f09a12c4db6250dfe8f2a12eaa3
+              body: >
+                This are no longer needed since docker-delta migrated to
+                typescript in
+
+                v4 and the custom typings were actually masking some bugs
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.4.1
+          title: ""
+          date: 2024-07-05T21:13:40.384Z
+        - commits:
+            - subject: Refactor host-config to be its own module
+              hash: 53f5641ef1cd2e5374f55a50a601fb80d4872511
+              body: >
+                The host-config module exposes the following interfaces: get,
+
+                patch, and parse.
+
+
+                `get` gets host configuration such as redsocks proxy
+                configuration
+
+                and hostname and returns it in an object of type
+                HostConfiguration.
+
+
+                `patch` takes an object of type HostConfiguration or
+                LegacyHostConfiguration
+
+                and updates the hostname and redsocks proxy configuration,
+                optionally
+
+                forcing the patch through update locks.
+
+
+                `parse` takes a user input of unknown type and parses it into
+                type
+
+                HostConfiguration or LegacyHostConfiguration for patching,
+                erroring if
+
+                parse was unsuccessful.
+
+
+                LegacyHostConfiguration is a looser typing of the user input
+                which does
+
+                not validate values of the five known proxy fields of type, ip,
+                port,
+
+                username, and password. We should stop supporting it in the next
+
+                major Supervisor API release.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Add HostConfig.parse method
+              hash: be986a62a5835116d58903fac9ffcf5c7d1fd0e1
+              body: |
+                Parses input from PATCH /v1/device/host-config into either
+                type HostConfiguration, or if LegacyHostConfiguration if
+                input is of an acceptable shape (for backwards compatibility).
+
+                Once input has been determined to be of type HostConfiguration,
+                we can easily extract ProxyConfig from the object for patching,
+                stringifying, and writing to redsocks.conf.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.4.0
+          title: ""
+          date: 2024-07-04T20:25:36.036Z
+        - commits:
+            - subject: Fix engine deadlock on network+service change
+              hash: ede27b63cecc2a9ae3139a905d9c6ab32418a72b
+              body: >
+                This fixes a regression on the supervisor state engine
+                computation
+
+                (added on v16.2.0) when
+
+                the target state removes a network at the same time that a
+                service
+
+                referencing that network is changed. Example going from
+
+
+                ```
+
+                services:
+                   one:
+                      image: alpine: 3.18
+                      networks: ['balena']
+
+                networks:
+                   balena:
+                ```
+
+
+                to
+
+
+                ```
+
+                services:
+                   one:
+                      image: alpine: latest
+                ```
+
+
+                Would never reach the target state as killing the service in
+                order to
+
+                remove the network is prioritized, but one of the invariants in
+                the target state calculation is
+
+                to not kill any services until all images have been downloaded.
+                These
+
+                two instructions were in contradiction leading to a deadlock.
+
+
+                The fix involves only adding removal steps for services
+                depending on a
+
+                changing network or volume if the service container is not being
+                removed
+
+                already.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.3.17
+          title: ""
+          date: 2024-06-25T01:03:26.734Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.72
+              hash: 170733422a7a8fb2e58482508fe74dc2fcb282a5
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.71 to 2.0.72
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.16
+          title: ""
+          date: 2024-06-17T01:56:08.257Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.71
+              hash: 552f77cef5aa4ff0107c5bd558755e4ed4c81ab2
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.70 to 2.0.71
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.15
+          title: ""
+          date: 2024-06-10T01:57:02.800Z
+        - commits:
+            - subject: Update got to v14.4.1
+              hash: 11628cda16986b76f67969970fe708e24d3ab125
+              body: |
+                Update got from 14.3.0 to 14.4.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.14
+          title: ""
+          date: 2024-06-09T13:29:56.248Z
+        - commits:
+            - subject: Split target state set/get into separate module
+              hash: 45d1f1f964e777b5168b089858af0cec33f98c68
+              body: >
+                This removes the circular dependency between device state index
+                and
+
+                preloading and cleans up the device state module code
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move device-state.ts into the device-state/index.ts
+              hash: fedeb518e5315a7cb593818c2e80a5d8e459cefa
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move device-state/target state to api-binder/poll
+              hash: 9497eed380e63f3b5d794071879ad9e8e4369178
+              body: >
+                This goes in the direction of grouping modules by
+                responsibility. The
+
+                api-binder module is the middleware between the device and the
+                backend,
+
+                thus the target state polling code makes more sense there.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.3.13
+          title: ""
+          date: 2024-06-05T20:43:08.205Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.70
+              hash: d7a325b80a5c79d290b7bb232dabb4a7ac2737f9
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.69 to 2.0.70
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.12
+          title: ""
+          date: 2024-06-03T01:55:57.227Z
+        - commits:
+            - subject: Move OS variant retrieval to config module
+              hash: 027c2575b1147b5395c61e3d824f9dff95e7f1d0
+              body: >
+                This also deprecates the `getOSVariant` function of the
+                `os-release`
+
+                module, as the OS variant are no longer defined in
+                `/etc/os-release`.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Do not export balenaApi on api-binder
+              hash: 59689b27892a0bb3e6ec692c158070b6defb48a9
+              body: >
+                Instead, add `getBalenaApi` function to api-helper so other
+                modules can
+
+                access a balena API instance.
+
+
+                Further reduces circular dependencies to 5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move api-keys module to src/lib
+              hash: ac2db38742962a31af63549f0d9f257e6a1331f3
+              body: >
+                This removes circular dependencies between the device-api module
+                and
+
+                the compose module, reducing total circular dependencies to 15
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Do not re-export ContractObject on lib/contracts
+              hash: 48f75e61b8c53c532c27eb0c3f0d878312b4f2e7
+              body: |
+                Further reduce circular dependencies to 10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move Compose(Network|Volume)Config to top level types
+              hash: bef5e784400d13d2788748e059e36c761d956f23
+              body: |
+                This reduces dependencies from 80 to 47
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move composition types to compose/types
+              hash: 234e0de07599c1033d04c77d2df9a000d38f60dd
+              body: >
+                This reduces circular dependencies from 250 to 80 by ensuring
+                that
+
+                modules that only require types do not import the full module
+                with all
+
+                its dependencies.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Split compose types into interface and implementation
+              hash: 94de4006a07baada9336721c4084a00f885a6572
+              body: >
+                This splits `App`, `Network`, `Service` and `Volume` which used
+                to be
+
+                defined as classes into an interface and a class implementation
+                that is
+
+                not exported. This will allow to work with just the types in
+                some cases
+
+                and prevent circular dependencies when importing.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.3.11
+          title: ""
+          date: 2024-05-27T20:04:25.017Z
+        - commits:
+            - subject: Update got to v14.3.0
+              hash: 4764bca2c4122a37f1f4c684e673ddca3812b4c9
+              body: |
+                Update got from 14.2.1 to 14.3.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.10
+          title: ""
+          date: 2024-05-27T02:41:46.106Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.69
+              hash: 9cdb363e4cf274e5506247cc55cebef0c676de7e
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.68 to 2.0.69
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.9
+          title: ""
+          date: 2024-05-27T01:59:21.096Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.68
+              hash: 8a7972c783845576741c626f7ac543671ebf868b
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.67 to 2.0.68
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.8
+          title: ""
+          date: 2024-05-24T14:29:17.821Z
+        - commits:
+            - subject: Update sinon to v18
+              hash: 6b47c3572dea75c161e3931f05f37c46828d90a2
+              body: |
+                Update sinon from 17.0.1 to 18.0.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.7
+          title: ""
+          date: 2024-05-24T13:45:20.892Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.67
+              hash: 21f72b0ce9fd977517df3bf0ee5c186a17d432c9
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.66 to 2.0.67
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.6
+          title: ""
+          date: 2024-05-20T01:54:04.811Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.66
+              hash: 0786f6d95bf67c5ba7002dd10bdde2578a4b28ea
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.65 to 2.0.66
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.5
+          title: ""
+          date: 2024-05-13T01:53:50.173Z
+        - commits:
+            - subject: Update semver to v7.6.2
+              hash: da5fdc5d781ce2c6dcf61f7344ef7a75aa5eb180
+              body: |
+                Update semver from 7.6.1 to 7.6.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.4
+          title: ""
+          date: 2024-05-12T16:29:18.605Z
+        - commits:
+            - subject: Update semver to v7.6.1
+              hash: 6ebeab14c1f8484335c553de10e64f4bae109797
+              body: |
+                Update semver from 7.6.0 to 7.6.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.3
+          title: ""
+          date: 2024-05-10T16:29:32.262Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.65
+              hash: 9945629f0a9fde10ec23668d3fc793e696ef82fb
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.63 to 2.0.65
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.3.2
+          title: ""
+          date: 2024-05-06T01:53:45.002Z
+        - commits:
+            - subject: Update @balena/contrato to 0.9.4
+              hash: 1dcd156fc84376fcba8141f37c4901e176b5cdb4
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.3.1
+          title: ""
+          date: 2024-05-01T01:06:23.630Z
+        - commits:
+            - subject: Add rpi support to balenaOS secure boot
+              hash: 3017ca6308ad8fce9e65882441a9ef5e123e9c6f
+              body: |
+                - Loop through `rpi`, `efi` for crypt boot mount
+                - Remove `exit 1` from dbus_get_mount
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.3.0
+          title: ""
+          date: 2024-04-30T21:13:08.847Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.63
+              hash: 6c2a07bd776c27fda9d34e9205152b8aac0476eb
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.62 to 2.0.63
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.37
+          title: ""
+          date: 2024-04-29T22:28:45.427Z
+        - commits:
+            - subject: Remove unused event-stream dependency
+              hash: 23ba3e43849bca6172a3783c82216c360c986eb2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update io-ts to 2.2.20, io-ts-reporters to 2.0.1, fp-ts to 2.16.5
+              hash: f510dd9a8068df4d0c14f6598388bf5c15e235b4
+              body: >
+                TODO: Upgrading io-ts to 2.2.21 will result in some unit tests
+                for
+
+                io-ts type validation breaking, due to a change in t.record's
+                handling
+
+                of decoding unknown objects. In <2.2.21, a record with a custom
+                key type
+
+                will decode an unknown object to Left if it has a key is not of
+                the custom
+
+                type. Whereas in io-ts@2.2.21, t.record will strip the invalid
+                key and
+
+                decode to Right. This is a breaking change for us.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.36
+          title: ""
+          date: 2024-04-29T19:54:50.854Z
+        - commits:
+            - subject: Update @types dependencies
+              hash: 4adf7105209a3aa407a93e22870100fe0b468015
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-16.2.35
+          title: ""
+          date: 2024-04-29T16:10:01.354Z
+        - commits:
+            - subject: "Dev: update husky to v9"
+              hash: 7df3c1f5fca8ae3e2a1a015b5698420c278e06c1
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-16.2.34
+          title: ""
+          date: 2024-04-29T15:09:50.951Z
+        - commits:
+            - subject: Update docker related dependencies
+              hash: ae823fea181e2b1680940538b04b5af37c1b3229
+              body: >
+                This bumps dockerode, removes resin-docker-build in favor of
+
+                @balena/compose, and updates docker-delta and docker-progress
+                packages.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.2.33
+          title: ""
+          date: 2024-04-26T19:51:36.874Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.62
+              hash: 20f6cb07cb1989f99eaa54625d8e4b502e2e0919
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.58 to 2.0.62
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.32
+          title: ""
+          date: 2024-04-26T01:51:50.589Z
+        - commits:
+            - subject: Move lib/fs-utils tests to testfs
+              hash: 9c968b8d06a407e943d9f91eb5f89863280d7962
+              body: |
+                This removes mock-fs as a dependency
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.31
+          title: ""
+          date: 2024-04-26T00:40:13.656Z
+        - commits:
+            - subject: Update supertest to v7
+              hash: 35e17cf22c0e45c14daa2efa24eb07358d14fff6
+              body: |
+                This patches a `formidable` package vulnerability
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update fork-ts-checker-webpack-plugin to v9
+              hash: 73b71386fe00fdf9896ef6f14ead75920e9318bf
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update yargs to v17, tar-stream to v3
+              hash: 717c8cd6149eb46b8b7e39b3021fd86321f95089
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.30
+          title: ""
+          date: 2024-04-24T18:35:21.169Z
+        - commits:
+            - subject: Refactor MDNS resolver into a module
+              hash: 6f02b17968d02c2e27b523e40a25ef4c4815d20a
+              body: >
+                Also add integration tests for the resolver functionality to
+                prevent
+
+                regressions.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Fix mdnsResolver import
+              hash: ad52561de548ef9f2dfec67187ae0d903e0bedfe
+              body: >
+                The `mdns-resolver` module does not provide a default export.
+                Trying to
+
+                use a default import notation, causes the `resolve` function to
+                not be
+
+                found, breaking MDNS resolution.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.2.29
+          title: ""
+          date: 2024-04-24T15:13:31.152Z
+        - commits:
+            - subject: Gracefully handle multiple reboot/shutdown requests
+              hash: 14bdc522c17c924ce560da81f735b96bac41bd4d
+              body: |
+                Since HTTP's server.close() is async, there is a slim chance
+                for two instances of /v1/reboot or /v1/shutdown to be processed.
+                If the server is already closed when server.close() is called,
+                the call throws ERR_SERVER_NOT_RUNNING
+                which doesn't need to be surfaced to the user. This change
+                only allows one server.close() attempt to occur at a time.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.28
+          title: ""
+          date: 2024-04-23T20:19:12.030Z
+        - commits:
+            - subject: Update ts-node to v10
+              hash: d14824f2fddffb0292af94c001d90e816ddb94c6
+              body: |
+                Update ts-node from 8.10.2 to 10.9.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.27
+          title: ""
+          date: 2024-04-23T19:33:02.255Z
+        - commits:
+            - subject: Remove unnecessary @types packages
+              hash: 8ebb26663880d879e5eb6528512822c99e1ef42b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update knex to 3.1.0
+              hash: 17a7e60506f36403a98c0205d80989edcb1997f6
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update json-mask to 2.0.0
+              hash: 77f6f17042d9fda21d90dc5363824562f1ddd0f6
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update lint-staged to 15.2.2
+              hash: f3809dccfb3cf787da9ccd9fefab6d0f2554d895
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update mocha-pod to 2.0.5
+              hash: 9ca027ad486ecffac20f1cff714c493e92b7befc
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update mocha to 10.4.0
+              hash: 7c423958ea61c12f3786b9a52567dea75d2351c5
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update rewire to 7, @balena/lint to 8
+              hash: 5d6a73514165f4fc60b64d3eebafc0419e50e228
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update nodemon to 3.1.0
+              hash: d887809494ce27859ddd571048f4c7266c0c4bec
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update sinon to 17
+              hash: bd26d8877003aa751df0216f341e776d39370724
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Update systeminformation to 5.22.7
+              hash: 7bb5900649b42ecd418dc21590b7359c2088cc5c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.26
+          title: ""
+          date: 2024-04-23T18:58:25.318Z
+        - commits:
+            - subject: Update copy-webpack-plugin to v12
+              hash: dde0e86a1abfab8c8f0e954ed632d5b154dc5a55
+              body: |
+                Update copy-webpack-plugin from 11.0.0 to 12.0.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.25
+          title: ""
+          date: 2024-04-19T15:46:46.217Z
+        - commits:
+            - subject: Update webpack-cli to v5
+              hash: 00f1610870497c4e2436d0fc022f4de30b90707b
+              body: |
+                Update webpack-cli from 4.10.0 to 5.1.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.24
+          title: ""
+          date: 2024-04-19T14:55:50.059Z
+        - commits:
+            - subject: Update got to v14
+              hash: 148ba6e0c31ac09834cb8ad598bf1cac35ca1095
+              body: |
+                Update got from 12.6.1 to 14.2.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.23
+          title: ""
+          date: 2024-04-19T13:34:13.665Z
+        - commits:
+            - subject: Update @types/supertest to v6
+              hash: e24691fa63c1f2b6f097e0bcb510bfc9da1eda7d
+              body: |
+                Update @types/supertest from 2.0.12 to 6.0.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.22
+          title: ""
+          date: 2024-04-19T12:25:19.313Z
+        - commits:
+            - subject: Remove unused `tmp` dependency
+              hash: 12cc8eb91b52545d84a22e511ddd63ad4ac677ad
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-16.2.21
+          title: ""
+          date: 2024-04-18T02:44:36.677Z
+        - commits:
+            - subject: Update rimraf
+              hash: 5e5a803e26ac36a3085701c3c7055553be6d2fcb
+              body: |
+                Update @types/rimraf from 2.0.5 to 4.0.5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.20
+          title: ""
+          date: 2024-04-17T15:39:15.721Z
+        - commits:
+            - subject: Update semver to v7.6.0
+              hash: 52268d83fa6d8fd364e765b4c0d11128040e9410
+              body: |
+                Update semver from 7.5.4 to 7.6.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.19
+          title: ""
+          date: 2024-04-17T14:38:48.064Z
+        - commits:
+            - subject: Update event-stream to v3.3.5
+              hash: 36e0fed219b041fa9695dd97629f710d52d76129
+              body: |
+                Update event-stream from 3.3.4 to 3.3.5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.18
+          title: ""
+          date: 2024-04-15T21:29:50.342Z
+        - commits:
+            - subject: Add additional update lock tests for lockOverride & force
+              hash: 57207c35398f147205fdc25d5010ec3fb51b132e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.17
+          title: ""
+          date: 2024-04-15T20:57:03.828Z
+        - commits:
+            - subject: Update @types/chai-things to v0.0.38
+              hash: 28d583067193fd0bcdb56732faf659785389f248
+              body: |
+                Update @types/chai-things from 0.0.35 to 0.0.38
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.16
+          title: ""
+          date: 2024-04-15T16:33:18.061Z
+        - commits:
+            - subject: Update webpack to v5.76.0 [SECURITY]
+              hash: 6517d7fdbd6185c448846f7265c411fb0a2d899c
+              body: |
+                Update webpack from 5.74.0 to 5.76.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.15
+          title: ""
+          date: 2024-04-15T15:29:42.533Z
+        - commits:
+            - subject: Disable automerge for major npm devDependencies
+              hash: dfff74d21c1c05b0e9a4560db807887b079a73dc
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: balena-supervisor-16.2.14
+          title: ""
+          date: 2024-04-15T14:19:35.895Z
+        - commits:
+            - subject: Update shell-quote to v1.7.3 [SECURITY]
+              hash: 7398e53626f90d574ea5ce9b318e518fce8d0c19
+              body: |
+                Update shell-quote from 1.7.2 to 1.7.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.13
+          title: ""
+          date: 2024-04-15T13:53:49.933Z
+        - commits:
+            - subject: Update express to v4.19.2 [SECURITY]
+              hash: 9dfb0c576429290c42754e64f27e86bbde8e23bf
+              body: |
+                Update express from 4.17.1 to 4.19.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.12
+          title: ""
+          date: 2024-04-15T11:31:06.812Z
+        - commits:
+            - subject: Enable npm package management via Renovate
+              hash: 23c2f6ddf10216ad47935ff8bf894274299b0ba2
+              body: |
+                Settings are inherited from balena-io/renovate-config
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: balena-supervisor-16.2.11
+          title: ""
+          date: 2024-04-15T10:40:13.559Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.58
+              hash: d7c14686cf22d9b82da1e3d7c8e52efb71da6ddc
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.57 to 2.0.58
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.10
+          title: ""
+          date: 2024-04-15T03:02:03.903Z
+        - commits:
+            - subject: Don't follow symlinks when checking for lockfiles
+              hash: 6e185fbd447bce46179f60a9e650a3a35937d990
+              body: >
+                The Supervisor should only care whether a lockfile exists or
+
+                not. This also fixes an edge case where a user symlinked a
+                lockfile
+
+                to a nonexistent file, causing the Supervisor to enter an error
+
+                loop as it was not able to `stat` the nonexistent file.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.9
+          title: ""
+          date: 2024-04-12T16:50:06.044Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.57
+              hash: 97633816850f0d13d70cdfa2afb8bc9652e71fa2
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.55 to 2.0.57
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.8
+          title: ""
+          date: 2024-04-12T11:30:35.445Z
+        - commits:
+            - subject: Add memory usage healthcheck
+              hash: f863075bdc5714baebcce8b73ddd95240fd04583
+              body: >
+                This healthcheck fails when Supervisor memory usage is above a
+                threshold
+
+                based on initial memory measurements after device state has
+                settled.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.7
+          title: ""
+          date: 2024-04-12T01:49:06.409Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.55
+              hash: 6864ab329aa9879a2d12aa19b2e70cadfff5fb49
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.54 to 2.0.55
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.6
+          title: ""
+          date: 2024-04-10T16:30:09.955Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.54
+              hash: 30351e5f12dbc7f0f2ea3633ad3e63c458adec4a
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.53 to 2.0.54
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.5
+          title: ""
+          date: 2024-04-09T18:43:49.721Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.53
+              hash: 7d7391194876c5593733113ee23ff28d24eb3422
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.52 to 2.0.53
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.4
+          title: ""
+          date: 2024-04-09T17:32:28.461Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.52
+              hash: 55de8ae4300a57776e9134218937fdf732a7f17a
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.27 to 2.0.52
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.2.3
+          title: ""
+          date: 2024-04-09T16:30:46.790Z
+        - commits:
+            - subject: Inherit Renovate settings from balena-io
+              hash: 58e05d0f63a9c789c4163a678b782cb56763250f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: balena-supervisor-16.2.2
+          title: ""
+          date: 2024-04-08T14:36:45.050Z
+        - commits:
+            - subject: Fix some RegEx io-ts types
+              hash: b7922e687567899c668474c3ee5e6f2e89f0989d
+              body: >
+                io-ts types that were generated using `shortStringWithRegex`
+                were testing
+
+                against `VAR_NAME_REGEX`, instead of the Regex that was
+                specified when
+
+                generating the type. This affected `DockerName` such that
+                service names with
+
+                a dash in the middle were returning as false when passed through
+                the
+
+                `DockerName.is` type guard, affecting how
+                `getServicesLockedByAppId` was
+
+                returning a map of locked services.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.1
+          title: ""
+          date: 2024-04-06T08:22:13.914Z
+        - commits:
+            - subject: Take lock before updating service metadata
+              hash: af6359f7ae2db4a656598947120bb46d5d3730de
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.2.0
+          title: ""
+          date: 2024-04-05T02:35:13.875Z
+  version: 5.2.13
+  title: ""
+  date: 2024-07-21T07:18:14.593Z
+- commits:
     - subject: "kirkstone: openssh: CVE-2024-6387"
       hash: 44ed0fab724525f99b8a989b23f0eb9684781349
       body: ""
