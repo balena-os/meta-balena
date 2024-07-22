@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.0.3
+## (2024-07-22)
+
+* Update docker API version to match the v20.10 engine version [Alex Gonzalez]
+* conf: distro: set default docker API version [Alex Gonzalez]
+
 # v6.0.2
 ## (2024-07-19)
 

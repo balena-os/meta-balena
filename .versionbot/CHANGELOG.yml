@@ -1,4 +1,32 @@
 - commits:
+    - subject: Update docker API version to match the v20.10 engine version
+      hash: b129f29043de773bf9f6b2259e30cd62487c3d41
+      body: |
+        Update the API version to the version set in the distro configuration,
+        which must match the API version of the balena package.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "conf: distro: set default docker API version"
+      hash: 39194a01acb4bfaf51f6d59a0a77b1988519620f
+      body: |
+        This is used to match the API version used in the build pipeline with
+        the balena version used in the image.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.0.3
+  title: ""
+  date: 2024-07-22T08:23:04.274Z
+- commits:
     - subject: Update tests/leviathan digest to 081cbeb
       hash: 1440f5c245ed251c5677cc72ec9de6e120b41c38
       body: Update tests/leviathan
