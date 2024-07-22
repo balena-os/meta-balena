@@ -1,6 +1,33 @@
 Change log
 -----------
 
+# v6.0.5
+## (2024-07-22)
+
+
+<details>
+<summary> Update balena-supervisor to v16.4.4 [Self-hosted Renovate Bot] </summary>
+
+> ## balena-supervisor-16.4.4
+> ### (2024-07-17)
+> 
+> * Improve log message typing [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.4.3
+> ### (2024-07-16)
+> 
+> * Logs: only truncate the message if it's possible it will need it [Pagan Gazzard]
+> * Logs: skip setting default values if we're dropping as an invalid log [Pagan Gazzard]
+> * Logs: only call `Date.now()` if a timestamp is not already present [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.4.2
+> ### (2024-07-16)
+> 
+> * Cleanup images after state-engine tests [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.0.4
 ## (2024-07-22)
 
