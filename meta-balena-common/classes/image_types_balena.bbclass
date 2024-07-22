@@ -384,8 +384,8 @@ do_rootfs[vardeps] += "BALENA_BOOT_PARTITION_FILES"
 
 # XXX(petrosagg): This should be eventually implemented using a docker-native daemon
 IMAGE_CMD:docker () {
-    DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=1.22 docker import -)
-    DOCKER_API_VERSION=1.22 docker save ${DOCKER_IMAGE} > ${BALENA_DOCKER_IMG}
+    DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=${BALENA_API_VERSION} docker import -)
+    DOCKER_API_VERSION=${BALENA_API_VERSION} docker save ${DOCKER_IMAGE} > ${BALENA_DOCKER_IMG}
 }
 
 IMAGE_TYPEDEP:hostapp-ext4 = "docker"
