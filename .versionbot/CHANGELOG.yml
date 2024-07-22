@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts action to v1.25.8
+      hash: a8e3ff95943773edee89f4b1b5b4762b8e9e9bdd
+      body: |
+        Update balena-os/balena-yocto-scripts from v1.25.7 to v1.25.8
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 6.0.4
+  title: ""
+  date: 2024-07-22T09:14:24.239Z
+- commits:
     - subject: Update docker API version to match the v20.10 engine version
       hash: b129f29043de773bf9f6b2259e30cd62487c3d41
       body: |
