@@ -1,0 +1,26 @@
+From 1e26e16168d4815a48ab77610e1c282dfc345567 Mon Sep 17 00:00:00 2001
+From: Aleksander Morgado <aleksandermj@chromium.org>
+Date: Mon, 6 May 2024 13:23:30 +0000
+Subject: [PATCH] broadband-modem-qmi-quectel: fix task completion when not
+ enabling profile manager events
+
+Fixes e3024ec620f2d4087c1d03579c8575b6cb988503
+---
+ src/plugins/quectel/mm-broadband-modem-qmi-quectel.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c b/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
+index c6f706a5..df990f3f 100644
+--- a/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
++++ b/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
+@@ -114,6 +114,7 @@ profile_manager_enable_unsolicited_events (MMIfaceModem3gppProfileManager *self,
+         mm_obj_warn (self, "continuing without enabling profile manager events");
+         g_task_return_boolean (task, TRUE);
+         g_object_unref (task);
++        return;
+     }
+ 
+     iface_modem_3gpp_profile_manager_parent->enable_unsolicited_events (
+-- 
+2.34.1
+
