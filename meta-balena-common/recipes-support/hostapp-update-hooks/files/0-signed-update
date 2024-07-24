@@ -124,7 +124,7 @@ updateKeys() {
     CURRENT_POLICY_PATH="$(find /mnt/efi -name "policies.*")"
     for UNLOCK_PCRS in  0,2,3,7 0,1,2,3; do
         {
-            [ -f "${SESSION_CTX}" ] && tpm2_flushcontext "${SESSION_CTX}"  2>&1 || true
+            tpm2_flushcontext "${SESSION_CTX}"  2>&1 || true
             tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
             tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
             POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
@@ -139,6 +139,8 @@ updateKeys() {
             break
         fi
     done
+
+    tpm2_flushcontext "${SESSION_CTX}"  >/dev/null 2>&1
 
     POLICY_UPDATED="${POLICY_PATH}/policy.updated"
     POLICY_EFIBIN="${POLICY_PATH}/policy.efibin"
@@ -186,7 +188,7 @@ updateKeys() {
         esac
 
         {
-            tpm2_flushcontext "${SESSION_CTX}"
+            tpm2_flushcontext "${SESSION_CTX}" 2>&1
 
             hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
             rm -rf "${CURRENT_POLICY_PATH}"
