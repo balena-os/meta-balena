@@ -46,6 +46,8 @@ if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
 	update_reason="Combined policy in use"
 fi
 
+trap 'tpm2_flushcontext "${SESSION_CTX}"' EXIT
+
 if hw_decrypt_passphrase "${EFI_MOUNT_DIR}" "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
 	echo "Unlocked passphrase using pcr:sha256:0,2,3,7"
 elif hw_decrypt_passphrase "${EFI_MOUNT_DIR}" "pcr:sha256:0,1,2,3" "${PASSPHRASE_FILE}"; then
@@ -55,6 +57,8 @@ else
 	echo "Failed to unlock passphrase, abort"
 	exit 1
 fi
+
+tpm2_flushcontext "${SESSION_CTX}" >/dev/null 2>&1
 
 POLICY="$(mktemp -t)"
 PCRS="0,2,3,7"
