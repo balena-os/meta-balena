@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 VOLUME /mnt/sysroot/inactive
 
