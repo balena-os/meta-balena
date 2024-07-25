@@ -251,7 +251,7 @@ For private device types, balena will make the necessary changes when supplied w
 
 ## Step 4: Setting up Hardware in the Loop Testing Pipeline
 
-In order to have the balenaOS image deployed to balenaCloud, it must first pass the [balenaOS automated test suite](./tests).
+In order to have the balenaOS image deployed to balenaCloud, it must first pass the [balenaOS automated test suite](https://github.com/balena-os/meta-balena/tree/master/tests).
 This involves the following steps:
 
 1. Order [parts to build](https://github.com/balena-io-hardware/autokit-assembly-doc/blob/master/source/bom/bom.csv) the autokit test harness, [set it up](https://github.com/balena-io-hardware/autokit-assembly-doc/blob/master/README.md), and connect it to the board for which the the device support is being done for. With the autokit setup, you would be able to run the automated test suite and test your balenaOS image on the board.
@@ -281,8 +281,8 @@ See the repositories below for specific examples on how board support is provide
 - [Raspberry Pi](https://raspberrypi.org): [balena-raspberrypi](https://github.com/balena-os/balena-raspberrypi)
 - [Freescale/NXP](http://www.nxp.com/): [balena-fsl-arm](https://github.com/balena-os/balena-fsl-arm)
 - [ODROID](http://www.hardkernel.com/main/main.php): [balena-odroid](https://github.com/balena-os/balena-odroid)
-- [Parallella](https://www.parallella.org/): [balena-parallella](https://github.com/balena-os/balena-parallella)
-- [Technologic Systems](https://www.embeddedarm.com/): [balena-ts](https://github.com/balena-os/balena-ts)
+- [Parallella](https://parallella.org/): [balena-parallella](https://github.com/balena-os/balena-parallella)
+- [Technologic Systems](https://www.embeddedts.com/): [balena-ts](https://github.com/balena-os/balena-ts)
 - [Toradex](https://www.toradex.com/): [balena-toradex](https://github.com/balena-os/balena-toradex)
 - [VIA](http://www.viatech.com/en/): [balena-via-arm](https://github.com/balena-os/balena-via-arm)
 - [Zynq](http://www.xilinx.com/products/silicon-devices/soc/zynq-7000.html): [balena-zc702](https://github.com/balena-os/balena-zc702)
