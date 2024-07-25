@@ -2,7 +2,6 @@ SUMMARY = "Rust compiler and runtime libaries"
 HOMEPAGE = "http://www.rust-lang.org"
 SECTION = "devel"
 LICENSE = "MIT | Apache-2.0"
-LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=93a95682d51b4cb0a633a97046940ef0"
 
 inherit rust
 inherit cargo_common
@@ -138,6 +137,12 @@ python do_configure() {
     # We can't use BUILD_SYS since that is something the rust snapshot knows
     # nothing about when trying to build some stage0 tools (like fabricate)
     config.set("build", "build", e(d.getVar("SNAPSHOT_BUILD_SYS", True)))
+
+    # Explicitly disable all tools.
+    # This is done because some tools (e.g. rust-analyzer-proc-macro-srv)
+    # require the build.build target to be included in build.target which we
+    # don't want to do.
+    config.set("build", "tools", e([]))
 
     # [install]
     config.add_section("install")
