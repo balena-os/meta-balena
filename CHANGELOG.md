@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.6
+## (2024-07-25)
+
+* patch: Fix broken links in CDS Docs [Vipul Gupta]
+
 # v6.0.5
 ## (2024-07-22)
 

@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: Fix broken links in CDS Docs"
+      hash: 1a9cee2069b3381eddbea606a5aeaa4a436f5643
+      body: ""
+      footer: {}
+      author: Vipul Gupta
+      nested: []
+  version: 6.0.6
+  title: ""
+  date: 2024-07-25T10:23:04.133Z
+- commits:
     - subject: Update balena-supervisor to v16.4.4
       hash: cd92e92408d399a81fa11e221cbd6f23849cefbb
       body: |
