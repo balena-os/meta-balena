@@ -1,0 +1,281 @@
+From e3024ec620f2d4087c1d03579c8575b6cb988503 Mon Sep 17 00:00:00 2001
+From: Lukas Voegl <lvoegl@tdt.de>
+Date: Fri, 19 Apr 2024 11:33:06 +0200
+Subject: [PATCH] quectel: disable qmi unsolicited profile manager events
+
+Signed-off-by: Lukas Voegl <lvoegl@tdt.de>
+---
+ .../quectel/mm-broadband-modem-qmi-quectel.c  | 105 ++++++++++++++++--
+ .../quectel/mm-modem-helpers-quectel.c        |  60 ++++++++++
+ .../quectel/mm-modem-helpers-quectel.h        |   9 ++
+ .../tests/test-modem-helpers-quectel.c        |  26 +++++
+ 4 files changed, 193 insertions(+), 7 deletions(-)
+
+diff --git a/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c b/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
+index 4b4e0c96..c6f706a5 100644
+--- a/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
++++ b/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
+@@ -20,26 +20,108 @@
+ #include "mm-iface-modem-firmware.h"
+ #include "mm-iface-modem-location.h"
+ #include "mm-iface-modem-time.h"
++#include "mm-iface-modem-3gpp-profile-manager.h"
++#include "mm-log-object.h"
++#include "mm-modem-helpers-quectel.h"
+ #include "mm-shared-quectel.h"
+ 
+-static void iface_modem_init          (MMIfaceModem         *iface);
+-static void iface_modem_firmware_init (MMIfaceModemFirmware *iface);
+-static void iface_modem_location_init (MMIfaceModemLocation *iface);
+-static void iface_modem_time_init     (MMIfaceModemTime     *iface);
+-static void shared_quectel_init       (MMSharedQuectel      *iface);
++static void iface_modem_init                      (MMIfaceModem                   *iface);
++static void iface_modem_firmware_init             (MMIfaceModemFirmware           *iface);
++static void iface_modem_location_init             (MMIfaceModemLocation           *iface);
++static void iface_modem_time_init                 (MMIfaceModemTime               *iface);
++static void iface_modem_3gpp_profile_manager_init (MMIfaceModem3gppProfileManager *iface);
++static void shared_quectel_init                   (MMSharedQuectel                *iface);
+ 
+-static MMIfaceModem         *iface_modem_parent;
+-static MMIfaceModemLocation *iface_modem_location_parent;
++static MMIfaceModem                   *iface_modem_parent;
++static MMIfaceModemLocation           *iface_modem_location_parent;
++static MMIfaceModem3gppProfileManager *iface_modem_3gpp_profile_manager_parent;
+ 
+ G_DEFINE_TYPE_EXTENDED (MMBroadbandModemQmiQuectel, mm_broadband_modem_qmi_quectel, MM_TYPE_BROADBAND_MODEM_QMI, 0,
+                         G_IMPLEMENT_INTERFACE (MM_TYPE_IFACE_MODEM, iface_modem_init)
+                         G_IMPLEMENT_INTERFACE (MM_TYPE_IFACE_MODEM_FIRMWARE, iface_modem_firmware_init)
+                         G_IMPLEMENT_INTERFACE (MM_TYPE_IFACE_MODEM_LOCATION, iface_modem_location_init)
+                         G_IMPLEMENT_INTERFACE (MM_TYPE_IFACE_MODEM_TIME, iface_modem_time_init)
++                        G_IMPLEMENT_INTERFACE (MM_TYPE_IFACE_MODEM_3GPP_PROFILE_MANAGER, iface_modem_3gpp_profile_manager_init)
+                         G_IMPLEMENT_INTERFACE (MM_TYPE_SHARED_QUECTEL, shared_quectel_init))
+ 
+ /*****************************************************************************/
+ 
++static gboolean
++profile_manager_check_unsolicited_support (MMBroadbandModemQmiQuectel *self)
++{
++    GError      *error = NULL;
++    const gchar *revision = NULL;
++    guint        release_version;
++    guint        minor_version;
++
++    revision = mm_iface_modem_get_revision (MM_IFACE_MODEM (self));
++    if (!mm_quectel_get_version_from_revision (revision,
++                                               &release_version,
++                                               &minor_version,
++                                               &error)) {
++        mm_obj_warn (self, "parsing revision failed: %s", error->message);
++        g_error_free (error);
++
++        /* assume profile manager supported if version not parseable */
++        return TRUE;
++    }
++
++    if (!mm_quectel_is_profile_manager_supported (revision,
++                                                  release_version,
++                                                  minor_version)) {
++        mm_obj_dbg (self, "profile management not supported by revision %s", revision);
++        return FALSE;
++    }
++
++    /* profile management seems supported */
++    return TRUE;
++}
++
++static gboolean
++profile_manager_enable_unsolicited_events_finish (MMIfaceModem3gppProfileManager  *self,
++                                                  GAsyncResult                    *res,
++                                                  GError                         **error)
++{
++    return g_task_propagate_boolean (G_TASK (res), error);
++}
++
++static void
++parent_enable_unsolicited_events_ready (MMIfaceModem3gppProfileManager *self,
++                                        GAsyncResult                   *res,
++                                        GTask                          *task)
++{
++    GError *error = NULL;
++
++    if (!iface_modem_3gpp_profile_manager_parent->enable_unsolicited_events_finish (self,
++                                                                                    res,
++                                                                                    &error))
++        g_task_return_error (task, error);
++    else
++        g_task_return_boolean (task, TRUE);
++    g_object_unref (task);
++}
++
++static void
++profile_manager_enable_unsolicited_events (MMIfaceModem3gppProfileManager *self,
++                                           GAsyncReadyCallback             callback,
++                                           gpointer                        user_data)
++{
++    GTask *task;
++
++    task = g_task_new (self, NULL, callback, user_data);
++
++    if (!profile_manager_check_unsolicited_support (MM_BROADBAND_MODEM_QMI_QUECTEL (self))) {
++        mm_obj_warn (self, "continuing without enabling profile manager events");
++        g_task_return_boolean (task, TRUE);
++        g_object_unref (task);
++    }
++
++    iface_modem_3gpp_profile_manager_parent->enable_unsolicited_events (
++        self,
++        (GAsyncReadyCallback)parent_enable_unsolicited_events_ready,
++        task);
++}
++
+ MMBroadbandModemQmiQuectel *
+ mm_broadband_modem_qmi_quectel_new (const gchar  *device,
+                                     const gchar  *physdev,
+@@ -124,6 +206,15 @@ peek_parent_modem_location_interface (MMSharedQuectel *self)
+     return iface_modem_location_parent;
+ }
+ 
++static void
++iface_modem_3gpp_profile_manager_init (MMIfaceModem3gppProfileManager *iface)
++{
++    iface_modem_3gpp_profile_manager_parent = g_type_interface_peek_parent (iface);
++
++    iface->enable_unsolicited_events        = profile_manager_enable_unsolicited_events;
++    iface->enable_unsolicited_events_finish = profile_manager_enable_unsolicited_events_finish;
++}
++
+ static void
+ shared_quectel_init (MMSharedQuectel *iface)
+ {
+diff --git a/src/plugins/quectel/mm-modem-helpers-quectel.c b/src/plugins/quectel/mm-modem-helpers-quectel.c
+index 4335e506..7b0fe96d 100644
+--- a/src/plugins/quectel/mm-modem-helpers-quectel.c
++++ b/src/plugins/quectel/mm-modem-helpers-quectel.c
+@@ -138,3 +138,63 @@ mm_quectel_check_standard_firmware_version_valid (const gchar *std_str)
+     }
+     return valid;
+ }
++
++gboolean
++mm_quectel_get_version_from_revision (const gchar  *revision,
++                                      guint        *release,
++                                      guint        *minor,
++                                      GError      **error)
++{
++    g_autoptr(GRegex) version_regex = NULL;
++    g_autoptr(GMatchInfo) match_info = NULL;
++
++    version_regex = g_regex_new ("R(\\d+)A(\\d+)",
++                                 G_REGEX_RAW | G_REGEX_OPTIMIZE,
++                                 0,
++                                 NULL);
++
++    if (!g_regex_match (version_regex, revision, 0, &match_info)) {
++        g_set_error (error, MM_CORE_ERROR, MM_CORE_ERROR_FAILED,
++                     "Cannot parse revision version %s", revision);
++        return FALSE;
++    }
++    if (!mm_get_uint_from_match_info (match_info, 1, release)) {
++        g_set_error (error, MM_CORE_ERROR, MM_CORE_ERROR_FAILED,
++                     "Couldn't get release version from revision %s", revision);
++        return FALSE;
++    }
++    if (!mm_get_uint_from_match_info (match_info, 2, minor)) {
++        g_set_error (error, MM_CORE_ERROR, MM_CORE_ERROR_FAILED,
++                     "Couldn't get minor version from revision %s", revision);
++        return FALSE;
++    }
++
++    return TRUE;
++}
++
++gboolean
++mm_quectel_is_profile_manager_supported (const gchar *revision,
++                                         guint        release,
++                                         guint        minor)
++{
++    guint i;
++    static const struct {
++        const gchar *revision_prefix;
++        guint minimum_release;
++        guint minimum_minor;
++    } profile_support_map [] = {
++        {"EC25", 6, 10},
++    };
++
++    for (i = 0; i < G_N_ELEMENTS (profile_support_map); ++i) {
++        if (g_str_has_prefix (revision, profile_support_map[i].revision_prefix)) {
++            guint minimum_release = profile_support_map[i].minimum_release;
++            guint minimum_minor = profile_support_map[i].minimum_minor;
++
++            return ((release > minimum_release) ||
++                    (release == minimum_release && minor >= minimum_minor));
++        }
++    }
++
++    return TRUE;
++}
+diff --git a/src/plugins/quectel/mm-modem-helpers-quectel.h b/src/plugins/quectel/mm-modem-helpers-quectel.h
+index ea9ff5c1..e4bc63b9 100644
+--- a/src/plugins/quectel/mm-modem-helpers-quectel.h
++++ b/src/plugins/quectel/mm-modem-helpers-quectel.h
+@@ -31,4 +31,13 @@ gboolean mm_quectel_parse_ctzu_test_response (const gchar  *response,
+ 
+ gboolean mm_quectel_check_standard_firmware_version_valid (const gchar *std_str);
+ 
++gboolean mm_quectel_get_version_from_revision (const gchar  *revision,
++                                               guint        *release,
++                                               guint        *minor,
++                                               GError      **error);
++
++gboolean mm_quectel_is_profile_manager_supported (const gchar *revision,
++                                                  guint        release,
++                                                  guint        minor);
++
+ #endif  /* MM_MODEM_HELPERS_QUECTEL_H */
+diff --git a/src/plugins/quectel/tests/test-modem-helpers-quectel.c b/src/plugins/quectel/tests/test-modem-helpers-quectel.c
+index dee01865..6c695f00 100644
+--- a/src/plugins/quectel/tests/test-modem-helpers-quectel.c
++++ b/src/plugins/quectel/tests/test-modem-helpers-quectel.c
+@@ -93,6 +93,30 @@ test_firmversion (void)
+     g_assert_cmpuint (valid, ==, FALSE);
+ }
+ 
++static void
++test_parse_revision (void)
++{
++    gboolean valid;
++    guint release;
++    guint minor;
++
++    valid = mm_quectel_get_version_from_revision ("EM05GFAR07A07M1G_01.016.01.016", &release, &minor, NULL);
++    g_assert_cmpuint (valid, ==, TRUE);
++    g_assert_cmpuint (release, ==, 7);
++    g_assert_cmpuint (minor, ==, 7);
++
++    valid = mm_quectel_get_version_from_revision ("EM05GFAR10A02M1G", &release, &minor, NULL);
++    g_assert_cmpuint (valid, ==, TRUE);
++    g_assert_cmpuint (release, ==, 10);
++    g_assert_cmpuint (minor, ==, 2);
++
++    valid = mm_quectel_get_version_from_revision ("EM05GFAR07AM1G", &release, &minor, NULL);
++    g_assert_cmpuint (valid, ==, FALSE);
++
++    valid = mm_quectel_get_version_from_revision ("EM05GFARA07M1G", &release, &minor, NULL);
++    g_assert_cmpuint (valid, ==, FALSE);
++}
++
+ /*****************************************************************************/
+ 
+ int main (int argc, char **argv)
+@@ -105,5 +129,7 @@ int main (int argc, char **argv)
+ 
+     g_test_add_func ("/MM/quectel/firmversion", test_firmversion);
+ 
++    g_test_add_func ("/MM/quectel/parse_revision", test_parse_revision);
++
+     return g_test_run ();
+ }
+-- 
+2.34.1
+
