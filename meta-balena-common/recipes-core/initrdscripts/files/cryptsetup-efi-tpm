@@ -28,27 +28,12 @@ ensure_luks2() {
 }
 
 cryptsetup_enabled() {
-    # Flasher should not try to unlock the partitions
-    if [ "$bootparam_flasher" = "true" ]; then
-        return 1
+    # Ensure that hook runs when in user mode
+    if user_mode_enabled; then
+	    return 0
     fi
 
-    # Ensure that secure boot is enabled and in user mode before unlocking
-    if ! user_mode_enabled; then
-	    return 1
-    fi
-
-    # Only run if the EFI partition is split
-    if [ ! -e "$EFI_DEV" ]; then
-        return 1
-    fi
-
-    # Check whether there are any LUKS partitions
-    if ! lsblk -nlo fstype | grep -q crypto_LUKS; then
-        return 1
-    fi
-
-    return 0
+    return 1
 }
 
 cryptsetup_run() {
