@@ -21,7 +21,7 @@
 EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
 parse_efivar_val() {
-	od --address-radix=n --format=u1 "$1" \
+	od --address-radix=n --format=u1 "$1" 2>/dev/null \
 		| tr -s "' '" \
 		| cut -d ' ' -f6
 }
@@ -29,13 +29,15 @@ parse_efivar_val() {
 # return zero if secure boot is enabled
 secureboot_enabled() {
 	test "$(parse_efivar_val \
-			/sys/firmware/efi/efivars/SecureBoot-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1
+			/sys/firmware/efi/efivars/SecureBoot-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1 \
+			2>/dev/null
 }
 
 # return zero if system is in setup mode
 setup_mode_enabled() {
 	test "$(parse_efivar_val \
-			/sys/firmware/efi/efivars/SetupMode-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1
+			/sys/firmware/efi/efivars/SetupMode-${EFI_GLOBAL_VARIABLE_GUID})" -eq 1 \
+			2>/dev/null
 }
 
 # return zero if system is in user mode
