@@ -432,7 +432,7 @@ module.exports = {
 
     // Retrieving journalctl logs: register teardown after device is reachable
     this.suite.teardown.register(async () => {
-      await this.worker.archiveLogs(this.id, this.balena.uuid);
+      await this.worker.archiveLogs(this.id, this.link);
     });
 
   },
