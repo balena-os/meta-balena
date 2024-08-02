@@ -63,6 +63,6 @@ do_install() {
     oe_runmake install DESTDIR='${D}${base_prefix}'
 }
 
-FILES_${PN} += "${EFI_BOOT_PATH}"
+FILES:${PN} += "${EFI_BOOT_PATH}"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}/LockDown.efi"
