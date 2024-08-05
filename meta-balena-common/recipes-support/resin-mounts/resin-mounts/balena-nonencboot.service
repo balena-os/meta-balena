@@ -1,18 +1,17 @@
 [Unit]
-Description=Balena EFI partition mount service
+Description=Balena non-encrypted boot partition mount service
 DefaultDependencies=no
 After=resin-boot.service
 Requires=resin-boot.service
 Before=umount.target
 Conflicts=umount.target
 ConditionVirtualization=!docker
-ConditionPathIsSymbolicLink=/mnt/boot/EFI
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/bin/resin-partition-mounter --mount balena-efi
-ExecStop=/usr/bin/resin-partition-mounter --umount balena-efi
+ExecStart=/usr/bin/resin-partition-mounter --mount @@BALENA_NONENC_BOOT_LABEL@@
+ExecStop=/usr/bin/resin-partition-mounter --umount @@BALENA_NONENC_BOOT_LABEL@@
 
 [Install]
 WantedBy=multi-user.target

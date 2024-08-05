@@ -5,7 +5,7 @@ include resin-mounts.inc
 RDEPENDS:${PN} += "os-helpers-fs"
 
 SRC_URI += " \
-	file://balena-efi.service \
+	file://balena-nonencboot.service \
 	file://resin-boot.service \
 	file://resin-data.service \
 	file://resin-state.service \
@@ -52,9 +52,6 @@ do_install:prepend () {
 	ln -sf docker ${D}/etc/balena-engine
 	install -d ${D}${BALENA_BOOT_MOUNT}
 	install -d ${D}/mnt/data
-	if [ "x${SIGN_API}" != "x" ]; then
-		install -d "${D}${BALENA_NONENC_BOOT_MOUNT}"
-	fi
 	install -d ${D}/mnt/state
 	install -d ${D}/mnt/sysroot/active
 	install -d ${D}/mnt/sysroot/inactive
@@ -63,8 +60,18 @@ do_install:prepend () {
 	install -m 755 ${WORKDIR}/resin-partition-mounter ${D}${bindir}
 
 	install -d ${D}${systemd_unitdir}/system
+	if [ "x${SIGN_API}" != "x" ]; then
+		install -d "${D}${BALENA_NONENC_BOOT_MOUNT}"
+		install -m 0644 balena-nonencboot.service ${D}${systemd_unitdir}/system/${BALENA_NONENC_BOOT_LABEL}.service
+		sed -i -e "s/@@BALENA_NONENC_BOOT_LABEL@@/${BALENA_NONENC_BOOT_LABEL}/g" "${D}${systemd_unitdir}/system/${BALENA_NONENC_BOOT_LABEL}.service"
+		if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
+			sed -i '/^\[Unit\]/a ConditionPathIsSymbolicLink=/mnt/boot/EFI' "${D}${systemd_unitdir}/system/${BALENA_NONENC_BOOT_LABEL}.service"
+		fi
+	fi
 	for service in ${SYSTEMD_SERVICE:resin-mounts}; do
-		install -m 0644 $service ${D}${systemd_unitdir}/system/
+		if [ -f $service ]; then
+			install -m 0644 $service ${D}${systemd_unitdir}/system/
+		fi
 	done
 	install -m 0644 ${WORKDIR}/etc-fake-hwclock.mount ${D}${systemd_unitdir}/system/etc-fake\\x2dhwclock.mount
 }
