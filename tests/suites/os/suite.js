@@ -445,6 +445,7 @@ module.exports = {
 		'./tests/fingerprint',
 		'./tests/fsck',
 		'./tests/os-release',
+		'./tests/iptables',
 		'./tests/migrate',
 		'./tests/issue',
 		'./tests/chrony',
