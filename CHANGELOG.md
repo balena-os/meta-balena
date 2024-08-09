@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.7
+## (2024-08-09)
+
+* modemmanager: Fix Quectel modems initialization bug [Florin Sarbu]
+
 # v6.0.6
 ## (2024-07-25)
 

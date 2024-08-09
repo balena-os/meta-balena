@@ -1,4 +1,58 @@
 - commits:
+    - subject: "modemmanager: Fix Quectel modems initialization bug"
+      hash: 2d53d2cb60a155ece0563fbb39629056e2c959d0
+      body: >
+        With the update to ModemManager version 1.22.0 we now have some Quectel
+        modems failing
+
+        to use QMI properly:
+
+
+        ModemManager[1178]: [modem0] power state updated: on
+
+        ModemManager[1178]: [modem0] (quectel) modem reset detected, triggering
+        reprobe
+
+        ModemManager[1178]: [modem0] (quectel) modem reset detected, triggering
+        reprobe
+
+        .
+
+        .
+
+        .
+
+        ModemManager[1178]: [modem0] failed waiting for final state: Too much
+        time waiting to get to a final state
+
+        ModemManager[1178]: [modem0] failed enabling modem: Operation was
+        cancelled
+
+        ModemManager[1178]: [modem1] couldn't start initialization: Transaction
+        timed out
+
+        ModemManager[1178]: [modem1] fatal error initializing: Fatal error:
+        modem is unusable
+
+
+        This has been fixed upstream with the 2 patches we backport here:
+
+
+        ModemManager[1139]: [modem0] power state updated: on
+
+        ModemManager[1139]: [modem0] (quectel) continuing without enabling
+        profile manager events
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.0.7
+  title: ""
+  date: 2024-08-09T17:47:34.390Z
+- commits:
     - subject: "patch: Fix broken links in CDS Docs"
       hash: 1a9cee2069b3381eddbea606a5aeaa4a436f5643
       body: ""
