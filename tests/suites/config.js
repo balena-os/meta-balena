@@ -44,7 +44,7 @@ module.exports = [
 			port: process.env.BALENACLOUD_SSH_PORT,
 		}
 	},
-	image: `${__dirname}/balena.img.gz`,
+	image: `${__dirname}/${process.env.BALENA_IMAGE}.gz`,
 	debug: {
 		// Exit the ongoing test suite if a test fails
 		failFast: true,
@@ -74,7 +74,7 @@ module.exports = [
 			port: process.env.BALENACLOUD_SSH_PORT,
 		}
 	},
-	image: `${__dirname}/balena.img.gz`,
+	image: `${__dirname}/${process.env.BALENA_IMAGE}.gz`,
 	debug: {
 		// Exit the ongoing test suite if a test fails
 		failFast: true,
