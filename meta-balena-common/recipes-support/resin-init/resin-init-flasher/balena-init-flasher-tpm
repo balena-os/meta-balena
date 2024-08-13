@@ -78,6 +78,11 @@ diskenc_setup() {
 			     seek="$(du -b "${PCR_VAL_BIN_PRIMARY}" | cut -f1)"
 	done
 
+	info "Creating combined policy for PCRs ${PCRS}"
+
+	print_pcr_val_bin "$PCRS" "$PCR_VAL_BIN_PRIMARY"
+	print_pcr_val_bin "$PCRS" "$PCR_VAL_BIN_SECONDARY"
+
 	tpm2_createpolicy --policy-pcr \
 		-l "sha256:${PCRS}" \
 		-f "${PCR_VAL_BIN_PRIMARY}" \
