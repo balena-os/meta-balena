@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.8
+## (2024-08-14)
+
+* tests: os: add check for iptables rules [rcooke-warwick]
+
 # v6.0.7
 ## (2024-08-09)
 

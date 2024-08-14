@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: os: add check for iptables rules"
+      hash: ac651d898929d492f3ec93a852f65b46d3883ac7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 6.0.8
+  title: ""
+  date: 2024-08-14T01:35:51.540Z
+- commits:
     - subject: "modemmanager: Fix Quectel modems initialization bug"
       hash: 2d53d2cb60a155ece0563fbb39629056e2c959d0
       body: >
