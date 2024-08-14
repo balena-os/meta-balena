@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.0.10
+## (2024-08-14)
+
+
+<details>
+<summary> Update balena-supervisor to v16.4.6 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.4.6
+> ### (Invalid date)
+> 
+> * Update semver to v7.6.3 [Self-hosted Renovate Bot]
+> 
+> ## balena-supervisor-16.4.5
+> ### (2024-07-25)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.74 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v6.0.9
 ## (2024-08-14)
 

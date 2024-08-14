@@ -1,4 +1,43 @@
 - commits:
+    - subject: Update balena-supervisor to v16.4.6
+      hash: 6137928e264def6afbbe5a42f8bc496419ab65a4
+      body: |
+        Update balena-supervisor from 16.4.4 to 16.4.6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update semver to v7.6.3
+              hash: 340e69d0c22e12281ac8608eda2b5a871e645e19
+              body: |
+                Update semver from 7.6.2 to 7.6.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.4.6
+          title: ""
+          date: 2024-07-30T14:43:21.325Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.74
+              hash: 92be067b0d2e408a526e55bd3a6a57e46dc52687
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.72 to 2.0.74
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: balena-supervisor-16.4.5
+          title: ""
+          date: 2024-07-25T14:31:14.222Z
+  version: 6.0.10
+  title: ""
+  date: 2024-08-14T20:51:23.124Z
+- commits:
     - subject: Update tests/leviathan digest to f4e9332
       hash: d475c7b424d396d03c712befb3fdb2934d7513f0
       body: Update tests/leviathan
