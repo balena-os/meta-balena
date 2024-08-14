@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v6.0.9
+## (2024-08-14)
+
+
+<details>
+<summary> Update tests/leviathan digest to f4e9332 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.25
+> ### (2024-08-06)
+> 
+> * Update actions/upload-artifact digest to 834a144 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.24
+> ### (2024-08-06)
+> 
+> * Update core/contracts digest to 6d69a05 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.23
+> ### (2024-07-23)
+> 
+> * core: remove nested retries in getDutIp function [rcooke-warwick]
+> 
+> ## leviathan-2.31.22
+> ### (2024-07-23)
+> 
+> * patch: Add migration & secureboot options to e2e test suite [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.31.21
+> ### (2024-07-22)
+> 
+> * Update docker/setup-buildx-action digest to aa33708 [Self-hosted Renovate Bot]
+> 
+
+</details>
+
 # v6.0.8
 ## (2024-08-14)
 
