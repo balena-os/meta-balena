@@ -20,8 +20,9 @@ diskenc_setup() {
         fi
 
         # Generate a random passphrase
+        PASSPHRASE_SZ=32
         PASSPHRASE_FILE="$(mktemp)"
-        hw_gen_passphrase > "$PASSPHRASE_FILE"
+        hw_gen_passphrase "$PASSPHRASE_SZ" > "$PASSPHRASE_FILE"
 
         # Create two policies to ensure the newly flashed system boots. One with
         # the EFI binaries measured into PCR7 as specified in the TCG spec, one
@@ -91,11 +92,6 @@ diskenc_setup() {
 		-l "sha256:${PCRS}" \
 		-f "${PCR_VAL_BIN_SECONDARY}" \
 		-L "$POLICY_DIR/policy.secondary"
-	COMBINED_POLICY=$(mktemp -t)
-	SESSION_CTX=$(mktemp -t)
-	tpm2_startauthsession -S "${SESSION_CTX}"
-	tpm2_policyor -S "${SESSION_CTX}" -L "${COMBINED_POLICY}" \
-		"sha256:${POLICY_DIR}/policy.primary,${POLICY_DIR}/policy.secondary"
-	tpm2_flushcontext "${SESSION_CTX}"
-	hw_encrypt_passphrase "$PASSPHRASE_FILE" "$COMBINED_POLICY" "$TPM_RESULT_DIR"
+
+	tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_DIR}"
 }
