@@ -114,10 +114,8 @@ cryptsetup_run() {
         tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
     fi
 
-    if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "session:${SESSION_CTX}" "$PASSPHRASE_FILE"; then
-        info "Successfully unlocked LUKS passphrase using the TPM"
-    elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "pcr:sha256:0,1,2,3" "$PASSPHRASE_FILE"; then
-        info "Unlocked LUKS passphrase without PCR7, will re-encrypt after rollback-health"
+    if tpm_nvram_retrieve_passphrase "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
+        info "Successfully retrieved passphrase from TPM NVRAM"
     else
         umount "$EFI_MOUNT_DIR"
         fail "Failed to unlock LUKS passphrase using the TPM"
