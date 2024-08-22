@@ -391,7 +391,7 @@ module.exports = {
 		await this.worker.flash(this.os.image.path);
 		await this.worker.on();
 		
-		await this.worker.addSSHKey(this.sshKeyPath);
+		// await this.worker.addSSHKey(this.sshKeyPath);
 
 		// create tunnels
 		await test.resolves(
