@@ -201,6 +201,12 @@ hw_encrypt_passphrase() {
     rm -f "${PRIMARY_CTX}" "${PRIVATE_KEY}" "${PUBLIC_KEY}" "${KEY_CTX}"
 }
 
+tpm_nvram_retrieve_passphrase() {
+    auth=$1
+    output=$2
+    tpm2_nvread --auth "${auth}" "${PASSPHRASE_NVINDEX}" > "${output}"
+}
+
 hw_decrypt_passphrase() {
     EFI_DIR="$1"
     AUTH="$2"
