@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.13
+## (2024-08-26)
+
+* classes/image_types_balena: Add support for device specific boot filesystem options [Alexandru Costache]
+
 # v6.0.12
 ## (2024-08-23)
 
