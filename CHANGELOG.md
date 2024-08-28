@@ -1,6 +1,64 @@
 Change log
 -----------
 
+# v6.0.14
+## (2024-08-28)
+
+
+<details>
+<summary> Update balena-supervisor to v16.5.8 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.5.8
+> ### (2024-08-27)
+> 
+> * Update webpack to v5.94.0 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-16.5.7
+> ### (2024-08-27)
+> 
+> * Add unit test for usingInferStepsLock [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.5.6
+> ### (2024-08-23)
+> 
+> * Revert PR #2364 [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.5.5
+> ### (2024-08-21)
+> 
+> * Avoid unnecessary config calls during Supervisor init [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.5.4
+> ### (2024-08-16)
+> 
+> * Add kmod to runtime-base [Joseph Kogut]
+> 
+> ## balena-supervisor-16.5.3
+> ### (2024-08-08)
+> 
+> * Do not write `noProxy` to redsocks.conf [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.5.2
+> ### (2024-08-07)
+> 
+> * Verify that LED_FILE exists on blinking setup [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.5.1
+> ### (2024-08-05)
+> 
+> * Avoid leaking memory on deep promise recursions [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.5.0
+> ### (Invalid date)
+> 
+> * Use promises for setup/writing for logging backend [Felipe Lalanne]
+> * Improve the LogBackend interface [Felipe Lalanne]
+> * Use stream pipeline instead of pipe [Felipe Lalanne]
+> * Do not use DB to store container logs info [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.0.13
 ## (2024-08-26)
 

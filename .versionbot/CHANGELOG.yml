@@ -1,4 +1,250 @@
 - commits:
+    - subject: Update balena-supervisor to v16.5.8
+      hash: 88e983ec5716c4187cd5819c1cefea083dfaad45
+      body: |
+        Update balena-supervisor from 16.4.6 to 16.5.8
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update webpack to v5.94.0 [SECURITY]
+              hash: a480266c5603dde4db0d1630cf5b21748c204d14
+              body: |
+                Update webpack from 5.76.0 to 5.94.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-16.5.8
+          title: ""
+          date: 2024-08-27T22:41:39.587Z
+        - commits:
+            - subject: Add unit test for usingInferStepsLock
+              hash: 51e59725f87b03e0e469e872373cf6088f0cb34a
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.5.7
+          title: ""
+          date: 2024-08-27T21:18:29.272Z
+        - commits:
+            - subject: "Revert PR #2364"
+              hash: 3cebfa9f789c973f94f285da2a4edcc4095e63c0
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.5.6
+          title: ""
+          date: 2024-08-23T00:24:26.769Z
+        - commits:
+            - subject: Avoid unnecessary config calls during Supervisor init
+              hash: fc6927e53d8460863ee495405750feb62ef0483c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.5.5
+          title: ""
+          date: 2024-08-21T04:35:54.822Z
+        - commits:
+            - subject: Add kmod to runtime-base
+              hash: aeb9c621a545a2b6aeead64cdd467a9371d76414
+              body: >
+                balenaOS v6 enables zstd module compression by default. Add kmod
+                to
+
+                runtime-base to support loading of compressed modules.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: balena-supervisor-16.5.4
+          title: ""
+          date: 2024-08-16T14:36:29.003Z
+        - commits:
+            - subject: Do not write `noProxy` to redsocks.conf
+              hash: b088b78a3e9ca135a9624a2d5be54a7c205fb03f
+              body: >
+                This fixes a regression introduced by the refactor in #2329
+                where
+
+                `noProxy` was being included in the data added to redsocks.conf.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.5.3
+          title: ""
+          date: 2024-08-08T16:40:40.421Z
+        - commits:
+            - subject: Verify that LED_FILE exists on blinking setup
+              hash: a255001c2e71942dd57806688dd1fb90a59ba22a
+              body: >
+                Before v1, the blinking module would not throw when the passed
+                led file
+
+                does not exist. This change checks for file existence and
+                defaults to
+
+                `/dev/null` otherwise
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.5.2
+          title: ""
+          date: 2024-08-07T21:59:11.050Z
+        - commits:
+            - subject: Avoid leaking memory on deep promise recursions
+              hash: d789e5bb77e0337773c69ed9d4e24696c019c6ac
+              body: >
+                The following pattern
+
+                ```ts
+
+                async function longRunning() {
+                   // do something
+                   await setTimeout(delay);
+                   await longRunning();
+                }
+
+                ```
+
+
+                Is regularly used for long running operations on the supervisor
+                (e.g.
+
+                polling target state). We have
+
+                recently discovered that this pattern can slowly leak memory as
+                it
+
+                essentially creates an infinite promise chain. Using `void
+                longRunning()` breaks
+
+                the chain and avoids the issue.
+
+
+                This commit fixes all those instances where the pattern was
+                used.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.5.1
+          title: ""
+          date: 2024-08-05T19:17:30.564Z
+        - commits:
+            - subject: Use promises for setup/writing for logging backend
+              hash: 8bc08750e946a3eea5c7eba14182a9506823b559
+              body: >
+                The balena logging backend now uses async functions to setup the
+
+                connection and write messages to the request stream. This adds
+                some
+
+                backpressure on `log` calls by by the log monitor module, to
+                prevent a
+
+                very agressive container causing the supervisor to waste CPU
+                cycles just
+
+                dropping messages.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Improve the LogBackend interface
+              hash: f3fcb0db7a8478dfe9ffde342b683510ba49502f
+              body: >
+                This make the LogBackend `log` method into an async method in
+
+                preparation for upcoming changes that will use backpressure from
+                the
+
+                connection to delay logging coming from containers.
+
+
+                This also removes unnecessary imageId from the LogMessage type
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Use stream pipeline instead of pipe
+              hash: 5af948483a69701ebe7db9933a695f85f29b62f3
+              body: |
+                This also removes the use of JSONStream from the monitor module
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Do not use DB to store container logs info
+              hash: dbacca977a1f42ad4e3381112d3523cf7624d283
+              body: >
+                This removes the dependence of the supervisor on the
+                containerLogs
+
+                database for remembering the last sent timestamp. This commit
+                instead
+
+                uses the supervisor startup time as the initial time for log
+                retrieval.
+
+                This might result in some logs missing for services that may
+                start
+
+                before the supervisor after a boot, or if the supervisor
+                restarts.
+
+                However this seems like an acceptable trade-off as the current
+
+                implementation seems to make things worst in resource contrained
+
+                environments.
+
+
+                We'll move storing the last sent timestamp to a better storage
+                medium in
+
+                a future commit.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.5.0
+          title: ""
+          date: 2024-07-30T18:48:22.422Z
+  version: 6.0.14
+  title: ""
+  date: 2024-08-28T09:01:22.853Z
+- commits:
     - subject: "classes/image_types_balena: Add support for device specific boot
         filesystem options"
       hash: 8a7b00339067e4b95933fe4936fc7bbfeacf97bf
