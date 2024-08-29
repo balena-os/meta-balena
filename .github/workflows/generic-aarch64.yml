@@ -1,4 +1,4 @@
-name: Raspberry Pi 3 (using 64bit OS)
+name: Generic AARCH64
 
 on:
   pull_request:
@@ -17,8 +17,6 @@ on:
 jobs:
   yocto:
     name: Yocto
-    # FIXME: This workflow has dependencies on scripts in the balena-yocto-scripts repository
-    # which is pinned separately as a submodule in the device repo. Expect some drift but try to retain compatibility.
     uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@v1.25.26
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
@@ -29,8 +27,17 @@ jobs:
     with:
       # Needed for testing - defaults to production
       deploy-environment: balena-staging.com
-      machine: raspberrypi3-64
-      device-repo: balena-os/balena-raspberrypi
+      machine: generic-aarch64
+      device-repo: balena-os/balena-generic
       device-repo-ref: master
       # Pin to the current commit
       meta-balena-ref: ${{ github.sha }}
+      # Use QEMU workers for testing and run cloud suite against balenaCloud production
+      # This would be faster with KVM on ARM64 but nested KVM is only on x86_64
+      test_matrix: >
+        {
+          "test_suite": ["os","cloud","hup"],
+          "environment": ["balena-cloud.com"],
+          "worker_type": ["qemu"],
+          "runs_on": [["self-hosted", "X64", "kvm"]]
+        }
