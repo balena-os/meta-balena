@@ -1,6 +1,38 @@
 Change log
 -----------
 
+# v6.0.16
+## (2024-08-29)
+
+
+<details>
+<summary> Update tests/leviathan digest to ff6a079 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.29
+> ### (2024-08-29)
+> 
+> * Update core/contracts digest to 59752b7 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.28
+> ### (2024-08-29)
+> 
+> * Update balena-os/leviathan-worker to v2.9.43 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.27
+> ### (2024-08-29)
+> 
+> * Update docker/setup-buildx-action digest to 988b5a0 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.26
+> ### (2024-08-29)
+> 
+> * specify ipv4 localhost for balena tunnel [rcooke-warwick]
+> * Move balena-cli download to a build stage with renovate management [Kyle Harding]
+> * core: update CLI to 19.0.0 [rcooke-warwick]
+> 
+
+</details>
+
 # v6.0.15
 ## (2024-08-29)
 

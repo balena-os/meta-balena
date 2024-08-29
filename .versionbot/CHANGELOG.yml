@@ -1,4 +1,93 @@
 - commits:
+    - subject: Update tests/leviathan digest to ff6a079
+      hash: 5b915b20c402774b2926a8f2ea73200daffdd607
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 59752b7
+              hash: 77fb084fa0073a4ce024c258bc81b44c7df84daa
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.29
+          title: ""
+          date: 2024-08-29T19:33:37.619Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.43
+              hash: 47bf1a79a6935e7c99430266f67d90f0f0155256
+              body: |
+                Update balena-os/leviathan-worker from 2.9.41 to 2.9.43
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.28
+          title: ""
+          date: 2024-08-29T18:44:20.177Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to 988b5a0
+              hash: e6b3ef176fbadff3adeb317158d8be96c635092a
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.27
+          title: ""
+          date: 2024-08-29T17:37:31.318Z
+        - commits:
+            - subject: specify ipv4 localhost for balena tunnel
+              hash: 26d159fb88c3455975a048aa70bfeaad530d6330
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+            - subject: Move balena-cli download to a build stage with renovate management
+              hash: 6bc62dc2b0b8368aea6b1763968ee5d775657d0e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "core: update CLI to 19.0.0"
+              hash: 382dd48d3c3f7bc4fbad1e3376d84a40c1342c15
+              body: >
+                we were previously using CLI 16.0.0, which is now over 365 days
+                since the next major release (17.0.0) , so its deprecated and
+                won't work without adding the --unsupported flag, or updating.
+                Choosing to update
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.31.26
+          title: ""
+          date: 2024-08-29T16:24:31.112Z
+  version: 6.0.16
+  title: ""
+  date: 2024-08-29T22:23:40.786Z
+- commits:
     - subject: remove up-board and cl-som-imx8
       hash: e89f03602ba6b9565db22e90ff1c7f604c6f2eca
       body: >
