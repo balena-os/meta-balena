@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.0.15
+## (2024-08-29)
+
+* remove up-board and cl-som-imx8 [rcooke-warwick]
+* Add GHA workflows for additional device types [Kyle Harding]
+
 # v6.0.14
 ## (2024-08-28)
 

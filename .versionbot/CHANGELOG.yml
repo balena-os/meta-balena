@@ -1,4 +1,30 @@
 - commits:
+    - subject: remove up-board and cl-som-imx8
+      hash: e89f03602ba6b9565db22e90ff1c7f604c6f2eca
+      body: >
+        These were recently removed from yocto-all as they need to be moved to
+        kirkstone or higher - and that work is not trivial
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: Add GHA workflows for additional device types
+      hash: de582e93afe502654f02617fbf6daa930e4cad03
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.0.15
+  title: ""
+  date: 2024-08-29T13:04:15.729Z
+- commits:
     - subject: Update balena-supervisor to v16.5.8
       hash: 88e983ec5716c4187cd5819c1cefea083dfaad45
       body: |
