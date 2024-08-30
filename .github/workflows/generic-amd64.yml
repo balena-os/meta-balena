@@ -19,7 +19,7 @@ jobs:
     name: Yocto
     # FIXME: This workflow has dependencies on scripts in the balena-yocto-scripts repository
     # which is pinned separately as a submodule in the device repo. Expect some drift but try to retain compatibility.
-    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@v1.25.26
+    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@5c8805dcd0013ca3aab6ec82e094595ad8f6780b # v1.25.28
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
