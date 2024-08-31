@@ -4,7 +4,7 @@ module.exports = [
     suite: `${__dirname}/../suites/cloud`,
     config: {
       networkWired: false,
-      networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
+      networkWireless: false,
       balenaApiKey: process.env.BALENACLOUD_API_KEY,
       balenaApiUrl: process.env.BALENACLOUD_API_URL,
       organization: process.env.BALENACLOUD_ORG,

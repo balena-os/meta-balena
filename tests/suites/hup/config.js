@@ -4,7 +4,7 @@ module.exports = [
     suite: `${__dirname}/../suites/hup`,
     config: {
       networkWired: false,
-      networkWireless: process.env.WORKER_TYPE === 'qemu' ? false : true,
+      networkWireless: false,
       downloadVersion: 'latest',
       balenaApiKey: process.env.BALENACLOUD_API_KEY,
       balenaApiUrl: process.env.BALENACLOUD_API_URL,
