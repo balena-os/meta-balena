@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update Pin balena-os/balena-yocto-scripts action to a3dfa26
+      hash: 3243ce257ab7824e3cf90e214dc31e56b3697ec5
+      body: |
+        Update balena-os/balena-yocto-scripts
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.0.17
+  title: ""
+  date: 2024-08-31T01:13:35.118Z
+- commits:
     - subject: Update tests/leviathan digest to ff6a079
       hash: 5b915b20c402774b2926a8f2ea73200daffdd607
       body: Update tests/leviathan

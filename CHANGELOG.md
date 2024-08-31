@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.17
+## (2024-08-31)
+
+* Update Pin balena-os/balena-yocto-scripts action to a3dfa26 [balena-renovate[bot]]
+
 # v6.0.16
 ## (2024-08-29)
 
