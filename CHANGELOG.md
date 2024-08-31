@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.20
+## (2024-08-31)
+
+* tests: config: restore both network options to false [Kyle Harding]
+
 # v6.0.19
 ## (2024-08-31)
 

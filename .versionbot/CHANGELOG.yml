@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tests: config: restore both network options to false"
+      hash: a1ed821735940bd56b3f6b92ae3db85bba4dd241
+      body: |
+        See: https://github.com/balena-os/meta-balena/pull/3117
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.0.20
+  title: ""
+  date: 2024-08-31T14:20:53.330Z
+- commits:
     - subject: Update balena-supervisor to v16.6.1
       hash: 6fdf650a5e214dacb40dd87e34c9369464cc2d12
       body: |
