@@ -1,4 +1,83 @@
 - commits:
+    - subject: Update balena-supervisor to v16.6.1
+      hash: 6fdf650a5e214dacb40dd87e34c9369464cc2d12
+      body: |
+        Update balena-supervisor from 16.5.8 to 16.6.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Remove unused patchDevice function
+              hash: 788afee9a1ebce3d1a319b0ca998ba4163f482ce
+              body: >
+                This function was a remainder of the dependent devices code that
+                no
+
+                was removed on #2105
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.6.1
+          title: ""
+          date: 2024-08-29T16:36:07.606Z
+        - commits:
+            - subject: Add support for redsocks dnsu2t config
+              hash: eaa07e97a9fd2089d1f6a2f3bdff74215cdee789
+              body: >
+                Users may specify dnsu2t config by including a `dns` field
+
+                in the `proxy` section of PATCH /v1/device/host-config's body:
+
+                ```
+
+                {
+                  network: {
+                    proxy: {
+                      dns: '1.1.1.1:53',
+                    }
+                  }
+                }
+
+                ```
+
+
+                If `dns` is a string, ADDRESS and PORT are required and should
+                be
+
+                in the format `ADDRESS:PORT`. The endpoint with error with
+
+                code 400 if either ADDRESS or PORT are missing.
+
+
+                `dns` may also be a boolean. If true, defaults will be
+                configured.
+
+                If false, the dns configuration will be removed.
+
+
+                If `proxy` is patched to empty, `dns` will be removed regardless
+
+                of its current or input configs, as `dns` depends on an active
+
+                redsocks proxy to function.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.6.0
+          title: ""
+          date: 2024-08-28T22:47:08.152Z
+  version: 6.0.19
+  title: ""
+  date: 2024-08-31T07:40:08.932Z
+- commits:
     - subject: Update balena-os/balena-yocto-scripts action to v1.25.28
       hash: 5d1ed6bafe7269c890b1f976f1065df7407ae7e7
       body: |

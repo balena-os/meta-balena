@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.0.19
+## (2024-08-31)
+
+
+<details>
+<summary> Update balena-supervisor to v16.6.1 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.6.1
+> ### (2024-08-29)
+> 
+> * Remove unused patchDevice function [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.6.0
+> ### (2024-08-28)
+> 
+> * Add support for redsocks dnsu2t config [Christina Ying Wang]
+> 
+
+</details>
+
 # v6.0.18
 ## (2024-08-31)
 
