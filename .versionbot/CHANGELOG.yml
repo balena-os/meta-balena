@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts action to v1.25.28
+      hash: 5d1ed6bafe7269c890b1f976f1065df7407ae7e7
+      body: |
+        Update balena-os/balena-yocto-scripts from v1.25.26 to v1.25.28
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.0.18
+  title: ""
+  date: 2024-08-31T04:29:39.151Z
+- commits:
     - subject: Update Pin balena-os/balena-yocto-scripts action to a3dfa26
       hash: 3243ce257ab7824e3cf90e214dc31e56b3697ec5
       body: |
