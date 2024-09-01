@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts action to v1.25.30
+      hash: c6c64ab317c0a7756c6a0aa218ab656b468b56df
+      body: |
+        Update balena-os/balena-yocto-scripts from v1.25.28 to v1.25.30
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.0.21
+  title: ""
+  date: 2024-09-01T04:40:51.408Z
+- commits:
     - subject: "tests: config: restore both network options to false"
       hash: a1ed821735940bd56b3f6b92ae3db85bba4dd241
       body: |
