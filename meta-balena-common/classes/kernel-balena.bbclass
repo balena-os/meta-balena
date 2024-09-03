@@ -395,14 +395,16 @@ BALENA_CONFIGS[compress-kmodules] ?= " \
 # 
 # PULSAR (https://pulsar.sh/docs/faq/kernel-requirements)
 #
-CONFIG_DEBUG_INFO=y
-CONFIG_DEBUG_INFO_BTF=y
-CONFIG_SECURITY=y
-CONFIG_SECURITYFS=y
-CONFIG_SECURITY_NETWORK=y
-CONFIG_FUNCTION_TRACER=y
-CONFIG_FTRACE_SYSCALLS=y
-CONFIG_BPF_LSM=y
+BALENA_CONFIGS[pulsar] ?= " \
+    CONFIG_DEBUG_INFO=y \
+    CONFIG_DEBUG_INFO_BTF=y \
+    CONFIG_SECURITY=y \
+    CONFIG_SECURITYFS=y \
+    CONFIG_SECURITY_NETWORK=y \
+    CONFIG_FUNCTION_TRACER=y \
+    CONFIG_FTRACE_SYSCALLS=y \
+    CONFIG_BPF_LSM=y \
+"
 
 #
 # Do not include debugging info in kernel and modules
