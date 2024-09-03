@@ -406,6 +406,8 @@ BALENA_CONFIGS[pulsar] ?= " \
     CONFIG_BPF_LSM=y \
 "
 
+BALENA_CONFIGS:append = " pulsar"
+
 #
 # Do not include debugging info in kernel and modules
 #
