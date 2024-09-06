@@ -21,76 +21,15 @@ const { join, dirname } = require("path");
 const { homedir } = require("os");
 const fse = require("fs-extra");
 
-const setConfig = async (test, that, target, key, value) => {
-
-	return test.test(`Update or delete ${key} in config.json`, t =>
-		t.resolves(
-			that.waitForServiceState(
-				'config-json.service',
-				'inactive',
-				target
-			),
-			'Should wait for config-json.service to be inactive'
-		).then(() => {
-			if (value == null) {
-				return t.resolves(
-					that.cloud.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`,
-							`&&`, `jq`, `"del(.${key})"`, `/mnt/boot/config.json`,
-							`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
-						].join(' '),
-						target
-					), `Should delete ${key} from config.json`
-				)
-			} else {
-				if (typeof(value) == 'string') {
-					value = `"${value}"`
-				} else {
-					value = JSON.stringify(value);
-				}
-
-				return t.resolves(
-					that.cloud.executeCommandInHostOS(
-						[
-							`tmp=$(mktemp)`,
-							`&&`, `jq`, `'.${key}=${value}'`, `/mnt/boot/config.json`,
-							`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
-						].join(' '),
-						target
-					), `Should set ${key} to ${value.substring(24) ? value.replace(value.substring(24), '...') : value} in config.json`
-				)
-			}
-		}).then(() => {
-			// avoid hitting 'start request repeated too quickly'
-			return t.resolves(
-				that.cloud.executeCommandInHostOS(
-					'systemctl reset-failed config-json.service',
-					target
-				), `Should reset start counter of config-json.service`
-			);
-		}).then(() => {
-			return t.resolves(
-				that.waitForServiceState(
-					'config-json.service',
-					'inactive',
-					target
-				),
-				'Should wait for config-json.service to be inactive'
-			)
-		})
-	);
-}
-
 module.exports = {
 	title: 'SSH authentication test',
 	tests: [
 		{
 			title: 'SSH authentication in production mode',
 			run: async function(test) {
-				return setConfig(test, this, this.balena.uuid, 'developmentMode', false)
+        return this.writeConfigJsonProp(test, 'developmentMode', false, this.balena.uuid)
 				.then(() => {
-					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
+          return this.writeConfigJsonProp(test, 'os.sshKeys', null, this.balena.uuid)
 				}).then(() => {
 					return test.resolves(
 						this.waitForServiceState(
@@ -122,7 +61,7 @@ module.exports = {
 						);
 					});
 				}).then(async () => {
-						return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()]);
+            return this.writeConfigJsonProp(test, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()], this.balena.uuid);
 				}).then(async () => {
 					let result;
 					await this.utils.waitUntil(
@@ -137,7 +76,7 @@ module.exports = {
 						"Local SSH authentication with custom keys is allowed in production mode"
 					);
 			  }).then(async () => {
-					await setConfig(test, this, this.balena.uuid, 'os.sshKeys');
+          await this.writeConfigJsonProp(test, 'os.sshKeys', null, this.balena.uuid);
 			  }).then(async () => {
 					let result;
 					let config = {};
@@ -177,9 +116,9 @@ module.exports = {
 				const customKey = await keygen({
 					location: customSshPath,
 				});
-				return setConfig(test, this, this.balena.uuid, 'developmentMode', true)
+        return this.writeConfigJsonProp(test, 'developmentMode', true, this.balena.uuid)
 				.then(() => {
-					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
+          return this.writeConfigJsonProp(test, 'os.sshKeys', null, this.balena.uuid);
 				}).then(() => {
 					return test.resolves(
 						this.waitForServiceState(
@@ -203,7 +142,7 @@ module.exports = {
 						"Local SSH authentication without custom keys is allowed in development mode"
 					)
 				}).then(() => {
-					return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [customKey.pubKey.trim()]);
+          return this.writeConfigJsonProp(test, 'os.sshKeys', [customKey.pubKey.trim()], this.balena.uuid);
 				}).then(() => {
 					return test.resolves(
 						this.waitForServiceState(
@@ -228,7 +167,7 @@ module.exports = {
 							this.worker.addSSHKey(this.context.get().sshKeyPath);
 						})
 						.then(() => {
-							return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()]);
+              return this.writeConfigJsonProp(test, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()], this.balena.uuid);
 						});
 				}).then(async () => {
 					let result;
@@ -244,7 +183,7 @@ module.exports = {
 						"Local SSH authentication with custom keys is allowed in development mode"
 					)
 				}).then(async () => {
-					return setConfig(test, this, this.balena.uuid, 'os.sshKeys');
+          return this.writeConfigJsonProp(test, 'os.sshKeys', null, this.balena.uuid);
 				}).then(async () => {
 					let result;
 					let config = {};
