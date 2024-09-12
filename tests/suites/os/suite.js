@@ -125,10 +125,10 @@ module.exports = {
 		const BalenaOS = this.require('components/os/balenaos');
 		const utils = this.require('common/utils');
 		const worker = new Worker(
-			this.suite.deviceType.slug, 
-			this.getLogger(), 
-			this.suite.options.workerUrl, 
-			this.suite.options.balena.organization, 
+			this.suite.deviceType.slug,
+			this.getLogger(),
+			this.suite.options.workerUrl,
+			this.suite.options.balena.organization,
 			join(homedir(), 'id'),
 			this.suite.options.config.sshConfig
 		);
@@ -205,7 +205,7 @@ module.exports = {
 						} else {
 							value = JSON.stringify(value);
 						}
-		
+
 						return t.resolves(
 							worker.executeCommandInHostOS(
 								[
@@ -260,7 +260,7 @@ module.exports = {
 			this.suite.options.balenaOS.network.wired = {
 				nat: true,
 			};
-		} 
+		}
 		else {
 			// device has wifi, use wifi hotspot to connect to DUT
 			delete this.suite.options.balenaOS.network.wired;
@@ -280,7 +280,7 @@ module.exports = {
 				psk: `${this.suite.options.id}_psk`,
 				nat: true,
 			};
-		} 
+		}
 		else {
 			// no wifi on DUT
 			delete this.suite.options.balenaOS.network.wireless;
@@ -299,12 +299,16 @@ module.exports = {
 					configJson: {
 						uuid: this.suite.options.balenaOS.config.uuid,
 						os: {
+              // Set a connectivity-check URI for HTTPS time sync service
+              network: {
+                connectivity: {
+                  uri: 'https://api.balena-cloud.com/connectivity-check'
+                }
+              },
 							sshKeys: [
 								keys.pubKey
 							],
 						},
-						// Set an API endpoint for the HTTPS time sync service.
-						apiEndpoint: 'https://api.balena-cloud.com',
 						// persistentLogging is managed by the supervisor and only read at first boot
 						persistentLogging: true,
 						// Set local mode so we can perform local pushes of containers to the DUT
@@ -359,7 +363,7 @@ module.exports = {
 			.get()
 			.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
 			this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
-			
+
 			await this.cloud.balena.models.key.create(
 				this.sshKeyLabel,
 				keys.pubKey
@@ -390,7 +394,7 @@ module.exports = {
 		await this.worker.off(); // Ensure DUT is off before starting tests
 		await this.worker.flash(this.os.image.path);
 		await this.worker.on();
-		
+
 		await this.worker.addSSHKey(this.sshKeyPath);
 
 		// create tunnels
@@ -412,11 +416,11 @@ module.exports = {
 			`Device ${this.link} should be reachable over local SSH connection`
 		)
 
-		await test.resolves( 
+		await test.resolves(
 			systemd.waitForServiceState('balena', 'active', this.link),
 			'balena Engine should be running and healthy'
 		)
-		
+
 		// we want to waitUntil here as the supervisor may take some time to come online.
 		await test.resolves(
 			this.utils.waitUntil(async () => {
@@ -429,7 +433,7 @@ module.exports = {
 			'Supervisor should be running and healthy'
 		)
 
-		
+
 		// Retrieving journalctl logs: register teardown after device is reachable
 		this.suite.teardown.register(async () => {
 			await this.context
