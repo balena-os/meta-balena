@@ -103,7 +103,7 @@ module.exports = {
 				}).then(async () => {
 					return exec(`ssh-add ${this.context.get().sshKeyPath}`)
 					.then(() => {
-						this.worker.addSSHKey(this.context.get().sshKeyPath);
+						// this.worker.addSSHKey(this.context.get().sshKeyPath);
 					})
 				}).then(async () => {
 					// disable retry, as we want to evaluate the failure
@@ -225,7 +225,7 @@ module.exports = {
 				}).then(async () => {
 						return exec(`ssh-add ${this.context.get().sshKeyPath}`)
 						.then(() => {
-							this.worker.addSSHKey(this.context.get().sshKeyPath);
+							// this.worker.addSSHKey(this.context.get().sshKeyPath);
 						})
 						.then(() => {
 							return setConfig(test, this, this.balena.uuid, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()]);

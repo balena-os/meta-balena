@@ -216,7 +216,7 @@ const initDUT = async (that, test, target) => {
 	await that.worker.flash(that.os.image.path);
 	await that.worker.on();
 
-	await that.worker.addSSHKey(that.sshKeyPath);
+	// await that.worker.addSSHKey(that.sshKeyPath);
 
 	// create tunnels
 	await test.resolves(
