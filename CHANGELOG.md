@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.23
+## (2024-09-12)
+
+* tests:os: Avoid setting apiEndpoint for unmanaged tests [Kyle Harding]
+
 # v6.0.22
 ## (2024-09-12)
 

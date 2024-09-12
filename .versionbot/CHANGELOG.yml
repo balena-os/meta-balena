@@ -1,4 +1,25 @@
 - commits:
+    - subject: "tests:os: Avoid setting apiEndpoint for unmanaged tests"
+      hash: 123e5476c4740abb29e0818d93449ca8da804f5c
+      body: >
+        When this config.json field has a value, the supervisor will treat the
+        device as managed and will crash and start to boot loop.
+
+
+        On faster device-types we don't seem to notice and the tests pass by
+        chance, but on Pi Zero and similar we consistently see ECONNRESET when
+        hitting local SV endpoints.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.0.23
+  title: ""
+  date: 2024-09-12T18:15:21.088Z
+- commits:
     - subject: Update balena-os/balena-yocto-scripts action to v1.25.39
       hash: 6e1c2685e6be2982ca7175936e0f4babae37081f
       body: |
