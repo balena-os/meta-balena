@@ -1,4 +1,27 @@
 - commits:
+    - subject: "initrdscripts: Make cryptsetup fail hard in unexpected conditions"
+      hash: c1bccdbd95bcb0202c4b80679ade0967df643342
+      body: |
+        This patch adds a set of checks that make sure that the partition
+        layout is as expected on a system with encrypted disks. Namely it
+        * Checks that the boot partition is split
+        * Checks that it can find the correct amount of encrypted partitions
+        * Checks that the label on the unlocked filesystem matches the label
+          on the encrypted partition
+        * Checks that system is not mixing encrypted and unencrypted
+          partitions
+        * Checks there are no ambiguities or duplicit partitions
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.0.25
+  title: ""
+  date: 2024-09-13T16:23:25.632Z
+- commits:
     - subject: "common: fix return in commit_apply-dbx HUP hook"
       hash: a557b614a0ce2cf39d6bdfb3e464834b0d570895
       body: |

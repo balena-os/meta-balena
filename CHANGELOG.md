@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.25
+## (2024-09-13)
+
+* initrdscripts: Make cryptsetup fail hard in unexpected conditions [Michal Toman]
+
 # v6.0.24
 ## (2024-09-13)
 
