@@ -15,17 +15,17 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "v20.10.43"
-BALENA_BRANCH = "master"
+BALENA_VERSION = "v20.10.18"
+BALENA_BRANCH = "v20.10.18-balena"
 
-SRCREV = "0be8046a1c191ad789a65d7d8429d899d6bc9fbe"
+SRCREV = "907483f1240ddaec0fa72c2cf09c0987f7f309a8"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
 #
 # 0: https://git.yoctoproject.org/meta-virtualization/tree/recipes-containers/docker/files
 SRC_URI = "\
-	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import;protocol=https \
+	git://github.com/alexgg/moby.git;branch=${BALENA_BRANCH};destsuffix=git/src/import;protocol=https \
 	file://balena.service \
 	file://balena-host.service \
 	file://balena-host.socket \
