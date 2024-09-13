@@ -31,20 +31,20 @@ CURRENT_DB_ESL="/resin-boot/balena-keys/db.esl"
 
 if [ ! -d "${EFI_DIR}" ]; then
 	# Not an EFI system, nothing to do
-	return
+	exit
 fi
 
 SECUREBOOT_VAL=$(efivar -p -n "${SECUREBOOT_VAR}" | tail -n 1 | sed -e "${EFIVAR_RE}")
 if [ "${SECUREBOOT_VAL}" -ne 1 ]; then
 	# Secure boot disabled, nothing to do
-	return
+	exit
 fi
 
 if [ ! -d "${PENDING_DBX_DIR}" ]; then
 	# Unexpected state - the directory should have been created by HUP
 	# With it missing, there is nothing we can do
 	echo "Rollback: Directory '${PENDING_DBX_DIR}' should exist but it does not"
-	return
+	exit 1
 fi
 
 echo "Rollback: Applying pending DBX updates to prevent formerly allowed OS versions to boot"
