@@ -1,4 +1,22 @@
 - commits:
+    - subject: "common: fix return in commit_apply-dbx HUP hook"
+      hash: a557b614a0ce2cf39d6bdfb3e464834b0d570895
+      body: |
+        This code was moved from rollback-health into a hostapp-update commit
+        hook, where it now runs outside of a function.
+
+        Replace the invalid return statements with exits.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.0.24
+  title: ""
+  date: 2024-09-13T08:22:06.217Z
+- commits:
     - subject: "tests:os: Avoid setting apiEndpoint for unmanaged tests"
       hash: 123e5476c4740abb29e0818d93449ca8da804f5c
       body: >

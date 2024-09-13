@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.24
+## (2024-09-13)
+
+* common: fix return in commit_apply-dbx HUP hook [Joseph Kogut]
+
 # v6.0.23
 ## (2024-09-12)
 
