@@ -1,4 +1,199 @@
 - commits:
+    - subject: Update tests/leviathan digest to 384eab3
+      hash: d83cff4412e56f15966c9ea9f3c5c6a54ef628da
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.47
+              hash: b53c1c88c58c9778c65d1374e0e6974c4ade9b7b
+              body: |
+                Update balena-os/leviathan-worker from 2.9.46 to 2.9.47
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.43
+          title: ""
+          date: 2024-09-16T18:05:30.777Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.46
+              hash: f3f95ce7b0f5db843a74254ab46e601c8d02e946
+              body: |
+                Update balena-os/leviathan-worker from 2.9.45 to 2.9.46
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.42
+          title: ""
+          date: 2024-09-16T15:31:00.845Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.10
+              hash: 7a610c2fa5f291963246490217351c9615fe24fc
+              body: |
+                Update balena-io/balena-cli from 19.0.9 to 19.0.10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.41
+          title: ""
+          date: 2024-09-13T00:37:52.211Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.9
+              hash: 4fa611fe286f7992201ca189399bc1d8de3cb5e5
+              body: |
+                Update balena-io/balena-cli from 19.0.8 to 19.0.9
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.40
+          title: ""
+          date: 2024-09-12T16:34:55.992Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.8
+              hash: db7090769dc27d334c8469e2506d9c292b858808
+              body: |
+                Update balena-io/balena-cli from 19.0.7 to 19.0.8
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.39
+          title: ""
+          date: 2024-09-12T15:33:44.784Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.7
+              hash: 23b1c74ae99df11d669829f17d59e0ca3be47760
+              body: |
+                Update balena-io/balena-cli from 19.0.5 to 19.0.7
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.38
+          title: ""
+          date: 2024-09-12T14:36:50.579Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.45
+              hash: 0dc026dca2f747f842c1409a13f47cea9b9d04a9
+              body: |
+                Update balena-os/leviathan-worker from 2.9.44 to 2.9.45
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.37
+          title: ""
+          date: 2024-09-12T07:31:44.179Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.44
+              hash: 6b43e8f2ffa27d0fb6c37da4bfaba4851df2f7f0
+              body: |
+                Update balena-os/leviathan-worker from 2.9.43 to 2.9.44
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.36
+          title: ""
+          date: 2024-09-11T23:32:37.123Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.5
+              hash: c174e083809828878a0c4ffff762e9f559accfe4
+              body: |
+                Update balena-io/balena-cli from 19.0.3 to 19.0.5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.35
+          title: ""
+          date: 2024-09-10T15:33:10.681Z
+        - commits:
+            - subject: Always upload reports, especially when tests fail
+              hash: c09fee58e73b0717726d5c3d381574cb12eadd83
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.31.34
+          title: ""
+          date: 2024-09-05T20:56:32.116Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.3
+              hash: b321cbdc50680242d6e4e61b0ae7b044593ddb75
+              body: |
+                Update balena-io/balena-cli from 19.0.2 to 19.0.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.33
+          title: ""
+          date: 2024-09-05T13:36:48.504Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.2
+              hash: 37461510767eeabbf8e9c20fe7b93a3ffc1ede7d
+              body: |
+                Update balena-io/balena-cli from 19.0.1 to 19.0.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.32
+          title: ""
+          date: 2024-09-03T15:32:37.054Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 5076954
+              hash: bbcc990c22373d8e04ebca6d20c36e500cee96ed
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.31
+          title: ""
+          date: 2024-09-02T15:34:35.548Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.1
+              hash: 1b906986e45c2fb485e3040ea1ac8af6ef54ad85
+              body: |
+                Update balena-io/balena-cli from 19.0.0 to 19.0.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.30
+          title: ""
+          date: 2024-09-02T14:30:18.866Z
+  version: 6.0.26
+  title: ""
+  date: 2024-09-16T20:58:39.824Z
+- commits:
     - subject: "initrdscripts: Make cryptsetup fail hard in unexpected conditions"
       hash: c1bccdbd95bcb0202c4b80679ade0967df643342
       body: |

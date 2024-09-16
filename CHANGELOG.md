@@ -1,6 +1,86 @@
 Change log
 -----------
 
+# v6.0.26
+## (2024-09-16)
+
+
+<details>
+<summary> Update tests/leviathan digest to 384eab3 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.43
+> ### (2024-09-16)
+> 
+> * Update balena-os/leviathan-worker to v2.9.47 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.42
+> ### (2024-09-16)
+> 
+> * Update balena-os/leviathan-worker to v2.9.46 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.41
+> ### (2024-09-13)
+> 
+> * Update balena-io/balena-cli to v19.0.10 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.40
+> ### (2024-09-12)
+> 
+> * Update balena-io/balena-cli to v19.0.9 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.39
+> ### (2024-09-12)
+> 
+> * Update balena-io/balena-cli to v19.0.8 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.38
+> ### (2024-09-12)
+> 
+> * Update balena-io/balena-cli to v19.0.7 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.37
+> ### (2024-09-12)
+> 
+> * Update balena-os/leviathan-worker to v2.9.45 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.36
+> ### (2024-09-11)
+> 
+> * Update balena-os/leviathan-worker to v2.9.44 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.35
+> ### (2024-09-10)
+> 
+> * Update balena-io/balena-cli to v19.0.5 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.34
+> ### (2024-09-05)
+> 
+> * Always upload reports, especially when tests fail [Kyle Harding]
+> 
+> ## leviathan-2.31.33
+> ### (2024-09-05)
+> 
+> * Update balena-io/balena-cli to v19.0.3 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.32
+> ### (2024-09-03)
+> 
+> * Update balena-io/balena-cli to v19.0.2 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.31
+> ### (2024-09-02)
+> 
+> * Update actions/upload-artifact digest to 5076954 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.30
+> ### (2024-09-02)
+> 
+> * Update balena-io/balena-cli to v19.0.1 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.0.25
 ## (2024-09-13)
 
