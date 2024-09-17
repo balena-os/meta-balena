@@ -24,12 +24,7 @@ module.exports = {
 				let ip = await this.worker.ip(this.link)
 				const docker = new Docker({host: `http://${ip}`, port: 2375})
 				test.comment(`Setting system in development mode...`)
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="true"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.link,
-				);
+        await this.systemd.writeConfigJsonProp(test, 'developmentMode', true, this.link);
 				test.comment(`Waiting for engine to restart...`)
 				await this.utils.waitUntil(async () => {
 					return (
@@ -69,12 +64,7 @@ module.exports = {
 				let ip = await this.worker.ip(this.link)
 				const docker = new Docker({host: `http://${ip}`, port: 2375})
 				test.comment(`Setting system in production mode...`)
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="false"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.link,
-				);
+				await this.systemd.writeConfigJsonProp(test, 'developmentMode', false, this.link);
 				test.comment(`Waiting for engine to restart...`)
 				await this.utils.waitUntil(async () => {
 					return (
@@ -97,12 +87,7 @@ module.exports = {
 					"Engine socket should not be exposed in production images"
 				);
 				test.comment(`Leaving system in development mode...`)
-				await this.context
-					.get()
-					.worker.executeCommandInHostOS(
-						`tmp=$(mktemp)&&cat /mnt/boot/config.json | jq '.developmentMode="true"' > $tmp&&mv "$tmp" /mnt/boot/config.json`,
-						this.link,
-				);
+				await this.systemd.writeConfigJsonProp(test, 'developmentMode', true, this.link);
 			},
 		},
 	],

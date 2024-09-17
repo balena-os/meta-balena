@@ -162,7 +162,76 @@ module.exports = {
           120,
           250,
         );
-      }
+      },
+      /**
+		 * Write or remove a property from config.json in the boot partition
+		 * @param {string} test Current test instance to append results
+		 * @param {string} key Object key to update, dot separated
+		 * @param {string} value New value, can be string, or object, or null|undefined to remove
+		 * @param {string} target The address of the target device
+		 *
+		 * @category helper
+		 */
+		writeConfigJsonProp: async function (test, key, value, target) {
+
+			return test.test(`Write or remove ${key} in config.json`, t =>
+				t.resolves(
+					this.waitForServiceState(
+						'config-json.service',
+						'inactive',
+						target
+					),
+					'Should wait for config-json.service to be inactive'
+				).then(() => {
+					if (value == null) {
+						return t.resolves(
+							this.worker.executeCommandInHostOS(
+								[
+									`tmp=$(mktemp)`,
+									`&&`, `jq`, `"del(.${key})"`, `/mnt/boot/config.json`,
+									`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+								].join(' '),
+								target
+							), `Should remove ${key} from config.json`
+						)
+					} else {
+						if (typeof(value) == 'string') {
+							value = `"${value}"`
+						} else {
+							value = JSON.stringify(value);
+						}
+
+						return t.resolves(
+							this.worker.executeCommandInHostOS(
+								[
+									`tmp=$(mktemp)`,
+									`&&`, `jq`, `'.${key}=${value}'`, `/mnt/boot/config.json`,
+									`>`, `$tmp`, `&&`, `mv`, `"$tmp"`, `/mnt/boot/config.json`
+								].join(' '),
+								target
+							), `Should write ${key} to ${value.substring(24) ? value.replace(value.substring(24), '...') : value} in config.json`
+						)
+					}
+				}).then(() => {
+					// avoid hitting 'start request repeated too quickly'
+					return t.resolves(
+						this.worker.executeCommandInHostOS(
+							'systemctl reset-failed config-json.service',
+							target
+						), `Should reset start counter of config-json.service`
+					);
+				}).then(() => {
+					return t.resolves(
+						this.waitForServiceState(
+							'config-json.service',
+							'inactive',
+							target
+						),
+						'Should wait for config-json.service to be inactive'
+					)
+				})
+			);
+		}
     });
 
     // Network definitions - these are given to the testbot via the config sent via the config.js
@@ -176,7 +245,7 @@ module.exports = {
 			this.suite.options.balenaOS.network.wired = {
 				nat: true,
 			};
-		} 
+		}
 		else {
 			// device has wifi, use wifi hotspot to connect to DUT
 			delete this.suite.options.balenaOS.network.wired;
@@ -196,7 +265,7 @@ module.exports = {
 				psk: `${this.suite.options.id}_psk`,
 				nat: true,
 			};
-		} 
+		}
 		else {
 			// no wifi on DUT
 			delete this.suite.options.balenaOS.network.wireless;
@@ -312,7 +381,7 @@ module.exports = {
         this.balena.application,
         this.balena.uuid
       );
-    
+
     // Add registered device's id and api key to config.json
     config.deviceApiKey = deviceRegInfo.api_key;
     config.deviceId = deviceRegInfo.id;
@@ -390,7 +459,7 @@ module.exports = {
       //re - enable port forwarding in case something flaked between us disabling it and re-enabling it
       await this.worker.executeCommandInWorker('sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"');
     });
-    
+
     await this.worker.on();
 
     // create tunnels
@@ -413,11 +482,11 @@ module.exports = {
 			`Device ${this.link} be reachable over local SSH connection`
 		)
 
-    await test.resolves( 
+    await test.resolves(
 			this.waitForServiceState('balena', 'active', this.link),
 			'balena Engine should be running and healthy'
 		)
-		
+
 		// we want to waitUntil here as the supervisor may take some time to come online.
 		await test.resolves(
 			this.utils.waitUntil(async () => {
