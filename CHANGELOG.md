@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.27
+## (2024-09-17)
+
+* tests:os: Use writeConfigJsonProp helper function [Kyle Harding]
+
 # v6.0.26
 ## (2024-09-16)
 

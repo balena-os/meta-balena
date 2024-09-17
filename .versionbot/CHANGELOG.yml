@@ -1,4 +1,17 @@
 - commits:
+    - subject: "tests:os: Use writeConfigJsonProp helper function"
+      hash: b44642caa14c4fb791d99e5705499b710a98c3e9
+      body: |
+        Use the existing helper function to write changes to config.json.
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Kyle Harding
+      nested: []
+  version: 6.0.27
+  title: ""
+  date: 2024-09-17T13:31:39.490Z
+- commits:
     - subject: Update tests/leviathan digest to 384eab3
       hash: d83cff4412e56f15966c9ea9f3c5c6a54ef628da
       body: Update tests/leviathan
