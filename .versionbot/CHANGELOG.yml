@@ -1,4 +1,27 @@
 - commits:
+    - subject: "modemmanager: Fix SIM7100E crash"
+      hash: e397c18742117596fed133e0b5992362e230f538
+      body: >
+        With the update to MM 1.22.0 we have received reports that
+
+        SIM7100E is not functioning correctly.
+
+        Followed up with ModemManager devs and it was discovered the issue
+
+        is related to a PCO setting:
+
+        https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/issues/884
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.0.29
+  title: ""
+  date: 2024-09-18T12:31:58.505Z
+- commits:
     - subject: "initrdscripts: replace cut by awk for parsing lsblk in cryptsetup hook"
       hash: c9544aaf502943f3b492d0a5907f1c1e401c6ac7
       body: |

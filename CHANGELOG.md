@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.29
+## (2024-09-18)
+
+* modemmanager: Fix SIM7100E crash [Florin Sarbu]
+
 # v6.0.28
 ## (2024-09-18)
 
