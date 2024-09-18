@@ -1,4 +1,23 @@
 - commits:
+    - subject: "initrdscripts: replace cut by awk for parsing lsblk in cryptsetup hook"
+      hash: c9544aaf502943f3b492d0a5907f1c1e401c6ac7
+      body: |
+        cut is sensitive to the amount of delimiter characters when parsing
+        output, so e.g. an additional space between two elements causes
+        every field shift by one index.
+
+        This patch replaces the use of cut by awk, which should be more robust.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.0.28
+  title: ""
+  date: 2024-09-18T04:59:46.616Z
+- commits:
     - subject: "tests:os: Use writeConfigJsonProp helper function"
       hash: b44642caa14c4fb791d99e5705499b710a98c3e9
       body: |

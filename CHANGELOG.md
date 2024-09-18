@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.28
+## (2024-09-18)
+
+* initrdscripts: replace cut by awk for parsing lsblk in cryptsetup hook [Michal Toman]
+
 # v6.0.27
 ## (2024-09-17)
 
