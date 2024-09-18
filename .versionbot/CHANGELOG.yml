@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 17c522f
+      hash: d4f0f9ccb2a819a22213d7cb5822534a5191014d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.11
+              hash: 2824ed421ede89a422157bae190ce00d1443548e
+              body: |
+                Update balena-io/balena-cli from 19.0.10 to 19.0.11
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.44
+          title: ""
+          date: 2024-09-18T17:49:06.237Z
+  version: 6.0.30
+  title: ""
+  date: 2024-09-18T21:20:36.785Z
+- commits:
     - subject: "modemmanager: Fix SIM7100E crash"
       hash: e397c18742117596fed133e0b5992362e230f538
       body: >
