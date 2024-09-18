@@ -1,0 +1,29 @@
+From 2505748e9b71ceaf290da40f767dc4b90238576a Mon Sep 17 00:00:00 2001
+From: Florin Sarbu <florin@balena.io>
+Date: Fri, 13 Sep 2024 09:36:49 +0000
+Subject: [PATCH] bearer-qmi: Fix SIM7100E crash
+
+As per https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/issues/842#note_2521001
+
+Signed-off-by: Florin Sarbu <florin@balena.io>
+---
+ src/mm-bearer-qmi.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/mm-bearer-qmi.c b/src/mm-bearer-qmi.c
+index 54f2e934..d8e52f5c 100644
+--- a/src/mm-bearer-qmi.c
++++ b/src/mm-bearer-qmi.c
+@@ -1116,8 +1116,7 @@ get_current_settings (GTask *task, QmiClientWds *client)
+                 QMI_WDS_REQUESTED_SETTINGS_GATEWAY_INFO |
+                 QMI_WDS_REQUESTED_SETTINGS_MTU |
+                 QMI_WDS_REQUESTED_SETTINGS_DOMAIN_NAME_LIST |
+-                QMI_WDS_REQUESTED_SETTINGS_IP_FAMILY |
+-                QMI_WDS_REQUESTED_SETTINGS_OPERATOR_RESERVED_PCO;
++                QMI_WDS_REQUESTED_SETTINGS_IP_FAMILY;
+ 
+     input = qmi_message_wds_get_current_settings_input_new ();
+     qmi_message_wds_get_current_settings_input_set_requested_settings (input, requested, NULL);
+-- 
+2.34.1
+
