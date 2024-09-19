@@ -14,9 +14,8 @@ resindataexpander_enabled() {
     fi
 
     datapart=$(get_state_path_from_label "resin-data")
-    dataparttype=$(lsblk "${datapart}" -nlo type)
     datapartdev=$(basename $(readlink -f "${datapart}"))
-    if [ "${dataparttype}" = "crypt" ]; then
+    if is_part_encrypted "${datapartdev}"; then
         if [ "$(ls /sys/class/block/${datapartdev}/slaves | wc -l)" != "1" ]; then
             # This is just a disaster circuit breaker, it should never happen
             fail "Unable to determine parent partition for ${datapartdev}"

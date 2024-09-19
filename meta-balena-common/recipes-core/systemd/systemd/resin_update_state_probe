@@ -72,8 +72,7 @@ for cand in $(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1); do
 done
 
 if [ -n "${rpdev}" ]; then
-	rptype=$(lsblk -nlo type,uuid | grep "${ruuid}" | cut -d " " -f1) || true
-	if [ "${rptype}" = "crypt" ]; then
+	if is_part_encrypted "/dev/${rpdev}"; then
 		cryptdev_uuid=$(lsblk -nlo uuid,kname | grep "${rpdev}" | cut -d " " -f1) || true
 		rpdev=$(lsblk -nlo pkname,uuid | grep "${cryptdev_uuid}" | cut -d " " -f1) || true
 	fi
