@@ -334,3 +334,52 @@ generate_bootpart_fingerprint() {
         mv "${tmpfp}" ${FSDIR}/@@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@
         sync -f "${FSDIR}"
 }
+
+# Identify an encrypted partition using dmsetup
+# Works for both dm-crypt and LUKS encrypted partitions
+# Arguments:
+# 1: Partition device - will be converted to a DM device
+# Returns:
+# 0: The partition device is encrypted
+# 1: The partition device is not encrypted
+is_part_encrypted() {
+	_part="${1#/dev/}"
+	_dm_part="${_part}"
+	if command -v dmsetup > /dev/null; then
+		if [ "${_part#dm-}" = "${_part}" ]; then
+			# Does not start with dm-
+			if [ "${_part#mapper/}" = "${_part}" ]; then
+				# Does not start with mapper/
+				# Find the corresponding DM device to the partition
+				_dm_part=$(lsblk -nlo kname "/dev/${_dm_part}" | grep dm)
+				if [ -z "${_dm_part}" ]; then
+					# No corresponding DM device, no dm-crypt in use
+					return 1
+				fi
+			fi
+		fi
+		# _dm_part is a DM device, either dm* or mapper/*
+		_name=$(lsblk -nlo name "/dev/${_dm_part}")
+		if dmsetup ls --target crypt | grep -q "${_name}"; then
+			return 0
+		fi
+	fi
+	return 1
+}
+
+# Identify a LUKS encrypted partition
+# Partitions encrypted with dm-crypt do not have a LUKS header
+# and will not identify as crypto_LUKS.
+# Arguments:
+# 1: Partition device
+# Returns:
+# 0: It is a LUKS encrypted partition
+# 1: It is not a LUKS encrypted partition (could be not encrypted)
+is_luks() {
+	_part="${1#/dev/}"
+	_part="/dev/$_part"
+	if lsblk -nlo fstype "${_part}" | grep -q "crypto_LUKS"; then
+		return 0
+	fi
+	return 1
+}
