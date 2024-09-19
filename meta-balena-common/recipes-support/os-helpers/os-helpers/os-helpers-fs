@@ -63,6 +63,13 @@ get_dev_uuid() {
 	lsblk -nlo uuid "${1}"
 }
 
+# Output the partition UUID for the specified block device.
+# Arguments:
+#   1 - Target block device
+get_dev_partuuid() {
+	lsblk -nlo partuuid "${1}"
+}
+
 # Output the filesystem label for the specified block device.
 # Arguments:
 #   1 - Target block device
@@ -104,6 +111,9 @@ get_cmdline_root_uuid() {
 			elif [ "$opt" = "LABEL" ]; then
 				label=$(echo "$p" | cut -d'=' -f3)
 				get_dev_uuid "$(get_dev_path_from_label "${label}")"
+				return 0
+			elif [ "$opt" = "PARTUUID" ]; then
+				echo "$p" | cut -d'=' -f3
 				return 0
 			fi
 		fi
