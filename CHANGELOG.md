@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.0.31
+## (2024-09-20)
+
+* mkfs-hostapp-native: update Dockerfile to using trixie [Alex Gonzalez]
+* meta-balena-rust: rust-llvm: backport a fix for build with gcc-13 [Alex Gonzalez]
+
 # v6.0.30
 ## (2024-09-18)
 

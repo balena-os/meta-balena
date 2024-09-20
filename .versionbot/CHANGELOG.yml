@@ -1,4 +1,47 @@
 - commits:
+    - subject: "mkfs-hostapp-native: update Dockerfile to using trixie"
+      hash: 61265dc52127a461b476c225268e3d6be6f9eabf
+      body: >-
+        This is required to be able to build in host distributions that use
+
+        glibc v2.39 to avoid errors such as:
+
+
+        ```
+
+        | + hostapp-update -f /input -n
+
+        | Running hostapp update...
+
+        | touch: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.38' not found
+        (required by touch)
+
+        ```
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-rust: rust-llvm: backport a fix for build with gcc-13"
+      hash: c8863a14595c7147a7072b21420eb803ef146779
+      body: |
+        * needed for rust-llvm-native on hosts with gcc-13
+
+        (backport from
+        335eb3a93e96 rust-llvm: backport a fix for build with gcc-13)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.0.31
+  title: ""
+  date: 2024-09-20T21:32:01.568Z
+- commits:
     - subject: Update tests/leviathan digest to 17c522f
       hash: d4f0f9ccb2a819a22213d7cb5822534a5191014d
       body: Update tests/leviathan
