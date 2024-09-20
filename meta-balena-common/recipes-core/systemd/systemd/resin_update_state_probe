@@ -74,7 +74,9 @@ done
 if [ -n "${rpdev}" ]; then
 	if is_part_encrypted "/dev/${rpdev}"; then
 		cryptdev_uuid=$(lsblk -nlo uuid,kname | grep "${rpdev}" | cut -d " " -f1) || true
-		rpdev=$(lsblk -nlo pkname,uuid | grep "${cryptdev_uuid}" | cut -d " " -f1) || true
+		if [ -n "${cryptdev_uuid}" ]; then
+			rpdev=$(lsblk -nlo pkname,uuid | grep "${cryptdev_uuid}" | cut -d " " -f1) || true
+		fi
 	fi
 fi
 if [ "${rpdev}" = "${parent}" ] || valid_device "${part}"; then
