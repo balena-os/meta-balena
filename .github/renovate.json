@@ -1,10 +1,6 @@
 {
   "extends": [
-    "github>balena-os/renovate-config",
-    ":automergeStableNonMajor",
-    ":automergePatch",
-    ":automergeDigest",
-    ":automergeTypes"
+    "github>balena-io/renovate-config"
   ],
   "ignorePaths": [
     "**/node_modules/**",
@@ -17,11 +13,6 @@
     "**/__fixtures__/**"
   ],
   "automerge": false,
-  "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: patch",
-  "pinDigest": {
-    "commitBody": "Update {{depName}}\n\nChange-type: patch",
-    "automerge": true
-  },
   "regexManagers": [
     {
       "fileMatch": ["(^|/)balena-supervisor.inc$"],
@@ -41,10 +32,6 @@
     }
   ],
   "packageRules": [
-    {
-      "matchManagers": ["git-submodules"],
-      "commitBody": "Update {{depName}}\nChange-type: patch"
-    },
     {
       "matchManagers": ["regex"],
       "matchPackagePatterns": [".*balena-engine"],
