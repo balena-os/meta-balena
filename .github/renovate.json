@@ -18,6 +18,9 @@
   ],
   "automerge": false,
   "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: patch",
+  "digest": {
+    "commitBody": "Update {{depName}} to {{newDigest}}\n\nChange-type: patch"
+  },
   "pinDigest": {
     "commitBody": "Update {{depName}}\n\nChange-type: patch",
     "automerge": true
