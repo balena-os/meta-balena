@@ -1,4 +1,18 @@
 - commits:
+    - subject: "kernel-headers-test: update dockerfile to bullseye"
+      hash: b1ba4caa955dc751d01e10e4159fde34dfb69f92
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.0.32
+  title: ""
+  date: 2024-09-21T17:20:33.365Z
+- commits:
     - subject: "mkfs-hostapp-native: update Dockerfile to using trixie"
       hash: 61265dc52127a461b476c225268e3d6be6f9eabf
       body: >-

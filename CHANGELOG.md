@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.32
+## (2024-09-21)
+
+* kernel-headers-test: update dockerfile to bullseye [Alex Gonzalez]
+
 # v6.0.31
 ## (2024-09-20)
 
