@@ -1,4 +1,21 @@
 - commits:
+    - subject: Override the default commit body for digest updates
+      hash: 767ecdac82438fd9390628796100165902c8fe14
+      body: |
+        A commit body is provided for digest updates in the
+        top-level config here: https://github.com/balena-os/renovate-config
+
+        So we must override the digest setting explicitly at the repo
+        level in order to use Change-type vs Changelog-entry
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Kyle Harding
+      nested: []
+  version: 6.0.33
+  title: ""
+  date: 2024-09-22T20:57:17.943Z
+- commits:
     - subject: "kernel-headers-test: update dockerfile to bullseye"
       hash: b1ba4caa955dc751d01e10e4159fde34dfb69f92
       body: ""

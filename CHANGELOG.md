@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.33
+## (2024-09-22)
+
+* Override the default commit body for digest updates [Kyle Harding]
+
 # v6.0.32
 ## (2024-09-21)
 
