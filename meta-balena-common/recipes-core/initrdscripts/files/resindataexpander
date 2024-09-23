@@ -73,6 +73,28 @@ resindataexpander_run() {
         fi
     done
 
+    # Expand dm-crypt device
+    if is_part_encrypted "${datapartdev}"; then
+        # LUKS partitions are autoexpanded on cryptsetup open
+        if ! is_luks "${datapartdev}"; then
+            _label=$(lsblk -nlo label,type "/dev/${datapartdev}" | grep dm | awk '{print $1}')
+            if [ -n "${_label}" ]; then
+                _size=$(lsblk -nb -o NAME,SIZE,TYPE "/dev/${datapartdev}" | grep part | awk '{print $2}')
+                _sectors=$(expr "${_size}" / 512)
+                _current_sectors=$(dmsetup table "${_label}" | awk '{print $2}')
+                if [ "${_sectors}" != "${_current_sectors}" ]; then
+                    _ntable=$(dmsetup table "${_label}" | awk -v sectors="${_sectors}" '{$2=sectors; print}')
+                    dmsetup suspend "${_label}"
+                    dmsetup reload "${_label}" --table "${_ntable}"
+                    dmsetup resume "${_label}"
+                    info "resindataexpander: ${_label} DM device expanded "
+                fi
+            else
+                error "Failed to expand partition ${datapartdev}"
+            fi
+        fi
+    fi
+
     # Expand filesystem
     info "resindataexpander: Expand ext4 filesystem on ${datapart}"
     resize2fs -f ${datapart}
