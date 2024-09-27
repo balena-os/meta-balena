@@ -43,6 +43,7 @@ jobs:
           # The default GITHUB_TOKEN does not have workflow scope
           # This is needed to push a new branch with workflow files
           token: ${{ steps.gh_app_token.outputs.token }}
+          persist-credentials: true
 
       - name: "Only run for meta-balena repository"
         id: assert-meta-balena-repository
