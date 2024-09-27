@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.34
+## (2024-09-27)
+
+* CI: Update checkout settings [Pagan Gazzard]
+
 # v6.0.33
 ## (2024-09-22)
 

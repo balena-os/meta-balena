@@ -1,4 +1,16 @@
 - commits:
+    - subject: "CI: Update checkout settings"
+      hash: 1bf597cd14ca59a1086c952cf03279d6d2046ca3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+  version: 6.0.34
+  title: ""
+  date: 2024-09-27T15:27:30.053Z
+- commits:
     - subject: Override the default commit body for digest updates
       hash: 767ecdac82438fd9390628796100165902c8fe14
       body: |
