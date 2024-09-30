@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: cloud: prevent hanging in cloud suite teardown"
+      hash: 66c2e28b0b5bb108308feda044418f04a113b742
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+  version: 6.0.35
+  title: ""
+  date: 2024-09-30T14:59:40.189Z
+- commits:
     - subject: "CI: Update checkout settings"
       hash: 1bf597cd14ca59a1086c952cf03279d6d2046ca3
       body: ""

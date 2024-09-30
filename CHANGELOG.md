@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.35
+## (2024-09-30)
+
+* tests: cloud: prevent hanging in cloud suite teardown [rcooke-warwick]
+
 # v6.0.34
 ## (2024-09-27)
 
