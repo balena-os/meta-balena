@@ -453,12 +453,12 @@ module.exports = {
 			this.workerContract.workerType !== `qemu`
 		){
       await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
+      this.suite.teardown.register(async () => {
+        //re - enable port forwarding in case something flaked between us disabling it and re-enabling it
+        console.log(`Ensuring worker port forwarding is active`)
+        await this.worker.executeCommandInWorker('sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"');
+      });
     }
-
-    this.suite.teardown.register(async () => {
-      //re - enable port forwarding in case something flaked between us disabling it and re-enabling it
-      await this.worker.executeCommandInWorker('sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"');
-    });
 
     await this.worker.on();
 
