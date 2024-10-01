@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts action to v1.25.49
+      hash: 8ecf11ed610cea0624111f5adefed55fbe1360e7
+      body: |
+        Update balena-os/balena-yocto-scripts from v1.25.39 to v1.25.49
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.0.36
+  title: ""
+  date: 2024-10-01T19:50:30.591Z
+- commits:
     - subject: "tests: cloud: prevent hanging in cloud suite teardown"
       hash: 66c2e28b0b5bb108308feda044418f04a113b742
       body: ""
