@@ -45,9 +45,27 @@ abroot_enabled() {
 abroot_run() {
     BOOT_PART=$(find_boot_partition)
 
-    if [ "x${BOOT_PART}" = "x" ]; then
-        fail "Failed to identify boot partition"
-    fi
+    # Give the boot partition 5s to appear.
+    # This is necessary when the rootfs is on a device that takes
+    # a while to initialize, such as a USB disk.
+    # Similar waiting already happens in the rootfs script, because
+    # on most device types it is the first one that needs to access
+    # the root device. But in the case of balena bootloader, the abroot
+    # script is called before rootfs, so it needs to do the waiting.
+    C=0
+    delay=${bootparam_rootdelay:-1}
+    timeout=${bootparam_roottimeout:-5}
+    while [ -z "${BOOT_PART}" ]; do
+        C=$(( C + 1 ))
+
+        if [ $(( C * delay )) -gt "$timeout" ]; then
+            fail "Failed to identify boot partition"
+        fi
+
+        sleep "${delay}"
+
+        BOOT_PART=$(find_boot_partition)
+    done
 
     BOOT_DEV="/dev/$(lsblk -nlo pkname ${BOOT_PART})"
 
