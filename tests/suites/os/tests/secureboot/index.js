@@ -2,11 +2,23 @@
 
 const fse = require('fs-extra');
 const securebootEfiVarPath = '/sys/firmware/efi/efivars/SecureBoot-*';
+const qmp = require("@balena/node-qmp");
+
+const retry = (fn, delay_ms=250, retries=10 * 4, err) => (
+	!retries
+	? Promise.reject(`Exhausted retries: ${err}`)
+	: fn().catch(e => setTimeout(
+			() => retry(fn, delay_ms, (retries - 1), e),
+			delay_ms
+		)
+	)
+);
 
 class secureBoot {
 	constructor(test, worker, suite, imagePath, module = {"name": "", "headersVersion": ""}) {
 		this.test = test;
 		this.worker = worker;
+		this.workerType = suite.context.get().workerContract.workerType;
 		this.link = suite.context.get().link;
 		this.imagePath = imagePath;
 		this.sshKeyPath = suite.context.get().sshKeyPath;
@@ -42,25 +54,52 @@ class secureBoot {
 	}
 
 	async testFullDiskEncryption() {
-			Promise.all(
-				[
-					{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
-					{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
-					{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
-					{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
-				].map(args => this.test.resolveMatch(
-						this.worker.executeCommandInHostOS(
-							[
-								'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
-								'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
-							],
-							this.link,
-						),
-						/crypt/,
-						`${args.name} is encrypted`,
-					)
+		await Promise.all(
+			[
+				{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
+				{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
+				{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
+				{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
+			].map(args => this.test.resolveMatch(
+					this.worker.executeCommandInHostOS(
+						[
+							'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
+							'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
+						],
+						this.link,
+					),
+					/crypt/,
+					`${args.name} is encrypted`,
 				)
-			);
+			)
+		);
+
+		if (!this.qmp) {
+			this.test.comment('QMP is unavailable, skipping encryption tampering test');
+			return
+		}
+
+		const label = "resin-data";
+		await this.worker.executeCommandInHostOS(
+			['while systemctl is-active balena balena-supervisor systemd-journald;',
+					 'do systemctl stop balena balena-supervisor systemd-journald; done',
+				 `&& while umount /dev/disk/by-label/${label}; do : ; done`,
+				 `&& cryptsetup luksClose /dev/disk/by-label/${label}`,
+				 `&& mkfs.ext4 -L ${label} -F /dev/disk/by-partlabel/${label}`,
+			],
+			this.link,
+		).then(() =>
+			this.test.resolves(() => {
+				return Promise.all([
+					this.worker.executeCommandInHostOS('reboot', this.link),
+					this.waitForFailedBoot(),
+				]);
+			},
+			'Kernel will not boot with tampered encrypted partitions',
+			)
+		);
+
+		return this.resetDUT();
 	}
 
 	async testModuleVerification() {
@@ -98,12 +137,20 @@ class secureBoot {
 		);
 	}
 
+	async waitForFailedBoot() {
+		throw new Error("Method waitForFailedBoot() is not implemented");
+	}
+
 	async testBootloaderIntegrity() {
 		throw new Error("Method testBootloaderIntegrity() must be implemented");
 	}
 
 	async testBootloaderConfigIntegrity() {
 		throw new Error("Method testBootloaderConfigIntegrity() must be implemented");
+	}
+
+	async teardown()
+	{
 	}
 }
 
@@ -115,7 +162,7 @@ class uefiSecureBoot extends secureBoot {
 					'||', 'echo', 'false'
 				],
 				this.link,
-			).then(output => { return output === 'true'});
+			).then(output => { return output === 'true' && this.workerType !== 'qemu' });
 	}
 
 	async isSecureBootEnabled() {
@@ -171,6 +218,67 @@ class uefiSecureBoot extends secureBoot {
 		)
 		).then( () => this.resetDUT() );
 	};
+}
+
+class qemuSecureBoot extends uefiSecureBoot {
+	constructor(...args) {
+		super(...args);
+		this.qmpSock = '/run/qemu/qmp.sock';
+		this.qmpClient = new qmp.Client();
+		this.qmp = false;
+		if (fse.existsSync(this.qmpSock)) {
+			this.qmp = true;
+			this.setupQMP();
+		}
+	}
+
+	async qmpConnect() {
+		return retry(() => this.qmpClient.connect(this.qmpSock)
+		).then(() => console.log("Connected to QMP socket")
+		).catch(e => {
+			console.log("Unable to connect to QMP socket");
+			throw e;
+		});
+	}
+
+	async setupQMP() {
+		if (this.qmp) {
+			this.qmpClient.once('disconnect', this.qmpConnect);
+			return this.qmpConnect();
+		}
+	}
+
+	async teardownQMP() {
+		this.qmpClient.removeAllListeners();
+	}
+
+	async teardown() {
+		this.teardownQMP();
+	}
+
+	async resetDUT() {
+		// flashing takes longer than we expect a QMP connection to take, so
+		// temporarily teardown the connection until it's finished
+		await this.teardownQMP();
+		await super.resetDUT();
+		await this.setupQMP();
+	}
+
+	async isSecureBootSupported() {
+		return this.workerType === 'qemu'
+	}
+
+	async waitForFailedBoot() {
+		return new Promise((resolve, reject) => {
+			/* Wait for the machine to reset, then resolve once the machine resets
+			 * again within the timeout (boot failed)
+			 */
+			this.qmpClient.once('reset', () => {
+				setTimeout(reject, 10 * 1000);
+				this.qmpClient.once('reset', resolve);
+			});
+		});
+	}
 }
 
 class rpiSecureBoot extends secureBoot {
@@ -302,12 +410,27 @@ class testSecureBoot {
 		} else {
 			test.comment('Secure boot is not supported by firmware');
 		}
+
+		return this.impl.teardown();
 	}
 }
 
 module.exports = {
 	title: 'secure boot tests',
 	tests: [
+		{
+			title: 'check QEMU secure boot',
+			run: async function(test) {
+				const impl = new testSecureBoot(new qemuSecureBoot(
+					test,
+					this.worker,
+					this.suite,
+					this.os.image.path,
+					{ name: "pcan_netdev", headersVersion: "2.108.6" },
+				));
+				return impl.run(test);
+			}
+		},
 		{
 			title: 'check UEFI secure boot',
 			run: async function(test) {
