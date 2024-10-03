@@ -314,8 +314,6 @@ module.exports = {
 			),
 		});
 
-		console.log(this.suite.options)
-
 		// Network definitions
 		// If suites config.js has networkWired: true, override the device contract
 		if (this.suite.options.balenaOS.network.wired === true) {
@@ -361,7 +359,16 @@ module.exports = {
 			},
 		});
 
-		// Downloads the balenaOS image we hup from
+		// Authenticating balenaSDK
+		// Required for downloading private device type images from balenaCloud
+		// the token is locally stored so a subsequent login with fetchOs will work, despite being a different sdk instance
+		await this.context
+		.get()
+		.sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
+		this.log(`Logged in with ${await this.context.get().sdk.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+
+
+		// Downloads the balenaOS image we hup from		
 		// It can't accept invalid deviceType because we check contracts already in the start
 		// If there are no releases found for a deviceType then skip the HUP suite
 		if (((await this.sdk.balena.models.os.getAvailableOsVersions(this.suite.deviceType.slug)).length) === 0) {
@@ -378,12 +385,6 @@ module.exports = {
 		);
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
-
-		// Authenticating balenaSDK
-    await this.context
-    .get()
-    .sdk.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-    this.log(`Logged in with ${await this.context.get().sdk.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
 
 		await this.sdk.balena.models.key.create(
 			this.sshKeyLabel,
