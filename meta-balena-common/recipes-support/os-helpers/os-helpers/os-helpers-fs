@@ -425,3 +425,45 @@ skip_nonencrypted_boot_files() {
 	# If running a different script, return 0 to skip it
 	test "$(basename "$0")" != "1-bootfiles"
 }
+
+# Split the boot partition in an encrypted and a non-encrypted partition, with
+# the list of files to place in the non-encrypted partition listed in the
+# BALENA_NONENCRYPTED_BOOT_PARTITION_FILES variable.
+#
+# Platforms that natively separate the files that bootROMs need to access
+# into a different folder, like EFI, will need to implement their own version.
+# All other platforms should use this implementation.
+#
+# This is typically called from the resin-init-flasher bootpart_split()
+# function when performing the splitting of boot partitions at installation
+# time.
+split_bootpartition() {
+    # Split the boot partition in an encrypted and non-encrypted partition
+    # Encrypted resin-boot already mounted in $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+    NONENC_BOOT_MOUNT_DIR="$(mktemp -d)"
+    NONENC_BOOT_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" "${BALENA_NONENC_BOOT_LABEL}")
+    if ! mount "${NONENC_BOOT_MOUNT}" "$NONENC_BOOT_MOUNT_DIR"; then
+        fail "Failed to mount disk labeled as ${BALENA_NONENC_BOOT_LABEL}."
+    fi
+
+    # Move all to be encrypted files to encrypted boot partition
+    for FILE in "$NONENC_BOOT_MOUNT_DIR/"*; do
+        _file=$(basename "$FILE")
+        if [[ "${BALENA_NONENCRYPTED_BOOT_PARTITION_FILES}" == *"${_file}"* ]]; then
+            continue
+        fi
+
+        mv "$FILE" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/"
+    done
+
+    # Store files necessary for TPM decryption to the unencrypted partitions
+    mv "${ENC_PASSPHRASE_FILE}" "$NONENC_BOOT_MOUNT_DIR/balena-luks.enc" && sync
+
+    rm -rf "$TPM_RESULT_DIR"
+
+    # Regenerate fingerprint in both partitions
+    generate_bootpart_fingerprint "${NONENC_BOOT_MOUNT_DIR}"
+    generate_bootpart_fingerprint "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+
+    # Do not umount - flasher script will still copy configuration files
+}
