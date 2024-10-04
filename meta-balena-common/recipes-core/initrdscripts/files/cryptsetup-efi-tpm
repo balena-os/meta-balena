@@ -106,6 +106,8 @@ cryptsetup_run() {
     tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
     tpm2_policypcr -S "${SESSION_CTX}" -l "${PCRS}"
 
+    trap 'tpm2_flushcontext "${SESSION_CTX}"' EXIT
+
     # combined multiple policies with tpm2_policyor
     POLICIES="$(find "${POLICY_PATH}" -type f | sort | xargs)"
     if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
@@ -120,6 +122,8 @@ cryptsetup_run() {
         umount "$EFI_MOUNT_DIR"
         fail "Failed to unlock LUKS passphrase using the TPM"
     fi
+
+    tpm2_flushcontext "${SESSION_CTX}" >/dev/null 2>&1
 
     BOOT_DEVICE=$(lsblk -nlo pkname "${EFI_DEV}")
 
