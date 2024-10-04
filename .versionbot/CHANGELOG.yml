@@ -1,4 +1,107 @@
 - commits:
+    - subject: Update tests/leviathan digest to 3a1a989
+      hash: 64b36498e5e23a742d3222df6d13c2eb38efdd8e
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update ubuntu to v24
+              hash: 50fb50ae3f0a80116e392e33962c7b430e631f77
+              body: |
+                Update ubuntu from 22.04 to 24.04
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.50
+          title: ""
+          date: 2024-10-04T09:34:18.914Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to c47758b
+              hash: 11f62cd9d67252ae4efd6a59011e988dc06782ce
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.49
+          title: ""
+          date: 2024-10-04T08:34:28.663Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.13
+              hash: 1d7483d08118632d302c1797e3ee67c84dbcf935
+              body: |
+                Update balena-io/balena-cli from 19.0.11 to 19.0.13
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.48
+          title: ""
+          date: 2024-10-03T18:34:06.132Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to 8026d2b
+              hash: 22ce1f283f4a9a21ad648cf89b0b35767d236530
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.47
+          title: ""
+          date: 2024-10-03T17:38:19.765Z
+        - commits:
+            - subject: Update core/contracts digest to 1fb0b0c
+              hash: 92c249e93ea3f1cd2dc8b09b05c1031f643fa268
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.46
+          title: ""
+          date: 2024-10-03T16:33:04.116Z
+        - commits:
+            - subject: add .git to dockerignore
+              hash: f67d5611247197f63e7798b1516218f361dcb3f7
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+            - subject: remove pull request target trigger from workflows
+              hash: d3fbb311a9e602ce2ed2e8073b6228dd9c13dd42
+              body: >
+                This will block external contributions - but right now we aren't
+                really getting any anyway.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.31.45
+          title: ""
+          date: 2024-10-03T15:47:50.285Z
+  version: 6.0.37
+  title: ""
+  date: 2024-10-04T11:58:11.117Z
+- commits:
     - subject: Update balena-os/balena-yocto-scripts action to v1.25.49
       hash: 8ecf11ed610cea0624111f5adefed55fbe1360e7
       body: |

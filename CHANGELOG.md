@@ -1,6 +1,47 @@
 Change log
 -----------
 
+# v6.0.37
+## (2024-10-04)
+
+
+<details>
+<summary> Update tests/leviathan digest to 3a1a989 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.50
+> ### (2024-10-04)
+> 
+> * Update ubuntu to v24 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.49
+> ### (2024-10-04)
+> 
+> * Update docker/setup-buildx-action digest to c47758b [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.48
+> ### (2024-10-03)
+> 
+> * Update balena-io/balena-cli to v19.0.13 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.47
+> ### (2024-10-03)
+> 
+> * Update docker/setup-buildx-action digest to 8026d2b [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.46
+> ### (2024-10-03)
+> 
+> * Update core/contracts digest to 1fb0b0c [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.45
+> ### (2024-10-03)
+> 
+> * add .git to dockerignore [rcooke-warwick]
+> * remove pull request target trigger from workflows [rcooke-warwick]
+> 
+
+</details>
+
 # v6.0.36
 ## (2024-10-01)
 
