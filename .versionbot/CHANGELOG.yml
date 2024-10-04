@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tpm2: ensure auth session contexts are flushed after use"
+      hash: 93f949ff05ecf745378a864a303a76278b0d1c27
+      body: |
+        The TPM is capable of storing a limited number of auth session handles.
+        Ensure auth sessions are flushed after use, to prevent
+        tpm2_startauthsession from failing with 'out of session handles'.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.0.38
+  title: ""
+  date: 2024-10-04T23:25:13.415Z
+- commits:
     - subject: Update tests/leviathan digest to 3a1a989
       hash: 64b36498e5e23a742d3222df6d13c2eb38efdd8e
       body: Update tests/leviathan

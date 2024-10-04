@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.38
+## (2024-10-04)
+
+* tpm2: ensure auth session contexts are flushed after use [Joseph Kogut]
+
 # v6.0.37
 ## (2024-10-04)
 
