@@ -393,3 +393,35 @@ is_luks() {
 	fi
 	return 1
 }
+
+# Skip files listed on the encrypted boot partition file list when
+# deploying files to the boot partition.
+# Most device types will call this from the do_skip() function in their
+# custom os-helpers-sb file. EFI devices in particular do not need this
+# as the non-encrypted files are separated into its own folder so they
+# do not need to be specified on a list.
+# Arguments:
+#  $1: File to check
+# Returns:
+# 0: Skip the file
+# 1: Move the file
+#
+# Note that files will only be skipped if called from a script that does not
+# deploy to /mnt/boot, so named differently from the default 1-bootfiles.
+skip_nonencrypted_boot_files() {
+	_file="$1"
+	for b in $BALENA_NONENCRYPTED_BOOT_PARTITION_FILES; do
+		# See if file is in the non-encrypted boot partition file list
+		if [ "$b" = "$(basename "$_file")" ]; then
+			# If so, skip (return 0) if running the 1-bootfiles script that copies files
+			# to the non-encrypted /mnt/boot partition
+			# If running a different script, return 1 not to skip it
+			test "$(basename $0)" = "1-bootfiles"
+			return
+		fi
+	done
+	# The file is in the encrypted boot partition file list, so do not skip (return 1) if running
+	# the 1-bootfiles script that copies files to the encrypted /mnt/boot partition
+	# If running a different script, return 0 to skip it
+	test "$(basename "$0")" != "1-bootfiles"
+}
