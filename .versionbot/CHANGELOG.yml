@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: hup: login with sdk before fetching image"
+      hash: b8e558c74ad626dfaf77f56aad5952225fed3e17
+      body: >
+        This is to ensure we have an authenticated SDK before trying to get the
+        last known production image - it needs to be authenticated in case the
+        DT is private
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.0.39
+  title: ""
+  date: 2024-10-07T16:47:42.103Z
+- commits:
     - subject: "tpm2: ensure auth session contexts are flushed after use"
       hash: 93f949ff05ecf745378a864a303a76278b0d1c27
       body: |

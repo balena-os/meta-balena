@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.39
+## (2024-10-07)
+
+* tests: hup: login with sdk before fetching image [Ryan Cooke]
+
 # v6.0.38
 ## (2024-10-04)
 
