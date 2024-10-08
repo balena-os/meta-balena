@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.0.40
+## (2024-10-08)
+
+* os-helpers-efi: silence secure boot variable checks [Joseph Kogut]
+* os-helpers-efi: silence od stderr [Joseph Kogut]
+
 # v6.0.39
 ## (2024-10-07)
 

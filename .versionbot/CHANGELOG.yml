@@ -1,4 +1,34 @@
 - commits:
+    - subject: "os-helpers-efi: silence secure boot variable checks"
+      hash: 7815bc8ea4496a704fe1c6dc6ecae36d1d9bbb86
+      body: |
+        If the SecureBoot variable is non-existent, the parsed value is not an
+        integer, and test complains. Redirect stderr to silence this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-efi: silence od stderr"
+      hash: 095d63b8fe773ebd7c9075bb6495f4620fcd238f
+      body: |
+        When parsing an efivar value, od will complain if a given file does not
+        exist, such as the SecureBoot variable.
+
+        Silence stderr to ignore this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.0.40
+  title: ""
+  date: 2024-10-08T20:12:41.671Z
+- commits:
     - subject: "tests: hup: login with sdk before fetching image"
       hash: b8e558c74ad626dfaf77f56aad5952225fed3e17
       body: >
