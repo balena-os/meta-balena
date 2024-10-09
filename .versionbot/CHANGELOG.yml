@@ -1,4 +1,22 @@
 - commits:
+    - subject: "flasher: improve logging with secure boot"
+      hash: ebde0895df02810798d80c585d5496d3b8d72909
+      body: |
+        Print the PCR digest values used to create the PCR policy used to seal
+        the LUKS passphrase during flashing. These values can be cross
+        referenced with the logs during secure boot to diagnose policy check
+        failures.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.0.42
+  title: ""
+  date: 2024-10-09T18:02:04.416Z
+- commits:
     - subject: Update balena-os/balena-yocto-scripts action to v1.25.59
       hash: b657c30b13e4bf9e66dbd1fd0d9612ce2f27768c
       body: |

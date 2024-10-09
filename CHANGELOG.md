@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.42
+## (2024-10-09)
+
+* flasher: improve logging with secure boot [Joseph Kogut]
+
 # v6.0.41
 ## (2024-10-09)
 
