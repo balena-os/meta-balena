@@ -60,6 +60,10 @@
 				"os-config": {
 					"description": "Cloud configuration",
 					"configuration": "apiEndpoint"
+				},
+				"os-fan-profile": {
+					"description": "Device specific fan profile configuration",
+					"configuration": "os.fan.profile"
 				}
 			}
 		}
