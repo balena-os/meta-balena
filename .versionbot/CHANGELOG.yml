@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts action to v1.25.59
+      hash: b657c30b13e4bf9e66dbd1fd0d9612ce2f27768c
+      body: |
+        Update balena-os/balena-yocto-scripts from v1.25.49 to v1.25.59
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.0.41
+  title: ""
+  date: 2024-10-09T12:24:24.775Z
+- commits:
     - subject: "os-helpers-efi: silence secure boot variable checks"
       hash: 7815bc8ea4496a704fe1c6dc6ecae36d1d9bbb86
       body: |
