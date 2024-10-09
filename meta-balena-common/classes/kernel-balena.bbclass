@@ -300,7 +300,7 @@ BALENA_CONFIGS[systemd] ?= " \
 # one
 #
 BALENA_CONFIGS[rtl8192cu] ?= "\
-    CONFIG_RTL8192CU=n \
+    CONFIG_RTL8192CU=m \
     CONFIG_HOSTAP=m \
     CONFIG_WIRELESS=y \
     CONFIG_USB=y \
