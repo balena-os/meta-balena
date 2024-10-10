@@ -1,0 +1,15 @@
+[Unit]
+Description=OS power mode management service
+DefaultDependencies=no
+Requires=var-volatile.mount
+After=var-volatile.mount resin-boot.service
+Before=umount.target
+Conflicts=umount.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/os-power-mode
+
+[Install]
+WantedBy=multi-user.target
