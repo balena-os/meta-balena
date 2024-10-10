@@ -10,6 +10,8 @@ set -o errexit
 . /usr/sbin/balena-config-vars
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
 
 verifyMd5sum() {
   if [ "$1" = "$3" ] ; then return 1; fi
@@ -28,8 +30,7 @@ else
 fi
 
 new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT -t ext4)
-type=$(lsblk -no TYPE "${new_part}")
-if [ "${type}" = "crypt" ]; then
+if is_part_encrypted "${new_part}"; then
     blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].children[].name')
 else
     blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].name')

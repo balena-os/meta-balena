@@ -29,7 +29,7 @@ parent=$3
 
 valid_device() {
 	p=$1
-	if [ "${p:0:8}" != "/dev/dm-" ] && [ "${p:0:7}" != "/dev/md" ]; then
+	if [ "${p#/dev/dm}" = "$p" ] && [ "${p#/dev/md}" = "$p" ]; then
 		return 1
 	fi
 }
@@ -72,10 +72,14 @@ for cand in $(lsblk -nlo pkname,uuid | grep "${ruuid}" | cut -d " " -f1); do
 done
 
 if [ -n "${rpdev}" ]; then
-	rptype=$(lsblk -nlo type,uuid | grep "${ruuid}" | cut -d " " -f1) || true
-	if [ "${rptype}" = "crypt" ]; then
+	if is_part_encrypted "${rpdev}"; then
+		if ! is_luks "${rpdev}"; then
+			rpdev="${part#/dev/}"
+		fi
 		cryptdev_uuid=$(lsblk -nlo uuid,kname | grep "${rpdev}" | cut -d " " -f1) || true
-		rpdev=$(lsblk -nlo pkname,uuid | grep "${cryptdev_uuid}" | cut -d " " -f1) || true
+		if [ -n "${cryptdev_uuid}" ]; then
+			rpdev=$(lsblk -nlo pkname,uuid | grep "${cryptdev_uuid}" | cut -d " " -f1) || true
+		fi
 	fi
 fi
 if [ "${rpdev}" = "${parent}" ] || valid_device "${part}"; then
@@ -85,7 +89,7 @@ if [ "${rpdev}" = "${parent}" ] || valid_device "${part}"; then
 	case $label in
 		resin-root*)
 			rdev=$(lsblk -nlo kname,uuid | grep "${ruuid}" | cut -d " " -f1)
-			if [ "/dev/${rdev}" == "${part}" ]; then
+			if [ "/dev/${rdev}" = "${part}" ]; then
 				echo "BALENA_UPDATE_STATE=active"
 			else
 				echo "BALENA_UPDATE_STATE=inactive"

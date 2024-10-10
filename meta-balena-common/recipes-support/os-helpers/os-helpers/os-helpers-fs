@@ -63,6 +63,13 @@ get_dev_uuid() {
 	lsblk -nlo uuid "${1}"
 }
 
+# Output the partition UUID for the specified block device.
+# Arguments:
+#   1 - Target block device
+get_dev_partuuid() {
+	lsblk -nlo partuuid "${1}"
+}
+
 # Output the filesystem label for the specified block device.
 # Arguments:
 #   1 - Target block device
@@ -104,6 +111,9 @@ get_cmdline_root_uuid() {
 			elif [ "$opt" = "LABEL" ]; then
 				label=$(echo "$p" | cut -d'=' -f3)
 				get_dev_uuid "$(get_dev_path_from_label "${label}")"
+				return 0
+			elif [ "$opt" = "PARTUUID" ]; then
+				echo "$p" | cut -d'=' -f3
 				return 0
 			fi
 		fi
@@ -333,4 +343,127 @@ generate_bootpart_fingerprint() {
         sort -k2 > "${tmpfp}"
         mv "${tmpfp}" ${FSDIR}/@@BALENA_FINGERPRINT_FILENAME@@.@@BALENA_FINGERPRINT_EXT@@
         sync -f "${FSDIR}"
+}
+
+# Identify an encrypted partition using dmsetup
+# Works for both dm-crypt and LUKS encrypted partitions
+# Arguments:
+# 1: Partition device - will be converted to a DM device
+# Returns:
+# 0: The partition device is encrypted
+# 1: The partition device is not encrypted
+is_part_encrypted() {
+	_part="${1#/dev/}"
+	_dm_part="${_part}"
+	if command -v dmsetup > /dev/null; then
+		if [ "${_part#dm-}" = "${_part}" ]; then
+			# Does not start with dm-
+			if [ "${_part#mapper/}" = "${_part}" ]; then
+				# Does not start with mapper/
+				# Find the corresponding DM device to the partition
+				_dm_part=$(lsblk -nlo kname "/dev/${_dm_part}" | grep dm)
+				if [ -z "${_dm_part}" ]; then
+					# No corresponding DM device, no dm-crypt in use
+					return 1
+				fi
+			fi
+		fi
+		# _dm_part is a DM device, either dm* or mapper/*
+		_name=$(lsblk -nlo name "/dev/${_dm_part}")
+		if dmsetup ls --target crypt | grep -q "${_name}"; then
+			return 0
+		fi
+	fi
+	return 1
+}
+
+# Identify a LUKS encrypted partition
+# Partitions encrypted with dm-crypt do not have a LUKS header
+# and will not identify as crypto_LUKS.
+# Arguments:
+# 1: Partition device
+# Returns:
+# 0: It is a LUKS encrypted partition
+# 1: It is not a LUKS encrypted partition (could be not encrypted)
+is_luks() {
+	_part="${1#/dev/}"
+	_part="/dev/$_part"
+	if lsblk -nlo fstype "${_part}" | grep -q "crypto_LUKS"; then
+		return 0
+	fi
+	return 1
+}
+
+# Skip files listed on the encrypted boot partition file list when
+# deploying files to the boot partition.
+# Most device types will call this from the do_skip() function in their
+# custom os-helpers-sb file. EFI devices in particular do not need this
+# as the non-encrypted files are separated into its own folder so they
+# do not need to be specified on a list.
+# Arguments:
+#  $1: File to check
+# Returns:
+# 0: Skip the file
+# 1: Move the file
+#
+# Note that files will only be skipped if called from a script that does not
+# deploy to /mnt/boot, so named differently from the default 1-bootfiles.
+skip_nonencrypted_boot_files() {
+	_file="$1"
+	for b in $BALENA_NONENCRYPTED_BOOT_PARTITION_FILES; do
+		# See if file is in the non-encrypted boot partition file list
+		if [ "$b" = "$(basename "$_file")" ]; then
+			# If so, skip (return 0) if running the 1-bootfiles script that copies files
+			# to the non-encrypted /mnt/boot partition
+			# If running a different script, return 1 not to skip it
+			test "$(basename $0)" = "1-bootfiles"
+			return
+		fi
+	done
+	# The file is in the encrypted boot partition file list, so do not skip (return 1) if running
+	# the 1-bootfiles script that copies files to the encrypted /mnt/boot partition
+	# If running a different script, return 0 to skip it
+	test "$(basename "$0")" != "1-bootfiles"
+}
+
+# Split the boot partition in an encrypted and a non-encrypted partition, with
+# the list of files to place in the non-encrypted partition listed in the
+# BALENA_NONENCRYPTED_BOOT_PARTITION_FILES variable.
+#
+# Platforms that natively separate the files that bootROMs need to access
+# into a different folder, like EFI, will need to implement their own version.
+# All other platforms should use this implementation.
+#
+# This is typically called from the resin-init-flasher bootpart_split()
+# function when performing the splitting of boot partitions at installation
+# time.
+split_bootpartition() {
+    # Split the boot partition in an encrypted and non-encrypted partition
+    # Encrypted resin-boot already mounted in $INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT
+    NONENC_BOOT_MOUNT_DIR="$(mktemp -d)"
+    NONENC_BOOT_MOUNT=$(get_dev_path_in_device_with_label "${internal_dev}" "${BALENA_NONENC_BOOT_LABEL}")
+    if ! mount "${NONENC_BOOT_MOUNT}" "$NONENC_BOOT_MOUNT_DIR"; then
+        fail "Failed to mount disk labeled as ${BALENA_NONENC_BOOT_LABEL}."
+    fi
+
+    # Move all to be encrypted files to encrypted boot partition
+    for FILE in "$NONENC_BOOT_MOUNT_DIR/"*; do
+        _file=$(basename "$FILE")
+        if [[ "${BALENA_NONENCRYPTED_BOOT_PARTITION_FILES}" == *"${_file}"* ]]; then
+            continue
+        fi
+
+        mv "$FILE" "$INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT/"
+    done
+
+    # Store files necessary for TPM decryption to the unencrypted partitions
+    mv "${ENC_PASSPHRASE_FILE}" "$NONENC_BOOT_MOUNT_DIR/balena-luks.enc" && sync
+
+    rm -rf "$TPM_RESULT_DIR"
+
+    # Regenerate fingerprint in both partitions
+    generate_bootpart_fingerprint "${NONENC_BOOT_MOUNT_DIR}"
+    generate_bootpart_fingerprint "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
+
+    # Do not umount - flasher script will still copy configuration files
 }
