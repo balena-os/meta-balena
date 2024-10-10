@@ -75,7 +75,10 @@ do_deploy() {
 LOGO = "/mnt/boot/splash/balena-logo.png"
 
 PACKAGES:remove = "${PN}-initrd"
-PACKAGECONFIG = ""
+PACKAGECONFIG:remove = "initrd"
+PACKAGECONFIG:remove = "freetype"
+PACKAGECONFIG:remove = "pango"
+PACKAGECONFIG:remove = "systemd"
 RDEPENDS:${PN} = "bash"
 
 addtask deploy before do_package after do_install
