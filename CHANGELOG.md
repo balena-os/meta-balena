@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.43
+## (2024-10-10)
+
+* initrdscripts: Wait for boot partition in the abroot script [Michal Toman]
+
 # v6.0.42
 ## (2024-10-09)
 

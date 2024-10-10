@@ -1,4 +1,26 @@
 - commits:
+    - subject: "initrdscripts: Wait for boot partition in the abroot script"
+      hash: 2ede3ce578907c2f2eb75598b0b599bb12913929
+      body: |
+        At this moment the abroot script assumes that the boot partition
+        is already in place when it executes. This might not be true
+        if the rootfs sits on a device that takes a while to initialize,
+        such as a USB drive. The script fails hard if that is the case.
+
+        This patch replicates a waiting loop from the rootfs script,
+        which addresses the same issue for systems that do not use
+        the balena bootloader.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.0.43
+  title: ""
+  date: 2024-10-10T15:37:21.568Z
+- commits:
     - subject: "flasher: improve logging with secure boot"
       hash: ebde0895df02810798d80c585d5496d3b8d72909
       body: |
