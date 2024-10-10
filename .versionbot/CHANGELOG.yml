@@ -1,4 +1,144 @@
 - commits:
+    - subject: Update tests/leviathan digest to cf58b57
+      hash: c44463d0bd4d94ded14173a9d91a6a6d8d8f95ec
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: add secureboot identifier into report name
+              hash: 7ca3cb281f0aae1b0b0ee5e157081fa5a7109098
+              body: >
+                This is to avoid calshes of artifact names when running a test
+                matrix with the secureboot option enabled
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.31.59
+          title: ""
+          date: 2024-10-10T18:06:05.535Z
+        - commits:
+            - subject: Update core/contracts digest to 5ac053b
+              hash: c40cc096fd39c13321cca04efce98944f725ee34
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.58
+          title: ""
+          date: 2024-10-10T15:33:51.355Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to b4b15b8
+              hash: 7bc68fe8c3ef8c699b708e3b241ceaec3134c9d2
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.57
+          title: ""
+          date: 2024-10-10T14:35:54.037Z
+        - commits:
+            - subject: "compose: map qemu volume into worker"
+              hash: 2e1669d6f34df4930fb9511a0edd52e7cc050ee7
+              body: >
+                This volume is used to share qemu's QMP socket between the
+                worker and
+
+                core containers, allowing tests to connect, receive events from,
+                and
+
+                control qemu.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: leviathan-2.31.56
+          title: ""
+          date: 2024-10-09T05:09:41.584Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 8448086
+              hash: 4eb9e7b49a0a56d4ad899479a9989d3fa6429cf1
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.55
+          title: ""
+          date: 2024-10-08T20:36:27.136Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.18
+              hash: 511f30f40338084b2bf59e1213194bd7afd62ad7
+              body: |
+                Update balena-io/balena-cli from 19.0.17 to 19.0.18
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.54
+          title: ""
+          date: 2024-10-08T16:35:10.880Z
+        - commits:
+            - subject: Update actions/checkout digest to eef6144
+              hash: 486a37fa55077267e9d2bebaef9d9fdb7cbf6b43
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.53
+          title: ""
+          date: 2024-10-08T15:35:10.306Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.0.17
+              hash: 2f8cfd61761fbb0b0ea12a038d25fb71f98facd2
+              body: |
+                Update balena-io/balena-cli from 19.0.13 to 19.0.17
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.52
+          title: ""
+          date: 2024-10-08T14:33:13.530Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 604373d
+              hash: 9dad57269d0016bb2a8e06d098923205e4e626be
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.51
+          title: ""
+          date: 2024-10-07T16:37:31.362Z
+  version: 6.0.44
+  title: ""
+  date: 2024-10-10T20:36:08.884Z
+- commits:
     - subject: "initrdscripts: Wait for boot partition in the abroot script"
       hash: 2ede3ce578907c2f2eb75598b0b599bb12913929
       body: |
