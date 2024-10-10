@@ -20,8 +20,9 @@ diskenc_setup() {
         fi
 
         # Generate a random passphrase
+        PASSPHRASE_SZ=32
         PASSPHRASE_FILE="$(mktemp)"
-        hw_gen_passphrase > "$PASSPHRASE_FILE"
+        hw_gen_passphrase "$PASSPHRASE_SZ" > "$PASSPHRASE_FILE"
 
         # Create two policies to ensure the newly flashed system boots. One with
         # the EFI binaries measured into PCR7 as specified in the TCG spec, one
@@ -93,9 +94,29 @@ diskenc_setup() {
 		-L "$POLICY_DIR/policy.secondary"
 	COMBINED_POLICY=$(mktemp -t)
 	SESSION_CTX=$(mktemp -t)
-	tpm2_startauthsession -S "${SESSION_CTX}"
-	tpm2_policyor -S "${SESSION_CTX}" -L "${COMBINED_POLICY}" \
-		"sha256:${POLICY_DIR}/policy.primary,${POLICY_DIR}/policy.secondary"
-	tpm2_flushcontext "${SESSION_CTX}"
-	hw_encrypt_passphrase "$PASSPHRASE_FILE" "$COMBINED_POLICY" "$TPM_RESULT_DIR"
+	tpm2_startauthsession -S "$SESSION_CTX"
+	tpm2_policypassword -S "$SESSION_CTX" -L "${POLICY_DIR}/policy.password"
+	tpm2_flushcontext "$SESSION_CTX"
+
+	POLICIES="$(find "${POLICY_DIR}" -type f | sort | xargs)"
+	tpm2_startauthsession -S "$SESSION_CTX"
+	tpm2_policyor -S "$SESSION_CTX" -L "${COMBINED_POLICY}" \
+		"sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
+	tpm2_flushcontext "$SESSION_CTX"
+
+	# The PCR policy can't be satisfied until the next boot, so associate a
+	# password with the nvindex that will allow us to write the LUKS
+	# passphrase immediately
+	POLICY_PASSWORD="str:$(hw_gen_passphrase $PASSPHRASE_SZ)"
+	tpm2_nvdefine "$PASSPHRASE_NVINDEX" --size "$PASSPHRASE_SZ" \
+					    --attributes "authwrite|policyread|policywrite" \
+					    --policy "$COMBINED_POLICY" \
+					    --index-auth "$POLICY_PASSWORD"
+
+	tpm2_startauthsession --policy-session -S "$SESSION_CTX"
+	tpm2_policypassword -S "$SESSION_CTX"
+	tpm2_nvwrite "$PASSPHRASE_NVINDEX" --input "$PASSPHRASE_FILE" \
+					   --auth "$POLICY_PASSWORD"
+	tpm2_flushcontext "$SESSION_CTX"
+	tpm2_shutdown
 }
