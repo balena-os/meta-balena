@@ -2,6 +2,17 @@
 
 const fse = require('fs-extra');
 const securebootEfiVarPath = '/sys/firmware/efi/efivars/SecureBoot-*';
+const qmp = require("@balena/node-qmp");
+
+const retry = (fn, delay_ms=250, retries=10 * 4, err) => (
+	!retries
+	? Promise.reject(`Exhausted retries: ${err}`)
+	: fn().catch(e => setTimeout(
+			() => retry(fn, delay_ms, (retries - 1), e),
+			delay_ms
+		)
+	)
+);
 
 class secureBoot {
 	constructor(test, worker, suite, imagePath, module = {"name": "", "headersVersion": ""}) {
@@ -42,25 +53,64 @@ class secureBoot {
 	}
 
 	async testFullDiskEncryption() {
-			Promise.all(
-				[
-					{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
-					{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
-					{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
-					{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
-				].map(args => this.test.resolveMatch(
-						this.worker.executeCommandInHostOS(
-							[
-								'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
-								'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
-							],
-							this.link,
-						),
-						/crypt/,
-						`${args.name} is encrypted`,
-					)
+		await Promise.all(
+			[
+				{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
+				{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
+				{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
+				{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
+			].map(args => this.test.resolveMatch(
+					this.worker.executeCommandInHostOS(
+						[
+							'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
+							'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
+						],
+						this.link,
+					),
+					/crypt/,
+					`${args.name} is encrypted`,
 				)
-			);
+			)
+		);
+
+		if (!this.qmp) {
+			this.test.comment('QMP is unavailable, skipping encryption tampering test');
+			return
+		}
+
+		const label = "resin-data";
+		await this.worker.executeCommandInHostOS(
+			['while systemctl is-active balena balena-supervisor systemd-journald;',
+					 'do systemctl stop balena balena-supervisor systemd-journald; done',
+				 `&& while umount /dev/disk/by-label/${label}; do : ; done`,
+				 `&& cryptsetup luksClose /dev/disk/by-label/${label}`,
+				 `&& mkfs.ext4 -L ${label} -F /dev/disk/by-partlabel/${label}`,
+			],
+			this.link,
+		).then(() =>
+			this.test.resolves(() => {
+				var waitForFailedBootPromise = new Promise((resolve, reject) => {
+					/* Wait for the machine to reset, then resolve once the machine resets
+					 * again within the timeout (boot failed)
+					 */
+					this.qmpClient.on('reset', () => {
+						setTimeout(reject, 10 * 1000);
+						this.qmpClient.on('reset', resolve);
+					});
+				});
+
+				var rebootPromise = this.worker.executeCommandInHostOS('reboot', this.link);
+
+				return Promise.all([
+					rebootPromise,
+					waitForFailedBootPromise,
+				]);
+			},
+			'Kernel will not boot with tampered encrypted partitions',
+			)
+		);
+
+		return this.resetDUT();
 	}
 
 	async testModuleVerification() {
@@ -108,6 +158,50 @@ class secureBoot {
 }
 
 class uefiSecureBoot extends secureBoot {
+	constructor(...args) {
+		super(...args);
+		this.qmpSock = '/run/qemu/qmp.sock';
+		this.qmpClient = new qmp.Client();
+		this.qmp = false;
+		if (fse.existsSync(this.qmpSock)) {
+			this.qmp = true;
+			this.setupQMP();
+		}
+	}
+
+	async qmpConnect() {
+		this.qmpClient.once('ready', () => this.qmpClient.execute('query-status') );
+		return retry(() => this.qmpClient.connect(this.qmpSock)
+		).then(() => console.log("Connected to QMP socket")
+		).catch(e => {
+			console.log("Unable to connect to QMP socket");
+			throw e;
+		});
+	}
+
+	async setupQMP() {
+		if (this.qmp) {
+			this.qmpClient.on('disconnect', this.qmpConnect);
+			return this.qmpConnect();
+		}
+
+		this.suite.teardown.register(this.teardownQMP);
+	}
+
+	async teardownQMP() {
+		if (this.qmp) {
+			this.qmpClient.removeListener('disconnect', this.qmpConnect);
+		}
+	}
+
+	async resetDUT() {
+		// flashing takes longer than we expect a QMP connection to take, so
+		// temporarily teardown the connection until it's finished
+		await this.teardownQMP();
+		await super.resetDUT();
+		await this.setupQMP();
+	}
+
 	async isSecureBootSupported() {
 			return this.worker.executeCommandInHostOS(
 				['ls', securebootEfiVarPath, '&>/dev/null',
