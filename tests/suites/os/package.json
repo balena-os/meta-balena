@@ -5,7 +5,7 @@
 		"bluebird-retry": "^0.11.0",
 		"dockerode": "^2.5.8",
 		"fs-extra": "^8.1.0",
-		"jpeg-js": "^0.3.6",
+		"jpeg-js": "^0.4.4",
 		"lodash": "^4.17.11",
 		"mz": "^2.7.0",
 		"request": "^2.88.0",
