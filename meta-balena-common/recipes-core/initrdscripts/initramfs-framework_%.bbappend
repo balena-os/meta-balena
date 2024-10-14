@@ -118,6 +118,7 @@ FILES:initramfs-module-recovery = "/init.d/00-recovery"
 SUMMARY:initramfs-module-migrate = "OS Migration"
 RDEPENDS:initramfs-module-migrate = " \
     util-linux-findmnt \
+    util-linux-zramctl \
     resin-init-flasher \
     util-linux-mountpoint \
     bash \
