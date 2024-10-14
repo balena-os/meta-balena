@@ -18,7 +18,8 @@ do_compile[network] = "1"
 do_compile() {
     cd ${S}
     unset GO_LDFLAGS
-    unset GOPATH GOROOT
+    unset GOROOT
+    export GOPATH="${B}/.go"
     export GOCACHE="${B}/.cache"
     oe_runmake
 }
