@@ -122,6 +122,9 @@ do_install:append() {
     # We don't have audit configs enabled in the kernel, so we can remove the audit sockets
     rm ${D}/lib/systemd/system/sockets.target.wants/systemd-journald-audit.socket || true
     rm ${D}/lib/systemd/system/systemd-journald-audit.socket || true
+
+    # Disable systemd-gpt-generator as it's currently a noop that just throws errors
+    ln -s /dev/null ${D}${sysconfdir}/systemd/system-generators/systemd-gpt-auto-generator
 }
 
 PACKAGES =+ "${PN}-zram-swap"
