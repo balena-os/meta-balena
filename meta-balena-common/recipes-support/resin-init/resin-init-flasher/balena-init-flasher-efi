@@ -116,8 +116,6 @@ bootpart_split() {
 
     # Store files necessary for TPM decryption to the EFI partitions
     mv "$TPM_RESULT_DIR/policies"* "$NONENC_BOOT_MOUNT_DIR/" && sync
-    mv "$TPM_RESULT_DIR/persistent.ctx" "$NONENC_BOOT_MOUNT_DIR/balena-luks.ctx" && sync
-    mv "$TPM_RESULT_DIR/passphrase.enc" "$NONENC_BOOT_MOUNT_DIR/balena-luks.enc" && sync
 
     rm -rf "$TPM_RESULT_DIR"
 
