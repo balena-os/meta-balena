@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+
+info "Fan profile configuration is not supported for this device type."

@@ -18,6 +18,8 @@ RDEPENDS:${PN} = " \
     kernel-image-initramfs \
     os-config \
     os-release \
+    os-fan-profile \
+    os-power-mode \
     less \
     development-features \
     resin-device-progress \
