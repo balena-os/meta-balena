@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.45
+## (2024-10-18)
+
+* workflows/meta-balena-esr: fix version creation bash [Ryan Cooke]
+
 # v6.0.44
 ## (2024-10-10)
 

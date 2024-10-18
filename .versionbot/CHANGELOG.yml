@@ -1,4 +1,18 @@
 - commits:
+    - subject: "workflows/meta-balena-esr: fix version creation bash"
+      hash: 40266212820dca50c7d6a938ca512b779dbd24b3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.0.45
+  title: ""
+  date: 2024-10-18T13:39:38.158Z
+- commits:
     - subject: Update tests/leviathan digest to cf58b57
       hash: c44463d0bd4d94ded14173a9d91a6a6d8d8f95ec
       body: Update tests/leviathan
