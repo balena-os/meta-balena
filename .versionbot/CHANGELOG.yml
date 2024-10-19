@@ -1,4 +1,23 @@
 - commits:
+    - subject: "balena-units-conf: Add os-fan-profile to units conf"
+      hash: 1424e413680f30a156bef66e46ead170562edaf4
+      body: |
+        This service needs to be restarted every time the
+        fan profile is modified in config.json, so that
+        it can apply the change and restart the device
+        specific fan control daemon. This is unlike the
+        power model service, which only runs once, at startup.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.46
+  title: ""
+  date: 2024-10-19T16:51:02.546Z
+- commits:
     - subject: "workflows/meta-balena-esr: fix version creation bash"
       hash: 40266212820dca50c7d6a938ca512b779dbd24b3
       body: ""

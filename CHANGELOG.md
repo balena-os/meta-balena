@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.46
+## (2024-10-19)
+
+* balena-units-conf: Add os-fan-profile to units conf [Alexandru Costache]
+
 # v6.0.45
 ## (2024-10-18)
 
