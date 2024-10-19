@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+
+info "Power mode configuration is not supported for this device type."

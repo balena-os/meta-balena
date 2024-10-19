@@ -106,6 +106,8 @@ read_config() {
              OS_NET_CONN_RESPONSE=\(.os.network.connectivity.response // "")
              OS_NET_CONN_URI=\(.os.network.connectivity.uri // "")
              OS_NET_WIFI_MACSCAN=\(.os.network.wifi.randomMacAddressScan)
+             OS_FAN_PROFILE=\(.os.fan.profile // "")
+             OS_POWER_MODE=\(.os.power.mode // "")
              PERSISTENT_LOGGING=\(.persistentLogging // false)
              PROVISIONING_API_KEY=\(.apiKey // "")
              REGISTERED_AT=\(.registered_at // "")
