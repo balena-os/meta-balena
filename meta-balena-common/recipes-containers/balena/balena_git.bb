@@ -59,7 +59,7 @@ DEPENDS:append:class-native = " go-native"
 INSANE_SKIP:${PN} += "already-stripped"
 
 FILES:${PN} += " \
-	/lib/systemd/system/* \
+	${systemd_unitdir}/system/* \
 	/home/root \
 	${localstatedir} \
 	"
