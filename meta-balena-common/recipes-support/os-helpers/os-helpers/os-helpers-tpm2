@@ -22,6 +22,7 @@ EFI_IMAGE_SECURITY_DATABASE_GUID="d719b2cb-3d3a-4596-a3bc-dad00e67656f"
 EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
 TPM_EVENTLOG_PATH="/sys/kernel/security/tpm0/binary_bios_measurements"
+PASSPHRASE_NVINDEX=0x1500000
 
 # silence errors messages from trying unsupported TCTI backends
 #
@@ -165,7 +166,8 @@ print_pcr_val_bin() {
 }
 
 hw_gen_passphrase() {
-    tpm2_getrandom 32
+    size=${1:-32}
+    tpm2_getrandom $size
 }
 
 hw_encrypt_passphrase() {
@@ -199,6 +201,12 @@ hw_encrypt_passphrase() {
 
     # Remove unnecessary files
     rm -f "${PRIMARY_CTX}" "${PRIVATE_KEY}" "${PUBLIC_KEY}" "${KEY_CTX}"
+}
+
+hw_retrieve_passphrase() {
+    AUTH=$1
+    OUTPUT=$2
+    tpm2_nvread --auth "$AUTH" "$PASSPHRASE_NVINDEX" > "$OUTPUT"
 }
 
 hw_decrypt_passphrase() {
