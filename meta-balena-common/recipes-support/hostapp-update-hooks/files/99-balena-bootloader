@@ -25,6 +25,10 @@ info "Switching root partition to ${NEW_ROOT}"
 
 BOOTENV_FILE="${BALENA_NONENC_BOOT_MOUNTPOINT}/bootenv"
 
+# When migrating to balena bootloader make sure no alternative is present
+rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
+rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/grubenv"
+
 grub-editenv "${BOOTENV_FILE}" set "resin_root_part=${NEW_ROOT}"
 grub-editenv "${BOOTENV_FILE}" set "upgrade_available=${DURING_UPDATE}"
 
