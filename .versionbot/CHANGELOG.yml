@@ -1,4 +1,22 @@
 - commits:
+    - subject: "hostapp-update-hooks: remove alternative bootloader environment files"
+      hash: b152124216f8360514961b83195c0e49f63c1a73
+      body: |
+        The rollback-parse-bootloader script will give priority to
+        resinOS_uEnv.txt so make sure there are no U-Boot leftovers when
+        migrating to a balena-bootloader enabled system which needs to read
+        the bootenv environment file on rollbacks.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.0.47
+  title: ""
+  date: 2024-10-21T17:55:13.550Z
+- commits:
     - subject: "balena-units-conf: Add os-fan-profile to units conf"
       hash: 1424e413680f30a156bef66e46ead170562edaf4
       body: |

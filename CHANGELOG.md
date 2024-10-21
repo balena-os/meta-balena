@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.47
+## (2024-10-21)
+
+* hostapp-update-hooks: remove alternative bootloader environment files [Alex Gonzalez]
+
 # v6.0.46
 ## (2024-10-19)
 
