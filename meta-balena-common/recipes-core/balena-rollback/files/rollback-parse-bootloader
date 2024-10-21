@@ -17,6 +17,8 @@
 set -o errexit
 
 . /usr/sbin/balena-config-vars
+# shellcheck disable=SC1091
+[ -f /usr/libexec/os-helpers-fs ] && . /usr/libexec/os-helpers-fs
 
 echo "Rollback: Parsing bootloader configuration"
 
@@ -55,8 +57,7 @@ fi
 # --uniq here because findmnt returns the same device twice because /mnt/sysroot/active
 # is bind-mounted over itself while running old hooks from the inactive partition
 current_part=$(findmnt --noheadings --canonicalize --uniq --output SOURCE /mnt/sysroot/active)
-type=$(lsblk -no TYPE "${current_part}")
-if [ "${type}" = "crypt" ]; then
+if is_part_encrypted "${current_part}"; then
     blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].children[].name')
 else
     blockdev=$(lsblk -sJ "${current_part}" | jq -r '.blockdevices[].name')
