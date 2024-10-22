@@ -57,7 +57,10 @@ done
 
 # Pull in the supervisor image as a separate app until it converges in the hostOS
 if [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
-	_supervisor_image=$(balena_api_fetch_image_from_app "${SUPERVISOR_FLEET}" "${SUPERVISOR_VERSION#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
+	#_supervisor_image=$(balena_api_fetch_image_from_app "${SUPERVISOR_FLEET}" "${SUPERVISOR_VERSION#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
+	# 16.7.3-1729271160397
+	# 619f6442 (Add NXP support to balenaOS secure boot, 2024-09-23)
+	_supervisor_image=registry2.balena-cloud.com/v2/f600f59eaaffd1d769421269a483552c
 	echo "Pulling ${SUPERVISOR_FLEET}:${SUPERVISOR_VERSION}"
 	if docker pull "${_supervisor_image}"; then
 		docker tag "${_supervisor_image}" "${_supervisor_image%@*}"
