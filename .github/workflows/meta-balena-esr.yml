@@ -94,7 +94,7 @@ jobs:
           git fetch --tags origin
           current_os_version=$(git describe --abbrev=0 "$(git rev-list --tags --max-count=1)")
           current_os_version="${current_os_version:1}"
-          va=("${current_os_version//./ }")
+          IFS="." read -r -a va <<< "${current_os_version}"
           if [ ${#va[@]} -ne 3 ]; then
             echo "Invalid current version: ${current_os_version}"
             exit 1
@@ -107,7 +107,7 @@ jobs:
             os_version=$(git tag --sort -version:refname | grep "v${va[0]}\." | head -n1)
           fi
           os_version="${os_version:1}"
-          ov_arr=( "${os_version//./ }" )
+          IFS="." read -r -a ov_arr <<< "${os_version}"
           os_esr_branch=${ov_arr[0]}.${ov_arr[1]}.x
           if git ls-remote --exit-code --heads origin "${os_esr_branch}" > /dev/null; then
             echo "Branch ${os_esr_branch} already exists"
