@@ -1,4 +1,4 @@
-From 2505748e9b71ceaf290da40f767dc4b90238576a Mon Sep 17 00:00:00 2001
+From 8a40020f5c4b9a1e5c7c03e315b1082208a06c14 Mon Sep 17 00:00:00 2001
 From: Florin Sarbu <florin@balena.io>
 Date: Fri, 13 Sep 2024 09:36:49 +0000
 Subject: [PATCH] bearer-qmi: Fix SIM7100E crash
@@ -24,6 +24,3 @@ index 54f2e934..d8e52f5c 100644
  
      input = qmi_message_wds_get_current_settings_input_new ();
      qmi_message_wds_get_current_settings_input_set_requested_settings (input, requested, NULL);
--- 
-2.34.1
-
