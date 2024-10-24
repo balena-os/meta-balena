@@ -76,7 +76,10 @@ api_fetch_supervisor_image() {
 
 do_install[network] = "1"
 do_install () {
-	SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
+	#SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
+	# 16.7.3-1729271160397
+	# 619f6442 (Add NXP support to balenaOS secure boot, 2024-09-23)
+	SUPERVISOR_IMAGE=registry2.balena-cloud.com/v2/f600f59eaaffd1d769421269a483552c
 	if [ -z "${SUPERVISOR_IMAGE}" ] || [ "${SUPERVISOR_IMAGE}" = "null" ]; then
 		bbfatal "Could not retrieve supervisor image for version ${SUPERVISOR_VERSION}"
 	fi
