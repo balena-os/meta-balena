@@ -1,6 +1,16 @@
 Change log
 -----------
 
+# v6.0.48
+## (2024-10-24)
+
+* os-helpers-fs: introduce a script to split boot partitions [Alex Gonzalez]
+* os-helpers-fs: add a shared script to deploy non-encrypted boot file [Alex Gonzalez]
+* systemd: disable systemd-gpt-generator [Alex Gonzalez]
+* resin-mounts: generalize non-enc boot partition mounter [Alex Gonzalez]
+* classes: kernel-balena: do not remove whole build directory [Alex Gonzalez]
+* efitools: Fix syntax [Alex Gonzalez]
+
 # v6.0.47
 ## (2024-10-21)
 

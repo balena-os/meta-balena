@@ -1,4 +1,103 @@
 - commits:
+    - subject: "os-helpers-fs: introduce a script to split boot partitions"
+      hash: 1c3fe3b3fd259cadf1f8b684aa883dd4274a6f0f
+      body: |
+        Secure boot enabled partitions need to split the boot partition into
+        an encrypted and a non-encrypted one.
+
+        Unless the device type natively separates the files that the bootROM
+        needs to boot, like EFI does into /mnt/boot/EFI, a list of files to
+        move to the non-encrypted partition needs to be provided on the
+        BALENA_NONENCRYPTED_BOOT_PARTITION_FILES variable, and a function
+        to implement the split needs to be provided.
+
+        This commit introduces a split_bootpartition() function that performs
+        this and can be used for those platforms that need to list the boot
+        essential files in a BALENA_NONENCRYPTED_BOOT_PARTITION_FILES variable.
+
+        This is typically called from the bootpart_split() function in the
+        balena-init-flasher customization file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: add a shared script to deploy non-encrypted boot file"
+      hash: d1deb3e4fc8744fe66e1b5a726c82b4a856f2fe4
+      body: |
+        On secure boot enabled devices the boot partition is split into an
+        encrypted boot partition (/mnt/boot) and a non-encrypted boot partition
+        (/mnt/<name>).
+
+        On the built rootfs all files live in `/mnt/boot`, and the installation
+        needs to create an encrypted /mnt/<name> and move some files from
+        /mnt/boot there.
+
+        UEFI platforms make this easy as the non-encrypted files are stored on a
+        different /mnt/boot/EFI folder. However, other platforms need to list
+        which files to move by name.
+
+        This commit introduces a skip_nonencrypted_boot_files() helper function
+        for these other platforms to use.
+
+        It is typically called from a do_skip() function in the os-helpers-sb
+        secure boot customization file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "systemd: disable systemd-gpt-generator"
+      hash: e5a17eabfbb1b1d262858ec0324e61c3fbd1bc09
+      body: |
+        This service is unused in balenaOS.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-mounts: generalize non-enc boot partition mounter"
+      hash: ed26eb561680ac1136645f83d2210f7997bca1c3
+      body: |
+        This avoids having to append this recipe on each device repository.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: kernel-balena: do not remove whole build directory"
+      hash: 1222daab16e2e09727868ad998affc35c24f6e29
+      body: |
+        When signing, only remove the certs directory in the build folder.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "efitools: Fix syntax"
+      hash: 42af7cf026fe0284768f7c1e6b8bfc07f649680c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.0.48
+  title: ""
+  date: 2024-10-24T16:31:08.793Z
+- commits:
     - subject: "hostapp-update-hooks: remove alternative bootloader environment files"
       hash: b152124216f8360514961b83195c0e49f63c1a73
       body: |
