@@ -65,7 +65,7 @@ set -e
 # Very long variables :)
 INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT=/tmp/internal_boot
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
-LUKS=0
+CRYPT=0
 BOOT_ENTRY_LABEL="balenaOS"
 
 # shellcheck disable=SC1091
@@ -217,13 +217,13 @@ IMAGE_FILE_SIZE=$(wc -c "$BALENA_IMAGE" | awk '{print $1}')
 
 if type secureboot_setup >/dev/null 2>&1 && secureboot_setup; then
         info "Secure boot is enabled, proceeding with lockdown"
-        LUKS=1
+        CRYPT=1
         # shellcheck disable=SC1091
         # Re-source after secureboot setup
         . /usr/sbin/balena-config-defaults
 fi
 
-if [ "$LUKS" = "1" ]; then
+if [ "$CRYPT" = "1" ]; then
     if type diskenc_setup >/dev/null 2>&1 && ! diskenc_setup; then
         fail "Failed to setup disk encryption"
     fi
@@ -241,7 +241,7 @@ if [ "$LUKS" = "1" ]; then
 
     # Wipe the existing partition table and create a blank one
     dd if=/dev/zero of="$internal_dev" bs=4M count=1
-    # Regardless of what the original image uses we always want GPT for secure boot + LUKS
+    # Regardless of what the original image uses we always want GPT for secure boot + CRYPT
     # Though in practice MBR would work as well in most cases, it is not globally guaranteed
     # and it is much harder to operate on due to the necessity of an extended partition
     parted "$internal_dev" mktable gpt
@@ -290,9 +290,11 @@ if [ "$LUKS" = "1" ]; then
     FIRST_PART_ID=$(echo -e "$ROOTA_PART_ID\n$ROOTB_PART_ID\n$STATE_PART_ID\n$DATA_PART_ID" | sort | head -n 1)
     FIRST_PART_START=$(get_part_start_by_number "$LOOP_DEVICE_NAME" "$FIRST_PART_ID")
 
-    # Create new partitions with extra space for LUKS headers
-    # LUKS2 header size is 16MiB
-    LUKS_HEADER_SIZE=$[16 * 1024 * 1024]
+    LUKS_HEADER_SIZE=0
+    if [ "${USE_LUKS}" == "1" ]; then
+        # CRYPT2 header size is 16MiB
+        LUKS_HEADER_SIZE=$((16 * 1024 * 1024))
+    fi
 
     BOOT_PART_END=$["$FIRST_PART_START" + "$BOOT_PART_SIZE" + "$LUKS_HEADER_SIZE" - 1]
     parted -s "$internal_dev" -- unit B mkpart resin-boot "$FIRST_PART_START" "$BOOT_PART_END"
@@ -315,9 +317,20 @@ if [ "$LUKS" = "1" ]; then
 
         PART_DEV="$internal_dev$PART_PREFIX$INTERNAL_PART_ID"
         info "Encrypting $PART_DEV"
-        cryptsetup -q luksFormat --type luks2 "$PART_DEV" "$PASSPHRASE_FILE"
-        cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file "$PASSPHRASE_FILE"
+        if [ "${USE_LUKS}" == "1" ]; then
+            cryptsetup -q luksFormat --type luks2 "$PART_DEV" "$PASSPHRASE_FILE"
+            cryptsetup luksOpen "$PART_DEV" "$PART_NAME" --key-file "$PASSPHRASE_FILE"
+        else
+            if command -v diskenc_dmsetup > /dev/null; then
+                diskenc_dmsetup "${PART_DEV}" "${PART_NAME}"
+            else
+                fail "Non-LUKS partition encryption command not available"
+            fi
+        fi
         DM_DEV="/dev/mapper/$PART_NAME"
+        if ! wait4file "$DM_DEV" "300"; then
+            fail "Timed out waiting for $DM_DEV"
+        fi
         if [ "$PART_NAME" = "resin-boot" ]; then
             # Just create the FS, we will split boot below
             mkfs.ext4 -L "resin-boot" "$DM_DEV"
@@ -389,7 +402,7 @@ else
     fail "Internal boot partition (resin-boot) not found in ${internal_dev}"
 fi
 
-if [ "$LUKS" = "1" ]; then
+if [ "$CRYPT" = "1" ]; then
     if type bootpart_split >/dev/null 2>&1 && ! bootpart_split; then
         fail "Failed to split boot partition."
     fi
@@ -457,7 +470,7 @@ fi
 jq 'del(.installer)' "${CONFIG_PATH}" \
     > "${INTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}/$(basename "${CONFIG_PATH}")"
 
-if [ "$LUKS" = "1" ]; then
+if [ "$CRYPT" = "1" ]; then
     umount "${NONENC_BOOT_MOUNT_DIR}"
 fi
 
@@ -478,9 +491,13 @@ if type secureboot_bootloader_postsetup >/dev/null 2>&1 && ! secureboot_bootload
     fail "Failed to run secureboot post installation steps."
 fi
 
-if [ "$LUKS" = "1" ]; then
+if [ "$CRYPT" = "1" ]; then
     for PART_NAME in resin-boot resin-rootA resin-rootB resin-state resin-data; do
-        cryptsetup luksClose "$PART_NAME"
+        if [ "${USE_LUKS}" == "1" ]; then
+            cryptsetup luksClose "$PART_NAME"
+        else
+            dmsetup remove --retry "${PART_NAME}"
+        fi
     done
 fi
 
