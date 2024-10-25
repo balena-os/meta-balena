@@ -1,4 +1,23 @@
 - commits:
+    - subject: "tests/os: Add Jetson Orin device-specific fan and power mode smoke
+        tests"
+      hash: 87e5e8450911fbd3eb400ca76b1273f6b3deb15d
+      body: |
+        These tests are the same for all public Orin device types
+        and validate that the power mode and the fan profile can be
+        changed by writing directly to the config.json file
+        in the boot partition of an un-managed OS.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.49
+  title: ""
+  date: 2024-10-25T13:54:52.420Z
+- commits:
     - subject: "os-helpers-fs: introduce a script to split boot partitions"
       hash: 1c3fe3b3fd259cadf1f8b684aa883dd4274a6f0f
       body: |

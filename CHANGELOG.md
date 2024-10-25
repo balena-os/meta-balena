@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.49
+## (2024-10-25)
+
+* tests/os: Add Jetson Orin device-specific fan and power mode smoke tests [Alexandru Costache]
+
 # v6.0.48
 ## (2024-10-24)
 
