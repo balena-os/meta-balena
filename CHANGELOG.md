@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.50
+## (2024-10-26)
+
+* tests: secureboot: add test to ensure partition integrity [Joseph Kogut]
+
 # v6.0.49
 ## (2024-10-25)
 

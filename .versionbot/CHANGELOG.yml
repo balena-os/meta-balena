@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: secureboot: add test to ensure partition integrity"
+      hash: 3cf94c892cd6a21f91c1c3ab7718f3feca35435f
+      body: |
+        Ensure the signed kernel aborts the boot process when partitions or
+        filesystems have been tampered with.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.0.50
+  title: ""
+  date: 2024-10-26T23:12:59.729Z
+- commits:
     - subject: "tests/os: Add Jetson Orin device-specific fan and power mode smoke
         tests"
       hash: 87e5e8450911fbd3eb400ca76b1273f6b3deb15d
