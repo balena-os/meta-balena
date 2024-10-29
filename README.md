@@ -97,7 +97,7 @@ The time keeping framework explained above provides robust time initialization a
 
 ### Bootloader
 
-The bootloader needs to select the active root filesystem, load and launch the Linux kernel. It also manages boot counts and rollbacks. balenaOS supports several bootloaders across the supported devices line-up.
+The bootloader needs to select the active root filesystem, load, and launch the Linux kernel. It also manages boot counts and rollbacks. BalenaOS supports several bootloaders across the supported devices line-up.
 
 * Balena bootloader
   * This is the preferred bootloader for new kexec capable devices
@@ -352,19 +352,11 @@ is passed in the kernel command line.
 ## Yocto version support
 
 The following Yocto versions are supported:
- * Kirkstone (4.0)
-  * **Long Term Support**
- * Honister (3.4)
-  * **EOL**
- * Dunfell (3.1)
-  * **Long Term Support**
- * Warrior (2.7)
-  * **EOL**
- * Thud (2.6)
-  * **EOL**
- * Sumo (2.5)
-  * **EOL**
- * Rocko (2.4)
-  * **EOL**
- * Pyro (2.3)
-  * **EOL**
+ * Kirkstone (4.0): **Long Term Support**
+ * Honister (3.4): **EOL**
+ * Dunfell (3.1): **Long Term Support**
+ * Warrior (2.7): **EOL**
+ * Thud (2.6): **EOL**
+ * Sumo (2.5): **EOL**
+ * Rocko (2.4): **EOL**
+ * Pyro (2.3): **EOL**
