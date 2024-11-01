@@ -1,4 +1,17 @@
 - commits:
+    - subject: Add auth. header to /os/v1/config requests
+      hash: 0c35aa38fec436fa0469aaf414fbcf68d97f6b0b
+      body: >
+        Allows the API to identify devices requesting configuration and apply
+        routing logic (e.g. switch from TCP to UDP OpenVPN configuration).
+      footer:
+        change-type: minor
+      author: Anton Belodedenko
+      nested: []
+  version: 6.1.0
+  title: ""
+  date: 2024-11-01T13:53:03.607Z
+- commits:
     - subject: "tests: secureboot: add test to ensure partition integrity"
       hash: 3cf94c892cd6a21f91c1c3ab7718f3feca35435f
       body: |
