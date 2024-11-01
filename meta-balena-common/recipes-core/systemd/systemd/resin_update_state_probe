@@ -88,7 +88,10 @@ if [ "${rpdev}" = "${parent}" ] || valid_device "${part}"; then
 	# UUID is passed by the bootloader in the kernel command line
 	case $label in
 		resin-root*)
-			rdev=$(lsblk -nlo kname,uuid | grep "${ruuid}" | cut -d " " -f1)
+			rdev=$(lsblk -nlo kname,uuid \
+				| grep "${parent}" \
+				| grep "${ruuid}" \
+				| cut -d " " -f1)
 			if [ "/dev/${rdev}" = "${part}" ]; then
 				echo "BALENA_UPDATE_STATE=active"
 			else
