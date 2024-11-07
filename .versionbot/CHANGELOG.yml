@@ -1,4 +1,28 @@
 - commits:
+    - subject: "README: format the supported Yocto versions for legibility"
+      hash: 848985f1c041fa2e3c3b66baeaa5b97b5d7ed6c7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Extend README to add balena bootloader
+      hash: f4f10eb6d6291ae568a61800cc89ef0423ff9c17
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.1.1
+  title: ""
+  date: 2024-11-07T15:40:15.964Z
+- commits:
     - subject: Add auth. header to /os/v1/config requests
       hash: 0c35aa38fec436fa0469aaf414fbcf68d97f6b0b
       body: >

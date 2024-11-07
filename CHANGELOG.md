@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.1.1
+## (2024-11-07)
+
+* README: format the supported Yocto versions for legibility [Alex Gonzalez]
+* Extend README to add balena bootloader [Alex Gonzalez]
+
 # v6.1.0
 ## (2024-11-01)
 
