@@ -97,7 +97,7 @@ The time keeping framework explained above provides robust time initialization a
 
 ### Bootloader
 
-balenaOS relies on the device's bootloader to select the active root filesystem. Several bootloaders are used accross the supported devices line-up:
+balenaOS relies on the device's bootloader to select the active root filesystem. Several bootloaders are used across the supported devices line-up:
 * U-boot
   * Is used on most of the supported ARM device-types
   * Only block devices can be used with BalenaOS, RAW flash devices are not supported
