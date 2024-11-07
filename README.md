@@ -97,9 +97,21 @@ The time keeping framework explained above provides robust time initialization a
 
 ### Bootloader
 
-balenaOS relies on the device's bootloader to select the active root filesystem. Several bootloaders are used accross the supported devices line-up:
+The bootloader needs to select the active root filesystem, load, and launch the Linux kernel. It also manages boot counts and rollbacks. BalenaOS supports several bootloaders across the supported devices line-up.
+
+* Balena bootloader
+  * This is the preferred bootloader for new kexec capable devices
+  * It is a minimal Linux kernel that contains all balena's logic, [like rollback support](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/recipes-core/initrdscripts/files/abroot), in the initramfs so that it does not have to be replicated across different bootloaders
+  * It fetches the final kernel from the active root partition and kexecs into it
+  * The balena bootloader is a requirement for secure boot enabled platforms as it needs to mount and decrypt root filesystems to launch the final kernel. Decrypting disks is not usually supported on standard bootloaders.
+  * It also provides a central environment file, [bootenv](https://github.com/balena-os/meta-balena/blob/bbfe78062182eaacc9a524383144a24b731a7372/meta-balena-common/recipes-support/hostapp-update-hooks/files/99-balena-bootloader#L26), to perform bootloader configuration by the system
+  * Ideally, the balena booloader can be built as an EFI binary and directly launched by an EFI capable bootROM
+  * Alternatively, a vendor bootloader like U-Boot can be minimally configured to launch it
+  * Using the balena bootloader reduces the friction of porting new hardware as modifications to vendor bootloaders are minimal, usually just launch configuration, and all balena logic has already been implemented and tested, and     is the same across all devices
+
+* Other bootloaders supported that can be used to launch the balena bootloader if needed, or on non-kexec capable devices are:
 * U-boot
-  * Is used on most of the supported ARM device-types
+  * Is used on most of the legacy supported ARM device-types
   * Only block devices can be used with BalenaOS, RAW flash devices are not supported
   * Common functionality is implemented in the [u-boot environment](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/recipes-bsp/u-boot/patches/env_resin.h), which is provided by the [common OS Yocto layer](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common)
   * The environment is embedded in the u-boot binary. This allows for the intended configuration to be used with the matching version of BalenaOS and avoids interference from any pre-programmed environment
@@ -108,7 +120,7 @@ balenaOS relies on the device's bootloader to select the active root filesystem.
   * Three environment files are stored and loaded by u-boot from the BalenaOS boot partition. [resinOS_uEnv.txt](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/classes/resin-u-boot.bbclass#L58) is used for storing the active root partition index, [extra_uEnv.txt](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/classes/resin-u-boot.bbclass#L59) stores device-specific configuration elements like optional kernel command-line parameters as well as any custom selected device-tree while [bootcount.env](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/classes/resin-u-boot.bbclass#L66) stores the number of failed attempted boot retries during an OS update. NOTE: Custom device-tree selection is supported only on [specific devices](https://docs.balena.io/learn/develop/hardware/i2c-and-spi/#custom-device-trees)
   * Applies the kernel device-tree overlays specified in [uEnv.txt_internal/uEnv.txt](https://github.com/balena-os/balena-beaglebone/blob/master/layers/meta-balena-beaglebone/recipes-core/images/balena-image-flasher.bbappend) on Beaglebone devices
 * Grub
-  * Is used for the supported x86 device-types
+  * Is used for the legacy supported x86 device-types
   * Common functionality is implemented by the OS layer in the [grub configuration template](https://github.com/balena-os/meta-balena/blob/master/meta-balena-common/recipes-bsp/grub/grub-conf/grub.cfg_internal_template)
 * Cboot
   * Is used on Jetson Xavier devices running L4T 32.X
@@ -340,19 +352,11 @@ is passed in the kernel command line.
 ## Yocto version support
 
 The following Yocto versions are supported:
- * Kirkstone (4.0)
-  * **Long Term Support**
- * Honister (3.4)
-  * **EOL**
- * Dunfell (3.1)
-  * **Long Term Support**
- * Warrior (2.7)
-  * **EOL**
- * Thud (2.6)
-  * **EOL**
- * Sumo (2.5)
-  * **EOL**
- * Rocko (2.4)
-  * **EOL**
- * Pyro (2.3)
-  * **EOL**
+ * Kirkstone (4.0): **Long Term Support**
+ * Honister (3.4): **EOL**
+ * Dunfell (3.1): **Long Term Support**
+ * Warrior (2.7): **EOL**
+ * Thud (2.6): **EOL**
+ * Sumo (2.5): **EOL**
+ * Rocko (2.4): **EOL**
+ * Pyro (2.3): **EOL**
