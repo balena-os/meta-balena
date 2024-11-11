@@ -1,4 +1,4 @@
-From e3024ec620f2d4087c1d03579c8575b6cb988503 Mon Sep 17 00:00:00 2001
+From 7414f61a3e674f51f003efaf279839de7387802a Mon Sep 17 00:00:00 2001
 From: Lukas Voegl <lvoegl@tdt.de>
 Date: Fri, 19 Apr 2024 11:33:06 +0200
 Subject: [PATCH] quectel: disable qmi unsolicited profile manager events
@@ -12,10 +12,10 @@ Signed-off-by: Lukas Voegl <lvoegl@tdt.de>
  4 files changed, 193 insertions(+), 7 deletions(-)
 
 diff --git a/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c b/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
-index 4b4e0c96..c6f706a5 100644
+index a1342e64..8d872dc5 100644
 --- a/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
 +++ b/src/plugins/quectel/mm-broadband-modem-qmi-quectel.c
-@@ -20,26 +20,108 @@
+@@ -19,26 +19,108 @@
  #include "mm-iface-modem-firmware.h"
  #include "mm-iface-modem-location.h"
  #include "mm-iface-modem-time.h"
@@ -131,8 +131,8 @@ index 4b4e0c96..c6f706a5 100644
  MMBroadbandModemQmiQuectel *
  mm_broadband_modem_qmi_quectel_new (const gchar  *device,
                                      const gchar  *physdev,
-@@ -124,6 +206,15 @@ peek_parent_modem_location_interface (MMSharedQuectel *self)
-     return iface_modem_location_parent;
+@@ -123,6 +205,15 @@ iface_modem_time_init (MMIfaceModemTime *iface)
+     iface->check_support_finish = mm_shared_quectel_time_check_support_finish;
  }
  
 +static void
@@ -148,12 +148,12 @@ index 4b4e0c96..c6f706a5 100644
  shared_quectel_init (MMSharedQuectel *iface)
  {
 diff --git a/src/plugins/quectel/mm-modem-helpers-quectel.c b/src/plugins/quectel/mm-modem-helpers-quectel.c
-index 4335e506..7b0fe96d 100644
+index 262d9794..ed2cc713 100644
 --- a/src/plugins/quectel/mm-modem-helpers-quectel.c
 +++ b/src/plugins/quectel/mm-modem-helpers-quectel.c
-@@ -138,3 +138,63 @@ mm_quectel_check_standard_firmware_version_valid (const gchar *std_str)
-     }
-     return valid;
+@@ -89,3 +89,63 @@ mm_quectel_parse_ctzu_test_response (const gchar  *response,
+ 
+     return TRUE;
  }
 +
 +gboolean
@@ -216,12 +216,12 @@ index 4335e506..7b0fe96d 100644
 +    return TRUE;
 +}
 diff --git a/src/plugins/quectel/mm-modem-helpers-quectel.h b/src/plugins/quectel/mm-modem-helpers-quectel.h
-index ea9ff5c1..e4bc63b9 100644
+index d4ec0eae..84701417 100644
 --- a/src/plugins/quectel/mm-modem-helpers-quectel.h
 +++ b/src/plugins/quectel/mm-modem-helpers-quectel.h
-@@ -31,4 +31,13 @@ gboolean mm_quectel_parse_ctzu_test_response (const gchar  *response,
- 
- gboolean mm_quectel_check_standard_firmware_version_valid (const gchar *std_str);
+@@ -29,4 +29,13 @@ gboolean mm_quectel_parse_ctzu_test_response (const gchar  *response,
+                                               gboolean     *supports_enable_update_rtc,
+                                               GError      **error);
  
 +gboolean mm_quectel_get_version_from_revision (const gchar  *revision,
 +                                               guint        *release,
@@ -234,11 +234,11 @@ index ea9ff5c1..e4bc63b9 100644
 +
  #endif  /* MM_MODEM_HELPERS_QUECTEL_H */
 diff --git a/src/plugins/quectel/tests/test-modem-helpers-quectel.c b/src/plugins/quectel/tests/test-modem-helpers-quectel.c
-index dee01865..6c695f00 100644
+index 0e2c7420..1ef73a46 100644
 --- a/src/plugins/quectel/tests/test-modem-helpers-quectel.c
 +++ b/src/plugins/quectel/tests/test-modem-helpers-quectel.c
-@@ -93,6 +93,30 @@ test_firmversion (void)
-     g_assert_cmpuint (valid, ==, FALSE);
+@@ -79,6 +79,30 @@ test_ctzu (void)
+                           test_ctzu_response[i].expect_supports_enable_update_rtc);
  }
  
 +static void
@@ -268,14 +268,11 @@ index dee01865..6c695f00 100644
  /*****************************************************************************/
  
  int main (int argc, char **argv)
-@@ -105,5 +129,7 @@ int main (int argc, char **argv)
+@@ -89,5 +113,7 @@ int main (int argc, char **argv)
  
-     g_test_add_func ("/MM/quectel/firmversion", test_firmversion);
+     g_test_add_func ("/MM/quectel/ctzu", test_ctzu);
  
 +    g_test_add_func ("/MM/quectel/parse_revision", test_parse_revision);
 +
      return g_test_run ();
  }
--- 
-2.34.1
-
