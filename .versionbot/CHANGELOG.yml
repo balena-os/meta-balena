@@ -1,4 +1,22 @@
 - commits:
+    - subject: "modemmanager: Update outdated context of patches"
+      hash: 9c86d383ae2038f81f8459768a5ad3732fd171d4
+      body: >
+        We do this in preparation for the Scarthgap update because with newer
+
+        Yocto versions the patches with outdated context will trigger fatal
+        build errors.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.1.2
+  title: ""
+  date: 2024-11-11T13:39:41.407Z
+- commits:
     - subject: "README: format the supported Yocto versions for legibility"
       hash: 848985f1c041fa2e3c3b66baeaa5b97b5d7ed6c7
       body: ""

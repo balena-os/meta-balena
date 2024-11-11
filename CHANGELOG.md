@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.2
+## (2024-11-11)
+
+* modemmanager: Update outdated context of patches [Florin Sarbu]
+
 # v6.1.1
 ## (2024-11-07)
 
