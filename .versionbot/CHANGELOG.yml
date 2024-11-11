@@ -1,4 +1,296 @@
 - commits:
+    - subject: Update tests/leviathan digest to ff6a079
+      hash: cc3b9d3baf535eb338dca923fa58c6e415b38a83
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 59752b7
+              hash: 77fb084fa0073a4ce024c258bc81b44c7df84daa
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.29
+          title: ""
+          date: 2024-08-29T19:33:37.619Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.43
+              hash: 47bf1a79a6935e7c99430266f67d90f0f0155256
+              body: |
+                Update balena-os/leviathan-worker from 2.9.41 to 2.9.43
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.28
+          title: ""
+          date: 2024-08-29T18:44:20.177Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to 988b5a0
+              hash: e6b3ef176fbadff3adeb317158d8be96c635092a
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.27
+          title: ""
+          date: 2024-08-29T17:37:31.318Z
+        - commits:
+            - subject: specify ipv4 localhost for balena tunnel
+              hash: 26d159fb88c3455975a048aa70bfeaad530d6330
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+            - subject: Move balena-cli download to a build stage with renovate management
+              hash: 6bc62dc2b0b8368aea6b1763968ee5d775657d0e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: "core: update CLI to 19.0.0"
+              hash: 382dd48d3c3f7bc4fbad1e3376d84a40c1342c15
+              body: >
+                we were previously using CLI 16.0.0, which is now over 365 days
+                since the next major release (17.0.0) , so its deprecated and
+                won't work without adding the --unsupported flag, or updating.
+                Choosing to update
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.31.26
+          title: ""
+          date: 2024-08-29T16:24:31.112Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 834a144
+              hash: 6a81dc37849f6290f104e3bbb95bc8b60f240ab5
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.25
+          title: ""
+          date: 2024-08-06T15:54:52.299Z
+        - commits:
+            - subject: Update core/contracts digest to 6d69a05
+              hash: 02819efbdc5ca46918d80ec2b23c18274995629b
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.24
+          title: ""
+          date: 2024-08-06T10:14:13.280Z
+        - commits:
+            - subject: "core: remove nested retries in getDutIp function"
+              hash: fc8a48737153dc528a005f4d963e0f3f54426aae
+              body: >
+                the function that was being used to fetch the DUT ip from the
+                worker had nested retries that led to 30x5 = 150 retries, and
+                timeouts taking ~40 mins in the case the DUT wasn't reachable
+                (autokit setup fault, device not booting, problem during
+                flashing). This removes the nested retries and reduces the
+                retries to 50 /  ~ 10mins
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.31.23
+          title: ""
+          date: 2024-07-23T13:24:35.947Z
+        - commits:
+            - subject: "patch: Add migration & secureboot options to e2e test suite"
+              hash: 7abd1e4f8483b2a5704c5f4e0b1f974e0fafc762
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.31.22
+          title: ""
+          date: 2024-07-23T13:00:12.436Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to aa33708
+              hash: dda330bb67cff678a5b7758f31ebf53bbc58886c
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.21
+          title: ""
+          date: 2024-07-22T10:33:23.487Z
+        - commits:
+            - subject: Update core/contracts digest to 17b44ca
+              hash: c889b407e4ad56080c98850022def0d122108863
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.20
+          title: ""
+          date: 2024-07-15T14:07:29.332Z
+        - commits:
+            - subject: Update core/contracts digest to 773c77c
+              hash: 2e512d7f1aac17346613962564293e78a0ecd971
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: leviathan-2.31.19
+          title: ""
+          date: 2024-07-12T10:30:54.239Z
+        - commits:
+            - subject: "client: use /start endpoint of worker to reserve worker if IDLE
+                immediately"
+              hash: 41b535e9ad160a6c663cf39137da562b4843829a
+              body: >
+                There is a problem where if the multiple jobs are running at the
+                same time, all waiting for a worker to be IDLE, multiple jobs
+                start using the worker at the same time. The reason was that
+                first, the state of the worker is polled using /state - then,
+                after some delay, it is reserved using the /start endpoint.
+                Problem 1 was that there is a delay between checking and
+                reserving - leading to a window of time where another job could
+                do the same thing. Problem 2 is that once /start was used, there
+                was nothing to stop the client from continuing, even if the
+                worker was BUSY. This commit forgoes the /state endpoint, and
+                just skips to trying /start - if the worker is IDLE, its
+                instanly reserved, if its BUSY, the reponse is actually checked
+                and nothing happens.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: leviathan-2.31.18
+          title: ""
+          date: 2024-07-12T09:25:30.846Z
+    - subject: Update balena-os/balena-yocto-scripts action to v1.25.59
+      hash: 8ec94e65ac04fb0998c52642620eb9bfd1f43720
+      body: |
+        Update balena-os/balena-yocto-scripts from v1.25.49 to v1.25.59
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+    - subject: "CI: Update checkout settings"
+      hash: 3ebd3ba85a2ab9b87ca004025a42c865213ba57d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Pagan Gazzard
+      nested: []
+    - subject: remove up-board and cl-som-imx8
+      hash: 14a416fd52275967ea0d0a9695dd60676d4a9506
+      body: >
+        These were recently removed from yocto-all as they need to be moved to
+        kirkstone or higher - and that work is not trivial
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: rcooke-warwick
+      nested: []
+    - subject: Add GHA workflows for additional device types
+      hash: 3da63483f17f2789c254cef81366184c2cde4ab6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "mkfs-hostapp-native: update Dockerfile to using trixie"
+      hash: a5654741232db4141f314803eccfa7c182a196ef
+      body: >-
+        This is required to be able to build in host distributions that use
+
+        glibc v2.39 to avoid errors such as:
+
+
+        ```
+
+        | + hostapp-update -f /input -n
+
+        | Running hostapp update...
+
+        | touch: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.38' not found
+        (required by touch)
+
+        ```
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "meta-balena-rust: rust-llvm: backport a fix for build with gcc-13"
+      hash: 9d86d117cdd46be0c7b8fc649f39f115f21115f1
+      body: |
+        * needed for rust-llvm-native on hosts with gcc-13
+
+        (backport from
+        335eb3a93e96 rust-llvm: backport a fix for build with gcc-13)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 5.4.2
+  title: ""
+  date: 2024-11-11T13:14:03.031Z
+- commits:
     - subject: Add build-only GHA workflows for missing devices
       hash: af70358b6b17b309cb043a3f15e1cca8084b1976
       body: |

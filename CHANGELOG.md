@@ -1,6 +1,85 @@
 Change log
 -----------
 
+# v5.4.2
+## (2024-11-11)
+
+
+<details>
+<summary> Update tests/leviathan digest to ff6a079 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.29
+> ### (2024-08-29)
+> 
+> * Update core/contracts digest to 59752b7 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.28
+> ### (2024-08-29)
+> 
+> * Update balena-os/leviathan-worker to v2.9.43 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.27
+> ### (2024-08-29)
+> 
+> * Update docker/setup-buildx-action digest to 988b5a0 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.26
+> ### (2024-08-29)
+> 
+> * specify ipv4 localhost for balena tunnel [rcooke-warwick]
+> * Move balena-cli download to a build stage with renovate management [Kyle Harding]
+> * core: update CLI to 19.0.0 [rcooke-warwick]
+> 
+> ## leviathan-2.31.25
+> ### (2024-08-06)
+> 
+> * Update actions/upload-artifact digest to 834a144 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.24
+> ### (2024-08-06)
+> 
+> * Update core/contracts digest to 6d69a05 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.23
+> ### (2024-07-23)
+> 
+> * core: remove nested retries in getDutIp function [rcooke-warwick]
+> 
+> ## leviathan-2.31.22
+> ### (2024-07-23)
+> 
+> * patch: Add migration & secureboot options to e2e test suite [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.31.21
+> ### (2024-07-22)
+> 
+> * Update docker/setup-buildx-action digest to aa33708 [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.20
+> ### (2024-07-15)
+> 
+> * Update core/contracts digest to 17b44ca [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.19
+> ### (2024-07-12)
+> 
+> * Update core/contracts digest to 773c77c [Self-hosted Renovate Bot]
+> 
+> ## leviathan-2.31.18
+> ### (2024-07-12)
+> 
+> * client: use /start endpoint of worker to reserve worker if IDLE immediately [rcooke-warwick]
+> 
+
+</details>
+
+* Update balena-os/balena-yocto-scripts action to v1.25.59 [balena-renovate[bot]]
+* CI: Update checkout settings [Pagan Gazzard]
+* remove up-board and cl-som-imx8 [rcooke-warwick]
+* Add GHA workflows for additional device types [Kyle Harding]
+* mkfs-hostapp-native: update Dockerfile to using trixie [Alex Gonzalez]
+* meta-balena-rust: rust-llvm: backport a fix for build with gcc-13 [Alex Gonzalez]
+
 # v5.4.1
 ## (2024-07-17)
 
