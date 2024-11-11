@@ -1,25 +1,25 @@
 name: Generic x86_64 (GPT)
 
 on:
-  # With these triggers the Yocto jobs will run
-  # in parallel with the Flowzone jobs, which is fine for now
-  # and allows us to better control what we want to test and when.
-  # It is expected that Flowzone could fail, but yocto jobs will run.
   pull_request:
     branches:
-      - "main"
-      - "master"
+      - main
+      - master
+      # ESR branches glob pattern
+      - "[0-9]+.[0-9]+.x"
   pull_request_target:
     branches:
-      - "main"
-      - "master"
+      - main
+      - master
+      # ESR branches glob pattern
+      - "[0-9]+.[0-9]+.x"
 
 jobs:
   yocto:
     name: Yocto
     # FIXME: This workflow has dependencies on scripts in the balena-yocto-scripts repository
     # which is pinned separately as a submodule in the device repo. Expect some drift but try to retain compatibility.
-    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@v1.25.7
+    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@83de190aa122be4bd706c855793273dc9f8b7c8c # v1.25.59
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
@@ -27,15 +27,13 @@ jobs:
     if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
     secrets: inherit
     with:
+      # Needed for testing - defaults to production
+      deploy-environment: balena-staging.com
       machine: generic-amd64
       device-repo: balena-os/balena-generic
       device-repo-ref: master
       # Pin to the current commit
       meta-balena-ref: ${{ github.sha }}
-      # Don't deploy any artifacts for meta-balena build sanity workflows
-      deploy-s3: false
-      deploy-hostapp: false
-      deploy-ami: false
       # Use QEMU workers for testing and run cloud suite against balenaCloud production
       test_matrix: >
         {
