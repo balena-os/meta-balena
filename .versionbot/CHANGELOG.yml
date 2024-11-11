@@ -1,4 +1,180 @@
 - commits:
+    - subject: Update balena-supervisor to v16.7.6
+      hash: 5b70d63d3b5c6c41d43a451576e9963937e92863
+      body: |
+        Update balena-supervisor from 16.6.1 to 16.7.6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update firewall documentation
+              hash: 1b747f6d65372632a5491a0630e7de00f92c773f
+              body: |
+                Removes experimental warning and updates issues
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.7.6
+          title: ""
+          date: 2024-11-07T21:02:38.875Z
+        - commits:
+            - subject: Delete apps not in target from db by appUuid instead of appId
+              hash: 3d3f659f1616cc291824d1f46da08583c138f39c
+              body: >
+                Resolve an issue in balenaMachine instances that were installed
+                at <v14.1.0,
+
+                in which a Supervisor app with random UUID is kept in the target
+                db due to its appId
+
+                being the same, even after the BM instance has upgraded to
+                v14.1.0 which patches
+
+                the correct reserved Supervisor app UUIDs in. This results in
+                two Supervisors running
+
+                on devices under the BM instance which persists after BM
+                upgrade.
+              footer:
+                See: https://balena.fibery.io/search/T7ozi#Inputs/Pattern/Two-supervisors-are-running-on-device-3370
+                see: https://balena.fibery.io/search/T7ozi#Inputs/Pattern/Two-supervisors-are-running-on-device-3370
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.7.5
+          title: ""
+          date: 2024-11-07T13:34:05.062Z
+        - commits:
+            - subject: Update express to v4.20.0 [SECURITY]
+              hash: f2aaf7372d0716e3b62118ed3102a7eac0f169a5
+              body: |
+                Update express from 4.19.2 to 4.20.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-16.7.4
+          title: ""
+          date: 2024-10-28T14:40:42.702Z
+        - commits:
+            - subject: Add NXP support to balenaOS secure boot
+              hash: 619f64429931975a6f33f1ef444928962d82e200
+              body: >
+                On NXP iMX devices the partitions are not encrypted with LUKS
+                but with
+
+                the lower level dm-crypt subsystem.
+
+
+                Adapt the partition mount script to use dmsetup which works for
+                both
+
+                LUKS and dm-crypt encrypted partitions.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: balena-supervisor-16.7.3
+          title: ""
+          date: 2024-10-28T14:04:22.141Z
+        - commits:
+            - subject: Use bookworm image to source journalctl binaries
+              hash: 57a17ea2075d7aadd440b7c2be78f52136988ad9
+              body: >
+                Debian no longer publishes linux/arm/v5 images for bullseye,
+                breaking
+
+                support for raspberry pi zero.
+
+
+                This change might not solve the issue indefinitely
+
+                as we don't know how long debian will continue publishing armv5
+                images.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.7.2
+          title: ""
+          date: 2024-10-18T15:20:52.555Z
+        - commits:
+            - subject: Add support for init field from compose
+              hash: ed1c18e3691e60bc22652e930be49e428d2ef1fe
+              body: >
+                Init supports boolean values, and is not included in the config
+                when
+
+                not defined.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.7.1
+          title: ""
+          date: 2024-09-26T14:28:03.356Z
+        - commits:
+            - subject: Store rejected apps in the database
+              hash: e9a52e6786e94f6be5e23c9410fc7b59df4726b5
+              body: >
+                This moves from throwing an error when an app is rejected due to
+                unmet
+
+                requirements (because of contracts) to storing the target with a
+
+                `rejected` flag on the database.
+
+
+                The application manager filters rejected apps when calculating
+                steps to
+
+                prevent them from affecting the current state. The state engine
+                uses the
+
+                rejection info to generate the state report.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+            - subject: Set the app update status when reporting state
+              hash: 227fee9941b77ec5a7589231979b083fb62d4f00
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+            - subject: Add update status to types
+              hash: e9f460fd75e296fb295b9e1f7a7bb56f7929035d
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.7.0
+          title: ""
+          date: 2024-09-02T15:33:39.300Z
+  version: 6.1.3
+  title: ""
+  date: 2024-11-11T18:30:47.169Z
+- commits:
     - subject: "modemmanager: Update outdated context of patches"
       hash: 9c86d383ae2038f81f8459768a5ad3732fd171d4
       body: >
