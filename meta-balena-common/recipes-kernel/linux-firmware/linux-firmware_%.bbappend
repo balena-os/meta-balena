@@ -48,6 +48,16 @@ FILES:${PN}-ibt-18-16-1  = " \
     ${nonarch_base_libdir}/firmware/intel/ibt-18-16-1.ddc* \
 "
 
+PACKAGES =+ "${PN}-ibt-41-41"
+
+FILES:${PN}-ibt-41-41  = " \
+    ${nonarch_base_libdir}/firmware/intel/ibt-0041-0041.ddc \
+    ${nonarch_base_libdir}/firmware/intel/ibt-0041-0041.sfi \
+"
+
+LICENSE:${PN}-ibt-41-41 = "Firmware-ibt_firmware"
+RDEPENDS:${PN}-ibt-41-41 = "${PN}-ibt-license"
+
 PACKAGES =+ "${PN}-ralink-nic"
 
 FILES:${PN}-ralink-nic = " \
@@ -65,6 +75,16 @@ PACKAGES =+ "${PN}-iwlwifi-cc-a0"
 FILES:${PN}-iwlwifi-cc-a0 = " \
     ${nonarch_base_libdir}/firmware/iwlwifi-cc-a0-*.ucode* \
 "
+
+PACKAGES =+ "${PN}-iwlwifi-ty-a0"
+
+FILES:${PN}-iwlwifi-ty-a0  = " \
+    ${nonarch_base_libdir}/firmware/iwlwifi-ty-a0-*.ucode \
+    ${nonarch_base_libdir}/firmware/iwlwifi-ty-a0-*.pnvm \
+"
+
+LICENSE:${PN}-iwlwifi-ty-a0 = "Firmware-iwlwifi_firmware"
+RDEPENDS:${PN}-iwlwifi-ty-a0 = "${PN}-iwlwifi-license"
 
 # Skylake/6th Gen Core processors
 # https://en.wikipedia.org/wiki/Skylake_(microarchitecture)#List_of_Skylake_processor_models
