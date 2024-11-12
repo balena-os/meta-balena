@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.1.4
+## (2024-11-12)
+
+* os: test for rootfs by-state link uniqueness [Joseph Kogut]
+* common: fix udev helper by-state link creation [Joseph Kogut]
+
 # v6.1.3
 ## (2024-11-11)
 

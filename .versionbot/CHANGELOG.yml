@@ -1,4 +1,33 @@
 - commits:
+    - subject: "os: test for rootfs by-state link uniqueness"
+      hash: d4341f15bc0398721e9b26cd728f91b1be7914f8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "common: fix udev helper by-state link creation"
+      hash: b260c964ddc5adf7e9e86d3825e1afe59500082d
+      body: |
+        The 65-resin-update-state udev rules creates links for the active and
+        inactive root filesystems in /dev/disk/by-state.
+
+        Filter the output of lsblk to remove devices that aren't partitions of
+        $parent, which is a problem when using software RAID.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.1.4
+  title: ""
+  date: 2024-11-12T16:10:47.705Z
+- commits:
     - subject: Update balena-supervisor to v16.7.6
       hash: 5b70d63d3b5c6c41d43a451576e9963937e92863
       body: |
