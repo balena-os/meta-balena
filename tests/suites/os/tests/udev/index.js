@@ -66,6 +66,18 @@ module.exports = {
 					'All required by-state links have been created'
 				);
 			}
-		}
+		},
+		{
+			title: 'rootfs by-state links are unique',
+			run: async function(test) {
+				return test.resolves(
+					this.worker.executeCommandInHostOS(
+						`test /dev/disk/by-state/active != /dev/disk/by-state/inactive`,
+						this.link
+					),
+					'Links are unique'
+				);
+			},
+		},
 	],
 };
