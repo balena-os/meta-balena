@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.7
+## (2024-11-13)
+
+* Update actions/checkout digest to 11bd719 [balena-renovate[bot]]
+
 # v6.1.6
 ## (2024-11-13)
 

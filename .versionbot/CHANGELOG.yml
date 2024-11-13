@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/checkout digest to 11bd719
+      hash: a4da39b99f863a49ce9aa608383c7ddf45300b3d
+      body: |
+        Update actions/checkout to 11bd71901bbe5b1630ceea73d27597364c9af683
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.1.7
+  title: ""
+  date: 2024-11-13T22:30:24.613Z
+- commits:
     - subject: Update balena-os/balena-yocto-scripts action to v1.27.10
       hash: 18b6a519955e8e66e51948adcd6a6e4ec70c0779
       body: |
