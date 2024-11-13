@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.1.5
+## (2024-11-13)
+
+* recipes-support/os-fan-profile: Don't print logs unless configured [Alexandru Costache]
+* Update tests/leviathan digest to 8234f44 [balena-renovate[bot]]
+
 # v6.1.4
 ## (2024-11-12)
 
