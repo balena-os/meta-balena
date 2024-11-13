@@ -3,5 +3,11 @@
 set -e
 
 . /usr/libexec/os-helpers-logging
+source /usr/sbin/balena-config-vars --no-cache
 
-info "Fan profile configuration is not supported for this device type."
+if [[ -z "$OS_FAN_PROFILE" ]]; then
+    # No fan profile configured
+    :
+else
+    info "Fan profile configuration is not supported for this device type."
+fi

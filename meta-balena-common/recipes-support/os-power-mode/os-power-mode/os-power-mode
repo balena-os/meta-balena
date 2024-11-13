@@ -3,5 +3,11 @@
 set -e
 
 . /usr/libexec/os-helpers-logging
+source /usr/sbin/balena-config-vars --no-cache
 
-info "Power mode configuration is not supported for this device type."
+if [[ -z "$OS_POWER_MODE" ]]; then
+    # No power mode configured
+    :
+else
+    info "Power mode configuration is not supported for this device type."
+fi
