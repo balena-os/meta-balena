@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts action to v1.27.10
+      hash: 18b6a519955e8e66e51948adcd6a6e4ec70c0779
+      body: |
+        Update balena-os/balena-yocto-scripts from v1.25.59 to v1.27.10
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.1.6
+  title: ""
+  date: 2024-11-13T19:27:40.260Z
+- commits:
     - subject: "recipes-support/os-fan-profile: Don't print logs unless configured"
       hash: dfc023721aefc427255e996f7589450296836de3
       body: |
