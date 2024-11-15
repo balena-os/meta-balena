@@ -116,8 +116,8 @@ class secureBoot {
 			const srcDir = `${__dirname}/kernel-module-build/`
 			await fse.copy(srcDir, this.tmpDir);
 			let data = await fse.readFile(`${this.tmpDir}/docker-compose.yml`, 'utf-8')
-			const result = data.replace(/os_version:\s*\S+/, `os_version: ${this.module.headersVersion}`);
-			await fse.writeFile( `${this.tmpDir}/docker-compose.yaml`, result, 'utf-8')
+			const result = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${this.module.headersVersion}`);
+			await fse.writeFile( `${this.tmpDir}/docker-compose.yml`, result, 'utf-8')
 			this.test.comment(`Using kernel headers version ${this.module.headersVersion}`)
 		}
 
@@ -538,7 +538,7 @@ module.exports = {
 				const impl = new testSecureBoot(new imxSecureBoot(test,
 					this.worker,
 					this.suite, this.os.image.path,
-					{"name": "", "headersVersion": "4.0.16"}));
+					{"name": "", "headersVersion": "6.0.49"}));
 				await impl.run(test);
 			},
 		},
