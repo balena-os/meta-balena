@@ -57,22 +57,21 @@ class secureBoot {
 	async testFullDiskEncryption() {
 		await Promise.all(
 			[
-				{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
-				{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
-				{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
-				{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
-			].map(args => this.test.resolveMatch(
+				{ path: '/dev/disk/by-state/resin-boot', name: 'Boot partition' },
+				{ path: '/dev/disk/by-state/resin-rootA', name: 'RootA partition' },
+				{ path: '/dev/disk/by-state/resin-rootB', name: 'RootB partition' },
+				{ path: '/dev/disk/by-state/resin-state', name: 'State partition' },
+				{ path: '/dev/disk/by-state/resin-data', name: 'Data partition' },
+			].map(args => {
+				this.test.resolveMatch(
 					this.worker.executeCommandInHostOS(
-						[
-							'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
-							'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
-						],
+						`. /usr/libexec/os-helpers-fs; is_part_encrypted ${args.path} && echo pass`,
 						this.link,
 					),
-					/crypt/,
+					/pass/,
 					`${args.name} is encrypted`,
 				)
-			)
+			})
 		);
 
 		if (!this.qmp) {
