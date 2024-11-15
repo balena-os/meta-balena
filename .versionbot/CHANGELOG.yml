@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python digest to 0b93645
+      hash: 1fd94da81b2613f9ff1d01e83f82705195ef51d7
+      body: |
+        Update actions/setup-python to 0b93645e9fea7318ecaed2b359559ac225c90a2b
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.1.9
+  title: ""
+  date: 2024-11-15T14:34:07.387Z
+- commits:
     - subject: "recipes-kernel/linux-firmware: Package Intel AX210 firmware"
       hash: 2ca4f0ebd247db9981d1c488327960cbde9d0e46
       body: |
