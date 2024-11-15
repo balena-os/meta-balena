@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.1.10
+## (2024-11-15)
+
+
+<details>
+<summary> Update balena-supervisor to v16.7.7 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.7.7
+> ### (2024-11-11)
+> 
+> * Firewall: allow DNS requests from custom Docker bridge networks [Christina Ying Wang]
+> 
+
+</details>
+
 # v6.1.9
 ## (2024-11-15)
 
