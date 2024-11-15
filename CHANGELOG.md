@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.8
+## (2024-11-15)
+
+* recipes-kernel/linux-firmware: Package Intel AX210 firmware [Alexandru Costache]
+
 # v6.1.7
 ## (2024-11-13)
 

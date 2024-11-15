@@ -1,4 +1,20 @@
 - commits:
+    - subject: "recipes-kernel/linux-firmware: Package Intel AX210 firmware"
+      hash: 2ca4f0ebd247db9981d1c488327960cbde9d0e46
+      body: |
+        This was requested for the AGX Orin 64GB devkit image,
+        and will be included from the device repository.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.1.8
+  title: ""
+  date: 2024-11-15T11:29:41.983Z
+- commits:
     - subject: Update actions/checkout digest to 11bd719
       hash: a4da39b99f863a49ce9aa608383c7ddf45300b3d
       body: |
