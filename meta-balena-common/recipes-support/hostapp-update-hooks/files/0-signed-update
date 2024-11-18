@@ -42,79 +42,25 @@ umountEfiVars() {
 }
 
 updateKeys() {
-    PCRS="0,2,3,7"
-    PCR_VAL_BIN_CURRENT="$(mktemp -t)"
-    PCR_VAL_BIN_UPDATED="$(mktemp -t)"
-    PCR_VAL_BIN_EFIBIN="$(mktemp -t)"
-    GRUB_BIN="$(find /mnt/sysroot/inactive -name bootx64.efi.secureboot -print -quit)"
-    KERNEL_BIN="$(find /mnt/sysroot/inactive -name bzImage -print -quit)"
+    INACTIVE_SYSROOT=/mnt/sysroot/inactive
+    GRUB_BIN="$(find "${INACTIVE_SYSROOT}" -name bootx64.efi.secureboot -print -quit)"
+    KERNEL_BIN="$(find "${INACTIVE_SYSROOT}" -name bzImage -print -quit)"
     if [ -z "${GRUB_BIN}" ] || [ -z "${KERNEL_BIN}" ]; then
         fail "Unable to add kernel and bootloader hashes to PCR7 digest"
     fi
 
     EFI_BINARIES="${GRUB_BIN} ${KERNEL_BIN}"
 
-    for pcr in $(echo ${PCRS} | sed 's/,/ /g'); do
-        case $pcr in
-            7)
-                # the signatures from the updated database are appended to the
-                # existing variable, removing duplicates
-                SIGNATURE_LENGTH=76 # sizeof(EFI_SIGNATURE_LIST) + SHA256_DIGEST_SIZE + EFI_GUID_SIZE
-                db_override="$( \
-                    { dd if=/sys/firmware/efi/efivars/"db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
-                         status=none \
-                         bs=1 \
-                         skip=4 | xxd -p -c ${SIGNATURE_LENGTH} ; \
-                      dd if=/resin-boot/balena-keys/db.esl \
-                         status=none | xxd -p -c ${SIGNATURE_LENGTH} ; \
-                    } | awk '!seen[$0]++' )"
-                current_digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
-                #shellcheck disable=SC2154
-                updated_digest="$(compute_pcr7 "${secureboot_override}" \
-                                               "${pk_override}" \
-                                               "${kek_override}" \
-                                               "${db_override}" \
-                                               "${dbx_override}")"
-
-                cp "${PCR_VAL_BIN_CURRENT}" "${PCR_VAL_BIN_UPDATED}"
-                printf "%s" "$updated_digest" | _hexdecode \
-                    | dd of="${PCR_VAL_BIN_UPDATED}" \
-                         status=none \
-                         bs=1 \
-                         seek="$(du -b "${PCR_VAL_BIN_UPDATED}" | cut -f1)"
-
-                # This OS release may not have the bootloader version required
-                # to read the TPM event log, which means we can't assess if the
-                # firmware measures EFI binary signatures into PCR7.
-                #
-                # Create a combined policy that authenticates with PCR7 values
-                # calculated with and without the EFI binary hashes.
-                cp "${PCR_VAL_BIN_CURRENT}" "${PCR_VAL_BIN_EFIBIN}"
-                for bin in ${EFI_BINARIES}; do
-                    extend="$(tcgtool -s "$bin" \
-                            | tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
-                            | _sha256 )"
-                    updated_digest=$(printf '%s%s' "$updated_digest" "$extend" | _hexdecode | _sha256)
-                done
-
-                printf "%s" "$updated_digest" | _hexdecode \
-                    | dd of="${PCR_VAL_BIN_EFIBIN}" \
-                         status=none \
-                         bs=1 \
-                         seek="$(du -b "${PCR_VAL_BIN_EFIBIN}" | cut -f1)"
-                digest="$current_digest"
-            ;;
-            *)
-                digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
-            ;;
-        esac
-
-        printf "%s" "$digest" | _hexdecode \
-            | dd of="${PCR_VAL_BIN_CURRENT}" \
-                 status=none \
-                 bs=1 \
-                 seek="$(du -b "${PCR_VAL_BIN_CURRENT}" | cut -f1)"
-    done
+    PCRS="0,2,3,7"
+    PCR_VAL_BIN_UPDATED="$(mktemp -t)"
+    PCR_VAL_BIN_EFIBIN="$(mktemp -t)"
+    generate_pcr_digests \
+        "${PCRS}" \
+        "${PCR_VAL_BIN_UPDATED}"
+    generate_pcr_digests \
+        "${PCRS}" \
+        "${PCR_VAL_BIN_EFIBIN}" \
+        "${EFI_BINARIES}"
 
     SESSION_CTX=$(mktemp -t)
     EFI_MOUNT_DIR="/mnt/efi"
@@ -142,6 +88,12 @@ updateKeys() {
 
     tpm2_flushcontext "${SESSION_CTX}"  >/dev/null 2>&1
 
+    # This OS release may not have the bootloader version required
+    # to read the TPM event log, which means we can't assess if the
+    # firmware measures EFI binary signatures into PCR7.
+    #
+    # Create a combined policy that authenticates with PCR7 values
+    # calculated with and without the EFI binary hashes.
     POLICY_UPDATED="${POLICY_PATH}/policy.updated"
     POLICY_EFIBIN="${POLICY_PATH}/policy.efibin"
     POLICY_COMBINED="$(mktemp -t)"
