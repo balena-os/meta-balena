@@ -295,6 +295,59 @@ tpm_nvram_store_passphrase() {
 	echo "${status}"
 }
 
+generate_pcr_digests() {
+    pcrs="${1}"
+    output="${2}"
+    efi_binaries="${3}"
+
+    tmp=$(mktemp)
+    for pcr in ${pcrs//,/ }; do
+        case $pcr in
+            7)
+                secureboot_override="01"
+                # the signatures from the updated database are appended to the
+                # existing variable, removing duplicates
+                SIGNATURE_LENGTH=76 # sizeof(EFI_SIGNATURE_LIST) + SHA256_DIGEST_SIZE + EFI_GUID_SIZE
+                db_override="$( \
+                    { dd if=/sys/firmware/efi/efivars/"db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+                         status=none \
+                         bs=1 \
+                         skip=4 \
+                         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
+                      dd if=/resin-boot/balena-keys/db.esl \
+                         status=none \
+                         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
+                    } | awk '!seen[$0]++' )"
+                #shellcheck disable=SC2154
+                digest="$(compute_pcr7 "${secureboot_override}" \
+                                       "${pk_override}" \
+                                       "${kek_override}" \
+                                       "${db_override}" \
+                                       "${dbx_override}")"
+
+                for bin in ${efi_binaries}; do
+                    extend="$(tcgtool -s "$bin" \
+                            | tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+                            | _sha256 )"
+                    digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
+                done
+            ;;
+            *)
+                digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
+            ;;
+        esac
+
+	# write to a real file first, as $output could be a stream
+        printf "%s" "$digest" | _hexdecode \
+            | dd of="${tmp}" \
+                 status=none \
+                 bs=1 \
+                 seek="$(du -b "${tmp}" | cut -f1)"
+    done
+
+    cat "${tmp}" > "${output}"
+}
+
 hw_decrypt_passphrase() {
     EFI_DIR="$1"
     AUTH="$2"
