@@ -145,6 +145,11 @@ migrate_run() {
 
         # Run flasher - should not return
         /usr/bin/resin-init-flasher
+        # Something went wrong - kill the process to prevent exploits
+        exit 1
+        # Just being paranoid
+        echo "c" > /proc/sysrq-trigger
+        sleep infinity
     else
         # If recovery mode, wait for adbd to exit
         if [ -n "${ADBD_PID}" ]; then
