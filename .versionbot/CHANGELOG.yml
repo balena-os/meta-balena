@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to ae505eb
+      hash: 42464576742648b84f86795f7d39cae12ff9bb9a
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update actions/checkout digest to 11bd719
+              hash: 9653c1e68ca07d9a9d7545cb018c4b2e09cbe914
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.62
+          title: ""
+          date: 2024-11-20T16:48:51.826Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v19.16.0
+              hash: 6b53a5af4bd9cb758ae28a3b595d1effd7d96b82
+              body: |
+                Update balena-io/balena-cli from 19.0.18 to 19.16.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.61
+          title: ""
+          date: 2024-11-20T15:54:30.635Z
+  version: 6.1.11
+  title: ""
+  date: 2024-11-20T18:59:00.812Z
+- commits:
     - subject: Update balena-supervisor to v16.7.7
       hash: a5fa76b78ede4419deacb69c891b5acd880115d0
       body: |
@@ -1057,15 +1095,11 @@
 - commits:
     - subject: "modemmanager: Fix SIM7100E crash"
       hash: e397c18742117596fed133e0b5992362e230f538
-      body: >
+      body: |
         With the update to MM 1.22.0 we have received reports that
-
         SIM7100E is not functioning correctly.
-
         Followed up with ModemManager devs and it was discovered the issue
-
         is related to a PCO setting:
-
         https://gitlab.freedesktop.org/mobile-broadband/ModemManager/-/issues/884
       footer:
         Change-type: patch
@@ -4988,14 +5022,11 @@
       nested: []
     - subject: "os-helpers-tpm2: specify TCTI backend"
       hash: c4eb9d7f6ad412bd74d77ece0e534c8dd2dd6fac
-      body: >
+      body: |
         Specify the TCTI backend [0], which also silences error messages from
-
         trying unsupported backends
 
-
-        [0]
-        https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/tcti.md
+        [0] https://github.com/tpm2-software/tpm2-tools/blob/master/man/common/tcti.md
       footer:
         Change-type: patch
         change-type: patch
@@ -5528,32 +5559,21 @@
       nested: []
     - subject: "os-helpers: compute_pcr7: merge event log digests"
       hash: e10d67084621e5ce10f14557f2466e91ff684b41
-      body: >
+      body: |
         The main variables measured into PCR7 to ensure secure boot
-
         configuration integrity are the state and EFI vars, including PK, KEK,
-
         db, dbx, etc.
 
-
         However, some systems have firmware that will measure other, unexpected
-
         events, such as "DMA Protection Disabled" (related to a Windows feature
-
         [0]), or "Unknown event type" with strange data.
 
-
         These events can't be predicted, and other devices may have different
-
         measured events that aren't compliant with the TCG spec, so attempt to
-
         check the TPM event log and extend our digest with any unknown events
-
         that fit the bill.
 
-
-        [0]
-        https://learn.microsoft.com/en-us/windows/security/hardware-security/kernel-dma-protection-for-thunderbolt
+        [0] https://learn.microsoft.com/en-us/windows/security/hardware-security/kernel-dma-protection-for-thunderbolt
       footer:
         Change-type: patch
         change-type: patch
@@ -5923,15 +5943,9 @@
         - commits:
             - subject: Remove dependency on @balena/happy-eyeballs
               hash: 08727ed2b5f67c55b2469d3ee5c5e2857119521b
-              body: >
-                Node 20 now implements the happy eyeballs algorithm as part of
-                its core
-
-                `net` module, with the
-                [autoSelectFamily](https://nodejs.org/docs/latest-v20.x/api/net.html#netgetdefaultautoselectfamily)
-                option of `socket.connect`. This option defaults to `true`,
-                meaning that a separate
-
+              body: |
+                Node 20 now implements the happy eyeballs algorithm as part of its core
+                `net` module, with the [autoSelectFamily](https://nodejs.org/docs/latest-v20.x/api/net.html#netgetdefaultautoselectfamily) option of `socket.connect`. This option defaults to `true`, meaning that a separate
                 implementation of happy eyeballs is no longer needed.
               footer:
                 Change-type: patch
@@ -6214,15 +6228,10 @@
     - subject: "resin-init-flasher: Allow building images for non-flasher devices that
         have internal storage"
       hash: 3a887512b343b80208196f6792a48f81d1a8c8f9
-      body: >
-        As per the internal thread:
-        https://balena.zulipchat.com/#narrow/stream/360838-balena-io.2Fos.2Fdevices/topic/balena-raspberrypi.20jenkins.20build.20failures/near/423970246
+      body: |
+        As per the internal thread: https://balena.zulipchat.com/#narrow/stream/360838-balena-io.2Fos.2Fdevices/topic/balena-raspberrypi.20jenkins.20build.20failures/near/423970246
 
-
-        Currently devices with on-board storage fail to build in jenkins, if
-        they don't provide a flasher image. One example is the CM4. Since there
-        are multiple devices using this configuration, let's re-enable builds
-        for all of them.
+        Currently devices with on-board storage fail to build in jenkins, if they don't provide a flasher image. One example is the CM4. Since there are multiple devices using this configuration, let's re-enable builds for all of them.
       footer:
         Change-type: patch
         change-type: patch
@@ -6298,16 +6307,10 @@
         - commits:
             - subject: Fix support for rsync deltas
               hash: 24e222045ac511cd4fbb3be66e57eb678a29d854
-              body: >
-                Rsync (v2) deltas have been broken since [Supervisor
-                v14](https://github.com/balena-os/balena-supervisor/commit/460c3ba0aab31d18a02e3f5dda1838691768c494).
-                While considered legacy,
-
-                they are still used by a few customers with devices running OS <
-                2.47.1.
-
+              body: |
+                Rsync (v2) deltas have been broken since [Supervisor v14](https://github.com/balena-os/balena-supervisor/commit/460c3ba0aab31d18a02e3f5dda1838691768c494). While considered legacy,
+                they are still used by a few customers with devices running OS < 2.47.1.
                 This should fix v2 delta support for those devices until we can
-
                 completely remove rsync deltas from the supervisor
               footer:
                 Change-type: patch
@@ -6380,37 +6383,19 @@
         - commits:
             - subject: Add special case for base DTO params on RPI config
               hash: 6e6a796da5ecc846248eae4c8495bc626964c038
-              body: >
-                While ordering is important in the RPI firmware configuration
-                file (config.txt),
-
-                some dt params are by default considered part of the base dt
-                overlay
-
+              body: |
+                While ordering is important in the RPI firmware configuration file (config.txt),
+                some dt params are by default considered part of the base dt overlay
                 if they are not used by other overlays.
-
-                Unfortunately the [list of
-                dtparams](https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README#L133)
-
-                is too long to add all of them as exceptions, but we can add the
-                params
-
-                used in the default config.txt provided in OS images, to avoid
-                reboots
-
+                Unfortunately the [list of dtparams](https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README#L133)
+                is too long to add all of them as exceptions, but we can add the params
+                used in the default config.txt provided in OS images, to avoid reboots
                 when updating to this new supervisor and correctly parsing the
-
                 provisioning config.txt as variables.
 
-
-                While this addition handles most common scenarios, there is
-                still a
-
-                chance a user may have use other base overlay dt params in the
-                initial
-
+                While this addition handles most common scenarios, there is still a
+                chance a user may have use other base overlay dt params in the initial
                 config, in which case those will be interpreted according to the
-
                 relative ordering
               footer:
                 Change-type: patch
@@ -9105,14 +9090,11 @@
 - commits:
     - subject: 'Revert "kernel-balena: Remove apparmor support"'
       hash: ddc94ae58072323cf94ac39d6c2d16c78ff794d8
-      body: >
+      body: |
         This is no longer needed after the balena_os/balena-engine commit:
-
         https://github.com/balena-os/balena-engine/commit/ed8ba18e8776a7bf37b3326baeca8196b4ea76b0
 
-
         released in balena-engine v20.10.39
-
 
         This reverts commit 18cd233a83554b58b3540164afd768fdeda60b03.
       footer:
@@ -11108,12 +11090,9 @@
 - commits:
     - subject: "linux/kernel-devsrc: Fix aarch64 kernel-headers-test build"
       hash: 65abb381ec266066b24f53fa3119dd47ec8af1a3
-      body: >
+      body: |
         This fix has been ported from the following upstream
-
-        change:
-        https://patchwork.yoctoproject.org/project/oe-core/patch/002c31d6add77e1002fb1ccd4050ce826a654170.1659653543.git.bruce.ashfield@gmail.com/
-
+        change: https://patchwork.yoctoproject.org/project/oe-core/patch/002c31d6add77e1002fb1ccd4050ce826a654170.1659653543.git.bruce.ashfield@gmail.com/
         and fixes the following compilation error on generic-aarch64:
 
             make[1]: *** No rule to make target 'arch/arm64/tools/gen-sysreg.awk',
@@ -11516,20 +11495,14 @@
 - commits:
     - subject: "kernel-devsrc: fix for v6.1+"
       hash: 1687110706cbde4a4d968afb04b3abc07e5c7eaa
-      body: >
+      body: |
         Adapted as a bbappend from:
-
         https://git.yoctoproject.org/poky/commit/meta/recipes-kernel/linux/kernel-devsrc.bb?id=2be1b5d7d38d72c35ec593b98366d128fe5ce12c
 
-
         The 6.1 kernel has a number of Kbuild and architecture changes
-
         that required us to update our devsrc recipe. With these changes
-
         we are once again able to build on target modules for all
-
         supported archectures.
-
 
         (From OE-Core rev: a3972b3f919400a12bb9a546ae98092cbfdcdbb8)
       footer:
@@ -14099,24 +14072,13 @@
         - commits:
             - subject: Log uncaught promise exceptions on the app entry
               hash: 676464142690da2e36a810cb35e4ea4d0d751636
-              body: >
-                Node 15 [changed the way it treats unhandled promise
-                rejections](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V15.md#throw-on-unhandled-rejections---33021)
-                from a warning to a throw.
+              body: |
+                Node 15 [changed the way it treats unhandled promise rejections](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V15.md#throw-on-unhandled-rejections---33021) from a warning to a throw.
+                For this reason errors like a corrupt migration directory, that happens when trying to
+                roll back to a previous supervisor version were no longer showing a
+                message but dumping the full minimized code into the journal logs.
 
-                For this reason errors like a corrupt migration directory, that
-                happens when trying to
-
-                roll back to a previous supervisor version were no longer
-                showing a
-
-                message but dumping the full minimized code into the journal
-                logs.
-
-
-                This PR adds a catchall on app.ts to log the exception and throw
-                an exit
-
+                This PR adds a catchall on app.ts to log the exception and throw an exit
                 code of 1.
               footer:
                 Change-type: patch
@@ -14129,13 +14091,9 @@
         - commits:
             - subject: Fix assertion error in restart-service
               hash: b9e1464d96824f5332c71324d753d94ddbdecf90
-              body: >
-                From:
-                https://github.com/balena-os/balena-supervisor/pull/2153/commits/c0b4fafe842115933b1da9b4d68e601a19c3e4eb
-
-                Restart-service checks that both services have restarted in its
-                test assertion, which is
-
+              body: |
+                From: https://github.com/balena-os/balena-supervisor/pull/2153/commits/c0b4fafe842115933b1da9b4d68e601a19c3e4eb
+                Restart-service checks that both services have restarted in its test assertion, which is
                 incorrect as restart-service should only restart one service.
               footer:
                 Change-type: patch
@@ -14540,19 +14498,14 @@
       nested: []
     - subject: Make sure balenaEngine owns the container cgroups
       hash: 5efa793c5af63ef177de95b8b4251799b0de7f40
-      body: >
+      body: |
         Setting `Delegate=yes` ensures that systemd will not change anything on
-
         the cgroups created for running the containers.
 
-
         This setting is used upstream since this commit:
-
         https://github.com/moby/moby/commit/d16737f971092767c1b9d28302a3f5aedbe2f576
 
-
-        And also is recommended by systemd:
-        https://systemd.io/CGROUP_DELEGATION/
+        And also is recommended by systemd: https://systemd.io/CGROUP_DELEGATION/
       footer:
         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
         signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -15064,9 +15017,8 @@
 - commits:
     - subject: "kernel-balena: Include NFS V2, V3 and V4 client and server modules"
       hash: 54c4090b518bccfdba0b635ead129502572685be
-      body: >
+      body: |
         As per internal discussion thread
-
         https://balena.zulipchat.com/#narrow/stream/345882-_help/topic/.E2.9C.94.20nfs.20.283.20or.204.29.20on.20jetson.20nano/near/342072698
       footer:
         Change-type: patch
@@ -15081,21 +15033,15 @@
 - commits:
     - subject: "dunfell+: remove obsolete systemd patch"
       hash: f649288c2b284cb06081d296e52b4562f512107b
-      body: >
+      body: |
         The patch applied to systemd addressed this upstream moby issue:
-
         https://github.com/moby/moby/issues/27202
 
-
         This was fixed in containerd 1.0.2:
-
         https://github.com/containerd/console/pull/10/commits/c358734ec94e72903243bd1c9034874a1de09424
 
-
         This fix is present in balena engine since v17.13.5, which has been in
-
         use since commit 53ce147. Drop this patch from meta-balena-dunfell and
-
         later.
       footer:
         Change-type: patch
@@ -15368,14 +15314,11 @@
 - commits:
     - subject: "balena-image-flasher: Default image type to balenaos-img"
       hash: 36750c1d0e75d82ec096faeff6d61579c075e0c4
-      body: >
+      body: |
         This avoids device repositories having to specify it, and it can always
-
         be overwritten in append files.
 
-
-        This change is an extension of
-        https://github.com/balena-os/meta-balena/commit/a3c276a1058d05e66991871bf167079fc2824843
+        This change is an extension of https://github.com/balena-os/meta-balena/commit/a3c276a1058d05e66991871bf167079fc2824843
       footer:
         Change-type: patch
         change-type: patch
@@ -16481,41 +16424,21 @@
               nested: []
             - subject: Reference networks by Id instead of by name
               hash: 180c4ff31ad719fb2b00217548514d42a4b5c4cf
-              body: >
-                We have seen a few times devices with duplicated network names
-                for some
-
-                reason. While we don't know the cause the networks get
-                duplicates,
-
+              body: |
+                We have seen a few times devices with duplicated network names for some
+                reason. While we don't know the cause the networks get duplicates,
                 this is disruptive of updates, as the supervisor usually queries
-
-                resource by name, resulting in a 400 error from the engine
-                because of
-
+                resource by name, resulting in a 400 error from the engine because of
                 the ambiguity.
 
-
-                This replaces those queries by name to queries by id. This
-                includes
-
-                network removal. If a `removeNetwork` step is generated, the
-                supervisor
-
-                opts to remove all instances of the network with the same name
-                as it
-
+                This replaces those queries by name to queries by id. This includes
+                network removal. If a `removeNetwork` step is generated, the supervisor
+                opts to remove all instances of the network with the same name as it
                 cannot easily resolve the ambiguity.
 
-
-                This doesn't solve the problem of ambiguous networks, because
-                even if
-
-                networks are referenced by id when creating a container, the
-                engine will
-
-                throw an error (see
-                https://github.com/balena-os/balena-supervisor/issues/590#issuecomment-1423557871)
+                This doesn't solve the problem of ambiguous networks, because even if
+                networks are referenced by id when creating a container, the engine will
+                throw an error (see https://github.com/balena-os/balena-supervisor/issues/590#issuecomment-1423557871)
               footer:
                 Change-type: patch
                 change-type: patch
@@ -17686,14 +17609,11 @@
 - commits:
     - subject: "redsocks: Increase maximum number of open files"
       hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
-      body: >
+      body: |
         This increases the number of open connections that redsocks can support
-
         to a new maximum of 2048.
 
-
-        See
-        https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
+        See https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
       footer:
         Change-type: patch
         change-type: patch
@@ -18156,20 +18076,14 @@
 - commits:
     - subject: "Engine healthcheck: deal with empty uuid file"
       hash: 345d1440d34fe042f03884c4ae32f0ba7e7768e8
-      body: >
+      body: |
         In rare cases (believed to be caused by a non-atomic file creation and
-
         writing operation in containerd), we end up with an empty file at
-
         `/mnt/data/docker/containerd/daemon/io.containerd.grpc.v1.introspection/uuid`.
-
         This causes `ctr version` (and hence the health check) to fail. See
-
         https://github.com/balena-os/balena-engine/issues/322
 
-
         This commit addresses this issue in two ways:
-
 
         1. Before running `ctr version`, we check if the uuid file exists and is
            empty. If so, we remove it. (The subsequent execution of `ctr
@@ -18178,7 +18092,6 @@
            created and is not empty.
 
         In both cases, when an empty uuid file is detected, we log the event to
-
         help us confirm our hypothesis about the root cause.
       footer:
         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -18963,21 +18876,14 @@
             - subject: "core: Reduce to 30 the retries number when trying to get the IP
                 address of the DUT"
               hash: 02b270e1c55429c7316a9c65f70362185bbe3aec
-              body: >
-                Instead of retrying to get the DUT IP address 120 times on a 1
-                seconds interval,
-
-                let's reduce it to 30 times because the resolveLocalTarget which
-                we call will
-
+              body: |
+                Instead of retrying to get the DUT IP address 120 times on a 1 seconds interval,
+                let's reduce it to 30 times because the resolveLocalTarget which we call will
                 timeout too in 15 seconds:
-
 
                 https://github.com/balena-os/leviathan-worker/blob/master/lib/helpers/index.ts#L162
 
-
-                So reducing the retries number to 30 will effectly bring the
-                total combined timeout to a maximum of 8 minutes.
+                So reducing the retries number to 30 will effectly bring the total combined timeout to a maximum of 8 minutes.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -19806,11 +19712,9 @@
 - commits:
     - subject: "wpa-supplicant: Sync with v2.10 from upstream"
       hash: 5464be07070bbc4a06a4d432250dd70b2b2e1522
-      body: >
+      body: |
         Synced from:
-
         http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-connectivity/wpa-supplicant?id=3a43c2a82881688d85238464db371f695e60b572
-
 
         Closes #2838
       footer:
@@ -20050,34 +19954,21 @@
 - commits:
     - subject: "ntp: Remove race condition from directory creation"
       hash: 5fd19e26d35d7160e2531277a9a14e194d0b95c6
-      body: >
-        Chronyd checks that the directory specified as `sourcedir` in
-        `chrony.conf`
-
-        (in this case `/var/chrony`) is not world accessible if it exists
-        (chrony
-
+      body: |
+        Chronyd checks that the directory specified as `sourcedir` in `chrony.conf`
+        (in this case `/var/chrony`) is not world accessible if it exists (chrony
         will create it correctly if it does not exist), and does not start
-
         if that's the case.
 
-
         The way that the `/var/chrony` is created when it does not exist opens
-
         the possibility of the directory existing with the wrong permissions and
-
         hitting this problem.
 
-
         This commit creates the directory with the correct permissions from the
-
         start to avoid the race condition.
 
-
         It also changes the permissiong from 750 to 770 to match what chrony
-
         does (see
-
         https://github.com/mlichvar/chrony/blob/7b197953e8add5515b7e58c4638dc55aa4bb91b7/conf.c#L1761)
       footer:
         Change-type: patch
@@ -22766,16 +22657,12 @@
 - commits:
     - subject: "hostapp-update-hooks: Rework bootfiles blacklist"
       hash: 7b523caa0099530c45b4d9981d31ca6c72a76262
-      body: >
+      body: |
         We may have cases when for some boards we do not want
-
         to have all these files blacklisted. See for example
-
         https://github.com/balena-os/balena-rockpi/commit/b5eadcfb3a296eea2554dc0cbdd16002d51c5169
 
-
         In conclusion, we rework how the blacklist is constructed
-
         so that users of meta-balena can alter this list as they see fit.
       footer:
         Change-type: patch
@@ -25068,27 +24955,17 @@
 - commits:
     - subject: "kernel-balena: Disable building gcc plugins"
       hash: bd8d2de9983f47e46ffa0e689be88c5b12e46617
-      body: >
-        Since
-        https://github.com/raspberrypi/linux/commit/1eee36a5520b5a89fb4d0d6af6f9cb0217a3164f
-
+      body: |
+        Since https://github.com/raspberrypi/linux/commit/1eee36a5520b5a89fb4d0d6af6f9cb0217a3164f
         was merged and included in kernel versions after 5.10.84,
-
         building the kernel-modules-headers fails due to various missing
-
         headers from the gmp and mpc packages. This problem is visible
-
         only after upgrading to a newer kernel, because until now the
-
         gcc plugins kernel config was not enabled at all, due to the
-
         failed check in the above mentioned patch.
 
-
         Since we are not using the functions provided
-
         by the gcc plugins anyway, we can disable this
-
         config.
       footer:
         Change-type: patch
@@ -25382,21 +25259,12 @@
         - commits:
             - subject: Ignore selinux security opts when comparing services
               hash: 1b54ce8bfd5dd3d1f14f573a0bfe17ee1dd81630
-              body: >
-                The moby engine v20.x.y adds some selinux [security
-                configurations](https://docs.docker.com/engine/reference/run/#security-configuration)
-
-                depending on the [container
-                configuration](https://github.com/moby/moby/blob/master/daemon/create.go#L214).
-
-                This would cause the supervisor to enter a service restart loop
-                as the
-
+              body: |
+                The moby engine v20.x.y adds some selinux [security configurations](https://docs.docker.com/engine/reference/run/#security-configuration)
+                depending on the [container configuration](https://github.com/moby/moby/blob/master/daemon/create.go#L214).
+                This would cause the supervisor to enter a service restart loop as the
                 current and target service configurations will never match. The
-
-                supervisor now ignores selinux specific security options since
-                those are
-
+                supervisor now ignores selinux specific security options since those are
                 not supported by balenaOS.
               footer:
                 Closes: "#1890"
@@ -25584,13 +25452,9 @@
               nested: []
             - subject: Backport platform-detection fixes from containerd
               hash: 9f71253561b1cd2f262ec0d6e81c5fbd09a7a0a1
-              body: >
+              body: |
                 See https://github.com/containerd/containerd/pull/4530
-
-                and `git log
-                ad25c1a9c34361e4071f508b9a91946b05fce165^..2055e12953bb538228d8d9fe627fa545d7cf82be
-                ./platforms/`
-
+                and `git log ad25c1a9c34361e4071f508b9a91946b05fce165^..2055e12953bb538228d8d9fe627fa545d7cf82be ./platforms/`
                 in the containerd repo
               footer:
                 Change-type: patch
@@ -25865,12 +25729,9 @@
               nested: []
             - subject: "hack: Fix CLI versioning"
               hash: a9d487d0751f7ad293ab66b3d24734505b41f85b
-              body: >
+              body: |
                 https://github.com/balena-os/balena-engine-cli/commit/20c19830a95455e8562551aad52c715ad0807cc6
-
-                moves the versioning variables to a separate package. We have to
-                adjust
-
+                moves the versioning variables to a separate package. We have to adjust
                 the location in hack/make.sh too
               footer:
                 Change-type: patch
@@ -26010,32 +25871,23 @@
               nested: []
             - subject: "pkg/authorization: Fix test failures on macOS"
               hash: 6e9af0514461f1ce3945ed308ef13e3ddbc7dc4f
-              body: >
+              body: |
                 On macOS, unit tests where failing with
 
-
-                root@c4101a75c792:/go/src/github.com/docker/docker/pkg/authorization#
-                go test .
-
+                root@c4101a75c792:/go/src/github.com/docker/docker/pkg/authorization# go test .
                 --- FAIL: TestAuthZRequestPluginError (0.00s)
                     authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
                 --- FAIL: TestAuthZRequestPlugin (0.00s)
                     authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
                 --- FAIL: TestAuthZResponsePlugin (0.00s)
                     authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
-                time="2020-04-07T10:07:04Z" level=warning msg="Request body is
-                larger than: '1048576' skipping body"
-
+                time="2020-04-07T10:07:04Z" level=warning msg="Request body is larger than: '1048576' skipping body"
                 --- FAIL: TestMiddlewareWrapHandler (0.00s)
                     authz_unix_test.go:295: listen unix authz-test-plugin.sock: bind: file name too long
                 FAIL
-
                 FAIL	github.com/docker/docker/pkg/authorization	0.120s
 
-
-                This change moves the socket creation from a working test
-                directory to a tmp directory,
-
+                This change moves the socket creation from a working test directory to a tmp directory,
                 so the path is shorter.
               footer:
                 Change-type: patch
@@ -28612,10 +28464,8 @@
 - commits:
     - subject: Add recipes for TPM2 tools
       hash: baddbd39fd17d364ebfd69bf139980ca82abc8ba
-      body: >
-        Taken from
-        http://git.yoctoproject.org/cgit/cgit.cgi/meta-security/tree/meta-tpm/recipes-tpm2
-
+      body: |
+        Taken from http://git.yoctoproject.org/cgit/cgit.cgi/meta-security/tree/meta-tpm/recipes-tpm2
         Only add the recipes, let DTs pull it as necessary.
       footer:
         Change-type: patch
@@ -28669,17 +28519,13 @@
 - commits:
     - subject: "dosfstools: selectively apply upstreamed patch"
       hash: 8f04f1142bcb3074d86e2827dfda6c7d8c87fefd
-      body: >
+      body: |
         This patch was submitted and accepted upstream, and is present since
-
         v4.2.
-
 
         https://github.com/dosfstools/dosfstools/commit/87a8f29785bb605350821f1638a42e6cf3e49ce3
 
-
         This fixes a build error applying a patch that's already been applied
-
         when building newer versions of dosfstools.
       footer:
         Change-type: patch
@@ -28765,11 +28611,9 @@
 - commits:
     - subject: Update balena-engine to v19.03.30
       hash: abf610e022eeac709c054e4fb672b850ef08a940
-      body: >
+      body: |
         Fixes EINVAL errors caused by sockets during storage migration,
-
         https://github.com/balena-os/balena-engine/commit/17a198cb53a53da456c848bf303dc3917ca538c5
-
 
         Update balena-engine from 19.03.29 to 19.03.30
       footer:
@@ -29018,31 +28862,20 @@
 - commits:
     - subject: "common: conf: create disable-user-ns distro feature"
       hash: 7dde2133a5b1df710255b8b0471385cca1449c1d
-      body: >
+      body: |
         When user namespacing was enabled in the kernel by default, a separate
-
         commit [0] was introduced to disable the feature at runtime, to allow
-
         users/administrators to explicitly choose to enable it, avoiding
-
         potential security implications.
 
-
         However, some applications such as Chromium's sandbox, require either
-
         SUID or user namespacing to work. Disabling this feature on boards
-
         that previously enabled it necessitates container modifications and
-
         potentially breaks previously working applications.
 
-
         Create a distro feature to disable user namespacing by default in
-
         meta-balena, while allowing device types to keep it enabled to maintain
-
         compatibility with their original behavior.
-
 
         https://github.com/balena-os/meta-balena/commit/31c3ae8ad5c7ad45e450349b6972524da120e96c
       footer:
@@ -29140,13 +28973,9 @@
         - commits:
             - subject: Backport platform-detection fixes from containerd
               hash: 9f71253561b1cd2f262ec0d6e81c5fbd09a7a0a1
-              body: >
+              body: |
                 See https://github.com/containerd/containerd/pull/4530
-
-                and `git log
-                ad25c1a9c34361e4071f508b9a91946b05fce165^..2055e12953bb538228d8d9fe627fa545d7cf82be
-                ./platforms/`
-
+                and `git log ad25c1a9c34361e4071f508b9a91946b05fce165^..2055e12953bb538228d8d9fe627fa545d7cf82be ./platforms/`
                 in the containerd repo
               footer:
                 Change-type: patch
@@ -29287,21 +29116,13 @@
         - commits:
             - subject: Bump path-parse from 1.0.6 to 1.0.7
               hash: 2e38356bf4f5157483017ea2e6670514cbca49c1
-              body: >
-                Bumps [path-parse](https://github.com/jbgutierrez/path-parse)
-                from 1.0.6 to 1.0.7.
-
-                - [Release
-                notes](https://github.com/jbgutierrez/path-parse/releases)
-
-                -
-                [Commits](https://github.com/jbgutierrez/path-parse/commits/v1.0.7)
-
+              body: |
+                Bumps [path-parse](https://github.com/jbgutierrez/path-parse) from 1.0.6 to 1.0.7.
+                - [Release notes](https://github.com/jbgutierrez/path-parse/releases)
+                - [Commits](https://github.com/jbgutierrez/path-parse/commits/v1.0.7)
 
                 ---
-
                 updated-dependencies:
-
                 - dependency-name: path-parse
                   dependency-type: indirect
                 ...
@@ -29317,23 +29138,14 @@
         - commits:
             - subject: Bump tar from 4.4.13 to 4.4.19
               hash: b7cb494602fbd050bb9e31b5e8293a080349562c
-              body: >
-                Bumps [tar](https://github.com/npm/node-tar) from 4.4.13 to
-                4.4.19.
-
+              body: |
+                Bumps [tar](https://github.com/npm/node-tar) from 4.4.13 to 4.4.19.
                 - [Release notes](https://github.com/npm/node-tar/releases)
-
-                -
-                [Changelog](https://github.com/npm/node-tar/blob/main/CHANGELOG.md)
-
-                -
-                [Commits](https://github.com/npm/node-tar/compare/v4.4.13...v4.4.19)
-
+                - [Changelog](https://github.com/npm/node-tar/blob/main/CHANGELOG.md)
+                - [Commits](https://github.com/npm/node-tar/compare/v4.4.13...v4.4.19)
 
                 ---
-
                 updated-dependencies:
-
                 - dependency-name: tar
                   dependency-type: indirect
                 ...
@@ -29836,47 +29648,25 @@
         - commits:
             - subject: Fix regression with local mode push
               hash: 6f5f3bc2f3aea1bf5e5772533be80c3bfbb4e3a9
-              body: >
-                PR #1749 introduced a bug when pushing local target state. An
-                update to
-
-                the [image name
-                normalization](https://github.com/balena-os/balena-supervisor/blob/f1bd4b8d9bcef29e326cbf97eaddd837c2704d19/src/lib/docker-utils.ts#L81)
-
-                failed to consider the local image name format. This results in
-                mangling
-
-                of image names in the database, i.e. the image `ubuntu:latest`
-                is stored
-
-                as `/ubuntu:latest`. This causes an exception to be returned by
-                the
-
+              body: |
+                PR #1749 introduced a bug when pushing local target state. An update to
+                the [image name normalization](https://github.com/balena-os/balena-supervisor/blob/f1bd4b8d9bcef29e326cbf97eaddd837c2704d19/src/lib/docker-utils.ts#L81)
+                failed to consider the local image name format. This results in mangling
+                of image names in the database, i.e. the image `ubuntu:latest` is stored
+                as `/ubuntu:latest`. This causes an exception to be returned by the
                 dockerode `getImage('/ubuntu:latest').inspect()` call.
 
-
-                This sends the supervisor into a crash loop and is shown on the
-                supervisor
-
+                This sends the supervisor into a crash loop and is shown on the supervisor
                 journal logs as
 
-
                 ```
-
                 getaddrinfo ENOTFOUND images
                     at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:64:26)
                 ```
 
-
-                Unfortunately if this happens on a user device, since the
-                mangled image
-
-                name is already on the database, the easiest way to fix is to
-                remove the
-
-                supervisor database and let the supervisor recreate it. Deleting
-                the
-
+                Unfortunately if this happens on a user device, since the mangled image
+                name is already on the database, the easiest way to fix is to remove the
+                supervisor database and let the supervisor recreate it. Deleting the
                 database should be side effect free.
               footer:
                 Change-type: patch
@@ -31152,25 +30942,17 @@
 - commits:
     - subject: "balena-engine: refactor systemd service"
       hash: 8227a61f6bef6d93cc6a5acd0ef93a2012079964
-      body: >
+      body: |
         This makes it easier to overwrite the arguments passed in the engine
-
         unit from drop-in overwrites. See the development image drop-in unit for
-
         reference.
 
-
         Using `systemctl edit --runtime balena.service`, which puts those
-
         overwrites into `/run/systemd/system/balena.service.d/`, it would be
-
         possible to modify the runtime behavior of the engine without remounting
-
         the rootfs to be writeable.
 
-
-        See
-        https://www.freedesktop.org/software/systemd/man/systemd.unit.html#System%20Unit%20Search%20Path
+        See https://www.freedesktop.org/software/systemd/man/systemd.unit.html#System%20Unit%20Search%20Path
       footer:
         Change-type: patch
         change-type: patch
@@ -32193,14 +31975,10 @@
         - commits:
             - subject: Bump ssri from 6.0.1 to 6.0.2
               hash: ae8dc8ff227237444ae532cf7e817bfc463fbac5
-              body: >
+              body: |
                 Bumps [ssri](https://github.com/npm/ssri) from 6.0.1 to 6.0.2.
-
                 - [Release notes](https://github.com/npm/ssri/releases)
-
-                -
-                [Changelog](https://github.com/npm/ssri/blob/v6.0.2/CHANGELOG.md)
-
+                - [Changelog](https://github.com/npm/ssri/blob/v6.0.2/CHANGELOG.md)
                 - [Commits](https://github.com/npm/ssri/compare/v6.0.1...v6.0.2)
               footer:
                 Change-type: patch
@@ -32874,12 +32652,10 @@
       nested: []
     - subject: "dnsmasq: update to 2.84 with dnspooq fix"
       hash: 3afbe8dfbbaf9f73a09048e0350622535befa0a8
-      body: >
+      body: |
         https://github.com/balena-os/meta-balena/issues/2099
 
-
         Copy dnsmasq 2.84 recipe and files from this upstream patch:
-
 
         http://cgit.openembedded.org/meta-openembedded/commit/meta-networking/recipes-support/dnsmasq?id=3e28a31bb479f292b9a052a3d2eee84c49319ee3
       footer:
@@ -33209,33 +32985,21 @@
 - commits:
     - subject: replace busybox ps with procps [klutchell]
       hash: 00556af37cf241e2b95d9b719f1ab58cc9bbddb6
-      body: >
+      body: |
         Replace busybox ps link with ps.procps without installing
-
         any other procps packages. This will avoid regression and bloat
-
         from swapping existing busybox links with procps variants.
 
-
         By using procps as docker expects we can properly handle ps args
-
         such as -e and -o to format output. Busybox is only capable of this
-
         when compiled in "desktop" mode.
 
-
         This upstream commit to poky has already split the ps binary into
-
         a separate procps package:
 
+        - https://git.yoctoproject.org/cgit/cgit.cgi/poky/commit/?id=507a47a4e5077d5f8f76d9629be6b871dfd8eb90
 
-        -
-        https://git.yoctoproject.org/cgit/cgit.cgi/poky/commit/?id=507a47a4e5077d5f8f76d9629be6b871dfd8eb90
-
-
-        So for now we can copy this recipe at the commit above into compat
-        branches
-
+        So for now we can copy this recipe at the commit above into compat branches
         and use that version until we pick up a branch newer than gatesgarth.
       footer:
         Change-type: patch
@@ -33515,18 +33279,12 @@
       nested: []
     - subject: "hostapp-update-hooks: Add supervisor database fix"
       hash: f3e7e164cf095218c1f92f2afecdd186cbbdfadd
-      body: >
+      body: |
         When adding hostapp extension support to mobynit, in:
-
         https://github.com/balena-os/meta-balena/commit/6be3f1153d56c1c0c21e6d84db7be70be96bcd10
 
-
-        the supervisor database was relocated by mistake. On this version the
-        database
-
-        returns to its original place, and these hooks copy the old database to
-        the
-
+        the supervisor database was relocated by mistake. On this version the database
+        returns to its original place, and these hooks copy the old database to the
         new location to avoid data loss.
       footer:
         Change-type: patch
@@ -33643,9 +33401,8 @@
       nested: []
     - subject: "systemd: add missing udev rules"
       hash: 02b48c9523ff5ed36cc2cfd94225ea4234649371
-      body: >
+      body: |
         https://github.com/balena-os/poky/commit/e3cd4e584239c207e3c82bdf5d7216d26fd28fc7
-
 
         add missing udev rules since systemd began including rules explicitly
       footer:
@@ -33669,12 +33426,10 @@
       nested: []
     - subject: "dropbear: prevent conflicts with openssh"
       hash: 169c1652e46e3a31d4f96bb98cbcf8240f3453ca
-      body: >
+      body: |
         [https://github.com/balena-os/poky/commit/d365948ebd76625f82ef04e77d35bcfeced42fec]
 
-
-        Dropbear is still required to migrate keys. Avoid the upstream conflict
-        with openssh.
+        Dropbear is still required to migrate keys. Avoid the upstream conflict with openssh.
       footer:
         Change-type: patch
         change-type: patch
@@ -33729,12 +33484,10 @@
       nested: []
     - subject: "u-boot: disable u-boot-initial-env"
       hash: 9346f58cdd73924aec4279861ff43611c125ab5d
-      body: >
+      body: |
         https://github.com/balena-os/poky/commit/d7b8ae3faa9344f2ada22e0402066c2fff5958c6
 
-
         We have no use for u-boot-initial-env and enabling it would require
-
         additional changes in do_compile to match the commit linked above.
       footer:
         Change-type: patch
@@ -33745,9 +33498,8 @@
       nested: []
     - subject: "dnsmasq: fix build after y2038 changes in glib"
       hash: fca86497476cf3d275ae3d4f8274d51b6b96a9b8
-      body: >
+      body: |
         SIOCGSTAMP is defined in linux/sockios.h, not asm/sockios.h
-
         http://thekelleys.org.uk/gitweb/?p=dnsmasq.git;a=commit;h=3052ce208acf602f0163166dcefb7330d537cedb
       footer:
         Change-type: patch
@@ -33829,14 +33581,11 @@
 - commits:
     - subject: "zram-swap-init: adjust default to lesser of 50%/4GB"
       hash: 155af3386029a0e76b74ee60d58c32ba72073a82
-      body: >
+      body: |
         Copied from Fedora zram defaults [0]. This may be adjusted later after
-
         doing our own profiling.
 
-
-        [0]
-        https://fedoraproject.org/wiki/Changes/SwapOnZRAM#Default_zram_device_configuration:
+        [0] https://fedoraproject.org/wiki/Changes/SwapOnZRAM#Default_zram_device_configuration:
       footer:
         Change-type: minor
         change-type: minor
@@ -36102,14 +35851,10 @@
         - commits:
             - subject: Bump elliptic from 6.5.2 to 6.5.3
               hash: c11004cd24fe66e6af7f16a79c0cc9e8847eb415
-              body: >
-                Bumps [elliptic](https://github.com/indutny/elliptic) from 6.5.2
-                to 6.5.3.
-
+              body: |
+                Bumps [elliptic](https://github.com/indutny/elliptic) from 6.5.2 to 6.5.3.
                 - [Release notes](https://github.com/indutny/elliptic/releases)
-
-                -
-                [Commits](https://github.com/indutny/elliptic/compare/v6.5.2...v6.5.3)
+                - [Commits](https://github.com/indutny/elliptic/compare/v6.5.2...v6.5.3)
               footer:
                 Change-type: patch
                 change-type: patch
@@ -36459,14 +36204,10 @@
         - commits:
             - subject: Bump lodash from 4.17.15 to 4.17.19
               hash: 01655b595555ae63ea1b70d623451c9ad3ec03dd
-              body: >
-                Bumps [lodash](https://github.com/lodash/lodash) from 4.17.15 to
-                4.17.19.
-
+              body: |
+                Bumps [lodash](https://github.com/lodash/lodash) from 4.17.15 to 4.17.19.
                 - [Release notes](https://github.com/lodash/lodash/releases)
-
-                -
-                [Commits](https://github.com/lodash/lodash/compare/4.17.15...4.17.19)
+                - [Commits](https://github.com/lodash/lodash/compare/4.17.15...4.17.19)
               footer:
                 Change-type: patch
                 change-type: patch
@@ -36780,18 +36521,13 @@
     - subject: Use --mount instead of --volume for bind mounts to the supervisor
         container.
       hash: 0fd442943d6b6c802df2f6e35d334ecde0f748e9
-      body: >
+      body: |
         This makes sure the source path refers to an existing file/directory on
-
         the host.
-
 
         https://docs.docker.com/engine/reference/commandline/service_create/#differences-between---mount-and---volume
 
-
-        This avoids situations where --volume implicitely creates a directory
-        (see #1748)
-
+        This avoids situations where --volume implicitely creates a directory (see #1748)
 
         Fixes #1754
       footer:
@@ -37605,30 +37341,17 @@
         - commits:
             - subject: Add label to expose gpu to container
               hash: ae646a07ec6a6c96f7cb91f1d37898a94dbab47a
-              body: >
-                In the absence of an upstream implementation of the
-                DeviceRequest API introduced
+              body: |
+                In the absence of an upstream implementation of the DeviceRequest API introduced
+                as part of Docker API v1.40 we roll our own using a feature label.
 
-                as part of Docker API v1.40 we roll our own using a feature
-                label.
-
-
-                As per my comment in the code, we fall back to the default
-                behavior of
-
-                docker cli's `--gpu` and request single device with the `gpu`
-                capabilty.
-
-                The only implementation at the moment is the NVIDIA driver;
-                here:
-
+                As per my comment in the code, we fall back to the default behavior of
+                docker cli's `--gpu` and request single device with the `gpu` capabilty.
+                The only implementation at the moment is the NVIDIA driver; here:
                 https://github.com/balena-os/balena-engine/blob/master/daemon/nvidia_linux.go
 
-
                 Background on the composefile implementation:
-
                 https://github.com/compose-spec/compose-spec/issues/74
-
                 https://github.com/docker/compose/issues/6691
               footer:
                 Change-type: patch
@@ -39729,14 +39452,10 @@
         - commits:
             - subject: Bump acorn from 5.7.3 to 5.7.4
               hash: f8363fc72b21386cc3561be576d8f21ec0463c89
-              body: >
-                Bumps [acorn](https://github.com/acornjs/acorn) from 5.7.3 to
-                5.7.4.
-
+              body: |
+                Bumps [acorn](https://github.com/acornjs/acorn) from 5.7.3 to 5.7.4.
                 - [Release notes](https://github.com/acornjs/acorn/releases)
-
-                -
-                [Commits](https://github.com/acornjs/acorn/compare/5.7.3...5.7.4)
+                - [Commits](https://github.com/acornjs/acorn/compare/5.7.3...5.7.4)
               footer:
                 Change-type: patch
                 change-type: patch
@@ -40417,14 +40136,10 @@
       author: Alex Gonzalez
     - subject: Update openvpn to v2.4.7
       hash: 5c7d3ae1296636dae7b0de67a9c0f8c66d996d1c
-      body: >
+      body: |
         Fetched from:
-
-        *
-        https://git.openembedded.org/meta-openembedded/commit/meta-networking/recipes-support/openvpn/openvpn_2.4.7.bb?id=c1c8895609ae70a1b735e8625c19046c25184ee4
-
-        *
-        https://git.openembedded.org/meta-openembedded/commit/meta-networking/recipes-support/openvpn/openvpn/openvpn?id=910891d722085c56c474ac72788898b94c5ed193
+        * https://git.openembedded.org/meta-openembedded/commit/meta-networking/recipes-support/openvpn/openvpn_2.4.7.bb?id=c1c8895609ae70a1b735e8625c19046c25184ee4
+        * https://git.openembedded.org/meta-openembedded/commit/meta-networking/recipes-support/openvpn/openvpn/openvpn?id=910891d722085c56c474ac72788898b94c5ed193
       footer:
         Connects-to: "#1740"
         connects-to: "#1740"
@@ -40634,9 +40349,8 @@
       author: Will Boyce
     - subject: Add wpa-supplicant recipe and update to v2.9
       hash: 139f76b73918e12aa8082896a7a017d2ad5df739
-      body: >
-        Fetched from
-        http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-connectivity/wpa-supplicant?id=95507898ad6a7b88c83ef376c1cb8b3b3a685c96
+      body: |
+        Fetched from http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-connectivity/wpa-supplicant?id=95507898ad6a7b88c83ef376c1cb8b3b3a685c96
       footer:
         Connects-to: "#1711"
         connects-to: "#1711"
@@ -41513,16 +41227,12 @@
       author: Andrei Gherzan
     - subject: Fix kernel-devsrc on thud when kernel version < 4.10
       hash: c4cd6307ac3ae86a8d34b91d9dc82b6d3310db9b
-      body: >
+      body: |
         Thud breaks when building against kernel version < 4.10. This is a known
-
         issue which is fixed in poky warrior[1]. This patch includes a
-
         workaround for thud.
 
-
-        [1]
-        http://lists.openembedded.org/pipermail/openembedded-core/2019-February/278695.html
+        [1] http://lists.openembedded.org/pipermail/openembedded-core/2019-February/278695.html
       footer:
         Change-type: patch
         change-type: patch
@@ -41592,24 +41302,16 @@
       author: Zubair Lutfullah Kakakhel
     - subject: Use all.rp_filter=2 as the default value in balenaOS
       hash: 2fe90f3316a9394db0a060ec976d23fa97d4f00a
-      body: >
+      body: |
         This change backports a PR[1] that is already in systemd and will come
-
         included by default from the version in Yocto warrior.
 
-
         In summary, with this change we fix newer NM which stopped handling
-
         rp_filter when connected to multiple interfaces. See "device: disable
-
         rp_filter handling" commit from NM. Without this change, only the
-
         default route will me usable and binding to a specific interface will
-
         break connectivity if that interface is not also the default route for
-
         the target IP.
-
 
         [1]https://github.com/systemd/systemd/pull/10971/commits/6caa14f763c11630f28d587b3caa5f0e6dc96165
       footer:
@@ -41847,9 +41549,8 @@
       author: Andrei Gherzan
     - subject: Sync ModemManager recipe with upstream
       hash: e0be8f152c88a5635b5d18249c5f882caf9e31c5
-      body: >
+      body: |
         We also pushed the latest update we did in BalenaOS to upstream:
-
         http://lists.openembedded.org/pipermail/openembedded-devel/2019-May/199743.html
       footer:
         Change-type: patch
@@ -41861,12 +41562,10 @@
       author: Andrei Gherzan
     - subject: Update NetworkManager to 1.18.0
       hash: 808f6f1790357b4f282a15cbb72c603ee77f63d3
-      body: >
+      body: |
         Fixes #1492
 
-
         Pushed to upstream as well:
-
         http://lists.openembedded.org/pipermail/openembedded-devel/2019-May/199742.html
       footer:
         Change-type: minor
@@ -42182,35 +41881,21 @@
       author: Andrei Gherzan
     - subject: Make security flags inclusion yocto version specific
       hash: 9571c572e4abcd1ea5951fa408b1543bc40db8c9
-      body: >
+      body: |
         Since thud, poky distro file on which balena OS is based, already
-
         includes security_flags.inc. Because of this change, this version throws
-
         a build warning similar to:
 
-
-        WARNING Duplicate inclusion for
-        /build/../layers/poky/meta/conf/distro/include/security_flags.inc
-
-        in
-        /build/../layers/meta-resin/meta-balena-thud/conf/distro/include/balena-os-yocto-version.inc
-
+        WARNING Duplicate inclusion for /build/../layers/poky/meta/conf/distro/include/security_flags.inc
+        in /build/../layers/meta-resin/meta-balena-thud/conf/distro/include/balena-os-yocto-version.inc
 
         This happens because again, we import `poky` and `security_flags` but
-
         since thud, poky includes security_flags by default. In order to avoid
-
         this warning we import it (security_flags) now using an .inc file at the
-
         level of the yocto version meta-balena layer. There is as well a small
-
         additional wrinkle here. We switch the include statement from `require`
-
         to `include` so new layers (like thud) don't have to carry this hack in
-
         the future.
-
 
         This commit prepares meta-balena for thud support.
       footer:
@@ -43071,9 +42756,8 @@
       author: Cameron Diver
     - subject: Fix for some warnings
       hash: 1d92f8c3bcc21a7c0b21b12f65f1051616f04b78
-      body: >
-        From
-        http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-kernel/linux/kernel-devsrc.bb?h=thud&id=fd74848c3c06901a77057ca03f7c01aff08ee34a
+      body: |
+        From http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-kernel/linux/kernel-devsrc.bb?h=thud&id=fd74848c3c06901a77057ca03f7c01aff08ee34a
       footer:
         Change-type: patch
         change-type: patch
@@ -43156,15 +42840,11 @@
     - subject: Add a workaround for a bug where the chronyc online command in network
         manager hook would get stuck and eat cpu cycles
       hash: 6fe830882bf8ee62dc6db09b5a8a6f099d64fe41
-      body: >
+      body: |
         We have noticed devices in support that show high cpu usage because
-
         the process chronyc online seems to be eating up 50% cpu.
 
-
-        This is probably fixed upstream
-        https://github.com/mlichvar/chrony/commit/6863e43269fe27ce2744eb643295f31c00ec176d#diff-50898f0cb35139d87132f4732a029213
-
+        This is probably fixed upstream https://github.com/mlichvar/chrony/commit/6863e43269fe27ce2744eb643295f31c00ec176d#diff-50898f0cb35139d87132f4732a029213
 
         Add a timeout in any case as its a lower risk option
       footer:
@@ -43426,11 +43106,9 @@
       author: Zubair Lutfullah Kakakhel
     - subject: Bump network manager from v1.12.2 to v1.14.4
       hash: 0b8be376090d9bff4f41a362e4bcc250e0c664e9
-      body: >
+      body: |
         Update recipe from upstream meta-openembedded
-
         http://cgit.openembedded.org/meta-openembedded/commit/meta-networking/recipes-connectivity/networkmanager?id=331b717b862e3599b99942acb64c1d6b03806042
-
 
         Difference in size ~ +400K
       footer:
@@ -43474,14 +43152,11 @@
     - subject: Add chrony v3.2 recipe in various layers to keep minimum chrony version
         on devices above v3.2
       hash: 898ce1a6c0a18c91478f704f4014ec2fcd1fedce
-      body: >
+      body: |
         We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
-
         That option is supported in newer versions of chrony.
 
-
         Add chrony 3.2 recipe from meta-openembedded sumo
-
         http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
       footer:
         Change-type: minor
@@ -43495,14 +43170,11 @@
       author: Zubair Lutfullah Kakakhel
     - subject: "chrony/pyro: Add v3.2 recipe"
       hash: c3fbd6fe368ae1ca2472f15414d319f802e2989c
-      body: >
+      body: |
         We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
-
         That option is supported in newer versions of chrony.
 
-
         Add chrony 3.2 recipe from meta-openembedded sumo
-
         http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
       footer:
         Change-type: minor
@@ -43512,14 +43184,11 @@
       author: Zubair Lutfullah Kakakhel
     - subject: "chrony/morty: Add v3.2 recipe"
       hash: 75f44470da8e5bf99bdf4cd4ea45cbb798909604
-      body: >
+      body: |
         We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
-
         That option is supported in newer versions of chrony.
 
-
         Add chrony 3.2 recipe from meta-openembedded sumo
-
         http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
       footer:
         Change-type: minor
@@ -43529,14 +43198,11 @@
       author: Zubair Lutfullah Kakakhel
     - subject: "chrony/krogoth: Bump recipe version to v3.2"
       hash: 59ac08ea58e59e2d61cc53cadea1b835eb5b4e31
-      body: >
+      body: |
         We added an option in chrony.conf (hwtimestamp) via meta-resin-common.
-
         That option is supported in newer versions of chrony.
 
-
         Add chrony 3.2 recipe from meta-openembedded sumo
-
         http://cgit.openembedded.org/meta-openembedded/tree/meta-networking/recipes-support/chrony?h=sumo
       footer:
         Change-type: minor
@@ -43789,18 +43455,13 @@
       author: Florin Sarbu
     - subject: Include avahi d-bus introspection files in rootfs
       hash: d98f0d47369135f1c88429aac58b73aced3d4f6c
-      body: >
+      body: |
         Poky removes the dbus introspection description documents for avahi.
-
         See:
-
         http://git.yoctoproject.org/cgit.cgi/poky/commit/?id=59a08907eafffde664079b9a2068f47131dd3f5d
 
-
         dbus-native node module requires this data to be available to allow
-
         access to interfaces.
-
 
         Fixes #1140
       footer:

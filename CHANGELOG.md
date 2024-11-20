@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.1.11
+## (2024-11-20)
+
+
+<details>
+<summary> Update tests/leviathan digest to ae505eb [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.62
+> ### (2024-11-20)
+> 
+> * Update actions/checkout digest to 11bd719 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.61
+> ### (2024-11-20)
+> 
+> * Update balena-io/balena-cli to v19.16.0 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.1.10
 ## (2024-11-15)
 
