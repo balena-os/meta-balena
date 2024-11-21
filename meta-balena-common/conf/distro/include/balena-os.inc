@@ -30,6 +30,9 @@ def set_default_kernel_cmdline(d):
     cmdline = 'console=null quiet splash vt.global_cursor_default=0 consoleblank=0'
     if d.getVar('OS_DEVELOPMENT', True) is '1':
         cmdline = ""
+        earlycon = d.getVar('EARLY_SERIAL_CONSOLE', True)
+        if earlycon is not None:
+            cmdline = "earlycon=" + earlycon
         for serial_console in d.getVar('SERIAL_CONSOLES', True).split():
             try:
                 baudrate,port = serial_console.split(';')
