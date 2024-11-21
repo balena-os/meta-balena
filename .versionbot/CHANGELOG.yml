@@ -1,4 +1,18 @@
 - commits:
+    - subject: "balena-os: allow to specify early console for OS development builds"
+      hash: eea406c78c131ec36c2fd8b26f6072f055dec89a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.1.12
+  title: ""
+  date: 2024-11-21T13:18:17.719Z
+- commits:
     - subject: Update tests/leviathan digest to ae505eb
       hash: 42464576742648b84f86795f7d39cae12ff9bb9a
       body: Update tests/leviathan

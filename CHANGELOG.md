@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.12
+## (2024-11-21)
+
+* balena-os: allow to specify early console for OS development builds [Alex Gonzalez]
+
 # v6.1.11
 ## (2024-11-20)
 
