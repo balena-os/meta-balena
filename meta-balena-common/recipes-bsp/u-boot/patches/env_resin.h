@@ -162,7 +162,7 @@
               "setexpr resin_roota ${resin_boot_part} + 1; " \
               "setexpr resin_rootb ${resin_boot_part} + 2; " \
               "run os_inc_bc_save;" \
-              "if test -n ${os_bc_lim}; then " \
+              "if test -n ${os_bc_lim} && test -n ${bootcount}; then " \
                       "if test ${bootcount} -gt ${os_bc_lim}; then " \
                                "echo WARNING! BOOTLIMIT EXCEEDED. SWITCHING TO PREVIOUS ROOT;" \
                                "echo WARNING! was: resin_root_part=${resin_root_part};" \
