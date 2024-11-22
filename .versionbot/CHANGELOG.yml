@@ -1,4 +1,40 @@
 - commits:
+    - subject: "u-boot: env_resin: fix use of skip bootcount"
+      hash: 5fbf52822a0743ead7693364f41da7895d69ce72
+      body: |
+        When `os_bc_skip` is set, the bootcount variable is not set and the
+        altboot check incorrectly assumes the boot limit has exceeded.
+
+        Make sure the bootcount comparison only takes place if bootcount has
+        been set.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: migrate: panic on installation failure"
+      hash: 0277b0573d25dd314fe4b0eda5ca5b3e08b69ce2
+      body: |
+        Right now if the flashing script errors out the initramfs just keeps
+        running modules. This is a security risk specially for secure boot
+        systems as at that point we have an authorized trusted OS running in
+        an unvetted path.
+
+        This commit exits init if the flasher returns, and also attemps to crash
+        the kernel followed by an infinite sleep for paranoic reasons.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.1.13
+  title: ""
+  date: 2024-11-22T14:23:50.319Z
+- commits:
     - subject: "balena-os: allow to specify early console for OS development builds"
       hash: eea406c78c131ec36c2fd8b26f6072f055dec89a
       body: ""

@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.1.13
+## (2024-11-22)
+
+* u-boot: env_resin: fix use of skip bootcount [Alex Gonzalez]
+* initrdscripts: migrate: panic on installation failure [Alex Gonzalez]
+
 # v6.1.12
 ## (2024-11-21)
 
