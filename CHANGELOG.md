@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v6.1.14
+## (2024-11-23)
+
+
+<details>
+<summary> Update tests/leviathan digest to 64ba6a3 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.65
+> ### (2024-11-23)
+> 
+> * Update balena-os/leviathan-worker to v2.9.50 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.64
+> ### (2024-11-23)
+> 
+> * Update core/contracts digest to 88fb8ad [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.63
+> ### (2024-11-23)
+> 
+> * Update balena-io/balena-cli to v20 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.1.13
 ## (2024-11-22)
 

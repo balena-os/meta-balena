@@ -1,4 +1,55 @@
 - commits:
+    - subject: Update tests/leviathan digest to 64ba6a3
+      hash: 186adb94af303adaa002e64c3cb25f99c992e80b
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.50
+              hash: 53f09c362c19fc010065841707727effcc5d2aa6
+              body: |
+                Update balena-os/leviathan-worker from 2.9.47 to 2.9.50
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.65
+          title: ""
+          date: 2024-11-23T20:34:16.707Z
+        - commits:
+            - subject: Update core/contracts digest to 88fb8ad
+              hash: 0652731d7054fbe8431c9a8e4c7eadc9dc5164b1
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.64
+          title: ""
+          date: 2024-11-23T19:35:52.250Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v20
+              hash: 55962849de4bfebaf83fb9d6c226f8ad0220446c
+              body: |
+                Update balena-io/balena-cli from 19.16.0 to 20.0.7
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.63
+          title: ""
+          date: 2024-11-23T18:36:27.695Z
+  version: 6.1.14
+  title: ""
+  date: 2024-11-23T22:50:40.547Z
+- commits:
     - subject: "u-boot: env_resin: fix use of skip bootcount"
       hash: 5fbf52822a0743ead7693364f41da7895d69ce72
       body: |
