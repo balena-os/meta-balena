@@ -58,6 +58,8 @@
 #  * balena-init-flasher-diskenc: Function hooks related to the disk encryption setup.
 #     * diskenc_setup
 #       * Generate and encrypt disk encryption keys
+#     * diskenc_purge
+#       * Wipe disk encryption keys
 #
 
 set -e
@@ -221,6 +223,11 @@ if type secureboot_setup >/dev/null 2>&1 && secureboot_setup; then
         # shellcheck disable=SC1091
         # Re-source after secureboot setup
         . /usr/sbin/balena-config-defaults
+fi
+
+# Make sure old encrypted partitions are no longer usable
+if type diskenc_purge >/dev/null 2>&1 && ! diskenc_purge; then
+    fail "Failed to purge disk encryption keys"
 fi
 
 if [ "$CRYPT" = "1" ]; then
