@@ -66,6 +66,11 @@ migrate_enabled() {
                 if [ "$bootparam_migrate" = "true" ] || jq -re '.installer.migrate.force' "${FLASH_BOOT_MOUNT}/config.json" > /dev/null; then
                     _migrate=1
                     info "Migration requested in configuration"
+                    if target_devices=$(jq -re '.installer.target_devices' "${FLASH_BOOT_MOUNT}/config.json"); then
+                        info "Configured target_devices: $target_devices"
+                        INTERNAL_DEVICE_KERNEL="${target_devices}"
+                        internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
+                    fi
                 fi
             else
                 fail "Flash boot partition not found in ${internal_dev}"
