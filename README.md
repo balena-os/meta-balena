@@ -349,6 +349,17 @@ is passed in the kernel command line.
 }
 ```
 
+#### target_devices
+
+(string) Overrides the default list of provisioning target mediums. May contain one or more
+devices, separated by spaces. The first one found will be used.
+
+```json
+"installer": {
+  "target_devices":"nvme0n1 sda"
+}
+```
+
 ## Yocto version support
 
 The following Yocto versions are supported:
