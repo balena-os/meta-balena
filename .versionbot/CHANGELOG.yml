@@ -1,4 +1,25 @@
 - commits:
+    - subject: "initrdscripts/migrate: Allow overriding of target internal devices"
+      hash: d969fcf547bad87cab45231ee30f59e48b32b6d4
+      body: >
+        ... on flasher images by specifying installer.target_devices in
+        config.json,
+
+        which will be used during migration instead of the list of devices
+        specified
+
+        at boot time.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.1.15
+  title: ""
+  date: 2024-11-26T17:20:05.226Z
+- commits:
     - subject: Update tests/leviathan digest to 64ba6a3
       hash: 186adb94af303adaa002e64c3cb25f99c992e80b
       body: Update tests/leviathan

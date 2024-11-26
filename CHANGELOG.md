@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.15
+## (2024-11-26)
+
+* initrdscripts/migrate: Allow overriding of target internal devices [Alexandru Costache]
+
 # v6.1.14
 ## (2024-11-23)
 
