@@ -204,6 +204,11 @@ if [ -z "${INTERNAL_DEVICE_KERNEL}" ]; then
     fail "Undefined target programming device - make sure INTERNAL_DEVICE_KERNEL is defined"
 fi
 
+if target_devices=$(jq -re '.installer.target_devices' "$CONFIG_PATH"); then
+    info "Using updated target devices list from configuration file: $target_devices"
+    INTERNAL_DEVICE_KERNEL="${target_devices}"
+fi
+
 # Flash Resin image on internal device
 info "Flash internal device... will take around 5 minutes... "
 internal_dev=$(get_internal_device "${INTERNAL_DEVICE_KERNEL}")
