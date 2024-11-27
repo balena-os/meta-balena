@@ -1,4 +1,19 @@
 - commits:
+    - subject: "classes/kernel-balena: Add aufs patches for 6.1 kernels"
+      hash: 87d1cdcd707cf90dc40a760d0307fdb1573498b4
+      body: |
+        Also, aufs5 and aufs6 patches are in the same git repo now.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.1.16
+  title: ""
+  date: 2024-11-27T19:50:52.083Z
+- commits:
     - subject: "initrdscripts/migrate: Allow overriding of target internal devices"
       hash: d969fcf547bad87cab45231ee30f59e48b32b6d4
       body: >

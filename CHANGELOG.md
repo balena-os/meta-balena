@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.16
+## (2024-11-27)
+
+* classes/kernel-balena: Add aufs patches for 6.1 kernels [Florin Sarbu]
+
 # v6.1.15
 ## (2024-11-26)
 
