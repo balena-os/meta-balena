@@ -20,6 +20,7 @@ PACKAGE_INSTALL = " \
     initramfs-module-rorootfs \
     initramfs-module-udev \
     initramfs-module-udevcleanup \
+    initramfs-module-zram \
     initramfs-framework-base \
     udev \
     ${ROOTFS_BOOTSTRAP_INSTALL} \
