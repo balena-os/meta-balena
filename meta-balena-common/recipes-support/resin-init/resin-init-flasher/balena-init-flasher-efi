@@ -143,7 +143,7 @@ secureboot_bootloader_setup() {
             fi
 
             EFI_BINARY_SECUREBOOT="${EFI_BINARY}.secureboot"
-            if [ "${LUKS}" = "1" ]; then
+            if [ "${CRYPT}" = "1" ]; then
                 # If this fails it is a fatal error - the secure boot variant
                 # must be in place when LUKS is enabled
                 mv "${EFI_BINARY_SECUREBOOT}" "${EFI_BINARY}"
@@ -158,7 +158,7 @@ secureboot_bootloader_setup() {
 secureboot_bootloader_postsetup() {
     EFIPART_LABEL="resin-boot"
     if [ -d /sys/firmware/efi ]; then
-        if [ "$LUKS" = "1" ]; then
+        if [ "${CRYPT}" = "1" ]; then
             EFIPART_LABEL="${BALENA_NONENC_BOOT_LABEL}"
         fi
 
