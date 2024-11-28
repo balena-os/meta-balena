@@ -162,14 +162,14 @@ firmware_measures_efibins() {
 }
 
 print_pcr_val_bin() {
-    PCRS=$1
-    PCR_VAL_BIN=$2
-    DIGEST_SIZE=32
-    SKIP=0
+    pcrs=$1
+    pcr_val_bin=$2
+    digest_size=32
+    skip=0
     printf " %s:\n" "sha256"
-    for pcr in $(echo "${PCRS}" | sed 's/,/ /g'); do
-        digest=$(dd if="${PCR_VAL_BIN}" bs=1 count=$DIGEST_SIZE status=none skip=$SKIP | _hexencode)
-        SKIP=$((SKIP + DIGEST_SIZE))
+    for pcr in $(echo "${pcrs}" | sed 's/,/ /g'); do
+        digest=$(dd if="${pcr_val_bin}" bs=1 count=$digest_size status=none skip=$skip | _hexencode)
+        skip=$((skip + digest_size))
         printf "   %s : %s\n" "$pcr" "$digest"
     done
     printf "\n"
