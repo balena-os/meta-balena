@@ -1,4 +1,56 @@
 - commits:
+    - subject: "resin-init-flasher: adapt EFI snippets to non-LUKS devices support"
+      hash: 014cfbc22b26cb642a9ebd59612208866d22497f
+      body: |
+        Adapt the EFI include file to the non-LUKS device support changes
+        introduced in cfa24c60b25699cadd2ca2e6c00232b515c1c6dc.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-config-vars: adapt to flasher non-LUKS device support"
+      hash: 426fd4aa88f25e6b231d017ca26659e07cd06f13
+      body: |
+        Adapt to the changes to the flasher script to support non-LUKS devices
+        introduced in cfa24c60b25699cadd2ca2e6c00232b515c1c6dc.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: add default LUKS configuration"
+      hash: 29df43ae23c12afd821f1e3d4ce3017bd201ca1a
+      body: |
+        The LUKS configuration now lives in the flasher configuration file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: replace the identification of encrypted
+        partitions"
+      hash: 910a88eaf84e571bc53ea50ca167d9e703a063d8
+      body: |
+        Adapt the grub update hook to the changes introduced in
+        https://github.com/balena-os/meta-balena/commit/d50e221988b3eda595bd86f93fd08965d6a09293
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.1.17
+  title: ""
+  date: 2024-12-02T09:47:19.858Z
+- commits:
     - subject: "classes/kernel-balena: Add aufs patches for 6.1 kernels"
       hash: 87d1cdcd707cf90dc40a760d0307fdb1573498b4
       body: |

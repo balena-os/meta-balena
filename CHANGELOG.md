@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v6.1.17
+## (2024-12-02)
+
+* resin-init-flasher: adapt EFI snippets to non-LUKS devices support [Alex Gonzalez]
+* balena-config-vars: adapt to flasher non-LUKS device support [Alex Gonzalez]
+* resin-init-flasher: add default LUKS configuration [Alex Gonzalez]
+* hostapp-update-hooks: replace the identification of encrypted partitions [Alex Gonzalez]
+
 # v6.1.16
 ## (2024-11-27)
 
