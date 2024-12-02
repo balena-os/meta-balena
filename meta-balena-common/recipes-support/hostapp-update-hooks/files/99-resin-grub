@@ -30,8 +30,10 @@ else
 fi
 
 new_part=$(findmnt --noheadings --canonicalize --output SOURCE $SYSROOT -t ext4)
+enc_part=0
 if is_part_encrypted "${new_part}"; then
     blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].children[].name')
+    enc_part=1
 else
     blockdev=$(lsblk -sJ "${new_part}" | jq -r '.blockdevices[].name')
 fi
@@ -75,7 +77,7 @@ else
         fi
 
         EFI_BINARY_SECUREBOOT="${EFI_BINARY}.secureboot"
-        if [ "${type}" = "crypt" ]; then
+        if [ "${enc_part}" = "1" ]; then
             # If this fails it is a fatal error - the secure boot variant
             # must be in place when LUKS is enabled
             mv "${EFI_BINARY_SECUREBOOT}" "${EFI_BINARY}"
@@ -91,7 +93,7 @@ grub_luks_cfg=$(find -L $BALENA_BOOT_MOUNTPOINT -name grub-luks.cfg)
 grub_env=$(find -L $BALENA_BOOT_MOUNTPOINT -name grubenv)
 
 if [ -n "$grub_luks_cfg" ]; then
-    if [ "$type" = "crypt" ]; then
+    if [ "${enc_part}" = "1" ]; then
         "${MV}" "$grub_luks_cfg" "$grub_cfg"
         "${MV}" "$grub_luks_cfg.sig" "$grub_cfg.sig"
     else

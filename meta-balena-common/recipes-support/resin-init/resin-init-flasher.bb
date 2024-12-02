@@ -91,6 +91,7 @@ do_install() {
     echo "BOOTLOADER_SKIP_OUTPUT_BLOCKS_1=${BOOTLOADER_SKIP_OUTPUT_BLOCKS_1}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
 
     if [ "x${SIGN_API}" != "x" ]; then
+        echo "USE_LUKS=${BALENA_USE_LUKS}" >> ${D}/${sysconfdir}/resin-init-flasher.conf
         if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
             install -d ${D}${libexecdir}
             echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf

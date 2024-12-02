@@ -10,7 +10,7 @@ BALENA_NONENC_BOOT_MOUNTPOINT="${BALENA_BOOT_MOUNTPOINT}"
 BALENA_NONENC_BOOT_LABEL="${BALENA_BOOT_LABEL}"
 if type is_secured >/dev/null 2>&1; then
     # LUKS only defined if sourced from flasher script
-    if is_secured || [ "${LUKS}" = "1" ]; then
+    if is_secured || [ "${CRYPT}" = "1" ]; then
         BALENA_NONENC_BOOT_MOUNTPOINT="@@BALENA_NONENC_BOOT_MOUNT@@"
         BALENA_NONENC_BOOT_LABEL="@@BALENA_NONENC_BOOT_LABEL@@"
     fi
