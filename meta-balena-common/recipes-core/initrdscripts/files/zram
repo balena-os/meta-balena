@@ -1,0 +1,58 @@
+#!/bin/sh
+
+# Copyright 2024 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Mounts /tmp as a zram
+#
+# Allows to migrate from devices with reduced memory availability
+
+zram_enabled() {
+    if [ "$bootparam_flasher" != "true" ]; then
+        return 1
+    fi
+}
+
+zram_run() {
+    # Setup zram to contain large, compressible installation images to
+    # reduce memory requirements
+    #
+    # round the zram dev size up to the nearest multiple of $zram_dev_size_mul_b
+    zram_dev_size_mul_b=$(expr 128 \* 1024 \* 1024)
+    _total_size_kb=$(grep MemAvailable /proc/meminfo | awk '{print $2}')
+    zram_dev_size_b=$(expr \( $(expr "$_total_size_kb" \* 1024) + "$zram_dev_size_mul_b" - 1 \) / "$zram_dev_size_mul_b" \* "$zram_dev_size_mul_b")
+    zram_alg=zstd
+
+    # zramctl will occasionally fail the first time with EBUSY
+    for _ in 1 2 3; do
+        zram_dev=$(zramctl --find \
+                           --algorithm "${zram_alg}" \
+                           --size "${zram_dev_size_b}") \
+                    && break
+        sleep 0.1
+    done
+
+    if [ -n "${zram_dev}" ]; then
+        zram_dev_alg=$(awk -F'[][]' '{print $2}' "/sys/class/block/$(basename "${zram_dev}")/comp_algorithm")
+        zram_dev_size_gb=$(echo "${zram_dev_size_b}" | awk '{print $1/1024/1024/1024}')
+
+        info "Created ${zram_dev_size_gb} GB zram device using ${zram_dev_alg} alg"
+
+        mke2fs -O ^has_journal "${zram_dev}"
+        mount "${zram_dev}" /tmp
+    else
+        fail "Unable to create zram device"
+    fi
+}

@@ -16,6 +16,7 @@ SRC_URI:append = " \
     file://udevcleanup \
     file://recovery \
     file://migrate \
+    file://zram \
     "
 
 do_install:append() {
@@ -42,6 +43,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-kexec"
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-migrate"
+    install -m 0755 ${WORKDIR}/zram ${D}/init.d/12-zram
 }
 
 PACKAGES:append = " \
@@ -57,6 +59,7 @@ PACKAGES:append = " \
     initramfs-module-udevcleanup \
     initramfs-module-recovery \
     initramfs-module-migrate \
+    initramfs-module-zram \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -124,5 +127,9 @@ RDEPENDS:initramfs-module-migrate = " \
     balena-config-vars-config \
     "
 FILES:initramfs-module-migrate = "/init.d/92-migrate"
+
+SUMMARY:initramfs-module-zram = "Mount tmp as zram"
+RDEPENDS:initramfs-module-zram = "${PN}-base util-linux-zramctl"
+FILES:initramfs-module-zram = "/init.d/12-zram"
 
 RDEPENDS:${PN}-base:append = " util-linux-mountpoint"
