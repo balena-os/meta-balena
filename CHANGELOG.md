@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v6.1.19
+## (2024-12-03)
+
+* balena-image-initramfs: add zram module [Alex Gonzalez]
+* initrdscripts: add zram module [Alex Gonzalez]
+* resin-init-flasher: search /tmp explicitly [Joseph Kogut]
+* kernel-balena: enable CRYPTO_ZSTD for zram [Joseph Kogut]
+
 # v6.1.18
 ## (2024-12-03)
 

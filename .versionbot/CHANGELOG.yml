@@ -1,4 +1,55 @@
 - commits:
+    - subject: "balena-image-initramfs: add zram module"
+      hash: a121381818b49fc669362ab295fb96ce88396dff
+      body: |
+        This modules mounts /tmp as a zram device.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: add zram module"
+      hash: 3f45fed4444d01f2dff1a2169bb795401ae5f3ea
+      body: |
+        This module mounts /tmp as a zram to take advantage of memory
+        compression so that migration can work on devices with reduced memory
+        availability.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "resin-init-flasher: search /tmp explicitly"
+      hash: 7741fcee4b3a3129a23a7d4673dcf9647129f2e2
+      body: |
+        GNU find option -xdev prohibits descending into directories on other
+        filesystems. Add /tmp as an explicit search path to allow for finding
+        the balenaOS image on zram, such as when migrating.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "kernel-balena: enable CRYPTO_ZSTD for zram"
+      hash: 7f622ab9a10a8e2cd065b85860826cfb18f02269
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.1.19
+  title: ""
+  date: 2024-12-03T16:30:32.869Z
+- commits:
     - subject: Explicitly set GITHUB_TOKEN permissions for yocto workflow
       hash: 30dc4c7b07ec1c877ee7a8b3feb234942eddac0c
       body: ""
