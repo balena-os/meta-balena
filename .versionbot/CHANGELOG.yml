@@ -1,4 +1,18 @@
 - commits:
+    - subject: Explicitly set GITHUB_TOKEN permissions for yocto workflow
+      hash: 30dc4c7b07ec1c877ee7a8b3feb234942eddac0c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.1.18
+  title: ""
+  date: 2024-12-03T13:04:14.122Z
+- commits:
     - subject: "resin-init-flasher: adapt EFI snippets to non-LUKS devices support"
       hash: 014cfbc22b26cb642a9ebd59612208866d22497f
       body: |
