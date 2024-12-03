@@ -14,10 +14,17 @@ on:
       # ESR branches glob pattern
       - "[0-9]+.[0-9]+.x"
 
+permissions:
+  id-token: write # This is required for requesting the JWT #https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#requesting-the-access-token
+  actions: read # We are fetching workflow run results of a merge commit when workflow is triggered by new tag, to see if tests pass
+  pull-requests: write # Read is required to fetch the PR that merged, in order to get the test results. Write is required to create PR comments for workflow approvals.
+  packages: read
+  contents: read
+
 jobs:
   yocto:
     name: Yocto
-    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@2543e49b79e8161d5d2d9f4625ac70101594cd76 # v1.27.10
+    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@master
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
