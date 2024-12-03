@@ -14,6 +14,13 @@ on:
       # ESR branches glob pattern
       - "[0-9]+.[0-9]+.x"
 
+permissions:
+  id-token: write # This is required for requesting the JWT #https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#requesting-the-access-token
+  actions: read # We are fetching workflow run results of a merge commit when workflow is triggered by new tag, to see if tests pass
+  pull-requests: write # Read is required to fetch the PR that merged, in order to get the test results. Write is required to create PR comments for workflow approvals.
+  packages: read
+  contents: read
+
 jobs:
   yocto:
     name: Yocto
