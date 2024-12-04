@@ -1,4 +1,52 @@
 - commits:
+    - subject: "kernel-module-build: update to 3.0.1"
+      hash: 87d1b45fad357cb25eda2bd82c9ea12b3c0645b2
+      body: |
+        This adds a required dependency.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: fix passing of kernel headers version"
+      hash: 4484c59fc924100232cc10303a4636ed0082760a
+      body: |
+        Specifying the kernel headers version was not woriking.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: add dm devices support in FDE test"
+      hash: 89518778741013d099048319cba8846530261dee
+      body: |
+        Use dmsetup to identify encrypted partitions instead of filesystem type
+        as this will work for both LUKS and DM encrypted partitions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: add imx specialization"
+      hash: 539bca4652ccef5d2ec8be9a5b669bcd2f073f27
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.1.20
+  title: ""
+  date: 2024-12-04T12:38:37.422Z
+- commits:
     - subject: "balena-image-initramfs: add zram module"
       hash: a121381818b49fc669362ab295fb96ce88396dff
       body: |

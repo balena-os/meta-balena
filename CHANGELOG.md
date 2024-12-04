@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v6.1.20
+## (2024-12-04)
+
+* kernel-module-build: update to 3.0.1 [Alex Gonzalez]
+* tests: secureboot: fix passing of kernel headers version [Alex Gonzalez]
+* tests: secureboot: add dm devices support in FDE test [Alex Gonzalez]
+* tests: secureboot: add imx specialization [Alex Gonzalez]
+
 # v6.1.19
 ## (2024-12-03)
 
