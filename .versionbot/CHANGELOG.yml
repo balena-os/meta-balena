@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 90d1685
+      hash: 647ef9196e83407d5220e03d1ce3fe09575c5bc8
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 474ab2d
+              hash: 8faa54c6388d41797667a2d2bc51a9b4a8ebad1c
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.66
+          title: ""
+          date: 2024-12-04T18:50:19.476Z
+  version: 6.1.21
+  title: ""
+  date: 2024-12-04T21:36:12.833Z
+- commits:
     - subject: "kernel-module-build: update to 3.0.1"
       hash: 87d1b45fad357cb25eda2bd82c9ea12b3c0645b2
       body: |
