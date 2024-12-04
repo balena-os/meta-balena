@@ -3,6 +3,7 @@
 const fse = require('fs-extra');
 const securebootEfiVarPath = '/sys/firmware/efi/efivars/SecureBoot-*';
 const qmp = require("@balena/node-qmp");
+const path = require('path');
 
 const retry = (fn, delay_ms=250, retries=10 * 4, err) => (
 	!retries
@@ -56,22 +57,21 @@ class secureBoot {
 	async testFullDiskEncryption() {
 		await Promise.all(
 			[
-				{ pattern: '/^\\/mnt\\/boot$/', name: 'Boot partition' },
-				{ pattern: '/^\\/mnt\\/sysroot\\/active$/', name: 'Root partition' },
-				{ pattern: '/^\\/mnt\\/state$/', name: 'State partition' },
-				{ pattern: '/^\\/mnt\\/data$/', name: 'Data partition' },
-			].map(args => this.test.resolveMatch(
+				{ path: '/dev/disk/by-state/resin-boot', name: 'Boot partition' },
+				{ path: '/dev/disk/by-state/resin-rootA', name: 'RootA partition' },
+				{ path: '/dev/disk/by-state/resin-rootB', name: 'RootB partition' },
+				{ path: '/dev/disk/by-state/resin-state', name: 'State partition' },
+				{ path: '/dev/disk/by-state/resin-data', name: 'Data partition' },
+			].map(args => {
+				this.test.resolveMatch(
 					this.worker.executeCommandInHostOS(
-						[
-							'lsblk', '-nlo', 'MOUNTPOINT,TYPE',
-							'|', 'awk', `'$1 ~ ${args.pattern} { print $2 }'`
-						],
+						`. /usr/libexec/os-helpers-fs; is_part_encrypted ${args.path} && echo pass`,
 						this.link,
 					),
-					/crypt/,
+					/pass/,
 					`${args.name} is encrypted`,
 				)
-			)
+			})
 		);
 
 		if (!this.qmp) {
@@ -116,8 +116,8 @@ class secureBoot {
 			const srcDir = `${__dirname}/kernel-module-build/`
 			await fse.copy(srcDir, this.tmpDir);
 			let data = await fse.readFile(`${this.tmpDir}/docker-compose.yml`, 'utf-8')
-			const result = data.replace(/os_version:\s*\S+/, `os_version: ${this.module.headersVersion}`);
-			await fse.writeFile( `${this.tmpDir}/docker-compose.yaml`, result, 'utf-8')
+			const result = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${this.module.headersVersion}`);
+			await fse.writeFile( `${this.tmpDir}/docker-compose.yml`, result, 'utf-8')
 			this.test.comment(`Using kernel headers version ${this.module.headersVersion}`)
 		}
 
@@ -138,7 +138,30 @@ class secureBoot {
 	}
 
 	async waitForFailedBoot() {
-		throw new Error("Method waitForFailedBoot() is not implemented");
+		// confirm that eth link is high
+		// we don't know what the ethernet interface connecting worker to DUT is, so first find that, using the autokit WIRED_IFACE var
+		let iface = await this.worker.executeCommandInWorker(`env | grep WIRED | awk -F'=' '{print $2}'`);
+
+		console.log(`Watching interface: ${iface}`)
+		// confirm that the link is high - confirming that the board is on
+		await this.utils.waitUntil(async() => {
+			console.log('Confirming eth link is present...')
+			let ethLink = await this.worker.executeCommandInWorker(`cat /sys/class/net/${iface}/carrier`);
+			console.log(`Eth link is: ${ethLink}`)
+			return ethLink === '1';
+		})
+
+		// SSH access shouldn't be possible - as the device shouldn't be booting?
+		// the CM4 takes a while to get into a state where we can SSH into it anyway after powering on - so we want to try a good number of times.
+		try {
+			await this.worker.executeCommandInHostOS('echo -n pass',this.link, { max_tries: 20, interval: 1000 });
+			// if we manage to SSH into the DUT, then something has gone wrong - so throw an error which will fail the test
+			throw new Error(`DUT was still reachable over SSH`)
+		} catch (e){
+			// we want / are expecting a failure here, so if the SSH fails after the specified number of retries, we want to return
+			console.log(`DUT was not reachable over SSH`)
+			return
+		}
 	}
 
 	async testBootloaderIntegrity() {
@@ -336,33 +359,6 @@ class rpiSecureBoot extends secureBoot {
 		}
 	}
 
-	async waitForFailedBoot(){
-		// confirm that eth link is high
-		// we don't know what the ethernet interface connecting worker to DUT is, so first find that, using the autokit WIRED_IFACE var
-		let iface = await this.worker.executeCommandInWorker(`env | grep WIRED | awk -F'=' '{print $2}'`);
-
-		console.log(`Watching interface: ${iface}`)
-		// confirm that the link is high - confirming that the board is on
-		await this.utils.waitUntil(async() => {
-			console.log('Confirming eth link is present...')
-			let ethLink = await this.worker.executeCommandInWorker(`cat /sys/class/net/${iface}/carrier`);
-			console.log(`Eth link is: ${ethLink}`)
-			return ethLink === '1';
-		})
-
-		// SSH access shouldn't be possible - as the device shouldn't be booting?
-		// the CM4 takes a while to get into a state where we can SSH into it anyway after powering on - so we want to try a good number of times.
-		try {
-			await this.worker.executeCommandInHostOS('echo -n pass',this.link, { max_tries: 20, interval: 1000 });
-			// if we manage to SSH into the DUT, then something has gone wrong - so throw an error which will fail the test
-			throw new Error(`DUT was still reachable over SSH`)
-		} catch (e){
-			// we want / are expecting a failure here, so if the SSH fails after the specified number of retries, we want to return
-			console.log(`DUT was not reachable over SSH`)
-			return
-		}
-	}
-
 	async testBootloaderIntegrity() {
 		/* Modify boot.sig to fail authentication */
 		await this.worker.executeCommandInHostOS(
@@ -388,6 +384,91 @@ class rpiSecureBoot extends secureBoot {
 			this.waitForFailedBoot(),
 			'Bootloader will not load configuration that fails signature verification',
 		)
+		await this.resetDUT();
+	}
+}
+
+class imxSecureBoot extends secureBoot {
+	async isSecureBootSupported() {
+		let out = await this.worker.executeCommandInHostOS(
+			'if command -v imx-otp-tool > /dev/null; then echo "pass"; fi',
+			this.link
+		)
+		return out === 'pass';
+	}
+
+	async isSecureBootEnabled() {
+		let out = await this.worker.executeCommandInHostOS(
+			'if imx-otp-tool --quiet is-secured; then echo "pass"; fi',
+			this.link
+		)
+		return out === 'pass';
+	}
+
+	async replaceBinaryPattern(pathPattern, pattern='d1002040', replacement='d1002041') {
+		await this.worker.executeCommandInHostOS(
+			[`files=$(find $(dirname ${pathPattern}) -name $(basename ${pathPattern}))`, ';',
+				'for f in ${files}; do ',
+					'tmpfile=$(mktemp)', ';',
+					'xxd -p ${f} > ${tmpfile}', ';',
+					`sed -i "s/${pattern}/${replacement}/g" $tmpfile`, ';',
+					'xxd -p -r ${tmpfile} > ${f}', ';',
+					'rm ${tmpfile}', ';',
+				'done', ';',
+				`sync -f $(dirname ${pathPattern})`
+			],
+			this.link
+		)
+	}
+
+	async testBootloaderIntegrity() {
+		await Promise.all(
+			[
+				{ name:'Bootloader', path: '/mnt/imx/imx-boot-*.csf', pattern: 'd1002040', replacement: 'd1002041' },
+				{ name: 'Balena bootloader', path: '/mnt/imx/Image.gz', pattern: 'd1002040', replacement: 'd1002041' },
+				{ name: 'Device trees', path: '/mnt/imx/*.dtb', pattern: 'd1002040', replacement: 'd1002041' },
+			].map(async (args) => {
+				await(this.replaceBinaryPattern(args.path, args.pattern, args.replacement));
+				await this.test.resolves(
+					this.waitForFailedBoot(),
+					`Device will not boot if ${args.name} fails signature verification`,
+				)
+				await this.resetDUT();
+			})
+		);
+	}
+
+	async testBootloaderConfigIntegrity() {
+		await Promise.all(
+			[
+				{ path: '/mnt/imx/resinOS_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
+				{ path: '/mnt/imx/extra_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
+				{ path: '/mnt/imx/bootcount.env', variable: 'extra_os_cmdline', value: 'test' },
+			].map(async (args) => {
+				await this.worker.executeCommandInHostOS(
+					`echo '${args.variable}=${args.value}' >> ${args.path} && sync -f $(dirname ${args.path})`,
+					this.link
+				)
+				await this.worker.rebootDut(this.link);
+				let cmdline = await this.worker.executeCommandInHostOS(
+						'cat /proc/cmdline',
+						this.link,
+					);
+				await this.test.equal(
+					cmdline.includes(`${args.value}`),
+					false,
+					`Kernel command line has not been modified by ${path.basename(args.path)}`,
+				)
+				await this.worker.executeCommandInHostOS(
+					`rm -f ${args.path} && sync -f $(dirname ${args.path})`,
+					this.link,
+				);
+			})
+		);
+
+		/* Note that the balena bootloader bootenv cannot be used to
+		 * inject kernel command line arguments at the moment */
+
 		await this.resetDUT();
 	}
 }
@@ -448,6 +529,16 @@ module.exports = {
 					this.worker,
 					this.suite, this.os.image.path,
 					{"name": "", "headersVersion": "4.0.16"}));
+				await impl.run(test);
+			},
+		},
+		{
+			title: 'check IMX secure boot',
+			run: async function(test) {
+				const impl = new testSecureBoot(new imxSecureBoot(test,
+					this.worker,
+					this.suite, this.os.image.path,
+					{"name": "", "headersVersion": "6.0.49"}));
 				await impl.run(test);
 			},
 		},
