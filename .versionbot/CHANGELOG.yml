@@ -1,4 +1,21 @@
 - commits:
+    - subject: "os-helpers-fs: add function to erase disks"
+      hash: cb2e8b97f6451c40504543cc0b56130564394bc0
+      body: |
+        The function overwrites the first 16 MiB of each partition (the default
+        LUKS2 header size), as well as the primary and backup GPT partition
+        tables.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.1.22
+  title: ""
+  date: 2024-12-05T17:35:54.393Z
+- commits:
     - subject: Update tests/leviathan digest to 90d1685
       hash: 647ef9196e83407d5220e03d1ce3fe09575c5bc8
       body: Update tests/leviathan

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.22
+## (2024-12-05)
+
+* os-helpers-fs: add function to erase disks [Alex Gonzalez]
+
 # v6.1.21
 ## (2024-12-04)
 
