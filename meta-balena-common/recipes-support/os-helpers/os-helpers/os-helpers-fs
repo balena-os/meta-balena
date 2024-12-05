@@ -467,3 +467,22 @@ split_bootpartition() {
 
     # Do not umount - flasher script will still copy configuration files
 }
+
+erase_disk() {
+    tdisk="${1}"
+    info "Erasing disk ${tdisk}"
+    _sector_size=$(lsblk -nlbo NAME,PHY-SEC,TYPE "/dev/${tdisk}" | grep disk |  awk '{print $2}')
+    _size=$(lsblk -nlbo NAME,SIZE,TYPE "/dev/${tdisk}" | grep disk |  awk '{print $2}')
+    _size_in_sectors=$( expr ${_size} / ${_sector_size} )
+    # Overwrite default LUKS2 header size of 16 MiB
+    _erased_sectors=$( expr 16 \* 1024 \* 1024 / ${_sector_size} )
+    # Erase the first sectors in each partition
+    for _ss in $(parted "/dev/${tdisk}" unit s print | awk '/^[ 0-9]/ {sub("s", ""); print $2}'); do
+            dd if=/dev/urandom of="/dev/${tdisk}" bs="${_sector_size}" count="${_erased_sectors}" seek="${_ss}" conv=sync
+    done
+    # Erase partition table
+    # GPT reserves 34 sector at the start of disk and end of disk as backup
+    GPT_RESERVED_LBA=34
+    dd if=/dev/urandom of="/dev/${tdisk}" bs="${_sector_size}" count="${GPT_RESERVED_LBA}" conv=sync
+    dd if=/dev/urandom of="/dev/${tdisk}" bs="${_sector_size}" seek="$(expr "${_size_in_sectors}" - "${GPT_RESERVED_LBA}" )" count="${GPT_RESERVED_LBA}" conv=sync
+}
