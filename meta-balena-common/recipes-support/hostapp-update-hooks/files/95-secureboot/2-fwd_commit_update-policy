@@ -46,7 +46,7 @@ if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
 	update_reason="Combined policy in use"
 fi
 
-trap 'tpm2_flushcontext "${SESSION_CTX}"' EXIT
+trap 'tpm2_flushcontext "${SESSION_CTX}" 2>/dev/null' EXIT
 
 if tpm_nvram_retrieve_passphrase "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
 	echo "Retrieved passphrase from TPM NVRAM"
