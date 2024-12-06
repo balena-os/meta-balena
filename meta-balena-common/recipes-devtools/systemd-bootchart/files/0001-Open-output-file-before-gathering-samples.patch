@@ -1,0 +1,67 @@
+From 2500d6351b81f024fc1c64b1805d65000b6345ba Mon Sep 17 00:00:00 2001
+From: Joseph Kogut <joseph@balena.io>
+Date: Wed, 5 Apr 2023 16:52:55 -0700
+Subject: [PATCH 1/1] Open output file before gathering samples
+
+When run in initramfs, bootchart is capable of collecting samples during
+the boot process and outputting the chart to /run when finished.
+However, after switch_root, mounted filesystems, including /run, are
+moved to the new root, and all files are deleted.
+
+Open the output file eagerly before gathering samples to ensure the
+chart can be written after switch_root.
+
+Signed-off-by: Joseph Kogut <joseph@balena.io>
+---
+ src/bootchart.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/src/bootchart.c b/src/bootchart.c
+index bb11a42..41b385b 100644
+--- a/src/bootchart.c
++++ b/src/bootchart.c
+@@ -357,6 +357,20 @@ int main(int argc, char *argv[]) {
+         }
+         argv[0][0] = '@';
+ 
++        if (!of) {
++                t = time(NULL);
++                r = strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M", localtime(&t));
++                assert_se(r > 0);
++
++                snprintf(output_file, PATH_MAX, "%s/bootchart-%s.svg", arg_output_path, datestr);
++                of = fopen(output_file, "we");
++        }
++
++        if (!of) {
++                log_error("Error opening output file '%s': %m\n", output_file);
++                return EXIT_FAILURE;
++        }
++
+         schfd = open("/proc/sys/kernel/sched_schedstats", O_WRONLY);
+         if (schfd >= 0) {
+                 write(schfd, "1\n", 2);
+@@ -480,20 +494,6 @@ int main(int argc, char *argv[]) {
+                 ps->smaps = safe_fclose(ps->smaps);
+         }
+ 
+-        if (!of) {
+-                t = time(NULL);
+-                r = strftime(datestr, sizeof(datestr), "%Y%m%d-%H%M", localtime(&t));
+-                assert_se(r > 0);
+-
+-                snprintf(output_file, PATH_MAX, "%s/bootchart-%s.svg", arg_output_path, datestr);
+-                of = fopen(output_file, "we");
+-        }
+-
+-        if (!of) {
+-                log_error("Error opening output file '%s': %m\n", output_file);
+-                return EXIT_FAILURE;
+-        }
+-
+         r = svg_do(of, strna(build), head, ps_first,
+                    samples, pscount, n_cpus, graph_start,
+                    log_start, interval, overrun);
+-- 
+2.40.0
+
