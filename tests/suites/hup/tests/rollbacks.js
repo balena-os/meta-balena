@@ -258,14 +258,26 @@ module.exports = {
 
 				await this.worker.rebootDut(this.link);
 
-				// system.waitForServiceState times out here for some reason, so just use shell
-				await this.worker.executeCommandInHostOS(
-					['while [ "$(systemctl is-active rollback-altboot)" != "inactive" ]',
-						'|| [ "$(systemctl is-active rollback-health)" != "inactive" ]; do sleep 1; done'
-					],
-					this.link,
-				);
+				await this.utils.waitUntil(async () => {
+					console.log(`Waiting for rollback-altboot service to be inactive...`)	
+					let state = await this.worker.executeCommandInHostOS(
+						`systemctl is-active rollback-altboot || true`,
+						this.link
+					)
+					console.log(state)
+					return (state === "inactive");
+				})
 
+				await this.utils.waitUntil(async () => {
+					console.log(`Waiting for rollback-health service to be inactive...`)	
+					let state = await this.worker.executeCommandInHostOS(
+						`systemctl is-active rollback-health || true`,
+						this.link
+					)
+					console.log(state)
+					return (state === "inactive");
+				})
+				
 				await test.resolves(
 					this.utils.waitUntil(async () => {
 						return this.worker.executeCommandInHostOS(
