@@ -1,4 +1,110 @@
 - commits:
+    - subject: Update balena-supervisor to v16.9.0
+      hash: c90b30e22412580fd94a65eb05231a6f49a0fdb4
+      body: |
+        Update balena-supervisor from 16.7.7 to 16.9.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Add ability to stream logs from host services to cloud
+              hash: fb6fa9b16caa33eabeb44414d4681cea52d11784
+              body: >
+                Add `os-power-mode.service`, `nvpmodel.service`, and
+                `os-fan-profile.service`
+
+                which report status from applying power mode and fan profile
+                configs as read
+
+                from config.json. The Supervisor sets these configs in
+                config.json for these
+
+                host services to pick up and apply.
+
+
+                Also add host log streaming from `jetson-qspi-manager.service`
+                as it
+
+                will very soon be needed for Jetson Orins.
+              footer:
+                Relates-to: "#2379"
+                relates-to: "#2379"
+                See: balena-os/balena-jetson-orin#513
+                see: balena-os/balena-jetson-orin#513
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.9.0
+          title: ""
+          date: 2024-12-06T17:52:55.615Z
+        - commits:
+            - subject: Take update locks for host-config changes
+              hash: a2d4b31b231d7e7981d2032b0bb76d301088ca95
+              body: >
+                This adds update-lock support to hostname changes via the
+                host-config
+
+                endpoint, in addition to proxy changes as changing the hostname
+                may
+
+                cause an engine restart from the OS.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.8.0
+          title: ""
+          date: 2024-12-05T17:06:07.578Z
+        - commits:
+            - subject: Clean up remaining locks on state settle
+              hash: 9c09329b86f08523501d4fbc54511cb2051b4bea
+              body: >
+                Locks could remain from a previous supervisor run that didn't
+                get to
+
+                settle the state. This ensures that cleanup will happen for
+                remaining
+
+                locks every time the state is settled.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Refactor update-locks implementation
+              hash: 3c6e9dd209a259211ed3fd2e7bbe00f3235f87aa
+              body: >
+                The refactor simplifies the implementation and ensures that
+                locks per
+
+                app can only be held by one supervisor task at the time.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Refactor lockfile module
+              hash: d8f54c05e7536096576ada4db3294785bef6b0ff
+              body: |
+                Updated interfaces for clarity
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.7.8
+          title: ""
+          date: 2024-11-28T21:23:24.352Z
+  version: 6.1.23
+  title: ""
+  date: 2024-12-06T19:49:58.749Z
+- commits:
     - subject: "os-helpers-fs: add function to erase disks"
       hash: cb2e8b97f6451c40504543cc0b56130564394bc0
       body: |

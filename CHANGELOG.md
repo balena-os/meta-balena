@@ -1,6 +1,33 @@
 Change log
 -----------
 
+# v6.1.23
+## (2024-12-06)
+
+
+<details>
+<summary> Update balena-supervisor to v16.9.0 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.9.0
+> ### (2024-12-06)
+> 
+> * Add ability to stream logs from host services to cloud [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.8.0
+> ### (2024-12-05)
+> 
+> * Take update locks for host-config changes [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.7.8
+> ### (2024-11-28)
+> 
+> * Clean up remaining locks on state settle [Felipe Lalanne]
+> * Refactor update-locks implementation [Felipe Lalanne]
+> * Refactor lockfile module [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.1.22
 ## (2024-12-05)
 
