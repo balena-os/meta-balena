@@ -73,6 +73,9 @@ SPLASH = "plymouth"
 
 IMAGE_CLASSES += "image_types_balena"
 
+IMAGE_NAME ?= "${IMAGE_LINK_NAME}${IMAGE_VERSION_SUFFIX}"
+IMAGE_LINK_NAME ?= "${IMAGE_BASENAME}${IMAGE_MACHINE_SUFFIX}${IMAGE_NAME_SUFFIX}"
+
 # Define the URL where resin exposes source or prebuilt packages
 AMAZON_BALENA_SHARE = "https://s3.amazonaws.com/resin-share/build_requirements"
 
@@ -90,6 +93,7 @@ OS_KERNEL_SECUREBOOT_CMDLINE ?= "module.sig_enforce lockdown=integrity"
 # Initramfs
 INITRAMFS_IMAGE = "balena-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
+INITRAMFS_IMAGE_NAME = "${INITRAMFS_IMAGE}${IMAGE_MACHINE_SUFFIX}"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
 
@@ -121,6 +125,8 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 
 # let's pin linux-firmware to the version we imported from Poky kirkstone release
 PREFERRED_VERSION_linux-firmware = "20230404"
+
+#PREFERRED_VERSION_gcc = "11.4"
 
 # balena-engine go version requirement
 GOVERSION = "1.17.13"
