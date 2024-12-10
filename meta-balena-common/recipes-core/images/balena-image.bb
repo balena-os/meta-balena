@@ -18,7 +18,7 @@ IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
 
 IMAGE_FSTYPES = "balenaos-img"
 
-inherit core-image image-balena features_check
+inherit core-image image-balena features_check sign-digest
 
 SPLASH += "plymouth-balena-theme"
 
@@ -58,10 +58,25 @@ generate_hostos_version () {
     echo "${HOSTOS_VERSION}" > ${DEPLOY_DIR_IMAGE}/VERSION_HOSTOS
 }
 
+symlink_image_signature () {
+    # This is probably not the correct way to do it, but it works.
+    # We sign BALENA_RAW_IMG, which ends up in IMGDEPLOYDIR
+    # and has a timestamp in the file name. We need to get rid
+    # of the timestamp for the final deploy, so that the file
+    # ends up in a predictable location.
+
+    if [ -n "${SIGN_API}" ]; then
+        ln -sf "${BALENA_RAW_IMG}.sig" "${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img.sig"
+    fi
+}
+
 DEPENDS += "jq-native"
 
 IMAGE_PREPROCESS_COMMAND:append = " generate_rootfs_fingerprints ; "
-IMAGE_POSTPROCESS_COMMAND += " generate_hostos_version ; "
+IMAGE_POSTPROCESS_COMMAND += " \
+    generate_hostos_version ; \
+    symlink_image_signature ; \
+"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     balena-logo.png:/splash/balena-logo.png \
@@ -96,3 +111,6 @@ BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE
 
 addtask image_size_check after do_image_balenaos_img before do_image_complete
 do_resin_boot_dirgen_and_deploy[depends] += "redsocks:do_deploy"
+
+SIGNING_ARTIFACTS = "${BALENA_RAW_IMG}"
+addtask sign_digest after do_image_balenaos_img before do_image_complete
