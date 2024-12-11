@@ -1,3 +1,9 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+# SPDX-License-Identifier: MIT
+#
+
 inherit rust
 
 RDEPENDS:${PN}:append:class-target = " ${RUSTLIB_DEP}"
@@ -93,7 +99,6 @@ do_configure () {
 }
 
 oe_runrustc () {
-	export RUST_TARGET_PATH="${RUST_TARGET_PATH}"
 	bbnote ${RUSTC} ${RUSTC_ARCHFLAGS} ${RUSTC_FLAGS} "$@"
 	"${RUSTC}" ${RUSTC_ARCHFLAGS} ${RUSTC_FLAGS} "$@"
 }
