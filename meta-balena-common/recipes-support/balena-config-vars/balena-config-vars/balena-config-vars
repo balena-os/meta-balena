@@ -130,6 +130,13 @@ if [ "${USE_CACHE}" -eq "1" ] && [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "$
 else
     [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -f "${BALENA_CONFIG_VARS_CACHE}" ] && rm -f "${BALENA_CONFIG_VARS_CACHE}"
 
+    # Grab lock
+    exec 120> "$(dirname ${BALENA_CONFIG_VARS_CACHE})/lock"
+    if ! flock -w 20 120; then
+        echo "[ERROR] $0: Failed to acquire lock." >&2
+        exit 1
+    fi
+
     # If config.json provides redefinitions for our vars let us rewrite their
     # runtime value
     if ! read_config; then
