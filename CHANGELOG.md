@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.1.24
+## (2024-12-11)
+
+
+<details>
+<summary> Update balena-supervisor to v16.10.1 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.10.1
+> ### (2024-12-11)
+> 
+> * Specify `/tmp/balena|resin` directories as necessary [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.10.0
+> ### (2024-12-10)
+> 
+> * Add PowerFanConfig config backend [Christina Ying Wang]
+> 
+
+</details>
+
 # v6.1.23
 ## (2024-12-06)
 

@@ -1,4 +1,96 @@
 - commits:
+    - subject: Update balena-supervisor to v16.10.1
+      hash: e64d17f5215a91dcc179373f70e71c842fb16d03
+      body: |
+        Update balena-supervisor from 16.9.0 to 16.10.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Specify `/tmp/balena|resin` directories as necessary
+              hash: dc740a159b9b299b85885bc8ab65e97cc4d356a3
+              body: ""
+              footer:
+                See: https://forums.balena.io/t/rm-cant-remove-tmp-balena-resource-busy/367888/5
+                see: https://forums.balena.io/t/rm-cant-remove-tmp-balena-resource-busy/367888/5
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.10.1
+          title: ""
+          date: 2024-12-11T00:28:17.295Z
+        - commits:
+            - subject: Add PowerFanConfig config backend
+              hash: 828bd22ba053aa08ca2bde8e72b3aa7ed82aae02
+              body: >
+                This config backend uses ConfigJsonConfigBackend to update
+
+                os.power and os.fan subfields under the "os" key, in order
+
+                to set power and fan configs. The expected format for os.power
+
+                and os.fan settings is:
+
+                ```
+
+                {
+                  os: {
+                    power: {
+                      mode: string
+                    },
+                    fan: {
+                      profile: string
+                    }
+                  }
+                }
+
+                ```
+
+
+                There may be other keys in os which are not managed by the
+                Supervisor,
+
+                so PowerFanConfig backend doesn't read or write to them. Extra
+                keys in os.power
+
+                and os.fan are ignored when getting boot config and removed when
+                setting
+
+                boot config.
+
+
+                After this backend writes to config.json, host services
+                os-power-mode
+
+                and os-fan-profile pick up the changes, on reboot in the
+                former's case
+
+                and at runtime in the latter's case. The changes are applied by
+                the host
+
+                services, which the Supervisor does not manage aside from
+                streaming
+
+                their service logs to the dashboard.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.10.0
+          title: ""
+          date: 2024-12-10T23:28:15.038Z
+  version: 6.1.24
+  title: ""
+  date: 2024-12-11T02:06:58.327Z
+- commits:
     - subject: Update balena-supervisor to v16.9.0
       hash: c90b30e22412580fd94a65eb05231a6f49a0fdb4
       body: |
