@@ -334,7 +334,7 @@ def rust_gen_target(d, thing, wd, arch):
         if arch == "arm" and target_is_armv7(d):
             arch = 'armv7'
 
-    rust_arch = oe.rust.arch_to_rust_arch(arch)
+    rust_arch = set_rust_arch(arch)
 
     if abi:
         arch_abi = "{}-{}".format(rust_arch, abi)
