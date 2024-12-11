@@ -19,6 +19,13 @@ RUSTFLAGS += "${RUSTLIB} ${RUST_DEBUG_REMAP}"
 RUSTLIB_DEP ?= "libstd-rs"
 RUST_PANIC_STRATEGY ?= "unwind"
 
+def set_rust_arch(arch):
+    try:
+        import oe.rust
+        return oe.rust.arch_to_rust_arch(arch)
+    except ImportError or ModuleNotFoundError:
+        return arch
+
 def target_is_armv7(d):
     '''Determine if target is armv7'''
     # TUNE_FEATURES may include arm* even if the target is not arm
@@ -51,7 +58,7 @@ def rust_base_triple(d, thing):
     if d.getVar('{}_ARCH'.format(thing)) == d.getVar('TARGET_ARCH') and target_is_armv7(d):
         arch = "armv7"
     else:
-        arch = oe.rust.arch_to_rust_arch(d.getVar('{}_ARCH'.format(thing)))
+        arch = set_rust_arch(d.getVar('{}_ARCH'.format(thing)))
 
     # Substituting "unknown" when vendor is empty will match rust's standard
     # targets when building native recipes (including rust-native itself)
@@ -71,7 +78,7 @@ def rust_base_triple(d, thing):
 
 
 # In some cases uname and the toolchain differ on their idea of the arch name
-RUST_BUILD_ARCH = "${@oe.rust.arch_to_rust_arch(d.getVar('BUILD_ARCH'))}"
+RUST_BUILD_ARCH = "${@set_rust_arch(d.getVar('BUILD_ARCH'))}"
 
 # Naming explanation
 # Yocto
