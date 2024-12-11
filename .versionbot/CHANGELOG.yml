@@ -1,4 +1,68 @@
 - commits:
+    - subject: "github/workflows: Add yocto label to runs_on"
+      hash: be897c850fcb972c64f2297f3ebc4a49b12acfd1
+      body: |
+        ... to allow for more powerfull runners to be used.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Update tests/leviathan digest to 3a37005
+      hash: 7a23d993a7b47732298adbbc319c5e154456b874
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "os/balenaos: Update Xavier and Xavier NX boot partitions for JP5"
+              hash: 0055ae3fd3ec51301ad7905a8e883bfbfd3bf105
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru
+              nested: []
+          version: leviathan-2.31.69
+          title: ""
+          date: 2024-12-10T08:39:47.608Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v20.0.9
+              hash: 089823393a02e0883a84e77ce53ee8254c141b35
+              body: |
+                Update balena-io/balena-cli from 20.0.7 to 20.0.9
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.68
+          title: ""
+          date: 2024-12-07T01:09:56.227Z
+        - commits:
+            - subject: Make leviathan worker ref configurable via env var
+              hash: ad7e4369929b6dfe2b78467e1b188738642bdea2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.31.67
+          title: ""
+          date: 2024-12-06T23:12:09.629Z
+  version: 6.1.25
+  title: ""
+  date: 2024-12-11T16:56:06.987Z
+- commits:
     - subject: Update balena-supervisor to v16.10.1
       hash: e64d17f5215a91dcc179373f70e71c842fb16d03
       body: |
