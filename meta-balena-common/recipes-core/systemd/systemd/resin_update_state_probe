@@ -38,13 +38,10 @@ valid_device() {
 
 # If the UUIDs have been regenerated in this boot, the root UUID is stored
 # on a temporary file, otherwise fetch from the kernel command line
-if [ -d "/run/initramfs" ]; then
+if [ -f "/run/bootparam_root.mux" ]; then
 	# Avoid a race condition between udev and writing the file
-	wait4rm "/run/initramfs/bootparam_root.mux" 30
-	new_root="/run/initramfs/bootparam_root"
-else
-	# Older releases do not create /run and use /tmp instead
-	new_root="/tmp/initramfs/bootparam_root"
+	wait4rm "/run/bootparam_root.mux" 30
+	new_root="/run/bootparam_root"
 fi
 if [ -f "${new_root}" ]; then
 	ruuid=$(cat "${new_root}" | cut -c6-)
