@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.1.26
+## (2024-12-12)
+
+
+<details>
+<summary> Update tests/leviathan digest to f308947 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.70
+> ### (2024-12-12)
+> 
+> * Update balena-io/balena-cli to v20.1.0 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.1.25
 ## (2024-12-11)
 

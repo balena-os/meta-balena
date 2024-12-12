@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to f308947
+      hash: 765f82092dfd8287b6b2e536d9dda5d6fb3d4bed
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v20.1.0
+              hash: 8f2efe31f565c8d83d13a70556038c8205a37dbe
+              body: |
+                Update balena-io/balena-cli from 20.0.9 to 20.1.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.70
+          title: ""
+          date: 2024-12-12T14:36:37.767Z
+  version: 6.1.26
+  title: ""
+  date: 2024-12-12T17:39:28.847Z
+- commits:
     - subject: "github/workflows: Add yocto label to runs_on"
       hash: be897c850fcb972c64f2297f3ebc4a49b12acfd1
       body: |
