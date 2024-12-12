@@ -1,7 +1,7 @@
 PACKAGES =+ "${PN}-rtl8188eu"
 
 FILES:${PN}-rtl8188eu = " \
-    /lib/firmware/rtlwifi/rtl8188eu*.bin* \
+    ${nonarch_base_libdir}/firmware/rtlwifi/rtl8188eu*.bin* \
     "
 
 PACKAGES =+ "${PN}-iwlwifi-9260"
