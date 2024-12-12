@@ -21,7 +21,7 @@ IWLWIFI_FW_MIN_API[9260-th-b0-jf-b0] = "46"
 PACKAGES =+ "${PN}-rtl8188eu"
 
 FILES:${PN}-rtl8188eu = " \
-    /lib/firmware/rtlwifi/rtl8188eu*.bin* \
+    ${nonarch_base_libdir}/firmware/rtlwifi/rtl8188eu*.bin* \
     "
 
 PACKAGES =+ "${PN}-iwlwifi-9260"
