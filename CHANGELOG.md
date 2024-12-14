@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.27
+## (2024-12-14)
+
+* README: Add fan profile and power mode info to docs [Alexandru Costache]
+
 # v6.1.26
 ## (2024-12-12)
 

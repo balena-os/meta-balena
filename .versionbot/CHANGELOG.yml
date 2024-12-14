@@ -1,4 +1,21 @@
 - commits:
+    - subject: "README: Add fan profile and power mode info to docs"
+      hash: b48a99a247cf28ecbf46864f9f41f92c8828d1f7
+      body: |
+        This commit adds detailed information for the
+        new power and cooling configuration options
+        available for Jetson Orin devices.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Change-type: patch
+        change-type: patch
+      author: Alexandru Costache
+      nested: []
+  version: 6.1.27
+  title: ""
+  date: 2024-12-14T13:36:02.387Z
+- commits:
     - subject: Update tests/leviathan digest to f308947
       hash: 765f82092dfd8287b6b2e536d9dda5d6fb3d4bed
       body: Update tests/leviathan
