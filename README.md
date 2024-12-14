@@ -315,6 +315,41 @@ The following example contains two custom udev rules that will create `/etc/udev
 }
 ```
 
+#### fan
+
+An object that defines thermal related configuration. Available for Jetson Orin devices running Jetpack 6 or newer, balenaOS v6.1.24 or newer and Supervisor v16.10.0 or newer.
+
+##### fan.profile
+
+(string) A string which will be used to select the desired cooling profile. Supported values are "quiet" and "cool". At runtime, this
+configuration option should be set through the API or from your balenaCloud dashboard.
+
+```json
+"os": {
+ "fan": {
+  "profile":"cool"
+ }
+}
+```
+
+#### power
+
+An object that defines power consumption related configuration. Available for Jetson Orin devices running Jetpack 6 or newer, balenaOS v6.1.24 or newer and Supervisor v16.10.0 or newer.
+
+##### power.mode
+
+(string) A string which will be used to select the desired power mode. Supported values for Jetpack 6 and newer are "low", "mid" and "high", where "low"
+is the lowest power consumption mode while "high" corresponds to MAXN or the highest available power mode for your device type. At runtime, this
+configuration option should be set through the API or from your balenaCloud dashboard, and it will cause a device reboot.
+
+```json
+"os": {
+ "power": {
+  "mode":"high"
+ }
+}
+```
+
 ### installer
 
 An object that configures the behaviour of the balenaOS installer image.
