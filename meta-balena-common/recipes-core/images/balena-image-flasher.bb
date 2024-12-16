@@ -13,7 +13,7 @@ IMAGE_FSTYPES = "balenaos-img"
 BALENA_ROOT_FSTYPE = "ext4"
 
 # Make sure you have the resin image ready
-do_image_balenaos_img[depends] += "balena-image:do_rootfs"
+do_image_balenaos_img[depends] += "balena-image:do_rootfs balena-image:do_sign_digest"
 
 # Ensure we have the raw balena image ready in DEPLOY_DIR_IMAGE
 do_image[depends] += "balena-image:do_image_complete"
@@ -61,6 +61,9 @@ BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.js
 add_resin_image_to_flasher_rootfs() {
     mkdir -p ${WORKDIR}/rootfs/opt
     cp ${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img ${WORKDIR}/rootfs/opt
+    if [ -n "${SIGN_API}" ]; then
+        cp "${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img.sig" "${WORKDIR}/rootfs/opt/"
+    fi
 }
 
 IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "
