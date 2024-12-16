@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.2.0
+## (2024-12-16)
+
+* resin-init-flasher: with secure boot, authenticate the inner image [Michal Toman]
+
 # v6.1.27
 ## (2024-12-14)
 

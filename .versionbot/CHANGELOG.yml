@@ -1,4 +1,29 @@
 - commits:
+    - subject: "resin-init-flasher: with secure boot, authenticate the inner image"
+      hash: 1ae37ac158b93df836126030abec8c3d3f69d92b
+      body: |
+        At this moment resin-init-flasher just takes whatever image lies in /opt
+        and dd's it to the target drive. This is fine for general use, but with
+        secure boot enabled, we want to perform at least basic authentication
+        of the image being written.
+
+        This patch gets the image signed at build time and makes flasher verify
+        the signature against a key built-in the kernel trust store. At this
+        very moment it fails hard if the signature does not match, but this may
+        change in the future. Technically we only want to know if we are about
+        to flash a balena-provided image or not, we might want to support both
+        but behave slightly differently in each scenario.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.2.0
+  title: ""
+  date: 2024-12-16T14:06:35.499Z
+- commits:
     - subject: "README: Add fan profile and power mode info to docs"
       hash: b48a99a247cf28ecbf46864f9f41f92c8828d1f7
       body: |
