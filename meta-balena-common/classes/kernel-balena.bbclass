@@ -130,6 +130,7 @@ BALENA_CONFIGS ?= " \
     mbim \
     qmi \
     misc \
+    panic \
     redsocks \
     reduce-size \
     security \
@@ -500,7 +501,6 @@ BALENA_CONFIGS[qmi] = " \
 # various other configurations
 BALENA_CONFIGS[misc] = " \
     CONFIG_USB_SERIAL_CP210X=m \
-    CONFIG_PANIC_TIMEOUT=1 \
     CONFIG_DEBUG_FS=y \
     "
 
@@ -510,6 +510,12 @@ BALENA_CONFIGS_DEPS[misc] = " \
     CONFIG_IP_NF_TARGET_LOG=m \
     CONFIG_NETFILTER_XT_TARGET_LOG=m \
     CONFIG_NF_NAT_REDIRECT=m \
+"
+
+# Reset on oops
+BALENA_CONFIGS[panic] = " \
+    CONFIG_PANIC_ON_OOPS=y \
+    CONFIG_PANIC_TIMEOUT=1 \
 "
 
 # configs needed for our usage of redsocks
