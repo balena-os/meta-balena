@@ -2,6 +2,8 @@
 # Balena images customizations
 #
 
+ROOTFS_RO_UNNEEDED = "udev-hwdb"
+
 inherit image_types_balena kernel-balena-noimage
 
 # When building a Balena OS image, we also generate the kernel modules headers
