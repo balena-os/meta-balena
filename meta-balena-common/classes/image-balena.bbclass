@@ -2,6 +2,8 @@
 # Balena images customizations
 #
 
+ROOTFS_RO_UNNEEDED = "udev-hwdb"
+
 inherit image_types_balena kernel-balena-noimage
 
 # Override if the device-type.json file is not named as the machine
