@@ -49,6 +49,10 @@ EXTRA_OEMESON += " \
     -Dfirewalld_zone=false \
     "
 
+# disable init script as we use systemd
+INITSCRIPT_PACKAGES = ""
+INITSCRIPT_NAME:${PN}-daemon = ""
+
 do_install:append() {
     install -d ${D}${sysconfdir}/tmpfiles.d
     install -m 0644 ${WORKDIR}/nm-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
