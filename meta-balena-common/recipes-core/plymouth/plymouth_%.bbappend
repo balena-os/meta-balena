@@ -29,7 +29,7 @@ do_install:append() {
     rm ${D}${nonarch_libdir}/plymouth/two-step.*
 
     # Themes are installed separately
-    rm -r ${D}${datadir}/plymouth/themes
+    rm -r ${D}${datadir}/plymouth/themes || true
     rm ${D}/${datadir}/plymouth/plymouthd.defaults
 
     # Don't stop splash at boot
