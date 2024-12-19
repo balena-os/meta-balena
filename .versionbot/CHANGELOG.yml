@@ -1,4 +1,21 @@
 - commits:
+    - subject: "classes: kernel-balena: configure reset on oops"
+      hash: dc2c8fc20d27d269d0132981ab03e62c882a9e8b
+      body: |
+        This is specially useful to prevent devices freezing at boot on errors,
+        for example when the initramfs fail() is called allowing the device to
+        reboot and rollback.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.2.1
+  title: ""
+  date: 2024-12-19T11:55:56.499Z
+- commits:
     - subject: "resin-init-flasher: with secure boot, authenticate the inner image"
       hash: 1ae37ac158b93df836126030abec8c3d3f69d92b
       body: |
