@@ -35,24 +35,22 @@ set -o errexit
 EFI_MOUNT_DIR="/mnt/efi"
 PASSPHRASE_FILE="$(mktemp -t)"
 SESSION_CTX="$(mktemp -t)"
-POLICY_PATH="$(find "${EFI_MOUNT_DIR}" -type d -name "policies.*")"
+CURRENT_POLICY_PATH="$(find "${EFI_MOUNT_DIR}" -type d -name "policies.*")"
 tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
 tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:0,2,3,7"
 
 update_reason=""
-POLICIES="$(find "${POLICY_PATH}" -type f | sort | xargs)"
+POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
 if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
 	tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
 	update_reason="Combined policy in use"
 fi
 
-trap 'tpm2_flushcontext "${SESSION_CTX}"' EXIT
+trap 'tpm2_flushcontext "${SESSION_CTX}" 2>/dev/null' EXIT
 
-if hw_decrypt_passphrase "${EFI_MOUNT_DIR}" "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
-	echo "Unlocked passphrase using pcr:sha256:0,2,3,7"
-elif hw_decrypt_passphrase "${EFI_MOUNT_DIR}" "pcr:sha256:0,1,2,3" "${PASSPHRASE_FILE}"; then
-	echo "Unlocked passphrase using pcr:sha256:0,1,2,3, migrating to 0,2,3,7"
-	update_reason="Legacy PCRs in use"
+if tpm_nvram_retrieve_passphrase "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
+	echo "Retrieved passphrase from TPM NVRAM"
+	rm -f "${EFI_MOUNT_DIR}/balena-luks.*"
 else
 	echo "Failed to unlock passphrase, abort"
 	exit 1
@@ -60,74 +58,61 @@ fi
 
 tpm2_flushcontext "${SESSION_CTX}" >/dev/null 2>&1
 
-POLICY="$(mktemp -t)"
+POLICY_PATH="$(mktemp -t -d policies.XXXXX)"
+POLICY="$(mktemp -p "${POLICY_PATH}")"
 PCRS="0,2,3,7"
 PCR_VAL_BIN="$(mktemp -t)"
-RESULT_DIR="$(mktemp -d)"
 EFI_BINARIES=" \
 	$(find "${EFI_MOUNT_DIR}" -name bootx64.efi -print -quit) \
 	$(find /boot -name bzImage -print -quit)
 	"
 
-for pcr in $(echo ${PCRS} | sed 's/,/ /g'); do
-	case $pcr in
-		7)
-			digest="$(compute_pcr7)"
+if [ "$(firmware_measures_efibins)" = "measured" ]; then
+	generate_pcr_digests \
+		"${PCRS}" \
+		"${PCR_VAL_BIN}" \
+		"${EFI_BINARIES}"
+else
+	generate_pcr_digests \
+		"${PCRS}" \
+		"${PCR_VAL_BIN}"
+fi
 
-			if [ "$(firmware_measures_efibins)" = "measured" ]; then
-				for bin in ${EFI_BINARIES}; do
-					extend="$(tcgtool -s "$bin" \
-						| tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
-						| _sha256 )"
-					digest="$(printf '%s%s' "$digest" "$extend" \
-						| _hexdecode | _sha256 )"
-				done
-			fi
-
-			current_digest="$( \
-				tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 \
-					| _hexencode)"
-			if [ "$current_digest" != "$digest" ]; then
-				update_reason="PCR7 computed value changed"
-			fi
-		;;
-		*)
-			digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
-		;;
-	esac
-
-	printf "%s" "$digest" | _hexdecode \
-		| dd of="${PCR_VAL_BIN}" \
-		     status=none \
-		     bs=1 \
-		     seek="$(du -b "${PCR_VAL_BIN}" | cut -f1)"
-done
+stdout=/dev/fd/1
+current_digest="$(tpm2_pcrread --quiet "sha256:7" -o "${stdout}" | _hexencode)"
+computed_digest="$(dd if="${PCR_VAL_BIN}" bs=1 status=none skip=$((32 * 3)) | _hexencode)"
+if [ "${current_digest}" != "${computed_digest}" ]; then
+	update_reason="PCR7 computed value changed"
+fi
 
 if [ -n "${update_reason}" ]; then
 	echo "${update_reason}, updating policy"
+	print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN}"
+
 	tpm2_createpolicy --policy-pcr \
 		-l "sha256:${PCRS}" \
 		-f "${PCR_VAL_BIN}" \
 		-L "${POLICY}"
-	hw_encrypt_passphrase "${PASSPHRASE_FILE}" "${POLICY}" "${RESULT_DIR}"
+	
+	tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_PATH}"
 
-	tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
-	mv "${RESULT_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx" && sync
-	mv "${RESULT_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc" && sync
+	# shellcheck disable=SC2012
+	if [ "$(ls -1 "${POLICY_PATH}" | wc -l)" -gt 1 ]; then
+		cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
+	fi
 
-	POLICY_PATH="$(find "${EFI_MOUNT_DIR}" -type d -name "policies.*")"
-
-	rm -rf "${RESULT_DIR}" \
-		"${POLICY}" \
-		"${PCR_VAL_BIN}" \
-		"${PASSPHRASE_FILE}" \
-		"${POLICY_PATH}"
+	rm -rf "${PCR_VAL_BIN}" \
+	      "${PASSPHRASE_FILE}" \
+	      "${CURRENT_POLICY_PATH}"
 
 	sync
 
-	# reboot to ensure the passphrase can be unlocked again, otherwise HUP
-	# won't work until the device is manually rebooted
-	reboot
+	if [ "${current_digest}" != "${computed_digest}" ]; then
+		# reboot to ensure the passphrase can be unlocked again,
+		# otherwise HUP won't work until the device is manually
+		# rebooted
+		reboot
+	fi
 else
 	echo "PCR7 computed value is unchanged"
 fi
