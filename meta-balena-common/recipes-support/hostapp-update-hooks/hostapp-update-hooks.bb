@@ -31,13 +31,15 @@ HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUR
 HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
 HOSTAPP_HOOKS_DIRS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUREBOOT_HOOK_DIRS}', '', d)}"
 
+GRUB_INSTALL_DIR = "${@bb.utils.contains('MACHINE_FEATURES','efi','/EFI/BOOT','/grub',d)}"
+
 BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
 BALENA_BOOTFILES_BLACKLIST="\
 	/config.json \
 	/config.txt \
 	/splash/balena-logo.png \
 	/extra_uEnv.txt \
-	/grub_extraenv \
+	/${GRUB_INSTALL_DIR}/grub_extraenv \
 	/configfs.json \
 	/hw_intfc.conf \
 	/bootenv \
