@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.2.2
+## (2024-12-20)
+
+* hostapp-update-hooks: fix path for grub_extraenv in blacklist [Alex Gonzalez]
+
 # v6.2.1
 ## (2024-12-19)
 

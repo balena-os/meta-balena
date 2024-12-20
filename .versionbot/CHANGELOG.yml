@@ -1,4 +1,20 @@
 - commits:
+    - subject: "hostapp-update-hooks: fix path for grub_extraenv in blacklist"
+      hash: a3d5424af810b62a672f325ef666c366776b0502
+      body: |
+        The `grub_extraenv` file is actually either installed under `/grub` for
+        MBR systems or `/EFI/BOOT` for EFI ones.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.2.2
+  title: ""
+  date: 2024-12-20T12:03:20.889Z
+- commits:
     - subject: "classes: kernel-balena: configure reset on oops"
       hash: dc2c8fc20d27d269d0132981ab03e62c882a9e8b
       body: |
