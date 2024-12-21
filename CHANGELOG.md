@@ -1,6 +1,46 @@
 Change log
 -----------
 
+# v6.2.3
+## (2024-12-21)
+
+
+<details>
+<summary> Update tests/leviathan digest to 2a609bc [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.76
+> ### (2024-12-19)
+> 
+> * lib/components/os: Add SRD3 JP4 and JP5 device type boot partition indexes [Alexandru Costache]
+> 
+> ## leviathan-2.31.75
+> ### (2024-12-19)
+> 
+> * Update balena-io/balena-cli to v20.1.2 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.74
+> ### (2024-12-19)
+> 
+> * Update docker/setup-buildx-action digest to 6524bf6 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.73
+> ### (2024-12-18)
+> 
+> * Update core/contracts digest to 9383b36 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.72
+> ### (2024-12-18)
+> 
+> * Update actions/upload-artifact digest to 6f51ac0 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.71
+> ### (2024-12-17)
+> 
+> * Enable selection of workers with locked DUT in secureboot tests [Ryan Cooke]
+> 
+
+</details>
+
 # v6.2.2
 ## (2024-12-20)
 
