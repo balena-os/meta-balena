@@ -1,7 +1,7 @@
 require cmake.inc
 inherit native
 
-DEPENDS += "bzip2-replacement-native expat-native xz-native zlib-native curl-native"
+DEPENDS += "bzip2-replacement-native xz-native zlib-native curl-native ncurses-native"
 
 SRC_URI += "file://OEToolchainConfig.cmake \
             file://environment.d-cmake.sh \
@@ -13,22 +13,22 @@ SRC_URI += "file://OEToolchainConfig.cmake \
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
 
-# Disable ccmake since we don't depend on ncurses
 CMAKE_EXTRACONF = "\
     -DCMAKE_LIBRARY_PATH=${STAGING_LIBDIR_NATIVE} \
-    -DBUILD_CursesDialog=0 \
+    -DBUILD_CursesDialog=1 \
     -DCMAKE_USE_SYSTEM_LIBRARIES=1 \
     -DCMAKE_USE_SYSTEM_LIBRARY_JSONCPP=0 \
     -DCMAKE_USE_SYSTEM_LIBRARY_LIBARCHIVE=0 \
     -DCMAKE_USE_SYSTEM_LIBRARY_LIBUV=0 \
     -DCMAKE_USE_SYSTEM_LIBRARY_LIBRHASH=0 \
+    -DCMAKE_USE_SYSTEM_LIBRARY_EXPAT=0 \
     -DENABLE_ACL=0 -DHAVE_ACL_LIBACL_H=0 \
     -DHAVE_SYS_ACL_H=0 \
 "
 
 do_configure () {
-		${S}/configure --verbose --prefix=${prefix} \
-		${@ '${PARALLEL_MAKE}'.replace('-j ', '--parallel=')} \
+	${S}/configure --verbose --prefix=${prefix} \
+		${@oe.utils.parallel_make_argument(d, '--parallel=%d')} \
 		${@bb.utils.contains('CCACHE', 'ccache ', '--enable-ccache', '', d)} \
 		-- ${CMAKE_EXTRACONF}
 }
