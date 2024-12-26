@@ -1,4 +1,49 @@
 - commits:
+    - subject: Update balena-supervisor to v16.10.3
+      hash: 5ee7bf1d8a23220f81b1c4de67e85f4d7cc94328
+      body: |
+        Update balena-supervisor from 16.10.1 to 16.10.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update systeminformation to v5.23.8 [SECURITY]
+              hash: 92b26c7ae2d8d329be18806abe24ab312e92db68
+              body: |
+                Update systeminformation from 5.22.7 to 5.23.8
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-16.10.3
+          title: ""
+          date: 2024-12-20T20:43:23.372Z
+        - commits:
+            - subject: Wait for service dependencies to be running
+              hash: 8e6c0fcad729b56e386ac27754c48c97517e293a
+              body: |
+                This fixes a regression where dependencies would only be started in
+                order and would start the dependent service if its dependency had been
+                started at some point in the past, regardless of the running condition.
+
+                This makes the behavior more consistent with docker compose where the
+                [dependency needs to be
+                running or healthy](https://github.com/docker/compose/blob/69a83d1303a103d82b05d512baf273244b4dbd94/pkg/compose/convergence.go#L441) for the service to be started.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.10.2
+          title: ""
+          date: 2024-12-18T18:48:52.008Z
+  version: 6.2.4
+  title: ""
+  date: 2024-12-26T13:14:08.203Z
+- commits:
     - subject: Update tests/leviathan digest to 2a609bc
       hash: 73c4edaf6615d148bf382ff7589fa9d6874fa753
       body: Update tests/leviathan

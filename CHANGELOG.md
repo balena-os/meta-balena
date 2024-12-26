@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.2.4
+## (2024-12-26)
+
+
+<details>
+<summary> Update balena-supervisor to v16.10.3 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.10.3
+> ### (2024-12-20)
+> 
+> * Update systeminformation to v5.23.8 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-16.10.2
+> ### (2024-12-18)
+> 
+> * Wait for service dependencies to be running [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.2.3
 ## (2024-12-21)
 
