@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.2.5
+## (2024-12-30)
+
+
+<details>
+<summary> Update tests/leviathan digest to c4feff6 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.77
+> ### (Invalid date)
+> 
+> * Update core/contracts digest to 8bd5651 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.2.4
 ## (2024-12-26)
 
