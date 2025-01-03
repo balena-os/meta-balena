@@ -91,17 +91,17 @@ do_install:append() {
     ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
 
     # We take care of journald flush ourselves
-    rm ${D}/lib/systemd/system/sysinit.target.wants/systemd-journal-flush.service
+    rm ${D}${prefix}/lib/systemd/system/sysinit.target.wants/systemd-journal-flush.service
 
     # Vacuum the journal to catch a corner case bug where the log bloats above limit
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/
     install -m 0644 ${WORKDIR}/vacuum.conf ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/vacuum.conf
 
-    install -m 0755 ${WORKDIR}/resin_update_state_probe ${D}/lib/udev/resin_update_state_probe
-    install -m 0755 ${WORKDIR}/zram-swap-init ${D}/lib/udev/zram-swap-init
+    install -m 0755 ${WORKDIR}/resin_update_state_probe ${D}${prefix}/lib/udev/resin_update_state_probe
+    install -m 0755 ${WORKDIR}/zram-swap-init ${D}${prefix}/lib/udev/zram-swap-init
 
     # Move udev rules into /lib as /etc/udev/rules.d is bind mounted for custom rules
-    mv ${D}/etc/udev/rules.d/*.rules ${D}/lib/udev/rules.d/
+    mv ${D}/etc/udev/rules.d/*.rules ${D}${prefix}/lib/udev/rules.d/
 
     install -d -m 0755 ${D}/usr/lib/sysctl.d/
     install -m 0644 ${WORKDIR}/balena-os-sysctl.conf ${D}/usr/lib/sysctl.d/
@@ -120,8 +120,8 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/getty-service-development-features.conf ${D}${sysconfdir}/systemd/system/getty@.service.d/development-features.conf
 
     # We don't have audit configs enabled in the kernel, so we can remove the audit sockets
-    rm ${D}/lib/systemd/system/sockets.target.wants/systemd-journald-audit.socket || true
-    rm ${D}/lib/systemd/system/systemd-journald-audit.socket || true
+    rm ${D}${prefix}/lib/systemd/system/sockets.target.wants/systemd-journald-audit.socket || true
+    rm ${D}${prefix}/lib/systemd/system/systemd-journald-audit.socket || true
 
     # Disable systemd-gpt-generator as it's currently a noop that just throws errors
     ln -s /dev/null ${D}${sysconfdir}/systemd/system-generators/systemd-gpt-auto-generator
@@ -156,9 +156,3 @@ PACKAGECONFIG:remove = "polkit"
 # In this time we avoid creating these at first boot
 USERADD_PARAM:${PN} += "; --system systemd-bus-proxy; --system -d / -M --shell /bin/nologin -u 65534 nobody;"
 GROUPADD_PARAM:${PN} += "; -r wheel; -r nobody;"
-
-# Clean up udev hardware database source files
-pkg_postinst:udev-hwdb:append () {
-    # These files have already been used to generate /etc/udev/hwdb.bin which is the only file used at runtime
-    rm $D/lib/udev/hwdb.d/*
-}
