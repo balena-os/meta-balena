@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.2.6
+## (2025-01-03)
+
+* workflows/meta-balena-esr: fix version array bash [Ryan Cooke]
+
 # v6.2.5
 ## (2024-12-30)
 
