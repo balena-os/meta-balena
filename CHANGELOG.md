@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.2.7
+## (2025-01-08)
+
+* balena-image-flasher: depend on balena-image:do_image_complete [Michal Toman]
+
 # v6.2.6
 ## (2025-01-03)
 

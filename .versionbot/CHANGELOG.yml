@@ -1,4 +1,24 @@
 - commits:
+    - subject: "balena-image-flasher: depend on balena-image:do_image_complete"
+      hash: aa030228732392d81bab7ed297c68eeaa28c0175
+      body: |
+        At this moment balena-image-flasher depends on do_image_sign_digest
+        and do_rootfs of balena-image, but this is not enough, as the signature
+        symlink is only created by a postprocess script.
+
+        This patch replaces the two existing dependencies by do_image_complete,
+        which should cover everything.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.2.7
+  title: ""
+  date: 2025-01-08T10:06:42.801Z
+- commits:
     - subject: "workflows/meta-balena-esr: fix version array bash"
       hash: 11c8daa43e30749fa943d142f787da64fda2882c
       body: ""
