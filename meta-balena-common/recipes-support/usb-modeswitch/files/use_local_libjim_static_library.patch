@@ -1,0 +1,37 @@
+Index: usb-modeswitch-2.6.1/Makefile
+===================================================================
+--- usb-modeswitch-2.6.1.orig/Makefile
++++ usb-modeswitch-2.6.1/Makefile
+@@ -13,6 +13,9 @@ UDEVDIR     = $(DESTDIR)/lib/udev
+ SBINDIR     = $(PREFIX)/sbin
+ MANDIR      = $(PREFIX)/share/man/man1
+ 
++JIM_CONFIGURE_OPTS = --disable-lineedit \
++	--with-out-jim-ext="stdlib posix load signal syslog" --prefix=/usr
++
+ .PHONY: clean install install-common uninstall \
+ 	dispatcher-script dispatcher-dynlink dispatcher-statlink \
+ 	install-script install-dynlink install-statlink
+@@ -28,6 +31,10 @@ all-with-statlink-dispatcher: $(PROG) di
+ $(PROG): $(OBJS) usb_modeswitch.h
+ 	$(CC) -o $(PROG) $(OBJS) $(CFLAGS) $(LIBS) $(LDFLAGS)
+ 
++jim/libjim.a:
++	cd jim && CFLAGS="$(CFLAGS)" CC="$(CC)" ./configure $(JIM_CONFIGURE_OPTS)
++	$(MAKE) -C jim
++
+ dispatcher-script: usb_modeswitch_dispatcher.tcl
+ 	DISPATCH=dispatcher-script
+ 	cp -f usb_modeswitch_dispatcher.tcl usb_modeswitch_dispatcher
+@@ -36,9 +43,9 @@ dispatcher-dynlink: dispatcher.c dispatc
+ 	DISPATCH=dispatcher-dynlink
+ 	$(CC) dispatcher.c $(LDFLAGS) -Ljim -ljim -Ijim -o usb_modeswitch_dispatcher $(CFLAGS)
+ 
+-dispatcher-statlink: dispatcher.c dispatcher.h
++dispatcher-statlink: jim/libjim.a dispatcher.c dispatcher.h
+ 	DISPATCH=dispatcher-statlink
+-	$(CC) dispatcher.c $(LDFLAGS) -l:libjim.a -ldl -Ijim -o usb_modeswitch_dispatcher $(CFLAGS)
++	$(CC) dispatcher.c $(LDFLAGS) jim/libjim.a -Ijim -o usb_modeswitch_dispatcher $(CFLAGS)
+ 
+ dispatcher.h: usb_modeswitch_dispatcher.tcl
+ 	./make_string.sh usb_modeswitch_dispatcher.tcl > $@
