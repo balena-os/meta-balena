@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.0
+## (2025-01-09)
+
+* Update usb-modeswitch to version 2.6.1 [Florin Sarbu]
+
 # v6.2.8
 ## (2025-01-08)
 

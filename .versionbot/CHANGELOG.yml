@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update usb-modeswitch to version 2.6.1
+      hash: 54b5b72a879e942e4b907e49e7387b505772dc55
+      body: >
+        Version 2.5.2 of usb-modeswitch contained a local 0.72 jimtcl copy which
+        was used
+
+        when the static version of the dispatcher was being compiled. Version
+        2.6.1 removed
+
+        this copy of jimtcl from the source package so we add it back ourselves
+        because it's
+
+        easier to have libjim.a compiled here rather than add a whole new Yocto
+        recipe just for it.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update usb-modeswitch to version 2.6.1
+        changelog-entry: Update usb-modeswitch to version 2.6.1
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.3.0
+  title: ""
+  date: 2025-01-09T14:29:56.985Z
+- commits:
     - subject: Update tests/leviathan digest to 6652ce0
       hash: 4752c5958197172b2ba8d19da67c7392ead45508
       body: Update tests/leviathan
