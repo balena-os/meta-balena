@@ -1,12 +1,11 @@
 SUMMARY = "A mode switching tool for controlling 'flip flop' (multiple device) USB gear"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=091556bd6d0154cd4c2d17a1bfc7380a"
 
 DEPENDS = "libusb1"
 
 SRC_URI = "http://www.draisberghof.de/usb_modeswitch/${BP}.tar.bz2"
-SRC_URI[md5sum] = "16b9a8efa1bf8fbd7d5612757eae4f26"
-SRC_URI[sha256sum] = "abffac09c87eacd78e101545967dc25af7e989745b4276756d45dbf4008a2ea6"
+SRC_URI[sha256sum] = "5195d9e136e52f658f19e9f93e4f982b1b67bffac197d0a455cd8c2cd245fa34"
 
 inherit pkgconfig systemd
 
@@ -16,7 +15,7 @@ FILES:${PN} = "${bindir} ${sysconfdir} ${nonarch_base_libdir}/udev/usb_modeswitc
 RRECOMMENDS:${PN} = "usb-modeswitch-data"
 
 do_install() {
-    oe_runmake DESTDIR=${D} install-static
+    oe_runmake DESTDIR=${D} install-statlink
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}/${systemd_unitdir}/system
         install -m 644 ${S}/usb_modeswitch@.service ${D}/${systemd_unitdir}/system
