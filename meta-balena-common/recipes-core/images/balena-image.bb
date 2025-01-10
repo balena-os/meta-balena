@@ -59,14 +59,9 @@ generate_hostos_version () {
 }
 
 symlink_image_signature () {
-    # This is probably not the correct way to do it, but it works.
-    # We sign BALENA_RAW_IMG, which ends up in IMGDEPLOYDIR
-    # and has a timestamp in the file name. We need to get rid
-    # of the timestamp for the final deploy, so that the file
-    # ends up in a predictable location.
-
     if [ -n "${SIGN_API}" ]; then
-        ln -sf "${BALENA_RAW_IMG}.sig" "${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img.sig"
+        ln -sf "${IMAGE_NAME}.rootfs.balenaos-img.sig" \
+            "${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img.sig"
     fi
 }
 
