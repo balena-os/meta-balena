@@ -152,16 +152,17 @@ class secureBoot {
 		})
 
 		// SSH access shouldn't be possible - as the device shouldn't be booting?
-		// the CM4 takes a while to get into a state where we can SSH into it anyway after powering on - so we want to try a good number of times.
+		// Devices take a while to get into a state where we can SSH into after powering on - so we want to try a good number of times.
 		try {
 			await this.worker.executeCommandInHostOS('echo -n pass',this.link, { max_tries: 20, interval: 1000 });
 			// if we manage to SSH into the DUT, then something has gone wrong - so throw an error which will fail the test
-			throw new Error(`DUT was still reachable over SSH`)
-		} catch (e){
+		} catch (e) {
 			// we want / are expecting a failure here, so if the SSH fails after the specified number of retries, we want to return
 			console.log(`DUT was not reachable over SSH`)
 			return
 		}
+
+		throw new Error(`DUT was still reachable over SSH`)
 	}
 
 	async testBootloaderIntegrity() {
