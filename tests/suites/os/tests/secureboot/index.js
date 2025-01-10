@@ -19,6 +19,7 @@ class secureBoot {
 	constructor(test, worker, suite, imagePath, module = {"name": "", "headersVersion": ""}) {
 		this.test = test;
 		this.worker = worker;
+		this.suite = suite;
 		this.workerType = suite.context.get().workerContract.workerType;
 		this.link = suite.context.get().link;
 		this.imagePath = imagePath;
@@ -437,20 +438,35 @@ class imxSecureBoot extends secureBoot {
 	}
 
 	async testBootloaderIntegrity() {
-		await Promise.all(
-			[
-				{ name:'Bootloader', path: '/mnt/imx/imx-boot-*.csf', pattern: 'd1002040', replacement: 'd1002041' },
-				{ name: 'Balena bootloader', path: '/mnt/imx/Image.gz', pattern: 'd1002040', replacement: 'd1002041' },
-				{ name: 'Device trees', path: '/mnt/imx/*.dtb', pattern: 'd1002040', replacement: 'd1002041' },
-			].map(async (args) => {
-				await(this.replaceBinaryPattern(args.path, args.pattern, args.replacement));
-				await this.test.resolves(
-					this.waitForFailedBoot(),
-					`Device will not boot if ${args.name} fails signature verification`,
-				)
-				await this.resetDUT();
-			})
-		);
+		const tests = [
+			{ name:'Bootloader', path: '/mnt/imx/imx-boot-*.bin-flash_evk', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
+			{ name:'Balena bootloader', path: '/mnt/imx/Image.gz', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
+			{ name: 'Device trees', path: '/mnt/imx/*.dtb', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
+		];
+
+		/* Assert the waitForFailedBoot() to make sure it works */
+		await this.test.rejects(
+			this.waitForFailedBoot(),
+			"waitForFailedBoot() will reject if the device boots successfully",
+		)
+
+		for (const args of tests) {
+			if ( args.name == 'Bootloader' &&
+				( this.suite.deviceType.slug == 'iot-gate-imx8' ||
+				  this.suite.deviceType.slug == 'iot-gate-imx8-sb' ) ) {
+				// iot-gate-imx8 needs U-Boot for flashing to work
+				this.test.comment(`Skipping bootloader integrity test for ${this.suite.deviceType.slug}`);
+				continue;
+			}
+
+			await this.replaceBinaryPattern(args.path, args.pattern, args.replacement);
+			await this.worker.executeCommandInHostOS('reboot', this.link)
+			await this.test.resolves(
+				this.waitForFailedBoot(),
+				`Device will not boot if ${args.name} fails signature verification`,
+			)
+			await this.resetDUT();
+		}
 	}
 
 	async testBootloaderConfigIntegrity() {
