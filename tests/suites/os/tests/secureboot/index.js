@@ -470,32 +470,32 @@ class imxSecureBoot extends secureBoot {
 	}
 
 	async testBootloaderConfigIntegrity() {
-		await Promise.all(
-			[
-				{ path: '/mnt/imx/resinOS_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
-				{ path: '/mnt/imx/extra_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
-				{ path: '/mnt/imx/bootcount.env', variable: 'extra_os_cmdline', value: 'test' },
-			].map(async (args) => {
-				await this.worker.executeCommandInHostOS(
-					`echo '${args.variable}=${args.value}' >> ${args.path} && sync -f $(dirname ${args.path})`,
-					this.link
-				)
-				await this.worker.rebootDut(this.link);
-				let cmdline = await this.worker.executeCommandInHostOS(
-						'cat /proc/cmdline',
-						this.link,
-					);
-				await this.test.equal(
-					cmdline.includes(`${args.value}`),
-					false,
-					`Kernel command line has not been modified by ${path.basename(args.path)}`,
-				)
-				await this.worker.executeCommandInHostOS(
-					`rm -f ${args.path} && sync -f $(dirname ${args.path})`,
-					this.link,
-				);
-			})
-		);
+		const tests = [
+			{ path: '/mnt/imx/resinOS_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
+			{ path: '/mnt/imx/extra_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
+			{ path: '/mnt/imx/bootcount.env', variable: 'extra_os_cmdline', value: 'test' },
+		];
+
+		for (const args of tests) {
+			await this.worker.executeCommandInHostOS(
+				`echo '${args.variable}=${args.value}' >> ${args.path} && sync -f $(dirname ${args.path})`,
+				this.link
+			)
+			await this.worker.rebootDut(this.link);
+			let cmdline = await this.worker.executeCommandInHostOS(
+				'cat /proc/cmdline',
+				this.link,
+			);
+			await this.test.equal(
+				cmdline.includes(`${args.value}`),
+				false,
+				`Kernel command line has not been modified by ${path.basename(args.path)}`,
+			)
+			await this.worker.executeCommandInHostOS(
+				`rm -f ${args.path} && sync -f $(dirname ${args.path})`,
+				this.link,
+			);
+		}
 
 		/* Note that the balena bootloader bootenv cannot be used to
 		 * inject kernel command line arguments at the moment */
