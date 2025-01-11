@@ -389,6 +389,9 @@ class rpiSecureBoot extends secureBoot {
 	}
 }
 
+const CSF_HEADER = "d1002040"
+const CSF_HEADER_BAD = "d1002041"
+
 class imxSecureBoot extends secureBoot {
 	async isSecureBootSupported() {
 		let out = await this.worker.executeCommandInHostOS(
@@ -406,17 +409,28 @@ class imxSecureBoot extends secureBoot {
 		return out === 'pass';
 	}
 
-	async replaceBinaryPattern(pathPattern, pattern='d1002040', replacement='d1002041') {
+	async replaceBinaryPattern(pathPattern, pattern=CSF_HEADER, replacement=CSF_HEADER_BAD) {
 		await this.worker.executeCommandInHostOS(
-			[`files=$(find $(dirname ${pathPattern}) -name $(basename ${pathPattern}))`, ';',
+			[`files=$(find $(dirname "${pathPattern}") -name $(basename "${pathPattern}"))`, ';',
 				'for f in ${files}; do ',
 					'tmpfile=$(mktemp)', ';',
-					'xxd -p ${f} > ${tmpfile}', ';',
-					`sed -i "s/${pattern}/${replacement}/g" $tmpfile`, ';',
-					'xxd -p -r ${tmpfile} > ${f}', ';',
-					'rm ${tmpfile}', ';',
+					'is_gzipped=0', ';',
+					'if [ "${f#*.}" = "gz" ]; then ',
+				  ' decomp_file=$(mktemp)', ';',
+				  ' is_gzipped=1', ';',
+				  ' gunzip -c "${f}" > "${decomp_file}"', ';',
+				  ' orig_file="${f}"', ';',
+				  ' f="${decomp_file}"', ';',
+				  'fi', ';',
+					'xxd -p "${f}" > "${tmpfile}"', ';',
+					`sed -i "s/${pattern}/${replacement}/g" "$tmpfile"`, ';',
+					'xxd -p -r "${tmpfile}" > "${f}"', ';',
+					'if [ "${is_gzipped}" = "1" ]; then ',
+				  ' gzip -c "${f}" > "${orig_file}"',';',
+				  'fi', ';',
+					'rm -f "${tmpfile}" "${decomp_file}"', ';',
 				'done', ';',
-				`sync -f $(dirname ${pathPattern})`
+				`sync -f "$(dirname "${pathPattern}")"`
 			],
 			this.link
 		)
