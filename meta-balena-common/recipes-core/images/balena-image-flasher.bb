@@ -61,9 +61,6 @@ BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.js
 add_resin_image_to_flasher_rootfs() {
     mkdir -p ${WORKDIR}/rootfs/opt
     cp ${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img ${WORKDIR}/rootfs/opt
-    if [ -n "${SIGN_API}" ]; then
-        cp "${DEPLOY_DIR_IMAGE}/balena-image-${MACHINE}.balenaos-img.sig" "${WORKDIR}/rootfs/opt/"
-    fi
 }
 
 IMAGE_PREPROCESS_COMMAND += " add_resin_image_to_flasher_rootfs; "

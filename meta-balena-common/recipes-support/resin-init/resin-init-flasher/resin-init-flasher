@@ -130,67 +130,6 @@ function dd_with_progress {
     done
 }
 
-function verify_image_signature() {
-    IMAGE="$1"
-
-    # The original idea was to use `keyctl pkey_verify` against a trusted key
-    # that we add into the kernel trust store at build time, but this does
-    # not work. The key ends up in the .builtin_trusted_keys keyring,
-    # and even though it is a public key, it is somehow protected by the kernel
-    # and even root is not able to use it. The only information that the kernel
-    # provides about the certificate is the OCSP hash of the public key.
-    # Since we ship the certificate in plain form in the boot partition, we can
-    # use the hash to confirm that the key is the same, and use it to verify
-    # the signature from userspace.
-    IMAGE_SIG="${IMAGE}.sig"
-    BOOT_PART_CERT="/mnt/boot/balena-keys/kmod.crt"
-
-    if [ ! -f "${IMAGE_SIG}" ]; then
-        fail "No signature found for image '${IMAGE}'"
-    fi
-
-    if [ ! -f "${BOOT_PART_CERT}" ]; then
-        fail "Signing certificate not found in the boot partition"
-    fi
-
-    # `openssl x509 -ocspid` returns multiple hashes, we are looking
-    # for the hash of the public key
-    BOOT_PART_CERT_HASH=$(openssl x509 -noout -ocspid -in "${BOOT_PART_CERT}" | grep "key" | sed -e "s,^[^:]*: *,,")
-
-    # We expect a SHA1 hash, make sure we got 40 characters as a sanity check
-    if [ $(echo -n "${BOOT_PART_CERT_HASH}" | wc -c) != "40" ]; then
-        fail "Unable to get OCSP hash of the public key from '${BOOT_PART_CERT}'"
-    fi
-
-    # The same certificate should be enrolled in the kernel trust store
-    # Let's see if we can find it, we want
-    # * The same hash (case insensitive)
-    # * The key must be asymmetric
-    # * The key must contain "balenaOS" in the subject
-    # * Flags must be "I------" - TL;DR the key is loaded and not revoked,
-    #   this is what built-in keys have, see `man keyrings` for semantics.
-    KERNEL_CERT=$(cat /proc/keys | grep -i "${BOOT_PART_CERT_HASH}" | grep "asymmetri" | grep "balenaOS" | grep "I------")
-
-    if [ $(echo "${KERNEL_CERT}" | wc -l) != "1" ]; then
-        fail "Unable to match '${BOOT_PART_CERT}' against the kernel trust store"
-    fi
-
-    # At this point we are confident that the certificate in the boot
-    # partition matches the one loaded into the kernel at build time.
-
-    # Calculate a SHA256 digest of the image file
-    DIGEST_FILE=$(mktemp)
-    openssl dgst --sha256 -binary -out "${DIGEST_FILE}" "${IMAGE}"
-
-    # Finally verify the signature.
-    if ! openssl pkeyutl -verify -in "${DIGEST_FILE}" -certin -inkey "${BOOT_PART_CERT}" -sigfile "${IMAGE_SIG}"; then
-        rm -f "${DIGEST_FILE}"
-        fail "Unable to verify signature of '${IMAGE}'"
-    fi
-
-    rm -f "${DIGEST_FILE}"
-}
-
 if [ -f /usr/libexec/balena-init-flasher-secureboot ]; then
     . /usr/libexec/balena-init-flasher-secureboot
 fi
@@ -296,12 +235,6 @@ if type secureboot_setup >/dev/null 2>&1 && secureboot_setup; then
 fi
 
 if [ "$CRYPT" = "1" ]; then
-    # If we are going for the encryption, first of all verify that the image
-    # we are about to flash is correctly signed.
-    if ! verify_image_signature "${BALENA_IMAGE}"; then
-        fail "Failed to verify signature of '${BALENA_IMAGE}'"
-    fi
-
     if type diskenc_setup >/dev/null 2>&1 && ! diskenc_setup; then
         fail "Failed to setup disk encryption"
     fi
