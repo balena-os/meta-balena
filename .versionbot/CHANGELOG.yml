@@ -1,4 +1,20 @@
 - commits:
+    - subject: "peak: Update to version 8.19.0"
+      hash: dc52e74c24bb84b8c2ec38b334fbbf8d9e1df3c4
+      body: |
+        This is needed to have it compiled against kernel version 6.12.3,
+        which we will include in balena-generic.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.3.1
+  title: ""
+  date: 2025-01-13T06:54:44.804Z
+- commits:
     - subject: Update usb-modeswitch to version 2.6.1
       hash: 54b5b72a879e942e4b907e49e7387b505772dc55
       body: >
