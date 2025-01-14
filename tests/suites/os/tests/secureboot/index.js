@@ -19,6 +19,7 @@ class secureBoot {
 	constructor(test, worker, suite, imagePath, module = {"name": "", "headersVersion": ""}) {
 		this.test = test;
 		this.worker = worker;
+		this.suite = suite;
 		this.workerType = suite.context.get().workerContract.workerType;
 		this.link = suite.context.get().link;
 		this.imagePath = imagePath;
@@ -152,16 +153,17 @@ class secureBoot {
 		})
 
 		// SSH access shouldn't be possible - as the device shouldn't be booting?
-		// the CM4 takes a while to get into a state where we can SSH into it anyway after powering on - so we want to try a good number of times.
+		// Devices take a while to get into a state where we can SSH into after powering on - so we want to try a good number of times.
 		try {
 			await this.worker.executeCommandInHostOS('echo -n pass',this.link, { max_tries: 20, interval: 1000 });
 			// if we manage to SSH into the DUT, then something has gone wrong - so throw an error which will fail the test
-			throw new Error(`DUT was still reachable over SSH`)
-		} catch (e){
+		} catch (e) {
 			// we want / are expecting a failure here, so if the SSH fails after the specified number of retries, we want to return
 			console.log(`DUT was not reachable over SSH`)
 			return
 		}
+
+		throw new Error(`DUT was still reachable over SSH`)
 	}
 
 	async testBootloaderIntegrity() {
@@ -388,6 +390,9 @@ class rpiSecureBoot extends secureBoot {
 	}
 }
 
+const CSF_HEADER = "d1002040"
+const CSF_HEADER_BAD = "d1002041"
+
 class imxSecureBoot extends secureBoot {
 	async isSecureBootSupported() {
 		let out = await this.worker.executeCommandInHostOS(
@@ -405,66 +410,92 @@ class imxSecureBoot extends secureBoot {
 		return out === 'pass';
 	}
 
-	async replaceBinaryPattern(pathPattern, pattern='d1002040', replacement='d1002041') {
+	async replaceBinaryPattern(pathPattern, pattern=CSF_HEADER, replacement=CSF_HEADER_BAD) {
 		await this.worker.executeCommandInHostOS(
-			[`files=$(find $(dirname ${pathPattern}) -name $(basename ${pathPattern}))`, ';',
+			[`files=$(find $(dirname "${pathPattern}") -name $(basename "${pathPattern}"))`, ';',
 				'for f in ${files}; do ',
 					'tmpfile=$(mktemp)', ';',
-					'xxd -p ${f} > ${tmpfile}', ';',
-					`sed -i "s/${pattern}/${replacement}/g" $tmpfile`, ';',
-					'xxd -p -r ${tmpfile} > ${f}', ';',
-					'rm ${tmpfile}', ';',
+					'is_gzipped=0', ';',
+					'if [ "${f#*.}" = "gz" ]; then ',
+				  ' decomp_file=$(mktemp)', ';',
+				  ' is_gzipped=1', ';',
+				  ' gunzip -c "${f}" > "${decomp_file}"', ';',
+				  ' orig_file="${f}"', ';',
+				  ' f="${decomp_file}"', ';',
+				  'fi', ';',
+					'xxd -p "${f}" > "${tmpfile}"', ';',
+					`sed -i "s/${pattern}/${replacement}/g" "$tmpfile"`, ';',
+					'xxd -p -r "${tmpfile}" > "${f}"', ';',
+					'if [ "${is_gzipped}" = "1" ]; then ',
+				  ' gzip -c "${f}" > "${orig_file}"',';',
+				  'fi', ';',
+					'rm -f "${tmpfile}" "${decomp_file}"', ';',
 				'done', ';',
-				`sync -f $(dirname ${pathPattern})`
+				`sync -f "$(dirname "${pathPattern}")"`
 			],
 			this.link
 		)
 	}
 
 	async testBootloaderIntegrity() {
-		await Promise.all(
-			[
-				{ name:'Bootloader', path: '/mnt/imx/imx-boot-*.csf', pattern: 'd1002040', replacement: 'd1002041' },
-				{ name: 'Balena bootloader', path: '/mnt/imx/Image.gz', pattern: 'd1002040', replacement: 'd1002041' },
-				{ name: 'Device trees', path: '/mnt/imx/*.dtb', pattern: 'd1002040', replacement: 'd1002041' },
-			].map(async (args) => {
-				await(this.replaceBinaryPattern(args.path, args.pattern, args.replacement));
-				await this.test.resolves(
-					this.waitForFailedBoot(),
-					`Device will not boot if ${args.name} fails signature verification`,
-				)
-				await this.resetDUT();
-			})
-		);
+		const tests = [
+			{ name:'Bootloader', path: '/mnt/imx/imx-boot-*.bin-flash_evk', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
+			{ name:'Balena bootloader', path: '/mnt/imx/Image.gz', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
+			{ name: 'Device trees', path: '/mnt/imx/*.dtb', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
+		];
+
+		/* Assert the waitForFailedBoot() to make sure it works */
+		await this.test.rejects(
+			this.waitForFailedBoot(),
+			"waitForFailedBoot() will reject if the device boots successfully",
+		)
+
+		for (const args of tests) {
+			if ( args.name == 'Bootloader' &&
+				( this.suite.deviceType.slug == 'iot-gate-imx8' ||
+				  this.suite.deviceType.slug == 'iot-gate-imx8-sb' ) ) {
+				// iot-gate-imx8 needs U-Boot for flashing to work
+				this.test.comment(`Skipping bootloader integrity test for ${this.suite.deviceType.slug}`);
+				continue;
+			}
+
+			await this.replaceBinaryPattern(args.path, args.pattern, args.replacement);
+			await this.worker.executeCommandInHostOS('reboot', this.link)
+			await this.test.resolves(
+				this.waitForFailedBoot(),
+				`Device will not boot if ${args.name} fails signature verification`,
+			)
+			await this.resetDUT();
+		}
 	}
 
 	async testBootloaderConfigIntegrity() {
-		await Promise.all(
-			[
-				{ path: '/mnt/imx/resinOS_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
-				{ path: '/mnt/imx/extra_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
-				{ path: '/mnt/imx/bootcount.env', variable: 'extra_os_cmdline', value: 'test' },
-			].map(async (args) => {
-				await this.worker.executeCommandInHostOS(
-					`echo '${args.variable}=${args.value}' >> ${args.path} && sync -f $(dirname ${args.path})`,
-					this.link
-				)
-				await this.worker.rebootDut(this.link);
-				let cmdline = await this.worker.executeCommandInHostOS(
-						'cat /proc/cmdline',
-						this.link,
-					);
-				await this.test.equal(
-					cmdline.includes(`${args.value}`),
-					false,
-					`Kernel command line has not been modified by ${path.basename(args.path)}`,
-				)
-				await this.worker.executeCommandInHostOS(
-					`rm -f ${args.path} && sync -f $(dirname ${args.path})`,
-					this.link,
-				);
-			})
-		);
+		const tests = [
+			{ path: '/mnt/imx/resinOS_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
+			{ path: '/mnt/imx/extra_uEnv.txt', variable: 'extra_os_cmdline', value: 'test' },
+			{ path: '/mnt/imx/bootcount.env', variable: 'extra_os_cmdline', value: 'test' },
+		];
+
+		for (const args of tests) {
+			await this.worker.executeCommandInHostOS(
+				`echo '${args.variable}=${args.value}' >> ${args.path} && sync -f $(dirname ${args.path})`,
+				this.link
+			)
+			await this.worker.rebootDut(this.link);
+			let cmdline = await this.worker.executeCommandInHostOS(
+				'cat /proc/cmdline',
+				this.link,
+			);
+			await this.test.equal(
+				cmdline.includes(`${args.value}`),
+				false,
+				`Kernel command line has not been modified by ${path.basename(args.path)}`,
+			)
+			await this.worker.executeCommandInHostOS(
+				`rm -f ${args.path} && sync -f $(dirname ${args.path})`,
+				this.link,
+			);
+		}
 
 		/* Note that the balena bootloader bootenv cannot be used to
 		 * inject kernel command line arguments at the moment */
