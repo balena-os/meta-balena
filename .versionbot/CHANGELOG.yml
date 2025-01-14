@@ -1,4 +1,68 @@
 - commits:
+    - subject: "tests: secureboot: imx: refactor bootloader config integrity tests"
+      hash: 8c165e9ed7a471d043ff00d4a091742b8412e785
+      body: |
+        Refactor to assure sequential execution of tests.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: imx: refactor bootloader integrity test"
+      hash: 502fc52ba4d8da9614667c55adb9ab3748a4baa6
+      body: >
+        * Force sequential test execution
+
+        * Skip bootloader integrity test on iot-gate-imx8 which needs a working
+          bootloader in order to reflash
+        * Add assertion for waitForFailedBoot() which was providing false
+        positives
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: imx: support compressed files pattern replacement"
+      hash: ea43fc9243ea44378c5ae81013fcc6bb18c2a3d8
+      body: |
+        Some of the boot files to test have been compressed after signing, so
+        in order to corrupt the signature we need to uncompress them first.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: fix function that confirms a failed boot"
+      hash: f5c7ad85d30c9de4c43ffbe76fb569de2866032a
+      body: >
+        Independently of whether the device was coming back or not after reboot,
+
+        the waitForFailedBoot() function always succeeds as the thrown errors
+        are
+
+        always caught.
+
+
+        Throw the error outside of the try/catch so that it is not always
+
+        caught.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.3.2
+  title: ""
+  date: 2025-01-14T15:53:20.934Z
+- commits:
     - subject: "peak: Update to version 8.19.0"
       hash: dc52e74c24bb84b8c2ec38b334fbbf8d9e1df3c4
       body: |
