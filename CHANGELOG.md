@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.3
+## (2025-01-15)
+
+* tests: hup: rollback-altboot: replace while loop over SSH to speed up tests [Ryan Cooke]
+
 # v6.3.2
 ## (2025-01-14)
 

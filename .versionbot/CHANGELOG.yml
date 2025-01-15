@@ -1,4 +1,24 @@
 - commits:
+    - subject: "tests: hup: rollback-altboot: replace while loop over SSH to speed up
+        tests"
+      hash: 65aba403ef0ae5d47510e5d8d11a5d4c0f7969c2
+      body: >
+        The altboot test often hangs for a long time during the altboot test,
+        after the DUT has booted into the old OS after the altboot failure - the
+        check to see if the rollback systemd services have stopped hangs. This
+        is an attempt to fix that, as I think there's some strange interaction
+        going on with the while loop over ssh
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.3.3
+  title: ""
+  date: 2025-01-15T16:36:05.153Z
+- commits:
     - subject: "tests: secureboot: imx: refactor bootloader config integrity tests"
       hash: 8c165e9ed7a471d043ff00d4a091742b8412e785
       body: |
