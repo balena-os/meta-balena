@@ -401,9 +401,9 @@ IMAGE_CMD:hostapp-ext4 () {
     mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
 }
 
-IMAGE_TYPEDEP:sign = "balenaos-img"
+IMAGE_TYPEDEP:balenaos-img.sig = "balenaos-img"
 
-IMAGE_CMD:sign () {
+IMAGE_CMD:balenaos-img.sig () {
     if [ "x${SIGN_API}" = "x" ]; then
         bbnote "Signing API not defined"
         return 0
@@ -429,8 +429,8 @@ IMAGE_CMD:sign () {
     done
 }
 
-do_image_sign[network] = "1"
-do_image_sign[depends] += " \
+do_image_balenaos_img_sig[network] = "1"
+do_image_balenaos_img_sig[depends] += " \
     openssl-native:do_populate_sysroot \
     curl-native:do_populate_sysroot \
     jq-native:do_populate_sysroot \
@@ -439,7 +439,7 @@ do_image_sign[depends] += " \
     gnupg-native:do_populate_sysroot \
     "
 
-do_image_sign[vardeps] += " \
+do_image_balenaos_img_sig[vardeps] += " \
     SIGN_API \
     SIGN_KMOD_KEY_ID \
     "
