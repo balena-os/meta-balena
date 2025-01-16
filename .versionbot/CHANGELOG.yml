@@ -1,4 +1,21 @@
 - commits:
+    - subject: "workflows: iot-gate-imx8: add custom template path"
+      hash: f206ad55df30f4939cbd2498fd6494aa8d05c60b
+      body: |
+        With the addition of the meta-balena-hab submodule there are multiple
+        balena layers with custom templates - specify which one to use to avoid
+        a build error.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.3.4
+  title: ""
+  date: 2025-01-16T16:14:51.120Z
+- commits:
     - subject: "tests: hup: rollback-altboot: replace while loop over SSH to speed up
         tests"
       hash: 65aba403ef0ae5d47510e5d8d11a5d4c0f7969c2

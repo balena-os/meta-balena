@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.4
+## (2025-01-16)
+
+* workflows: iot-gate-imx8: add custom template path [Alex Gonzalez]
+
 # v6.3.3
 ## (2025-01-15)
 
