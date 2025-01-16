@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.5
+## (2025-01-16)
+
+* classes/kernel-balena: Avoid re-building kernel modules when not signed [Alexandru Costache]
+
 # v6.3.4
 ## (2025-01-16)
 
