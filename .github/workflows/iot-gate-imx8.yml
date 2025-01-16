@@ -35,6 +35,7 @@ jobs:
       # Needed for testing - defaults to production
       deploy-environment: balena-staging.com
       machine: iot-gate-imx8
+      build-args: '--templates-path layers/meta-balena-imx8mm'
       device-repo: balena-os/balena-iot-gate-imx8
       device-repo-ref: master
       # Pin to the current commit
