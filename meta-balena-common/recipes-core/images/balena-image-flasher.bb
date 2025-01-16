@@ -8,7 +8,7 @@ REQUIRED_DISTRO_FEATURES += " systemd"
 
 BALENA_FLAG_FILE = "${BALENA_FLASHER_FLAG_FILE}"
 
-IMAGE_FSTYPES = "balenaos-img"
+IMAGE_FSTYPES = "${@oe.utils.conditional('SIGN_API','','balenaos-img','balenaos-img.sig',d)}"
 
 BALENA_ROOT_FSTYPE = "ext4"
 
