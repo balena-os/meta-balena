@@ -1133,7 +1133,12 @@ do_sign_gpg:append () {
 
 # Parallel builds sharing state cache will mismatch singed kernel and modules
 # Avoid using cache for signed kernel modules to avoid this
-do_compile_kernelmodules[nostamp] = "${@oe.utils.conditional('SIGN_API','','','1',d)}"
+# Also, avoid having the kernel modules rebuilt even if they
+# are not signed - see https://lists.openembedded.org/g/bitbake-devel/message/12359
+python __anonymous() {
+    if d.getVar('SIGN_API'):
+        d.setVarFlag('do_compile_kernelmodules', 'nostamp', '1')
+}
 
 do_deploy:prepend () {
     SIGNING_ARTIFACTS="${SIGNING_ARTIFACTS_BASE}"
