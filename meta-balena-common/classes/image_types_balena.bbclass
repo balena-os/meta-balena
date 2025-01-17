@@ -400,3 +400,46 @@ IMAGE_CMD:hostapp-ext4 () {
     truncate -s "$(expr ${ROOTFS_SIZE} \* 1024)" "${BALENA_HOSTAPP_IMG}"
     mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
 }
+
+IMAGE_TYPEDEP:balenaos-img.sig = "balenaos-img"
+
+IMAGE_CMD:balenaos-img.sig () {
+    if [ "x${SIGN_API}" = "x" ]; then
+        bbnote "Signing API not defined"
+        return 0
+    fi
+    if [ "x${SIGN_API_KEY}" = "x" ]; then
+        bbfatal "Signing API key must be defined"
+    fi
+
+    for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}
+    do
+        if [ -z "${SIGNING_ARTIFACT}" ] || [ ! -f "${SIGNING_ARTIFACT}" ]; then
+            bbfatal "Nothing to sign"
+        fi
+
+        DIGEST=$(openssl dgst -hex -sha256 "${SIGNING_ARTIFACT}" | awk '{print $2}')
+
+        REQUEST_FILE=$(mktemp)
+        RESPONSE_FILE=$(mktemp)
+        echo "{\"cert_id\": \"${SIGN_KMOD_KEY_ID}\", \"digest\": \"${DIGEST}\"}" > "${REQUEST_FILE}"
+        CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt" curl --retry 5 --fail --silent "${SIGN_API}/cert/sign" -X POST -H "Content-Type: application/json" -H "X-API-Key: ${SIGN_API_KEY}" -d "@${REQUEST_FILE}" > "${RESPONSE_FILE}"
+        jq -r ".signature" < "${RESPONSE_FILE}" | base64 -d > "${SIGNING_ARTIFACT}.sig"
+        rm -f "${REQUEST_FILE}" "${RESPONSE_FILE}"
+    done
+}
+
+do_image_balenaos_img_sig[network] = "1"
+do_image_balenaos_img_sig[depends] += " \
+    openssl-native:do_populate_sysroot \
+    curl-native:do_populate_sysroot \
+    jq-native:do_populate_sysroot \
+    ca-certificates-native:do_populate_sysroot \
+    coreutils-native:do_populate_sysroot \
+    gnupg-native:do_populate_sysroot \
+    "
+
+do_image_balenaos_img_sig[vardeps] += " \
+    SIGN_API \
+    SIGN_KMOD_KEY_ID \
+    "

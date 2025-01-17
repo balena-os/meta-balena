@@ -8,12 +8,12 @@ REQUIRED_DISTRO_FEATURES += " systemd"
 
 BALENA_FLAG_FILE = "${BALENA_FLASHER_FLAG_FILE}"
 
-IMAGE_FSTYPES = "balenaos-img"
+IMAGE_FSTYPES = "${@oe.utils.conditional('SIGN_API','','balenaos-img','balenaos-img.sig',d)}"
 
 BALENA_ROOT_FSTYPE = "ext4"
 
 # Make sure you have the resin image ready
-do_image_balenaos_img[depends] += "balena-image:do_image_complete"
+do_image_balenaos_img[depends] += "balena-image:do_rootfs"
 
 # Ensure we have the raw balena image ready in DEPLOY_DIR_IMAGE
 do_image[depends] += "balena-image:do_image_complete"
