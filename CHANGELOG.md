@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.3.6
+## (2025-01-17)
+
+* images: balena-image*: Set balenaos-img.sig image type for signed builds [Alex Gonzalez]
+* classes: balenaos-img.sig: Rename the sign image type to balenaos-img.sig [Alex Gonzalez]
+* image_types_balena.bbclass: Move image signing code here [Florin Sarbu]
+
 # v6.3.5
 ## (2025-01-16)
 
