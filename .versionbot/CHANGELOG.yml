@@ -1,4 +1,39 @@
 - commits:
+    - subject: Update tests/leviathan digest to 03a7057
+      hash: c7785c82e087b501b9cea7ee66f696af043c0755
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v20.2.1
+              hash: 247459b21aa26c329a474677c47d504b5b62fb2a
+              body: |
+                Update balena-io/balena-cli from 20.1.6 to 20.2.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.83
+          title: ""
+          date: 2025-01-09T14:36:41.373Z
+        - commits:
+            - subject: "patch: Add retention & compression to Leviathan action artifacts"
+              hash: 00573208b857067c1471dcaaac6d77e7bcc4754e
+              body: ""
+              footer: {}
+              author: Vipul Gupta
+              nested: []
+          version: leviathan-2.31.82
+          title: ""
+          date: 2025-01-09T14:06:23.177Z
+  version: 6.3.7
+  title: ""
+  date: 2025-01-20T22:06:50.879Z
+- commits:
     - subject: "images: balena-image*: Set balenaos-img.sig image type for signed
         builds"
       hash: c7c2fb62abbda3008e73e9ef72d771fb7a43498f
