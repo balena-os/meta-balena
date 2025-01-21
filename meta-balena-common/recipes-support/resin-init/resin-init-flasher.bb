@@ -36,7 +36,7 @@ RDEPENDS:${PN} = " \
 RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils efibootmgr efivar', '',d)}"
 RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' os-helpers-tpm2', '',d)}"
 
-RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs util-linux-mount util-linux-losetup',d)}"
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs util-linux-mount util-linux-losetup openssl-bin',d)}"
 
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
