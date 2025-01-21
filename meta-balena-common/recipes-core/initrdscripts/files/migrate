@@ -116,6 +116,10 @@ migrate_run() {
         fi
         # Copy the raw image to memory
         cp "${image}" "/tmp"
+        # If the image is signed, copy the signature to memory
+        if [ -f "${image}.sig" ]; then
+            cp "${image}.sig" "/tmp"
+        fi
 
         # Copy the flasher boot partition into memory (contains configuration)
         mkdir -p "${EXTERNAL_DEVICE_BOOT_PART_MOUNTPOINT}"
