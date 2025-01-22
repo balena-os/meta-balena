@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.3.8
+## (2025-01-22)
+
+* resin-init-flasher: add openssl dependency [Alex Gonzalez]
+* initrdscript: copy image signature to memory if required [Alex Gonzalez]
+
 # v6.3.7
 ## (2025-01-20)
 

@@ -1,4 +1,32 @@
 - commits:
+    - subject: "resin-init-flasher: add openssl dependency"
+      hash: 49b2d8635d5c4837f651f16f97fae18bda50a3c1
+      body: |
+        This is required for openssl to be available on the initramfs so that
+        migration can use it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscript: copy image signature to memory if required"
+      hash: 6963166ed83138d15f39a7efd54beb2a6088febe
+      body: |
+        For migration to work on signed images, the signature needs to be
+        available in memory.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.3.8
+  title: ""
+  date: 2025-01-22T16:04:48.428Z
+- commits:
     - subject: Update tests/leviathan digest to 03a7057
       hash: c7785c82e087b501b9cea7ee66f696af043c0755
       body: Update tests/leviathan
