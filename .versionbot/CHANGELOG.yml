@@ -1,4 +1,98 @@
 - commits:
+    - subject: Update balena-supervisor to v16.12.0
+      hash: 41c4f1ded4dd881dc97eabaa531a2ccfb212e528
+      body: |
+        Update balena-supervisor from 16.10.3 to 16.12.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update contrato to v0.12.0
+              hash: 85fc5784bcd187d086bffbd0c2167ce9eb34650f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update alpine base image to 3.21
+              hash: 55f22dbc0f4792033b6253af89c6adde6a727ab0
+              body: >
+                This allows to update Node to v22 on production supervisor images
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update Node support to v22
+              hash: ea594b18abb6b82f498071e50f71422dedb5b280
+              body: |
+                Updates @types/node and expands module support to v22.
+                Support for v20 will be removed on a future version.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.12.0
+          title: ""
+          date: 2025-01-20T22:14:35.646Z
+        - commits:
+            - subject: Add support for `io.balena.update.requires-reboot`
+              hash: e416ad0daf61fba14cd8c2012c5b2f66d8fb5f4a
+              body: >
+                This label can be used by user services to indicate that a
+                reboot is
+
+                required after the install of a service in order to fully apply
+                an update.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+            - subject: Move reboot breadcrumb check to device-state
+              hash: 75127c6074531fd20199ed07d6860687b4105cfb
+              body: >
+                This was on device-config before, but we'll need to set the
+                reboot
+
+                breadcrumb from the application-manager as well when we
+                introduce
+
+                `requires-reboot` as a label.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Refactor device-config as part of device-state
+              hash: 51f1fb0f30e04ece6a00d2d8b9420b49703a2fde
+              body: >
+                Move the device-config module to the device-state folder and
+                export only
+
+                those functions that are needed elsewhere in the codebase
+
+
+                This moves us closer to making the device-state module the only
+                way to
+
+                modify application and configuration.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.11.0
+          title: ""
+          date: 2025-01-14T18:15:55.879Z
+  version: 6.3.11
+  title: ""
+  date: 2025-01-27T20:20:58.111Z
+- commits:
     - subject: Update tests/leviathan digest to 25370da
       hash: 0d1300383c19f479b47fd6ce8d14ec03cb9b1ab4
       body: Update tests/leviathan
