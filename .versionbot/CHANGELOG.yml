@@ -1,4 +1,68 @@
 - commits:
+    - subject: Update tests/leviathan digest to 25370da
+      hash: 0d1300383c19f479b47fd6ce8d14ec03cb9b1ab4
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update actions/upload-artifact digest to 65c4c4a
+              hash: 41ecb3c5112bc5b2b6d8e63dabb05fbf558c9df1
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.87
+          title: ""
+          date: 2025-01-26T14:28:56.808Z
+        - commits:
+            - subject: Fix extractVersion renovate template
+              hash: fc005a800f77b29dae553ef38d45ef705a011dbf
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.31.86
+          title: ""
+          date: 2025-01-26T12:57:09.462Z
+        - commits:
+            - subject: Update core/contracts digest to cde8b88
+              hash: 4aad7b4af4fed4fc54ceb874330c0e8b2a86b70e
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.85
+          title: ""
+          date: 2025-01-24T18:32:12.098Z
+        - commits:
+            - subject: "lib/components: Add partition index for Jetson TX2 NX types"
+              hash: 3db19db2746a55855b6601f37f791f5d7e6e5487
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.31.84
+          title: ""
+          date: 2025-01-23T08:13:42.965Z
+  version: 6.3.10
+  title: ""
+  date: 2025-01-27T16:33:22.765Z
+- commits:
     - subject: "workflows: iot-gate-imx8plus: add custom template path"
       hash: 0aa5664c4edba93084e81c184119b1fc7a31fbc8
       body: |

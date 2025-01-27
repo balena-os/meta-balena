@@ -1,6 +1,36 @@
 Change log
 -----------
 
+# v6.3.10
+## (2025-01-27)
+
+
+<details>
+<summary> Update tests/leviathan digest to 25370da [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.87
+> ### (2025-01-26)
+> 
+> * Update actions/upload-artifact digest to 65c4c4a [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.86
+> ### (2025-01-26)
+> 
+> * Fix extractVersion renovate template [Kyle Harding]
+> 
+> ## leviathan-2.31.85
+> ### (2025-01-24)
+> 
+> * Update core/contracts digest to cde8b88 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.84
+> ### (2025-01-23)
+> 
+> * lib/components: Add partition index for Jetson TX2 NX types [Alexandru Costache]
+> 
+
+</details>
+
 # v6.3.9
 ## (2025-01-27)
 
