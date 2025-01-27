@@ -76,16 +76,16 @@ def get_kernel_version(d):
 
     kernelversion = ""
     for s in lines:
-        m = re.match("VERSION = (\d+)", s)
+        m = re.match(r"VERSION = (\d+)", s)
         if m:
             kernelversion = kernelversion + m.group(1)
-        m = re.match("PATCHLEVEL = (\d+)", s)
+        m = re.match(r"PATCHLEVEL = (\d+)", s)
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
-        m = re.match("SUBLEVEL = (\d+)", s)
+        m = re.match(r"SUBLEVEL = (\d+)", s)
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
-        m = re.match("EXTRAVERSION = (\d+)", s)
+        m = re.match(r"EXTRAVERSION = (\d+)", s)
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
     return kernelversion
