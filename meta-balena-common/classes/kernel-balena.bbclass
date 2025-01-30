@@ -76,16 +76,16 @@ def get_kernel_version(d):
 
     kernelversion = ""
     for s in lines:
-        m = re.match("VERSION = (\d+)", s)
+        m = re.match(r"VERSION = (\d+)", s)
         if m:
             kernelversion = kernelversion + m.group(1)
-        m = re.match("PATCHLEVEL = (\d+)", s)
+        m = re.match(r"PATCHLEVEL = (\d+)", s)
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
-        m = re.match("SUBLEVEL = (\d+)", s)
+        m = re.match(r"SUBLEVEL = (\d+)", s)
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
-        m = re.match("EXTRAVERSION = (\d+)", s)
+        m = re.match(r"EXTRAVERSION = (\d+)", s)
         if m:
             kernelversion = kernelversion + '.' + m.group(1)
     return kernelversion
@@ -838,6 +838,8 @@ def aufs_kernel_select(kernelversion):
         ('5.15.36','8c2481e91182fc6959cb3ad56858c66d7a0c97fd'),
         ('5.15.41','5e018961ad499fc74e750ae857c33fbfc7641cfd'),
         ('6.1','bfd38ec481836d86de5686dadca02e072b4f0584'),
+        ('6.6','1b28ab1ec3a89a9bec859f61f36d7a5e895583d5'),
+        ('6.6.63','4b3aaa6e3dfad2e26deef81a6abbec02939e1080'),
     ])
 
 
