@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.3.12
+## (2025-01-30)
+
+* kernel-balena.bbclass: silence regex escape warnings [Michal Toman]
+* kernel-balena.bbclass: Add aufs patches for 6.6 kernels [Michal Toman]
+
 # v6.3.11
 ## (2025-01-27)
 

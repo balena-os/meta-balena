@@ -1,4 +1,30 @@
 - commits:
+    - subject: "kernel-balena.bbclass: silence regex escape warnings"
+      hash: 2b737fdc534da23c6f22efc83e1e64e109a8fb29
+      body: |
+        This patch converts the regex strings to raw strings to silence
+        `DeprecationWarning: invalid escape sequence \d`
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "kernel-balena.bbclass: Add aufs patches for 6.6 kernels"
+      hash: 54faaa0714db55ebe486a101eb2ad62e75679ffd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.3.12
+  title: ""
+  date: 2025-01-30T11:44:21.994Z
+- commits:
     - subject: Update balena-supervisor to v16.12.0
       hash: 41c4f1ded4dd881dc97eabaa531a2ccfb212e528
       body: |
