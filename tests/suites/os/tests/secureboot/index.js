@@ -538,7 +538,7 @@ module.exports = {
 					this.worker,
 					this.suite,
 					this.os.image.path,
-					{ name: "pcan_netdev", headersVersion: "2.108.6" },
+					{ name: "pcan_netdev", headersVersion: "2.108.27" },
 				));
 				return impl.run(test);
 			}
@@ -549,7 +549,7 @@ module.exports = {
 				const impl = new testSecureBoot(new uefiSecureBoot(test,
 					this.worker,
 					this.suite, this.os.image.path,
-					{"name": "pcan_netdev", "headersVersion": "2.108.6"}));
+					{"name": "pcan_netdev", "headersVersion": "2.108.27"}));
 				await impl.run(test);
 			},
 		},
