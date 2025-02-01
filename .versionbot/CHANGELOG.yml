@@ -1,4 +1,25 @@
 - commits:
+    - subject: "tests: secureboot: fix reference to unavailable kernel-module-headers"
+      hash: 7f49f8d3e780461e603196cc23917e41fe925bac
+      body: >
+        2.108.6 doesn't exist for generic-amd64. The tests used to still work,
+        because we werent acually passing the version to kernel-module-build
+        correctly, meaning that it would default to the one in the
+        kernel-module-build project. That was fixed in
+        4484c59fc924100232cc10303a4636ed0082760a , and now we are passing the
+        version correctly, we're looking for a nonexistant version. Changing
+        version to match the default.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.3.13
+  title: ""
+  date: 2025-02-01T09:17:38.671Z
+- commits:
     - subject: "kernel-balena.bbclass: silence regex escape warnings"
       hash: 2b737fdc534da23c6f22efc83e1e64e109a8fb29
       body: |

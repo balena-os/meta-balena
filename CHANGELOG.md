@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.13
+## (2025-02-01)
+
+* tests: secureboot: fix reference to unavailable kernel-module-headers [Ryan Cooke]
+
 # v6.3.12
 ## (2025-01-30)
 
