@@ -392,6 +392,11 @@ module.exports = {
       migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
     };
 
+    // Add config to suite context so accessible within tests. Main use case is to check secureboot status
+    this.suite.context.set({
+      config: config
+    })
+
     if( this.workerContract.workerType === `qemu` && config.installer.migrate.force ) {
         console.log("Forcing installer migration")
     } else {
@@ -423,11 +428,18 @@ module.exports = {
     // preload image with the single container application
     this.log(`Device uuid should be ${this.balena.uuid}`)
     await this.os.configure();
-    await this.cli.preload(this.os.image.path, {
-      app: this.balena.application,
-      commit: initialCommit,
-      pin: true,
-    });
+    
+    // Until secureboot flasher + preloading is implemented, skip preloading, and preloading test
+    if ( config.installer.secureboot ) {
+      console.log("Opting-in secure boot and full disk encryption - skip preloading")
+    } else {
+      console.log(`No secure boot requested, preloading image...`)
+      await this.cli.preload(this.os.image.path, {
+        app: this.balena.application,
+        commit: initialCommit,
+        pin: true,
+      });
+    }
 
     this.log("Setting up worker");
     await this.worker.network(this.suite.options.balenaOS.network);
