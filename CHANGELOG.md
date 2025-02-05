@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.14
+## (2025-02-05)
+
+* tests: secureboot: remove preload test for secureboot enabled DUTs [Ryan Cooke]
+
 # v6.3.13
 ## (2025-02-01)
 

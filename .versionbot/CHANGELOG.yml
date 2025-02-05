@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: secureboot: remove preload test for secureboot enabled DUTs"
+      hash: e6c5f14a2e6af02efb8e8766c4244a5bc1081b2e
+      body: >
+        Since 1ae37ac158b93df836126030abec8c3d3f69d92b using the flasher image
+        with secureboot and preloading doesn't work. Skipping preloading tests
+        will unblock users not using this combination with the signed images.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.3.14
+  title: ""
+  date: 2025-02-05T20:53:09.987Z
+- commits:
     - subject: "tests: secureboot: fix reference to unavailable kernel-module-headers"
       hash: 7f49f8d3e780461e603196cc23917e41fe925bac
       body: >
