@@ -100,3 +100,7 @@ files are updated to, calling the hook twice with different names and using
 the `do_skip` function to decide whether to install a file or not.
 
 See examples in device integration layers like meta-balena-raspberrypi.
+
+# Preloading
+
+Preloading of secure boot enabled balenaOS images is currently not supported
