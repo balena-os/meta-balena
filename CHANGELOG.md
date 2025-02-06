@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.16
+## (2025-02-06)
+
+* tests: os: swap: increase wiggle room in swap check [Ryan Cooke]
+
 # v6.3.15
 ## (2025-02-06)
 
