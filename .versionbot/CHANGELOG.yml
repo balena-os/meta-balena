@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: cloud: env vars: restart supervisor to speed up tests"
+      hash: 047519b3d11b48b55a6dac8b5d5b4af63cb85171
+      body: >
+        Tests can get stuck here for 15 to 20 minutes if the timings are
+        unlucky. Forcing a supervisor restart ensures a clean slate and ensures
+        that the variables are included as quickly as possible
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.3.15
+  title: ""
+  date: 2025-02-06T17:05:15.720Z
+- commits:
     - subject: "tests: secureboot: remove preload test for secureboot enabled DUTs"
       hash: e6c5f14a2e6af02efb8e8766c4244a5bc1081b2e
       body: >

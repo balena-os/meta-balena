@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.15
+## (2025-02-06)
+
+* tests: cloud: env vars: restart supervisor to speed up tests [Ryan Cooke]
+
 # v6.3.14
 ## (2025-02-05)
 
