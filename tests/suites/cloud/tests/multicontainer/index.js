@@ -34,6 +34,12 @@ module.exports = {
             value
           );
 
+        // The supervisor might not pick up this change immediately - restart the supervisor to force this and save time
+        await this.cloud.executeCommandInHostOS(
+          `systemctl restart balena-supervisor`,
+          this.balena.uuid
+        )
+        
         // Check that device env variable is present in each service
         let services  = [`containerA`, `containerB`];
         await this.utils.waitUntil(async () => {
