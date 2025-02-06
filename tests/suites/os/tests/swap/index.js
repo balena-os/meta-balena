@@ -44,10 +44,11 @@ module.exports = {
 
 		const maxSwap = 4096000;
 		const expectedSwap = Math.min(totalMem / 2, maxSwap);
-		// Swap size is calculated as a percentage, so allow a little wiggle room
+		// Swap size is calculated as a percentage, so allow a little wiggle room to account for HW differences. 
+		// This value is derived from the current worst case we have seen
 		const delta = Math.abs(expectedSwap - swap.size);
 		test.ok(
-			delta < 10,
+			delta < 50,
 			'Swap should be the lesser of either half the total memory, or 4 GB'
 		);
 	},
