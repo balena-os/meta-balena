@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python digest to 4237552
+      hash: 9eadb53467b9c6e5bf39d33010119e74ed9d4792
+      body: |
+        Update actions/setup-python to 42375524e23c412d93fb67b49958b491fce71c38
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.3.18
+  title: ""
+  date: 2025-02-07T17:32:47.609Z
+- commits:
     - subject: Update tests/leviathan digest to ae96a7e
       hash: 00cec0d947cd10e91d635e37a977dcaf68803852
       body: Update tests/leviathan
