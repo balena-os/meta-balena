@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.3.17
+## (2025-02-07)
+
+
+<details>
+<summary> Update tests/leviathan digest to ae96a7e [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.89
+> ### (2025-02-06)
+> 
+> * Update balena-os/leviathan-worker to v2.9.57 [balena-renovate[bot]]
+> 
+> ## leviathan-2.31.88
+> ### (2025-02-06)
+> 
+> * Fix running tests over local worker IP [Ryan Cooke]
+> 
+
+</details>
+
 # v6.3.16
 ## (2025-02-06)
 
