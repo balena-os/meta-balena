@@ -1,4 +1,25 @@
 - commits:
+    - subject: "wpa-supplicant: Update to recipe from Kirkstone"
+      hash: 95306535b424977c6f1f978b8cb37dca74cd8f55
+      body: |
+        We switch to the recipe from Kirkstone which is still at version 2.10
+        but has other patches applied to it.
+
+        The wpa_supplicant version from Kirkstone is from Poky revision
+        be48ef3d1bab50824c6678748bcfa897a2a6ca8a
+
+        This fixes auth issues we have seen on a Jetson TX2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.3.19
+  title: ""
+  date: 2025-02-13T14:40:11.517Z
+- commits:
     - subject: Update actions/setup-python digest to 4237552
       hash: 9eadb53467b9c6e5bf39d33010119e74ed9d4792
       body: |

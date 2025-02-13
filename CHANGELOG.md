@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.19
+## (2025-02-13)
+
+* wpa-supplicant: Update to recipe from Kirkstone [Florin Sarbu]
+
 # v6.3.18
 ## (2025-02-07)
 
