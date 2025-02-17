@@ -98,10 +98,12 @@ updateKeys() {
     POLICY_EFIBIN="$(mktemp -t)"
     generate_pcr_digests \
         "${PCRS}" \
-        "${PCR_VAL_BIN}"
+        "${PCR_VAL_BIN}" \
+        "use_pcr2"
     generate_pcr_digests \
         "${PCRS}" \
         "${PCR_VAL_BIN_EFIBIN}" \
+        "use_pcr2" \
         "${EFI_BINARIES}"
 
     tpm2_createpolicy --policy-pcr \

@@ -236,7 +236,7 @@ tpm_nvram_store_passphrase() {
 
 	stdout=/dev/fd/1
 	current_digest=$(tpm2_pcrread sha256:7 --quiet -o "${stdout}" | _hexencode)
-	computed_digest=$(generate_pcr_digests 7 "${stdout}" "${efi_binaries}" | _hexencode)
+	computed_digest=$(generate_pcr_digests 7 "${stdout}" "" "${efi_binaries}" | _hexencode)
 	if [ "${current_digest}" != "${computed_digest}" ]; then
 		# The PCR policy can't be satisfied until the next boot, so associate a
 		# password with the nvindex that will allow us to write the LUKS
@@ -298,11 +298,22 @@ tpm_nvram_store_passphrase() {
 generate_pcr_digests() {
     pcrs="${1}"
     output="${2}"
-    efi_binaries="${3}"
+    pcr2="${3}"
+    efi_binaries="${4}"
 
     tmp=$(mktemp)
     for pcr in ${pcrs//,/ }; do
         case $pcr in
+            2)
+                # "use_pcr2" is an unimportant constant, we chose this wording to make the function calls more readable
+                if [ "${pcr2}" = "use_pcr2" ]; then
+                    digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
+                else
+                    # This is the SHA256 hash of an "empty list" - a PCR that has only been extended with EV_SEPARATOR
+                    # It is a static value, it is easier to hardcode it here than to compute it every time
+                    digest="3d458cfe55cc03ea1f443f1562beec8df51c75e14a9fcf9a7234a13f198e7969"
+                fi
+            ;;
             7)
                 secureboot_override="01"
                 # the signatures from the updated database are appended to the
