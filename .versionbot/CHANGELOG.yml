@@ -1,4 +1,25 @@
 - commits:
+    - subject: "resin-mounts: only run non-encrypted mount if partition exists"
+      hash: 8af007811087416a98826d138d6e654941d9716c
+      body: |
+        When signed images are used without opting in secure boot, we don't want
+        the encrypted mount service to run and fail as there is no encrypted
+        boot partition.
+
+        This commit adds a condition to the encrypted boot mount service to only
+        run if the encrypted boot partition exists, similarly to what is
+        already done for EFI builds.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.3.20
+  title: ""
+  date: 2025-02-18T17:33:52.196Z
+- commits:
     - subject: "wpa-supplicant: Update to recipe from Kirkstone"
       hash: 95306535b424977c6f1f978b8cb37dca74cd8f55
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.20
+## (2025-02-18)
+
+* resin-mounts: only run non-encrypted mount if partition exists [Alex Gonzalez]
+
 # v6.3.19
 ## (2025-02-13)
 
