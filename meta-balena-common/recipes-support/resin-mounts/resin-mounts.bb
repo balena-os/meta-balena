@@ -66,6 +66,8 @@ do_install:prepend () {
 		sed -i -e "s/@@BALENA_NONENC_BOOT_LABEL@@/${BALENA_NONENC_BOOT_LABEL}/g" "${D}${systemd_unitdir}/system/${BALENA_NONENC_BOOT_LABEL}.service"
 		if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
 			sed -i '/^\[Unit\]/a ConditionPathIsSymbolicLink=/mnt/boot/EFI' "${D}${systemd_unitdir}/system/${BALENA_NONENC_BOOT_LABEL}.service"
+		else
+			sed -i "/^\[Unit\]/a ConditionPathExists=/dev/disk/by-state/${BALENA_NONENC_BOOT_LABEL}" "${D}${systemd_unitdir}/system/${BALENA_NONENC_BOOT_LABEL}.service"
 		fi
 	fi
 	for service in ${SYSTEMD_SERVICE:resin-mounts}; do
