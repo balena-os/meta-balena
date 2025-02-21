@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.21
+## (2025-02-21)
+
+* kernel-balena.bbclass: Add aufs patches for 6.12 kernels [Florin Sarbu]
+
 # v6.3.20
 ## (2025-02-18)
 

@@ -1,4 +1,18 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Add aufs patches for 6.12 kernels"
+      hash: 21469a4d0fb4ddf15d17ec1cff3687329abea018
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.3.21
+  title: ""
+  date: 2025-02-21T20:03:08.166Z
+- commits:
     - subject: "resin-mounts: only run non-encrypted mount if partition exists"
       hash: 8af007811087416a98826d138d6e654941d9716c
       body: |
