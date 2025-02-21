@@ -840,6 +840,7 @@ def aufs_kernel_select(kernelversion):
         ('6.1','bfd38ec481836d86de5686dadca02e072b4f0584'),
         ('6.6','1b28ab1ec3a89a9bec859f61f36d7a5e895583d5'),
         ('6.6.63','4b3aaa6e3dfad2e26deef81a6abbec02939e1080'),
+        ('6.12','a74fc3a112d90acddafa65a254177d4e523d1f0c'),
     ])
 
 
