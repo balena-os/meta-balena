@@ -1,4 +1,24 @@
 - commits:
+    - subject: "kernel-devsrc.bb: Use recipe from Poky for 6.12+ kernels"
+      hash: 1eb52a251cfd48d32a4dce2ee01b54e791d7b4ea
+      body: >
+        This is taken from Poky rev ae8fe5b896a1f6bd0740d1fa6638b9d9377a8d28 in
+        master.
+
+
+        It is required for being able to compile kernel modules for 6.12+
+        kernels.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.3.22
+  title: ""
+  date: 2025-02-24T09:34:34.666Z
+- commits:
     - subject: "kernel-balena.bbclass: Add aufs patches for 6.12 kernels"
       hash: 21469a4d0fb4ddf15d17ec1cff3687329abea018
       body: ""

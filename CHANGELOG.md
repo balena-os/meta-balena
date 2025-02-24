@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.22
+## (2025-02-24)
+
+* kernel-devsrc.bb: Use recipe from Poky for 6.12+ kernels [Florin Sarbu]
+
 # v6.3.21
 ## (2025-02-21)
 
