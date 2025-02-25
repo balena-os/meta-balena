@@ -1,0 +1,45 @@
+From 0932fb447b5cc8ac029e70b5caf860f879038a5f Mon Sep 17 00:00:00 2001
+From: Kirill Zabelin <zabelinkirillv@gmail.com>
+Date: Wed, 19 Feb 2025 15:16:03 +0000
+Subject: [PATCH] Update Cinterion port types
+
+---
+ .../77-mm-cinterion-port-types.rules          | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/src/plugins/cinterion/77-mm-cinterion-port-types.rules b/src/plugins/cinterion/77-mm-cinterion-port-types.rules
+index c1a9bc4a..bb9dceab 100644
+--- a/src/plugins/cinterion/77-mm-cinterion-port-types.rules
++++ b/src/plugins/cinterion/77-mm-cinterion-port-types.rules
+@@ -68,4 +68,28 @@ ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="006F", ENV{.MM_USBIFNUM}=="02", SUBS
+ ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="006F", ENV{.MM_USBIFNUM}=="04", SUBSYSTEM=="tty", ENV{ID_MM_PORT_TYPE_GPS}="1"
+ ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="006F", ENV{.MM_USBIFNUM}=="06", SUBSYSTEM=="tty", ENV{ID_MM_PORT_TYPE_QCDM}="1"
+ 
++# ALAS5
++#  ttyACM0 (if #0): AT port
++#  ttyACM1 (if #1): AT port
++#  ttyACM2 (if #2): GNSS port
++#  ttyACM3 (if #6): AT port (but just ignore)
++#  ttyACM4 (if #8): DIAG/QCDM
++#ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="00", SUBSYSTEM=="tty", ENV{ID_MM_PORT_TYPE_AT_PRIMARY}="1"
++#ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="02", SUBSYSTEM=="tty", ENV{ID_MM_PORT_TYPE_AT_SECONDARY}="1"
++#ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="04", SUBSYSTEM=="tty", ENV{ID_MM_PORT_TYPE_GPS}="1"
++#ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="06", ENV{ID_MM_PORT_IGNORE}="1"
++#ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="08", SUBSYSTEM=="tty", ENV{ID_MM_PORT_TYPE_QCDM}="1"
++
++ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="00", SUBSYSTEM=="tty", ENV{ID_MM_PORT_IGNORE}="1"
++ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="02", SUBSYSTEM=="tty", ENV{ID_MM_PORT_IGNORE}="1"
++ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="04", SUBSYSTEM=="tty", ENV{ID_MM_PORT_IGNORE}="1"
++ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="06", SUBSYSTEM=="tty", ENV{ID_MM_PORT_IGNORE}="1"
++ATTRS{idVendor}=="1e2d", ATTRS{idProduct}=="0065", ENV{.MM_USBIFNUM}=="08", SUBSYSTEM=="tty", ENV{ID_MM_PORT_IGNORE}="1"
++
+ LABEL="mm_cinterion_port_types_end"
++
++# ignore KBox
++ATTRS{idVendor}=="208b", ATTRS{idProduct}=="0035", ENV{ID_MM_DEVICE_IGNORE}="1"
++
++
++
+-- 
+2.34.1
+
