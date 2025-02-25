@@ -23,6 +23,17 @@ EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
 TPM_EVENTLOG_PATH="/sys/kernel/security/tpm0/binary_bios_measurements"
 
+# A static nvram index is chosen to ensure the index can't be modified without
+# also changing the hash of the kernel, which is verified by the firmware as
+# part of secure boot.
+#
+# The nvram index here is chosen empirically, as it's in the range for platform
+# manufacturer indices, and otherwise available for use in the devices we've
+# tested with.
+#
+# https://trustedcomputinggroup.org/wp-content/uploads/131011-Registry-of-reserved-TPM2-handles-and-localities.pdf
+PASSPHRASE_NVINDEX=0x1500000
+
 # silence errors messages from trying unsupported TCTI backends
 #
 # tpmrm0 is for kernel managed access by multiple clients, and should be
@@ -151,21 +162,22 @@ firmware_measures_efibins() {
 }
 
 print_pcr_val_bin() {
-    PCRS=$1
-    PCR_VAL_BIN=$2
-    DIGEST_SIZE=32
-    SKIP=0
+    pcrs=$1
+    pcr_val_bin=$2
+    digest_size=32
+    skip=0
     printf " %s:\n" "sha256"
-    for pcr in $(echo "${PCRS}" | sed 's/,/ /g'); do
-        digest=$(dd if="${PCR_VAL_BIN}" bs=1 count=$DIGEST_SIZE status=none skip=$SKIP | _hexencode)
-        SKIP=$((SKIP + DIGEST_SIZE))
+    for pcr in $(echo "${pcrs}" | sed 's/,/ /g'); do
+        digest=$(dd if="${pcr_val_bin}" bs=1 count=$digest_size status=none skip=$skip | _hexencode)
+        skip=$((skip + digest_size))
         printf "   %s : %s\n" "$pcr" "$digest"
     done
     printf "\n"
 }
 
 hw_gen_passphrase() {
-    tpm2_getrandom 32
+    size=${1:-32}
+    tpm2_getrandom "$size"
 }
 
 hw_encrypt_passphrase() {
@@ -199,6 +211,141 @@ hw_encrypt_passphrase() {
 
     # Remove unnecessary files
     rm -f "${PRIMARY_CTX}" "${PRIVATE_KEY}" "${PUBLIC_KEY}" "${KEY_CTX}"
+}
+
+tpm_nvram_retrieve_passphrase() {
+    auth=$1
+    output=$2
+    tpm2_nvread --auth "${auth}" "${PASSPHRASE_NVINDEX}" > "${output}"
+}
+
+tpm_nvram_store_passphrase() {
+	passphrase_file=$1
+	policy_dir=$2
+	passphrase_sz=32
+
+	session_ctx=$(mktemp)
+	combined_policy=$(mktemp)
+
+	active_sysroot=/mnt/sysroot/active
+	grub_bin="$(find "${active_sysroot}" -name bootx64.efi.secureboot -print -quit)"
+	kernel_bin="$(find "${active_sysroot}" -name bzImage -print -quit)"
+	if [ "$(firmware_measures_efibins)" = "measured" ]; then
+		efi_binaries="${grub_bin} ${kernel_bin}"
+	fi
+
+	stdout=/dev/fd/1
+	current_digest=$(tpm2_pcrread sha256:7 --quiet -o "${stdout}" | _hexencode)
+	computed_digest=$(generate_pcr_digests 7 "${stdout}" "${efi_binaries}" | _hexencode)
+	if [ "${current_digest}" != "${computed_digest}" ]; then
+		# The PCR policy can't be satisfied until the next boot, so associate a
+		# password with the nvindex that will allow us to write the LUKS
+		# passphrase immediately
+		tpm2_startauthsession --session "${session_ctx}"
+		tpm2_policypassword \
+			--session "${session_ctx}" \
+			--policy "${policy_dir}/policy.password"
+		tpm2_flushcontext "${session_ctx}"
+
+		policy_password="hex:$(hw_gen_passphrase "${passphrase_sz}" | _hexencode)"
+		nvdefine_addl_args="--index-auth ${policy_password}"
+		status=reboot_required
+	fi
+
+	policies="$(find "${policy_dir}" -type f | sort | xargs)"
+	if [ "$(echo "${policies}" | wc -w)" -gt 1 ]; then
+		tpm2_startauthsession --session "${session_ctx}"
+		tpm2_policyor \
+			--session "${session_ctx}" \
+			--policy "${combined_policy}" \
+			"sha256:${policies// /,}"
+		tpm2_flushcontext "${session_ctx}"
+		policy="${combined_policy}"
+	else
+		policy="${policies}"
+	fi
+
+	# an nvindex policy cannot be changed after it's defined, so undefine
+	# the index when it's already defined
+	if tpm2_nvreadpublic "${PASSPHRASE_NVINDEX}"; then
+		tpm2_nvundefine "${PASSPHRASE_NVINDEX}"
+	fi
+
+	# shellcheck disable=SC2086
+	tpm2_nvdefine "${PASSPHRASE_NVINDEX}" --size "${passphrase_sz}" \
+					      --attributes "authwrite|policyread|policywrite" \
+					      --policy "${policy}" \
+					      ${nvdefine_addl_args}
+
+	tpm2_startauthsession --policy-session --session "${session_ctx}"
+	if [ -n "${policy_password}" ]; then
+		nvwrite_addl_args="--auth ${policy_password}"
+	else
+		pcrs="sha256:0,2,3,7"
+		tpm2_policypcr --session "${session_ctx}" --pcr-list "${pcrs}"
+		nvwrite_addl_args="--auth session:${session_ctx}"
+	fi
+
+	# shellcheck disable=SC2086
+	tpm2_nvwrite "${PASSPHRASE_NVINDEX}" --input "${passphrase_file}" \
+					     ${nvwrite_addl_args}
+	tpm2_flushcontext "${session_ctx}"
+	tpm2_shutdown
+
+	echo "${status}"
+}
+
+generate_pcr_digests() {
+    pcrs="${1}"
+    output="${2}"
+    efi_binaries="${3}"
+
+    tmp=$(mktemp)
+    for pcr in ${pcrs//,/ }; do
+        case $pcr in
+            7)
+                secureboot_override="01"
+                # the signatures from the updated database are appended to the
+                # existing variable, removing duplicates
+                SIGNATURE_LENGTH=76 # sizeof(EFI_SIGNATURE_LIST) + SHA256_DIGEST_SIZE + EFI_GUID_SIZE
+                db_override="$( \
+                    { dd if=/sys/firmware/efi/efivars/"db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+                         status=none \
+                         bs=1 \
+                         skip=4 \
+                         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
+                      dd if=/resin-boot/balena-keys/db.esl \
+                         status=none \
+                         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
+                    } | awk '!seen[$0]++' )"
+                #shellcheck disable=SC2154
+                digest="$(compute_pcr7 "${secureboot_override}" \
+                                       "${pk_override}" \
+                                       "${kek_override}" \
+                                       "${db_override}" \
+                                       "${dbx_override}")"
+
+                for bin in ${efi_binaries}; do
+                    extend="$(tcgtool -s "$bin" \
+                            | tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+                            | _sha256 )"
+                    digest=$(printf '%s%s' "$digest" "$extend" | _hexdecode | _sha256)
+                done
+            ;;
+            *)
+                digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
+            ;;
+        esac
+
+	# write to a real file first, as $output could be a stream
+        printf "%s" "$digest" | _hexdecode \
+            | dd of="${tmp}" \
+                 status=none \
+                 bs=1 \
+                 seek="$(du -b "${tmp}" | cut -f1)"
+    done
+
+    cat "${tmp}" > "${output}"
 }
 
 hw_decrypt_passphrase() {

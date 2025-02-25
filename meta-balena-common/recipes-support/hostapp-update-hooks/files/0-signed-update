@@ -42,167 +42,104 @@ umountEfiVars() {
 }
 
 updateKeys() {
-    PCRS="0,2,3,7"
-    PCR_VAL_BIN_CURRENT="$(mktemp -t)"
-    PCR_VAL_BIN_UPDATED="$(mktemp -t)"
-    PCR_VAL_BIN_EFIBIN="$(mktemp -t)"
-    GRUB_BIN="$(find /mnt/sysroot/inactive -name bootx64.efi.secureboot -print -quit)"
-    KERNEL_BIN="$(find /mnt/sysroot/inactive -name bzImage -print -quit)"
+    SESSION_CTX=$(mktemp -t)
+    EFI_MOUNT_DIR="/mnt/efi"
+    PASSPHRASE_FILE="$(mktemp -t)"
+    CURRENT_POLICY_PATH="$(find /mnt/efi -name "policies.*")"
+    for UNLOCK_PCRS in  0,2,3,7 0,1,2,3; do
+        tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
+        tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
+        POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
+        if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
+            tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
+        fi
+
+        if tpm_nvram_retrieve_passphrase "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
+            UNLOCK_PCRS_SUCCESS="${UNLOCK_PCRS}"
+            info "Retrieved passphrase from TPM NVRAM"
+        elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
+            UNLOCK_PCRS_SUCCESS="${UNLOCK_PCRS}"
+            info "Decrypted passphrase stored on disk"
+        fi
+
+        if [ -n "${UNLOCK_PCRS_SUCCESS}" ]; then
+            break;
+        fi
+
+        tpm2_flushcontext "${SESSION_CTX}" 2>/dev/null
+    done
+
+    if [ -n "${UNLOCK_PCRS_SUCCESS}" ]; then
+        info "Authorized access to passphrase using PCRs ${UNLOCK_PCRS_SUCCESS}"
+    else
+        fail "Failed to update policy sealing LUKS passphrase"
+    fi
+
+    INACTIVE_SYSROOT=/mnt/sysroot/inactive
+    GRUB_BIN="$(find "${INACTIVE_SYSROOT}" -name bootx64.efi.secureboot -print -quit)"
+    KERNEL_BIN="$(find "${INACTIVE_SYSROOT}" -name bzImage -print -quit)"
     if [ -z "${GRUB_BIN}" ] || [ -z "${KERNEL_BIN}" ]; then
         fail "Unable to add kernel and bootloader hashes to PCR7 digest"
     fi
 
     EFI_BINARIES="${GRUB_BIN} ${KERNEL_BIN}"
+    PCRS="0,2,3,7"
+    PCR_VAL_BIN="$(mktemp -t)"
+    PCR_VAL_BIN_EFIBIN="$(mktemp -t)"
 
-    for pcr in $(echo ${PCRS} | sed 's/,/ /g'); do
-        case $pcr in
-            7)
-                # the signatures from the updated database are appended to the
-                # existing variable, removing duplicates
-                SIGNATURE_LENGTH=76 # sizeof(EFI_SIGNATURE_LIST) + SHA256_DIGEST_SIZE + EFI_GUID_SIZE
-                db_override="$( \
-                    { dd if=/sys/firmware/efi/efivars/"db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
-                         status=none \
-                         bs=1 \
-                         skip=4 | xxd -p -c ${SIGNATURE_LENGTH} ; \
-                      dd if=/resin-boot/balena-keys/db.esl \
-                         status=none | xxd -p -c ${SIGNATURE_LENGTH} ; \
-                    } | awk '!seen[$0]++' )"
-                current_digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
-                #shellcheck disable=SC2154
-                updated_digest="$(compute_pcr7 "${secureboot_override}" \
-                                               "${pk_override}" \
-                                               "${kek_override}" \
-                                               "${db_override}" \
-                                               "${dbx_override}")"
+    # This OS release may not have the bootloader version required
+    # to read the TPM event log, which means we can't assess if the
+    # firmware measures EFI binary signatures into PCR7.
+    #
+    # Create a combined policy that authenticates with PCR7 values
+    # calculated with and without the EFI binary hashes.
+    POLICY_PATH="$(mktemp -t -d policies.XXXXX)"
+    POLICY_PCR="$(mktemp -t)"
+    POLICY_EFIBIN="$(mktemp -t)"
+    generate_pcr_digests \
+        "${PCRS}" \
+        "${PCR_VAL_BIN}"
+    generate_pcr_digests \
+        "${PCRS}" \
+        "${PCR_VAL_BIN_EFIBIN}" \
+        "${EFI_BINARIES}"
 
-                cp "${PCR_VAL_BIN_CURRENT}" "${PCR_VAL_BIN_UPDATED}"
-                printf "%s" "$updated_digest" | _hexdecode \
-                    | dd of="${PCR_VAL_BIN_UPDATED}" \
-                         status=none \
-                         bs=1 \
-                         seek="$(du -b "${PCR_VAL_BIN_UPDATED}" | cut -f1)"
+    tpm2_createpolicy --policy-pcr \
+                      -l "sha256:${PCRS}" \
+                      -f "${PCR_VAL_BIN}" \
+                      -L "${POLICY_PCR}"
+    tpm2_createpolicy --policy-pcr \
+                      -l "sha256:${PCRS}" \
+                      -f "${PCR_VAL_BIN_EFIBIN}" \
+                      -L "${POLICY_EFIBIN}"
 
-                # This OS release may not have the bootloader version required
-                # to read the TPM event log, which means we can't assess if the
-                # firmware measures EFI binary signatures into PCR7.
-                #
-                # Create a combined policy that authenticates with PCR7 values
-                # calculated with and without the EFI binary hashes.
-                cp "${PCR_VAL_BIN_CURRENT}" "${PCR_VAL_BIN_EFIBIN}"
-                for bin in ${EFI_BINARIES}; do
-                    extend="$(tcgtool -s "$bin" \
-                            | tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
-                            | _sha256 )"
-                    updated_digest=$(printf '%s%s' "$updated_digest" "$extend" | _hexdecode | _sha256)
-                done
-
-                printf "%s" "$updated_digest" | _hexdecode \
-                    | dd of="${PCR_VAL_BIN_EFIBIN}" \
-                         status=none \
-                         bs=1 \
-                         seek="$(du -b "${PCR_VAL_BIN_EFIBIN}" | cut -f1)"
-                digest="$current_digest"
+    case "$(firmware_measures_efibins)" in
+        measured)
+            info "Using PCR7 digest with EFI binary measurements"
+            cp "${POLICY_EFIBIN}" "${POLICY_PATH}/policy.pcr-efibin"
+            print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
             ;;
-            *)
-                digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
+        unmeasured)
+            info "Using PCR7 digest without EFI binary measurements"
+            cp "${POLICY_PCR}" "${POLICY_PATH}/policy.pcr"
+            print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN}"
             ;;
-        esac
+        unknown)
+            # we don't have access to the TPM event log, and can't
+            # definitively tell whether or not EFI binaries are measured
+            # into PCR7, so unlock with both digests
+            cp "${POLICY_PCR}" "${POLICY_PATH}/policy.pcr"
+            cp "${POLICY_EFIBIN}" "${POLICY_PATH}/policy.pcr-efibin"
 
-        printf "%s" "$digest" | _hexdecode \
-            | dd of="${PCR_VAL_BIN_CURRENT}" \
-                 status=none \
-                 bs=1 \
-                 seek="$(du -b "${PCR_VAL_BIN_CURRENT}" | cut -f1)"
-    done
+            print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
+            printf "\nOR\n"
+            print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN}"
+            ;;
+    esac
 
-    SESSION_CTX=$(mktemp -t)
-    EFI_MOUNT_DIR="/mnt/efi"
-    POLICY_PATH="$(mktemp -d policies.XXXXX)"
-    PASSPHRASE_FILE="$(mktemp -t)"
-    RESULT_DIR="$(mktemp -d)"
-    CURRENT_POLICY_PATH="$(find /mnt/efi -name "policies.*")"
-    for UNLOCK_PCRS in  0,2,3,7 0,1,2,3; do
-        {
-            tpm2_flushcontext "${SESSION_CTX}"  2>&1 || true
-            tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
-            tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
-            POLICIES="$(find "${CURRENT_POLICY_PATH}" -type f | sort | xargs)"
-            if [ "$(echo "${POLICIES}" | wc -w)" -gt 1 ]; then
-                tpm2_policyor -S "${SESSION_CTX}" "sha256:$(echo "${POLICIES}" | sed 's/ /,/g')"
-            fi
-
-        } >/dev/null
-
-        if hw_decrypt_passphrase "$EFI_MOUNT_DIR" "session:${SESSION_CTX}" "$PASSPHRASE_FILE"; then
-            UNLOCK_PCRS_SUCCESS="${UNLOCK_PCRS}"
-            break
-        fi
-    done
-
-    tpm2_flushcontext "${SESSION_CTX}"  >/dev/null 2>&1
-
-    POLICY_UPDATED="${POLICY_PATH}/policy.updated"
-    POLICY_EFIBIN="${POLICY_PATH}/policy.efibin"
-    POLICY_COMBINED="$(mktemp -t)"
-    if [ "${UNLOCK_PCRS_SUCCESS}" = "0,2,3,7" ]; then
-        {
-            tpm2_createpolicy --policy-pcr \
-                              -l "sha256:${PCRS}" \
-                              -f "${PCR_VAL_BIN_UPDATED}" \
-                              -L "${POLICY_UPDATED}"
-            tpm2_createpolicy --policy-pcr \
-                              -l "sha256:${PCRS}" \
-                              -f "${PCR_VAL_BIN_EFIBIN}" \
-                              -L "${POLICY_EFIBIN}"
-            tpm2_startauthsession -S "${SESSION_CTX}"
-        } >/dev/null
-
-        case "$(firmware_measures_efibins)" in
-            measured)
-                info "Using PCR7 digest with EFI binary measurements"
-                POLICY="${POLICY_EFIBIN}"
-                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
-                ;;
-            unmeasured)
-                info "Using PCR7 digest without EFI binary measurements"
-                POLICY="${POLICY_UPDATED}"
-                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_UPDATED}"
-                ;;
-            unknown)
-                # we don't have access to the TPM event log, and can't
-                # definitively tell whether or not EFI binaries are measured
-                # into PCR7, so unlock with both digests
-                info "Creating combined policy"
-                tpm2_policyor -S "${SESSION_CTX}" \
-                              -L "${POLICY_COMBINED}" \
-                              "sha256:$(find "${POLICY_PATH}" -type f | sort | xargs | sed 's/ /,/g')" \
-                              >/dev/null
-                POLICY="${POLICY_COMBINED}"
-                cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
-
-                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_EFIBIN}"
-                printf "\nOR\n"
-                print_pcr_val_bin "${PCRS}" "${PCR_VAL_BIN_UPDATED}"
-                ;;
-        esac
-
-        {
-            tpm2_flushcontext "${SESSION_CTX}" 2>&1
-
-            hw_encrypt_passphrase "$PASSPHRASE_FILE" "$POLICY" "$RESULT_DIR"
-            rm -rf "${CURRENT_POLICY_PATH}"
-
-            tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
-            mv "${RESULT_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx"
-            mv "${RESULT_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc"
-        } >/dev/null
-
-    elif [ "${UNLOCK_PCRS_SUCCESS}" = "0,1,2,3" ]; then
-        warn "Unlocked passphrase without PCR7, delaying policy update until rollback-health success"
-    else
-        fail "Failed to update policy sealing LUKS passphrase"
-    fi
+    tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_PATH}"
+    cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
+    rm -rf "${CURRENT_POLICY_PATH}"
 
     # update the second stage bootloader kernel binary, as the hash of the
     # original may not be present in the signature database
