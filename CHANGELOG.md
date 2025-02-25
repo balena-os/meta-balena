@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.3.23
+## (2025-02-25)
+
+* modemmanager: patch for Cinterion port types [Kirill Zabelin]
+
 # v6.3.22
 ## (2025-02-24)
 

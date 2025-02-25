@@ -1,4 +1,18 @@
 - commits:
+    - subject: "modemmanager: patch for Cinterion port types"
+      hash: 6cd7bdcef2405b836975d2a06cdd83cbb5177499
+      body: >
+        Patch with changes in udev rules for ALAS5 for proper support of port
+        types
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Kirill Zabelin
+      nested: []
+  version: 6.3.23
+  title: ""
+  date: 2025-02-25T10:26:55.368Z
+- commits:
     - subject: "kernel-devsrc.bb: Use recipe from Poky for 6.12+ kernels"
       hash: 1eb52a251cfd48d32a4dce2ee01b54e791d7b4ea
       body: >
