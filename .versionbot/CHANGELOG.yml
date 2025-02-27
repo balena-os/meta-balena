@@ -1,4 +1,140 @@
 - commits:
+    - subject: "hup: hooks: silence tpm2_flushcontext trap while updating policy"
+      hash: 518bc5e7a481de8ba4093379c8092f48965876a3
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hup: hooks: update passphrase in TPM NVRAM"
+      hash: b519967781871d1550c70a61893b39d4e2926e50
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: lowercase vars in print_pcr_val_bin"
+      hash: 046106f5b6568f916f0407b7f57547110cd73bfe
+      body: |
+        Rename vars in print_pcr_val_bin to prevent conflicts and accidental
+        changes to globals.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hup: signed-update: store passphrase in TPM"
+      hash: 0a74600ac273a3233196b117726d8af7d8328c9a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "hostapp-update-hooks: use generate_pcr_digests"
+      hash: c974c02c99aae4aeaef734ee06e83d7de9f0b3f6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "balena-init-flasher-tpm: use generate_pcr_digests"
+      hash: c96cbed0ca1d68a1dc4ea15c6824dfc9bb371811
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "balena-init-flasher-tpm: write LUKS passphrase to TPM nvram"
+      hash: 4b55f95e701d42a5a122e15a9305b9791da211ec
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: add generate_pcr_digests"
+      hash: 753695494c4bc25e23baab6987482897c074398a
+      body: |
+        In several places currently, a PCR digest value binary is generated to
+        create a PCR policy from, either to secure a secret using the TPM, or
+        update an existing policy.
+
+        Add a function to os-helpers-tpm2 to unify this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: add tpm_nvram_store_passphrase"
+      hash: 74cf48d94d8ac0882c30ad906139aa0d6b9df70c
+      body: |
+        Add function to tpm2 helpers to store a LUKS passphrase in the TPM's
+        NVRAM, protected by a policy.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: add size param to hw_gen_passphrase"
+      hash: 2353774a960a3e798107d463c7b029bc41a685ca
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "cryptsetup-efi-tpm: retrieve passphrase from TPM"
+      hash: b8d292ec6ee60a9e01cc088f38c29144387c6872
+      body: |
+        Attempt to retrieve the LUKS passphrase from TPM nvram during boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+    - subject: "os-helpers-tpm2: add tpm_nvram_retrieve_passphrase"
+      hash: 142dbc5b2512a5c46e3ff264bb3b00a6e342a4ad
+      body: |
+        Add function to tpm2 helpers to retrieve a passphrase stored in the
+        TPM's nvram.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.4.0
+  title: ""
+  date: 2025-02-27T14:42:28.112Z
+- commits:
     - subject: "modemmanager: patch for Cinterion port types"
       hash: 6cd7bdcef2405b836975d2a06cdd83cbb5177499
       body: >
