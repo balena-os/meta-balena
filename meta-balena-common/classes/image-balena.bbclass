@@ -4,6 +4,9 @@
 
 inherit image_types_balena kernel-balena-noimage
 
+# Override if the device-type.json file is not named as the machine
+DEVICE_TYPE ?= "${MACHINE}"
+
 # When building a Balena OS image, we also generate the kernel modules headers
 # and ship them in the deploy directory for out-of-tree kernel modules build
 DEPENDS += "coreutils-native jq-native ${@bb.utils.contains('BALENA_DISABLE_KERNEL_HEADERS', '1', '', 'kernel-devsrc kernel-headers-test', d)}"
@@ -51,7 +54,7 @@ init_config_json() {
    echo "$(cat ${1}/config.json | jq -S ".persistentLogging=false")" > ${1}/config.json
 
    # Find board json and extract slug
-   json_path=${BALENA_COREBASE}/../../../${MACHINE}.json
+   json_path=${BALENA_COREBASE}/../../../${DEVICE_TYPE}.json
    slug=$(jq .slug $json_path)
 
    # Set deviceType for supervisor
@@ -321,11 +324,12 @@ def get_rel_path(layers, rel, d):
 def get_slug(d):
     import json
     slug = "unknown"
+    device_type = d.getVar("DEVICE_TYPE", True)
     machine = d.getVar("MACHINE", True)
     resinboardpath = get_rel_path(['meta-resin-common','meta-balena-common'], '../../../', d)
     if not resinboardpath:
         return slug
-    jsonfile = os.path.normpath(os.path.join(resinboardpath, machine + ".json"))
+    jsonfile = os.path.normpath(os.path.join(resinboardpath, device_type + ".json"))
     try:
         with open(jsonfile, 'r') as fd:
             machinejson = json.load(fd)
