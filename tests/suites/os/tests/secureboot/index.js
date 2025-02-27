@@ -569,7 +569,7 @@ module.exports = {
 				const impl = new testSecureBoot(new imxSecureBoot(test,
 					this.worker,
 					this.suite, this.os.image.path,
-					{"name": "", "headersVersion": "6.0.49"}));
+					{"name": "", "headersVersion": "6.3.19"}));
 				await impl.run(test);
 			},
 		},
