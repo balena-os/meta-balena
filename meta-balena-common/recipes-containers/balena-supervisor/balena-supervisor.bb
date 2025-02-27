@@ -63,7 +63,7 @@ do_compile[noexec] = "1"
 
 api_fetch_supervisor_image() {
 	_version=$1
-	_arch=$(jq --raw-output '.arch' "${TOPDIR}/../${MACHINE}.json")
+	_arch=$(jq --raw-output '.arch' "${TOPDIR}/../${DEVICE_TYPE}.json")
 	_api_env="${BALENA_API_ENV}"
 	_token="${BALENA_API_TOKEN}"
 	[ -z "${_token}" ] && [ -f "~/.balena/token" ] && _token=$(cat "~/.balena/token") || true
