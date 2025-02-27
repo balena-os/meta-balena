@@ -460,6 +460,18 @@ class imxSecureBoot extends secureBoot {
 			}
 
 			await this.replaceBinaryPattern(args.path, args.pattern, args.replacement);
+			if ( args.name == 'Bootloader' ) {
+				// Program the bootloader
+				await this.worker.executeCommandInHostOS(
+					[
+						'tmpdir=$(mktemp -d)', ';',
+						'cp /etc/hostapp-update-hooks.d/99-flash-bootloader ${tmpdir}', ';',
+						'sed -i "s,resin-boot,mnt/imx,g" ${tmpdir}/99-flash-bootloader', ';',
+						'${tmpdir}/99-flash-bootloader', ';'
+					],
+					this.link
+				)
+			}
 			await this.worker.executeCommandInHostOS('reboot', this.link)
 			await this.test.resolves(
 				this.waitForFailedBoot(),
