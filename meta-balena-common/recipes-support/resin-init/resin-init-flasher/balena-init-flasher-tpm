@@ -20,8 +20,9 @@ diskenc_setup() {
         fi
 
         # Generate a random passphrase
+        PASSPHRASE_SZ=32
         PASSPHRASE_FILE="$(mktemp)"
-        hw_gen_passphrase > "$PASSPHRASE_FILE"
+        hw_gen_passphrase "$PASSPHRASE_SZ" > "$PASSPHRASE_FILE"
 
         # Create two policies to ensure the newly flashed system boots. One with
         # the EFI binaries measured into PCR7 as specified in the TCG spec, one
@@ -40,43 +41,13 @@ diskenc_setup() {
                 $(find / -name bootx64.efi.secureboot -print -quit) \
                 $(find / -name bzImage -print -quit)"
         PCRS="0,2,3,7"
-        for pcr in ${PCRS//,/ }; do
-                case "$pcr" in
-                        # PCR7 is computed at boot, and we must recompute the hash at
-                        # runtime after modifying secure boot configuration before creating
-                        # a new policy
-                        7)
-				cp "${PCR_VAL_BIN_PRIMARY}" "${PCR_VAL_BIN_SECONDARY}"
-				# Force secure boot on when calculating PCR7 hash
-				secureboot_override="01"
-				primary_digest="$(compute_pcr7 ${secureboot_override})"
-				secondary_digest="${primary_digest}"
-				for bin in ${EFI_BINARIES}; do
-					extend="$(tcgtool -s "$bin" \
-						| tcgtool -e "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
-						| _sha256 )"
-					secondary_digest=$(printf '%s%s' "$secondary_digest" "$extend" \
-						| _hexdecode | _sha256)
-				done
-
-				printf "%s" "$secondary_digest" | _hexdecode \
-					| dd of="${PCR_VAL_BIN_SECONDARY}" \
-					     status=none \
-					     bs=1 \
-					     seek="$(du -b "${PCR_VAL_BIN_SECONDARY}" | cut -f1)"
-				digest="$primary_digest"
-                                ;;
-                        *)
-                                digest="$(tpm2_pcrread --quiet "sha256:$pcr" -o /proc/self/fd/1 | _hexencode)"
-				;;
-                esac
-
-		printf "%s" "$digest" | _hexdecode \
-		        | dd of="${PCR_VAL_BIN_PRIMARY}" \
-			     status=none \
-			     bs=1 \
-			     seek="$(du -b "${PCR_VAL_BIN_PRIMARY}" | cut -f1)"
-	done
+	generate_pcr_digests \
+		"${PCRS}" \
+		"${PCR_VAL_BIN_PRIMARY}"
+	generate_pcr_digests \
+		"${PCRS}" \
+		"${PCR_VAL_BIN_SECONDARY}" \
+		"${EFI_BINARIES}"
 
 	info "Creating combined policy for PCRs ${PCRS}"
 
@@ -91,11 +62,6 @@ diskenc_setup() {
 		-l "sha256:${PCRS}" \
 		-f "${PCR_VAL_BIN_SECONDARY}" \
 		-L "$POLICY_DIR/policy.secondary"
-	COMBINED_POLICY=$(mktemp -t)
-	SESSION_CTX=$(mktemp -t)
-	tpm2_startauthsession -S "${SESSION_CTX}"
-	tpm2_policyor -S "${SESSION_CTX}" -L "${COMBINED_POLICY}" \
-		"sha256:${POLICY_DIR}/policy.primary,${POLICY_DIR}/policy.secondary"
-	tpm2_flushcontext "${SESSION_CTX}"
-	hw_encrypt_passphrase "$PASSPHRASE_FILE" "$COMBINED_POLICY" "$TPM_RESULT_DIR"
+
+	tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_DIR}"
 }
