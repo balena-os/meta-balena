@@ -154,3 +154,6 @@ BALENA_USE_LUKS ?= "1"
 # This is the docker API version for v20.10
 # balena version --format '{{.Server.APIVersion}}'
 BALENA_API_VERSION ?= "1.41"
+
+# Override if the device-type.json file is not named as the machine
+DEVICE_TYPE ?= "${MACHINE}"
