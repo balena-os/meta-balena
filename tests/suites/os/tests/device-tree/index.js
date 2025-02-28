@@ -44,28 +44,6 @@ module.exports = {
 				let ip = await this.worker.ip(this.link);
 				let targetState
 
-				// Export the GPIO pin
-				const exportPin = async () => {
-					return await this.worker.executeCommandInHostOS(
-						`echo 4 >/sys/class/gpio/export`,
-						this.link
-					)
-				}
-
-				// Check value of GPIO pin and unexport the GPIO pin
-				const getPinValue = async () => {
-					const pinValue =  await this.worker.executeCommandInHostOS(
-						`cat /sys/class/gpio/gpio4/value`,
-						this.link
-					)
-
-					await this.worker.executeCommandInHostOS(
-						`echo 4 >/sys/class/gpio/unexport`,
-						this.link
-					)
-					return pinValue
-				}
-
 				// After applying Dtoverlay, the GPIO pins becomes unavailable as drivers take control over the pin
 				// Hence, sysfs can't be used to query the value of the GPIO pin hence the user of /sys/kernel/debug/gpio
 				const getPinValueThroughDebug = async () => {
@@ -163,16 +141,14 @@ module.exports = {
 				}
 
 				// Start of the device-tree practical test
-				await exportPin(4)
-				if (await getPinValue(4) === "0") {
-					test.true(true, "Pin 4 was Low when the test started")
-					const targetState = await applySupervisorConfig("up")
-					test.equal(await getPinValueThroughDebug(4), '"hi"', "Pin 4 set to High after applying dtoverlay")
-				} else {
-					test.true(true, "Pin 4 is High as expected")
-					const targetState = await applySupervisorConfig("down")
-					test.equal(await getPinValueThroughDebug(4), '"lo"', "Pin 4 set to Low after applying dtoverlay")
-				}
+
+				// set pin to high and check if it was set correctly after reboot
+				await applySupervisorConfig("up")
+				test.equal(await getPinValueThroughDebug(), '"hi"', "GPIO4 set to High after applying dtoverlay")
+
+				// set pin to low and check if it was set correctly after reboot
+				targetState = await applySupervisorConfig("down")
+				test.equal(await getPinValueThroughDebug(), '"lo"', "GPIO4 set to Low after applying dtoverlay")
 
 				// Get the current target state of device
 				const currentState = await request({
