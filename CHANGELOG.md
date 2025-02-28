@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.4.1
+## (2025-02-28)
+
+* tests/device-tree: Rework test to not use the sysfs gpio interface [Florin Sarbu]
+
 # v6.4.0
 ## (2025-02-27)
 

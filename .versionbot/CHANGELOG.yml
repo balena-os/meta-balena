@@ -1,4 +1,26 @@
 - commits:
+    - subject: "tests/device-tree: Rework test to not use the sysfs gpio interface"
+      hash: 2f65f40490329f6e9ab9e32778564f821eb6fb4e
+      body: |
+        The /sys/class/gpio interface is bound to be removed anytime so let's
+        not use it anymore. Instead just make the test set the pin to high then
+        check its value after reboot then set the pin to low and check its value
+        again after the next reboot.
+
+        Also, when checking the pin value in /sys/kernel/debug/gpio lets search
+        for the gpio using the GPIO label instead of grepping for a gpio number
+        because various kernel versions may offset the gpios with a base.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.4.1
+  title: ""
+  date: 2025-02-28T14:20:09.237Z
+- commits:
     - subject: "hup: hooks: silence tpm2_flushcontext trap while updating policy"
       hash: 518bc5e7a481de8ba4093379c8092f48965876a3
       body: ""
