@@ -425,6 +425,18 @@ def available_space(img, d):
      available_space = free_blk_count - reserved_blks - reserved_gdt_blks - journal_blks - (inode_count * inode_size / blk_size)
      return int(available_space * blk_size / 1024)
 
+def assert_max_rootfs_size(rfs_size):
+    rootfs_maxsize = int(d.getVar("BALENA_ROOTFS_MAXSIZE") * 1024 * 1024)
+    if rootfs_maxsize is not None and rootfs_maxsize != "":
+        boot_partition_size = int(d.getVar("BALENA_BOOT_SIZE"))
+        state_partition_size = int(d.getVar("BALENA_STATE_SIZE"))
+        max_updatable_size = (rootfs_maxsize - boot_partition_size - state_partition_size ) / 2
+        rfs_alignment = int(d.getVar("IMAGE_ROOTFS_ALIGNMENT"))
+        # Use an aligned size and substract the alignment value to cater for filesystem overheads
+        adj_max_updatable_size = disk_aligned(d, max_updatable_size) - rfs_alignment
+        if rfs_size > adj_max_updatable_size:
+            bb.fatal("The OS container size %d exceeds the configured maximum updatable size %d" % (rfs_size, adj_max_updatable_size))
+
 # Check that the generated docker image can be updated to the rootfs partition
 python do_image_size_check() {
     imgfile = d.getVar("BALENA_DOCKER_IMG")
@@ -436,6 +448,7 @@ python do_image_size_check() {
     if image_size_aligned > available:
         bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
     bb.debug(1, 'requested %d, available %d' % (image_size_aligned, available) )
+    assert_max_rootfs_size(rfs_size)
 }
 
 # Equivalent to:
