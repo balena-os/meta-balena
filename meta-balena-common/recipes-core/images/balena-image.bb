@@ -7,14 +7,16 @@ REQUIRED_DISTRO_FEATURES += " systemd"
 BALENA_FLAG_FILE = "${BALENA_IMAGE_FLAG_FILE}"
 
 #
-# The default root filesystem partition size is set in such a way that the
-# entire space taken by resinOS would not exceed 700 MiB. This  can be
-# overwritten by board specific layers.
+# Default root filesystem partition size.
+# This  can be overwritten by board specific layers.
 #
 IMAGE_ROOTFS_SIZE = "${@balena_rootfs_size(d)}"
 IMAGE_OVERHEAD_FACTOR = "1.0"
 IMAGE_ROOTFS_EXTRA_SPACE = "0"
 IMAGE_ROOTFS_MAXSIZE = "${IMAGE_ROOTFS_SIZE}"
+# The maximum size of the rootfs contents in MB - allows to limit the rootfs size
+# to allow for devices with smaller partitions to still HUP
+BALENA_ROOTFS_MAXSIZE = "700"
 
 IMAGE_FSTYPES = "${@oe.utils.conditional('SIGN_API','','balenaos-img','balenaos-img.sig',d)}"
 
