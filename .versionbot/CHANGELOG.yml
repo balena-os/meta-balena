@@ -1,4 +1,242 @@
 - commits:
+    - subject: Update balena-supervisor to v16.12.7
+      hash: 0b8267253da82eb0b1f485046e52c570c1d5168a
+      body: |
+        Update balena-supervisor from 16.12.0 to 16.12.7
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Release locks when removing apps
+              hash: 026dc0aed29ce7d66cfdd8616d80d1f5daf3ad46
+              body: >
+                This prevents leftover locks that can prevent other operations
+                from
+
+                taking place.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.12.7
+          title: ""
+          date: 2025-03-06T19:11:18.704Z
+        - commits:
+            - subject: Log non-API errors during state poll
+              hash: 6d00be20930398699da1006176dac1e81b2dbbd6
+              body: >
+                The supervisor was failing silently if an error happened while
+                establishing the
+
+                connection (e.g. requesting the socket).
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Fix target poll healthcheck
+              hash: f8bdb1433508dcaeff12a78d746256041ba1c414
+              body: >
+                The Target.lastFetch time compared when performing the
+                healthcheck
+
+                resets any time a poll is attempted no matter the outcome. This
+                changes
+
+                the behavior so the time is reset only on a successful poll
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.12.6
+          title: ""
+          date: 2025-03-04T14:25:06.565Z
+        - commits:
+            - subject: Decrease balenaCloud api request timeout from 15m to 59s
+              hash: 49163e92a013250f72ca7231e11945b465c4dd45
+              body: >
+                This was mistakenly increased due to confusion between the
+                timeout for
+
+                requests to the supervisor's api vs the timeout for requests
+                from the
+
+                supervisor to the balenaCloud api. This separates the two
+                configs and
+
+                documents the difference between the timeouts whilst also
+                decreasing
+
+                the timeout for balenaCloud api requests to the correct/expected
+                value
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-16.12.5
+          title: ""
+          date: 2025-03-04T13:35:26.801Z
+        - commits:
+            - subject: Don't revert to regular pull if delta server 401
+              hash: 2dc9d275b15a0802264bcd49e2f0dddbbadd2225
+              body: >
+                If the Supervisor receives a 401 Unauthorized from the delta
+                server
+
+                when requesting a delta image location, we should surface the
+                error
+
+                instead of falling back to a regular pull immediately, as there
+                could
+
+                be an issue with the delta auth token, which refreshes after
+
+                DELTA_TOKEN_TIMEOUT (10min), or some other edge case.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.12.4
+          title: ""
+          date: 2025-03-03T13:42:18.045Z
+        - commits:
+            - subject: Retry DELTA_APPLY_RETRY_COUNT (3) times during delta apply fail before
+                reverting to regular pull
+              hash: 341111f1f94cd9f17fd7be9b6f21e3bc22c9ad3a
+              body: >
+                This prevents an image download error loop where the delta image
+                on the delta server is present,
+
+                but some aspect of the delta image or the base image on the
+                device does not match up, causing
+
+                the delta to fail to be applied to the base image.
+
+
+                Delta apply errors don't raise status codes as they are thrown
+                from the Engine (although they should),
+
+                so if an error with a status code is raised during this time,
+                throw an error to the handler
+
+                indicating that the delta should be retried until success.
+                Errors with status codes raised during
+
+                this time are largely network related, so falling back to a
+                regular pull won't improve anything.
+
+
+                Upon delta apply errors exceeding DELTA_APPLY_RETRY_COUNT,
+                revert to a regular pull.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Revert to regular pull immediately on delta server failure (code 400s)
+              hash: 1fc242200f78e4219aafc5bb91de8cf0916236af
+              body: >
+                If the delta server responds immediately with HTTP 4xx upon
+                requesting a delta image,
+
+                this means the server is not able to supply the resource, so
+                fall back to a regular pull
+
+                immediately.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-16.12.3
+          title: ""
+          date: 2025-02-19T20:51:53.085Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.92
+              hash: c57622e2264e41078e907d6ba8de9d5206bb6293
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.74 to 2.0.92
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-16.12.2
+          title: ""
+          date: 2025-02-11T01:04:22.736Z
+        - commits:
+            - subject: Pin io-ts version to v2.2.20
+              hash: 88e821ed8e36e10d6429dc31950b5aeed968aa3f
+              body: >
+                gcanti/io-ts#705 fixes an issue with io-ts and non-enumerable
+
+                properties, but that results in objects with invalid properties
+                to get
+
+                removed during `decode`, which breaks our validation tests.
+
+
+                Need to figure out what is the right behavior for us
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update network-manager to v1
+              hash: f71f98777cbf7198745f1dcb8467b8cc62719d85
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update balena-request and balena-register-device
+              hash: 52081ba15e84be794a906d5cbccc343b24748bba
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update pinejs-client-request to v8
+              hash: 342a2d4dac737274ab13a8b05eac0f1f036a5075
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Update chai utility modules
+              hash: 3a3889546d8546793914bc2b5da10e202ebb14b1
+              body: >
+                Updating chai will be done in a future PR as it requires
+                overhauling all
+
+                tests since chai is now ESM
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.12.1
+          title: ""
+          date: 2025-02-10T22:51:51.632Z
+  version: 6.4.2
+  title: ""
+  date: 2025-03-07T05:37:46.183Z
+- commits:
     - subject: "tests/device-tree: Rework test to not use the sysfs gpio interface"
       hash: 2f65f40490329f6e9ab9e32778564f821eb6fb4e
       body: |

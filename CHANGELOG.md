@@ -1,6 +1,57 @@
 Change log
 -----------
 
+# v6.4.2
+## (2025-03-07)
+
+
+<details>
+<summary> Update balena-supervisor to v16.12.7 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-16.12.7
+> ### (2025-03-06)
+> 
+> * Release locks when removing apps [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.12.6
+> ### (2025-03-04)
+> 
+> * Log non-API errors during state poll [Felipe Lalanne]
+> * Fix target poll healthcheck [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.12.5
+> ### (2025-03-04)
+> 
+> * Decrease balenaCloud api request timeout from 15m to 59s [Pagan Gazzard]
+> 
+> ## balena-supervisor-16.12.4
+> ### (2025-03-03)
+> 
+> * Don't revert to regular pull if delta server 401 [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.12.3
+> ### (2025-02-19)
+> 
+> * Retry DELTA_APPLY_RETRY_COUNT (3) times during delta apply fail before reverting to regular pull [Christina Ying Wang]
+> * Revert to regular pull immediately on delta server failure (code 400s) [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.12.2
+> ### (2025-02-11)
+> 
+> * Update balena-io/deploy-to-balena-action action to v2.0.92 [balena-renovate[bot]]
+> 
+> ## balena-supervisor-16.12.1
+> ### (2025-02-10)
+> 
+> * Pin io-ts version to v2.2.20 [Felipe Lalanne]
+> * Update network-manager to v1 [Felipe Lalanne]
+> * Update balena-request and balena-register-device [Felipe Lalanne]
+> * Update pinejs-client-request to v8 [Felipe Lalanne]
+> * Update chai utility modules [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.4.1
 ## (2025-02-28)
 
