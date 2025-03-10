@@ -1,4 +1,32 @@
 - commits:
+    - subject: "secureboot: imx: program bootloader in integrity check"
+      hash: 436297c86c5607985bda16fb156d8f360984c78f
+      body: |
+        After modifying the bootloader binary to corrupt the signature it needs
+        to be programmed into disk.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "secureboot: imx: increase kernel headers required version"
+      hash: 58f5ad1b243e99a49fad724180f518ffd1adeb01
+      body: |
+        The chosen version has available releases for the devices that make use
+        of the imx secure boot tests.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.4.3
+  title: ""
+  date: 2025-03-10T15:11:23.005Z
+- commits:
     - subject: Update balena-supervisor to v16.12.7
       hash: 0b8267253da82eb0b1f485046e52c570c1d5168a
       body: |

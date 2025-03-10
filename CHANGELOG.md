@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.4.3
+## (2025-03-10)
+
+* secureboot: imx: program bootloader in integrity check [Alex Gonzalez]
+* secureboot: imx: increase kernel headers required version [Alex Gonzalez]
+
 # v6.4.2
 ## (2025-03-07)
 
