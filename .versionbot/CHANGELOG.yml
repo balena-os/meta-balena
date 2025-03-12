@@ -1,4 +1,25 @@
 - commits:
+    - subject: Differentiate MACHINE from DEVICE_TYPE
+      hash: 3fa237d98c8b4039f0616544686e4aba1a2d0839
+      body: |
+        Allow for device type names and machine to differ. Until know, the
+        device type contract had to be named `$MACHINE.json`, and then the
+        slug in it could be something else.
+
+        The DEVICE_TYPE variable that defaults to MACHINE for backwards
+        compatibility allows for the same MACHINE to build several device types
+        by passing a different DEVICE_TYPE to the build.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.4.4
+  title: ""
+  date: 2025-03-12T10:14:34.113Z
+- commits:
     - subject: "secureboot: imx: program bootloader in integrity check"
       hash: 436297c86c5607985bda16fb156d8f360984c78f
       body: |

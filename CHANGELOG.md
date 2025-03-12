@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.4.4
+## (2025-03-12)
+
+* Differentiate MACHINE from DEVICE_TYPE [Alex Gonzalez]
+
 # v6.4.3
 ## (2025-03-10)
 
