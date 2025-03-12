@@ -54,8 +54,8 @@ BALENA_BOOT_PARTITION_FILES:append = "${@bb.utils.contains('MACHINE_FEATURES','e
 # Put the resin logo, uEnv.txt files inside the boot partition
 BALENA_BOOT_PARTITION_FILES:append = " balena-logo.png:/splash/balena-logo.png"
 
-# add the generated <machine-name>.json to the flash-boot partition, renamed as device-type.json
-BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${MACHINE}.json:/device-type.json"
+# add the generated <devicetype-name>.json to the flash-boot partition, renamed as device-type.json
+BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_COREBASE}/../../../${DEVICE_TYPE}.json:/device-type.json"
 
 # Put balena-image in the flasher rootfs
 add_resin_image_to_flasher_rootfs() {
