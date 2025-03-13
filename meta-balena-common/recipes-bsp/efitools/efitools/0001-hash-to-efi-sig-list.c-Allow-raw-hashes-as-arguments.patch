@@ -1,0 +1,74 @@
+From cd50901c9b983d3b06e598e276d848a707ab0b6e Mon Sep 17 00:00:00 2001
+From: Michal Toman <michalt@balena.io>
+Date: Mon, 10 Feb 2025 15:59:36 +0100
+Subject: [PATCH] hash-to-efi-sig-list.c: Allow raw hashes as arguments
+
+At the moment hash-to-efi-sig-list only accepts EFI applications
+as arguments. It then hashes them and builds an ESL containing
+only the hashes.
+
+It is sometimes handy to be able to specify the hash directly,
+as the full EFI application might not be available. This is the case
+of enrolling hashes of PCIe device drivers measured into TPM's PCR2.
+The hashes are available from the TPM event log, but the raw EFI
+drivers or applications are not readable from userspace.
+
+The implementation itself is simple and does the job. At the same time
+it is not very nice - it adds ambiguity to argument semantics.
+
+Signed-off-by: Michal Toman <michalt@balena.io>
+---
+ hash-to-efi-sig-list.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/hash-to-efi-sig-list.c b/hash-to-efi-sig-list.c
+index 4969052..7f71d45 100644
+--- a/hash-to-efi-sig-list.c
++++ b/hash-to-efi-sig-list.c
+@@ -4,6 +4,7 @@
+  * see COPYING file
+  */
+ #include <stdint.h>
++#include <ctype.h>
+ #define __STDC_VERSION__ 199901L
+ #include <efi.h>
+ 
+@@ -71,6 +72,35 @@ main(int argc, char *argv[])
+ 
+ 	for (i = 0; i < hashes; i++) {
+ 		int j;
++
++		/* Check if the argument looks like a SHA256 hash */
++		int raw = 1;
++		const char *hash_cand = argv[i + 1];
++		if (strlen(hash_cand) != 2 * SHA256_DIGEST_SIZE) {
++			raw = 0;
++		} else {
++			for (j = 0; j < 2 * SHA256_DIGEST_SIZE; ++j) {
++				if (!isxdigit(hash_cand[j])) {
++					raw = 0;
++					break;
++				}
++			}
++		}
++
++		if (raw) {
++			/* Use the argument as a raw hash */
++			char buf[3];
++			buf[sizeof(buf) - 1] = '\0';
++			for (j = 0; j < SHA256_DIGEST_SIZE; ++j) {
++				buf[0] = hash_cand[2 * j];
++				buf[1] = hash_cand[2 * j + 1];
++				hash[i][j] = (UINT8)strtoul(buf, NULL, 16);
++			}
++
++			continue;
++		}
++
++		/* Use the argument as an EFI file */
+ 		struct stat st;
+ 		EFI_STATUS status;
+ 
+-- 
+2.39.5
+

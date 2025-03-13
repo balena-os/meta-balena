@@ -71,11 +71,13 @@ if [ "$(firmware_measures_efibins)" = "measured" ]; then
 	generate_pcr_digests \
 		"${PCRS}" \
 		"${PCR_VAL_BIN}" \
+		"use_pcr2" \
 		"${EFI_BINARIES}"
 else
 	generate_pcr_digests \
 		"${PCRS}" \
-		"${PCR_VAL_BIN}"
+		"${PCR_VAL_BIN}" \
+		"use_pcr2"
 fi
 
 stdout=/dev/fd/1
