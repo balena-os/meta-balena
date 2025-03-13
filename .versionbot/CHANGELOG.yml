@@ -1,4 +1,55 @@
 - commits:
+    - subject: "resin-init-flasher: Support devices using 3rd party UEFI drivers"
+      hash: 892fd4f6083b5dc6248f6a83fcdf60dd2528e5ec
+      body: |
+        At this moment, if anything is measured into PCR2 (OpROMs, UEFI drivers)
+        the device will provision, but not be able to boot the first time.
+        This is because the EFI applications measured in PCR2 need to verify
+        against `db`, which means they will be loaded during provisioning
+        (while secure boot is still off), but won't be loaded once secure boot
+        is enabled. This changes the value of PCR2 between provisioning
+        and first boot, which means the encryption keys won't be released.
+
+        This patch adds two new behaviors to flasher:
+        * By default ignore the PCR2 hashes during secure boot provisioning,
+          assuming none of the drivers will work with secure boot enabled.
+        * After an opt-in, read the hashes present in PCR2 and enroll
+          them into `db` during provisioning.
+
+        The latter is an opt-in, as we have no control and no way to know
+        what a UEFI driver does. Since these run at firmware level, they have
+        enough privileges to bypass secure boot. All we can do is blindly
+        whitelist everything present during provisioning, which might be seen
+        as security risk, and the user should explicitly accept that.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "efitools: Allow building an ESL from a list of hashes"
+      hash: 3711e752054bc83ec869c0bd726157bf7fe8acb3
+      body: |
+        At this moment hash-to-efi-sig-list only allows to add hash to an ESL
+        if the whole EFI application is presented, but this is technically
+        not necessary. We want to be able to use raw hashes, because
+        for PCIe devices using 3rd party drivers, we only know the hash,
+        the full EFI application or driver is not accessible to userspace.
+
+        This patch adds support to use raw hashes to hash-to-efi-sig-list
+        and ships the tool with efitools-utils.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.0
+  title: ""
+  date: 2025-03-13T21:11:06.177Z
+- commits:
     - subject: Differentiate MACHINE from DEVICE_TYPE
       hash: 3fa237d98c8b4039f0616544686e4aba1a2d0839
       body: |

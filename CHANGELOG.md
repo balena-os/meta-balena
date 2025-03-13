@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.5.0
+## (2025-03-13)
+
+* resin-init-flasher: Support devices using 3rd party UEFI drivers [Michal Toman]
+* efitools: Allow building an ESL from a list of hashes [Michal Toman]
+
 # v6.4.4
 ## (2025-03-12)
 
