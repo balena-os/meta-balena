@@ -30,6 +30,8 @@ PACKAGE_INSTALL:append = " initramfs-module-console-null-workaround"
 PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-kexec',d)}"
 PACKAGE_INSTALL:append = "${@oe.utils.conditional('PARTITION_TABLE_TYPE','gpt',' gptfdisk ','',d)}"
 
+PACKAGE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', ' initramfs-module-bootchart', '', d)}"
+
 # Do not pollute the initrd image with rootfs features
 IMAGE_FEATURES = ""
 
