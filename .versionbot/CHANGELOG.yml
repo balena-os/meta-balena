@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 81e7f26
+      hash: e3ff6305b8db606870bd8271d00010945e771288
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v20.2.7
+              hash: 451d57f30bf1e8b16b0a1bdacd9d0bd12b848b38
+              body: |
+                Update balena-io/balena-cli from 20.2.1 to 20.2.7
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.90
+          title: ""
+          date: 2025-02-25T23:03:19.812Z
+  version: 6.5.1
+  title: ""
+  date: 2025-03-14T00:29:54.195Z
+- commits:
     - subject: "resin-init-flasher: Support devices using 3rd party UEFI drivers"
       hash: 892fd4f6083b5dc6248f6a83fcdf60dd2528e5ec
       body: |
