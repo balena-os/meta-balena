@@ -1068,7 +1068,7 @@ python do_kernel_resin_checkconfig() {
     configs = d.getVarFlags("BALENA_CONFIGS") or {}
     firmware_compression = d.getVar('FIRMWARE_COMPRESSION', True)
 
-    if firmware_compression == "1" and \
+    if firmware_compression in ['xz', 'zst'] and \
         'firmware_compress' not in activatedflags:
             bb.fatal("Firmware compression is enabled for this device but" \
                 " the kernel does not have support for it")
