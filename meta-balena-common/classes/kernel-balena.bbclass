@@ -226,6 +226,7 @@ BALENA_CONFIGS[firmware_compress] = " \
 
 MODULE_COMPRESS = "${@configure_from_version("5.13", "module_compress", "", d)}"
 BALENA_CONFIGS[module_compress] = " \
+    CONFIG_MODULE_COMPRESS=y \
     CONFIG_MODULE_COMPRESS_ZSTD=y \
 "
 
