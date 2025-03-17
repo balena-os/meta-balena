@@ -128,7 +128,7 @@ GOVERSION = "1.17.13"
 PREFERRED_PROVIDER_go-native = "go-native"
 
 # Firmware compression support
-FIRMWARE_COMPRESSION ?= "0"
+FIRMWARE_COMPRESSION ?= ""
 
 SIGN_API ?= ""
 # Signing keys
