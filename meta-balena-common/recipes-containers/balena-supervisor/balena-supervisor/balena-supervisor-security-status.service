@@ -1,0 +1,10 @@
+[Unit]
+Description=Expose Secureboot & FDE status to the supervisor
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c ". /usr/libexec/os-helpers-supervisor && writeSecurityStatus"
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

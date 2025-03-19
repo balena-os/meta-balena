@@ -1,0 +1,59 @@
+#!/bin/sh
+# Copyright 2025 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# security.json is a file that is read by the supervisor to get the secureboot and encryption status
+# it can be extended in the future to include more security related information
+# altenratively, we could replace it with a 2-way communication channel between the supervisor and the host (gRPC or ...)
+
+# note that the /var/run/supervisor folder is mounted in the SV container
+
+# vi: ft=sh
+
+# shellcheck disable=SC1091
+[ -f "/usr/libexec/os-helpers-sb" ] && . /usr/libexec/os-helpers-sb
+# shellcheck disable=SC1091
+[ -f "/usr/libexec/os-helpers-fs" ] && . /usr/libexec/os-helpers-fs
+# shellcheck disable=SC1091
+[ -f "/usr/libexec/os-helpers-fs" ] && . /usr/libexec/os-helpers-efi
+
+SUPERVISOR_RUN_DIR="/var/run/supervisor"
+
+writeSecurityStatus() {
+	mkdir -p "$SUPERVISOR_RUN_DIR"
+
+  # is_secured is a function from os-helpers-sb which returns 0 if secureboot is enabled
+	if is_secured; then
+		secureboot=true
+	else 
+		secureboot=false
+	fi
+
+  # determine if the data partition is encrypted
+  data_partition=$(get_dev_path_from_label "resin-data")
+  if is_part_encrypted ${data_partition}; then
+    fullDiskEncryption=true
+  else
+    fullDiskEncryption=false
+  fi
+
+  # get_SB_keys is a function from os-helpers-efi that returns the PK and KEK keys metadata as a json array
+	cat > "$SUPERVISOR_RUN_DIR/security.json" <<EOF
+{
+  "is_secureboot_enabled": $secureboot
+  "is_storage_encrypted": $fullDiskEncryption
+  "secureboot_keys_metadata": $(get_SB_keys)
+}
+EOF
+}

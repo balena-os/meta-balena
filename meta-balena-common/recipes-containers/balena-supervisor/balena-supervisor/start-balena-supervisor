@@ -71,6 +71,7 @@ runSupervisor() {
         --mount type=bind,source=/var/log/supervisor-log,target=/var/log \
         --mount type=bind,source=/etc/ssl/certs,target=/etc/ssl/certs,readonly \
         --mount type=bind,source=/usr/share/ca-certificates,target=/usr/share/ca-certificates,readonly \
+        --mount type=bind,source=/var/run/supervisor/,target=/var/run/supervisor/,readonly \
         --mount type=bind,source=/,target=/mnt/root \
         -e DOCKER_ROOT=/mnt/root/var/lib/docker \
         -e DOCKER_SOCKET=/var/run/balena-engine.sock \
