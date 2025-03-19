@@ -20,6 +20,7 @@ SRC_URI += " \
 	file://balena-supervisor-healthcheck \
 	file://tmpfiles-supervisor.conf \
 	file://migrate-supervisor-state.service \
+	file://balena-supervisor-security-status.service \
 	"
 
 SYSTEMD_SERVICE:${PN} = " \
@@ -27,6 +28,7 @@ SYSTEMD_SERVICE:${PN} = " \
 	update-balena-supervisor.service \
 	update-balena-supervisor.timer \
 	migrate-supervisor-state.service \
+	balena-supervisor-security-status \
 	"
 
 FILES:${PN} += " \
@@ -48,6 +50,9 @@ RDEPENDS:${PN} = " \
 	balena-config-vars \
 	systemd \
 	os-helpers-api \
+	os-helpers-supervisor \
+	os-helpers-fs \
+	os-helpers-sb \
 	"
 
 python () {
@@ -104,6 +109,7 @@ do_install () {
 	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.service ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.timer ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${WORKDIR}/migrate-supervisor-state.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${WORKDIR}/balena-supervisor-security-status.service ${D}${systemd_unitdir}/system
 	# symlinks to legacy resin-supervisor systemd unit files
 	ln -s balena-supervisor.service ${D}${systemd_unitdir}/system/resin-supervisor.service
 	ln -s update-balena-supervisor.service ${D}${systemd_unitdir}/system/update-resin-supervisor.service

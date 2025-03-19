@@ -44,3 +44,54 @@ setup_mode_enabled() {
 user_mode_enabled() {
 	secureboot_enabled && ! setup_mode_enabled
 }
+
+# return PK and KEK keys metadata as a json array
+get_SB_keys() {
+	tmp_dir="/tmp/efi_extract_$(openssl rand -hex 6)"
+	mkdir -p "$tmp_dir"
+
+		# Function to extract and process certificates
+		extract_and_process() {
+			local efi_var="$1"
+			local efi_readvar_output="${tmp_dir}/${efi_var}"
+			local certs_output_prefix="${efi_readvar_output}-certs"
+			local json_entries=()
+
+			# Read EFI variable and extract certificates
+			efi-readvar -v "$efi_var" -o "$efi_readvar_output" > /dev/null 2>&1
+			sig-list-to-certs "$efi_readvar_output" "$certs_output_prefix" > /dev/null 2>&1
+
+			# Process all extracted certificates
+			for cert_file in "${certs_output_prefix}"-*.der; do
+					if [[ -f "$cert_file" ]]; then
+							# Convert DER to PEM
+							pem_file="${cert_file%.der}.pem"
+							openssl x509 -inform der -in "$cert_file" -out "$pem_file" > /dev/null 2>&1
+
+							# Extract certificate details
+							issuer=$(openssl x509 -in "$pem_file" -noout -issuer | sed 's/issuer=//')
+							subject=$(openssl x509 -in "$pem_file" -noout -subject | sed 's/subject=//')
+							validity=$(openssl x509 -in "$pem_file" -noout -dates | tr '\n' ' ' | sed 's/ *$//')
+							serial=$(openssl x509 -in "$pem_file" -noout -serial | sed 's/serial=//')
+							sha256_fingerprint=$(openssl x509 -in "$pem_file" -noout -fingerprint -sha256 | cut -d'=' -f2 | tr -d ':')
+
+							# Construct JSON object for this certificate
+							json_entry="{\"type\":\"$efi_var\",\"issuer\":\"$issuer\",\"subject\":\"$subject\",\"validity\":\"$validity\",\"serial\":\"$serial\",\"sha256\":\"$sha256_fingerprint\"}"
+							
+							# Add JSON entry to the list
+							json_entries+=("$json_entry")
+					fi
+			done
+
+			# Join JSON entries into a valid JSON array and return
+			echo "${json_entries[@]}" | jq -s .
+	}
+
+	pk_json=$(extract_and_process "PK")
+	kek_json=$(extract_and_process "KEK")
+
+	rm -rf "$tmp_dir"
+	
+	# Merge PK and KEK JSON arrays
+	echo "$pk_json" "$kek_json" | jq -s 'add'
+}
