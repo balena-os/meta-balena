@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.2
+## (2025-03-19)
+
+* kernel-balena: enable CONFIG_MODULE_COMPRESS as needed [Joseph Kogut]
+
 # v6.5.1
 ## (2025-03-14)
 

@@ -1,4 +1,20 @@
 - commits:
+    - subject: "kernel-balena: enable CONFIG_MODULE_COMPRESS as needed"
+      hash: c2e44fac5f5a0a68116d6de04f011a43ec7856ab
+      body: |
+        CONFIG_MODULE_COMPRESS_ZSTD requires CONFIG_MODULE_COMPRESS in kernel
+        v6.12. Enable it when necessary.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.5.2
+  title: ""
+  date: 2025-03-19T11:27:10.189Z
+- commits:
     - subject: Update tests/leviathan digest to 81e7f26
       hash: e3ff6305b8db606870bd8271d00010945e771288
       body: Update tests/leviathan
