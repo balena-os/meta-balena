@@ -458,5 +458,5 @@ python do_image_size_check() {
 python __anonymous() {
     import re
     rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND')
-    d.setVar('ROOTFS_POSTPROCESS_COMMAND', re.sub(r'zap_empty_root_password ?;', '', rootfs_postprocess_command))
+    d.setVar('ROOTFS_POSTPROCESS_COMMAND', re.sub(r'zap_empty_root_password ?;?', '', rootfs_postprocess_command))
 }
