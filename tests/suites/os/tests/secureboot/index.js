@@ -115,11 +115,25 @@ class secureBoot {
 
 		if (this.module.headersVersion.length != 0) {
 			const srcDir = `${__dirname}/kernel-module-build/`
-			await fse.copy(srcDir, this.tmpDir);
-			let data = await fse.readFile(`${this.tmpDir}/docker-compose.yml`, 'utf-8')
-			const result = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${this.module.headersVersion}`);
-			await fse.writeFile( `${this.tmpDir}/docker-compose.yml`, result, 'utf-8')
-			this.test.comment(`Using kernel headers version ${this.module.headersVersion}`)
+			const headersArchivePath = `${this.imagePath}/kernel_modules_headers.tar.gz`;
+
+			try {
+				const exists = await fse.pathExists(headersArchivePath);
+				if (exists) {
+					await fse.copy(headersArchivePath, srcDir);
+					this.test.comment('Using provided kernel headers');
+				} else {
+					await fse.copy(srcDir, this.tmpDir);
+					const dockerComposePath = `${this.tmpDir}/docker-compose.yml`;
+					const data = await fse.readFile(dockerComposePath, 'utf-8');
+					const updatedData = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${this.module.headersVersion}`);
+					await fse.writeFile(dockerComposePath, updatedData, 'utf-8');
+					this.test.comment(`Using kernel headers version ${this.module.headersVersion}`);
+				}
+			} catch (err) {
+				console.error(err);
+				return;
+			}
 		}
 
 		await this.worker.pushContainerToDUT(
@@ -581,7 +595,7 @@ module.exports = {
 				const impl = new testSecureBoot(new imxSecureBoot(test,
 					this.worker,
 					this.suite, this.os.image.path,
-					{"name": "", "headersVersion": "6.3.19"}));
+					{"name": "", "headersVersion": "6.5.2"}));
 				await impl.run(test);
 			},
 		},
