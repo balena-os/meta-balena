@@ -117,9 +117,23 @@ class secureBoot {
 			const srcDir = `${__dirname}/kernel-module-build/`
 			await fse.copy(srcDir, this.tmpDir);
 			let data = await fse.readFile(`${this.tmpDir}/docker-compose.yml`, 'utf-8')
-			const result = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${this.module.headersVersion}`);
+			let result = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${this.module.headersVersion}`);
 			await fse.writeFile( `${this.tmpDir}/docker-compose.yml`, result, 'utf-8')
 			this.test.comment(`Using kernel headers version ${this.module.headersVersion}`)
+
+			/* Modify so it also works for  private device types */
+			data = await fse.readFile(`${this.tmpDir}/module/Dockerfile.template`, 'utf-8')
+			result = data.replace('bc \\', 'bc awscli \\');
+			await fse.writeFile( `${this.tmpDir}/module/Dockerfile.template`, result, 'utf-8')
+			data = await fse.readFile(`${this.tmpDir}/module/build.sh`, 'utf-8')
+			const newLines = [
+				'if ! wget --quiet $(echo "$url" | sed -e "s/+/%2B/g"); then',
+				'    if ! aws s3 cp "s3://resin-production-img-cloudformation/${image_path}/${slug}/${version}/kernel_modules_headers.tar.gz" "$(basename ${url})" --no-progress > /dev/null; then',
+				'        fail "Could not find headers for $slug at version $version"',
+				'    fi'
+			].join('\n');
+			result = data.replace(/^.*wget .*$/gm, newLines);
+			await fse.writeFile( `${this.tmpDir}/module/build.sh`, result, 'utf-8')
 		}
 
 		await this.worker.pushContainerToDUT(
@@ -581,7 +595,7 @@ module.exports = {
 				const impl = new testSecureBoot(new imxSecureBoot(test,
 					this.worker,
 					this.suite, this.os.image.path,
-					{"name": "", "headersVersion": "6.3.19"}));
+					{"name": "", "headersVersion": "6.5.2"}));
 				await impl.run(test);
 			},
 		},
