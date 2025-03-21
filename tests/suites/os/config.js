@@ -14,6 +14,7 @@ module.exports = [
       }
     },
     image: `${__dirname}/balena.img.gz`,
+    kernelHeaders: `${__dirname}/kernel_modules_headers.tar.gz`,
     debug: {
       // Exit the ongoing test suite if a test fails
       failFast: true,
