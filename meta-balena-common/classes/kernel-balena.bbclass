@@ -224,6 +224,9 @@ BALENA_CONFIGS[firmware_compress] = " \
     CONFIG_FW_LOADER_COMPRESS=y \
 "
 
+BALENA_CONFIGS:append = " ${@configure_from_version("5.6", "", " mptcp", d)}"
+BALENA_CONFIGS[mptcp] = "CONFIG_MPTCP=y"
+
 MODULE_COMPRESS = "${@configure_from_version("5.13", "module_compress", "", d)}"
 BALENA_CONFIGS[module_compress] = " \
     CONFIG_MODULE_COMPRESS=y \
