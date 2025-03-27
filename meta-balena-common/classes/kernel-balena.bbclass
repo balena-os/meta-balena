@@ -727,6 +727,11 @@ BALENA_CONFIGS[efi-secureboot] = " \
 "
 BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' efi-secureboot','',d)}"
 
+BALENA_CONFIGS:append = " ${@configure_from_version("6.11", " memcg", "", d)}"
+BALENA_CONFIGS[memcg] = " \
+    CONFIG_MEMCG_V1=y \
+"
+
 ###########
 # HELPERS #
 ###########
