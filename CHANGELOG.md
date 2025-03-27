@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.4
+## (2025-03-27)
+
+* classes: kernel-balena: enable CONFIG_MEMCG_V1 when needed [Alex Gonzalez]
+
 # v6.5.3
 ## (2025-03-27)
 

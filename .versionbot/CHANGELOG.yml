@@ -1,4 +1,22 @@
 - commits:
+    - subject: "classes: kernel-balena: enable CONFIG_MEMCG_V1 when needed"
+      hash: b7d69ac707a1c1ce58e28033d8a5aeeaaf542c27
+      body: |
+        From kernel v6.11 the memory controller for cgroups v1 has to be
+        explicitely selected or its compiled out.
+
+        This is required for the engine to apply memory resource constraints.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.5.4
+  title: ""
+  date: 2025-03-27T22:08:15.577Z
+- commits:
     - subject: Update tests/leviathan digest to c3c6661
       hash: c141588401621db7581a1e82e8856437dbf1561f
       body: Update tests/leviathan
