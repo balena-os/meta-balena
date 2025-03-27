@@ -39,10 +39,17 @@ finish_run() {
 
         debug "Moving /dev, /proc and /sys onto rootfs..."
         mount --move /dev $ROOTFS_DIR/dev
-        mount --move /proc $ROOTFS_DIR/proc
         mount --move /sys $ROOTFS_DIR/sys
         debug "Moving log mount into rootfs..."
         relocate_log_mount
+
+	# remount proc in $ROOTFS_DIR instead of moving if systemd-bootchart is
+	# running, as it reads from /proc/schedstat
+	if pgrep systemd-bootchart; then
+		mount -t proc proc $ROOTFS_DIR/proc
+	else
+		mount --move /proc $ROOTFS_DIR/proc
+	fi
 
         cd $ROOTFS_DIR
         exec switch_root $ROOTFS_DIR ${bootparam_init:-/sbin/init}
