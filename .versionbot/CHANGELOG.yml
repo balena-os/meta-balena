@@ -1,4 +1,89 @@
 - commits:
+    - subject: Update tests/leviathan digest to c3c6661
+      hash: c141588401621db7581a1e82e8856437dbf1561f
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v21
+              hash: cb8172a1cc6b5357ef2965418de0f7e43f128c6f
+              body: |
+                Update balena-io/balena-cli from 20.2.10 to 21.1.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.95
+          title: ""
+          date: 2025-03-25T12:35:47.604Z
+        - commits:
+            - subject: Extend selection of devices to run secureboot tests
+              hash: 4885a0abb6cb379218bcf2ffcd51e1b6a1693cd9
+              body: >
+                When FLASHER_SECUREBOOT=1 select only devices that have a
+                `deviceType-sb`
+
+                tag, taking into account the device type name could already have
+                a `-sb`
+
+                suffix.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: leviathan-2.31.94
+          title: ""
+          date: 2025-03-25T10:41:19.499Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v20.2.10
+              hash: 83586a4f5f1a6d4c8afeecae4f0fac4862fdef61
+              body: |
+                Update balena-io/balena-cli from 20.2.7 to 20.2.10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.93
+          title: ""
+          date: 2025-03-19T22:33:53.213Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to b5ca514
+              hash: 24966423bd59c7dd1e1fdeb2646784aa53ff4f39
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.92
+          title: ""
+          date: 2025-03-19T20:35:11.071Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to ea165f8
+              hash: 0f7d4f09cd41c30c1aea88845e59395159f26a1b
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.91
+          title: ""
+          date: 2025-03-19T18:34:55.180Z
+  version: 6.5.3
+  title: ""
+  date: 2025-03-27T13:32:24.313Z
+- commits:
     - subject: "kernel-balena: enable CONFIG_MODULE_COMPRESS as needed"
       hash: c2e44fac5f5a0a68116d6de04f011a43ec7856ab
       body: |
