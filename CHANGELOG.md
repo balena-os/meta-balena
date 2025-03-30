@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.5
+## (2025-03-30)
+
+* initrdscripts: Force migration with secure boot enabled [Michal Toman]
+
 # v6.5.4
 ## (2025-03-27)
 

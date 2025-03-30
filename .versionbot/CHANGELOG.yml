@@ -1,4 +1,20 @@
 - commits:
+    - subject: "initrdscripts: Force migration with secure boot enabled"
+      hash: a664a14d3e788f086f8572a312a72e5603faf0db
+      body: |
+        As a part of secure boot hardening, we want to avoid flasher running
+        userspace from an external drive, and always provision from memory.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.5
+  title: ""
+  date: 2025-03-30T12:42:16.341Z
+- commits:
     - subject: "classes: kernel-balena: enable CONFIG_MEMCG_V1 when needed"
       hash: b7d69ac707a1c1ce58e28033d8a5aeeaaf542c27
       body: |
