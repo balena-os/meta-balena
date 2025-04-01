@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.6
+## (2025-04-01)
+
+* tests: os: modem: Skip modem test if no SIM detected [Ryan Cooke]
+
 # v6.5.5
 ## (2025-03-30)
 

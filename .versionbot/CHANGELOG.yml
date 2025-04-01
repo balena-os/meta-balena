@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tests: os: modem: Skip modem test if no SIM detected"
+      hash: d2881bf9c6ef8f94e134362fbf786bd89e841bc1
+      body: >
+        This is to allow for the use case of a test device having a hard wired
+        modem, that won't work in the region the test device is hosted in - e.g
+        NA modem soldered on but test device in the EU. In that case we can
+        remove the SIM, and the test will skip
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.5.6
+  title: ""
+  date: 2025-04-01T10:45:56.026Z
+- commits:
     - subject: "initrdscripts: Force migration with secure boot enabled"
       hash: a664a14d3e788f086f8572a312a72e5603faf0db
       body: |
