@@ -1,4 +1,19 @@
 - commits:
+    - subject: "kernel-balena.bbclass: enable multipath TCP"
+      hash: e96b6aebcd77ada85e17aec8e7bfe32855e8a0d7
+      body: |
+        Enable multipath TCP (MPTCP) for all devices by default.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.5.7
+  title: ""
+  date: 2025-04-01T19:43:34.631Z
+- commits:
     - subject: "tests: os: modem: Skip modem test if no SIM detected"
       hash: d2881bf9c6ef8f94e134362fbf786bd89e841bc1
       body: >

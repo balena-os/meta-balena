@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.7
+## (2025-04-01)
+
+* kernel-balena.bbclass: enable multipath TCP [Joseph Kogut]
+
 # v6.5.6
 ## (2025-04-01)
 
