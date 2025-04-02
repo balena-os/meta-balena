@@ -4,6 +4,12 @@ FILES:${PN}-rtl8188eu = " \
     /lib/firmware/rtlwifi/rtl8188eu*.bin* \
     "
 
+PACKAGES =+ "${PN}-rtl8192eu"
+
+FILES_${PN}-rtl8192eu = " \
+    /lib/firmware/rtlwifi/rtl8192eu*.bin* \
+    "
+
 PACKAGES =+ "${PN}-iwlwifi-9260"
 
 FILES:${PN}-iwlwifi-9260 = " \
