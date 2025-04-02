@@ -1,4 +1,67 @@
 - commits:
+    - subject: "resin-init-flasher: Do not check exitcode of reboot, halt or poweroff"
+      hash: 467089bfa746cf9801ac137c76aa47e2e8b69989
+      body: |
+        At this moment flasher tries multiple methods to shut down or reboot
+        the device after it has finished. The current approach first tries
+        a graceful way, e.g. `poweroff`, and checks the exitcode.
+        If the command exits with a non-zero status, it then adds a `-f` flag
+        to force the behavior. But this doesn't work inside the initramfs,
+        because the busybox variant of the commands exits with 0 and does
+        nothing (it will register the signal, but only shutdown / reboot
+        after the last initscript has been executed). Additionally,
+        the systemd variant of the tools, used on fully booted systems,
+        never returns to shell, so there is no point checking the exitcode.
+
+        This patch makes flasher use the forced variant if the graceful
+        attempt returned to shell, regardless of the exitcode.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: Replace the usage of /dev/fd/1 by /proc/self/fd/1
+      hash: 174d17a1789ba7bf3245b61bc768f1c70929ad73
+      body: |
+        Currently we are using /dev/fd/1 as output file for tools that do not
+        normally allow using stdout. This works on a fully running system,
+        but the /dev/fd symlinks do not exist in the intramfs. This breaks
+        the migrator when provisioning secure boot systems.
+
+        This patch replaces /dev/fd/1 by /proc/self/fd/1 which is semantically
+        the same, but does exist even in the initramfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-init-flasher-efi: look for kernel in both / and /tmp"
+      hash: 9b7f1438dba338c6814ac3dc204df86fd75c36ea
+      body: |
+        One of the things that balena-init-flasher-efi does is that it copies
+        the currently running kernel to the EFI partition to serve as 2nd stage
+        bootloader when secure boot is enabled and the boot partition is split.
+        Right now it looks for the kernel in /, which works for provisioning
+        from an external drive, but not for the migrator. The migrator copies
+        the kernel into /tmp before running flasher, but that directory would
+        be skipped by flasher, as it is a different filesystem.
+
+        This patch makes flasher look for the kernel in both / and /tmp.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.8
+  title: ""
+  date: 2025-04-02T09:48:30.481Z
+- commits:
     - subject: "kernel-balena.bbclass: enable multipath TCP"
       hash: e96b6aebcd77ada85e17aec8e7bfe32855e8a0d7
       body: |

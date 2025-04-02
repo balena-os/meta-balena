@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.5.8
+## (2025-04-02)
+
+* resin-init-flasher: Do not check exitcode of reboot, halt or poweroff [Michal Toman]
+* Replace the usage of /dev/fd/1 by /proc/self/fd/1 [Michal Toman]
+* balena-init-flasher-efi: look for kernel in both / and /tmp [Michal Toman]
+
 # v6.5.7
 ## (2025-04-01)
 
