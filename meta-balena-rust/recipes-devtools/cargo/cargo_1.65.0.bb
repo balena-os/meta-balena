@@ -1,6 +1,5 @@
 require recipes-devtools/rust/rust-source.inc
 require recipes-devtools/rust/rust-snapshot.inc
-
-FILESEXTRAPATHS:prepend := "${THISDIR}/cargo-${PV}:"
-
-require cargo-cross-canadian.inc
+require cargo.inc
+BBCLASSEXTEND = "native nativesdk"
+RUSTLIB_DEP:class-nativesdk = ""
