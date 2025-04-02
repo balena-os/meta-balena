@@ -118,6 +118,8 @@ class secureBoot {
 			const srcDir = `${__dirname}/kernel-module-build/`
 			const headersArchivePath = this.kernelHeadersPath;
 
+			this.test.comment(`Using kernel headers from ${headersArchivePath}`);
+
 			try {
 				const exists = await fse.pathExists(headersArchivePath);
 				await fse.copy(srcDir, this.tmpDir);
