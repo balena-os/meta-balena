@@ -587,6 +587,13 @@ fi
 
 report_progress 100 "Post-Provisioning"
 
+# No reason to check the exitcode on reboot, poweroff or halt
+# We are using two variants of the tools:
+# * systemd - if it succeeds it never returns to shell
+# * busybox - with no arguments, it exits with 0, returns to shell and does nothing
+# So if the first call without `-f` returns to shell,
+# we want to continue to the forced variant no matter what.
+
 _a='o'
 if [ "${POSTINSTALL_REBOOT}" = "1" ]; then
     info "Rebooting..."
@@ -594,9 +601,8 @@ if [ "${POSTINSTALL_REBOOT}" = "1" ]; then
     if command -v os_helpers_reboot > /dev/null; then
         os_helpers_reboot
     elif command -v reboot > /dev/null; then
-        if ! reboot; then
-            reboot -f
-        fi
+        reboot
+        reboot -f
     fi
 fi
 
@@ -607,17 +613,14 @@ else
 	if command -v shutdown > /dev/null; then
 		shutdown -h now
 	elif command -v poweroff > /dev/null; then
-		if ! poweroff; then
-		    poweroff -f
-		fi
+		poweroff
+		poweroff -f
 	elif command -v halt > /dev/null; then
-		if ! halt; then
-		    halt -f
-		fi
+		halt
+		halt -f
 	elif command -v reboot > /dev/null; then
-		if ! reboot -p; then
-		    reboot -p -f
-		fi
+		reboot -p
+		reboot -p -f
 	fi
 fi
 

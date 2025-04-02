@@ -234,7 +234,7 @@ tpm_nvram_store_passphrase() {
 		efi_binaries="${grub_bin} ${kernel_bin}"
 	fi
 
-	stdout=/dev/fd/1
+	stdout=/proc/self/fd/1
 	current_digest=$(tpm2_pcrread sha256:7 --quiet -o "${stdout}" | _hexencode)
 	computed_digest=$(generate_pcr_digests 7 "${stdout}" "" "${efi_binaries}" | _hexencode)
 	if [ "${current_digest}" != "${computed_digest}" ]; then
