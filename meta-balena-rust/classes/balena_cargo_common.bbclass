@@ -16,7 +16,7 @@ def set_crate_fetcher(d):
 
 # add crate fetch support
 inherit ${@set_crate_fetcher(d)}
-inherit rust-common
+inherit balena_rust-common
 
 # Where we download our registry and dependencies to
 export CARGO_HOME = "${WORKDIR}/cargo_home"
@@ -35,7 +35,7 @@ CARGO_DISABLE_BITBAKE_VENDORING ?= "0"
 CARGO_VENDORING_DIRECTORY ?= "${CARGO_HOME}/bitbake"
 
 CARGO_RUST_TARGET_CCLD ?= "${RUST_TARGET_CCLD}"
-cargo_common_do_configure () {
+balena_cargo_common_do_configure () {
 	mkdir -p ${CARGO_HOME}/bitbake
 
 	cat <<- EOF > ${CARGO_HOME}/config
