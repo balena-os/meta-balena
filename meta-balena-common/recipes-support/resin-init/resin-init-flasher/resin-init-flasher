@@ -624,5 +624,6 @@ else
 	fi
 fi
 
+sleep 5
 echo "${_a}" > /proc/sysrq-trigger
 fail "Unable to shutdown or reboot"
