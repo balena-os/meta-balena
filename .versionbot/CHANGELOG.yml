@@ -1,4 +1,23 @@
 - commits:
+    - subject: "balena-unique-key: Fix dependency on /home/root/.rnd mount point"
+      hash: fa7215bbef396dfe75f7ebd9ab6b1b5d568fe47a
+      body: >
+        We have changed the mount units to service units a while back but forgot
+        to update a
+
+        depending service to use the new service unit instead of the older mount
+        point unit.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.9
+  title: ""
+  date: 2025-04-03T03:23:17.919Z
+- commits:
     - subject: "resin-init-flasher: Do not check exitcode of reboot, halt or poweroff"
       hash: 467089bfa746cf9801ac137c76aa47e2e8b69989
       body: |

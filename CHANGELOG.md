@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.9
+## (2025-04-03)
+
+* balena-unique-key: Fix dependency on /home/root/.rnd mount point [Florin Sarbu]
+
 # v6.5.8
 ## (2025-04-02)
 
