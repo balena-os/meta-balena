@@ -1,7 +1,7 @@
 [Unit]
 Description=Balena device UUID
-Requires=resin-boot.service home-root-.rnd.mount
-After=resin-boot.service home-root-.rnd.mount os-config-devicekey.service
+Requires=resin-boot.service bind-home-root-.rnd.service
+After=resin-boot.service bind-home-root-.rnd.service os-config-devicekey.service
 
 [Service]
 Type=oneshot
