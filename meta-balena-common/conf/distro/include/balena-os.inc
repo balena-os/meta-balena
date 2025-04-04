@@ -154,3 +154,9 @@ BALENA_USE_LUKS ?= "1"
 # This is the docker API version for v20.10
 # balena version --format '{{.Server.APIVersion}}'
 BALENA_API_VERSION ?= "1.41"
+
+# Generate SBOM https://docs.yoctoproject.org/dev/ref-manual/classes.html#ref-classes-create-spdx
+INHERIT += "create-spdx"
+# TODO: CVE listing is currently broken
+# INHERIT += "cve-check"
+# include cve-extra-exclusions.inc
