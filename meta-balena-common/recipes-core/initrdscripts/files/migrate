@@ -156,6 +156,9 @@ migrate_run() {
             fi
         fi
 
+        # Mount securityfs so that TPM event log is accessible to flasher
+        mount -t securityfs securityfs /sys/kernel/security
+
         # Run flasher - should not return
         /usr/bin/resin-init-flasher
         # Something went wrong - kill the process to prevent exploits
