@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.5.12
+## (2025-04-08)
+
+
+<details>
+<summary> Update tests/leviathan digest to b8e76d7 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.103
+> ### (2025-04-08)
+> 
+> * Add kernel headers artifacts [Alex Gonzalez]
+> 
+
+</details>
+
 # v6.5.11
 ## (2025-04-08)
 

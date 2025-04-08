@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to b8e76d7
+      hash: a782ef21b71a408635e0a75754555d1571c5ab49
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Add kernel headers artifacts
+              hash: f15ad5e91cd22ba03193a7dd53512324a09ce87e
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: leviathan-2.31.103
+          title: ""
+          date: 2025-04-08T13:01:01.819Z
+  version: 6.5.12
+  title: ""
+  date: 2025-04-08T21:49:57.591Z
+- commits:
     - subject: Update tests/leviathan digest to 8b32739
       hash: eb2866f279a11240267960cf7c63ee874f8c021d
       body: Update tests/leviathan
