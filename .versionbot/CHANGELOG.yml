@@ -1,4 +1,42 @@
 - commits:
+    - subject: "resin-init-flasher: Sleep before SysRq to let shutdown properly
+        execute if need be"
+      hash: a059180c9ae5dd4551fd977871fa5a54981b53f2
+      body: >
+        There are cases when at the end of the flashing procedure the board will
+        execute
+
+        "shutdown -h now" but sometimes the shutdown procedure is not immediate
+        and the script will
+
+        continue with the next instruction which is to use SysRq and on some
+        hardware this can happen
+
+        right when the previous shutdown command is still running in the
+        background and the effect will
+
+        be that the board does not actually power off in the end (eth carrier is
+        still on, the power
+
+        circuitry is still online and so on.)
+
+
+        To fix this we sleep for 5 seconds to give the system a chance to
+        properly shutdown. If it has
+
+        not been shutdown in 5 seconds then most likely shutdown is broken so we
+        force it via SysRq.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.10
+  title: ""
+  date: 2025-04-08T07:44:56.710Z
+- commits:
     - subject: "balena-unique-key: Fix dependency on /home/root/.rnd mount point"
       hash: fa7215bbef396dfe75f7ebd9ab6b1b5d568fe47a
       body: >

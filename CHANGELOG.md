@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.10
+## (2025-04-08)
+
+* resin-init-flasher: Sleep before SysRq to let shutdown properly execute if need be [Florin Sarbu]
+
 # v6.5.9
 ## (2025-04-03)
 
