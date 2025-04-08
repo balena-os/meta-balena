@@ -1,4 +1,109 @@
 - commits:
+    - subject: Update tests/leviathan digest to 8b32739
+      hash: eb2866f279a11240267960cf7c63ee874f8c021d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to 34033e6
+              hash: ae8c5539e6df98f2ed8b87ae9b9e712825be3ac5
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.102
+          title: ""
+          date: 2025-04-07T16:35:24.638Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v21.1.9
+              hash: c80880792af05905fe5581bd7cd5eb9bffe95dcb
+              body: |
+                Update balena-io/balena-cli from 21.1.4 to 21.1.9
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.101
+          title: ""
+          date: 2025-04-07T14:31:34.378Z
+        - commits:
+            - subject: Update core/contracts digest to d077818
+              hash: 13ee8b92a54708ce555f948d68e4cd8eeeda9798
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.100
+          title: ""
+          date: 2025-04-02T17:08:31.543Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v21.1.4
+              hash: 4b66b13964a25bc960528f956616d0644d256db5
+              body: |
+                Update balena-io/balena-cli from 21.1.3 to 21.1.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.99
+          title: ""
+          date: 2025-04-02T11:45:25.557Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v21.1.3
+              hash: 9159d3f488fcb6260b834423f5fe265ef65e3e8a
+              body: |
+                Update balena-io/balena-cli from 21.1.0 to 21.1.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.98
+          title: ""
+          date: 2025-04-01T18:42:52.531Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.58
+              hash: 154a4ad9587f3d7bb262f5ae412da9e4a0a11b22
+              body: |
+                Update balena-os/leviathan-worker from 2.9.57 to 2.9.58
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.97
+          title: ""
+          date: 2025-04-01T17:58:10.260Z
+        - commits:
+            - subject: Improve device selection logs
+              hash: 6513668024b0c32e0bbb0e73f002f56fee8a1faf
+              body: |
+                Print fleets and worker tag used for device selection.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: leviathan-2.31.96
+          title: ""
+          date: 2025-03-27T16:34:07.013Z
+  version: 6.5.11
+  title: ""
+  date: 2025-04-08T13:06:52.864Z
+- commits:
     - subject: "resin-init-flasher: Sleep before SysRq to let shutdown properly
         execute if need be"
       hash: a059180c9ae5dd4551fd977871fa5a54981b53f2
