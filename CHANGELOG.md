@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.16
+## (2025-04-09)
+
+* os-helpers: tpm_nvram_store_passphrase: remove tpm2_shutdown [Joseph Kogut]
+
 # v6.5.15
 ## (2025-04-09)
 

@@ -1,4 +1,19 @@
 - commits:
+    - subject: "os-helpers: tpm_nvram_store_passphrase: remove tpm2_shutdown"
+      hash: 3526cac33a536465ec60a26214213ddf580c099e
+      body: |
+        This should only be called during machine shutdown
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Joseph Kogut <joseph@balena.io>
+        signed-off-by: Joseph Kogut <joseph@balena.io>
+      author: Joseph Kogut
+      nested: []
+  version: 6.5.16
+  title: ""
+  date: 2025-04-09T16:17:22.672Z
+- commits:
     - subject: "initrdscripts: mount securityfs in migrate script"
       hash: 37c70ed240e67ff367ae5af44f287a5089a5fde7
       body: |
