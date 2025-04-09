@@ -421,7 +421,8 @@ module.exports = {
 						developmentMode: true,
 						installer: {
 							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration }
+							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration },
+							whitelist_pcr2: true
 						},
 					},
 				},
