@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.14
+## (2025-04-09)
+
+* tests: whitelist extra PCR2 events by default [Michal Toman]
+
 # v6.5.13
 ## (2025-04-09)
 
