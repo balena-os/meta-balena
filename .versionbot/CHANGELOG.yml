@@ -1,4 +1,150 @@
 - commits:
+    - subject: Update balena-supervisor to v17
+      hash: ddf24d8375ca4cc9d004798b9ba096ceb9ea3286
+      body: |
+        Update balena-supervisor from 16.12.7 to 17.0.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Fix search for app leftover locks
+              hash: d475b1d8301c83b932ce272d3496bf4aac0ef1ad
+              body: >
+                The leftover locks search was creating an array rather than an
+                object
+
+                keyed by the appId. This could affect the lock cleanup and make
+                leftover
+
+                locks from one app affect the install of the app in local mode.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-17.0.2
+          title: ""
+          date: 2025-04-02T20:16:09.754Z
+        - commits:
+            - subject: Clarify firewall docs on behavior with host network containers
+              hash: caed4dcca0043f848f6dd5a3d1a2f82a2466e8d6
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.0.1
+          title: ""
+          date: 2025-03-25T20:41:20.141Z
+        - commits:
+            - subject: Add Docker network label if custom ipam config
+              hash: b596c77ce2d229e79082cbb1f0022f93806f09ae
+              body: >
+                In a target release where the only change is the addition or
+                removal
+
+                of a custom ipam config, the Supervisor does not recreate the
+                network
+
+                due to ignoring ipam config differences when comparing current
+                and target
+
+                network (in network.isEqualConfig). This commit implements the
+                addition of
+
+                a network label if the target compose object includes a network
+                with custom
+
+                ipam. With the label, the Supervisor will detect a difference
+                between a
+
+                network with a custom ipam and a network without, without
+                needing to compare
+
+                the ipam configs themselves.
+
+
+                This is a major change, as devices running networks with custom
+                ipam configs
+
+                will have their networks recreated to add the network label.
+              footer:
+                Closes: "#2251"
+                closes: "#2251"
+                Change-type: major
+                change-type: major
+                See: https://balena.fibery.io/Work/Project/Fix-Supervisor-not-recreating-network-when-passed-custom-ipam-config-1127
+                see: https://balena.fibery.io/Work/Project/Fix-Supervisor-not-recreating-network-when-passed-custom-ipam-config-1127
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.0.0
+          title: ""
+          date: 2025-03-24T22:18:08.753Z
+        - commits:
+            - subject: Start a dependent if all dependencies are started
+              hash: 7764f98c9d357a1942628e57951266767555f67b
+              body: |
+                The previous behavior required that dependencies were running beefore
+                starting the dependent service. This made it that services dependent on
+                a one-shot service would not get started and goes against the default
+                docker behavior.
+
+                Depending on a service to be running will require the implementation of
+                [long syntax depends_on](https://docs.docker.com/reference/compose-file/services/#long-syntax-1) and the condition
+                `service_healthy`.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Closes: "#2409"
+                closes: "#2409"
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.12.9
+          title: ""
+          date: 2025-03-20T18:43:06.085Z
+        - commits:
+            - subject: Remove GOT retries on state poll
+              hash: ae337a1dd7743b0ee0a05c32a5ce01965c5bafef
+              body: >
+                The state poll already has retry implementation, making the GOT
+                default
+
+                unnecessary.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Ensure poll socket timeout is defined early
+              hash: bdbc6a4ba4766f9466891497bc02bd33aff1d4c7
+              body: |
+                We have observed that even when setting the socket timeout on the
+                state poll https request, the timeout is only applied once the socket is
+                connected. This causes issues with Node's auto family selection (happy
+                eyeballs), as the default https timeout is 5s which means that larger
+                [auto select attempt timeout](https://nodejs.org/docs/latest-v22.x/api/net.html#netgetdefaultautoselectfamilyattempttimeout) may result in the socket timing out before all connection attempts have been tried.
+
+                This commit sets a different https Agent for state polling, with a
+                timeout matching the `apiRequestTimeout` used for other request events.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-16.12.8
+          title: ""
+          date: 2025-03-12T14:50:33.204Z
+  version: 6.5.13
+  title: ""
+  date: 2025-04-09T04:37:03.228Z
+- commits:
     - subject: Update tests/leviathan digest to b8e76d7
       hash: a782ef21b71a408635e0a75754555d1571c5ab49
       body: Update tests/leviathan

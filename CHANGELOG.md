@@ -1,6 +1,42 @@
 Change log
 -----------
 
+# v6.5.13
+## (2025-04-09)
+
+
+<details>
+<summary> Update balena-supervisor to v17 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.0.2
+> ### (2025-04-02)
+> 
+> * Fix search for app leftover locks [Felipe Lalanne]
+> 
+> ## balena-supervisor-17.0.1
+> ### (2025-03-25)
+> 
+> * Clarify firewall docs on behavior with host network containers [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.0.0
+> ### (2025-03-24)
+> 
+> * Add Docker network label if custom ipam config [Christina Ying Wang]
+> 
+> ## balena-supervisor-16.12.9
+> ### (2025-03-20)
+> 
+> * Start a dependent if all dependencies are started [Felipe Lalanne]
+> 
+> ## balena-supervisor-16.12.8
+> ### (2025-03-12)
+> 
+> * Remove GOT retries on state poll [Felipe Lalanne]
+> * Ensure poll socket timeout is defined early [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.5.12
 ## (2025-04-08)
 
