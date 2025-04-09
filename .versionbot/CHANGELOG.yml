@@ -1,4 +1,29 @@
 - commits:
+    - subject: "tests: os: secureboot: update kernel-module-build to v3.0.2"
+      hash: 230a38b7b558fe4c9104f86fc605d5d1982759b9
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: adapt kernel modules test to private device types"
+      hash: ffb5bd295200dbd081a30789cf0c6a7b5d7d1650
+      body: |
+        If a kernel headers file is provided, use it for the kernel module test.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.5.17
+  title: ""
+  date: 2025-04-09T21:47:13.513Z
+- commits:
     - subject: "os-helpers: tpm_nvram_store_passphrase: remove tpm2_shutdown"
       hash: 3526cac33a536465ec60a26214213ddf580c099e
       body: |

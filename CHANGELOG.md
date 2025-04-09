@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.5.17
+## (2025-04-09)
+
+* tests: os: secureboot: update kernel-module-build to v3.0.2 [Alex Gonzalez]
+* tests: secureboot: adapt kernel modules test to private device types [Alex Gonzalez]
+
 # v6.5.16
 ## (2025-04-09)
 
