@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.15
+## (2025-04-09)
+
+* initrdscripts: mount securityfs in migrate script [Michal Toman]
+
 # v6.5.14
 ## (2025-04-09)
 

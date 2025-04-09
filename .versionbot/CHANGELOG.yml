@@ -1,4 +1,26 @@
 - commits:
+    - subject: "initrdscripts: mount securityfs in migrate script"
+      hash: 37c70ed240e67ff367ae5af44f287a5089a5fde7
+      body: |
+        At this moment securityfs is not mounted in the initramfs,
+        so when flasher is running from the migrate script, it won't find
+        the TPM event log. This is fine for most systems, but on systems
+        that have extra TPM events logged and measured, the expected PCR7
+        value will be computed incorrectly.
+
+        This patch mounts securityfs before running flasher from the migrate
+        script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.15
+  title: ""
+  date: 2025-04-09T12:39:41.112Z
+- commits:
     - subject: "tests: whitelist extra PCR2 events by default"
       hash: 0c8fe3a4e9d00a2b766677b1e43b30c586202126
       body: |
