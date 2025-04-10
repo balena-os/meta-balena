@@ -119,15 +119,15 @@ BAD_RECOMMENDATIONS += "shared-mime-info"
 PREFERRED_VERSION_upx:arm = "3.94"
 PREFERRED_VERSION_upx-native:arm = "3.94"
 
-# let's pin linux-firmware to the version we imported from Poky kirkstone release
-PREFERRED_VERSION_linux-firmware = "20230404"
+# let's pin linux-firmware to the version we imported from Poky
+PREFERRED_VERSION_linux-firmware = "20250211"
 
 # balena-engine go version requirement
 GOVERSION = "1.17.13"
 PREFERRED_PROVIDER_go-native = "go-native"
 
 # Firmware compression support
-FIRMWARE_COMPRESSION ?= "0"
+FIRMWARE_COMPRESSION ?= ""
 
 SIGN_API ?= ""
 # Signing keys
