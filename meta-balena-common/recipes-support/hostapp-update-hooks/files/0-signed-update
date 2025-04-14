@@ -46,6 +46,7 @@ updateKeys() {
     EFI_MOUNT_DIR="/mnt/efi"
     PASSPHRASE_FILE="$(mktemp -t)"
     CURRENT_POLICY_PATH="$(find /mnt/efi -name "policies.*")"
+    DISK_ENC_DIR=""
     for UNLOCK_PCRS in  0,2,3,7 0,1,2,3; do
         tpm2_startauthsession --policy-session -S "${SESSION_CTX}"
         tpm2_policypcr -S "${SESSION_CTX}" -l "sha256:${UNLOCK_PCRS}"
@@ -59,6 +60,7 @@ updateKeys() {
             info "Retrieved passphrase from TPM NVRAM"
         elif hw_decrypt_passphrase "$EFI_MOUNT_DIR" "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
             UNLOCK_PCRS_SUCCESS="${UNLOCK_PCRS}"
+            DISK_ENC_DIR="$(mktemp -d)"
             info "Decrypted passphrase stored on disk"
         fi
 
@@ -139,9 +141,23 @@ updateKeys() {
             ;;
     esac
 
-    tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_PATH}"
+    tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_PATH}" "${DISK_ENC_DIR}"
     cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
     rm -rf "${CURRENT_POLICY_PATH}"
+
+    # If we are migrating from encrypted passphrase stored in the boot partition
+    # to passphrase stored in TPM NVRAM, the above has re-encrypted the passphrase
+    # and we now need to store it in the EFI partition, otherwise rollback won't work.
+    if [ -n "${DISK_ENC_DIR}" ]; then
+        tpm2_evictcontrol -c "${EFI_MOUNT_DIR}/balena-luks.ctx"
+
+        mv "${DISK_ENC_DIR}/persistent.ctx" "${EFI_MOUNT_DIR}/balena-luks.ctx"
+        mv "${DISK_ENC_DIR}/passphrase.enc" "${EFI_MOUNT_DIR}/balena-luks.enc"
+
+        rm -rf "${DISK_ENC_DIR}"
+
+        sync "${EFI_MOUNT_DIR}"
+    fi
 
     # update the second stage bootloader kernel binary, as the hash of the
     # original may not be present in the signature database

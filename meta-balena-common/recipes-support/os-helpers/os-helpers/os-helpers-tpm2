@@ -222,6 +222,8 @@ tpm_nvram_retrieve_passphrase() {
 tpm_nvram_store_passphrase() {
 	passphrase_file=$1
 	policy_dir=$2
+	disk_enc_dir=$3
+
 	passphrase_sz=32
 
 	session_ctx=$(mktemp)
@@ -289,6 +291,14 @@ tpm_nvram_store_passphrase() {
 	# shellcheck disable=SC2086
 	tpm2_nvwrite "${PASSPHRASE_NVINDEX}" --input "${passphrase_file}" \
 					     ${nvwrite_addl_args}
+
+	# If we are migrating from passphrase encrypted on disk to passphrase stored in TPM NVRAM,
+	# we still need to re-encrypt the passphrase and store it in the EFI partition for rollback
+	# to work. It will be removed by rollback-health when the new OS is validated.
+	if [ -n "${disk_enc_dir}" ]; then
+		hw_encrypt_passphrase "${passphrase_file}" "${policy}" "${disk_enc_dir}"
+	fi
+
 	tpm2_flushcontext "${session_ctx}"
 	echo "${status}"
 }
