@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.18
+## (2025-04-15)
+
+* hostapp-update-hooks: make rollback possible when migrating to TPM NVRAM [Michal Toman]
+
 # v6.5.17
 ## (2025-04-09)
 

@@ -1,4 +1,41 @@
 - commits:
+    - subject: "hostapp-update-hooks: make rollback possible when migrating to TPM
+        NVRAM"
+      hash: ce2a7d309a5637dc8f5f17d1106fc925f00a898e
+      body: |
+        At this moment migrating from passphrase encrypted in the EFI partition
+        to passphrase stored in TPM NVRAM is a one way operation.
+        The signed-update HUP hook will move the passphrase to TPM NVRAM
+        and protect it with a new policy, but doesn't update the encrypted
+        file in the EFI partition. That way, if the new OS doesn't work
+        and triggers a rollback, the passphrase can't be decrypted when running
+        the "old" hooks and rollback fails, leaving the system
+        in an inconsistent state.
+
+        This patch makes the signed-update hook re-encrypt the passphrase
+        and update it in the boot partition one last time during the migration.
+        * If HUP goes through, the encrypted file is removed from the boot
+          partition and the system sticks with NVRAM only.
+        * If HUP fails, the system can rollback and the "old" OS version
+          is able to decrypt the passphrase without involving NVRAM.
+
+        It's worth noting that both the RSA key and the NVRAM slot are protected
+        by the same policy, so the "old" OS will be allowed to access
+        the passphrase in the TPM NVRAM, even though there is no OS tooling
+        that would know how to do that. And the "new" OS will be allowed
+        to decrypt the passphrase in the EFI partition until it's removed
+        by rollback-health, even though it will prefer to use NVRAM.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.18
+  title: ""
+  date: 2025-04-15T08:48:17.007Z
+- commits:
     - subject: "tests: os: secureboot: update kernel-module-build to v3.0.2"
       hash: 230a38b7b558fe4c9104f86fc605d5d1982759b9
       body: ""
