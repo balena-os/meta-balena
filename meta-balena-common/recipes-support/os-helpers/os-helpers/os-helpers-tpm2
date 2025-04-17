@@ -236,23 +236,19 @@ tpm_nvram_store_passphrase() {
 		efi_binaries="${grub_bin} ${kernel_bin}"
 	fi
 
-	stdout=/proc/self/fd/1
-	current_digest=$(tpm2_pcrread sha256:7 --quiet -o "${stdout}" | _hexencode)
-	computed_digest=$(generate_pcr_digests 7 "${stdout}" "" "${efi_binaries}" | _hexencode)
-	if [ "${current_digest}" != "${computed_digest}" ]; then
-		# The PCR policy can't be satisfied until the next boot, so associate a
-		# password with the nvindex that will allow us to write the LUKS
-		# passphrase immediately
-		tpm2_startauthsession --session "${session_ctx}"
-		tpm2_policypassword \
-			--session "${session_ctx}" \
-			--policy "${policy_dir}/policy.password"
-		tpm2_flushcontext "${session_ctx}"
+	# When updating, most of the times the PCR policy can't be satisfied
+	# until the next boot, so associate a password with the nvindex
+	# that will allow us to write the LUKS passphrase immediately.
+	# It is probably possible not to use the password if the new policy
+	# is already satisfied, but at this moment it feels like an unnecessary
+	# optimization.
+	tpm2_startauthsession --session "${session_ctx}"
+	tpm2_policypassword \
+		--session "${session_ctx}" \
+		--policy "${policy_dir}/policy.password"
+	tpm2_flushcontext "${session_ctx}"
 
-		policy_password="hex:$(hw_gen_passphrase "${passphrase_sz}" | _hexencode)"
-		nvdefine_addl_args="--index-auth ${policy_password}"
-		status=reboot_required
-	fi
+	policy_password="hex:$(hw_gen_passphrase "${passphrase_sz}" | _hexencode)"
 
 	policies="$(find "${policy_dir}" -type f | sort | xargs)"
 	if [ "$(echo "${policies}" | wc -w)" -gt 1 ]; then
@@ -277,20 +273,12 @@ tpm_nvram_store_passphrase() {
 	tpm2_nvdefine "${PASSPHRASE_NVINDEX}" --size "${passphrase_sz}" \
 					      --attributes "authwrite|policyread|policywrite" \
 					      --policy "${policy}" \
-					      ${nvdefine_addl_args}
+					      --index-auth ${policy_password}
 
 	tpm2_startauthsession --policy-session --session "${session_ctx}"
-	if [ -n "${policy_password}" ]; then
-		nvwrite_addl_args="--auth ${policy_password}"
-	else
-		pcrs="sha256:0,2,3,7"
-		tpm2_policypcr --session "${session_ctx}" --pcr-list "${pcrs}"
-		nvwrite_addl_args="--auth session:${session_ctx}"
-	fi
 
 	# shellcheck disable=SC2086
-	tpm2_nvwrite "${PASSPHRASE_NVINDEX}" --input "${passphrase_file}" \
-					     ${nvwrite_addl_args}
+	tpm2_nvwrite "${PASSPHRASE_NVINDEX}" --input "${passphrase_file}" --auth "${policy_password}"
 
 	# If we are migrating from passphrase encrypted on disk to passphrase stored in TPM NVRAM,
 	# we still need to re-encrypt the passphrase and store it in the EFI partition for rollback
@@ -299,8 +287,11 @@ tpm_nvram_store_passphrase() {
 		hw_encrypt_passphrase "${passphrase_file}" "${policy}" "${disk_enc_dir}"
 	fi
 
+	# destroy the policy password before leaving the function
+	# +2 to get 2 more bytes (4 hex characters) because the password has been prefixed by "hex:"
+	policy_password="$(dd if=/dev/urandom bs=$((${passphrase_sz} + 2)) count=1 | _hexencode)"
+
 	tpm2_flushcontext "${session_ctx}"
-	echo "${status}"
 }
 
 generate_pcr_digests() {
