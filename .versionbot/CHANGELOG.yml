@@ -1,4 +1,30 @@
 - commits:
+    - subject: "os-helpers-tpm2: Always use password protection for TPM NVRAM writes"
+      hash: e91e64315c06327d4592ad4c9d72658ae88c4fba
+      body: |
+        At this moment tpm_nvram_store_passphrase checks whether the expected
+        policy is currently met or not, and acts differently in each case.
+        If the policy doesn't match, the TPM write is protected by a one-time
+        password that is lost when the function exits.
+        If the policy matches, it will be used to protect the write directly.
+        The latter seems to be broken at least in some scenarios (retrying
+        HUP after a rollback).
+
+        This patch removes the special-casing and makes
+        tpm_nvram_store_passphrase always use the password protection. While
+        using the current PCR states directly is a nice optimization, always
+        using the password is more universal and makes the code simpler.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.19
+  title: ""
+  date: 2025-04-17T08:41:50.848Z
+- commits:
     - subject: "hostapp-update-hooks: make rollback possible when migrating to TPM
         NVRAM"
       hash: ce2a7d309a5637dc8f5f17d1106fc925f00a898e

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.19
+## (2025-04-17)
+
+* os-helpers-tpm2: Always use password protection for TPM NVRAM writes [Michal Toman]
+
 # v6.5.18
 ## (2025-04-15)
 
