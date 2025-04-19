@@ -1,4 +1,20 @@
 - commits:
+    - subject: "kernel-balena: add aufs commit for v6.6.84"
+      hash: 6a63c9f2e9e064be591e4e29d6c50f86393c752f
+      body: |
+        We will continue to update to the stable head of v6.6 until v6.12 is
+        officially deployed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.5.20
+  title: ""
+  date: 2025-04-19T06:11:53.850Z
+- commits:
     - subject: "os-helpers-tpm2: Always use password protection for TPM NVRAM writes"
       hash: e91e64315c06327d4592ad4c9d72658ae88c4fba
       body: |

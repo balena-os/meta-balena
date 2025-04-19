@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.20
+## (2025-04-19)
+
+* kernel-balena: add aufs commit for v6.6.84 [Alex Gonzalez]
+
 # v6.5.19
 ## (2025-04-17)
 
