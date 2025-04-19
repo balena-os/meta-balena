@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 5ecdcd3
+      hash: 0e98a555c2f4ba4003502b3e01c054828a74c67d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.59
+              hash: 3664862394cf24a370ae3679d2fba9517c1bf7de
+              body: |
+                Update balena-os/leviathan-worker from 2.9.58 to 2.9.59
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.104
+          title: ""
+          date: 2025-04-16T11:21:05.396Z
+  version: 6.5.21
+  title: ""
+  date: 2025-04-19T11:24:43.032Z
+- commits:
     - subject: "kernel-balena: add aufs commit for v6.6.84"
       hash: 6a63c9f2e9e064be591e4e29d6c50f86393c752f
       body: |

@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.5.21
+## (2025-04-19)
+
+
+<details>
+<summary> Update tests/leviathan digest to 5ecdcd3 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.31.104
+> ### (2025-04-16)
+> 
+> * Update balena-os/leviathan-worker to v2.9.59 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.5.20
 ## (2025-04-19)
 
