@@ -1,0 +1,15 @@
+Index: plymouth-24.004.60/src/libply-splash-core/ply-device-manager.c
+===================================================================
+--- plymouth-24.004.60.orig/src/libply-splash-core/ply-device-manager.c
++++ plymouth-24.004.60/src/libply-splash-core/ply-device-manager.c
+@@ -1129,8 +1129,9 @@ create_devices_for_terminal_and_renderer
+                                 renderer = NULL;
+                                 return true;
+                         }
+-
++#ifdef HAVE_UDEV
+                         add_input_devices_to_renderer (manager, renderer);
++#endif
+                 }
+         }
+ 

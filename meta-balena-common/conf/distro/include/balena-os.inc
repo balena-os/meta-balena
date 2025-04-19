@@ -92,6 +92,7 @@ INITRAMFS_IMAGE = "balena-image-initramfs"
 INITRAMFS_IMAGE_BUNDLE = "1"
 KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
+IMAGE_NAME_SUFFIX = ""
 
 # resinOS defaults to ipk packages
 PACKAGE_CLASSES ?= "package_ipk"
