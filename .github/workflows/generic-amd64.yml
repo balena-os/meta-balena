@@ -24,28 +24,30 @@ permissions:
 jobs:
   yocto:
     name: Yocto
-    # FIXME: This workflow has dependencies on scripts in the balena-yocto-scripts repository
-    # which is pinned separately as a submodule in the device repo. Expect some drift but try to retain compatibility.
-    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@master
+    # TODO: Add a renovate versioning strategy to support tags like v6.5.19+rev3 and avoid pinning to master
+    uses: balena-os/balena-generic/.github/workflows/generic-amd64.yml@master
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
     # still allowing it to run for all other event types.
-    if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
+    if:
+      (github.event.pull_request.head.repo.full_name == github.repository) ==
+      (github.event_name == 'pull_request')
     secrets: inherit
     with:
       # Needed for testing - defaults to production
       deploy-environment: balena-staging.com
-      machine: generic-amd64
-      device-repo: balena-os/balena-generic
       device-repo-ref: master
-      # Pin to the current commit
       meta-balena-ref: ${{ github.sha }}
-      # Use QEMU workers for testing and run cloud suite against balenaCloud production
+      # Use QEMU workers for testing and run cloud suite against balenaCloud production.
+      # Use AX102 runners as the AX162 runners have issues with QEMU and AMD EPYC processors.
+      # See https://balena.fibery.io/Work/Project/Investigation-of-secure-boot-tests-not-booting-on-self-hosted-runners-1030
+      # See https://unix.stackexchange.com/questions/757583/linux-reboots-with-no-panic-when-booting-smp-configuration-from-kexec
       test_matrix: >
         {
           "test_suite": ["os","cloud","hup"],
           "environment": ["balena-cloud.com"],
           "worker_type": ["qemu"],
-          "runs_on": [["self-hosted", "X64", "kvm", "yocto"]]
+          "runs_on": [["self-hosted", "X64", "kvm", "AX102"]],
+          "secure_boot": ["sb",""]
         }
