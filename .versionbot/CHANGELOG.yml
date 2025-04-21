@@ -1,4 +1,19 @@
 - commits:
+    - subject: Use workflow_call for balena-generic device type tests
+      hash: 685b74e962f6805713118c887e8574fadf4148f3
+      body: |
+        This includes adding secure boot tests to the generic-amd64 test matrix.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.5.22
+  title: ""
+  date: 2025-04-21T21:24:03.843Z
+- commits:
     - subject: Update tests/leviathan digest to 5ecdcd3
       hash: 0e98a555c2f4ba4003502b3e01c054828a74c67d
       body: Update tests/leviathan

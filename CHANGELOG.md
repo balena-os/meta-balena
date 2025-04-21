@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.22
+## (2025-04-21)
+
+* Use workflow_call for balena-generic device type tests [Kyle Harding]
+
 # v6.5.21
 ## (2025-04-19)
 
