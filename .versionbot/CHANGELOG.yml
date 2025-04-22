@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python digest to 8d9ed9a
+      hash: 50dd1e53238b004511d2854291c81afa6bd9604e
+      body: |
+        Update actions/setup-python to 8d9ed9ac5c53483de85588cdf95a591a75ab9f55
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.5.23
+  title: ""
+  date: 2025-04-22T10:52:53.386Z
+- commits:
     - subject: Use workflow_call for balena-generic device type tests
       hash: 685b74e962f6805713118c887e8574fadf4148f3
       body: |

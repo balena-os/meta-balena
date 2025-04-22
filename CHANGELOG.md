@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.23
+## (2025-04-22)
+
+* Update actions/setup-python digest to 8d9ed9a [balena-renovate[bot]]
+
 # v6.5.22
 ## (2025-04-21)
 
