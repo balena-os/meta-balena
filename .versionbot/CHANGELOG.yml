@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python digest to a26af69
+      hash: 0946c15d23411563fae3fd38b2e4bfa5f11f89fb
+      body: |
+        Update actions/setup-python to a26af69be951a213d495a4c3e4e4022e16d87065
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.5.24
+  title: ""
+  date: 2025-04-24T10:53:52.990Z
+- commits:
     - subject: Update actions/setup-python digest to 8d9ed9a
       hash: 50dd1e53238b004511d2854291c81afa6bd9604e
       body: |
