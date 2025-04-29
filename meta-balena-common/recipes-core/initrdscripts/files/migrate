@@ -25,6 +25,8 @@
 . /usr/libexec/os-helpers-fs
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-defaults
+# shellcheck disable=SC1091
+. /usr/sbin/balena-sb
 
 memory_check() {
     _size="${1}"
@@ -67,8 +69,11 @@ migrate_enabled() {
                     _migrate=1
                     info "Migration requested in configuration"
                 elif jq -re '.installer.secureboot' "${FLASH_BOOT_MOUNT}/config.json" > /dev/null; then
-                    _migrate=1
-                    info "Migration forced because secure boot is enabled"
+                    if is_secured
+                        _migrate=1
+                        info "Migration forced because secure boot is enabled"
+                    else
+                        info "Secureboot requested in configuration but not yet enforced; migration is not forced"
                 fi
 
                 if [ "${_migrate}" = "1" ] && target_devices=$(jq -re '.installer.target_devices' "${FLASH_BOOT_MOUNT}/config.json"); then

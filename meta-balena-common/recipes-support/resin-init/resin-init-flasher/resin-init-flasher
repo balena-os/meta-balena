@@ -73,6 +73,8 @@ BOOT_ENTRY_LABEL="balenaOS"
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 # shellcheck disable=SC1091
+. /usr/libexec/os-helpers-sb
+# shellcheck disable=SC1091
 [ -f /usr/libexec/os-helpers-power ] && . /usr/libexec/os-helpers-power
 
 function clean {
@@ -296,9 +298,9 @@ if type secureboot_setup >/dev/null 2>&1 && secureboot_setup; then
 fi
 
 if [ "$CRYPT" = "1" ]; then
-    # If we are going for the encryption, first of all verify that the image
-    # we are about to flash is correctly signed.
-    if ! verify_image_signature "${BALENA_IMAGE}"; then
+    # If we are running on a secure system and going for the encryption, 
+    # first of all verify that the image we are about to flash is correctly signed.
+    if is_secured && ! verify_image_signature "${BALENA_IMAGE}"; then
         fail "Failed to verify signature of '${BALENA_IMAGE}'"
     fi
 
