@@ -1,45 +1,23 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+# SPDX-License-Identifier: MIT
+#
+
 inherit python3native
+inherit rust-target-config
 
 # Common variables used by all Rust builds
-export rustlibdir = "${libdir}/rust"
+export rustlibdir = "${libdir}/rustlib/${RUST_HOST_SYS}/lib"
 FILES:${PN} += "${rustlibdir}/*.so"
 FILES:${PN}-dev += "${rustlibdir}/*.rlib ${rustlibdir}/*.rmeta"
 FILES:${PN}-dbg += "${rustlibdir}/.debug"
 
-RUSTLIB = "-L ${STAGING_LIBDIR}/rust"
-RUST_DEBUG_REMAP = "--remap-path-prefix=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR}"
+RUSTLIB = "-L ${STAGING_DIR_HOST}${rustlibdir}"
+RUST_DEBUG_REMAP = "--remap-path-prefix=${WORKDIR}=${TARGET_DBGSRC_DIR}"
 RUSTFLAGS += "${RUSTLIB} ${RUST_DEBUG_REMAP}"
-RUSTLIB_DEP ?= "libstd-rs"
-export RUST_TARGET_PATH = "${STAGING_LIBDIR_NATIVE}/rustlib"
-RUST_PANIC_STRATEGY ?= "unwind"
-
-# Native builds are not effected by TCLIBC. Without this, rust-native
-# thinks it's "target" (i.e. x86_64-linux) is a musl target.
-RUST_LIBC = "${TCLIBC}"
-RUST_LIBC:class-crosssdk = "glibc"
-RUST_LIBC:class-native = "glibc"
-
-def set_rust_arch(arch):
-    try:
-        import oe.rust
-        return oe.rust.arch_to_rust_arch(arch)
-    except ImportError or ModuleNotFoundError:
-        return arch
-
-def determine_libc(d, thing):
-    '''Determine which libc something should target'''
-
-    # BUILD is never musl, TARGET may be musl or glibc,
-    # HOST could be musl, but only if a compiler is built to be run on
-    # target in which case HOST_SYS != BUILD_SYS.
-    if thing == 'TARGET':
-        libc = d.getVar('RUST_LIBC')
-    elif thing == 'BUILD' and (d.getVar('HOST_SYS') != d.getVar('BUILD_SYS')):
-        libc = d.getVar('RUST_LIBC')
-    else:
-        libc = d.getVar('RUST_LIBC:class-native')
-
-    return libc
+RUSTLIB_DEP ??= "libstd-rs"
+RUST_PANIC_STRATEGY ??= "unwind"
 
 def target_is_armv7(d):
     '''Determine if target is armv7'''
@@ -70,37 +48,38 @@ def rust_base_triple(d, thing):
     '''
 
     # The llvm-target for armv7 is armv7-unknown-linux-gnueabihf
-    if thing == "TARGET" and target_is_armv7(d):
+    if d.getVar('{}_ARCH'.format(thing)) == d.getVar('TARGET_ARCH') and target_is_armv7(d):
         arch = "armv7"
     else:
-        arch = set_rust_arch(d.getVar('{}_ARCH'.format(thing)))
+        arch = oe.rust.arch_to_rust_arch(d.getVar('{}_ARCH'.format(thing)))
 
-    # All the Yocto targets are Linux and are 'unknown'
-    vendor = "-unknown"
+    # Substituting "unknown" when vendor is empty will match rust's standard
+    # targets when building native recipes (including rust-native itself)
+    vendor = d.getVar('{}_VENDOR'.format(thing)) or "-unknown"
+
+    # Default to glibc
+    libc = "-gnu"
     os = d.getVar('{}_OS'.format(thing))
-    libc = determine_libc(d, thing)
-
-    # Prefix with a dash and convert glibc -> gnu
-    if libc == "glibc":
-        libc = "-gnu"
-    elif libc == "musl":
-        libc = "-musl"
-
-    # Don't double up musl (only appears to be the case on aarch64)
-    if os == "linux-musl":
-        if libc != "-musl":
-            bb.fatal("{}_OS was '{}' but TCLIBC was not 'musl'".format(thing, os))
-        os = "linux"
-
     # This catches ARM targets and appends the necessary hard float bits
     if os == "linux-gnueabi" or os == "linux-musleabi":
         libc = bb.utils.contains('TUNE_FEATURES', 'callconvention-hard', 'hf', '', d)
+    elif os == "linux-gnux32" or os == "linux-muslx32":
+        libc = ""
+    elif "musl" in os:
+        libc = "-musl"
+        os = "linux"
+    elif "elf" in os:
+        libc = "-elf"
+        os = "none"
+    elif "eabi" in os:
+        libc = "-eabi"
+        os = "none"
+
     return arch + vendor + '-' + os + libc
 
 
-
 # In some cases uname and the toolchain differ on their idea of the arch name
-RUST_BUILD_ARCH = "${@set_rust_arch(d.getVar('BUILD_ARCH'))}"
+RUST_BUILD_ARCH = "${@oe.rust.arch_to_rust_arch(d.getVar('BUILD_ARCH'))}"
 
 # Naming explanation
 # Yocto
@@ -120,7 +99,7 @@ RUST_BUILD_ARCH = "${@set_rust_arch(d.getVar('BUILD_ARCH'))}"
 # Rust additionally will use two additional cases:
 # - undecorated (e.g. CC) - equivalent to TARGET
 # - triple suffix (e.g. CC:x86_64_unknown_linux_gnu) - both
-#   see: https://github.com/alexcrichton/gcc-rs
+#   see: https://github.com/rust-lang/cc-rs
 # The way that Rust's internal triples and Yocto triples are mapped together
 # its likely best to not use the triple suffix due to potential confusion.
 
@@ -146,26 +125,46 @@ RUST_TARGET_CXX = "${WRAPPER_DIR}/target-rust-cxx"
 RUST_TARGET_CCLD = "${WRAPPER_DIR}/target-rust-ccld"
 RUST_TARGET_AR = "${WRAPPER_DIR}/target-rust-ar"
 
-create_wrapper () {
+create_wrapper_rust () {
 	file="$1"
+	shift
+	extras="$1"
+	shift
+	crate_cc_extras="$1"
 	shift
 
 	cat <<- EOF > "${file}"
 	#!/usr/bin/env python3
 	import os, sys
 	orig_binary = "$@"
+	extras = "${extras}"
+
+	# Apply a required subset of CC crate compiler flags
+	# when we build a target recipe for a non-bare-metal target.
+	# https://github.com/rust-lang/cc-rs/blob/main/src/lib.rs#L1614
+	if "CRATE_CC_NO_DEFAULTS" in os.environ.keys() and \
+	   "TARGET" in os.environ.keys() and not "-none-" in os.environ["TARGET"]:
+	    orig_binary += "${crate_cc_extras}"
+
 	binary = orig_binary.split()[0]
 	args = orig_binary.split() + sys.argv[1:]
+	if extras:
+	    args.append(extras)
 	os.execvp(binary, args)
 	EOF
 	chmod +x "${file}"
 }
 
-export WRAPPER_TARGET_CC = "${CC}"
-export WRAPPER_TARGET_CXX = "${CXX}"
-export WRAPPER_TARGET_CCLD = "${CCLD}"
-export WRAPPER_TARGET_LDFLAGS = "${LDFLAGS}"
-export WRAPPER_TARGET_AR = "${AR}"
+WRAPPER_TARGET_CC = "${CC}"
+WRAPPER_TARGET_CXX = "${CXX}"
+WRAPPER_TARGET_CCLD = "${CCLD}"
+WRAPPER_TARGET_LDFLAGS = "${LDFLAGS}"
+WRAPPER_TARGET_EXTRALD = ""
+# see recipes-devtools/gcc/gcc/0018-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
+# we need to link with ssp_nonshared on musl to avoid "undefined reference to `__stack_chk_fail_local'"
+# when building MACHINE=qemux86 for musl
+WRAPPER_TARGET_EXTRALD:libc-musl = "-lssp_nonshared"
+WRAPPER_TARGET_AR = "${AR}"
 
 # compiler is used by gcc-rs
 # linker is used by rustc/cargo
@@ -174,22 +173,22 @@ do_rust_create_wrappers () {
 	mkdir -p "${WRAPPER_DIR}"
 
 	# Yocto Build / Rust Host C compiler
-	create_wrapper "${RUST_BUILD_CC}" "${BUILD_CC}"
+	create_wrapper_rust "${RUST_BUILD_CC}" "" "${CRATE_CC_FLAGS}" "${BUILD_CC}"
 	# Yocto Build / Rust Host C++ compiler
-	create_wrapper "${RUST_BUILD_CXX}" "${BUILD_CXX}"
+	create_wrapper_rust "${RUST_BUILD_CXX}" "" "${CRATE_CC_FLAGS}" "${BUILD_CXX}"
 	# Yocto Build / Rust Host linker
-	create_wrapper "${RUST_BUILD_CCLD}" "${BUILD_CCLD}" "${BUILD_LDFLAGS}"
+	create_wrapper_rust "${RUST_BUILD_CCLD}" "" "" "${BUILD_CCLD}" "${BUILD_LDFLAGS}"
 	# Yocto Build / Rust Host archiver
-	create_wrapper "${RUST_BUILD_AR}" "${BUILD_AR}"
+	create_wrapper_rust "${RUST_BUILD_AR}" "" "" "${BUILD_AR}"
 
 	# Yocto Target / Rust Target C compiler
-	create_wrapper "${RUST_TARGET_CC}" "${WRAPPER_TARGET_CC}" "${WRAPPER_TARGET_LDFLAGS}"
+	create_wrapper_rust "${RUST_TARGET_CC}" "${WRAPPER_TARGET_EXTRALD}" "${CRATE_CC_FLAGS}" "${WRAPPER_TARGET_CC}" "${WRAPPER_TARGET_LDFLAGS}"
 	# Yocto Target / Rust Target C++ compiler
-	create_wrapper "${RUST_TARGET_CXX}" "${WRAPPER_TARGET_CXX}"
+	create_wrapper_rust "${RUST_TARGET_CXX}" "${WRAPPER_TARGET_EXTRALD}" "${CRATE_CC_FLAGS}" "${WRAPPER_TARGET_CXX}" "${CXXFLAGS}"
 	# Yocto Target / Rust Target linker
-	create_wrapper "${RUST_TARGET_CCLD}" "${WRAPPER_TARGET_CCLD}" "${WRAPPER_TARGET_LDFLAGS}"
+	create_wrapper_rust "${RUST_TARGET_CCLD}" "${WRAPPER_TARGET_EXTRALD}" "" "${WRAPPER_TARGET_CCLD}" "${WRAPPER_TARGET_LDFLAGS}"
 	# Yocto Target / Rust Target archiver
-	create_wrapper "${RUST_TARGET_AR}" "${WRAPPER_TARGET_AR}"
+	create_wrapper_rust "${RUST_TARGET_AR}" "" "" "${WRAPPER_TARGET_AR}"
 
 }
 
