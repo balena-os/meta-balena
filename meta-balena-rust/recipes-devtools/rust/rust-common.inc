@@ -24,9 +24,6 @@ def llvm_features_from_tune(d):
     if 'vfpv2' in feat or 'vfp' in feat:
         f.append("+vfp2")
 
-    if 'neon' in feat:
-        f.append("+neon")
-
     if 'mips32' in feat:
         f.append("+mips32")
 
@@ -35,6 +32,11 @@ def llvm_features_from_tune(d):
 
     if target_is_armv7(d):
         f.append('+v7')
+
+    if 'neon' in feat:
+        f.append("+neon")
+    else:
+        f.append("-neon")
 
     if ('armv6' in mach_overrides) or ('armv6' in feat):
         f.append("+v6")

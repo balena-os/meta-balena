@@ -2,7 +2,6 @@ SUMMARY = "Rust standard libaries"
 HOMEPAGE = "http://www.rust-lang.org"
 SECTION = "devel"
 LICENSE = "MIT | Apache-2.0"
-LIC_FILES_CHKSUM = "file://../../COPYRIGHT;md5=93a95682d51b4cb0a633a97046940ef0"
 
 RUSTLIB_DEP = ""
 inherit cargo
