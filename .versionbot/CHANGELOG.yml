@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 769d8e6
+      hash: 3fc4f63b17c401143523698731924a07599a8818
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to a1e8b75
+              hash: 4b8505c58f5cd30541d334077ee2b96f3cfe233c
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.105
+          title: ""
+          date: 2025-04-30T22:32:41.266Z
+  version: 6.5.25
+  title: ""
+  date: 2025-05-04T12:47:31.788Z
+- commits:
     - subject: Update actions/setup-python digest to a26af69
       hash: 0946c15d23411563fae3fd38b2e4bfa5f11f89fb
       body: |
