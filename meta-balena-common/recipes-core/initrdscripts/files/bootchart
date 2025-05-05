@@ -1,0 +1,25 @@
+#!/bin/sh
+
+bootchart_enabled() {
+	# shellcheck disable=SC2154
+	[ "${bootparam_bootchart}" = "true" ] && return 0 || return 1
+}
+
+bootchart_run() {
+	# bootchart runs backgrounded through switch_root, after the real root
+	# is mounted and init is run, until it's collected enough samples, at
+	# which point it exits
+	#
+	# argv[0][0] is replaced with '@' in main() to indicate that the
+	# process remains from the initramfs, and to prevent init from killing
+	# it
+	#
+	# https://freedesktop.org/wiki/Software/systemd/RootStorageDaemons/
+	[ -n "${bootparam_bootchart_frequency}" ] \
+		&& sed -i "/Frequency=/c\Frequency=${bootparam_bootchart_frequency}" \
+		/etc/systemd/bootchart.conf
+	[ -n "${bootparam_bootchart_samples}" ] \
+		&& sed -i "/Samples=/c\Samples=${bootparam_bootchart_samples}" \
+		/etc/systemd/bootchart.conf
+	( exec /lib/systemd/systemd-bootchart ) &
+}

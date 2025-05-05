@@ -153,6 +153,7 @@ BALENA_CONFIGS ?= " \
     ${FIRMWARE_COMPRESS} \
     ${MODULE_COMPRESS} \
     ${WIREGUARD} \
+    ${BOOTCHART} \
     "
 
 #
@@ -243,6 +244,12 @@ BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi'," ${KERNE
 BALENA_CONFIGS[kernel_zstd] = " \
     CONFIG_KERNEL_ZSTD=y \
     CONFIG_CRYPTO_ZSTD=y \
+"
+
+BOOTCHART = "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'bootchart', '', d)}"
+BALENA_CONFIGS[bootchart] = " \
+    CONFIG_SCHEDSTATS=y \
+    CONFIG_SCHED_DEBUG=y \
 "
 
 BALENA_CONFIGS[aufs] = " \

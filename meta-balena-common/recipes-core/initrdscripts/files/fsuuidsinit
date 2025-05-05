@@ -58,13 +58,13 @@ fsuuidsinit_run() {
         uuid="$(get_dev_uuid "${dev}")"
         fstype="$(get_dev_fstype "${dev}")"
         if [ "${uuid}" = "$(get_cmdline_root_uuid)" ]; then
-            touch "/run/initramfs/bootparam_root.mux"
+            touch "/run/bootparam_root.mux"
         fi
         if regenerate_uuid "${dev}" "${fstype}"; then
-            if [ -f "/run/initramfs/bootparam_root.mux" ]; then
+            if [ -f "/run/bootparam_root.mux" ]; then
                 bootparam_root="UUID=$(get_dev_uuid "${dev}")"
-                echo "${bootparam_root}" > /run/initramfs/bootparam_root
-                rm -f "/run/initramfs/bootparam_root.mux"
+                echo "${bootparam_root}" > /run/bootparam_root
+                rm -f "/run/bootparam_root.mux"
                 info "Using new root UUID: ${bootparam_root}"
             fi
         else
