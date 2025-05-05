@@ -467,6 +467,7 @@ module.exports = {
 		'./tests/engine-socket',
 		'./tests/engine-healthcheck',
 		'./tests/under-voltage',
+		'./tests/regulatory-db',
 		'./tests/udev',
 		'./tests/device-tree',
 		'./tests/purge-data',
