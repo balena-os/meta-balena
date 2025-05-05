@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests/os: Add regdb load failure test"
+      hash: 545214b5e3a19bda78254bf1f9e01de34f3c8df1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.5.26
+  title: ""
+  date: 2025-05-05T18:46:13.539Z
+- commits:
     - subject: Update tests/leviathan digest to 769d8e6
       hash: 3fc4f63b17c401143523698731924a07599a8818
       body: Update tests/leviathan

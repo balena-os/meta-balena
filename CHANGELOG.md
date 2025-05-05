@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.26
+## (2025-05-05)
+
+* tests/os: Add regdb load failure test [Alexandru Costache]
+
 # v6.5.25
 ## (2025-05-04)
 
