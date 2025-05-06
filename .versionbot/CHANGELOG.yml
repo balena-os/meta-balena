@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 81e581a
+      hash: 8d082e3e727f18c7b58098debdb522dfaf3831fd
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v21.1.10
+              hash: cd9d6e00b478dde5dc69ac2fbfa1b127a588bb3b
+              body: |
+                Update balena-io/balena-cli from 21.1.9 to 21.1.10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.106
+          title: ""
+          date: 2025-05-05T18:57:38.638Z
+  version: 6.5.27
+  title: ""
+  date: 2025-05-06T15:08:40.140Z
+- commits:
     - subject: "tests/os: Add regdb load failure test"
       hash: 545214b5e3a19bda78254bf1f9e01de34f3c8df1
       body: ""
