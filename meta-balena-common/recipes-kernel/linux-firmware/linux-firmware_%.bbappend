@@ -1,3 +1,23 @@
+inherit balena-linux-firmware
+
+# Cleanup iwlwifi firmware files
+IWLWIFI_PATH = "lib/firmware"
+IWLWIFI_REGEX = "^iwlwifi-([0-9a-zA-Z-]+)-([0-9]+).ucode$"
+IWLWIFI_FW_TOCLEAN ?= " \
+    7260 \
+    7265 \
+    7265D \
+    8000C \
+    8265 \
+    9260-th-b0-jf-b0 \
+"
+IWLWIFI_FW_MIN_API[7260] = "17"
+IWLWIFI_FW_MIN_API[7265] = "17"
+IWLWIFI_FW_MIN_API[7265D] = "29"
+IWLWIFI_FW_MIN_API[8000C] = "36"
+IWLWIFI_FW_MIN_API[8265] = "36"
+IWLWIFI_FW_MIN_API[9260-th-b0-jf-b0] = "46"
+
 PACKAGES =+ "${PN}-rtl8188eu"
 
 FILES:${PN}-rtl8188eu = " \
