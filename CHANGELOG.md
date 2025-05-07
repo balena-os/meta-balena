@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.28
+## (2025-05-07)
+
+* Do not include in the rootfs the test binaries from the nss package [Florin Sarbu]
+
 # v6.5.27
 ## (2025-05-06)
 

@@ -1,4 +1,22 @@
 - commits:
+    - subject: Do not include in the rootfs the test binaries from the nss package
+      hash: 045f1061526a95857b8d27f69b87383ddcba5b51
+      body: |
+        In order to free up space in the rootfs we remove the following binaries:
+        bltest  chktest  crmftest  dbtest  dertimetest  encodeinttest  fbectest  fipstest  pk11ectest  pk11gcmtest  pk11importtest  remtest  sdrtest  secmodtest
+      footer:
+        Changelog-entry: Do not include in the rootfs the test binaries from the nss package
+        changelog-entry: Do not include in the rootfs the test binaries from the nss package
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.28
+  title: ""
+  date: 2025-05-07T19:45:20.413Z
+- commits:
     - subject: Update tests/leviathan digest to 81e581a
       hash: 8d082e3e727f18c7b58098debdb522dfaf3831fd
       body: Update tests/leviathan
