@@ -462,8 +462,10 @@ module.exports = {
 
     // disable port forwarding on the testbot - disables the DUT internet access. We do this after flashing is completed
     // in case the flashing requires internet access - e.g jetson-flash container build
+    // We disable it to test that preloaded apps start without internet access
+    // If this is for a secureboot enabled device, don't disable port forwarding, as we aren't running the preload test anyway
     if (
-			this.workerContract.workerType !== `qemu`
+			this.workerContract.workerType !== `qemu` && !config.installer.secureboot
 		){
       await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
       this.suite.teardown.register(async () => {
