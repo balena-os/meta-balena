@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.29
+## (2025-05-08)
+
+* tests: cloud: Don't disable DUT internet access if secureboot enabled [Ryan Cooke]
+
 # v6.5.28
 ## (2025-05-07)
 

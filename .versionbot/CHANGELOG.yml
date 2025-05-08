@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tests: cloud: Don't disable DUT internet access if secureboot enabled"
+      hash: e4a000782b5cff3f3416950eb5cc62b360a1c359
+      body: >
+        For the preload test, we disable DUT internet access to check the
+        preloaded app starts without API access. For secureboot devices, we dont
+        run the preload test as its not a supported feature yet. So don't
+        disable the internet access for a secureboot device
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.5.29
+  title: ""
+  date: 2025-05-08T20:36:21.893Z
+- commits:
     - subject: Do not include in the rootfs the test binaries from the nss package
       hash: 045f1061526a95857b8d27f69b87383ddcba5b51
       body: |
