@@ -1,6 +1,35 @@
 Change log
 -----------
 
+# v6.5.30
+## (2025-05-09)
+
+* conf: set INIT_MANAGER to disable sysvinit scripts [Joseph Kogut]
+* openvpn: fix systemd-tmpfiles legacy path warning [Joseph Kogut]
+* common: image_types: backport nanbield+ image output naming [Joseph Kogut]
+* common: networkmanager: fix postinst script failure [Joseph Kogut]
+* common: systemd: fix QA issue [Joseph Kogut]
+* rust: Replace references to deprecated distutils python module [Joseph Kogut]
+* meta-balena-rust: add balena_ prefix to classes [Joseph Kogut]
+* resin-sanity: get datastore from event [Joseph Kogut]
+* common: bluez: bump from 5.66 to 5.72 [Joseph Kogut]
+* scarthgap: enable usrmerge distro feature [Joseph Kogut]
+* common: systemd: prepare for merged usr [Joseph Kogut]
+* common: usb-modeswitch-data: prepare for merged usr [Joseph Kogut]
+* common: usb-modeswitch: prepare for merged usr [Joseph Kogut]
+* common: libnss-ato: prepare for merged usr [Joseph Kogut]
+* common: base-files: prepare for merged usr [Joseph Kogut]
+* common: peak: prepare for merged usr [Joseph Kogut]
+* meta-balena-common: add scarthgap to LAYERSERIES_COMPAT [Joseph Kogut]
+* meta-balena-rust: add scarthgap to LAYERSERIES_COMPAT [Joseph Kogut]
+* common: adjust bmaptool name for scarthgap [Joseph Kogut]
+* scarthgap: busybox: fix QA issue in patch [Joseph Kogut]
+* os-config: add checksums [Joseph Kogut]
+* bindmount: add checksums [Joseph Kogut]
+* healthdog: add checksums [Joseph Kogut]
+* fatrw: add checksums [Joseph Kogut]
+* meta-balena-scarthgap: Add integration layer [Joseph Kogut]
+
 # v6.5.29
 ## (2025-05-08)
 
