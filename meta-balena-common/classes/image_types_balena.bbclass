@@ -69,16 +69,16 @@ python() {
     # instead of DEPLOY_DIR_IMAGE (poky morty introduced this change)
     if d.getVar('IMGDEPLOYDIR', True):
         d.setVar('BALENA_ROOT_FS', '${IMGDEPLOYDIR}/${IMAGE_LINK_NAME}.${BALENA_ROOT_FSTYPE}')
-        d.setVar('BALENA_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.balenaos-img')
-        d.setVar('BALENA_RAW_BMAP', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.bmap')
-        d.setVar('BALENA_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.docker')
-        d.setVar('BALENA_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.${BALENA_ROOT_FSTYPE}')
+        d.setVar('BALENA_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.balenaos-img')
+        d.setVar('BALENA_RAW_BMAP', '${IMGDEPLOYDIR}/${IMAGE_NAME}.bmap')
+        d.setVar('BALENA_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.docker')
+        d.setVar('BALENA_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.${BALENA_ROOT_FSTYPE}')
     else:
         d.setVar('BALENA_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${BALENA_ROOT_FSTYPE}')
-        d.setVar('BALENA_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.balenaos-img')
-        d.setVar('BALENA_RAW_BMAP', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.bmap')
-        d.setVar('BALENA_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.docker')
-        d.setVar('BALENA_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.${BALENA_ROOT_FSTYPE}')
+        d.setVar('BALENA_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.balenaos-img')
+        d.setVar('BALENA_RAW_BMAP', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.bmap')
+        d.setVar('BALENA_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.docker')
+        d.setVar('BALENA_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.${BALENA_ROOT_FSTYPE}')
 
     d.setVar('BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("BALENA_IMAGE_BOOTLOADER", True).split()))
 }
@@ -137,7 +137,7 @@ do_image_balenaos_img[depends] = " \
     e2fsprogs-native:do_populate_sysroot \
     mtools-native:do_populate_sysroot \
     parted-native:do_populate_sysroot \
-    bmap-tools-native:do_populate_sysroot \
+    bmaptool-native:do_populate_sysroot \
     virtual/kernel:do_deploy \
     ${BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK} \
     "

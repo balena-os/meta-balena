@@ -5,7 +5,7 @@ LICENSE = "MIT | Apache-2.0"
 LIC_FILES_CHKSUM = "file://../../COPYRIGHT;md5=93a95682d51b4cb0a633a97046940ef0"
 
 RUSTLIB_DEP = ""
-inherit cargo
+inherit balena_cargo
 
 DEPENDS:append:libc-musl = " libunwind"
 # rv32 does not have libunwind ported yet
