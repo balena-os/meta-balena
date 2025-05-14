@@ -1,4 +1,4 @@
-From 872a9d96386b819d2c5fd7581d2bdaf7ea61a5f8 Mon Sep 17 00:00:00 2001
+From e9cc9bb7e81ec254ebda68b6b9af86966e61f111 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Tue, 15 Mar 2016 17:12:24 +0800
 Subject: [PATCH] Kill all the build warning caused by implicit declaration of
@@ -8,13 +8,15 @@ Upstream-Status: Pending
 
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
- Loader.c                |    1 +
- cert-to-efi-hash-list.c |    2 +-
- flash-var.c             |    2 ++
- lib/pecoff.c            |    1 +
- sign-efi-sig-list.c     |    2 ++
+ Loader.c                | 1 +
+ cert-to-efi-hash-list.c | 2 +-
+ flash-var.c             | 2 ++
+ lib/pecoff.c            | 1 +
+ sign-efi-sig-list.c     | 2 ++
  5 files changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/Loader.c b/Loader.c
+index 1f9201a..044469a 100644
 --- a/Loader.c
 +++ b/Loader.c
 @@ -9,6 +9,7 @@
@@ -25,6 +27,8 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  #include <simple_file.h>
  #include <pecoff.h>
  #include <sha256.h>
+diff --git a/cert-to-efi-hash-list.c b/cert-to-efi-hash-list.c
+index 8a5468a..e63d36e 100644
 --- a/cert-to-efi-hash-list.c
 +++ b/cert-to-efi-hash-list.c
 @@ -3,7 +3,7 @@
@@ -36,6 +40,8 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  
  #include <stdint.h>
  #define _XOPEN_SOURCE
+diff --git a/flash-var.c b/flash-var.c
+index aa10ae6..10429bc 100644
 --- a/flash-var.c
 +++ b/flash-var.c
 @@ -1,3 +1,5 @@
@@ -44,6 +50,8 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  #include <stdlib.h>
  #include <stdint.h>
  #include <sys/types.h>
+diff --git a/lib/pecoff.c b/lib/pecoff.c
+index 26d9dcf..10b898a 100644
 --- a/lib/pecoff.c
 +++ b/lib/pecoff.c
 @@ -59,6 +59,7 @@
@@ -54,6 +62,8 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  #include <pecoff.h>
  #include <guid.h>
  #include <simple_file.h>
+diff --git a/sign-efi-sig-list.c b/sign-efi-sig-list.c
+index 94bd7d4..5124f21 100644
 --- a/sign-efi-sig-list.c
 +++ b/sign-efi-sig-list.c
 @@ -3,6 +3,8 @@

@@ -1,4 +1,4 @@
-From 363c731290a57f968b7435e648907c6d8cc4499c Mon Sep 17 00:00:00 2001
+From 85cfc420ac06a27379db1ddb0b8703340b77c494 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Sat, 28 Jan 2017 13:42:28 +0800
 Subject: [PATCH] Build DBX by default
@@ -9,7 +9,7 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index dd45e31..93c919d 100644
+index 7779ddc..9638c52 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -26,7 +26,7 @@ include Make.rules

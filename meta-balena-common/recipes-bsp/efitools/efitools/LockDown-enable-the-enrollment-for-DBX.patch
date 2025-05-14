@@ -1,4 +1,4 @@
-From 49b6a0bf2b9c69d1fd682fbc9d2ad7a7f6abee77 Mon Sep 17 00:00:00 2001
+From dcde5729745e256072d07971d73d59925a4bdff9 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Fri, 22 Apr 2016 16:28:05 +0800
 Subject: [PATCH] LockDown: enable the enrollment for DBX
@@ -59,7 +59,7 @@ index 821985c..fec2e79 100644
  	efi_status = RT->SetVariable(L"PK", &GV_GUID,
  				     EFI_VARIABLE_NON_VOLATILE
 diff --git a/Makefile b/Makefile
-index b3bb73a..e189866 100644
+index 249b92a..2e4ba1c 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -53,7 +53,7 @@ lib/asn1/libasn1.a lib/asn1/libasn1-efi.a: FORCE
@@ -80,6 +80,3 @@ index b3bb73a..e189866 100644
  noPK.esl:
  	> noPK.esl
  
--- 
-1.9.1
-
