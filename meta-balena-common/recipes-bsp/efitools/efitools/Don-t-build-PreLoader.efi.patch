@@ -1,4 +1,4 @@
-From 95e167f432f1a6d8c96aeca73871122806007c9f Mon Sep 17 00:00:00 2001
+From 10a5c5921fdd274033b290e4119adec8261b5cb5 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Thu, 28 Apr 2016 11:21:33 +0800
 Subject: [PATCH] Don't build PreLoader.efi
@@ -23,7 +23,7 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Makefile b/Makefile
-index b3bb73a..da363a6 100644
+index 4a9f85d..b62ad91 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -5,7 +5,7 @@ BINARIES = cert-to-efi-sig-list sig-list-to-certs sign-efi-sig-list \
@@ -35,6 +35,3 @@ index b3bb73a..da363a6 100644
  endif
  
  MSGUID = 77FA9ABD-0359-4D32-BD60-28F4E78F784B
--- 
-1.9.1
-

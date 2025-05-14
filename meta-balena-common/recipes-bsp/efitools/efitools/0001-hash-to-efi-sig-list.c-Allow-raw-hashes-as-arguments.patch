@@ -1,4 +1,4 @@
-From cd50901c9b983d3b06e598e276d848a707ab0b6e Mon Sep 17 00:00:00 2001
+From a64fc0b05f83b27488c1e183110fb178f4d2a8cf Mon Sep 17 00:00:00 2001
 From: Michal Toman <michalt@balena.io>
 Date: Mon, 10 Feb 2025 15:59:36 +0100
 Subject: [PATCH] hash-to-efi-sig-list.c: Allow raw hashes as arguments
@@ -22,7 +22,7 @@ Signed-off-by: Michal Toman <michalt@balena.io>
  1 file changed, 30 insertions(+)
 
 diff --git a/hash-to-efi-sig-list.c b/hash-to-efi-sig-list.c
-index 4969052..7f71d45 100644
+index 4b69026..4323c73 100644
 --- a/hash-to-efi-sig-list.c
 +++ b/hash-to-efi-sig-list.c
 @@ -4,6 +4,7 @@
@@ -32,8 +32,8 @@ index 4969052..7f71d45 100644
 +#include <ctype.h>
  #define __STDC_VERSION__ 199901L
  #include <efi.h>
- 
-@@ -71,6 +72,35 @@ main(int argc, char *argv[])
+ #ifdef CONFIG_arm
+@@ -77,6 +78,35 @@ main(int argc, char *argv[])
  
  	for (i = 0; i < hashes; i++) {
  		int j;
@@ -69,6 +69,3 @@ index 4969052..7f71d45 100644
  		struct stat st;
  		EFI_STATUS status;
  
--- 
-2.39.5
-

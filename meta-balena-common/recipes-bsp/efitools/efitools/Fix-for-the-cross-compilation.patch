@@ -1,4 +1,4 @@
-From ab2eb06c1271e46e07add5a0b0a444353d45e055 Mon Sep 17 00:00:00 2001
+From 69860c575cdd5ae2a481b28892332437135c3e30 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Tue, 15 Mar 2016 21:28:33 +0800
 Subject: [PATCH] Fix for the cross compilation
@@ -7,10 +7,12 @@ Upstream-Status: Pending
 
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
- Make.rules |   51 ++++++++++++++++++++++++++++-----------------------
- Makefile   |   20 ++++++++++----------
+ Make.rules | 51 ++++++++++++++++++++++++++++-----------------------
+ Makefile   | 20 ++++++++++----------
  2 files changed, 38 insertions(+), 33 deletions(-)
 
+diff --git a/Make.rules b/Make.rules
+index 903a5a4..6e295c8 100644
 --- a/Make.rules
 +++ b/Make.rules
 @@ -13,21 +13,26 @@ ARCH3264 =
@@ -46,7 +48,7 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  MYGUID		= 11111111-2222-3333-4444-123456789abc
  INSTALL		= install
  BINDIR		= $(DESTDIR)/usr/bin
-@@ -36,23 +41,23 @@ EFIDIR		= $(DESTDIR)/usr/share/efitools/
+@@ -36,23 +41,23 @@ EFIDIR		= $(DESTDIR)/usr/share/efitools/efi
  DOCDIR		= $(DESTDIR)/usr/share/efitools
  
  # globally use EFI calling conventions (requires gcc >= 4.7)
@@ -91,7 +93,7 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  
  %.hash: %.efi hash-to-efi-sig-list
  	./hash-to-efi-sig-list $< $@
-@@ -99,28 +104,28 @@ getvar = $(shell if [ "$(1)" = "PK" -o "
+@@ -99,28 +104,28 @@ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else ec
  	./sign-efi-sig-list -a -c PK.crt -k PK.key dbx $< $@
  
  %.o: %.c
@@ -128,7 +130,7 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  
  ##
  # No need for KEK signing
-@@ -129,7 +134,7 @@ getvar = $(shell if [ "$(1)" = "PK" -o "
+@@ -129,7 +134,7 @@ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else ec
  #	sbsign --key KEK.key --cert KEK.crt --output $@ $<
  
  %.a:
@@ -137,6 +139,8 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  
  doc/%.1: doc/%.1.in %
  	$(HELP2MAN) --no-info -i $< -o $@ ./$*
+diff --git a/Makefile b/Makefile
+index 7d471da..f622318 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -73,7 +73,7 @@ ms-%.esl: ms-%.crt cert-to-efi-sig-list
