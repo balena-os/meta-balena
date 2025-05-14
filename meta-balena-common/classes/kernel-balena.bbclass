@@ -153,6 +153,7 @@ BALENA_CONFIGS ?= " \
     ${FIRMWARE_COMPRESS} \
     ${MODULE_COMPRESS} \
     ${WIREGUARD} \
+    vlan \
     "
 
 #
@@ -733,6 +734,11 @@ BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' efi-sec
 BALENA_CONFIGS:append = " ${@configure_from_version("6.11", " memcg", "", d)}"
 BALENA_CONFIGS[memcg] = " \
     CONFIG_MEMCG_V1=y \
+"
+
+# 802.1q VLANs are supported by NetworkManager on all device types
+BALENA_CONFIGS[vlan] = " \
+    CONFIG_VLAN_8021Q=y \
 "
 
 ###########
