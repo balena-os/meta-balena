@@ -1,4 +1,4 @@
-From f2e4ff4e63f4a5f8a4452c970ca271091eeaec7d Mon Sep 17 00:00:00 2001
+From 4ee0a8cc6bab355f4eb15226b5f1e84108aa237d Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Sun, 18 Jun 2017 23:35:09 +0800
 Subject: [PATCH] Fix help2man error
@@ -11,10 +11,10 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Make.rules b/Make.rules
-index 38c7a22..bda5518 100644
+index faf2ae4..752b3f8 100644
 --- a/Make.rules
 +++ b/Make.rules
-@@ -140,5 +140,7 @@ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else ec
+@@ -153,5 +153,7 @@ getvar = $(shell if [ "$(1)" = "PK" -o "$(1)" = "KEK" ]; then echo $(1); else ec
  %.a:
  	$(AR) rcv $@ $^
  
@@ -23,6 +23,3 @@ index 38c7a22..bda5518 100644
  doc/%.1: doc/%.1.in %
 -	$(HELP2MAN) --no-discard-stderr --no-info -i $< -o $@ ./$*
 +	$(HELP2MAN) --no-discard-stderr --no-info -i $< -o $@ $(HELP2MAN_PROG_PREFIX)/$*
--- 
-2.7.5
-
