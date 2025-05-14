@@ -1,4 +1,4 @@
-From 0b579e0382ac86d6a6a72bbd5898cee75457922e Mon Sep 17 00:00:00 2001
+From 13bba2021c95e0cca8e876677c32eade0e2b4ba4 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Wed, 16 Aug 2017 22:59:12 +0800
 Subject: [PATCH] Dynamically load openssl.cnf for openssl-1.0.x/1.1.x/3.0
@@ -43,6 +43,3 @@ index b90c4d3..faf2ae4 100644
  
  %-subkey.crt: %-subkey.csr KEK.crt
  	$(OPENSSL) x509 -req -in $< -CA DB.crt -CAkey DB.key -set_serial 1 -out $@ -days 365
--- 
-2.17.1
-
