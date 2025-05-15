@@ -40,7 +40,7 @@ jobs:
       device-repo: balena-os/balena-intel
       device-repo-ref: master
       # Pin to the current commit
-      meta-balena-ref: ${{ github.sha }}
+      meta-balena-ref: ${{ github.event.pull_request.head.sha }}
       # Use QEMU workers for testing and run cloud suite against balenaCloud production
       test_matrix: >
         {
