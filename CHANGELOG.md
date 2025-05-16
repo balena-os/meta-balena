@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.31
+## (2025-05-16)
+
+* .github/workflows: Change meta-balena ref to last commit of the pull request [Florin Sarbu]
+
 # v6.5.30
 ## (2025-05-09)
 

@@ -1,4 +1,28 @@
 - commits:
+    - subject: ".github/workflows: Change meta-balena ref to last commit of the pull
+        request"
+      hash: 0f34b3070a332626003b2f3fe72c3c9fc799ee89
+      body: |
+        Using github.sha will point to a temporary merge commit which should
+        be the commit of merging the PR. This has caused issues from time to time
+        with the builds failing with an error such as:
+
+        fatal: unable to read tree (d1611af4dccfe68c7fe136816ead2257a9659425)
+
+        Instead let's switch to using github.event.pull_request.head.sha which is the
+        commit ID of the last commit to the head branch of the pull request as per
+        https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull-request-event-pull_request
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.31
+  title: ""
+  date: 2025-05-16T05:33:07.347Z
+- commits:
     - subject: "conf: set INIT_MANAGER to disable sysvinit scripts"
       hash: 3c0070b3455d6d2a4a0e34dc3efa5682bcb7e069
       body: ""
