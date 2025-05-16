@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 DEPENDS = "time-native curl-native"
-RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk"
+RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk zstd"
 RDEPENDS:${PN}-fs:append = "${@bb.utils.contains('MACHINE_FEATURES','raid',' mdadm','',d)}"
 RDEPENDS:${PN}-tpm2 = "libtss2-tcti-device tpm2-tools tcgtool"
 RDEPENDS:${PN}-config = "bash"
