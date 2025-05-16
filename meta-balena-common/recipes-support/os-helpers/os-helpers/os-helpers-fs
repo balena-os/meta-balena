@@ -486,3 +486,94 @@ erase_disk() {
     dd if=/dev/urandom of="/dev/${tdisk}" bs="${_sector_size}" count="${GPT_RESERVED_LBA}" conv=sync
     dd if=/dev/urandom of="/dev/${tdisk}" bs="${_sector_size}" seek="$(expr "${_size_in_sectors}" - "${GPT_RESERVED_LBA}" )" count="${GPT_RESERVED_LBA}" conv=sync
 }
+
+# Estimate the compressed size of a file stored in zram
+#
+# Inputs:
+#
+# 1: Uncompressed file to estimate
+#
+# Outputs:
+#
+# Estimated compressed size
+#
+# Returns:
+#
+# 0: Success
+# 1: Failure
+#
+estimate_size_in_zram() {
+	_file="${1}"
+	_zram_mount="${2:-/tmp}"
+
+	[ ! -f "$_file" ] && error "File not found!" && return 1
+
+	# Find which zram device is being used for /tmp
+	_zram=$(basename $(df "${_zram_mount}" | awk 'NR==2 {print $1}'))
+	if [ -z "$_zram" ]; then
+		error "Unable to determine zram device"
+		return 1
+	fi
+
+	if [ ! -d "/sys/block/$_zram" ]; then
+		error "zram not found"
+		return 1
+	fi
+
+	_alg=$(sed -n 's/.*\[\(.*\)\].*/\1/p' "/sys/block/$_zram/comp_algorithm")
+	if [ -z "$_alg" ]; then
+		error "Unable to determine compression algorithm"
+		return 1
+	fi
+
+	if [ ! command -v "$_alg" > /dev/null 2>&1 ]; then
+		error "$_alg not found"
+		return 1
+	fi
+
+	info "Using $_alg to estimate compressed size of $_file"
+	CHUNK_SIZE_BYTES=$(expr 250 \* 1024 \* 1024)
+	SAMPLE_SIZE_BYTES=$(expr 50 \* 1024 \* 1024)
+
+	_dev=$(df "$_file" | awk 'NR==2 {print $1}')
+	_blk_sz=$(lsblk -o NAME,PHY-SEC,TYPE "$_dev" 2>/dev/null | awk '$3 == "part" {print $2}' | head -n1)
+	if [ -z "$_blk_sz" ] || [ "$_blk_sz" -eq 0 ]; then
+		warn "Unable to determine block size, using 512 bytes"
+		_blk_sz=512
+	fi
+
+	_file_sz_bytes=$(du -cb "$_file" | awk '/total/ {print $1}')
+	_total_chunks=$(expr \( "$_file_sz_bytes" + "$CHUNK_SIZE_BYTES" - 1 \) / "$CHUNK_SIZE_BYTES")
+
+	_sample_blks=$(expr "$SAMPLE_SIZE_BYTES" / "$_blk_sz")
+	_samples_total=0
+	_compressed_total=0
+
+	_i=0
+	while [ "$_i" -lt "$_total_chunks" ]; do
+		_chunk_start_byte=$(expr "$_i" \* "$CHUNK_SIZE_BYTES")
+		_sample_start_blk=$(expr "$_chunk_start_byte" / "$_blk_sz")
+
+		if [ $(expr "$_chunk_start_byte" + "$SAMPLE_SIZE_BYTES") -gt "$_file_sz_bytes" ]; then
+			break
+		fi
+
+		_cs=$(dd if="$_file" bs="$_blk_sz" skip="$_sample_start_blk" count="$_sample_blks" status=none 2>/dev/null | "$_alg" -c 2>/dev/null | wc -c)
+
+		_compressed_total=$(expr "$_compressed_total" + "$_cs")
+		_samples_total=$(expr "$_samples_total" + 1)
+
+		_i=$(expr "$_i" + 1)
+	done
+
+	if [ "$_samples_total" -eq 0 ]; then
+		echo "$_file_sz_bytes"
+		return 0
+	fi
+
+	_average_ratio=$(echo "scale=4; $_compressed_total / ($_samples_total * $SAMPLE_SIZE_BYTES)" | bc)
+	_estimated_sz=$(echo "$_file_sz_bytes * $_average_ratio" | bc | awk '{printf "%.0f", $0}')
+
+	info "Estimated compressed size for $_file of size $_file_sz_bytes is $_estimated_sz bytes with average ratio $_average_ratio"
+	echo "$_estimated_sz"
+}
