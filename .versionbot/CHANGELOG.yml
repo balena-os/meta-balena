@@ -1,4 +1,21 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Include 802.1q VLAN driver"
+      hash: edf1db17820be0689799c73a68b4bd72c593fb98
+      body: |
+        On most devices this is already included but we want it everywhere,
+        NetworkManager provides native support and it can't work without
+        the kernel driver.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.32
+  title: ""
+  date: 2025-05-17T16:27:22.273Z
+- commits:
     - subject: ".github/workflows: Change meta-balena ref to last commit of the pull
         request"
       hash: 0f34b3070a332626003b2f3fe72c3c9fc799ee89

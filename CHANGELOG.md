@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.32
+## (2025-05-17)
+
+* kernel-balena.bbclass: Include 802.1q VLAN driver [Michal Toman]
+
 # v6.5.31
 ## (2025-05-16)
 
