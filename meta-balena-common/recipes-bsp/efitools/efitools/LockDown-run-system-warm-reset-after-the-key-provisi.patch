@@ -1,4 +1,4 @@
-From b2897e78c7910f0e55f4861542155d2817c15bf4 Mon Sep 17 00:00:00 2001
+From 0e95c8a616ef6f35ada9e0cdc9f610a12483df48 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Fri, 25 Mar 2016 10:52:34 +0800
 Subject: [PATCH] LockDown: run system warm reset after the key provision
@@ -39,6 +39,3 @@ index 29df9de..821985c 100644
 +
  	return EFI_SUCCESS;
  }
--- 
-1.9.1
-
