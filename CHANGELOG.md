@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.5.33
+## (2025-05-21)
+
+
+<details>
+<summary> Update balena-supervisor to v17.0.3 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.0.3
+> ### (2025-05-13)
+> 
+> * Simplify contract validation module [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.5.32
 ## (2025-05-17)
 

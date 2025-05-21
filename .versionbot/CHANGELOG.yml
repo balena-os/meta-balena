@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update balena-supervisor to v17.0.3
+      hash: 85752e8323d83b7ed8fc705df7239157bf0640c6
+      body: |
+        Update balena-supervisor from 17.0.2 to 17.0.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Simplify contract validation module
+              hash: 7c83eaef8024cec9052eb0051a1a1f47e238c690
+              body: >
+                Use `satisfiesChildContract` instead of Blueprints as the
+                previous
+
+                implementation did.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-17.0.3
+          title: ""
+          date: 2025-05-13T14:50:13.303Z
+  version: 6.5.33
+  title: ""
+  date: 2025-05-21T07:30:02.404Z
+- commits:
     - subject: "kernel-balena.bbclass: Include 802.1q VLAN driver"
       hash: edf1db17820be0689799c73a68b4bd72c593fb98
       body: |
