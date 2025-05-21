@@ -671,3 +671,59 @@ luks_parts_postmount_assert() {
 		# want to use the symlinks will trigger udev and get them created.
 	done
 }
+
+# Assert the following conditions:
+#
+# 1. The number of unlocked partitions is as expected
+# 2. The number of mounted encrypted partitions is the expected
+# 3. The mounted encrypted partitions are on the same device
+# 4. Only one partition is mounted per expected partition label
+#
+# Inputs:
+#
+# $1: Unlocked partition numbers
+#
+dmcrypt_parts_assert() {
+	_unlocked="${1}"
+
+	[ -z "${_unlocked}" ] && fail "No unlocked partition number specified"
+
+	_parent_dev="$(lsblk -nlo PKNAME,LABEL | grep "${BALENA_NONENC_BOOT_LABEL}" | awk '{print $1}')"
+	_nonenc_part="$(lsblk -nlo label | grep "${BALENA_NONENC_BOOT_LABEL}")"
+	[ -z "${_nonenc_part}" ] && fail "No non-encrypted boot partition found"
+	[ -z "${_parent_dev}" ] && fail "No parent device specified"
+
+	_enc_parts=$(dmsetup ls --target crypt 2>/dev/null | awk '{print $1}')
+	[ -z "${_enc_parts}" ] && fail "No encrypted partitions found"
+
+	if [ "$(echo "${_enc_parts}" | wc -l)" != "${_unlocked}" ]; then
+			fail "An unexpected amount of encrypted partitions was unlocked"
+	fi
+
+	if [ "$(echo "${_enc_parts}" | wc -l)" != "$(echo "${DEFAULT_PARTITION_NAMES}" | wc -w)" ]; then
+		fail "An unexpected amount of encrypted partitions was found"
+	fi
+
+	for _part in ${_enc_parts}; do
+		if ! dmsetup deps -o blkdevname "${_part}" | grep -q "${_parent_dev}"; then
+			fail "Encrypted partition '${_part}' is not on the same device as ${_parent_dev}"
+		fi
+	done
+
+	for _part in ${DEFAULT_PARTITION_NAMES}; do
+			_enc_parts_count=$(echo "${_enc_parts}" | grep -Ec "^(resin|balena)-${_part}$")
+
+			if [ "${_enc_parts_count}" -lt "1"  ]; then
+					fail "Partition '${_part}' not found"
+			fi
+
+			if [ "${_enc_parts_count}" -gt "1"  ]; then
+					fail "More than one '${_part}' partition found"
+			fi
+
+			_part_count=$(lsblk -nlo label | grep -Ec "^(resin|balena)-${_part}$")
+			if [ "${_part_count}" -gt "1" ]; then
+					fail "More than one '${_part}' found"
+			fi
+	done
+}
