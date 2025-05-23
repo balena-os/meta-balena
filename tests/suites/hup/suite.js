@@ -379,9 +379,12 @@ module.exports = {
 			return
 		}
 
+		console.log('OS download options:')
+		console.log(this.suite.options.balenaOS.download)
 		let path = await this.sdk.fetchOS(
 			this.suite.options.balenaOS.download.version,
 			this.suite.deviceType.slug,
+			this.suite.options.balenaOS.download.imageType
 		);
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
