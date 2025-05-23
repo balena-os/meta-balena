@@ -1,4 +1,18 @@
 - commits:
+    - subject: Increases persistent logs size to 128M
+      hash: ffe62ab787a0d50bf48fea0d9a9c28fb9f163221
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.5.34
+  title: ""
+  date: 2025-05-23T08:18:21.963Z
+- commits:
     - subject: Update balena-supervisor to v17.0.3
       hash: 85752e8323d83b7ed8fc705df7239157bf0640c6
       body: |

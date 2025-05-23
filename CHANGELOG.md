@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.34
+## (2025-05-23)
+
+* Increases persistent logs size to 128M [Alex Gonzalez]
+
 # v6.5.33
 ## (2025-05-21)
 
