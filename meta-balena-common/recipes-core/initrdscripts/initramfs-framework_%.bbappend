@@ -17,6 +17,7 @@ SRC_URI:append = " \
     file://recovery \
     file://migrate \
     file://zram \
+    file://growroot \
     "
 
 do_install:append() {
@@ -44,6 +45,7 @@ do_install:append() {
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-kexec"
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-migrate"
     install -m 0755 ${WORKDIR}/zram ${D}/init.d/12-zram
+    install -m 0755 ${WORKDIR}/growroot ${D}/init.d/91-growroot
 }
 
 PACKAGES:append = " \
@@ -60,6 +62,7 @@ PACKAGES:append = " \
     initramfs-module-recovery \
     initramfs-module-migrate \
     initramfs-module-zram \
+    initramfs-module-growroot \
     "
 
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
@@ -131,5 +134,9 @@ FILES:initramfs-module-migrate = "/init.d/92-migrate"
 SUMMARY:initramfs-module-zram = "Mount tmp as zram"
 RDEPENDS:initramfs-module-zram = "${PN}-base util-linux-zramctl"
 FILES:initramfs-module-zram = "/init.d/12-zram"
+
+SUMMARY:initramfs-module-growroot = "Grow root partition"
+RDEPENDS:initramfs-module-growroot = "${PN}-base os-helpers-fs"
+FILES:initramfs-module-growroot = "/init.d/91-growroot"
 
 RDEPENDS:${PN}-base:append = " util-linux-mountpoint"
