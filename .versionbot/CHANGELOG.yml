@@ -1,4 +1,134 @@
 - commits:
+    - subject: Update tests/leviathan digest to 17aa86b
+      hash: 1d00af3555ef743e4d2841aa2604891d9c4f0ef8
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v22
+              hash: a0496491a1176c6def64a813d21c857f8de0c828
+              body: |
+                Update balena-io/balena-cli from 21.1.14 to 22.0.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.32.2
+          title: ""
+          date: 2025-05-27T12:29:55.248Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 2992f6dcdb1433fc923f299ee037d2c851dac4ba
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.32.1
+          title: ""
+          date: 2025-05-23T20:29:49.880Z
+        - commits:
+            - subject: Remove custom compose binary installation from Make
+              hash: efcf8422d597ba297d0b4be23a809555aacf78f3
+              body: >
+                Instead just check the installed version of compose for
+                compatibility.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.32.0
+          title: ""
+          date: 2025-05-23T17:11:23.196Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v21.1.14
+              hash: 012da90fd1b65de61e2eb14d84367bd4323ee831
+              body: |
+                Update balena-io/balena-cli from 21.1.13 to 21.1.14
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.111
+          title: ""
+          date: 2025-05-23T16:40:44.786Z
+        - commits:
+            - subject: "Core: update to node 22"
+              hash: c0769dfa821dca8568e5d577f449fa17fc9c85d5
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.31.110
+          title: ""
+          date: 2025-05-23T14:56:57.540Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v21.1.13
+              hash: 5f35acb9b7b280e152cf445e5472f28aaa29b0e3
+              body: |
+                Update balena-io/balena-cli from 21.1.11 to 21.1.13
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.109
+          title: ""
+          date: 2025-05-21T14:43:38.311Z
+        - commits:
+            - subject: Update core/contracts digest to 417aec2
+              hash: 69146ce0f994f8ecf302d20ab3dde162c0144dc2
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.108
+          title: ""
+          date: 2025-05-14T16:38:33.326Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v21.1.11
+              hash: 88a3a2e7b6a5aafcb63314d5682d9ddc2c97c829
+              body: |
+                Update balena-io/balena-cli from 21.1.10 to 21.1.11
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.31.107
+          title: ""
+          date: 2025-05-06T16:32:38.363Z
+    - subject: "tests: update for node 22"
+      hash: 2b86d00f665430b384984fc5e9b691db727645c6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.5.35
+  title: ""
+  date: 2025-06-03T12:01:23.627Z
+- commits:
     - subject: Increases persistent logs size to 128M
       hash: ffe62ab787a0d50bf48fea0d9a9c28fb9f163221
       body: ""
