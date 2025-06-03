@@ -363,7 +363,9 @@ module.exports = {
 			await this.context
 			.get()
 			.cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
-			this.log(`Logged in with ${await this.context.get().cloud.balena.auth.whoami()}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+			this.log(`Logged in with ${await (this.context.get().cloud.balena.auth.whoami()).username}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
+
+			console.log(await (this.context.get().cloud.balena.auth.whoami()))
 
 			await this.cloud.balena.models.key.create(
 				this.sshKeyLabel,
