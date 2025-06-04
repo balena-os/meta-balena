@@ -6,6 +6,7 @@ module.exports = [
       networkWired: false,
       networkWireless: false,
       downloadVersion: 'latest',
+      downloadImageType: process.env.DOWNLOAD_IMAGE_TYPE,
       balenaApiKey: process.env.BALENACLOUD_API_KEY,
       balenaApiUrl: process.env.BALENACLOUD_API_URL,
       organization: process.env.BALENACLOUD_ORG,
