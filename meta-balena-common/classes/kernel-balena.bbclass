@@ -398,6 +398,7 @@ BALENA_CONFIGS[compress-kmodules] ?= " \
 #
 BALENA_CONFIGS[no-debug-info] ?= " \
     CONFIG_DEBUG_INFO=n \
+    CONFIG_DEBUG_INFO_NONE=y \
     "
 
 #
