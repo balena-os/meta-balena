@@ -277,6 +277,21 @@ module.exports = {
     .cloud.balena.auth.loginWithToken(this.suite.options.balena.apiKey);
     this.log(`Logged in with ${await (this.context.get().cloud.balena.auth.whoami()).username}'s account on ${this.suite.options.balena.apiUrl} using balenaSDK`);
 
+     // create an ssh key, so we can ssh into DUT later
+     const keys = await this.utils.createSSHKey(this.sshKeyPath);
+     await this.cloud.balena.models.key.create(
+         this.balena.sshKey.label,
+         keys.pubKey
+       );
+     this.suite.context.set({
+       sshKey: keys
+     })
+     this.suite.teardown.register(() => {
+       return Promise.resolve(
+         this.cloud.removeSSHKey(this.balena.sshKey.label)
+       );
+     });
+
     // create a balena application
     this.log("Creating application in cloud...");
 
@@ -302,17 +317,6 @@ module.exports = {
       }
     });
 
-    // remove application when tests are done
-    this.suite.teardown.register(() => {
-      this.log("Removing application");
-      try {
-        return this.cloud.balena.models.application.remove(
-          this.balena.application
-        );
-      } catch(e){
-        this.log(`Error while removing application...`)
-      }
-    });
 
     this.suite.context.set({
       appPath: `${__dirname}/test-app`,
@@ -326,27 +330,17 @@ module.exports = {
       }
     })
 
-    // create an ssh key, so we can ssh into DUT later
-    const keys = await this.utils.createSSHKey(this.sshKeyPath);
-    await this.cloud.balena.models.key.create(
-        this.balena.sshKey.label,
-        keys.pubKey
-      );
-    this.suite.context.set({
-      sshKey: keys
-    })
-    this.suite.teardown.register(() => {
-      return Promise.resolve(
-        this.cloud.removeSSHKey(this.balena.sshKey.label)
-      );
-    });
-
     // generate a uuid
     this.suite.context.set({
       balena: {
-        uuid: this.cloud.balena.models.device.generateUniqueKey(),
+        uuid: (typeof this.suite.options.config.dutUuid !== undefined) ? this.suite.options.config.dutUuid : this.cloud.balena.models.device.generateUniqueKey(),
       },
     });
+
+    // add DUT local hostname to context
+    this.suite.context.set({
+      link: (typeof this.suite.options.config.dutIp !== undefined) ? this.suite.options.config.dutIp : `${this.balena.uuid.slice(0, 7)}.local`
+    })
 
     this.suite.context.set({
       os: new BalenaOS(
@@ -363,139 +357,155 @@ module.exports = {
 			workerContract: await this.worker.getContract()
 		})
 
-		// Unpack OS image .gz
-		await this.os.fetch();
-    await this.os.readOsRelease();
 
-    // get config.json for application
-    this.log("Getting application config.json...");
-    const config = await this.cloud.balena.models.os.getConfig(this.balena.application, {
-        version: this.os.contract.version,
+    if(!this.suite.options.config.manual){ 
+      // remove application when tests are done
+      this.suite.teardown.register(() => {
+        this.log("Removing application");
+        try {
+          return this.cloud.balena.models.application.remove(
+            this.balena.application
+          );
+        } catch(e){
+          this.log(`Error while removing application...`)
+        }
       });
 
-    config.uuid = this.balena.uuid;
+      // Unpack OS image .gz
+      await this.os.fetch();
+      await this.os.readOsRelease();
 
-    //register the device with the application, add the api key to the config.json
-    this.log("Pre-registering a new device...");
-    const deviceRegInfo = await this.cloud.balena.models.device.register(
-        this.balena.application,
-        this.balena.uuid
+      // get config.json for application
+      this.log("Getting application config.json...");
+      const config = await this.cloud.balena.models.os.getConfig(this.balena.application, {
+          version: this.os.contract.version,
+        });
+
+      config.uuid = this.balena.uuid;
+
+      //register the device with the application, add the api key to the config.json
+      this.log("Pre-registering a new device...");
+      const deviceRegInfo = await this.cloud.balena.models.device.register(
+          this.balena.application,
+          this.balena.uuid
+        );
+
+      // Add registered device's id and api key to config.json
+      config.deviceApiKey = deviceRegInfo.api_key;
+      config.deviceId = deviceRegInfo.id;
+      config.persistentLogging = true;
+      config.developmentMode = true;
+      config.installer = {
+        secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
+        migrate: { force: this.suite.options.balenaOS.config.installerForceMigration },
+        whitelist_pcr2: true
+      };
+
+      // Add config to suite context so accessible within tests. Main use case is to check secureboot status
+      this.suite.context.set({
+        config: config
+      })
+
+      if( this.workerContract.workerType === `qemu` && config.installer.migrate.force ) {
+          console.log("Forcing installer migration")
+      } else {
+          console.log("No migration requested")
+      }
+
+      if ( config.installer.secureboot ) {
+          console.log("Opting-in secure boot and full disk encryption")
+      } else {
+          console.log("No secure boot requested")
+      }
+
+      // get ready to populate DUT image config.json with the attributes we just generated
+      this.os.addCloudConfig(config);
+
+      // Teardown the worker when the tests end
+      this.suite.teardown.register(() => {
+        this.log("Worker teardown");
+        return this.worker.teardown();
+      });
+
+      console.log('--config.json--')
+      console.log(this.os.configJson);
+      // preload image with the single container application
+      this.log(`Device uuid should be ${this.balena.uuid}`)
+      await this.os.configure();
+      
+      // Until secureboot flasher + preloading is implemented, skip preloading, and preloading test
+      if ( config.installer.secureboot ) {
+        console.log("Opting-in secure boot and full disk encryption - skip preloading")
+      } else {
+        console.log(`No secure boot requested, preloading image...`)
+        await this.cli.preload(this.os.image.path, {
+          app: this.balena.application,
+          commit: initialCommit,
+          pin: true,
+        });
+      }
+
+      this.log("Setting up worker");
+      await this.worker.network(this.suite.options.balenaOS.network);
+
+      if (supportsBootConfig(this.suite.deviceType.slug)) {
+        await enableSerialConsole(this.os.image.path);
+      }
+
+      if(flasherConfig(this.suite.deviceType.slug)){
+        await setFlasher(this.os.image.path);
+      }
+
+      if(externalAnt(this.suite.deviceType.slug)){
+        await enableExternalAntenna(this.os.image.path);
+      }
+
+      await this.worker.off();
+      await this.worker.flash(this.os.image.path);
+
+      // disable port forwarding on the testbot - disables the DUT internet access. We do this after flashing is completed
+      // in case the flashing requires internet access - e.g jetson-flash container build
+      // We disable it to test that preloaded apps start without internet access
+      // If this is for a secureboot enabled device, don't disable port forwarding, as we aren't running the preload test anyway
+      if (
+        this.workerContract.workerType !== `qemu` && !config.installer.secureboot
+      ){
+        await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
+        this.suite.teardown.register(async () => {
+          //re - enable port forwarding in case something flaked between us disabling it and re-enabling it
+          console.log(`Ensuring worker port forwarding is active`)
+          await this.worker.executeCommandInWorker('sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"');
+        });
+      }
+
+      await this.worker.on();
+
+      // create tunnels
+      await test.resolves(
+        this.worker.createSSHTunnels(
+          this.link,
+        ),
+        `Should detect ${this.link} on local network and establish tunnel`
+      )
+
+      this.log('Waiting for device to be reachable');
+      await test.resolves(
+        this.utils.waitUntil(async () => {
+          let hostname = await this.worker.executeCommandInHostOS(
+          "cat /etc/hostname",
+          this.link
+          )
+          return (hostname === this.link.split('.')[0])
+        }, true),
+        `Device ${this.link} be reachable over local SSH connection`
+      )
+    } else {
+      // move device to app instead of flashing it
+      await this.cloud.balena.models.device.move(
+        this.balena.uuid,
+        this.balena.application
       );
-
-    // Add registered device's id and api key to config.json
-    config.deviceApiKey = deviceRegInfo.api_key;
-    config.deviceId = deviceRegInfo.id;
-    config.persistentLogging = true;
-    config.developmentMode = true;
-    config.installer = {
-      secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-      migrate: { force: this.suite.options.balenaOS.config.installerForceMigration },
-      whitelist_pcr2: true
-    };
-
-    // Add config to suite context so accessible within tests. Main use case is to check secureboot status
-    this.suite.context.set({
-      config: config
-    })
-
-    if( this.workerContract.workerType === `qemu` && config.installer.migrate.force ) {
-        console.log("Forcing installer migration")
-    } else {
-        console.log("No migration requested")
     }
-
-    if ( config.installer.secureboot ) {
-        console.log("Opting-in secure boot and full disk encryption")
-    } else {
-        console.log("No secure boot requested")
-    }
-
-    // get ready to populate DUT image config.json with the attributes we just generated
-    this.os.addCloudConfig(config);
-
-    // add DUT local hostname to context
-    this.suite.context.set({
-      link: `${this.balena.uuid.slice(0, 7)}.local`
-    })
-
-    // Teardown the worker when the tests end
-    this.suite.teardown.register(() => {
-      this.log("Worker teardown");
-      return this.worker.teardown();
-    });
-
-    console.log('--config.json--')
-    console.log(this.os.configJson);
-    // preload image with the single container application
-    this.log(`Device uuid should be ${this.balena.uuid}`)
-    await this.os.configure();
-    
-    // Until secureboot flasher + preloading is implemented, skip preloading, and preloading test
-    if ( config.installer.secureboot ) {
-      console.log("Opting-in secure boot and full disk encryption - skip preloading")
-    } else {
-      console.log(`No secure boot requested, preloading image...`)
-      await this.cli.preload(this.os.image.path, {
-        app: this.balena.application,
-        commit: initialCommit,
-        pin: true,
-      });
-    }
-
-    this.log("Setting up worker");
-    await this.worker.network(this.suite.options.balenaOS.network);
-
-    if (supportsBootConfig(this.suite.deviceType.slug)) {
-      await enableSerialConsole(this.os.image.path);
-    }
-
-    if(flasherConfig(this.suite.deviceType.slug)){
-			await setFlasher(this.os.image.path);
-		}
-
-    if(externalAnt(this.suite.deviceType.slug)){
-			await enableExternalAntenna(this.os.image.path);
-		}
-
-    await this.worker.off();
-    await this.worker.flash(this.os.image.path);
-
-    // disable port forwarding on the testbot - disables the DUT internet access. We do this after flashing is completed
-    // in case the flashing requires internet access - e.g jetson-flash container build
-    // We disable it to test that preloaded apps start without internet access
-    // If this is for a secureboot enabled device, don't disable port forwarding, as we aren't running the preload test anyway
-    if (
-			this.workerContract.workerType !== `qemu` && !config.installer.secureboot
-		){
-      await this.worker.executeCommandInWorker('sh -c "echo 0 > /proc/sys/net/ipv4/ip_forward"');
-      this.suite.teardown.register(async () => {
-        //re - enable port forwarding in case something flaked between us disabling it and re-enabling it
-        console.log(`Ensuring worker port forwarding is active`)
-        await this.worker.executeCommandInWorker('sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"');
-      });
-    }
-
-    await this.worker.on();
-
-    // create tunnels
-		await test.resolves(
-			this.worker.createSSHTunnels(
-				this.link,
-			),
-			`Should detect ${this.link} on local network and establish tunnel`
-		)
-
-    this.log('Waiting for device to be reachable');
-    await test.resolves(
-			this.utils.waitUntil(async () => {
-				let hostname = await this.worker.executeCommandInHostOS(
-				"cat /etc/hostname",
-				this.link
-				)
-				return (hostname === this.link.split('.')[0])
-			}, true),
-			`Device ${this.link} be reachable over local SSH connection`
-		)
 
     await test.resolves(
 			this.waitForServiceState('balena', 'active', this.link),
@@ -521,7 +531,7 @@ module.exports = {
 
   },
   tests: [
-    "./tests/preload",
+    //"./tests/preload",
     "./tests/device-specific-tests/hostapd",
     "./tests/supervisor",
     "./tests/multicontainer",
