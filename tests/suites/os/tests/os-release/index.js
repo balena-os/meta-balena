@@ -55,8 +55,8 @@ module.exports = {
 				// check slug
 				test.is(
 					result['SLUG'],
-					`"${this.os.deviceType}"`,
-					`SLUG field should contain ${this.os.deviceType}`,
+					`"${this.suite.deviceType.slug}"`,
+					`SLUG field should contain ${this.suite.deviceType.slug}`,
 				);
 			},
 		},

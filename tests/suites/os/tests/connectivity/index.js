@@ -42,7 +42,7 @@ module.exports = {
 						},
 					},
 					run: async function(test) {
-						let connection = adaptor === 'wireless' ? 'balena-wifi' : 'Wired';
+						let connection = adaptor === 'wireless' ? '-wifi' : 'Wired';
 						return this.worker.executeCommandInHostOS(
 							`nmcli d  | grep ' ${connection} ' | grep connected | awk '{print $1}'`,
 							this.link,

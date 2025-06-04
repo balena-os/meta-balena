@@ -29,7 +29,7 @@ module.exports = {
 		{
 			title: 'Bluetooth scanning test',
 			run: async function(test) {
-				if(this.workerContract.workerType === `qemu`){
+				if(this.workerContract.workerType !== `autokit`){
 					test.pass(
 						'Qemu worker used - skipping bluetooth test',
 					);
