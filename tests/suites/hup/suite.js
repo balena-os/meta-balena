@@ -198,46 +198,48 @@ const doHUP = async (that, test, mode, target) => {
 const initDUT = async (that, test, target) => {
 	test.comment(`Initializing DUT for HUP test`);
 
-	if (supportsBootConfig(that.suite.deviceType.slug)) {
-		await enableSerialConsole(that.os.image.path);
+	if(!that.suite.options.config.manual){
+		if (supportsBootConfig(that.suite.deviceType.slug)) {
+			await enableSerialConsole(that.os.image.path);
+		}
+
+		if(flasherConfig(that.suite.deviceType.slug)){
+			await setFlasher(that.os.image.path);
+		}
+
+		if(externalAnt(that.suite.deviceType.slug)){
+			await enableExternalAntenna(that.os.image.path);
+		}
+
+
+		test.comment(`Flashing DUT`);
+		await that.worker.off();
+		await that.worker.flash(that.os.image.path);
+		await that.worker.on();
+
+		await that.worker.addSSHKey(that.sshKeyPath);
+
+		// create tunnels
+		await test.resolves(
+			that.worker.createSSHTunnels(
+				that.link,
+			),
+			`Should detect ${that.link} on local network and establish tunnel`
+		)
+
+		await test.resolves(
+			that.utils.waitUntil(async () => {
+				return (
+					(await that.worker.executeCommandInHostOS(
+						'[[ -f /etc/hostname ]] && echo pass || echo fail',
+						target,
+					)) === 'pass'
+				);
+			}, true),
+			`Device ${that.link} should be reachable over local SSH connection`
+		)
+		test.comment(`DUT flashed`);
 	}
-
-	if(flasherConfig(that.suite.deviceType.slug)){
-		await setFlasher(that.os.image.path);
-	}
-
-	if(externalAnt(that.suite.deviceType.slug)){
-		await enableExternalAntenna(that.os.image.path);
-	}
-
-
-	test.comment(`Flashing DUT`);
-	await that.worker.off();
-	await that.worker.flash(that.os.image.path);
-	await that.worker.on();
-
-	await that.worker.addSSHKey(that.sshKeyPath);
-
-	// create tunnels
-	await test.resolves(
-		that.worker.createSSHTunnels(
-			that.link,
-		),
-		`Should detect ${that.link} on local network and establish tunnel`
-	)
-
-	await test.resolves(
-		that.utils.waitUntil(async () => {
-			return (
-				(await that.worker.executeCommandInHostOS(
-					'[[ -f /etc/hostname ]] && echo pass || echo fail',
-					target,
-				)) === 'pass'
-			);
-		}, true),
-		`Device ${that.link} should be reachable over local SSH connection`
-	)
-	test.comment(`DUT flashed`);
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
@@ -304,7 +306,7 @@ module.exports = {
 			sdk: new Balena(this.suite.options.balena.apiUrl, this.getLogger(), this.suite.options.config.sshConfig),
 			sshKeyPath: join(homedir(), 'id'),
 			sshKeyLabel: this.suite.options.id,
-			link: `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
+			link: (typeof this.suite.options.config.dutIp !== undefined) ? this.suite.options.config.dutIp : `${this.suite.options.balenaOS.config.uuid.slice(0, 7)}.local`,
 			worker: new Worker(this.suite.deviceType.slug,
 				this.getLogger(),
 				this.suite.options.workerUrl,
@@ -379,10 +381,6 @@ module.exports = {
 			return
 		}
 
-		let path = await this.sdk.fetchOS(
-			this.suite.options.balenaOS.download.version,
-			this.suite.deviceType.slug,
-		);
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
 
@@ -401,60 +399,73 @@ module.exports = {
 			workerContract: await this.worker.getContract()
 		})
 
-		this.suite.context.set({
-			os: new BalenaOS(
-				{
-					deviceType: this.suite.deviceType.slug,
-					network: this.suite.options.balenaOS.network,
-					image: `${path}`,
-					configJson: {
-						uuid: this.suite.options.balenaOS.config.uuid,
-						os: {
-							sshKeys: [
-								keys.pubKey
-							],
-						},
-						// persistentLogging is managed by the supervisor and only read at first boot
-						persistentLogging: true,
-						// Set local mode so we can perform local pushes of containers to the DUT
-						localMode: true,
-						developmentMode: true,
-						installer: {
-							secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
-							migrate: { force: this.suite.options.balenaOS.config.installerForceMigration },
-							whitelist_pcr2: true
+		if(!this.suite.options.config.manual){
+			let path = await this.sdk.fetchOS(
+				this.suite.options.balenaOS.download.version,
+				this.suite.deviceType.slug,
+			);
+
+			this.suite.context.set({
+				os: new BalenaOS(
+					{
+						deviceType: this.suite.deviceType.slug,
+						network: this.suite.options.balenaOS.network,
+						image: `${path}`,
+						configJson: {
+							uuid: this.suite.options.balenaOS.config.uuid,
+							os: {
+								sshKeys: [
+									keys.pubKey
+								],
+							},
+							// persistentLogging is managed by the supervisor and only read at first boot
+							persistentLogging: true,
+							// Set local mode so we can perform local pushes of containers to the DUT
+							localMode: true,
+							developmentMode: true,
+							installer: {
+								secureboot: ['1', 'true'].includes(process.env.FLASHER_SECUREBOOT),
+								migrate: { force: this.suite.options.balenaOS.config.installerForceMigration },
+								whitelist_pcr2: true
+							},
 						},
 					},
-				},
-				this.getLogger(),
-			),
-			hupOs: new BalenaOS({}, this.getLogger()),
-		});
-		this.suite.teardown.register(() => {
-			this.log('Worker teardown');
-			return this.worker.teardown();
-		});
+					this.getLogger(),
+				),
+				hupOs: new BalenaOS({}, this.getLogger()),
+			});
+			this.suite.teardown.register(() => {
+				this.log('Worker teardown');
+				return this.worker.teardown();
+			});
 
-		if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
-			console.log("Forcing installer migration")
+			if ( this.workerContract.workerType === `qemu` && this.os.configJson.installer.migrate.force ) {
+				console.log("Forcing installer migration")
+			} else {
+				console.log("No migration requested")
+			}
+
+			if ( this.os.configJson.installer.secureboot ) {
+				console.log("Opting-in secure boot and full disk encryption")
+			} else {
+				console.log("No secure boot requested")
+			}
+
+			this.log('Setting up worker');
+			await this.worker.network(this.suite.options.balenaOS.network);
+
+			// Unpack both base and target OS images
+			await this.os.fetch();
+			await this.hupOs.fetch();
+			// configure the image
+			await this.os.configure();
 		} else {
-			console.log("No migration requested")
+			this.suite.context.set({
+				hupOs: new BalenaOS({}, this.getLogger()),
+				
+			})
+			await this.hupOs.fetch();
 		}
-
-		if ( this.os.configJson.installer.secureboot ) {
-			console.log("Opting-in secure boot and full disk encryption")
-		} else {
-			console.log("No secure boot requested")
-		}
-
-		this.log('Setting up worker');
-		await this.worker.network(this.suite.options.balenaOS.network);
-
-		// Unpack both base and target OS images
-		await this.os.fetch();
-		await this.hupOs.fetch();
-		// configure the image
-		await this.os.configure();
 
 		// Retrieving journalctl logs
 		this.suite.teardown.register(async () => {
