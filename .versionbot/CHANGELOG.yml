@@ -1,4 +1,20 @@
 - commits:
+    - subject: "classes: Make sure we disable debug info for newer kernels"
+      hash: 22494caa4284a15d9f707f22d0a03f546de85f47
+      body: |
+        Starting with https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f9b3cd24578401e7a392974b3353277286e49cee
+        we also need to enable CONFIG_DEBUG_INFO_NONE to properly disable debug info for the kernel.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.36
+  title: ""
+  date: 2025-06-04T15:07:17.703Z
+- commits:
     - subject: Update tests/leviathan digest to 17aa86b
       hash: 1d00af3555ef743e4d2841aa2604891d9c4f0ef8
       body: Update tests/leviathan

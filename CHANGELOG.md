@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.36
+## (2025-06-04)
+
+* classes: Make sure we disable debug info for newer kernels [Florin Sarbu]
+
 # v6.5.35
 ## (2025-06-03)
 
