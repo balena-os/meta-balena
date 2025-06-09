@@ -1,4 +1,28 @@
 - commits:
+    - subject: Update tests/leviathan digest to 2c6c6ef
+      hash: 31b6a51e1a0e635377b3f5e6025a75ca054c49b6
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+    - subject: "tests: hup: enable specifying image type"
+      hash: fe0c0c5c2542e3eb325f217c9b3439f2c2a473d0
+      body: >
+        Allows selecting image type (flasher vs raw) in the hup suite, to hup
+        from
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.5.37
+  title: ""
+  date: 2025-06-09T13:51:50.387Z
+- commits:
     - subject: "classes: Make sure we disable debug info for newer kernels"
       hash: 22494caa4284a15d9f707f22d0a03f546de85f47
       body: |

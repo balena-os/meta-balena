@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.5.37
+## (2025-06-09)
+
+* Update tests/leviathan digest to 2c6c6ef [balena-renovate[bot]]
+* tests: hup: enable specifying image type [Ryan Cooke]
+
 # v6.5.36
 ## (2025-06-04)
 
