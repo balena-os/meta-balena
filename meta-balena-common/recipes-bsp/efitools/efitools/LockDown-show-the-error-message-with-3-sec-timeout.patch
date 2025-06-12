@@ -1,4 +1,4 @@
-From 28eb6a3118c3c843b41732ec3cf5167fe027daba Mon Sep 17 00:00:00 2001
+From 9788b3b0e9c9e6f8602b9335d693f915f4ed8ce6 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Tue, 17 Jan 2017 12:48:27 +0800
 Subject: [PATCH] LockDown: show the error message with 3-sec timeout
@@ -89,6 +89,3 @@ index fec2e79..13c626f 100644
 +	BS->Stall(3000000);
 +	return efi_status;
  }
--- 
-2.7.4
-
