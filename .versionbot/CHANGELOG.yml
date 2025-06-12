@@ -1,4 +1,82 @@
 - commits:
+    - subject: Update tests/leviathan digest to 473af4b
+      hash: 87e6999dae7010ab541d367a9b51d26b8e3cd4c4
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: d277c85c9a0601573486eefc5fc1c2219dd61c6c
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.1
+          title: ""
+          date: 2025-06-10T20:46:22.016Z
+        - commits:
+            - subject: "minor: Upgrade Typedoc to v0.26.11"
+              hash: fcb51606c3936b16488abe765baff97686547515
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: leviathan-2.33.0
+          title: ""
+          date: 2025-06-10T16:59:15.659Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.9.60
+              hash: 2c44681c4132a2115dc7448ff0cdfe1800fb01db
+              body: |
+                Update balena-os/leviathan-worker from 2.9.59 to 2.9.60
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.32.9
+          title: ""
+          date: 2025-06-09T16:23:26.272Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.0.6
+              hash: 9b97e276d7c143b33a5744bcbdebee3e560c2b98
+              body: |
+                Update balena-io/balena-cli from 22.0.5 to 22.0.6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.32.8
+          title: ""
+          date: 2025-06-09T10:31:47.585Z
+        - commits:
+            - subject: "core/lib: Specify partition indexes for Jetson Nano eMMC and JN30B
+                Nano"
+              hash: 38dfbc2013e438ffc7b6d2df54ec889c1be3afc3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru
+              nested: []
+          version: leviathan-2.32.7
+          title: ""
+          date: 2025-06-09T09:28:56.518Z
+  version: 6.5.38
+  title: ""
+  date: 2025-06-12T09:01:23.456Z
+- commits:
     - subject: Update tests/leviathan digest to 2c6c6ef
       hash: 31b6a51e1a0e635377b3f5e6025a75ca054c49b6
       body: Update tests/leviathan

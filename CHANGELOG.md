@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v6.5.38
+## (2025-06-12)
+
+
+<details>
+<summary> Update tests/leviathan digest to 473af4b [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.33.1
+> ### (2025-06-10)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.0
+> ### (2025-06-10)
+> 
+> * minor: Upgrade Typedoc to v0.26.11 [Vipul Gupta (@vipulgupta2048)]
+> 
+> ## leviathan-2.32.9
+> ### (2025-06-09)
+> 
+> * Update balena-os/leviathan-worker to v2.9.60 [balena-renovate[bot]]
+> 
+> ## leviathan-2.32.8
+> ### (2025-06-09)
+> 
+> * Update balena-io/balena-cli to v22.0.6 [balena-renovate[bot]]
+> 
+> ## leviathan-2.32.7
+> ### (2025-06-09)
+> 
+> * core/lib: Specify partition indexes for Jetson Nano eMMC and JN30B Nano [Alexandru]
+> 
+
+</details>
+
 # v6.5.37
 ## (2025-06-09)
 
