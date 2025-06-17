@@ -36,6 +36,11 @@ modprobe zram || true
 
 # Configure zram0 (assuming it's available) with size 100MiB more than the test file size for meta-data
 if ! ZRAM_DEV=$(zramctl --find --size "$(( TEST_CONTENT_SIZE + (100 * 1024 * 1024)))" --algo zstd); then
+    info "Available zram devices: " "$(zramctl)"
+    zramctl --reset "/dev/zram0" || true
+    if ZRAM_DEV=$(zramctl --find --size "$(( TEST_CONTENT_SIZE + (100 * 1024 * 1024)))" --algo zstd); then
+        info "Initialized $ZRAM_DEV."
+    fi
     fail "Failed to set up zram device."
 fi
 
