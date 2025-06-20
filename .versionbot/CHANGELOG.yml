@@ -1,4 +1,22 @@
 - commits:
+    - subject: "workflows: remove Jetson Xavier AGX"
+      hash: 2c15ce8d878115f45c77bc39ced83ab4bfda0d4d
+      body: |
+        This device type is no longer being built in the device repository,
+        although it has not been officially discontinued yet it probably should.
+
+        Removing it from meta-balena not to block development.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.5.39
+  title: ""
+  date: 2025-06-20T12:30:59.288Z
+- commits:
     - subject: Update tests/leviathan digest to 473af4b
       hash: 87e6999dae7010ab541d367a9b51d26b8e3cd4c4
       body: Update tests/leviathan

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.39
+## (2025-06-20)
+
+* workflows: remove Jetson Xavier AGX [Alex Gonzalez]
+
 # v6.5.38
 ## (2025-06-12)
 
