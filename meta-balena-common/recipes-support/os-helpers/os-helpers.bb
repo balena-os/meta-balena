@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 DEPENDS = "time-native curl-native"
-RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk"
+RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk zstd"
 RDEPENDS:${PN}-fs:append = "${@bb.utils.contains('MACHINE_FEATURES','raid',' mdadm','',d)}"
 RDEPENDS:${PN}-tpm2 = "libtss2-tcti-device tpm2-tools tcgtool"
 RDEPENDS:${PN}-config = "bash"
@@ -24,6 +24,8 @@ SRC_URI = " \
     file://os-helpers-efi \
     file://os-helpers-sb \
     file://safe_reboot \
+    file://test-zram-estimation.sh \
+    file://Dockerfile \
 "
 S = "${WORKDIR}"
 
@@ -92,5 +94,36 @@ do_test_api() {
 addtask test_api before do_package after do_install
 do_test_api[network] = "1"
 do_test_api[depends] += "curl-native:do_populate_sysroot os-helpers-native:do_populate_sysroot ca-certificates-native:do_populate_sysroot"
+
+do_test_fs() {
+    if ! command -v docker; then
+        bbnote "${PN}: Skipping test as docker is available"
+        return 0
+    fi
+
+    # Prepare context
+    mkdir -p ${WORKDIR}/testfs
+    cp \
+        ${WORKDIR}/os-helpers-fs \
+        ${WORKDIR}/os-helpers-logging \
+        ${WORKDIR}/test-zram-estimation.sh \
+        ${WORKDIR}/Dockerfile \
+        ${WORKDIR}/testfs
+
+    if ! docker build -t test-fs-container ${WORKDIR}/testfs; then
+        fail "${PN}: Docker build failed"
+    fi
+
+    if ! docker run --privileged --rm \
+        -v /dev:/dev \
+        -v /lib/modules/$(uname -r):/lib/modules/$(uname -r) \
+        test-fs-container; then
+        fail "${PN}: os-helpers-fs test failed"
+    fi
+
+}
+addtask test_fs before do_package after do_install
+do_test_fs[network] = "1"
+do_test_fs[depends] += "os-helpers-native:do_populate_sysroot"
 
 BBCLASSEXTEND = "native"
