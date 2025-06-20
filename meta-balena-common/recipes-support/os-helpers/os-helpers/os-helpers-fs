@@ -486,3 +486,189 @@ erase_disk() {
     dd if=/dev/urandom of="/dev/${tdisk}" bs="${_sector_size}" count="${GPT_RESERVED_LBA}" conv=sync
     dd if=/dev/urandom of="/dev/${tdisk}" bs="${_sector_size}" seek="$(expr "${_size_in_sectors}" - "${GPT_RESERVED_LBA}" )" count="${GPT_RESERVED_LBA}" conv=sync
 }
+
+# Estimate the compressed size of a file stored in zram
+#
+# Inputs:
+#
+# 1: Uncompressed file to estimate
+#
+# Outputs:
+#
+# Estimated compressed size
+#
+# Returns:
+#
+# 0: Success
+# 1: Failure
+#
+estimate_size_in_zram() {
+	_file="${1}"
+	_zram_mount="${2:-/tmp}"
+
+	[ ! -f "$_file" ] && error "File not found!" && return 1
+
+	# Find which zram device is being used for /tmp
+	_zram=$(basename $(df "${_zram_mount}" | awk 'NR==2 {print $1}'))
+	if [ -z "$_zram" ]; then
+		error "Unable to determine zram device"
+		return 1
+	fi
+
+	if [ ! -d "/sys/block/$_zram" ]; then
+		error "zram not found"
+		return 1
+	fi
+
+	_alg=$(sed -n 's/.*\[\(.*\)\].*/\1/p' "/sys/block/$_zram/comp_algorithm")
+	if [ -z "$_alg" ]; then
+		error "Unable to determine compression algorithm"
+		return 1
+	fi
+
+	if [ ! command -v "$_alg" > /dev/null 2>&1 ]; then
+		error "$_alg not found"
+		return 1
+	fi
+
+	info "Using $_alg to estimate compressed size of $_file"
+	CHUNK_SIZE_BYTES=$(expr 250 \* 1024 \* 1024)
+	SAMPLE_SIZE_BYTES=$(expr 50 \* 1024 \* 1024)
+
+	_dev=$(df "$_file" | awk 'NR==2 {print $1}')
+	_blk_sz=$(lsblk -o NAME,PHY-SEC,TYPE "$_dev" 2>/dev/null | awk '$3 == "part" {print $2}' | head -n1)
+	if [ -z "$_blk_sz" ] || [ "$_blk_sz" -eq 0 ]; then
+		warn "Unable to determine block size, using 512 bytes"
+		_blk_sz=512
+	fi
+
+	_file_sz_bytes=$(du -cb "$_file" | awk '/total/ {print $1}')
+	_total_chunks=$(expr \( "$_file_sz_bytes" + "$CHUNK_SIZE_BYTES" - 1 \) / "$CHUNK_SIZE_BYTES")
+
+	_sample_blks=$(expr "$SAMPLE_SIZE_BYTES" / "$_blk_sz")
+	_samples_total=0
+	_compressed_total=0
+
+	_i=0
+	while [ "$_i" -lt "$_total_chunks" ]; do
+		_chunk_start_byte=$(expr "$_i" \* "$CHUNK_SIZE_BYTES")
+		_sample_start_blk=$(expr "$_chunk_start_byte" / "$_blk_sz")
+
+		if [ $(expr "$_chunk_start_byte" + "$SAMPLE_SIZE_BYTES") -gt "$_file_sz_bytes" ]; then
+			break
+		fi
+
+		_cs=$(dd if="$_file" bs="$_blk_sz" skip="$_sample_start_blk" count="$_sample_blks" status=none 2>/dev/null | "$_alg" -c 2>/dev/null | wc -c)
+
+		_compressed_total=$(expr "$_compressed_total" + "$_cs")
+		_samples_total=$(expr "$_samples_total" + 1)
+
+		_i=$(expr "$_i" + 1)
+	done
+
+	if [ "$_samples_total" -eq 0 ]; then
+		echo "$_file_sz_bytes"
+		return 0
+	fi
+
+	_average_ratio=$(echo "scale=4; $_compressed_total / ($_samples_total * $SAMPLE_SIZE_BYTES)" | bc)
+	_estimated_sz=$(echo "$_file_sz_bytes * $_average_ratio" | bc | awk '{printf "%.0f", $0}')
+
+	info "Estimated compressed size for $_file of size $_file_sz_bytes is $_estimated_sz bytes with average ratio $_average_ratio"
+	echo "$_estimated_sz"
+}
+
+DEFAULT_PARTITION_NAMES="boot rootA rootB state data"
+
+# Assert the following conditions:
+#
+# 1. There is only a single unencrypted partition
+# 2. The boot partition is split
+#
+# Outputs the parent of the unencrypted partition for further use
+#
+boot_part_assert() {
+	_nonenc_part="$(lsblk -nlo label | grep "${BALENA_NONENC_BOOT_LABEL}")"
+	_nonenc_part_count="$(echo "${_nonenc_part}" | wc -l)"
+	if [ "${_nonenc_part_count}" -eq 0 ]; then
+		fail "Partition '${BALENA_NONENC_BOOT_LABEL}' not found."
+	elif [ "${_nonenc_part_count}" -gt 1 ]; then
+		fail "Multiple '${BALENA_NONENC_BOOT_LABEL}' partitions found."
+	fi
+
+	_nonenc_dev=$(get_state_path_from_label "${BALENA_NONENC_BOOT_LABEL}")
+	if [ ! -e "${_nonenc_dev}" ]; then
+		fail "Won't attempt to decrypt drives because the boot partition is not split"
+	fi
+}
+
+# Assert the following conditions before mounting the LUKS partitions:
+#
+# 1. The number of encrypted LUKS partitions is the expected
+# 2. All LUKS encrypted partitions are on the same device
+#
+luks_parts_premount_assert() {
+	_parent_dev="$(lsblk -nlo pkname,label | grep "${BALENA_NONENC_BOOT_LABEL}" | awk '{print $1}')"
+	[ -z "${_parent_dev}" ] && fail "No parent device specified"
+
+	_luks_parts=$(lsblk -nlo "kname,uuid,fstype,partlabel" "/dev/${_parent_dev}" | grep "crypto_LUKS")
+	if [ -n "${_luks_parts}" ]; then
+		if [ "$(echo "${_luks_parts}" | wc -l)" != "$(echo "${DEFAULT_PARTITION_NAMES}" | wc -w)" ]; then
+			fail "An unexpected amount of encrypted partitions was found"
+		fi
+	fi
+}
+
+# Assert we have mounted the expected LUKS partitions
+#
+luks_parts_postmount_assert() {
+	_nonenc_dev=$(get_state_path_from_label "${BALENA_NONENC_BOOT_LABEL}")
+	[ -z "${_nonenc_dev}" ] && fail "Error: Could not find non-encrypted boot device for ${BALENA_NONENC_BOOT_LABEL}."
+
+	_luks_part=$(lsblk -nlo "kname,uuid,fstype,partlabel" "/dev/$(lsblk -nlo pkname "${_nonenc_dev}")" | grep "crypto_LUKS")
+	for PART_NAME in ${DEFAULT_PARTITION_NAMES}; do
+		LUKS_LINE=$(echo "${_luks_parts}" | grep " \(balena\|resin\)-${PART_NAME}$")
+
+		# Effectively the same checks have been done in the previous loop
+		# We want to be defensive, so we don't mind double-checking
+		if [ -z "${LUKS_LINE}" ]; then
+			fail "Partition '${PART_NAME}' not found"
+		fi
+
+		if [ "$(echo "${LUKS_LINE}" | wc -l)" -gt 1 ]; then
+			fail "More than one '${PART_NAME}' partition found"
+		fi
+
+		LUKS_KNAME=$(echo "${LUKS_LINE}" | awk '{print $1}')
+		LUKS_LABEL=$(echo "${LUKS_LINE}" | awk '{print $4}')
+
+		# Even though the following lsblk could be restricted to just /dev/${LUKS_KNAME}
+		# we intentionally do not want to do that. If there are multiple filesystems with
+		# the correct label, even though we know which one to use, we prefer to bail out,
+		# as this should never happen.
+		FS_LINE=$(lsblk -nlo "kname,pkname,label" | grep "${LUKS_LABEL}")
+		if [ -z "${FS_LINE}" ]; then
+			fail "Filesystem '${LUKS_LABEL}' not found after decryption"
+		fi
+
+		if [ "$(echo "${FS_LINE}" | wc -l)" -gt 1 ]; then
+			fail "More than one '${LUKS_LABEL}' filesystems found after decryption"
+		fi
+
+		FS_KNAME=$(echo "${FS_LINE}" | awk '{print $1}')
+		FS_PKNAME=$(echo "${FS_LINE}" | awk '{print $2}')
+
+		# We have found an encrypted partition with partlabel=${LUKS_LABEL} and a filesystem
+		# with label=${LUKS_LABEL}. Check that these are parent/child.
+		if [ "${FS_PKNAME}" != "${LUKS_KNAME}" ]; then
+			fail "LUKS partition '${LUKS_LABEL}' does not provide the expected filesystem"
+		fi
+
+		# The original idea was to check the /dev/disk/by-state symlinks here,
+		# but they do not all exist at this point. Because resin_update_state_probe
+		# only creates the symlinks for partitions that are on the same physical drive
+		# as the root partition, no by-state symlinks are created until rootA or rootB
+		# is unlocked. This is not an issue here and all further scripts that actually
+		# want to use the symlinks will trigger udev and get them created.
+	done
+}
