@@ -1,4 +1,81 @@
 - commits:
+    - subject: "busybox: add conv support in dd"
+      hash: b2b69965b8c955ef099e5b4bfcf13ea9bdfb835c
+      body: |
+        This is used from the initramfs of flasher devices to erase the disk
+        of secrets.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: cryptsetup-efi-tmp: use common encrypted partition
+        asserts"
+      hash: b1e95e0114a34f8c8241db6455c772c6b24b9a30
+      body: |
+        Use the shared helper functions to assert encrypted partitions.
+
+        Note that the new functions have introduced some refactoring so that
+        they can be used in the general case.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: move logic to assert luks encrypted partitions"
+      hash: 9671276855e76cd296e5c077af4653b3c88188f9
+      body: |
+        The logic to assert encrypted partitions was being implemented in a
+        device specific way as part of cryptsetup - move it to common code so
+        that this does not need to be re-implemented for every device type.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: migrate: use an estimated compressed size for raw image"
+      hash: f712bab8bb2df75fbb5a5d37c809f6f9a6c9f5d1
+      body: >
+        The memory check before a migration run was not taking into account
+
+        that the tmp directory is now compressed ram.
+
+
+        This change approximates the compressed size of the raw image which is
+
+        the biggest in the calculation. The rest of the file sizes are left as
+
+        is to provide some buffer for approximation failures and not to
+        complicate
+
+        the logic excessively.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-fs: add a function to estimate zram compression sizes"
+      hash: 91c07c0f263c5e63d46b438aa6b972458f8f5182
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.5.40
+  title: ""
+  date: 2025-06-26T14:04:59.217Z
+- commits:
     - subject: "workflows: remove Jetson Xavier AGX"
       hash: 2c15ce8d878115f45c77bc39ced83ab4bfda0d4d
       body: |

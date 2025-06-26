@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v6.5.40
+## (2025-06-26)
+
+* busybox: add conv support in dd [Alex Gonzalez]
+* initrdscripts: cryptsetup-efi-tmp: use common encrypted partition asserts [Alex Gonzalez]
+* os-helpers-fs: move logic to assert luks encrypted partitions [Alex Gonzalez]
+* initrdscripts: migrate: use an estimated compressed size for raw image [Alex Gonzalez]
+* os-helpers-fs: add a function to estimate zram compression sizes [Alex Gonzalez]
+
 # v6.5.39
 ## (2025-06-20)
 
