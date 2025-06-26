@@ -38,8 +38,6 @@
 . /usr/libexec/os-helpers-efi
 . /usr/sbin/balena-config-defaults
 
-ENCRYPTED_PARTITIONS="boot rootA rootB state data"
-
 ensure_luks2() {
     LUKS_DEVICE="$1"
 
@@ -70,29 +68,10 @@ cryptsetup_run() {
     # Die if anything fails here
     set -e
 
-    # Make sure there is only a single unencrypted partition.
-    # We will blindly mount it here with no further authentication,
-    # so if there are ambiguities, we prefer to bail out.
-    NONENC_PARTS="$(lsblk -nlo label | grep "${BALENA_NONENC_BOOT_LABEL}")"
-    if [ -z "${NONENC_PARTS}" ]; then
-        fail "Partition '${BALENA_NONENC_BOOT_LABEL}' not found"
-    fi
-
-    if [ "$(echo "${NONENC_PARTS}" | wc -l)" -gt 1 ]; then
-        fail "Multiple '${BALENA_NONENC_BOOT_LABEL}' partitions found"
-    fi
-
-    EFI_DEV=$(get_state_path_from_label "${BALENA_NONENC_BOOT_LABEL}")
-    if [ ! -e "$EFI_DEV" ]; then
-        fail "Won't attempt to decrypt drives because the EFI partition is not split"
-    fi
-
-    # Check whether there are any LUKS partitions
-    if ! lsblk -nlo fstype | grep -q crypto_LUKS; then
-        fail "There are no encrypted partitions"
-    fi
+    boot_part_assert
 
     EFI_MOUNT_DIR="/efi"
+    EFI_DEV=$(get_state_path_from_label "${BALENA_NONENC_BOOT_LABEL}")
     mkdir "$EFI_MOUNT_DIR"
     mount "$EFI_DEV" "$EFI_MOUNT_DIR"
 
@@ -123,20 +102,16 @@ cryptsetup_run() {
 
     tpm2_flushcontext "${SESSION_CTX}" >/dev/null 2>&1
 
-    BOOT_DEVICE=$(lsblk -nlo pkname "${EFI_DEV}")
-
-    # Check that we have the expected amount of encrypted partitions on the boot device
-    LUKS_PARTITIONS=$(lsblk -nlo "kname,uuid,fstype,partlabel" "/dev/${BOOT_DEVICE}" | grep "crypto_LUKS")
-    if [ "$(echo "${LUKS_PARTITIONS}" | wc -l)" != "$(echo "${ENCRYPTED_PARTITIONS}" | wc -w)" ]; then
-        fail "An unexpected amount of encrypted partitions was found"
-    fi
+    luks_parts_premount_assert
 
     # Unlock all the partitions - cryptsetup luksOpen does not wait for udev processing
     # of the DM device to complete, it just kicks off the process and returns.
     # Since this is async, we can perform all the luksOpens here, note the device names
     # and wait for them in a separate loop later
     LUKS_UNLOCKED=""
-    for PART_NAME in ${ENCRYPTED_PARTITIONS}; do
+    BOOT_DEVICE=$(lsblk -nlo pkname "${EFI_DEV}")
+    LUKS_PARTITIONS=$(lsblk -nlo "kname,uuid,fstype,partlabel" "/dev/${BOOT_DEVICE}" | grep "crypto_LUKS")
+    for PART_NAME in ${DEFAULT_PARTITION_NAMES}; do
         LUKS_UUID=$(echo "${LUKS_PARTITIONS}" | grep " \(balena\|resin\)-${PART_NAME}$" | awk '{print $2}')
 
         if [ -z "${LUKS_UUID}" ]; then
@@ -161,51 +136,7 @@ cryptsetup_run() {
     # We know what the system should look like after the partitions are unlocked.
     # We want to make sure that the newly unlocked partitions are the ones
     # we are going to actually use, there is nothing missing and nothing extra.
-    for PART_NAME in ${ENCRYPTED_PARTITIONS}; do
-        LUKS_LINE=$(echo "${LUKS_PARTITIONS}" | grep " \(balena\|resin\)-${PART_NAME}$")
-
-        # Effectively the same checks have been done in the previous loop
-        # We want to be defensive, so we don't mind double-checking
-        if [ -z "${LUKS_LINE}" ]; then
-            fail "Partition '${PART_NAME}' not found"
-        fi
-
-        if [ "$(echo "${LUKS_LINE}" | wc -l)" -gt 1 ]; then
-            fail "More than one '${PART_NAME}' partition found"
-        fi
-
-        LUKS_KNAME=$(echo "${LUKS_LINE}" | awk '{print $1}')
-        LUKS_LABEL=$(echo "${LUKS_LINE}" | awk '{print $4}')
-
-        # Even though the following lsblk could be restricted to just /dev/${LUKS_KNAME}
-        # we intentionally do not want to do that. If there are multiple filesystems with
-        # the correct label, even though we know which one to use, we prefer to bail out,
-        # as this should never happen.
-        FS_LINE=$(lsblk -nlo "kname,pkname,label" | grep "${LUKS_LABEL}")
-        if [ -z "${FS_LINE}" ]; then
-            fail "Filesystem '${LUKS_LABEL}' not found after decryption"
-        fi
-
-        if [ "$(echo "${FS_LINE}" | wc -l)" -gt 1 ]; then
-            fail "More than one '${LUKS_LABEL}' filesystems found after decryption"
-        fi
-
-        FS_KNAME=$(echo "${FS_LINE}" | awk '{print $1}')
-        FS_PKNAME=$(echo "${FS_LINE}" | awk '{print $2}')
-
-        # We have found an encrypted partition with partlabel=${LUKS_LABEL} and a filesystem
-        # with label=${LUKS_LABEL}. Check that these are parent/child.
-        if [ "${FS_PKNAME}" != "${LUKS_KNAME}" ]; then
-            fail "LUKS partition '${LUKS_LABEL}' does not provide the expected filesystem"
-        fi
-
-        # The original idea was to check the /dev/disk/by-state symlinks here,
-        # but they do not all exist at this point. Because resin_update_state_probe
-        # only creates the symlinks for partitions that are on the same physical drive
-        # as the root partition, no by-state symlinks are created until rootA or rootB
-        # is unlocked. This is not an issue here and all further scripts that actually
-        # want to use the symlinks will trigger udev and get them created.
-    done
+    luks_parts_postmount_assert
 
     rm -f "$PASSPHRASE_FILE"
     umount "$EFI_MOUNT_DIR"
