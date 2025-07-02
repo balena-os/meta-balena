@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.41
+## (2025-07-02)
+
+* Update outdated context of efitools patches [Florin Sarbu]
+
 # v6.5.40
 ## (2025-06-26)
 

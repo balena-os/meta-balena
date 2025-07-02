@@ -1,4 +1,22 @@
 - commits:
+    - subject: Update outdated context of efitools patches
+      hash: de30667d5b7548ea6381978c45d7ae3bdeb3b10c
+      body: >
+        Patches with outdated context will trigger fatal build errors in Yocto
+        Scarthgap
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Update outdated context of efitools patches
+        changelog-entry: Update outdated context of efitools patches
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.41
+  title: ""
+  date: 2025-07-02T00:16:55.553Z
+- commits:
     - subject: "busybox: add conv support in dd"
       hash: b2b69965b8c955ef099e5b4bfcf13ea9bdfb835c
       body: |
