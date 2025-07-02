@@ -942,7 +942,6 @@ addtask test_aufs_kernel_select after do_fetch before do_patch
 python do_kernel_resin_aufs_fetch_and_unpack() {
 
     import os.path
-    from bb.fetch2.git import Git
 
     balena_storage = d.getVar('BALENA_STORAGE', True)
     bb.note("Kernel will be configured for " + balena_storage + " balena storage driver.")
@@ -973,10 +972,9 @@ python do_kernel_resin_aufs_fetch_and_unpack() {
         srcuri = "git://github.com/sfjro/aufs-standalone.git;protocol=https;branch=aufs%s;name=aufs;destsuffix=aufs_standalone" % aufsbranch
 
     d.setVar('SRCREV_aufs', aufscommit)
-    aufsgit = Git()
-    urldata = bb.fetch.FetchData(srcuri, d)
-    aufsgit.download(urldata, d)
-    aufsgit.unpack(urldata, d.getVar('WORKDIR', True), d)
+    urldata = bb.fetch.Fetch([srcuri], d)
+    urldata.download()
+    urldata.unpack(d.getVar('WORKDIR', True))
 }
 
 # add our task to task queue - we need the kernel version (so we need to have the sources unpacked and patched) in order to know what aufs patches version we fetch and unpack
@@ -988,6 +986,10 @@ apply_aufs_patches () {
     # bail out if it looks like the kernel source tree already has the fs/aufs directory
     if [ -d ${S}/fs/aufs ] || ! ${@bb.utils.contains('BALENA_CONFIGS','aufs','true','false',d)}; then
         exit
+    fi
+    # fix for kernels up to 6.10: fs/aufs/Makefile:3: fs/aufs/magic.mk: No such file or directory
+    if [ `git -C ${WORKDIR}/aufs_standalone branch --show-current` = "aufs6.6.63" ]; then
+        sed -i 's|include ${src}/magic.mk|include ${srctree}/${src}/magic.mk|' ${WORKDIR}/aufs_standalone/fs/aufs/Makefile
     fi
     cp -r ${WORKDIR}/aufs_standalone/Documentation ${WORKDIR}/aufs_standalone/fs ${S}
     cp ${WORKDIR}/aufs_standalone/include/uapi/linux/aufs_type.h ${S}/include/uapi/linux/

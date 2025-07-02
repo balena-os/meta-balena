@@ -1,4 +1,4 @@
-From 1613bae3a9760b3cdcbf8f43e750c475d69ad8bb Mon Sep 17 00:00:00 2001
+From 1d8924f14028aa9169945d035cd0838d996b297d Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Wed, 23 Mar 2016 19:05:29 +0800
 Subject: [PATCH] Allow to override tools for target build
@@ -14,10 +14,10 @@ Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
  2 files changed, 15 insertions(+), 11 deletions(-)
 
 diff --git a/Make.rules b/Make.rules
-index 5e8cb82..4aa7650 100644
+index 9bb571e..6599417 100644
 --- a/Make.rules
 +++ b/Make.rules
-@@ -34,6 +34,10 @@ AR		= ar
+@@ -33,6 +33,10 @@ AR		= ar
  OPENSSL		= openssl
  SBSIGN		= sbsign
  XXD		= xxd
@@ -28,7 +28,7 @@ index 5e8cb82..4aa7650 100644
  MYGUID		= 11111111-2222-3333-4444-123456789abc
  INSTALL		= install
  BINDIR		= $(DESTDIR)/usr/bin
-@@ -75,34 +79,34 @@ endif
+@@ -74,34 +78,34 @@ endif
  	$(XXD) -i $< > $@
  
  %.hash: %.efi hash-to-efi-sig-list
@@ -73,7 +73,7 @@ index 5e8cb82..4aa7650 100644
  %.o: %.c
  	$(CC) $(INCDIR) $(cflags) $(cppflags) -c $< -o $@
 diff --git a/Makefile b/Makefile
-index 15fc944..c4e0081 100644
+index f622318..4a9f85d 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -66,10 +66,10 @@ noPK.esl:
@@ -89,6 +89,3 @@ index 15fc944..c4e0081 100644
  
  hashlist.h: HashTool.hash
  	cat $^ > /tmp/tmp.hash
--- 
-1.9.1
-

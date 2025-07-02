@@ -1,4 +1,4 @@
-From 923b9cb2bfe81ff29a29d46bfc4e3fe172e0e5ae Mon Sep 17 00:00:00 2001
+From b58376d6c966002416546171175031cb4707a8db Mon Sep 17 00:00:00 2001
 From: Yunguo Wei <yunguo.wei@windriver.com>
 Date: Tue, 17 Jan 2017 17:24:51 +0800
 Subject: [PATCH] Makefile: do not build signed efi image
@@ -9,7 +9,7 @@ Signed-off-by: Yunguo Wei <yunguo.wei@windriver.com>
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index addb593..a1fc538 100644
+index 2e4ba1c..7779ddc 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,5 +1,4 @@
@@ -28,6 +28,3 @@ index addb593..a1fc538 100644
  	$(KEYUPDATEAUTH) $(KEYBLACKLISTAUTH) $(KEYHASHBLACKLISTAUTH)
  
  
--- 
-2.7.4
-

@@ -1,4 +1,4 @@
-From e259aecc645c6dd4c194a64d607124cd5a714f9a Mon Sep 17 00:00:00 2001
+From 110a5e468c52a6d0d96ccbf687436ca2d3676514 Mon Sep 17 00:00:00 2001
 From: Lans Zhang <jia.zhang@windriver.com>
 Date: Wed, 15 Feb 2017 14:52:07 +0800
 Subject: [PATCH] LockDown: disable the entrance into BIOS setup to re-enable
@@ -42,6 +42,3 @@ index 13c626f..fbde3f2 100644
  	        SETOSIndicationsAndReboot(EFI_OS_INDICATIONS_BOOT_TO_FW_UI);
  	else
  	        RT->ResetSystem(EfiResetWarm, EFI_SUCCESS, 0, NULL);
--- 
-2.7.4
-
