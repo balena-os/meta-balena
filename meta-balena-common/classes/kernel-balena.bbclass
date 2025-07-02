@@ -560,8 +560,11 @@ BALENA_CONFIGS[zram] = " \
     CONFIG_CRYPTO_LZ4=y \
     "
 
-BALENA_CONFIGS:append = " ${@configure_from_version("6.12", " zram_backend_lz4", "", d)}"
-BALENA_CONFIGS[zram_backend_lz4] = "CONFIG_ZRAM_BACKEND_LZ4=y"
+BALENA_CONFIGS:append = " ${@configure_from_version("6.12", " zram_backends", "", d)}"
+BALENA_CONFIGS[zram_backends] = " \
+    CONFIG_ZRAM_BACKEND_LZ4=y \
+    CONFIG_ZRAM_BACKEND_ZSTD=y \
+"
 
 # Kernel versions between 4.0 and 4.9
 # need this for lz4 support
