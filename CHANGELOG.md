@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.42
+## (2025-07-03)
+
+* Enable zram zstd compression for 6.12+ kernels [Florin Sarbu]
+
 # v6.5.41
 ## (2025-07-02)
 

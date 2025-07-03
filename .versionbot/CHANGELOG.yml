@@ -1,4 +1,36 @@
 - commits:
+    - subject: Enable zram zstd compression for 6.12+ kernels
+      hash: ffafb1007a8deab5bd80de5cb65fbc81c18f4e7d
+      body: >
+        Kernels 6.12+ need the corresponding CONFIG_ZRAM_BACKEND_* linux
+
+        kernel config item enabled for the respective compression support
+
+        to be available for zram.
+
+
+        For the flasher we need zram zstd support so we need to enable the new
+
+        CONFIG_ZRAM_BACKEND_ZSTD option.
+
+
+        This fixes the following error when booting a flasher image running a
+        6.12+ kernel:
+
+        zramctl: /dev/zram1: failed to set algorithm: Invalid argument
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Enable zram zstd compression for 6.12+ kernels
+        changelog-entry: Enable zram zstd compression for 6.12+ kernels
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.42
+  title: ""
+  date: 2025-07-03T13:05:08.986Z
+- commits:
     - subject: Update outdated context of efitools patches
       hash: de30667d5b7548ea6381978c45d7ae3bdeb3b10c
       body: >
