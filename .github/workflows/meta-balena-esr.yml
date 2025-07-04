@@ -111,7 +111,15 @@ jobs:
           os_esr_branch=${ov_arr[0]}.${ov_arr[1]}.x
           if git ls-remote --exit-code --heads origin "${os_esr_branch}" > /dev/null; then
             echo "Branch ${os_esr_branch} already exists"
-            exit 1
+            echo "Falling back to HEAD of the current minor - i.e current HEAD"
+            os_version="${current_os_version}"
+            IFS="." read -r -a ov_arr <<< "${os_version}"
+            os_esr_branch=${ov_arr[0]}.${ov_arr[1]}.x
+            # Final sanity check to see if the current minor also already exists, unlikely, but better to catch it here
+            if git ls-remote --exit-code --heads origin "${os_esr_branch}" > /dev/null; then
+              echo "Branch ${os_esr_branch} already exists"
+              exit 1
+            fi
           fi
           echo "os_version=${os_version}" >> "$GITHUB_OUTPUT"
           echo "os_esr_branch=${os_esr_branch}" >> "$GITHUB_OUTPUT"
