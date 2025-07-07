@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.43
+## (2025-07-07)
+
+* meta-balena-esr: fall back to current minor [Ryan Cooke]
+
 # v6.5.42
 ## (2025-07-03)
 

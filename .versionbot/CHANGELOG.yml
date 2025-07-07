@@ -1,4 +1,20 @@
 - commits:
+    - subject: "meta-balena-esr: fall back to current minor"
+      hash: b04c4769fdffb61e65c365aad7cea8907991cb2d
+      body: >
+        If an esr branch for a previous minor already exists, then fall back to
+        the current minor
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.5.43
+  title: ""
+  date: 2025-07-07T10:43:40.599Z
+- commits:
     - subject: Enable zram zstd compression for 6.12+ kernels
       hash: ffafb1007a8deab5bd80de5cb65fbc81c18f4e7d
       body: >
