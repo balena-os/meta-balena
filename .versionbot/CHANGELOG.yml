@@ -1,4 +1,19 @@
 - commits:
+    - subject: "meta-balena-YOCTO_RELEASE: update bmap-tools branch name"
+      hash: ca3e8df431c811088982050c5053d4fb5ca46499
+      body: |
+        In Nov 2024 bmap-tools  master branch was renamed to main
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.5.44
+  title: ""
+  date: 2025-07-09T16:53:56.590Z
+- commits:
     - subject: "meta-balena-esr: fall back to current minor"
       hash: b04c4769fdffb61e65c365aad7cea8907991cb2d
       body: >

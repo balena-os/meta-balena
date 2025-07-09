@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.44
+## (2025-07-09)
+
+* meta-balena-YOCTO_RELEASE: update bmap-tools branch name [Ryan Cooke]
+
 # v6.5.43
 ## (2025-07-07)
 
