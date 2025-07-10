@@ -6,6 +6,8 @@ There are several ways for enabling balenaOS support for your hardware:
 2. Consider our [Custom Device Support (CDS) service](https://cds.balena.io/). This is a paid service where we create a custom balenaOS build for you and maintain it for a monthly fee.
 3. Building and maintaining balenaOS yourselves using our Customer Board Support (CBS) documentation. This will require knowledge of the Yocto project and familiarity with tools used to build custom images. Follow along the documentation for CBS below:
 
+__Note:__ Please note that these instructions are intended for use by our trained Integration Partners. Attempts to self-submit device support will be declined at this time.
+
 ## Pre-requisites
 
 A [Yocto](https://www.yoctoproject.org) Board Support Package (BSP) layer for your particular board. It should be compatible with the Yocto releases balenaOS supports.
