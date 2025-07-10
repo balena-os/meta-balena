@@ -1,5 +1,9 @@
 # Building Your Own Image
 
+:::note
+Please note that these instructions are intended for use by our trained Integration Partners. Attempts to self-submit device support will be declined at this time.
+:::
+
 To build your own custom balenaOS image, refer to the README for respective device type repository hosted in the [balenaOS GitHub org](https://github.com/balena-os/) for more information.
 
 Identifying the right repository is important. All device type repositories will start with `balena-*`, and all device types built by a repository define a device type coffee file named `machine-name.coffee` with device meta-data for the build pipeline and balenaCloud to injest. Find the correct coffee file for your machine name and read the `slug` field from it.
