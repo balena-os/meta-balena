@@ -32,7 +32,7 @@ do_compile() {
         "${WORKDIR}/grub.cfg_internal_luks_template" > "${B}/grub.cfg_internal_luks"
 }
 
-SIGNING_ARTIFACTS = "${B}/grub.cfg_external ${B}/grub.cfg_internal ${B}/grub.cfg_internal_luks"
+SIGNING_ARTIFACTS = "${B}/grub.cfg_external ${B}/grub.cfg_internal_luks"
 addtask sign_gpg before do_install after do_compile
 
 do_install[noexec] = '1'

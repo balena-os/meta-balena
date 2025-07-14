@@ -217,7 +217,7 @@ if [ -n "${SETUPMODE_VAL}" ] && [ "${SETUPMODE_VAL}" -ne "0" ]; then
 fi
 
 # Not applicable if the signatures are in place
-if [ -f "/resin-boot/EFI/BOOT/grub.cfg.sig" ]; then
+if [ -f "/resin-boot/EFI/BOOT/grub-luks.cfg.sig" ]; then
     updateKeys
     umountEfiVars
     exit $?
