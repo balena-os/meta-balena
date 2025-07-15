@@ -266,9 +266,17 @@ FIRMWARE_COMPRESSION ?= ""
 PARALLEL_MAKE = ""
 
 def fw_compr_suffix(d):
+    # Backwards compatibility
+    # FIRMWARE_COMPRESSION == "0" is the same as FIRMWARE_COMPRESSION == ""
+    # FIRMWARE_COMPRESSION == "1" is the same as FIRMWARE_COMPRESSION == "xz"
+
     compr = d.getVar('FIRMWARE_COMPRESSION')
-    if compr == '':
+    if compr == '' or compr == '0':
         return ''
+
+    if compr == '1':
+        return '-xz'
+
     return '-' + compr
 
 do_compile() {
