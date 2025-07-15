@@ -260,7 +260,7 @@ PACKAGECONFIG ??= ""
 PACKAGECONFIG[deduplicate] = ",,rdfind-native"
 
 # Possible values are "xz" and "zst".
-FIRMWARE_COMPRESSION ?= ""
+FIRMWARE_COMPRESSION ?= "xz"
 
 # Specifying -j requires GNU parallel, which is a part of meta-oe
 PARALLEL_MAKE = ""
