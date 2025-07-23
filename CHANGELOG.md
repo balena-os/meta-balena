@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.45
+## (2025-07-23)
+
+* grub-conf: Don't sign non-luks grub.cfg [Michal Toman]
+
 # v6.5.44
 ## (2025-07-09)
 

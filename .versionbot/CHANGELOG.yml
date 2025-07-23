@@ -1,4 +1,27 @@
 - commits:
+    - subject: "grub-conf: Don't sign non-luks grub.cfg"
+      hash: 000f38c9384557ba7ed67e0fa2444638a4f0d3e4
+      body: |
+        At this moment we sign 3 artifacts:
+        * grub.cfg_external - for flasher (secure boot or not)
+        * grub.cfg_internal_luks - for secure boot + LUKS
+        * grub.cfg_internal - for regular systems
+
+        We don't verify any signatures on systems with secure boot disabled
+        so there is no need to sign grub.cfg_internal, on the contrary, having
+        it signed only makes the file loadable on secure boot systems,
+        which is undesirable.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.45
+  title: ""
+  date: 2025-07-23T23:20:31.526Z
+- commits:
     - subject: "meta-balena-YOCTO_RELEASE: update bmap-tools branch name"
       hash: ca3e8df431c811088982050c5053d4fb5ca46499
       body: |
