@@ -1,4 +1,241 @@
 - commits:
+    - subject: Update tests/leviathan digest to 353d77d
+      hash: d6b24c862bc95915b84b738b7b3eaa302d5b7ac6
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Ensure we always pass the BALENA_ARCH worker build arg
+              hash: 45b97d1f907a69123c41407c48e49ab11d19c44c
+              body: |
+                'docker compose up' will build any missing images,
+                but does not accept build-args from the command line
+
+                instead, we want to always inherit some build args
+                from the environment via docker compose substitution
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.35.1
+          title: ""
+          date: 2025-07-24T18:51:48.786Z
+        - commits:
+            - subject: "Core: worker: use polling to track flashing"
+              hash: be6971bb77cf11fd6051797b772631e3c955530b
+              body: >
+                Switch to worker endpoints that allow for initiation -> polling
+                to flash the DUT - reducing drastically the amount of time the
+                socket over public URL needs to remain open
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.35.0
+          title: ""
+          date: 2025-07-24T12:06:06.767Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.1.4
+              hash: 72192e00754a9101b2b307182227988cc3081a10
+              body: |
+                Update balena-io/balena-cli from 22.1.1 to 22.1.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.34.4
+          title: ""
+          date: 2025-07-24T10:33:19.249Z
+        - commits:
+            - subject: "tests/e2e: switch to self hosted runners"
+              hash: bb79590f0a1b56044c351625a36ca08902a7b027
+              body: >
+                github hosted runners have exhibited frequent failures recently
+                - switching to self-hosted to see if there's improvement
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.34.3
+          title: ""
+          date: 2025-07-24T08:36:18.389Z
+        - commits:
+            - subject: Update core/contracts digest to fc76558
+              hash: e76d47a39268b0b6e5b138c61c01d65d151fda19
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.34.2
+          title: ""
+          date: 2025-07-23T08:37:54.214Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.0
+              hash: a2aa0eb3b9580c56981263d8e974388d4376de4e
+              body: |
+                Update balena-os/leviathan-worker from 2.9.60 to 2.10.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.34.1
+          title: ""
+          date: 2025-07-23T08:07:52.398Z
+        - commits:
+            - subject: Prefer image pull when running from GitHub Actions
+              hash: 1c15e8ec3d28ef11972835195209f260e13e3e7b
+              body: >
+                The default 'make test' behaviour still includes a local build
+                but when
+
+                running as part of CI/CD it should pull by default.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+            - subject: Publish core and client docker images to ghcr.io
+              hash: 9974eb05f120b3b79efb64e133a05f454df7fdb0
+              body: |
+                We want to allow image reuse at test time and avoid
+                always building from scratch.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.34.0
+          title: ""
+          date: 2025-07-22T15:50:16.616Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: ed1a6486bb4af8d15c9235d36bb2c9175bfb206f
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.9
+          title: ""
+          date: 2025-07-22T14:25:32.055Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 88f2cb9f2b0afe7277b537535a76ae3bec9085d6
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.8
+          title: ""
+          date: 2025-06-30T01:06:02.687Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 5f8f872d4ad9fc05c8d1803b19890a202e3f0aa4
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.7
+          title: ""
+          date: 2025-06-23T03:12:57.657Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 22cc9f3e4f6149f745b8881ae402ff2d298361a9
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.6
+          title: ""
+          date: 2025-06-23T01:04:00.788Z
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to e468171
+              hash: 485edfb5ce584c44b104dc24e3aea28b8eb6c5ea
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.5
+          title: ""
+          date: 2025-06-19T12:52:06.923Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.1.1
+              hash: b92156046845a298521ddf21d1174a98394ccdb5
+              body: |
+                Update balena-io/balena-cli from 22.1.0 to 22.1.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.4
+          title: ""
+          date: 2025-06-19T10:32:52.015Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.1.0
+              hash: 1a86ffebadeac1d5c44de0a856f343c93b8f1ad8
+              body: |
+                Update balena-io/balena-cli from 22.0.6 to 22.1.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.3
+          title: ""
+          date: 2025-06-16T03:03:58.314Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: b70f8fdadbb949d00a3562a07c7f537df2521229
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.33.2
+          title: ""
+          date: 2025-06-16T01:02:47.803Z
+  version: 6.5.46
+  title: ""
+  date: 2025-07-25T14:19:20.691Z
+- commits:
     - subject: "grub-conf: Don't sign non-luks grub.cfg"
       hash: 000f38c9384557ba7ed67e0fa2444638a4f0d3e4
       body: |

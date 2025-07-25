@@ -1,6 +1,92 @@
 Change log
 -----------
 
+# v6.5.46
+## (2025-07-25)
+
+
+<details>
+<summary> Update tests/leviathan digest to 353d77d [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.35.1
+> ### (2025-07-24)
+> 
+> * Ensure we always pass the BALENA_ARCH worker build arg [Kyle Harding]
+> 
+> ## leviathan-2.35.0
+> ### (2025-07-24)
+> 
+> * Core: worker: use polling to track flashing [Ryan Cooke]
+> 
+> ## leviathan-2.34.4
+> ### (2025-07-24)
+> 
+> * Update balena-io/balena-cli to v22.1.4 [balena-renovate[bot]]
+> 
+> ## leviathan-2.34.3
+> ### (2025-07-24)
+> 
+> * tests/e2e: switch to self hosted runners [Ryan Cooke]
+> 
+> ## leviathan-2.34.2
+> ### (2025-07-23)
+> 
+> * Update core/contracts digest to fc76558 [balena-renovate[bot]]
+> 
+> ## leviathan-2.34.1
+> ### (2025-07-23)
+> 
+> * Update balena-os/leviathan-worker to v2.10.0 [balena-renovate[bot]]
+> 
+> ## leviathan-2.34.0
+> ### (2025-07-22)
+> 
+> * Prefer image pull when running from GitHub Actions [Kyle Harding]
+> * Publish core and client docker images to ghcr.io [Kyle Harding]
+> 
+> ## leviathan-2.33.9
+> ### (2025-07-22)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.8
+> ### (Invalid date)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.7
+> ### (2025-06-23)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.6
+> ### (2025-06-23)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.5
+> ### (2025-06-19)
+> 
+> * Update docker/setup-buildx-action digest to e468171 [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.4
+> ### (2025-06-19)
+> 
+> * Update balena-io/balena-cli to v22.1.1 [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.3
+> ### (2025-06-16)
+> 
+> * Update balena-io/balena-cli to v22.1.0 [balena-renovate[bot]]
+> 
+> ## leviathan-2.33.2
+> ### (2025-06-16)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.5.45
 ## (2025-07-23)
 
