@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.5.47
+## (2025-07-29)
+
+
+<details>
+<summary> Update tests/leviathan digest to b33ddb7 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.35.3
+> ### (2025-07-28)
+> 
+> * Bind mount private contracts in the core service [Kyle Harding]
+> 
+> ## leviathan-2.35.2
+> ### (2025-07-28)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.5.46
 ## (2025-07-25)
 
