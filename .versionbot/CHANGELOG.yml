@@ -1,4 +1,61 @@
 - commits:
+    - subject: Update tests/leviathan digest to 9df0f9b
+      hash: ccd75a1a45890dff66e68740a2262b4a11892d7e
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "Core: sdk: Fix error handling on fetchOS function"
+              hash: d020caee0283f5bf69f6a016396c6ee82ab14ce6
+              body: >
+                The exsiting error handling and retry logic no longer works
+                after updating to node 22, leading to the core crashing in the
+                case of a failed attempt to download the OS image in the hup
+                suite
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.36.2
+          title: ""
+          date: 2025-08-01T16:50:54.699Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.1.5
+              hash: 35b591e8499f9624e3c29f2bd807478761b7cfd0
+              body: |
+                Update balena-io/balena-cli from 22.1.4 to 22.1.5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.1
+          title: ""
+          date: 2025-08-01T15:40:24.613Z
+        - commits:
+            - subject: "Core: worker: update flashing method to use native fetch API"
+              hash: 8f5ce43de3c268a6191c843f019aba8c1c78d8e4
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.36.0
+          title: ""
+          date: 2025-07-31T08:44:28.779Z
+  version: 6.5.48
+  title: ""
+  date: 2025-08-02T13:15:29.481Z
+- commits:
     - subject: Update tests/leviathan digest to b33ddb7
       hash: 05bcaafe9f196f4762775cc87bc740edb344c93c
       body: Update tests/leviathan

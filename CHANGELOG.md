@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v6.5.48
+## (2025-08-02)
+
+
+<details>
+<summary> Update tests/leviathan digest to 9df0f9b [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.2
+> ### (2025-08-01)
+> 
+> * Core: sdk: Fix error handling on fetchOS function [Ryan Cooke]
+> 
+> ## leviathan-2.36.1
+> ### (2025-08-01)
+> 
+> * Update balena-io/balena-cli to v22.1.5 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.0
+> ### (2025-08-01)
+> 
+> * Core: worker: update flashing method to use native fetch API [Ryan Cooke]
+> 
+
+</details>
+
 # v6.5.47
 ## (2025-07-29)
 
