@@ -112,7 +112,6 @@ BALENA_CONFIGS ?= " \
     brcmfmac \
     cdc-acm \
     ralink \
-    rtl8192cu \
     r8188eu \
     systemd \
     leds-gpio \
@@ -300,23 +299,6 @@ BALENA_CONFIGS[systemd] ?= " \
     CONFIG_CGROUP_SCHED=y \
     CONFIG_FAIR_GROUP_SCHED=y \
     CONFIG_CFS_BANDWIDTH=y"
-
-#
-# We use an out-of-tree kernel module for RTL8192CU WiFi devices
-# Deactivate in-tree driver and add all the dependencies of the out-of-the tree
-# one
-#
-BALENA_CONFIGS[rtl8192cu] ?= "\
-    CONFIG_RTL8192CU=n \
-    CONFIG_HOSTAP=m \
-    CONFIG_WIRELESS=y \
-    CONFIG_USB=y \
-    CONFIG_MAC80211=m \
-    CONFIG_CFG80211=m \
-    CONFIG_CFG80211_WEXT=y \
-    CONFIG_WIRELESS_EXT=y \
-    CONFIG_WEXT_PRIV=y \
-    "
 
 # Activate R8188EU driver
 BALENA_CONFIGS_DEPS[r8188eu] ?= "\
