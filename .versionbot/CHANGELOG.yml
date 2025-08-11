@@ -1,4 +1,27 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Remove references to disabling CONFIG_RTL8192CU"
+      hash: 341e9982c25cf7ef902e3a93eb28f5bead090605
+      body: >
+        This commit is a continuation of
+        e3b7a1555542e6b1381f1a5f7131b935d1f66f22
+
+
+        Devices that need a driver for RTL8192 based chipsets should enable the
+
+        in-tree CONFIG_RTL8192CU kernel driver which should be stable in newer
+
+        kernel releases.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.5.49
+  title: ""
+  date: 2025-08-11T15:09:39.184Z
+- commits:
     - subject: Update tests/leviathan digest to 9df0f9b
       hash: ccd75a1a45890dff66e68740a2262b4a11892d7e
       body: Update tests/leviathan

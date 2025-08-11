@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.49
+## (2025-08-11)
+
+* kernel-balena.bbclass: Remove references to disabling CONFIG_RTL8192CU [Florin Sarbu]
+
 # v6.5.48
 ## (2025-08-02)
 
