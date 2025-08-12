@@ -550,3 +550,7 @@ CONFIG_AUTOSCAN_EXPONENTIAL=y
 #
 # External password backend for testing purposes (developer use)
 #CONFIG_EXT_PASSWORD_TEST=y
+
+# Enable WPA3 personal
+# This uses SAE (Simultaneous Authentication of Equals) for key_mgmt
+CONFIG_SAE=y
