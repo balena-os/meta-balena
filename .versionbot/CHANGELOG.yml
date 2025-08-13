@@ -1,4 +1,24 @@
 - commits:
+    - subject: "wpa_supplicant: Enable SAE to support WPA3 personal"
+      hash: f293e606129ba9f9f9a67ce0cd1cad208973bd8d
+      body: |
+        At this moment we completely lack WPA3 support in wpa_supplicant.
+        Mixed WPA2/WPA3 networks will sometimes fall back to WPA2 and sometimes
+        won't work. WPA3-only networks never work.
+
+        This patch enables SAE in the config, which should allow networks
+        secured with WPA3 personal to work.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.5.50
+  title: ""
+  date: 2025-08-13T13:41:27.493Z
+- commits:
     - subject: "kernel-balena.bbclass: Remove references to disabling CONFIG_RTL8192CU"
       hash: 341e9982c25cf7ef902e3a93eb28f5bead090605
       body: >

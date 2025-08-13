@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.50
+## (2025-08-13)
+
+* wpa_supplicant: Enable SAE to support WPA3 personal [Michal Toman]
+
 # v6.5.49
 ## (2025-08-11)
 
