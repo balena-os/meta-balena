@@ -13,16 +13,6 @@
 				}
 			},
 			"systemd_services": ["prepare-openvpn.service", "openvpn.service"]
-		},
-		{
-			"id": "ssh",
-			"files": {
-				"authorized_keys": {
-					"path": "/home/root/.ssh/authorized_keys_remote",
-					"perm": "600"
-				}
-			},
-			"systemd_services": []
 		}
 	],
 	"keys": [
