@@ -3,6 +3,8 @@ LICENSE = "Apache-2.0"
 
 PR = "r1"
 
+PACKAGE_ARCH = "${TUNE_PKGARCH}"
+
 inherit packagegroup
 
 RDEPENDS:${PN} = " \
