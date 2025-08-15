@@ -1,4 +1,19 @@
 - commits:
+    - subject: Updated contributing-device-support.md Part of
+        https://balena.fibery.io/Work/Project/Update-Device-Support-Docs-1641
+      hash: 9895bf9caa5c5c817c04321e2e6fd9e9ccf2c769
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+        signed-off-by: Ryan Hampton (@rhampt) <rhampt@balena.io>
+      author: Ryan
+      nested: []
+  version: 6.5.51
+  title: ""
+  date: 2025-08-15T19:55:29.375Z
+- commits:
     - subject: "wpa_supplicant: Enable SAE to support WPA3 personal"
       hash: f293e606129ba9f9f9a67ce0cd1cad208973bd8d
       body: |

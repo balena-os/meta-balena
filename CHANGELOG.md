@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.51
+## (2025-08-15)
+
+* Updated contributing-device-support.md Part of https://balena.fibery.io/Work/Project/Update-Device-Support-Docs-1641 [Ryan]
+
 # v6.5.50
 ## (2025-08-13)
 
