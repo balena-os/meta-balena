@@ -1,4 +1,199 @@
 - commits:
+    - subject: Update tests/leviathan digest to f8b1a87
+      hash: 1e793e8979afecc6a37f5b96d2191e03161fc2ba
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update actions/checkout action to v5
+              hash: f91a05f1ddadd8f70eeae039b16f10c244f8ff93
+              body: |
+                Update actions/checkout from 4 to 5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.16
+          title: ""
+          date: 2025-08-11T14:39:59.149Z
+        - commits:
+            - subject: Update actions/checkout digest to 08eba0b
+              hash: 1a6458dfeaa64423a3683dd81370ba61d1116d8b
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.15
+          title: ""
+          date: 2025-08-11T12:50:07.778Z
+        - commits:
+            - subject: "core/lib: Specify partition index for a TX2 NX based device type"
+              hash: e99700cb8d5c097e6d2b97229a80a8357248ebfd
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru
+              nested: []
+          version: leviathan-2.36.14
+          title: ""
+          date: 2025-08-11T10:09:16.146Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.3
+              hash: d2e7994b9f352df00b952ab17abf2835d18c979c
+              body: |
+                Update balena-os/leviathan-worker from 2.10.2 to 2.10.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.13
+          title: ""
+          date: 2025-08-11T06:37:02.055Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 9f4b39588dec144edeb175f8f9c8498fd8cb9ce4
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.12
+          title: ""
+          date: 2025-08-11T04:47:29.932Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.2
+              hash: 638f5a07e14e982f54670bc79ac669b5326fed5f
+              body: |
+                Update balena-os/leviathan-worker from 2.10.1 to 2.10.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.11
+          title: ""
+          date: 2025-08-11T03:23:45.515Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 112f1423bdc4a49be88cb729e66a8fb827a7cb4f
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.10
+          title: ""
+          date: 2025-08-11T01:13:21.085Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.2.4
+              hash: 16b0ab299a58108d43156a7f9ccd9282a8dc64ae
+              body: |
+                Update balena-io/balena-cli from 22.2.3 to 22.2.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.9
+          title: ""
+          date: 2025-08-09T08:44:18.111Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.2.3
+              hash: 025dc07450a2fa37660075b167eeec9c1fd6d367
+              body: |
+                Update balena-io/balena-cli from 22.2.2 to 22.2.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.8
+          title: ""
+          date: 2025-08-08T20:41:24.692Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.1
+              hash: 6282cdb39064dff4a228c543c2c91998b7978ff6
+              body: |
+                Update balena-os/leviathan-worker from 2.10.0 to 2.10.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.7
+          title: ""
+          date: 2025-08-07T03:17:49.599Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.2.2
+              hash: f08d8678d79beda2e0c7630a8ae7cd2b1c42521e
+              body: |
+                Update balena-io/balena-cli from 22.2.1 to 22.2.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.6
+          title: ""
+          date: 2025-08-06T16:44:07.658Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.2.1
+              hash: f605aa676a45d18b0e55ec50bf8717b339fbff2a
+              body: |
+                Update balena-io/balena-cli from 22.2.0 to 22.2.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.5
+          title: ""
+          date: 2025-08-06T16:09:27.436Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.2.0
+              hash: ca03177de5da86095ac66282337ee33835806c20
+              body: |
+                Update balena-io/balena-cli from 22.1.5 to 22.2.0
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.4
+          title: ""
+          date: 2025-08-05T22:39:11.319Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: fc8d8e3dfcb0c50b341e15f0b98f347321fdd0e5
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.3
+          title: ""
+          date: 2025-08-04T01:10:51.893Z
+  version: 6.5.52
+  title: ""
+  date: 2025-08-16T19:55:45.407Z
+- commits:
     - subject: Updated contributing-device-support.md Part of
         https://balena.fibery.io/Work/Project/Update-Device-Support-Docs-1641
       hash: 9895bf9caa5c5c817c04321e2e6fd9e9ccf2c769

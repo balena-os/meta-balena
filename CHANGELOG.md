@@ -1,6 +1,86 @@
 Change log
 -----------
 
+# v6.5.52
+## (2025-08-16)
+
+
+<details>
+<summary> Update tests/leviathan digest to f8b1a87 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.16
+> ### (2025-08-11)
+> 
+> * Update actions/checkout action to v5 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.15
+> ### (2025-08-11)
+> 
+> * Update actions/checkout digest to 08eba0b [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.14
+> ### (2025-08-11)
+> 
+> * core/lib: Specify partition index for a TX2 NX based device type [Alexandru]
+> 
+> ## leviathan-2.36.13
+> ### (2025-08-11)
+> 
+> * Update balena-os/leviathan-worker to v2.10.3 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.12
+> ### (2025-08-11)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.11
+> ### (2025-08-11)
+> 
+> * Update balena-os/leviathan-worker to v2.10.2 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.10
+> ### (2025-08-11)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.9
+> ### (2025-08-09)
+> 
+> * Update balena-io/balena-cli to v22.2.4 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.8
+> ### (2025-08-08)
+> 
+> * Update balena-io/balena-cli to v22.2.3 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.7
+> ### (2025-08-07)
+> 
+> * Update balena-os/leviathan-worker to v2.10.1 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.6
+> ### (2025-08-06)
+> 
+> * Update balena-io/balena-cli to v22.2.2 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.5
+> ### (2025-08-06)
+> 
+> * Update balena-io/balena-cli to v22.2.1 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.4
+> ### (2025-08-05)
+> 
+> * Update balena-io/balena-cli to v22.2.0 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.3
+> ### (2025-08-04)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.5.51
 ## (2025-08-15)
 
