@@ -431,7 +431,7 @@ module.exports = {
 				},
 				this.getLogger(),
 			),
-			hupOs: new BalenaOS({}, this.getLogger()),
+			hupOs: new BalenaOS({deviceType: this.suite.deviceType.slug}, this.getLogger()),
 		});
 		this.suite.teardown.register(() => {
 			this.log('Worker teardown');
