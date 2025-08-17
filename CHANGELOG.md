@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.53
+## (2025-08-17)
+
+* recipes-core/packagegroup-resin: Set PACKAGE_ARCH [Alexandru Costache]
+
 # v6.5.52
 ## (2025-08-16)
 

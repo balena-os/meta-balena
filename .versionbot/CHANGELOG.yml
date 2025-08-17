@@ -1,4 +1,31 @@
 - commits:
+    - subject: "recipes-core/packagegroup-resin: Set PACKAGE_ARCH"
+      hash: b267e7b5e6309cac4418929be270ab5a57d1d438
+      body: >
+        Packages with dinamically changed names cannot be included
+
+        in allarch package groups. This package was set to allarch
+
+        because it inherits packagegroup class, which sets PACKAGE_ARCH
+
+        to "all" by default.
+
+
+        This fixes the following error:
+            packagegroup-resin-1.0-r1 do_package_write_ipk: An allarch packagegroup shouldn't depend on packages which are dynamically renamed (kernel-modules to kernel-modules-6.6.3-g284172f37508)
+
+        See https://github.com/openembedded/meta-openembedded/commit/112cca9f474
+      footer:
+        Change-type: Patch
+        change-type: Patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.5.53
+  title: ""
+  date: 2025-08-17T10:21:23.988Z
+- commits:
     - subject: Update tests/leviathan digest to f8b1a87
       hash: 1e793e8979afecc6a37f5b96d2191e03161fc2ba
       body: Update tests/leviathan
