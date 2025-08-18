@@ -45,6 +45,6 @@ jobs:
           "test_suite": ["os","cloud","hup"],
           "environment": ["balena-cloud.com"],
           "worker_type": ["qemu"],
-          "runs_on": [["self-hosted", "X64", "kvm"]],
+          "runs_on": [["self-hosted", "X64", "kvm", "qemu-os"]],
           "secure_boot": ["sb",""]
         }
