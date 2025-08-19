@@ -37,6 +37,19 @@ SRC_URI = "\
 	"
 S = "${WORKDIR}/git"
 
+CVE_PRODUCT = "balena:balena-engine mobyproject:moby"
+
+CVE_STATUS[CVE-2024-21626] = "backported-patch: runc has been updated to a non-vulnerable version"
+CVE_STATUS[CVE-2023-28840] = "not-applicable-config: Swarm Mode is not part of balena-engine"
+CVE_STATUS[CVE-2023-28841] = "not-applicable-config: Swarm Mode is not part of balena-engine"
+CVE_STATUS[CVE-2023-28842] = "not-applicable-config: Swarm Mode is not part of balena-engine"
+CVE_STATUS[CVE-2024-23650] = "not-applicable-config: Buildkit is not part of balena-engine"
+CVE_STATUS[CVE-2024-23651] = "not-applicable-config: Buildkit is not part of balena-engine"
+CVE_STATUS[CVE-2024-23652] = "not-applicable-config: Buildkit is not part of balena-engine"
+CVE_STATUS[CVE-2024-23653] = "not-applicable-config: Buildkit is not part of balena-engine"
+CVE_STATUS[CVE-2024-32473] = "not-applicable-config: balena-engine doesn't support ipvlan or macvlan"
+CVE_STATUS[CVE-2024-41110] = "not-applicable-config: balena-engine doesn't use an AuthZ plugin"
+
 PV = "${@d.getVar('BALENA_VERSION').replace('v', '')}+git${SRCREV}"
 
 SECURITY_CFLAGS = "${SECURITY_NOPIE_CFLAGS}"
