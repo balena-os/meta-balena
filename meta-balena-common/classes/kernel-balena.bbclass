@@ -153,6 +153,7 @@ BALENA_CONFIGS ?= " \
     ${MODULE_COMPRESS} \
     ${WIREGUARD} \
     vlan \
+    dmabuf \
     "
 
 #
@@ -725,6 +726,13 @@ BALENA_CONFIGS[memcg] = " \
 # 802.1q VLANs are supported by NetworkManager on all device types
 BALENA_CONFIGS[vlan] = " \
     CONFIG_VLAN_8021Q=y \
+"
+
+# Enable DMA-BUF memory heaps
+BALENA_CONFIGS[dmabuf] = " \
+    CONFIG_DMABUF_HEAPS=y \
+    CONFIG_DMABUF_HEAPS_CMA=y \
+    CONFIG_DMABUF_HEAPS_SYSTEM=y \
 "
 
 ###########
