@@ -155,6 +155,7 @@ BALENA_CONFIGS ?= " \
     vlan \
     disk-watchdog \
     bpf \
+    dmabuf \
 "
 
 #
@@ -740,6 +741,13 @@ BALENA_CONFIGS[bpf] = " \
 "
 BALENA_CONFIGS_DEPS[bpf] = " \
     CONFIG_BPF_SYSCALL=y \
+"
+
+# Enable DMA-BUF memory heaps
+BALENA_CONFIGS[dmabuf] = " \
+    CONFIG_DMABUF_HEAPS=y \
+    CONFIG_DMABUF_HEAPS_CMA=y \
+    CONFIG_DMABUF_HEAPS_SYSTEM=y \
 "
 
 ###########
