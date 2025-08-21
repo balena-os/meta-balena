@@ -1,4 +1,24 @@
 - commits:
+    - subject: "recipes-connectivity/balena-proxy-config: Clean-up redsocks rules by
+        index"
+      hash: 55d2b92a235efab0f131a99d670c122fea4be113
+      body: |
+        ... instead of rule matching, since this may fail on particular devices
+        and prevent the redsocks chain from being removed, as well as
+        new iptables rules from being added.
+
+        We also switch to using the os logging helpers while we're at this.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.5.54
+  title: ""
+  date: 2025-08-21T16:11:59.568Z
+- commits:
     - subject: "recipes-core/packagegroup-resin: Set PACKAGE_ARCH"
       hash: b267e7b5e6309cac4418929be270ab5a57d1d438
       body: >

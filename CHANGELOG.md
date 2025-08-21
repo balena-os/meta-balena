@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.54
+## (2025-08-21)
+
+* recipes-connectivity/balena-proxy-config: Clean-up redsocks rules by index [Alexandru Costache]
+
 # v6.5.53
 ## (2025-08-17)
 
