@@ -9,17 +9,41 @@ IPTABLES_WAIT_SECS="10"
 IPTABLES="iptables -w $IPTABLES_WAIT_SECS"
 
 . /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-logging
+
+# $1 - iptables chain
+# $2 - iptables target
+removeRulesFromChain() {
+    _chain=${1}
+    _target=${2}
+    while true; do
+        _idx=$($IPTABLES -t nat -L ${_chain} --line-numbers | \
+               grep -m 1 "${_target}" | \
+               awk '{print $1}' | \
+               head -n 1)
+
+
+        if [ -z "${_idx}" ]; then
+            info "No more ${_target} targets found."
+            break
+        else
+            info "Found ${_target} target at line number: ${_idx}. Deleting..."
+            $IPTABLES -t nat -D "${_chain}" "${_idx}" \
+                && info "Rule no. ${_idx} deleted." \
+                || error "Failed to delete target ${_target} rule no. ${_idx}."
+        fi
+    done
+}
+
 
 if [ ! -f "$CONFIG_PATH" ]; then
-	echo "balena-proxy-config: $CONFIG_PATH does not exist."
-	exit 1
+	fail "$CONFIG_PATH does not exist."
 else
-	echo "balena-proxy-config: Found config.json in $CONFIG_PATH ."
+	info "Found config.json in $CONFIG_PATH ."
 fi
 
 if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
-	echo "balena-proxy-config: $BALENA_BOOT_MOUNTPOINT does not exist."
-	exit 1
+	fail " $BALENA_BOOT_MOUNTPOINT does not exist."
 fi
 
 REDSOCKSCONF=${BALENA_BOOT_MOUNTPOINT}/system-proxy/redsocks.conf
@@ -33,14 +57,13 @@ NOPROXYFILE=${BALENA_BOOT_MOUNTPOINT}/system-proxy/no_proxy
 # Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
 $IPTABLES -t nat -D OUTPUT -p udp -m owner ! --uid-owner redsocks -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
 $IPTABLES -t nat -D PREROUTING -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
-$IPTABLES -t nat -D OUTPUT -m owner --uid-owner redsocks -p tcp --dport 53 -j REDSOCKS || true
-$IPTABLES -t nat -D OUTPUT -m owner ! --uid-owner redsocks -p tcp -j REDSOCKS || true
-$IPTABLES -t nat -D PREROUTING -p tcp -j REDSOCKS || true
+removeRulesFromChain OUTPUT REDSOCKS
+removeRulesFromChain PREROUTING REDSOCKS
 $IPTABLES -t nat -F REDSOCKS || true
 $IPTABLES -t nat -X REDSOCKS || true
 
 if [ ! -f "$REDSOCKSCONF" ]; then
-	echo "balena-proxy-config: No proxy configuration found, skipping."
+	info "No proxy configuration found, skipping."
 	exit 0
 fi
 
@@ -65,7 +88,7 @@ $IPTABLES -t nat -N REDSOCKS
 
 # Use every line in the no_proxy file as an IP/subnet to not redirect through redsocks
 if [ -f "$NOPROXYFILE" ]; then
-	echo "Noproxy configuration found in $NOPROXYFILE ..."
+	info "Noproxy configuration found in $NOPROXYFILE ..."
 	while IFS= read -r line || [ -n "${line}" ]; do
 		echo "Setting no proxy for $line ..."
 		$IPTABLES -t nat -A REDSOCKS -d "$line" -j RETURN
