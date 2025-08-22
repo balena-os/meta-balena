@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.55
+## (2025-08-22)
+
+* patch: add metadata to improve balena-engine cve tracking [Edwin Joassart]
+
 # v6.5.54
 ## (2025-08-21)
 

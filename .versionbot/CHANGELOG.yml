@@ -1,4 +1,14 @@
 - commits:
+    - subject: "patch: add metadata to improve balena-engine cve tracking"
+      hash: d3bacbe379e5ffd335daf111942998477e5fb58c
+      body: ""
+      footer: {}
+      author: Edwin Joassart
+      nested: []
+  version: 6.5.55
+  title: ""
+  date: 2025-08-22T10:15:24.486Z
+- commits:
     - subject: "recipes-connectivity/balena-proxy-config: Clean-up redsocks rules by
         index"
       hash: 55d2b92a235efab0f131a99d670c122fea4be113
