@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.0
+## (2025-08-23)
+
+* minor: remove ssh service from os-config.json [Edwin Joassart]
+
 # v6.5.55
 ## (2025-08-22)
 

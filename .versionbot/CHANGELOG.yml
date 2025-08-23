@@ -1,4 +1,14 @@
 - commits:
+    - subject: "minor: remove ssh service from os-config.json"
+      hash: e6f4c951dcdfc32bc748807a4a40ab74a24309b9
+      body: ""
+      footer: {}
+      author: Edwin Joassart
+      nested: []
+  version: 6.6.0
+  title: ""
+  date: 2025-08-23T05:15:48.339Z
+- commits:
     - subject: "patch: add metadata to improve balena-engine cve tracking"
       hash: d3bacbe379e5ffd335daf111942998477e5fb58c
       body: ""
