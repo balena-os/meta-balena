@@ -17,7 +17,7 @@
 
 set -e
 
-AUTH_KEYS_BASE="/home/root/.ssh"
+AUTH_KEYS_BASE="@ROOT_HOME@/.ssh"
 AUTH_KEYS="$AUTH_KEYS_BASE/authorized_keys"
 AUTH_KEYS_REMOTE="$AUTH_KEYS_BASE/authorized_keys_remote"
 AUTH_KEYS_LOCAL="$AUTH_KEYS_BASE/authorized_keys_local"
