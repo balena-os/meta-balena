@@ -39,7 +39,7 @@ FILES:${PN} += " \
 BINDMOUNTS += " \
 	/etc/docker \
 	/etc/balena-supervisor \
-	/home/root/.docker \
+	${ROOT_HOME}/.docker \
 	/var/log/journal \
 	/var/lib/systemd \
 	/var/lib/chrony \
