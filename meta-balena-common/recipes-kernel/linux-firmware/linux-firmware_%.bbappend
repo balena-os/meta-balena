@@ -71,8 +71,8 @@ FILES:${PN}-ibt-18-16-1  = " \
 PACKAGES =+ "${PN}-ibt-41-41"
 
 FILES:${PN}-ibt-41-41  = " \
-    ${nonarch_base_libdir}/firmware/intel/ibt-0041-0041.ddc \
-    ${nonarch_base_libdir}/firmware/intel/ibt-0041-0041.sfi \
+    ${nonarch_base_libdir}/firmware/intel/ibt-0041-0041.ddc* \
+    ${nonarch_base_libdir}/firmware/intel/ibt-0041-0041.sfi* \
 "
 
 LICENSE:${PN}-ibt-41-41 = "Firmware-ibt_firmware"
@@ -99,8 +99,8 @@ FILES:${PN}-iwlwifi-cc-a0 = " \
 PACKAGES =+ "${PN}-iwlwifi-ty-a0"
 
 FILES:${PN}-iwlwifi-ty-a0  = " \
-    ${nonarch_base_libdir}/firmware/iwlwifi-ty-a0-*.ucode \
-    ${nonarch_base_libdir}/firmware/iwlwifi-ty-a0-*.pnvm \
+    ${nonarch_base_libdir}/firmware/iwlwifi-ty-a0-*.ucode* \
+    ${nonarch_base_libdir}/firmware/iwlwifi-ty-a0-*.pnvm* \
 "
 
 LICENSE:${PN}-iwlwifi-ty-a0 = "Firmware-iwlwifi_firmware"
