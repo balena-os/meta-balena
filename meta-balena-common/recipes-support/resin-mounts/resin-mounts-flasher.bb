@@ -25,7 +25,7 @@ BINDMOUNTS += " \
 	/etc/hostname \
 	/etc/NetworkManager/system-connections \
 	/etc/NetworkManager/dispatcher.d \
-	/home/root/.rnd \
+	${ROOT_HOME}/.rnd \
 	"
 
 do_install:prepend () {
