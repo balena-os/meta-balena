@@ -73,7 +73,7 @@ INSANE_SKIP:${PN} += "already-stripped"
 
 FILES:${PN} += " \
 	${systemd_unitdir}/system/* \
-	/home/root \
+	${ROOT_HOME} \
 	${localstatedir} \
 	"
 
@@ -142,9 +142,9 @@ do_install() {
 	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
 	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
 
-	install -d ${D}/home/root/.docker
-	ln -sf .docker ${D}/home/root/.balena
-	ln -sf .docker ${D}/home/root/.balena-engine
+	install -d ${D}/${ROOT_HOME}/.docker
+	ln -sf .docker ${D}/${ROOT_HOME}/.balena
+	ln -sf .docker ${D}/${ROOT_HOME}/.balena-engine
 
 	install -d ${D}${localstatedir}/lib/docker
 	ln -sf docker ${D}${localstatedir}/lib/balena
