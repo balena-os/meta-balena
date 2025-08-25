@@ -21,7 +21,7 @@ set -e
 
 tool=$(basename "$0")
 custom_ssh_public_keys=".os.sshKeys"
-authorized_keys_path=/home/root/.ssh/authorized_keys_local
+authorized_keys_path="@ROOT_HOME@/.ssh/authorized_keys_local"
 authorized_keys_perm="600"
 
 log () {

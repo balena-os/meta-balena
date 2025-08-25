@@ -43,6 +43,7 @@ SYSTEMD_SERVICE:${PN} = " \
     "
 
 do_install() {
+    root_bindmount_name=$(echo "${ROOT_HOME}" | sed 's|/|-|g')
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/balena-config-vars ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/balena-config-defaults ${D}${sbindir}/
@@ -53,6 +54,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
     install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/
+    sed -i -e "s,@ROOT_HOME@,${ROOT_HOME},g" ${D}${sbindir}/os-sshkeys
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
@@ -64,6 +66,7 @@ do_install() {
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \
+            -e "s,@ROOT_HOME@,${root_bindmount_name},g" \
             ${D}${systemd_unitdir}/system/*.service
     fi
 }
