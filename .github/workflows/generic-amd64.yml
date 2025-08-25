@@ -40,14 +40,11 @@ jobs:
       device-repo-ref: master
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
       # Use QEMU workers for testing and run cloud suite against balenaCloud production.
-      # Use AX102 runners as the AX162 runners have issues with QEMU and AMD EPYC processors.
-      # See https://balena.fibery.io/Work/Project/Investigation-of-secure-boot-tests-not-booting-on-self-hosted-runners-1030
-      # See https://unix.stackexchange.com/questions/757583/linux-reboots-with-no-panic-when-booting-smp-configuration-from-kexec
       test_matrix: >
         {
           "test_suite": ["os","cloud","hup"],
           "environment": ["balena-cloud.com"],
           "worker_type": ["qemu"],
-          "runs_on": [["self-hosted", "X64", "kvm", "AX102"]],
+          "runs_on": [["self-hosted", "X64", "kvm", "qemu-os"]],
           "secure_boot": ["sb",""]
         }
