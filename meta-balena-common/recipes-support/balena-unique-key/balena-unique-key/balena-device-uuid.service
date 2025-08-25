@@ -1,12 +1,11 @@
 [Unit]
 Description=Balena device UUID
-Requires=resin-boot.service bind-home-root-.rnd.service
-After=resin-boot.service bind-home-root-.rnd.service os-config-devicekey.service
+Requires=resin-boot.service bind@ROOT_HOME@-.rnd.service
+After=resin-boot.service bind@ROOT_HOME@-.rnd.service os-config-devicekey.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-Environment="HOME=/home/root"
 ExecStart=@BASE_BINDIR@/bash @BINDIR@/balena-unique-key uuid
 
 [Install]
