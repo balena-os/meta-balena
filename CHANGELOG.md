@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.1
+## (2025-08-25)
+
+* Remove the AX102 requirement for secure boot tests [Kyle Harding]
+
 # v6.6.0
 ## (2025-08-23)
 
