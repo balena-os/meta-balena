@@ -73,7 +73,7 @@ INSANE_SKIP:${PN} += "already-stripped"
 
 FILES:${PN} += " \
 	${systemd_unitdir}/system/* \
-	/home/root \
+	${ROOT_HOME} \
 	${localstatedir} \
 	"
 
@@ -110,6 +110,7 @@ do_compile() {
 }
 
 do_install() {
+	root_bindmount_name=$(echo "${ROOT_HOME}" | sed 's|/|-|g')
 	mkdir -p ${D}/${bindir}
 	install -m 0755 ${S}/src/import/bundles/dynbinary-daemon/balena-engine ${D}/${bindir}/balena-engine
 
@@ -131,6 +132,8 @@ do_install() {
 	install -m 0644 ${S}/src/import/contrib/init/systemd/balena-engine.socket ${D}/${systemd_unitdir}/system
 
 	install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
+
+	sed -i -e "s,@ROOT_HOME@,${root_bindmount_name},g" ${D}/${systemd_unitdir}/system/balena.service
 	install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
 	install -m 0644 ${WORKDIR}/balena-host.socket ${D}/${systemd_unitdir}/system
 
@@ -142,9 +145,9 @@ do_install() {
 	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
 	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
 
-	install -d ${D}/home/root/.docker
-	ln -sf .docker ${D}/home/root/.balena
-	ln -sf .docker ${D}/home/root/.balena-engine
+	install -d ${D}/${ROOT_HOME}/.docker
+	ln -sf .docker ${D}/${ROOT_HOME}/.balena
+	ln -sf .docker ${D}/${ROOT_HOME}/.balena-engine
 
 	install -d ${D}${localstatedir}/lib/docker
 	ln -sf docker ${D}${localstatedir}/lib/balena
