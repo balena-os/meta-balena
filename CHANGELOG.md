@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.2
+## (2025-08-26)
+
+* linux-firmware: Ensure Intel AX210 firmware can be installed [Alexandru Costache]
+
 # v6.6.1
 ## (2025-08-25)
 

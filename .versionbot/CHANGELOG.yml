@@ -1,4 +1,19 @@
 - commits:
+    - subject: "linux-firmware: Ensure Intel AX210 firmware can be installed"
+      hash: f54f1988aaa46746c70ad8b4cf63a88218d4f983
+      body: |
+        ... on devices which enable firmware compression.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.6.2
+  title: ""
+  date: 2025-08-26T08:56:53.219Z
+- commits:
     - subject: Remove the AX102 requirement for secure boot tests
       hash: 89822ae1c747c990c5ec0881e1a38a62d5b76913
       body: |
