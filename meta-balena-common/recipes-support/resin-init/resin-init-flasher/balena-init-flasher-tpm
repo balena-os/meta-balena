@@ -10,6 +10,11 @@ diskenc_setup() {
         # Include TPM2 helpers
         . /usr/libexec/os-helpers-tpm2
 
+        # Bail out if the IOMMU is disabled
+        if pcr7_has_dma_disabled_event; then
+            fail "Won't set up disk encryption with IOMMU disabled"
+        fi
+
         # Generate password and encrypt it using the TPM
         TPM="${TPM:-/dev/tpmrm0}"
         if [ -e "$TPM" ]; then
