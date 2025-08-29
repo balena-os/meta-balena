@@ -1,7 +1,7 @@
 [Unit]
 Description=OS SSH keys
-Requires=resin-boot.service bind-home-root-.ssh.service
-After=resin-boot.service bind-home-root-.ssh.service
+Requires=resin-boot.service bind@ROOT_HOME@-.ssh.service
+After=resin-boot.service bind@ROOT_HOME@-.ssh.service
 
 [Service]
 Type=oneshot

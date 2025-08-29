@@ -26,6 +26,7 @@ do_install:append () {
     # SSH keys merger tool for custom SSH keys
     install -d ${D}${sbindir}
     install -m 0755 ${WORKDIR}/ssh_keys_merger ${D}${sbindir}
+    sed -i -e "s,@ROOT_HOME@,${ROOT_HOME},g" ${D}${sbindir}/ssh_keys_merger
 
     # Create config files for read-only rootfs with custom paths for host keys
     install -d ${D}${sysconfdir}/ssh

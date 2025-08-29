@@ -12,7 +12,7 @@ SYSTEMD_SERVICE:${PN} += "${@bindmounts_systemd_services(d)}"
 FILES:${PN} += " \
 	${sysconfdir} \
 	${systemd_unitdir} \
-	/home/root/.ssh \
+	${ROOT_HOME}/.ssh \
 	"
 
 BINDMOUNTS += " \
@@ -25,10 +25,10 @@ BINDMOUNTS += " \
 	/etc/udev/rules.d \
 	/etc/ssl/certs \
 	/usr/share/ca-certificates/balena \
-	/home/root/.rnd \
+	${ROOT_HOME}/.rnd \
 	/var/lib/bluetooth \
 	/var/lib/NetworkManager \
-	/home/root/.ssh \
+	${ROOT_HOME}/.ssh \
 	"
 
 PACKAGES = "${PN}"
@@ -82,6 +82,6 @@ do_install () {
 	install -d "${D}${sysconfdir}"
 	touch "${D}/${sysconfdir}/hostname"
 	install -d "${D}${sysconfdir}/openvpn"
-	install -d "${D}/home/root/.ssh"
+	install -d "${D}/${ROOT_HOME}/.ssh"
 	install -d "${D}/${sysconfdir}/ssh/hostkeys"
 }

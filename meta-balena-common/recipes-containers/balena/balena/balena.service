@@ -2,8 +2,8 @@
 Description=Balena Application Container Engine
 Documentation=https://www.balena.io/docs/getting-started
 Wants=dnsmasq.service
-Requires=balena-engine.socket var-lib-docker.mount bind-etc-docker.service bind-home-root-.docker.service development-features.service balena-hostname.service
-After=network.target balena-engine.socket var-lib-docker.mount bind-etc-docker.service bind-home-root-.docker.service dnsmasq.service rollback-altboot.service development-features.service balena-hostname.service
+Requires=balena-engine.socket var-lib-docker.mount bind-etc-docker.service bind@ROOT_HOME@-.docker.service development-features.service balena-hostname.service
+After=network.target balena-engine.socket var-lib-docker.mount bind-etc-docker.service bind@ROOT_HOME@-.docker.service dnsmasq.service rollback-altboot.service development-features.service balena-hostname.service
 PartOf=development-features.target
 
 [Service]
