@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.3
+## (2025-08-29)
+
+* recipes-connectivity/libnss-ato: Do not hardcode the homedir for user root [Florin Sarbu]
+
 # v6.6.2
 ## (2025-08-26)
 
