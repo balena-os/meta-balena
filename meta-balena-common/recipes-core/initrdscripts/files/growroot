@@ -1,0 +1,96 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-fs
+
+# !!! Proof of concept !!!
+# No error checking, if anything fails, you'll most likely lose the device
+# Currently triggered by "growroot" on the kernel command line
+# In the final version it should probably run if root < 512MB or something like that
+# It should also not be possible to run this again if rootB is already behind data
+#
+# This must only be executed after the initrd mounts the root
+# The initrd scripts contain a substantial amount of logic trying to identify the correct
+# root partition, if this script was executed first, it would need to reimplement most of it
+
+growroot_enabled() {
+    # shellcheck disable=SC2154
+    if [ "$bootparam_flasher" = "true" ]; then
+        info "Flasher detected, not necessary to grow root partition"
+        return 1
+    fi
+
+    if [ "$bootparam_growroot" = "true" ]; then
+        return 0
+    fi
+
+    return 1
+}
+
+growroot_run() {
+    # The root partition (either rootA or rootB, we don't care) is already mounted
+    # Find it, umnount, and use it to identify the block device we're working with
+    FINAL_ROOT=$(grep "${ROOTFS_DIR}" /proc/mounts | awk '{print $1}')
+    ROOT_DEVICE=$(lsblk -nlo pkname "${FINAL_ROOT}")
+    umount "${ROOTFS_DIR}"
+
+    # Now that we know the root device, let's find rootA, rootB and data
+    ROOTA_LABEL="resin-rootA"
+    ROOTA_DEV=$(get_dev_path_in_device_with_label "/dev/${ROOT_DEVICE}" "${ROOTA_LABEL}")
+    ROOTA_NUM=$(get_part_number_by_label "${ROOT_DEVICE}" "${ROOTA_LABEL}")
+    ROOTA_START=$(get_part_start_by_number "${ROOT_DEVICE}" "${ROOTA_NUM}")
+    ROOTA_SIZE=$(get_part_size_by_number "${ROOT_DEVICE}" "${ROOTA_NUM}")
+
+    ROOTB_LABEL="resin-rootB"
+    ROOTB_DEV=$(get_dev_path_in_device_with_label "/dev/${ROOT_DEVICE}" "${ROOTB_LABEL}")
+    ROOTB_NUM=$(get_part_number_by_label "${ROOT_DEVICE}" "${ROOTB_LABEL}")
+    ROOTB_START=$(get_part_start_by_number "${ROOT_DEVICE}" "${ROOTB_NUM}")
+    ROOTB_SIZE=$(get_part_size_by_number "${ROOT_DEVICE}" "${ROOTB_NUM}")
+
+    DATA_LABEL="resin-data"
+    DATA_DEV=$(get_dev_path_in_device_with_label "/dev/${ROOT_DEVICE}" "${DATA_LABEL}")
+    DATA_NUM=$(get_part_number_by_label "${ROOT_DEVICE}" "${DATA_LABEL}")
+    DATA_START=$(get_part_start_by_number "${ROOT_DEVICE}" "${DATA_NUM}")
+    DATA_SIZE=$(get_part_size_by_number "${ROOT_DEVICE}" "${DATA_NUM}")
+    DATA_BLOCK_SIZE=$(tune2fs -l "${DATA_DEV}" | grep "Block size:" | awk '{print $3}')
+
+    # Calculate the new partition sizes and offsets
+    NEW_ROOT_SIZE=$((2 * "${ROOTA_SIZE}"))
+    NEW_ROOTA_END=$(("${ROOTA_START}" + "${NEW_ROOT_SIZE}" - 1))
+    NEW_DATA_SIZE=$(("${DATA_SIZE}" - "${NEW_ROOT_SIZE}"))
+    NEW_ROOTB_START=$(("${DATA_START}" + "${NEW_DATA_SIZE}"))
+    NEW_ROOTB_END=$(("${NEW_ROOTB_START}" + "${NEW_ROOT_SIZE}" - 1))
+    NEW_DATA_END=$(("${NEW_ROOTB_START}" - 1))
+
+    # Back up rootB
+    ROOTB_BACKUP=$(mktemp)
+    dd "if=${ROOTB_DEV}" "of=${ROOTB_BACKUP}" bs=4M
+
+    # Shrink data
+    fsck.ext4 -fp "${DATA_DEV}"
+    resize2fs "${DATA_DEV}" $(("${NEW_DATA_SIZE}" / "${DATA_BLOCK_SIZE}"))
+    yes | parted ---pretend-input-tty "/dev/${ROOT_DEVICE}" resizepart "${DATA_NUM}" "${NEW_DATA_END}B"
+
+    # On MBR, we also need to shrink the extended partition that holds data
+    # We're hardcoding number 4 here instead of looking for it programatically
+    # No device type is using anything else and resindataexpander does the same
+    if [ "$(get_part_table_type "/dev/${ROOT_DEVICE}")" = msdos ]; then
+        yes | parted ---pretend-input-tty "/dev/${ROOT_DEVICE}" resizepart 4 "${NEW_DATA_END}B"
+    fi
+
+    # Recreate rootB at the end, restore it from the backup and grow it
+    parted -s "/dev/${ROOT_DEVICE}" rm "${ROOTB_NUM}"
+    parted -s "/dev/${ROOT_DEVICE}" mkpart primary ext4 "${NEW_ROOTB_START}B" "${NEW_ROOTB_END}B"
+    dd "if=${ROOTB_BACKUP}" "of=${ROOTB_DEV}" bs=4M
+    fsck.ext4 -fp "${ROOTB_DEV}"
+    resize2fs "${ROOTB_DEV}"
+
+    # Grow rootA
+    parted -s "/dev/${ROOT_DEVICE}" resizepart "${ROOTA_NUM}" "${NEW_ROOTA_END}B"
+    fsck.ext4 -fp "${ROOTA_DEV}"
+    resize2fs "${ROOTA_DEV}"
+
+    # We're done
+    # Remount the final root and pretend nothing happened
+    mount "${FINAL_ROOT}" "${ROOTFS_DIR}"
+}
