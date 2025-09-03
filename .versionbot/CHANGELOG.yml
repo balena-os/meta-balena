@@ -1,4 +1,25 @@
 - commits:
+    - subject: Fail if IOMMU is disabled on secure boot systems
+      hash: ecedf68132543a21d906b299c365db7be34abe9f
+      body: |
+        At this moment we provision secure boot systems without checking
+        whether the IOMMU is enabled. With the IOMMU disabled, all PCIe cards
+        have full DMA access and are able to retrieve the encryption keys
+        from memory. On some systems this logs an extra event into PCR7.
+
+        This patch makes the OS look for the event in the TPM event log
+        and refuse to provision or unlock the disks if the IOMMU is disabled.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.6.4
+  title: ""
+  date: 2025-09-03T13:27:58.602Z
+- commits:
     - subject: "recipes-connectivity/libnss-ato: Do not hardcode the homedir for user
         root"
       hash: b5457ab54bcd354b01adcc001ee02afe76785f65

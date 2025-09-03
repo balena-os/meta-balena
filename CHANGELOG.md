@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.4
+## (2025-09-03)
+
+* Fail if IOMMU is disabled on secure boot systems [Michal Toman]
+
 # v6.6.3
 ## (2025-08-29)
 
