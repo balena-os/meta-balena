@@ -68,6 +68,11 @@ cryptsetup_run() {
     # Die if anything fails here
     set -e
 
+    # Don't load the passphrase into memory if the IOMMU is disabled
+    if pcr7_has_dma_disabled_event; then
+        fail "The IOMMU is disabled, won't load the LUKS passphrase into memory"
+    fi
+
     boot_part_assert
 
     EFI_MOUNT_DIR="/efi"

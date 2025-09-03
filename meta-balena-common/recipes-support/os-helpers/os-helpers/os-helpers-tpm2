@@ -368,3 +368,28 @@ hw_decrypt_passphrase() {
                     -o "${OUTPUT_FILE}" \
                     "${EFI_DIR}/balena-luks.enc"
 }
+
+pcr7_has_dma_disabled_event() {
+    # This function checks whether a "DMA Protection Disabled" event is logged in PCR7
+    # which indicates the IOMMU is disabled and PCIe cards have full DMA access.
+    # It doesn't parse the event log properly (as a yaml), instead it greps PCR7 events
+    # events and looks for the "DMA Protection Disabled" message in the following
+    # few lines. Not all UEFI implementations log the event even when the IOMMU
+    # is disabled, so this is inherently best-effort, but still better than nothing.
+    #
+    # The event in the log looks like this:
+    # - EventNum: 11
+    #   PCRIndex: 7
+    #   EventType: EV_EFI_ACTION
+    #   DigestCount: 1
+    #   Digests:
+    #   - AlgorithmId: sha256
+    #     Digest: "019537eeff4f1858181e09d26faa59a5ad3a9d8eef3d1bbbb35288e0e16d656c"
+    #   EventSize: 23
+    #   Event: |-
+    #     DMA Protection Disabled
+
+    tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
+        | grep "PCRIndex: 7" -A 10 \
+        | grep -qi "DMA Protection Disabled"
+}
