@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.6
+## (2025-09-17)
+
+* Condition the start of update-balena-supervisor.service after internet connectivity [Florin Sarbu]
+
 # v6.6.5
 ## (2025-09-15)
 

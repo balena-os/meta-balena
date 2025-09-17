@@ -1,4 +1,32 @@
 - commits:
+    - subject: Condition the start of update-balena-supervisor.service after internet
+        connectivity
+      hash: d5b31e24d8d772deeb8b2bf961bb206ecb999289
+      body: |
+        There is a board that is slower to get to internet connectivity over WiFi (slower interface
+        bring-up, slower initial DNS resolution). Because of this, in cases where we need to update
+        the supervisor just after boot (such as after clearing the data partiton by means of deleting
+        /mnt/data/remove_me_to_reset and after that rebooting the board) the update-balena-supervisor.service
+        will fail because internet connectivity is not yet established.
+
+        To overcome this we make update-balena-supervisor.service depend on a separate target we have defined solely
+        for the purpose of waiting for network connectivity. See
+        https://github.com/balena-os/meta-balena/commit/a6781d54c6edced457ad916cac3fec9c70d25a0a for details
+      footer:
+        Changelog-entry: Condition the start of update-balena-supervisor.service after
+          internet connectivity
+        changelog-entry: Condition the start of update-balena-supervisor.service after
+          internet connectivity
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.6.6
+  title: ""
+  date: 2025-09-17T09:45:49.030Z
+- commits:
     - subject: Update tests/leviathan digest to 3e61af4
       hash: caf294a73627b6c317cd0d1732ab3b53f5e4f63d
       body: Update tests/leviathan
