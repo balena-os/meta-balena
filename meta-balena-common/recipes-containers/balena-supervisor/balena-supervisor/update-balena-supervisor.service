@@ -3,7 +3,8 @@ Description=Balena supervisor updater
 Requires=\
     balena.service \
     bind-etc-balena-supervisor.service \
-    tmp.mount
+    tmp.mount \
+    balena-net-connectivity-wait.target
 Wants=\
     mnt-boot.mount \
     balena-supervisor.service
@@ -12,7 +13,8 @@ After=\
     tmp.mount \
     mnt-boot.mount \
     bind-etc-balena-supervisor.service \
-    balena-supervisor.service
+    balena-supervisor.service \
+    balena-net-connectivity-wait.target
 
 [Service]
 Type=simple
