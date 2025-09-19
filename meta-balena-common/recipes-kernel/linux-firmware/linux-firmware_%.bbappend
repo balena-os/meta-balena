@@ -24,12 +24,6 @@ FILES:${PN}-rtl8188eu = " \
     ${nonarch_base_libdir}/firmware/rtlwifi/rtl8188eu*.bin* \
     "
 
-PACKAGES =+ "${PN}-iwlwifi-9260"
-
-FILES:${PN}-iwlwifi-9260 = " \
-    ${nonarch_base_libdir}/firmware/iwlwifi-9260-* \
-    "
-
 PACKAGES =+ "${PN}-iwlwifi-qu-b0-hr-b0"
 
 FILES:${PN}-iwlwifi-qu-b0-hr-b0 = " \
@@ -42,12 +36,6 @@ FILES:${PN}-ibt-19-0-4  = " \
     ${nonarch_base_libdir}/firmware/intel/ibt-19-0-4.doc* \
     ${nonarch_base_libdir}/firmware/intel/ibt-19-0-4.sfi* \
     "
-
-PACKAGES =+ "${PN}-ath10k-qca6174"
-
-FILES:${PN}-ath10k-qca6174 = " \
-    ${nonarch_base_libdir}/firmware/ath10k/QCA6174/* \
-"
 
 PACKAGES =+ "${PN}-rtl8723b-bt"
 
