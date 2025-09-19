@@ -1,4 +1,4 @@
-inherit deploy meson
+inherit deploy
 
 FILESEXTRAPATHS:append := ":${THISDIR}/balena-files:${THISDIR}/${BPN}"
 
