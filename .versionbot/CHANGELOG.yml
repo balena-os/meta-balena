@@ -1,4 +1,145 @@
 - commits:
+    - subject: Update balena-supervisor to v17.1.2
+      hash: 6744c3312b70dd0fa3b87ca4dcd3a4efd7405680
+      body: |
+        Update balena-supervisor from 17.0.3 to 17.1.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "config/backends/power-fan: Enable configurable power and fan for
+                Forecr DSBOARD ORNX Nano 8GB"
+              hash: 69b451c650a6d641a77b293abfd253d17db8a2ce
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: balena-supervisor-17.1.2
+          title: ""
+          date: 2025-07-28T14:08:15.142Z
+        - commits:
+            - subject: Remove memory healthcheck
+              hash: 8ffdba7d187a00d846d2c76c3416a45e02bf0e93
+              body: >
+                Supervisor has had memory leaks removed since v16.5.1, with
+                latest tested
+
+                version being v16.7.1. Furthermore, on recent reported instances
+                of memory healthcheck
+
+                triggering on support, we've snapshotted the heap before & after
+                on devices multiple times
+
+                without finding any evidence of memory leaks in the snapshots.
+
+
+                Therefore, it's hypothesized that the heuristic for determining
+                starting memory may
+
+                be flawed in that it's not waiting long enough after system
+                startup, or it may
+
+                run right after garbage collection has happened. Because of the
+                variability and
+
+                difficulty of ascertaining these factors, we suspect an
+                inaccurate memory
+
+                baseline may be the cause of the instances of false positives on
+                support.
+              footer:
+                See: https://balena.zulipchat.com/#narrow/channel/403752-channel.2Fsupport-help/topic/supervisor.20memory.20usage.20above.20threadhold/near/520640885
+                see: https://balena.zulipchat.com/#narrow/channel/403752-channel.2Fsupport-help/topic/supervisor.20memory.20usage.20above.20threadhold/near/520640885
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.1.1
+          title: ""
+          date: 2025-06-09T13:58:34.068Z
+        - commits:
+            - subject: Support target state apply cancellation
+              hash: 8c691662712d1b93264260bf6c7ded8d51bd7d55
+              body: >
+                The current target state apply is cancelled when either:
+
+                - /v1/update is called with cancel: true
+
+                - A different target state is received from the cloud (with a
+                non-304 status)
+
+
+                Following apply cancellation, a target state apply is
+                re-triggered. This ensures
+
+                that the user can force a device out of a dead-locked situation
+                where a long-running
+
+                task such as an image fetch fails to cede control back to the
+                Supervisor, which is
+
+                the behavior observed in an Engine bug with infinite pull
+                retries with a bad network.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.1.0
+          title: ""
+          date: 2025-05-28T15:42:41.610Z
+        - commits:
+            - subject: Exclude reclaimable slab memory from used memory metric
+              hash: 49e91a2639fbee6333fbf3ea52d8d6a7acfd705d
+              body: >
+                Aligns metric value with used memory reported by the free and
+                htop
+
+                utilities.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Ken Bannister
+              nested: []
+          version: balena-supervisor-17.0.5
+          title: ""
+          date: 2025-05-27T15:32:21.540Z
+        - commits:
+            - subject: Remove unsupported fields from contract requirements
+              hash: 4318272844c7067288675ca6a2b0f4d0175c3ae1
+              body: >
+                A contract including extra requirement fields, such as "name"
+                would fail
+
+                validation. This PR removes any extra fields from the validated
+                contract
+
+                to prevent services with these extra fields from getting
+                rejected by the
+
+                contract validation.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-17.0.4
+          title: ""
+          date: 2025-05-22T18:47:27.797Z
+  version: 6.6.9
+  title: ""
+  date: 2025-09-29T17:46:37.294Z
+- commits:
     - subject: Update tests/leviathan digest to 73d4851
       hash: d0c870cd02f1ba1a2ddaa50d223160665fc056a1
       body: Update tests/leviathan
