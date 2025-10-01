@@ -16,6 +16,16 @@ if [ -f "/usr/libexec/os-helpers-logging" ]; then
 . /usr/libexec/os-helpers-logging
 fi
 
+# Get the physical sector size for a device
+# Arguments:
+#   1 - device path (e.g., /dev/sda1, /dev/mmcblk0p1)
+# Returns: sector size in bytes via stdout
+get_sector_size() {
+	local _device="$1"
+
+	lsblk -o NAME,PHY-SEC,TYPE "$_device" 2>/dev/null | awk '$3 == "part" || $3 == "crypt" {print $2}' | head -n1
+}
+
 # Wait for a file to appear with loop count limit.
 # Use-case example: wait for udev to create a filesystem symlink.
 # Arguments:
@@ -536,7 +546,7 @@ estimate_size_in_zram() {
 	SAMPLE_SIZE_BYTES=$(expr 50 \* 1024 \* 1024)
 
 	_dev=$(df "$_file" | awk 'NR==2 {print $1}')
-	_blk_sz=$(lsblk -o NAME,PHY-SEC,TYPE "$_dev" 2>/dev/null | awk '$3 == "part" {print $2}' | head -n1)
+	_blk_sz=$(get_sector_size "$_dev")
 	if [ -z "$_blk_sz" ] || [ "$_blk_sz" -eq 0 ]; then
 		warn "Unable to determine block size, using 512 bytes"
 		_blk_sz=512
