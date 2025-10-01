@@ -1,0 +1,16 @@
+[Unit]
+Description=Disk watchdog service for monitoring disk health
+After=local-fs.target
+
+[Service]
+Type=notify
+ExecStart=@DAEMON_PATH@ -v -f @WD_TEST_FILE@ -i 5000
+WatchdogSec=30s
+StartLimitInterval=2min
+StartLimitBurst=3
+StartLimitAction=reboot-force
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
