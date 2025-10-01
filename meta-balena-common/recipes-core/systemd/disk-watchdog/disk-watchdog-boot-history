@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Disk watchdog boot history updater
+# This script runs once per boot to update the boot timestamp history
+
+TIME_WINDOW=600  # 10 minutes
+MAX_BOOTS=3
+
+# Read boot history, one timestamp per line
+read_boot_history() {
+    local boot_file="@DISK_WD_BOOT_DIR@/boot-history"
+    if [[ -f "$boot_file" ]]; then
+        cat "$boot_file"
+    fi
+}
+
+# Write boot history, one timestamp per line
+write_boot_history() {
+    local timestamps="$1"
+    local boot_file="@DISK_WD_BOOT_DIR@/boot-history"
+    mkdir -p "$(dirname "$boot_file")" 2>/dev/null || true
+    echo "$timestamps" > "$boot_file" 2>/dev/null || true
+}
+
+# Disable the watchdog service by creating the disable file
+disable_watchdog_service() {
+    mkdir -p @DISK_WD_BOOT_DIR@ 2>/dev/null || true
+    touch @DISK_WD_BOOT_DIR@/disabled 2>/dev/null || true
+}
+
+# Update boot history with current boot timestamp
+update_boot_history() {
+    local current_time=$(date +%s)
+    local filtered_history=""
+
+    echo "Boot history updater: Processing boot at timestamp $current_time"
+
+    # Process existing boots, keeping only recent ones
+    while IFS= read -r timestamp; do
+        if [[ -n "$timestamp" && $((current_time - timestamp)) -lt $TIME_WINDOW ]]; then
+            filtered_history="${filtered_history}${timestamp}"$'\n'
+        fi
+    done < <(read_boot_history)
+
+    # Add current boot timestamp
+    filtered_history="${filtered_history}${current_time}"
+
+    # Write updated history
+    write_boot_history "$filtered_history"
+
+    # Count boots in the updated history
+    local boot_count=$(echo "$filtered_history" | wc -l)
+
+    echo "Boot history updated successfully (boot #$boot_count in last $((TIME_WINDOW/60)) minutes)"
+
+    # Check if we have too many boots
+    if [[ $boot_count -ge $MAX_BOOTS ]]; then
+        echo "Excessive boots detected ($boot_count >= $MAX_BOOTS) - disabling disk watchdog"
+        disable_watchdog_service
+    else
+        echo "Boot count ($boot_count) below threshold ($MAX_BOOTS) - watchdog will be allowed to start"
+    fi
+}
+
+# Main execution
+update_boot_history
+exit 0

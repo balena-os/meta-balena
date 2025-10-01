@@ -477,5 +477,6 @@ module.exports = {
 		'./tests/swap',
 		'./tests/internet-sharing',
 		'./tests/safe-reboot',
+		'./tests/disk-watchdog',
 	],
 };
