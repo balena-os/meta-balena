@@ -1,0 +1,12 @@
+[Unit]
+Description=Disk watchdog boot history updater
+After=local-fs.target
+Before=disk-watchdogd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/disk-watchdog-boot-history
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
