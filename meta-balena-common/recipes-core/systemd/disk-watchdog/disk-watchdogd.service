@@ -1,0 +1,18 @@
+[Unit]
+Description=Disk watchdog service for monitoring disk health
+After=local-fs.target disk-watchdog-boot-history.service
+Requires=disk-watchdog-boot-history.service
+ConditionPathExists=!@DISK_WD_BOOT_DIR@/disabled
+
+[Service]
+Type=notify
+ExecStart=/bin/sh -c '@DAEMON_PATH@ -v -f @WD_TEST_FILE@ -b $(source @OS_HELPERS_FS@ && get_sector_size /dev/disk/by-state/active)'
+WatchdogSec=30s
+StartLimitInterval=2min
+StartLimitBurst=3
+StartLimitAction=reboot-force
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
