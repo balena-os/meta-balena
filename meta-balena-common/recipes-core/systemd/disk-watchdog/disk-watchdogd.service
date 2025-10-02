@@ -4,7 +4,7 @@ After=local-fs.target
 
 [Service]
 Type=notify
-ExecStart=@DAEMON_PATH@ -v -f @WD_TEST_FILE@ -i 5000
+ExecStart=@DAEMON_PATH@ -v -f @WD_TEST_FILE@
 WatchdogSec=30s
 StartLimitInterval=2min
 StartLimitBurst=3

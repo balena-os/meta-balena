@@ -19,7 +19,10 @@ static int verbose_mode = 0;
 static int debug_mode = 0;
 
 #define LOG_VERBOSE(fmt, ...) do { \
-    if (verbose_mode) printf(fmt, ##__VA_ARGS__); \
+    if (verbose_mode) { \
+        printf(fmt, ##__VA_ARGS__); \
+        fflush(stdout); \
+    } \
 } while(0)
 
 // this test will overwrite the file with test data and check for write errors
@@ -213,6 +216,24 @@ static int parse_args(int argc, char *argv[]) {
         return -1;
     }
 
+    /* Check if systemd watchdog is enabled and adjust interval if not manually set */
+    if (!debug_mode) {
+        uint64_t watchdog_usec = 0;
+        int watchdog_enabled = sd_watchdog_enabled(0, &watchdog_usec);
+        if (watchdog_enabled > 0) {
+            LOG_VERBOSE("Systemd watchdog enabled: timeout = %lu microseconds (%.1f seconds)\n",
+                       watchdog_usec, watchdog_usec / 1000000.0);
+            /* Always override interval when systemd watchdog is enabled for safety */
+            if (interval_us != DEFAULT_INTERVAL) {
+                LOG_VERBOSE("Overriding user-specified interval (%d ms) for watchdog safety\n", interval_us / 1000);
+            }
+            /* Use half the watchdog timeout as our test interval for safety margin */
+            interval_us = watchdog_usec / 2;
+            LOG_VERBOSE("Using watchdog-safe interval: %d ms\n", interval_us / 1000);
+            LOG_VERBOSE("Systemd watchdog integration: ENABLED\n");
+        }
+    }
+
     LOG_VERBOSE("Configuration:\n");
     LOG_VERBOSE("  Test file: %s\n", test_file);
     LOG_VERBOSE("  Interval: %d ms\n", interval_us / 1000);
@@ -277,6 +298,7 @@ int main(int argc, char *argv[]) {
         read_result = test_read(test_file);
         if (read_result != 0) {
             fprintf(stderr, "Read test failed with code %d\n", read_result);
+            fflush(stderr);
             /* Don't reset watchdog on failure - let systemd handle timeout */
         } else {
             LOG_VERBOSE("read ok\n");
