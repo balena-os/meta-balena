@@ -26,10 +26,10 @@ SECUREBOOT_HOOKS = " \
 SECUREBOOT_HOOK_DIRS = " \
     95-secureboot \
     "
-HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUREBOOT_HOOKS}', '', d)}"
+HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' ${SECUREBOOT_HOOKS}', '', d)}"
 
 HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
-HOSTAPP_HOOKS_DIRS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', '${SECUREBOOT_HOOK_DIRS}', '', d)}"
+HOSTAPP_HOOKS_DIRS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' ${SECUREBOOT_HOOK_DIRS}', '', d)}"
 
 GRUB_INSTALL_DIR = "${@bb.utils.contains('MACHINE_FEATURES','efi','/EFI/BOOT','/grub',d)}"
 
