@@ -17,7 +17,7 @@ SRC_URI:append = " \
 
 PACKAGECONFIG:remove = "polkit"
 
-PACKAGECONFIG:append = "at"
+PACKAGECONFIG:append = " at"
 
 do_install:append() {
     install -d ${D}${base_libdir}/udev/rules.d/

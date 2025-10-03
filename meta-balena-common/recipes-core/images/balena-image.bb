@@ -69,7 +69,7 @@ BALENA_BOOT_PARTITION_FILES:append = " \
 "
 
 # add the secure boot keys if needed
-BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','','balena-keys:/balena-keys/',d)}"
+BALENA_BOOT_PARTITION_FILES:append = "${@oe.utils.conditional('SIGN_API','','',' balena-keys:/balena-keys/',d)}"
 
 # add the LUKS variant of GRUB config if needed
 BALENA_BOOT_PARTITION_FILES:append = "${@bb.utils.contains('MACHINE_FEATURES','efi',' grub.cfg_internal_luks:/EFI/BOOT/grub-luks.cfg','',d)}"
@@ -89,7 +89,7 @@ BALENA_BOOT_PARTITION_FILES:append = " \
     system-proxy/README.ignore:/system-proxy/README.ignore \
 "
 
-BALENA_BOOT_PARTITION_FILES:append = "${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') or d.getVar('UBOOT_CONFIG') else ''}"
+BALENA_BOOT_PARTITION_FILES:append = " ${@ ' extra_uEnv.txt:/extra_uEnv.txt ' if d.getVar('UBOOT_MACHINE') or d.getVar('UBOOT_CONFIG') else ''}"
 
 # Resin image flag file
 BALENA_BOOT_PARTITION_FILES:append = " ${BALENA_IMAGE_FLAG_FILE}:/${BALENA_IMAGE_FLAG_FILE}"

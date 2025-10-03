@@ -20,4 +20,4 @@ ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.dnsmasq"
 ALTERNATIVE_LINK_NAME[resolv-conf] = "${sysconfdir}/resolv.conf"
 ALTERNATIVE_PRIORITY[resolv-conf] = "60"
 
-PACKAGECONFIG:append = "dbus"
+PACKAGECONFIG:append = " dbus"
