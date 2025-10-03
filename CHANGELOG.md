@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.10
+## (2025-10-03)
+
+* meta-balena-common: Consistently prepend spaces when using append [Alexandru Costache]
+
 # v6.6.9
 ## (2025-09-29)
 

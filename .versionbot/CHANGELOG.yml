@@ -1,4 +1,21 @@
 - commits:
+    - subject: "meta-balena-common: Consistently prepend spaces when using append"
+      hash: d40e75d6a53dbbeced901bec555f33e10f1c22c8
+      body: |
+        The '+=' operator ensures a space is inserted before appending a value,
+        however ':append' does not. So let's prepend a space consistently
+        where ':append' is used.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.6.10
+  title: ""
+  date: 2025-10-03T09:17:11.161Z
+- commits:
     - subject: Update balena-supervisor to v17.1.2
       hash: 6744c3312b70dd0fa3b87ca4dcd3a4efd7405680
       body: |
