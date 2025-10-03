@@ -3,10 +3,12 @@ DESCRIPTION = "A watchdog service that monitors disk health and takes action on 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-SRC_URI = "file://disk-watchdog.c \
-           file://disk-watchdogd.service"
+SRC_URI = "git://github.com/balena-os/disk-watchdogd.git;branch=add-flowzone;protocol=https"
+SRCREV = "d8d0868c25135c9b59c361b6341a473d07a3a688"
 
-S = "${WORKDIR}"
+SRC_URI += "file://disk-watchdogd.service"
+
+S = "${WORKDIR}/git"
 
 WD_TEST_FILE ?= "${bindir}/disk-watchdogd"
 
@@ -14,7 +16,7 @@ DEPENDS += "systemd"
 RDEPENDS:${PN} += "systemd"
 
 do_compile() {
-    ${CC} ${CFLAGS} -D_GNU_SOURCE -Wall -Werror -pedantic disk-watchdog.c ${LDFLAGS} -lsystemd -o disk-watchdogd
+    oe_runmake all
 }
 
 inherit systemd
