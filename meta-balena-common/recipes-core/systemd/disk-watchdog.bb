@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = "git://github.com/balena-os/disk-watchdogd.git;branch=add-flowzone;protocol=https"
-SRCREV = "d8d0868c25135c9b59c361b6341a473d07a3a688"
+SRCREV = "f406edede6f3f1d013c0af7e8021b5634ba125fe"
 
 SRC_URI += "file://disk-watchdogd.service"
 

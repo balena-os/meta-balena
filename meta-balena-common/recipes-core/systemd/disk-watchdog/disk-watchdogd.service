@@ -4,7 +4,7 @@ After=local-fs.target
 
 [Service]
 Type=notify
-ExecStart=@DAEMON_PATH@ -v -f @WD_TEST_FILE@
+ExecStart=/bin/sh -c '@DAEMON_PATH@ -v -f @WD_TEST_FILE@ -b $(blockdev --getss /dev/disk/by-state/active)'
 WatchdogSec=30s
 StartLimitInterval=2min
 StartLimitBurst=3
