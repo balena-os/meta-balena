@@ -6,14 +6,18 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 SRC_URI = "git://github.com/balena-os/disk-watchdogd.git;branch=add-flowzone;protocol=https"
 SRCREV = "f406edede6f3f1d013c0af7e8021b5634ba125fe"
 
-SRC_URI += "file://disk-watchdogd.service"
+SRC_URI += "file://disk-watchdogd.service \
+            file://disk-watchdog-failure.service \
+            file://disk-watchdog-failure-handler"
 
 S = "${WORKDIR}/git"
 
 WD_TEST_FILE ?= "${bindir}/disk-watchdogd"
+DISK_WD_FAIL_COUNT_FILE ?= "/mnt/state/disk-watchdog/failure-count"
 
 DEPENDS += "systemd"
 RDEPENDS:${PN} += "systemd"
+RDEPENDS:${PN} += "os-helpers-fs bash"
 
 do_compile() {
     oe_runmake all
@@ -21,7 +25,7 @@ do_compile() {
 
 inherit systemd
 
-SYSTEMD_SERVICE:${PN} = "disk-watchdogd.service"
+SYSTEMD_SERVICE:${PN} = "disk-watchdogd.service disk-watchdog-failure.service"
 SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install() {
@@ -31,8 +35,16 @@ do_install() {
     # Substitute paths in service file
     sed -i -e 's|@DAEMON_PATH@|/usr/bin/disk-watchdogd|g' \
            -e 's|@WD_TEST_FILE@|${WD_TEST_FILE}|g' \
+           -e 's|@OS_HELPERS_FS@|${libexecdir}/os-helpers-fs|g' \
            ${WORKDIR}/disk-watchdogd.service
+
+    # Substitute paths in failure handler script
+    sed -i -e 's|@DISK_WD_FAIL_COUNT_FILE@|${DISK_WD_FAIL_COUNT_FILE}|g' \
+           ${WORKDIR}/disk-watchdog-failure-handler
 
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/disk-watchdogd.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${WORKDIR}/disk-watchdog-failure.service ${D}${systemd_unitdir}/system/
+
+    install -m 0755 ${WORKDIR}/disk-watchdog-failure-handler ${D}${bindir}/
 }

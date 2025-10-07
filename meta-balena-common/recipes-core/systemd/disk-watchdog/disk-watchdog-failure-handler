@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# Disk watchdog failure handler script
+# This script runs when the disk watchdog fails
+
+# MAX_FAILURES is the number of failures allowed in the time window,
+# the script will be called every time a watchdog failure is detected,
+# so the number of reboot possible is MAX_FAILURES/StartLimitBurst from
+# the service file
+MAX_FAILURES=10
+TIME_WINDOW=600  # 10 minutes
+
+# this function get the failure and returns one timestamp per line
+read_failure_history() {
+    # Simple file storage functions (will be replaced with something cloud based later)
+    local failure_file="@DISK_WD_FAIL_COUNT_FILE@"
+    if [[ -f "$failure_file" ]]; then
+        cat "$failure_file"
+    fi
+}
+
+# this function writes the failure, one timestamp per line
+write_failure_history() {
+    # Simple file storage functions (will be replaced with something cloud based later)
+    local timestamps="$1"
+    local failure_file="@DISK_WD_FAIL_COUNT_FILE@"
+    mkdir -p "$(dirname "$failure_file")" 2>/dev/null || true
+    echo "$timestamps" > "$failure_file" 2>/dev/null || true
+}
+
+# Alert function for excessive failures (will be replaced with something cloud based later)
+alert_excessive_failures() {
+    echo "Excessive disk watchdog failures detected - preventing reboot loop"
+}
+
+# Mitigation function for excessive failures (will be replaced with something cloud based later)
+mitigate_excessive_failures() {
+    alert_excessive_failures
+
+    # Disable the watchdog service to prevent further reboots
+    systemctl disable disk-watchdogd.service
+}
+
+# Update failure history and return current failure count
+update_failure_count() {
+    local current_time=$(date +%s)
+    local filtered_history=""
+    local failure_count=0
+
+    # Process existing failures
+    while IFS= read -r timestamp; do
+        if [[ -n "$timestamp" && $((current_time - timestamp)) -lt $TIME_WINDOW ]]; then
+            filtered_history="${filtered_history}${timestamp}"$'\n'
+            failure_count=$((failure_count + 1))
+        fi
+    done < <(read_failure_history)
+
+    # Add current failure
+    filtered_history="${filtered_history}${current_time}"
+    failure_count=$((failure_count + 1))
+
+    # Write back filtered history
+    write_failure_history "$filtered_history"
+
+    # Return failure count
+    return "$failure_count"
+}
+
+# Update failure count and get result
+update_failure_count
+FAILURE_COUNT=$?
+
+echo "Disk watchdog failure detected (failure #$FAILURE_COUNT in last $((TIME_WINDOW/60)) minutes)"
+
+# Take action based on failure count
+if [[ $FAILURE_COUNT -ge $MAX_FAILURES ]]; then
+    mitigate_excessive_failures
+else
+    echo "Failure count ($FAILURE_COUNT) below threshold ($MAX_FAILURES)"
+    echo "Allowing normal restart/reboot behavior"
+fi
