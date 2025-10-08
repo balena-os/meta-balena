@@ -13,7 +13,7 @@ SRC_URI += "file://disk-watchdogd.service \
 S = "${WORKDIR}/git"
 
 WD_TEST_FILE ?= "${bindir}/disk-watchdogd"
-DISK_WD_FAIL_COUNT_FILE ?= "/mnt/state/disk-watchdog/failure-count"
+DISK_WD_FAIL_DIR ?= "/mnt/state/disk-watchdog"
 
 DEPENDS += "systemd"
 RDEPENDS:${PN} += "systemd"
@@ -36,10 +36,11 @@ do_install() {
     sed -i -e 's|@DAEMON_PATH@|/usr/bin/disk-watchdogd|g' \
            -e 's|@WD_TEST_FILE@|${WD_TEST_FILE}|g' \
            -e 's|@OS_HELPERS_FS@|${libexecdir}/os-helpers-fs|g' \
+           -e 's|@DISK_WD_FAIL_DIR@|${DISK_WD_FAIL_DIR}|g' \
            ${WORKDIR}/disk-watchdogd.service
 
     # Substitute paths in failure handler script
-    sed -i -e 's|@DISK_WD_FAIL_COUNT_FILE@|${DISK_WD_FAIL_COUNT_FILE}|g' \
+    sed -i -e 's|@DISK_WD_FAIL_DIR@|${DISK_WD_FAIL_DIR}|g' \
            ${WORKDIR}/disk-watchdog-failure-handler
 
     install -d ${D}${systemd_unitdir}/system

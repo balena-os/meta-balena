@@ -2,6 +2,7 @@
 Description=Disk watchdog service for monitoring disk health
 After=local-fs.target
 OnFailure=disk-watchdog-failure.service
+ConditionPathExists=!@DISK_WD_FAIL_DIR@/disabled
 
 [Service]
 Type=notify

@@ -3,17 +3,14 @@
 # Disk watchdog failure handler script
 # This script runs when the disk watchdog fails
 
-# MAX_FAILURES is the number of failures allowed in the time window,
-# the script will be called every time a watchdog failure is detected,
-# so the number of reboot possible is MAX_FAILURES/StartLimitBurst from
-# the service file
-MAX_FAILURES=10
+# MAX_FAILURES is the number of failures allowed in the time window
+MAX_FAILURES=3
 TIME_WINDOW=600  # 10 minutes
 
 # this function get the failure and returns one timestamp per line
 read_failure_history() {
     # Simple file storage functions (will be replaced with something cloud based later)
-    local failure_file="@DISK_WD_FAIL_COUNT_FILE@"
+    local failure_file="@DISK_WD_FAIL_DIR@/failure-count"
     if [[ -f "$failure_file" ]]; then
         cat "$failure_file"
     fi
@@ -23,7 +20,7 @@ read_failure_history() {
 write_failure_history() {
     # Simple file storage functions (will be replaced with something cloud based later)
     local timestamps="$1"
-    local failure_file="@DISK_WD_FAIL_COUNT_FILE@"
+    local failure_file="@DISK_WD_FAIL_DIR@/failure-count"
     mkdir -p "$(dirname "$failure_file")" 2>/dev/null || true
     echo "$timestamps" > "$failure_file" 2>/dev/null || true
 }
@@ -37,8 +34,10 @@ alert_excessive_failures() {
 mitigate_excessive_failures() {
     alert_excessive_failures
 
-    # Disable the watchdog service to prevent further reboots
-    systemctl disable disk-watchdogd.service
+    # Create disable file to prevent service start on next boot
+    mkdir -p @DISK_WD_FAIL_DIR@ 2>/dev/null || true
+    touch @DISK_WD_FAIL_DIR@/disabled 2>/dev/null || true
+
 }
 
 # Update failure history and return current failure count
