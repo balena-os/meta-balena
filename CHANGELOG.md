@@ -1,6 +1,31 @@
 Change log
 -----------
 
+# v6.6.11
+## (2025-10-10)
+
+
+<details>
+<summary> Update tests/leviathan digest to 9cb148e [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.47
+> ### (2025-10-09)
+> 
+> * Update balena-io/balena-cli to v22.4.10 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.46
+> ### (2025-10-06)
+> 
+> * Update balena-os/leviathan-worker to v2.10.9 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.45
+> ### (2025-10-06)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.6.10
 ## (2025-10-03)
 
