@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# Disk watchdog boot check script
+# This script runs before the watchdog starts to detect reboot loops
+
+MAX_BOOTS=5
+TIME_WINDOW=600  # 10 minutes
+
+# Read boot history, one timestamp per line
+read_boot_history() {
+    local boot_file="@DISK_WD_BOOT_DIR@/boot-history"
+    if [[ -f "$boot_file" ]]; then
+        cat "$boot_file"
+    fi
+}
+
+# Write boot history, one timestamp per line
+write_boot_history() {
+    local timestamps="$1"
+    local boot_file="@DISK_WD_BOOT_DIR@/boot-history"
+    mkdir -p "$(dirname "$boot_file")" 2>/dev/null || true
+    echo "$timestamps" > "$boot_file" 2>/dev/null || true
+}
+
+# Disable the watchdog service by creating the disable file
+disable_watchdog_service() {
+    mkdir -p @DISK_WD_BOOT_DIR@ 2>/dev/null || true
+    touch @DISK_WD_BOOT_DIR@/disabled 2>/dev/null || true
+}
+
+# Update boot history with current boot timestamp
+update_boot_history() {
+    local current_time=$(date +%s)
+    local filtered_history=""
+
+    # Process existing boots, keeping only recent ones
+    while IFS= read -r timestamp; do
+        if [[ -n "$timestamp" && $((current_time - timestamp)) -lt $TIME_WINDOW ]]; then
+            filtered_history="${filtered_history}${timestamp}"$'\n'
+        fi
+    done < <(read_boot_history)
+
+    # Add current boot
+    filtered_history="${filtered_history}${current_time}"
+
+    # Write back filtered history
+    write_boot_history "$filtered_history"
+}
+
+# Get current boot count from history
+get_boot_count() {
+    local boot_count=0
+    local boot_file="@DISK_WD_BOOT_DIR@/boot-history"
+
+    # Count lines in boot history file (already filtered by update_boot_history)
+    if [[ -f "$boot_file" ]]; then
+        boot_count=$(wc -l < "$boot_file" 2>/dev/null || echo 0)
+    fi
+
+    # Return boot count
+    return "$boot_count"
+}
+
+# Update boot history and get current count
+update_boot_history
+get_boot_count
+BOOT_COUNT=$?
+
+echo "Boot detected (boot #$BOOT_COUNT in last $((TIME_WINDOW/60)) minutes)"
+
+# Check if we have too many boots
+if [[ $BOOT_COUNT -ge $MAX_BOOTS ]]; then
+    echo "Excessive boots detected ($BOOT_COUNT >= $MAX_BOOTS) - disabling disk watchdog"
+    
+    # Create disable file to prevent service start
+    disable_watchdog_service
+    
+    # Exit with error to prevent service start
+    exit 1
+else
+    echo "Boot count ($BOOT_COUNT) below threshold ($MAX_BOOTS)"
+    echo "Allowing disk watchdog to start"
+    exit 0
+fi
