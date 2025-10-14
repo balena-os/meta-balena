@@ -1,4 +1,68 @@
 - commits:
+    - subject: Update tests/leviathan digest to 8a590d2
+      hash: 9cfc0df106db82513ded9985fc56db961917af82
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.4.12
+              hash: 038d5ef3b5b2b4dcee0672ec1f93daac11a633cc
+              body: |
+                Update balena-io/balena-cli from 22.4.11 to 22.4.12
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.51
+          title: ""
+          date: 2025-10-13T20:35:47.103Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.10
+              hash: f3ad3e8de2c0e9c55dd4dddd90d366453293340f
+              body: |
+                Update balena-os/leviathan-worker from 2.10.9 to 2.10.10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.50
+          title: ""
+          date: 2025-10-13T04:41:12.472Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.4.11
+              hash: cba0d208fc9ab6557f3f1841f00cdc2f681ba8f7
+              body: |
+                Update balena-io/balena-cli from 22.4.10 to 22.4.11
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.49
+          title: ""
+          date: 2025-10-13T03:05:36.610Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 439319d3f5971b45851f24781d9aa1dfabe96613
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.48
+          title: ""
+          date: 2025-10-13T01:02:12.251Z
+  version: 6.6.12
+  title: ""
+  date: 2025-10-14T00:41:25.980Z
+- commits:
     - subject: Update tests/leviathan digest to 9cb148e
       hash: 1cd38c8cc6296ead209b4d3a215a593c0f1888e5
       body: Update tests/leviathan
