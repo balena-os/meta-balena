@@ -242,7 +242,6 @@ KERNEL_ZSTD = "${@configure_from_version("5.9", "kernel_zstd", "", d)}"
 BALENA_CONFIGS:append = "${@bb.utils.contains('MACHINE_FEATURES','efi'," ${KERNEL_ZSTD}",'',d)}"
 BALENA_CONFIGS[kernel_zstd] = " \
     CONFIG_KERNEL_ZSTD=y \
-    CONFIG_CRYPTO_ZSTD=y \
 "
 
 BALENA_CONFIGS[aufs] = " \
@@ -540,6 +539,7 @@ BALENA_CONFIGS[zram] = " \
     CONFIG_ZRAM=y \
     CONFIG_CRYPTO=y \
     CONFIG_CRYPTO_LZ4=y \
+    CONFIG_CRYPTO_ZSTD=y \
     "
 
 BALENA_CONFIGS:append = " ${@configure_from_version("6.12", " zram_backends", "", d)}"
