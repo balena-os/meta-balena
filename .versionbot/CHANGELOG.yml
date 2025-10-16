@@ -1,4 +1,32 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Fix zram failure when setting algorithm"
+      hash: ca456a422109f6cd4132d0c74fc012ec12a01f91
+      body: >
+        The initramfs error addressed by this commit is:
+
+            zramctl: /dev/zram1: failed to set algorithm: Invalid argument
+
+        zstd is the default algorithm currently used by the zram initramfs
+        module,
+
+        which is installed for all device-types. Also, the crypto API provides
+
+        the compression algorithms used by the zram kernel module, so let's make
+
+        this available for all devices as built-in, so it is accessible in the
+
+        initramfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 6.6.13
+  title: ""
+  date: 2025-10-16T10:23:25.020Z
+- commits:
     - subject: Update tests/leviathan digest to 8a590d2
       hash: 9cfc0df106db82513ded9985fc56db961917af82
       body: Update tests/leviathan

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.13
+## (2025-10-16)
+
+* kernel-balena.bbclass: Fix zram failure when setting algorithm [Alexandru]
+
 # v6.6.12
 ## (2025-10-14)
 
