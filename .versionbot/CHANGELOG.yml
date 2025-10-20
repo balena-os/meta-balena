@@ -1,4 +1,55 @@
 - commits:
+    - subject: Update tests/leviathan digest to 19c382d
+      hash: 7049d36cc9302a3bfb2918643d5668ea6fdbb869
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: ffe44154a6f98b06324b18dfe9de24bbe3b39752
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.54
+          title: ""
+          date: 2025-10-20T01:06:24.485Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.4.14
+              hash: 7a5ef964fb8ca00e80690144c0ff59c6d55fdd01
+              body: |
+                Update balena-io/balena-cli from 22.4.13 to 22.4.14
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.53
+          title: ""
+          date: 2025-10-17T18:55:11.552Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.4.13
+              hash: e41a4514e4851cd3476108072b5930a8b3bb4ea6
+              body: |
+                Update balena-io/balena-cli from 22.4.12 to 22.4.13
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.52
+          title: ""
+          date: 2025-10-14T15:09:42.204Z
+  version: 6.6.14
+  title: ""
+  date: 2025-10-20T07:06:29.629Z
+- commits:
     - subject: "kernel-balena.bbclass: Fix zram failure when setting algorithm"
       hash: ca456a422109f6cd4132d0c74fc012ec12a01f91
       body: >
