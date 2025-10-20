@@ -1,0 +1,21 @@
+[Unit]
+Description=Graceful shutdown test service
+Requires=balena.service
+After=balena.service
+Wants=balena.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10s
+WatchdogSec=180
+SyslogIdentifier=graceful-shutdown
+ExecStartPre=-@BINDIR@/balena stop graceful_shutdown_test
+ExecStartPre=-@BINDIR@/balena rm -f graceful_shutdown_test
+ExecStartPre=/bin/systemctl is-active balena.service
+ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/graceful-shutdown/graceful-shutdown-healthcheck /usr/lib/graceful-shutdown/start-graceful-shutdown
+ExecStop=-@BINDIR@/balena stop graceful_shutdown_test
+
+[Install]
+WantedBy=multi-user.target
+
