@@ -34,8 +34,7 @@ jobs:
       (github.event_name == 'pull_request')
     secrets: inherit
     with:
-      # Needed for testing - defaults to production
-      deploy-environment: balena-staging.com
+      deploy-environment: balena-cloud.com
       device-repo-ref: master
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
       # We don't want any tests to run for non-virtual device types on meta-balena PRs, as we don't have enough hardware
