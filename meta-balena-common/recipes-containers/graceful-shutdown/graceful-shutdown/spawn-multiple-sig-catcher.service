@@ -1,0 +1,17 @@
+[Unit]
+Description=Spawn multiple signal catchers test
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=no
+SyslogIdentifier=spawn-sig-catcher
+Environment="WAIT_FOR_CHILDREN=1"
+Environment="SHUTDOWN_DELAY_SECONDS=0"
+Environment="VERBOSE_SHUTDOWN=0"
+ExecStart=/usr/bin/spawn-multiple-sig-catcher
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+

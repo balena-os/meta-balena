@@ -9,18 +9,21 @@ SRC_URI = " \
     file://start-graceful-shutdown \
     file://graceful-shutdown-healthcheck \
     file://graceful-shutdown.service \
+    file://spawn-multiple-sig-catcher \
+    file://spawn-multiple-sig-catcher.service \
 "
 
 S = "${WORKDIR}"
 
 inherit systemd
 
-SYSTEMD_SERVICE:${PN} = "graceful-shutdown.service"
+SYSTEMD_SERVICE:${PN} = "graceful-shutdown.service spawn-multiple-sig-catcher.service"
 
 RDEPENDS:${PN} = " \
     balena \
     systemd \
     healthdog \
+    bash \
 "
 
 do_compile() {
@@ -31,6 +34,7 @@ do_install() {
     # Install the signal-test binary
     install -d ${D}${bindir}
     install -m 0755 ${B}/signal-test ${D}${bindir}/signal-test
+    install -m 0755 ${WORKDIR}/spawn-multiple-sig-catcher ${D}${bindir}/spawn-multiple-sig-catcher
 
     # Install scripts and Dockerfile to /usr/lib/graceful-shutdown
     install -d ${D}${libdir}/graceful-shutdown
@@ -39,9 +43,10 @@ do_install() {
     install -m 0644 ${WORKDIR}/Dockerfile ${D}${libdir}/graceful-shutdown/
     install -m 0755 ${B}/signal-test ${D}${libdir}/graceful-shutdown/
 
-    # Install systemd service
+    # Install systemd services
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${WORKDIR}/graceful-shutdown.service ${D}${systemd_system_unitdir}/
+    install -m 0644 ${WORKDIR}/spawn-multiple-sig-catcher.service ${D}${systemd_system_unitdir}/
     
     # Substitute @BINDIR@
     sed -i -e 's,@BINDIR@,${bindir},g' ${D}${systemd_system_unitdir}/graceful-shutdown.service
@@ -49,11 +54,13 @@ do_install() {
 
 FILES:${PN} += " \
     ${bindir}/signal-test \
+    ${bindir}/spawn-multiple-sig-catcher \
     ${libdir}/graceful-shutdown/start-graceful-shutdown \
     ${libdir}/graceful-shutdown/graceful-shutdown-healthcheck \
     ${libdir}/graceful-shutdown/Dockerfile \
     ${libdir}/graceful-shutdown/signal-test \
     ${systemd_system_unitdir}/graceful-shutdown.service \
+    ${systemd_system_unitdir}/spawn-multiple-sig-catcher.service \
 "
 
 # Service is not enabled by default - manual testing only

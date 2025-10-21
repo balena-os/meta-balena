@@ -1,0 +1,81 @@
+#!/bin/bash
+
+set -e
+
+# Configuration via environment variables
+# WAIT_FOR_CHILDREN=1      - Wait for children and forward signals (default)
+# WAIT_FOR_CHILDREN=0      - Just print signal and exit immediately
+# SHUTDOWN_DELAY_SECONDS=0 - Delay in seconds before children exit after signal (default: 0)
+WAIT_FOR_CHILDREN=${WAIT_FOR_CHILDREN:-1}
+SHUTDOWN_DELAY_SECONDS=${SHUTDOWN_DELAY_SECONDS:-0}
+
+timestamp() {
+    date '+%Y-%m-%d %H:%M:%S'
+}
+
+cleanup() {
+    local sig=$1
+    echo "[$(timestamp)] [BASH-WRAPPER] Received signal: ${sig}"
+    
+    if [ "${WAIT_FOR_CHILDREN}" = "1" ]; then
+        echo "[$(timestamp)] [BASH-WRAPPER] Forwarding ${sig} to all child processes..."
+        
+        # Send signal to all children
+        if [ -n "${PIDS}" ]; then
+            for pid in ${PIDS}; do
+                if kill -0 "$pid" 2>/dev/null; then
+                    echo "[$(timestamp)] [BASH-WRAPPER] Sending ${sig} to child PID ${pid}"
+                    kill -s "${sig}" "$pid" 2>/dev/null || true
+                fi
+            done
+        fi
+        
+        # Wait for children to exit
+        echo "[$(timestamp)] [BASH-WRAPPER] Waiting for children to exit..."
+        wait
+        
+        echo "[$(timestamp)] [BASH-WRAPPER] All children exited. Bash wrapper exiting."
+    else
+        echo "[$(timestamp)] [BASH-WRAPPER] WAIT_FOR_CHILDREN=0, exiting immediately without waiting"
+    fi
+    
+    exit 0
+}
+
+# Install signal handlers
+trap 'cleanup TERM' TERM
+trap 'cleanup INT' INT
+trap 'cleanup HUP' HUP
+
+echo "[$(timestamp)] [BASH-WRAPPER] Starting multiple signal catchers (PID: $$)"
+echo "[$(timestamp)] [BASH-WRAPPER] Signal handlers installed"
+echo "[$(timestamp)] [BASH-WRAPPER] WAIT_FOR_CHILDREN=${WAIT_FOR_CHILDREN}"
+echo "[$(timestamp)] [BASH-WRAPPER] SHUTDOWN_DELAY_SECONDS=${SHUTDOWN_DELAY_SECONDS}"
+
+# Spawn multiple signal-test instances
+NUM_INSTANCES=3
+PIDS=""
+
+for i in $(seq 1 $NUM_INSTANCES); do
+    /usr/bin/signal-test ${SHUTDOWN_DELAY_SECONDS} ${VERBOSE_SHUTDOWN} &
+    pid=$!
+    PIDS="${PIDS} ${pid}"
+    echo "[$(timestamp)] [BASH-WRAPPER] Spawned signal-test instance ${i} with PID ${pid} (delay: ${SHUTDOWN_DELAY_SECONDS}s, verbose: ${VERBOSE_SHUTDOWN})"
+done
+
+echo "[$(timestamp)] [BASH-WRAPPER] All instances spawned. PIDs: ${PIDS}"
+
+if [ "${WAIT_FOR_CHILDREN}" = "1" ]; then
+    echo "[$(timestamp)] [BASH-WRAPPER] Waiting for children (or signal)..."
+    # Wait for all children
+    wait
+    echo "[$(timestamp)] [BASH-WRAPPER] All children exited naturally. Exiting."
+else
+    echo "[$(timestamp)] [BASH-WRAPPER] Not waiting for children, sleeping until signal..."
+    # Sleep indefinitely until signal arrives
+    while true; do
+        sleep 60
+    done
+fi
+
+exit 0
