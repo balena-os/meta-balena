@@ -24,7 +24,6 @@ permissions:
 jobs:
   yocto:
     name: Yocto
-    # TODO: Add a renovate versioning strategy to support tags like v6.5.19+rev3 and avoid pinning to master
     uses: balena-os/balena-jetson-orin/.github/workflows/jetson-orin-nano-devkit-nvme.yml@master
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
