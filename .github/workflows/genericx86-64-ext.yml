@@ -34,8 +34,7 @@ jobs:
     if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
     secrets: inherit
     with:
-      # Needed for testing - defaults to production
-      deploy-environment: balena-staging.com
+      deploy-environment: balena-cloud.com
       machine: genericx86-64-ext
       device-repo: balena-os/balena-intel
       device-repo-ref: master

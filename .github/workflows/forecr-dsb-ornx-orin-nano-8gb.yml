@@ -1,4 +1,4 @@
-name: Nanopi Neo Air
+name: Forecr DSB ORNX LAN Nano 8GB
 
 on:
   pull_request:
@@ -24,18 +24,19 @@ permissions:
 jobs:
   yocto:
     name: Yocto
-    uses: balena-os/balena-yocto-scripts/.github/workflows/yocto-build-deploy.yml@master
+    uses: balena-os/balena-jetson-orin/.github/workflows/forecr-dsb-ornx-orin-nano-8gb.yml@master
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
     # still allowing it to run for all other event types.
-    if: (github.event.pull_request.head.repo.full_name == github.repository) == (github.event_name == 'pull_request')
+    if:
+      (github.event.pull_request.head.repo.full_name == github.repository) ==
+      (github.event_name == 'pull_request')
     secrets: inherit
     with:
-      # Needed for testing - defaults to production
-      deploy-environment: balena-staging.com
-      machine: nanopi-neo-air
-      device-repo: balena-os/balena-allwinner
+      deploy-environment: balena-cloud.com
       device-repo-ref: master
-      # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
+      # We don't want any tests to run for non-virtual device types on meta-balena PRs, as we don't have enough hardware
+      # to sustain that amount of testing
+      test_matrix: '{}'
