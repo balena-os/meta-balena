@@ -33,4 +33,5 @@ RDEPENDS:${PN} += " \
     systemd-zram-swap \
     ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util-auplink', '', d)} \
     ${BALENA_SUPERVISOR} \
+    disk-watchdog \
     "
