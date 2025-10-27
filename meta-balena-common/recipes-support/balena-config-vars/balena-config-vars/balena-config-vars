@@ -140,11 +140,15 @@ else
         fi
     fi
     if [ -n "${BALENA_CONFIG_VARS_CACHE}" ] && [ -n "${CONFIG_PARAMS}" ]; then
-        tmpfile=$(mktemp)
-        echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
-        chmod a+rx "${tmpfile}"
-        mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
+        (
+            flock -x 200
+            tmpfile=$(mktemp)
+            echo "${CONFIG_PARAMS}" | sed -e 's/^[[:space:]]*//' > "${tmpfile}"
+            chmod a+rx "${tmpfile}"
+            mv "${tmpfile}" "${BALENA_CONFIG_VARS_CACHE}"
+        ) 200>"${BALENA_CONFIG_VARS_CACHE}.lock"
     fi
+
     eval "$CONFIG_PARAMS"
 fi
 
