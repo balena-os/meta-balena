@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -e
+
+# Paths (will be substituted during build)
+LIB_DIR="@GRACEFUL_SHUTDOWN_LIB_DIR@"
+RUNTIME_DIR="@GRACEFUL_SHUTDOWN_RUNTIME_DIR@"
+
+echo "Setting up graceful-shutdown runtime environment..."
+echo "  Source: ${LIB_DIR}"
+echo "  Target: ${RUNTIME_DIR}"
+
+# Create runtime directory if it doesn't exist
+if [ ! -d "${RUNTIME_DIR}" ]; then
+    echo "Creating ${RUNTIME_DIR}..."
+    mkdir -p "${RUNTIME_DIR}"
+fi
+
+# Copy all files from /usr/lib/graceful-shutdown to /mnt/state/graceful-shutdown
+echo "Copying files to runtime directory..."
+cp -av "${LIB_DIR}"/* "${RUNTIME_DIR}"/
+
+# Ensure executables have correct permissions
+chmod +x "${RUNTIME_DIR}/signal-test"
+chmod +x "${RUNTIME_DIR}/spawn-multiple-sig-catcher"
+chmod +x "${RUNTIME_DIR}/start-graceful-shutdown"
+chmod +x "${RUNTIME_DIR}/graceful-shutdown-healthcheck"
+
+echo "Setup complete!"
+echo "You can now modify files in ${RUNTIME_DIR} for testing."
+

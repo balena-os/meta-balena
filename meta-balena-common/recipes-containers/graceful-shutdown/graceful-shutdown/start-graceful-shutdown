@@ -5,17 +5,25 @@ set -e
 GRACEFUL_SHUTDOWN_IMAGE="graceful-shutdown-test:latest"
 GRACEFUL_SHUTDOWN_CONTAINER="graceful_shutdown_test"
 
+# Configuration via environment variables (defaults)
+SHUTDOWN_DELAY_SECONDS=${SHUTDOWN_DELAY_SECONDS:-0}
+VERBOSE_SHUTDOWN=${VERBOSE_SHUTDOWN:-0}
+
 # Build the Docker image
 echo "Building graceful-shutdown test image..."
-balena build /usr/lib/graceful-shutdown/ -t "${GRACEFUL_SHUTDOWN_IMAGE}"
+balena build @GRACEFUL_SHUTDOWN_RUNTIME_DIR@/ -t "${GRACEFUL_SHUTDOWN_IMAGE}"
 
 # Remove existing container if present
 balena rm -f "${GRACEFUL_SHUTDOWN_CONTAINER}" 2>/dev/null || true
 
 # Run the container
 echo "Starting graceful-shutdown test container..."
+echo "  SHUTDOWN_DELAY_SECONDS=${SHUTDOWN_DELAY_SECONDS}"
+echo "  VERBOSE_SHUTDOWN=${VERBOSE_SHUTDOWN}"
 balena run \
     --name "${GRACEFUL_SHUTDOWN_CONTAINER}" \
+    -e SHUTDOWN_DELAY_SECONDS="${SHUTDOWN_DELAY_SECONDS}" \
+    -e VERBOSE_SHUTDOWN="${VERBOSE_SHUTDOWN}" \
     --rm \
     "${GRACEFUL_SHUTDOWN_IMAGE}"
 

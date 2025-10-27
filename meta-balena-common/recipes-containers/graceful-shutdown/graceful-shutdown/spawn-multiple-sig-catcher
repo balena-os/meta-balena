@@ -57,7 +57,7 @@ NUM_INSTANCES=3
 PIDS=""
 
 for i in $(seq 1 $NUM_INSTANCES); do
-    /usr/bin/signal-test ${SHUTDOWN_DELAY_SECONDS} ${VERBOSE_SHUTDOWN} &
+    @GRACEFUL_SHUTDOWN_RUNTIME_DIR@/signal-test ${SHUTDOWN_DELAY_SECONDS} ${VERBOSE_SHUTDOWN} &
     pid=$!
     PIDS="${PIDS} ${pid}"
     echo "[$(timestamp)] [BASH-WRAPPER] Spawned signal-test instance ${i} with PID ${pid} (delay: ${SHUTDOWN_DELAY_SECONDS}s, verbose: ${VERBOSE_SHUTDOWN})"

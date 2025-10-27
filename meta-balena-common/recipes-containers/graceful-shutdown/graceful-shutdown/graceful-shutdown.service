@@ -13,7 +13,7 @@ SyslogIdentifier=graceful-shutdown
 ExecStartPre=-@BINDIR@/balena stop graceful_shutdown_test
 ExecStartPre=-@BINDIR@/balena rm -f graceful_shutdown_test
 ExecStartPre=/bin/systemctl is-active balena.service
-ExecStart=/usr/bin/healthdog --healthcheck=/usr/lib/graceful-shutdown/graceful-shutdown-healthcheck /usr/lib/graceful-shutdown/start-graceful-shutdown
+ExecStart=/usr/bin/healthdog --healthcheck=@GRACEFUL_SHUTDOWN_RUNTIME_DIR@/graceful-shutdown-healthcheck @GRACEFUL_SHUTDOWN_RUNTIME_DIR@/start-graceful-shutdown
 ExecStop=-@BINDIR@/balena stop graceful_shutdown_test
 
 [Install]
