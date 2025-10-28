@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.15
+## (2025-10-28)
+
+* Remove non-autokit DTs from build list [Ryan Cooke]
+
 # v6.6.14
 ## (2025-10-20)
 
