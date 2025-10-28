@@ -289,12 +289,20 @@ const verify_service_enabled_and_active = async (context, link, test) => {
         );
     test.is(enabled.trim(), 'enabled', 'disk-watchdogd should be enabled');
 
-    const active = await context
-        .get()
-        .worker.executeCommandInHostOS(
-            `systemctl is-active disk-watchdogd || true`,
-            link,
-        );
+    // Retry checking service state in case it's still activating
+    let active = '';
+    for (let i = 0; i < 10; i++) {
+        active = await context
+            .get()
+            .worker.executeCommandInHostOS(
+                `systemctl is-active disk-watchdogd || true`,
+                link,
+            );
+        if (active.trim() === 'active') {
+            break;
+        }
+        await new Promise(r => setTimeout(r, 2000));
+    }
     test.is(active.trim(), 'active', 'disk-watchdogd should be active');
 };
 
