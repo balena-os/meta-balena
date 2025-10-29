@@ -1,4 +1,32 @@
 - commits:
+    - subject: "recipes-support/balena-config-vars: Avoid failure caused by race in
+        cache file creation"
+      hash: 6ec251e48f3eaae6e3fded5b003d11f2fae2d418
+      body: >
+        Services like os-fan-profile or os-power-mode may fail
+
+        at startup due to a race in the creation of the balena-config-vars
+
+        cache:
+
+            mv: cannot create regular file '/var/cache/balena-config-vars': File exists
+
+        The cache file may bee generated at the same time by another
+
+        instance of the same helper function. To avoid that,
+
+        we now introduce the lock file /var/cache/balena-config-vars.lock
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.6.16
+  title: ""
+  date: 2025-10-29T12:52:25.561Z
+- commits:
     - subject: Remove non-autokit DTs from build list
       hash: 45e7c8c715168f16fea4eb8b52914da71116c7c1
       body: >

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.16
+## (2025-10-29)
+
+* recipes-support/balena-config-vars: Avoid failure caused by race in cache file creation [Alexandru Costache]
+
 # v6.6.15
 ## (2025-10-28)
 
