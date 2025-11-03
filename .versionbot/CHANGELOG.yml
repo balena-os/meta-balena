@@ -1,4 +1,107 @@
 - commits:
+    - subject: Update tests/leviathan digest to 2a3a310
+      hash: c8c839b8c113dfaac8da89c7047a1f20101678a2
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 4f0d5b6e503bd43388d6f5c2612459dd73b0ba03
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.61
+          title: ""
+          date: 2025-11-03T01:06:27.667Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.12
+              hash: 2ef23809596a9d8d1b28c374b2500208603d718e
+              body: |
+                Update balena-os/leviathan-worker from 2.10.11 to 2.10.12
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.60
+          title: ""
+          date: 2025-10-31T18:39:38.518Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.4.16
+              hash: d6ee2dba7f4fbdb9abb3931c7083997f50c7e3a0
+              body: |
+                Update balena-io/balena-cli from 22.4.15 to 22.4.16
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.59
+          title: ""
+          date: 2025-10-30T12:41:43.048Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: e5f5e44e678ddd168e75d5d592f7295240033eab
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.58
+          title: ""
+          date: 2025-10-27T01:04:34.052Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.11
+              hash: a421f4e0de57989571aefb0bf3e2ef1b64cb5de2
+              body: |
+                Update balena-os/leviathan-worker from 2.10.10 to 2.10.11
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.57
+          title: ""
+          date: 2025-10-25T04:44:18.462Z
+        - commits:
+            - subject: Update actions/upload-artifact action to v5
+              hash: ebe9249cea7074f384efc0b47c9c03cecf4ae03e
+              body: |
+                Update actions/upload-artifact from 4 to 5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.56
+          title: ""
+          date: 2025-10-25T00:59:58.363Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v22.4.15
+              hash: c76ba33a932e25f4936698134976d04fc0b2c396
+              body: |
+                Update balena-io/balena-cli from 22.4.14 to 22.4.15
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.55
+          title: ""
+          date: 2025-10-21T14:45:35.335Z
+  version: 6.6.17
+  title: ""
+  date: 2025-11-03T06:10:54.794Z
+- commits:
     - subject: "recipes-support/balena-config-vars: Avoid failure caused by race in
         cache file creation"
       hash: 6ec251e48f3eaae6e3fded5b003d11f2fae2d418
