@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.7.0
+## (2025-11-05)
+
+* add disk-watchdog daemon [Yann CARDAILLAC]
+
 # v6.6.17
 ## (2025-11-03)
 
