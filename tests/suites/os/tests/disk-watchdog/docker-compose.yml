@@ -1,0 +1,11 @@
+version: '2'
+services:
+  disk-watchdog:
+    build: .
+    restart: on-failure
+    privileged: true
+    volumes:
+      - logs:/logs
+
+volumes:
+  logs:

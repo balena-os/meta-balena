@@ -1,0 +1,12 @@
+FROM balenalib/%%BALENA_ARCH%%-alpine:3.12-run
+
+RUN apk add device-mapper e2fsprogs bash
+
+COPY create-dm-flakey.sh /usr/bin/create-dm-flakey.sh
+RUN chmod +x /usr/bin/create-dm-flakey.sh
+
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+CMD ["sleep", "infinity"]
