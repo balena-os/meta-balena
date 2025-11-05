@@ -1,4 +1,21 @@
 - commits:
+    - subject: add disk-watchdog daemon
+      hash: fa725ce23e93d918d0eafaf9fa7b15549b0f8b7f
+      body: >
+        This service helps in detecting io errors and try to solve them by
+        issuing a reboot. It avoids reboot loops by tracking boot with a
+        timestamp.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 6.7.0
+  title: ""
+  date: 2025-11-05T10:29:49.790Z
+- commits:
     - subject: Update tests/leviathan digest to 2a3a310
       hash: c8c839b8c113dfaac8da89c7047a1f20101678a2
       body: Update tests/leviathan
