@@ -1,4 +1,36 @@
 - commits:
+    - subject: "packagegroups/packagegroup-resin-flasher: Set PACKAGE_ARCH"
+      hash: fb118c04107f0aa4c17caf933938038f13963e96
+      body: >
+        Fixes the following error:
+
+            packagegroup-resin-flasher-1.0-r1 do_package_write_rpm: An allarch packagegroup shouldn't depend on packages which are dynamically renamed
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "tests/suites: Use USB relay to toggle boot switch on certain devices"
+      hash: 5890f661fac084258c26fe0fe7c5a3572af98521
+      body: |
+        We no longer need to override the boot switch from
+        the flasher image because we have access to the boot pins
+        of the device in question and can control them using a
+        relay. This way we can test if the bootswitch detection
+        mechanism in u-boot works properly.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.7.1
+  title: ""
+  date: 2025-11-06T11:49:00.999Z
+- commits:
     - subject: add disk-watchdog daemon
       hash: fa725ce23e93d918d0eafaf9fa7b15549b0f8b7f
       body: >

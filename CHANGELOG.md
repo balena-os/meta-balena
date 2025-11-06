@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.7.1
+## (2025-11-06)
+
+* packagegroups/packagegroup-resin-flasher: Set PACKAGE_ARCH [Alexandru Costache]
+* tests/suites: Use USB relay to toggle boot switch on certain devices [Alexandru Costache]
+
 # v6.7.0
 ## (2025-11-05)
 
