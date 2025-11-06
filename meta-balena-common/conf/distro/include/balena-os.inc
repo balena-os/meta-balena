@@ -95,7 +95,7 @@ INITRAMFS_TASK = ""
 IMAGE_NAME_SUFFIX = ""
 
 # resinOS defaults to ipk packages
-PACKAGE_CLASSES ?= "package_ipk"
+PACKAGE_CLASSES = "package_ipk"
 
 # Default the docker storage driver to aufs
 BALENA_STORAGE = "overlay2"
