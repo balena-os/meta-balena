@@ -94,6 +94,7 @@ SECTORS=$(blockdev --getsz "$LOOP_DEV" 2>/dev/null) || true
 [[ -n "$SECTORS" && "$SECTORS" =~ ^[0-9]+$ ]] || die 7 "Could not determine size for $LOOP_DEV"
 
 # Create dm-flakey mapping: 1s up / 1s down
+modprobe dm_flakey || die 5 "Failed to load dm_flakey module"
 TABLE="0 $SECTORS flakey $LOOP_DEV 0 1 2"
 if ! echo "$TABLE" | dmsetup create "$DM_NAME"; then
     die 5 "dmsetup create failed for $DM_NAME"
