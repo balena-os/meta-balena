@@ -153,7 +153,8 @@ BALENA_CONFIGS ?= " \
     ${MODULE_COMPRESS} \
     ${WIREGUARD} \
     vlan \
-    "
+    disk-watchdog \
+"
 
 #
 # Balena specific kernel configuration
@@ -725,6 +726,11 @@ BALENA_CONFIGS[memcg] = " \
 # 802.1q VLANs are supported by NetworkManager on all device types
 BALENA_CONFIGS[vlan] = " \
     CONFIG_VLAN_8021Q=y \
+"
+
+# Used by disk-watchdog tests
+BALENA_CONFIGS[disk-watchdog] = " \
+    CONFIG_DM_FLAKEY=m \
 "
 
 ###########
