@@ -1,4 +1,25 @@
 - commits:
+    - subject: "balena-os.inc: Enforce PACKAGE_CLASSES to package_ipk"
+      hash: 5c530095011bba2935b3dcac374a415b6710d7ec
+      body: >
+        We used to have the PACKAGE_CLASSES default to package_ipk by using the
+        soft ?= assignment.
+
+        However, starting with Scarthgap poky.conf also does a soft assignment
+        to package_rpm so we
+
+        end up with that instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.7.2
+  title: ""
+  date: 2025-11-07T10:28:02.622Z
+- commits:
     - subject: "packagegroups/packagegroup-resin-flasher: Set PACKAGE_ARCH"
       hash: fb118c04107f0aa4c17caf933938038f13963e96
       body: >

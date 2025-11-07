@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.7.2
+## (2025-11-07)
+
+* balena-os.inc: Enforce PACKAGE_CLASSES to package_ipk [Florin Sarbu]
+
 # v6.7.1
 ## (2025-11-06)
 
