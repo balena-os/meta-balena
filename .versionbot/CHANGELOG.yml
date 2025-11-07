@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to c549c54
+      hash: e4de9a070360d2f934743b1bedcbfb62995bb079
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.14
+              hash: 1492ec2da6a3a93a5bd1d06f076d4532d331497a
+              body: |
+                Update balena-os/leviathan-worker from 2.10.12 to 2.10.14
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.62
+          title: ""
+          date: 2025-11-06T14:45:42.174Z
+  version: 6.7.3
+  title: ""
+  date: 2025-11-07T17:05:12.407Z
+- commits:
     - subject: "balena-os.inc: Enforce PACKAGE_CLASSES to package_ipk"
       hash: 5c530095011bba2935b3dcac374a415b6710d7ec
       body: >
