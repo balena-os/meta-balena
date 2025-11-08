@@ -1,4 +1,18 @@
 - commits:
+    - subject: add CONFIG_DM_FLAKEY for disk-watchdog testing
+      hash: f523f9cde68a93b770f47f6cc2522b1a96284eea
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 6.7.4
+  title: ""
+  date: 2025-11-08T09:10:11.321Z
+- commits:
     - subject: Update tests/leviathan digest to c549c54
       hash: e4de9a070360d2f934743b1bedcbfb62995bb079
       body: Update tests/leviathan

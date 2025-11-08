@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.7.4
+## (2025-11-08)
+
+* add CONFIG_DM_FLAKEY for disk-watchdog testing [Yann CARDAILLAC]
+
 # v6.7.3
 ## (2025-11-07)
 
