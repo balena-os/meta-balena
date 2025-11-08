@@ -234,6 +234,13 @@ const verify_service_wont_restart = async (context, link, test) => {
 };
 
 const verify_reboot_with_flakey_disk = async (context, link, test) => {
+    await context
+        .get()
+        .worker.executeCommandInHostOS(
+            `modprobe dm_flakey`,
+            link,
+        );
+
     // Push service
     const ip = await context.get().worker.ip(link);
     await context
