@@ -1,4 +1,46 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Enable required CONFIG_CGROUP_BPF"
+      hash: 21b4333b7cf17399b1ee5c82e646eb369a1a77f7
+      body: >
+        This is required to fix the following error:
+
+
+        balena-supervisor[13352]: Error response from daemon: No such container:
+        resin_supervisor
+
+        balena-supervisor[13361]: balena_supervisor
+
+        balena-supervisor[13370]: active
+
+        balena-supervisor[13381]: Container config has not changed
+
+        balena-supervisor[13447]: time="2025-11-12T06:15:12Z" level=error
+        msg="error waiting for container: context canceled"
+
+        balena-supervisor[13447]: Error response from daemon: failed to create
+        shim task: OCI runtime create failed: runc create failed:
+
+        unable to start container process: error during container init: error
+        setting cgroup config for procHooks process:
+        bpf_prog_query(BPF_CGROUP_DEVICE) failed: function not implemented:
+        unknown
+
+
+        systemd[1]: balena-supervisor.service: Main process exited, code=exited,
+        status=1/FAILURE
+
+        systemd[1]: balena-supervisor.service: Failed with result 'exit-code'.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.7.5
+  title: ""
+  date: 2025-11-12T20:17:22.886Z
+- commits:
     - subject: add CONFIG_DM_FLAKEY for disk-watchdog testing
       hash: f523f9cde68a93b770f47f6cc2522b1a96284eea
       body: ""

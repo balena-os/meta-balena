@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.7.5
+## (2025-11-12)
+
+* kernel-balena.bbclass: Enable required CONFIG_CGROUP_BPF [Florin Sarbu]
+
 # v6.7.4
 ## (2025-11-08)
 
