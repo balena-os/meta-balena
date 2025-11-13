@@ -50,7 +50,7 @@ jobs:
           repositories: >
             ["${{ github.event.repository.name }}"]
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
         with:
           # The default GITHUB_TOKEN does not have workflow scope
           # This is needed to push a new branch with workflow files
