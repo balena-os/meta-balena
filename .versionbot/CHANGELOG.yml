@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python action to v6
+      hash: 00de2112bdc41a488ab09eaec47015b88caa3fa5
+      body: |
+        Update actions/setup-python from v5 to v6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.7.6
+  title: ""
+  date: 2025-11-13T06:31:58.282Z
+- commits:
     - subject: "kernel-balena.bbclass: Enable required CONFIG_CGROUP_BPF"
       hash: 21b4333b7cf17399b1ee5c82e646eb369a1a77f7
       body: >

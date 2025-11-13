@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.7.6
+## (2025-11-13)
+
+* Update actions/setup-python action to v6 [balena-renovate[bot]]
+
 # v6.7.5
 ## (2025-11-12)
 
