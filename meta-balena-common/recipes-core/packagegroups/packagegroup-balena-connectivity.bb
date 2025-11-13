@@ -16,6 +16,7 @@ CONNECTIVITY_FIRMWARES ?= " \
     linux-firmware-ralink \
     linux-firmware-rtl8192cu \
     linux-firmware-rtl8192su \
+    linux-firmware-rtl8192eu \
     linux-firmware-rtl8723 \
     linux-firmware-rtl8723b-bt \
     "
