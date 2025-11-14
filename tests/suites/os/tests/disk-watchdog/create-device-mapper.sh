@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Create a dm-flakey device on top of a loop-backed image and mount it.
+# Create a linear device-mapper device on top of a loop-backed image containing
+# a 5M random file named test.bin, and mount it.
 # Usage:
-#   create-dm-flakey.sh <mount_point> <image_path> <dm_name>
-#   create-dm-flakey.sh cleanup <mount_point> <image_path> <dm_name>
+#   create-device-mapper.sh <mount_point> <image_path> <dm_name>
+#   create-device-mapper.sh cleanup <mount_point> <image_path> <dm_name>
 # Exit codes:
 #   1: usage
 #   2: image creation failed
@@ -93,16 +94,18 @@ fi
 SECTORS=$(blockdev --getsz "$LOOP_DEV" 2>/dev/null) || true
 [[ -n "$SECTORS" && "$SECTORS" =~ ^[0-9]+$ ]] || die 7 "Could not determine size for $LOOP_DEV"
 
-# Create dm-flakey mapping: 1s up / 1s down
-TABLE="0 $SECTORS flakey $LOOP_DEV 0 1 2"
+# Create a linear (passthrough) mapping first so we can mount successfully
+TABLE="0 $SECTORS linear $LOOP_DEV 0"
 if ! echo "$TABLE" | dmsetup create "$DM_NAME"; then
     die 5 "dmsetup create failed for $DM_NAME"
 fi
 
-# Mount the flakey device
+# Mount the device while it's working normally
 if ! mount "/dev/mapper/$DM_NAME" "$MOUNT_POINT"; then
     die 6 "Failed to mount /dev/mapper/$DM_NAME on $MOUNT_POINT"
 fi
 
-# Leave devices mounted/active; caller is responsible for teardown.
+# Leave devices mounted/active in working state
+# Caller should activate error mode when ready by running:
+#   dmsetup suspend <dm_name> && echo "0 <sectors> error" | dmsetup reload <dm_name> && dmsetup resume <dm_name>
 exit 0
