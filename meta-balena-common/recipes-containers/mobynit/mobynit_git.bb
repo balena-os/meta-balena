@@ -14,12 +14,15 @@ SRCREV="0423d69ee52970bb8eeae46da8f1d5cf7a8c948c"
 
 S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
 
+GOPROXY ??= "https://proxy.golang.org,direct"
+
 do_compile[network] = "1"
 do_compile() {
     cd ${S}
     unset GO_LDFLAGS
     unset GOPATH GOROOT
     export GOCACHE="${B}/.cache"
+    export GOPROXY="${GOPROXY}"
     oe_runmake
 }
 
