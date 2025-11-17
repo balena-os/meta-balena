@@ -154,7 +154,6 @@ BALENA_CONFIGS ?= " \
     ${WIREGUARD} \
     vlan \
     bpf \
-    disk-watchdog \
 "
 
 #
@@ -735,11 +734,6 @@ BALENA_CONFIGS[bpf] = " \
 "
 BALENA_CONFIGS_DEPS[bpf] = " \
     CONFIG_BPF_SYSCALL=y \
-"
-
-# Used by disk-watchdog tests
-BALENA_CONFIGS[disk-watchdog] = " \
-    CONFIG_BLK_DEV_DM=y \
 "
 
 ###########
