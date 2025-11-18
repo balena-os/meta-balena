@@ -36,7 +36,7 @@ const verifyBlockDeviceExists = async (context, link, test, path, location = 'di
     await verifyFileOrDirExists(context, link, test, path, '-b', location);
 };
 
-// Retry helper for flakey devices: try N times with delay to detect existence
+// Retry helpers: try N times with delay to detect existence
 const waitForExists = async (
     context,
     link,
@@ -53,14 +53,14 @@ const waitForExists = async (
     return (await exec(cmd)).trim();
 };
 
-const createDmFlakey = async (context, link, test, deviceName = 'flakey-disk') => {
+const createDeviceMapper = async (context, link, test, deviceName = 'dm-disk-watchdog') => {
     const containerMount = '/tmp/mnt';
     const containerImage = '/tmp/disk-image';
 
     await context
         .get()
         .worker.executeCommandInContainer(
-            `sh -lc 'bash -x /usr/bin/create-dm-flakey.sh ${containerMount} ${containerImage} ${deviceName} 2>&1 | tee /logs/flakey.log'`,
+            `sh -lc 'bash -x /usr/bin/create-device-mapper.sh ${containerMount} ${containerImage} ${deviceName} 2>&1 | tee /logs/device-mapper.log'`,
             'disk-watchdog',
             link,
         );
@@ -68,7 +68,7 @@ const createDmFlakey = async (context, link, test, deviceName = 'flakey-disk') =
     test.comment(await context
         .get()
         .worker.executeCommandInContainer(
-            `sh -lc 'cat /logs/flakey.log'`,
+            `sh -lc 'cat /logs/device-mapper.log'`,
             'disk-watchdog',
             link,
         ));
@@ -90,7 +90,7 @@ const createDmFlakey = async (context, link, test, deviceName = 'flakey-disk') =
         );
 };
 
-const mountFlakeyOnHost = async (context, link, test, deviceName, hostMount) => {
+const mountDeviceMapper = async (context, link, test, deviceName, hostMount) => {
     await context
         .get()
         .worker.executeCommandInHostOS(
@@ -107,6 +107,25 @@ const mountFlakeyOnHost = async (context, link, test, deviceName, hostMount) => 
 
     const wait = await waitForExists(context, link, `${hostMount}/test.bin`);
     test.is(wait, 'exists', `${hostMount}/test.bin should eventually exist on host`);
+};
+
+const activate_dm_error = async (context, link, test, deviceName) => {
+    test.comment('Activating error mode on the device mapper...');
+    const sectors = await context
+        .get()
+        .worker.executeCommandInContainer(
+            `blockdev --getsz /dev/mapper/${deviceName}`,
+            'disk-watchdog',
+            link,
+        );
+    await context
+        .get()
+        .worker.executeCommandInContainer(
+            `sh -lc 'dmsetup suspend ${deviceName} && echo "0 ${sectors.trim()} error" | dmsetup reload ${deviceName} && dmsetup resume ${deviceName}'`,
+            'disk-watchdog',
+            link,
+        );
+    test.comment('Error mode activated - all I/O will now fail');
 };
 
 const modify_disk_watchdogd_systemd = async (context, link, test) => {
@@ -233,13 +252,7 @@ const verify_service_wont_restart = async (context, link, test) => {
     test.is(state == 'active', false, 'disk-watchdogd should not start when disabled file exists');
 };
 
-const verify_reboot_with_flakey_disk = async (context, link, test) => {
-    await context
-        .get()
-        .worker.executeCommandInHostOS(
-            `modprobe dm_flakey`,
-            link,
-        );
+const verify_reboot_with_io_error_disk = async (context, link, test) => {
 
     // Push service
     const ip = await context.get().worker.ip(link);
@@ -248,15 +261,18 @@ const verify_reboot_with_flakey_disk = async (context, link, test) => {
         .worker.pushContainerToDUT(ip, __dirname, 'disk-watchdog');
     test.comment('Service pushed');
 
-    // Create flakey device and mount on host
-    const deviceName = 'flakey-disk';
-    await createDmFlakey(context, link, test, deviceName);
-    const hostMount = '/mnt/state/flakey-mount';
-    await mountFlakeyOnHost(context, link, test, deviceName, hostMount);
+    // Create device mapper and mount on host
+    const deviceName = 'dm-disk-watchdog';
+    await createDeviceMapper(context, link, test, deviceName);
+    const hostMount = '/mnt/state/io-error-mount';
+    await mountDeviceMapper(context, link, test, deviceName, hostMount);
 
     // Install systemd override on host and restart disk-watchdogd
     test.comment('Installing disk-watchdogd systemd override on host...');
     await modify_disk_watchdogd_systemd(context, link, test);
+
+    // Activate error mode: switch device from linear to error target
+    await activate_dm_error(context, link, test, deviceName);
 
     // Expect device to reboot shortly (watchdog triggers reboot)
     await expectRebootSoon(context, link, test, 120, 2);
@@ -325,8 +341,8 @@ module.exports = {
         test.comment('Verifying boot history is 1 at boot...');
         await verify_boot_count(this.context, this.link, test, '1');
 
-        test.comment('Verifying reboot with flakey disk...');
-        await verify_reboot_with_flakey_disk(this.context, this.link, test);
+        test.comment('Verifying reboot with I/O error disk...');
+        await verify_reboot_with_io_error_disk(this.context, this.link, test);
 
         test.comment('Verifying service is disabled after 3 boots...');
         await verify_service_disabled(this.context, this.link, test, '3');

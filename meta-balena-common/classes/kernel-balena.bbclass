@@ -153,8 +153,8 @@ BALENA_CONFIGS ?= " \
     ${MODULE_COMPRESS} \
     ${WIREGUARD} \
     vlan \
-    disk-watchdog \
     bpf \
+    disk-watchdog \
 "
 
 #
@@ -729,17 +729,17 @@ BALENA_CONFIGS[vlan] = " \
     CONFIG_VLAN_8021Q=y \
 "
 
-# Used by disk-watchdog tests
-BALENA_CONFIGS[disk-watchdog] = " \
-    CONFIG_DM_FLAKEY=m \
-"
-
 # enable CGROUP_BPF required by the supervisor
 BALENA_CONFIGS[bpf] = " \
     CONFIG_CGROUP_BPF=y \
 "
 BALENA_CONFIGS_DEPS[bpf] = " \
     CONFIG_BPF_SYSCALL=y \
+"
+
+# Used by disk-watchdog tests
+BALENA_CONFIGS[disk-watchdog] = " \
+    CONFIG_BLK_DEV_DM=y \
 "
 
 ###########
