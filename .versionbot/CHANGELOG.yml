@@ -1,4 +1,18 @@
 - commits:
+    - subject: simplify disk watchdog tests
+      hash: 2216355d073162c79748367f49d4a1294ede7796
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 6.7.7
+  title: ""
+  date: 2025-11-18T17:31:09.706Z
+- commits:
     - subject: Update actions/setup-python action to v6
       hash: 00de2112bdc41a488ab09eaec47015b88caa3fa5
       body: |

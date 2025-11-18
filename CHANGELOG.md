@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.7.7
+## (2025-11-18)
+
+* simplify disk watchdog tests [Yann CARDAILLAC]
+
 # v6.7.6
 ## (2025-11-13)
 
