@@ -78,7 +78,7 @@ FILES:${PN} += " \
 	"
 
 DOCKER_PKG="github.com/docker/docker"
-BUILD_TAGS="no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs"
+BUILD_TAGS="no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs no_buildkit"
 
 do_configure[noexec] = "1"
 
