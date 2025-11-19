@@ -9,9 +9,6 @@ SRC_URI:append = " \
     file://u-blox-switch.sh \
     file://ModemManager.conf.systemd \
     file://0001-increase-qmi-port-open-timeout.patch \
-    file://0002-quectel-disable-qmi-unsolicited-profile-manager-even.patch \
-    file://0003-broadband-modem-qmi-quectel-fix-task-completion-when.patch \
-    file://0004-bearer-qmi-Fix-SIM7100E-crash.patch \
     file://0005-Update-Cinterion-port-types.patch \
 "
 
