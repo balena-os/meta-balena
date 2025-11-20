@@ -454,7 +454,7 @@ class imxSecureBoot extends secureBoot {
 
 	async testBootloaderIntegrity() {
 		const tests = [
-			{ name:'Bootloader', path: '/mnt/imx/imx-boot-*.bin-flash_evk', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
+			{ name:'Bootloader', path: '/mnt/imx/imx-boot*.bin*', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
 			{ name:'Balena bootloader', path: '/mnt/imx/Image.gz', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
 			{ name: 'Device trees', path: '/mnt/imx/*.dtb', pattern: CSF_HEADER, replacement: CSF_HEADER_BAD },
 		];
