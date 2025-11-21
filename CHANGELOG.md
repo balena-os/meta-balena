@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.7.8
+## (2025-11-21)
+
+* os-helpers: generalize get_sector_size [Alex Gonzalez]
+* tests: secureboot: generalize U-boot binary naming [Alex Gonzalez]
+
 # v6.7.7
 ## (2025-11-18)
 

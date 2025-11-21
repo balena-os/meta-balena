@@ -1,4 +1,29 @@
 - commits:
+    - subject: "os-helpers: generalize get_sector_size"
+      hash: 6501bcfec6810499a78347f09bac8b43b641b6b7
+      body: |
+        Do not limit to specific partition types.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: secureboot: generalize U-boot binary naming"
+      hash: 91bb7f49910b4cb8661e993d798e57a736b7b6b1
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.7.8
+  title: ""
+  date: 2025-11-21T09:46:55.177Z
+- commits:
     - subject: simplify disk watchdog tests
       hash: 2216355d073162c79748367f49d4a1294ede7796
       body: ""
