@@ -1,4 +1,59 @@
 - commits:
+    - subject: "balena: disable buildkit and dependencies with no_buildkit tag"
+      hash: 977ac4e187e4888286ddec1ef926fe195cf0e01d
+      body: |
+        This change disables the builkit backend to reduce the final
+        binary size by 3-4mb.
+
+        If buildkit is enabled manually via DOCKER_BUILDKIT=1 the
+        engine will return a clear error that buildkit is not supported.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "balena: Rebase patches onto upstream Moby v20.10.27"
+      hash: 2533a1a701bcac6cacac1504180475968c3ceee9
+      body: >
+        This rebases all balenaEngine-specific features on top of the
+
+        upstream Moby v20.10.27 release, cleaning up the previously
+
+        intermingled history of merge commits while preserving full commit
+        attribution.
+
+
+        The patch revision appears to go backwards as previously the patch
+
+        value would increase whenever local commits were added. However going
+        forward
+
+        we will track the upstream version exactly and only pin commit SHAs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "go: Update to 1.22.12 for compatibility with balena v20.10.27"
+      hash: a6168f3da54c275d7929fe99a0eecc3c2651b4f8
+      body: |
+        Imports go 1.22.12 from poky scarthgap branch (c973f0e006) to meet
+        the minimum version requirement for building balena v20.10.27.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.8.0
+  title: ""
+  date: 2025-11-21T17:52:58.091Z
+- commits:
     - subject: "os-helpers: generalize get_sector_size"
       hash: 6501bcfec6810499a78347f09bac8b43b641b6b7
       body: |

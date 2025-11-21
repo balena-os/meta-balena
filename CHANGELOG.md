@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.8.0
+## (2025-11-21)
+
+* balena: disable buildkit and dependencies with no_buildkit tag [Kyle Harding]
+* balena: Rebase patches onto upstream Moby v20.10.27 [Kyle Harding]
+* go: Update to 1.22.12 for compatibility with balena v20.10.27 [Kyle Harding]
+
 # v6.7.8
 ## (2025-11-21)
 
