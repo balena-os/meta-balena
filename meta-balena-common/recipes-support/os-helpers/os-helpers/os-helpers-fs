@@ -23,7 +23,7 @@ fi
 get_sector_size() {
 	local _device="$1"
 
-	lsblk -o NAME,PHY-SEC,TYPE "$_device" 2>/dev/null | awk '$3 == "part" || $3 == "crypt" {print $2}' | head -n1
+	lsblk -nlo NAME,PHY-SEC,TYPE "$_device" 2>/dev/null | awk '{print $2}'
 }
 
 # Wait for a file to appear with loop count limit.
