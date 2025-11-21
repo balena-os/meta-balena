@@ -15,10 +15,10 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "v20.10.43"
-BALENA_BRANCH = "master"
+BALENA_VERSION = "v20.10.27"
+BALENA_BRANCH = "release/v20.10"
 
-SRCREV = "0be8046a1c191ad789a65d7d8429d899d6bc9fbe"
+SRCREV = "f4c93ad2b3c4ffa190ad29abba0a6f3e0779c797"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
@@ -78,7 +78,7 @@ FILES:${PN} += " \
 	"
 
 DOCKER_PKG="github.com/docker/docker"
-BUILD_TAGS="no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs"
+BUILD_TAGS="no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs no_buildkit"
 
 do_configure[noexec] = "1"
 
