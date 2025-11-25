@@ -1,0 +1,114 @@
+if [ -f "/usr/libexec/os-helpers-logging" ]; then
+    . /usr/libexec/os-helpers-logging
+fi
+if [ -f "/usr/sbin/balena-config-defaults" ]; then
+    . /usr/sbin/balena-config-defaults
+fi
+if [ -f "/usr/libexec/os-helpers-sb" ]; then
+    . /usr/libexec/os-helpers-sb
+fi
+
+# Provides fatmv
+. /usr/sbin/balena-config-vars
+
+set -e
+
+BOOTLOADER_CONFIG_LOCK_FILE="/var/volatile/bootloader_config.lock"
+
+# Intel NUC image contains grub_extraenv for both MBR and EFI boot
+bootloader_config_files=("extra_uEnv.txt" "grub/grub_extraenv" "EFI/BOOT/grub_extraenv")
+
+# $1 - bootloader environment variable name
+# $2 - bootloader environment variable value.
+#
+# Bootloader environment variable is removed from
+# the environment files if $2 is not provided.
+bootloader_config_modify() {
+    # Bail out if run on a SB system
+    if type is_secured >/dev/null 2>&1; then
+        # is_secured is used on an already provisioned system
+        # to check if it has secure boot enabled.
+        # Bootloader configuration is not performed
+        # during flashing.
+        if is_secured ; then
+            warn "Bootloader configuration not available on secure boot systems"
+            exit 0
+        fi
+    fi
+
+    if [ "$#" -lt 1 ]; then
+        fail "Bootloader environment variable not provided"
+    fi
+
+    local key="$1"
+    local value="$2"
+
+    local escaped_key
+
+    # Key and value are escaped for usage inside sed
+    escaped_key=$(printf '%s\n' "$key" | sed 's/[|\]/\\&/g')
+
+    local escaped_value=""
+    if [ ! -z "$value" ]; then
+        # Value can be a path, in the case of the extra firmware volume
+        escaped_value=$(printf '%s\n' "$value" | sed 's/[\&|\\]/\\&/g')
+    fi
+
+    (
+        local tmpfile=""
+        # set -e is used, clear temp file on failure
+        trap 'rm -f "$tmpfile"' EXIT
+
+        flock -x 200
+        for bootloader_file in "${bootloader_config_files[@]}"; do
+            local file_updated=0
+            local bootloader_config_file="${BALENA_BOOT_MOUNTPOINT}/${bootloader_file}"
+
+            if [ -f "$bootloader_config_file" ]; then
+                if grep -q "^${key}\s*=" "$bootloader_config_file"; then
+                    local current_value
+                    # Check for existing value in bootloader config file
+                    current_value=$(grep -E "^${key}\s*=" "$bootloader_config_file" | sed -E "s/^${key}\s*=\s*(.*)/\1/")
+
+                    if [ ! -z "$value" ] && [ "$current_value" = "$value" ]; then
+                        info "Variable ${key} already set to ${value} in ${bootloader_config_file}. Skipping modification."
+                        file_updated=0
+                    else
+                        tmpfile=$(mktemp)
+
+                        if [ ! -z "$value" ]; then
+                            # env varible present but differs from target value
+                            sed "s|^\(${escaped_key}\s*=\s*\).*$|\1${escaped_value}|" "$bootloader_config_file" > "$tmpfile"
+                        else
+                            # env variable present and it should be deleted
+                            sed "/^${escaped_key}\s*=/d" "$bootloader_config_file" > "$tmpfile"
+                        fi
+                        file_updated=1
+                    fi
+                elif [ ! -z "$value" ]; then
+                    # env variable does not exist, will be added
+                    tmpfile=$(mktemp)
+                    cat "$bootloader_config_file" > "$tmpfile"
+                    echo "${key}=${value}" >> "$tmpfile"
+                    file_updated=1
+                fi # env variable doesn't exist and no value was provided, nothing to do
+
+                if [ "$file_updated" -eq 1 ]; then
+                    "${MV}" "$tmpfile" "$bootloader_config_file"
+
+                    if grep -q "^${key}\s*=" "$bootloader_config_file"; then
+                        info "${key}=${value} has been set in ${bootloader_config_file}"
+                    else
+                        info "${key} has been removed from ${bootloader_config_file}"
+                    fi
+
+                    # temp file already moved
+                    tmpfile=""
+                else
+                    rm -f "$tmpfile"
+                    tmpfile=""
+                fi
+            fi
+        done
+    ) 200>"${BOOTLOADER_CONFIG_LOCK_FILE}"
+}
