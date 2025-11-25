@@ -53,15 +53,15 @@ else
   get_root_uuid "resin-rootB"
  fi
 fi
-linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
 }
 
 menuentry 'manualfallbackA' {
   get_root_uuid "resin-rootA"
-  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
 }
 
 menuentry 'manualfallbackB' {
   get_root_uuid "resin-rootB"
-  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
 }
