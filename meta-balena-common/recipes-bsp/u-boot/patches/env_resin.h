@@ -176,7 +176,7 @@
               "fi;\0" \
        \
        "set_os_cmdline=" \
-               "setenv os_cmdline ${base_os_cmdline} ${bootparam_flasher} ${extra_os_cmdline};\0" \
+               "setenv os_cmdline ${base_os_cmdline} ${bootparam_flasher} ${extra_os_cmdline} ${extra_os_firmware_class_path};\0" \
        "resin_set_kernel_root=" \
                "run resin_set_dev_index;" \
                "run resin_inject_env_file;" \
