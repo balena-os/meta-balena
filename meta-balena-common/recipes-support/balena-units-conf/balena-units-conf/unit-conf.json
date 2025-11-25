@@ -64,6 +64,10 @@
 				"os-fan-profile": {
 					"description": "Device specific fan profile configuration",
 					"configuration": "os.fan.profile"
+				},
+				"os-extra-firmware": {
+					"description": "Extra firmware search path",
+					"configuration": "os.kernel.extraFirmwareVol"
 				}
 			}
 		}
