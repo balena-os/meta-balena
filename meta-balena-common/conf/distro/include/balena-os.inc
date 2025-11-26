@@ -120,8 +120,8 @@ BAD_RECOMMENDATIONS += "shared-mime-info"
 PREFERRED_VERSION_upx:arm = "3.94"
 PREFERRED_VERSION_upx-native:arm = "3.94"
 
-# let's pin linux-firmware to the version we imported from Poky kirkstone release
-PREFERRED_VERSION_linux-firmware = "20230404"
+# let's pin linux-firmware to the version we imported from Poky scarthgap release
+PREFERRED_VERSION_linux-firmware = "20240909"
 
 # Scarthgap go version, meets balena-engine go version requirement
 GOVERSION = "1.22.12"

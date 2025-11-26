@@ -24,12 +24,6 @@ FILES:${PN}-rtl8188eu = " \
     ${nonarch_base_libdir}/firmware/rtlwifi/rtl8188eu*.bin* \
     "
 
-PACKAGES =+ "${PN}-iwlwifi-9260"
-
-FILES:${PN}-iwlwifi-9260 = " \
-    ${nonarch_base_libdir}/firmware/iwlwifi-9260-* \
-    "
-
 PACKAGES =+ "${PN}-iwlwifi-qu-b0-hr-b0"
 
 FILES:${PN}-iwlwifi-qu-b0-hr-b0 = " \
