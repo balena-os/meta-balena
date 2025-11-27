@@ -1,4 +1,22 @@
 - commits:
+    - subject: Upgrade linux-firmware from 20230404 to 20240909
+      hash: e01fbc5a5ff48e58e6a967e042be4454bbfcb9af
+      body: >
+        This new recipe is taken from Poky revision
+        711c93422918d1810e652e75405b9f9ad6f01167 (scarthgap branch)
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: Upgrade linux-firmware from 20230404 to 20240909
+        changelog-entry: Upgrade linux-firmware from 20230404 to 20240909
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.8.1
+  title: ""
+  date: 2025-11-27T00:19:03.865Z
+- commits:
     - subject: "balena: disable buildkit and dependencies with no_buildkit tag"
       hash: 977ac4e187e4888286ddec1ef926fe195cf0e01d
       body: |

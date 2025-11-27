@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.8.1
+## (2025-11-27)
+
+* Upgrade linux-firmware from 20230404 to 20240909 [Florin Sarbu]
+
 # v6.8.0
 ## (2025-11-21)
 
