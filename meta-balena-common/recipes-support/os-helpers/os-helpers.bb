@@ -20,6 +20,7 @@ SRC_URI = " \
     file://os-helpers-time \
     file://os-helpers-tpm2 \
     file://os-helpers-config \
+    file://os-helpers-bootloader-config \
     file://os-helpers-api \
     file://os-helpers-efi \
     file://os-helpers-sb \
@@ -49,6 +50,7 @@ do_install() {
         ${WORKDIR}/os-helpers-time \
         ${WORKDIR}/os-helpers-tpm2 \
         ${WORKDIR}/os-helpers-config \
+        ${WORKDIR}/os-helpers-bootloader-config \
         ${WORKDIR}/os-helpers-api \
         ${WORKDIR}/os-helpers-efi \
         ${WORKDIR}/os-helpers-sb \
@@ -62,7 +64,7 @@ FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"
 FILES:${PN}-logging = "${libexecdir}/os-helpers-logging"
 FILES:${PN}-time = "${libexecdir}/os-helpers-time"
 FILES:${PN}-tpm2 = "${libexecdir}/os-helpers-tpm2"
-FILES:${PN}-config = "${libexecdir}/os-helpers-config"
+FILES:${PN}-config = "${libexecdir}/os-helpers-config ${libexecdir}/os-helpers-bootloader-config"
 FILES:${PN}-api = "${libexecdir}/os-helpers-api"
 FILES:${PN}-reboot = "${libexecdir}/safe_reboot"
 FILES:${PN}-efi = "${libexecdir}/os-helpers-efi"
