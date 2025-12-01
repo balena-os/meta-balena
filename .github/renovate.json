@@ -33,31 +33,12 @@
       "packageNameTemplate": "balena-os/balena-supervisor",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^v(?<version>.*)$"
-    },
-    {
-      "fileMatch": ["(^|/)balena_git.bb$"],
-      "matchStrings": ["BALENA_VERSION = \"v?(?<currentValue>.*?)\"\\n"],
-      "depNameTemplate": "balena-engine",
-      "packageNameTemplate": "balena-os/balena-engine",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v?(?<version>.*)$"
     }
   ],
   "packageRules": [
     {
       "matchManagers": ["git-submodules"],
       "commitBody": "Update {{depName}}\nChange-type: patch"
-    },
-    {
-      "matchManagers": ["regex"],
-      "matchPackagePatterns": [".*balena-engine"],
-      "postUpgradeTasks": {
-        "commands": [
-          "sed -r \"s|SRCREV = \\\"[0-9a-f]+\\\"|SRCREV = \\\"$(git ls-remote -t {{{sourceUrl}}} refs/tags/v{{{newVersion}}} | awk '{print $1}')\\\"|\" -i {{{packageFile}}}"
-        ],
-        "fileFilters": ["**/balena_git.bb"],
-        "executionMode": "update"
-      }
     },
     {
       "matchUpdateTypes": ["minor", "patch"],
