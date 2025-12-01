@@ -38,7 +38,7 @@ CVE: CVE-2023-52160
 Upstream-Status: Backport [https://w1.fi/cgit/hostap/commit/?id=8e6485a1bcb0baffdea9e55255a81270b768439c]
 
 Signed-off-by: Claus Stovgaard <claus.stovgaard@gmail.com>
-Signed-off-by: Peter Marko <peter.marko@siemens.com>
+
 ---
  src/eap_peer/eap_config.h          |  8 ++++++
  src/eap_peer/eap_peap.c            | 40 +++++++++++++++++++++++++++---
