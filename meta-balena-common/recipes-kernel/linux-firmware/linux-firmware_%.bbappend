@@ -194,6 +194,14 @@ PACKAGES =+ "${PN}-i915-dg1"
 FILES:${PN}-i915-dg1 = " \
     ${nonarch_base_libdir}/firmware/i915/dg1* \
     "
+
+# ARC iGPUs on Core Ultra series
+PACKAGES =+ "${PN}-i915-mtl"
+
+FILES:${PN}-i915-mtl = " \
+    ${nonarch_base_libdir}/firmware/i915/mtl* \
+    "
+
 PACKAGES =+ "${PN}-iwlwifi-quz-a0-hr-b0"
 
 FILES:${PN}-iwlwifi-quz-a0-hr-b0 = " \
