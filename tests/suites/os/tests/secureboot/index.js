@@ -465,11 +465,21 @@ class imxSecureBoot extends secureBoot {
 			"waitForFailedBoot() will reject if the device boots successfully",
 		)
 
+		/* Skip all bootloader integrity tests for devices that do not bring link up on boot failure */
+		const skipAllIntegrityDevices = [
+			'imx8mp-var-dart-pl1000pp',
+			'imx8mp-var-dart-pl1000pp-sb',
+		];
+		if (skipAllIntegrityDevices.includes(this.suite.deviceType.slug)) {
+			this.test.comment(`Skipping bootloader integrity tests for ${this.suite.deviceType.slug}`);
+			return;
+		}
+
 		for (const args of tests) {
-			if ( args.name == 'Bootloader' &&
-				( this.suite.deviceType.slug == 'iot-gate-imx8' ||
-				  this.suite.deviceType.slug == 'iot-gate-imx8-sb' ) ) {
-				// iot-gate-imx8 needs U-Boot for flashing to work
+			/* Skip only U-Boot integrity test for devices that need U-Boot for flashing */
+			if (args.name == 'Bootloader' &&
+				(this.suite.deviceType.slug == 'iot-gate-imx8' ||
+				 this.suite.deviceType.slug == 'iot-gate-imx8-sb')) {
 				this.test.comment(`Skipping bootloader integrity test for ${this.suite.deviceType.slug}`);
 				continue;
 			}
