@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.8.2
+## (2025-12-02)
+
+* usb-modeswitch-data: Fix packaging for merged usr [Florin Sarbu]
+
 # v6.8.1
 ## (2025-11-27)
 

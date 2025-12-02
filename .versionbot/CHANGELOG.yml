@@ -1,4 +1,18 @@
 - commits:
+    - subject: "usb-modeswitch-data: Fix packaging for merged usr"
+      hash: a0b3eb932b78b87d5340eae15b4a05c4a7c8cb6c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.8.2
+  title: ""
+  date: 2025-12-02T09:12:30.552Z
+- commits:
     - subject: Upgrade linux-firmware from 20230404 to 20240909
       hash: e01fbc5a5ff48e58e6a967e042be4454bbfcb9af
       body: >
