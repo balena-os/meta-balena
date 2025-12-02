@@ -1,4 +1,240 @@
 - commits:
+    - subject: Update balena-supervisor to v17.2.1
+      hash: 7602a4490e283aac4555f12ad329a1fcaf7a6e9d
+      body: |
+        Update balena-supervisor from 17.1.2 to 17.2.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Fix state engine tests failing with newer version of docker
+              hash: a7e0eb63fd723b09620a49269b6e48e776ff38b9
+              body: >
+                It seems that inspecting a network now shows `IPRange: ""` as
+                part of the IPAM config
+
+                even if not set. This was interfering with integration testing.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: felipe
+              nested: []
+            - subject: Await provisioning on error before continuing
+              hash: d0f990959f0ef70b4d2725e3f904f6622735995e
+              body: >
+                The `provisionOrRetry` call was not being awaited to avoid
+                memory leaks
+
+                due to the recursion, however that can cause other issues if the
+
+                api-binder is started without properly provisioning.
+
+
+                This re-adds the await, but now using a loop to avoid the memory
+                leak.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: felipe
+              nested: []
+          version: balena-supervisor-17.2.1
+          title: ""
+          date: 2025-11-19T12:02:29.113Z
+        - commits:
+            - subject: Support io.balena.features.host-os.board-rev feature label
+              hash: a813e246ee450d7f9730e466e14d1b8704d5ab58
+              body: >
+                When io.balena.features.host-os.board-rev feature label
+
+                is specified, adds (RESIN_|BALENA_)HOST_OS_BOARD_REV env var
+
+                to containers that specified the label.
+
+
+                This label will be used by Helios for Supervisor-managed OS
+                updates.
+              footer:
+                See: https://balena.fibery.io/Work/Improvement/Add-io.balena.features.host-os.board-rev-label-on-supervisor-3203
+                see: https://balena.fibery.io/Work/Improvement/Add-io.balena.features.host-os.board-rev-label-on-supervisor-3203
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.2.0
+          title: ""
+          date: 2025-11-03T18:11:19.155Z
+        - commits:
+            - subject: Stream logs from host os-update.service
+              hash: a80ca2546a5721258395a79fdbbd74859d2413c8
+              body: >
+                This service logs the status of HUP and update-balena-supervisor
+
+                host services. The commit streams the logs from this service to
+                the cloud
+
+                when an OS / SV update is triggered.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.1.10
+          title: ""
+          date: 2025-10-30T14:41:44.578Z
+        - commits:
+            - subject: Update balena-io/deploy-to-balena-action action to v2.0.136
+              hash: 53495f433f336abbc5ee65571e50117adbe22a15
+              body: |
+                Update balena-io/deploy-to-balena-action from 2.0.92 to 2.0.136
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-17.1.9
+          title: ""
+          date: 2025-10-18T00:53:35.218Z
+        - commits:
+            - subject: Do not block calls to dbus reboot/shutdown
+              hash: 4a463bcf290211824b4cab0503023c620950d825
+              body: >
+                This should give the supervisor API time to respond to queries
+                before
+
+                the device goes down.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-17.1.8
+          title: ""
+          date: 2025-10-17T19:20:34.056Z
+        - commits:
+            - subject: Update deep-object-diff to v1.1.9
+              hash: ca9457e75188ed11a2b0539b3e343fbb5a5aa0cc
+              body: |
+                Update deep-object-diff from 1.1.0 to 1.1.9
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-17.1.7
+          title: ""
+          date: 2025-10-16T20:30:17.955Z
+        - commits:
+            - subject: Add back python3 distutils with py3-setuptools
+              hash: b2a0b84bc34e09c87ee38a2e2122f19c6e041f7c
+              body: >
+                Python3 was bumped to remove distutils, but it's needed for
+                building
+
+                sqlite3 from source, so add it back via py3-setuptools.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Bump dependencies
+              hash: 1d7ff62c73419310c6827457dd41dac47649b4bf
+              body: |
+                - dockerode 4.0.2 -> 4.0.9
+                - livepush 3.5.1 -> 3.5.2
+                - mocha 10.4.0 -> 11.7.2
+                - mocha-pod 2.0.10 -> 2.0.12
+                - morgan 1.10.0 -> 1.10.1
+                - sinon 18.0.0 -> 21.0.0
+                - supertest 7.0.0 -> 7.1.4
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.1.6
+          title: ""
+          date: 2025-10-16T18:30:36.732Z
+        - commits:
+            - subject: "fix(2433): Fix redaction of secrets in env variables logging"
+              hash: 2952818cf3412fcb550fa981e178771678007fd8
+              body: >
+                The code was incorrectly casting the result of detailedDiff as
+                ServiceConfig,
+
+                which prevented environment variable redaction from working.
+                This caused
+
+                sensitive environment variables (API keys, passwords, tokens) to
+                be logged
+
+                in plain text in debug logs.
+
+
+                Fixed by:
+
+                - Creating a proper DetailedDiff interface for the return type
+
+                - Correctly redacting environment variables from
+                added/deleted/updated sections
+
+                - Adding tests to verify environment variables are properly
+                redacted
+              footer:
+                Change-Type: patch
+                change-type: patch
+                Signed-off-by: Tomas Mella <tomas@mytos.bio>
+                signed-off-by: Tomas Mella <tomas@mytos.bio>
+              author: Tomas Mella
+              nested: []
+          version: balena-supervisor-17.1.5
+          title: ""
+          date: 2025-10-16T16:33:11.418Z
+        - commits:
+            - subject: Only publish + finalize arm64 & amd64 for staging
+              hash: fcf101808c52e060aae12c1344551f0458c3a3bc
+              body: >
+                The armv7/v6 builds are broken due to emulating on QEMU with
+                Alpine musl,
+
+                and tests are run on arm/amd64 anyway.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.1.4
+          title: ""
+          date: 2025-10-15T22:16:52.628Z
+        - commits:
+            - subject: Clarify that a process should hold a lockfile
+              hash: 934d5d5f7efb3b73f283a2d61fe9bdb13cbe411f
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.1.3
+          title: ""
+          date: 2025-09-29T16:49:41.875Z
+  version: 6.8.3
+  title: ""
+  date: 2025-12-02T19:08:56.236Z
+- commits:
     - subject: "usb-modeswitch-data: Fix packaging for merged usr"
       hash: a0b3eb932b78b87d5340eae15b4a05c4a7c8cb6c
       body: ""
