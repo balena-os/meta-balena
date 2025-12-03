@@ -108,6 +108,7 @@ read_config() {
              OS_NET_WIFI_MACSCAN=\(.os.network.wifi.randomMacAddressScan)
              OS_FAN_PROFILE=\(.os.fan.profile // "")
              OS_POWER_MODE=\(.os.power.mode // "")
+             OS_EXTRA_FIRMWARE_VOLUME=\(.os.kernel.extraFirmwareVol // "")
              PERSISTENT_LOGGING=\(.persistentLogging // false)
              PROVISIONING_API_KEY=\(.apiKey // "")
              REGISTERED_AT=\(.registered_at // "")

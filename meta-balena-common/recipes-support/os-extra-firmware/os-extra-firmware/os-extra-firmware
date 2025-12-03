@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-bootloader-config
+
+source /usr/sbin/balena-config-vars --no-cache
+
+extra_fw_bootloader_var="extra_os_firmware_class_path"
+runtime_fw_class_config_path="/sys/module/firmware_class/parameters/path"
+
+if [[ -z "$OS_EXTRA_FIRMWARE_VOLUME" ]]; then
+    # No extra firmware volume configured. If present in u-boot environment,
+    # it will be removed.
+    bootloader_config_modify "extra_os_firmware_class_path"
+else
+    extra_firmware_volume_path="/var/lib/docker/volumes/${OS_EXTRA_FIRMWARE_VOLUME}"
+    if [ ! -d "${extra_firmware_volume_path}" ]; then
+        # Volume should exist at this point
+        fail "${extra_firmware_volume_path} - path does not exist"
+    fi
+
+    kernel_cmdline=$(cat "/proc/cmdline")
+    if echo "$kernel_cmdline" | grep -q "firmware_class.path=${extra_firmware_volume_path}"; then
+        info "OK: Kernel cmdline already configured for extra firmware search path. "
+    elif [ -e ${runtime_fw_class_config_path} ]; then
+        echo "${extra_firmware_volume_path}" > ${runtime_fw_class_config_path}
+        info "OK: \"${extra_firmware_volume_path}\" has been set in \"${runtime_fw_class_config_path}\""
+    else
+        warn "\"${runtime_fw_class_config_path}\" - path does not exist, please check kernel configuration."
+    fi
+    bootloader_config_modify "extra_os_firmware_class_path" "firmware_class.path=${extra_firmware_volume_path}"
+fi

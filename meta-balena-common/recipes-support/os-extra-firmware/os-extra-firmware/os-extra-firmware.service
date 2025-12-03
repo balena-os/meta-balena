@@ -1,0 +1,15 @@
+[Unit]
+Description=OS extra firmware management service
+DefaultDependencies=no
+Requires=var-volatile.mount
+After=var-volatile.mount resin-boot.service var-lib-docker.mount
+Before=umount.target
+Conflicts=umount.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/os-extra-firmware
+
+[Install]
+WantedBy=multi-user.target

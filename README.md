@@ -350,6 +350,24 @@ configuration option should be set through the API or from your balenaCloud dash
 }
 ```
 
+#### kernel
+
+An object that allows configuring kernel settings, which are applied during boot or at runtime.
+
+##### kernel.extraFirmwareVol
+
+(string) A string used for specifying the name of the volume used for storing additional firmware. This volume is used as an additional search path for Linux firmware.
+At runtime this setting is managed by the Supervisor and the default volume name is "extra-firmware".
+
+```json
+"os": {
+ "kernel": {
+  "extraFirmwareVol":"extra-firmware"
+ }
+}
+```
+
+
 ### installer
 
 An object that configures the behaviour of the balenaOS installer image.
