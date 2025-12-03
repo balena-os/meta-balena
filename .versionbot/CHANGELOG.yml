@@ -1,4 +1,19 @@
 - commits:
+    - subject: "recipes-support/os-extra-firmware: Add service for configuring extra
+        fw search path"
+      hash: cbfff3d75adb1be30f98cb8b54bf3fa2c88703fd
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.8.5
+  title: ""
+  date: 2025-12-03T15:29:59.247Z
+- commits:
     - subject: "linux-firmware_20240909.bb: Fix packaging amdgpu and various other
         firmware"
       hash: 90c8b5e2eb091736f531d242c3088baaaba93b2f

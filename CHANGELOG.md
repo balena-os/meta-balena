@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.8.5
+## (2025-12-03)
+
+* recipes-support/os-extra-firmware: Add service for configuring extra fw search path [Alexandru Costache]
+
 # v6.8.4
 ## (2025-12-03)
 
