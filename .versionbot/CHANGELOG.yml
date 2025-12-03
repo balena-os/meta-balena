@@ -1,4 +1,19 @@
 - commits:
+    - subject: "linux-firmware_20240909.bb: Fix packaging amdgpu and various other
+        firmware"
+      hash: 90c8b5e2eb091736f531d242c3088baaaba93b2f
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.8.4
+  title: ""
+  date: 2025-12-03T09:19:37.296Z
+- commits:
     - subject: Update balena-supervisor to v17.2.1
       hash: 7602a4490e283aac4555f12ad329a1fcaf7a6e9d
       body: |

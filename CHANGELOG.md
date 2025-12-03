@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.8.4
+## (2025-12-03)
+
+* linux-firmware_20240909.bb: Fix packaging amdgpu and various other firmware [Florin Sarbu]
+
 # v6.8.3
 ## (2025-12-02)
 
