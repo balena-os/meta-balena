@@ -1,0 +1,12 @@
+version: "2.4"
+
+services:
+  extra-linux-firmware:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # this label is required for the extra-firmware feature to be enabled on the supervisor side
+    # it's exactly what the test is about
+    labels:
+      io.balena.features.extra-firmware: '1'
+
