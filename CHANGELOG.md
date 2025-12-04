@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.8.6
+## (2025-12-04)
+
+* tests: os: secureboot: skip bootloader integrity for imx8mp-var-dart-pl1000pp [Alex Gonzalez]
+
 # v6.8.5
 ## (2025-12-03)
 

@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tests: os: secureboot: skip bootloader integrity for
+        imx8mp-var-dart-pl1000pp"
+      hash: db106f0a475386ce467a1625ae4664b4c52154f5
+      body: |
+        This device type authenticates the bootloader in the SPL and is not able
+        to bring the ethernet link up before that as the SPL does not have that
+        support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.8.6
+  title: ""
+  date: 2025-12-04T01:03:56.586Z
+- commits:
     - subject: "recipes-support/os-extra-firmware: Add service for configuring extra
         fw search path"
       hash: cbfff3d75adb1be30f98cb8b54bf3fa2c88703fd
