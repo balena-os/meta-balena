@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.8.7
+## (2025-12-04)
+
+* linux-firmware: Revert packaging i915 firmware by SoC generations [Florin Sarbu]
+
 # v6.8.6
 ## (2025-12-04)
 

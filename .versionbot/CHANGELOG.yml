@@ -1,4 +1,31 @@
 - commits:
+    - subject: "linux-firmware: Revert packaging i915 firmware by SoC generations"
+      hash: 43b440248b06c921dcad3423427e3b2fe2a38a3e
+      body: >
+        This reverts e741dcf6f520765c3345c1e64cfc3f31f5b6a604
+
+
+        We only use this separate packaging for the Up Board(s) but even there
+        we will
+
+        trim this list further but only in that device repository.
+
+
+        By not splitting the i915 firmware files in multiple packages we make
+        sure the
+
+        Generic X86_64 image contains all the i915 firmware.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.8.7
+  title: ""
+  date: 2025-12-04T10:16:30.316Z
+- commits:
     - subject: "tests: os: secureboot: skip bootloader integrity for
         imx8mp-var-dart-pl1000pp"
       hash: db106f0a475386ce467a1625ae4664b4c52154f5
