@@ -81,7 +81,7 @@ const configureExtraFirmwareAndVerifyServiceTriggered = async (context, link, te
     await context
         .get()
         .worker.executeCommandInHostOS(
-            `jq '.os.kernel.extraFirmwareVol = "${VOLUME_NAME}/_data"' ${CONFIG_PATH} > /tmp/config.json && cp /tmp/config.json ${CONFIG_PATH}`,
+            `jq '.os.kernel.extraFirmwareVol = "${VOLUME_NAME}"' ${CONFIG_PATH} > /tmp/config.json && cp /tmp/config.json ${CONFIG_PATH}`,
             link,
         );
 
@@ -92,7 +92,7 @@ const configureExtraFirmwareAndVerifyServiceTriggered = async (context, link, te
             `jq -r '.os.kernel.extraFirmwareVol // empty' ${CONFIG_PATH}`,
             link,
         );
-    test.is(configValue.trim(), `${VOLUME_NAME}/_data`, 'config.json should have extraFirmwareVol set');
+    test.is(configValue.trim(), VOLUME_NAME, 'config.json should have extraFirmwareVol set');
 
     test.comment('config.json updated, waiting for service to be triggered automatically...');
 
