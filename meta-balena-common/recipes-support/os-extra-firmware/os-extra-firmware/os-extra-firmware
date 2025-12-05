@@ -15,10 +15,10 @@ if [[ -z "$OS_EXTRA_FIRMWARE_VOLUME" ]]; then
     # it will be removed.
     bootloader_config_modify "extra_os_firmware_class_path"
 else
-    extra_firmware_volume_path="/var/lib/docker/volumes/${OS_EXTRA_FIRMWARE_VOLUME}"
-    if [ ! -d "${extra_firmware_volume_path}" ]; then
+    extra_firmware_volume_path=$(/usr/bin/balena volume inspect ${OS_EXTRA_FIRMWARE_VOLUME} | /usr/bin/jq -r ".[].Mountpoint")
+    if [ -z "${extra_firmware_volume_path}" ] || [ ! -d "${extra_firmware_volume_path}" ]; then
         # Volume should exist at this point
-        fail "${extra_firmware_volume_path} - path does not exist"
+        fail "${extra_firmware_volume_path} - path is not set or is not a directory"
     fi
 
     kernel_cmdline=$(cat "/proc/cmdline")
