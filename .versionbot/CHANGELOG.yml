@@ -1,4 +1,21 @@
 - commits:
+    - subject: Update ModemManager to 1.24.2
+      hash: 1aab953699dda53d6beddba72dd64bee6ec9c2e1
+      body: |
+        This is the latest stable version available
+      footer:
+        Change-type: minor
+        change-type: minor
+        Changelog-entry: Update ModemManager to 1.24.2
+        changelog-entry: Update ModemManager to 1.24.2
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.9.0
+  title: ""
+  date: 2025-12-07T00:03:29.091Z
+- commits:
     - subject: "linux-firmware: Revert packaging i915 firmware by SoC generations"
       hash: 43b440248b06c921dcad3423427e3b2fe2a38a3e
       body: >

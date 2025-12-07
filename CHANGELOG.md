@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.9.0
+## (2025-12-07)
+
+* Update ModemManager to 1.24.2 [Florin Sarbu]
+
 # v6.8.7
 ## (2025-12-04)
 
