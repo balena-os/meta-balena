@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = " \
     file://LICENSE.lgpl;md5=1803fa9c2c3ce8cb06b4861d75310742 \
     "
 
-SRC_URI[sha256sum] = "7e0cc997d4d3838a60a3634d54774d8234070b91db14dcc48ed15ae2ea4d163e"
+SRC_URI[sha256sum] = "efecadba9294edc38bbe189387708d0c34b25d7621fbfd4208d8b12811fc2580"
 SRC_URI = " \
     https://www.peak-system.com/fileadmin/media/linux/files/peak-linux-driver-${PV}.tar.gz \
 "
