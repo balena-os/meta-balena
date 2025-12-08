@@ -1,4 +1,18 @@
 - commits:
+    - subject: "peak: Update to version 8.20.0"
+      hash: 5a9dc4f0d52b0164784275cfd500e5dfc080810c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.9.1
+  title: ""
+  date: 2025-12-08T10:06:41.959Z
+- commits:
     - subject: Update ModemManager to 1.24.2
       hash: 1aab953699dda53d6beddba72dd64bee6ec9c2e1
       body: |

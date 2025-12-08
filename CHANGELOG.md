@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.9.1
+## (2025-12-08)
+
+* peak: Update to version 8.20.0 [Florin Sarbu]
+
 # v6.9.0
 ## (2025-12-07)
 
