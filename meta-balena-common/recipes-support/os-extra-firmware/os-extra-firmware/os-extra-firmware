@@ -25,7 +25,7 @@ else
     if echo "$kernel_cmdline" | grep -q "firmware_class.path=${extra_firmware_volume_path}"; then
         info "OK: Kernel cmdline already configured for extra firmware search path. "
     elif [ -e ${runtime_fw_class_config_path} ]; then
-        echo "${extra_firmware_volume_path}" > ${runtime_fw_class_config_path}
+        echo -n "${extra_firmware_volume_path}" > ${runtime_fw_class_config_path}
         info "OK: \"${extra_firmware_volume_path}\" has been set in \"${runtime_fw_class_config_path}\""
     else
         warn "\"${runtime_fw_class_config_path}\" - path does not exist, please check kernel configuration."
