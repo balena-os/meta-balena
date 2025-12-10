@@ -99,31 +99,38 @@ const getSysfsPath = async (worker, link) => {
 /**
  * Build the kernel module
  */
-const buildKernelModule = async (worker, link, test) => {
+const buildKernelModule = async (worker, link, test, suite) => {
     test.comment('Building test kernel module...');
 
     // Copy our hello.c and Makefile to kernel-module-build/module/src/ at runtime
     const srcDir = path.join(__dirname, 'src');
     const destDir = path.join(__dirname, 'kernel-module-build', 'module', 'src');
-    
+
     test.comment('Copying firmware test module sources...');
     await fse.copy(path.join(srcDir, 'hello.c'), path.join(destDir, 'hello.c'));
     await fse.copy(path.join(srcDir, 'Makefile'), path.join(destDir, 'Makefile'));
 
-    // Get OS version from device
-    const osVersion = await worker.executeCommandInHostOS(
-        `cat /etc/os-release | grep VERSION_ID | cut -d= -f2 | tr -d '"'`,
-        link,
-    );
-    test.comment(`OS Version: ${osVersion.trim()}`);
+    // Check if kernel headers archive exists and copy it (like secureboot does)
+    const kernelHeadersPath = suite.context.get().os.kernelHeaders;
+    const headersExists = await fse.pathExists(kernelHeadersPath);
 
-    // Update OS_VERSION in our docker-compose.yml
-    const dockerComposePath = path.join(__dirname, 'docker-compose.yml');
-    const data = await fse.readFile(dockerComposePath, 'utf-8');
-    const updatedData = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${osVersion.trim()}`);
-    await fse.writeFile(dockerComposePath, updatedData, 'utf-8');
+    if (headersExists) {
+        await fse.copy(kernelHeadersPath, path.join(__dirname, 'kernel-module-build', 'module', path.basename(kernelHeadersPath)));
+        test.comment('Using provided kernel headers');
+    } else {
+        // Headers don't exist - update docker-compose.yml with OS_VERSION to download headers
+        const osVersion = await worker.executeCommandInHostOS(
+            `cat /etc/os-release | grep VERSION_ID | cut -d= -f2 | tr -d '"'`,
+            link,
+        );
+        test.comment(`OS Version: ${osVersion.trim()}`);
+        const dockerComposePath = path.join(__dirname, 'docker-compose.yml');
+        const data = await fse.readFile(dockerComposePath, 'utf-8');
+        const updatedData = data.replace(/OS_VERSION:\s*\S+/, `OS_VERSION: ${osVersion.trim()}`);
+        await fse.writeFile(dockerComposePath, updatedData, 'utf-8');
+        test.comment(`Using kernel headers version ${osVersion.trim()}`);
+    }
 
-    // Build and run container
     test.comment('Building kernel module container on device...');
     await worker.pushContainerToDUT(link, __dirname, BUILD_CONTAINER_NAME);
 };
@@ -330,7 +337,7 @@ module.exports = {
             await backupConfig(worker, link, test);
 
             // Step 1: Build kernel module
-            await buildKernelModule(worker, link, test);
+            await buildKernelModule(worker, link, test, this.suite);
             const modulePath = await getModulePath(worker, link);
             test.comment(`Module path: ${modulePath}`);
             test.is(modulePath !== '', true, 'Module path should not be empty');
