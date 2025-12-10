@@ -14,6 +14,7 @@ inherit go
 inherit goarch
 inherit pkgconfig
 inherit useradd
+inherit binary-compress
 
 BALENA_VERSION = "v20.10.27"
 BALENA_BRANCH = "v20.10-runc-1.2.8-containerd-1.6.27"
@@ -57,6 +58,7 @@ SECURITY_LDFLAGS = ""
 
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE:${PN} = "balena.service balena-host.socket var-lib-docker.mount"
+FILES_COMPRESS = "/usr/bin/balena-engine"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM:${PN} = "-r balena-engine"
