@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/checkout action to v6
+      hash: a9116ae98349e3f2a545f5728f8e803b69344a01
+      body: |
+        Update actions/checkout from v4 to v6
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.9.4
+  title: ""
+  date: 2025-12-10T10:45:18.733Z
+- commits:
     - subject: Update actions/setup-python digest to 83679a8
       hash: 8732123a80a7b55c3d790d17c2dd70777d551a9c
       body: |

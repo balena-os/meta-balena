@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.9.4
+## (2025-12-10)
+
+* Update actions/checkout action to v6 [balena-renovate[bot]]
+
 # v6.9.3
 ## (2025-12-09)
 
