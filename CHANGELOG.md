@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.9.5
+## (2025-12-10)
+
+* fix initramfs rootfs script wrong indent [Yann CARDAILLAC]
+
 # v6.9.4
 ## (2025-12-10)
 

@@ -1,4 +1,18 @@
 - commits:
+    - subject: fix initramfs rootfs script wrong indent
+      hash: 4204dd9590e5bfeb740088ad2285edc67a634986
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 6.9.5
+  title: ""
+  date: 2025-12-10T18:36:27.261Z
+- commits:
     - subject: Update actions/checkout action to v6
       hash: a9116ae98349e3f2a545f5728f8e803b69344a01
       body: |
