@@ -114,11 +114,11 @@ hostname:pn-base-files = ""
 
 BAD_RECOMMENDATIONS += "shared-mime-info"
 
-# ARM data -> instruction cache consistency bug in latest UPX
-# Downgrade to avoid this bug
+# Use UPX >= 3.96 to avoid the following issues:
 # https://github.com/upx/upx/issues/225
-PREFERRED_VERSION_upx:arm = "3.94"
-PREFERRED_VERSION_upx-native:arm = "3.94"
+# https://github.com/upx/upx/issues/254
+PREFERRED_VERSION_upx:arm = "4.2.2"
+PREFERRED_VERSION_upx-native:arm = "4.2.2"
 
 # let's pin linux-firmware to the version we imported from Poky scarthgap release
 PREFERRED_VERSION_linux-firmware = "20240909"
