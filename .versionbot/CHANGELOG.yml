@@ -1,4 +1,20 @@
 - commits:
+    - subject: "balena-os.inc: Enable firmware compression by default"
+      hash: 67b37d3f74c4e589a195774fb15f5534dc648bae
+      body: |
+        The only requirement is kernel >= 5.3, we should default to compressed
+        and opt-out on devices with older kernels.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.10.1
+  title: ""
+  date: 2025-12-11T21:36:10.715Z
+- commits:
     - subject: "networkmanager: update to 1.52.0"
       hash: 2595dd8712d093d8fd4fc9166da2bfc40c77c038
       body: |
