@@ -19,34 +19,36 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 "
 
 DEPENDS = " \
+    glib-2.0 \
     python3-pygobject-native \
     coreutils-native \
     intltool-native \
     libxslt-native \
     libnl \
+    libnvme \
     udev \
     util-linux \
+    util-linux-libuuid \
     libndp \
     curl \
     dbus \
 "
 DEPENDS:append:class-target = " bash-completion"
 
-inherit gnomebase gettext update-rc.d systemd gobject-introspection gtk-doc update-alternatives upstream-version-is-even
+inherit meson gettext update-rc.d systemd gobject-introspection update-alternatives upstream-version-is-even pkgconfig
 
 SRC_URI = " \
-    ${GNOME_MIRROR}/NetworkManager/${@gnome_verdir("${PV}")}/NetworkManager-${PV}.tar.xz \
+    git://github.com/NetworkManager/NetworkManager.git;protocol=https;branch=main \
+    file://enable-dhcpcd.conf \
+    file://enable-iwd.conf \
 "
 SRC_URI:append:libc-musl = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' file://0001-linker-scripts-Do-not-export-_IO_stdin_used.patch', '', d)}"
-
-SRC_URI[sha256sum] = "722649e25362693b334371473802a729b0ec9ee283375096905f868808e74068"
-
-S = "${WORKDIR}/NetworkManager-${PV}"
+SRCREV = "995a28fa1ccc54ad22e794294c3c6783cc3f30ed"
 
 # ['auto', 'symlink', 'file', 'netconfig', 'resolvconf']
 NETWORKMANAGER_DNS_RC_MANAGER_DEFAULT ??= "auto"
 
-# ['dhcpcanon', 'dhclient', 'dhcpcd', 'internal', 'nettools']
+# ['dhclient', 'dhcpcd', 'internal', 'nettools']
 NETWORKMANAGER_DHCP_DEFAULT ??= "internal"
 
 # The default gets detected based on whether /usr/sbin/nft or /usr/sbin/iptables is installed, with nftables preferred.
@@ -56,13 +58,11 @@ NETWORKMANAGER_FIREWALL_DEFAULT ??= "nftables"
 EXTRA_OEMESON = "\
     -Difcfg_rh=false \
     -Dtests=yes \
-    -Dnmtui=true \
     -Dudev_dir=${nonarch_base_libdir}/udev \
     -Dlibpsl=false \
     -Dqt=false \
     -Dconfig_dns_rc_manager_default=${NETWORKMANAGER_DNS_RC_MANAGER_DEFAULT} \
     -Dconfig_dhcp_default=${NETWORKMANAGER_DHCP_DEFAULT} \
-    -Ddhcpcanon=false \
     -Diptables=${sbindir}/iptables \
     -Dnft=${sbindir}/nft \
 "
@@ -74,15 +74,18 @@ CFLAGS:append:libc-musl = " \
     -DRTLD_DEEPBIND=0 \
 "
 
-do_compile:prepend() {
-    export GI_TYPELIB_PATH="${B}}/src/libnm-client-impl${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"
-}
+# networkmanager-1.52.0/src/nmcli/agent.c:88:29: error: incompatible function pointer types assigning to 'rl_hook_func_t *' (aka 'int (*)(void)') from 'int (const char *, int)' [-Wincompatible-function-pointer-types]
+#   88 |             rl_startup_hook = set_deftext;
+#      |                             ^ ~~~~~~~~~~~
+ 
+CFLAGS:append:toolchain-clang = " -Wno-error=incompatible-function-pointer-types"
 
-PACKAGECONFIG ??= "readline nss ifupdown dnsmasq nmcli vala \
+PACKAGECONFIG ??= "readline nss ifupdown dnsmasq nmcli \
     ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', bb.utils.contains('DISTRO_FEATURES', 'x11', 'consolekit', '', d), d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez5', '', d)} \
     ${@bb.utils.filter('DISTRO_FEATURES', 'wifi polkit ppp', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux audit', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED', 'gobject-introspection-data', '', 'vala', d)} \
 "
 
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'vala', 'vala', '', d)}
@@ -95,7 +98,7 @@ PACKAGECONFIG[polkit] = "-Dpolkit=true,-Dpolkit=false,polkit"
 PACKAGECONFIG[bluez5] = "-Dbluez5_dun=true,-Dbluez5_dun=false,bluez5"
 # consolekit is not picked by shlibs, so add it to RDEPENDS too
 PACKAGECONFIG[consolekit] = "-Dsession_tracking_consolekit=true,-Dsession_tracking_consolekit=false,consolekit,consolekit"
-PACKAGECONFIG[modemmanager] = "-Dmodem_manager=true,-Dmodem_manager=false,modemmanager mobile-broadband-provider-info,modemmanager mobile-broadband-provider-info"
+PACKAGECONFIG[modemmanager] = "-Dmodem_manager=true,-Dmodem_manager=false,modemmanager mobile-broadband-provider-info"
 PACKAGECONFIG[ppp] = "-Dppp=true -Dpppd=${sbindir}/pppd,-Dppp=false,ppp"
 PACKAGECONFIG[dnsmasq] = "-Ddnsmasq=${bindir}/dnsmasq"
 PACKAGECONFIG[nss] = "-Dcrypto=nss,,nss"
@@ -307,11 +310,11 @@ do_install:append() {
 
     # Enable iwd if compiled
     if ${@bb.utils.contains('PACKAGECONFIG','iwd','true','false',d)}; then
-        install -Dm 0644 ${WORKDIR}/enable-iwd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-iwd.conf
+        install -Dm 0644 ${UNPACKDIR}/enable-iwd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-iwd.conf
     fi
 
     # Enable dhcpd if compiled
     if ${@bb.utils.contains('PACKAGECONFIG','dhcpcd','true','false',d)}; then
-        install -Dm 0644 ${WORKDIR}/enable-dhcpcd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-dhcpcd.conf
+        install -Dm 0644 ${UNPACKDIR}/enable-dhcpcd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-dhcpcd.conf
     fi
 }
