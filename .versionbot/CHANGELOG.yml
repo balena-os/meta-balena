@@ -1,4 +1,23 @@
 - commits:
+    - subject: "renovate.json: Remove custom balena-git package rules"
+      hash: 3b143a83bf6693ff42783f0c7a88107418440c12
+      body: |
+        Since 2533a1a we are no longer versioning or tagging balena commits
+        to the engine, so this renovate package rule no longer applies.
+
+        Going forward, we will manually bump the commit hash unless we are
+        moving to a new upstream tag.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.9.6
+  title: ""
+  date: 2025-12-11T01:33:51.039Z
+- commits:
     - subject: fix initramfs rootfs script wrong indent
       hash: 4204dd9590e5bfeb740088ad2285edc67a634986
       body: ""

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.9.6
+## (2025-12-11)
+
+* renovate.json: Remove custom balena-git package rules [Kyle Harding]
+
 # v6.9.5
 ## (2025-12-10)
 
