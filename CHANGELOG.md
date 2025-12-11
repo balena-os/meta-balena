@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.0
+## (2025-12-11)
+
+* networkmanager: update to 1.52.0 [Michal Toman]
+
 # v6.9.6
 ## (2025-12-11)
 

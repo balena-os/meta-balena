@@ -1,4 +1,26 @@
 - commits:
+    - subject: "networkmanager: update to 1.52.0"
+      hash: 2595dd8712d093d8fd4fc9166da2bfc40c77c038
+      body: |
+        This recipe is taken from meta-openembedded commit
+        33fec4b4f47ae5b86f274c352939437b641e7f8d with the only changes being
+        that we removed the initd configuration which we don't use, and removed
+        tag from the GIT URL because yocto spits an error when both tag
+        and SRCREV are used at the same time. Remaining tweaks are handled
+        in bbappend.
+
+        Fixes #3677
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.10.0
+  title: ""
+  date: 2025-12-11T12:11:50.125Z
+- commits:
     - subject: "renovate.json: Remove custom balena-git package rules"
       hash: 3b143a83bf6693ff42783f0c7a88107418440c12
       body: |
