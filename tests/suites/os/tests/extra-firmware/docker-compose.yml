@@ -1,0 +1,17 @@
+version: "2.4"
+
+services:
+  build:
+    build:
+      context: kernel-module-build/module
+      dockerfile: Dockerfile.template
+      args:
+        OS_VERSION: 5.2.8
+    privileged: true
+    volumes:
+      - module_output:/output
+    entrypoint: ["/bin/sh", "-c", "cp $MOD_PATH/*.ko /output/ && ls -la /output/ && echo 'Module copied to output volume'"]
+
+volumes:
+  module_output:
+
