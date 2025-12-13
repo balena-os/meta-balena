@@ -14,11 +14,12 @@ inherit go
 inherit goarch
 inherit pkgconfig
 inherit useradd
+inherit binary-compress
 
-BALENA_VERSION = "v20.10.27"
-BALENA_BRANCH = "release/v20.10"
+BALENA_VERSION = "v23.0.18"
+BALENA_BRANCH = "rerun-rebase-v23.0.18"
 
-SRCREV = "f4c93ad2b3c4ffa190ad29abba0a6f3e0779c797"
+SRCREV = "4058b18c1375a393b771899a26d6d56af4e69522"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
@@ -57,6 +58,7 @@ SECURITY_LDFLAGS = ""
 
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE:${PN} = "balena.service balena-host.socket var-lib-docker.mount"
+FILES_COMPRESS = "/usr/bin/balena-engine"
 GO_IMPORT = "import"
 USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM:${PN} = "-r balena-engine"
