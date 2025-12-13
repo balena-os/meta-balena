@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.10.2
+## (2025-12-13)
+
+
+<details>
+<summary> Update balena-supervisor to v17.2.2 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.2.2
+> ### (2025-12-11)
+> 
+> * Improve issue of very early container logs potentially being dropped [Pagan Gazzard]
+> 
+
+</details>
+
 # v6.10.1
 ## (2025-12-11)
 

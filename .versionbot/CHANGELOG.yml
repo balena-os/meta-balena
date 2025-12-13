@@ -1,4 +1,44 @@
 - commits:
+    - subject: Update balena-supervisor to v17.2.2
+      hash: 0d50a5c161c26f741a85aa48169328f989534a80
+      body: |
+        Update balena-supervisor from 17.2.1 to 17.2.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Improve issue of very early container logs potentially being dropped
+              hash: b97dc2bba2ca7c560a88b497ce5a78e1ec77bb61
+              body: >
+                It is possible for logs to be received for a container before we
+                have
+
+                marked it for attachment and hence cause those logs to be
+                skipped and
+
+                never sent to the backend. Waiting for a lock before attaching
+                makes
+
+                this more likely to happen and is unnecessary as we are not
+                directly
+
+                interacting with/affecting the container and it only affects the
+
+                journalctl tailing
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.2.2
+          title: ""
+          date: 2025-12-11T20:44:07.627Z
+  version: 6.10.2
+  title: ""
+  date: 2025-12-13T01:27:35.362Z
+- commits:
     - subject: "balena-os.inc: Enable firmware compression by default"
       hash: 67b37d3f74c4e589a195774fb15f5534dc648bae
       body: |
