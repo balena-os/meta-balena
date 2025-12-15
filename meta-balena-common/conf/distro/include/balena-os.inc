@@ -7,6 +7,20 @@ DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
 DISTRO_VERSION = "6.10.3"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
+
+# Allowed kernel cmdline arguments, used by balena-bootloader and the bootloader configuration scripts
+ALLOWED_BOOTARGS_LIST=" \
+    firmware_class.path=/var/lib/docker/volumes/extra-firmware/_data \
+"
+
+# Provides a bash array from the above allowed boot args list
+def format_bootargs_array(d):
+    args_list = d.getVar('ALLOWED_BOOTARGS_LIST', False, False).split()
+    quoted_args = [f'\\"{arg}\\"' for arg in args_list]
+    joined_args = ' '.join(quoted_args)
+    bash_array_str = '(' + joined_args + ')'
+    return bash_array_str
+
 python () {
     ''' Set HOSTOS_VERSION from board VERSION if available '''
 
