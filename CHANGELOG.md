@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.3
+## (2025-12-15)
+
+* remove disk watchdog logs [Yann CARDAILLAC]
+
 # v6.10.2
 ## (2025-12-13)
 
