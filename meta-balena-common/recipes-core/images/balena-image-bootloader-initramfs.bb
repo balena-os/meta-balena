@@ -17,7 +17,7 @@ PACKAGE_INSTALL = " \
     udev \
 "
 
-PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-resindataexpander',d)}"
+PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','initramfs-module-extraenv-bootparams',' initramfs-module-cryptsetup initramfs-module-resindataexpander',d)}"
 
 BAD_RECOMMENDATIONS += "busybox-syslog"
 
