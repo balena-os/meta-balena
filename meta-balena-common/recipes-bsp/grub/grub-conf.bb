@@ -7,6 +7,7 @@ SRC_URI = " \
     file://grub.cfg_internal_template \
     file://grub.cfg_internal_luks_template \
     file://grubenv \
+    file://grub_extraenv \
     "
 
 inherit deploy nopackages sign-gpg
@@ -42,7 +43,7 @@ do_deploy() {
     install -m 644 ${B}/grub.cfg_internal ${DEPLOYDIR}
 
     install -m 644 ${WORKDIR}/grubenv ${DEPLOYDIR}/grubenv
-    touch ${DEPLOYDIR}/grub_extraenv
+    install -m 644 ${WORKDIR}/grub_extraenv ${DEPLOYDIR}/grub_extraenv
     install -m 644 ${B}/grub.cfg_internal_luks ${DEPLOYDIR}/grub.cfg_internal_luks
 }
 
