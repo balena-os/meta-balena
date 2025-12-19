@@ -10,6 +10,7 @@ PACKAGE_INSTALL = " \
     glibc-gconv-ibm850 \
     initramfs-module-abroot \
     initramfs-module-debug \
+    initramfs-module-extrafw \
     initramfs-module-fsck \
     initramfs-module-kexec \
     initramfs-module-udev \
