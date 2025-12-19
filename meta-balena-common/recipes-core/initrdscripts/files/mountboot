@@ -1,0 +1,98 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+. /usr/sbin/balena-config-defaults
+
+BOOT_MOUNT="/bootfs"
+BOOTENV_FILENAME="bootenv"
+
+find_boot_partition() {
+    BOOT_LABEL_CANDIDATES="${BALENA_BOOT_LABEL} resin-boot"
+    if [ "${BALENA_NONENC_BOOT_LABEL}" != "${BALENA_BOOT_LABEL}" ]; then
+        BOOT_LABEL_CANDIDATES="${BALENA_NONENC_BOOT_LABEL} ${BOOT_LABEL_CANDIDATES}"
+    fi
+    for LABEL in ${BOOT_LABEL_CANDIDATES}; do
+        BY_LABEL_PATH="/dev/disk/by-label/${LABEL}"
+        if [ -L "${BY_LABEL_PATH}" ]; then
+            echo "${BY_LABEL_PATH}"
+            break
+        fi
+    done
+}
+
+mountboot_enabled() {
+    # Only run this inside the balena bootloader
+    # shellcheck disable=SC2154
+    if [ "$bootparam_balena_stage2" != "true" ]
+    then
+        return 1
+    fi
+
+    # shellcheck disable=SC2154
+    if [ "$bootparam_flasher" = "true" ]
+    then
+        return 1
+    fi
+
+    return 0
+}
+
+mountboot_run() {
+    BOOT_PART=$(find_boot_partition)
+
+    # Give the boot partition 5s to appear.
+    # This is necessary when the rootfs is on a device that takes
+    # a while to initialize, such as a USB disk.
+    # Similar waiting already happens in the rootfs script, because
+    # on most device types it is the first one that needs to access
+    # the root device. But in the case of balena bootloader,
+    # the mountboot script is called before rootfs, so it needs
+    # to do the waiting.
+    C=0
+    delay=${bootparam_rootdelay:-1}
+    timeout=${bootparam_roottimeout:-5}
+    while [ -z "${BOOT_PART}" ]; do
+        C=$(( C + 1 ))
+
+        if [ $(( C * delay )) -gt "$timeout" ]; then
+            fail "Failed to identify boot partition"
+        fi
+
+        sleep "${delay}"
+
+        BOOT_PART=$(find_boot_partition)
+    done
+
+    BOOT_DEV="/dev/$(lsblk -nlo pkname "${BOOT_PART}")"
+
+    mkdir -p "${BOOT_MOUNT}"
+    mount "${BOOT_PART}" "${BOOT_MOUNT}"
+    BOOTENV_FILE=$(find "${BOOT_MOUNT}" -name "${BOOTENV_FILENAME}")
+
+    BOOTENV_COUNT=$(echo "${BOOTENV_FILE}" | wc -w)
+    if [ "${BOOTENV_COUNT}" -eq 0 ]; then
+        umount "${BOOT_MOUNT}"
+        fail "Boot environment file not found"
+    fi
+
+    if [ "${BOOTENV_COUNT}" -gt 1 ]; then
+        # If multiple bootenv files are found, use the first one
+        # This is unexpected and non-deterministic and while normally
+        # it would be preferrable to fail at this point, this is early
+        # boot stage and in this particular situation we choose to guess
+        # as it increases the chance to succeed and not brick the device
+        for BOOTENV_ONE_FILE in ${BOOTENV_FILE}; do
+            BOOTENV_FILE="${BOOTENV_ONE_FILE}"
+            warn "Multiple boot environment files found"
+            warn "Will use '${BOOTENV_FILE}' and hope for the best"
+            break
+        done
+    fi
+
+    # export the variables for the next scripts to use
+    export BOOT_DEV
+    export BOOT_PART
+    export BOOT_MOUNT
+    export BOOTENV_FILE
+}
