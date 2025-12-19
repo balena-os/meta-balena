@@ -1,0 +1,69 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+get_bootenv() {
+    BOOTENV_FILE="$1"
+    KEY="$2"
+
+    grub-editenv "${BOOTENV_FILE}" list | grep "^${KEY}=" | sed -e "s,^${KEY}=\(.*\)$,\1,"
+}
+
+extrafw_enabled() {
+    # Only run this inside the balena bootloader
+    # shellcheck disable=SC2154
+    if [ "$bootparam_balena_stage2" != "true" ]; then
+        return 1
+    fi
+
+    # shellcheck disable=SC2154
+    if [ "$bootparam_flasher" = "true" ]; then
+        return 1
+    fi
+
+    # BOOTENV_FILE must be defined and exist
+    if [ -z "${BOOTENV_FILE}" ] || [ ! -f "${BOOTENV_FILE}" ]; then
+        return 1
+    fi
+
+    return 0
+}
+
+extrafw_run() {
+    EXTRA_FW_PATH=$(get_bootenv "${BOOTENV_FILE}" "extra_os_firmware_class_path")
+
+    # Nothing to do if undefined
+    if [ -z "${EXTRA_FW_PATH}" ]; then
+        return 0
+    fi
+
+    # For compatibility with other bootloaders, balenaOS sets the value
+    # as a full kernel parameter. Here we only care about the actual
+    # path, so let's cut the prefix.
+    EXTRA_FW_PATH="${EXTRA_FW_PATH#firmware_class.path=}"
+
+    # Make sure the path doesn't contain spaces, quotes, equality signs
+    # or backslashes. Technically these may be a part of a file
+    # or directory name, but we don't do (or need) that and having
+    # these could be abused to inject extra kernel arguments.
+    if echo "${EXTRA_FW_PATH}" | grep -q "[ '\"=\\]"; then
+        # We should probably die here, but that would make the device
+        # unbootable. Instead we just log a warning, throw away
+        # the extra FW configuration and continue booting without it.
+        warn "Extra firmware path is invalid: '${EXTRA_FW_PATH}'"
+        return 0
+    fi
+
+    # Make sure the path is absolute
+    # This just checks that the path starts with a forward slash
+    if ! echo "${EXTRA_FW_PATH}" | grep -q "^/"; then
+        # Same as above, we should die here, but we choose to log
+        # a warning and go on.
+        warn "Extra firmware path must be absolute: '${EXTRA_FW_PATH}'"
+        return 0
+    fi
+
+    # Everything seems OK, add the firmware path to kernel command line
+    export KEXEC_EXTRA_ARGS="${KEXEC_EXTRA_ARGS} firmware_class.path=${EXTRA_FW_PATH}"
+}
