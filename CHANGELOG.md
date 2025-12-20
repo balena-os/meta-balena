@@ -1,6 +1,46 @@
 Change log
 -----------
 
+# v6.10.4
+## (2025-12-20)
+
+
+<details>
+<summary> Update tests/leviathan digest to c80702b [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.77
+> ### (2025-12-20)
+> 
+> * Update docker/setup-buildx-action digest to 8d2750c [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.76
+> ### (2025-12-19)
+> 
+> * Update balena-os/leviathan-worker to v2.10.20 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.75
+> ### (2025-12-19)
+> 
+> * Core: worker: enable configurable flashing timeout [Ryan Cooke]
+> 
+> ## leviathan-2.36.74
+> ### (2025-12-16)
+> 
+> * Update balena-os/leviathan-worker to v2.10.18 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.73
+> ### (2025-12-15)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.72
+> ### (2025-12-13)
+> 
+> * Update actions/upload-artifact action to v6 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.10.3
 ## (2025-12-15)
 

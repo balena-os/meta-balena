@@ -1,4 +1,98 @@
 - commits:
+    - subject: Update tests/leviathan digest to c80702b
+      hash: fdd04ce817ba785c1d9a0e0d25392dd31cadf39a
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update docker/setup-buildx-action digest to 8d2750c
+              hash: 53c1b3b7c93bd7f7f76220ce3b6cbcec88b7d342
+              body: |
+                Update docker/setup-buildx-action
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.77
+          title: ""
+          date: 2025-12-20T01:10:28.074Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.20
+              hash: ceb7c8821ce44300169c59953e8f986d5ddd0452
+              body: |
+                Update balena-os/leviathan-worker from 2.10.18 to 2.10.20
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.76
+          title: ""
+          date: 2025-12-19T10:49:13.465Z
+        - commits:
+            - subject: "Core: worker: enable configurable flashing timeout"
+              hash: fb6228264bcda7fc0be5c0db4ece37ee85089b87
+              body: >
+                This is controlled via an env var on the worker - the worker
+                will send back the time for the core to wait, if not the
+                default.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.36.75
+          title: ""
+          date: 2025-12-19T09:49:12.134Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.18
+              hash: 22a8e952b4b2a38ff9218c52d5f09a97b8aed70f
+              body: |
+                Update balena-os/leviathan-worker from 2.10.17 to 2.10.18
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.74
+          title: ""
+          date: 2025-12-16T14:39:06.600Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 087cffba7ba15a707f558423d68bbdfec1370358
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.73
+          title: ""
+          date: 2025-12-15T01:04:43.814Z
+        - commits:
+            - subject: Update actions/upload-artifact action to v6
+              hash: 6ff3cfd5341a71f585ec5b631ef89e6777ce0fe1
+              body: |
+                Update actions/upload-artifact from 5 to 6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.72
+          title: ""
+          date: 2025-12-13T02:40:01.305Z
+  version: 6.10.4
+  title: ""
+  date: 2025-12-20T06:54:56.306Z
+- commits:
     - subject: remove disk watchdog logs
       hash: 426c342e1c3ee87b752c88ef6805da093249bd51
       body: ""
