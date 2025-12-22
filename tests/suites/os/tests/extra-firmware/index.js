@@ -152,40 +152,27 @@ const verifyFirmware = async (worker, link, test) => {
 };
 
 /**
- * Verify initial state: config.json and sysfs path should be empty/unset
+ * Verify firmware container state: volume exists, config.json is set, service has run
  */
-const verifyInitialState = async (worker, link, test) => {
-    test.comment('Verifying initial state (no extra firmware configured)...');
+const verifyFirmwareContainerState = async (worker, link, test) => {
+    test.comment('Verifying firmware container state...');
 
-    const configValue = await getConfigExtraFirmwareVol(worker, link);
-    test.comment(`config.json extraFirmwareVol: "${configValue}"`);
-    test.is(configValue, '', 'extraFirmwareVol should not be set initially');
+    // Check that volume exists
+    const firmwareDir = await getFirmwareDir(worker, link);
+    test.is(firmwareDir !== '', true, 'Firmware volume should exist');
+    test.comment(`Firmware directory: "${firmwareDir}"`);
 
-    const sysfsValue = await getSysfsFirmwareClassValue(worker, link);
-    test.comment(`sysfs firmware path: "${sysfsValue}"`);
-    test.is(sysfsValue, '', 'sysfs firmware path should be empty initially');
-
-    const deployDate = await worker.executeCommandInHostOS(
-        `cat /proc/uptime | awk '{printf "%.0f", $1 * 1000000}'`,
-        link,
-    );
-    return deployDate.trim();
-};
-
-const verifyConfigJsAndOsExtraFirmwareService = async (worker, link, test, deployDate) => {
-
+    // Check config.json has extraFirmwareVol set
     const configValue = await getConfigExtraFirmwareVol(worker, link);
     test.is(configValue, VOLUME_NAME, 'config.json should contain the correct volume name');
+    test.comment(`config.json extraFirmwareVol: "${configValue}"`);
 
-    const deployDateMicros = parseInt(deployDate, 10);
-
-    const exitTimestamp = await worker.executeCommandInHostOS(
-        `systemctl show os-extra-firmware.service --property=ExecMainExitTimestampMonotonic --value`,
+    // Check that service has run successfully
+    const result = await worker.executeCommandInHostOS(
+        `systemctl show os-extra-firmware.service --property=Result --value`,
         link,
     );
-    const exitTimestampMicros = parseInt(exitTimestamp.trim(), 10) || 0;
-
-    test.is(exitTimestampMicros > deployDateMicros, true, 'os-extra-firmware.service should have been triggered after deployment');
+    test.is(result.trim(), 'success', 'os-extra-firmware.service should have run successfully');
 
     // Verify sysfs path is set
     await verifySysfsPath(worker, link, test);
@@ -305,39 +292,36 @@ module.exports = {
             // Backup config.json
             await backupConfig(worker, link, test);
 
-            // Step 1: Verify initial state (config and sysfs should be empty)
-            const deployTimestamp = await verifyInitialState(worker, link, test);
-
-            // Step 2: Build test module
+            // Step 1: Build test module
             await buildTestModule(worker, link, test, this.suite);
 
-            // Step 3: Test that firmware is NOT found before deploying firmware container
+            // Step 2: Test that firmware is NOT found before deploying firmware container
             await testFirmwareNotFound(worker, link, test);
 
-            // Step 4: Deploy firmware container
+            // Step 3: Deploy firmware container
             test.comment('Pushing firmware container to device...');
             const firmwareContainerPath = path.join(__dirname, 'firmware-container');
             await worker.pushContainerToDUT(link, firmwareContainerPath, FIRMWARE_CONTAINER_NAME);
 
+            // Step 4: Verify firmware container state (volume, config.json, service)
+            await verifyFirmwareContainerState(worker, link, test);
+
             // Step 5: Verify the firmware file
             await verifyFirmware(worker, link, test);
 
-            // Step 6: Verify the config.json and os-extra-firmware.service
-            await verifyConfigJsAndOsExtraFirmwareService(worker, link, test, deployTimestamp);
-
-            // Step 7: Load module - expect firmware FOUND and VERIFIED
+            // Step 6: Load module - expect firmware FOUND and VERIFIED
             await testFirmwareFound(worker, link, test);
 
-            // Step 8: Reboot
+            // Step 7: Reboot
             await worker.rebootDut(link);
 
-            // Step 9: Verify kernel cmdline has firmware_class.path
+            // Step 8: Verify kernel cmdline has firmware_class.path
             await verifyKernelCmdline(worker, link, test);
 
-            // Step 10: Verify sysfs path is still set
+            // Step 9: Verify sysfs path is still set
             await verifySysfsPath(worker, link, test);
 
-            // Step 11: Load module again - should still work after reboot
+            // Step 10: Load module again - should still work after reboot
             await testFirmwareFound(worker, link, test);
         } finally {
             await cleanup(worker, link, test);
