@@ -224,6 +224,7 @@ BALENA_CONFIGS[memcfg_swap] = "CONFIG_MEMCG_SWAP=y"
 FIRMWARE_COMPRESS = "${@configure_from_version("5.3", "firmware_compress", "", d)}"
 BALENA_CONFIGS[firmware_compress] = " \
     CONFIG_FW_LOADER_COMPRESS=y \
+    CONFIG_FW_LOADER_COMPRESS_XZ=y \
 "
 
 BALENA_CONFIGS:append = " ${@configure_from_version("5.6", "", " mptcp", d)}"
