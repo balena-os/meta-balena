@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.5
+## (2025-12-23)
+
+* classes/kernel-balena: Enable support for xz firmware compression [Alexandru]
+
 # v6.10.4
 ## (2025-12-20)
 
