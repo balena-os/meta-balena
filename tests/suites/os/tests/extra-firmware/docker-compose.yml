@@ -1,0 +1,19 @@
+version: "2.4"
+
+services:
+  build:
+    build:
+      context: kernel-module-build/module
+      dockerfile: Dockerfile.template
+      # OS_VERSION is not used and don't have to be updated, as we provide a kernel headers archive,
+      # see kernel-module-build/module/Dockerfile.template and kernel-module-build/module/build.sh
+      args:
+        OS_VERSION: 5.2.8
+    privileged: true
+    volumes:
+      - module_output:/output
+    entrypoint: ["/bin/sh", "-c", "cp $MOD_PATH/*.ko /output/ && ls -la /output/ && echo 'Module copied to output volume'"]
+
+volumes:
+  module_output:
+
