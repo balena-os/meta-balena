@@ -1,6 +1,76 @@
 Change log
 -----------
 
+# v6.10.6
+## (2025-12-24)
+
+
+<details>
+<summary> Update balena-supervisor to v17.4.0 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.4.0
+> ### (2025-12-19)
+> 
+> * Support sw.kernel version and slug requirements for container contracts [Christina Ying Wang]
+> * Support sw.os version and slug requirements for container contracts [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.3.6
+> ### (2025-12-18)
+> 
+> * Update systeminformation to v5.27.14 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.3.5
+> ### (2025-12-18)
+> 
+> * patch: only apply noop for download-then-kill strategy and fix integration tests [Rob Thein]
+> * patch: Fix premature locking for metadata-only changes [Rob Thein]
+> 
+> ## balena-supervisor-17.3.4
+> ### (2025-12-18)
+> 
+> * Update tsconfig.module to node20 and TS to 5.9.x [felipe]
+> 
+> ## balena-supervisor-17.3.3
+> ### (2025-12-16)
+> 
+> * Log errors and warnings to stderr [felipe]
+> * Revert moduleResolution to node16 [felipe]
+> 
+> ## balena-supervisor-17.3.2
+> ### (2025-12-16)
+> 
+> * Update tsconfig targets for node22 [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.3.1
+> ### (2025-12-15)
+> 
+> * Remove unused direct dependency on pinejs-client-core [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.3.0
+> ### (2025-12-15)
+> 
+> * Purge extra-firmware system volume with purge action [Christina Ying Wang]
+> * Configure services to use extra-firmware volume if feature label present [Christina Ying Wang]
+> * Create extra firmware volume on startup and write volume to config.json [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.2.5
+> ### (2025-12-15)
+> 
+> * Update lint-staged to v16 [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.2.4
+> ### (2025-12-15)
+> 
+> * Update @types/sinon to v21 [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.2.3
+> ### (2025-12-15)
+> 
+> * Update @balena/compose to v7 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.10.5
 ## (2025-12-23)
 
