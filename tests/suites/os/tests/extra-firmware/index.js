@@ -285,6 +285,14 @@ const cleanup = async (worker, link, test) => {
 module.exports = {
     title: 'Extra firmware test',
     run: async function(test) {
+        const deviceType = this.suite.deviceType.slug;
+
+        // Skip test for secureboot device types
+        if (deviceType.endsWith('-sb')) {
+            test.comment(`Skipping extra-firmware test on secureboot device type: ${deviceType}`);
+            return;
+        }
+
         const worker = this.context.get().worker;
         const link = this.link;
 
