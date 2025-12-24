@@ -33,7 +33,7 @@ SRC_URI = "\
 	file://var-lib-docker.mount \
 	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
-	file://0001-dynbinary-use-go-cross-compiler.patch \
+	file://0001-dynbinary-use-go-cross-compiler.patch;patchdir=src/import \
 	"
 S = "${WORKDIR}/git"
 
