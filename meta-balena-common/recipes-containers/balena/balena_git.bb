@@ -16,9 +16,9 @@ inherit pkgconfig
 inherit useradd
 
 BALENA_VERSION = "v20.10.27"
-BALENA_BRANCH = "release/v20.10"
+BALENA_BRANCH = "fast-signature-delta"
 
-SRCREV = "f4c93ad2b3c4ffa190ad29abba0a6f3e0779c797"
+SRCREV = "d0856fb6dc14742402bd4907e05ce490596cf8ef"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
