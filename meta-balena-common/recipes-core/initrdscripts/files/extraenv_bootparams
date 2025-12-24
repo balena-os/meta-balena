@@ -1,0 +1,90 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091c
+. /usr/libexec/os-helpers-logging
+. /usr/sbin/balena-config-defaults
+
+BOOT_MP="/bootfs"
+BOOTENV_FILENAMES=( "extra_uEnv.txt" "grub_extraenv")
+
+# Variables allowed for passing extra bootargs
+BOOTENV_EXTRA_OS_CMDLINE_VARS=("extra_os_cmdline" "extra_os_firmware_class_path")
+
+# Is replaced at build time with an array of allowed kernel cmdline args
+ALLOWED_BOOTARGS=@@ALLOWED_BOOTARGS@@
+
+extra_boot_args=""
+
+find_boot_partition() {
+    BOOT_LABEL_CANDIDATES="${BALENA_BOOT_LABEL} resin-boot"
+    if [ "${BALENA_NONENC_BOOT_LABEL}" != "${BALENA_BOOT_LABEL}" ]; then
+        BOOT_LABEL_CANDIDATES="${BALENA_NONENC_BOOT_LABEL} ${BOOT_LABEL_CANDIDATES}"
+    fi
+    for LABEL in ${BOOT_LABEL_CANDIDATES}; do
+        BY_LABEL_PATH="/dev/disk/by-label/${LABEL}"
+        if [ -L "${BY_LABEL_PATH}" ]; then
+            echo "${BY_LABEL_PATH}"
+            break
+        fi
+    done
+}
+
+extraenv_bootparams_enabled() {
+    if [ "$bootparam_balena_stage2" = "true" ]
+    then
+        return 0
+    fi
+
+    if [ "$bootparam_flasher" = "true" ]
+    then
+        return 1
+    fi
+
+    return 1
+}
+
+extraenv_bootparams_run() {
+    boot_part=$(find_boot_partition)
+    boot_device="/dev/$(lsblk -nlo pkname ${boot_part})"
+    extraenv_args=""
+
+    mkdir -p "${BOOT_MP}"
+    mount -t vfat "${boot_part}" "${BOOT_MP}"
+    for bootenv_filename in "${BOOTENV_FILENAMES[@]}"; do
+        bootenv_file=$(find "${BOOT_MP}" -name "${bootenv_filename}" -print | head -n 1)
+        if [ -n "${bootenv_file}" ] && [ -e "${bootenv_file}" ]; then
+            info "Using ${bootenv_file} as main extra environment file"
+            if [[ "${bootenv_filename}" = "extra_uEnv.txt" ]]; then
+                extraenv_args=$(cat "${bootenv_file}")
+            else
+                extraenv_args=$(grub-editenv "${bootenv_file}" list 2>/dev/null)
+            fi
+            if [ -n "${extraenv_args}" ]; then
+                # Allowed bootargs can only be passed through allowed bootloader variables
+                for extra_os_cmdline_var in "${BOOTENV_EXTRA_OS_CMDLINE_VARS[@]}" ; do
+                    for allowed_bootarg in "${ALLOWED_BOOTARGS[@]}"; do
+                        if echo "${extraenv_args}" | grep -q "^${extra_os_cmdline_var}=.*${allowed_bootarg}" ; then
+                            info "Allowed bootarg ${allowed_bootarg} found in ${bootenv_file}."
+                            if echo "${extra_boot_args}" | grep -q "${allowed_bootarg}"; then
+                                warn "Skip adding duplicate boot arg: ${allowed_bootarg}"
+                            else
+                                # Extra bootargs are passed as defined in the allowed list,
+                                # as they could be manually extended in the environment file
+                                extra_boot_args="${extra_boot_args} ${allowed_bootarg}"
+                                info "Added bootarg $allowed_bootarg to extra cmdline"
+                            fi
+                        fi
+                    done
+                done
+                # Stop adding extra args if at least one environment file is present
+                break
+            fi
+        fi
+    done
+
+    umount "${BOOT_MP}"
+
+    if [ -n "${extra_boot_args}" ]; then
+        export KEXEC_EXTRA_ARGS="${KEXEC_EXTRA_ARGS} ${extra_boot_args} "
+    fi
+}

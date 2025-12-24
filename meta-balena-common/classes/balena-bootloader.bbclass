@@ -635,6 +635,10 @@ do_kernel_resin_checkconfig[vardeps] += "BALENA_CONFIGS BALENA_CONFIGS_DEPS"
 do_kernel_resin_checkconfig[deptask] += "do_kernel_resin_reconfigure"
 do_kernel_resin_checkconfig[dirs] += "${WORKDIR} ${B}"
 
+do_deploy:append() {
+    touch ${DEPLOY_DIR_IMAGE}/extra_uEnv.txt
+}
+
 do_configure:append () {
     if [ -f "${DEPLOY_DIR_IMAGE}/balena-keys/kmod.crt" ]; then
         install -d certs
