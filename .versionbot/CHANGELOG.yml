@@ -1,4 +1,35 @@
 - commits:
+    - subject: add extra firmware tests
+      hash: 3ae3e4c6edf0096423d367952d79e43c6469d9a8
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+    - subject: "recipes-support/os-extra-firmware: Extract extra-firmware volume data
+        path"
+      hash: cc8a5cde75867e9842f8d9ca02f84f01af295300
+      body: >
+        The volume data path is currently
+        /var/lib/docker/volumes/extra-firmware/_data,
+
+        and might change in the future, so let's use the engine to extract the
+
+        actual value.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.10.7
+  title: ""
+  date: 2025-12-31T13:01:52.916Z
+- commits:
     - subject: Update balena-supervisor to v17.4.0
       hash: f2e3318ff3ec03acb218fc154dabf3c0999fb8f8
       body: |

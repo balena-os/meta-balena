@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.10.7
+## (2025-12-31)
+
+* add extra firmware tests [Yann CARDAILLAC]
+* recipes-support/os-extra-firmware: Extract extra-firmware volume data path [Alexandru Costache]
+
 # v6.10.6
 ## (2025-12-24)
 
