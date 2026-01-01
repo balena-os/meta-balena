@@ -1,6 +1,26 @@
 Change log
 -----------
 
+# v6.10.8
+## (2026-01-01)
+
+
+<details>
+<summary> Update tests/leviathan digest to c2b518d [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.79
+> ### (2025-12-29)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.78
+> ### (2025-12-22)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.10.7
 ## (2025-12-31)
 

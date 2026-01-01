@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update tests/leviathan digest to c2b518d
+      hash: 31b602609f8ac21d41ca1e5b79774f2549485d0b
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 0122f154f4e9e54cadfb835ca902d332964ef3f6
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.79
+          title: ""
+          date: 2025-12-29T01:05:55.390Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 353f2dcce89e641799309f5a8a41fc7f189fc2b7
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.78
+          title: ""
+          date: 2025-12-22T01:30:09.473Z
+  version: 6.10.8
+  title: ""
+  date: 2026-01-01T11:32:30.962Z
+- commits:
     - subject: add extra firmware tests
       hash: 3ae3e4c6edf0096423d367952d79e43c6469d9a8
       body: ""
