@@ -155,6 +155,7 @@ BALENA_CONFIGS ?= " \
     vlan \
     bpf \
     disk-watchdog \
+    dmabuf \
 "
 
 #
@@ -741,6 +742,13 @@ BALENA_CONFIGS_DEPS[bpf] = " \
 # Used by disk-watchdog tests
 BALENA_CONFIGS[disk-watchdog] = " \
     CONFIG_BLK_DEV_DM=y \
+"
+
+# Enable DMA-BUF memory heaps
+BALENA_CONFIGS[dmabuf] = " \
+    CONFIG_DMABUF_HEAPS=y \
+    CONFIG_DMABUF_HEAPS_CMA=y \
+    CONFIG_DMABUF_HEAPS_SYSTEM=y \
 "
 
 ###########
