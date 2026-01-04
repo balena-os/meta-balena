@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.9
+## (2026-01-04)
+
+* kernel-balena.bbclass: Enable DMA-BUF memory heaps [Michal Toman]
+
 # v6.10.8
 ## (2026-01-01)
 

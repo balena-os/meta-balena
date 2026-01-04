@@ -1,4 +1,21 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Enable DMA-BUF memory heaps"
+      hash: c3e207d8e8c5fa8f35c6f5e3f4ffc7962e579bd7
+      body: |
+        This is required by some external drivers (e.g. metis).
+
+        The configuration matches what Fedora 42 and Debian 13 have enabled.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.10.9
+  title: ""
+  date: 2026-01-04T12:08:43.272Z
+- commits:
     - subject: Update tests/leviathan digest to c2b518d
       hash: 31b602609f8ac21d41ca1e5b79774f2549485d0b
       body: Update tests/leviathan
