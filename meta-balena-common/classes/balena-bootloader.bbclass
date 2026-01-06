@@ -501,6 +501,16 @@ BALENA_CONFIGS[crypto] = " \
     CONFIG_CRYPTO_SHA256=y \
     "
 
+# shrink size by removing unneeded functionality in balena-bootloader so we have enough space in the boot partition
+BALENA_CONFIGS:append = "shrink_size"
+BALENA_CONFIGS[shrink_size] = " \
+    CONFIG_CHROME_PLATFORMS=n \
+    CONFIG_MFD_CORE=n \
+    CONFIG_NEW_LEDS=n \
+    CONFIG_PPS=n \
+    CONFIG_VFIO=n \
+"
+
 ###########
 # HELPERS #
 ###########
