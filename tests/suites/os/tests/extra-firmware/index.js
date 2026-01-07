@@ -325,6 +325,11 @@ module.exports = {
             // Step 6: Load module - expect firmware FOUND and VERIFIED
             await testFirmwareFound(worker, link, test);
 
+            if (this.suite.deviceType.slug == 'srd3-xavier') {
+                test.comment('Skipping extra-firmware post-reboot test on Jetpack 4 Xavier AGX');
+                return;
+            }
+
             // Step 7: Reboot
             await worker.rebootDut(link);
 
