@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.10.11
+## (2026-01-07)
+
+
+<details>
+<summary> Update balena-supervisor to v17.4.2 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.4.2
+> ### (2026-01-06)
+> 
+> * Parse multiple child contracts listed under an `or` clause [Christina Ying Wang]
+> 
+
+</details>
+
 # v6.10.10
 ## (2026-01-06)
 

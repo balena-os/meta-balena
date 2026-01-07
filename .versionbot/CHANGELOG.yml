@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update balena-supervisor to v17.4.2
+      hash: 7fb52fa3483857556bababd4b5d8d2b20b13fa41
+      body: |
+        Update balena-supervisor from 17.4.1 to 17.4.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Parse multiple child contracts listed under an `or` clause
+              hash: 5560744c8061bc2e008b4d5a1816fea04b611fd3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.4.2
+          title: ""
+          date: 2026-01-06T19:34:23.699Z
+  version: 6.10.11
+  title: ""
+  date: 2026-01-07T11:00:48.232Z
+- commits:
     - subject: Update balena-supervisor to v17.4.1
       hash: bf6e8af96d18bacb0389a78536fe2d02b8ac25b6
       body: |
