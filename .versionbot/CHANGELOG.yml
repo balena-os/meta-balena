@@ -1,4 +1,24 @@
 - commits:
+    - subject: "tests/extra-firmware: Skip post-reboot extra-firmware check for a
+        specific device"
+      hash: 7c45dfe5f71004108f8873653ae345a20a9d123e
+      body: |
+        ... on which the cboot bootloader does not have FAT support to access
+        the extra_uEnv.txt environment file.
+
+        This device-type uses an old version of Jetpack 4.0 which does not
+        have uboot / grub / UEFI EDK2 / balena-bootloader support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.10.13
+  title: ""
+  date: 2026-01-08T19:53:44.644Z
+- commits:
     - subject: Reduce the size of the balena bootloader by removing unused functionality
       hash: e658d4b92cb1622009fc5529d573345a426ff09b
       body: >

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.13
+## (2026-01-08)
+
+* tests/extra-firmware: Skip post-reboot extra-firmware check for a specific device [Alexandru Costache]
+
 # v6.10.12
 ## (2026-01-08)
 
