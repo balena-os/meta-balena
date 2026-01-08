@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.12
+## (2026-01-08)
+
+* Reduce the size of the balena bootloader by removing unused functionality [Florin Sarbu]
+
 # v6.10.11
 ## (2026-01-07)
 

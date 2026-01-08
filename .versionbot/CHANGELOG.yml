@@ -1,4 +1,33 @@
 - commits:
+    - subject: Reduce the size of the balena bootloader by removing unused functionality
+      hash: e658d4b92cb1622009fc5529d573345a426ff09b
+      body: >
+        Newer meta-balena updates are failing for iot-gate-imx8plus-sb with the
+        error:
+
+        ERROR: balena-image-flasher-1.0-r0 do_resin_boot_dirgen_and_deploy:
+        resin-boot: Not enough space for atomic copy operations.
+
+
+        In order to have the size reduction available for all balena-bootloader
+        users we do these changes
+
+        directly here in the balena-bootloader class.
+      footer:
+        Changelog-entry: Reduce the size of the balena bootloader by removing unused
+          functionality
+        changelog-entry: Reduce the size of the balena bootloader by removing unused
+          functionality
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.10.12
+  title: ""
+  date: 2026-01-08T09:48:14.494Z
+- commits:
     - subject: Update balena-supervisor to v17.4.2
       hash: 7fb52fa3483857556bababd4b5d8d2b20b13fa41
       body: |
