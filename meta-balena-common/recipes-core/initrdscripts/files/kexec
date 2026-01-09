@@ -41,6 +41,7 @@ kexec_run() {
     kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS} root=UUID=${ROOT_UUID} ${KEXEC_EXTRA_ARGS}"
 
     umount "${ROOTFS_DIR}"
+    umount "${BOOT_MOUNT}"
 
     kexec -e
 
