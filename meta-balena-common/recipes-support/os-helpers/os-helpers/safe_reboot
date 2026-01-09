@@ -52,13 +52,14 @@ _check_override_locks() {
 do_reboot() {
   info "Rebooting now..."
   _progress "100" "Reboot in progress"
+  sync
   systemctl reboot
-  (sleep 120 && systemctl reboot --force > /dev/null 2>&1) &
+  (sleep 120 && sync && systemctl reboot --force > /dev/null 2>&1) &
   # If the previous reboot commands have failed for any reason, let's try differently
-  (sleep 300 && reboot --force > /dev/null 2>&1) &
+  (sleep 300 && sync && reboot --force > /dev/null 2>&1) &
   # If the previous 2 reboot commands have failed for any reason, try the Magic SysRq
-  # enable and send reboot request
-  (sleep 600 && echo 1 > /proc/sys/kernel/sysrq && echo b > /proc/sysrq-trigger) &
+  # enable and send reboot request - use 's' (sync) before 'b' (reboot)
+  (sleep 600 && echo 1 > /proc/sys/kernel/sysrq && echo s > /proc/sysrq-trigger && sleep 2 && echo b > /proc/sysrq-trigger) &
   while true; do sleep 60; done
 }
 
