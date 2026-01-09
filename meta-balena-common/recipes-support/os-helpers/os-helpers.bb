@@ -58,6 +58,9 @@ do_install() {
         ${D}${libexecdir}
         sed -i "s,@@BALENA_CONF_UNIT_STORE@@,${BALENA_CONF_UNIT_STORE},g" ${D}${libexecdir}/os-helpers-config
         sed -i -e "s,@@BALENA_FINGERPRINT_FILENAME@@,${BALENA_FINGERPRINT_FILENAME},g" -e "s,@@BALENA_FINGERPRINT_EXT@@,${BALENA_FINGERPRINT_EXT},g" ${D}${libexecdir}/os-helpers-fs
+
+        # ALLOWED_BOOTARGS_ARRAY is provided by conf/distro/include/balena-os.inc
+        sed -i "s|@@ALLOWED_BOOTARGS@@|${@format_bootargs_array(d)}|g" ${D}${libexecdir}/os-helpers-bootloader-config
 }
 
 FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"

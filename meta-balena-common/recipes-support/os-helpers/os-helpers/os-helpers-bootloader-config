@@ -14,9 +14,55 @@ fi
 set -e
 
 BOOTLOADER_CONFIG_LOCK_FILE="/var/volatile/bootloader_config.lock"
+ALLOWED_BOOTARGS=@@ALLOWED_BOOTARGS@@
 
 # Intel NUC image contains grub_extraenv for both MBR and EFI boot
-bootloader_config_files=("extra_uEnv.txt" "grub/grub_extraenv" "EFI/BOOT/grub_extraenv")
+bootloader_config_files=("extra_uEnv.txt" "grub/grub_extraenv" "EFI/BOOT/grub_extraenv" "bootenv")
+
+check_key_value_format() {
+    local line="$1"
+    if [[ "$line" =~ ^[a-zA-Z0-9_]+=[[:print:]]*$ ]]; then
+        return 0
+     else
+        return 1
+     fi
+}
+
+# Get environment variables
+# from a grub file which has been written
+# with any tool other than grub-editenv
+#
+# $1 - grub environment file path
+get_valid_key_value_lines() {
+    local invalid_grub_file="$1"
+
+    if [ ! -f "$invalid_grub_file" ] || [ ! -r "$invalid_grub_file" ]; then
+        warn "Error: File '$invalid_grub_file' not found or not readable."
+        return 1
+    fi
+
+    local valid_lines=()
+    local line_number=0
+    while IFS= read -r line || [ -n "$line" ]; do
+        line_number=$((line_number + 1))
+
+        # Trim leading/trailing whitespaces
+        local trimmed_line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+        # Skip empty lines or commented out variables
+        if [ -z "$trimmed_line" ] || [[ "$trimmed_line" =~ ^# ]]; then
+            continue
+        fi
+
+        if check_key_value_format "$trimmed_line"; then
+            valid_lines+=("$trimmed_line")
+        fi
+
+    done < "$invalid_grub_file"
+    printf "%s\n" "${valid_lines[@]}"
+
+    return 0
+}
 
 # $1 - bootloader environment variable name
 # $2 - bootloader environment variable value.
@@ -42,14 +88,24 @@ bootloader_config_modify() {
 
     local key="$1"
     local value="$2"
-
+    local is_allowed=0
     local escaped_key
 
     # Key and value are escaped for usage inside sed
     escaped_key=$(printf '%s\n' "$key" | sed 's/[|\]/\\&/g')
 
     local escaped_value=""
-    if [ ! -z "$value" ]; then
+    if [ -n "$value" ]; then
+        for allowed_arg in "${ALLOWED_BOOTARGS[@]}"; do
+            if [ "$allowed_arg" = "$value" ] ; then
+                is_allowed=1
+            fi
+        done
+
+        if [ $is_allowed -eq 0 ]; then
+            fail "Refusing to set ${key}=${value} - bootarg not in whitelist"
+        fi
+
         # Value can be a path, in the case of the extra firmware volume
         escaped_value=$(printf '%s\n' "$value" | sed 's/[\&|\\]/\\&/g')
     fi
@@ -63,11 +119,48 @@ bootloader_config_modify() {
         for bootloader_file in "${bootloader_config_files[@]}"; do
             local file_updated=0
             local bootloader_config_file="${BALENA_BOOT_MOUNTPOINT}/${bootloader_file}"
+            local is_grub_extraenv=0
 
             if [ -f "$bootloader_config_file" ]; then
+                bootloader_config_file_base_name=$(basename "${bootloader_config_file}")
+                if [ "${bootloader_config_file_base_name}" = "grub_extraenv" ]; then
+                    if ! command -v grub-editenv >/dev/null 2>&1
+                        then
+                        warn "Found grub_extraenv but grub-editenv not installed. Skipping..."
+                        continue
+                    fi
+
+                    is_grub_extraenv=1
+
+                    # If grub_extraenv has been created with touch, or edited without grub-editenv, try to save
+                    # any existing variables to a valid file.
+                    if grub-editenv "${bootloader_config_file}" list 2>&1 | grep -q "invalid environment block." ; then
+                        warn "Found invalid grub environment file: ${bootloader_config_file}. Will attempt to extract existing variables from it."
+                        mapfile -t extracted_values < <(get_valid_key_value_lines "${bootloader_config_file}")
+
+                        if [ $? -ne 0 ] || [ ${#extracted_values[@]} -eq 0 ]; then
+                            warn "Failed to extract any valid environment variables from corrupted ${bootloader_config_file}. Will be re-initialized."
+                            tmpfile=$(mktemp)
+                            grub-editenv "$tmpfile" create
+                            "${MV}" "$tmpfile" "$bootloader_config_file"
+                        else
+                            tmpfile=$(mktemp)
+                            grub-editenv "$tmpfile" create
+                            for extracted_line in "${extracted_values[@]}"; do
+                                info "Appending saved environment variable: ${extracted_line}"
+                                grub-editenv "$tmpfile" set "${extracted_line}"
+                            done
+                            "${MV}" "$tmpfile" "$bootloader_config_file"
+                            info "Recovered $bootloader_config_file"
+                        fi
+                    fi
+                fi
+
                 if grep -q "^${key}\s*=" "$bootloader_config_file"; then
                     local current_value
-                    # Check for existing value in bootloader config file
+                    # Check for existing value in bootloader config file.
+                    # grep can be used on both u-boot and grub environment files because key and value pairs are stored
+                    # sequentially on individual lines
                     current_value=$(grep -E "^${key}\s*=" "$bootloader_config_file" | sed -E "s/^${key}\s*=\s*(.*)/\1/")
 
                     if [ ! -z "$value" ] && [ "$current_value" = "$value" ]; then
@@ -78,10 +171,20 @@ bootloader_config_modify() {
 
                         if [ ! -z "$value" ]; then
                             # env varible present but differs from target value
-                            sed "s|^\(${escaped_key}\s*=\s*\).*$|\1${escaped_value}|" "$bootloader_config_file" > "$tmpfile"
+                            if [ "$is_grub_extraenv" -eq 1 ] || [ "${bootloader_config_file_base_name}" = "bootenv" ]; then
+                                cat "$bootloader_config_file" > "$tmpfile"
+                                grub-editenv "$tmpfile" set "${key}=${value}"
+                            else
+                                 sed "s|^\(${escaped_key}\s*=\s*\).*$|\1${escaped_value}|" "$bootloader_config_file" > "$tmpfile"
+                            fi
                         else
                             # env variable present and it should be deleted
-                            sed "/^${escaped_key}\s*=/d" "$bootloader_config_file" > "$tmpfile"
+                            if [ "$is_grub_extraenv" -eq 1 ] || [ "${bootloader_config_file_base_name}" = "bootenv" ]; then
+                                cat "$bootloader_config_file" > "$tmpfile"
+                                grub-editenv "$tmpfile" unset "${escaped_key}"
+                            else
+                                sed "/^${escaped_key}\s*=/d" "$bootloader_config_file" > "$tmpfile"
+                            fi
                         fi
                         file_updated=1
                     fi
@@ -89,7 +192,11 @@ bootloader_config_modify() {
                     # env variable does not exist, will be added
                     tmpfile=$(mktemp)
                     cat "$bootloader_config_file" > "$tmpfile"
-                    echo "${key}=${value}" >> "$tmpfile"
+                    if [ "$is_grub_extraenv" -eq 1 ] || [ "${bootloader_config_file_base_name}" = "bootenv" ]; then
+                        grub-editenv "$tmpfile" set "${key}=${value}"
+                    else
+                        echo "${key}=${value}" >> "$tmpfile"
+                    fi
                     file_updated=1
                 fi # env variable doesn't exist and no value was provided, nothing to do
 
