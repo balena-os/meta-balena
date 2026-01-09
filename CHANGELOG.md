@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.14
+## (2026-01-09)
+
+* initrdscripts: Unlock mutex if regenerate_uuid fails in fsuuidsinit [Michal Toman]
+
 # v6.10.13
 ## (2026-01-08)
 
