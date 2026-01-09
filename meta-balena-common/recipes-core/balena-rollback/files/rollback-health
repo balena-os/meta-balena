@@ -96,6 +96,7 @@ if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$curr
 					echo "Rollback: Failed to run previous hooks. Rebooting to recover system"
 				fi
 				rollback-stop || true
+				sync
 				sleep 10
 				reboot
 			fi
@@ -114,5 +115,6 @@ else
 	sleep $REBOOT_TIMEOUT
 	echo "Rollback: Looks like something bad happened to rollback-altboot.service. Lets force a reboot"
 	rollback-stop || true
+	sync
 	systemctl --force reboot
 fi
