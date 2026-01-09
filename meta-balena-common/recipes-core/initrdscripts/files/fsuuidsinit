@@ -68,6 +68,7 @@ fsuuidsinit_run() {
                 info "Using new root UUID: ${bootparam_root}"
             fi
         else
+            rm -f "/run/initramfs/bootparam_root.mux"
             error "UUIDs not regenerated - retry on next boot"
             return
         fi
