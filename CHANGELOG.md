@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.15
+## (2026-01-12)
+
+* os-helpers/os-helpers-bootloader-config: Add support for whitelisted cmdline args [Alexandru Costache]
+
 # v6.10.14
 ## (2026-01-09)
 

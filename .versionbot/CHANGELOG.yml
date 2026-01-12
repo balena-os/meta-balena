@@ -1,4 +1,22 @@
 - commits:
+    - subject: "os-helpers/os-helpers-bootloader-config: Add support for whitelisted
+        cmdline args"
+      hash: 549db4c8ead797a28243d8b99329aa17524dbdb9
+      body: |
+        ... and use grub-editenv where applicable. We also attempt to save
+        any existing environment variables from grub_extra env if it was
+        created or edited with any tool other than grub-editenv.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.10.15
+  title: ""
+  date: 2026-01-12T10:42:48.677Z
+- commits:
     - subject: "initrdscripts: Unlock mutex if regenerate_uuid fails in fsuuidsinit"
       hash: 62657c7ccdb690015405804c8d3df00fa814bd87
       body: |
