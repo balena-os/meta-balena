@@ -51,7 +51,9 @@ abroot_run() {
     fi
 
     # Rollback if this is the 3rd boot attempt
+    IS_ROLLBACK="0"
     if [ "${BOOT_COUNT}" -ge 3 ]; then
+        IS_ROLLBACK="1"
         if [ "${ROOT_PART}" = "A" ]; then
             ROOT_PART="B"
         else
@@ -63,4 +65,10 @@ abroot_run() {
 
     # Switch between rootA and rootB
     export bootparam_root="UUID=${ROOT_UUID}"
+
+    # Some device types need additional rollback hooks after abroot,
+    # let them know whether we're rolling back or not
+    # and which partition we're going to boot from (after rollback)
+    export IS_ROLLBACK
+    export ROOT_PART
 }
