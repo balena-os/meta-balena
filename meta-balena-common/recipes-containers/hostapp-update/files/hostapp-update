@@ -103,6 +103,7 @@ for hostapp in "$SYSROOT/hostapps/"*; do
 	[ -e "$hostapp" ] || break
 	rm -rf "$hostapp"
 done
+sync -f "$SYSROOT"
 
 # Load new hostapp
 if [ "$local_image" != "" ]; then

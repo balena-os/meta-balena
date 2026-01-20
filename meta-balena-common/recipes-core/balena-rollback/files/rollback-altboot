@@ -29,6 +29,7 @@ if [ "$resin_root_part" != "$current_part_idx" ] && [ "$resin_root_part" != "$cu
 	touch /mnt/state/rollback-altboot-triggered
 	rollback-stop || true
 	echo "Rollback: Rebooting system"
+	sync
 	sleep 10
 	reboot
 else
