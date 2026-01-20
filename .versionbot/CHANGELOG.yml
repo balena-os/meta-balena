@@ -1,4 +1,18 @@
 - commits:
+    - subject: "os-helpers: safe-reboot: always sync filesystem before reboot"
+      hash: 69066785bef32cf64471f4e999d771dfd4d009fb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.10.16
+  title: ""
+  date: 2026-01-20T11:56:13.550Z
+- commits:
     - subject: "os-helpers/os-helpers-bootloader-config: Add support for whitelisted
         cmdline args"
       hash: 549db4c8ead797a28243d8b99329aa17524dbdb9

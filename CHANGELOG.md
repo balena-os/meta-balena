@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.16
+## (2026-01-20)
+
+* os-helpers: safe-reboot: always sync filesystem before reboot [Alex Gonzalez]
+
 # v6.10.15
 ## (2026-01-12)
 
