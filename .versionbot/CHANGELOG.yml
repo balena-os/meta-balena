@@ -1,4 +1,61 @@
 - commits:
+    - subject: "initrdscripts: export IS_ROLLBACK and ROOT_PART flags from abroot
+        script"
+      hash: 19ed842efafa473f1f6d4a39cae8ac3fccf9df64
+      body: |
+        Some device types apply additional (bootloader-level) rollback hooks
+        when the abroot script decides to roll back. Right now they keep
+        a cusomized fork of the abroot script in the device repo.
+
+        This patch exports the ROOT_PART variable from abroot to indicate
+        which partition we're about to boot into, as well as a new IS_ROLLBACK
+        variable. This way all the device types should be able to use the same
+        abroot and add hooks as separate initrd scripts ordered after abroot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "initrdscripts: add extrafw script"
+      hash: f51d22a0f232844221badef4e793fa057d70fe1a
+      body: |
+        This enables the balena bootloader to set a custom firmware search path
+        on the kernel command line.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "initrdscripts: separate mounting boot partition from abroot"
+      hash: 49a3c942b852dcc1e96b0bdfded6666c1fd7b369
+      body: |
+        Right now, abroot is the only script executed in the balena bootloader
+        so it does everything - find the boot partition, mount it, read boot
+        configuration, perform A/B selection, and unmount the boot partition.
+
+        Long-term, we want to introduce other bootloader scripts that read
+        the boot configuration and do other things, so we want to have
+        an "entry" script that finds and mounts the boot partition, so that
+        the subsequently executed scripts can just use it.
+
+        This patch splits the abroot script into two - the mountboot script
+        that finds and mounts the boot partition, and the abroot script,
+        that only performs tha A/B selection.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.10.18
+  title: ""
+  date: 2026-01-21T18:19:00.076Z
+- commits:
     - subject: Update vacuum-size to 128M to match vacuum.conf and
         journald-balena-os.conf
       hash: 42ac8ca0096c93c486ea29f2de4cd3bacd0460ff

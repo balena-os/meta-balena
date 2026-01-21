@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.10.18
+## (2026-01-21)
+
+* initrdscripts: export IS_ROLLBACK and ROOT_PART flags from abroot script [Michal Toman]
+* initrdscripts: add extrafw script [Michal Toman]
+* initrdscripts: separate mounting boot partition from abroot [Michal Toman]
+
 # v6.10.17
 ## (2026-01-21)
 
