@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.17
+## (2026-01-21)
+
+* Update vacuum-size to 128M to match vacuum.conf and journald-balena-os.conf [Chris Sawer]
+
 # v6.10.16
 ## (2026-01-20)
 

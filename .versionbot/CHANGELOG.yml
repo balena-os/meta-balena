@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update vacuum-size to 128M to match vacuum.conf and
+        journald-balena-os.conf
+      hash: 42ac8ca0096c93c486ea29f2de4cd3bacd0460ff
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Chris Sawer <chris.sawer@demandlogic.co.uk>
+        signed-off-by: Chris Sawer <chris.sawer@demandlogic.co.uk>
+      author: Chris Sawer
+      nested: []
+  version: 6.10.17
+  title: ""
+  date: 2026-01-21T11:49:44.917Z
+- commits:
     - subject: "os-helpers: safe-reboot: always sync filesystem before reboot"
       hash: 69066785bef32cf64471f4e999d771dfd4d009fb
       body: ""
