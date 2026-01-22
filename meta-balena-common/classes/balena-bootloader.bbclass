@@ -78,6 +78,7 @@ BALENA_CONFIGS ?= " \
     nls \
     misc \
     ${@oe.utils.conditional('SIGN_API','','',' crypto',d)} \
+    shrink_size \
     "
 
 #
@@ -508,6 +509,7 @@ BALENA_CONFIGS[shrink_size] = " \
     CONFIG_MFD_CORE=n \
     CONFIG_NEW_LEDS=n \
     CONFIG_PPS=n \
+    CONFIG_PTP_1588_CLOCK=n \
     CONFIG_VFIO=n \
 "
 
