@@ -1,4 +1,11 @@
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
+
+inherit balena-firmware-exclusion
 inherit balena-linux-firmware
+
+SRC_URI:append = " \
+    file://extra_WHENCE \
+"
 
 # Cleanup iwlwifi firmware files
 IWLWIFI_PATH = "${D}${nonarch_base_libdir}/firmware"
@@ -109,4 +116,38 @@ FILES:${PN}-iwlwifi-quz-a0-hr-b0 = " \
 PACKAGES =+ "${PN}-iwlwifi-quz-a0-jf-b0"
 FILES:${PN}-iwlwifi-quz-a0-jf-b0 = " \
     ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-jf-b0-*.ucode* \
+"
+
+FILES:${PN}-moxa = "${nonarch_base_libdir}/firmware/moxa/moxa-*.fw*"
+
+PACKAGES =+ "${PN}-qca-bt"
+
+FILES:${PN}-qca-bt = " \
+    ${nonarch_base_libdir}/firmware/qca/nvm* \
+    ${nonarch_base_libdir}/firmware/qca/rampatch* \
+    ${nonarch_base_libdir}/firmware/qca/htbtfw* \
+    ${nonarch_base_libdir}/firmware/qca/htnv* \
+    ${nonarch_base_libdir}/firmware/qca/hpnv* \
+    ${nonarch_base_libdir}/firmware/qca/hpbtfw* \
+    ${nonarch_base_libdir}/firmware/qca/hspnv* \
+    ${nonarch_base_libdir}/firmware/qca/crnv* \
+    ${nonarch_base_libdir}/firmware/qca/crbtfw* \
+    ${nonarch_base_libdir}/firmware/qca/apbtfw* \
+    ${nonarch_base_libdir}/firmware/qca/apnv* \
+    ${nonarch_base_libdir}/firmware/qca/msbtfw* \
+    ${nonarch_base_libdir}/firmware/qca/msnv* \
+"
+
+PACKAGES += "${PN}-rtl-bt"
+
+# Capture Ralink Bluetooth firmware specifically
+FILES:${PN}-rtl-bt = " \
+    ${nonarch_base_libdir}/firmware/rtl_bt/rt*.bin* \
+"
+
+# Do not capture rtl*
+FILES:${PN}-ralink = " \
+    ${nonarch_base_libdir}/firmware/rt2*.bin* \
+    ${nonarch_base_libdir}/firmware/rt3*.bin* \
+    ${nonarch_base_libdir}/firmware/rt7*.bin* \
 "
