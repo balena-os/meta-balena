@@ -1,4 +1,29 @@
 - commits:
+    - subject: Further reduce the size of the balena bootloader by removing PTP clock
+        support
+      hash: 793ab6bf9a64f1a27418c301a5c920454fd75f85
+      body: |
+        This disables support for PTP clock since it's not something
+        I foresee us needing in the balena bootloader.
+
+        Additionaly, fix the actual bootloader shrinking since the initial
+        commit which introduced this did not effectively add the disabling
+        of these options to the .config
+      footer:
+        Changelog-entry: Further reduce the size of the balena bootloader by removing
+          PTP clock support
+        changelog-entry: Further reduce the size of the balena bootloader by removing
+          PTP clock support
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.10.19
+  title: ""
+  date: 2026-01-23T05:03:51.721Z
+- commits:
     - subject: "initrdscripts: export IS_ROLLBACK and ROOT_PART flags from abroot
         script"
       hash: 19ed842efafa473f1f6d4a39cae8ac3fccf9df64

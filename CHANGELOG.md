@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.19
+## (2026-01-23)
+
+* Further reduce the size of the balena bootloader by removing PTP clock support [Florin Sarbu]
+
 # v6.10.18
 ## (2026-01-21)
 
