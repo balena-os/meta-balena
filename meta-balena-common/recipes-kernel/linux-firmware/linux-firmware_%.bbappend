@@ -1,4 +1,11 @@
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
+
+inherit balena-firmware-exclusion
 inherit balena-linux-firmware
+
+SRC_URI:append = " \
+    file://extra_WHENCE \
+"
 
 # Cleanup iwlwifi firmware files
 IWLWIFI_PATH = "${D}${nonarch_base_libdir}/firmware"
@@ -110,3 +117,5 @@ PACKAGES =+ "${PN}-iwlwifi-quz-a0-jf-b0"
 FILES:${PN}-iwlwifi-quz-a0-jf-b0 = " \
     ${nonarch_base_libdir}/firmware/iwlwifi-QuZ-a0-jf-b0-*.ucode* \
 "
+
+FILES:${PN}-moxa = "${nonarch_base_libdir}/firmware/moxa/moxa-*.fw*"
