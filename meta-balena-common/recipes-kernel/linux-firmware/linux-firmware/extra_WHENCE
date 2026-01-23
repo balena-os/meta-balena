@@ -1,0 +1,29 @@
+--------------------------------------------------------------------------
+
+Driver: iwlwifi - Intel Wireless Wifi
+
+File: iwlwifi-3160-12.ucode
+File: iwlwifi-3160-7.ucode
+File: iwlwifi-3160-8.ucode
+File: iwlwifi-3160-9.ucode
+File: iwlwifi-3160-10.ucode
+File: iwlwifi-3160-12.ucode
+File: iwlwifi-3160-13.ucode
+File: iwlwifi-3160-16.ucode
+File: iwlwifi-6000g2a-5.ucode
+File: iwlwifi-6000g2b-5.ucode
+File: iwlwifi-6050-4.ucode
+
+--------------------------------------------------------------------------
+
+Driver: qcom_q6v5_pas - Qualcomm remoteproc firmware
+
+File: qcom/LENOVO/21BX
+
+--------------------------------------------------------------------------
+
+Driver: mwifiex - Marvell Wi-Fi fullmac-type 802.11n/ac cards
+
+Link: mrvl/sd8997_uapsta.bin -> mrvl/sdsd8997_combo_v4.bin
+
+--------------------------------------------------------------------------
