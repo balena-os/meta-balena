@@ -2,7 +2,7 @@
 
 ## Overview
 
-BalenaOS supports layering the root filesystem with content from hostapp extension containers. In essence, hostapp extensions are container images flagged with the `balena.io.features.host-extension` label that are overlayed during the early boot process.
+BalenaOS supports layering the root filesystem with content from hostapp extension containers. In essence, hostapp extensions are container images flagged with the `io.balena.image.class=overlay` label that are overlayed during the early boot process.
 
 Hostapp extension containers are meant to extend or modify the root filesystem in a managed way, and to house content that cannot be placed on an application container.
 
@@ -14,11 +14,11 @@ The last stage of a hostapp extension container is shown next:
 
     FROM scratch
 
-    LABEL io.balena.features.host-extension=1
+    LABEL io.balena.image.class=overlay
 
     COPY --from=builder /hostext /
 
-The example Dockerfile above starts with an empty container, then adds the `io.balena.features.host-extension` label so that BalenaOS can identify it and overlay it at boot, and finally the desired content is copied from a space holder directory to the root of this container. Care should be taken not to shadow root filesystem content which is essential for BalenaOS to function.
+The example Dockerfile above starts with an empty container, then adds the `io.balena.image.class=overlay` label so that BalenaOS can identify it and overlay it at boot, and finally the desired content is copied from a space holder directory to the root of this container. Care should be taken not to shadow root filesystem content which is essential for BalenaOS to function.
 
 ## Managing hostapp extensions
 

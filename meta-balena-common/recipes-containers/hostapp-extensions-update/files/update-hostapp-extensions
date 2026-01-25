@@ -5,7 +5,8 @@ set -e
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 
-BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
+BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
+BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
 BALENA_HOSTAPP_EXTENSIONS_DEFAULT="/etc/hostapp-extensions.conf"
 DOCKER_OVERLAY_ROOT="/var/lib/docker/overlay2/"
 
@@ -14,15 +15,19 @@ usage() {
 	cat <<EOF
 Usage: ${script_name} [OPTIONS]
 	-t Space separated list of repository tags for hostapp extension containers
+	-l Additional labels to apply (comma-separated key=value pairs)
 	-r Reboot after update
 EOF
 	exit 0
 }
 
-while getopts 'hrt:' flag; do
+extra_labels=""
+
+while getopts 'hrt:l:' flag; do
 	case "${flag}" in
 	r) reboot=1 ;;
 	t) target_hostext_images="${OPTARG}" ;;
+	l) extra_labels="${OPTARG}" ;;
 	h) usage ;;
 	*) error "Unexpected option ${flag}" ;;
 	esac
@@ -111,7 +116,7 @@ done
 
 info "Removing previous hostapp extensions"
 
-for image in $(${DOCKER} images --all --quiet --filter label="${BALENA_HOSTAPP_EXTENSIONS_FEATURE}"); do
+for image in $(${DOCKER} images --all --quiet --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
 	imagetag=$(${DOCKER} inspect "${image}" --format='{{index .RepoTags 0}}' 2>/dev/null)
 	cids=$(${DOCKER} ps --all --quiet --no-trunc --filter ancestor="${image}" | tr '\n' ' ')
 	case "${target_hostext_images}" in
@@ -145,7 +150,15 @@ if [ -n "${target_hostext_images}" ]; then
 			error "   - failed to install"
 			break
 		else
-			if ! ${DOCKER} create --runtime="bare" --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${hostext}" none  > /dev/null 2>&1; then
+			# Build label arguments
+			label_args="--label ${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"
+			if [ -n "${extra_labels}" ]; then
+				for label in $(echo "${extra_labels}" | tr ',' ' '); do
+					label_args="${label_args} --label ${label}"
+				done
+			fi
+			# shellcheck disable=SC2086
+			if ! ${DOCKER} create --runtime="bare" ${label_args} "${hostext}" none  > /dev/null 2>&1; then
 				error "   - failed to spawn"
 				break
 			fi
