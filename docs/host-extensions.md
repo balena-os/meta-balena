@@ -2,7 +2,7 @@
 
 ## Overview
 
-BalenaOS supports layering the root filesystem with content from hostapp extension containers. In essence, hostapp extensions are container images flagged with the `balena.io.features.host-extension` label that are overlayed during the early boot process.
+BalenaOS supports layering the root filesystem with content from hostapp extension containers. In essence, hostapp extensions are container images flagged with the `io.balena.image.class=overlay` label that are overlayed during the early boot process.
 
 Hostapp extension containers are meant to extend or modify the root filesystem in a managed way, and to house content that cannot be placed on an application container.
 
@@ -14,11 +14,11 @@ The last stage of a hostapp extension container is shown next:
 
     FROM scratch
 
-    LABEL io.balena.features.host-extension=1
+    LABEL io.balena.image.class=overlay
 
     COPY --from=builder /hostext /
 
-The example Dockerfile above starts with an empty container, then adds the `io.balena.features.host-extension` label so that BalenaOS can identify it and overlay it at boot, and finally the desired content is copied from a space holder directory to the root of this container. Care should be taken not to shadow root filesystem content which is essential for BalenaOS to function.
+The example Dockerfile above starts with an empty container, then adds the `io.balena.image.class=overlay` label so that BalenaOS can identify it and overlay it at boot, and finally the desired content is copied from a space holder directory to the root of this container. Care should be taken not to shadow root filesystem content which is essential for BalenaOS to function.
 
 ## Managing hostapp extensions
 
@@ -28,7 +28,7 @@ Extensions are meant to be managed by the supervisor or as part of a hostOS upda
 
 An incorrect hostapp extension can leave your system in a non-working state. Balena advises against deploying custom made hostapp extensions and recommends to either use the hostapp extensions included as part of BalenaOS releases, or let the supervisor manage the installation, update and removal of production ready hostapp extensions.
 
-The overlaying of hostapp extensions can be disabled by specifying a `balena.nohostext` argument to the kernel command line.
+The overlaying of hostapp extensions can be disabled by specifying a `mobynit.no_overlays` argument to the kernel command line.
 
 ## Caveats
 
