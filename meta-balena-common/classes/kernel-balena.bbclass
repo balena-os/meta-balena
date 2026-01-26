@@ -1114,7 +1114,7 @@ python do_kernel_resin_checkconfig() {
     resinDefconfigPath = d.getVar("WORKDIR", True) + '/' +  resinDefconfig
     wantedConfigs = getKernelSetConfigs(resinDefconfigPath)
     if wantedConfigs:
-        configured = wantedConfigs.intersection(allSetConfigs)
+        configured = wantedConfigs.intersection(allSetKernelConfigs)
         notconfigured = wantedConfigs.difference(configured)
         for config in notconfigured:
             if not config.endswith('=n'):
