@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.10.21
+## (2026-01-26)
+
+* classes/kernel-balena: Fix typo in kernel-balena.bbclass [Alexandru Costache]
+* Fix type allSetConfigs -> allSetKernelConfigs [Christina Ying Wang]
+
 # v6.10.20
 ## (2026-01-26)
 

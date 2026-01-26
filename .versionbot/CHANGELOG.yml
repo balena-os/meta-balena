@@ -1,4 +1,31 @@
 - commits:
+    - subject: "classes/kernel-balena: Fix typo in kernel-balena.bbclass"
+      hash: 892d3d965db1a1fe02ba5e29d76a7e903570f28f
+      body: |
+        The variable allSetConfigs is not in this context and
+        it appears to be a typo. Replacing it with 'allSetKernelConfigs'
+        which appears to be the intended one.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Fix type allSetConfigs -> allSetKernelConfigs
+      hash: 60cdbc889156f816aee432897209f927ee339438
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Christina Ying Wang <christina@balena.io>
+        signed-off-by: Christina Ying Wang <christina@balena.io>
+      author: Christina Ying Wang
+      nested: []
+  version: 6.10.21
+  title: ""
+  date: 2026-01-26T21:36:10.894Z
+- commits:
     - subject: Update actions/setup-python digest to a309ff8
       hash: 0b7ff6146520a85ba1d3256e30ac4d76766da2d5
       body: |
