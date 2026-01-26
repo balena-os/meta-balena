@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/setup-python digest to a309ff8
+      hash: 0b7ff6146520a85ba1d3256e30ac4d76766da2d5
+      body: |
+        Update actions/setup-python to a309ff8b426b58ec0e2a45f0f869d46889d02405
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.10.20
+  title: ""
+  date: 2026-01-26T08:08:03.906Z
+- commits:
     - subject: Further reduce the size of the balena bootloader by removing PTP clock
         support
       hash: 793ab6bf9a64f1a27418c301a5c920454fd75f85
