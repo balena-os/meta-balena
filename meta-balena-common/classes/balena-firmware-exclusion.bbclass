@@ -368,6 +368,9 @@ def check_package_drivers(d, whence_map):
     uncategorized_drivers = []
     # Packages and set of categories
     nonessential_packages = {}
+    # Packages considered essential (e.g. Connectivity, possibly Misc)
+    essential_packages = {}
+    essential_categories = ["Connectivity"]
 
     bb.note("\n--- Packages and Drivers Mapping ---")
     for pkg in packages:
@@ -406,6 +409,7 @@ def check_package_drivers(d, whence_map):
 
         if pkg_drivers:
             bb.note(f"Package: {pkg}")
+            pkg_categories = set()
             for drv in sorted(pkg_drivers):
                 category = "Unknown"
                 # Check if the drivers in this package are classified
@@ -423,11 +427,25 @@ def check_package_drivers(d, whence_map):
                 # otherwise the build will fail
                 if category == "Unknown":
                     uncategorized_drivers.append((drv, pkg))
-                # TODO: Check if we should include Misc or a sub-set of packages from it
-                elif category not in ["Connectivity"]:
+                else:
+                    # Track all known categories for this package
+                    pkg_categories.add(category)
+
+            # Classify package based on its categories:
+            # - Categories in essential_categories => essential
+            # - Categories not in essential_categories => non-essential
+            if pkg_categories:
+                essential_cats = {c for c in pkg_categories if c in essential_categories}
+                if essential_cats:
+                    if pkg not in essential_packages:
+                        essential_packages[pkg] = set()
+                    essential_packages[pkg].update(essential_cats)
+
+                nonessential_cats = {c for c in pkg_categories if c not in essential_categories}
+                if nonessential_cats:
                     if pkg not in nonessential_packages:
                         nonessential_packages[pkg] = set()
-                    nonessential_packages[pkg].add(category)
+                    nonessential_packages[pkg].update(nonessential_cats)
         else:
             bb.fatal(f"Package: {pkg} has no matches in WHENCE. Please check the files it ships and add them to the extra_WHENCE")
             for item in sorted(package_contents):
@@ -437,15 +455,25 @@ def check_package_drivers(d, whence_map):
     # When the rootfs is generated, these listed packages will be added
     # to BAD_RECOMMENDATIONS.
     deploy_dir = d.getVar('DEPLOY_DIR_IMAGE')
-    if deploy_dir and nonessential_packages:
+    if deploy_dir:
         bb.utils.mkdirhier(deploy_dir)
-        output_file = os.path.join(deploy_dir, "nonessential_firmware.txt")
-        with open(output_file, 'w') as f:
-            for pkg in sorted(nonessential_packages.keys()):
-                # Also list all categories of the drivers matched to each package
-                cats = ", ".join(sorted(list(nonessential_packages[pkg])))
-                f.write(f"{pkg} : {cats}\n")
-        bb.note(f"\n[INFO] Saved non-essential linux-firmware packages list to: {output_file}")
+
+        if nonessential_packages:
+            nonessential_output = os.path.join(deploy_dir, "nonessential_firmware.txt")
+            with open(nonessential_output, 'w') as f:
+                for pkg in sorted(nonessential_packages.keys()):
+                    # Also list all categories of the drivers matched to each package
+                    cats = ", ".join(sorted(list(nonessential_packages[pkg])))
+                    f.write(f"{pkg} : {cats}\n")
+            bb.note(f"\n[INFO] Saved non-essential linux-firmware packages list to: {nonessential_output}")
+
+        if essential_packages:
+            essential_output = os.path.join(deploy_dir, "essential_firmware.txt")
+            with open(essential_output, 'w') as f:
+                for pkg in sorted(essential_packages.keys()):
+                    cats = ", ".join(sorted(list(essential_packages[pkg])))
+                    f.write(f"{pkg} : {cats}\n")
+            bb.note(f"\n[INFO] Saved essential linux-firmware packages list to: {essential_output}")
 
     # All files in packages should be succesfully mapped to a categorized driver
     if uncategorized_drivers:
