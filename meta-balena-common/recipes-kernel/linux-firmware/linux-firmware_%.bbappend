@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 
-inherit balena-firmware-exclusion
+inherit balena-firmware-list-tools
 inherit balena-linux-firmware
 
 SRC_URI:append = " \
@@ -90,6 +90,8 @@ PACKAGES =+ "${PN}-iwlwifi-3160"
 FILES:${PN}-iwlwifi-3160 = " \
     ${nonarch_base_libdir}/firmware/iwlwifi-3160-17.ucode* \
 "
+RDEPENDS:${PN}-iwlwifi-3160   = "${PN}-iwlwifi-license"
+LICENSE:${PN}-iwlwifi-3160    = "Firmware-iwlwifi_firmware"
 
 PACKAGES =+ "${PN}-iwlwifi-cc-a0"
 
