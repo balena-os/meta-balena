@@ -71,7 +71,6 @@ LICENSE = "\
     & Firmware-ti-keystone \
     & Firmware-ueagle-atm4-firmware \
     & Firmware-via_vt6656 \
-    & Firmware-wl1251 \
     & Firmware-xc4000 \
     & Firmware-xc5000 \
     & Firmware-xc5000c \
@@ -224,7 +223,6 @@ NO_GENERIC_LICENSE[Firmware-ti-connectivity] = "LICENCE.ti-connectivity"
 NO_GENERIC_LICENSE[Firmware-ti-keystone] = "LICENCE.ti-keystone"
 NO_GENERIC_LICENSE[Firmware-ueagle-atm4-firmware] = "LICENCE.ueagle-atm4-firmware"
 NO_GENERIC_LICENSE[Firmware-via_vt6656] = "LICENCE.via_vt6656"
-NO_GENERIC_LICENSE[Firmware-wl1251] = "LICENCE.wl1251"
 NO_GENERIC_LICENSE[Firmware-xc4000] = "LICENCE.xc4000"
 NO_GENERIC_LICENSE[Firmware-xc5000] = "LICENCE.xc5000"
 NO_GENERIC_LICENSE[Firmware-xc5000c] = "LICENCE.xc5000c"
@@ -398,7 +396,6 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-amlogic-vdec-license ${PN}-amlogic-vdec \
              ${PN}-lt9611uxc ${PN}-lontium-license \
              ${PN}-whence-license \
-             ${PN}-wl1251-license ${PN}-wl1251 \
              ${PN}-xc4000-license ${PN}-xc4000 \
              ${PN}-xc5000-license ${PN}-xc5000 \
              ${PN}-xc5000c-license ${PN}-xc5000c \
@@ -440,7 +437,7 @@ FILES:${PN}-ar9170 = " \
   ${nonarch_base_libdir}/firmware/ar9170*.fw* \
 "
 FILES:${PN}-ath3k = " \
-  ${nonarch_base_libdir}/firmware/ath3k*fw \
+  ${nonarch_base_libdir}/firmware/ath3k*fw* \
 "
 FILES:${PN}-ath6k = " \
   ${nonarch_base_libdir}/firmware/ath6k \
@@ -810,8 +807,8 @@ RDEPENDS:${PN}-qla2xxx += "${PN}-qla2xxx-license"
 LICENSE:${PN}-rs9113 = "WHENCE"
 LICENSE:${PN}-rs9116 = "WHENCE"
 
-FILES:${PN}-rs9113 = " ${nonarch_base_libdir}/firmware/rsi/rs9113*.rps "
-FILES:${PN}-rs9116 = " ${nonarch_base_libdir}/firmware/rsi/rs9116*.rps "
+FILES:${PN}-rs9113 = " ${nonarch_base_libdir}/firmware/rsi/rs9113*.rps* "
+FILES:${PN}-rs9116 = " ${nonarch_base_libdir}/firmware/rsi/rs9116*.rps* "
 
 RDEPENDS:${PN}-rs9113 += "${PN}-whence-license"
 RDEPENDS:${PN}-rs9116 += "${PN}-whence-license"
@@ -876,18 +873,6 @@ RDEPENDS:${PN}-rtl8761 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8822 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8168 += "${PN}-whence-license"
 RDEPENDS:${PN}-rtl-nic += "${PN}-whence-license"
-
-# For TI wl1251
-LICENSE:${PN}-wl1251 = "Firmware-wl1251"
-LICENSE:${PN}-wl1251-license = "Firmware-wl1251"
-
-FILES:${PN}-wl1251 = " \
-  ${nonarch_base_libdir}/firmware/ti-connectivity/wl1251-fw.bin*         \
-  ${nonarch_base_libdir}/firmware/ti-connectivity/wl1251-nvs.bin*        \
-"
-FILES:${PN}-wl1251-license = "${nonarch_base_libdir}/firmware/LICENCE.wl1251*"
-
-RDEPENDS:${PN}-wl1251 += "${PN}-wl1251-license"
 
 # For ti-connectivity
 LICENSE:${PN}-wlcommon = "Firmware-ti-connectivity"
@@ -1322,7 +1307,7 @@ RDEPENDS:${PN}-ice-enhanced        = "${PN}-ice-enhanced-license"
 
 LICENSE:${PN}-ice       = "Firmware-ice"
 LICENSE:${PN}-ice-license = "Firmware-ice"
-FILES:${PN}-ice-license = "${nonarch_base_libdir}/firmware/LICENSE.ice*"
+FILES:${PN}-ice-license = "${nonarch_base_libdir}/firmware/LICENSE.ice.*"
 FILES:${PN}-ice         = " \
   ${nonarch_base_libdir}/firmware/intel/ice/ddp/* \
   ${nonarch_base_libdir}/firmware/intel/ice/ddp-lag/* \
@@ -1552,7 +1537,6 @@ LICENSE:${PN} = "\
     & Firmware-ti-connectivity \
     & Firmware-ti-keystone \
     & Firmware-ueagle-atm4-firmware \
-    & Firmware-wl1251 \
     & Firmware-xc4000 \
     & Firmware-xc5000 \
     & Firmware-xc5000c \
