@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.22
+## (2026-01-27)
+
+* tests: Update kernel-module-build submodule [Alexandru Costache]
+
 # v6.10.21
 ## (2026-01-26)
 
