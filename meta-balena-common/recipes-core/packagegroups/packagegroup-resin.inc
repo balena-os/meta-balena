@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${TUNE_PKGARCH}"
 inherit packagegroup
 
 RDEPENDS:${PN} = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd-analyze', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'systemd-analyze', '', d), '', d)} \
     ${BALENA_INIT_PACKAGE} \
     ${BALENA_MOUNTS} \
     ${BALENA_REGISTER} \
