@@ -10,16 +10,6 @@ NETWORK_MANAGER_PACKAGES ?= "networkmanager"
 
 CONNECTIVITY_MODULES = ""
 
-CONNECTIVITY_FIRMWARES ?= " \
-    linux-firmware-ath9k \
-    linux-firmware-mt7601u \
-    linux-firmware-ralink \
-    linux-firmware-rtl8192cu \
-    linux-firmware-rtl8192su \
-    linux-firmware-rtl8723 \
-    linux-firmware-rtl8723b-bt \
-    "
-
 CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
     avahi-daemon \
@@ -35,6 +25,5 @@ CONNECTIVITY_PACKAGES = " \
 
 RDEPENDS:${PN} = " \
     ${CONNECTIVITY_MODULES} \
-    ${CONNECTIVITY_FIRMWARES} \
     ${CONNECTIVITY_PACKAGES} \
     "

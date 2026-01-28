@@ -34,6 +34,7 @@ IMAGE_INSTALL = " \
     ${CORE_IMAGE_EXTRA_INSTALL} \
     packagegroup-resin-debugtools \
     packagegroup-balena-connectivity \
+    packagegroup-balena-linux-firmware \
     packagegroup-resin \
     "
 
