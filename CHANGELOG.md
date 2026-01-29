@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.23
+## (2026-01-29)
+
+* Revert "packagegroup-resin: Add systemd-analyze to production images as well" [Kyle Harding]
+
 # v6.10.22
 ## (2026-01-27)
 

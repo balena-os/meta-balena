@@ -1,4 +1,21 @@
 - commits:
+    - subject: 'Revert "packagegroup-resin: Add systemd-analyze to production images
+        as well"'
+      hash: ae4fe85fd1fa21505131c54c82d5c1aa8f5e48cb
+      body: >
+        This reverts commit ae99502356d994dee5896164afbe7df8bde00d6a to free up
+        rootfs space.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.10.23
+  title: ""
+  date: 2026-01-29T20:30:25.326Z
+- commits:
     - subject: "tests: Update kernel-module-build submodule"
       hash: 36ca85a57312b0187cd6f74fe5542017a61b7ee5
       body: |
