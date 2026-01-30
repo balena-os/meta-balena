@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.24
+## (2026-01-30)
+
+* extra firmware test fix bbb kernel module [Yann CARDAILLAC]
+
 # v6.10.23
 ## (2026-01-29)
 

@@ -1,4 +1,20 @@
 - commits:
+    - subject: extra firmware test fix bbb kernel module
+      hash: 0f35877958083828988ee78f2da19618005602a8
+      body: |
+        bumps kernel-module-build to newer version removing bbb workaround
+        bumps kernel-module-build for secure boot tests as well
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 6.10.24
+  title: ""
+  date: 2026-01-30T13:46:09.239Z
+- commits:
     - subject: 'Revert "packagegroup-resin: Add systemd-analyze to production images
         as well"'
       hash: ae4fe85fd1fa21505131c54c82d5c1aa8f5e48cb
