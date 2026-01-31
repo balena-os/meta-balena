@@ -44,14 +44,30 @@ do
 done
 echo "Docker started."
 
-# Pull in host extension images
+# Authenticate with balena registry for private images
+if [ -n "${HOSTEXT_IMAGES}" ] && [ -n "${BALENA_API_TOKEN}" ]; then
+	balena_api_registry_login "${BALENA_API_ENV}" "${BALENA_API_TOKEN}" || true
+fi
+
+# Pull in host extension images via API resolution
 BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
 BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
-for image_name in ${HOSTEXT_IMAGES}; do
-	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
-		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}" "${image_name}" none
+for ref in ${HOSTEXT_IMAGES}; do
+	echo "Resolving ${ref}..."
+	image_url=$(balena_api_resolve_fleet_image "${ref}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
+	if [ -z "${image_url}" ]; then
+		echo "Failed to resolve ${ref}"
+		exit 1
+	fi
+
+	echo "Pulling ${image_url}..."
+	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_url}"; then
+		# Tag with sanitized reference for traceability (+ is invalid in Docker tags)
+		tag=$(echo "${ref}" | tr '+' '_')
+		docker tag "${image_url}" "${tag}"
+		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}" "${tag}" none
 	else
-		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
+		echo "Failed to pull ${ref}"
 		exit 1
 	fi
 done
