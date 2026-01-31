@@ -28,7 +28,7 @@ Extensions are meant to be managed by the supervisor or as part of a hostOS upda
 
 An incorrect hostapp extension can leave your system in a non-working state. Balena advises against deploying custom made hostapp extensions and recommends to either use the hostapp extensions included as part of BalenaOS releases, or let the supervisor manage the installation, update and removal of production ready hostapp extensions.
 
-The overlaying of hostapp extensions can be disabled by specifying a `balena.nohostext` argument to the kernel command line.
+The overlaying of hostapp extensions can be disabled by specifying a `balena.disable_overlays` argument to the kernel command line.
 
 ## Caveats
 
