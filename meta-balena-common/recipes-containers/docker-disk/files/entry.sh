@@ -90,6 +90,21 @@ kill -TERM "$(cat /var/run/docker.pid)"
 # don't let wait() error out and crash the build if the docker daemon has already been stopped
 wait "$(cat /var/run/docker.pid)" || true
 
+# Calculate partition size based on actual content
+CONTENT_SIZE_MB=$(du -sm ${DATA_VOLUME} | awk '{print $1}')
+# Add 20% padding for filesystem overhead, minimum 64 MB padding
+PADDING_MB=$(( CONTENT_SIZE_MB / 5 ))
+[ ${PADDING_MB} -lt 64 ] && PADDING_MB=64
+CALCULATED_SIZE=$(( CONTENT_SIZE_MB + PADDING_MB ))
+
+# Use larger of calculated size or configured PARTITION_SIZE
+if [ ${CALCULATED_SIZE} -gt ${PARTITION_SIZE} ]; then
+    echo "Auto-sizing partition: ${CONTENT_SIZE_MB} MB content + ${PADDING_MB} MB padding = ${CALCULATED_SIZE} MB"
+    PARTITION_SIZE=${CALCULATED_SIZE}
+else
+    echo "Using configured partition size: ${PARTITION_SIZE} MB (content: ${CONTENT_SIZE_MB} MB)"
+fi
+
 # Export the final data filesystem
 dd if=/dev/zero of=${BUILD}/resin-data.img bs=1M count=0 seek="${PARTITION_SIZE}"
 
