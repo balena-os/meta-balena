@@ -151,3 +151,16 @@ FILES:${PN}-ralink = " \
     ${nonarch_base_libdir}/firmware/rt3*.bin* \
     ${nonarch_base_libdir}/firmware/rt7*.bin* \
 "
+
+PACKAGES =+ " ${PN}-wlcommon-bt "
+FILES:${PN}-wlcommon-bt = " \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/TIInit*bts* \
+"
+
+# We override the upstream wlcommon packaging
+# to avoid including Bluetooth files, which
+# we pack separately above
+FILES:${PN}-wlcommon = " \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl127x-nvs.bin* \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl1271-nvs.bin* \
+"
