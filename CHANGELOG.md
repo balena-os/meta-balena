@@ -1,6 +1,50 @@
 Change log
 -----------
 
+# v6.10.25
+## (2026-02-03)
+
+
+<details>
+<summary> Update balena-supervisor to v17.5.0 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.5.0
+> ### (2026-02-03)
+> 
+> * Make withExclusive always cancel pending and running calls [Christina Ying Wang]
+> * Remove usingInferStepsLock [Christina Ying Wang]
+> * Don't generate redundant kill steps for services already stopping [Christina Ying Wang]
+> * Don't retry fetch if aborted [Christina Ying Wang]
+> * Bump docker-progress to 5.4.1 [Christina Ying Wang]
+> * Replace applyIntermediateTarget with ExclusiveRunner [Christina Ying Wang]
+> * Use ExclusiveRunner for triggerApplyTarget [Christina Ying Wang]
+> * ExclusiveRunner: Add pending call cancellation [Christina Ying Wang]
+> * ExclusiveRunner: Add running call cancellation to trigger() [Christina Ying Wang]
+> * Implement ExclusiveRunner class with mutual exclusion & priority [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.4.6
+> ### (2026-02-03)
+> 
+> * Remove reference links in update-locking.md [Jonathan Berger]
+> 
+> ## balena-supervisor-17.4.5
+> ### (2026-01-22)
+> 
+> * Remove object-capturing closure in triggerFetch abortSignal [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.4.4
+> ### (2026-01-22)
+> 
+> * Update lodash to v4.17.23 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.4.3
+> ### (2026-01-22)
+> 
+> * Update @balena/sbvr-types to v11 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.10.24
 ## (2026-01-30)
 

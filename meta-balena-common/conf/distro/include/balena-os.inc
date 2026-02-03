@@ -5,7 +5,7 @@ include conf/distro/include/balena-os-rust-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
-DISTRO_VERSION = "6.10.24"
+DISTRO_VERSION = "6.10.25"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 
 # Allowed kernel cmdline arguments, used by balena-bootloader and the bootloader configuration scripts

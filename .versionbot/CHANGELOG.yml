@@ -1,4 +1,365 @@
 - commits:
+    - subject: Update balena-supervisor to v17.5.0
+      hash: 27891c4d5a3d2a87dbdc749e5ed532622ac0faa1
+      body: |
+        Update balena-supervisor from 17.4.2 to 17.5.0
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Make withExclusive always cancel pending and running calls
+              hash: ea413682fe81abf2e6ecbfb54ebbb6fcbf7b3264
+              body: |
+                The cancel parameter was only ever passed as true from the sole
+                call site (withExclusiveApply). Remove the parameter and always
+                cancel. The option can be reintroduced if a non-cancelling
+                use case arises.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Remove usingInferStepsLock
+              hash: 736aedcdcd4f359f60f40a5feb364eefbccd9977
+              body: >
+                This locking mechanism is made redundant by ExclusiveRunner.
+
+
+                It and the unmaintained rwlock can be removed entirely by
+                migrating
+
+                the other locking functions that use it over to async-mutex;
+                usage
+
+                of Bluebird's disposer pattern can also be removed at that
+                point.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Don't generate redundant kill steps for services already stopping
+              hash: 657b76df1301c45c23fe01c8cbb0a7e8d12f45f4
+              body: >
+                stepsToRemoveApp generates kill steps for services already
+                stopping,
+
+                which results in a large amount of kill steps generated and sent
+                to
+
+                the Engine, which eventually throws a bunch 'removal of
+                container already in
+
+                progress' errors, flooding the journal logs. This is
+                undesireable UX.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Don't retry fetch if aborted
+              hash: da40a1d49026ccd6db3086c274c1abcf42c09fc0
+              body: ""
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Bump docker-progress to 5.4.1
+              hash: fbd179afb56c67d733037f6d228538b1a3fabc05
+              body: >
+                This adds source stream error handling, so that
+                dockerProgress.pull
+
+                throws if context is cancelled in the pull. Before, it would
+                hang
+
+                without exiting if context was cancelled by an AbortSignal for
+                example.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Replace applyIntermediateTarget with ExclusiveRunner
+              hash: 5733450f8bea5a5da120a872704643044a04a221
+              body: |
+                Use ExclusiveRunner.withExclusive() for intermediate
+                target operations such as restart & purge actions
+                instead of the applyIntermediateTarget/pausingApply pattern.
+                withExclusive() is always called with cancel=true in order
+                for restart/purge actions to take precedence over triggered
+                state applies, as was the case before.
+
+                Remove:
+                - pausingApply's Bluebird disposer chain in favor of
+                  ExclusiveRunner semaphore's built-in high-priority queue
+                - applyBlocker & its guard in applyTarget
+                - applyInProgress module-scoped variable
+                - applyIntermediateTarget function
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Use ExclusiveRunner for triggerApplyTarget
+              hash: 5ced6ce967b456438fc12df7fb9ca85bd3f99a1e
+              body: >
+                Replace the ad-hoc state machine in triggerApplyTarget with an
+
+                ExclusiveRunner instance, the class of which was implemented
+
+                in the last commit.
+
+
+                Removed module-level variables: cancelDelay, applyCancelled,
+
+                scheduledApply, abortController. Kept applyBlocker and
+                applyInProgress
+
+                temporarily for applyIntermediateTarget compatibility.
+                Intermediate target
+
+                functionality to be merged into ExclusiveRunner.withExclusive in
+                next commit.
+
+
+                Eliminates race condition where cancel set applyInProgress=false
+
+                while the aborted apply was still cleaning up, then the
+                recursive
+
+                re-trigger set it back to true, only for the old finally block
+                to
+
+                reset it to false again mid-apply.
+
+
+                To note is that multiple apply triggers during an in-progress
+                apply
+
+                queue independently in the semaphore rather than merging into a
+
+                single scheduledApply (which was the case before). This is fine
+                b/c
+
+                each queued apply is idempotent so redundant runs are harmless
+                no-ops,
+
+                so only a slight computational cost.
+
+
+                Also removed some tests; ExclusiveRunner unit-tests a lot of the
+
+                functionality during state apply transitions so these tests are
+                no
+
+                longer necessary.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: "ExclusiveRunner: Add pending call cancellation"
+              hash: 2763d057bbef37e36d7221625ef72d51c583c7dd
+              body: >
+                trigger({ cancel }) now invalidates all pending (queued but not
+                yet
+
+                running) triggers via AbortController, in addition to
+
+                aborting the currently running trigger. Pending withExclusive
+                calls
+
+                are unaffected.
+
+
+                withExclusive(fn, { cancel })
+
+                - aborts the running trigger's signal,
+
+                - aborts the running exclusive's signal,
+
+                - calls semaphore.cancel() to reject all pending waiters (both
+
+                trigger and exclusive) with E_CANCELED.
+
+
+                The separation ensures that normal retries (trigger) can cancel
+                stale
+
+                queued work without interfering with high-priority user
+                operations,
+
+                while user-initiated operations can cancel everything when
+                needed.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: "ExclusiveRunner: Add running call cancellation to trigger()"
+              hash: 6dc62b9b7b730642c6ad790719115208aa762c8f
+              body: >
+                Adds an AbortSignal to the fn callback and a cancel option to
+
+                trigger(). When cancel=true, the currently running
+                trigger-initiated
+
+                call is aborted via its AbortController before dispatching a new
+                one.
+
+
+                withExclusive is not affected by trigger({ cancel }).
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+            - subject: Implement ExclusiveRunner class with mutual exclusion & priority
+              hash: f05e5cde40dedfe19c2f5b98f3316bf1b41e2a7a
+              body: >
+                This class wraps async-mutex's Semaphore to serialize exclusive
+
+                function execution. This is the first step toward replacing
+
+                the current flawed state machine in device-state module.
+
+
+                Next commits address running & pending call cancellation.
+
+
+                The semaphore subsumes several module-level variables that
+                currently
+
+                manage apply state:
+
+                - applyBlocker / applyInProgress: mutual exclusion is built into
+                  Semaphore and Semaphore.prototype.isLocked()
+                - scheduledApply: the semaphore queue replaces explicit
+                scheduling
+
+
+                Provides two entry points:
+
+                - trigger(): fire-and-forget at normal priority
+
+                - withExclusive(): awaitable at high priority, for
+                  user-triggered sequences such as restart or purge which
+                  take precedence over normal calls through trigger().
+
+                Both entry points hold the semaphore lock for their duration.
+
+
+                The class is generic over FnArgs, so the wrapped function's
+
+                parameter types are defined by the caller, not baked into the
+                class.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.5.0
+          title: ""
+          date: 2026-02-03T17:09:54.278Z
+        - commits:
+            - subject: Remove reference links in update-locking.md
+              hash: bbfdfce778f2867562a45dacdfeac27692403291
+              body: |
+                The files in the `docs` folder are fetched by our documentation repo so we need to remove reference links since they are not supported by our new docs platform.
+
+                See https://balena.fibery.io/Work/Project/Migrate-the-docs-to-Gitbook-2116
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Jonathan Berger
+              nested: []
+          version: balena-supervisor-17.4.6
+          title: ""
+          date: 2026-02-03T14:01:13.541Z
+        - commits:
+            - subject: Remove object-capturing closure in triggerFetch abortSignal
+              hash: 93baefd7be429fa23e79ad576e0d932c234ba437
+              body: >
+                The `abortSignal.onabort` callback was never cleaned up after
+                fetch
+
+                completion, causing the closure to retain references to
+                image/service
+
+                data.
+
+
+                Replace `onabort` property assignment with `addEventListener`
+                and
+
+                remove the listener in a `finally` block to ensure cleanup on
+                all
+
+                code paths.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Christina Ying Wang <christina@balena.io>
+                signed-off-by: Christina Ying Wang <christina@balena.io>
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.4.5
+          title: ""
+          date: 2026-01-22T13:20:19.340Z
+        - commits:
+            - subject: Update lodash to v4.17.23 [SECURITY]
+              hash: 0a768aa1f2109bb73501d7ef02b3d9b96b4bc2a8
+              body: |
+                Update lodash from 4.17.21 to 4.17.23
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-17.4.4
+          title: ""
+          date: 2026-01-22T01:01:09.680Z
+        - commits:
+            - subject: Update @balena/sbvr-types to v11
+              hash: f11f2ce6935763caa93d509e500cc029eecf4cae
+              body: |
+                Update @balena/sbvr-types from 9.1.0 to 11.1.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-17.4.3
+          title: ""
+          date: 2026-01-22T00:10:34.770Z
+  version: 6.10.25
+  title: ""
+  date: 2026-02-03T23:03:54.143Z
+- commits:
     - subject: extra firmware test fix bbb kernel module
       hash: 0f35877958083828988ee78f2da19618005602a8
       body: |
