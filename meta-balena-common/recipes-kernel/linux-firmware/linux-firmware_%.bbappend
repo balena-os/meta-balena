@@ -120,9 +120,7 @@ FILES:${PN}-iwlwifi-quz-a0-jf-b0 = " \
 
 FILES:${PN}-moxa = "${nonarch_base_libdir}/firmware/moxa/moxa-*.fw*"
 
-PACKAGES =+ "${PN}-qca-bt"
-
-FILES:${PN}-qca-bt = " \
+FILES:${PN}-qca = " \
     ${nonarch_base_libdir}/firmware/qca/nvm* \
     ${nonarch_base_libdir}/firmware/qca/rampatch* \
     ${nonarch_base_libdir}/firmware/qca/htbtfw* \
