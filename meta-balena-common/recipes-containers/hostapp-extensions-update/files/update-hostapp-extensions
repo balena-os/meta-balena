@@ -13,7 +13,8 @@ DOCKER_OVERLAY_ROOT="/var/lib/docker/overlay2/"
 # Track registries we've authenticated to (avoid duplicate logins)
 authenticated_registries=""
 
-readonly script_name=$(basename "${0}")
+script_name="$(basename "$0")"
+readonly script_name
 usage() {
 	cat <<EOF
 Usage: ${script_name} [OPTIONS]
@@ -42,16 +43,18 @@ shift $#
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-vars
 
+# shellcheck disable=SC2317 # Called via trap
 error_handler() {
 	# shellcheck disable=SC2181
 	[ $? -eq 0 ] && exit 0
-
 	exit 1
 }
 
 trap error_handler EXIT
 
 current_hostext_images=""
+install_failed=0
+
 update_current_host_extensions() {
 	if [ -z "${current_hostext_images}" ]; then
 		current_hostext_images="${hostext}"
@@ -63,7 +66,7 @@ update_current_host_extensions() {
 umount_merged() {
 	mergeddir=$(${DOCKER} inspect -f '{{.GraphDriver.Data.MergedDir}}' "${1}" 2> /dev/null) || mergeddir=""
 	if [ -n "${mergeddir}" ]; then
-		mergeddir=${mergeddir#${DOCKER_OVERLAY_ROOT}}
+		mergeddir=${mergeddir#"${DOCKER_OVERLAY_ROOT}"}
 		overlay=$(findmnt --noheadings --canonicalize  -t overlay -l -o TARGET | grep "${mergeddir}" || true)
 		if [ -n "${overlay}" ]; then
 			umount -l "${overlay}" || true
@@ -149,8 +152,7 @@ elif which rce > /dev/null 2>&1; then
 elif which balena > /dev/null 2>&1; then
     DOCKER=balena
 else
-    error "No container engine detected."
-    error_handler "no container engine detected"
+    fail "No container engine detected."
 fi
 
 # Verify targets
@@ -177,9 +179,10 @@ info "Removing previous hostapp extensions"
 for image in $(${DOCKER} images --all --quiet --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
 	imagetag=$(${DOCKER} inspect "${image}" --format='{{index .RepoTags 0}}' 2>/dev/null)
 	cids=$(${DOCKER} ps --all --quiet --no-trunc --filter ancestor="${image}" | tr '\n' ' ')
-	case "${target_hostext_images}" in
-		*${imagetag}*)
-			# If no container use the image do not preserve it
+	# Use word boundaries to avoid partial matches (e.g., "foo" matching "foobar")
+	case " ${target_hostext_images} " in
+		*" ${imagetag} "*)
+			# If no container uses the image do not preserve it
 			if [ -n "${cids}" ]; then
 				info " - Preserving $imagetag"
 				continue
@@ -198,30 +201,39 @@ if [ -n "${target_hostext_images}" ]; then
 	for hostext in ${target_hostext_images}; do
 		info " - ${hostext}"
 		imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
-		if [ -n "${imageid}" ]; then
-			info "   - already installed"
-			update_current_host_extensions
-			continue
-		fi
 
-		if ! ${DOCKER} pull "${hostext}"  > /dev/null 2>&1; then
-			error "   - failed to install"
-			break
-		else
-			# Build label arguments
-			label_args="--label ${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"
-			if [ -n "${extra_labels}" ]; then
-				for label in $(echo "${extra_labels}" | tr ',' ' '); do
-					label_args="${label_args} --label ${label}"
-				done
+		# Check if container already exists for this image
+		if [ -n "${imageid}" ]; then
+			container_exists=$(${DOCKER} ps --all --quiet --filter ancestor="${imageid}" | head -1)
+			if [ -n "${container_exists}" ]; then
+				info "   - already installed"
+				update_current_host_extensions
+				continue
 			fi
-			# shellcheck disable=SC2086
-			if ! ${DOCKER} create --runtime="bare" ${label_args} "${hostext}" none  > /dev/null 2>&1; then
-				error "   - failed to spawn"
+			info "   - image exists, creating container"
+		else
+			# Image doesn't exist, need to pull
+			if ! ${DOCKER} pull "${hostext}" > /dev/null 2>&1; then
+				error "   - failed to pull"
+				install_failed=1
 				break
 			fi
-			update_current_host_extensions
 		fi
+
+		# Build label arguments and create container
+		label_args="--label ${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"
+		if [ -n "${extra_labels}" ]; then
+			for label in $(echo "${extra_labels}" | tr ',' ' '); do
+				label_args="${label_args} --label ${label}"
+			done
+		fi
+		# shellcheck disable=SC2086
+		if ! ${DOCKER} create --runtime="bare" ${label_args} "${hostext}" none > /dev/null 2>&1; then
+			error "   - failed to create container"
+			install_failed=1
+			break
+		fi
+		update_current_host_extensions
 		info "   - done"
 	done
 fi
@@ -253,6 +265,10 @@ if [ -n "${current_hostext_images}" ]; then
 	fi
 else
 	info "Nothing else to do"
+fi
+
+if [ "${install_failed}" -eq 1 ]; then
+	exit 1
 fi
 
 exit 0
