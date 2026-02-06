@@ -10,6 +10,9 @@ BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
 BALENA_HOSTAPP_EXTENSIONS_DEFAULT="/etc/hostapp-extensions.conf"
 DOCKER_OVERLAY_ROOT="/var/lib/docker/overlay2/"
 
+# Track registries we've authenticated to (avoid duplicate logins)
+authenticated_registries=""
+
 readonly script_name=$(basename "${0}")
 usage() {
 	cat <<EOF
@@ -68,6 +71,55 @@ umount_merged() {
 	fi
 }
 
+# Extract registry from image name
+# e.g., "registry2.balena-cloud.com/v2/abc123" -> "registry2.balena-cloud.com"
+# e.g., "myregistry.io/org/image:tag" -> "myregistry.io"
+# Returns empty for Docker Hub images (no registry prefix)
+get_registry() {
+	image="$1"
+	# Check if image has a registry (contains a dot before the first slash)
+	case "${image}" in
+		*.*/*)
+			# Has registry - extract it (everything before the first slash)
+			echo "${image%%/*}"
+			;;
+		*)
+			# No registry prefix (Docker Hub or local)
+			echo ""
+			;;
+	esac
+}
+
+# Login to registry using device credentials
+# Uses UUID and DEVICE_API_KEY from balena-config-vars
+registry_login() {
+	registry="$1"
+	[ -z "${registry}" ] && return 0
+
+	# Check if already authenticated to this registry
+	case " ${authenticated_registries} " in
+		*" ${registry} "*)
+			return 0
+			;;
+	esac
+
+	# Need device credentials for authentication
+	if [ -z "${UUID}" ] || [ -z "${DEVICE_API_KEY}" ]; then
+		warn "Device credentials not available, skipping registry login"
+		return 1
+	fi
+
+	# Login using device credentials
+	if echo "${DEVICE_API_KEY}" | ${DOCKER} login "${registry}" -u "${UUID}" --password-stdin > /dev/null 2>&1; then
+		authenticated_registries="${authenticated_registries} ${registry}"
+		info "Authenticated to ${registry}"
+		return 0
+	else
+		warn "Failed to authenticate to ${registry}"
+		return 1
+	fi
+}
+
 # The target hostapp extensions is a space separated list of docker repository
 # tags in the form repo/name:tag, e.g balena/default:v1 balena/extra:v2
 #
@@ -106,6 +158,12 @@ for hostext in ${target_hostext_images}; do
 	imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
 	if [ -n "${imageid}" ]; then
 		continue
+	fi
+
+	# Authenticate to registry before checking remote availability
+	registry=$(get_registry "${hostext}")
+	if [ -n "${registry}" ]; then
+		registry_login "${registry}" || true
 	fi
 
 	if ! DOCKER_CLI_EXPERIMENTAL=enabled ${DOCKER} manifest inspect "${hostext}"  > /dev/null 2>&1; then
