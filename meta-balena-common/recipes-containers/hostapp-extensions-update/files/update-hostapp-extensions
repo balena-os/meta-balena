@@ -2,6 +2,8 @@
 
 set -e
 
+export DOCKER_HOST="unix:///var/run/balena-engine.sock"
+
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 
@@ -93,6 +95,17 @@ get_registry() {
 	esac
 }
 
+# Check if a registry is configured as insecure in daemon.json
+# Returns 0 (true) if insecure, 1 (false) otherwise
+is_insecure_registry() {
+	registry="$1"
+	[ -z "${registry}" ] && return 1
+	if [ -f /etc/docker/daemon.json ]; then
+		grep -q "\"${registry}\"" /etc/docker/daemon.json 2>/dev/null && return 0
+	fi
+	return 1
+}
+
 # Login to registry using device credentials
 # Uses UUID and DEVICE_API_KEY from balena-config-vars
 registry_login() {
@@ -168,7 +181,14 @@ for hostext in ${target_hostext_images}; do
 		registry_login "${registry}" || true
 	fi
 
-	if ! DOCKER_CLI_EXPERIMENTAL=enabled ${DOCKER} manifest inspect "${hostext}"  > /dev/null 2>&1; then
+	# Use --insecure flag for registries configured in insecure-registries
+	insecure_flag=""
+	if is_insecure_registry "${registry}"; then
+		insecure_flag="--insecure"
+	fi
+
+	# shellcheck disable=SC2086
+	if ! DOCKER_CLI_EXPERIMENTAL=enabled ${DOCKER} manifest inspect ${insecure_flag} "${hostext}" > /dev/null 2>&1; then
 		error "${hostext} not found in repository - bailing out with no action taken."
 		exit 1
 	fi
