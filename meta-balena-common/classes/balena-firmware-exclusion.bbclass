@@ -361,6 +361,7 @@ def check_package_drivers(d, whence_map):
 
     packages = (d.getVar('PACKAGES') or "").split()
     fw_roots = [os.path.join(d.getVar('nonarch_base_libdir'), 'firmware'), '/usr/lib/firmware', '/lib/firmware']
+    image_dir = d.getVar('D')
 
     # Firmware file to driver mapping
     known_files = []
@@ -372,6 +373,8 @@ def check_package_drivers(d, whence_map):
     uncategorized_drivers = []
     # Packages and set of categories
     nonessential_packages = {}
+    # All available packages and the size of the files in them
+    all_packages_data = {}
 
     bb.note("\n--- Packages and Drivers Mapping ---")
     for pkg in packages:
@@ -384,6 +387,7 @@ def check_package_drivers(d, whence_map):
 
         # Drivers associated to the files in the current package
         pkg_drivers = set()
+        pkg_size = 0
 
         # File paths for current package
         package_contents = []
@@ -397,7 +401,19 @@ def check_package_drivers(d, whence_map):
                 if pattern.startswith(root):
                     # '/lib/firmware/qca/fw.bin' becomes 'qca/fw.bin
                     clean_p = os.path.relpath(pattern, root)
+
+                    full_pattern_path = os.path.join(image_dir, pattern.lstrip('/'))
+                    dir_to_search = os.path.dirname(full_pattern_path)
+                    file_pattern = os.path.basename(full_pattern_path)
+
+                    if os.path.exists(dir_to_search):
+                        for f_name in os.listdir(dir_to_search):
+                            if fnmatch.fnmatch(f_name, file_pattern):
+                                f_path = os.path.join(dir_to_search, f_name)
+                                if os.path.isfile(f_path) and not os.path.islink(f_path):
+                                    pkg_size += os.path.getsize(f_path)
                     break
+
             clean_p = clean_p.lstrip('./')
             package_contents.append(clean_p)
 
@@ -409,7 +425,10 @@ def check_package_drivers(d, whence_map):
                     pkg_drivers.add(driver)
 
         if pkg_drivers:
-            bb.note(f"Package: {pkg}")
+            if pkg not in all_packages_data:
+                all_packages_data[pkg] = {"categories": set(), "size": pkg_size}
+
+            bb.note(f"Package: {pkg} (Size: {pkg_size} bytes)")
             for drv in sorted(pkg_drivers):
                 category = "Unknown"
                 # Check if the drivers in this package are classified
@@ -421,13 +440,15 @@ def check_package_drivers(d, whence_map):
                         category = cat
                         break
 
+                all_packages_data[pkg]["categories"].add(category)
                 bb.note(f"  Driver: {drv} - Category: {category}")
 
                 # Each driver should be listed above in a category,
                 # otherwise the build will fail
                 if category == "Unknown":
                     uncategorized_drivers.append((drv, pkg))
-                # TODO: Check if we should include Misc or a sub-set of packages from it
+                # We allow Storage and Connectivity by default. But we may switch to layers,
+                # which could contain bluetooth packages too
                 elif category not in ["Connectivity", "Storage"]:
                     if pkg not in nonessential_packages:
                         nonessential_packages[pkg] = set()
@@ -440,16 +461,29 @@ def check_package_drivers(d, whence_map):
     # Save the non essential firmware packages list to DEPLOY_DIR_IMAGE.
     # When the rootfs is generated, these listed packages will be added
     # to BAD_RECOMMENDATIONS.
+    # This last step is performed by image-balena.bbclass.
     deploy_dir = d.getVar('DEPLOY_DIR_IMAGE')
-    if deploy_dir and nonessential_packages:
+    if deploy_dir:
         bb.utils.mkdirhier(deploy_dir)
-        output_file = os.path.join(deploy_dir, "nonessential_firmware.txt")
-        with open(output_file, 'w') as f:
-            for pkg in sorted(nonessential_packages.keys()):
-                # Also list all categories of the drivers matched to each package
-                cats = ", ".join(sorted(list(nonessential_packages[pkg])))
-                f.write(f"{pkg} : {cats}\n")
-        bb.note(f"\n[INFO] Saved non-essential linux-firmware packages list to: {output_file}")
+
+        if nonessential_packages:
+            output_file_nonessential = os.path.join(deploy_dir, "nonessential_firmware.txt")
+            with open(output_file_nonessential, 'w') as f:
+                for pkg in sorted(nonessential_packages.keys()):
+                    cats = ", ".join(sorted(list(nonessential_packages[pkg])))
+                    f.write(f"{pkg} : {cats}\n")
+
+        # Save the full list of all linux-firmware packages, categories, and their calculated sizes in build_dir/tmp/deploy/images/<dt>/all_firmware_packages.txt
+        if all_packages_data:
+            output_file_all = os.path.join(deploy_dir, "all_firmware_packages.txt")
+            with open(output_file_all, 'w') as f:
+                f.write(f"{'PACKAGE_NAME':<50} | {'SIZE (KiB)':>10} | {'CATEGORIES'}\n")
+                f.write("-" * 80 + "\n")
+                for pkg in sorted(all_packages_data.keys()):
+                    cats = ", ".join(sorted(list(all_packages_data[pkg]["categories"])))
+                    size_kb = all_packages_data[pkg]["size"] / 1024
+                    f.write(f"{pkg:<50} | {size_kb:>10.2f} | {cats}\n")
+            bb.note(f"\n[INFO] Saved full linux-firmware packages list with sizes to: {output_file_all}")
 
     # All files in packages should be succesfully mapped to a categorized driver
     if uncategorized_drivers:
@@ -485,4 +519,4 @@ python do_exclude_firmware() {
     check_package_drivers(d, whence_map)
 }
 
-addtask exclude_firmware after do_install before do_package
+addtask exclude_firmware after firmware_compression before do_package
