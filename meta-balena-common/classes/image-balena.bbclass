@@ -460,3 +460,98 @@ python __anonymous() {
     rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND')
     d.setVar('ROOTFS_POSTPROCESS_COMMAND', re.sub(r'zap_empty_root_password ?;?', '', rootfs_postprocess_command))
 }
+
+# Add excluded firmware to BAD_RECOMMENDATIONS. This includes GPU, Audio, Video and Misc categories.
+python do_apply_firmware_exclusion_policy() {
+    import os
+
+    # Allow including specific packages from device repositories
+    # if they are really necessary
+    raw_whitelist = d.getVar('BALENA_ALLOWED_FIRMWARE_PACKAGES') or ""
+    whitelist = [pkg.strip() for pkg in raw_whitelist.split()]
+    bb.note(f"Allowed firmware whitelist: {repr(whitelist)}")
+
+    deploy_dir = d.getVar('DEPLOY_DIR_IMAGE')
+    if not deploy_dir:
+         bb.fatal("Could not determine DEPLOY_DIR_IMAGE")
+
+    nonessential_file = os.path.join(deploy_dir, 'nonessential_firmware.txt')
+
+    if os.path.exists(nonessential_file):
+        try:
+            with open(nonessential_file, 'r') as f:
+                extra_bad = []
+                for line in f:
+                    # Extract the package name without category
+                    pkg = line.split(':')[0].strip()
+
+                    if pkg and pkg not in whitelist:
+                        extra_bad.append(pkg)
+                    elif pkg in whitelist:
+                        bb.note(f"Firmware Policy: Whitelisting '{pkg}', allowing installation.")
+
+                if extra_bad:
+                    bad_str = " ".join(extra_bad)
+
+                    # Should we use PACKAGE_EXCLUDE instead? If we do, error messages may not be straight forward
+                    d.appendVar('BAD_RECOMMENDATIONS', " " + bad_str)
+                    bb.note(f"Policy applied: Excluded {len(extra_bad)} firmware packages.")
+        except Exception as e:
+            bb.fatal(f"Failed to enforce firmware exclusion policy: {str(e)}")
+}
+
+do_rootfs[depends] += "linux-firmware:do_exclude_firmware"
+addtask do_apply_firmware_exclusion_policy before do_rootfs
+
+
+# Fail the build if any of the excluded packages have been found in the image manifest
+#
+python do_nonessential_firmware_check() {
+    import os
+
+    # During do_image_complete, this variable points to the manifest in WORKDIR
+    manifest_path = d.getVar('IMAGE_MANIFEST')
+
+    if not manifest_path or not os.path.exists(manifest_path):
+        # Fallback to check the deploy directory manually
+        deploy_dir = d.getVar('DEPLOY_DIR_IMAGE')
+        link_name = d.getVar('IMAGE_LINK_NAME')
+        manifest_path = os.path.join(deploy_dir, f"{link_name}.manifest")
+
+    if not os.path.exists(manifest_path):
+        bb.fatal(f"Firmware policy check failed: Manifest file not found in {manifest_path}")
+
+    nonessential_path = os.path.join(d.getVar('DEPLOY_DIR_IMAGE'), 'nonessential_firmware.txt')
+    if not os.path.exists(nonessential_path):
+        bb.fatal("nonessential_firmware.txt not found, cannot perform firmware policy check.")
+
+    whitelist_raw = d.getVar('BALENA_ALLOWED_FIRMWARE_PACKAGES') or ""
+    whitelist = [p.strip() for p in whitelist_raw.split()]
+
+    # Parse non-essential packages list
+    with open(nonessential_path, 'r') as f:
+        nonessential_packages = [line.split(':')[0].strip() for line in f if line.strip()]
+
+    # Parse image manifest
+    installed = []
+    with open(manifest_path, 'r') as f:
+        for line in f:
+            parts = line.split()
+            if parts:
+                installed.append(parts[0])
+
+    # Check if non-essential packages exist in image manifest AND are not whitelisted
+    matched_packages = [p for p in nonessential_packages if p in installed and p not in whitelist]
+
+    if matched_packages:
+        bb.fatal(f"Non-essential firmware found in manifest: {', '.join(matched_packages)}. "
+                 f"Please check which categories these packages belong to in linux-firmware/temp/log.do_exclude_firmware "
+                 f"or add them to BALENA_ALLOWED_FIRMWARE_PACKAGES")
+    else:
+        bb.plain("Firmware Policy Check: PASSED")
+}
+
+# Manifest is generated in do_rootfs,
+# we thus need to perform the check after
+# it becomes available.
+addtask nonessential_firmware_check after do_rootfs before do_image_complete
