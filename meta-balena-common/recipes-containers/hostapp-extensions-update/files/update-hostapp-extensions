@@ -76,6 +76,22 @@ umount_merged() {
 	fi
 }
 
+# Check if a container's overlay is part of the root overlay stack
+# Returns 0 if mounted as lowerdir of /, 1 otherwise
+is_mounted_in_root_overlay() {
+	cid="$1"
+	mergeddir=$(${DOCKER} inspect -f '{{.GraphDriver.Data.MergedDir}}' "${cid}" 2>/dev/null) || return 1
+	[ -z "${mergeddir}" ] && return 1
+	mergeddir=${mergeddir#"${DOCKER_OVERLAY_ROOT}"}
+
+	# Check if this path appears in the root overlay mount options
+	root_mount=$(findmnt -n -o OPTIONS / 2>/dev/null) || return 1
+	case "${root_mount}" in
+		*"${mergeddir}"*) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
 # Extract registry from image name
 # e.g., "registry2.balena-cloud.com/v2/abc123" -> "registry2.balena-cloud.com"
 # e.g., "myregistry.io/org/image:tag" -> "myregistry.io"
@@ -196,24 +212,30 @@ done
 
 info "Removing previous hostapp extensions"
 
-for image in $(${DOCKER} images --all --quiet --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
-	imagetag=$(${DOCKER} inspect "${image}" --format='{{index .RepoTags 0}}' 2>/dev/null)
-	cids=$(${DOCKER} ps --all --quiet --no-trunc --filter ancestor="${image}" | tr '\n' ' ')
-	# Use word boundaries to avoid partial matches (e.g., "foo" matching "foobar")
+# Remove containers not in the target list. Iterate over containers directly
+for cid in $(${DOCKER} ps --all --quiet --no-trunc --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
+	imagetag=$(${DOCKER} inspect "${cid}" --format='{{.Config.Image}}' 2>/dev/null)
 	case " ${target_hostext_images} " in
 		*" ${imagetag} "*)
-			# If no container uses the image do not preserve it
-			if [ -n "${cids}" ]; then
-				info " - Preserving $imagetag"
-				continue
-			fi
+			info " - Preserving $imagetag"
+			continue
 			;;
 	esac
-	for cid in ${cids}; do
+	if is_mounted_in_root_overlay "${cid}"; then
+		info " - ${imagetag} mounted in root overlay, deferring cleanup to reboot"
+		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
+	else
 		umount_merged "${cid}"
 		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
-	done
-	${DOCKER} rmi --force "$image" > /dev/null 2>&1 || true
+	fi
+done
+
+# Clean up extension images no longer used by any container
+for image in $(${DOCKER} images --all --quiet --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
+	cids=$(${DOCKER} ps --all --quiet --filter ancestor="${image}" | head -1)
+	if [ -z "${cids}" ]; then
+		${DOCKER} rmi --force "$image" > /dev/null 2>&1 || true
+	fi
 done
 
 if [ -n "${target_hostext_images}" ]; then
