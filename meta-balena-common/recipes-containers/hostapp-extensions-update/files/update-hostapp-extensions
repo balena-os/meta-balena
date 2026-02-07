@@ -76,6 +76,14 @@ umount_merged() {
 	fi
 }
 
+# Check if a container is dead (failed removal)
+# Returns 0 if dead, 1 otherwise
+is_container_dead() {
+	cid="$1"
+	dead=$(${DOCKER} inspect --format '{{.State.Dead}}' "${cid}" 2>/dev/null) || dead="false"
+	[ "${dead}" = "true" ]
+}
+
 # Check if a container's overlay is part of the root overlay stack
 # Returns 0 if mounted as lowerdir of /, 1 otherwise
 is_mounted_in_root_overlay() {
@@ -184,6 +192,18 @@ else
     fail "No container engine detected."
 fi
 
+# Clean up dead containers from previous failed removals.
+# Dead containers are left behind when removal is attempted while the overlay
+# is mounted in the root filesystem. After reboot, mobynit skips them so they
+# are no longer mounted and can be safely removed.
+for cid in $(${DOCKER} ps --all --quiet --no-trunc --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
+	if is_container_dead "${cid}"; then
+		imagetag=$(${DOCKER} inspect "${cid}" --format='{{.Config.Image}}' 2>/dev/null) || imagetag="${cid}"
+		info "Cleaning up dead container: ${imagetag}"
+		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
+	fi
+done
+
 # Verify targets
 for hostext in ${target_hostext_images}; do
 	imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
@@ -247,7 +267,7 @@ if [ -n "${target_hostext_images}" ]; then
 		# Check if container already exists for this image
 		if [ -n "${imageid}" ]; then
 			container_exists=$(${DOCKER} ps --all --quiet --filter ancestor="${imageid}" | head -1)
-			if [ -n "${container_exists}" ]; then
+			if [ -n "${container_exists}" ] && ! is_container_dead "${container_exists}"; then
 				info "   - already installed"
 				update_current_host_extensions
 				continue
