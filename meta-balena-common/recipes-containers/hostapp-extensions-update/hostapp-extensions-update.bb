@@ -18,7 +18,7 @@ RDEPENDS:${PN} = " \
     "
 
 SYSTEMD_SERVICE:${PN} = "update-hostapp-extensions.service"
-SYSTEMD_AUTO_ENABLE = "disable"
+SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install() {
     install -d ${D}${bindir}
