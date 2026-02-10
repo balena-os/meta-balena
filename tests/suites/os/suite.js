@@ -478,5 +478,6 @@ module.exports = {
 		'./tests/safe-reboot',
 		'./tests/disk-watchdog',
 		'./tests/extra-firmware',
+		'./tests/recover-sshd-socket',
 	],
 };
