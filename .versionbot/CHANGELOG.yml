@@ -1,4 +1,25 @@
 - commits:
+    - subject: "kernel-devsrc.bb: Use recipe from OpenEmbedded Core layer for 6.18+
+        kernels"
+      hash: ea0f634a0b294095c3610b9ff7a36a25a4c4743e
+      body: >
+        This is taken from OpenEmbedded Core rev
+        58b9f90779d1227e30a7de4948b10e49fb5b5ac1 in master.
+
+
+        It is required for being able to compile kernel modules for 6.18+
+        kernels.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.10.26
+  title: ""
+  date: 2026-02-10T20:11:19.017Z
+- commits:
     - subject: Update balena-supervisor to v17.5.0
       hash: 27891c4d5a3d2a87dbdc749e5ed532622ac0faa1
       body: |

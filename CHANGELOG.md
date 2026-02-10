@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.26
+## (2026-02-10)
+
+* kernel-devsrc.bb: Use recipe from OpenEmbedded Core layer for 6.18+ kernels [Florin Sarbu]
+
 # v6.10.25
 ## (2026-02-03)
 
