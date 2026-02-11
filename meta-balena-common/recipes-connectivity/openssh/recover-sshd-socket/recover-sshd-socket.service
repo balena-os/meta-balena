@@ -1,0 +1,11 @@
+[Unit]
+Description=Recover sshd.socket if stopped by burst protection
+After=sshd.socket
+
+[Service]
+ExecStart=/bin/sh -c '\
+    result=$(/bin/systemctl show -p Result --value sshd.socket); \
+    if [ "$result" = "trigger-limit-hit" ]; then \
+        echo "sshd.socket was stopped by trigger rate limit, restarting"; \
+        /bin/systemctl start sshd.socket; \
+    fi'

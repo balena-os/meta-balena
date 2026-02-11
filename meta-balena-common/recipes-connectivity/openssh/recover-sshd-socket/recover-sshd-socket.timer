@@ -1,0 +1,9 @@
+[Unit]
+Description=Periodically check and recover sshd.socket
+
+[Timer]
+OnCalendar=*:0/15
+Persistent=true
+
+[Install]
+WantedBy=multi-user.target

@@ -58,3 +58,5 @@ do_install:append () {
 # We need dropbear to be able to migrate host keys in the update hooks
 RCONFLICTS:${PN} = ""
 RCONFLICTS:${PN}-sshd = ""
+
+RDEPENDS:${PN}-sshd += "recover-sshd-socket"
