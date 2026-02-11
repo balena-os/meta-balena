@@ -1,4 +1,27 @@
 - commits:
+    - subject: "openssh: Add sshd.socket burst protection recovery timer"
+      hash: 4ddde103fb870b36943f01fb0544c76617eef3d8
+      body: |
+        Devices with public-facing SSH ports can lose SSH access permanently
+        when systemd's trigger rate limiting stops sshd.socket due to
+        connection floods from automated scanners. Since there is no built-in
+        recovery, headless devices remain unreachable until manual intervention.
+
+        Add a systemd timer that checks sshd.socket every 15 minutes and
+        restarts it only if Result=trigger-limit-hit — the specific state
+        systemd sets when TriggerLimitBurst is exceeded. Manual stops and
+        other failure states are left alone.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.11.0
+  title: ""
+  date: 2026-02-11T18:34:06.783Z
+- commits:
     - subject: "kernel-devsrc.bb: Use recipe from OpenEmbedded Core layer for 6.18+
         kernels"
       hash: ea0f634a0b294095c3610b9ff7a36a25a4c4743e

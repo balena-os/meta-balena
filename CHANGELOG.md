@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.0
+## (2026-02-11)
+
+* openssh: Add sshd.socket burst protection recovery timer [Kyle Harding]
+
 # v6.10.26
 ## (2026-02-10)
 
