@@ -75,7 +75,15 @@ for ref in ${HOSTEXT_IMAGES}; do
 done
 
 # Pull in the supervisor image as a separate app until it converges in the hostOS
-if [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
+if [ -n "${SUPERVISOR_IMAGE_NAME:-}" ]; then
+	echo "Pulling supervisor override: ${SUPERVISOR_IMAGE_NAME}"
+	if docker pull "${SUPERVISOR_IMAGE_NAME}"; then
+		docker tag "${SUPERVISOR_IMAGE_NAME}" "balena_supervisor":"${SUPERVISOR_VERSION}"
+	else
+		echo "Not able to pull ${SUPERVISOR_IMAGE_NAME}"
+		exit 1
+	fi
+elif [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
 	_supervisor_image=$(balena_api_fetch_image_from_app "${SUPERVISOR_FLEET}" "${SUPERVISOR_VERSION#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
 	echo "Pulling ${SUPERVISOR_FLEET}:${SUPERVISOR_VERSION}"
 	if docker pull "${_supervisor_image}"; then
