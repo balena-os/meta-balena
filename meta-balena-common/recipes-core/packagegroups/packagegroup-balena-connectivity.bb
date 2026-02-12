@@ -10,15 +10,17 @@ NETWORK_MANAGER_PACKAGES ?= "networkmanager"
 
 CONNECTIVITY_MODULES = ""
 
-CONNECTIVITY_FIRMWARES ?= " \
-    linux-firmware-ath9k \
-    linux-firmware-mt7601u \
-    linux-firmware-ralink \
-    linux-firmware-rtl8192cu \
-    linux-firmware-rtl8192su \
-    linux-firmware-rtl8723 \
+# We no longer ship bluetooth
+# firmware by default
+
+BLUETOOTH_FIRMWARE = " \
     linux-firmware-rtl8723b-bt \
-    "
+"
+
+# Defined in meta-balena-common/conf/distro/include/balena-os.inc
+CONNECTIVITY_FIRMWARES ?= " \
+   ${CORE_CONNECTIVITY_FIRMWARES}
+"
 
 CONNECTIVITY_PACKAGES = " \
     ${NETWORK_MANAGER_PACKAGES} \
