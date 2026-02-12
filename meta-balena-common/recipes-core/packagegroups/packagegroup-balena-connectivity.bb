@@ -17,13 +17,9 @@ BLUETOOTH_FIRMWARE = " \
     linux-firmware-rtl8723b-bt \
 "
 
+# Defined in meta-balena-common/conf/distro/include/balena-os.inc
 CONNECTIVITY_FIRMWARES ?= " \
-    linux-firmware-ath9k \
-    linux-firmware-mt7601u \
-    linux-firmware-ralink \
-    linux-firmware-rtl8192cu \
-    linux-firmware-rtl8192su \
-    linux-firmware-rtl8723 \
+   ${CORE_CONNECTIVITY_FIRMWARES}
 "
 
 CONNECTIVITY_PACKAGES = " \
