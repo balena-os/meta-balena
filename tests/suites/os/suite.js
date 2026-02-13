@@ -479,5 +479,6 @@ module.exports = {
 		'./tests/disk-watchdog',
 		'./tests/extra-firmware',
 		'./tests/recover-sshd-socket',
+		'./tests/device-specific-tests/raspberrypi4-64',
 	],
 };
