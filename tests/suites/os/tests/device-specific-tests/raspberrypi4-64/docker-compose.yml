@@ -1,0 +1,10 @@
+version: '2'
+services:
+  eeprom-firmware:
+    build: .
+    restart: on-failure
+    volumes:
+      - eeprom-firmware:/firmware
+
+volumes:
+  eeprom-firmware:
