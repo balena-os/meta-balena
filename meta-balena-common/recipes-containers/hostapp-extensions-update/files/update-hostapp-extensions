@@ -100,6 +100,36 @@ is_mounted_in_root_overlay() {
 	esac
 }
 
+# Extract the @sha256:... digest from an image reference
+# e.g., "registry.com/v2/abc@sha256:15ba80..." → "sha256:15ba80..."
+# Returns empty if no digest is present.
+get_image_digest() {
+	image="$1"
+	case "${image}" in
+		*@sha256:*) echo "${image##*@}" ;;
+		*) echo "" ;;
+	esac
+}
+
+# Resolve a target image to its local docker image ID.
+# Tries direct inspect first, then falls back to digest matching
+# against locally available images.
+resolve_image_id() {
+	image="$1"
+	# Try direct reference first
+	iid=$(${DOCKER} inspect -f '{{.Id}}' "${image}" 2>/dev/null) || iid=""
+	if [ -n "${iid}" ]; then
+		echo "${iid}"
+		return
+	fi
+	# Fall back to digest matching
+	digest=$(get_image_digest "${image}")
+	if [ -n "${digest}" ]; then
+		${DOCKER} images --digests --format '{{.Digest}} {{.ID}}' \
+			| awk -v d="${digest}" '$1 == d {print $2; exit}'
+	fi
+}
+
 # Extract registry from image name
 # e.g., "registry2.balena-cloud.com/v2/abc123" -> "registry2.balena-cloud.com"
 # e.g., "myregistry.io/org/image:tag" -> "myregistry.io"
@@ -206,7 +236,7 @@ done
 
 # Verify targets
 for hostext in ${target_hostext_images}; do
-	imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
+	imageid=$(resolve_image_id "${hostext}")
 	if [ -n "${imageid}" ]; then
 		continue
 	fi
@@ -232,15 +262,38 @@ done
 
 info "Removing previous hostapp extensions"
 
+# Resolve target image IDs for content-based comparison.
+# This handles the case where a preloaded container uses a different tag
+# (e.g., local tag) than the target reference (e.g., registry URL with digest)
+# but both point to the same image content.
+target_image_ids=""
+for hostext in ${target_hostext_images}; do
+	tid=$(resolve_image_id "${hostext}")
+	if [ -n "${tid}" ]; then
+		target_image_ids="${target_image_ids} ${tid}"
+	fi
+done
+
 # Remove containers not in the target list. Iterate over containers directly
 for cid in $(${DOCKER} ps --all --quiet --no-trunc --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
 	imagetag=$(${DOCKER} inspect "${cid}" --format='{{.Config.Image}}' 2>/dev/null)
+	# Check by tag string
 	case " ${target_hostext_images} " in
 		*" ${imagetag} "*)
 			info " - Preserving $imagetag"
 			continue
 			;;
 	esac
+	# Check by image content ID (handles tag mismatches for same image)
+	container_image_id=$(${DOCKER} inspect "${cid}" --format='{{.Image}}' 2>/dev/null) || container_image_id=""
+	if [ -n "${container_image_id}" ] && [ -n "${target_image_ids}" ]; then
+		case " ${target_image_ids} " in
+			*" ${container_image_id} "*)
+				info " - Preserving $imagetag (matching image content)"
+				continue
+				;;
+		esac
+	fi
 	if is_mounted_in_root_overlay "${cid}"; then
 		info " - ${imagetag} mounted in root overlay, deferring cleanup to reboot"
 		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
@@ -262,7 +315,7 @@ if [ -n "${target_hostext_images}" ]; then
 	info "Installing new hostapp extensions:"
 	for hostext in ${target_hostext_images}; do
 		info " - ${hostext}"
-		imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
+		imageid=$(resolve_image_id "${hostext}")
 
 		# Check if container already exists for this image
 		if [ -n "${imageid}" ]; then
@@ -274,7 +327,7 @@ if [ -n "${target_hostext_images}" ]; then
 			fi
 			info "   - image exists, creating container"
 		else
-			# Image doesn't exist, need to pull
+			# Image doesn't exist locally, need to pull
 			if ! ${DOCKER} pull "${hostext}" > /dev/null 2>&1; then
 				error "   - failed to pull"
 				install_failed=1
