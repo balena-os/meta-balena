@@ -1,4 +1,18 @@
 - commits:
+    - subject: "peak: Update to version 9.0"
+      hash: 37ab4aef27be7c9042757b3f3d2b91080a5b4259
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.11.1
+  title: ""
+  date: 2026-02-17T13:05:12.004Z
+- commits:
     - subject: "openssh: Add sshd.socket burst protection recovery timer"
       hash: 4ddde103fb870b36943f01fb0544c76617eef3d8
       body: |
