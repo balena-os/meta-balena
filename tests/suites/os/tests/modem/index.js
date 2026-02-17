@@ -23,6 +23,12 @@ const PING_ATTEMPTS = 3;
 module.exports = {
     title: 'Cellular tests',
     run: async function (test) {
+
+        if (this.suite.deviceType.slug == 'kontron-come-xelx') {
+            test.comment('Skipping modem test on Kontron COMe xELx');
+            return;
+        }
+
         test.comment('starting modem tests...');
 
         async function getConfig() {
