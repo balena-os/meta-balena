@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.2
+## (2026-02-18)
+
+* tests:modem: Disable for kontron-come-xelx [Florin Sarbu]
+
 # v6.11.1
 ## (2026-02-17)
 
