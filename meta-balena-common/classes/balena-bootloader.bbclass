@@ -91,7 +91,7 @@ BALENA_CONFIGS[kexec] = " \
     CONFIG_KEXEC_FILE=y \
     "
 
-BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' secureboot',d)}"
 BALENA_CONFIGS_DEPS[secureboot] = " \
     CONFIG_INTEGRITY_SIGNATURE=y \
     CONFIG_INTEGRITY_ASYMMETRIC_KEYS=y \
@@ -503,7 +503,7 @@ BALENA_CONFIGS[crypto] = " \
     "
 
 # shrink size by removing unneeded functionality in balena-bootloader so we have enough space in the boot partition
-BALENA_CONFIGS:append = "shrink_size"
+BALENA_CONFIGS:append = " shrink_size"
 BALENA_CONFIGS[shrink_size] = " \
     CONFIG_CHROME_PLATFORMS=n \
     CONFIG_MFD_CORE=n \
