@@ -27,6 +27,7 @@ COMMON_CONNECTIVITY_FIRMWARES = " \
     linux-firmware-wl12xx \
 "
 
+# This list is set by meta-balena-common
 CORE_CONNECTIVITY_FIRMWARES = " \
     linux-firmware-ath9k \
     linux-firmware-mt7601u \
@@ -34,7 +35,91 @@ CORE_CONNECTIVITY_FIRMWARES = " \
     linux-firmware-rtl8192cu \
     linux-firmware-rtl8192su \
     linux-firmware-rtl8723 \
-    ${COMMON_CONNECTIVITY_FIRMWARES}
+    ${COMMON_CONNECTIVITY_FIRMWARES} \
+"
+
+# Firmware packages which are used by
+# wifi modules with an M.2 interface
+LINUX_FIRMWARE_PACKAGES[features_M2] ?= " \
+    linux-firmware-iwlwifi-9260 \
+    linux-firmware-iwlwifi-3160 \
+    linux-firmware-iwlwifi-7260 \
+    linux-firmware-iwlwifi-7265d \
+    linux-firmware-iwlwifi-7265 \
+    linux-firmware-iwlwifi-8000c \
+    linux-firmware-iwlwifi-8265 \
+    linux-firmware-rtl8723 \
+    linux-firmware-iwlwifi-7260 \
+    linux-firmware-iwlwifi-7265d \
+    linux-firmware-iwlwifi-7265 \
+    linux-firmware-iwlwifi-8000c \
+    linux-firmware-iwlwifi-8265 \
+    linux-firmware-rtl8723 \
+"
+
+# Firmware packages used by wifi modules
+# that use SDIO or UART. The wifi chip
+# usually comes soldered in this case.
+LINUX_FIRMWARE_PACKAGES[features_SDIO_UART_wifi] ?= " \
+    linux-firmware-iwlwifi-8265 \
+    linux-firmware-rtl8723 \
+"
+
+# Firmware packages for modules which use a
+# Half MINI PCIE interface
+LINUX_FIRMWARE_PACKAGES[features_HMC] ?= " \
+    linux-firmware-iwlwifi-6000-4 \
+    linux-firmware-iwlwifi-6000g2a-6 \
+    linux-firmware-iwlwifi-6000g2b-6 \
+    linux-firmware-iwlwifi-6050-5 \
+    linux-firmware-iwlwifi-7260 \
+    linux-firmware-iwlwifi-135-6 \
+    linux-firmware-rtl8723 \
+"
+
+# Firmware packages for USB wifi dongles
+LINUX_FIRMWARE_PACKAGES[features_USB] ?= " \
+    linux-firmware-ath9k \
+    linux-firmware-rtl8723 \
+    linux-firmware-ralink \
+    linux-firmware-bcm43143 \
+    linux-firmware-rtl8192cu \
+    linux-firmware-mt7601u \
+    linux-firmware-rtl8188eu \
+"
+
+# Firmware packages for PCIE Wifi adapters
+LINUX_FIRMWARE_PACKAGES[features_PCIE] ?= " \
+    linux-firmware-ath9k  \
+"
+
+# Firmware packages for mini PCIE Wifi adapters
+LINUX_FIRMWARE_PACKAGES[features_MINI_PCIE] ?= " \
+    linux-firmware-ath9k \
+    linux-firmware-ralink \
+"
+
+# Firmware packages used by the TI WiLink8 WL1835MOD / 1837MOD
+# wifi chipsets. These are not detachable
+# from the device, they are soldered.
+# Commonly used by Beaglebone boards
+LINUX_FIRMWARE_PACKAGES[features_TI_WiLink8] ?= " \
+    linux-firmware-wl18xx \
+    linux-firmware-wlcommon \
+"
+
+# Firmware for TI wilink 6.0 / 7.0 - WL1271 / WL1273
+# wifi chipsets, used on the VAR-SOM-MX6 and BeagleXM
+LINUX_FIRMWARE_PACKAGES[features_TI_WiLink_6_7] ?= " \
+    linux-firmware-wl12xx \
+"
+
+# Firmware for the Realtek RTL8192SU chipset,
+# found in USB dongles. Has been discontinued
+# since 2012 and can only be purchased from
+# pulled parts.
+LINUX_FIRMWARE_PACKAGES[features_blacklisted] ?= " \
+    linux-firmware-rtl8192su \
 "
 
 # Allowed kernel cmdline arguments, used by balena-bootloader and the bootloader configuration scripts

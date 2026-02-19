@@ -489,13 +489,12 @@ python do_apply_firmware_exclusion_policy() {
                         extra_bad.append(pkg)
                     elif pkg in whitelist:
                         bb.note(f"Firmware Policy: Whitelisting '{pkg}', allowing installation.")
-
                 if extra_bad:
                     bad_str = " ".join(extra_bad)
-
-                    # Should we use PACKAGE_EXCLUDE instead? If we do, error messages may not be straight forward
+                    # BAD_RECOMMENDATIONS is used to remove packages from RRECOMMENDS
                     d.appendVar('BAD_RECOMMENDATIONS', " " + bad_str)
                     bb.note(f"Policy applied: Excluded {len(extra_bad)} firmware packages.")
+
         except Exception as e:
             bb.fatal(f"Failed to enforce firmware exclusion policy: {str(e)}")
 }
