@@ -363,11 +363,20 @@ def check_package_drivers(d, whence_map):
     fw_roots = [os.path.join(d.getVar('nonarch_base_libdir'), 'firmware'), '/usr/lib/firmware', '/lib/firmware']
     image_dir = d.getVar('D')
 
-    # Firmware file to driver mapping
+    # Machine features as defined by the the device repository
+    # firmware to feature mapping is done at meta-balena level
+    # in conf/include/balena-os.inc
+    machine_features = (d.getVar('MACHINE_FEATURES') or "").split()
+    fw_feature_map = d.getVarFlags('LINUX_FIRMWARE_PACKAGES') or {}
+
+    # Firmware file to driver mapping is used
+    # for determining the categories (i.e GPU, Audio, etc)
+    # for each linux-firmware package.
     known_files = []
     for drv, files in whence_map.items():
         for f in files:
-            # Searchable list of files and their associated drivers
+            # Searchable list of firmware files and their associated drivers
+            # as described in WHENCE
             known_files.append((f, drv))
 
     uncategorized_drivers = []
@@ -376,12 +385,13 @@ def check_package_drivers(d, whence_map):
     # All available packages and the size of the files in them
     all_packages_data = {}
 
-    bb.note("\n--- Packages and Drivers Mapping ---")
+    bb.note("\nPackages and Drivers Mapping:")
     for pkg in packages:
-        # Skip license packages
+        # Skip license packages, they are not useful for
+        # categorization
         if pkg in skip_list or "license" in pkg: continue
 
-        # Files included in package, as set in recipe
+        # Files included in package, as set in the linux-firmware recipe(s)
         package_files = d.getVar(f'FILES:{pkg}')
         if not package_files: continue
 
@@ -396,18 +406,22 @@ def check_package_drivers(d, whence_map):
         for pattern in package_files.split():
             clean_p = pattern
 
-            # Strip absolute path for each file path or pattern in package to try match it to the relative one in the WHENCE
+            # Strip absolute path for each file path or pattern in FILES:${PN} and
+            # try match it to the relative path mentioned in WHENCE
             for root in fw_roots:
                 if pattern.startswith(root):
                     # '/lib/firmware/qca/fw.bin' becomes 'qca/fw.bin
                     clean_p = os.path.relpath(pattern, root)
 
+                    # image_dir is ${D}, and this task is run after do_firmware_compression()
                     full_pattern_path = os.path.join(image_dir, pattern.lstrip('/'))
                     dir_to_search = os.path.dirname(full_pattern_path)
                     file_pattern = os.path.basename(full_pattern_path)
 
                     if os.path.exists(dir_to_search):
                         for f_name in os.listdir(dir_to_search):
+                            # linux-firmware bbappend uses * to account for
+                            # compressed firmware in FILES:${PN}
                             if fnmatch.fnmatch(f_name, file_pattern):
                                 f_path = os.path.join(dir_to_search, f_name)
                                 if os.path.isfile(f_path) and not os.path.islink(f_path):
@@ -418,17 +432,65 @@ def check_package_drivers(d, whence_map):
             package_contents.append(clean_p)
 
             # Check if stripped file entry exists in the firmware-to-driver mapping
-            # and if it does, map the package to the driver
+            # and if it does, associate the package to the driver
             for fw_file, driver in known_files:
                 if (fnmatch.fnmatch(fw_file, clean_p) or clean_p in fw_file or fw_file in clean_p):
-                    bb.note(f"Mapping File: {clean_p} (in {pkg}) -> Driver: {driver}")
+                    bb.note(f"Mapping File: {clean_p} (in {pkg}) to driver: {driver}")
                     pkg_drivers.add(driver)
 
         if pkg_drivers:
             if pkg not in all_packages_data:
                 all_packages_data[pkg] = {"categories": set(), "size": pkg_size}
 
+            # Stores every interface supported by this package, i.e 'features_USB'
+            associated_features = []
+
+            for feature_name, package_list_string in fw_feature_map.items():
+                if pkg in package_list_string.split():
+                    associated_features.append(feature_name)
+
+            # Avoid excluding packages added by the BSP.
+            # This check focuses on the packages added by meta-balena
+            # by default
+            has_hardware_support = True
+
+            if associated_features:
+                matching_features = []
+
+                # Check if any of the interfaces supported by this package
+                # is set in MACHINE_FEATURES
+                for f in associated_features:
+                    if f in machine_features:
+                        matching_features.append(f)
+
+                if matching_features:
+                    # At least one interface is set in MACHINE_FEATURES
+                    has_hardware_support = True
+                    bb.note(f"Package {pkg} is essential - supported by: {', '.join(matching_features)}")
+                else:
+                    # MACHINE_FEATURES contains none of the supported interfaces
+                    has_hardware_support = False
+
+            if not has_hardware_support:
+                # Package is mapped to at least one feature, so it is installed by meta-balena. But MACHINE_FEATURES does not include it
+                bb.note(f"Package {pkg} is non-essential: None of its interfaces ({', '.join(associated_features)}) present in MACHINE_FEATURES")
+
+                if pkg not in nonessential_packages:
+                    nonessential_packages[pkg] = set()
+
+                # Include exclusion reason
+                nonessential_packages[pkg].add(f"UnsupportedInterfaces({','.join(associated_features)})")
+
+            elif not associated_features:
+                # Firmware package is not categorized,
+                # which means it is installed by device repository,
+                # not by meta-balena for all devices.
+                # We only filter out packages installed by meta-balena
+                # through hardware mapping
+                bb.note(f"Package {pkg} is not installed by meta-balena for all devices (no hardware interface mapping found)")
+
             bb.note(f"Package: {pkg} (Size: {pkg_size} bytes)")
+
             for drv in sorted(pkg_drivers):
                 category = "Unknown"
                 # Check if the drivers in this package are classified
@@ -467,6 +529,7 @@ def check_package_drivers(d, whence_map):
         bb.utils.mkdirhier(deploy_dir)
 
         if nonessential_packages:
+            # Non essential packages list is used during the final audit of the image manifest
             output_file_nonessential = os.path.join(deploy_dir, "nonessential_firmware.txt")
             with open(output_file_nonessential, 'w') as f:
                 for pkg in sorted(nonessential_packages.keys()):
@@ -474,6 +537,7 @@ def check_package_drivers(d, whence_map):
                     f.write(f"{pkg} : {cats}\n")
 
         # Save the full list of all linux-firmware packages, categories, and their calculated sizes in build_dir/tmp/deploy/images/<dt>/all_firmware_packages.txt
+        # It is used for debugging purposes only
         if all_packages_data:
             output_file_all = os.path.join(deploy_dir, "all_firmware_packages.txt")
             with open(output_file_all, 'w') as f:
@@ -511,7 +575,7 @@ python do_exclude_firmware() {
         bb.fatal("No files matching *WHENCE discovered in ${D}, ${S} or ${WORKDIR}")
         return
 
-    bb.note("--- WHENCE Files used ---")
+    bb.note("WHENCE FILES:")
     for path in final_paths:
         bb.note(f"Found: {path}")
 
@@ -519,4 +583,4 @@ python do_exclude_firmware() {
     check_package_drivers(d, whence_map)
 }
 
-addtask exclude_firmware after firmware_compression before do_package
+addtask exclude_firmware after do_unpack firmware_compression before do_package
