@@ -91,7 +91,7 @@ BALENA_CONFIGS[kexec] = " \
     CONFIG_KEXEC_FILE=y \
     "
 
-BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','','secureboot',d)}"
+BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' secureboot',d)}"
 BALENA_CONFIGS_DEPS[secureboot] = " \
     CONFIG_INTEGRITY_SIGNATURE=y \
     CONFIG_INTEGRITY_ASYMMETRIC_KEYS=y \
@@ -152,6 +152,7 @@ BALENA_CONFIGS[virt] = " \
     CONFIG_VHOST_MENU=n \
     CONFIG_VHOST_NET=n \
     CONFIG_VSOCKETS=n \
+    CONFIG_XEN=n \
     "
 
 # We only need ext4, FAT(32) and the pseudo-filesystems
@@ -394,6 +395,9 @@ BALENA_CONFIGS[media] = " \
     CONFIG_SOUND=n \
     CONFIG_MEDIA_SUPPORT=n \
     CONFIG_DRM=n \
+    CONFIG_FB=n \
+    CONFIG_FB_TFT=n \
+    CONFIG_FRAMEBUFFER_CONSOLE=n \
     "
 
 # NLS is pulled in by ext4
@@ -479,7 +483,6 @@ BALENA_CONFIGS[misc] = " \
     CONFIG_SECURITY_SELINUX=n \
     CONFIG_W1=n \
     CONFIG_RC_CORE=n \
-    CONFIG_FB_TFT=n \
     CONFIG_SSB=n \
     CONFIG_IIO=n \
     CONFIG_UIO=n \
@@ -491,6 +494,9 @@ BALENA_CONFIGS[misc] = " \
     CONFIG_TRACING=n \
     CONFIG_KGDB=n \
     CONFIG_STAGING=n \
+    CONFIG_CORESIGHT=n \
+    CONFIG_REMOTEPROC=n \
+    CONFIG_RPMSG=n \
     "
 
 # We need crypto support to mount LUKS encrypted drives
@@ -503,7 +509,7 @@ BALENA_CONFIGS[crypto] = " \
     "
 
 # shrink size by removing unneeded functionality in balena-bootloader so we have enough space in the boot partition
-BALENA_CONFIGS:append = "shrink_size"
+BALENA_CONFIGS:append = " shrink_size"
 BALENA_CONFIGS[shrink_size] = " \
     CONFIG_CHROME_PLATFORMS=n \
     CONFIG_MFD_CORE=n \
