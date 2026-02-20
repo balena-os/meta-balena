@@ -16,6 +16,8 @@ HOSTAPP_HOOKS = " \
     76-supervisor-db/76-forward_supervisor-db \
     76-supervisor-db/76-fwd_commit_supervisor-db \
     80-rollback \
+    85-os-blocks-extensions/85-after_os-blocks-extensions \
+    85-os-blocks-extensions/85-fwd_commit_os-blocks-extensions \
     "
 
 SECUREBOOT_HOOKS = " \
@@ -28,7 +30,7 @@ SECUREBOOT_HOOK_DIRS = " \
     "
 HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' ${SECUREBOOT_HOOKS}', '', d)}"
 
-HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
+HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db 85-os-blocks-extensions"
 HOSTAPP_HOOKS_DIRS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' ${SECUREBOOT_HOOK_DIRS}', '', d)}"
 
 GRUB_INSTALL_DIR = "${@bb.utils.contains('MACHINE_FEATURES','efi','/EFI/BOOT','/grub',d)}"
@@ -63,6 +65,7 @@ FILES:${PN} += " \
 RDEPENDS:${PN} = " \
     balena \
     dropbear \
+    hostapp-extensions-update \
     openssh-keygen \
     util-linux \
     "

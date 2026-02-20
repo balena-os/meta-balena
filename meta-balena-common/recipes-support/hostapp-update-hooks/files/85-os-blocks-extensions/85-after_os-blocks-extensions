@@ -1,0 +1,57 @@
+#!/bin/sh
+
+#
+# HUP after hook: re-install hostapp extensions tagged with the new kernel version.
+#
+# During a Host OS Update, extensions must be re-installed with the new OS's
+# kernel version label so that mobynit mounts only ABI-compatible extensions
+# after reboot. If rollback occurs, the old kernel boots and mobynit skips
+# the new-kernel extensions automatically.
+#
+
+set -o errexit
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+DURING_UPDATE=${DURING_UPDATE:-0}
+
+if [ "${DURING_UPDATE}" != "1" ]; then
+	exit 0
+fi
+
+# Derive the new rootfs path from HOOKS_DIR.
+# hostapp-update calls us with: --dir "$new_rootfs/etc/hostapp-update-hooks.d/"
+# shellcheck disable=SC2153 # HOOKS_DIR is exported by the hostapp-update-hooks orchestrator
+hooks_dir="${HOOKS_DIR%/}"
+NEW_ROOTFS="${hooks_dir%/etc/hostapp-update-hooks.d}"
+
+if [ -z "${NEW_ROOTFS}" ] || [ ! -d "${NEW_ROOTFS}" ]; then
+	warn "Could not derive new rootfs from HOOKS_DIR=${HOOKS_DIR}"
+	exit 0
+fi
+
+# Read kernel version from the new rootfs
+NEW_KERNEL_VERSION=""
+if [ -d "${NEW_ROOTFS}/lib/modules" ]; then
+	for kdir in "${NEW_ROOTFS}/lib/modules"/[0-9]*; do
+		if [ -d "${kdir}" ]; then
+			# Extract M.m.p, strip local extensions (e.g., "-v8+")
+			NEW_KERNEL_VERSION=$(basename "${kdir}" | cut -d'-' -f1)
+			break
+		fi
+	done
+fi
+
+if [ -z "${NEW_KERNEL_VERSION}" ]; then
+	warn "no kernel version found in ${NEW_ROOTFS}/lib/modules/"
+	exit 0
+fi
+
+info "installing extensions for kernel ${NEW_KERNEL_VERSION}"
+
+# update-hostapp-extensions resolves the extension list itself:
+# config.json hostappExtensions → /etc/hostapp-extensions.conf fallback.
+# We only need to export the new kernel version so containers get the right label.
+export NEW_KERNEL_VERSION
+update-hostapp-extensions

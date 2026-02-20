@@ -1,0 +1,17 @@
+#!/bin/sh
+
+#
+# HUP commit hook: clean up old-kernel extension containers.
+#
+# Runs after rollback-health confirms the new OS is healthy.
+# By this point the rollback-health-breadcrumb is gone, so
+# update-hostapp-extensions will remove kernel-mismatched containers.
+#
+
+set -o errexit
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+info "cleaning up old-kernel extensions"
+update-hostapp-extensions
