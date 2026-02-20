@@ -1,4 +1,41 @@
 - commits:
+    - subject: "balena-bootloader.bbclass: disable more unnecessary drivers"
+      hash: 1f51bdc9c52ea9ea9207d90f00db581b797409ad
+      body: |
+        Some device types are tight on storage and the balena bootloader is one
+        of the cheaper places to save space.
+
+        This patch is just another round of disabling unnecessary drivers,
+        depending on the device type this one should shrink the resulting
+        kernel binary by 300-500kB.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+    - subject: "balena-bootloader.bbclass: add spaces to BALENA_CONFIGS appends"
+      hash: e807ca5c1f055234bb8750e9f21bb5c2ea3eef26
+      body: |
+        At this moment `secureboot` and `shrink_size` sections are appended
+        to BALENA_CONFIGS without spaces, so if both are enabled at the same
+        time, they merge into `securebootshrink_size`, effectively disabling
+        both.
+
+        This patch adds a space before each append so that both are treated
+        as standalone sections.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.11.3
+  title: ""
+  date: 2026-02-20T06:15:21.216Z
+- commits:
     - subject: "tests:modem: Disable for kontron-come-xelx"
       hash: ee77d4f792c0a4eb397b4ee084bce9fd64398fcd
       body: |

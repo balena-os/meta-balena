@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.11.3
+## (2026-02-20)
+
+* balena-bootloader.bbclass: disable more unnecessary drivers [Michal Toman]
+* balena-bootloader.bbclass: add spaces to BALENA_CONFIGS appends [Michal Toman]
+
 # v6.11.2
 ## (2026-02-18)
 
