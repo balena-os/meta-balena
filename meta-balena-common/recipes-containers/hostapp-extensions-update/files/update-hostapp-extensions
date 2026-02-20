@@ -10,6 +10,7 @@ export DOCKER_HOST="unix:///var/run/balena-engine.sock"
 BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
 BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
 BALENA_HOSTAPP_EXTENSIONS_DEFAULT="/etc/hostapp-extensions.conf"
+KERNEL_VERSION_LABEL="io.balena.image.kernel-version"
 DOCKER_OVERLAY_ROOT="/var/lib/docker/overlay2/"
 
 # Track registries we've authenticated to (avoid duplicate logins)
@@ -260,6 +261,9 @@ for hostext in ${target_hostext_images}; do
 	fi
 done
 
+# Target kernel version: NEW_KERNEL_VERSION (from HUP hook) or running kernel
+kernel_version="${NEW_KERNEL_VERSION:-$(uname -r | cut -d'-' -f1)}"
+
 info "Removing previous hostapp extensions"
 
 # Resolve target image IDs for content-based comparison.
@@ -277,22 +281,31 @@ done
 # Remove containers not in the target list. Iterate over containers directly
 for cid in $(${DOCKER} ps --all --quiet --no-trunc --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
 	imagetag=$(${DOCKER} inspect "${cid}" --format='{{.Config.Image}}' 2>/dev/null)
-	# Check by tag string
-	case " ${target_hostext_images} " in
-		*" ${imagetag} "*)
-			info " - Preserving $imagetag"
-			continue
-			;;
-	esac
-	# Check by image content ID (handles tag mismatches for same image)
-	container_image_id=$(${DOCKER} inspect "${cid}" --format='{{.Image}}' 2>/dev/null) || container_image_id=""
-	if [ -n "${container_image_id}" ] && [ -n "${target_image_ids}" ]; then
-		case " ${target_image_ids} " in
-			*" ${container_image_id} "*)
-				info " - Preserving $imagetag (matching image content)"
+	# Remove containers with mismatched kernel version label, but only after
+	# rollback-health has confirmed the new OS. While the breadcrumb exists,
+	# old-kernel containers are preserved for rollback safety.
+	cid_kver=$(${DOCKER} inspect --format '{{ index .Config.Labels "'"${KERNEL_VERSION_LABEL}"'" }}' "${cid}" 2>/dev/null) || cid_kver=""
+	if [ -n "${cid_kver}" ] && [ "${cid_kver}" != "${kernel_version}" ] \
+	   && [ ! -f /mnt/state/rollback-health-breadcrumb ]; then
+		info " - Removing $imagetag (kernel ${cid_kver} != ${kernel_version})"
+	else
+		# Check by tag string
+		case " ${target_hostext_images} " in
+			*" ${imagetag} "*)
+				info " - Preserving $imagetag"
 				continue
 				;;
 		esac
+		# Check by image content ID (handles tag mismatches for same image)
+		container_image_id=$(${DOCKER} inspect "${cid}" --format='{{.Image}}' 2>/dev/null) || container_image_id=""
+		if [ -n "${container_image_id}" ] && [ -n "${target_image_ids}" ]; then
+			case " ${target_image_ids} " in
+				*" ${container_image_id} "*)
+					info " - Preserving $imagetag (matching image content)"
+					continue
+					;;
+			esac
+		fi
 	fi
 	if is_mounted_in_root_overlay "${cid}"; then
 		info " - ${imagetag} mounted in root overlay, deferring cleanup to reboot"
@@ -317,10 +330,20 @@ if [ -n "${target_hostext_images}" ]; then
 		info " - ${hostext}"
 		imageid=$(resolve_image_id "${hostext}")
 
-		# Check if container already exists for this image
+		# Check if container already exists for this image with matching kernel
 		if [ -n "${imageid}" ]; then
-			container_exists=$(${DOCKER} ps --all --quiet --filter ancestor="${imageid}" | head -1)
-			if [ -n "${container_exists}" ] && ! is_container_dead "${container_exists}"; then
+			container_exists=""
+			for ecid in $(${DOCKER} ps --all --quiet --filter ancestor="${imageid}"); do
+				if is_container_dead "${ecid}"; then
+					continue
+				fi
+				ecid_kver=$(${DOCKER} inspect --format '{{ index .Config.Labels "'"${KERNEL_VERSION_LABEL}"'" }}' "${ecid}" 2>/dev/null) || ecid_kver=""
+				if [ -z "${ecid_kver}" ] || [ "${ecid_kver}" = "${kernel_version}" ]; then
+					container_exists="${ecid}"
+					break
+				fi
+			done
+			if [ -n "${container_exists}" ]; then
 				info "   - already installed"
 				update_current_host_extensions
 				continue
@@ -337,6 +360,7 @@ if [ -n "${target_hostext_images}" ]; then
 
 		# Build label arguments and create container
 		label_args="--label ${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"
+		label_args="${label_args} --label ${KERNEL_VERSION_LABEL}=${kernel_version}"
 		if [ -n "${extra_labels}" ]; then
 			for label in $(echo "${extra_labels}" | tr ',' ' '); do
 				label_args="${label_args} --label ${label}"
