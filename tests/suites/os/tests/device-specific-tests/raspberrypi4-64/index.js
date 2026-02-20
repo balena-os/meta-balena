@@ -69,30 +69,30 @@ const listFirmware = async (context, link, volumePath) => {
   return output.trim().split('\n').filter((l) => l.length > 0);
 };
 
-// Deploy a firmware binary to /mnt/boot as pieeprom.upd + generate pieeprom.sig
+// Deploy a firmware binary to /mnt/boot as pieeprom.bin + generate pieeprom.sig
 const deployFirmwareToBootPartition = async (context, link, test, firmwarePath) => {
   test.comment(`Deploying firmware: ${firmwarePath}`);
   await context
     .get()
     .worker.executeCommandInHostOS(
-      `cp ${firmwarePath} /mnt/boot/pieeprom.upd`,
+      `cp ${firmwarePath} /mnt/boot/pieeprom.bin`,
       link,
     );
   // Generate the self-update signature (sha256 + timestamp)
   await context
     .get()
     .worker.executeCommandInHostOS(
-      `sha256sum /mnt/boot/pieeprom.upd | awk '{print $1}' > /mnt/boot/pieeprom.sig && echo "ts: $(date -u +%s)" >> /mnt/boot/pieeprom.sig`,
+      `sha256sum /mnt/boot/pieeprom.bin | awk '{print $1}' > /mnt/boot/pieeprom.sig && echo "ts: $(date -u +%s)" >> /mnt/boot/pieeprom.sig`,
       link,
     );
   // Verify files exist
   const exists = await context
     .get()
     .worker.executeCommandInHostOS(
-      `test -f /mnt/boot/pieeprom.upd && test -f /mnt/boot/pieeprom.sig && echo ok || echo missing`,
+      `test -f /mnt/boot/pieeprom.bin && test -f /mnt/boot/pieeprom.sig && echo ok || echo missing`,
       link,
     );
-  test.is(exists.trim(), 'ok', 'pieeprom.upd and pieeprom.sig should exist on boot partition');
+  test.is(exists.trim(), 'ok', 'pieeprom.bin and pieeprom.sig should exist on boot partition');
 };
 
 // Extract BUILD_TIMESTAMP from a firmware binary
@@ -121,7 +121,7 @@ const findDifferentFirmware = async (context, link, test, firmwareList, currentV
 };
 
 // Force an EEPROM update via flashrom
-const runForcedEepromUpdateViaFlashrom = async (context, link, image = 'pieeprom.upd') => {
+const runForcedEepromUpdateViaFlashrom = async (context, link, image = 'pieeprom.bin') => {
   return (await context
     .get()
     .worker.executeCommandInHostOS(
