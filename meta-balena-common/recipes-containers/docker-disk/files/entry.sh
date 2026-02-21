@@ -52,6 +52,7 @@ fi
 # Pull in host extension images via API resolution
 BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
 BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
+: > ${BUILD}/hostext-images
 for ref in ${HOSTEXT_IMAGES}; do
 	echo "Resolving ${ref}..."
 	image_url=$(balena_api_resolve_fleet_image "${ref}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
@@ -66,6 +67,7 @@ for ref in ${HOSTEXT_IMAGES}; do
 		tag=$(echo "${ref}" | tr '+' '_')
 		docker tag "${image_url}" "${tag}"
 		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}" "${tag}" none
+		echo "${image_url}" >> ${BUILD}/hostext-images
 	else
 		echo "Failed to pull ${ref}"
 		exit 1

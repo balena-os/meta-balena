@@ -74,9 +74,9 @@ do_compile () {
 
 do_install () {
 	install -d ${D}${sysconfdir}
-	for image in "${HOSTEXT_IMAGES}"; do
-		echo "${image}" >> ${D}${sysconfdir}/hostapp-extensions.conf
-	done
+	if [ -f "${B}/hostext-images" ] && [ -s "${B}/hostext-images" ]; then
+		install -m 644 ${B}/hostext-images ${D}${sysconfdir}/hostapp-extensions.conf
+	fi
 }
 
 FILES:${PN} += "/etc/hostapp-extensions.conf"
