@@ -40,7 +40,7 @@ CORE_CONNECTIVITY_FIRMWARES = " \
 
 # Firmware packages which are used by
 # wifi modules with an M.2 interface
-LINUX_FIRMWARE_PACKAGES[features_M2] ?= " \
+LINUX_FIRMWARE_PACKAGES[pci] ?= " \
     linux-firmware-iwlwifi-9260 \
     linux-firmware-iwlwifi-3160 \
     linux-firmware-iwlwifi-7260 \
@@ -60,14 +60,14 @@ LINUX_FIRMWARE_PACKAGES[features_M2] ?= " \
 # Firmware packages used by wifi modules
 # that use SDIO or UART. The wifi chip
 # usually comes soldered in this case.
-LINUX_FIRMWARE_PACKAGES[features_SDIO_UART_wifi] ?= " \
+LINUX_FIRMWARE_PACKAGES[sdio] ?= " \
     linux-firmware-iwlwifi-8265 \
     linux-firmware-rtl8723 \
 "
 
 # Firmware packages for modules which use a
 # Half MINI PCIE interface
-LINUX_FIRMWARE_PACKAGES[features_HMC] ?= " \
+LINUX_FIRMWARE_PACKAGES[pci] ?= " \
     linux-firmware-iwlwifi-6000-4 \
     linux-firmware-iwlwifi-6000g2a-6 \
     linux-firmware-iwlwifi-6000g2b-6 \
@@ -78,7 +78,7 @@ LINUX_FIRMWARE_PACKAGES[features_HMC] ?= " \
 "
 
 # Firmware packages for USB wifi dongles
-LINUX_FIRMWARE_PACKAGES[features_USB] ?= " \
+LINUX_FIRMWARE_PACKAGES[usbhost] ?= " \
     linux-firmware-ath9k \
     linux-firmware-rtl8723 \
     linux-firmware-ralink \
@@ -89,12 +89,12 @@ LINUX_FIRMWARE_PACKAGES[features_USB] ?= " \
 "
 
 # Firmware packages for PCIE Wifi adapters
-LINUX_FIRMWARE_PACKAGES[features_PCIE] ?= " \
+LINUX_FIRMWARE_PACKAGES[pci] ?= " \
     linux-firmware-ath9k  \
 "
 
 # Firmware packages for mini PCIE Wifi adapters
-LINUX_FIRMWARE_PACKAGES[features_MINI_PCIE] ?= " \
+LINUX_FIRMWARE_PACKAGES[pci] ?= " \
     linux-firmware-ath9k \
     linux-firmware-ralink \
 "
@@ -118,7 +118,7 @@ LINUX_FIRMWARE_PACKAGES[features_TI_WiLink_6_7] ?= " \
 # found in USB dongles. Has been discontinued
 # since 2012 and can only be purchased from
 # pulled parts.
-LINUX_FIRMWARE_PACKAGES[features_blacklisted] ?= " \
+LINUX_FIRMWARE_PACKAGES[rtl8192su] ?= " \
     linux-firmware-rtl8192su \
 "
 
