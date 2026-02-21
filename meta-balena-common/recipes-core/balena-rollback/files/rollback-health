@@ -37,10 +37,13 @@ run_hooks_from_inactive () {
 	mount -o bind /dev "${old_rootfs}/dev"
 	mount --bind /mnt/boot/ "${old_rootfs}/mnt/boot/"
 	mount --bind /mnt/state/ "${old_rootfs}/mnt/state/"
+	mount --bind /mnt/data/ "${old_rootfs}/mnt/data/"
 	mount --bind /mnt/sysroot/ "${old_rootfs}/mnt/sysroot/"
 	mount --bind /mnt/sysroot/active/ "${old_rootfs}/mnt/sysroot/active/"
 	mount --bind /mnt/sysroot/inactive/ "${old_rootfs}/mnt/sysroot/inactive/"
 	mount -t sysfs sysfs "${old_rootfs}/sys/"
+	mount -t tmpfs tmpfs "${old_rootfs}/tmp/"
+	mount -t tmpfs tmpfs "${old_rootfs}/var/cache/"
 
 	# Allow old OS hooks to access efivars
 	if [ -d /sys/firmware/efi/efivars ]; then
