@@ -44,19 +44,46 @@ do
 done
 echo "Docker started."
 
-# Pull in host extension images
-BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
-for image_name in ${HOSTEXT_IMAGES}; do
-	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
-		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${image_name}" none
+# Authenticate with balena registry for private images
+if [ -n "${HOSTEXT_IMAGES}" ] && [ -n "${BALENA_API_TOKEN}" ]; then
+	balena_api_registry_login "${BALENA_API_ENV}" "${BALENA_API_TOKEN}" || true
+fi
+
+# Pull in host extension images via API resolution
+BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
+BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
+: > ${BUILD}/hostext-images
+for ref in ${HOSTEXT_IMAGES}; do
+	echo "Resolving ${ref}..."
+	image_url=$(balena_api_resolve_fleet_image "${ref}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
+	if [ -z "${image_url}" ]; then
+		echo "Failed to resolve ${ref}"
+		exit 1
+	fi
+
+	echo "Pulling ${image_url}..."
+	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_url}"; then
+		# Tag with sanitized reference for traceability (+ is invalid in Docker tags)
+		tag=$(echo "${ref}" | tr '+' '_')
+		docker tag "${image_url}" "${tag}"
+		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}" "${tag}" none
+		echo "${image_url}" >> ${BUILD}/hostext-images
 	else
-		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
+		echo "Failed to pull ${ref}"
 		exit 1
 	fi
 done
 
 # Pull in the supervisor image as a separate app until it converges in the hostOS
-if [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
+if [ -n "${SUPERVISOR_IMAGE_NAME:-}" ]; then
+	echo "Pulling supervisor override: ${SUPERVISOR_IMAGE_NAME}"
+	if docker pull "${SUPERVISOR_IMAGE_NAME}"; then
+		docker tag "${SUPERVISOR_IMAGE_NAME}" "balena_supervisor":"${SUPERVISOR_VERSION}"
+	else
+		echo "Not able to pull ${SUPERVISOR_IMAGE_NAME}"
+		exit 1
+	fi
+elif [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
 	_supervisor_image=$(balena_api_fetch_image_from_app "${SUPERVISOR_FLEET}" "${SUPERVISOR_VERSION#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
 	echo "Pulling ${SUPERVISOR_FLEET}:${SUPERVISOR_VERSION}"
 	if docker pull "${_supervisor_image}"; then
@@ -72,6 +99,21 @@ echo "Stopping docker..."
 kill -TERM "$(cat /var/run/docker.pid)"
 # don't let wait() error out and crash the build if the docker daemon has already been stopped
 wait "$(cat /var/run/docker.pid)" || true
+
+# Calculate partition size based on actual content
+CONTENT_SIZE_MB=$(du -sm ${DATA_VOLUME} | awk '{print $1}')
+# Add 20% padding for filesystem overhead, minimum 64 MB padding
+PADDING_MB=$(( CONTENT_SIZE_MB / 5 ))
+[ ${PADDING_MB} -lt 64 ] && PADDING_MB=64
+CALCULATED_SIZE=$(( CONTENT_SIZE_MB + PADDING_MB ))
+
+# Use larger of calculated size or configured PARTITION_SIZE
+if [ ${CALCULATED_SIZE} -gt ${PARTITION_SIZE} ]; then
+    echo "Auto-sizing partition: ${CONTENT_SIZE_MB} MB content + ${PADDING_MB} MB padding = ${CALCULATED_SIZE} MB"
+    PARTITION_SIZE=${CALCULATED_SIZE}
+else
+    echo "Using configured partition size: ${PARTITION_SIZE} MB (content: ${CONTENT_SIZE_MB} MB)"
+fi
 
 # Export the final data filesystem
 dd if=/dev/zero of=${BUILD}/resin-data.img bs=1M count=0 seek="${PARTITION_SIZE}"

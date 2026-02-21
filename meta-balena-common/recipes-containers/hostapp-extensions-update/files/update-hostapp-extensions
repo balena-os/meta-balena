@@ -2,27 +2,39 @@
 
 set -e
 
+export DOCKER_HOST="unix:///var/run/balena-engine.sock"
+
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 
-BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
+BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
+BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
 BALENA_HOSTAPP_EXTENSIONS_DEFAULT="/etc/hostapp-extensions.conf"
+KERNEL_VERSION_LABEL="io.balena.image.kernel-version"
 DOCKER_OVERLAY_ROOT="/var/lib/docker/overlay2/"
 
-readonly script_name=$(basename "${0}")
+# Track registries we've authenticated to (avoid duplicate logins)
+authenticated_registries=""
+
+script_name="$(basename "$0")"
+readonly script_name
 usage() {
 	cat <<EOF
 Usage: ${script_name} [OPTIONS]
 	-t Space separated list of repository tags for hostapp extension containers
+	-l Additional labels to apply (comma-separated key=value pairs)
 	-r Reboot after update
 EOF
 	exit 0
 }
 
-while getopts 'hrt:' flag; do
+extra_labels=""
+
+while getopts 'hrt:l:' flag; do
 	case "${flag}" in
 	r) reboot=1 ;;
 	t) target_hostext_images="${OPTARG}" ;;
+	l) extra_labels="${OPTARG}" ;;
 	h) usage ;;
 	*) error "Unexpected option ${flag}" ;;
 	esac
@@ -34,16 +46,18 @@ shift $#
 # shellcheck disable=SC1091
 . /usr/sbin/balena-config-vars
 
+# shellcheck disable=SC2317 # Called via trap
 error_handler() {
 	# shellcheck disable=SC2181
 	[ $? -eq 0 ] && exit 0
-
 	exit 1
 }
 
 trap error_handler EXIT
 
 current_hostext_images=""
+install_failed=0
+
 update_current_host_extensions() {
 	if [ -z "${current_hostext_images}" ]; then
 		current_hostext_images="${hostext}"
@@ -55,11 +69,125 @@ update_current_host_extensions() {
 umount_merged() {
 	mergeddir=$(${DOCKER} inspect -f '{{.GraphDriver.Data.MergedDir}}' "${1}" 2> /dev/null) || mergeddir=""
 	if [ -n "${mergeddir}" ]; then
-		mergeddir=${mergeddir#${DOCKER_OVERLAY_ROOT}}
+		mergeddir=${mergeddir#"${DOCKER_OVERLAY_ROOT}"}
 		overlay=$(findmnt --noheadings --canonicalize  -t overlay -l -o TARGET | grep "${mergeddir}" || true)
 		if [ -n "${overlay}" ]; then
 			umount -l "${overlay}" || true
 		fi
+	fi
+}
+
+# Check if a container is dead (failed removal)
+# Returns 0 if dead, 1 otherwise
+is_container_dead() {
+	cid="$1"
+	dead=$(${DOCKER} inspect --format '{{.State.Dead}}' "${cid}" 2>/dev/null) || dead="false"
+	[ "${dead}" = "true" ]
+}
+
+# Check if a container's overlay is part of the root overlay stack
+# Returns 0 if mounted as lowerdir of /, 1 otherwise
+is_mounted_in_root_overlay() {
+	cid="$1"
+	mergeddir=$(${DOCKER} inspect -f '{{.GraphDriver.Data.MergedDir}}' "${cid}" 2>/dev/null) || return 1
+	[ -z "${mergeddir}" ] && return 1
+	mergeddir=${mergeddir#"${DOCKER_OVERLAY_ROOT}"}
+
+	# Check if this path appears in the root overlay mount options
+	root_mount=$(findmnt -n -o OPTIONS / 2>/dev/null) || return 1
+	case "${root_mount}" in
+		*"${mergeddir}"*) return 0 ;;
+		*) return 1 ;;
+	esac
+}
+
+# Extract the @sha256:... digest from an image reference
+# e.g., "registry.com/v2/abc@sha256:15ba80..." → "sha256:15ba80..."
+# Returns empty if no digest is present.
+get_image_digest() {
+	image="$1"
+	case "${image}" in
+		*@sha256:*) echo "${image##*@}" ;;
+		*) echo "" ;;
+	esac
+}
+
+# Resolve a target image to its local docker image ID.
+# Tries direct inspect first, then falls back to digest matching
+# against locally available images.
+resolve_image_id() {
+	image="$1"
+	# Try direct reference first
+	iid=$(${DOCKER} inspect -f '{{.Id}}' "${image}" 2>/dev/null) || iid=""
+	if [ -n "${iid}" ]; then
+		echo "${iid}"
+		return
+	fi
+	# Fall back to digest matching
+	digest=$(get_image_digest "${image}")
+	if [ -n "${digest}" ]; then
+		${DOCKER} images --digests --format '{{.Digest}} {{.ID}}' \
+			| awk -v d="${digest}" '$1 == d {print $2; exit}'
+	fi
+}
+
+# Extract registry from image name
+# e.g., "registry2.balena-cloud.com/v2/abc123" -> "registry2.balena-cloud.com"
+# e.g., "myregistry.io/org/image:tag" -> "myregistry.io"
+# Returns empty for Docker Hub images (no registry prefix)
+get_registry() {
+	image="$1"
+	# Check if image has a registry (contains a dot before the first slash)
+	case "${image}" in
+		*.*/*)
+			# Has registry - extract it (everything before the first slash)
+			echo "${image%%/*}"
+			;;
+		*)
+			# No registry prefix (Docker Hub or local)
+			echo ""
+			;;
+	esac
+}
+
+# Check if a registry is configured as insecure in daemon.json
+# Returns 0 (true) if insecure, 1 (false) otherwise
+is_insecure_registry() {
+	registry="$1"
+	[ -z "${registry}" ] && return 1
+	if [ -f /etc/docker/daemon.json ]; then
+		grep -q "\"${registry}\"" /etc/docker/daemon.json 2>/dev/null && return 0
+	fi
+	return 1
+}
+
+# Login to registry using device credentials
+# Uses UUID and DEVICE_API_KEY from balena-config-vars
+registry_login() {
+	registry="$1"
+	[ -z "${registry}" ] && return 0
+
+	# Check if already authenticated to this registry
+	case " ${authenticated_registries} " in
+		*" ${registry} "*)
+			return 0
+			;;
+	esac
+
+	# Need device credentials for authentication
+	if [ -z "${UUID}" ] || [ -z "${DEVICE_API_KEY}" ]; then
+		warn "Device credentials not available, skipping registry login"
+		return 1
+	fi
+
+	# Login using device credentials
+	if echo "${DEVICE_API_KEY}" | ${DOCKER} login "${registry}" -u "${UUID}" --password-stdin > /dev/null 2>&1; then
+		authenticated_registries="${authenticated_registries} ${registry}"
+		info "Authenticated to ${registry}"
+		return 0
+	else
+		warn "Failed to authenticate to ${registry}"
+		return 1
 	fi
 }
 
@@ -92,65 +220,159 @@ elif which rce > /dev/null 2>&1; then
 elif which balena > /dev/null 2>&1; then
     DOCKER=balena
 else
-    error "No container engine detected."
-    error_handler "no container engine detected"
+    fail "No container engine detected."
 fi
+
+# Clean up dead containers from previous failed removals.
+# Dead containers are left behind when removal is attempted while the overlay
+# is mounted in the root filesystem. After reboot, mobynit skips them so they
+# are no longer mounted and can be safely removed.
+for cid in $(${DOCKER} ps --all --quiet --no-trunc --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
+	if is_container_dead "${cid}"; then
+		imagetag=$(${DOCKER} inspect "${cid}" --format='{{.Config.Image}}' 2>/dev/null) || imagetag="${cid}"
+		info "Cleaning up dead container: ${imagetag}"
+		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
+	fi
+done
 
 # Verify targets
 for hostext in ${target_hostext_images}; do
-	imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
+	imageid=$(resolve_image_id "${hostext}")
 	if [ -n "${imageid}" ]; then
 		continue
 	fi
 
-	if ! DOCKER_CLI_EXPERIMENTAL=enabled ${DOCKER} manifest inspect "${hostext}"  > /dev/null 2>&1; then
+	# Authenticate to registry before checking remote availability
+	registry=$(get_registry "${hostext}")
+	if [ -n "${registry}" ]; then
+		registry_login "${registry}" || true
+	fi
+
+	# Use --insecure flag for registries configured in insecure-registries
+	insecure_flag=""
+	if is_insecure_registry "${registry}"; then
+		insecure_flag="--insecure"
+	fi
+
+	# shellcheck disable=SC2086
+	if ! DOCKER_CLI_EXPERIMENTAL=enabled ${DOCKER} manifest inspect ${insecure_flag} "${hostext}" > /dev/null 2>&1; then
 		error "${hostext} not found in repository - bailing out with no action taken."
 		exit 1
 	fi
 done
 
+# Target kernel version: NEW_KERNEL_VERSION (from HUP hook) or running kernel
+kernel_version="${NEW_KERNEL_VERSION:-$(uname -r | cut -d'-' -f1)}"
+
 info "Removing previous hostapp extensions"
 
-for image in $(${DOCKER} images --all --quiet --filter label="${BALENA_HOSTAPP_EXTENSIONS_FEATURE}"); do
-	imagetag=$(${DOCKER} inspect "${image}" --format='{{index .RepoTags 0}}' 2>/dev/null)
-	cids=$(${DOCKER} ps --all --quiet --no-trunc --filter ancestor="${image}" | tr '\n' ' ')
-	case "${target_hostext_images}" in
-		*${imagetag}*)
-			# If no container use the image do not preserve it
-			if [ -n "${cids}" ]; then
+# Resolve target image IDs for content-based comparison.
+# This handles the case where a preloaded container uses a different tag
+# (e.g., local tag) than the target reference (e.g., registry URL with digest)
+# but both point to the same image content.
+target_image_ids=""
+for hostext in ${target_hostext_images}; do
+	tid=$(resolve_image_id "${hostext}")
+	if [ -n "${tid}" ]; then
+		target_image_ids="${target_image_ids} ${tid}"
+	fi
+done
+
+# Remove containers not in the target list. Iterate over containers directly
+for cid in $(${DOCKER} ps --all --quiet --no-trunc --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
+	imagetag=$(${DOCKER} inspect "${cid}" --format='{{.Config.Image}}' 2>/dev/null)
+	# Remove containers with mismatched kernel version label, but only after
+	# rollback-health has confirmed the new OS. While the breadcrumb exists,
+	# old-kernel containers are preserved for rollback safety.
+	cid_kver=$(${DOCKER} inspect --format '{{ index .Config.Labels "'"${KERNEL_VERSION_LABEL}"'" }}' "${cid}" 2>/dev/null) || cid_kver=""
+	if [ -n "${cid_kver}" ] && [ "${cid_kver}" != "${kernel_version}" ] \
+	   && [ ! -f /mnt/state/rollback-health-breadcrumb ]; then
+		info " - Removing $imagetag (kernel ${cid_kver} != ${kernel_version})"
+	else
+		# Check by tag string
+		case " ${target_hostext_images} " in
+			*" ${imagetag} "*)
 				info " - Preserving $imagetag"
 				continue
-			fi
-			;;
-	esac
-	for cid in ${cids}; do
+				;;
+		esac
+		# Check by image content ID (handles tag mismatches for same image)
+		container_image_id=$(${DOCKER} inspect "${cid}" --format='{{.Image}}' 2>/dev/null) || container_image_id=""
+		if [ -n "${container_image_id}" ] && [ -n "${target_image_ids}" ]; then
+			case " ${target_image_ids} " in
+				*" ${container_image_id} "*)
+					info " - Preserving $imagetag (matching image content)"
+					continue
+					;;
+			esac
+		fi
+	fi
+	if is_mounted_in_root_overlay "${cid}"; then
+		info " - ${imagetag} mounted in root overlay, deferring cleanup to reboot"
+		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
+	else
 		umount_merged "${cid}"
 		${DOCKER} rm --force --volumes "${cid}" > /dev/null 2>&1 || true
-	done
-	${DOCKER} rmi --force "$image" > /dev/null 2>&1 || true
+	fi
+done
+
+# Clean up extension images no longer used by any container
+for image in $(${DOCKER} images --all --quiet --filter "label=${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"); do
+	cids=$(${DOCKER} ps --all --quiet --filter ancestor="${image}" | head -1)
+	if [ -z "${cids}" ]; then
+		${DOCKER} rmi --force "$image" > /dev/null 2>&1 || true
+	fi
 done
 
 if [ -n "${target_hostext_images}" ]; then
 	info "Installing new hostapp extensions:"
 	for hostext in ${target_hostext_images}; do
 		info " - ${hostext}"
-		imageid=$(${DOCKER} inspect -f '{{.Id}}' "${hostext}" 2> /dev/null) || imageid=""
-		if [ -n "${imageid}" ]; then
-			info "   - already installed"
-			update_current_host_extensions
-			continue
-		fi
+		imageid=$(resolve_image_id "${hostext}")
 
-		if ! ${DOCKER} pull "${hostext}"  > /dev/null 2>&1; then
-			error "   - failed to install"
-			break
+		# Check if container already exists for this image with matching kernel
+		if [ -n "${imageid}" ]; then
+			container_exists=""
+			for ecid in $(${DOCKER} ps --all --quiet --filter ancestor="${imageid}"); do
+				if is_container_dead "${ecid}"; then
+					continue
+				fi
+				ecid_kver=$(${DOCKER} inspect --format '{{ index .Config.Labels "'"${KERNEL_VERSION_LABEL}"'" }}' "${ecid}" 2>/dev/null) || ecid_kver=""
+				if [ -z "${ecid_kver}" ] || [ "${ecid_kver}" = "${kernel_version}" ]; then
+					container_exists="${ecid}"
+					break
+				fi
+			done
+			if [ -n "${container_exists}" ]; then
+				info "   - already installed"
+				update_current_host_extensions
+				continue
+			fi
+			info "   - image exists, creating container"
 		else
-			if ! ${DOCKER} create --runtime="bare" --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${hostext}" none  > /dev/null 2>&1; then
-				error "   - failed to spawn"
+			# Image doesn't exist locally, need to pull
+			if ! ${DOCKER} pull "${hostext}" > /dev/null 2>&1; then
+				error "   - failed to pull"
+				install_failed=1
 				break
 			fi
-			update_current_host_extensions
 		fi
+
+		# Build label arguments and create container
+		label_args="--label ${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}"
+		label_args="${label_args} --label ${KERNEL_VERSION_LABEL}=${kernel_version}"
+		if [ -n "${extra_labels}" ]; then
+			for label in $(echo "${extra_labels}" | tr ',' ' '); do
+				label_args="${label_args} --label ${label}"
+			done
+		fi
+		# shellcheck disable=SC2086
+		if ! ${DOCKER} create --runtime="bare" ${label_args} "${hostext}" none > /dev/null 2>&1; then
+			error "   - failed to create container"
+			install_failed=1
+			break
+		fi
+		update_current_host_extensions
 		info "   - done"
 	done
 fi
@@ -182,6 +404,10 @@ if [ -n "${current_hostext_images}" ]; then
 	fi
 else
 	info "Nothing else to do"
+fi
+
+if [ "${install_failed}" -eq 1 ]; then
+	exit 1
 fi
 
 exit 0

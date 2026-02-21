@@ -61,6 +61,7 @@ do_compile () {
 		-e USER_ID=$(id -u) -e USER_GID=$(id -u) \
 		-e SUPERVISOR_FLEET="${SUPERVISOR_FLEET}" \
 		-e SUPERVISOR_VERSION="${SUPERVISOR_VERSION}" \
+		-e SUPERVISOR_IMAGE_NAME="${SUPERVISOR_IMAGE_NAME}" \
 		-e HOSTEXT_IMAGES="${HOSTEXT_IMAGES}" \
 		-e HOSTAPP_PLATFORM="${HOSTAPP_PLATFORM}" \
 		-e BALENA_API_ENV="${BALENA_API_ENV}" \
@@ -74,9 +75,9 @@ do_compile () {
 
 do_install () {
 	install -d ${D}${sysconfdir}
-	for image in "${HOSTEXT_IMAGES}"; do
-		echo "${image}" >> ${D}${sysconfdir}/hostapp-extensions.conf
-	done
+	if [ -f "${B}/hostext-images" ] && [ -s "${B}/hostext-images" ]; then
+		install -m 644 ${B}/hostext-images ${D}${sysconfdir}/hostapp-extensions.conf
+	fi
 }
 
 FILES:${PN} += "/etc/hostapp-extensions.conf"
