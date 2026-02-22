@@ -13,6 +13,7 @@ PACKAGE_INSTALL = " \
     initramfs-module-fsuuidsinit \
     initramfs-module-prepare \
     initramfs-module-fsck \
+    initramfs-module-growroot \
     initramfs-module-machineid \
     initramfs-module-recovery \
     initramfs-module-migrate \
