@@ -384,10 +384,15 @@ IMAGE_CMD:balenaos-img () {
 # partition
 do_rootfs[vardeps] += "BALENA_BOOT_PARTITION_FILES"
 
+do_image_docker[depends] = " \
+    docker-tag-native:do_populate_sysroot \
+    "
+
 # XXX(petrosagg): This should be eventually implemented using a docker-native daemon
 IMAGE_CMD:docker () {
     DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=${BALENA_API_VERSION} docker import -)
     DOCKER_API_VERSION=${BALENA_API_VERSION} docker save ${DOCKER_IMAGE} > ${BALENA_DOCKER_IMG}
+    docker-tag-native "${DOCKER_IMAGE}" "${MACHINE}" "${IMAGE_BASENAME}"
 }
 
 IMAGE_TYPEDEP:hostapp-ext4 = "docker"
