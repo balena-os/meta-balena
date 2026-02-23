@@ -267,6 +267,17 @@ do_resin_boot_dirgen_and_deploy () {
 }
 do_resin_boot_dirgen_and_deploy[depends] += "${@bb.utils.contains_any('BALENA_IMAGE_BOOTLOADER', 'grub grub-efi', 'grub-conf:do_deploy', '', d)}"
 
+# If ephemeral GPG keys were created during build, remove them as everything should be signed by now
+remove_gpghome() {
+    GPGHOME="${DEPLOY_DIR_IMAGE}/gpghome"
+    if [ ! -d "${GPGHOME}" ]; then
+        return
+    fi
+
+    gpgconf --homedir "${GPGHOME}" --kill gpg-agent || :
+    rm -rf "${GPGHOME}"
+}
+
 QUIRK_FILES ?= " \
     etc/hosts \
     etc/resolv.conf \
@@ -381,6 +392,7 @@ ROOTFS_POSTPROCESS_COMMAND += " \
     resin_root_quirks ; \
     resin_boot_sanity_handler ; \
     balena_udev_rules_sanity_handler ; \
+    remove_gpghome ; \
     "
 
 addtask resin_boot_dirgen_and_deploy after do_rootfs before do_image_complete
