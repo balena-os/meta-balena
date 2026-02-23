@@ -1,23 +1,112 @@
-From bbf600cc4d46c3f7ec0c1b486790a2402d41f550 Mon Sep 17 00:00:00 2001
+From 01b96a1f049be09c93d88b3c0c82252cb5ebdf44 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 30 Jun 2020 22:23:33 -0400
 Subject: [PATCH] dynbinary: use go cross compiler
 
+MJ: use ${GO} also in "go env" calls, because native go:
+  $ go env GOARM
+  5
+while go cross compiler for my target:
+  $ ${GO} env GOARM
+  7
+this can lead to:
+  error: switch '-mcpu=cortex-a9' conflicts with switch '-march=armv5t' [-Werror]
+
+but even after fixing it to use "better" -march it still doesn't match with -mcpu
+set in our GOBUILDFLAGS, causing e.g.:
+  error: switch '-mcpu=cortex-a9' conflicts with switch '-march=armv7-a+simd' [-Werror]
+
+so drop CGO_CFLAGS/CGO_CXXFLAGS as in OE builds we don't need them
+as long as ${GO} and GOBUILDFLAGS are respected
+
+it was added in:
+https://github.com/moby/moby/commit/12558c8d6ea9f388b54eb94ba6b9eb4a9fc5c9f2
+
+and it wasn't an issue before:
+https://github.com/moby/moby/commit/8c12a6648b368cc2acaea0339d6c57c920ed265c
+
+because it was using 'case "${GOARM}" in' and ${GOARM} was empty in our builds
+
+Upstream-Status: Inappropriate [embedded specific]
+
+Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
- hack/make/.binary | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ hack/make/.binary | 37 ++++++++-----------------------------
+ 1 file changed, 8 insertions(+), 29 deletions(-)
 
-Index: git/src/import/hack/make/.binary
-===================================================================
---- git.orig/src/import/hack/make/.binary
-+++ git/src/import/hack/make/.binary
-@@ -81,7 +81,7 @@
+diff --git a/hack/make/.binary b/hack/make/.binary
+index d79a18eada..67bf681edb 100644
+--- a/hack/make/.binary
++++ b/hack/make/.binary
+@@ -3,7 +3,7 @@ set -e
  
- 	echo "Building: $DEST/$BINARY_FULLNAME"
- 	echo "GOOS=\"${GOOS}\" GOARCH=\"${GOARCH}\" GOARM=\"${GOARM}\""
--	go build \
-+	${GO} build \
- 		-o "$DEST/$BINARY_FULLNAME" \
- 		"${BUILDFLAGS[@]}" \
- 		-ldflags "
+ # a helper to provide ".exe" when it's appropriate
+ binary_extension() {
+-	if [ "$(go env GOOS)" = 'windows' ]; then
++	if [ "$(${GO} env GOOS)" = 'windows' ]; then
+ 		echo -n '.exe'
+ 	fi
+ }
+@@ -16,33 +16,12 @@ source "${MAKEDIR}/.go-autogen"
+ (
+ 	export GOGC=${DOCKER_BUILD_GOGC:-1000}
+ 
+-	if [ "$(go env GOOS)/$(go env GOARCH)" != "$(go env GOHOSTOS)/$(go env GOHOSTARCH)" ]; then
+-		# must be cross-compiling!
+-		if [ "$(go env GOOS)/$(go env GOARCH)" = "linux/arm" ]; then
+-			# specify name of the target ARM architecture
+-			case "$(go env GOARM)" in
+-				5)
+-					export CGO_CFLAGS="-march=armv5t"
+-					export CGO_CXXFLAGS="-march=armv5t"
+-					;;
+-				6)
+-					export CGO_CFLAGS="-march=armv6"
+-					export CGO_CXXFLAGS="-march=armv6"
+-					;;
+-				7)
+-					export CGO_CFLAGS="-march=armv7-a"
+-					export CGO_CXXFLAGS="-march=armv7-a"
+-					;;
+-			esac
+-		fi
+-	fi
+-
+ 	# -buildmode=pie is not supported on Windows arm64 and Linux mips*, ppc64be
+ 	# https://github.com/golang/go/blob/go1.19.4/src/cmd/internal/sys/supported.go#L125-L132
+ 	if ! [ "$DOCKER_STATIC" = "1" ]; then
+ 		# -buildmode=pie not supported when -race is enabled
+ 		if [[ " $BUILDFLAGS " != *" -race "* ]]; then
+-			case "$(go env GOOS)/$(go env GOARCH)" in
++			case "$(${GO} env GOOS)/$(${GO} env GOARCH)" in
+ 				windows/arm64 | linux/mips* | linux/ppc64) ;;
+ 				*)
+ 					BUILDFLAGS+=("-buildmode=pie")
+@@ -66,11 +45,11 @@ source "${MAKEDIR}/.go-autogen"
+ 	# only necessary for non-sandboxed invocation where TARGETPLATFORM is empty
+ 	PLATFORM_NAME=$TARGETPLATFORM
+ 	if [ -z "$PLATFORM_NAME" ]; then
+-		PLATFORM_NAME="$(go env GOOS)/$(go env GOARCH)"
+-		if [ -n "$(go env GOARM)" ]; then
+-			PLATFORM_NAME+="/v$(go env GOARM)"
+-		elif [ -n "$(go env GOAMD64)" ] && [ "$(go env GOAMD64)" != "v1" ]; then
+-			PLATFORM_NAME+="/$(go env GOAMD64)"
++		PLATFORM_NAME="$(${GO} env GOOS)/$(${GO} env GOARCH)"
++		if [ -n "$(${GO} env GOARM)" ]; then
++			PLATFORM_NAME+="/v$(${GO} env GOARM)"
++		elif [ -n "$(${GO} env GOAMD64)" ] && [ "$(${GO} env GOAMD64)" != "v1" ]; then
++			PLATFORM_NAME+="/$(${GO} env GOAMD64)"
+ 		fi
+ 	fi
+ 
+@@ -90,7 +69,7 @@ source "${MAKEDIR}/.go-autogen"
+ 	if [ -n "$DOCKER_DEBUG" ]; then
+ 		set -x
+ 	fi
+-	go build -o "$DEST/$BINARY_FULLNAME" "${BUILDFLAGS[@]}" -ldflags "$LDFLAGS $LDFLAGS_STATIC $DOCKER_LDFLAGS" ${GO_PACKAGE}
++	${GO} build -trimpath -o "$DEST/$BINARY_FULLNAME" "${BUILDFLAGS[@]}" -ldflags "$LDFLAGS $LDFLAGS_STATIC $DOCKER_LDFLAGS" ${GO_PACKAGE}
+ )
+ 
+ echo "Created binary: $DEST/$BINARY_FULLNAME"
+ 
