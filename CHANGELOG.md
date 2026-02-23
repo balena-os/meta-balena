@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.4
+## (2026-02-23)
+
+* tests/modem: Skip modem test on unsupported Orin device-type [Alexandru]
+
 # v6.11.3
 ## (2026-02-20)
 

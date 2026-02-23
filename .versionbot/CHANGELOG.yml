@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tests/modem: Skip modem test on unsupported Orin device-type"
+      hash: e72616cea3600a8781bf094c6f10316ebe8f3325
+      body: |
+        This particular device-type has an e-SIM and cannot be tested
+        in our autokit, because a custom setup is required.
+
+        Connectivity will thus be tested by the vendor.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 6.11.4
+  title: ""
+  date: 2026-02-23T14:31:12.414Z
+- commits:
     - subject: "balena-bootloader.bbclass: disable more unnecessary drivers"
       hash: 1f51bdc9c52ea9ea9207d90f00db581b797409ad
       body: |
