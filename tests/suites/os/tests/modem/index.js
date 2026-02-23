@@ -24,8 +24,8 @@ module.exports = {
     title: 'Cellular tests',
     run: async function (test) {
 
-        if (this.suite.deviceType.slug == 'kontron-come-xelx') {
-            test.comment('Skipping modem test on Kontron COMe xELx');
+        if (this.suite.deviceType.slug == 'kontron-come-xelx' || this.suite.deviceType.slug == 'jetson-orin-nx-es') {
+            test.comment(`Skipping modem test on ${this.suite.deviceType.slug}`);
             return;
         }
 
