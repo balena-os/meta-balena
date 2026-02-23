@@ -45,30 +45,156 @@ module.exports = {
 			},
 		},
 		{
-			title: 'ntpServer test',
+			title: 'ntpServers custom servers test',
 			run: async function(test) {
-				const ntpServer = (regex = '') => {
-					return `time${regex}.google.com`;
-				};
+				const context = this.context.get();
+				const customServers = 'time.google.com time.cloudflare.com';
 
+				await this.systemd.writeConfigJsonProp(test, 'ntpServers', customServers, context.link);
+
+				// Wait for service to process
+				await this.utils.waitUntil(async () => {
+					const result = await context.worker.executeCommandInHostOS(
+						'journalctl -u balena-ntp-config.service --no-pager | grep -q "Adding NTP sources" && echo found || echo missing',
+						context.link,
+					);
+					return result.trim() === 'found';
+				}, false, 60, 500);
+
+				// Wait for chrony to show custom servers
+				const customServerList = customServers.split(' ');
+				await this.utils.waitUntil(async () => {
+					const chronySources = await context.worker.executeCommandInHostOS(
+						'chronyc sources',
+						context.link,
+					);
+
+					// Check for time.google.com or time1.google.com, time2.google.com, etc.
+					if (!/time\d*\.google\.com/.test(chronySources)) {
+						test.comment('Chrony does not have time.google.com (or variant) in the sources');
+						return false;
+					}
+
+					// Check for time.cloudflare.com or time1.cloudflare.com, time2.cloudflare.com, etc.
+					if (!/time\d*\.cloudflare\.com/.test(chronySources)) {
+						test.comment('Chrony does not have time.cloudflare.com (or variant) in the sources');
+						return false;
+					}
+
+					return true;
+				}, false, 60, 500);
+
+				// Check added_config.sources exists
+				const addedFileResult = await context.worker.executeCommandInHostOS(
+					'test -f /run/chrony/added_config.sources && echo exists || echo missing',
+					context.link,
+				);
+				test.is(addedFileResult.trim(), 'exists', 'added_config.sources file should exist');
+
+				// Check default.sources does NOT exist
+				const defaultFileResult = await context.worker.executeCommandInHostOS(
+					'test -f /run/chrony/default.sources && echo exists || echo missing',
+					context.link,
+				);
+				test.is(defaultFileResult.trim(), 'missing', 'default.sources should not exist');
+
+				// Check added_config.sources contains custom servers with correct format
+				const googleResult = await context.worker.executeCommandInHostOS(
+					'grep -q "pool time.google.com iburst minpoll 14 maxpoll 14 maxsources 1" /run/chrony/added_config.sources && echo found || echo missing',
+					context.link,
+				);
+				test.is(googleResult.trim(), 'found', 'added_config.sources should contain time.google.com');
+
+				const cloudflareResult = await context.worker.executeCommandInHostOS(
+					'grep -q "pool time.cloudflare.com iburst minpoll 14 maxpoll 14 maxsources 1" /run/chrony/added_config.sources && echo found || echo missing',
+					context.link,
+				);
+				test.is(cloudflareResult.trim(), 'found', 'added_config.sources should contain time.cloudflare.com');
+
+				// Cleanup: remove custom servers (triggers default behavior)
+				await this.systemd.writeConfigJsonProp(test, 'ntpServers', null, context.link);
+			},
+		},
+		{
+			title: 'ntpServers default behavior test',
+			run: async function(test) {
+				const context = this.context.get();
+				const defaultServers = [
+					'0.resinio.pool.ntp.org',
+					'1.resinio.pool.ntp.org',
+					'2.resinio.pool.ntp.org',
+					'3.resinio.pool.ntp.org',
+				];
+
+				// remove ntpServers from config.json (should trigger default behavior)
+				await this.systemd.writeConfigJsonProp(test, 'ntpServers', null, context.link);
+
+				// Wait for service to process
+				await this.utils.waitUntil(async () => {
+					const result = await context.worker.executeCommandInHostOS(
+						'journalctl -u balena-ntp-config.service --no-pager | grep -q "Using default NTP sources" && echo found || echo missing',
+						context.link,
+					);
+					return result.trim() === 'found';
+				}, false, 60, 500);
+
+				// Check default.sources file exists
+				const defaultFileResult = await context.worker.executeCommandInHostOS(
+					'test -f /run/chrony/default.sources && echo exists || echo missing',
+					context.link,
+				);
+				test.is(defaultFileResult.trim(), 'exists', 'default.sources file should exist');
+
+				// Check added_config.sources does NOT exist
+				const addedFileResult = await context.worker.executeCommandInHostOS(
+					'test -f /run/chrony/added_config.sources && echo exists || echo missing',
+					context.link,
+				);
+				test.is(addedFileResult.trim(), 'missing', 'added_config.sources should not exist');
+
+				// Check default.sources contains all 4 default pools
+				for (const server of defaultServers) {
+					const result = await context.worker.executeCommandInHostOS(
+						`grep -q "${server}" /run/chrony/default.sources && echo found || echo missing`,
+						context.link,
+					);
+					test.is(result.trim(), 'found', `default.sources should contain ${server}`);
+				}
+			},
+		},
+		{
+			title: 'ntpServers null value test',
+			run: async function(test) {
 				const context = this.context.get();
 
-				return this.systemd.writeConfigJsonProp(test, 'ntpServers', ntpServer(), context.link)
-				.then(() => {
-					return test.resolves(
-						this.utils.waitUntil(async () => {
-							return context.worker.executeCommandInHostOS(
-								`chronyc sources | grep -q ${ntpServer('.*')} ; echo $?`,
-								context.link,
-							).then((exitCode) => {
-								return Promise.resolve(exitCode === '0');
-							});
-						}, false, 60, 500),
-						'Device should show one record with our ntp server'
+				// set ntpServers to 'null'
+				await this.systemd.writeConfigJsonProp(test, 'ntpServers', 'null', context.link);
+
+				// Wait for service to process
+				await this.utils.waitUntil(async () => {
+					const result = await context.worker.executeCommandInHostOS(
+						'journalctl -u balena-ntp-config.service --no-pager | grep -q "Default NTP sources disabled via config.json" && echo found || echo missing',
+						context.link,
 					);
-				}).then(() => {
-					return this.systemd.writeConfigJsonProp(test, 'ntpServers', null, context.link);
-				});
+					return result.trim() === 'found';
+				}, false, 60, 500);
+
+				// Check default.sources does NOT exist
+				const defaultFileResult = await context.worker.executeCommandInHostOS(
+					'test -f /run/chrony/default.sources && echo exists || echo missing',
+					context.link,
+				);
+				test.is(defaultFileResult.trim(), 'missing', 'default.sources should not exist when ntpServers is "null"');
+
+				// Check added_config.sources does NOT exist
+				const addedFileResult = await context.worker.executeCommandInHostOS(
+					'test -f /run/chrony/added_config.sources && echo exists || echo missing',
+					context.link,
+				);
+				test.is(addedFileResult.trim(), 'missing', 'added_config.sources should not exist when ntpServers is "null"');
+
+				// Cleanup: restore default behavior
+				await this.systemd.writeConfigJsonProp(test, 'ntpServers', null, context.link);
 			},
 		},
 		{

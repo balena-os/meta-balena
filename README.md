@@ -193,12 +193,11 @@ The behavior of balenaOS can be configured by setting the following keys in the 
 
 ### ntpServers
 
-(string) A space-separated list of NTP servers to use for time synchronization. Defaults to `resinio.pool.ntp.org` servers:
+(string) A space-separated list of NTP servers to use for time synchronization.
 
-- `0.resinio.pool.ntp.org`
-- `1.resinio.pool.ntp.org`
-- `2.resinio.pool.ntp.org`
-- `3.resinio.pool.ntp.org`
+- When `ntpServers` is not defined, or empty, the following default pools are added to the chrony configuration: `0.resinio.pool.ntp.org`, `1.resinio.pool.ntp.org`, `2.resinio.pool.ntp.org`, `3.resinio.pool.ntp.org`.
+- When `ntpServers` is "null" (a string), no default pools are added. This is useful when your network provides its own NTP servers via DHCP Option 42 or when no external NTP access is desired.
+- When `ntpServers` is defined and not "null", only the listed servers are added (in addition to any servers supplied through DHCP Option 42).
 
 ### dnsServers
 
