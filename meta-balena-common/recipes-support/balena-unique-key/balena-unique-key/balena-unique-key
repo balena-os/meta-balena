@@ -48,11 +48,17 @@ if ! key=$("${CAT}" "${CONFIG_PATH}" | jq -r ".$key_name //empty"); then
 fi
 
 if [ -z "$key" ]; then
+    key=$(openssl rand -hex 16)
+    cnt=100
+    while echo "$key" | grep -q -E '^[0-9]{7}'; do
+        key=$(openssl rand -hex 16)
+        cnt=$((cnt -1))
+        if [ ! $cnt ]; then
+            echo "[ERROR] balena-unique-key : Failed to generate the random key."
+            exit 1
+        fi
+    done
     echo "[INFO] balena-unique-key: $key_name missing from config file. Generating..."
-    if ! key=$(openssl rand -hex 16); then
-        echo "[ERROR] balena-unique-key : Failed to generate the random key."
-        exit 1
-    fi
     "${CAT}" "$CONFIG_PATH" | jq ".$key_name=\"$key\"" | "${WR}" "$CONFIG_PATH"
 else
     echo "[INFO] balena-unique-key : Device already has $key_name assigned."
