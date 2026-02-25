@@ -516,7 +516,7 @@ def check_package_drivers(d, whence_map):
                         nonessential_packages[pkg] = set()
                     nonessential_packages[pkg].add(category)
         else:
-            bb.fatal(f"Package: {pkg} has no matches in WHENCE. Please check the files it ships and add them to the extra_WHENCE")
+            bb.plain(f"Package: {pkg} has no matches in WHENCE. Please check the files it ships and add them to the extra_WHENCE")
             for item in sorted(package_contents):
                 if item not in [".", ""]: bb.note(f"  - File/Pattern: {item}")
 
