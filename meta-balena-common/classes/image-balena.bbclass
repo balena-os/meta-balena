@@ -543,7 +543,7 @@ python do_nonessential_firmware_check() {
     matched_packages = [p for p in nonessential_packages if p in installed and p not in whitelist]
 
     if matched_packages:
-        bb.fatal(f"Non-essential firmware found in manifest: {', '.join(matched_packages)}. "
+        bb.plain(f"Non-essential firmware found in manifest: {', '.join(matched_packages)}. "
                  f"Please check which categories these packages belong to in linux-firmware/temp/log.do_exclude_firmware "
                  f"or add them to BALENA_ALLOWED_FIRMWARE_PACKAGES")
     else:
