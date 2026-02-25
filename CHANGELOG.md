@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.5
+## (2026-02-25)
+
+* kernel-balena.bbclass: Enable support for traditional iptables backends for newer kernels [Florin Sarbu]
+
 # v6.11.4
 ## (2026-02-23)
 

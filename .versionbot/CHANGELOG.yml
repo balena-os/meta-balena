@@ -1,4 +1,21 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Enable support for traditional iptables
+        backends for newer kernels"
+      hash: 01a6a81809341086d153f94dc38234b4bbcf855b
+      body: >
+        This is required to also work on newer kernels (i.e. 6.18) which use
+        primarily nftables.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.11.5
+  title: ""
+  date: 2026-02-25T03:10:51.056Z
+- commits:
     - subject: "tests/modem: Skip modem test on unsupported Orin device-type"
       hash: e72616cea3600a8781bf094c6f10316ebe8f3325
       body: |
