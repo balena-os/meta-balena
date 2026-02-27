@@ -83,6 +83,7 @@ PACKAGES =+ "${PN}-iwlwifi-3160"
 FILES:${PN}-iwlwifi-3160 = " \
     ${nonarch_base_libdir}/firmware/iwlwifi-3160-17.ucode* \
 "
+RDEPENDS:${PN}-iwlwifi-3160 = "${PN}-iwlwifi-license"
 
 PACKAGES =+ "${PN}-iwlwifi-cc-a0"
 
