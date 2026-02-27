@@ -213,48 +213,33 @@ def _expand_firmware_pattern(pattern, image_dir, nonarch):
 
 def process_package_files(pkg, pkg_files_var, image_dir, nonarch, known_files):
     """Resolve each FILES glob to actual firmware files, map each to its driver via WHENCE.
-    Returns (pkg_drivers, firmware_entries, files_not_in_whence)."""
+    Fails on first firmware file not in WHENCE. Returns (pkg_drivers, firmware_entries)."""
     pkg_drivers = set()
     firmware_entries = {}
-    files_not_in_whence = []
     for pattern in pkg_files_var.split():
         for canonical_path in _expand_firmware_pattern(pattern, image_dir, nonarch):
             driver = find_driver_for_file(canonical_path, known_files)
             if driver is None:
-                files_not_in_whence.append((canonical_path, pkg))
-            else:
-                pkg_drivers.add(driver)
-                firmware_entries[canonical_path] = pkg
-    return pkg_drivers, firmware_entries, files_not_in_whence
+                bb.fatal(f"Firmware file not in WHENCE: {canonical_path} (package: {pkg})")
+            pkg_drivers.add(driver)
+            firmware_entries[canonical_path] = pkg
+    return pkg_drivers, firmware_entries
 
-def resolve_category(pkg_drivers, driver_categories):
+def resolve_category(pkg_drivers, driver_categories, pkg):
+    """Resolve package category from its drivers. Fails on first uncategorized driver."""
     pkg_categories = set()
-    uncategorized = []
     for drv in pkg_drivers:
         cat = driver_categories.get(drv, "Unknown")
         if cat == "Unknown":
-            uncategorized.append(drv)
-        else:
-            pkg_categories.add(cat)
+            bb.fatal(f"Uncategorized driver: {drv} (package: {pkg})")
+        pkg_categories.add(cat)
     if "Connectivity" in pkg_categories:
-        return "Connectivity", uncategorized
+        return "Connectivity"
     if "Storage" in pkg_categories:
-        return "Storage", uncategorized
+        return "Storage"
     if pkg_categories:
-        return sorted(pkg_categories)[0], uncategorized
-    return "Unknown", uncategorized
-
-def fatal_if_errors(files_not_in_whence, uncategorized):
-    if files_not_in_whence:
-        err = "\n[ERROR] Firmware files not in WHENCE:\n"
-        for f, p in sorted(set(files_not_in_whence)):
-            err += f"  - {f} (package: {p})\n"
-        bb.fatal(err)
-    if uncategorized:
-        err = "\n[ERROR] Uncategorized drivers:\n"
-        for drv, pkg in sorted(set(uncategorized)):
-            err += f"  - {drv} (package: {pkg})\n"
-        bb.fatal(err)
+        return sorted(pkg_categories)[0]
+    return "Unknown"
 
 def write_firmware_metadata(deploy_dir, packages, firmware):
     import os
@@ -265,6 +250,7 @@ def write_firmware_metadata(deploy_dir, packages, firmware):
     out = os.path.join(deploy_dir, "firmware_metadata.json")
     with open(out, 'w') as f:
         json.dump({
+            "version": 1,
             "packages": packages,
             "firmware": firmware
         }, f, indent=2, sort_keys=True)
@@ -288,8 +274,6 @@ python do_firmware_sort() {
 
     packages = {}
     firmware = {}
-    uncategorized = []
-    files_not_in_whence = []
 
     for pkg in packages_var:
         if pkg in firmware_sort_skip_list or "license" in pkg:
@@ -298,21 +282,17 @@ python do_firmware_sort() {
         if not pkg_files_var:
             continue
 
-        pkg_drivers, fw_entries, not_in_whence = process_package_files(
+        pkg_drivers, fw_entries = process_package_files(
             pkg, pkg_files_var, image_dir, nonarch, known_files)
         firmware.update(fw_entries)
-        files_not_in_whence.extend(not_in_whence)
 
         if not pkg_drivers:
             continue
 
-        category, uncat = resolve_category(pkg_drivers, firmware_sort_driver_categories)
-        uncategorized.extend((drv, pkg) for drv in uncat)
+        category = resolve_category(pkg_drivers, firmware_sort_driver_categories, pkg)
         pkg_interfaces = get_package_interfaces(pkg, fw_feature_map)
-
         packages[pkg] = {"category": category, "interfaces": pkg_interfaces}
 
-    fatal_if_errors(files_not_in_whence, uncategorized)
     write_firmware_metadata(d.getVar('DEPLOY_DIR_IMAGE'), packages, firmware)
 }
 
