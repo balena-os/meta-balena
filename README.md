@@ -137,6 +137,60 @@ The bootloader needs to select the active root filesystem, load, and launch the 
 
 Check [docs/rollbacks.md](docs/rollbacks.md) for the rollback documentation
 
+### OS update locks
+
+Host OS update scripts (`safe_reboot` in `hostapp-update`) check for an exclusive `flock()` on `/tmp/balena/updates.lock` in any of the container before rebooting the device. If a process holds an exclusive flock on this file, these scripts will wait until the lock is released before proceeding with the reboot.
+
+This is independent from the application update lock mechanism managed by the Supervisor. The Supervisor uses a lockfile (file existence) to prevent application updates, while the host OS uses `flock()` to prevent reboots during OS updates.
+
+During critical operations, both mechanisms should be used together for full protection. For details on the application update lock and how to combine both, see the [Supervisor update locking documentation](https://github.com/balena-os/balena-supervisor/blob/master/docs/update-locking.md).
+
+#### Creating the flock
+
+##### Shell
+
+Using [flock](https://linux.die.net/man/1/flock) (Debian: `util-linux` package):
+
+```shell
+flock /tmp/balena/updates.lock -c '... (command to run while locked)'
+```
+
+To hold the lock across a long-running process:
+
+```shell
+exec {FD}>/tmp/balena/updates.lock
+flock -x $FD || exit 1
+# ... critical section; safe_reboot will wait ...
+exec {FD}>&-
+```
+
+##### Python
+
+Using `fcntl.flock` (standard library):
+
+```python
+import fcntl
+import os
+import time
+
+LOCK_PATH = '/tmp/balena/updates.lock'
+
+def with_update_lock(fn):
+    fd = os.open(LOCK_PATH, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        fn()
+    finally:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+        os.close(fd)
+        try:
+            os.unlink(LOCK_PATH)
+        except OSError:
+            pass
+
+with_update_lock(critical_function)
+```
+
 ## Devices support
 
 ### WiFi Adapters
