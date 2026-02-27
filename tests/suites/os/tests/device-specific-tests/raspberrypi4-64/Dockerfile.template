@@ -1,0 +1,9 @@
+FROM alpine:3.18
+
+RUN apk add --no-cache git coreutils
+
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+CMD ["sleep", "infinity"]
