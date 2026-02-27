@@ -111,6 +111,15 @@ python () {
 }
 
 def parse_whences(d, whence_paths):
+    """Parse linux-firmware WHENCE files. Extracts Driver: sections and their
+    File:/RawFile:/Link: entries.
+
+    Example WHENCE input:
+        Driver: iwlwifi
+        File: iwlwifi-3160-12.ucode
+        File: iwlwifi-6000g2a-5.ucode
+
+    Returns e.g. {"iwlwifi": ["iwlwifi-3160-12.ucode", "iwlwifi-6000g2a-5.ucode"], ...}"""
     import re
     whence_map = {}
     for path in whence_paths:
@@ -149,34 +158,131 @@ def find_driver_for_file(canonical_path, known_files):
             return driver
     return None
 
-python do_firmware_sort() {
+def find_whence_files(d):
     import os
-    import json
     import fnmatch
-    global firmware_sort_driver_categories
-    global firmware_sort_skip_list
-
     search_dirs = [d.getVar('D'), d.getVar('S'), d.getVar('WORKDIR')]
-    found_whence = []
+    found = []
     for s_dir in search_dirs:
         if not s_dir:
             continue
         for root, dirs, files in os.walk(s_dir):
             for f in fnmatch.filter(files, '*WHENCE'):
-                found_whence.append(os.path.join(root, f))
+                found.append(os.path.join(root, f))
+    return sorted(set(found))
 
-    whence_paths = sorted(set(found_whence))
+def get_package_interfaces(pkg, fw_feature_map):
+    interfaces = []
+    for feat, pkg_list in fw_feature_map.items():
+        if pkg in pkg_list.split():
+            interfaces.append(feat)
+    return sorted(interfaces)
+
+def _pattern_under_fw_root(pattern, root):
+    pat_norm = pattern.lstrip('/')
+    root_norm = root.lstrip('/')
+    return pat_norm.startswith(root_norm) or pattern.startswith(root)
+
+def _expand_firmware_pattern(pattern, image_dir, nonarch):
+    """Resolve a FILES glob (e.g. lib/firmware/iwlwifi/*) to the actual files on disk.
+    Lists the target directory, matches filenames against the glob, returns canonical paths
+    (relative to firmware root, compression suffixes stripped)."""
+    import os
+    import fnmatch
+    firmware_root_prefix = os.path.join(nonarch, 'firmware').lstrip('/')
+    firmware_root_absolute = os.path.normpath(os.path.join(image_dir, firmware_root_prefix))
+    possible_roots = [firmware_root_prefix, '/usr/lib/firmware', '/lib/firmware', 'lib/firmware']
+    pattern_normalized = pattern.lstrip('/')
+    for root in possible_roots:
+        if not _pattern_under_fw_root(pattern, root):
+            continue
+        full_pattern = os.path.join(image_dir, pattern_normalized)
+        directory = os.path.dirname(full_pattern)
+        file_pattern = os.path.basename(full_pattern)
+        if not os.path.exists(directory):
+            break
+        canonical_paths = []
+        for filename in os.listdir(directory):
+            if fnmatch.fnmatch(filename, file_pattern):
+                filepath = os.path.join(directory, filename)
+                if os.path.isfile(filepath) and not os.path.islink(filepath):
+                    relative_path = os.path.relpath(filepath, firmware_root_absolute)
+                    canonical_paths.append(canonical_firmware_path(relative_path))
+        return canonical_paths
+    return []
+
+def process_package_files(pkg, pkg_files_var, image_dir, nonarch, known_files):
+    """Resolve each FILES glob to actual firmware files, map each to its driver via WHENCE.
+    Returns (pkg_drivers, firmware_entries, files_not_in_whence)."""
+    pkg_drivers = set()
+    firmware_entries = {}
+    files_not_in_whence = []
+    for pattern in pkg_files_var.split():
+        for canonical_path in _expand_firmware_pattern(pattern, image_dir, nonarch):
+            driver = find_driver_for_file(canonical_path, known_files)
+            if driver is None:
+                files_not_in_whence.append((canonical_path, pkg))
+            else:
+                pkg_drivers.add(driver)
+                firmware_entries[canonical_path] = pkg
+    return pkg_drivers, firmware_entries, files_not_in_whence
+
+def resolve_category(pkg_drivers, driver_categories):
+    pkg_categories = set()
+    uncategorized = []
+    for drv in pkg_drivers:
+        cat = driver_categories.get(drv, "Unknown")
+        if cat == "Unknown":
+            uncategorized.append(drv)
+        else:
+            pkg_categories.add(cat)
+    if "Connectivity" in pkg_categories:
+        return "Connectivity", uncategorized
+    if "Storage" in pkg_categories:
+        return "Storage", uncategorized
+    if pkg_categories:
+        return sorted(pkg_categories)[0], uncategorized
+    return "Unknown", uncategorized
+
+def fatal_if_errors(files_not_in_whence, uncategorized):
+    if files_not_in_whence:
+        err = "\n[ERROR] Firmware files not in WHENCE:\n"
+        for f, p in sorted(set(files_not_in_whence)):
+            err += f"  - {f} (package: {p})\n"
+        bb.fatal(err)
+    if uncategorized:
+        err = "\n[ERROR] Uncategorized drivers:\n"
+        for drv, pkg in sorted(set(uncategorized)):
+            err += f"  - {drv} (package: {pkg})\n"
+        bb.fatal(err)
+
+def write_firmware_metadata(deploy_dir, packages, firmware):
+    import os
+    import json
+    if not deploy_dir:
+        return
+    bb.utils.mkdirhier(deploy_dir)
+    out = os.path.join(deploy_dir, "firmware_metadata.json")
+    with open(out, 'w') as f:
+        json.dump({
+            "packages": packages,
+            "firmware": firmware
+        }, f, indent=2, sort_keys=True)
+    bb.note(f"Wrote firmware_metadata.json to {out}")
+
+python do_firmware_sort() {
+    global firmware_sort_driver_categories
+    global firmware_sort_skip_list
+
+    whence_paths = find_whence_files(d)
     if not whence_paths:
         bb.fatal("No *WHENCE files found in ${D}, ${S} or ${WORKDIR}")
 
     whence_map = parse_whences(d, whence_paths)
     known_files = [(f, drv) for drv, files in whence_map.items() for f in files]
 
-    nonarch = d.getVar('nonarch_base_libdir') or 'lib'
-    fw_root = os.path.join(nonarch, 'firmware').lstrip('/')
-    fw_roots = [fw_root, '/usr/lib/firmware', '/lib/firmware', 'lib/firmware']
     image_dir = d.getVar('D')
-    firmware_root = os.path.normpath(os.path.join(image_dir, fw_root))
+    nonarch = d.getVar('nonarch_base_libdir') or 'lib'
     packages_var = (d.getVar('PACKAGES') or "").split()
     fw_feature_map = d.getVarFlags('LINUX_FIRMWARE_PACKAGES') or {}
 
@@ -192,83 +298,22 @@ python do_firmware_sort() {
         if not pkg_files_var:
             continue
 
-        pkg_drivers = set()
-        pkg_interfaces = []
-        for feat, pkg_list in fw_feature_map.items():
-            if pkg in pkg_list.split():
-                pkg_interfaces.append(feat)
-
-        for pattern in pkg_files_var.split():
-            pat_norm = pattern.lstrip('/')
-            for root in fw_roots:
-                root_norm = root.lstrip('/')
-                if pat_norm.startswith(root_norm) or pattern.startswith(root):
-                    full_pat = os.path.join(image_dir, pat_norm)
-                    dir_s = os.path.dirname(full_pat)
-                    file_pat = os.path.basename(full_pat)
-                    if os.path.exists(dir_s):
-                        for fname in os.listdir(dir_s):
-                            if fnmatch.fnmatch(fname, file_pat):
-                                fpath = os.path.join(dir_s, fname)
-                                if os.path.isfile(fpath) and not os.path.islink(fpath):
-                                    rel = os.path.relpath(fpath, firmware_root)
-                                    canon = canonical_firmware_path(rel)
-                                    driver = find_driver_for_file(canon, known_files)
-                                    if driver is None:
-                                        files_not_in_whence.append((canon, pkg))
-                                    else:
-                                        pkg_drivers.add(driver)
-                                        firmware[canon] = pkg
-                    break
+        pkg_drivers, fw_entries, not_in_whence = process_package_files(
+            pkg, pkg_files_var, image_dir, nonarch, known_files)
+        firmware.update(fw_entries)
+        files_not_in_whence.extend(not_in_whence)
 
         if not pkg_drivers:
             continue
 
-        pkg_categories = set()
-        for drv in pkg_drivers:
-            cat = firmware_sort_driver_categories.get(drv, "Unknown")
-            if cat == "Unknown":
-                uncategorized.append((drv, pkg))
-            else:
-                pkg_categories.add(cat)
+        category, uncat = resolve_category(pkg_drivers, firmware_sort_driver_categories)
+        uncategorized.extend((drv, pkg) for drv in uncat)
+        pkg_interfaces = get_package_interfaces(pkg, fw_feature_map)
 
-        # Connectivity wins over everything; Storage wins over non-Connectivity
-        # (e.g. combo wifi+bt packages are treated as Connectivity)
-        if "Connectivity" in pkg_categories:
-            category = "Connectivity"
-        elif "Storage" in pkg_categories:
-            category = "Storage"
-        elif pkg_categories:
-            category = sorted(pkg_categories)[0]
-        else:
-            category = "Unknown"
+        packages[pkg] = {"category": category, "interfaces": pkg_interfaces}
 
-        if pkg not in packages:
-            packages[pkg] = {"category": category, "interfaces": sorted(pkg_interfaces)}
-
-    if files_not_in_whence:
-        err = "\n[ERROR] Firmware files not in WHENCE:\n"
-        for f, p in sorted(set(files_not_in_whence)):
-            err += f"  - {f} (package: {p})\n"
-        bb.fatal(err)
-
-    if uncategorized:
-        err = "\n[ERROR] Uncategorized drivers:\n"
-        for drv, pkg in sorted(set(uncategorized)):
-            err += f"  - {drv} (package: {pkg})\n"
-        bb.fatal(err)
-
-    deploy_dir = d.getVar('DEPLOY_DIR_IMAGE')
-    if deploy_dir:
-        bb.utils.mkdirhier(deploy_dir)
-        out = os.path.join(deploy_dir, "firmware_metadata.json")
-        with open(out, 'w') as f:
-            json.dump({
-                "version": 1,
-                "packages": packages,
-                "firmware": firmware
-            }, f, indent=2, sort_keys=True)
-        bb.note(f"Wrote firmware_metadata.json to {out}")
+    fatal_if_errors(files_not_in_whence, uncategorized)
+    write_firmware_metadata(d.getVar('DEPLOY_DIR_IMAGE'), packages, firmware)
 }
 
 addtask firmware_sort after do_unpack firmware_compression before do_package
