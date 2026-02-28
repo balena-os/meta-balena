@@ -1,6 +1,101 @@
 Change log
 -----------
 
+# v6.11.6
+## (2026-02-28)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4ac50e6 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.96
+> ### (2026-02-28)
+> 
+> * Update balena-os/leviathan-worker to v2.10.29 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.95
+> ### (2026-02-28)
+> 
+> * Update actions/upload-artifact action to v7 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.94
+> ### (2026-02-25)
+> 
+> * Update balena-os/leviathan-worker to v2.10.27 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.93
+> ### (2026-02-23)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.92
+> ### (2026-02-16)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.91
+> ### (2026-02-09)
+> 
+> * Update balena-os/leviathan-worker to v2.10.26 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.90
+> ### (2026-02-09)
+> 
+> * Update balena-os/leviathan-worker to v2.10.25 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.89
+> ### (2026-02-09)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.88
+> ### (2026-02-07)
+> 
+> * Update actions/checkout digest to de0fac2 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.87
+> ### (2026-02-02)
+> 
+> * Update balena-os/leviathan-worker to v2.10.24 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.86
+> ### (2026-02-02)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.85
+> ### (2026-01-27)
+> 
+> * Update balena-os/leviathan-worker to v2.10.23 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.84
+> ### (2026-01-26)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.83
+> ### (2026-01-20)
+> 
+> * Update balena-os/leviathan-worker to v2.10.22 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.82
+> ### (2026-01-19)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.81
+> ### (2026-01-12)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.80
+> ### (2026-01-05)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
 # v6.11.5
 ## (2026-02-25)
 
