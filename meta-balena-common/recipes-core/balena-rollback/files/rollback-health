@@ -35,6 +35,7 @@ run_hooks_from_inactive () {
 	old_rootfs=$(/mnt/sysroot/active/current/boot/init -sysroot /mnt/sysroot/inactive)
 	mount -t proc proc "${old_rootfs}/proc/"
 	mount -o bind /dev "${old_rootfs}/dev"
+	mount -o bind /run "${old_rootfs}/run"
 	mount --bind /mnt/boot/ "${old_rootfs}/mnt/boot/"
 	mount --bind /mnt/state/ "${old_rootfs}/mnt/state/"
 	mount --bind /mnt/sysroot/ "${old_rootfs}/mnt/sysroot/"
