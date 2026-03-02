@@ -1,6 +1,46 @@
 Change log
 -----------
 
+# v6.11.7
+## (2026-03-02)
+
+
+<details>
+<summary> Update balena-supervisor to v17.6.2 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.6.2
+> ### (2026-02-25)
+> 
+> * Fix storage usage over-reporting caused by duplicate mount points [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.6.1
+> ### (2026-02-19)
+> 
+> * Update systeminformation to v5.30.8 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.6.0
+> ### (2026-02-17)
+> 
+> * Rewrite lock mechanism doc to include flock as well [Yann CARDAILLAC]
+> 
+> ## balena-supervisor-17.5.3
+> ### (2026-02-15)
+> 
+> * Update webpack to v5.104.1 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.5.2
+> ### (2026-02-10)
+> 
+> * Preserve unmanaged fields in extra_uEnv.txt [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.5.1
+> ### (2026-02-10)
+> 
+> * Do not rely on container timestamps to check for dependency start [felipe]
+> 
+
+</details>
+
 # v6.11.6
 ## (2026-02-28)
 
