@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.8
+## (2026-03-03)
+
+* hostapp-update-hooks: allow GRUB downgrade during secure boot rollbacks [Michal Toman]
+
 # v6.11.7
 ## (2026-03-02)
 

@@ -1,4 +1,34 @@
 - commits:
+    - subject: "hostapp-update-hooks: allow GRUB downgrade during secure boot rollbacks"
+      hash: 8855c81bff7c62f5e9d22779e4774df90d6e6f23
+      body: |
+        On systems where UEFI binaries are measured into PCR7, rollback-altboot
+        currently doesn't work if GRUB has been updated. This is because
+        the 0-signed-update hook only recalculates the expected PCR7 hashes
+        when updating forward, so after GRUB is rolled back, it's no longer
+        allowed to boot.
+
+        This is specific to rollback-altboot, but pretty much by accident.
+        rollback-health works because it runs the old hooks
+        with DURING_UPDATE=1, so the system thinks it's updating
+        (and recalculates PCR7) even when it's really rolling back. This has
+        an unwanted side-effect of applying the dbx blacklist from the new OS
+        (the one we're rolling back from) and prevents a retry.
+
+        This patch fixes both issues, 0-signed-update now recalculates
+        PCR7 unconditionally and only applies the destructive changes
+        (db and dbx updates) when it's actually updating forward.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.11.8
+  title: ""
+  date: 2026-03-03T07:28:52.792Z
+- commits:
     - subject: Update balena-supervisor to v17.6.2
       hash: 53ea95f465e96633f735e1025ce50bc64142ab27
       body: |
