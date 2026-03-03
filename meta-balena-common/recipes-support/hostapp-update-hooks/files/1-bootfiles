@@ -124,6 +124,13 @@ deploy() {
 					info "Development mode set in new OS... "
 				fi
 			fi
+		elif [ "$_file" = "/extra_uEnv.txt" ] || [ "$_file" = "/EFI/BOOT/grub_extraenv" ] || [ "$_file" = "/grub/grub_extraenv" ] ; then
+			if [ -f "${boot_mountpoint}${_file}" ]; then
+				info "${boot_mountpoint}${_file} already exists. Ignoring."
+			else
+				copyBootFile "$_file"
+				return
+			fi
 		fi
 		info "${boot_mountpoint}${_file} blacklisted. Ignoring."
 	else
