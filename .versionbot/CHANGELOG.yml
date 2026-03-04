@@ -1,4 +1,25 @@
 - commits:
+    - subject: "recipes-support/hostapp-update-hooks: Deploy blacklisted bootloader
+        files"
+      hash: 539bf3638f5ecab05c587b1a97f15b6f4b526405
+      body: >
+        ... only if they don't already exist. This way, devices which are
+        updated
+
+        from a version in which these files did not exist, will have them from
+
+        now on.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.11.9
+  title: ""
+  date: 2026-03-04T12:56:26.148Z
+- commits:
     - subject: "hostapp-update-hooks: allow GRUB downgrade during secure boot rollbacks"
       hash: 8855c81bff7c62f5e9d22779e4774df90d6e6f23
       body: |

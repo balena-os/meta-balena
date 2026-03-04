@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.9
+## (2026-03-04)
+
+* recipes-support/hostapp-update-hooks: Deploy blacklisted bootloader files [Alexandru Costache]
+
 # v6.11.8
 ## (2026-03-03)
 
