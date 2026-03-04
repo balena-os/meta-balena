@@ -33,7 +33,7 @@ SRC_URI = "\
     file://0001-console-Fix-a-typo-in-the-EFI-warning-list-in-gnu-ef.patch \
     file://0001-hash-to-efi-sig-list.c-Allow-raw-hashes-as-arguments.patch \
 "
-SRCREV = "392836a46ce3c92b55dc88a1aebbcfdfc5dcddce"
+SRCREV = "b988d20a7f8373cf19c30d5c9c459f3e87f28da2"
 
 PARALLEL_MAKE = ""
 
