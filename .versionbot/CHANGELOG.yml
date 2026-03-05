@@ -1,4 +1,28 @@
 - commits:
+    - subject: "efitools: update to master"
+      hash: 474f4bde4ff49250568628e1c88b622a1b433259
+      body: |
+        At this moment hash-to-efi-sig-list works fine on <= 6.12 kernel
+        binaries, but fails to get the hash of a kernel 6.18 binary, reporting
+        a PECOFF error.
+
+        The latest released efitools is v1.9.2 from 2019, which we're currently
+        using. In master, there are 4 extra commits from 2020 on top of it, one
+        of which (namely 449cfc99c9453d6321116c12a19f7ceba0bd7fec) fixes
+        the issue.
+
+        This bumps efitools to follow master and include the 4 commits.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.11.10
+  title: ""
+  date: 2026-03-05T09:43:10.899Z
+- commits:
     - subject: "recipes-support/hostapp-update-hooks: Deploy blacklisted bootloader
         files"
       hash: 539bf3638f5ecab05c587b1a97f15b6f4b526405

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.10
+## (2026-03-05)
+
+* efitools: update to master [Michal Toman]
+
 # v6.11.9
 ## (2026-03-04)
 
