@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v6.11.11
+## (2026-03-10)
+
+
+<details>
+<summary> Update balena-supervisor to v17.6.3 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.6.3
+> ### (2026-03-10)
+> 
+> * Only report download progress if service status is `Downloading` [Felipe Lalanne]
+> 
+
+</details>
+
 # v6.11.10
 ## (2026-03-05)
 

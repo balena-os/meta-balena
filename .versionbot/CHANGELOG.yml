@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update balena-supervisor to v17.6.3
+      hash: 2db60e91dec0cbde8bf5c6133b5ce001edad16ea
+      body: |
+        Update balena-supervisor from 17.6.2 to 17.6.3
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Only report download progress if service status is `Downloading`
+              hash: 1c3efc9316405aa81e9ace790f62202e068e7204
+              body: >
+                The value is useless for the backend otherwise and this also
+                prevents
+
+                calculating the wrong update status for reporting.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-17.6.3
+          title: ""
+          date: 2026-03-10T08:08:26.569Z
+  version: 6.11.11
+  title: ""
+  date: 2026-03-10T12:46:02.038Z
+- commits:
     - subject: "efitools: update to master"
       hash: 474f4bde4ff49250568628e1c88b622a1b433259
       body: |
