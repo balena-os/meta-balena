@@ -249,14 +249,14 @@ PREFERRED_VERSION_upx:arm = "3.94"
 PREFERRED_VERSION_upx-native:arm = "3.94"
 
 # let's pin linux-firmware to the version we imported from Poky scarthgap release
-PREFERRED_VERSION_linux-firmware = "20240909"
+PREFERRED_VERSION_linux-firmware = "20241017"
 
 # Scarthgap go version, meets balena-engine go version requirement
 GOVERSION = "1.22.12"
 PREFERRED_PROVIDER_go-native = "go-binary-native"
 
 # Firmware compression support
-FIRMWARE_COMPRESSION ?= "1"
+FIRMWARE_COMPRESSION ?= "xz"
 
 SIGN_API ?= ""
 # Signing keys

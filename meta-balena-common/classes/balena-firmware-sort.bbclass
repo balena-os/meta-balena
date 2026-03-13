@@ -364,4 +364,4 @@ python do_firmware_sort() {
     write_firmware_metadata(d.getVar('DEPLOY_DIR_IMAGE'), packages, firmware)
 }
 
-addtask firmware_sort after do_firmware_compression before do_package
+addtask firmware_sort after do_amd_firmware_decompression before do_package
