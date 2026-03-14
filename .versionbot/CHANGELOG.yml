@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tcgtool: update to v0.1.4"
+      hash: e87d51dcafe025009a86c18b757dbea6ebbaf6fe
+      body: |
+        This should fix hash calculation for kernel 6.18 binaries
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.11.13
+  title: ""
+  date: 2026-03-14T22:54:14.152Z
+- commits:
     - subject: Update tests/leviathan digest to 6430fad
       hash: 0cdd837d6dc8a5664ce7ceb9710cd7539d43c214
       body: Update tests/leviathan

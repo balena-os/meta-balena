@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.13
+## (2026-03-14)
+
+* tcgtool: update to v0.1.4 [Michal Toman]
+
 # v6.11.12
 ## (2026-03-14)
 
