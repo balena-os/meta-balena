@@ -1,4 +1,81 @@
 - commits:
+    - subject: Update tests/leviathan digest to 6430fad
+      hash: 0cdd837d6dc8a5664ce7ceb9710cd7539d43c214
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update core/contracts digest to ab2042b
+              hash: 9844b0bc7ed924da85ae18e1b36bc4e3f36f3c8e
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.101
+          title: ""
+          date: 2026-03-11T08:56:26.364Z
+        - commits:
+            - subject: Update core/contracts digest to 73054ac
+              hash: 73abc9499c4b37ff48a09bde7726f95463d27455
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.100
+          title: ""
+          date: 2026-03-09T11:05:19.331Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: f1d17673fd16679a48021099c51fa9baaef1d1af
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.99
+          title: ""
+          date: 2026-03-09T01:21:48.394Z
+        - commits:
+            - subject: Update docker/setup-buildx-action action to v4
+              hash: 37c171f8292611acc86a6ebf9a664f64b134b46b
+              body: |
+                Update docker/setup-buildx-action from 3 to 4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.98
+          title: ""
+          date: 2026-03-07T03:29:41.922Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: e3904eb90cccd56f77b6d08fd771e6f8e3106888
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.97
+          title: ""
+          date: 2026-03-02T01:16:59.689Z
+  version: 6.11.12
+  title: ""
+  date: 2026-03-14T15:19:40.272Z
+- commits:
     - subject: Update balena-supervisor to v17.6.3
       hash: 2db60e91dec0cbde8bf5c6133b5ce001edad16ea
       body: |
