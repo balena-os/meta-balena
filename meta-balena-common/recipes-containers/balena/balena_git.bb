@@ -15,10 +15,10 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "v23.0.18"
-BALENA_BRANCH = "kyle/rerun-rebase-v23.0.18"
+BALENA_VERSION = "v25.0.14"
+BALENA_BRANCH = "kyle/v25"
 
-SRCREV = "43301e9d10d3a17cf344ba6ac2d2b40ef8e7ba07"
+SRCREV = "0aecfb9bbe6313880d5e4bd8f88874107c7990e7"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
@@ -31,7 +31,6 @@ SRC_URI = "\
 	file://balena-host.socket \
 	file://balena-healthcheck \
 	file://var-lib-docker.mount \
-	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
 	file://0001-dynbinary-use-go-cross-compiler.patch;patchdir=src/import \
 	"
@@ -103,6 +102,7 @@ do_compile() {
 	export DOCKER_BUILDTAGS="${BUILD_TAGS} ${PACKAGECONFIG_CONFARGS}"
 	export DOCKER_LDFLAGS="-s"
 	export GO111MODULE=off
+	export GOTOOLCHAIN=local
 
 	export DISABLE_WARN_OUTSIDE_CONTAINER=1
 
@@ -141,9 +141,6 @@ do_install() {
 
 	mkdir -p ${D}/usr/lib/balena
 	install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
-
-	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
-	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
 
 	install -d ${D}/${ROOT_HOME}/.docker
 	ln -sf .docker ${D}/${ROOT_HOME}/.balena
