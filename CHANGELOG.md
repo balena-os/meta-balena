@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.11.14
+## (2026-03-16)
+
+* wpa-supplicant: Align to recipe from Scarthgap [Florin Sarbu]
+
 # v6.11.13
 ## (2026-03-14)
 

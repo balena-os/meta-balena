@@ -1,4 +1,23 @@
 - commits:
+    - subject: "wpa-supplicant: Align to recipe from Scarthgap"
+      hash: bd8979799b88c68b40892af469d0fe1da5a7d791
+      body: >
+        We add the recipe with the patches from Scarthgap revision
+        97f732ce9b914ea4022c9425611c16d333c2787b
+
+
+        This is the same package version but adds additional CVE patches.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.11.14
+  title: ""
+  date: 2026-03-16T13:02:38.469Z
+- commits:
     - subject: "tcgtool: update to v0.1.4"
       hash: e87d51dcafe025009a86c18b757dbea6ebbaf6fe
       body: |
