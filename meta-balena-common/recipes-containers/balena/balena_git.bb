@@ -32,7 +32,7 @@ SRC_URI = "\
 	file://balena-healthcheck \
 	file://var-lib-docker.mount \
 	file://balena-tmpfiles.conf \
-	file://0001-dynbinary-use-go-cross-compiler.patch \
+	file://0001-dynbinary-use-go-cross-compiler.patch;patchdir=src/import \
 	"
 S = "${WORKDIR}/git"
 
