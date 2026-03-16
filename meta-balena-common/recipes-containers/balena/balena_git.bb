@@ -16,7 +16,7 @@ inherit pkgconfig
 inherit useradd
 
 BALENA_VERSION = "v25.0.14"
-BALENA_BRANCH = "kyle/25"
+BALENA_BRANCH = "kyle/v25"
 
 SRCREV = "5875bf63065ceb4e66f03e512c7dcc4db1d372fa"
 # NOTE: update patches when bumping major versions
