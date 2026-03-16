@@ -15,10 +15,10 @@ inherit goarch
 inherit pkgconfig
 inherit useradd
 
-BALENA_VERSION = "v23.0.18"
-BALENA_BRANCH = "kyle/rerun-rebase-v23.0.18"
+BALENA_VERSION = "v25.0.14"
+BALENA_BRANCH = "kyle/25"
 
-SRCREV = "43301e9d10d3a17cf344ba6ac2d2b40ef8e7ba07"
+SRCREV = "5875bf63065ceb4e66f03e512c7dcc4db1d372fa"
 # NOTE: update patches when bumping major versions
 # [0] will have up-to-date versions, make sure poky version matches what
 # meta-balena uses
