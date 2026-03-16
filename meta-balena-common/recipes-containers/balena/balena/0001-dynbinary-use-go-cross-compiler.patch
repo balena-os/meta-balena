@@ -1,4 +1,4 @@
-From 01b96a1f049be09c93d88b3c0c82252cb5ebdf44 Mon Sep 17 00:00:00 2001
+From 3ce6089417b8c6c4e8279e6ef60213436ebf8793 Mon Sep 17 00:00:00 2001
 From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 30 Jun 2020 22:23:33 -0400
 Subject: [PATCH] dynbinary: use go cross compiler
@@ -35,11 +35,11 @@ Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
  hack/make/.binary | 37 ++++++++-----------------------------
  1 file changed, 8 insertions(+), 29 deletions(-)
 
-diff --git a/hack/make/.binary b/hack/make/.binary
-index d79a18eada..67bf681edb 100644
---- a/hack/make/.binary
-+++ b/hack/make/.binary
-@@ -3,7 +3,7 @@ set -e
+Index: import/hack/make/.binary
+===================================================================
+--- import.orig/hack/make/.binary
++++ import/hack/make/.binary
+@@ -3,7 +3,7 @@
  
  # a helper to provide ".exe" when it's appropriate
  binary_extension() {
@@ -48,7 +48,7 @@ index d79a18eada..67bf681edb 100644
  		echo -n '.exe'
  	fi
  }
-@@ -16,33 +16,12 @@ source "${MAKEDIR}/.go-autogen"
+@@ -16,33 +16,12 @@
  (
  	export GOGC=${DOCKER_BUILD_GOGC:-1000}
  
@@ -83,7 +83,7 @@ index d79a18eada..67bf681edb 100644
  				windows/arm64 | linux/mips* | linux/ppc64) ;;
  				*)
  					BUILDFLAGS+=("-buildmode=pie")
-@@ -66,11 +45,11 @@ source "${MAKEDIR}/.go-autogen"
+@@ -66,11 +45,11 @@
  	# only necessary for non-sandboxed invocation where TARGETPLATFORM is empty
  	PLATFORM_NAME=$TARGETPLATFORM
  	if [ -z "$PLATFORM_NAME" ]; then
@@ -100,13 +100,12 @@ index d79a18eada..67bf681edb 100644
  		fi
  	fi
  
-@@ -90,7 +69,7 @@ source "${MAKEDIR}/.go-autogen"
+@@ -82,7 +61,7 @@
  	if [ -n "$DOCKER_DEBUG" ]; then
  		set -x
  	fi
--	go build -o "$DEST/$BINARY_FULLNAME" "${BUILDFLAGS[@]}" -ldflags "$LDFLAGS $LDFLAGS_STATIC $DOCKER_LDFLAGS" ${GO_PACKAGE}
-+	${GO} build -trimpath -o "$DEST/$BINARY_FULLNAME" "${BUILDFLAGS[@]}" -ldflags "$LDFLAGS $LDFLAGS_STATIC $DOCKER_LDFLAGS" ${GO_PACKAGE}
+-	./hack/with-go-mod.sh go build -mod=vendor -modfile=vendor.mod -o "$DEST/$BINARY_FULLNAME" "${BUILDFLAGS[@]}" -ldflags "$LDFLAGS $LDFLAGS_STATIC $DOCKER_LDFLAGS" -gcflags="${GCFLAGS}" "$GO_PACKAGE"
++	./hack/with-go-mod.sh ${GO} build -trimpath -mod=vendor -modfile=vendor.mod -o "$DEST/$BINARY_FULLNAME" "${BUILDFLAGS[@]}" -ldflags "$LDFLAGS $LDFLAGS_STATIC $DOCKER_LDFLAGS" -gcflags="${GCFLAGS}" "$GO_PACKAGE"
  )
  
  echo "Created binary: $DEST/$BINARY_FULLNAME"
- 
