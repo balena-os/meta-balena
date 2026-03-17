@@ -48,7 +48,7 @@ module.exports = {
 						{
 							cat <<- EOF > /run/systemd/system/sshd.socket.d/override.conf
 							[Socket]
-							TriggerLimitBurst=5
+							TriggerLimitBurst=2
 							TriggerLimitIntervalSec=5s
 							EOF
 						} &&
@@ -81,11 +81,9 @@ module.exports = {
 				test.comment('Triggering burst protection...');
 				const result = await this.worker.executeCommandInHostOS(
 					[
-						'for i in $(seq 1 20); do',
-						'  (exec 3<>/dev/tcp/127.0.0.1/22222 && exec 3>&-) 2>/dev/null &',
+						'for i in $(seq 1 5); do',
+						'  (sleep 10 | nc 127.0.0.1 22222 >/dev/null 2>&1 &)',
 						'done',
-						'wait',
-						'sleep 2',
 						'systemctl show -p Result --value sshd.socket',
 					].join('\n'),
 					this.link,
