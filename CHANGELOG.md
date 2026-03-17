@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.12.0
+## (2026-03-17)
+
+* add flock and lockfile documentation [Yann CARDAILLAC]
+
 # v6.11.14
 ## (2026-03-16)
 

@@ -1,4 +1,18 @@
 - commits:
+    - subject: add flock and lockfile documentation
+      hash: d5ae3bea0cce63d60e5048fe696c655a666b9550
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 6.12.0
+  title: ""
+  date: 2026-03-17T10:38:00.364Z
+- commits:
     - subject: "wpa-supplicant: Align to recipe from Scarthgap"
       hash: bd8979799b88c68b40892af469d0fe1da5a7d791
       body: >
