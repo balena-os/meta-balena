@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.12.1
+## (2026-03-18)
+
+* os/tests: Fix sporadic failure in recover-sshd-socket [Alexandru Costache]
+
 # v6.12.0
 ## (2026-03-17)
 

@@ -1,4 +1,35 @@
 - commits:
+    - subject: "os/tests: Fix sporadic failure in recover-sshd-socket"
+      hash: 093e3cbd633e418aa00665e13d9b591310c5bb56
+      body: |
+        Occasionally the recover-sshd-socket test may fail if
+        the exit reason for sshd.socket is 'success' instead
+        of 'trigger-limit-hit'. This seems to be a race which could
+        be caused by factors like the speed of the hardware, the way
+        systemd calculates time, as well as to how it determines "bad"
+        connections. For example if the first connection is fully
+        handed off before the next one arrived, the burst counter may
+        not reach the limit.
+
+        Also, if the socket unit is restarted while the script sleeps
+        for two seconds, the Result property would show 'success' as the
+        unit is now healthy again.
+
+        We switch to a lower burst limit and keep each connection
+        active for a period of time longer than the systemd's sliding window,
+        to ensure that the connection limit is always exceeded in the defined
+        interval.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.12.1
+  title: ""
+  date: 2026-03-18T09:34:00.113Z
+- commits:
     - subject: add flock and lockfile documentation
       hash: d5ae3bea0cce63d60e5048fe696c655a666b9550
       body: ""
