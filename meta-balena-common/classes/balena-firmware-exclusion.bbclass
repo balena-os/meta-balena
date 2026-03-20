@@ -4,6 +4,12 @@
 #  - DEPLOY_DIR_IMAGE/nonessential_firmware.txt (debug with reasons)
 #
 
+BALENA_FIRMWARE_EXCLUSION_ENABLED ?= "1"
+
+def _is_firmware_exclusion_enabled(d):
+    value = (d.getVar('BALENA_FIRMWARE_EXCLUSION_ENABLED') or "").strip()
+    return value == "1"
+
 # Read firmware metadata produced by balena-firmware-sort, then compute the
 # nonessential package set including interface-incompatible firmware.
 def _compute_nonessential_firmware_from_metadata(d):
@@ -121,6 +127,10 @@ def get_nonessential_firmware_path(d):
 
 # Add excluded firmware from nonessential_firmware.txt to BAD_RECOMMENDATIONS
 python do_apply_firmware_exclusion_policy() {
+    if not _is_firmware_exclusion_enabled(d):
+        bb.note("Firmware exclusion is disabled; skipping BAD_RECOMMENDATIONS updates")
+        return
+
     extra_bad = _get_nonessential_firmware_packages(d)
 
     if extra_bad:
@@ -137,6 +147,10 @@ addtask do_apply_firmware_exclusion_policy after do_generate_nonessential_firmwa
 # Fail the build if any of the excluded packages have been found in the image manifest
 python do_nonessential_firmware_check() {
     import os
+
+    if not _is_firmware_exclusion_enabled(d):
+        bb.note("Firmware exclusion is disabled; skipping manifest enforcement")
+        return
 
     # During do_image_complete, this variable points to the manifest in WORKDIR
     manifest_path = d.getVar('IMAGE_MANIFEST')
