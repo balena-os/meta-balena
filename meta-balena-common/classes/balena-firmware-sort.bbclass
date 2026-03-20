@@ -207,6 +207,19 @@ def save_package_metadata(d, packages_metadata):
 
     bb.note(f"Wrote firmware metadata work file to: {output_path}")
 
+def _fail_missing_whence_entries(missing_in_whence):
+    if not missing_in_whence:
+        return
+
+    missing_lines = "\n".join(
+        f"  - {path} (package: {pkg})" for path, pkg in missing_in_whence
+    )
+    bb.fatal(
+        "Firmware files not in WHENCE:\n"
+        f"{missing_lines}\n"
+        "Please add them to WHENCE/extra_WHENCE with a known Driver category."
+    )
+
 # do_firmware_sort is the entry point for the sorting mechanism
 # 1) collect canonical firmware file ownership from packages-split (file -> package)
 # 2) parse WHENCE and resolve canonical file categories with firmware_sort_driver_categories (file -> category) 
@@ -260,12 +273,17 @@ python do_firmware_sort() {
     # category from WHENCE and build package -> set(categories).
     # If a file exists in packages-split but has no WHENCE category, we fail
     # so that all firmware has to be categorized.
+    missing_in_whence = []
     for canonical_path, pkg in sorted(file_to_package.items()):
         category = file_to_category.get(canonical_path)
         if category is None:
-            bb.fatal(f"Firmware file not in WHENCE: {canonical_path} (package: {pkg})")
+            missing_in_whence.append((canonical_path, pkg))
+            continue
 
         package_categories.setdefault(pkg, set()).add(category)
+
+    if missing_in_whence:
+        _fail_missing_whence_entries(missing_in_whence)
 
     for pkg in sorted(package_categories.keys()):
         categories = sorted(package_categories[pkg])
