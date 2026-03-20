@@ -27,3 +27,15 @@ Driver: mwifiex - Marvell Wi-Fi fullmac-type 802.11n/ac cards
 Link: mrvl/sd8997_uapsta.bin -> mrvl/sdsd8997_combo_v4.bin
 
 --------------------------------------------------------------------------
+
+Driver: brcmfmac - Broadcom/Cypress FullMAC WLAN driver
+
+File: brcm/brcmfmac4330-sdio.txt
+File: brcm/brcmfmac43340-sdio.txt
+File: brcm/brcmfmac43362-sdio.txt
+File: brcm/brcmfmac43430-sdio.txt
+File: brcm/brcmfmac43430a0-sdio.txt
+File: brcm/brcmfmac43455-sdio.txt
+File: brcm/brcmfmac4356-sdio.txt
+
+--------------------------------------------------------------------------
