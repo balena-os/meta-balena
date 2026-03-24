@@ -31,7 +31,6 @@ SRC_URI = "\
 	file://balena-host.socket \
 	file://balena-healthcheck \
 	file://var-lib-docker.mount \
-	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
 	file://0001-dynbinary-use-go-cross-compiler.patch;patchdir=src/import \
 	"
@@ -142,9 +141,6 @@ do_install() {
 
 	mkdir -p ${D}/usr/lib/balena
 	install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
-
-	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
-	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
 
 	install -d ${D}/${ROOT_HOME}/.docker
 	ln -sf .docker ${D}/${ROOT_HOME}/.balena
