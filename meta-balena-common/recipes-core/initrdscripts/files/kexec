@@ -43,12 +43,26 @@ kexec_run() {
     BOOT_PARAMS="$(cat /proc/cmdline | sed -e "s,balena_stage2,," | sed -e "s,root=[^\ ]*,," | sed -e "s,maxcpus=0,," | sed -e "s,nr_cpus=[^\ ]*,,")"
     kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS} root=UUID=${ROOT_UUID} ${KEXEC_EXTRA_ARGS}"
 
-    umount "${ROOTFS_DIR}"
-
     # BOOT_MOUNT is undefined in flasher
     if [ -n "${BOOT_MOUNT}" ]; then
         umount "${BOOT_MOUNT}"
     fi
+
+    # The machineid script mounts the state partition and /etc/machine-id
+    MACHINEID_MOUNT="${ROOTFS_DIR}/etc/machine-id"
+    if grep -q "${MACHINEID_MOUNT}" < /proc/mounts; then
+        umount "${MACHINEID_MOUNT}"
+    fi
+
+    STATE_MOUNT="${ROOTFS_DIR}/mnt/state"
+    if grep -q "${STATE_MOUNT}" < /proc/mounts; then
+        umount "${STATE_MOUNT}"
+    fi
+
+    umount "${ROOTFS_DIR}"
+
+    # Nothing should be mounted at this point, but let's be defensive and sync
+    sync
 
     kexec -e
 
