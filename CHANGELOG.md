@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.12.3
+## (2026-03-26)
+
+* initrdscripts: Unmount the state partition before kexec [Michal Toman]
+
 # v6.12.2
 ## (2026-03-20)
 

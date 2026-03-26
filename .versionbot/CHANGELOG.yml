@@ -1,4 +1,26 @@
 - commits:
+    - subject: "initrdscripts: Unmount the state partition before kexec"
+      hash: 44c8cdf321581634f562ffb4c836cf00d7d72cf8
+      body: |
+        At this moment we only attempt to unmount boot and root partitions
+        in the kexec script as the assumption was nothing else is mounted
+        at that point. But this is not true, the machineid script mounts
+        the state partition and bind-mounts /etc/machine-id from it. As a side
+        effect, the root partition won't properly unmount either.
+
+        This patch changes the kexec script to unmount the state partition
+        before trying to unmount root.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 6.12.3
+  title: ""
+  date: 2026-03-26T13:52:27.431Z
+- commits:
     - subject: "balena-supervisor: remove redundant bind mounts and DOCKER_ROOT"
       hash: f89a663ce8fa379176f935a45ff6340c8e700f9e
       body: |
