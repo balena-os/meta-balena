@@ -1,4 +1,22 @@
 - commits:
+    - subject: ".github/workflows: Remove discontinued machines"
+      hash: 5f2ca2e4adaf3c7ef807e1f82e55c07537540dc2
+      body: |
+        It was decided to remove support for these machines based on
+        hardware being discontinued or lack of customer interest:
+
+        https://docs.balena.io/reference/hardware/versioning#discontinued
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.12.5
+  title: ""
+  date: 2026-04-09T01:53:25.209Z
+- commits:
     - subject: Update balena-supervisor to v17.6.27
       hash: e7476f5ca220f62ae8c5b00bea27c1426bcf7d1c
       body: |

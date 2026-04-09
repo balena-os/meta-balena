@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.12.5
+## (2026-04-09)
+
+* .github/workflows: Remove discontinued machines [Florin Sarbu]
+
 # v6.12.4
 ## (2026-04-02)
 
