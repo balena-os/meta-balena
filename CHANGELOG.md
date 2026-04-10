@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.12.6
+## (2026-04-10)
+
+* Update actions/checkout digest to de0fac2 [balena-renovate[bot]]
+
 # v6.12.5
 ## (2026-04-09)
 

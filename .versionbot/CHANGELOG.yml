@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update actions/checkout digest to de0fac2
+      hash: 71b5d16d84c284c2fdb2d50ec6fce0b5ebe6eb5a
+      body: |
+        Update actions/checkout to de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 6.12.6
+  title: ""
+  date: 2026-04-10T11:35:57.174Z
+- commits:
     - subject: ".github/workflows: Remove discontinued machines"
       hash: 5f2ca2e4adaf3c7ef807e1f82e55c07537540dc2
       body: |
