@@ -1,4 +1,169 @@
 - commits:
+    - subject: Update balena-supervisor to v17.7.1
+      hash: 94842a810c54fc4d8eb1feea8bfa111b658e75c4
+      body: |
+        Update balena-supervisor from 17.6.27 to 17.7.1
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Fix bug in single -> multicontainer migration of legacy app.json
+              hash: dadca5fd2f1651aa7c3cc0c13d197d27cd7bfbae
+              body: >
+                The use of `exports.` means that typescript couldn't spot the
+                bug
+
+                introduced in
+                https://github.com/balena-os/balena-supervisor/pull/1765
+
+                where the function was moved to another file. This switches to
+
+                importing the function as expected.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.7.1
+          title: ""
+          date: 2026-04-08T16:07:56.710Z
+        - commits:
+            - subject: Return updateStatus in /v2/applications/state
+              hash: 16df0720d4682bc5004aec97c171bd0e3dc22fde
+              body: >
+                This updates the handler for the endpoint to use the result of
+
+                application-manager.getState (augmented with data from the
+                target apps)
+
+                in order to include the `updateStatus` as part of the app
+                report. This
+
+                allows the method to be used by apps to identify when an app
+                update has
+
+                finished downloading in order to force an update.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+            - subject: Ensure all downloading images are reported
+              hash: 51528674db4747ce1ab938f452a4dbb987249398
+              body: >
+                Previously, the report would only include the images that are in
+                the
+
+                process of being downloaded, without including images in the
+                target
+
+                state that will have to be downloaded eventually. This could
+                also cause
+
+                the `update_status` report to fluctuate between `done` and
+                `downloading`
+
+                while new image downloads were being queued up.
+
+
+                The `getState` method in application-manager now checks the
+                target apps
+
+                and adds any target images as `Downloading` with progress `0`
+                that are
+
+                overrided by the current state. This method also now reports
+                when an app
+
+                has been rejected which was previously done in
+                `getCurrentForReport`.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-17.7.0
+          title: ""
+          date: 2026-04-07T20:44:17.935Z
+        - commits:
+            - subject: Convert many lodash usages to native equivalents
+              hash: 6a28bb270f0f1f5d095631e142f23c9fe4d9b46d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.6.32
+          title: ""
+          date: 2026-04-07T19:17:34.212Z
+        - commits:
+            - subject: "Tests: remove unused file"
+              hash: 6f54477ac9661258e7552d64be54d280113985c3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.6.31
+          title: ""
+          date: 2026-04-07T15:59:33.996Z
+        - commits:
+            - subject: Update to typescript 6.x / es2025
+              hash: 3cdceb7af6d38b59465fad1be52c10dc82e619b9
+              body: |
+                This also makes use of the unlocked es2025 features
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Remove nodejs 20/22 from the test matrix as we only ship with/truly
+                support 24.x
+              hash: a8e652683e7c778730ecd171d7890a94ab8953b8
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.6.30
+          title: ""
+          date: 2026-04-06T14:30:27.547Z
+        - commits:
+            - subject: Update lodash to v4.18.1 [SECURITY]
+              hash: 614d1e001445ebeae314e256411b0628d08f3ddf
+              body: |
+                Update lodash from 4.17.23 to 4.18.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-17.6.29
+          title: ""
+          date: 2026-04-03T20:39:05.415Z
+        - commits:
+            - subject: "config/backends: Allow setting custom dtb on iot-gate-imx8plus"
+              hash: a0b267d7abc35e20647fd4dc5e42cfe1e1424eb2
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: balena-supervisor-17.6.28
+          title: ""
+          date: 2026-04-03T18:31:16.999Z
+  version: 6.12.7
+  title: ""
+  date: 2026-04-11T12:09:48.444Z
+- commits:
     - subject: Update actions/checkout digest to de0fac2
       hash: 71b5d16d84c284c2fdb2d50ec6fce0b5ebe6eb5a
       body: |

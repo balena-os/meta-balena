@@ -1,6 +1,53 @@
 Change log
 -----------
 
+# v6.12.7
+## (2026-04-11)
+
+
+<details>
+<summary> Update balena-supervisor to v17.7.1 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.7.1
+> ### (2026-04-08)
+> 
+> * Fix bug in single -> multicontainer migration of legacy app.json [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.7.0
+> ### (2026-04-07)
+> 
+> * Return updateStatus in /v2/applications/state [Felipe Lalanne]
+> * Ensure all downloading images are reported [Felipe Lalanne]
+> 
+> ## balena-supervisor-17.6.32
+> ### (2026-04-07)
+> 
+> * Convert many lodash usages to native equivalents [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.6.31
+> ### (2026-04-07)
+> 
+> * Tests: remove unused file [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.6.30
+> ### (2026-04-06)
+> 
+> * Update to typescript 6.x / es2025 [Pagan Gazzard]
+> * Remove nodejs 20/22 from the test matrix as we only ship with/truly support 24.x [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.6.29
+> ### (2026-04-03)
+> 
+> * Update lodash to v4.18.1 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.6.28
+> ### (2026-04-03)
+> 
+> * config/backends: Allow setting custom dtb on iot-gate-imx8plus [Alexandru Costache]
+> 
+
+</details>
+
 # v6.12.6
 ## (2026-04-10)
 
