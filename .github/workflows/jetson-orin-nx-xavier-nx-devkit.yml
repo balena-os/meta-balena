@@ -24,7 +24,7 @@ permissions:
 jobs:
   yocto:
     name: Yocto
-    uses: balena-os/balena-jetson-orin/.github/workflows/jetson-orin-nx-xavier-nx-devkit.yml@master
+    uses: balena-os/balena-jetson-orin/.github/workflows/jetson-orin-nx-xavier-nx-devkit.yml@d5cdc23f6777ff88adf4cda9d17d84ce8a1e3286 # master
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
