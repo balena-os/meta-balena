@@ -460,3 +460,5 @@ python __anonymous() {
     rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND')
     d.setVar('ROOTFS_POSTPROCESS_COMMAND', re.sub(r'zap_empty_root_password ?;?', '', rootfs_postprocess_command))
 }
+
+inherit balena-firmware-exclusion
