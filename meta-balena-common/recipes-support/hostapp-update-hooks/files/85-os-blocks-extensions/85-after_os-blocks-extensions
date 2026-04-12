@@ -1,0 +1,10 @@
+#!/bin/sh
+set -o errexit
+
+DURING_UPDATE=${DURING_UPDATE:-0}
+[ "${DURING_UPDATE}" != "1" ] && exit 0
+
+hooks_dir="${HOOKS_DIR%/}"
+new_rootfs="${hooks_dir%/etc/hostapp-update-hooks.d}"
+
+balena-extension-manager update --rootfs "${new_rootfs}"
