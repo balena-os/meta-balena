@@ -17,4 +17,7 @@ SUPERVISOR_FLEET:x86-64 ?= "amd64-supervisor"
 SUPERVISOR_FLEET:intel-quark ?= "i386-nlp-supervisor"
 
 # Balena supervisor default version
-SUPERVISOR_VERSION ?= "v17.7.1"
+SUPERVISOR_VERSION ?= "v17.6.27"
+
+# Override supervisor image name (empty: fetch from API)
+SUPERVISOR_IMAGE_NAME ?= "aggurio/aarch64-supervisor:oci-runtime"
