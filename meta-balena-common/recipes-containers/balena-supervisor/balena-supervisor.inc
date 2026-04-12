@@ -18,3 +18,8 @@ SUPERVISOR_FLEET:intel-quark ?= "i386-nlp-supervisor"
 
 # Balena supervisor default version
 SUPERVISOR_VERSION ?= "v18.2.2"
+
+# Override supervisor image name (empty: fetch from API)
+SUPERVISOR_IMAGE_NAME ?= "ghcr.io/alexgg/balena-supervisor:alexgg-helios-extensions-aarch64-v19.0.0-2-g78595326dc"
+
+HELIOS_IMAGE_NAME ?= "ghcr.io/alexgg/helios:alexgg-helios-overlay-extensions-hostonly-g8894d96c3e63"

@@ -1,0 +1,19 @@
+[Unit]
+Description=Helios supervisor service
+After=\
+    balena.service \
+    balena-supervisor.service
+Wants=balena.service
+ConditionPathExists=/etc/helios/helios.conf
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10s
+SyslogIdentifier=helios
+ExecStartPre=-@BINDIR@/balena stop helios
+ExecStart=@BINDIR@/start-helios
+ExecStop=-@BINDIR@/balena stop helios
+
+[Install]
+WantedBy=multi-user.target
