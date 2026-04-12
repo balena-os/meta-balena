@@ -6,7 +6,7 @@ Before=balena-supervisor.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/bin/sh -c 'balena ps -a --filter "label=io.balena.image.class=overlay" --filter "status=dead" -q | xargs -r balena rm'
+ExecStart=/usr/bin/balena-extension-manager cleanup
 
 [Install]
 WantedBy=multi-user.target

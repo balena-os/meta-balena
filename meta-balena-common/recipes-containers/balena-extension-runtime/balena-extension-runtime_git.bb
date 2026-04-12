@@ -28,6 +28,7 @@ do_compile() {
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/balena-extension-runtime ${D}${bindir}
+    install -m 0755 ${S}/balena-extension-manager ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
