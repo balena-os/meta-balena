@@ -18,9 +18,8 @@ include packagegroup-resin.inc
 RDEPENDS:${PN} += " \
     dosfstools \
     mobynit \
-    docker-disk \
     hostapp-update \
-    hostapp-extensions-update \
+    balena-extension-runtime \
     hostapp-update-hooks \
     resin-filesystem-expand \
     balena-persistent-logs \
