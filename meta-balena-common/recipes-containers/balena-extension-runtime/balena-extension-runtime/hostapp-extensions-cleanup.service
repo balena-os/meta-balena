@@ -1,0 +1,12 @@
+[Unit]
+Description=Clean up dead hostapp extension containers
+After=balena.service
+Before=balena-supervisor.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c 'balena ps -a --filter "label=io.balena.image.class=overlay" --filter "status=dead" -q | xargs -r balena rm'
+
+[Install]
+WantedBy=multi-user.target
