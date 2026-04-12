@@ -42,5 +42,3 @@ HOSTAPP_PLATFORM:aarch64 = "linux/arm64"
 HOSTAPP_PLATFORM:x86 = "linux/i386"
 HOSTAPP_PLATFORM:x86-64 = "linux/amd64"
 HOSTAPP_PLATFORM:intel-quark = "linux/i386"
-
-HOSTEXT_IMAGES ?= ""
