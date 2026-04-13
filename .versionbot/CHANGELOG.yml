@@ -1,4 +1,82 @@
 - commits:
+    - subject: Update tests/leviathan digest to 2e945b4
+      hash: e5f020562e656d4d554aaef11318855861428624
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 6a2a4f57b4c99d957c88c7d3422549fb4575d6cb
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.106
+          title: ""
+          date: 2026-04-13T01:28:25.145Z
+        - commits:
+            - subject: Update actions/upload-artifact digest to 043fb46
+              hash: 62e14d3058fe31d156aff97853942f9dbaea9db5
+              body: |
+                Update actions/upload-artifact
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.105
+          title: ""
+          date: 2026-04-11T01:39:14.274Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.30
+              hash: a8200231aa037f4bf9ddb4e7e6693527558be4ae
+              body: |
+                Update balena-os/leviathan-worker from 2.10.29 to 2.10.30
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.104
+          title: ""
+          date: 2026-04-10T13:17:58.036Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 8194a3c017cd0a86356e4a5e91e46801f02abc97
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.103
+          title: ""
+          date: 2026-04-10T11:33:28.387Z
+        - commits:
+            - subject: "core/contracts: Update submodule to v2.0.142"
+              hash: a950ff11b6676135a00f246e4268123c13d26e22
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.36.102
+          title: ""
+          date: 2026-04-10T10:18:35.246Z
+  version: 6.12.8
+  title: ""
+  date: 2026-04-13T11:49:42.542Z
+- commits:
     - subject: Update balena-supervisor to v17.7.1
       hash: 94842a810c54fc4d8eb1feea8bfa111b658e75c4
       body: |

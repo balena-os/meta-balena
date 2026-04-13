@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v6.12.8
+## (2026-04-13)
+
+
+<details>
+<summary> Update tests/leviathan digest to 2e945b4 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.106
+> ### (2026-04-13)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.105
+> ### (2026-04-11)
+> 
+> * Update actions/upload-artifact digest to 043fb46 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.104
+> ### (2026-04-10)
+> 
+> * Update balena-os/leviathan-worker to v2.10.30 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.103
+> ### (2026-04-10)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.102
+> ### (2026-04-10)
+> 
+> * core/contracts: Update submodule to v2.0.142 [Alexandru Costache]
+> 
+
+</details>
+
 # v6.12.7
 ## (2026-04-11)
 
