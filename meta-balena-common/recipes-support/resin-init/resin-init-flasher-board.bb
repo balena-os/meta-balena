@@ -4,7 +4,9 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = "file://resin-init-flasher-board"
-S = "${UNPACKDIR}"
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
+S = "${S_UNPACK}"
 
 inherit allarch
 
@@ -12,5 +14,5 @@ RDEPENDS:${PN} = "bash"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/resin-init-flasher-board ${D}${bindir}
+    install -m 0755 ${S_UNPACK}/resin-init-flasher-board ${D}${bindir}
 }
