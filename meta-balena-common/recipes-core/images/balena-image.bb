@@ -38,7 +38,7 @@ IMAGE_INSTALL = " \
     "
 
 # add packages for LUKS operations if necessary
-IMAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup lvm2-udevrules',d)}"
+IMAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup lvm2',d)}"
 IMAGE_INSTALL:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' tpm2-tools libtss2-tcti-device os-helpers-tpm2', '',d)}"
 
 generate_rootfs_fingerprints () {

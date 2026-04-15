@@ -3,8 +3,7 @@ From: Lans Zhang <jia.zhang@windriver.com>
 Date: Tue, 15 Mar 2016 21:28:33 +0800
 Subject: [PATCH] Fix for the cross compilation
 
-Upstream-Status: Pending
-
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Make.rules | 51 ++++++++++++++++++++++++++++-----------------------

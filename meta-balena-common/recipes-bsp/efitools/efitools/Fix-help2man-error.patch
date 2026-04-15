@@ -5,6 +5,7 @@ Subject: [PATCH] Fix help2man error
 
 This issue may be caused by the poky compiler.
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Make.rules | 4 +++-

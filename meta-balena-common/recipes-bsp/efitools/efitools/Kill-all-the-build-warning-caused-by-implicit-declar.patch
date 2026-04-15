@@ -4,8 +4,7 @@ Date: Tue, 15 Mar 2016 17:12:24 +0800
 Subject: [PATCH] Kill all the build warning caused by implicit declaration of
  function
 
-Upstream-Status: Pending
-
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Loader.c                | 1 +

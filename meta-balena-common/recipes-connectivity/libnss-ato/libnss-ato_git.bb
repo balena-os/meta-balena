@@ -3,7 +3,7 @@ to map every nss request for unknown user to a single predefined user"
 HOMEPAGE = "https://github.com/donapieppo/libnss-ato"
 SECTION = "libs"
 
-LICENSE = "LGPLv3"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://copyright;md5=37e0ae856bc7cedaaaca1d4a681b62b0"
 
 SRC_URI = " \
@@ -11,7 +11,7 @@ SRC_URI = " \
 	file://0001-libnss_ato.c-Enable-use-for-root-user.patch \
 "
 SRCREV = "7f33780a09b3a6a256ff77601adaed28d9bb117a"
-S = "${WORKDIR}/git"
+#S = "${WORKDIR}/git"
 
 do_compile() {
 	oe_runmake 'CC=${CC}' all

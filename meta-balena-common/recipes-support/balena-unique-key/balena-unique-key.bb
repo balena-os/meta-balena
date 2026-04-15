@@ -7,7 +7,13 @@ SRC_URI = " \
     file://balena-unique-key \
     file://balena-device-uuid.service \
     "
-S = "${WORKDIR}"
+
+python () {
+    if not d.getVar('UNPACKDIR'):
+        d.setVar('UNPACKDIR', d.getVar('WORKDIR'))
+}
+
+S = "${UNPACKDIR}"
 
 inherit allarch systemd
 
@@ -36,11 +42,11 @@ do_install() {
     chmod 0600 ${D}/${ROOT_HOME}/.rnd
 
     install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/balena-unique-key ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/balena-unique-key ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/balena-device-uuid.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/balena-device-uuid.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \

@@ -14,12 +14,12 @@ FILES:${PN} += "\
 RDEPENDS:${PN} = "bash healthdog"
 
 do_install:append() {
-    install -m 0644 ${WORKDIR}/chrony.conf ${D}/${sysconfdir}/chrony.conf
+    install -m 0644 ${UNPACKDIR}/chrony.conf ${D}/${sysconfdir}/chrony.conf
 
     # Install systemd drop-in for chronyd.service
     install -d ${D}${sysconfdir}/systemd/system/chronyd.service.d
-    install -m 0644 ${WORKDIR}/chronyd.conf.systemd ${D}${sysconfdir}/systemd/system/chronyd.service.d/chronyd.conf
+    install -m 0644 ${UNPACKDIR}/chronyd.conf.systemd ${D}${sysconfdir}/systemd/system/chronyd.service.d/chronyd.conf
     install -d ${D}${libexecdir}
-    install -m 0775 ${WORKDIR}/chrony-helper ${D}${libexecdir}
-    install -m 0775 ${WORKDIR}/chrony-healthcheck ${D}${libexecdir}
+    install -m 0775 ${UNPACKDIR}/chrony-helper ${D}${libexecdir}
+    install -m 0775 ${UNPACKDIR}/chrony-healthcheck ${D}${libexecdir}
 }

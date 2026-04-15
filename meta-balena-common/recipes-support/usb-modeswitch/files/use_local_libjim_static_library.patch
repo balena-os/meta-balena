@@ -1,3 +1,5 @@
+Upstream-Status: Inappropriate [oe-configuration]
+
 Index: usb-modeswitch-2.6.1/Makefile
 ===================================================================
 --- usb-modeswitch-2.6.1.orig/Makefile

@@ -29,7 +29,7 @@ SRC_URI = " \
     file://rollback-parse-bootloader \
     file://rollback-board-healthcheck \
     "
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit allarch systemd
 

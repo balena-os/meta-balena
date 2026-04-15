@@ -21,7 +21,7 @@ SRC_URI = " \
 
 DEPENDS = "libevent"
 
-S = "${WORKDIR}/git"
+#S = "${UNPACKDIR}/git"
 
 do_install () {
     install -d ${D}${bindir}
@@ -30,8 +30,8 @@ do_install () {
 
 do_deploy() {
     mkdir -p "${DEPLOYDIR}/system-proxy/"
-    install -m 0600 "${WORKDIR}/redsocks.conf.ignore" "${DEPLOYDIR}/system-proxy/"
-    install -m 0600 "${WORKDIR}/README.ignore" "${DEPLOYDIR}/system-proxy/"
+    install -m 0600 "${UNPACKDIR}/redsocks.conf.ignore" "${DEPLOYDIR}/system-proxy/"
+    install -m 0600 "${UNPACKDIR}/README.ignore" "${DEPLOYDIR}/system-proxy/"
 }
 
 addtask deploy before do_package after do_install

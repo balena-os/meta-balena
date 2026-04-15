@@ -14,7 +14,12 @@ SRC_URI = " \
     file://os-sshkeys \
     file://os-sshkeys.service \
     "
-S = "${WORKDIR}"
+python () {
+    if not d.getVar('UNPACKDIR'):
+        d.setVar('UNPACKDIR', d.getVar('WORKDIR'))
+}
+
+S = "${UNPACKDIR}"
 
 inherit allarch systemd
 
@@ -45,24 +50,24 @@ SYSTEMD_SERVICE:${PN} = " \
 do_install() {
     root_bindmount_name=$(echo "${ROOT_HOME}" | sed 's|/|-|g')
     install -d ${D}${sbindir}
-    install -m 0755 ${WORKDIR}/balena-config-vars ${D}${sbindir}/
-    install -m 0755 ${WORKDIR}/balena-config-defaults ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/balena-config-vars ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/balena-config-defaults ${D}${sbindir}/
     sed -i -e 's:@@BALENA_NONENC_BOOT_MOUNT@@:${BALENA_NONENC_BOOT_MOUNT}:g' ${D}${sbindir}/balena-config-defaults
     sed -i -e 's:@@BALENA_NONENC_BOOT_LABEL@@:${BALENA_NONENC_BOOT_LABEL}:g' ${D}${sbindir}/balena-config-defaults
     sed -i -e 's:@@BALENA_BOOT_MOUNT@@:${BALENA_BOOT_MOUNT}:g' ${D}${sbindir}/balena-config-defaults
     sed -i -e 's:@@BALENA_BOOT_LABEL@@:${BALENA_BOOT_LABEL}:g' ${D}${sbindir}/balena-config-defaults
-    install -m 0755 ${WORKDIR}/os-networkmanager ${D}${sbindir}/
-    install -m 0755 ${WORKDIR}/os-udevrules ${D}${sbindir}/
-    install -m 0755 ${WORKDIR}/os-sshkeys ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/os-networkmanager ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/os-udevrules ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/os-sshkeys ${D}${sbindir}/
     sed -i -e "s,@ROOT_HOME@,${ROOT_HOME},g" ${D}${sbindir}/os-sshkeys
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/config-json.path ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/config-json.service ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/os-networkmanager.service ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/os-udevrules.service ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/os-sshkeys.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/config-json.path ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/config-json.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/os-networkmanager.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/os-udevrules.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/os-sshkeys.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \

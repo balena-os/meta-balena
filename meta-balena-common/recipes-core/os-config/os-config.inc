@@ -20,11 +20,11 @@ SYSTEMD_SERVICE:${PN} = " \
 do_compile[network] = "1"
 do_install:append() {
 	install -d ${D}${sysconfdir}
-	install -m 0644 ${WORKDIR}/os-config.json ${D}${sysconfdir}
+	install -m 0644 ${UNPACKDIR}/os-config.json ${D}${sysconfdir}
 
 	install -d ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${WORKDIR}/os-config.service ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${WORKDIR}/os-config.timer ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${WORKDIR}/os-config-devicekey.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${UNPACKDIR}/os-config.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${UNPACKDIR}/os-config.timer ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${UNPACKDIR}/os-config-devicekey.service ${D}${systemd_unitdir}/system
 
 }

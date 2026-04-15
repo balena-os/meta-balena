@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 PR = "r2"
 
 SRC_URI = "file://resin-device-progress"
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit allarch
 
@@ -20,5 +20,5 @@ RDEPENDS:${PN} = " \
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/resin-device-progress ${D}${bindir}/resin-device-progress
+    install -m 0775 ${UNPACKDIR}/resin-device-progress ${D}${bindir}/resin-device-progress
 }

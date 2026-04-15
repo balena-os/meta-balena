@@ -3,7 +3,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = "file://hostapp-update-hooks"
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit allarch
 
@@ -68,7 +68,8 @@ RDEPENDS:${PN} = " \
     "
 RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' os-helpers-sb',d)}"
 
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils tcgtool', '',d)}"
+# efitools needs more debugging, commenting this out for the purpose of checking blockers for nvidia builds
+#RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efivar efitools-utils tcgtool', '',d)}"
 
 do_install() {
 	mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/

@@ -6,7 +6,7 @@ SRC_URI = " \
     file://balena-data-reset \
     file://balena-data-reset.service \
     "
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 inherit allarch systemd
 
@@ -26,7 +26,7 @@ BALENA_DATA_MOUNT_POINT = "/mnt/data"
 
 do_install() {
     install -d ${D}${bindir}/
-    install -m 0755 ${WORKDIR}/balena-data-reset ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/balena-data-reset ${D}${bindir}/
 
     sed -i -e 's,@BALENA_DATA_MP@,${BALENA_DATA_MOUNT_POINT},g' \
           ${D}${bindir}/balena-data-reset
@@ -34,7 +34,7 @@ do_install() {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system/
         install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
-        install -m 0644 ${WORKDIR}/balena-data-reset.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/balena-data-reset.service ${D}${systemd_unitdir}/system/
 
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \

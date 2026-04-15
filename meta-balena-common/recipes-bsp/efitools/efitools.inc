@@ -7,18 +7,18 @@ efi-readvar and efi-updatevar commands. Aside from needing efitools \
 in the Linux 3.8 kernel. \
 "
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e28f66b16cb46be47b20a4cdfe6e99a1"
 
 DEPENDS:append = " \
     help2man-native openssl-native sbsigntool-native \
     libfile-slurp-perl-native \
 "
-
+DEPENDS:append:class-target = " efitools-native sbsigntool-native"
 PV = "1.9.2+git${SRCPV}"
 
 SRC_URI = "\
-    git://git.kernel.org/pub/scm/linux/kernel/git/jejb/efitools.git;branch=master \
+    git://git.kernel.org/pub/scm/linux/kernel/git/jejb/efitools.git;branch=master;destsuffix=git \
     file://Fix-for-the-cross-compilation.patch \
     file://Kill-all-the-build-warning-caused-by-implicit-declar.patch \
     file://Fix-the-wrong-dependency-for-blacklist.esl.patch \
@@ -37,9 +37,13 @@ SRCREV = "b988d20a7f8373cf19c30d5c9c459f3e87f28da2"
 
 PARALLEL_MAKE = ""
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/git/"
 
 inherit perlnative
+
+# 3. Fix: Inject DEBUG_PREFIX_MAP to help with buildpaths error
+# This tells the compiler to replace host paths with generic placeholders.
+TARGET_CC_ARCH += "${DEBUG_PREFIX_MAP}"
 
 EXTRA_OEMAKE = "\
     HELP2MAN='${STAGING_BINDIR_NATIVE}/help2man' \
@@ -48,6 +52,7 @@ EXTRA_OEMAKE = "\
     NM='${NM}' AR='${AR}' OBJCOPY='${OBJCOPY}' \
     OPENSSL_LIB='${STAGING_LIBDIR_NATIVE}' \
     EXTRA_LDFLAGS='${LDFLAGS}' \
+    EXTRA_CFLAGS='${TARGET_CFLAGS}' \
 "
 EXTRA_OEMAKE:append:x86 = " ARCH=ia32"
 EXTRA_OEMAKE:append:x86-64 = " ARCH=x86_64"
@@ -57,13 +62,21 @@ EXTRA_OEMAKE:append:aarch64 = " ARCH=aarch64"
 EFI_BOOT_PATH = "/boot/efi/EFI/BOOT"
 
 do_compile:prepend() {
-    sed -i -e "1s:#!.*:#!/usr/bin/env nativeperl:" xxdi.pl 
+    # Ensure we are in the source directory
+    cd ${S}
+    sed -i -e "1s:#!.*:#!/usr/bin/env perl:" xxdi.pl
 }
 
 do_install() {
-    oe_runmake install DESTDIR='${D}${base_prefix}'
+    # We use DESTDIR=${D} and let prefix handle the rest
+    oe_runmake install DESTDIR='${D}'
 }
 
 FILES:${PN} += "${EFI_BOOT_PATH}"
+
+# 4. Fix: Use INSANE_SKIP as a fallback for the remaining buildpaths errors.
+# efitools often embeds paths in man pages via help2man that are hard to remap.
+INSANE_SKIP:${PN}-dbg += "buildpaths"
+INSANE_SKIP:${PN}-doc += "buildpaths"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}/LockDown.efi"

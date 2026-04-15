@@ -25,7 +25,7 @@ python __anonymous() {
         d.setVar("BALENA_STORAGE", bs_machine)
 }
 
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 do_compile () {
     rm -rf ${B}/work

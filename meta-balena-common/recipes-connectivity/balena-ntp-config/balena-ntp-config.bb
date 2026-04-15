@@ -8,7 +8,8 @@ SRC_URI = " \
     file://balena-ntp-config.service \
     "
 
-S = "${WORKDIR}"
+
+S = "${UNPACKDIR}"
 
 inherit allarch systemd balena-configurable
 
@@ -17,11 +18,11 @@ RDEPENDS:${PN} = "chrony chronyc"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/balena-ntp-config ${D}${bindir}/balena-ntp-config
+    install -m 0775 ${UNPACKDIR}/balena-ntp-config ${D}${bindir}/balena-ntp-config
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/balena-ntp-config.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/balena-ntp-config.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
         -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/balena-ntp-config.service

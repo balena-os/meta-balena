@@ -9,7 +9,7 @@ inherit balena_cargo
 # SRC_URI += "crate://crates.io/healthdog/1.0.6"
 SRC_URI += "git://github.com/balena-os/healthdog-rs.git;protocol=https;nobranch=1"
 SRCREV = "37f9dbb37a399e5548fe47477ddd027bb846212d"
-S = "${WORKDIR}/git"
+
 CARGO_SRC_DIR = ""
 
 

@@ -9,7 +9,7 @@ inherit balena_cargo balena-configurable
 # SRC_URI += "crate://crates.io/os-config/1.2.11"
 SRC_URI += "git://git@github.com/balena-os/os-config.git;protocol=https;nobranch=1"
 SRCREV = "f207b2a73e1ebe11e33ed35351b38ba50592af7f"
-S = "${WORKDIR}/git"
+#S = "${WORKDIR}/git"
 CARGO_SRC_DIR = ""
 
 

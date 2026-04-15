@@ -4,11 +4,11 @@ Date: Fri, 25 Mar 2016 10:52:34 +0800
 Subject: [PATCH] LockDown: run system warm reset after the key provision
  success
 
-Upstream-Status: Pending
 
 In addition, BIOS would stop at its setup screen. The end user can thus
 enable UEFI secure boot immediately.
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  LockDown.c | 15 +++++++++++++++
