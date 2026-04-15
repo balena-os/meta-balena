@@ -33,7 +33,6 @@ SRC_URI = " \
     file://time-set.target \
     file://time-sync.conf \
     "
-S = "${UNPACKDIR}"
 
 inherit allarch systemd
 
@@ -54,17 +53,17 @@ do_install() {
     install -d ${D}${systemd_unitdir}/system
     install -d ${D}/etc/fake-hwclock
     install -d ${D}${sysconfdir}/systemd/system/time-sync.target.d/
-    install -m 0775 ${UNPACKDIR}/timeinit-buildtime.sh ${D}${bindir}
-    install -m 0775 ${UNPACKDIR}/timeinit-rtc.sh ${D}${bindir}
-    install -m 0775 ${UNPACKDIR}/timesync-https.sh ${D}${bindir}
-    install -m 0775 ${UNPACKDIR}/fake-hwclock ${D}${base_sbindir}
-    install -m 0644 ${UNPACKDIR}/timeinit-buildtime.service ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/fake-hwclock.service ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/fake-hwclock-update.service ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/fake-hwclock-update.timer ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/timeinit-rtc.service ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/timesync-https.service ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/time-sync-https-wait.target ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/time-set.target ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/time-sync.conf ${D}${sysconfdir}/systemd/system/time-sync.target.d/
+    install -m 0775 ${S_UNPACK}/timeinit-buildtime.sh ${D}${bindir}
+    install -m 0775 ${S_UNPACK}/timeinit-rtc.sh ${D}${bindir}
+    install -m 0775 ${S_UNPACK}/timesync-https.sh ${D}${bindir}
+    install -m 0775 ${S_UNPACK}/fake-hwclock ${D}${base_sbindir}
+    install -m 0644 ${S_UNPACK}/timeinit-buildtime.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/fake-hwclock.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/fake-hwclock-update.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/fake-hwclock-update.timer ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/timeinit-rtc.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/timesync-https.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/time-sync-https-wait.target ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/time-set.target ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/time-sync.conf ${D}${sysconfdir}/systemd/system/time-sync.target.d/
 }

@@ -10,7 +10,9 @@ SRC_URI += "file://disk-watchdogd.service \
             file://disk-watchdog-boot-history.service \
             file://disk-watchdog-boot-history"
 
-#S = "${UNPACKDIR}/git"
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
+S = "${S_UNPACK}"
 
 WD_TEST_FILE ?= "${bindir}/disk-watchdogd"
 DISK_WD_BOOT_DIR ?= "/mnt/state/disk-watchdog"
@@ -37,14 +39,14 @@ do_install() {
            -e 's|@WD_TEST_FILE@|${WD_TEST_FILE}|g' \
            -e 's|@OS_HELPERS_FS@|${libexecdir}/os-helpers-fs|g' \
            -e 's|@DISK_WD_BOOT_DIR@|${DISK_WD_BOOT_DIR}|g' \
-           ${UNPACKDIR}/disk-watchdogd.service
+           ${S_UNPACK}/disk-watchdogd.service
 
     # Substitute paths in boot history script
     sed -i -e 's|@DISK_WD_BOOT_DIR@|${DISK_WD_BOOT_DIR}|g' \
-           ${UNPACKDIR}/disk-watchdog-boot-history
+           ${S_UNPACK}/disk-watchdog-boot-history
 
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/disk-watchdogd.service ${D}${systemd_unitdir}/system/
-    install -m 0644 ${UNPACKDIR}/disk-watchdog-boot-history.service ${D}${systemd_unitdir}/system/
-    install -m 0755 ${UNPACKDIR}/disk-watchdog-boot-history ${D}${bindir}/
+    install -m 0644 ${S_UNPACK}/disk-watchdogd.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${S_UNPACK}/disk-watchdog-boot-history.service ${D}${systemd_unitdir}/system/
+    install -m 0755 ${S_UNPACK}/disk-watchdog-boot-history ${D}${bindir}/
 }

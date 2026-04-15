@@ -9,6 +9,8 @@ SRC_URI = " \
 
 inherit allarch systemd
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 SYSTEMD_SERVICE:${PN} = " \
     periodic-vacuum-logs.service \
     periodic-vacuum-logs.timer \
@@ -22,6 +24,6 @@ do_build[noexec] = "1"
 do_install() {
         install -d ${D}${systemd_unitdir}/system/
         install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
-        install -m 0644 ${UNPACKDIR}/periodic-vacuum-logs.service ${D}${systemd_unitdir}/system/
-        install -m 0644 ${UNPACKDIR}/periodic-vacuum-logs.timer ${D}${systemd_unitdir}/system/
+        install -m 0644 ${S_UNPACK}/periodic-vacuum-logs.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${S_UNPACK}/periodic-vacuum-logs.timer ${D}${systemd_unitdir}/system/
 }

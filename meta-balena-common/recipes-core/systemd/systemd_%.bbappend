@@ -22,6 +22,8 @@ SRC_URI:append = " \
 
 PACKAGECONFIG:remove = "nss-resolve"
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 python() {
     import re
 
@@ -51,17 +53,17 @@ do_install:append() {
     rm -f ${D}${systemd_unitdir}/system/time-set.target
 
     install -d -m 0755 ${D}/${sysconfdir}/systemd/journald.conf.d
-    install -m 06444 ${UNPACKDIR}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
+    install -m 06444 ${S_UNPACK}/journald-balena-os.conf ${D}/${sysconfdir}/systemd/journald.conf.d
 
     # install drop-in configs to disable these services when running containerized
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/getty@.service.d
-    install -m 0644 ${UNPACKDIR}/condition-virtualization-not-docker.conf \
+    install -m 0644 ${S_UNPACK}/condition-virtualization-not-docker.conf \
         ${D}/${sysconfdir}/systemd/system/getty@.service.d
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/serial-getty@.service.d
-    install -m 0644 ${UNPACKDIR}/condition-virtualization-not-docker.conf \
+    install -m 0644 ${S_UNPACK}/condition-virtualization-not-docker.conf \
         ${D}/${sysconfdir}/systemd/system/serial-getty@.service.d
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
-    install -m 0644 ${UNPACKDIR}/condition-virtualization-not-docker.conf \
+    install -m 0644 ${S_UNPACK}/condition-virtualization-not-docker.conf \
         ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
 
     # mask systemd-getty-generator
@@ -72,20 +74,20 @@ do_install:append() {
 
     # shorten reboot/poweroff timeouts
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/reboot.target.d
-    install -m 0644 ${UNPACKDIR}/reboot.target.conf ${D}/${sysconfdir}/systemd/system/reboot.target.d/
+    install -m 0644 ${S_UNPACK}/reboot.target.conf ${D}/${sysconfdir}/systemd/system/reboot.target.d/
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/poweroff.target.d
-    install -m 0644 ${UNPACKDIR}/poweroff.target.conf ${D}/${sysconfdir}/systemd/system/poweroff.target.d/
+    install -m 0644 ${S_UNPACK}/poweroff.target.conf ${D}/${sysconfdir}/systemd/system/poweroff.target.d/
 
     # enable watchdog
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
-    install -m 0644 ${UNPACKDIR}/watchdog.conf ${D}/${sysconfdir}/systemd/system.conf.d
+    install -m 0644 ${S_UNPACK}/watchdog.conf ${D}/${sysconfdir}/systemd/system.conf.d
 
     # Add os specific conf
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system.conf.d
-    install -m 0644 ${UNPACKDIR}/os.conf ${D}/${sysconfdir}/systemd/system.conf.d
+    install -m 0644 ${S_UNPACK}/os.conf ${D}/${sysconfdir}/systemd/system.conf.d
 
     install -d -m 0755 ${D}/${sysconfdir}/systemd/coredump.conf.d
-    install -m 0644 ${UNPACKDIR}/coredump.conf ${D}/${sysconfdir}/systemd/coredump.conf.d
+    install -m 0644 ${S_UNPACK}/coredump.conf ${D}/${sysconfdir}/systemd/coredump.conf.d
 
     ln -s ${datadir}/zoneinfo ${D}${sysconfdir}/localtime
     ln -s ../proc/self/mounts ${D}${sysconfdir}/mtab
@@ -95,29 +97,29 @@ do_install:append() {
 
     # Vacuum the journal to catch a corner case bug where the log bloats above limit
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/
-    install -m 0644 ${UNPACKDIR}/vacuum.conf ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/vacuum.conf
+    install -m 0644 ${S_UNPACK}/vacuum.conf ${D}/${sysconfdir}/systemd/system/systemd-journald.service.d/vacuum.conf
 
-    install -m 0755 ${UNPACKDIR}/resin_update_state_probe ${D}${prefix}/lib/udev/resin_update_state_probe
-    install -m 0755 ${UNPACKDIR}/zram-swap-init ${D}${prefix}/lib/udev/zram-swap-init
+    install -m 0755 ${S_UNPACK}/resin_update_state_probe ${D}${prefix}/lib/udev/resin_update_state_probe
+    install -m 0755 ${S_UNPACK}/zram-swap-init ${D}${prefix}/lib/udev/zram-swap-init
 
     # Move udev rules into /lib as /etc/udev/rules.d is bind mounted for custom rules
     mv ${D}/etc/udev/rules.d/*.rules ${D}${prefix}/lib/udev/rules.d/
 
     install -d -m 0755 ${D}/usr/lib/sysctl.d/
-    install -m 0644 ${UNPACKDIR}/balena-os-sysctl.conf ${D}/usr/lib/sysctl.d/
+    install -m 0644 ${S_UNPACK}/balena-os-sysctl.conf ${D}/usr/lib/sysctl.d/
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'disable-user-ns', 'true', 'false', d)}; then
-        install -m 0644 ${UNPACKDIR}/disable-user-ns.conf ${D}/usr/lib/sysctl.d/
+        install -m 0644 ${S_UNPACK}/disable-user-ns.conf ${D}/usr/lib/sysctl.d/
     fi
 
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${UNPACKDIR}/dev-zram0.swap ${D}${systemd_unitdir}/system/dev-zram0.swap
+    install -m 0644 ${S_UNPACK}/dev-zram0.swap ${D}${systemd_unitdir}/system/dev-zram0.swap
 
     # Do not start getty on production mode
     install -d -m 0755 ${D}${sysconfdir}/systemd/system/getty.target.d
-    install -m 0644 ${UNPACKDIR}/getty-target-development-features.conf ${D}${sysconfdir}/systemd/system/getty.target.d/development-features.conf
+    install -m 0644 ${S_UNPACK}/getty-target-development-features.conf ${D}${sysconfdir}/systemd/system/getty.target.d/development-features.conf
     install -d -m 0755 ${D}${sysconfdir}/systemd/system/getty@.service.d
-    install -m 0644 ${UNPACKDIR}/getty-service-development-features.conf ${D}${sysconfdir}/systemd/system/getty@.service.d/development-features.conf
+    install -m 0644 ${S_UNPACK}/getty-service-development-features.conf ${D}${sysconfdir}/systemd/system/getty@.service.d/development-features.conf
 
     # We don't have audit configs enabled in the kernel, so we can remove the audit sockets
     rm ${D}${prefix}/lib/systemd/system/sockets.target.wants/systemd-journald-audit.socket || true
