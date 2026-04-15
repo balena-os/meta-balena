@@ -4,6 +4,11 @@ SRC_URI:append = " \
     file://mdns.allow \
     "
 
+python () {
+    if not d.getVar('UNPACKDIR'):
+        d.setVar('UNPACKDIR', d.getVar('WORKDIR'))
+}
+
 do_install:append () {
 	# Systemd provides mtab so if activated, don't let base-files provide it too
 	# We avoid errors at do_rootfs in this way when using opkg
@@ -23,5 +28,5 @@ do_install_basefilesissue:append () {
 }
 
 do_install:append:libc-glibc () {
-	install -m 0644 ${WORKDIR}/mdns.allow ${D}${sysconfdir}/mdns.allow
+	install -m 0644 ${UNPACKDIR}/mdns.allow ${D}${sysconfdir}/mdns.allow
 }

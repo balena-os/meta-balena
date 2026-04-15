@@ -7,9 +7,9 @@ inherit balena_cargo
 
 # how to get fatrw could be as easy as but default to a git checkout:
 # SRC_URI += "crate://crates.io/fatrw/0.2.21"
-SRC_URI += "git://git@github.com/balena-os/fatrw.git;protocol=ssh;nobranch=1"
+SRC_URI += "git://git@github.com/balena-os/fatrw.git;protocol=ssh;nobranch=1;destsuffix=git"
 SRCREV = "228b66078678317ea28802369719b235cd10d56f"
-S = "${@d.getVar('UNPACKDIR') + '/git' if d.getVar('UNPACKDIR') else d.getVar('WORKDIR') + '/git'}"
+S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 CARGO_SRC_DIR = ""
 
 # please note if you have entries that do not begin with crate://
