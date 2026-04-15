@@ -9,9 +9,8 @@ inherit balena_cargo
 # SRC_URI += "crate://crates.io/fatrw/0.2.21"
 SRC_URI += "git://git@github.com/balena-os/fatrw.git;protocol=ssh;nobranch=1"
 SRCREV = "228b66078678317ea28802369719b235cd10d56f"
-S = "${WORKDIR}/git"
+S = "${@d.getVar('UNPACKDIR') + '/git' if d.getVar('UNPACKDIR') else d.getVar('WORKDIR') + '/git'}"
 CARGO_SRC_DIR = ""
-
 
 # please note if you have entries that do not begin with crate://
 # you must change them to how that package can be fetched
