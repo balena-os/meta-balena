@@ -7,7 +7,7 @@ inherit balena_cargo
 
 # how to get healthdog could be as easy as but default to a git checkout:
 # SRC_URI += "crate://crates.io/healthdog/1.0.6"
-SRC_URI += "git://github.com/balena-os/healthdog-rs.git;protocol=https;nobranch=1"
+SRC_URI += "git://github.com/balena-os/healthdog-rs.git;protocol=https;nobranch=1;destsuffix=git"
 SRCREV = "37f9dbb37a399e5548fe47477ddd027bb846212d"
 
 CARGO_SRC_DIR = ""
