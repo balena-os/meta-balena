@@ -1,0 +1,1 @@
+DISTRO_FEATURES_DEFAULT:remove = "x11"
