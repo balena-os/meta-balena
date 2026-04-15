@@ -15,7 +15,9 @@ SRC_URI:append = " \
            ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' file://balena-init-flasher-tpm', '',d)} \
 "
 
-S = "${UNPACKDIR}"
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
+S = "${S_UNPACK}"
 
 inherit allarch systemd
 
@@ -53,11 +55,11 @@ do_install() {
     fi
 
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/resin-init-flasher ${D}${bindir}
+    install -m 0755 ${S_UNPACK}/resin-init-flasher ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${UNPACKDIR}/resin-init-flasher.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${S_UNPACK}/resin-init-flasher.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@BASE_SBINDIR@,${base_sbindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
@@ -96,12 +98,12 @@ do_install() {
         if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
             install -d ${D}${libexecdir}
             echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-            install -m 0755 ${UNPACKDIR}/balena-init-flasher-efi ${D}${libexecdir}/balena-init-flasher-secureboot
+            install -m 0755 ${S_UNPACK}/balena-init-flasher-efi ${D}${libexecdir}/balena-init-flasher-secureboot
             sed -i -e 's,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE},' ${D}${libexecdir}/balena-init-flasher-secureboot
         fi
         if ${@bb.utils.contains('MACHINE_FEATURES','tpm','true','false',d)}; then
             install -d ${D}${libexecdir}
-            install -m 0755 ${UNPACKDIR}/balena-init-flasher-tpm ${D}${libexecdir}/balena-init-flasher-diskenc
+            install -m 0755 ${S_UNPACK}/balena-init-flasher-tpm ${D}${libexecdir}/balena-init-flasher-diskenc
         fi
     fi
 

@@ -7,7 +7,7 @@ SRC_URI = "file://resin-init-flasher-board"
 S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
 
 S = "${S_UNPACK}"
-
+ 
 inherit allarch
 
 RDEPENDS:${PN} = "bash"
