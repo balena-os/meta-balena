@@ -49,9 +49,62 @@ In overlayfs terminology, `lowerdir=A:B:C` means A has the highest lookup priori
 
 Care should be taken not to shadow root filesystem content which is essential for BalenaOS to function.
 
+## Kernel ABI compatibility
+
+Extensions that ship kernel modules or BTF-sensitive content should declare the kernel they were built against. Mobynit uses these labels at boot to skip extensions whose kernel does not match the running one, preventing module load failures and mitigating ABI drift across HUPs.
+
+* `io.balena.image.kernel-version=M.m.p` — coarse userspace-visible kernel version (e.g. `6.12.61`). Checked against the running kernel's stripped `uname -r`. Missing label is fail-open (extension is mounted).
+* `io.balena.image.kernel-abi-id=<sha256>` — precise kernel ABI fingerprint, typically the sha256 of `Module.symvers`. Provides exact module-ABI matching. Optional; mobynit can derive the value from the extension's `Module.symvers` if the label is absent.
+
+<!-- -->
+
+    FROM scratch
+
+    LABEL io.balena.image.class=overlay
+    LABEL io.balena.image.kernel-version=6.12.61
+    LABEL io.balena.image.kernel-abi-id=<sha256 of Module.symvers>
+
+    COPY --from=builder /lib/modules /lib/modules
+
+A boot-time cleanup service (`balena-extension-manager cleanup`) complements this by removing dead extension containers, including those whose `kernel-version` label no longer matches the running kernel. After a HUP changes the kernel, the now-mismatched containers are pruned on the next boot. See [Managing hostapp extensions](#managing-hostapp-extensions).
+
+## Image retention across HUPs
+
+Extension images declare which OS versions they are valid for via the `io.balena.image.os-version` label. At the post-HUP commit (the rollback-health boundary), the engine-side cleanup runs `balena-extension-manager cleanup --stale-os`, which removes extension images whose label no longer satisfies the new OS version, and preserves the ones that do.
+
+* `io.balena.image.os-version=<pattern>[,<pattern>...]` — a comma-separated list of shell-style globs (`filepath.Match` semantics) matched against `/etc/os-release` `VERSION_ID`. Any match retains the image. A missing or empty label is a legacy-safe retain.
+
+<!-- -->
+
+    FROM scratch
+
+    LABEL io.balena.image.class=overlay
+    LABEL io.balena.image.os-version=2.119.*
+
+    COPY --from=builder /hostext /
+
+Common choices:
+
+* Exact version (`2.119.0`) — drops on any patch or suffix bump. Use for extensions that pin tightly (e.g. signed kernel modules whose ABI guarantees don't extend across patches).
+* Minor-line glob (`2.119.*`) — survives patch-level HUPs and suffixed variants like `2.119.0-staging`. Recommended default.
+* Minor-list glob (`2.119.*,2.120.*`) — builder opts in to one minor version of forward compatibility.
+
+Because `filepath.Match`'s `*` matches `.`, `2.119.*` also matches `2.119.0-staging`, `2.119.1+rev1`, and similar suffixed versions — this is intentional.
+
+At HUP commit, an image that fails the predicate is removed; the same HUP has already reconciled containers via the `kernel-version` and `kernel-abi-id` filters above, so no running extension is disrupted. Before the commit, during the rollback window, no image or container retention decisions are altered.
+
+## Reboot-requiring extensions
+
+* `io.balena.update.requires-reboot=1` — marks the extension as needing a host reboot after install/update. The supervisor sets a reboot breadcrumb when creating a container with this label; the host reboots on the next reconcile tick and mobynit layers the extension on the subsequent boot. This is the same label the supervisor already honors on regular services (via the `io.balena.update.*` namespace of update-time directives).
+
 ## Managing hostapp extensions
 
 Extensions are meant to be managed by the supervisor or as part of a hostOS update. Manually installing, removing or updating hostapp extensions is neither advised nor supported.
+
+On-host lifecycle is handled by the `balena-extension-runtime` recipe, which ships two binaries: `balena-extension-runtime` (the OCI runtime) and `balena-extension-manager` (the lifecycle helper). The manager's cleanup runs at two points:
+
+* **Every boot** — `hostapp-extensions-cleanup.service`, a oneshot ordered after `balena.service` and before the supervisor, runs `balena-extension-manager cleanup` to drop dead extension containers (see [Kernel ABI compatibility](#kernel-abi-compatibility)).
+* **At HUP commit** — the `85-fwd_commit_os-blocks-extensions` forward-commit hook runs `balena-extension-manager cleanup --stale-os` to drop extension images that no longer match the booted OS version (see [Image retention across HUPs](#image-retention-across-hups)).
 
 ## Disabling hostapp extension overlays
 
