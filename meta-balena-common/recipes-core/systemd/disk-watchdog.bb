@@ -3,16 +3,18 @@ DESCRIPTION = "A watchdog service that monitors disk health"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
-SRC_URI = "git://github.com/balena-os/disk-watchdogd.git;branch=master;protocol=https"
+SRC_URI = "git://github.com/balena-os/disk-watchdogd.git;branch=master;protocol=https;destsuffix=git"
 SRCREV = "1060e49da45d9bfda3047856d66bdc7c6b8c1911"
 
 SRC_URI += "file://disk-watchdogd.service \
             file://disk-watchdog-boot-history.service \
             file://disk-watchdog-boot-history"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+#S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
 
-S = "${S_UNPACK}"
+#S = "${S_UNPACK}"
+
+S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 
 WD_TEST_FILE ?= "${bindir}/disk-watchdogd"
 DISK_WD_BOOT_DIR ?= "/mnt/state/disk-watchdog"
@@ -39,14 +41,14 @@ do_install() {
            -e 's|@WD_TEST_FILE@|${WD_TEST_FILE}|g' \
            -e 's|@OS_HELPERS_FS@|${libexecdir}/os-helpers-fs|g' \
            -e 's|@DISK_WD_BOOT_DIR@|${DISK_WD_BOOT_DIR}|g' \
-           ${S_UNPACK}/disk-watchdogd.service
+           ${UNPACKDIR}/disk-watchdogd.service
 
     # Substitute paths in boot history script
     sed -i -e 's|@DISK_WD_BOOT_DIR@|${DISK_WD_BOOT_DIR}|g' \
-           ${S_UNPACK}/disk-watchdog-boot-history
+           ${UNPACKDIR}/disk-watchdog-boot-history
 
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${S_UNPACK}/disk-watchdogd.service ${D}${systemd_unitdir}/system/
-    install -m 0644 ${S_UNPACK}/disk-watchdog-boot-history.service ${D}${systemd_unitdir}/system/
-    install -m 0755 ${S_UNPACK}/disk-watchdog-boot-history ${D}${bindir}/
+    install -m 0644 ${UNPACKDIR}/disk-watchdogd.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${UNPACKDIR}/disk-watchdog-boot-history.service ${D}${systemd_unitdir}/system/
+    install -m 0755 ${UNPACKDIR}/disk-watchdog-boot-history ${D}${bindir}/
 }
