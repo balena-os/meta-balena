@@ -55,6 +55,10 @@ EXTRA_OEMAKE = "\
     EXTRA_LDFLAGS='${LDFLAGS}' \
     EXTRA_CFLAGS='${TARGET_CFLAGS}' \
 "
+
+DEPENDS:append:class-target = " efitools-native"
+
+
 EXTRA_OEMAKE:append:x86 = " ARCH=ia32"
 EXTRA_OEMAKE:append:x86-64 = " ARCH=x86_64"
 EXTRA_OEMAKE:append:arm = " ARCH=arm"
@@ -71,6 +75,12 @@ do_compile:prepend() {
 do_install() {
     # We use DESTDIR=${D} and let prefix handle the rest
     oe_runmake install DESTDIR='${D}'
+    install -d ${D}${bindir}
+    install -m 0755 ${B}/cert-to-efi-sig-list ${D}${bindir}/
+    install -m 0755 ${B}/sign-efi-sig-list ${D}${bindir}/
+    install -m 0755 ${B}/sig-list-to-certs ${D}${bindir}/
+    install -m 0755 ${B}/hash-to-efi-sig-list ${D}${bindir}/
+    install -m 0755 ${B}/cert-to-efi-hash-list ${D}${bindir}/
 }
 
 FILES:${PN} += "${EFI_BOOT_PATH}"
