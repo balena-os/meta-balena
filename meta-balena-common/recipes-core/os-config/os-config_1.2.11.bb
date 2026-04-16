@@ -7,9 +7,10 @@ inherit balena_cargo balena-configurable
 
 # how to get os-config could be as easy as but default to a git checkout:
 # SRC_URI += "crate://crates.io/os-config/1.2.11"
-SRC_URI += "git://git@github.com/balena-os/os-config.git;protocol=https;nobranch=1"
+SRC_URI += "git://git@github.com/balena-os/os-config.git;protocol=https;nobranch=1;destsuffix=git"
 SRCREV = "f207b2a73e1ebe11e33ed35351b38ba50592af7f"
 #S = "${WORKDIR}/git"
+S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 CARGO_SRC_DIR = ""
 
 
@@ -590,8 +591,7 @@ SRC_URI[ws2_32-sys-0.2.1.sha256sum] = "d59cefebd0c892fa2dd6de581e937301d8552cb44
 
 SRCREV_FORMAT .= "_fatrw"
 SRCREV_fatrw = "04629a208b9035d642e51db54886f3d39d7ee029"
-EXTRA_OECARGO_PATHS += "${WORKDIR}/fatrw"
-
+EXTRA_OECARGO_PATHS += "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/fatrw"
 # FIXME: update generateme with the real MD5 of the license file
 LIC_FILES_CHKSUM = " \
     file://Apache-2.0;md5=86d3f3a95c324c9479bd8986968f4327 \

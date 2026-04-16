@@ -1,4 +1,4 @@
-inherit systemd cargo-dyn
+inherit systemd cargo-dyn pkgconfig
 
 DEPENDS += "dbus openssl pkgconfig-native"
 
