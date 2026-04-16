@@ -27,7 +27,8 @@ SRCREV_FORMAT       =  "sbsigntools_ccan"
 
 PV = "0.9.4-git${SRCPV}"
 
-S = "${UNPACKDIR}/git/"
+#S = "${UNPACKDIR}/git"
+S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 
 inherit autotools-brokensep pkgconfig
 
