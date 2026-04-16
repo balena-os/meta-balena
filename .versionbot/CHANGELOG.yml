@@ -1,4 +1,20 @@
 - commits:
+    - subject: Fix modemmanager build on dunfell
+      hash: e945ee3d1610d387a7e29b482b678d9a38d72b9d
+      body: ""
+      footer:
+        Changelog-entry: Fix modemmanager build on dunfell
+        changelog-entry: Fix modemmanager build on dunfell
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.12.9
+  title: ""
+  date: 2026-04-16T17:50:24.850Z
+- commits:
     - subject: Update tests/leviathan digest to 2e945b4
       hash: e5f020562e656d4d554aaef11318855861428624
       body: Update tests/leviathan

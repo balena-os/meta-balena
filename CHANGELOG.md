@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.12.9
+## (2026-04-16)
+
+* Fix modemmanager build on dunfell [Florin Sarbu]
+
 # v6.12.8
 ## (2026-04-13)
 
