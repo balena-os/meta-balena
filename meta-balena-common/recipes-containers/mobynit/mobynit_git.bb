@@ -9,9 +9,8 @@ inherit go
 RDEPENDS:${PN} = "util-linux"
 
 GO_IMPORT = "github.com/balena-os/mobynit"
-SRC_URI = "git://${GO_IMPORT};nobranch=1;protocol=https"
-# v1.0.0
-SRCREV="68b5fba96640392b591d27d243b891f657d7d02b"
+SRC_URI = "git://${GO_IMPORT};branch=alexgg/oci-runtime;protocol=https"
+SRCREV="556f2b4933054573e05ed06a90dc345240b7ddd8"
 
 S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
 
