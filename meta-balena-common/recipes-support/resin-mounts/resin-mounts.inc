@@ -3,7 +3,8 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 SRC_URI += "file://bind-path.service.in"
 
-S = "${UNPACKDIR}"
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}"
 
 inherit systemd allarch
 
@@ -76,7 +77,7 @@ do_compile () {
 		fi
 	done
 }
-do_compile[dirs] = "${UNPACKDIR}"
+do_compile[dirs] = "${S_UNPACK}"
 
 do_install () {
 	install -d "${D}${sysconfdir}"

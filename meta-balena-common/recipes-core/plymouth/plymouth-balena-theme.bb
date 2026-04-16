@@ -16,11 +16,13 @@ SRC_URI = " \
 
 inherit allarch
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 do_install () {
     mkdir -p ${D}${datadir}/plymouth/themes/balena
-    install -m 644 ${UNPACKDIR}/balena.script ${D}${datadir}/plymouth/themes/balena/
-    install -m 644 ${UNPACKDIR}/balena.plymouth ${D}${datadir}/plymouth/themes/balena/
-    install -m 644 ${UNPACKDIR}/plymouthd.defaults ${D}${datadir}/plymouth/
+    install -m 644 ${S_UNPACK}/balena.script ${D}${datadir}/plymouth/themes/balena/
+    install -m 644 ${S_UNPACK}/balena.plymouth ${D}${datadir}/plymouth/themes/balena/
+    install -m 644 ${S_UNPACK}/plymouthd.defaults ${D}${datadir}/plymouth/
 }
 
 FILES:${PN} = "${datadir}/plymouth/*"

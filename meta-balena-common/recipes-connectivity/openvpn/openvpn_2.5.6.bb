@@ -7,6 +7,8 @@ DEPENDS = "lzo openssl iproute2 ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '
 
 inherit autotools systemd update-rc.d
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 SRC_URI = "http://swupdate.openvpn.org/community/releases/${BP}.tar.gz \
            file://openvpn \
            file://openvpn@.service \
@@ -37,7 +39,7 @@ EXTRA_OECONF += "IPROUTE=${base_sbindir}/ip"
 
 do_install:append() {
     install -d ${D}/${sysconfdir}/init.d
-    install -m 755 ${UNPACKDIR}/openvpn ${D}/${sysconfdir}/init.d
+    install -m 755 ${S_UNPACK}/openvpn ${D}/${sysconfdir}/init.d
 
     install -d ${D}/${sysconfdir}/openvpn
     install -d ${D}/${sysconfdir}/openvpn/sample
@@ -48,16 +50,16 @@ do_install:append() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}/${systemd_unitdir}/system
-        install -m 644 ${UNPACKDIR}/openvpn@.service ${D}/${systemd_unitdir}/system
-        install -m 644 ${UNPACKDIR}/openvpn@.service ${D}/${systemd_unitdir}/system/openvpn@loopback-server.service
-        install -m 644 ${UNPACKDIR}/openvpn@.service ${D}/${systemd_unitdir}/system/openvpn@loopback-client.service
+        install -m 644 ${S_UNPACK}/openvpn@.service ${D}/${systemd_unitdir}/system
+        install -m 644 ${S_UNPACK}/openvpn@.service ${D}/${systemd_unitdir}/system/openvpn@loopback-server.service
+        install -m 644 ${S_UNPACK}/openvpn@.service ${D}/${systemd_unitdir}/system/openvpn@loopback-client.service
 
         install -d ${D}/${localstatedir}
         install -d ${D}/${localstatedir}/lib
         install -d -m 710 ${D}/${localstatedir}/lib/openvpn
 
         install -d ${D}${sysconfdir}/tmpfiles.d
-        install -m 0644 ${UNPACKDIR}/openvpn-volatile.conf ${D}${sysconfdir}/tmpfiles.d/openvpn.conf
+        install -m 0644 ${S_UNPACK}/openvpn-volatile.conf ${D}${sysconfdir}/tmpfiles.d/openvpn.conf
     fi
 }
 

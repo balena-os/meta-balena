@@ -37,6 +37,8 @@ DEPENDS:append:class-target = " bash-completion"
 
 inherit meson gettext update-rc.d systemd gobject-introspection update-alternatives upstream-version-is-even pkgconfig
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 SRC_URI = " \
     git://github.com/NetworkManager/NetworkManager.git;protocol=https;branch=main \
     file://enable-dhcpcd.conf \
@@ -311,11 +313,11 @@ do_install:append() {
 
     # Enable iwd if compiled
     if ${@bb.utils.contains('PACKAGECONFIG','iwd','true','false',d)}; then
-        install -Dm 0644 ${UNPACKDIR}/enable-iwd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-iwd.conf
+        install -Dm 0644 ${S_UNPACK}/enable-iwd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-iwd.conf
     fi
 
     # Enable dhcpd if compiled
     if ${@bb.utils.contains('PACKAGECONFIG','dhcpcd','true','false',d)}; then
-        install -Dm 0644 ${UNPACKDIR}/enable-dhcpcd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-dhcpcd.conf
+        install -Dm 0644 ${S_UNPACK}/enable-dhcpcd.conf ${D}${nonarch_libdir}/NetworkManager/conf.d/enable-dhcpcd.conf
     fi
 }

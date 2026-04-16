@@ -25,7 +25,8 @@ python __anonymous() {
         d.setVar("BALENA_STORAGE", bs_machine)
 }
 
-S = "${UNPACKDIR}"
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}"
 
 do_compile () {
     rm -rf ${B}/work

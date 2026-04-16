@@ -18,18 +18,20 @@ RDEPENDS:${PN} += "balena-config-vars bash"
 SYSTEMD_SERVICE:${PN} = "openvpn.service prepare-openvpn.service"
 SYSTEMD_AUTO_ENABLE = "enable"
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 do_install:append() {
 	install -d ${D}${bindir}
-	install -m 0755 ${UNPACKDIR}/prepare-openvpn ${D}${bindir}
+	install -m 0755 ${S_UNPACK}/prepare-openvpn ${D}${bindir}
 
 	install -d ${D}${sysconfdir}/openvpn-misc
-	install -m 0755 ${UNPACKDIR}/upscript.sh ${D}${sysconfdir}/openvpn-misc
-	install -m 0755 ${UNPACKDIR}/downscript.sh ${D}${sysconfdir}/openvpn-misc
+	install -m 0755 ${S_UNPACK}/upscript.sh ${D}${sysconfdir}/openvpn-misc
+	install -m 0755 ${S_UNPACK}/downscript.sh ${D}${sysconfdir}/openvpn-misc
 
 	install -d ${D}${systemd_unitdir}/system
 	install -c -m 0644 \
-		${UNPACKDIR}/prepare-openvpn.service \
-		${UNPACKDIR}/openvpn.service \
+		${S_UNPACK}/prepare-openvpn.service \
+		${S_UNPACK}/openvpn.service \
 		${D}${systemd_unitdir}/system
 
     sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \

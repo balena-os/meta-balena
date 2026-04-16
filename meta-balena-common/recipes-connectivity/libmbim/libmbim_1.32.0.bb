@@ -14,7 +14,7 @@ inherit meson pkgconfig bash-completion gobject-introspection
 SRCREV = "2bc1080292aae30000e808ec77d7a99b87eb3553"
 SRC_URI = "git://gitlab.freedesktop.org/mobile-broadband/libmbim.git;protocol=https;branch=mbim-1-32"
 
-#S = "${WORKDIR}/git"
+S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 
 EXTRA_OEMESON = " \
     -Dgtk_doc=false \

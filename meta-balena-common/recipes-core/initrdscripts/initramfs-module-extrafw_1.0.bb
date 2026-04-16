@@ -13,11 +13,12 @@ inherit allarch
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI = "file://extrafw"
 
-S = "${UNPACKDIR}"
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}"
 
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/extrafw ${D}/init.d/81-extrafw
+    install -m 0755 ${S_UNPACK}/extrafw ${D}/init.d/81-extrafw
 }
 
 FILES:${PN} = "/init.d/81-extrafw"

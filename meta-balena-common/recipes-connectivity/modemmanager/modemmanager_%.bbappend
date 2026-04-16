@@ -16,16 +16,18 @@ PACKAGECONFIG:remove = "polkit"
 
 PACKAGECONFIG:append = " at"
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 do_install:append() {
     install -d ${D}${base_libdir}/udev/rules.d/
-    install -m 0644 ${UNPACKDIR}/77-mm-huawei-configuration.rules ${D}${base_libdir}/udev/rules.d/
-    install -m 0755 ${UNPACKDIR}/mm-huawei-configuration-switch.sh ${D}${base_libdir}/udev/
-    install -m 0644 ${UNPACKDIR}/77-mm-u-blox-modeswitch.rules ${D}${base_libdir}/udev/rules.d
+    install -m 0644 ${S_UNPACK}/77-mm-huawei-configuration.rules ${D}${base_libdir}/udev/rules.d/
+    install -m 0755 ${S_UNPACK}/mm-huawei-configuration-switch.sh ${D}${base_libdir}/udev/
+    install -m 0644 ${S_UNPACK}/77-mm-u-blox-modeswitch.rules ${D}${base_libdir}/udev/rules.d
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/u-blox-switch.sh ${D}${bindir}
+    install -m 0755 ${S_UNPACK}/u-blox-switch.sh ${D}${bindir}
     install -d ${D}${systemd_unitdir}/system/ModemManager.service.d
-    install -m 0644 ${UNPACKDIR}/ModemManager.conf.systemd ${D}${systemd_unitdir}/system/ModemManager.service.d/ModemManager.conf
-    install -m 0644 ${UNPACKDIR}/u-blox-switch@.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S_UNPACK}/ModemManager.conf.systemd ${D}${systemd_unitdir}/system/ModemManager.service.d/ModemManager.conf
+    install -m 0644 ${S_UNPACK}/u-blox-switch@.service ${D}${systemd_unitdir}/system
 }
 
 FILES:${PN} += " \

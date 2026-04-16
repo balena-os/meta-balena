@@ -17,14 +17,16 @@ SYSTEMD_SERVICE:${PN} = " \
 	os-config-devicekey.service \
 	"
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 do_compile[network] = "1"
 do_install:append() {
 	install -d ${D}${sysconfdir}
-	install -m 0644 ${UNPACKDIR}/os-config.json ${D}${sysconfdir}
+	install -m 0644 ${S_UNPACK}/os-config.json ${D}${sysconfdir}
 
 	install -d ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${UNPACKDIR}/os-config.service ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${UNPACKDIR}/os-config.timer ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${UNPACKDIR}/os-config-devicekey.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${S_UNPACK}/os-config.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${S_UNPACK}/os-config.timer ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${S_UNPACK}/os-config-devicekey.service ${D}${systemd_unitdir}/system
 
 }

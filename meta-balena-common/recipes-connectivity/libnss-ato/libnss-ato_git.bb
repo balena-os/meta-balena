@@ -11,7 +11,8 @@ SRC_URI = " \
 	file://0001-libnss_ato.c-Enable-use-for-root-user.patch \
 "
 SRCREV = "7f33780a09b3a6a256ff77601adaed28d9bb117a"
-#S = "${WORKDIR}/git"
+
+S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 
 do_compile() {
 	oe_runmake 'CC=${CC}' all

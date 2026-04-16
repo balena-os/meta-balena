@@ -56,7 +56,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://0001-test-gatt-Fix-hung-issue.patch \
            file://0004-src-shared-util.c-include-linux-limits.h.patch \
            "
-S = "${UNPACKDIR}/bluez-${PV}"
+
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}/bluez-${PV}"
 
 CVE_PRODUCT = "bluez"
 
@@ -85,7 +87,7 @@ NOINST_TOOLS = " \
 
 do_install:append() {
 	install -d ${D}${INIT_D_DIR}
-	install -m 0755 ${UNPACKDIR}/init ${D}${INIT_D_DIR}/bluetooth
+	install -m 0755 ${S_UNPACK}/init ${D}${INIT_D_DIR}/bluetooth
 
 	if [ -f ${D}/${sysconfdir}/init.d/bluetooth ]; then
 		sed -i -e 's#@LIBEXECDIR@#${libexecdir}#g' ${D}/${sysconfdir}/init.d/bluetooth

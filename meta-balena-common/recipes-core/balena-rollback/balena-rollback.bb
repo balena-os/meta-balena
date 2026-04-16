@@ -29,7 +29,9 @@ SRC_URI = " \
     file://rollback-parse-bootloader \
     file://rollback-board-healthcheck \
     "
-S = "${UNPACKDIR}"
+
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}"
 
 inherit allarch systemd
 

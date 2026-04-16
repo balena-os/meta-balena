@@ -6,7 +6,9 @@ SRC_URI = " \
     file://balena-persistent-logs \
     file://balena-persistent-logs.service \
     "
-S = "${UNPACKDIR}"
+
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}"
 
 inherit allarch systemd
 
@@ -14,11 +16,11 @@ SYSTEMD_SERVICE:${PN} = "balena-persistent-logs.service"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${UNPACKDIR}/balena-persistent-logs ${D}${bindir}
+    install -m 0775 ${S_UNPACK}/balena-persistent-logs ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${UNPACKDIR}/balena-persistent-logs.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${S_UNPACK}/balena-persistent-logs.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \

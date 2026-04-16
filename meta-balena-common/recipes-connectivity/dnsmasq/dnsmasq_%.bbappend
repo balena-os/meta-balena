@@ -7,11 +7,12 @@ SRC_URI += " \
 
 inherit update-alternatives balena-configurable
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
 do_install:append () {
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
-		install -c -m 0644 ${UNPACKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
-		install -c -m 0644 ${UNPACKDIR}/resolv-conf.dnsmasq ${D}${sysconfdir}
+		install -c -m 0644 ${S_UNPACK}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
+		install -c -m 0644 ${S_UNPACK}/resolv-conf.dnsmasq ${D}${sysconfdir}
 	fi
 }
 

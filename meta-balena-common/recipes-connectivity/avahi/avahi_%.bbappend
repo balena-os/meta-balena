@@ -9,10 +9,7 @@ FILES:avahi-daemon += " \
 
 RDEPENDS:avahi-daemon += "balena-hostname"
 
-python () {
-    if not d.getVar('UNPACKDIR'):
-        d.setVar('UNPACKDIR', d.getVar('WORKDIR'))
-}
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
 
 do_install:append() {
     # remove example services as we don't want to advertise example services
@@ -21,7 +18,7 @@ do_install:append() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system/avahi-daemon.service.d
-        install -c -m 0644 ${UNPACKDIR}/avahi-daemon.conf ${D}${sysconfdir}/systemd/system/avahi-daemon.service.d
+        install -c -m 0644 ${S_UNPACK}/avahi-daemon.conf ${D}${sysconfdir}/systemd/system/avahi-daemon.service.d
     fi
 
     # Bring back the dbus introspection files poky removes

@@ -4,6 +4,8 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 inherit allarch
 
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+
 SRC_URI = " \
 	file://00-teensy.rules \
 	file://79-wlan-power.rules \
@@ -12,11 +14,11 @@ SRC_URI = " \
 
 do_install:append() {
 	# Rules to prevent ModemManager attempting to use Teensy boards as a modem
-	install -D -m 0644 ${UNPACKDIR}/00-teensy.rules ${D}/usr/lib/udev/rules.d/00-teensy.rules
+	install -D -m 0644 ${S_UNPACK}/00-teensy.rules ${D}/usr/lib/udev/rules.d/00-teensy.rules
 
 	# Install miscellaneous rules file
-	install -D -m 0644 ${UNPACKDIR}/99-misc.rules ${D}/usr/lib/udev/rules.d/99-misc.rules
+	install -D -m 0644 ${S_UNPACK}/99-misc.rules ${D}/usr/lib/udev/rules.d/99-misc.rules
 
 	# Install wlan rules file
-	install -D -m 0644 ${UNPACKDIR}/79-wlan-power.rules ${D}/usr/lib/udev/rules.d/79-wlan-power.rules
+	install -D -m 0644 ${S_UNPACK}/79-wlan-power.rules ${D}/usr/lib/udev/rules.d/79-wlan-power.rules
 }

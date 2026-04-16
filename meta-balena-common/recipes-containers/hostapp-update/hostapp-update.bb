@@ -5,7 +5,9 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 SRC_URI = " \
 	file://hostapp-update \
 	"
-S = "${UNPACKDIR}"
+
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}"
 
 inherit allarch
 
@@ -21,5 +23,5 @@ RDEPENDS:${PN}:class-target += "os-helpers-reboot"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/hostapp-update ${D}${bindir}
+    install -m 0755 ${S_UNPACK}/hostapp-update ${D}${bindir}
 }

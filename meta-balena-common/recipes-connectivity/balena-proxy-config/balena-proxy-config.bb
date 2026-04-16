@@ -9,7 +9,8 @@ SRC_URI = " \
     file://balena-proxy-config.service \
     "
 
-S = "${UNPACKDIR}"
+S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
+S = "${S_UNPACK}"
 
 inherit allarch systemd useradd
 
@@ -23,12 +24,12 @@ USERADD_PARAM:${PN} += "--system redsocks"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${UNPACKDIR}/balena-proxy-config ${D}${bindir}/balena-proxy-config
+    install -m 0775 ${S_UNPACK}/balena-proxy-config ${D}${bindir}/balena-proxy-config
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${UNPACKDIR}/balena-proxy-config.service ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${UNPACKDIR}/redsocks.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${S_UNPACK}/balena-proxy-config.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${S_UNPACK}/redsocks.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/*.service
