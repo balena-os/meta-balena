@@ -81,6 +81,8 @@ do_install() {
     install -m 0755 ${B}/sig-list-to-certs ${D}${bindir}/
     install -m 0755 ${B}/hash-to-efi-sig-list ${D}${bindir}/
     install -m 0755 ${B}/cert-to-efi-hash-list ${D}${bindir}/
+    install -m 0755 ${B}/efi-readvar ${D}${bindir}/
+    install -m 0755 ${B}/efi-updatevar ${D}${bindir}/
 }
 
 FILES:${PN} += "${EFI_BOOT_PATH}"
