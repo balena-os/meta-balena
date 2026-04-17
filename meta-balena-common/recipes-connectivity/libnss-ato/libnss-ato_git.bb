@@ -12,8 +12,6 @@ SRC_URI = " \
 "
 SRCREV = "7f33780a09b3a6a256ff77601adaed28d9bb117a"
 
-S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
-
 do_compile() {
 	oe_runmake 'CC=${CC}' all
 }
