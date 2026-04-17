@@ -168,10 +168,3 @@ BALENA_USE_LUKS ?= "1"
 # This is the docker API version for v20.10
 # balena version --format '{{.Server.APIVersion}}'
 BALENA_API_VERSION ?= "1.41"
-
-# Support building with Wrynose and earlier
-# TODO: Remove this if not needed
-##python () {
-##    if not d.getVar('UNPACKDIR'):
-##        d.setVar('UNPACKDIR', d.getVar('WORKDIR'))
-##}
