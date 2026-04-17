@@ -17,9 +17,6 @@ export GOCACHE = "${B}/.cache"
 GO_EXTLDFLAGS ?= "${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} ${LDFLAGS}"
 GO_SHLIB_LDFLAGS ?= '-ldflags="-extldflags '${GO_EXTLDFLAGS}'"'
 
-# Ensure we have the cross-linker available in the sysroot
-DEPENDS:append = " binutils-cross-aarch64"
-
 do_configure() {
 	:
 }
@@ -29,36 +26,18 @@ do_configure:libc-musl() {
 }
 
 do_compile() {
-        # 1. Force the toolchain directory to the front of the PATH
-        export PATH="${STAGING_BINDIR_TOOLCHAIN}:$PATH"
+	export CC_FOR_${TARGET_GOTUPLE}="${CC}"
+	export CXX_FOR_${TARGET_GOTUPLE}="${CXX}"
 
-        # 2. Robust Linker Alias: Create the 'ld' symlink if it doesn't exist
-        if [ ! -e ${STAGING_BINDIR_TOOLCHAIN}/ld ]; then
-                ln -sf ${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}ld ${STAGING_BINDIR_TOOLCHAIN}/ld
-        fi
-
-        # 3. Environment setup for GCC and Go's internal linker
-        export COMPILER_PATH="${STAGING_BINDIR_TOOLCHAIN}"
-        export CC_FOR_${TARGET_GOTUPLE}="${CC} -B${STAGING_BINDIR_TOOLCHAIN}"
-        export CXX_FOR_${TARGET_GOTUPLE}="${CXX} -B${STAGING_BINDIR_TOOLCHAIN}"
-
-        cd src
-        ./make.bash --target-only --no-banner std
-
-        if [ -n "${GO_DYNLINK}" ]; then
-                export GOTOOLDIR="${B}/pkg/tool/native_native"
-                
-                # We also pass the -B flag into the external linker flags here
-                CC="$CC_FOR_${TARGET_GOTUPLE}" \
-                GOARCH="${TARGET_GOARCH}" \
-                GOOS="${TARGET_GOOS}" \
-                GOROOT=${B} \
-                $GOTOOLDIR/go_bootstrap install -linkshared -buildmode=shared \
-                        -ldflags="-extldflags '-B${STAGING_BINDIR_TOOLCHAIN} ${GO_RPATH_LINK}'" std
-        fi
-        cd ${B}
+	cd src
+	./make.bash --target-only --no-banner std
+	if [ -n "${GO_DYNLINK}" ]; then
+		export GOTOOLDIR="${B}/pkg/tool/native_native"
+		CC="$CC_FOR_${TARGET_GOTUPLE}" GOARCH="${TARGET_GOARCH}" GOOS="${TARGET_GOOS}" GOROOT=${B} \
+			$GOTOOLDIR/go_bootstrap install -linkshared -trimpath -buildmode=shared ${GO_SHLIB_LDFLAGS} std
+	fi
+	cd ${B}
 }
-
 do_compile[cleandirs] += "${GOTMPDIR} ${B}/bin ${B}/pkg"
 
 do_install() {
@@ -67,7 +46,7 @@ do_install() {
 	if [ "${BUILD_GOTUPLE}" != "${TARGET_GOTUPLE}" ]; then
 		rm -rf ${D}${libdir}/go/pkg/${BUILD_GOTUPLE}
 		rm -rf ${D}${libdir}/go/pkg/obj/${BUILD_GOTUPLE}
-	fi ;
+	fi
 	rm -rf ${D}${libdir}/go/pkg/tool
 	rm -rf ${D}${libdir}/go/pkg/obj
 	rm -rf ${D}${libdir}/go/pkg/bootstrap
