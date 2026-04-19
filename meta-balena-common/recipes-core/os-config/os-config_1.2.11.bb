@@ -7,10 +7,8 @@ inherit balena_cargo balena-configurable
 
 # how to get os-config could be as easy as but default to a git checkout:
 # SRC_URI += "crate://crates.io/os-config/1.2.11"
-SRC_URI += "git://git@github.com/balena-os/os-config.git;protocol=https;nobranch=1;destsuffix=git"
+SRC_URI += "git://git@github.com/balena-os/os-config.git;protocol=https;nobranch=1;"
 SRCREV = "f207b2a73e1ebe11e33ed35351b38ba50592af7f"
-#S = "${WORKDIR}/git"
-S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 CARGO_SRC_DIR = ""
 
 

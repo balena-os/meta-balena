@@ -19,10 +19,8 @@ do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_build[noexec] = "1"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-
 do_install() {
         install -d ${D}${systemd_unitdir}/system/
-        install -m 0644 ${S_UNPACK}/recover-sshd-socket.service ${D}${systemd_unitdir}/system/
-        install -m 0644 ${S_UNPACK}/recover-sshd-socket.timer ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/recover-sshd-socket.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/recover-sshd-socket.timer ${D}${systemd_unitdir}/system/
 }

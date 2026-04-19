@@ -7,9 +7,6 @@ PR = "r2"
 
 SRC_URI = "file://resin-device-progress"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}"
-
 inherit allarch
 
 RDEPENDS:${PN} = " \
@@ -22,5 +19,5 @@ RDEPENDS:${PN} = " \
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${S_UNPACK}/resin-device-progress ${D}${bindir}/resin-device-progress
+    install -m 0775 ${UNPACKDIR}/resin-device-progress ${D}${bindir}/resin-device-progress
 }

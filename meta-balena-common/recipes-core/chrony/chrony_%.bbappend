@@ -13,15 +13,13 @@ FILES:${PN} += "\
 
 RDEPENDS:${PN} = "bash healthdog"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-
 do_install:append() {
-    install -m 0644 ${S_UNPACK}/balena_chrony.conf ${D}/${sysconfdir}/chrony.conf
+    install -m 0644 ${UNPACKDIR}/balena_chrony.conf ${D}/${sysconfdir}/chrony.conf
 
     # Install systemd drop-in for chronyd.service
     install -d ${D}${sysconfdir}/systemd/system/chronyd.service.d
-    install -m 0644 ${S_UNPACK}/chronyd.conf.systemd ${D}${sysconfdir}/systemd/system/chronyd.service.d/chronyd.conf
+    install -m 0644 ${UNPACKDIR}/chronyd.conf.systemd ${D}${sysconfdir}/systemd/system/chronyd.service.d/chronyd.conf
     install -d ${D}${libexecdir}
-    install -m 0775 ${S_UNPACK}/chrony-helper ${D}${libexecdir}
-    install -m 0775 ${S_UNPACK}/chrony-healthcheck ${D}${libexecdir}
+    install -m 0775 ${UNPACKDIR}/chrony-helper ${D}${libexecdir}
+    install -m 0775 ${UNPACKDIR}/chrony-healthcheck ${D}${libexecdir}
 }

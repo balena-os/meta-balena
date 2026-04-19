@@ -8,7 +8,6 @@ SRC_URI:append = " \
 
 SYSTEMD_SERVICE:${PN}-sshd += "sshdgenkeys.service"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
 # Have a dedicated user for running AuthorizedKeysCommand
 USERADD_PARAM:${PN}-sshd:append = "; --system --no-create-home --home-dir / --shell /bin/false --user-group sshd-authcommands"
 
@@ -22,11 +21,11 @@ FILES:${PN}-sshd += " \
 do_install:append () {
     # Advertise SSH service using an avahi service file
     mkdir -p ${D}/etc/avahi/services/
-    install -m 0644 ${S_UNPACK}/ssh.service ${D}/etc/avahi/services
+    install -m 0644 ${UNPACKDIR}/ssh.service ${D}/etc/avahi/services
 
     # SSH keys merger tool for custom SSH keys
     install -d ${D}${sbindir}
-    install -m 0755 ${S_UNPACK}/ssh_keys_merger ${D}${sbindir}
+    install -m 0755 ${UNPACKDIR}/ssh_keys_merger ${D}${sbindir}
     sed -i -e "s,@ROOT_HOME@,${ROOT_HOME},g" ${D}${sbindir}/ssh_keys_merger
 
     # Create config files for read-only rootfs with custom paths for host keys
@@ -44,7 +43,7 @@ do_install:append () {
     # Allow RSA signatures using SHA1 algorithm for backwards compatibility
     echo "PubkeyAcceptedKeyTypes=+ssh-rsa" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 
-    install -D -m 0755 ${S_UNPACK}/cloud-public-sshkeys ${D}${libexecdir}/${BPN}/cloud-public-sshkeys
+    install -D -m 0755 ${UNPACKDIR}/cloud-public-sshkeys ${D}${libexecdir}/${BPN}/cloud-public-sshkeys
 
     # Development version allows PasswordAuthentication
     cp ${D}${sysconfdir}/ssh/sshd_config_readonly ${D}${sysconfdir}/ssh/sshd_config_development

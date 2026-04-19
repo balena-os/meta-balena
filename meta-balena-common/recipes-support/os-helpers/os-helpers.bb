@@ -27,10 +27,6 @@ SRC_URI = " \
     file://safe_reboot \
 "
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-
-S = "${S_UNPACK}"
-
 inherit allarch
 
 PACKAGES = " \
@@ -48,16 +44,16 @@ PACKAGES = " \
 do_install() {
     install -d ${D}${libexecdir}
     install -m 0775 \
-        ${S_UNPACK}/os-helpers-fs \
-        ${S_UNPACK}/os-helpers-logging \
-        ${S_UNPACK}/os-helpers-time \
-        ${S_UNPACK}/os-helpers-tpm2 \
-        ${S_UNPACK}/os-helpers-config \
-        ${S_UNPACK}/os-helpers-bootloader-config \
-        ${S_UNPACK}/os-helpers-api \
-        ${S_UNPACK}/os-helpers-efi \
-        ${S_UNPACK}/os-helpers-sb \
-        ${S_UNPACK}/safe_reboot \
+        ${UNPACKDIR}/os-helpers-fs \
+        ${UNPACKDIR}/os-helpers-logging \
+        ${UNPACKDIR}/os-helpers-time \
+        ${UNPACKDIR}/os-helpers-tpm2 \
+        ${UNPACKDIR}/os-helpers-config \
+        ${UNPACKDIR}/os-helpers-bootloader-config \
+        ${UNPACKDIR}/os-helpers-api \
+        ${UNPACKDIR}/os-helpers-efi \
+        ${UNPACKDIR}/os-helpers-sb \
+        ${UNPACKDIR}/safe_reboot \
         ${D}${libexecdir}
         sed -i "s,@@BALENA_CONF_UNIT_STORE@@,${BALENA_CONF_UNIT_STORE},g" ${D}${libexecdir}/os-helpers-config
         sed -i -e "s,@@BALENA_FINGERPRINT_FILENAME@@,${BALENA_FINGERPRINT_FILENAME},g" -e "s,@@BALENA_FINGERPRINT_EXT@@,${BALENA_FINGERPRINT_EXT},g" ${D}${libexecdir}/os-helpers-fs
@@ -83,7 +79,7 @@ do_test_api() {
     fi
     endpoint="https://api.${BALENA_API_ENV}"
     export CURL_CA_BUNDLE="${STAGING_DIR_NATIVE}/etc/ssl/certs/ca-certificates.crt"
-    . ${S_UNPACK}/os-helpers-api
+    . ${UNPACKDIR}/os-helpers-api
     # GET 200
     if ! api_get_request "${endpoint}/ping"; then
         bbwarn "${PN}: API request failed "

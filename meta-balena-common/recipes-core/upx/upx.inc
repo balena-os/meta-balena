@@ -7,8 +7,7 @@ inherit perlnative
 
 DEPENDS += "zlib ucl"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}/${BPN}-${PV}-src"
+S = "${UNPACKDIR}/${BPN}-${PV}-src"
 
 # CHECK_WHITESPACE breaks cross builds: https://github.com/upx/upx/issues/64
 EXTRA_OEMAKE = "CHECK_WHITESPACE=/bin/true"

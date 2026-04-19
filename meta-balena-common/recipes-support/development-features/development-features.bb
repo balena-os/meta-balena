@@ -8,9 +8,6 @@ SRC_URI = " \
     file://development-features.target \
     "
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}"
-
 inherit allarch systemd balena-configurable
 
 SYSTEMD_SERVICE:${PN} = " \
@@ -24,13 +21,13 @@ do_build[noexec] = "1"
 
 do_install() {
     install -d ${D}${bindir}/
-    install -m 0755 ${S_UNPACK}/development-features ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/development-features ${D}${bindir}/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system/
         install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
-        install -m 0644 ${S_UNPACK}/development-features.service ${D}${systemd_unitdir}/system/
-        install -m 0644 ${S_UNPACK}/development-features.target ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/development-features.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/development-features.target ${D}${systemd_unitdir}/system/
 
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \

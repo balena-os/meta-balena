@@ -13,8 +13,6 @@ SRC_URI:append = " \
 # and prevents user apps from writing to tty consoles even after stopping plymouth
 SRC_URI:remove = "file://0001-plymouth-Add-the-retain-splash-option.patch"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-
 # install our theme, and remove some extra files to save a significant
 # amount of space
 do_install:append() {
@@ -45,7 +43,7 @@ do_install:append() {
                 plymouth-switch-root.service \
                 systemd-ask-password-plymouth.path; do
         install -d -m 0755 ${D}${libdir}/systemd/system/${unit}.d
-        install -m 0644 ${S_UNPACK}/plymouth-disable-containerized.conf \
+        install -m 0644 ${UNPACKDIR}/plymouth-disable-containerized.conf \
             ${D}${libdir}/systemd/system/${unit}.d
     done
 
@@ -55,12 +53,12 @@ do_install:append() {
                 plymouth-poweroff.service \
                 plymouth-reboot.service; do
         install -d -m 0755 ${D}${libdir}/systemd/system/${unit}.d
-        install -m 0644 ${S_UNPACK}/plymouth-stop-balena-os.conf \
+        install -m 0644 ${UNPACKDIR}/plymouth-stop-balena-os.conf \
             ${D}${libdir}/systemd/system/${unit}.d
     done
 
     install -d -m 0755 ${D}${libdir}/systemd/system/plymouth-start.service.d
-    install -m 0644 ${S_UNPACK}/plymouth-start-balena-os.conf \
+    install -m 0644 ${UNPACKDIR}/plymouth-start-balena-os.conf \
         ${D}${libdir}/systemd/system/plymouth-start.service.d
 }
 
@@ -70,7 +68,7 @@ FILES:${PN} += " \
     "
 
 do_deploy() {
-    install ${S_UNPACK}/balena-logo.png ${DEPLOYDIR}/balena-logo.png
+    install ${UNPACKDIR}/balena-logo.png ${DEPLOYDIR}/balena-logo.png
 }
 
 # by setting a logo we avoid installing the default one

@@ -4,9 +4,6 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 SRC_URI = "file://hostapp-update-hooks"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}"
-
 inherit allarch
 
 HOSTAPP_HOOKS = " \
@@ -79,10 +76,10 @@ do_install() {
 		mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/$hdir
 	done
 	for h in ${HOSTAPP_HOOKS}; do
-		install -m 0755 $h ${D}${sysconfdir}/hostapp-update-hooks.d/"$h"
+		install -m 0755 ${UNPACKDIR}/$h ${D}${sysconfdir}/hostapp-update-hooks.d/"$h"
 	done
 	mkdir -p ${D}${bindir}
-	install -m 0755 hostapp-update-hooks ${D}${bindir}/hostapp-update-hooks-v2
+	install -m 0755 ${UNPACKDIR}/hostapp-update-hooks ${D}${bindir}/hostapp-update-hooks-v2
 	ln -s -r ${D}${bindir}/hostapp-update-hooks-v2 ${D}${bindir}/hostapp-update-hooks
 
 	sed -i -e 's:@BALENA_BOOT_FINGERPRINT@:${BALENA_BOOT_FINGERPRINT}:g;' \

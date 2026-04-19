@@ -6,9 +6,6 @@ SRC_URI = " \
 	file://hostapp-update \
 	"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}"
-
 inherit allarch
 
 BBCLASSEXTEND = "native"
@@ -23,5 +20,5 @@ RDEPENDS:${PN}:class-target += "os-helpers-reboot"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${S_UNPACK}/hostapp-update ${D}${bindir}
+    install -m 0755 ${UNPACKDIR}/hostapp-update ${D}${bindir}
 }

@@ -7,8 +7,6 @@ SYSTEMD_SERVICE:${PN} = "extract-balena-ca.service"
 
 RDEPENDS:${PN}:class-target += "os-helpers-logging"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-
 SRC_URI:append = " \
     file://extract-balena-ca \
     file://extract-balena-ca.service \
@@ -20,10 +18,10 @@ do_install:append:class-target () {
 
     # Add a service to regenerate CA chain on update
     install -d ${D}${bindir}/
-    install -m 0755 ${S_UNPACK}/extract-balena-ca ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/extract-balena-ca ${D}${bindir}/
 
     install -d ${D}${systemd_unitdir}/system/
-    install -m 0644 ${S_UNPACK}/extract-balena-ca.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${UNPACKDIR}/extract-balena-ca.service ${D}${systemd_unitdir}/system/
 
     # Make update-ca-certificates use our directory instead of the non-existing default
     sed -i -e "s,^LOCALCERTSDIR=.*$,LOCALCERTSDIR=\$SYSROOT/usr/share/ca-certificates/balena," ${D}/usr/sbin/update-ca-certificates

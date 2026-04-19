@@ -9,8 +9,6 @@ inherit deploy
 
 SRCREV = "27b17889a43e32b0c1162514d00967e6967d41bb"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-
 SRC_URI = " \
 	git://github.com/darkk/redsocks.git;branch=master;protocol=https \
 	file://0001-using-libevent-2_1_x.patch \
@@ -23,8 +21,6 @@ SRC_URI = " \
 
 DEPENDS = "libevent"
 
-#S = "${S_UNPACK}/git"
-
 do_install () {
     install -d ${D}${bindir}
     install -m 0775 ${S}/redsocks ${D}${bindir}/redsocks
@@ -32,8 +28,8 @@ do_install () {
 
 do_deploy() {
     mkdir -p "${DEPLOYDIR}/system-proxy/"
-    install -m 0600 "${S_UNPACK}/redsocks.conf.ignore" "${DEPLOYDIR}/system-proxy/"
-    install -m 0600 "${S_UNPACK}/README.ignore" "${DEPLOYDIR}/system-proxy/"
+    install -m 0600 "${UNPACKDIR}/redsocks.conf.ignore" "${DEPLOYDIR}/system-proxy/"
+    install -m 0600 "${UNPACKDIR}/README.ignore" "${DEPLOYDIR}/system-proxy/"
 }
 
 addtask deploy before do_package after do_install

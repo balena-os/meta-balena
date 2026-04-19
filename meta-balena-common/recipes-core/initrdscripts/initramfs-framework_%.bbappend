@@ -19,33 +19,31 @@ SRC_URI:append = " \
     file://zram \
     "
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-
 do_install:append() {
-    install -m 0755 ${S_UNPACK}/console_null_workaround ${D}/init.d/000-console_null_workaround
-    install -m 0755 ${S_UNPACK}/prepare ${D}/init.d/70-prepare
-    install -m 0755 ${S_UNPACK}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
-    install -m 0755 ${S_UNPACK}/fsck ${D}/init.d/87-fsck
-    install -m 0755 ${S_UNPACK}/rootfs ${D}/init.d/90-rootfs
-    install -m 0755 ${S_UNPACK}/migrate ${D}/init.d/92-migrate
-    install -m 0755 ${S_UNPACK}/finish ${D}/init.d/99-finish
+    install -m 0755 ${UNPACKDIR}/console_null_workaround ${D}/init.d/000-console_null_workaround
+    install -m 0755 ${UNPACKDIR}/prepare ${D}/init.d/70-prepare
+    install -m 0755 ${UNPACKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
+    install -m 0755 ${UNPACKDIR}/fsck ${D}/init.d/87-fsck
+    install -m 0755 ${UNPACKDIR}/rootfs ${D}/init.d/90-rootfs
+    install -m 0755 ${UNPACKDIR}/migrate ${D}/init.d/92-migrate
+    install -m 0755 ${UNPACKDIR}/finish ${D}/init.d/99-finish
 
-    install -m 0755 ${S_UNPACK}/machineid ${D}/init.d/91-machineid
-    install -m 0755 ${S_UNPACK}/resindataexpander ${D}/init.d/88-resindataexpander
-    install -m 0755 ${S_UNPACK}/rorootfs ${D}/init.d/89-rorootfs
-    install -m 0755 ${S_UNPACK}/udevcleanup ${D}/init.d/98-udevcleanup
+    install -m 0755 ${UNPACKDIR}/machineid ${D}/init.d/91-machineid
+    install -m 0755 ${UNPACKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
+    install -m 0755 ${UNPACKDIR}/rorootfs ${D}/init.d/89-rorootfs
+    install -m 0755 ${UNPACKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
     if [ ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'true', 'false',d)} = 'true' ] &&
        [ ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', 'true', 'false',d)} = 'true' ]; then
-        install -m 0755 ${S_UNPACK}/cryptsetup-efi-tpm ${D}/init.d/72-cryptsetup
+        install -m 0755 ${UNPACKDIR}/cryptsetup-efi-tpm ${D}/init.d/72-cryptsetup
     else
-        install -m 0755 ${S_UNPACK}/cryptsetup ${D}/init.d/72-cryptsetup
+        install -m 0755 ${UNPACKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
     fi
-    install -m 0755 ${S_UNPACK}/recovery ${D}/init.d/00-recovery
+    install -m 0755 ${UNPACKDIR}/recovery ${D}/init.d/00-recovery
 
-    install -m 0755 ${S_UNPACK}/kexec ${D}/init.d/92-kexec
+    install -m 0755 ${UNPACKDIR}/kexec ${D}/init.d/92-kexec
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-kexec"
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-migrate"
-    install -m 0755 ${S_UNPACK}/zram ${D}/init.d/12-zram
+    install -m 0755 ${UNPACKDIR}/zram ${D}/init.d/12-zram
 }
 
 PACKAGES:append = " \

@@ -9,9 +9,6 @@ SRC_URI = " \
     file://balena-info@.service \
     "
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}"
-
 inherit allarch
 
 TTYS = "tty1"
@@ -25,12 +22,12 @@ do_build[noexec] = "1"
 
 do_install() {
     install -d ${D}${sbindir}/
-    install -m 0755 ${S_UNPACK}/balena-info ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/balena-info ${D}${sbindir}/
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system/
         install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
-        install -m 0644 ${S_UNPACK}/balena-info@.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/balena-info@.service ${D}${systemd_unitdir}/system/
 
         # Enable services
         for ttydev in ${TTYS}; do

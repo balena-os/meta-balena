@@ -7,8 +7,7 @@ SRC_URI = " \
 	file://entry.sh \
 	"
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}"
+S = "${UNPACKDIR}"
 B = "${S}/build"
 
 inherit deploy
@@ -44,7 +43,7 @@ do_compile () {
 	# docker daemon instead of the result of docker-native. This avoids version
 	# mismatches
 	DOCKER=$(PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" which docker)
-	cp "${TOPDIR}/../balena-yocto-scripts/automation/include/balena-api.inc" "${S_UNPACK}/"
+	cp "${TOPDIR}/../balena-yocto-scripts/automation/include/balena-api.inc" "${UNPACKDIR}/"
 
 	_token="${BALENA_API_TOKEN}"
 	if [ -z "${_token}" ] && [ -f "~/.balena/token" ]; then
@@ -56,7 +55,7 @@ do_compile () {
 	_image_name="docker-disk-$RANDOM"
 	_container_name="docker-disk-$RANDOM"
 	$DOCKER rmi -f ${_image_name} > /dev/null 2>&1 || true
-	$DOCKER build -t ${_image_name} -f ${S_UNPACK}/Dockerfile ${S_UNPACK}
+	$DOCKER build -t ${_image_name} -f ${UNPACKDIR}/Dockerfile ${UNPACKDIR}
 	$DOCKER run --privileged --rm \
 		-e BALENA_STORAGE=${BALENA_STORAGE} \
 		-e USER_ID=$(id -u) -e USER_GID=$(id -u) \

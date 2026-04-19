@@ -25,14 +25,11 @@ python __anonymous() {
         d.setVar("BALENA_STORAGE", bs_machine)
 }
 
-S_UNPACK = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}"
-S = "${S_UNPACK}"
-
 do_compile () {
     rm -rf ${B}/work
     mkdir -p ${B}/work
 
-    cp Dockerfile create.* mkfs.hostapp ${B}/work/
+    cp ${UNPACKDIR}/Dockerfile ${UNPACKDIR}/create.* ${UNPACKDIR}/mkfs.hostapp ${B}/work/
     for i in ${B}/work/create.*; do
         sed -i "s/@BALENA_STORAGE@/${BALENA_STORAGE}/g" $i
     done
@@ -49,7 +46,6 @@ do_compile[network] = "1"
 do_install () {
     install -d ${D}/${bindir}
     install ${B}/work/mkfs.hostapp ${D}/${bindir}/
-
     install -d ${D}/${datadir}
     install ${B}/work/mkfs-hostapp-image.tar ${D}/${datadir}/
 }
