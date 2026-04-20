@@ -39,7 +39,7 @@ IMAGE_LINGUAS = ""
 LICENSE = "MIT"
 
 # disable initramfs compression when the kernel is already compressed
-COMPRESSED_KERNEL_IMAGETYPES="bzImage zImage Image.gz"
+COMPRESSED_KERNEL_IMAGETYPES = "bzImage zImage Image.gz"
 IMAGE_FSTYPES = "${@bb.utils.contains_any( \
                         'KERNEL_IMAGETYPE', \
                         '${COMPRESSED_KERNEL_IMAGETYPES}', \

@@ -6,7 +6,6 @@ SRC_URI = " \
     file://resin-state-reset \
     file://resin-state-reset.service \
     "
-S = "${WORKDIR}"
 
 inherit allarch systemd
 
@@ -26,7 +25,7 @@ BALENA_STATE_MOUNT_POINT = "/mnt/state"
 
 do_install() {
     install -d ${D}${bindir}/
-    install -m 0755 ${WORKDIR}/resin-state-reset ${D}${bindir}/
+    install -m 0755 ${UNPACKDIR}/resin-state-reset ${D}${bindir}/
 
     sed -i -e 's,@BALENA_STATE_MP@,${BALENA_STATE_MOUNT_POINT},g' \
           ${D}${bindir}/resin-state-reset
@@ -34,7 +33,7 @@ do_install() {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system/
         install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
-        install -m 0644 ${WORKDIR}/resin-state-reset.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/resin-state-reset.service ${D}${systemd_unitdir}/system/
 
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \

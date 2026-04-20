@@ -18,9 +18,9 @@ inherit allarch
 
 do_install () {
     mkdir -p ${D}${datadir}/plymouth/themes/balena
-    install -m 644 ${WORKDIR}/balena.script ${D}${datadir}/plymouth/themes/balena/
-    install -m 644 ${WORKDIR}/balena.plymouth ${D}${datadir}/plymouth/themes/balena/
-    install -m 644 ${WORKDIR}/plymouthd.defaults ${D}${datadir}/plymouth/
+    install -m 644 ${UNPACKDIR}/balena.script ${D}${datadir}/plymouth/themes/balena/
+    install -m 644 ${UNPACKDIR}/balena.plymouth ${D}${datadir}/plymouth/themes/balena/
+    install -m 644 ${UNPACKDIR}/plymouthd.defaults ${D}${datadir}/plymouth/
 }
 
 FILES:${PN} = "${datadir}/plymouth/*"

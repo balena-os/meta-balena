@@ -15,11 +15,9 @@ inherit allarch
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI = "file://abroot"
 
-S = "${WORKDIR}"
-
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/abroot ${D}/init.d/74-abroot
+    install -m 0755 ${UNPACKDIR}/abroot ${D}/init.d/74-abroot
 }
 
 FILES:${PN} = "/init.d/74-abroot"

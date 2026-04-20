@@ -56,7 +56,7 @@ python () {
         bb.fatal("balena-supervisor: There is no support for this architecture.")
 }
 
-S = "${WORKDIR}"
+S = "${UNPACKDIR}/${BP}"
 
 do_patch[noexec] = "1"
 do_compile[noexec] = "1"
@@ -85,7 +85,7 @@ do_install () {
 	fi
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/balena-supervisor/
-	install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/balena-supervisor/
+	install -m 0755 ${UNPACKDIR}/supervisor.conf ${D}${sysconfdir}/balena-supervisor/
 	sed -i -e "s,@LED_FILE@,${LED_FILE},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 	sed -i -e "s,@SUPERVISOR_VERSION@,${SUPERVISOR_VERSION},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
 	sed -i -e "s,@SUPERVISOR_IMAGE@,${SUPERVISOR_IMAGE},g" ${D}${sysconfdir}/balena-supervisor/supervisor.conf
@@ -93,17 +93,17 @@ do_install () {
 	install -d ${D}/resin-data
 
 	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}/update-balena-supervisor ${D}${bindir}
-	install -m 0755 ${WORKDIR}/start-balena-supervisor ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/update-balena-supervisor ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/start-balena-supervisor ${D}${bindir}
 
 	install -d ${D}${systemd_unitdir}/system
 	# Yocto gets confused if we use strange file names - so we rename it here
 	# https://bugzilla.yoctoproject.org/show_bug.cgi?id=8161
-	install -c -m 0644 ${WORKDIR}/resin-data.mount ${D}${systemd_unitdir}/system/resin\\x2ddata.mount
-	install -c -m 0644 ${WORKDIR}/balena-supervisor.service ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.service ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${WORKDIR}/update-balena-supervisor.timer ${D}${systemd_unitdir}/system
-	install -c -m 0644 ${WORKDIR}/migrate-supervisor-state.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${UNPACKDIR}/resin-data.mount ${D}${systemd_unitdir}/system/resin\\x2ddata.mount
+	install -c -m 0644 ${UNPACKDIR}/balena-supervisor.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${UNPACKDIR}/update-balena-supervisor.service ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${UNPACKDIR}/update-balena-supervisor.timer ${D}${systemd_unitdir}/system
+	install -c -m 0644 ${UNPACKDIR}/migrate-supervisor-state.service ${D}${systemd_unitdir}/system
 	# symlinks to legacy resin-supervisor systemd unit files
 	ln -s balena-supervisor.service ${D}${systemd_unitdir}/system/resin-supervisor.service
 	ln -s update-balena-supervisor.service ${D}${systemd_unitdir}/system/update-resin-supervisor.service
@@ -114,11 +114,11 @@ do_install () {
 		${D}${systemd_unitdir}/system/*.service
 
 	install -d ${D}/usr/lib/balena-supervisor
-	install -m 0755 ${WORKDIR}/balena-supervisor-healthcheck ${D}/usr/lib/balena-supervisor/balena-supervisor-healthcheck
+	install -m 0755 ${UNPACKDIR}/balena-supervisor-healthcheck ${D}/usr/lib/balena-supervisor/balena-supervisor-healthcheck
 
 	# systemd tmpfiles configuration for supervisor
 	mkdir -p ${D}${sysconfdir}/tmpfiles.d
-	install -m 0644 ${WORKDIR}/tmpfiles-supervisor.conf ${D}${sysconfdir}/tmpfiles.d/supervisor.conf
+	install -m 0644 ${UNPACKDIR}/tmpfiles-supervisor.conf ${D}${sysconfdir}/tmpfiles.d/supervisor.conf
 }
 
 do_deploy () {
