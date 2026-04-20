@@ -30,37 +30,27 @@ SECTION = "net"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "https://download.tuxfamily.org/chrony/chrony-${PV}.tar.gz \
+SRC_URI = "https://chrony-project.org/releases/chrony-${PV}.tar.gz \
     file://chrony.conf \
     file://chronyd \
     file://arm_eabi.patch \
 "
 
-SRC_URI:append:libc-musl = " \
-    file://0001-Fix-compilation-with-musl.patch \
-"
-SRC_URI[sha256sum] = "273f9fd15c328ed6f3a5f6ba6baec35a421a34a73bb725605329b1712048db9a"
+SRC_URI[sha256sum] = "33ea8eb2a4daeaa506e8fcafd5d6d89027ed6f2f0609645c6f149b560d301706"
 
 DEPENDS = "pps-tools"
 
 # Note: Despite being built via './configure; make; make install',
 #       chrony does not use GNU Autotools.
-inherit update-rc.d systemd
+inherit update-rc.d systemd pkgconfig
 
 # Add chronyd user if privdrop packageconfig is selected
 inherit ${@bb.utils.contains('PACKAGECONFIG', 'privdrop', 'useradd', '', d)}
 USERADD_PACKAGES = "${@bb.utils.contains('PACKAGECONFIG', 'privdrop', '${PN}', '', d)}"
-USERADD_PARAM:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'privdrop', '--system -d / -M --shell /bin/nologin chronyd;', '', d)}"
+USERADD_PARAM:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'privdrop', '--system -d / -M --shell /sbin/nologin chronyd;', '', d)}"
+GROUPADD_PARAM:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'privdrop', '--system chronyd', '', d)}"
 
 # Configuration options:
-# - For command line editing support in chronyc, you may specify either
-#   'editline' or 'readline' but not both.  editline is smaller, but
-#   many systems already have readline for other purposes so you might want
-#   to choose that instead.  However, beware license incompatibility
-#   since chrony is GPLv2 and readline versions after 6.0 are GPLv3+.
-#   You can of course choose neither, but if you're that tight on space
-#   consider dropping chronyc entirely (you can use it remotely with
-#   appropriate chrony.conf options).
 # - Security-related:
 #   - 'sechash' is omitted by default because it pulls in nss which is huge.
 #   - 'privdrop' allows chronyd to run as non-root; would need changes to
@@ -70,14 +60,12 @@ USERADD_PARAM:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'privdrop', '--sys
 PACKAGECONFIG ??= "editline \
     ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
-PACKAGECONFIG[readline] = "--without-editline,--without-readline,readline"
 PACKAGECONFIG[editline] = ",--without-editline,libedit"
 PACKAGECONFIG[sechash] = "--without-tomcrypt,--disable-sechash,nss"
-PACKAGECONFIG[privdrop] = "--with-libcap,--disable-privdrop --without-libcap,libcap"
+PACKAGECONFIG[privdrop] = ",--disable-privdrop,libcap"
 PACKAGECONFIG[scfilter] = "--enable-scfilter,--without-seccomp,libseccomp"
 PACKAGECONFIG[ipv6] = ",--disable-ipv6,"
-PACKAGECONFIG[nss] = "--with-nss,--without-nss,nss"
-PACKAGECONFIG[libcap] = "--with-libcap,--without-libcap,libcap"
+PACKAGECONFIG[nts] = ",--disable-nts,gnutls"
 
 # --disable-static isn't supported by chrony's configure script.
 DISABLE_STATIC = ""
@@ -101,7 +89,8 @@ do_install() {
 
     # Config file
     install -d ${D}${sysconfdir}
-    install -m 644 ${WORKDIR}/chrony.conf ${D}${sysconfdir}
+    
+    install -m 644 ${UNPACKDIR}/chrony.conf ${D}${sysconfdir}
     if ${@bb.utils.contains('PACKAGECONFIG', 'privdrop', 'true', 'false', d)}; then
         echo "# Define user to drop to after dropping root privileges" >> ${D}${sysconfdir}/chrony.conf
         echo "user chronyd" >> ${D}${sysconfdir}/chrony.conf
@@ -109,14 +98,11 @@ do_install() {
 
     # System V init script
     install -d ${D}${sysconfdir}/init.d
-    install -m 755 ${WORKDIR}/chronyd ${D}${sysconfdir}/init.d
+    install -m 755 ${UNPACKDIR}/chronyd ${D}${sysconfdir}/init.d
 
     # systemd unit configuration file
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${S}/examples/chronyd.service ${D}${systemd_unitdir}/system/
-
-    # Variable data (for drift and/or rtc file)
-    install -d ${D}${localstatedir}/lib/chrony
 
     # Fix hard-coded paths in config files and init scripts
     sed -i -e 's!/var/!${localstatedir}/!g' -e 's!/etc/!${sysconfdir}/!g' \
@@ -127,12 +113,25 @@ do_install() {
     sed -i 's!^PATH=.*!PATH=${base_sbindir}:${base_bindir}:${sbindir}:${bindir}!' ${D}${sysconfdir}/init.d/chronyd
     sed -i 's!^EnvironmentFile=.*!EnvironmentFile=-${sysconfdir}/default/chronyd!' ${D}${systemd_unitdir}/system/chronyd.service
 
-    install -d ${D}${sysconfdir}/tmpfiles.d
-    echo "d /var/lib/chrony 0755 root root -" > ${D}${sysconfdir}/tmpfiles.d/chronyd.conf
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+        install -d ${D}${sysconfdir}/tmpfiles.d
+        if ${@bb.utils.contains('PACKAGECONFIG', 'privdrop', 'true', 'false', d)}; then
+            echo "d /var/lib/chrony 0755 chronyd chronyd -" > ${D}${sysconfdir}/tmpfiles.d/chronyd.conf
+        else
+            echo "d /var/lib/chrony 0755 root root -" > ${D}${sysconfdir}/tmpfiles.d/chronyd.conf
+        fi
+    else
+        install -d ${D}${sysconfdir}/default/volatiles
+        if ${@bb.utils.contains('PACKAGECONFIG', 'privdrop', 'true', 'false', d)}; then
+            echo "d chronyd chronyd 0755 /var/lib/chrony none" > "${D}${sysconfdir}/default/volatiles/00_runtime_chrony_dirs"
+        else
+            echo "d root root 0755 /var/lib/chrony none" > "${D}${sysconfdir}/default/volatiles/00_runtime_chrony_dirs"
+        fi
+    fi
 
 }
 
-FILES:${PN} = "${sbindir}/chronyd ${sysconfdir} ${localstatedir}/lib/chrony ${localstatedir}"
+FILES:${PN} = "${sbindir}/chronyd ${sysconfdir}"
 CONFFILES:${PN} = "${sysconfdir}/chrony.conf"
 INITSCRIPT_NAME = "chronyd"
 INITSCRIPT_PARAMS = "defaults"
