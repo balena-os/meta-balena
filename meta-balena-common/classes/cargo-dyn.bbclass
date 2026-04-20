@@ -9,8 +9,8 @@
 # to reuse this fix.
 
 # From rust.bbclass
-rustlib_suffix="${TUNE_ARCH}${TARGET_VENDOR}-${TARGET_OS}/rustlib/${HOST_SYS}/lib"
-rustlib="${libdir}/${rustlib_suffix}"
+rustlib_suffix = "${TUNE_ARCH}${TARGET_VENDOR}-${TARGET_OS}/rustlib/${HOST_SYS}/lib"
+rustlib = "${libdir}/${rustlib_suffix}"
 
 rustbindest ?= "${bindir}"
 rustlibdest ?= "${rustlibdir}"
