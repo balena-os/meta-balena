@@ -6,7 +6,6 @@
 # Adds support for following format in recipe SRC_URI:
 # crate://<packagename>/<version>
 #
-
 def import_crate(d):
     import crate
     if not getattr(crate, 'imported', False):

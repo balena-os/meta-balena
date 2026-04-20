@@ -285,7 +285,7 @@ def llvm_cpu(d):
     except:
         return trans.get(target, "generic")
 
-TARGET_LLVM_CPU="${@llvm_cpu(d)}"
+TARGET_LLVM_CPU = "${@llvm_cpu(d)}"
 TARGET_LLVM_FEATURES = "${@llvm_features(d)}"
 
 # class-native implies TARGET=HOST, and TUNE_FEATURES only describes the real
