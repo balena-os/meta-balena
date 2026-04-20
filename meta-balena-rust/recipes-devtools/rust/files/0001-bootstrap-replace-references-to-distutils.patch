@@ -5,6 +5,8 @@ Subject: [PATCH 1/1] bootstrap: replace references to distutils
 
 Replace references to deprecated distutils package.
 
+Upstream-Status: Inappropriate [configuration]
+
 Signed-off-by: Joseph Kogut <joseph@balena.io>
 Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
 ---
