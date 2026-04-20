@@ -37,7 +37,6 @@ SRCREV = "b988d20a7f8373cf19c30d5c9c459f3e87f28da2"
 
 PARALLEL_MAKE = ""
 
-#S = "${UNPACKDIR}/git"
 S = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/git"
 
 inherit perlnative

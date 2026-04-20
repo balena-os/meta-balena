@@ -35,7 +35,6 @@ SRC_URI = "\
 	file://balena-tmpfiles.conf \
 	file://0001-dynbinary-use-go-cross-compiler.patch;striplevel=1 \
 	"
-#S = "${UNPACKDIR}/git"
 S = "${UNPACKDIR}/git/"
 
 CVE_PRODUCT = "balena:balena-engine mobyproject:moby"
