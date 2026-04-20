@@ -4,7 +4,7 @@ Date: Thu, 23 Aug 2018 11:22:12 +0100
 Subject: [PATCH] Adjust CONFIG_JSON_FLASHER_PATH based on OS changes
 
 Signed-off-by: Andrei Gherzan <andrei@resin.io>
-Upstream-status: Pending
+Upstream-Status: Inappropriate [configuration]
 ---
  src/args.rs | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
