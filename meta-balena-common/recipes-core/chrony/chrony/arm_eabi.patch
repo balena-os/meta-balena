@@ -1,36 +1,36 @@
-From f35e07aceb4a16121d83b47ee77990018bec98ea Mon Sep 17 00:00:00 2001
+From 7df907871b87772072abc94aeff2b7ba770e8f44 Mon Sep 17 00:00:00 2001
 From: Joe Slater <jslater@windriver.com>
 Date: Thu, 9 Mar 2017 10:58:06 -0800
 Subject: [PATCH] chrony: fix build failure for arma9
 
-    Eliminate references to syscalls not available
-    for ARM_EABI.  Also add a dependency on libseccomp
-    which is needed for scfilter to work.
+Eliminate references to syscalls not available
+for ARM_EABI.  Also add a dependency on libseccomp
+which is needed for scfilter to work.
 
-    Set PACKAGECONFIG to not enable scfilter, since
-    kernel CONFIG_SECCOMP is unlikely to be set.  This
-    aligns the usage of libseccomp with that of other packages.
+Set PACKAGECONFIG to not enable scfilter, since
+kernel CONFIG_SECCOMP is unlikely to be set.  This
+aligns the usage of libseccomp with that of other packages.
 
-    Upstream-Status: Pending
+Upstream-Status: Pending
 
-    Signed-off-by: Joe Slater <jslater@windriver.com>
+Signed-off-by: Joe Slater <jslater@windriver.com>
 
-    Refresh patch for new upstream version.
+Refresh patch for new upstream version.
 
-    Signed-off-by: Robert Joslyn <robert.joslyn@redrectangle.org>
+Signed-off-by: Robert Joslyn <robert.joslyn@redrectangle.org>
 
-    Refreshed for 4.0
+Refreshed for 4.0
 
-    Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  sys_linux.c | 15 +++++++++------
  1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/sys_linux.c b/sys_linux.c
-index 9cab2ef..8104b8f 100644
+index 8373e25..47b4459 100644
 --- a/sys_linux.c
 +++ b/sys_linux.c
-@@ -484,7 +484,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
+@@ -490,7 +490,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
  #endif
      SCMP_SYS(gettimeofday),
      SCMP_SYS(settimeofday),
@@ -38,15 +38,15 @@ index 9cab2ef..8104b8f 100644
  
      /* Process */
      SCMP_SYS(clone),
-@@ -494,7 +493,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
+@@ -500,7 +499,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
      SCMP_SYS(exit),
      SCMP_SYS(exit_group),
      SCMP_SYS(getpid),
 -    SCMP_SYS(getrlimit),
      SCMP_SYS(getuid),
      SCMP_SYS(getuid32),
-     SCMP_SYS(rt_sigaction),
-@@ -508,7 +506,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
+ #ifdef __NR_membarrier
+@@ -520,7 +518,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
      /* Memory */
      SCMP_SYS(brk),
      SCMP_SYS(madvise),
@@ -54,7 +54,7 @@ index 9cab2ef..8104b8f 100644
      SCMP_SYS(mmap2),
      SCMP_SYS(mprotect),
      SCMP_SYS(mremap),
-@@ -568,8 +565,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
+@@ -580,8 +577,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
      SCMP_SYS(sendmsg),
      SCMP_SYS(sendto),
      SCMP_SYS(shutdown),
@@ -63,15 +63,15 @@ index 9cab2ef..8104b8f 100644
  
      /* General I/O */
      SCMP_SYS(_newselect),
-@@ -593,7 +588,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
+@@ -605,7 +600,6 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
  #ifdef __NR_futex_time64
      SCMP_SYS(futex_time64),
  #endif
 -    SCMP_SYS(select),
      SCMP_SYS(set_robust_list),
      SCMP_SYS(write),
- 
-@@ -601,6 +595,15 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
+     SCMP_SYS(writev),
+@@ -614,6 +608,15 @@ SYS_Linux_EnableSystemCallFilter(int level, SYS_ProcessContext context)
      SCMP_SYS(getrandom),
      SCMP_SYS(sysinfo),
      SCMP_SYS(uname),
@@ -87,6 +87,3 @@ index 9cab2ef..8104b8f 100644
    };
  
    const int denied_any[] = {
--- 
-2.25.1
-
