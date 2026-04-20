@@ -20,30 +20,30 @@ SRC_URI:append = " \
     "
 
 do_install:append() {
-    install -m 0755 ${WORKDIR}/console_null_workaround ${D}/init.d/000-console_null_workaround
-    install -m 0755 ${WORKDIR}/prepare ${D}/init.d/70-prepare
-    install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
-    install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
-    install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
-    install -m 0755 ${WORKDIR}/migrate ${D}/init.d/92-migrate
-    install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
+    install -m 0755 ${UNPACKDIR}/console_null_workaround ${D}/init.d/000-console_null_workaround
+    install -m 0755 ${UNPACKDIR}/prepare ${D}/init.d/70-prepare
+    install -m 0755 ${UNPACKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
+    install -m 0755 ${UNPACKDIR}/fsck ${D}/init.d/87-fsck
+    install -m 0755 ${UNPACKDIR}/rootfs ${D}/init.d/90-rootfs
+    install -m 0755 ${UNPACKDIR}/migrate ${D}/init.d/92-migrate
+    install -m 0755 ${UNPACKDIR}/finish ${D}/init.d/99-finish
 
-    install -m 0755 ${WORKDIR}/machineid ${D}/init.d/91-machineid
-    install -m 0755 ${WORKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
-    install -m 0755 ${WORKDIR}/rorootfs ${D}/init.d/89-rorootfs
-    install -m 0755 ${WORKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
+    install -m 0755 ${UNPACKDIR}/machineid ${D}/init.d/91-machineid
+    install -m 0755 ${UNPACKDIR}/resindataexpander ${D}/init.d/88-resindataexpander
+    install -m 0755 ${UNPACKDIR}/rorootfs ${D}/init.d/89-rorootfs
+    install -m 0755 ${UNPACKDIR}/udevcleanup ${D}/init.d/98-udevcleanup
     if [ ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'true', 'false',d)} = 'true' ] &&
        [ ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', 'true', 'false',d)} = 'true' ]; then
-        install -m 0755 ${WORKDIR}/cryptsetup-efi-tpm ${D}/init.d/72-cryptsetup
+        install -m 0755 ${UNPACKDIR}/cryptsetup-efi-tpm ${D}/init.d/72-cryptsetup
     else
-        install -m 0755 ${WORKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
+        install -m 0755 ${UNPACKDIR}/cryptsetup ${D}/init.d/72-cryptsetup
     fi
-    install -m 0755 ${WORKDIR}/recovery ${D}/init.d/00-recovery
+    install -m 0755 ${UNPACKDIR}/recovery ${D}/init.d/00-recovery
 
-    install -m 0755 ${WORKDIR}/kexec ${D}/init.d/92-kexec
+    install -m 0755 ${UNPACKDIR}/kexec ${D}/init.d/92-kexec
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-kexec"
     sed -i -e "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE}," "${D}/init.d/92-migrate"
-    install -m 0755 ${WORKDIR}/zram ${D}/init.d/12-zram
+    install -m 0755 ${UNPACKDIR}/zram ${D}/init.d/12-zram
 }
 
 PACKAGES:append = " \
@@ -97,7 +97,7 @@ RDEPENDS:initramfs-module-fsuuidsinit = "${PN}-base"
 FILES:initramfs-module-fsuuidsinit = "/init.d/75-fsuuidsinit"
 
 SUMMARY:initramfs-module-cryptsetup = "Unlock encrypted partitions"
-RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libgcc lvm2-udevrules os-helpers-logging os-helpers-fs balena-config-vars-config"
+RDEPENDS:initramfs-module-cryptsetup = "${PN}-base cryptsetup libgcc os-helpers-logging os-helpers-fs balena-config-vars-config"
 RDEPENDS:initramfs-module-cryptsetup:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' os-helpers-tpm2', '',d)}"
 RDEPENDS:initramfs-module-cryptsetup:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' os-helpers-efi', '',d)}"
 FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
