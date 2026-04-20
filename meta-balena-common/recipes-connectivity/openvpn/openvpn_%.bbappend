@@ -20,16 +20,16 @@ SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install:append() {
 	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}/prepare-openvpn ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/prepare-openvpn ${D}${bindir}
 
 	install -d ${D}${sysconfdir}/openvpn-misc
-	install -m 0755 ${WORKDIR}/upscript.sh ${D}${sysconfdir}/openvpn-misc
-	install -m 0755 ${WORKDIR}/downscript.sh ${D}${sysconfdir}/openvpn-misc
+	install -m 0755 ${UNPACKDIR}/upscript.sh ${D}${sysconfdir}/openvpn-misc
+	install -m 0755 ${UNPACKDIR}/downscript.sh ${D}${sysconfdir}/openvpn-misc
 
 	install -d ${D}${systemd_unitdir}/system
 	install -c -m 0644 \
-		${WORKDIR}/prepare-openvpn.service \
-		${WORKDIR}/openvpn.service \
+		${UNPACKDIR}/prepare-openvpn.service \
+		${UNPACKDIR}/openvpn.service \
 		${D}${systemd_unitdir}/system
 
     sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
