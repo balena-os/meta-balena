@@ -6,6 +6,7 @@ Subject: [PATCH] LockDown: disable the entrance into BIOS setup to re-enable
 
 In most cases, this step is not necessary.
 
+Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  LockDown.c | 9 +++++++--
