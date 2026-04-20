@@ -9,7 +9,7 @@ inherit balena_cargo
 # SRC_URI += "crate://crates.io/bindmount/0.0.4"
 SRC_URI += "git://git@github.com/balena-os/bindmount.git;branch=master;protocol=https"
 SRCREV = "82761d07cce8a61e09e2e37ba07477288c5683b6"
-#S = "${WORKDIR}/git"
+
 CARGO_SRC_DIR=""
 PV:append = ".AUTOINC+f597fb0266"
 
