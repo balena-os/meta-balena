@@ -8,7 +8,6 @@ SRC_URI = " \
     file://balena-net-connectivity-wait.service \
     file://balena-net-connectivity-wait.target \
     "
-S = "${WORKDIR}"
 
 inherit allarch systemd
 
@@ -22,12 +21,12 @@ RDEPENDS:${PN} = "bash"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/balena-net-connectivity-wait ${D}${bindir}/balena-net-connectivity-wait
+    install -m 0775 ${UNPACKDIR}/balena-net-connectivity-wait ${D}${bindir}/balena-net-connectivity-wait
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/balena-net-connectivity-wait.service ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/balena-net-connectivity-wait.target ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/balena-net-connectivity-wait.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/balena-net-connectivity-wait.target ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
         -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/balena-net-connectivity-wait.service

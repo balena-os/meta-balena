@@ -22,6 +22,7 @@ do_compile() {
     cd ${S}
     unset GO_LDFLAGS
     unset GOPATH GOROOT
+
     export GOCACHE="${B}/.cache"
     export GOPROXY="${GOPROXY}"
     oe_runmake
