@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.12.10
+## (2026-04-21)
+
+* balena-bootloader.bbclass: Add required CONFIG_NLS_ISO8859_1 as built-in [Florin Sarbu]
+
 # v6.12.9
 ## (2026-04-16)
 

@@ -1,4 +1,22 @@
 - commits:
+    - subject: "balena-bootloader.bbclass: Add required CONFIG_NLS_ISO8859_1 as
+        built-in"
+      hash: 59ff5ba6b5583e14d7d05548930ccfa4a1f3ef92
+      body: |
+        Without this config the boot fails with:
+
+        FAT-fs (mmcblk0p1): IO charset iso8859-1 not found
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 6.12.10
+  title: ""
+  date: 2026-04-21T21:38:05.157Z
+- commits:
     - subject: Fix modemmanager build on dunfell
       hash: e945ee3d1610d387a7e29b482b678d9a38d72b9d
       body: ""
