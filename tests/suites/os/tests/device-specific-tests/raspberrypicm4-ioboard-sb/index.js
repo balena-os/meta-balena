@@ -15,7 +15,6 @@
 'use strict';
 
 const path = require('path');
-
 const {
 	prepareSecureBootDowngradeArtifacts,
 } = require('./secureboot-artifacts');
@@ -29,10 +28,10 @@ const EEPROM_IMAGE_BACKUP_PATH = '/mnt/data/pieeprom.upd.bak';
 const EEPROM_SIG_BACKUP_PATH = '/mnt/data/pieeprom.sig.bak';
 const BOOT_IMG_BACKUP_PATH = '/mnt/data/boot.img.bak';
 const BOOT_SIG_BACKUP_PATH = '/mnt/data/boot.sig.bak';
-
+const ASSETS_DIR = path.join(__dirname, 'assets');
+const ASSETS_SB_DIR = path.join(__dirname, 'assets-sb');
 const RELEASE_ID = 3921947;
 
-let baselineMd5 = null;
 
 const runCommandWithExitCode = async (context, link, command) => {
 	const rawOutput = await context.get().worker.executeCommandInHostOS(
@@ -61,6 +60,42 @@ const getFileMd5 = async (context, link, filePath) => {
 	return output.trim();
 };
 
+const getFirmwareBuildTimestamp = async (context, link, firmwarePath) => {
+	const output = await context
+		.get()
+		.worker.executeCommandInHostOS(
+			`strings ${firmwarePath} | grep BUILD_TIMESTAMP | sed 's/.*=//'`,
+			link,
+		);
+	return output.trim();
+};
+
+const validateTimestamp = (test, value, label) => {
+	test.ok(/^\d+$/.test(value), `${label} should be a numeric unix timestamp`);
+	test.ok(Number(value) > 0, `${label} should be greater than 0`);
+};
+
+const verifyDowngradeAssetSupportsSelfUpdate = async (
+	context,
+	link,
+	test,
+	pieepromUpdAsset,
+) => {
+	const selfUpdateSetting = await context
+		.get()
+		.worker.executeCommandInHostOS(
+			`strings ${pieepromUpdAsset.stagingPath} | grep ENABLE_SELF_UPDATE || true`,
+			link,
+		);
+	test.comment(
+		`Downgrade pieeprom ENABLE_SELF_UPDATE entries: ${selfUpdateSetting.trim() || '(none found)'}`,
+	);
+	test.ok(
+		!selfUpdateSetting.includes('ENABLE_SELF_UPDATE=0'),
+		'Downgrade pieeprom should not disable self-update (no ENABLE_SELF_UPDATE=0)',
+	);
+};
+
 const runFlashromUpdate = async (context, link, test) => {
 	const { output, exitCode } = await runCommandWithExitCode(
 		context,
@@ -75,106 +110,454 @@ const runFlashromUpdate = async (context, link, test) => {
 	);
 };
 
-const backupShippedArtifacts = async (context, link) => {
+const createCommonInitialFiles = () => ({
+	pieepromUpd: {
+		id: 'pieepromUpd',
+		originalPath: EEPROM_IMAGE_PATH,
+		backupPath: EEPROM_IMAGE_BACKUP_PATH,
+		baselineMd5: null,
+	},
+	pieepromSig: {
+		id: 'pieepromSig',
+		originalPath: EEPROM_SIG_PATH,
+		backupPath: EEPROM_SIG_BACKUP_PATH,
+		baselineMd5: null,
+	},
+});
+
+const createNonSbManifest = () => ({
+	downgradeAssets: {
+		pieepromUpd: {
+			id: 'pieepromUpd',
+			sourcePath: path.join(ASSETS_DIR, 'pieeprom-2022-07-19.bin'),
+			expectedMd5: '3bc921f60a573f5a601cefbcb1685bf4',
+			stagingPath: '/mnt/data/pieeprom.upd',
+			targetPath: EEPROM_IMAGE_PATH,
+		},
+	},
+	initialFiles: createCommonInitialFiles(),
+});
+
+const createSbManifest = async (cloud, tmpdir, test) => {
+	// const downloadedAssets = await prepareSecureBootDowngradeArtifacts(
+	// 	cloud,
+	// 	tmpdir,
+	// 	RELEASE_ID,
+	// 	test,
+	// );
+	// const assets = downloadedAssets;
+	const assets = {
+		pieepromUpdPath: path.join(ASSETS_SB_DIR, 'pieeprom.upd'),
+		pieepromSigPath: path.join(ASSETS_SB_DIR, 'pieeprom.sig'),
+		bootImgPath: path.join(ASSETS_SB_DIR, 'boot.img'),
+		bootSigPath: path.join(ASSETS_SB_DIR, 'boot.sig'),
+	};
+	return {
+		downgradeAssets: {
+			pieepromUpd: {
+				id: 'pieepromUpd',
+				sourcePath: assets.pieepromUpdPath,
+				expectedMd5: 'def5c26a6bf31e36d0fb718089ca3cfc',
+				stagingPath: '/mnt/data/pieeprom.upd',
+				targetPath: EEPROM_IMAGE_PATH,
+			},
+			pieepromSig: {
+				id: 'pieepromSig',
+				sourcePath: assets.pieepromSigPath,
+				expectedMd5: 'b8905661cbdb01e8337b993e06136512',
+				stagingPath: '/mnt/data/pieeprom.sig',
+				targetPath: EEPROM_SIG_PATH,
+			},
+			bootImg: {
+				id: 'bootImg',
+				sourcePath: assets.bootImgPath,
+				expectedMd5: '558cc8888eda8a809e7a088db0013c18',
+				stagingPath: '/mnt/data/boot.img',
+				targetPath: BOOT_IMG_PATH,
+			},
+			bootSig: {
+				id: 'bootSig',
+				sourcePath: assets.bootSigPath,
+				expectedMd5: '263ac78bb7f4fa11ec98888b8f2fdc5a',
+				stagingPath: '/mnt/data/boot.sig',
+				targetPath: BOOT_SIG_PATH,
+			},
+		},
+		initialFiles: {
+			...createCommonInitialFiles(),
+			bootImg: {
+				id: 'bootImg',
+				originalPath: BOOT_IMG_PATH,
+				backupPath: BOOT_IMG_BACKUP_PATH,
+				baselineMd5: null,
+			},
+			bootSig: {
+				id: 'bootSig',
+				originalPath: BOOT_SIG_PATH,
+				backupPath: BOOT_SIG_BACKUP_PATH,
+				baselineMd5: null,
+			},
+		},
+	};
+};
+
+// This detection logic is inspired by rpiSecureBoot in tests/secureboot/index.js.
+const readRpiOtpReg = async (context, link, reg) => {
+	const otpDump = await context
+		.get()
+		.worker.executeCommandInHostOS('vcgencmd otp_dump 2>/dev/null || true', link);
+	for (const line of otpDump.split('\n')) {
+		if (line.startsWith(`${reg}:`)) {
+			return line.split(':')[1].trim();
+		}
+	}
+	return '';
+};
+
+const rpiHasSecureBootOtpKeys = async (context, link) => {
+	for (let reg = 47; reg <= 54; reg++) {
+		const regValue = await readRpiOtpReg(context, link, reg);
+		if (regValue && regValue !== '00000000') {
+			return true;
+		}
+	}
+	return false;
+};
+
+const readRpiPrivateKeyRegister = async (context, link) => {
+	const mailboxOutput = await context
+		.get()
+		.worker.executeCommandInHostOS(
+			'vcmailbox 0x00030081 40 40 0 8 0 0 0 0 0 0 0 0 2>/dev/null || true',
+			link,
+		);
+	return mailboxOutput
+		.replace(/0x/g, '')
+		.trim()
+		.split(/\s+/)
+		.slice(7, 15)
+		.join('');
+};
+
+const isRpiSecureBootEnabled = async (context, link) => {
+	if (!(await rpiHasSecureBootOtpKeys(context, link))) {
+		return false;
+	}
+	const key = await readRpiPrivateKeyRegister(context, link);
+	return key.replace(/0/g, '').trim().length > 0;
+};
+
+const resolveManifestForSlug = async (slug, context, link, cloud, tmpdir, test) => {
+	test.comment(`testing if secureboot is enabled...`);
+	if (await isRpiSecureBootEnabled(context, link)) {
+		test.comment(
+			`Device ${slug} reports secureboot enabled at runtime; selecting SB manifest`,
+		);
+		return createSbManifest(cloud, tmpdir, test);
+	}
+	test.comment(`Device ${slug} reports secureboot disabled at runtime; selecting non-SB manifest`);
+	return createNonSbManifest();
+};
+
+const sendAndValidateDowngradeAsset = async (context, link, downgradeAssets, test) => {
+	for (const asset of Object.values(downgradeAssets)) {
+		await context.get().worker.sendFile(asset.sourcePath, asset.stagingPath, link);
+		if (asset.expectedMd5) {
+			const stagingMd5 = await getFileMd5(context, link, asset.stagingPath);
+			test.is(
+				stagingMd5,
+				asset.expectedMd5,
+				`${asset.id} md5 on DUT should match expected fixture checksum`,
+			);
+		}
+	}
+
+	const pieepromUpdAsset = downgradeAssets.pieepromUpd;
+	if (pieepromUpdAsset == null) {
+		throw new Error('Downgrade asset manifest is missing pieepromUpd entry');
+	}
+	const downgradeVersion = await getFirmwareBuildTimestamp(
+		context,
+		link,
+		pieepromUpdAsset.stagingPath,
+	);
+	test.comment(`Downgrade pieeprom BUILD_TIMESTAMP: ${downgradeVersion}`);
+	validateTimestamp(test, downgradeVersion, 'Downgrade pieeprom BUILD_TIMESTAMP');
+
+	return downgradeVersion;
+};
+
+const deployDowngradeFirmware = async (context, link, downgradeAssets) => {
+	const copyCommands = Object.values(downgradeAssets).map(
+		(asset) => `cp ${asset.stagingPath} ${asset.targetPath}`,
+	);
 	await context.get().worker.executeCommandInHostOS(
-		`cp ${EEPROM_IMAGE_PATH} ${EEPROM_IMAGE_BACKUP_PATH} && cp ${EEPROM_SIG_PATH} ${EEPROM_SIG_BACKUP_PATH} && cp ${BOOT_IMG_PATH} ${BOOT_IMG_BACKUP_PATH} && cp ${BOOT_SIG_PATH} ${BOOT_SIG_BACKUP_PATH}`,
+		copyCommands.join(' && '),
 		link,
 	);
 };
 
-const restoreShippedArtifactsForSelfUpdate = async (context, link) => {
-	await context.get().worker.executeCommandInHostOS(
-		`cp ${EEPROM_IMAGE_BACKUP_PATH} ${EEPROM_IMAGE_PATH} && cp ${EEPROM_SIG_BACKUP_PATH} ${EEPROM_SIG_PATH} && cp ${BOOT_IMG_BACKUP_PATH} ${BOOT_IMG_PATH} && cp ${BOOT_SIG_BACKUP_PATH} ${BOOT_SIG_PATH}`,
-		link,
-	);
+const captureInitialFileBaselineMd5 = async (context, link, initialFiles) => {
+	for (const file of Object.values(initialFiles)) {
+		file.baselineMd5 = await getFileMd5(context, link, file.originalPath);
+	}
 };
 
-const restoreShippedArtifactsInTeardown = async (context, link) => {
-	await context.get().worker.executeCommandInHostOS(
-		`if [ -f ${EEPROM_IMAGE_BACKUP_PATH} ]; then mv -f ${EEPROM_IMAGE_BACKUP_PATH} ${EEPROM_IMAGE_PATH}; fi`,
-		link,
+const testSetup = async (context, link, manifests, test) => {
+	test.comment('Running EEPROM setup checks...');
+
+	const shippedVersion = await getFirmwareBuildTimestamp(context, link, EEPROM_IMAGE_PATH);
+	validateTimestamp(test, shippedVersion, 'Shipped firmware BUILD_TIMESTAMP');
+	test.comment(`Shipped firmware BUILD_TIMESTAMP: ${shippedVersion}`);
+
+	const currentVersion = await getBootloaderVersion(context, link);
+	validateTimestamp(test, currentVersion, 'Current bootloader version');
+	test.comment(`Current bootloader version: ${currentVersion}`);
+	test.is(
+		currentVersion,
+		shippedVersion,
+		'Running bootloader version should match shipped EEPROM image',
 	);
-	await context.get().worker.executeCommandInHostOS(
-		`if [ -f ${EEPROM_SIG_BACKUP_PATH} ]; then mv -f ${EEPROM_SIG_BACKUP_PATH} ${EEPROM_SIG_PATH}; fi`,
+
+	const downgradeVersion = await sendAndValidateDowngradeAsset(
+		context,
 		link,
+		manifests.downgradeAssets,
+		test,
 	);
-	await context.get().worker.executeCommandInHostOS(
-		`if [ -f ${BOOT_IMG_BACKUP_PATH} ]; then mv -f ${BOOT_IMG_BACKUP_PATH} ${BOOT_IMG_PATH}; fi`,
+	await verifyDowngradeAssetSupportsSelfUpdate(
+		context,
 		link,
+		test,
+		manifests.downgradeAssets.pieepromUpd,
 	);
-	await context.get().worker.executeCommandInHostOS(
-		`if [ -f ${BOOT_SIG_BACKUP_PATH} ]; then mv -f ${BOOT_SIG_BACKUP_PATH} ${BOOT_SIG_PATH}; fi`,
-		link,
+	test.ok(
+		Number(downgradeVersion) < Number(shippedVersion),
+		'Downgrade firmware should be older than shipped EEPROM image',
 	);
+
+	await captureInitialFileBaselineMd5(context, link, manifests.initialFiles);
+
+	return currentVersion;
 };
 
-const verifyTeardownMd5 = async (context, link, test) => {
-	if (baselineMd5 == null) {
+const backUpInitialBootloaderFirmware = async (context, link, initialFiles, test) => {
+	test.comment(
+		'Moving original pieeprom.* and boot.* out of /mnt/boot and /mnt/rpi to prevent self-update until restore phase...',
+	);
+	for (const file of Object.values(initialFiles)) {
+		await context
+			.get()
+			.worker.executeCommandInHostOS(
+				`mv ${file.originalPath} ${file.backupPath}`,
+				link,
+			);
+	}
+};
+
+const restoreInitialBootloaderFirmware = async (context, link, initialFiles) => {
+	for (const file of Object.values(initialFiles)) {
+		await context
+			.get()
+			.worker.executeCommandInHostOS(
+				`cp ${file.backupPath} ${file.originalPath}`,
+				link,
+			);
+	}
+};
+
+const restoreInitialBootloaderFirmwareInTeardown = async (context, link, initialFiles) => {
+	for (const file of Object.values(initialFiles)) {
+		await context.get().worker.executeCommandInHostOS(
+			`if [ -f ${file.backupPath} ]; then mv -f ${file.backupPath} ${file.originalPath}; fi`,
+			link,
+		);
+	}
+};
+
+const verifyTeardownEepromMd5 = async (context, link, test, initialFiles) => {
+	for (const file of Object.values(initialFiles)) {
+		if (file.baselineMd5 == null) {
+			test.comment(`Post-teardown md5 check skipped for ${file.id} (no setup baseline)`);
+			continue;
+		}
+		const restoredMd5 = await getFileMd5(context, link, file.originalPath);
+		test.is(
+			restoredMd5,
+			file.baselineMd5,
+			`${file.id} md5 should match setup baseline`,
+		);
+	}
+};
+
+const verifyTeardownEepromVersion = async (context, link, test, initialVersion) => {
+	if (!initialVersion) {
 		return;
 	}
-	test.is(await getFileMd5(context, link, EEPROM_IMAGE_PATH), baselineMd5.eepromUpd, 'pieeprom.upd md5 restored');
-	test.is(await getFileMd5(context, link, EEPROM_SIG_PATH), baselineMd5.eepromSig, 'pieeprom.sig md5 restored');
-	test.is(await getFileMd5(context, link, BOOT_IMG_PATH), baselineMd5.bootImg, 'boot.img md5 restored');
-	test.is(await getFileMd5(context, link, BOOT_SIG_PATH), baselineMd5.bootSig, 'boot.sig md5 restored');
+	const finalBootloaderVersion = await getBootloaderVersion(context, link);
+	test.is(
+		finalBootloaderVersion,
+		initialVersion,
+		'After teardown, running bootloader should match setup baseline version',
+	);
+};
+
+const prepareForDowngrade = async (
+	context,
+	link,
+	test,
+	initialVersion,
+	downgradeAssets,
+) => {
+	await deployDowngradeFirmware(context, link, downgradeAssets);
+	const downgradeVersion = await getFirmwareBuildTimestamp(
+		context,
+		link,
+		EEPROM_IMAGE_PATH,
+	);
+	test.comment(`Downgrade firmware BUILD_TIMESTAMP: ${downgradeVersion}`);
+	validateTimestamp(test, downgradeVersion, 'Downgrade firmware BUILD_TIMESTAMP');
+	test.ok(
+		Number(downgradeVersion) < Number(initialVersion),
+		'Downgrade firmware should be older than current bootloader',
+	);
+	return downgradeVersion;
+};
+
+const verifyDowngradedBootloader = async (context, link, test, downgradeVersion) => {
+	const postFlashromVersion = await getBootloaderVersion(context, link);
+	test.comment(`Post-flashrom bootloader version: ${postFlashromVersion}`);
+	test.is(
+		postFlashromVersion,
+		downgradeVersion,
+		'Bootloader version should match the downgrade firmware flashed',
+	);
+};
+
+const downgradeBootloader = async (
+	context,
+	link,
+	test,
+	worker,
+	initialVersion,
+	manifests,
+) => {
+	await backUpInitialBootloaderFirmware(context, link, manifests.initialFiles, test);
+	const downgradeVersion = await prepareForDowngrade(
+		context,
+		link,
+		test,
+		initialVersion,
+		manifests.downgradeAssets,
+	);
+	await runFlashromUpdate(context, link, test);
+	test.comment('Rebooting to apply flashrom update...');
+	await worker.rebootDut(link);
+	await verifyDowngradedBootloader(context, link, test, downgradeVersion);
+};
+
+const bestEffortTearDown = async (
+	context,
+	link,
+	test,
+	needRecoveryFlashrom,
+	initialVersion,
+	worker,
+	manifests,
+) => {
+	try {
+		await restoreInitialBootloaderFirmwareInTeardown(
+			context,
+			link,
+			manifests.initialFiles,
+		);
+	} catch (error) {
+		test.comment(`Teardown warning: failed to restore artifacts (${error.message})`);
+	}
+	if (needRecoveryFlashrom) {
+		try {
+			await runFlashromUpdate(context, link, test);
+			await worker.rebootDut(link);
+		} catch (error) {
+			test.comment(`Teardown warning: flashrom recovery failed (${error.message})`);
+		}
+	}
+	await verifyTeardownEepromMd5(context, link, test, manifests.initialFiles);
+	await verifyTeardownEepromVersion(context, link, test, initialVersion);
+	await cleanupStagedDowngradeAssets(context, link, test, manifests.downgradeAssets);
+};
+
+const cleanupStagedDowngradeAssets = async (
+	context,
+	link,
+	test,
+	downgradeAssets,
+) => {
+	for (const asset of Object.values(downgradeAssets)) {
+		try {
+			await context
+				.get()
+				.worker.executeCommandInHostOS(`rm -f ${asset.stagingPath}`, link);
+		} catch (error) {
+			test.comment(
+				`Teardown warning: failed to remove staged ${asset.id} from data partition (${error.message})`,
+			);
+		}
+	}
 };
 
 module.exports = {
-	// deviceType: {
-	// 	type: 'object',
-	// 	required: ['slug'],
-	// 	properties: {
-	// 		slug: {
-	// 			type: 'string',
-	// 			enum: ['raspberrypicm4-ioboard-sb'],
-	// 		},
-	// 	},
-	// },
-	title: 'RPi4 secureboot EEPROM update (flashrom + self-update) test',
+	deviceType: {
+		type: 'object',
+		required: ['slug'],
+		properties: {
+			slug: {
+				type: 'string',
+				enum: ['raspberrypi4-64'],
+			},
+		},
+	},
+	title: 'Raspberry Pi EEPROM update (flashrom + self-update) test',
 	run: async function (test) {
 		const context = this.context;
 		const link = this.link;
-		const initialVersion = await getBootloaderVersion(context, link);
+		const slug = this.suite.deviceType.slug;
+		test.comment(`DUT test slug: ${this.suite.deviceType.slug}`);
+		let initialVersion = null;
 		let needRecoveryFlashrom = false;
-
-		// const artifacts = await prepareSecureBootDowngradeArtifacts(
-		// 	this.context.get().cloud,
-		// 	this.suite.options.tmpdir,
-		// 	RELEASE_ID,
-		// 	test,
-		// );
-		const artifacts = {
-			pieepromUpdPath: path.join(__dirname, 'assets', 'pieeprom.upd'),
-			pieepromSigPath: path.join(__dirname, 'assets', 'pieeprom.sig'),
-			bootImgPath: path.join(__dirname, 'assets', 'boot.img'),
-			bootSigPath: path.join(__dirname, 'assets', 'boot.sig'),
-		};
-		baselineMd5 = {
-			eepromUpd: await getFileMd5(context, link, EEPROM_IMAGE_PATH),
-			eepromSig: await getFileMd5(context, link, EEPROM_SIG_PATH),
-			bootImg: await getFileMd5(context, link, BOOT_IMG_PATH),
-			bootSig: await getFileMd5(context, link, BOOT_SIG_PATH),
-		};
+		const manifests = await resolveManifestForSlug(
+			slug,
+			context,
+			link,
+			this.context.get().cloud,
+			this.suite.options.tmpdir,
+			test,
+		);
 
 		try {
-			await backupShippedArtifacts(context, link);
-
-			await context.get().worker.sendFile(artifacts.pieepromUpdPath, '/mnt/data/pieeprom.upd', link);
-			await context.get().worker.sendFile(artifacts.pieepromSigPath, '/mnt/data/pieeprom.sig', link);
-			await context.get().worker.sendFile(artifacts.bootImgPath, '/mnt/data/boot.img', link);
-			await context.get().worker.sendFile(artifacts.bootSigPath, '/mnt/data/boot.sig', link);
-
-			await context.get().worker.executeCommandInHostOS(
-				`cp /mnt/data/pieeprom.upd ${EEPROM_IMAGE_PATH} && cp /mnt/data/pieeprom.sig ${EEPROM_SIG_PATH} && cp /mnt/data/boot.img ${BOOT_IMG_PATH} && cp /mnt/data/boot.sig ${BOOT_SIG_PATH}`,
+			initialVersion = await testSetup(
+				context,
 				link,
+				manifests,
+				test,
 			);
-			await runFlashromUpdate(context, link, test);
-			await this.worker.rebootDut(link);
-			const postFlashromVersion = await getBootloaderVersion(context, link);
-			test.ok(
-				postFlashromVersion !== initialVersion,
-				`After flashrom downgrade and reboot, bootloader version should differ from initial (${initialVersion}), got ${postFlashromVersion}`,
+
+			test.comment('=== Test 1: Downgrade bootloader via flashrom ===');
+			await downgradeBootloader(
+				context,
+				link,
+				test,
+				this.worker,
+				initialVersion,
+				manifests,
 			);
-			await restoreShippedArtifactsForSelfUpdate(context, link);
+
+			test.comment('=== Test 2: Restore shipped firmware and verify self-update ===');
+			await restoreInitialBootloaderFirmware(
+				context,
+				link,
+				manifests.initialFiles,
+			);
 			needRecoveryFlashrom = true;
 
 			await this.worker.rebootDut(link);
@@ -182,25 +565,19 @@ module.exports = {
 			test.is(
 				postSelfUpdateVersion,
 				initialVersion,
-				'After restore and reboot, secureboot self-update should return to initial bootloader version',
+				'After restore and reboot, self-update should return to initial bootloader version',
 			);
 			needRecoveryFlashrom = false;
 		} finally {
-			try {
-				await restoreShippedArtifactsInTeardown(context, link);
-			} catch (error) {
-				test.comment(`Teardown warning: failed to restore artifacts (${error.message})`);
-			}
-			if (needRecoveryFlashrom) {
-				try {
-					await runFlashromUpdate(context, link, test);
-					await this.worker.rebootDut(link);
-				} catch (error) {
-					test.comment(`Teardown warning: flashrom recovery failed (${error.message})`);
-				}
-			}
-			await verifyTeardownMd5(context, link, test);
+			await bestEffortTearDown(
+				context,
+				link,
+				test,
+				needRecoveryFlashrom,
+				initialVersion,
+				this.worker,
+				manifests,
+			);
 		}
 	},
 };
-
