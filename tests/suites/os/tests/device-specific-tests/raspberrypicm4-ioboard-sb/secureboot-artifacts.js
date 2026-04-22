@@ -207,7 +207,6 @@ const prepareSecureBootDowngradeArtifacts = async (cloud, tmpdir, releaseId, tes
 	await assertMd5(bootSigPath, EXPECTED_MD5.bootSig, 'boot.sig');
 	await assertMd5(pieepromUpdPath, EXPECTED_MD5.pieepromUpd, 'pieeprom-latest-stable.bin');
 	await assertMd5(pieepromSigPath, EXPECTED_MD5.pieepromSig, 'pieeprom-latest-stable.sig');
-
 	test.comment(`Prepared SB downgrade assets in ${workDir}`);
 	return { bootImgPath, bootSigPath, pieepromUpdPath, pieepromSigPath };
 };
