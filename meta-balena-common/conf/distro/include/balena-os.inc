@@ -63,6 +63,10 @@ MAINTAINER = "Balena <hello@balena.io>"
 
 # Strip down unneeded features
 POKY_DEFAULT_DISTRO_FEATURES:remove = "ptest"
+DISTRO_FEATURES:remove = "ptest"
+EXTRA_IMAGE_FEATURES:remove = "ptest-pkgs"
+PTEST_ENABLED = "0"
+
 POKY_DEFAULT_DISTRO_FEATURES:remove = "wayland"
 
 # OS development image
