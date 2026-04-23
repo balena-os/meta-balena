@@ -1,4 +1,27 @@
 - commits:
+    - subject: "tests: cloud: Stop waiting for healthy supervisor in cloud suite
+        before preload test"
+      hash: 6afa76bd2f4cd1a342a3dd2339976a380e40b607
+      body: >
+        In the cloud suite we provision the device with no internet - to test
+        that the prloaded app starts on first boot without api access.
+        Supervisor 17.6.26 fixed a supervisor connectivity healthcheck, that
+        causes the supervisor to now correctly report as non healthy if there is
+        no connectivity. This caused a failure in the cloud suite where we were
+        waiting for a healthy supervisor to continue to the preloaded app test,
+        but as the internet is disabled until we complete that test, we were
+        waiting until the test timed out.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.12.11
+  title: ""
+  date: 2026-04-23T05:56:40.348Z
+- commits:
     - subject: "balena-bootloader.bbclass: Add required CONFIG_NLS_ISO8859_1 as
         built-in"
       hash: 59ff5ba6b5583e14d7d05548930ccfa4a1f3ef92
