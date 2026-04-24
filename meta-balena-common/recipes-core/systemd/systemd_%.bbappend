@@ -130,6 +130,21 @@ do_install:append() {
 
     # Disable systemd-gpt-generator as it's currently a noop that just throws errors
     ln -s /dev/null ${D}${sysconfdir}/systemd/system-generators/systemd-gpt-auto-generator
+
+    # These scripts output metadata to serial consoles, but not all can handle it.
+    # We thus remove them if they exist, to keep the UART clean.
+    rm -f ${D}${sysconfdir}/profile.d/80-systemd-osc-context.sh
+    rm -f ${D}${nonarch_base_libdir}/systemd/profile.d/80-systemd-osc-context.sh
+    rm -f ${D}${nonarch_base_libdir}/tmpfiles.d/20-systemd-osc-context.conf
+
+    # Remove 20-systemd-ssh-proxy.conf and 20-systemd-userdb.conf,
+    # and their symlinks, because they cause ssh via the CLI and
+    # webterminal to fail in Wrynose. They are added by
+    # systemd v256 and newer, in opembedded-core commit
+    # 89b75b463, and are not present in Scarthgap.
+    rm -rf ${D}${sysconfdir}/ssh
+    rm -rf ${D}${nonarch_libdir}/systemd/ssh/ssh_config.d
+    rm -rf ${D}${nonarch_libdir}/systemd/ssh/sshd_config.d
 }
 
 PACKAGES =+ "${PN}-zram-swap"
@@ -155,6 +170,13 @@ RDEPENDS:${PN}:append = " os-helpers-fs balena-ntp-config util-linux periodic-va
 PACKAGECONFIG:remove = "resolved networkd timesyncd"
 
 PACKAGECONFIG:remove = "polkit"
+
+# These configuration files are added by systemd v256,
+# we remove them because they cause ssh via webterminal and CLI
+# to fail when developmentMode is not set to true in config.json
+FILES:${PN}:remove = " ${sysconfdir}/ssh/ssh_config.d/20-systemd-ssh-proxy.conf \
+                ${sysconfdir}/ssh/sshd_config.d/20-systemd-userdb.conf \
+"
 
 # Add missing users/groups defined in /usr/lib/sysusers.d/*
 # In this time we avoid creating these at first boot
