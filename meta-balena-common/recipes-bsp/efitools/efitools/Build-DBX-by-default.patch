@@ -3,6 +3,7 @@ From: Lans Zhang <jia.zhang@windriver.com>
 Date: Sat, 28 Jan 2017 13:42:28 +0800
 Subject: [PATCH] Build DBX by default
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Makefile | 6 +++---

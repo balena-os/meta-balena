@@ -5,7 +5,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/os-files:"
 SRC_URI += "file://e2fsck.conf"
 
 do_install:append() {
-	install -m 644 ${WORKDIR}/e2fsck.conf ${D}${sysconfdir}
+	install -m 644 ${UNPACKDIR}/e2fsck.conf ${D}${sysconfdir}
 }
 
 CONFFILES:${PN} += "${sysconfdir}/e2fsck.conf"

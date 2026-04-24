@@ -29,6 +29,7 @@ callback function).
 [2] https://www.spinics.net/lists/linux-man/msg11329.html
 [3] https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/tfo-configuring.html#jd0e18
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Andrei Gherzan <andrei@resin.io>
 ---
  dnsu2t.c | 17 +++++++++++++++++

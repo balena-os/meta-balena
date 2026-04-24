@@ -3,8 +3,7 @@ From: Lans Zhang <jia.zhang@windriver.com>
 Date: Tue, 15 Mar 2016 21:07:31 +0800
 Subject: [PATCH] Fix the wrong dependency for %-blacklist.esl
 
-Upstream-Status: Pending
-
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Make.rules | 2 +-

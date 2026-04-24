@@ -64,7 +64,6 @@ MAINTAINER = "Balena <hello@balena.io>"
 # Strip down unneeded features
 POKY_DEFAULT_DISTRO_FEATURES:remove = "ptest"
 POKY_DEFAULT_DISTRO_FEATURES:remove = "wayland"
-DISTRO_FEATURES_DEFAULT:remove = "x11"
 
 # OS development image
 OS_DEVELOPMENT ?= "0"
@@ -138,7 +137,7 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 PREFERRED_VERSION_linux-firmware = "20240909"
 
 # Scarthgap go version, meets balena-engine go version requirement
-GOVERSION = "1.22.12"
+GOVERSION = "1.26.1"
 PREFERRED_PROVIDER_go-native = "go-binary-native"
 
 # Firmware compression support

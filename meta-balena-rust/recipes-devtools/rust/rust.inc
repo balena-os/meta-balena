@@ -42,25 +42,25 @@ setup_cargo_environment () {
 include rust-common.inc
 
 do_rust_setup_snapshot () {
-    for installer in "${WORKDIR}/rust-snapshot-components/"*"/install.sh"; do
-        "${installer}" --prefix="${WORKDIR}/rust-snapshot" --disable-ldconfig
+    for installer in "${UNPACKDIR}/rust-snapshot-components/"*"/install.sh"; do
+        "${installer}" --prefix="${UNPACKDIR}/rust-snapshot" --disable-ldconfig
     done
 
     # Some versions of rust (e.g. 1.18.0) tries to find cargo in stage0/bin/cargo
     # and fail without it there.
     mkdir -p ${RUSTSRC}/build/${BUILD_SYS}
-    ln -sf ${WORKDIR}/rust-snapshot/ ${RUSTSRC}/build/${BUILD_SYS}/stage0
+    ln -sf ${UNPACKDIR}/rust-snapshot/ ${RUSTSRC}/build/${BUILD_SYS}/stage0
 
     # Need to use uninative's loader if enabled/present since the library paths
     # are used internally by rust and result in symbol mismatches if we don't
     if [ ! -z "${UNINATIVE_LOADER}" -a -e "${UNINATIVE_LOADER}" ]; then
         for bin in cargo rustc rustdoc; do
-            patchelf-uninative ${WORKDIR}/rust-snapshot/bin/$bin --set-interpreter ${UNINATIVE_LOADER}
+            patchelf-uninative ${UNPACKDIR}/rust-snapshot/bin/$bin --set-interpreter ${UNINATIVE_LOADER}
         done
     fi
 }
 addtask rust_setup_snapshot after do_unpack before do_configure
-do_rust_setup_snapshot[dirs] += "${WORKDIR}/rust-snapshot"
+do_rust_setup_snapshot[dirs] += "${UNPACKDIR}/rust-snapshot"
 do_rust_setup_snapshot[vardepsexclude] += "UNINATIVE_LOADER"
 
 python do_configure() {
@@ -115,14 +115,14 @@ python do_configure() {
     config.set("build", "submodules", e(False))
     config.set("build", "docs", e(False))
 
-    rustc = d.expand("${WORKDIR}/rust-snapshot/bin/rustc")
+    rustc = d.expand("${UNPACKDIR}/rust-snapshot/bin/rustc")
     config.set("build", "rustc", e(rustc))
 
     # Support for the profiler runtime to generate e.g. coverage report,
     # PGO etc.
     config.set("build", "profiler", e(True))
 
-    cargo = d.expand("${WORKDIR}/rust-snapshot/bin/cargo")
+    cargo = d.expand("${UNPACKDIR}/rust-snapshot/bin/cargo")
     config.set("build", "cargo", e(cargo))
 
     config.set("build", "vendor", e(True))
@@ -153,7 +153,7 @@ python do_configure() {
         f.write('changelog-seen = 2\n\n')
         config.write(f)
 
-    # set up ${WORKDIR}/cargo_home
+    # set up ${UNPACKDIR}/cargo_home
     bb.build.exec_func("setup_cargo_environment", d)
 }
 
