@@ -125,6 +125,13 @@ do_install:append() {
 
     # Disable systemd-gpt-generator as it's currently a noop that just throws errors
     ln -s /dev/null ${D}${sysconfdir}/systemd/system-generators/systemd-gpt-auto-generator
+
+    # These scripts output metadata to serial consoles, but not all can handle it.
+    # We thus remove them if they exist, to keep the UART clean.
+    rm -f ${D}${sysconfdir}/profile.d/80-systemd-osc-context.sh
+    rm -f ${D}${nonarch_base_libdir}/systemd/profile.d/80-systemd-osc-context.sh
+    rm -f ${D}${nonarch_base_libdir}/tmpfiles.d/20-systemd-osc-context.conf
+
 }
 
 PACKAGES =+ "${PN}-zram-swap"
