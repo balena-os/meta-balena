@@ -45,10 +45,11 @@ done
 echo "Docker started."
 
 # Pull in host extension images
-BALENA_HOSTAPP_EXTENSIONS_FEATURE="io.balena.features.host-extension"
+BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
+BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
 for image_name in ${HOSTEXT_IMAGES}; do
 	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
-		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_FEATURE}" "${image_name}" none
+		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}" "${image_name}" none
 	else
 		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
 		exit 1

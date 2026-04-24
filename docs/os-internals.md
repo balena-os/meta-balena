@@ -23,6 +23,6 @@ graph TD
     E --> F(udev by-state symlinks)
     F --> G{Balena UUIDs?} -- N --> H(Regenerate UUIDs) --> I(New root UUID stored in /run/initramfs for first boot) --> J(Mount rootfs using UUID)
     G -- Y --> J --> K
-    K(Switch root) --> L(Mobyinit) --> M(Pivot root disk/by-state/active) --> N(systemd) --> O(resin-mount using /dev/by-state)
+    K(Switch root) --> L(Mobynit) --> M("Mount overlay union (lowerdirs)") --> M2(Pivot root) --> N(systemd) --> O(resin-mount using /dev/by-state)
     O --> P(resin-boot) & Q(resin-state) & R(resin-data)
 ```
