@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.0.0
+## (2026-04-24)
+
+* mobynit: update to v1.0.0 [Alex Gonzalez]
+
 # v6.12.11
 ## (2026-04-23)
 

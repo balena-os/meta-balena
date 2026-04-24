@@ -1,4 +1,20 @@
 - commits:
+    - subject: "mobynit: update to v1.0.0"
+      hash: d3c6c79ec6ff747fdcec1534bd704950b163f63b
+      body: |
+        This mobynit version mounts the rootfs as lowerdirs and is intrinsically
+        read-only.
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.0.0
+  title: ""
+  date: 2026-04-24T18:34:48.170Z
+- commits:
     - subject: "tests: cloud: Stop waiting for healthy supervisor in cloud suite
         before preload test"
       hash: 6afa76bd2f4cd1a342a3dd2339976a380e40b607
