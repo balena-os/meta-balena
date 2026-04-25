@@ -3,6 +3,11 @@ require conf/distro/poky.conf
 include conf/distro/include/balena-os-yocto-version.inc
 include conf/distro/include/balena-os-rust-version.inc
 
+# crates.io now rejects requests without a proper User-Agent (HTTP 403).
+# bitbake's default wget command does not pass a User-Agent, which causes
+# Rust crate fetches (crate://) to fail. Force a User-Agent so fetches work.
+FETCHCMD:wget = "/usr/bin/env wget -t 2 -T 100 --user-agent=balena-yocto-build --progress=dot -v"
+
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
 DISTRO_VERSION = "7.0.0"
