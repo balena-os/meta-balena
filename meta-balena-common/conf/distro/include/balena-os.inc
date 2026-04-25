@@ -8,7 +8,7 @@ include conf/distro/include/balena-os-rust-version.inc
 # Rust crate fetches (crate://) to fail. Force a User-Agent so fetches work.
 # NOTE: FETCHCMD_wget is a literal variable name (read via d.getVar in
 # bitbake's wget fetcher); the override-syntax form FETCHCMD:wget is not
-# applied because "wget" is not in OVERRIDES.
+# applied because "wget" is not in OVERRIDES. 
 FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 100 --user-agent=balena-yocto-build --progress=dot -v"
 
 DISTRO = "balena-os"
