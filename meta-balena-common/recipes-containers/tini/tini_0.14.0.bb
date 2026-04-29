@@ -13,11 +13,11 @@ SRC_URI = " \
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=ffc9091894702bc5dcf4cc0085561ef5"
 
-S = "${WORKDIR}/git"
-
 BBCLASSEXTEND = "native"
 
 inherit cmake
+
+EXTRA_OECMAKE:append = " -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 do_install() {
   mkdir -p ${D}/${bindir}

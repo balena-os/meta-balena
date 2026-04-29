@@ -29,7 +29,6 @@ SRC_URI = " \
     file://rollback-parse-bootloader \
     file://rollback-board-healthcheck \
     "
-S = "${WORKDIR}"
 
 inherit allarch systemd
 
@@ -42,15 +41,15 @@ SYSTEMD_SERVICE:${PN} = " \
 do_install() {
     install -d ${D}${bindir}
     install -d ${D}${systemd_unitdir}/system
-    install -m 0775 ${S}/rollback-altboot ${D}${bindir}
-    install -m 0775 ${S}/rollback-check-version ${D}${bindir}
-    install -m 0775 ${S}/rollback-clear-bootcount ${D}${bindir}
-    install -m 0775 ${S}/rollback-health ${D}${bindir}
-    install -m 0775 ${S}/rollback-stop ${D}${bindir}
-    install -m 0775 ${S}/rollback-tests ${D}${bindir}
-    install -m 0775 ${S}/rollback-parse-bootloader ${D}${bindir}
-    install -m 0775 ${S}/rollback-board-healthcheck ${D}${bindir}
-    install -c -m 0644 ${S}/rollback-altboot.service ${D}${systemd_unitdir}/system
-    install -c -m 0644 ${S}/rollback-clear-bootcount.service ${D}${systemd_unitdir}/system
-    install -c -m 0644 ${S}/rollback-health.service ${D}${systemd_unitdir}/system
+    install -m 0775 ${UNPACKDIR}/rollback-altboot ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/rollback-check-version ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/rollback-clear-bootcount ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/rollback-health ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/rollback-stop ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/rollback-tests ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/rollback-parse-bootloader ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/rollback-board-healthcheck ${D}${bindir}
+    install -c -m 0644 ${UNPACKDIR}/rollback-altboot.service ${D}${systemd_unitdir}/system
+    install -c -m 0644 ${UNPACKDIR}/rollback-clear-bootcount.service ${D}${systemd_unitdir}/system
+    install -c -m 0644 ${UNPACKDIR}/rollback-health.service ${D}${systemd_unitdir}/system
 }

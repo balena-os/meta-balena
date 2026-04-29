@@ -9,7 +9,6 @@ SRC_URI = " \
     file://resin-device-register \
     file://resin-device-register.service \
     "
-S = "${WORKDIR}"
 
 inherit allarch systemd
 
@@ -25,11 +24,11 @@ SYSTEMD_SERVICE:${PN} = "resin-device-register.service"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0775 ${WORKDIR}/resin-device-register ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/resin-device-register ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/resin-device-register.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/resin-device-register.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
             -e 's,@BINDIR@,${bindir},g' \

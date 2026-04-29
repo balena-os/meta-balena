@@ -9,7 +9,7 @@ DISTRO_VERSION = "7.0.0"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 
 # Allowed kernel cmdline arguments, used by balena-bootloader and the bootloader configuration scripts
-ALLOWED_BOOTARGS_LIST=" \
+ALLOWED_BOOTARGS_LIST = " \
     firmware_class.path=/var/lib/docker/volumes/extra-firmware/_data \
 "
 
@@ -63,8 +63,11 @@ MAINTAINER = "Balena <hello@balena.io>"
 
 # Strip down unneeded features
 POKY_DEFAULT_DISTRO_FEATURES:remove = "ptest"
+DISTRO_FEATURES:remove = "ptest"
+EXTRA_IMAGE_FEATURES:remove = "ptest-pkgs"
+PTEST_ENABLED = "0"
+
 POKY_DEFAULT_DISTRO_FEATURES:remove = "wayland"
-DISTRO_FEATURES_DEFAULT:remove = "x11"
 
 # OS development image
 OS_DEVELOPMENT ?= "0"
@@ -138,7 +141,7 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 PREFERRED_VERSION_linux-firmware = "20240909"
 
 # Scarthgap go version, meets balena-engine go version requirement
-GOVERSION = "1.22.12"
+GOVERSION = "1.26.1"
 PREFERRED_PROVIDER_go-native = "go-binary-native"
 
 # Firmware compression support

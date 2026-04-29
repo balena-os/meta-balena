@@ -738,7 +738,7 @@ RDEPENDS:${PN}-nxpiw612-sdio += "${PN}-nxp-license"
 LICENSE:${PN}-nxp-mc = "Firmware-nxp_mc_firmware"
 LICENSE:${PN}-nxp-mc-license = "Firmware-nxp_mc_firmware"
 
-FILES:${PN}-nxp-mc= "${nonarch_base_libdir}/firmware/dpaa2/mc/*"
+FILES:${PN}-nxp-mc = "${nonarch_base_libdir}/firmware/dpaa2/mc/*"
 FILES:${PN}-nxp-mc-license = " \
   ${nonarch_base_libdir}/firmware/LICENSE.nxp_mc_firmware* \
 "
@@ -1298,7 +1298,7 @@ RDEPENDS:${PN}-ibt-17 = "${PN}-ibt-license"
 RDEPENDS:${PN}-ibt-20 = "${PN}-ibt-license"
 RDEPENDS:${PN}-ibt-misc    = "${PN}-ibt-license"
 
-ALLOW_EMPTY:${PN}-ibt= "1"
+ALLOW_EMPTY:${PN}-ibt = "1"
 ALLOW_EMPTY:${PN}-ibt-misc = "1"
 
 LICENSE:${PN}-i915       = "Firmware-i915"

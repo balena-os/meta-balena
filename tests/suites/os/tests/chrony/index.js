@@ -1,33 +1,21 @@
 
 const blockNTP = async (test, that, target) => {
 
-	return test.test(`Blocking NTP by stopping dnsmasq.service`, t =>
+	return test.test(`Blocking NTP by stopping via iptables`, t =>
 		t.resolves(
-			/* Block NTP by adding a server entry for the domain that loops back to
-			 * our own DNS server
+			/* Block port 123 used for NTP
 			 */
 			that.worker.executeCommandInHostOS(
-				['dbus-send',
-					'--system',
-					'--dest=uk.org.thekelleys.dnsmasq',
-					'/uk/org/thekelleys/dnsmasq',
-					'uk.org.thekelleys.dnsmasq.SetServers',
-					'uint32:127.0.0.2',
-					'string:ntp.org',
-				],
+				['iptables', '-A', 'OUTPUT', '-p', 'udp', '--dport', '123', '-j', 'DROP'],
 				target,
 			).then(() => {
+				/* Tell chrony it's offline so it doesn't wait for timeouts to fail */
 				return that.worker.executeCommandInHostOS(
-					['dbus-send',
-						'--system',
-						'--dest=uk.org.thekelleys.dnsmasq',
-						'/uk/org/thekelleys/dnsmasq',
-						'uk.org.thekelleys.dnsmasq.ClearCache',
-					],
+					['chronyc offline'],
 					target,
 				);
 			}),
-			'Should block ntp.org',
+			'Should block Port 123 and set chrony offline',
 		).then(() => {
 			return t.resolves(
 				that.worker.executeCommandInHostOS(
@@ -66,29 +54,20 @@ const blockNTP = async (test, that, target) => {
 
 const restoreNTP = async (test, that, target) => {
 
-	return test.test(`Unblocking NTP by restarting dnsmasq.service`, t =>
+	return test.test(`Unblocking NTP using iptables`, t =>
 		t.resolves(
 			// avoid hitting 'start request repeated too quickly'
 			that.worker.executeCommandInHostOS(
-				'systemctl reset-failed dnsmasq.service',
+				['iptables', '-D', 'OUTPUT', '-p', 'udp', '--dport', '123', '-j', 'DROP'],
 				target
-			), `Should reset start counter of dnsmasq.service`
+			), `Should delete iptables rule which blocks port 123`
 		).then(() => {
 			return t.resolves(
 				that.worker.executeCommandInHostOS(
-					`systemctl restart dnsmasq.service`,
+					`chronyc online`,
 					target
-				), `Should restart dnsmasq.service`
+				), `Should tell chrony the network is back`
 			);
-		}).then(() => {
-			return t.resolves(
-				that.systemd.waitForServiceState(
-					'dnsmasq.service',
-					'active',
-					target
-				),
-				'Should wait for dnsmasq.service to be active'
-			)
 		})
 	);
 }
