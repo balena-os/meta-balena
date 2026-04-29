@@ -13,8 +13,6 @@ SRC_URI = "git://${GO_IMPORT};nobranch=1;protocol=https"
 # v1.0.0
 SRCREV="68b5fba96640392b591d27d243b891f657d7d02b"
 
-S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
-
 GOPROXY ??= "https://proxy.golang.org,direct"
 
 do_compile[network] = "1"
