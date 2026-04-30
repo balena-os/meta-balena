@@ -36,6 +36,7 @@ const supportsBootConfig = (deviceType) => {
 const flasherConfig = (deviceType) => {
 	return (
 		[
+			'imx8mmebcrs16a1',
 			'imx8mm-var-dart-plt'
 		].includes(deviceType)
 	);
