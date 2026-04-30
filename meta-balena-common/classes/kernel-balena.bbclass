@@ -155,7 +155,12 @@ BALENA_CONFIGS ?= " \
     vlan \
     bpf \
     disk-watchdog \
+    dmabuf \
+    cve_2026_31431 \
 "
+
+# CVE-2026-31431: unconditionally disable CONFIG_CRYPTO_USER_API_AEAD
+BALENA_CONFIGS[cve_2026_31431] = "CONFIG_CRYPTO_USER_API_AEAD=n"
 
 #
 # Balena specific kernel configuration
