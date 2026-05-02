@@ -24,7 +24,7 @@ permissions:
 jobs:
   yocto:
     name: Yocto
-    uses: balena-os/balena-compulab-imx9/.github/workflows/ucm-imx93.yml@master
+    uses: balena-os/balena-compulab-imx9/.github/workflows/ucm-imx93.yml@0323293df1a4e12d118b68abd7c4ffe09494330e # master
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
