@@ -16,6 +16,7 @@ HOSTAPP_HOOKS = " \
     76-supervisor-db/76-forward_supervisor-db \
     76-supervisor-db/76-fwd_commit_supervisor-db \
     80-rollback \
+    95-bootability \
     "
 
 SECUREBOOT_HOOKS = " \
