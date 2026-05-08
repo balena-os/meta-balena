@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.0.1
+## (2026-05-08)
+
+* kernel-balena: address CVE-2026-31431 [Alex Gonzalez]
+
 # v7.0.0
 ## (2026-04-24)
 

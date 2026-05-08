@@ -1,4 +1,19 @@
 - commits:
+    - subject: "kernel-balena: address CVE-2026-31431"
+      hash: d95ef53e5e65cabc0dcbb87db994463367bd2bad
+      body: |
+        Unconditionally remove CONFIG_CRYPTO_USER_API_AEAD.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.0.1
+  title: ""
+  date: 2026-05-08T11:09:20.703Z
+- commits:
     - subject: "mobynit: update to v1.0.0"
       hash: d3c6c79ec6ff747fdcec1534bd704950b163f63b
       body: |
