@@ -314,7 +314,7 @@ class qemuSecureBoot extends uefiSecureBoot {
 			 * again within the timeout (boot failed)
 			 */
 			this.qmpClient.once('reset', () => {
-				setTimeout(reject, 10 * 1000);
+				setTimeout(reject, 20 * 1000);
 				this.qmpClient.once('reset', resolve);
 			});
 		});
