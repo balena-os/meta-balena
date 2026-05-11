@@ -1,4 +1,27 @@
 - commits:
+    - subject: "kernel-balena: address CVE-2026-43284"
+      hash: f774fd5ea5dff8e1751c19a62825330fce043425
+      body: >
+        This commit removes the esp4/esp6 and rxrpc modules as they are
+        vulnerable.
+
+
+        Devices will not be able to use IPSEC based VPNs (esp4/esp6). The only
+
+        consumer of rxrpc is the in-kernel AFS (Andrew File System) which is
+
+        experimental anyway.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.0.2
+  title: ""
+  date: 2026-05-11T13:58:10.857Z
+- commits:
     - subject: "kernel-balena: address CVE-2026-31431"
       hash: d95ef53e5e65cabc0dcbb87db994463367bd2bad
       body: |
