@@ -1,0 +1,35 @@
+usb-modeswitch: Fix building with newer gcc versions
+
+In older C standards an empty parameter list implied
+a function can take any number of arguments. Newer gcc
+versions however are stricter about function prototypes.
+
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+Upstream-Status: Inappropriate [oe-specific]
+
+Index: usb-modeswitch-2.6.1/usb_modeswitch.c
+===================================================================
+--- usb-modeswitch-2.6.1.orig/usb_modeswitch.c
++++ usb-modeswitch-2.6.1/usb_modeswitch.c
+@@ -1855,7 +1855,7 @@ int find_first_bulk_endpoint(int directi
+ }
+ 
+ 
+-int get_current_config_value()
++int get_current_config_value(struct libusb_device *dev)
+ {
+ 	SHOW_PROGRESS(output,"Get the current device configuration ...\n");
+ 	if (active_config != NULL) {
+Index: usb-modeswitch-2.6.1/usb_modeswitch.h
+===================================================================
+--- usb-modeswitch-2.6.1.orig/usb_modeswitch.h
++++ usb-modeswitch-2.6.1/usb_modeswitch.h
+@@ -52,7 +52,7 @@ void release_usb_device(int dummy);
+ struct libusb_device* search_devices( int *numFound, int vendor, char* productList,
+ 		int targetClass, int configuration, int mode);
+ int find_first_bulk_endpoint(int direction);
+-int get_current_config_value();
++int get_current_config_value(struct libusb_device *dev);
+ int get_interface_class();
+ char* ReadParseParam(const char* FileName, char *VariableName);
+ int hex2num(char c);
