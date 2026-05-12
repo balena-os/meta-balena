@@ -153,7 +153,23 @@ BALENA_CONFIGS ?= " \
     ${MODULE_COMPRESS} \
     ${WIREGUARD} \
     vlan \
+    bpf \
+    disk-watchdog \
+    dmabuf \
+    cve_2026_31431 \
+    cve_2026_43284 \
+"
+
+# CVE-2026-31431: unconditionally disable CONFIG_CRYPTO_USER_API_AEAD
+BALENA_CONFIGS[cve_2026_31431] = "CONFIG_CRYPTO_USER_API_AEAD=n"
+
+# CVE-2026-43284: disable IPsec ESP (esp4/esp6) and RxRPC
+BALENA_CONFIGS[cve_2026_43284] = " \
+    CONFIG_INET_ESP=n \
+    CONFIG_INET6_ESP=n \
+    CONFIG_AF_RXRPC=n \
     "
+
 
 #
 # Balena specific kernel configuration
