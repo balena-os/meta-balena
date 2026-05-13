@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.0.3
+## (2026-05-13)
+
+* plymouth: start after udev settle [Michal Toman]
+
 # v7.0.2
 ## (2026-05-11)
 

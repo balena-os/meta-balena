@@ -1,4 +1,30 @@
 - commits:
+    - subject: "plymouth: start after udev settle"
+      hash: 2c223c726e75bc0ecf0aafbf850bde5907e4107b
+      body: |
+        In commit 72706964b8dd308b6c1772fa22c4e89d1680d205 we have reworked
+        the plymouth unit files to use drop-in configs and avoid the need
+        to patch the sources.
+
+        During this process we have lost the plymouth-start's depenency
+        on systemd-udev-settle.service which creates a race condition around
+        the GPU initialization. Sometimes plymouth starts too early, displays
+        the splash screen on the early boot SW framebuffer, which then gets
+        lost when the actual GPU driver takes over.
+
+        This patch re-adds the dependency on systemd-udev-settle.service
+        which should address the issue.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 7.0.3
+  title: ""
+  date: 2026-05-13T11:48:58.719Z
+- commits:
     - subject: "kernel-balena: address CVE-2026-43284"
       hash: f774fd5ea5dff8e1751c19a62825330fce043425
       body: >
