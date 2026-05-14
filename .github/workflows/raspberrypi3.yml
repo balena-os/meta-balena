@@ -7,12 +7,18 @@ on:
       - master
       # ESR branches glob pattern
       - "[0-9]+.[0-9]+.x"
+      # Respective device repo ESR branches are missing
+      - "!6.6.x" # "!2025.10.x"
+      - "!6.11.x" # "!2026.4.x"
   pull_request_target:
     branches:
       - main
       - master
       # ESR branches glob pattern
       - "[0-9]+.[0-9]+.x"
+      # Respective device repo ESR branches are missing
+      - "!6.6.x" # "!2025.10.x"
+      - "!6.11.x" # "!2026.4.x"
 
 permissions:
   id-token: write # This is required for requesting the JWT #https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#requesting-the-access-token

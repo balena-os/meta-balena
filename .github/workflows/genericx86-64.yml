@@ -38,6 +38,6 @@ jobs:
       deploy-environment: balena-staging.com
       machine: genericx86-64
       device-repo: balena-os/balena-intel
-      device-repo-ref: master
+      device-repo-ref: 2025.10.x
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
