@@ -37,7 +37,7 @@ jobs:
       deploy-environment: balena-cloud.com
       machine: genericx86-64-ext
       device-repo: balena-os/balena-intel
-      device-repo-ref: master
+      device-repo-ref: aa7af34130e135c34c937302cdf40232d309bc27
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
       # Use QEMU workers for testing and run cloud suite against balenaCloud production

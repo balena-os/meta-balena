@@ -37,6 +37,6 @@ jobs:
       deploy-environment: balena-cloud.com
       machine: raspberrypi3-64
       device-repo: balena-os/balena-raspberrypi
-      device-repo-ref: master
+      device-repo-ref: 0880a86cdca34721c29b360b05e6a483b474b954
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}

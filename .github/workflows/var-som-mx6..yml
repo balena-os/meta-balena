@@ -35,6 +35,6 @@ jobs:
       deploy-environment: balena-cloud.com
       machine: var-som-mx6
       device-repo: balena-os/balena-variscite
-      device-repo-ref: master
+      device-repo-ref: 0c69b8ec50bb81984be9fc45c69908a23a5686cc
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}

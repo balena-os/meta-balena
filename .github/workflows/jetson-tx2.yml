@@ -35,6 +35,6 @@ jobs:
       deploy-environment: balena-cloud.com
       machine: jetson-tx2
       device-repo: balena-os/balena-jetson
-      device-repo-ref: master
+      device-repo-ref: 1c5f18c0e6233eeaf7e91641a2d5575b2bb7031f
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
