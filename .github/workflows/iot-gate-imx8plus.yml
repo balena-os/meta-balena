@@ -7,12 +7,18 @@ on:
       - master
       # ESR branches glob pattern
       - "[0-9]+.[0-9]+.x"
+      # Respective device repo ESR branches are missing
+      - "!6.6.x" # "!2025.10.x"
+      - "!6.9.x" # "!2026.1.x"
   pull_request_target:
     branches:
       - main
       - master
       # ESR branches glob pattern
       - "[0-9]+.[0-9]+.x"
+      # Respective device repo ESR branches are missing
+      - "!6.6.x" # "!2025.10.x"
+      - "!6.9.x" # "!2026.1.x"
 
 permissions:
   id-token: write # This is required for requesting the JWT #https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#requesting-the-access-token
@@ -36,6 +42,6 @@ jobs:
       machine: iot-gate-imx8plus
       build-args: '--templates-path layers/meta-balena-imx8mplus'
       device-repo: balena-os/balena-iot-gate-imx8plus
-      device-repo-ref: master
+      device-repo-ref: 2026.4.x
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
