@@ -1,0 +1,30 @@
+name: Automerge Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, auto_merge_enabled]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: All Passed # must match the required check in your ruleset
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      checks: read
+      pull-requests: read
+      actions: read
+    steps:
+      - uses: pkgdeps/automerge-gate@v4.1.0
+        with:
+          gate-mode: 'public'
+          # All Yocto Build checks are ignored because they do not include
+          # the device-type slug so we cannot selectively ignore them.
+          # Use 'All jobs' to selectively ignore device-type-specific checks.
+          ignore-checks: |
+            Yocto / Build
+            Yocto / Yocto / Build
+            Yocto / All jobs (var-som-mx6, *)
