@@ -20,9 +20,6 @@ SRC_URI:remove = " \
     file://enable-iwd.conf \
 "
 
-# Necessary after upstream moved SRC_URI from tarballs to git
-S = "${WORKDIR}/git"
-
 NETWORKMANAGER_FIREWALL_DEFAULT = "iptables"
 
 NETWORKMANAGER_DNS_RC_MANAGER_DEFAULT = "resolvconf"
@@ -70,22 +67,22 @@ INITSCRIPT_NAME:${PN}-daemon = ""
 
 do_install:append() {
     install -d ${D}${sysconfdir}/tmpfiles.d
-    install -m 0644 ${WORKDIR}/nm-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
+    install -m 0644 ${UNPACKDIR}/nm-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
 
-    install -m 0644 ${WORKDIR}/NetworkManager.conf ${D}${sysconfdir}/NetworkManager/
+    install -m 0644 ${UNPACKDIR}/NetworkManager.conf ${D}${sysconfdir}/NetworkManager/
 
     # Install balena dispatch scripts in /usr/lib/NetworkManager/dispatcher.d/ as
     # /etc/NetworkManager/dispatcher.d/ is used for user-provided scripts
-    install -m 0755 ${WORKDIR}/90shared ${D}${libdir}/NetworkManager/dispatcher.d/
-    install -m 0755 ${WORKDIR}/98dhcp_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
-    install -m 0755 ${WORKDIR}/99onoffline_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
+    install -m 0755 ${UNPACKDIR}/90shared ${D}${libdir}/NetworkManager/dispatcher.d/
+    install -m 0755 ${UNPACKDIR}/98dhcp_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
+    install -m 0755 ${UNPACKDIR}/99onoffline_ntp ${D}${libdir}/NetworkManager/dispatcher.d/
 
     # Cleanup /etc/NetworkManager/dispatcher.d/, so that it is empty when bindmounted
     rm -rdf ${D}${sysconfdir}/NetworkManager/dispatcher.d/*
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system/NetworkManager.service.d
-        install -m 0644 ${WORKDIR}/NetworkManager.conf.systemd ${D}${sysconfdir}/systemd/system/NetworkManager.service.d/NetworkManager.conf
+        install -m 0644 ${UNPACKDIR}/NetworkManager.conf.systemd ${D}${sysconfdir}/systemd/system/NetworkManager.service.d/NetworkManager.conf
     fi
 
     ln -s /var/run/resolvconf/interface/NetworkManager ${D}/etc/resolv.dnsmasq
@@ -97,7 +94,7 @@ do_install:append() {
 
 do_deploy() {
     mkdir -p "${DEPLOYDIR}/system-connections/"
-    install -m 0600 "${WORKDIR}/balena-sample.ignore" "${DEPLOYDIR}/system-connections/"
-    install -m 0600 "${WORKDIR}/README.ignore" "${DEPLOYDIR}/system-connections/"
+    install -m 0600 "${UNPACKDIR}/balena-sample.ignore" "${DEPLOYDIR}/system-connections/"
+    install -m 0600 "${UNPACKDIR}/README.ignore" "${DEPLOYDIR}/system-connections/"
 }
 addtask deploy before do_package after do_install

@@ -1,0 +1,1 @@
+DISTRO_FEATURES_OPTED_OUT = "sysvinit"

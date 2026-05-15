@@ -3,6 +3,7 @@ From: Bruce Ashfield <bruce.ashfield@gmail.com>
 Date: Tue, 30 Jun 2020 22:23:33 -0400
 Subject: [PATCH] dynbinary: use go cross compiler
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
 ---
  hack/make/.binary | 2 +-

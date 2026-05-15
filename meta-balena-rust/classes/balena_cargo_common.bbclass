@@ -10,7 +10,7 @@
 
 def set_crate_fetcher(d):
     # Check to see whether bitbake has a crate fetcher (included in Kirkstone)
-    if not os.path.exists(os.path.join(d.getVar('TOPDIR'),'../layers/poky/bitbake/lib/bb/fetch2/crate.py')):
+    if not any(os.path.exists(os.path.join(d.getVar('TOPDIR'), p)) for p in ['../layers/poky/bitbake/lib/bb/fetch2/crate.py', '../layers/bitbake/lib/bb/fetch2/crate.py']):
         return "crate-fetch"
     return ""
 
@@ -19,7 +19,7 @@ inherit ${@set_crate_fetcher(d)}
 inherit balena_rust-common
 
 # Where we download our registry and dependencies to
-export CARGO_HOME = "${WORKDIR}/cargo_home"
+export CARGO_HOME = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/cargo_home"
 
 # The pkg-config-rs library used by cargo build scripts disables itself when
 # cross compiling unless this is defined. We set up pkg-config appropriately

@@ -25,7 +25,7 @@ SRCREV = "f4c93ad2b3c4ffa190ad29abba0a6f3e0779c797"
 #
 # 0: https://git.yoctoproject.org/meta-virtualization/tree/recipes-containers/docker/files
 SRC_URI = "\
-	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};destsuffix=git/src/import;protocol=https \
+	git://github.com/balena-os/balena-engine.git;branch=${BALENA_BRANCH};protocol=https;destsuffix=git/src/import \
 	file://balena.service \
 	file://balena-host.service \
 	file://balena-host.socket \
@@ -33,9 +33,9 @@ SRC_URI = "\
 	file://var-lib-docker.mount \
 	file://balena.conf.storagemigration \
 	file://balena-tmpfiles.conf \
-	file://0001-dynbinary-use-go-cross-compiler.patch \
+	file://0001-dynbinary-use-go-cross-compiler.patch;striplevel=1 \
 	"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/git/"
 
 CVE_PRODUCT = "balena:balena-engine mobyproject:moby"
 
@@ -77,8 +77,8 @@ FILES:${PN} += " \
 	${localstatedir} \
 	"
 
-DOCKER_PKG="github.com/docker/docker"
-BUILD_TAGS="no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs no_buildkit"
+DOCKER_PKG = "github.com/docker/docker"
+BUILD_TAGS = "no_btrfs no_cri no_devmapper no_zfs exclude_disk_quota exclude_graphdriver_btrfs exclude_graphdriver_devicemapper exclude_graphdriver_zfs no_buildkit"
 
 do_configure[noexec] = "1"
 
@@ -131,19 +131,19 @@ do_install() {
 	install -d ${D}${systemd_unitdir}/system
 	install -m 0644 ${S}/src/import/contrib/init/systemd/balena-engine.socket ${D}/${systemd_unitdir}/system
 
-	install -m 0644 ${WORKDIR}/balena.service ${D}/${systemd_unitdir}/system
+	install -m 0644 ${UNPACKDIR}/balena.service ${D}/${systemd_unitdir}/system
 
 	sed -i -e "s,@ROOT_HOME@,${root_bindmount_name},g" ${D}/${systemd_unitdir}/system/balena.service
-	install -m 0644 ${WORKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/balena-host.socket ${D}/${systemd_unitdir}/system
+	install -m 0644 ${UNPACKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
+	install -m 0644 ${UNPACKDIR}/balena-host.socket ${D}/${systemd_unitdir}/system
 
-	install -m 0644 ${WORKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
+	install -m 0644 ${UNPACKDIR}/var-lib-docker.mount ${D}/${systemd_unitdir}/system
 
 	mkdir -p ${D}/usr/lib/balena
-	install -m 0755 ${WORKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
+	install -m 0755 ${UNPACKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
 
 	install -d ${D}${sysconfdir}/systemd/system/balena.service.d
-	install -c -m 0644 ${WORKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
+	install -c -m 0644 ${UNPACKDIR}/balena.conf.storagemigration ${D}${sysconfdir}/systemd/system/balena.service.d/storagemigration.conf
 
 	install -d ${D}/${ROOT_HOME}/.docker
 	ln -sf .docker ${D}/${ROOT_HOME}/.balena
@@ -154,7 +154,7 @@ do_install() {
 	ln -sf docker ${D}${localstatedir}/lib/balena-engine
 
 	install -d ${D}${sysconfdir}/tmpfiles.d
-	install -m 0644 ${WORKDIR}/balena-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
+	install -m 0644 ${UNPACKDIR}/balena-tmpfiles.conf ${D}${sysconfdir}/tmpfiles.d/
 }
 
 BBCLASSEXTEND = " native"
