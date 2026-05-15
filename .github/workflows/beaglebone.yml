@@ -35,6 +35,6 @@ jobs:
       deploy-environment: balena-cloud.com
       machine: beaglebone
       device-repo: balena-os/balena-beaglebone
-      device-repo-ref: master
+      device-repo-ref: 81f3f1c8c69208adb13c7aba53114e16e233c144
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}

@@ -36,6 +36,6 @@ jobs:
       machine: iot-gate-imx8
       build-args: '--templates-path layers/meta-balena-imx8mm'
       device-repo: balena-os/balena-iot-gate-imx8
-      device-repo-ref: master
+      device-repo-ref: eaf2ec6af3a2b0bc6c7a1ace8f16b287fc54d5db
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
