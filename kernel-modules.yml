@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+version: '2.4'
+services:
+
+  kernel-modules:
+    image: __BUILD_OUTPUT__
+    x-build: ~
+    labels:
+      io.balena.image.class: 'overlay'
+      io.balena.image.store: 'data'
+      io.balena.update.requires-reboot: '1'
+      # Mount this extension LEFT of the hostapp in mobynit's overlay stack,
+      # 100 leaves headroom both directions for future overlays that need
+      # to shadow or be shadowed by kernel-modules.
+      io.balena.image.override: '100'
