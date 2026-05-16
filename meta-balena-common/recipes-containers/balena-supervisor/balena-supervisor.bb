@@ -24,8 +24,6 @@ SRC_URI += " \
 
 SYSTEMD_SERVICE:${PN} = " \
 	balena-supervisor.service \
-	update-balena-supervisor.service \
-	update-balena-supervisor.timer \
 	migrate-supervisor-state.service \
 	"
 
@@ -116,6 +114,11 @@ do_install () {
 		-e 's,@SBINDIR@,${sbindir},g' \
 		-e 's,@BINDIR@,${bindir},g' \
 		${D}${systemd_unitdir}/system/*.service
+
+
+	install -d ${D}${sysconfdir}/systemd/system
+	ln -sf /dev/null ${D}${sysconfdir}/systemd/system/update-balena-supervisor.service
+	ln -sf /dev/null ${D}${sysconfdir}/systemd/system/update-resin-supervisor.service
 
 	install -d ${D}/usr/lib/balena-supervisor
 	install -m 0755 ${UNPACKDIR}/balena-supervisor-healthcheck ${D}/usr/lib/balena-supervisor/balena-supervisor-healthcheck
