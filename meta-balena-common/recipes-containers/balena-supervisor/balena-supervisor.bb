@@ -24,8 +24,6 @@ SRC_URI += " \
 
 SYSTEMD_SERVICE:${PN} = " \
 	balena-supervisor.service \
-	update-balena-supervisor.service \
-	update-balena-supervisor.timer \
 	migrate-supervisor-state.service \
 	"
 
