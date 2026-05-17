@@ -24,8 +24,6 @@ SRC_URI += " \
 
 SYSTEMD_SERVICE:${PN} = " \
 	balena-supervisor.service \
-	update-balena-supervisor.service \
-	update-balena-supervisor.timer \
 	migrate-supervisor-state.service \
 	"
 
@@ -79,9 +77,13 @@ api_fetch_supervisor_image() {
 
 do_install[network] = "1"
 do_install () {
-	SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
-	if [ -z "${SUPERVISOR_IMAGE}" ] || [ "${SUPERVISOR_IMAGE}" = "null" ]; then
-		bbfatal "Could not retrieve supervisor image for version ${SUPERVISOR_VERSION}"
+	if [ -n "${SUPERVISOR_IMAGE_NAME}" ]; then
+		SUPERVISOR_IMAGE="${SUPERVISOR_IMAGE_NAME}"
+	else
+		SUPERVISOR_IMAGE=$(api_fetch_supervisor_image "${SUPERVISOR_VERSION}")
+		if [ -z "${SUPERVISOR_IMAGE}" ] || [ "${SUPERVISOR_IMAGE}" = "null" ]; then
+			bbfatal "Could not retrieve supervisor image for version ${SUPERVISOR_VERSION}"
+		fi
 	fi
 	# Generate supervisor conf
 	install -d ${D}${sysconfdir}/balena-supervisor/

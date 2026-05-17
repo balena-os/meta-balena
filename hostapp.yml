@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+version: '2.4'
+services:
+
+  hostapp:
+    image: __BUILD_OUTPUT__
+    x-build: {}
+    labels:
+      io.balena.image.store: 'root'
+      io.balena.image.class: 'hostapp'
+      io.balena.update.requires-reboot: '1'
+      io.balena.private.hostapp.board-rev: '${DEVICE_REPO_REV}'
