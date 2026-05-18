@@ -15,7 +15,7 @@ LICENSE = "BSD-3-Clause"
 inherit goarch
 
 SRC_URI = "https://golang.org/dl/go${PV}.src.tar.gz;name=main"
-S = "${WORKDIR}/go"
+S = "${UNPACKDIR}/go"
 B = "${S}"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.src\.tar"
 
