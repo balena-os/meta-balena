@@ -6,11 +6,11 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 inherit go systemd
 
 GO_IMPORT = "github.com/balena-os/balena-extension-runtime"
-SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=master;protocol=https \
+SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=alexgg/oci-runtime;protocol=https \
     file://hostapp-extensions-cleanup.service \
     "
-SRCREV = "bca6ae6753c5958abaa08417f3dcf461fabeaba7"
-PV = "1.0.0"
+SRCREV = "${AUTOREV}"
+PV = "1.0.0+git${SRCPV}"
 
 S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
 
