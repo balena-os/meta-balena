@@ -91,13 +91,14 @@ def disk_aligned(d, rootfs_size):
     bb.debug(1, 'requested rootfs size %d, aligned %d' % (saved_rootfs_size, rootfs_size) )
     return rootfs_size
 
-# The rootfs size is calculated by substracting from the maximum BalenaOS image
-# 700 MiB size, the size  of all other partitions except the data partition,
-# dividing by 2, and substracting filesystem metadata and reserved allocations
+# The rootfs size is calculated by substracting from the provided maximum
+# BalenaOS image size in MB, the size  of all other partitions except the data
+# partition, dividing by 2, and substracting filesystem metadata and reserved
+# allocations
 def balena_rootfs_size(d):
     boot_part_size = int(d.getVar("BALENA_BOOT_SIZE"))
     state_part_size = int(d.getVar("BALENA_STATE_SIZE"))
-    balena_rootfs_size = int(((700 * 1024) - boot_part_size - state_part_size) / 2)
+    balena_rootfs_size = int(((1340 * 1024) - boot_part_size - state_part_size) / 2)
     return int(disk_aligned(d, balena_rootfs_size))
 
 BALENA_BOOT_FS_LABEL ?= "resin-boot"
