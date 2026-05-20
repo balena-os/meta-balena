@@ -1,4 +1,168 @@
 - commits:
+    - subject: Update balena-supervisor to v17.8.2
+      hash: 69657084a424d2002dbd249b397b0cbcdb813d12
+      body: |
+        Update balena-supervisor from 17.7.1 to 17.8.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Pin back to Node 22 / Alpine 3.22
+              hash: 063cfc03f7aefe20cbcfde3bcb19db72b22a5a00
+              body: >
+                Node 24's V8 engine has issues with rpi/armv6 arch, throwing
+
+                `Fatal error in , line 0 unreachable code`.
+
+
+                We still support RPi Zero devices in production, roughly 3k
+
+                at time of this commit.
+
+
+                Revert RegExp.escape to lodash escapeRegExp as it isn't useable
+                in Node 22.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.8.2
+          title: ""
+          date: 2026-05-19T18:28:44.611Z
+        - commits:
+            - subject: Update systeminformation to v5.31.6 [SECURITY]
+              hash: db278c1c91d4948d737108a9fd97f742640dc341
+              body: |
+                Update systeminformation from 5.31.4 to 5.31.6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: balena-supervisor-17.8.1
+          title: ""
+          date: 2026-05-13T17:54:55.662Z
+        - commits:
+            - subject: Add a `PATCH /v2/device/tags` endpoint to tell the supervisor device
+                tags to report
+              hash: ff0dca884b25711e34bd3ce29bed5da330bbf006
+              body: |
+                https://balena.fibery.io/Work/Project/1031
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.8.0
+          title: ""
+          date: 2026-05-01T12:30:03.307Z
+        - commits:
+            - subject: Trim whitespaces around dtparam input values
+              hash: c240c47363869335fbaf40ba11c494bd5ce1cfca
+              body: |
+                Slightly more defensive, and prevents boot config apply
+                loop from surrounding whitespaces such as in
+                `BALENA_HOST_CONFIG_dtparam=" "foo=1","bar=2""`
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Christina Ying Wang
+              nested: []
+            - subject: Fix dtparam parsing for comma-separated values
+              hash: b1b3f8e9ee19339825066d81fb9924d02b25808c
+              body: |
+                The RPi config.txt spec allows multiple comma-separated params
+                on a single dtparam line (e.g. `dtparam=audio=on,i2c_arm=on`).
+                The supervisor itself always writes one param per line, so this
+                bug only triggers when a user preloads a config.txt that uses
+                the multi-param form.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.7.5
+          title: ""
+          date: 2026-04-30T16:49:37.368Z
+        - commits:
+            - subject: Fix the network connectivity check
+              hash: c377bbedd928dafe77d898efe048942f0463fd6e
+              body: >
+                The connectivity check function was receiving a `path` argument,
+                added
+
+                on #820. The function, that just connects to a socket was
+                looking for a
+
+                unix socket instead of connecting to the remote host, which
+                means it was
+
+                always failing.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-17.7.4
+          title: ""
+          date: 2026-04-29T20:31:23.602Z
+        - commits:
+            - subject: Fix error propagation is fsUtils.touch
+              hash: 29d84ac9ab8bd8e659d52acdcdd94efcf2040f24
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+            - subject: Convert code to async/await
+              hash: a9e72a1533bd72d675401edf01a0f470dc00812e
+              body: >
+                This is how new code would be written and can result in better
+                stack
+
+                traces via zero cost async stack traces and less closure
+                overhead
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.7.3
+          title: ""
+          date: 2026-04-20T16:16:49.325Z
+        - commits:
+            - subject: "Firewall: avoid `exports.` to improve type-checking"
+              hash: 553f884dd90f4187c44527f6b1ae4027d7ace245
+              body: >
+                `exports` is `any` so referencing it means no typings are
+                applied in
+
+                cases you would normally expect them to be and means that it's
+                easy to
+
+                introduce bugs due to expecting typescript to be able to catch
+                them
+
+                when in fact it's gone via a commonjs indirection. As an added
+                benefit
+
+                it also makes the code more ESM ready
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-17.7.2
+          title: ""
+          date: 2026-04-14T21:26:22.254Z
+  version: 7.0.4
+  title: ""
+  date: 2026-05-20T16:31:29.825Z
+- commits:
     - subject: "plymouth: start after udev settle"
       hash: 2c223c726e75bc0ecf0aafbf850bde5907e4107b
       body: |
