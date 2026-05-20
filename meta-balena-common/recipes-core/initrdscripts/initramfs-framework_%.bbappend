@@ -9,6 +9,7 @@ SRC_URI:append = " \
     file://resindataexpander \
     file://rorootfs \
     file://rootfs \
+    file://mountdata \
     file://finish \
     file://cryptsetup \
     file://cryptsetup-efi-tpm \
@@ -25,6 +26,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/fsuuidsinit ${D}/init.d/75-fsuuidsinit
     install -m 0755 ${WORKDIR}/fsck ${D}/init.d/87-fsck
     install -m 0755 ${WORKDIR}/rootfs ${D}/init.d/90-rootfs
+    install -m 0755 ${WORKDIR}/mountdata ${D}/init.d/91-mountdata
     install -m 0755 ${WORKDIR}/migrate ${D}/init.d/92-migrate
     install -m 0755 ${WORKDIR}/finish ${D}/init.d/99-finish
 
@@ -50,6 +52,7 @@ PACKAGES:append = " \
     initramfs-module-console-null-workaround \
     initramfs-module-fsck \
     initramfs-module-machineid \
+    initramfs-module-mount-data \
     initramfs-module-resindataexpander \
     initramfs-module-rorootfs \
     initramfs-module-prepare \
@@ -105,6 +108,7 @@ FILES:initramfs-module-cryptsetup = "/init.d/72-cryptsetup"
 SUMMARY:initramfs-module-kexec = "Find and start a new kernel if in stage2"
 RDEPENDS:initramfs-module-kexec = " \
     kexec-tools \
+    os-helpers-bootenv \
     os-helpers-logging \
     util-linux-findmnt \
     "
@@ -131,5 +135,9 @@ FILES:initramfs-module-migrate = "/init.d/92-migrate"
 SUMMARY:initramfs-module-zram = "Mount tmp as zram"
 RDEPENDS:initramfs-module-zram = "${PN}-base util-linux-zramctl"
 FILES:initramfs-module-zram = "/init.d/12-zram"
+
+SUMMARY:initramfs-module-mount-data = "Mount data partition during stage-2 for kernel-override resolution"
+RDEPENDS:initramfs-module-mount-data = "${PN}-base os-helpers-bootenv os-helpers-fs os-helpers-logging"
+FILES:initramfs-module-mount-data = "/init.d/91-mountdata"
 
 RDEPENDS:${PN}-base:append = " util-linux-mountpoint"
