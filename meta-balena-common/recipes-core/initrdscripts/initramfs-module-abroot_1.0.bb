@@ -6,6 +6,7 @@ RDEPENDS:${PN} = " \
     initramfs-framework-base \
     grub-editenv \
     util-linux-lsblk \
+    os-helpers-bootenv \
     os-helpers-logging \
     initramfs-module-mountboot \
 "
