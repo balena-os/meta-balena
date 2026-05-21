@@ -18,6 +18,7 @@ set -o errexit
 
 . /usr/sbin/balena-config-vars
 . /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-bootenv
 . /usr/bin/rollback-parse-bootloader
 
 if ! rollback-check-version; then
@@ -93,6 +94,20 @@ if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$curr
 			counter=$((counter + 1))
 			if [ $counter -ge $COUNT ]; then
 				warn "Looks like we failed some health check. Rolling back"
+				ACTIVE_ABI=$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi")
+				if [ -n "${ACTIVE_ABI}" ]; then
+					if [ "${current_part_name}" = "A" ]; then TARGET_SLOT="B"; else TARGET_SLOT="A"; fi
+					PREV_ABI=$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi_committed_${TARGET_SLOT}")
+					info "kernel-override active (ABI=${ACTIVE_ABI}); restoring slot ${TARGET_SLOT} committed override (ABI=${PREV_ABI:-none})"
+					if ! bootenv_restore_kernel_override "${BOOTLOADER_FILE}" "${TARGET_SLOT}"; then
+						warn "failed to restore slot ${TARGET_SLOT} committed override; continuing rollback with stale bootenv"
+					fi
+					if ! echo "$(date -Iseconds): from=${ACTIVE_ABI} to=${PREV_ABI:-none} slot=${TARGET_SLOT}" > /mnt/state/override-health-triggered; then
+						warn "failed to write override-health-triggered audit record; continuing rollback"
+					fi
+					sync -f "${BALENA_NONENC_BOOT_MOUNTPOINT}" || true
+					sync -f /mnt/state || true
+				fi
 
 				if run_hooks_from_inactive; then
 					touch /mnt/state/rollback-health-triggered
@@ -108,6 +123,13 @@ if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$curr
 			fi
 		done
 	    info "new OS seems stable. Preventing further rollbacks"
+	    INTENT_ABI=$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi")
+	    RUNNING_ABI=$(sed -n 's/.*balena_kernel_abi=\([^ ]*\).*/\1/p' /proc/cmdline)
+	    if [ -n "${INTENT_ABI}" ] && [ "${INTENT_ABI}" = "${RUNNING_ABI}" ]; then
+	        bootenv_commit_override "${BOOTLOADER_FILE}" "${current_part_name}" || true
+	    elif [ -n "${INTENT_ABI}" ]; then
+	        warn "kernel override ${INTENT_ABI} did not boot (running ABI='${RUNNING_ABI:-stock}'); not committing"
+	    fi
 	    rollback-stop || true
 	    info "Running commit hooks"
 	    hostapp-update-hooks-v2 --commit || true
