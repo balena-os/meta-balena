@@ -17,6 +17,7 @@
 set -o errexit
 
 . /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-bootenv
 . /usr/bin/rollback-parse-bootloader
 
 if ! rollback-check-version; then
@@ -92,6 +93,15 @@ if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$curr
 			counter=$((counter + 1))
 			if [ $counter -ge $COUNT ]; then
 				echo "Rollback: Looks like we failed some health check. Rolling back"
+				ACTIVE_ABI=$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi")
+				if [ -n "${ACTIVE_ABI}" ]; then
+					echo "Rollback: kernel-override active (ABI=${ACTIVE_ABI}); clearing kernel_override_abi"
+					bootenv_unset "${BOOTLOADER_FILE}" "kernel_override_abi"
+					echo "$(date -Iseconds): ABI=${ACTIVE_ABI}" > /mnt/state/override-health-triggered
+					sync -f "${BALENA_NONENC_BOOT_MOUNTPOINT}" || true
+					sync -f /mnt/state || true
+				fi
+
 				if run_hooks_from_inactive; then
 					touch /mnt/state/rollback-health-triggered
 					echo "Rollback: Failed heathchecks. Rebooting to previous rootfs"

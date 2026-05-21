@@ -33,6 +33,8 @@ S = "${WORKDIR}"
 
 inherit allarch systemd
 
+RDEPENDS:${PN} = "os-helpers-bootenv"
+
 SYSTEMD_SERVICE:${PN} = " \
 	rollback-altboot.service \
 	rollback-health.service \
