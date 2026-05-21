@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.0.5
+## (2026-05-21)
+
+* image-balena: include size of boot directory in HUP check [Alex Gonzalez]
+
 # v7.0.4
 ## (2026-05-20)
 

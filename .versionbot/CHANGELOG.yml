@@ -1,4 +1,22 @@
 - commits:
+    - subject: "image-balena: include size of boot directory in HUP check"
+      hash: 46af76930d0c23200d96350e26063672f0215aaa
+      body: |
+        As part of hostapp-update, after pulling the container image into the
+        alternative root partition, a volume is created with the contents of
+        `/boot`. If there is no space left for this, HUP will fail on the
+        field with no space left on device.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.0.5
+  title: ""
+  date: 2026-05-21T14:53:59.471Z
+- commits:
     - subject: Update balena-supervisor to v17.8.2
       hash: 69657084a424d2002dbd249b397b0cbcdb813d12
       body: |
