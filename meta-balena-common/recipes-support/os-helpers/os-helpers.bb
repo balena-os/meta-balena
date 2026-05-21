@@ -15,6 +15,7 @@ RDEPENDS:${PN}-sb = "os-helpers-logging"
 RDEPENDS:${PN}-sb:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'os-helpers-efi', '',d)}"
 
 SRC_URI = " \
+    file://os-helpers-extensions \
     file://os-helpers-fs \
     file://os-helpers-logging \
     file://os-helpers-time \
@@ -30,6 +31,7 @@ SRC_URI = " \
 inherit allarch
 
 PACKAGES = " \
+        ${PN}-extensions \
         ${PN}-fs \
         ${PN}-logging \
         ${PN}-time \
@@ -44,6 +46,7 @@ PACKAGES = " \
 do_install() {
     install -d ${D}${libexecdir}
     install -m 0775 \
+        ${UNPACKDIR}/os-helpers-extensions \
         ${UNPACKDIR}/os-helpers-fs \
         ${UNPACKDIR}/os-helpers-logging \
         ${UNPACKDIR}/os-helpers-time \
@@ -60,8 +63,11 @@ do_install() {
 
         # ALLOWED_BOOTARGS_ARRAY is provided by conf/distro/include/balena-os.inc
         sed -i "s|@@ALLOWED_BOOTARGS@@|${@format_bootargs_array(d)}|g" ${D}${libexecdir}/os-helpers-bootloader-config
+
+        sed -i "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE},g" ${D}${libexecdir}/os-helpers-extensions
 }
 
+FILES:${PN}-extensions = "${libexecdir}/os-helpers-extensions"
 FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"
 FILES:${PN}-logging = "${libexecdir}/os-helpers-logging"
 FILES:${PN}-time = "${libexecdir}/os-helpers-time"
