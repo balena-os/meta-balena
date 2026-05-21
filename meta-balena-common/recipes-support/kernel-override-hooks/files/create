@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# kernel-override-hooks: install hook
+#
+# Symlinks /mnt/data/boot-by-abi/<abi> -> $EXTENSION_VOLUME_BOOT
+# using a relative path so the link resolves identically in both OS and
+# the initramfs namespaces.
+#
+# Env vars expected (provided by balena-extension-runtime):
+#   EXTENSION_ROOTFS       - extension's merged overlay path
+#   EXTENSION_VOLUME_BOOT  - on-disk path of the /boot volume
+#
+
+set -eu
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-extensions
+
+BOOT_BY_ABI_DIR="/mnt/data/boot-by-abi"
+
+extension_kernel_override_prelude "${EXTENSION_ROOTFS}" || exit 0
+
+VOLUME_DATA="${EXTENSION_VOLUME_BOOT:?EXTENSION_VOLUME_BOOT not set; image is missing VOLUME /boot}"
+
+mkdir -p "${BOOT_BY_ABI_DIR}"
+
+# Build a symlink relative to the resin-data partition
+REL_TARGET="../${VOLUME_DATA#/*/*/}"
+
+# Atomic via .new + mv -T. Partial runs leave no half-state.
+ln -sfT "${REL_TARGET}" "${BOOT_BY_ABI_DIR}/${EXTENSION_KERNEL_ABI_ID}.new"
+mv -T "${BOOT_BY_ABI_DIR}/${EXTENSION_KERNEL_ABI_ID}.new" "${BOOT_BY_ABI_DIR}/${EXTENSION_KERNEL_ABI_ID}"
+sync -f "${BOOT_BY_ABI_DIR}"
+info "installed boot-by-abi/${EXTENSION_KERNEL_ABI_ID} -> ${REL_TARGET} (${VOLUME_DATA})"
+
+# Persist the deactivate hook alongside the kernel in the /boot volume.
+install -m 0755 "${EXTENSION_ROOTFS}/hooks/deactivate" "${VOLUME_DATA}/deactivate"
+sync -f "${VOLUME_DATA}"
+info "persisted deactivate hook into ${VOLUME_DATA}"
