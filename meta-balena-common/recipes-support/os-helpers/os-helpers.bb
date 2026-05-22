@@ -4,6 +4,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 DEPENDS = "time-native curl-native"
+RDEPENDS:${PN}-bootenv = "util-linux-findmnt ${PN}-fs"
 RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk zstd"
 RDEPENDS:${PN}-fs:append = "${@bb.utils.contains('MACHINE_FEATURES','raid',' mdadm','',d)}"
 RDEPENDS:${PN}-tpm2:class-target = "libtss2-tcti-device tpm2-tools tcgtool"
@@ -15,6 +16,7 @@ RDEPENDS:${PN}-sb = "os-helpers-logging"
 RDEPENDS:${PN}-sb:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'os-helpers-efi', '',d)}"
 
 SRC_URI = " \
+    file://os-helpers-bootenv \
     file://os-helpers-extensions \
     file://os-helpers-fs \
     file://os-helpers-logging \
@@ -31,6 +33,7 @@ SRC_URI = " \
 inherit allarch
 
 PACKAGES = " \
+        ${PN}-bootenv \
         ${PN}-extensions \
         ${PN}-fs \
         ${PN}-logging \
@@ -46,6 +49,7 @@ PACKAGES = " \
 do_install() {
     install -d ${D}${libexecdir}
     install -m 0775 \
+        ${UNPACKDIR}/os-helpers-bootenv \
         ${UNPACKDIR}/os-helpers-extensions \
         ${UNPACKDIR}/os-helpers-fs \
         ${UNPACKDIR}/os-helpers-logging \
@@ -67,6 +71,7 @@ do_install() {
         sed -i "s,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE},g" ${D}${libexecdir}/os-helpers-extensions
 }
 
+FILES:${PN}-bootenv = "${libexecdir}/os-helpers-bootenv"
 FILES:${PN}-extensions = "${libexecdir}/os-helpers-extensions"
 FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"
 FILES:${PN}-logging = "${libexecdir}/os-helpers-logging"
