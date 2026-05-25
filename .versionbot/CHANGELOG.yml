@@ -1,4 +1,24 @@
 - commits:
+    - subject: "wpa_supplicant: enable OWE networks"
+      hash: 0e38fdbb14224c7ab537055ae8beef809617f84c
+      body: |
+        This patch adds two config options necessary to enable Opportunistic
+        Wireless Encryption (open networks with client isolation). The main
+        thing is CONFIG_OWE, which enables the feature. CONFIG_IEEE80211W adds
+        management frame protection, which is optional in OWE, but we expect
+        it to be necessary on most networks. It's also mandatory for other WPA3
+        family protocols such as SAE.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 7.0.6
+  title: ""
+  date: 2026-05-25T06:22:47.338Z
+- commits:
     - subject: "image-balena: include size of boot directory in HUP check"
       hash: 46af76930d0c23200d96350e26063672f0215aaa
       body: |

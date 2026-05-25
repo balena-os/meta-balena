@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.0.6
+## (2026-05-25)
+
+* wpa_supplicant: enable OWE networks [Michal Toman]
+
 # v7.0.5
 ## (2026-05-21)
 
