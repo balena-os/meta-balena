@@ -1,6 +1,41 @@
 Change log
 -----------
 
+# v7.0.7
+## (2026-05-26)
+
+
+<details>
+<summary> Update tests/leviathan digest to 053da9e [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.111
+> ### (2026-05-21)
+> 
+> * Update balena-io/balena-cli to v25 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.110
+> ### (2026-05-20)
+> 
+> * e2e: probe supervisor /ping instead of /v1/healthy [Kyle Harding]
+> 
+> ## leviathan-2.36.109
+> ### (2026-04-27)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.108
+> ### (2026-04-22)
+> 
+> * Update core/contracts digest to 7c3bf64 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.107
+> ### (2026-04-20)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
 # v7.0.6
 ## (2026-05-25)
 

@@ -1,4 +1,116 @@
 - commits:
+    - subject: Update tests/leviathan digest to 053da9e
+      hash: 078703410e0531f05fc4b9c74f9ec41523908950
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-io/balena-cli to v25
+              hash: 21225003a53c571f4c4d1d3396dca862f8ad4703
+              body: |
+                Update balena-io/balena-cli from 22.5.5 to 25.1.6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.111
+          title: ""
+          date: 2026-05-21T13:58:26.221Z
+        - commits:
+            - subject: "e2e: probe supervisor /ping instead of /v1/healthy"
+              hash: 8d1d5e8b554e0b63ed1320244543e4d114393436
+              body: >
+                balena-supervisor v17.6.26 fixed an inverted boolean in the
+                connectivity
+
+                healthcheck (balena-os/balena-supervisor@22e4d646), so
+                /v1/healthy now
+
+                correctly returns 500 when the device isn't actively reporting
+                state to
+
+                balena-cloud. The QEMU DUT in this suite is provisioned in local
+                mode and
+
+                isn't registered to a fleet, so the supervisor never establishes
+                that
+
+                report, deviceState.connected stays false, and the post-fix
+                supervisor
+
+                honestly reports unhealthy. This has blocked every
+                leviathan-worker PR
+
+                since 2026-04-30.
+
+
+                /ping is what this test actually wants: unauthenticated, no
+                internal
+
+                checks, returns "OK" if the supervisor process is up.
+                meta-balena did
+
+                the same thing in tests/suites/cloud/suite.js after hitting this
+                on
+
+                2026-04-22 (balena-os/meta-balena@6afa76bd).
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: leviathan-2.36.110
+          title: ""
+          date: 2026-05-20T18:40:21.433Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: 70f8357cca3a4a73911c2e049be08c570a0e2bfb
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.109
+          title: ""
+          date: 2026-04-27T01:32:31.752Z
+        - commits:
+            - subject: Update core/contracts digest to 7c3bf64
+              hash: e24bce4eabaae877a5e9497dd8e5777bf10c66bf
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.108
+          title: ""
+          date: 2026-04-22T09:23:40.879Z
+        - commits:
+            - subject: Update Lock file maintenance
+              hash: fc31934417d90ee46827e6c75c028022c420922f
+              body: |
+                Update 
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.107
+          title: ""
+          date: 2026-04-20T01:29:14.347Z
+  version: 7.0.7
+  title: ""
+  date: 2026-05-26T13:41:57.157Z
+- commits:
     - subject: "wpa_supplicant: enable OWE networks"
       hash: 0e38fdbb14224c7ab537055ae8beef809617f84c
       body: |
