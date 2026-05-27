@@ -24,7 +24,7 @@ permissions:
 jobs:
   yocto:
     name: Yocto
-    uses: balena-os/balena-generic/.github/workflows/generic-amd64.yml@master
+    uses: balena-os/balena-generic/.github/workflows/generic-amd64.yml@6b37a8bab9de5927ef1a7a4c8e80ae8ed66cb958 # master
     # Prevent duplicate workflow executions for pull_request (PR) and pull_request_target (PRT) events.
     # Both PR and PRT will be triggered for the same pull request, whether it is internal or from a fork.
     # This condition will prevent the workflow from running twice for the same pull request while
