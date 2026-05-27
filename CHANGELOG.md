@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.1.0
+## (2026-05-27)
+
+* remove all bins from nss to save some place [Yann CARDAILLAC]
+
 # v7.0.7
 ## (2026-05-26)
 

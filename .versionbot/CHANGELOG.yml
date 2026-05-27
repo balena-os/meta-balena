@@ -1,4 +1,18 @@
 - commits:
+    - subject: remove all bins from nss to save some place
+      hash: e7124736f403316e53f373ef61c7cd06773e06d3
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 7.1.0
+  title: ""
+  date: 2026-05-27T13:55:53.166Z
+- commits:
     - subject: Update tests/leviathan digest to 053da9e
       hash: 078703410e0531f05fc4b9c74f9ec41523908950
       body: Update tests/leviathan
