@@ -1182,6 +1182,11 @@ do_deploy:prepend () {
 
 # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
 do_deploy:append () {
-    install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
-    install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
+    deployDir="${DEPLOYDIR}"
+    if [ -n "${KERNEL_DEPLOYSUBDIR}" ]; then
+        deployDir="${DEPLOYDIR}/${KERNEL_DEPLOYSUBDIR}"
+        mkdir -p "$deployDir"
+    fi
+    install -m 0644 ${D}/boot/Module.symvers-* "$deployDir/Module.symvers"
+    install -m 0644 ${D}/boot/config-* "$deployDir/.config"
 }
