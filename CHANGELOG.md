@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.1.1
+## (2026-05-28)
+
+* Remove some docs in favor of moving them directly to the product docs [Matthew Yarmolinsky]
+
 # v7.1.0
 ## (2026-05-27)
 

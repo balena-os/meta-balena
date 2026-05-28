@@ -1,4 +1,16 @@
 - commits:
+    - subject: Remove some docs in favor of moving them directly to the product docs
+      hash: 48b0fc4b2fff441067d9601219cef747b431c74d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Matthew Yarmolinsky
+      nested: []
+  version: 7.1.1
+  title: ""
+  date: 2026-05-28T14:15:39.228Z
+- commits:
     - subject: remove all bins from nss to save some place
       hash: e7124736f403316e53f373ef61c7cd06773e06d3
       body: ""
