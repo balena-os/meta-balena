@@ -8,4 +8,5 @@ python __anonymous() {
     kernel_package_name = d.getVar('KERNEL_PACKAGE_NAME') or "kernel"
     d.appendVar('PACKAGE_EXCLUDE',
                 ' %s-image-%s-*' % (kernel_package_name, kernel_image_type.lower()))
+    d.setVar('RRECOMMENDS:%s-base' % kernel_package_name, '')
 }
