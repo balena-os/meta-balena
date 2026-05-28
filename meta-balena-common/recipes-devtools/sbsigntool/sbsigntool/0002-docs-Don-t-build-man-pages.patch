@@ -5,6 +5,7 @@ Subject: [PATCH 2/3] docs: Don't build man pages
 
 Man pages not needed on embedded targets
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 ---
  docs/Makefile.am | 5 -----

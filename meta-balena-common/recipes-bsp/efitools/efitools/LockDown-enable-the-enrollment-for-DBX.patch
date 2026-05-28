@@ -3,8 +3,7 @@ From: Lans Zhang <jia.zhang@windriver.com>
 Date: Fri, 22 Apr 2016 16:28:05 +0800
 Subject: [PATCH] LockDown: enable the enrollment for DBX
 
-Upstream-Status: Pending
-
+Upstream-Status: Inappropriate [configuration]
 DBX acting as blacklist now is able to be enrolled.
 
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>

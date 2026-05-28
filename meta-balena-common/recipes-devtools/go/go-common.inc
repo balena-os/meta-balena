@@ -15,7 +15,7 @@ LICENSE = "BSD-3-Clause"
 inherit goarch
 
 SRC_URI = "https://golang.org/dl/go${PV}.src.tar.gz;name=main"
-S = "${WORKDIR}/go"
+S = "${UNPACKDIR}/go"
 B = "${S}"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.src\.tar"
 
@@ -39,7 +39,6 @@ export GOARCH ?= "${TARGET_GOARCH}"
 export GOARM ?= "${TARGET_GOARM}"
 export GO386 ?= "${TARGET_GO386}"
 export GOMIPS ?= "${TARGET_GOMIPS}"
-export GOROOT_FINAL ?= "${libdir}/go"
 
 export GODEBUG = "gocachehash=1"
 

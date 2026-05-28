@@ -14,7 +14,8 @@ Content-Transfer-Encoding: 8bit
 | ../Make.rules:113: recipe for target 'console.efi.o' failed
 |
 
-Upstream-Status: Pending
+Upstream-Status: Backport [from commit
+b10bb68613eb98ecf00bfc90df66740bb538589d]
 
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 ---

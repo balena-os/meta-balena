@@ -19,7 +19,7 @@ inherit ${@set_crate_fetcher(d)}
 inherit balena_rust-common
 
 # Where we download our registry and dependencies to
-export CARGO_HOME = "${WORKDIR}/cargo_home"
+export CARGO_HOME = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/cargo_home"
 
 # The pkg-config-rs library used by cargo build scripts disables itself when
 # cross compiling unless this is defined. We set up pkg-config appropriately

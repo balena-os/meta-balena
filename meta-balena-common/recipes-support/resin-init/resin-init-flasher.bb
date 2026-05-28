@@ -15,8 +15,6 @@ SRC_URI:append = " \
            ${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' file://balena-init-flasher-tpm', '',d)} \
 "
 
-S = "${WORKDIR}"
-
 inherit allarch systemd
 
 SYSTEMD_SERVICE:${PN} = "resin-init-flasher.service"
@@ -33,10 +31,11 @@ RDEPENDS:${PN} = " \
     util-linux-lsblk \
     "
 
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils efibootmgr efivar', '',d)}"
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' os-helpers-tpm2', '',d)}"
+# efitools build needs more debugging
+#RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' efitools-utils efibootmgr efivar', '',d)}"
+#RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'tpm', ' os-helpers-tpm2', '',d)}"
 
-RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2-udevrules os-helpers-fs util-linux-mount util-linux-losetup openssl-bin',d)}"
+RDEPENDS:${PN}:append = "${@oe.utils.conditional('SIGN_API','','',' cryptsetup dosfstools e2fsprogs-mke2fs lvm2 os-helpers-fs util-linux-mount util-linux-losetup openssl-bin',d)}"
 
 # This should be just fine
 BALENA_IMAGE ?= "balena-image-${MACHINE}.balenaos-img"
@@ -52,11 +51,11 @@ do_install() {
     fi
 
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/resin-init-flasher ${D}${bindir}
+    install -m 0755 ${UNPACKDIR}/resin-init-flasher ${D}${bindir}
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/resin-init-flasher.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/resin-init-flasher.service ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@BASE_SBINDIR@,${base_sbindir},g' \
             -e 's,@SBINDIR@,${sbindir},g' \
@@ -95,12 +94,12 @@ do_install() {
         if ${@bb.utils.contains('MACHINE_FEATURES','efi','true','false',d)}; then
             install -d ${D}${libexecdir}
             echo "INTERNAL_DEVICE_BOOTLOADER_CONFIG_LUKS=grub.cfg_internal_luks" >> ${D}/${sysconfdir}/resin-init-flasher.conf
-            install -m 0755 ${WORKDIR}/balena-init-flasher-efi ${D}${libexecdir}/balena-init-flasher-secureboot
+            install -m 0755 ${UNPACKDIR}/balena-init-flasher-efi ${D}${libexecdir}/balena-init-flasher-secureboot
             sed -i -e 's,@@KERNEL_IMAGETYPE@@,${KERNEL_IMAGETYPE},' ${D}${libexecdir}/balena-init-flasher-secureboot
         fi
         if ${@bb.utils.contains('MACHINE_FEATURES','tpm','true','false',d)}; then
             install -d ${D}${libexecdir}
-            install -m 0755 ${WORKDIR}/balena-init-flasher-tpm ${D}${libexecdir}/balena-init-flasher-diskenc
+            install -m 0755 ${UNPACKDIR}/balena-init-flasher-tpm ${D}${libexecdir}/balena-init-flasher-diskenc
         fi
     fi
 

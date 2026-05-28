@@ -8,7 +8,7 @@ CARGO_RUST_TARGET_CCLD = "${RUST_BUILD_CCLD}"
 require recipes-devtools/rust/rust-common.inc
 require cargo.inc
 
-CARGO = "${WORKDIR}/${CARGO_SNAPSHOT}/bin/cargo"
+CARGO = "${UNPACKDIR}/${CARGO_SNAPSHOT}/bin/cargo"
 BASEDEPENDS:remove = "cargo-native"
 
 export RUST_TARGET_PATH="${WORKDIR}/targets/"
@@ -29,7 +29,7 @@ inherit cross-canadian
 PN = "cargo-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 python do_rust_gen_targets () {
-    wd = d.getVar('WORKDIR') + '/targets/'
+    wd = d.getVar('UNPACKDIR') + '/targets/'
 
     rust_gen_target(d, 'BUILD', wd, "", "generic", d.getVar('BUILD_ARCH'))
     rust_gen_target(d, 'HOST', wd, "", "generic", d.getVar('HOST_ARCH'))

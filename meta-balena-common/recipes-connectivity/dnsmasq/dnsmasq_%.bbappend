@@ -10,8 +10,8 @@ inherit update-alternatives balena-configurable
 do_install:append () {
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		install -d ${D}${sysconfdir}/systemd/system/dnsmasq.service.d
-		install -c -m 0644 ${WORKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
-		install -c -m 0644 ${WORKDIR}/resolv-conf.dnsmasq ${D}${sysconfdir}
+		install -c -m 0644 ${UNPACKDIR}/dnsmasq.conf.systemd ${D}${sysconfdir}/systemd/system/dnsmasq.service.d/dnsmasq.conf
+		install -c -m 0644 ${UNPACKDIR}/resolv-conf.dnsmasq ${D}${sysconfdir}
 	fi
 }
 

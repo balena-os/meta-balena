@@ -19,8 +19,6 @@ SRC_URI = " \
     file://gen-conf-unit \
 "
 
-S = "${WORKDIR}"
-
 inherit allarch
 
 do_patch[noexec] = "1"
@@ -39,16 +37,16 @@ do_test() {
     JQ="${STAGING_BINDIR_NATIVE}/jq"
     # Test parsing into configuration units
     JQ="${JQ}" \
-    CONF_DIR=${WORKDIR}/tmp \
-    CONFIG_PATH=${WORKDIR}/test-input.json \
-    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
-    UNITS_DIR=${WORKDIR}/tmp\
+    CONF_DIR=${UNPACKDIR}/tmp \
+    CONFIG_PATH=${UNPACKDIR}/test-input.json \
+    CACHED_CONFIG_PATH=${UNPACKDIR}/tmp/test-cache.json \
+    UNITS_DIR=${UNPACKDIR}/tmp\
     STAGING_DIR=${STAGING_DIR_NATIVE} \
-    /bin/sh "${WORKDIR}/os-config-json"
+    /bin/sh "${UNPACKDIR}/os-config-json"
     for i in 1 2 3 4 5; do
-        if [ -f "${WORKDIR}/tmp/unit$i.json" ]; then
-            cksum1=$(md5sum "${WORKDIR}/tmp/unit$i.json" | cut -d " " -f1)
-            cksum2=$(md5sum "${WORKDIR}/test-output$i.json" | cut -d " " -f1)
+        if [ -f "${UNPACKDIR}/tmp/unit$i.json" ]; then
+            cksum1=$(md5sum "${UNPACKDIR}/tmp/unit$i.json" | cut -d " " -f1)
+            cksum2=$(md5sum "${UNPACKDIR}/test-output$i.json" | cut -d " " -f1)
             if [ "${cksum1}" != "${cksum2}" ]; then
                 bbfatal "[PARSING] os-config-json: Unexpected output for unit$i and test-output$i"
             fi
@@ -59,46 +57,46 @@ do_test() {
 
     # Test modification of unit configuration
     tmpfile=$(mktemp)
-    "${JQ}" '.key_integer=10' "${WORKDIR}/test-input.json" > "${WORKDIR}/${tmpfile}"
+    "${JQ}" '.key_integer=10' "${UNPACKDIR}/test-input.json" > "${UNPACKDIR}/${tmpfile}"
     JQ="${JQ}" \
-    CONF_DIR=${WORKDIR}/tmp \
-    CONFIG_PATH=${WORKDIR}/${tmpfile} \
-    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
-    UNITS_DIR=${WORKDIR}/tmp\
+    CONF_DIR=${UNPACKDIR}/tmp \
+    CONFIG_PATH=${UNPACKDIR}/${tmpfile} \
+    CACHED_CONFIG_PATH=${UNPACKDIR}/tmp/test-cache.json \
+    UNITS_DIR=${UNPACKDIR}/tmp\
     STAGING_DIR=${STAGING_DIR_NATIVE} \
-    /bin/sh "${WORKDIR}/os-config-json"
-    cksum1=$(md5sum "${WORKDIR}/tmp/unit5.json" | cut -d " " -f1)
-    cksum2=$(md5sum "${WORKDIR}/test-output7.json" | cut -d " " -f1)
+    /bin/sh "${UNPACKDIR}/os-config-json"
+    cksum1=$(md5sum "${UNPACKDIR}/tmp/unit5.json" | cut -d " " -f1)
+    cksum2=$(md5sum "${UNPACKDIR}/test-output7.json" | cut -d " " -f1)
     if [ "${cksum1}" != "${cksum2}" ]; then
         bbfatal "[MODIFICATION] os-config-json: Unexpected output"
     fi
 
     # Test removal of value from configuration unit
-    "${JQ}" 'del(.key_object.one)' "${WORKDIR}/test-input.json" > "${WORKDIR}/${tmpfile}"
+    "${JQ}" 'del(.key_object.one)' "${UNPACKDIR}/test-input.json" > "${UNPACKDIR}/${tmpfile}"
     JQ="${JQ}" \
-    CONF_DIR=${WORKDIR}/tmp \
-    CONFIG_PATH=${WORKDIR}/${tmpfile} \
-    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
-    UNITS_DIR=${WORKDIR}/tmp\
+    CONF_DIR=${UNPACKDIR}/tmp \
+    CONFIG_PATH=${UNPACKDIR}/${tmpfile} \
+    CACHED_CONFIG_PATH=${UNPACKDIR}/tmp/test-cache.json \
+    UNITS_DIR=${UNPACKDIR}/tmp\
     STAGING_DIR=${STAGING_DIR_NATIVE} \
-    /bin/sh "${WORKDIR}/os-config-json"
-    cksum1=$(md5sum "${WORKDIR}/tmp/unit1.json" | cut -d " " -f1)
-    cksum2=$(md5sum "${WORKDIR}/test-output6.json" | cut -d " " -f1)
+    /bin/sh "${UNPACKDIR}/os-config-json"
+    cksum1=$(md5sum "${UNPACKDIR}/tmp/unit1.json" | cut -d " " -f1)
+    cksum2=$(md5sum "${UNPACKDIR}/test-output6.json" | cut -d " " -f1)
     if [ "${cksum1}" != "${cksum2}" ]; then
         bbfatal "[REMOVAL] os-config-json: Unexpected output"
     fi
 
     # Test removal of all values from configuration unit
-    "${JQ}" 'del(.key_nested.key_nested_child2_nested.key_child2_nested."0") | del(.key_object.one)' "${WORKDIR}/test-input.json" > "${WORKDIR}/${tmpfile}"
+    "${JQ}" 'del(.key_nested.key_nested_child2_nested.key_child2_nested."0") | del(.key_object.one)' "${UNPACKDIR}/test-input.json" > "${UNPACKDIR}/${tmpfile}"
     JQ="${JQ}" \
-    CONF_DIR=${WORKDIR}/tmp \
-    CONFIG_PATH=${WORKDIR}/${tmpfile} \
-    CACHED_CONFIG_PATH=${WORKDIR}/tmp/test-cache.json \
-    UNITS_DIR=${WORKDIR}/tmp\
+    CONF_DIR=${UNPACKDIR}/tmp \
+    CONFIG_PATH=${UNPACKDIR}/${tmpfile} \
+    CACHED_CONFIG_PATH=${UNPACKDIR}/tmp/test-cache.json \
+    UNITS_DIR=${UNPACKDIR}/tmp\
     STAGING_DIR=${STAGING_DIR_NATIVE} \
-    /bin/sh "${WORKDIR}/os-config-json"
-    if [ -f "${WORKDIR}/tmp/unit1.json" ]; then
-        contents=$(cat "${WORKDIR}/tmp/unit1.json")
+    /bin/sh "${UNPACKDIR}/os-config-json"
+    if [ -f "${UNPACKDIR}/tmp/unit1.json" ]; then
+        contents=$(cat "${UNPACKDIR}/tmp/unit1.json")
         if [ "${contents}" != "{}" ]; then
             bbfatal "[REMOVAL-ALL] os-config-json: Unexpected output"
         fi
@@ -119,11 +117,11 @@ parse_conf_to_units() {
 
 do_install() {
     install -d ${D}${sbindir}
-    install -m 0755 ${WORKDIR}/os-config-json ${D}${sbindir}/
-    install -m 0755 ${WORKDIR}/gen-conf-unit ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/os-config-json ${D}${sbindir}/
+    install -m 0755 ${UNPACKDIR}/gen-conf-unit ${D}${sbindir}/
     install -d ${D}${sysconfdir}/systemd
-    install -d ${WORKDIR}/tmp
-    install -c -m 0644 ${WORKDIR}/unit-conf.json ${STAGING_DIR_TARGET}
-    parse_conf_to_units "${WORKDIR}/unit-conf.json" "${D}/${sysconfdir}/systemd"
-    parse_conf_to_units "${WORKDIR}/test-conf.json" "${WORKDIR}/tmp"
+    install -d ${UNPACKDIR}/tmp
+    install -c -m 0644 ${UNPACKDIR}/unit-conf.json ${STAGING_DIR_TARGET}
+    parse_conf_to_units "${UNPACKDIR}/unit-conf.json" "${D}/${sysconfdir}/systemd"
+    parse_conf_to_units "${UNPACKDIR}/test-conf.json" "${UNPACKDIR}/tmp"
 }
