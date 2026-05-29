@@ -111,7 +111,6 @@ IMAGE_NAME_SUFFIX = ""
 # resinOS defaults to ipk packages
 PACKAGE_CLASSES = "package_ipk"
 
-# Default the docker storage driver to aufs
 BALENA_STORAGE = "overlay2"
 python () {
     docker_storage = d.getVar('DOCKER_STORAGE', True)
@@ -137,8 +136,8 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 # let's pin linux-firmware to the version we imported from Poky scarthgap release
 PREFERRED_VERSION_linux-firmware = "20240909"
 
-# Scarthgap go version, meets balena-engine go version requirement
-GOVERSION = "1.22.12"
+# Go version from walnascar, meets balena-engine v25 requirement
+GOVERSION = "1.24.6"
 PREFERRED_PROVIDER_go-native = "go-binary-native"
 
 # Firmware compression support
