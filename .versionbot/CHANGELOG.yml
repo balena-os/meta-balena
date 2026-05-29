@@ -1,4 +1,71 @@
 - commits:
+    - subject: "balena: Remove aufs as a supported storage driver"
+      hash: b95114ed07adc01d510371e705a76d0a8d745560
+      body: |
+        Engine v25 drops aufs support. Update the sanity check to only accept
+        overlay2, remove the conditional aufs-util-auplink dependency from the
+        packagegroup, and fix the stale comment in balena-os.inc.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "balena: Remove aufs-to-overlay2 storage migration drop-in"
+      hash: 493c5d406a79eb22412b337e0e546e962c8004ce
+      body: |
+        Engine v25 removes aufs support entirely, making the
+        BALENA_MIGRATE_OVERLAY env var a no-op. Remove the systemd drop-in
+        that set it and its install logic from the recipe.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "go: Upgrade to 1.24.6 from upstream walnascar recipes"
+      hash: c13d7b3f15cfe5b80f2efcf669735c3c89a557cb
+      body: |
+        Balena engine v25 requires Go 1.23+. OE-Core skipped 1.23 entirely
+        (scarthgap=1.22, walnascar=1.24), so we adopt the upstream-validated
+        walnascar Go 1.24.6 recipes rather than hand-rolling untested 1.23
+        patches.
+
+        Changes from scarthgap 1.22.12:
+        - New source checksums and license md5 for Go 1.24.6
+        - Remove GOROOT_FINAL (Go 1.24 uses dynamic GOROOT discovery)
+        - Add -trimpath to shared lib install for reproducibility
+        - Add patch 0010 (GOROOT trimpath fix for shared builds)
+        - Add patch 6d265b (remove forced binutils-gold on aarch64)
+        - Drop 14 CVE patches (all fixed upstream in 1.24.6)
+        - Update line offsets in 9 existing patches
+
+        go-crosssdk.inc and go-cross-canadian.inc are intentionally kept at
+        scarthgap versions to preserve SDK dependency naming compatibility.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "balena: Update balena engine to v25.0.14"
+      hash: 75466c69edde68993e58512f94bd6e367d376cf3
+      body: |
+        This release removes support for aufs to overlay migration.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.2.0
+  title: ""
+  date: 2026-05-29T21:39:00.695Z
+- commits:
     - subject: Remove some docs in favor of moving them directly to the product docs
       hash: 48b0fc4b2fff441067d9601219cef747b431c74d
       body: ""
