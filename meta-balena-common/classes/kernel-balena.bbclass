@@ -239,6 +239,8 @@ BALENA_CONFIGS[module_compress] = " \
     CONFIG_MODULE_COMPRESS_ZSTD=y \
 "
 
+EXTRA_OEMAKE:append = " ${@configure_from_version("5.13", "INSTALL_MOD_STRIP=1", "", d)}"
+
 WIREGUARD = "${@configure_from_version("5.10", "wireguard", "", d)}"
 BALENA_CONFIGS[wireguard] = " \
     CONFIG_WIREGUARD=m \
