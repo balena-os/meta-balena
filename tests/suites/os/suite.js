@@ -454,6 +454,7 @@ module.exports = {
 		'./tests/fingerprint',
 		'./tests/fsck',
 		'./tests/os-release',
+		'./tests/uptime',
 		'./tests/iptables',
 		'./tests/migrate',
 		'./tests/issue',
