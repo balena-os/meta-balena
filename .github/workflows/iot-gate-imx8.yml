@@ -5,14 +5,10 @@ on:
     branches:
       - main
       - master
-      # ESR branches glob pattern
-      - "[0-9]+.[0-9]+.x"
   pull_request_target:
     branches:
       - main
       - master
-      # ESR branches glob pattern
-      - "[0-9]+.[0-9]+.x"
 
 permissions:
   id-token: write # This is required for requesting the JWT #https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#requesting-the-access-token
@@ -36,6 +32,6 @@ jobs:
       machine: iot-gate-imx8
       build-args: '--templates-path layers/meta-balena-imx8mm'
       device-repo: balena-os/balena-iot-gate-imx8
-      device-repo-ref: master
+      device-repo-ref: 2026.1.x
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}
