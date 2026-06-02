@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.11.15
+## (2026-06-02)
+
+* workflows: remove ESR branch triggers for DT's with no ESR release [Ryan Cooke]
+* kernel-balena: address CVE-2026-43284 [Alex Gonzalez]
+* kernel-balena: address CVE-2026-31431 [Alex Gonzalez]
+
 # v6.11.14
 ## (2026-03-16)
 
