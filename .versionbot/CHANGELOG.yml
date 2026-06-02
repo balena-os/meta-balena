@@ -1,4 +1,50 @@
 - commits:
+    - subject: "workflows: remove ESR branch triggers for DT's with no ESR release"
+      hash: 8794e8ae0c2cb0c4c3b9c38e3b03afec1d7472ab
+      body: >
+        For now the ESR list is very limited, so don't run the builds on non-ESR
+        device types, on the ESR meta-balena branch
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+    - subject: "kernel-balena: address CVE-2026-43284"
+      hash: 1e0071574b000329093f747b6ccbea727c8a9a0e
+      body: >
+        This commit removes the esp4/esp6 and rxrpc modules as they are
+        vulnerable.
+
+
+        Devices will not be able to use IPSEC based VPNs (esp4/esp6). The only
+
+        consumer of rxrpc is the in-kernel AFS (Andrew File System) which is
+
+        experimental anyway.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena: address CVE-2026-31431"
+      hash: 890dfb85f3fab74205604e23d6c995921563dd93
+      body: |
+        Unconditionally remove CONFIG_CRYPTO_USER_API_AEAD.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.9.7
+  title: ""
+  date: 2026-06-02T13:59:57.996Z
+- commits:
     - subject: "renovate.json: Remove custom balena-git package rules"
       hash: 3b143a83bf6693ff42783f0c7a88107418440c12
       body: |
