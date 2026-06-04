@@ -68,7 +68,9 @@ fi
 
 INFO "Running hostapp update..."
 
-export DOCKER_HOST="unix:///var/run/balena-host.sock"
+HOST_DOCKER_HOST="unix:///var/run/balena-host.sock"
+APP_DOCKER_HOST="unix:///var/run/balena.sock"
+export DOCKER_HOST="$HOST_DOCKER_HOST"
 SYSROOT="/mnt/sysroot/inactive"
 LOADTMP="/mnt/data/resin-data/tmp"
 
@@ -116,20 +118,23 @@ rm -rf "$SYSROOT/hostapps/.new"
 mkdir -p "$SYSROOT/hostapps/.new"
 
 # Dual-image path (-b): stage boot on sysroot before main image load/pull.
+# Boot image load/pull uses the app engine; main hostapp uses the host engine.
 # -b is a local tarball if the path exists, otherwise a remote image reference.
 if [ "$boot_image" != "" ]; then
+	export DOCKER_HOST="$APP_DOCKER_HOST"
 	if [ -f "$boot_image" ]; then
-		if ! mountpoint "${SYSROOT}/balena/tmp" >/dev/null; then
-			mkdir -p "${LOADTMP}"
-			mount --bind "${LOADTMP}" "${SYSROOT}/balena/tmp"
-		fi
 		INFO "Loading boot image from local: $boot_image"
 		BOOT_IMAGE=$(balena load --quiet -i "$(realpath "$boot_image")" | cut -d: -f1 --complement | tr -d ' ')
 	else
 		INFO "Pulling boot image from remote: $boot_image"
+		balena rmi --force "$boot_image" >/dev/null 2>&1 || true
 		_out="$(balena pull "$boot_image" 2>&1)"
 		INFO "${_out}"
 		BOOT_IMAGE="$boot_image"
+	fi
+	if [ -z "$BOOT_IMAGE" ]; then
+		ERROR "Failed to resolve boot image reference after load/pull"
+		exit 1
 	fi
 	INFO "Creating boot container from image: $BOOT_IMAGE"
 	BOOT_CONTAINER_ID=$(balena create --runtime="bare" "$BOOT_IMAGE" /bin/sh)
@@ -154,6 +159,7 @@ if [ "$boot_image" != "" ]; then
 		exit 1
 	fi
 	INFO "${_out}"
+	export DOCKER_HOST="$HOST_DOCKER_HOST"
 fi
 
 # Load new hostapp
