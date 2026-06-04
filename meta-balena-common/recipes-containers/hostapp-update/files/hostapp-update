@@ -23,6 +23,49 @@ ERROR() {
 	fi
 }
 
+BOOT_ENGINE_MNT="/run/hostapp-update-boot-engine"
+BOOT_ENGINE_SOCKET="unix://${BOOT_ENGINE_MNT}/balena-boot.sock"
+boot_engine_active=0
+boot_engine_pid=""
+
+stop_boot_engine() {
+	if [ -n "$boot_engine_pid" ]; then
+		kill "$boot_engine_pid" 2>/dev/null || true
+		wait "$boot_engine_pid" 2>/dev/null || true
+		boot_engine_pid=""
+	fi
+	if [ "$boot_engine_active" = 1 ]; then
+		rm -rf "$BOOT_ENGINE_MNT"
+		boot_engine_active=0
+	fi
+}
+
+start_boot_engine() {
+	# temporary engine under /run (tmpfs)
+	rm -rf "$BOOT_ENGINE_MNT"
+	mkdir -p "${BOOT_ENGINE_MNT}/data" "${BOOT_ENGINE_MNT}/exec" "${BOOT_ENGINE_MNT}/pid"
+	boot_engine_active=1
+
+	balenad --data-root="${BOOT_ENGINE_MNT}/data" \
+		--exec-root="${BOOT_ENGINE_MNT}/exec" \
+		--pidfile="${BOOT_ENGINE_MNT}/pid/balenad.pid" \
+		-H "$BOOT_ENGINE_SOCKET" \
+		--iptables=false &
+	boot_engine_pid=$!
+
+	_i=0
+	while [ "$_i" -lt 30 ]; do
+		if DOCKER_HOST="$BOOT_ENGINE_SOCKET" balena info >/dev/null 2>&1; then
+			INFO "Boot engine ready at ${BOOT_ENGINE_SOCKET}"
+			return 0
+		fi
+		_i=$((_i + 1))
+		sleep 1
+	done
+	ERROR "Boot engine failed to start at ${BOOT_ENGINE_SOCKET}"
+	return 1
+}
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
@@ -69,7 +112,6 @@ fi
 INFO "Running hostapp update..."
 
 HOST_DOCKER_HOST="unix:///var/run/balena-host.sock"
-APP_DOCKER_HOST="unix:///var/run/balena.sock"
 export DOCKER_HOST="$HOST_DOCKER_HOST"
 SYSROOT="/mnt/sysroot/inactive"
 LOADTMP="/mnt/data/resin-data/tmp"
@@ -118,10 +160,15 @@ rm -rf "$SYSROOT/hostapps/.new"
 mkdir -p "$SYSROOT/hostapps/.new"
 
 # Dual-image path (-b): stage boot on sysroot before main image load/pull.
-# Boot image load/pull uses the app engine; main hostapp uses the host engine.
+# Boot image load/pull uses an ephemeral engine under /run; main hostapp uses the host engine.
 # -b is a local tarball if the path exists, otherwise a remote image reference.
 if [ "$boot_image" != "" ]; then
-	export DOCKER_HOST="$APP_DOCKER_HOST"
+	trap stop_boot_engine EXIT INT HUP
+	if ! start_boot_engine; then
+		exit 1
+	fi
+
+	export DOCKER_HOST="$BOOT_ENGINE_SOCKET"
 	if [ -f "$boot_image" ]; then
 		INFO "Loading boot image from local: $boot_image"
 		BOOT_IMAGE=$(balena load --quiet -i "$(realpath "$boot_image")" | cut -d: -f1 --complement | tr -d ' ')
@@ -160,6 +207,8 @@ if [ "$boot_image" != "" ]; then
 	fi
 	INFO "${_out}"
 	export DOCKER_HOST="$HOST_DOCKER_HOST"
+
+	stop_boot_engine
 fi
 
 # Load new hostapp

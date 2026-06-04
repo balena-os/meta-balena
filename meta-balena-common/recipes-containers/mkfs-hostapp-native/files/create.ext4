@@ -3,63 +3,14 @@
 set -ex
 
 SYSROOT="/mnt/sysroot/inactive"
-HOST_DOCKER_HOST="unix:///var/run/balena-host.sock"
-APP_DOCKER_HOST="unix:///var/run/balena.sock"
-HOST_DATA_ROOT="$SYSROOT/balena"
-APP_DATA_ROOT="/var/lib/docker"
 
-mkdir -p /var/run "$APP_DATA_ROOT" "$HOST_DATA_ROOT"
+balenad -s=@BALENA_STORAGE@ --data-root="$SYSROOT/balena" -H unix:///var/run/balena-host.sock --iptables=false &
+pid=$!
+sleep 5
 
-wait_for_engine() {
-	_socket="$1"
-	_i=0
-	while [ "$_i" -lt 30 ]; do
-		if DOCKER_HOST="$_socket" balena info >/dev/null 2>&1; then
-			return 0
-		fi
-		_i=$((_i + 1))
-		sleep 1
-	done
-	return 1
-}
+hostapp-update -f /input -n
 
-# App engine (boot image). 
-# a second overlay2 daemon would fail inside the mkfs build container (docker-in-docker)
-# vfs is fixing this issue by using a different storage driver.
-balenad -s=@BALENA_STORAGE@ \
-	--storage-driver=vfs \
-	--data-root="$APP_DATA_ROOT" \
-	--exec-root=/var/run/balena-app \
-	--pidfile=/var/run/balena-app.pid \
-	-H "$APP_DOCKER_HOST" \
-	--iptables=false &
-app_pid=$!
-
-# Host engine (main hostapp)
-balenad -s=@BALENA_STORAGE@ \
-	--data-root="$HOST_DATA_ROOT" \
-	--exec-root=/var/run/balena-host \
-	--pidfile=/var/run/balena-host.pid \
-	-H "$HOST_DOCKER_HOST" \
-	--iptables=false &
-host_pid=$!
-
-cleanup_engines() {
-	kill "$host_pid" "$app_pid" 2>/dev/null || true
-	wait "$host_pid" "$app_pid" 2>/dev/null || true
-}
-
-if ! wait_for_engine "$APP_DOCKER_HOST"; then
-	echo "App engine failed to start at $APP_DOCKER_HOST" >&2
-	exit 1
-fi
-if ! wait_for_engine "$HOST_DOCKER_HOST"; then
-	echo "Host engine failed to start at $HOST_DOCKER_HOST" >&2
-	exit 1
-fi
-
-hostapp-update -f /input -b /input-boot -n
-
-cleanup_engines
+kill $pid
+wait $pid
 
 mkfs.ext4 -F -E lazy_itable_init=0,lazy_journal_init=0 -i 8192 -d "$SYSROOT" /output
