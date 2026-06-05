@@ -1,4 +1,18 @@
 - commits:
+    - subject: "hostapp.yml: Add root hostapp composition for all boards"
+      hash: 487eaa85a5b8edb115cf2b8b33005155f8df4760
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.2.1
+  title: ""
+  date: 2026-06-05T13:27:23.444Z
+- commits:
     - subject: "balena: Remove aufs as a supported storage driver"
       hash: b95114ed07adc01d510371e705a76d0a8d745560
       body: |

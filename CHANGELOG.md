@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.2.1
+## (2026-06-05)
+
+* hostapp.yml: Add root hostapp composition for all boards [Kyle Harding]
+
 # v7.2.0
 ## (2026-05-29)
 
