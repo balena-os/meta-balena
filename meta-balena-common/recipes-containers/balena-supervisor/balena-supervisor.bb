@@ -20,12 +20,18 @@ SRC_URI += " \
 	file://balena-supervisor-healthcheck \
 	file://tmpfiles-supervisor.conf \
 	file://migrate-supervisor-state.service \
+	file://start-helios \
+	file://helios.service \
+	file://helios.conf \
 	"
 
 SYSTEMD_SERVICE:${PN} = " \
 	balena-supervisor.service \
 	migrate-supervisor-state.service \
 	"
+
+# helios ships and is enabled only when an image is configured for it
+SYSTEMD_SERVICE:${PN} += "${@'helios.service' if d.getVar('HELIOS_IMAGE_NAME') else ''}"
 
 FILES:${PN} += " \
 	/resin-data \
@@ -106,6 +112,15 @@ do_install () {
 	install -c -m 0644 ${UNPACKDIR}/update-balena-supervisor.service ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${UNPACKDIR}/update-balena-supervisor.timer ${D}${systemd_unitdir}/system
 	install -c -m 0644 ${UNPACKDIR}/migrate-supervisor-state.service ${D}${systemd_unitdir}/system
+	# helios (next-generation supervisor): standalone host service, image pulled at boot.
+	# helios.service @BINDIR@ is substituted by the shared *.service sed below.
+	if [ -n "${HELIOS_IMAGE_NAME}" ]; then
+		install -m 0755 ${UNPACKDIR}/start-helios ${D}${bindir}
+		install -c -m 0644 ${UNPACKDIR}/helios.service ${D}${systemd_unitdir}/system
+		install -d ${D}${sysconfdir}/helios
+		install -m 0644 ${UNPACKDIR}/helios.conf ${D}${sysconfdir}/helios/helios.conf
+		sed -i -e "s,@HELIOS_IMAGE@,${HELIOS_IMAGE_NAME},g" ${D}${sysconfdir}/helios/helios.conf
+	fi
 	# symlinks to legacy resin-supervisor systemd unit files
 	ln -s balena-supervisor.service ${D}${systemd_unitdir}/system/resin-supervisor.service
 	ln -s update-balena-supervisor.service ${D}${systemd_unitdir}/system/update-resin-supervisor.service

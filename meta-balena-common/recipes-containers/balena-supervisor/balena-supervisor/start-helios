@@ -1,0 +1,51 @@
+#!/bin/sh
+
+# helios is normally a service in the supervisor composition, where the
+# io.balena.features.* labels inject the engine/dbus sockets, the API
+# credentials and the host runtime dir. balenaOS launches it standalone (the
+# same way it launches the supervisor), so the wiring those labels would add is
+# supplied explicitly below.
+
+# shellcheck disable=SC1091
+. /usr/sbin/balena-config-vars
+# shellcheck disable=SC1091
+. /etc/helios/helios.conf
+# shellcheck disable=SC1091
+. /etc/os-release
+
+CONFIG_JSON="${BALENA_BOOT_MOUNTPOINT:-/mnt/boot}/config.json"
+UUID=$(jq -r .uuid "${CONFIG_JSON}")
+API_KEY=$(jq -r .deviceApiKey "${CONFIG_JSON}")
+API_URL=$(jq -r .apiEndpoint "${CONFIG_JSON}")
+
+# The image is pulled on demand: it is not baked into the rootfs, mirroring the
+# supervisor. Requires the helios package to be public (or registry creds).
+if [ -z "$(balena inspect --format='{{.Id}}' "${HELIOS_IMAGE}" 2>/dev/null)" ]; then
+    balena pull "${HELIOS_IMAGE}"
+fi
+
+# helios shares this runtime dir with the host: it extracts the balenahup
+# scripts here and then asks host systemd to run them by their host path, so the
+# bind source and BALENA_HOST_RUNTIME_DIR must be the same path.
+mkdir -p /tmp/balena-supervisor
+
+balena rm --force helios 2>/dev/null || true
+exec balena run --rm --name helios \
+    --net=host \
+    --mount type=bind,source=/var/run/balena-engine.sock,target=/host/run/balena-engine.sock \
+    --mount type=bind,source=/run/dbus,target=/host/run/dbus \
+    --mount type=bind,source=/tmp/balena-supervisor,target=/tmp/run \
+    --mount type=bind,source=/mnt/state,target=/mnt/state,readonly \
+    -v helios-config:/config/helios \
+    -v helios-cache:/cache/helios \
+    -v helios-state:/local/helios \
+    -e DOCKER_HOST=unix:///host/run/balena-engine.sock \
+    -e DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket \
+    -e BALENA_HOST_RUNTIME_DIR=/tmp/balena-supervisor \
+    -e BALENA_HOST_STATE_DIR=/mnt/state \
+    -e "BALENA_DEVICE_UUID=${UUID}" \
+    -e "BALENA_API_URL=${API_URL}" \
+    -e "BALENA_API_KEY=${API_KEY}" \
+    -e "BALENA_HOST_OS_VERSION=balenaOS ${VERSION}" \
+    -e "BALENA_HOST_OS_BOARD_REV=${BALENA_BOARD_REV}" \
+    "${HELIOS_IMAGE}"
