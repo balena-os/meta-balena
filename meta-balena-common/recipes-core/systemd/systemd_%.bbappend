@@ -2,6 +2,7 @@ FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 
 SRC_URI:append = " \
     file://coredump.conf \
+    file://10-balena-lid-switch-ignore.conf \
     file://reboot.target.conf \
     file://poweroff.target.conf \
     file://journald-balena-os.conf \
@@ -44,6 +45,7 @@ FILES:${PN} += " \
     /etc/localtime \
     /etc/mtab \
     ${sysconfdir}/systemd/journald.conf.d \
+    ${sysconfdir}/systemd/logind.conf.d/10-balena-lid-switch-ignore.conf \
     "
 
 do_install:append() {
@@ -63,6 +65,9 @@ do_install:append() {
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
     install -m 0644 ${WORKDIR}/condition-virtualization-not-docker.conf \
         ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
+    install -d -m 0755 ${D}/${sysconfdir}/systemd/logind.conf.d
+    install -m 0644 ${WORKDIR}/10-balena-lid-switch-ignore.conf \
+        ${D}/${sysconfdir}/systemd/logind.conf.d
 
     # mask systemd-getty-generator
     install -d -m 0755 ${D}/${sysconfdir}/systemd/system-generators
