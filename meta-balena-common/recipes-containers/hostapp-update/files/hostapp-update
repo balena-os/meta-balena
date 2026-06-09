@@ -23,6 +23,61 @@ ERROR() {
 	fi
 }
 
+# Map the inactive root slot to resin-data boot dir (boot-A / boot-B).
+data_boot_slot() {
+	if [ ! -e /dev/disk/by-state/inactive ] || [ ! -e /dev/disk/by-state/resin-rootA ]; then
+		return 1
+	fi
+	inactive_dev=$(readlink -f /dev/disk/by-state/inactive)
+	roota_dev=$(readlink -f /dev/disk/by-state/resin-rootA)
+	if [ "$inactive_dev" = "$roota_dev" ]; then
+		echo "boot-A"
+	else
+		echo "boot-B"
+	fi
+}
+
+# Stage /boot on resin-data for GRUB (intermediate: root-slot /boot volume is kept too).
+stage_boot_to_data_partition() {
+	container_id="$1"
+	slot=""
+
+	if ! mountpoint -q /mnt/data 2>/dev/null; then
+		INFO "Skipping data-partition boot staging (/mnt/data not mounted)"
+		return 0
+	fi
+
+	if ! slot=$(data_boot_slot); then
+		INFO "Skipping data-partition boot staging (inactive root slot unknown)"
+		return 0
+	fi
+
+	data_boot_dir="/mnt/data/${slot}"
+	data_boot_new="${data_boot_dir}.new"
+
+	rm -rf "$data_boot_new"
+	mkdir -p "$data_boot_new"
+	if ! _out=$(balena cp "${container_id}:/boot/." "${data_boot_new}/" 2>&1); then
+		ERROR "Failed to copy boot files to data partition: ${_out}"
+		exit 1
+	fi
+	if [ -z "$(ls -A "$data_boot_new" 2>/dev/null)" ]; then
+		ERROR "Boot image /boot is empty"
+		exit 1
+	fi
+	sync -f /mnt/data
+
+	rm -rf "${data_boot_dir}.old" 2>/dev/null || true
+	if [ -d "$data_boot_dir" ]; then
+		mv "$data_boot_dir" "${data_boot_dir}.old"
+	fi
+	mv -T "$data_boot_new" "$data_boot_dir"
+	sync -f /mnt/data
+	rm -rf "${data_boot_dir}.old" 2>/dev/null || true
+
+	INFO "Staged boot payload to ${data_boot_dir}/"
+}
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
@@ -127,7 +182,9 @@ fi
 CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
 BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
 
-# Create boot entry
+stage_boot_to_data_partition "$CONTAINER_ID"
+
+# Root-slot boot volume (legacy path); GRUB loads from resin-data boot-A/boot-B.
 rm -rf "$SYSROOT/hostapps/.new"
 mkdir -p "$SYSROOT/hostapps/.new"
 ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/boot"

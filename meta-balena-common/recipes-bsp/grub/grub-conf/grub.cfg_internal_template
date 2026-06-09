@@ -39,29 +39,45 @@ function get_root_uuid {
  done
 }
 
-menuentry 'boot'{
-if [ ${bootcount} = 2 ] ; then
- if [ ${resin_root_part} = 2 ] ; then
-  get_root_uuid "resin-rootB"
+# Kernel on resin-data (/boot-A or /boot-B); root= still points at the selected root slot.
+function select_root_slot_and_boot_dir {
+ if [ ${bootcount} = 2 ] ; then
+  if [ ${resin_root_part} = 2 ] ; then
+   set root_slot_label=resin-rootB
+   set data_boot_dir=/boot-B
+  else
+   set root_slot_label=resin-rootA
+   set data_boot_dir=/boot-A
+  fi
  else
-  get_root_uuid "resin-rootA"
+  if [ ${resin_root_part} = 2 ] ; then
+   set root_slot_label=resin-rootA
+   set data_boot_dir=/boot-A
+  else
+   set root_slot_label=resin-rootB
+   set data_boot_dir=/boot-B
+  fi
  fi
-else
- if [ ${resin_root_part} = 2 ] ; then
-  get_root_uuid "resin-rootA"
- else
-  get_root_uuid "resin-rootB"
- fi
-fi
-linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
+}
+
+menuentry 'boot' {
+ select_root_slot_and_boot_dir
+ get_root_uuid ${root_slot_label}
+ set root_slot_uuid=${root_uuid}
+ get_root_uuid "resin-data"
+ linux ${data_boot_dir}/@@KERNEL_IMAGETYPE@@ root=UUID=${root_slot_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
 }
 
 menuentry 'manualfallbackA' {
-  get_root_uuid "resin-rootA"
-  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
+ get_root_uuid "resin-rootA"
+ set root_slot_uuid=${root_uuid}
+ get_root_uuid "resin-data"
+ linux /boot-A/@@KERNEL_IMAGETYPE@@ root=UUID=${root_slot_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
 }
 
 menuentry 'manualfallbackB' {
-  get_root_uuid "resin-rootB"
-  linux /boot/@@KERNEL_IMAGETYPE@@ root=UUID=${root_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
+ get_root_uuid "resin-rootB"
+ set root_slot_uuid=${root_uuid}
+ get_root_uuid "resin-data"
+ linux /boot-B/@@KERNEL_IMAGETYPE@@ root=UUID=${root_slot_uuid} @@KERNEL_CMDLINE@@ ${extra_os_cmdline} ${extra_os_firmware_class_path}
 }
