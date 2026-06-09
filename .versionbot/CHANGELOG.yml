@@ -1,4 +1,21 @@
 - commits:
+    - subject: "systemd: add configuration to ignore lid switch events"
+      hash: fa80d44b3bc0f4c23d468d23b0006d89af2c6def
+      body: >
+        Add a systemd-logind drop-in that sets HandleLidSwitch=ignore and
+        HandleLidSwitchDocked=ignore so closing the lid does not suspend
+        laptop-class hardware.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Dr Bill Mcilhargey <19168174+billmcilhargey@users.noreply.github.com>
+        signed-off-by: Dr Bill Mcilhargey <19168174+billmcilhargey@users.noreply.github.com>
+      author: Dr Bill Mcilhargey
+      nested: []
+  version: 7.4.0
+  title: ""
+  date: 2026-06-09T23:56:00.838Z
+- commits:
     - subject: "tests: pieeprom test raspberrypi4 and CM4"
       hash: c4589cf31d1d245a2fc19ad8809c2ae35c88c927
       body: ""

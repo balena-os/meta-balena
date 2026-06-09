@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.4.0
+## (2026-06-09)
+
+* systemd: add configuration to ignore lid switch events [Dr Bill Mcilhargey]
+
 # v7.3.0
 ## (2026-06-09)
 
