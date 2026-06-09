@@ -447,6 +447,7 @@ module.exports = {
 		'./tests/secureboot',
 		'./tests/device-specific-tests/beaglebone-black',
 		'./tests/device-specific-tests/243390-rpi3',
+		'./tests/raspberrypi4-eeprom',
 		'./tests/power-and-cooling',
 		'./tests/overlap_test/',
 		'./tests/fingerprint',
