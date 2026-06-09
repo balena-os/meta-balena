@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.3.0
+## (2026-06-09)
+
+* tests: pieeprom test raspberrypi4 and CM4 [Yann CARDAILLAC]
+
 # v7.2.1
 ## (2026-06-05)
 

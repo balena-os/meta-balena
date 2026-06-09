@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tests: pieeprom test raspberrypi4 and CM4"
+      hash: c4589cf31d1d245a2fc19ad8809c2ae35c88c927
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+        signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+      author: Yann CARDAILLAC
+      nested: []
+  version: 7.3.0
+  title: ""
+  date: 2026-06-09T11:50:41.226Z
+- commits:
     - subject: "hostapp.yml: Add root hostapp composition for all boards"
       hash: 487eaa85a5b8edb115cf2b8b33005155f8df4760
       body: ""
