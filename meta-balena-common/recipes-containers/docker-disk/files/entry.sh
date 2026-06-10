@@ -73,5 +73,4 @@ kill -TERM "$(cat /var/run/docker.pid)"
 # don't let wait() error out and crash the build if the docker daemon has already been stopped
 wait "$(cat /var/run/docker.pid)" || true
 
-# Staging tree only; balenaos-img runs mkfs.ext4 -d (with boot-A) into resin-data.img.
 tar -cf ${BUILD}/${BALENA_DATA_STAGING} -C ${DATA_VOLUME} .

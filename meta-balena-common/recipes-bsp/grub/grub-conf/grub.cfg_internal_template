@@ -39,7 +39,6 @@ function get_root_uuid {
  done
 }
 
-# Kernel on resin-data (/boot-A or /boot-B); root= still points at the selected root slot.
 function select_root_slot_and_boot_dir {
  if [ ${bootcount} = 2 ] ; then
   if [ ${resin_root_part} = 2 ] ; then

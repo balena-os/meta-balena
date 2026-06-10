@@ -37,7 +37,7 @@ data_boot_slot() {
 	fi
 }
 
-# Stage /boot on resin-data for GRUB (intermediate: root-slot /boot volume is kept too).
+# Stage hostapp /boot on resin-data boot-{A|B} for GRUB
 stage_boot_to_data_partition() {
 	container_id="$1"
 	slot=""
@@ -62,7 +62,7 @@ stage_boot_to_data_partition() {
 		exit 1
 	fi
 	if [ -z "$(ls -A "$data_boot_new" 2>/dev/null)" ]; then
-		ERROR "Boot image /boot is empty"
+		ERROR "Hostapp /boot is empty"
 		exit 1
 	fi
 	sync -f /mnt/data
@@ -76,6 +76,22 @@ stage_boot_to_data_partition() {
 	rm -rf "${data_boot_dir}.old" 2>/dev/null || true
 
 	INFO "Staged boot payload to ${data_boot_dir}/"
+}
+
+# Root-slot boot dir holds mobynit init only
+install_hostapp_init() {
+	container_id="$1"
+	hostapp_boot="$2"
+
+	mkdir -p "$hostapp_boot"
+	if ! _out=$(balena cp "${container_id}:/boot/init" "${hostapp_boot}/" 2>&1); then
+		ERROR "Failed to copy mobynit init: ${_out}"
+		exit 1
+	fi
+	if [ ! -x "${hostapp_boot}/init" ]; then
+		ERROR "Hostapp /boot/init missing or not executable"
+		exit 1
+	fi
 }
 
 run_current_hooks_and_recover () {
@@ -179,15 +195,13 @@ elif [ "$remote_image" != "" ]; then
 	_out="$(balena pull "$HOSTAPP_IMAGE" 2>&1)"
 	INFO "${_out}"
 fi
-CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
-BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
+CONTAINER_ID=$(balena create --runtime="bare" "$HOSTAPP_IMAGE" /bin/sh)
 
 stage_boot_to_data_partition "$CONTAINER_ID"
 
-# Root-slot boot volume (legacy path); GRUB loads from resin-data boot-A/boot-B.
 rm -rf "$SYSROOT/hostapps/.new"
 mkdir -p "$SYSROOT/hostapps/.new"
-ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/boot"
+install_hostapp_init "$CONTAINER_ID" "$SYSROOT/hostapps/.new/boot"
 sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
