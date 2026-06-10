@@ -1,0 +1,12 @@
+[Unit]
+Description=Balena Host OS update service
+Requires=balena-host.service
+After=balena-host.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=@BINDIR@/hostapp-update -i %i
+
+[Install]
+WantedBy=multi-user.target
