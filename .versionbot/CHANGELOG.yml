@@ -1,4 +1,36 @@
 - commits:
+    - subject: Update tests/leviathan digest to a310841
+      hash: 2cdf1c6d12225dd6aee87db808482744cd3c2b8b
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "core/lib: Make Protected Management Frames (PMF) support optional /
+                disabled when creating the wifi connection profile"
+              hash: 2f56cc2c38b830a81492ddec574b91644953e16e
+              body: >
+                We have a case where not setting this to optional will cause
+                issues
+
+                when authenticating to an AP created by the worker (a RPi 4
+                worker).
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: leviathan-2.36.112
+          title: ""
+          date: 2026-06-10T14:29:15.175Z
+  version: 7.4.1
+  title: ""
+  date: 2026-06-11T06:12:09.908Z
+- commits:
     - subject: "systemd: add configuration to ignore lid switch events"
       hash: fa80d44b3bc0f4c23d468d23b0006d89af2c6def
       body: >

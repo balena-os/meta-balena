@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v7.4.1
+## (2026-06-11)
+
+
+<details>
+<summary> Update tests/leviathan digest to a310841 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.112
+> ### (2026-06-10)
+> 
+> * core/lib: Make Protected Management Frames (PMF) support optional / disabled when creating the wifi connection profile [Florin Sarbu]
+> 
+
+</details>
+
 # v7.4.0
 ## (2026-06-09)
 
