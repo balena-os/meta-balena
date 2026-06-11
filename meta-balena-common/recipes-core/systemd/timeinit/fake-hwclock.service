@@ -18,7 +18,7 @@ Documentation=man:fake-hwclock(8)
 DefaultDependencies=no
 Requires=etc-fake\x2dhwclock.mount
 After=etc-fake\x2dhwclock.mount
-Before=sysinit.target systemd-journald.service systemd-fsck-root.service time-set.target timeinit-rtc.service
+Before=sysinit.target systemd-journald.service time-set.target timeinit-rtc.service
 Conflicts=shutdown.target
 
 [Service]
