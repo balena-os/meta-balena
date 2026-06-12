@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.0
+## (2026-06-12)
+
+* conf/layer.conf: Specify Wrynose compatibility [Alexandru Costache]
+
 # v7.4.1
 ## (2026-06-11)
 

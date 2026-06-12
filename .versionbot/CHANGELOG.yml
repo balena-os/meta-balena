@@ -1,4 +1,22 @@
 - commits:
+    - subject: "conf/layer.conf: Specify Wrynose compatibility"
+      hash: b5779e477068e55f3110cf735db17fdb33eb522b
+      body: |
+        ... and populate UNPACKDIR for the dunfell, kirkstone
+        and scarthgap layers, to ensure backwards compatibility.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Co-authored-by: Florin Sarbu <florin@balena.io>
+        co-authored-by: Florin Sarbu <florin@balena.io>
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.5.0
+  title: ""
+  date: 2026-06-12T08:17:26.427Z
+- commits:
     - subject: Update tests/leviathan digest to a310841
       hash: 2cdf1c6d12225dd6aee87db808482744cd3c2b8b
       body: Update tests/leviathan
