@@ -5,3 +5,5 @@ FILES_udev += "\
 	${rootlibexecdir}/udev/rules.d/10-zram.rules \
 	${rootlibexecdir}/udev/rules.d/65-resin-update-state.rules \
 "
+
+RDEPENDS_${PN}_append = "${@oe.utils.conditional('SIGN_API','','',' lvm2-udevrules',d)}"

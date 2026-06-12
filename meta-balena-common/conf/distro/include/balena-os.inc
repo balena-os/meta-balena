@@ -9,7 +9,7 @@ DISTRO_VERSION = "7.4.1"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 
 # Allowed kernel cmdline arguments, used by balena-bootloader and the bootloader configuration scripts
-ALLOWED_BOOTARGS_LIST=" \
+ALLOWED_BOOTARGS_LIST = " \
     firmware_class.path=/var/lib/docker/volumes/extra-firmware/_data \
 "
 
@@ -63,8 +63,11 @@ MAINTAINER = "Balena <hello@balena.io>"
 
 # Strip down unneeded features
 POKY_DEFAULT_DISTRO_FEATURES:remove = "ptest"
+DISTRO_FEATURES:remove = "ptest"
+EXTRA_IMAGE_FEATURES:remove = "ptest-pkgs"
+PTEST_ENABLED = "0"
+
 POKY_DEFAULT_DISTRO_FEATURES:remove = "wayland"
-DISTRO_FEATURES_DEFAULT:remove = "x11"
 
 # OS development image
 OS_DEVELOPMENT ?= "0"

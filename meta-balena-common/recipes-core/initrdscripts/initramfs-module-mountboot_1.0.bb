@@ -13,11 +13,9 @@ inherit allarch
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI = "file://mountboot"
 
-S = "${WORKDIR}"
-
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/mountboot ${D}/init.d/73-mountboot
+    install -m 0755 ${UNPACKDIR}/mountboot ${D}/init.d/73-mountboot
 }
 
 FILES:${PN} = "/init.d/73-mountboot"

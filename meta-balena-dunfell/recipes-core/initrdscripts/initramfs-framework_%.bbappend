@@ -12,3 +12,4 @@ SUMMARY_initramfs-module-console-null-workaround = "Workaround needed for when c
 RDEPENDS_initramfs-module-console-null-workaround = "${PN}-base"
 FILES_initramfs-module-console-null-workaround = "/init.d/000-console_null_workaround"
 RDEPENDS_initramfs-module-recovery = "${PN}-base android-tools"
+RDEPENDS_initramfs-module-cryptsetup += " lvm2-udevrules"

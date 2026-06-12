@@ -3,9 +3,9 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 SRC_URI += "file://bind-path.service.in"
 
-S = "${WORKDIR}"
-
 inherit systemd allarch
+
+S = "${UNPACKDIR}"
 
 SYSTEMD_SERVICE:${PN} += "${@bindmounts_systemd_services(d)}"
 
@@ -76,7 +76,7 @@ do_compile () {
 		fi
 	done
 }
-do_compile[dirs] = "${WORKDIR}"
+do_compile[dirs] = "${UNPACKDIR}"
 
 do_install () {
 	install -d "${D}${sysconfdir}"
