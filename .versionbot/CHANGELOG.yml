@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: Define imx8mmebcrs16a1 as flasherConfig type"
+      hash: 16c56bacdccd9e1a58aa32b0169d05302ebbd4e1
+      body: |
+        This allows us to boot the flasher image from microSD even when the
+        bootswitch is set to eMMC boot. This is needed for automated testing.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 7.5.1
+  title: ""
+  date: 2026-06-15T18:09:10.587Z
+- commits:
     - subject: "conf/layer.conf: Specify Wrynose compatibility"
       hash: b5779e477068e55f3110cf735db17fdb33eb522b
       body: |

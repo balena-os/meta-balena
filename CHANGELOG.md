@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.1
+## (2026-06-15)
+
+* tests: Define imx8mmebcrs16a1 as flasherConfig type [Florin Sarbu]
+
 # v7.5.0
 ## (2026-06-12)
 
