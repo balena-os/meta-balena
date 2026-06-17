@@ -1,4 +1,25 @@
 - commits:
+    - subject: "recipes-core/systemd: Fix building with Wrynose"
+      hash: 4ea508b6986a811fadad7ae753ce06f9a5e0f002
+      body: >
+        A PR which uses WORKDIR was merged before the Wrynose PR, and the
+        automated re-base did not catch this because WORKDIR can be used in all
+        Yocto versions pre-Wrynose.
+
+
+        We thus update the recipe to make it compatible with all Yocto versions
+        again.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 7.5.2
+  title: ""
+  date: 2026-06-17T16:07:07.932Z
+- commits:
     - subject: "tests: Define imx8mmebcrs16a1 as flasherConfig type"
       hash: 16c56bacdccd9e1a58aa32b0169d05302ebbd4e1
       body: |

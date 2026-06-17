@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.2
+## (2026-06-17)
+
+* recipes-core/systemd: Fix building with Wrynose [Alexandru]
+
 # v7.5.1
 ## (2026-06-15)
 
