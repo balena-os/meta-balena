@@ -66,7 +66,7 @@ do_install:append() {
     install -m 0644 ${UNPACKDIR}/condition-virtualization-not-docker.conf \
         ${D}/${sysconfdir}/systemd/system/systemd-logind.service.d
     install -d -m 0755 ${D}/${sysconfdir}/systemd/logind.conf.d
-    install -m 0644 ${WORKDIR}/10-balena-lid-switch-ignore.conf \
+    install -m 0644 ${UNPACKDIR}/10-balena-lid-switch-ignore.conf \
         ${D}/${sysconfdir}/systemd/logind.conf.d
 
     # mask systemd-getty-generator
