@@ -197,6 +197,16 @@ jobs:
           with open(filePath, 'w') as modified:
               yaml.dump(ydata, modified)
           EOF
+          # Point every device test workflow at the device-repo ESR branch
+          # that will be created for this ESR (e.g. 2026.4.x), so that tests on
+          # the committed meta-balena ESR branch target the corresponding
+          # device-repo branches (which should eventually exist).
+          esr_branch="${ESR_VERSION}.x"
+          for workflow in .github/workflows/*.yml; do
+            if grep -q "device-repo-ref:" "${workflow}"; then
+              sed -i -E "s|^([[:space:]]*device-repo-ref:)[[:space:]].*|\1 ${esr_branch}|" "${workflow}"
+            fi
+          done
           # The new commit's parent is the base tag's commit
           parent_sha=$(git rev-parse "refs/tags/v${OS_VERSION}^{commit}")
           # Strip the trailing ".x" to get the ESR label (e.g. 2.108.x -> 2.108)
@@ -224,7 +234,7 @@ jobs:
       # https://github.com/orgs/community/discussions/50055
       # https://octokit.github.io/rest.js/v21/#git-create-blob
       # https://octokit.github.io/rest.js/v21/#git-create-tree
-      - name: "Create blob and tree"
+      - name: "Create blobs and tree"
         id: create_tree
         env:
           PARENT_COMMIT_SHA: ${{ steps.prepare-esr-branch.outputs.parent_sha }}
@@ -238,25 +248,35 @@ jobs:
             const parentSha = process.env.PARENT_COMMIT_SHA;
             const baseTreeSha = execSync(`git show -s --format=%T "${parentSha}"`).toString().trim();
 
-            // Only repo.yml changes; base_tree carries every other entry
-            // (including this repo's own submodules) forward unchanged.
-            const file = 'repo.yml';
-            core.info(`Creating blob for ${file}...`);
-            const content = await fs.readFile(file, { encoding: 'utf8' });
-            const { data: blob } = await github.rest.git.createBlob({
-              ...context.repo,
-              content: Buffer.from(content).toString('base64'),
-              encoding: 'base64'
-            });
+            // Every file modified on the working tree vs the base tag: repo.yml
+            // plus each device workflow whose device-repo-ref we just pinned.
+            // base_tree carries all unchanged entries (including this repo's own
+            // submodules) forward untouched.
+            const files = execSync('git diff --name-only HEAD')
+              .toString()
+              .split('\n')
+              .map((line) => line.trim())
+              .filter(Boolean);
+
+            if (files.length === 0) {
+              core.setFailed('No file changes detected to commit');
+              return;
+            }
+            core.info(`Committing ${files.length} changed file(s):\n${files.join('\n')}`);
+
+            const treeEntries = await Promise.all(files.map(async (file) => {
+              const content = await fs.readFile(file, { encoding: 'utf8' });
+              const { data: blob } = await github.rest.git.createBlob({
+                ...context.repo,
+                content: Buffer.from(content).toString('base64'),
+                encoding: 'base64'
+              });
+              return { path: file, mode: '100644', type: 'blob', sha: blob.sha };
+            }));
 
             const { data: tree } = await github.rest.git.createTree({
               ...context.repo,
-              tree: [{
-                path: file,
-                mode: '100644',
-                type: 'blob',
-                sha: blob.sha
-              }],
+              tree: treeEntries,
               base_tree: baseTreeSha
             });
 
