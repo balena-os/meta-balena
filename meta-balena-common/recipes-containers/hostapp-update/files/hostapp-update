@@ -47,24 +47,17 @@ resolve_boot_dir_from_image() {
 	echo "$boot_dir"
 }
 
-link_boot_from_overlay_layers() {
-	dest_boot="${SYSROOT}/hostapps/.new/boot"
+# Symlink hostapps boot to overlay2 layer diff/boot (no copy).
+symlink_boot_from_overlay_layers() {
+	hostapp_new="${SYSROOT}/hostapps/.new"
 
-	rm -rf "${SYSROOT}/hostapps/.new"
-	mkdir -p "$dest_boot"
+	rm -rf "$hostapp_new"
+	mkdir -p "$hostapp_new"
 
 	boot_dir=$(resolve_boot_dir_from_image "$HOSTAPP_IMAGE")
-	for src in $(find "$boot_dir" -type f); do
-		# rel takes ${SYSROOT}/balena/overlay2/.../diff/boot/bzImage and makes it boot/bzImage
-		rel="${src#${boot_dir}/}"
-		dst="${dest_boot}/${rel}"
-		if [ -e "$dst" ]; then
-			continue
-		fi
-		mkdir -p "$(dirname "$dst")"
-		ln "$src" "$dst"
-		INFO "Hardlinked boot file: $src -> $dst"
-	done
+	cache_id=$(basename "$(dirname "$(dirname "$boot_dir")")")
+	ln -sfn "../../balena/overlay2/${cache_id}/diff/boot" "${hostapp_new}/boot"
+	INFO "Symlinked ${hostapp_new}/boot -> ../../balena/overlay2/${cache_id}/diff/boot"
 }
 
 run_current_hooks_and_recover () {
@@ -170,7 +163,7 @@ elif [ "$remote_image" != "" ]; then
 fi
 CONTAINER_ID=$(balena create --runtime="bare" "$HOSTAPP_IMAGE" /bin/sh)
 
-link_boot_from_overlay_layers
+symlink_boot_from_overlay_layers
 sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
