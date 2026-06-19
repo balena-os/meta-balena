@@ -87,8 +87,7 @@ do_install:append() {
 
     ln -s /var/run/resolvconf/interface/NetworkManager ${D}/etc/resolv.dnsmasq
 
-    # remove these empty not-used (at this moment) directories so we don't have to package them
-    rmdir ${D}${libdir}/NetworkManager/conf.d
+    # remove this empty not-used (at this moment) directory so we don't have to package it
     rmdir ${D}${libdir}/NetworkManager/VPN
 }
 
