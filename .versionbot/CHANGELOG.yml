@@ -1,4 +1,23 @@
 - commits:
+    - subject: "networkmanager_%.bbappend: Don't remove /usr/lib/NetworkManager/conf.d
+        from the rootfs"
+      hash: 1b6528f8ed894aadd6b379e1c1969f0614b6bb78
+      body: >
+        We need to allow for various boards to be able to use this location for
+        placing any needed drop-ins
+
+        now that /etc/NetworkManager/conf.d is bindmounted at boot time.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 7.5.3
+  title: ""
+  date: 2026-06-19T05:29:51.761Z
+- commits:
     - subject: "recipes-core/systemd: Fix building with Wrynose"
       hash: 4ea508b6986a811fadad7ae753ce06f9a5e0f002
       body: >

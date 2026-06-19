@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.3
+## (2026-06-19)
+
+* networkmanager_%.bbappend: Don't remove /usr/lib/NetworkManager/conf.d from the rootfs [Florin Sarbu]
+
 # v7.5.2
 ## (2026-06-17)
 
