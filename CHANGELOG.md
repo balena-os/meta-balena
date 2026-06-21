@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.4
+## (2026-06-21)
+
+* balena: bump balena-engine to restore 1777 default for bare tmpfs mounts [Kyle Harding]
+
 # v7.5.3
 ## (2026-06-19)
 

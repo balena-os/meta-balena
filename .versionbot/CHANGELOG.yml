@@ -1,4 +1,19 @@
 - commits:
+    - subject: "balena: bump balena-engine to restore 1777 default for bare tmpfs
+        mounts"
+      hash: 94d798cdc879b302f5fc481f63e0be8f12e8175c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.5.4
+  title: ""
+  date: 2026-06-21T20:25:17.143Z
+- commits:
     - subject: "networkmanager_%.bbappend: Don't remove /usr/lib/NetworkManager/conf.d
         from the rootfs"
       hash: 1b6528f8ed894aadd6b379e1c1969f0614b6bb78
