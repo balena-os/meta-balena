@@ -480,6 +480,14 @@ python do_image_size_check() {
 # But working on all Yocto versions
 python __anonymous() {
     import re
-    rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND')
-    d.setVar('ROOTFS_POSTPROCESS_COMMAND', re.sub(r'zap_empty_root_password ?;?', '', rootfs_postprocess_command))
+    rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND') or ''
+
+    cleaned_command = re.sub(r'zap_empty_root_password ?;?', '', rootfs_postprocess_command)
+    # Wrynose introduces an root empty password note in /etc/issue at build time,
+    # if passwordless root login is allowed. This breaks the /etc/issue file test
+    # and also, is meaningful only if developmentMode is 'true'. We thus remove it
+    # to keep the issue file clean.
+    cleaned_command = re.sub(r'add_empty_root_password_note ?;?', '', cleaned_command)
+
+    d.setVar('ROOTFS_POSTPROCESS_COMMAND', cleaned_command)
 }
