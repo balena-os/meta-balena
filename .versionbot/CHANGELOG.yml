@@ -1,4 +1,30 @@
 - commits:
+    - subject: "meta-balena-esr: Use GitHub REST API for verified commits"
+      hash: 89ffe906af62cc1eb83afa93cbcb229987b4f4ae
+      body: |
+        Bring the meta-balena ESR workflow to parity with the sibling
+        balena-os/github-workflows esr.yml. Replace the local
+        git commit/push/tag commands with GitHub REST API calls
+        (createRef/createBlob/createTree/createCommit/updateRef/createTag) so
+        the ESR bot's branch and tag are authored by the GitHub App and show as
+        verified.
+
+        Also adopt the dual-format (raw PEM or base64) private key decode step,
+        switch from tibdex/github-app-token to actions/create-github-app-token,
+        and drop the now-unused GIT_AUTHOR/COMMITTER env vars (the API uses the
+        App identity). Harden the esr-version workflow_dispatch input by passing
+        it via env instead of interpolating into a run block.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.5.5
+  title: ""
+  date: 2026-06-22T19:33:56.967Z
+- commits:
     - subject: "balena: bump balena-engine to restore 1777 default for bare tmpfs
         mounts"
       hash: 94d798cdc879b302f5fc481f63e0be8f12e8175c

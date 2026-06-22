@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.5
+## (2026-06-22)
+
+* meta-balena-esr: Use GitHub REST API for verified commits [Kyle Harding]
+
 # v7.5.4
 ## (2026-06-21)
 
