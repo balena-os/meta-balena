@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+# 95-bootability - reject HUP if the inactive partition is too full for
+# the kernel-side overlay workdir creation that happens at first boot.
+#
+# Calls mobynit to validate the staged sysroot's symlink chain, then
+# attempts an RW overlay mount with workdir on the same partition —
+# reproducing what the kernel will do at next boot. mobynit alone is
+# insufficient because its -sysroot mount is read-only and never
+# allocates blocks (verified empirically: mobynit succeeds at 0 free).
+#
+
+set -o errexit
+
+# shellcheck source=/dev/null
+. /usr/libexec/os-helpers-logging
+
+SYSROOT="/mnt/sysroot/inactive"
+MOBYNIT="$SYSROOT/current/boot/init"
+SENTINEL="/run/balena-hup-bootability-check"
+PROBE="$SYSROOT/.bootability-probe.$$"
+
+trap 'umount "$PROBE/m" 2>/dev/null; rm -rf "$PROBE"; umount "$new_rootfs" 2>/dev/null || true' EXIT
+
+new_rootfs=$("$MOBYNIT" -sysroot "$SYSROOT") \
+    || fail "bootability check: mobynit -sysroot failed"
+
+[ -d "$new_rootfs" ] \
+    || fail "bootability check: mobynit returned invalid path '$new_rootfs'"
+
+mkdir -p "$PROBE/w" "$PROBE/u" "$PROBE/m" \
+    || fail "bootability check: cannot create probe dirs on $SYSROOT (partition full)"
+
+mount -t overlay overlay \
+    -o "lowerdir=$new_rootfs,workdir=$PROBE/w,upperdir=$PROBE/u" "$PROBE/m" \
+    || fail "bootability check: RW overlay mount failed (partition too full for kernel work/work)"
+
+touch "$PROBE/m/.t" \
+    || fail "bootability check: overlay is RO (kernel work/work ENOSPC)"
+
+: > "$SENTINEL"
+info "bootability check passed"

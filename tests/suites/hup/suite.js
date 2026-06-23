@@ -467,5 +467,6 @@ module.exports = {
 	tests: [
 		'./tests/rollbacks',
 		'./tests/smoke',
+		'./tests/bootability',
 	],
 };
