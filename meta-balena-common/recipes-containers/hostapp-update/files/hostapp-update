@@ -23,6 +23,49 @@ ERROR() {
 	fi
 }
 
+BOOT_ENGINE_MNT="/run/hostapp-update-boot-engine"
+BOOT_ENGINE_SOCKET="unix://${BOOT_ENGINE_MNT}/balena-boot.sock"
+boot_engine_active=0
+boot_engine_pid=""
+
+stop_boot_engine() {
+	if [ -n "$boot_engine_pid" ]; then
+		kill "$boot_engine_pid" 2>/dev/null || true
+		wait "$boot_engine_pid" 2>/dev/null || true
+		boot_engine_pid=""
+	fi
+	if [ "$boot_engine_active" = 1 ]; then
+		rm -rf "$BOOT_ENGINE_MNT"
+		boot_engine_active=0
+	fi
+}
+
+start_boot_engine() {
+	# temporary engine under /run (tmpfs)
+	rm -rf "$BOOT_ENGINE_MNT"
+	mkdir -p "${BOOT_ENGINE_MNT}/data" "${BOOT_ENGINE_MNT}/exec" "${BOOT_ENGINE_MNT}/pid"
+	boot_engine_active=1
+
+	balenad --data-root="${BOOT_ENGINE_MNT}/data" \
+		--exec-root="${BOOT_ENGINE_MNT}/exec" \
+		--pidfile="${BOOT_ENGINE_MNT}/pid/balenad.pid" \
+		-H "$BOOT_ENGINE_SOCKET" \
+		--iptables=false &
+	boot_engine_pid=$!
+
+	_i=0
+	while [ "$_i" -lt 30 ]; do
+		if DOCKER_HOST="$BOOT_ENGINE_SOCKET" balena info >/dev/null 2>&1; then
+			INFO "Boot engine ready at ${BOOT_ENGINE_SOCKET}"
+			return 0
+		fi
+		_i=$((_i + 1))
+		sleep 1
+	done
+	ERROR "Boot engine failed to start at ${BOOT_ENGINE_SOCKET}"
+	return 1
+}
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
@@ -38,13 +81,15 @@ run_current_hooks_and_recover () {
 }
 
 local_image=""
+boot_image=""
 remote_image=""
 reboot=0
 hooks=1
 hooks_rollback=1
 
-while getopts 'f:i:rnx' flag; do
+while getopts 'b:f:i:rnx' flag; do
 	case "${flag}" in
+	b) boot_image="${OPTARG}" ;;
 	f) local_image=$(realpath "${OPTARG}") ;;
 	i) remote_image="${OPTARG}" ;;
 	r) reboot=1 ;;
@@ -54,14 +99,20 @@ while getopts 'f:i:rnx' flag; do
 	esac
 done
 
-if [ "$local_image" =  "" ] && [ "$remote_image" = "" ]; then
+if [ "$local_image" = "" ] && [ "$remote_image" = "" ]; then
 	ERROR "At least one of -f or -i is required"
+	exit 1
+fi
+
+if [ "$boot_image" != "" ] && [ "$local_image" != "" ] && [ "$remote_image" != "" ]; then
+	ERROR "Cannot use -b with both -f and -i"
 	exit 1
 fi
 
 INFO "Running hostapp update..."
 
-export DOCKER_HOST="unix:///var/run/balena-host.sock"
+HOST_DOCKER_HOST="unix:///var/run/balena-host.sock"
+export DOCKER_HOST="$HOST_DOCKER_HOST"
 SYSROOT="/mnt/sysroot/inactive"
 LOADTMP="/mnt/data/resin-data/tmp"
 
@@ -105,6 +156,61 @@ for hostapp in "$SYSROOT/hostapps/"*; do
 done
 sync -f "$SYSROOT"
 
+rm -rf "$SYSROOT/hostapps/.new"
+mkdir -p "$SYSROOT/hostapps/.new"
+
+# Dual-image path (-b): stage boot on sysroot before main image load/pull.
+# Boot image load/pull uses an ephemeral engine under /run; main hostapp uses the host engine.
+# -b is a local tarball if the path exists, otherwise a remote image reference.
+if [ "$boot_image" != "" ]; then
+	trap stop_boot_engine EXIT INT HUP
+	if ! start_boot_engine; then
+		exit 1
+	fi
+
+	export DOCKER_HOST="$BOOT_ENGINE_SOCKET"
+	if [ -f "$boot_image" ]; then
+		INFO "Loading boot image from local: $boot_image"
+		BOOT_IMAGE=$(balena load --quiet -i "$(realpath "$boot_image")" | cut -d: -f1 --complement | tr -d ' ')
+	else
+		INFO "Pulling boot image from remote: $boot_image"
+		balena rmi --force "$boot_image" >/dev/null 2>&1 || true
+		_out="$(balena pull "$boot_image" 2>&1)"
+		INFO "${_out}"
+		BOOT_IMAGE="$boot_image"
+	fi
+	if [ -z "$BOOT_IMAGE" ]; then
+		ERROR "Failed to resolve boot image reference after load/pull"
+		exit 1
+	fi
+	INFO "Creating boot container from image: $BOOT_IMAGE"
+	BOOT_CONTAINER_ID=$(balena create --runtime="bare" "$BOOT_IMAGE" /bin/sh)
+	INFO "Extracting boot files from container: $BOOT_CONTAINER_ID"
+	mkdir -p "$SYSROOT/hostapps/.new/boot"
+	if ! _out=$(balena cp "$BOOT_CONTAINER_ID:/boot/." "$SYSROOT/hostapps/.new/boot/" 2>&1); then
+		ERROR "Failed to copy boot files from boot image: ${_out}"
+		exit 1
+	fi
+	INFO "${_out}"
+	if [ -z "$(ls -A "$SYSROOT/hostapps/.new/boot" 2>/dev/null)" ]; then
+		ERROR "Boot image /boot is empty"
+		exit 1
+	fi
+	if ! _out=$(balena rm --force "$BOOT_CONTAINER_ID" 2>&1); then
+		ERROR "Failed to remove boot container: ${_out}"
+		exit 1
+	fi
+	INFO "${_out}"
+	if ! _out=$(balena rmi --force "$BOOT_IMAGE" 2>&1); then
+		ERROR "Failed to remove boot image: ${_out}"
+		exit 1
+	fi
+	INFO "${_out}"
+	export DOCKER_HOST="$HOST_DOCKER_HOST"
+
+	stop_boot_engine
+fi
+
 # Load new hostapp
 if [ "$local_image" != "" ]; then
 	# bind mount the data partition for temporary extract/load files
@@ -124,13 +230,16 @@ elif [ "$remote_image" != "" ]; then
 	_out="$(balena pull "$HOSTAPP_IMAGE" 2>&1)"
 	INFO "${_out}"
 fi
-CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
-BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
 
-# Create boot entry
-rm -rf "$SYSROOT/hostapps/.new"
-mkdir -p "$SYSROOT/hostapps/.new"
-ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/boot"
+if [ "$boot_image" != "" ]; then
+	CONTAINER_ID=$(balena create --runtime="bare" "$HOSTAPP_IMAGE" /bin/sh)
+else
+	CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
+	BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
+
+	# Wire the anonymous /boot volume into the root-slot layout.
+	ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/boot"
+fi
 sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
