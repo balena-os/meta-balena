@@ -6,7 +6,6 @@ set -o nounset
 DOCKER_TIMEOUT=20 # Wait 20 seconds for docker to start
 DATA_VOLUME=/resin-data
 BUILD=/build
-PARTITION_SIZE=${PARTITION_SIZE:-1024}
 DOCKER_HOST=unix:///var/run/docker.sock
 
 finish() {
@@ -74,8 +73,4 @@ kill -TERM "$(cat /var/run/docker.pid)"
 # don't let wait() error out and crash the build if the docker daemon has already been stopped
 wait "$(cat /var/run/docker.pid)" || true
 
-# Export the final data filesystem
-dd if=/dev/zero of=${BUILD}/resin-data.img bs=1M count=0 seek="${PARTITION_SIZE}"
-
-# Usage type default, block size 4k defined in recipe. See https://github.com/tytso/e2fsprogs/issues/50
-mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -T default -b ${FS_BLOCK_SIZE}  -i 8192 -d ${DATA_VOLUME} -F ${BUILD}/resin-data.img
+tar -cf ${BUILD}/${BALENA_DATA_STAGING} -C ${DATA_VOLUME} .
