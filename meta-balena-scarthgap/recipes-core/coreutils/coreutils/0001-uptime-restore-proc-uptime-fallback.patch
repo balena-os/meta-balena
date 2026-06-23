@@ -1,0 +1,106 @@
+From: Kyle Harding <kyle@balena.io>
+Subject: [PATCH] uptime: read elapsed time from /proc/uptime on Linux
+
+GNU coreutils 9.4 rewrote src/uptime.c on top of the gnulib 'readutmp'
+module and, in doing so, dropped the long-standing code that read the
+elapsed time directly from /proc/uptime.  The duration is now derived
+solely from a BOOT_TIME record in utmp.
+
+On systemd-based systems that do not record a usable BOOT_TIME entry in
+utmp -- such as balenaOS, whose /run/utmp holds USER_PROCESS records but
+no boot record (who -b reports the epoch) -- boot_time is 0, so uptime
+prints:
+
+    uptime: couldn't get boot time: No such file or directory
+     HH:MM:SS  up ???? days ??:??,  N user,  load average: ...
+
+This restores the pre-9.4 behaviour: when HAVE_PROC_UPTIME is defined
+(set by balenaOS for coreutils), read the up-seconds from /proc/uptime
+and use it as the authoritative source, falling back to the utmp
+BOOT_TIME computation only when that read fails.  /proc/uptime is always
+present under a mounted procfs, so this works regardless of utmp state.
+busybox's uptime applet already relies on /proc/uptime on the same
+devices and reports correctly.
+
+The %jd conversion stops at the '.' in "<up>.<frac> <idle>.<frac>", so
+parsing is locale-independent and keeps whole-second resolution, which
+is all uptime needs.
+
+This is not suitable for submission upstream: coreutils intentionally
+moved boot-time discovery into gnulib (readutmp/boot-time, which gained
+a /proc/uptime-based synthesis after 9.4).  The proper long-term fix is
+to carry a newer gnulib; this patch is the surgical backport for the
+9.4 line.
+
+Upstream-Status: Inappropriate [superseded upstream by the gnulib
+readutmp/boot-time module; this re-adds pre-9.4 behaviour for the 9.4 line]
+
+Signed-off-by: Kyle Harding <kyle@balena.io>
+---
+ src/uptime.c | 44 ++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 40 insertions(+), 4 deletions(-)
+
+--- a/src/uptime.c
++++ b/src/uptime.c
+@@ -53,9 +53,37 @@ print_uptime (idx_t n, struct gl_utmp const *utmp_buf)
+       if (UT_TYPE_BOOT_TIME (this))
+         boot_time = this->ut_ts.tv_sec;
+     }
++
++#ifdef HAVE_PROC_UPTIME
++  /* On Linux, read the elapsed time directly from /proc/uptime.  This is the
++     authoritative source and, unlike the utmp BOOT_TIME record, is always
++     available -- including on systemd-based systems (such as balenaOS) that
++     do not record a usable BOOT_TIME entry in utmp.  coreutils did this prior
++     to 9.4; the 9.4 rewrite onto the gnulib 'readutmp' module dropped it,
++     which broke 'uptime' wherever utmp lacks a BOOT_TIME record.  */
++  intmax_t proc_uptime = -1;
++  {
++    FILE *fp = fopen ("/proc/uptime", "r");
++    if (fp)
++      {
++        intmax_t secs;
++        /* /proc/uptime is "<up-seconds>.<frac> <idle-seconds>.<frac>"; the
++           "%jd" conversion stops at the '.', so this is locale-independent
++           and keeps whole-second resolution, which is all uptime needs.  */
++        if (fscanf (fp, "%jd", &secs) == 1 && 0 <= secs)
++          proc_uptime = secs;
++        fclose (fp);
++      }
++  }
++#endif
++
+   /* The gnulib module 'readutmp' is supposed to provide a BOOT_TIME entry
+      on all platforms.  */
+-  if (boot_time == 0)
++  if (boot_time == 0
++#ifdef HAVE_PROC_UPTIME
++      && proc_uptime < 0
++#endif
++     )
+     {
+       error (0, errno, _("couldn't get boot time"));
+       status = EXIT_FAILURE;
+@@ -75,8 +103,20 @@ print_uptime (idx_t n, struct gl_utmp const *utmp_buf)
+     }
+
+   intmax_t uptime;
+-  if (time_now == (time_t) -1 || boot_time == 0
+-      || ckd_sub (&uptime, time_now, boot_time) || uptime < 0)
++  bool have_uptime = false;
++#ifdef HAVE_PROC_UPTIME
++  if (0 <= proc_uptime)
++    {
++      uptime = proc_uptime;
++      have_uptime = true;
++    }
++#endif
++  if (! have_uptime
++      && time_now != (time_t) -1 && boot_time != 0
++      && ! ckd_sub (&uptime, time_now, boot_time) && 0 <= uptime)
++    have_uptime = true;
++
++  if (! have_uptime)
+     {
+       printf (_("up ???? days ??:??,  "));
+       status = EXIT_FAILURE;
