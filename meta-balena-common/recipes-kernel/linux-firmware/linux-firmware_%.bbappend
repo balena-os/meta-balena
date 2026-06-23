@@ -1,4 +1,11 @@
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
+
+inherit balena-firmware-sort
 inherit balena-linux-firmware
+
+SRC_URI:append = " \
+    file://extra_WHENCE \
+"
 
 # Cleanup iwlwifi firmware files
 IWLWIFI_PATH = "${D}${nonarch_base_libdir}/firmware"
