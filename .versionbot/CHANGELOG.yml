@@ -1,4 +1,66 @@
 - commits:
+    - subject: "tests: Add uptime regression test to the os suite"
+      hash: d2d0888090d64172ce92f547b23f0d1c67fb1006
+      body: |
+        Guards against the coreutils 9.4 utmp BOOT_TIME breakage fixed in the
+        previous commit: asserts uptime exits 0, prints an elapsed time and load
+        average, and emits neither "couldn't get boot time" nor the "????"
+        placeholder. Provider-agnostic, so it holds whether uptime comes from
+        coreutils, busybox or procps.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "coreutils: Restore /proc/uptime read so uptime works on scarthgap"
+      hash: 1903d863d9d1de8cdfaeeec624564fee0640b6ea
+      body: >
+        GNU coreutils 9.4 (scarthgap) rewrote src/uptime.c onto gnulib readutmp
+        and
+
+        dropped the direct /proc/uptime read. uptime now derives the elapsed
+        time
+
+        solely from a utmp BOOT_TIME record, which balenaOS has no usable entry
+        for,
+
+        so it fails with "couldn't get boot time" and prints "up ???? days
+        ??:??".
+
+
+        Backport the pre-9.4 behaviour: read the up-seconds from /proc/uptime
+        (gated on
+
+        -DHAVE_PROC_UPTIME, already set by the common coreutils bbappend),
+        falling back
+
+        to the utmp BOOT_TIME computation only when that read fails. busybox's
+        uptime
+
+        already relies on /proc/uptime on the same devices and reports
+        correctly.
+
+
+        Scoped to the scarthgap layer with a version-pinned bbappend so it
+        cannot affect
+
+        older layers (dunfell/honister/kirkstone, coreutils 8.32-9.1) whose
+        uptime.c
+
+        still reads /proc/uptime.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.5.6
+  title: ""
+  date: 2026-06-23T13:29:39.960Z
+- commits:
     - subject: "meta-balena-esr: Use GitHub REST API for verified commits"
       hash: 89ffe906af62cc1eb83afa93cbcb229987b4f4ae
       body: |

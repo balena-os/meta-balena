@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v7.5.6
+## (2026-06-23)
+
+* tests: Add uptime regression test to the os suite [Kyle Harding]
+* coreutils: Restore /proc/uptime read so uptime works on scarthgap [Kyle Harding]
+
 # v7.5.5
 ## (2026-06-22)
 
