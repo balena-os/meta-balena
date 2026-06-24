@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.7
+## (2026-06-24)
+
+* classes/image-balena: Cleanup issue file in Wrynose [Alexandru Costache]
+
 # v7.5.6
 ## (2026-06-23)
 

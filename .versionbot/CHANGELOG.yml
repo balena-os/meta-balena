@@ -1,4 +1,28 @@
 - commits:
+    - subject: "classes/image-balena: Cleanup issue file in Wrynose"
+      hash: f5591ed2b60d1bddd07152e1ac6ad5806d34566a
+      body: |
+        Commit https://git.openembedded.org/openembedded-core/commit/?id=b650bd2c94f9aefd4dec82b27285ed1d439778bc
+        introduces an empty root  password note in /etc/issue
+        at build time, if passwordless root login is enabled.
+
+        The Scarthgap bbclass does not include this note at all
+        and in Wrynose it breaks the /etc/issue file tests. It also
+        is only meaningful if developmentMode is set to 'true'.
+
+        We thus remove the note altogether to keep the /etc/issue file clean
+        and consistent across all versions.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.5.7
+  title: ""
+  date: 2026-06-24T16:43:04.211Z
+- commits:
     - subject: "tests: Add uptime regression test to the os suite"
       hash: d2d0888090d64172ce92f547b23f0d1c67fb1006
       body: |
