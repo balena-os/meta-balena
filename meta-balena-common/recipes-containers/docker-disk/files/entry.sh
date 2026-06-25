@@ -44,20 +44,16 @@ do
 done
 echo "Docker started."
 
-# Pull in host extension images
-BALENA_HOSTAPP_EXTENSIONS_LABEL="io.balena.image.class"
-BALENA_HOSTAPP_EXTENSIONS_VALUE="overlay"
-for image_name in ${HOSTEXT_IMAGES}; do
-	if docker pull --platform "${HOSTAPP_PLATFORM}" "${image_name}"; then
-		docker create --label "${BALENA_HOSTAPP_EXTENSIONS_LABEL}=${BALENA_HOSTAPP_EXTENSIONS_VALUE}" "${image_name}" none
+# Pull in the supervisor image as a separate app until it converges in the hostOS
+if [ -n "${SUPERVISOR_IMAGE_NAME:-}" ]; then
+	echo "Pulling supervisor override: ${SUPERVISOR_IMAGE_NAME}"
+	if docker pull --platform "${HOSTAPP_PLATFORM}" "${SUPERVISOR_IMAGE_NAME}"; then
+		docker tag "${SUPERVISOR_IMAGE_NAME}" "balena_supervisor":"${SUPERVISOR_VERSION}"
 	else
-		echo "Not able to pull ${image_name} for ${HOSTAPP_PLATFORM}"
+		echo "Not able to pull ${SUPERVISOR_IMAGE_NAME}"
 		exit 1
 	fi
-done
-
-# Pull in the supervisor image as a separate app until it converges in the hostOS
-if [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
+elif [ -n "${SUPERVISOR_FLEET}" ] && [ -n "${SUPERVISOR_VERSION}" ]; then
 	_supervisor_image=$(balena_api_fetch_image_from_app "${SUPERVISOR_FLEET}" "${SUPERVISOR_VERSION#v}" "${BALENA_API_ENV}" "${BALENA_API_TOKEN}")
 	echo "Pulling ${SUPERVISOR_FLEET}:${SUPERVISOR_VERSION}"
 	if docker pull "${_supervisor_image}"; then

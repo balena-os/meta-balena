@@ -1141,6 +1141,56 @@ do_kernel_resin_checkconfig[vardeps] += "BALENA_CONFIGS BALENA_CONFIGS_DEPS"
 do_kernel_resin_checkconfig[deptask] += "do_kernel_resin_reconfigure"
 do_kernel_resin_checkconfig[dirs] += "${WORKDIR} ${B}"
 
+python do_kernel_balena_merge_fragments() {
+    import glob
+    import os
+    import subprocess
+
+    S = d.getVar("S")
+    B = d.getVar("B")
+    base_config = os.path.join(B, ".config")
+
+    make_cmd = d.getVar("KERNEL_MAKE_CMD") or "make"
+    make_opts = d.getVar("EXTRA_OEMAKE") or ""
+    arch = d.getVar("ARCH")
+    if not arch:
+        bb.fatal("kernel-balena: ARCH variable not set")
+
+    fragments = []
+    seen = set()
+    filesextrapaths = d.getVar("FILESEXTRAPATHS") or ""
+    for path in filesextrapaths.split(":"):
+        if not path:
+            continue
+        for cfg in sorted(glob.glob(os.path.join(path, "*.cfg"))):
+            if cfg not in seen:
+                seen.add(cfg)
+                fragments.append(cfg)
+
+    if not fragments:
+        return
+
+    bb.note("Merging %d kernel fragment(s):" % len(fragments))
+    for f in fragments:
+        bb.note("  %s" % f)
+
+    merge_script = os.path.join(S, "scripts", "kconfig", "merge_config.sh")
+    cmd = " ".join([merge_script, "-m", "-O", B, base_config] + fragments)
+    ret = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if ret.returncode != 0:
+        bb.fatal("merge_config.sh failed:\n%s" % ret.stderr)
+    if ret.stderr:
+        bb.note(ret.stderr)
+
+    cmd = "%s %s -C %s O=%s ARCH=%s olddefconfig" % (make_cmd, make_opts, S, B, arch)
+    bb.note("Running olddefconfig")
+    ret = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if ret.returncode != 0:
+        bb.fatal("olddefconfig failed:\n%s" % ret.stderr)
+}
+addtask kernel_balena_merge_fragments after do_kernel_resin_injectconfig before do_compile
+do_kernel_balena_merge_fragments[dirs] += "${B}"
+
 do_configure:append () {
     if [ -f "${DEPLOY_DIR_IMAGE}/balena-keys/kmod.crt" ]; then
         install -d certs
@@ -1195,6 +1245,11 @@ do_deploy:prepend () {
 
 # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
 do_deploy:append () {
-    install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
-    install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
+    deployDir="${DEPLOYDIR}"
+    if [ -n "${KERNEL_DEPLOYSUBDIR}" ]; then
+        deployDir="${DEPLOYDIR}/${KERNEL_DEPLOYSUBDIR}"
+        mkdir -p "$deployDir"
+    fi
+    install -m 0644 ${D}/boot/Module.symvers-* "$deployDir/Module.symvers"
+    install -m 0644 ${D}/boot/config-* "$deployDir/.config"
 }
