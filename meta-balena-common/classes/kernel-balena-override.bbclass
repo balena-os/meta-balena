@@ -2,16 +2,61 @@
 #
 # Late kernel config-fragment merge for kernel-OVERRIDE extensions.
 #
-# Discovery: every *.cfg in any FILESEXTRAPATHS dir.
-# Timing: merged after all BALENA_CONFIGS processing (do_kernel_resin_checkconfig), so a fragment wins.
-# Tracking: the same *.cfg set is registered as [file-checksums] on the merge task
+# Discovery: an explicit, ordered list in KERNEL_BALENA_OVERRIDE_FRAGMENTS,
+#            each resolved on FILESPATH. Never SRC_URI (that merges early).
+# Timing:    merged after all BALENA_CONFIGS processing
+#            (do_kernel_resin_checkconfig), so a fragment wins.
+# Safety:    do_kernel_balena_verify_fragments asserts every requested symbol
+#            landed, and re-asserts the signing posture, after the merge.
 
 inherit kernel-balena
 
+KERNEL_BALENA_OVERRIDE_FRAGMENTS ?= ""
+
+def kernel_balena_override_fragments(d):
+    names = (d.getVar("KERNEL_BALENA_OVERRIDE_FRAGMENTS") or "").split()
+    filespath = d.getVar("FILESPATH") or ""
+    resolved = []
+    for name in names:
+        path = bb.utils.which(filespath, name)
+        if not path:
+            bb.fatal("kernel-balena-override: fragment not found on FILESPATH: %s" % name)
+        resolved.append(path)
+    return resolved
+
+def kernel_balena_parse_config(path):
+    """Return {CONFIG_X: value} for every positively-set symbol in a kconfig
+    file. '# CONFIG_X is not set' lines and other comments are ignored."""
+    symbols = {}
+    with open(path) as handle:
+        for line in handle:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            symbols[key.strip()] = value.strip()
+    return symbols
+
+def kernel_balena_required_symbols(fragments, extra_symbols):
+    """Symbols that must be present after the merge: every positive fragment
+    entry (value != n) plus explicit CONFIG_X=value strings."""
+    required = {}
+    for fragment in fragments:
+        for key, value in kernel_balena_parse_config(fragment).items():
+            if value != "n":
+                required[key] = value
+    for symbol in extra_symbols:
+        key, value = symbol.split("=", 1)
+        required[key.strip()] = value.strip()
+    return required
+
 python do_kernel_balena_merge_fragments() {
-    import glob
     import os
     import subprocess
+
+    fragments = kernel_balena_override_fragments(d)
+    if not fragments:
+        return
 
     S = d.getVar("S")
     B = d.getVar("B")
@@ -22,20 +67,6 @@ python do_kernel_balena_merge_fragments() {
     arch = d.getVar("ARCH")
     if not arch:
         bb.fatal("kernel-balena-override: ARCH variable not set")
-
-    fragments = []
-    seen = set()
-    filesextrapaths = d.getVar("FILESEXTRAPATHS") or ""
-    for path in filesextrapaths.split(":"):
-        if not path:
-            continue
-        for cfg in sorted(glob.glob(os.path.join(path, "*.cfg"))):
-            if cfg not in seen:
-                seen.add(cfg)
-                fragments.append(cfg)
-
-    if not fragments:
-        return
 
     bb.note("Merging %d kernel fragment(s):" % len(fragments))
     for f in fragments:
@@ -58,11 +89,43 @@ python do_kernel_balena_merge_fragments() {
 addtask kernel_balena_merge_fragments after do_kernel_resin_checkconfig before do_compile
 do_kernel_balena_merge_fragments[dirs] += "${B}"
 
-# Fold fragment *.cfg content into the merge task's signature (same scope as the
-# runtime glob above).
+python do_kernel_balena_verify_fragments() {
+    import os
+
+    fragments = kernel_balena_override_fragments(d)
+    if not fragments:
+        return
+
+    have = kernel_balena_parse_config(os.path.join(d.getVar("B"), ".config"))
+
+    # Signing guard: when signing is enabled the secure-boot posture inherited
+    # from BALENA_CONFIGS[secureboot] must survive the late fragment merge.
+    extra = []
+    if d.getVar("SIGN_API"):
+        secureboot = d.getVarFlag("BALENA_CONFIGS", "secureboot") or ""
+        extra = [s for s in secureboot.split() if "=" in s and not s.endswith("=n")]
+
+    required = kernel_balena_required_symbols(fragments, extra)
+
+    missing = []
+    for key, value in sorted(required.items()):
+        if have.get(key) != value:
+            missing.append("%s=%s (found %s)" % (key, value, have.get(key, "unset")))
+
+    if missing:
+        bb.fatal("kernel-balena-override: required kernel config missing after merge:\n%s"
+                 % "\n".join(missing))
+}
+addtask kernel_balena_verify_fragments after do_kernel_balena_merge_fragments before do_compile
+do_kernel_balena_verify_fragments[dirs] += "${B}"
+
+# Fold fragment content into the task hashes so a change re-runs the merge and
+# the check. The verify logic itself lives in this class, so a change to it
+# already rehashes the task through the normal bbclass code checksum.
 python () {
-    fep = (d.getVar("FILESEXTRAPATHS") or "").split(":")
-    patterns = " ".join("%s/*.cfg:True" % p.rstrip("/") for p in fep if p)
-    if patterns:
-        d.appendVarFlag("do_kernel_balena_merge_fragments", "file-checksums", " " + patterns)
+    fragments = kernel_balena_override_fragments(d)
+    if fragments:
+        checksums = " " + " ".join("%s:True" % f for f in fragments)
+        d.appendVarFlag("do_kernel_balena_merge_fragments", "file-checksums", checksums)
+        d.appendVarFlag("do_kernel_balena_verify_fragments", "file-checksums", checksums)
 }
