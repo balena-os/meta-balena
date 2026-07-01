@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# kernel-override-hooks: deactivate hook
+#
+#
+# Env vars expected:
+#   EXTENSION_IMAGE_KERNEL_ABI_ID - sha256 of the extension's Module.symvers
+#
+
+set -eu
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
+
+BOOT_BY_ABI_DIR="/mnt/data/boot-by-abi"
+
+ABI="${EXTENSION_IMAGE_KERNEL_ABI_ID:-}"
+if [ -z "${ABI}" ]; then
+    info "no kernel-abi-id label; not a kernel-override extension, nothing to do"
+    exit 0
+fi
+
+if BOOTENV_FILE=$(bootenv_locate); then
+    CURRENT=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
+    if [ "${CURRENT}" = "${ABI}" ]; then
+        bootenv_unset "${BOOTENV_FILE}" "kernel_override_abi"
+        sync
+        info "cleared active kernel_override_abi=${ABI}"
+    fi
+fi
+
+TARGET="${BOOT_BY_ABI_DIR}/${ABI}"
+if [ -L "${TARGET}" ]; then
+    rm -f "${TARGET}"
+    sync -f "${BOOT_BY_ABI_DIR}"
+    info "removed boot-by-abi/${ABI} symlink"
+fi
