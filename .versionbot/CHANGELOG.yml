@@ -1,4 +1,43 @@
 - commits:
+    - subject: Update tests/leviathan digest to a8266fb
+      hash: e502a8cfabe88513a4249118818bd0defcad35ce
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.35
+              hash: 22f6b08c504f610ff41cebb1250f072d38a8ae10
+              body: |
+                Update balena-os/leviathan-worker from 2.10.30 to 2.10.35
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+            - subject: "core/lib/common/worker.js: Switch to segmented OS image upload to
+                worker"
+              hash: 2664ab80d20f592752f32801bd655bc0be9eff40
+              body: |
+                This will circumvent the Cloudlink timeouts.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: leviathan-2.36.113
+          title: ""
+          date: 2026-07-06T09:49:57.428Z
+  version: 7.5.8
+  title: ""
+  date: 2026-07-07T15:51:56.668Z
+- commits:
     - subject: "classes/image-balena: Cleanup issue file in Wrynose"
       hash: f5591ed2b60d1bddd07152e1ac6ad5806d34566a
       body: |

@@ -1,6 +1,22 @@
 Change log
 -----------
 
+# v7.5.8
+## (2026-07-07)
+
+
+<details>
+<summary> Update tests/leviathan digest to a8266fb [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.113
+> ### (2026-07-06)
+> 
+> * Update balena-os/leviathan-worker to v2.10.35 [Florin Sarbu]
+> * core/lib/common/worker.js: Switch to segmented OS image upload to worker [Florin Sarbu]
+> 
+
+</details>
+
 # v7.5.7
 ## (2026-06-24)
 
