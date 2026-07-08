@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.5.9
+## (2026-07-08)
+
+* renovate: Append major/minor/patch updates with change-type footer [Kyle Harding]
+
 # v7.5.8
 ## (2026-07-07)
 

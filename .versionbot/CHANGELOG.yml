@@ -1,4 +1,24 @@
 - commits:
+    - subject: "renovate: Append major/minor/patch updates with change-type footer"
+      hash: 04b5a9c25690ae21d6e8967619515589c265d377
+      body: >
+        The existing top-level property is being overridden by a packageRule
+
+        in the balena-os/renovate-config shared settings, so we need a local
+        package
+
+        rule to take priority.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.5.9
+  title: ""
+  date: 2026-07-08T11:14:53.897Z
+- commits:
     - subject: Update tests/leviathan digest to a8266fb
       hash: e502a8cfabe88513a4249118818bd0defcad35ce
       body: Update tests/leviathan
