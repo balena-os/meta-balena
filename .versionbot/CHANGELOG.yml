@@ -1,4 +1,73 @@
 - commits:
+    - subject: "kernel-image-initramfs: multi-kernel support"
+      hash: b867868f36008b78f4c80491659c51a9394ddca4
+      body: |
+        Generalize the recipe so it can be re-used on different kernel builds.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena-noimage: remove upstream rrecommends"
+      hash: 83873f45a68f1f031bd257573a901e07afef7215
+      body: |
+        The upstream RRECOMMENDS that drags in via kernel-base overwrites
+        /boot/<type> with the no-initramfs binary.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena-override: add config fragment support"
+      hash: ff42195a77fa045eabc6477f78d504d440fbf6b7
+      body: >
+        Auto-merge kconfig fragments found in FILESEXTRAPATHS.
+
+
+        Yocto's stock kernel-yocto.bbclass already merges *.cfg fragments listed
+        in
+
+        SRC_URI through do_kernel_configme. This step complements discovering
+
+        every *.cfg file reachable via FILESEXTRAPATHS and merging them into
+
+        ${B}/.config, then runs olddefconfig to resolve dependencies.
+
+
+        - It lets recipes ship fragments by dropping them in ${THISDIR}/files/
+        (or any
+          FILESEXTRAPATHS-reachable dir) without touching SRC_URI.
+        - Allows sharing of kernel fragments across kernel siblings
+
+        - Allow fragments to override BALENA_CONFIGS-injected values when
+        needed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena: add multi kernel support"
+      hash: 99058c43b1981d025d0556ca2931ac093fff52b3
+      body: |
+        Different kernel recipes might declare different deploy directories
+        not to clash between them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.5.10
+  title: ""
+  date: 2026-07-09T17:44:56.012Z
+- commits:
     - subject: "renovate: Append major/minor/patch updates with change-type footer"
       hash: 04b5a9c25690ae21d6e8967619515589c265d377
       body: >

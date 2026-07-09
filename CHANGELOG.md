@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v7.5.10
+## (2026-07-09)
+
+* kernel-image-initramfs: multi-kernel support [Alex Gonzalez]
+* kernel-balena-noimage: remove upstream rrecommends [Alex Gonzalez]
+* kernel-balena-override: add config fragment support [Alex Gonzalez]
+* kernel-balena: add multi kernel support [Alex Gonzalez]
+
 # v7.5.9
 ## (2026-07-08)
 
