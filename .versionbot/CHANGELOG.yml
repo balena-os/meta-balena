@@ -1,4 +1,304 @@
 - commits:
+    - subject: Update balena-supervisor to v18
+      hash: acc41cd3fea8bcd7ba189da9074d9b622adcd7a8
+      body: |
+        Update balena-supervisor from 17.8.2 to 18.2.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Clean up supervisor images in the database
+              hash: 4b7d733e4c4d0c78284c4090bb10ec82e4ba2df5
+              body: |
+                On supervisor v18.2.0, we renamed the supervisor service to `core` in
+                the [supervisor
+                composition](https://github.com/balena-os/balena-supervisor/blob/v18.2.0/docker-compose.yml). That change also updated the [isSupervisor](https://github.com/balena-os/balena-supervisor/blob/v18.2.0/src/lib/supervisor-metadata.ts#L34) filter in the supervisor-metadata module.
+
+                The problem is that when updating to v18.2.0, the following race
+                condition may happen
+
+                - The device is on v17.8.5, and the user updates the supervisor on the dashboard to v18.2.0. The target state changes
+                - Before the update-balena-supervisor script can run, supervisor v17.8.5,
+                  sees the new `core` service which it not part of its filter list and
+                  creates the service and image on the database.
+                - Eventually supervisor v18.2.0 runs, it knows to filter `core` and tries
+                  to remove the image, but its using the image itself, so it gets stuck
+                  in a loop trying to remove the image and failing.
+
+                This adds a `isSupervisor` check to the initial application manager
+                image cleanup to avoid the issue happening altogether.
+
+                If a customer is stuck in the delete loop, updating to this supervisor
+                should fix it.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-18.2.2
+          title: ""
+          date: 2026-07-06T19:00:57.589Z
+        - commits:
+            - subject: Clarify documentation on device tags API
+              hash: 29b23c9f867f2ef2b50f70966e97eeee36e2b503
+              body: >
+                Add titles to remove confusion in the device tags API docs
+                section
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Jonathan Berger
+              nested: []
+          version: balena-supervisor-18.2.1
+          title: ""
+          date: 2026-07-02T16:03:57.956Z
+        - commits:
+            - subject: Rename the supervisor service to core on the commposition
+              hash: 2c6627b369f43fffdd56eedd20c7f3a88b6720a6
+              body: >
+                This will allow it to show on the dashboard with that name in
+                the
+
+                Supervisor services table.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+            - subject: Report the supervisor main service to backend
+              hash: 14e7f97ea15d6699cd778ad573246932aec5d550
+              body: >
+                The supervisor cannot update itself so its core service is
+                removed from
+
+                the target state before applying steps. However we do want the
+                service
+
+                to be reported so it shows up in the new `Supervisor services`
+                table on
+
+                the dashboard.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-18.2.0
+          title: ""
+          date: 2026-06-22T20:17:31.186Z
+        - commits:
+            - subject: "Docs: clarify behavior for `PATCH /v2/device/tags`"
+              hash: 13881bed43f564b6168c64f78db4c15d4fdd308c
+              body: |
+                https://balena.fibery.io/Work/Project/1031
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Pagan Gazzard
+              nested: []
+          version: balena-supervisor-18.1.2
+          title: ""
+          date: 2026-06-22T11:43:14.014Z
+        - commits:
+            - subject: Pass correct value for restart policy 'no'
+              hash: 57f300e957f41776ab1ffa24f789a4d4332afe2a
+              body: >
+                The supervisor was passing an empty string '' when receiving
+
+                `restart_policy: no`, this now passes the direct name which is
+                required
+
+                by engine v25
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-18.1.1
+          title: ""
+          date: 2026-06-05T18:56:17.011Z
+        - commits:
+            - subject: Remove any overrides created by helios and restore service
+              hash: e5c66d90586f127fee9713445dcc9aa868131c57
+              body: >
+                This restores single-service operation for those users that
+                already
+
+                updated to v18.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Revert "Add `helios` service to composition"
+              hash: 80d77392a363d9f2e60436b69d2f1fd01d28b73c
+              body: >
+                We are re-working our release strategy around the new
+                multi-container
+
+                supervisor after some initial customer concerns. This removes
+                the new
+
+                services from the supervisor release composition, reverting
+
+                commit e62c021b0c065b8f66164fe661754d7f796206c2.
+              footer:
+                Change-type: minor
+                change-type: minor
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-18.1.0
+          title: ""
+          date: 2026-06-03T16:22:13.155Z
+        - commits:
+            - subject: Add `helios` service to composition
+              hash: e62c021b0c065b8f66164fe661754d7f796206c2
+              body: >
+                Helios is the experimental supervisor replacement. The service
+                acts as
+
+                a proxy for the existing supervisor and will slowly take over
+                supervisor features
+
+
+                This also adds a `helios-api` service to listen on port 48484
+
+
+                While this should not break any of the interfaces, it is an
+                important
+
+                change so it has a new major version.
+              footer:
+                Change-type: major
+                change-type: major
+              author: Felipe Lalanne
+              nested: []
+            - subject: Restrict supervisor API listen address when overriding port
+              hash: 0af5da36f3dfdfe0be0bce9d85deb1c0c2a7409f
+              body: >
+                The supervisor would listen to the override port on all
+                interfaces,
+
+                however this would unnecessarily expose the port to the local
+                network.
+
+                We now listen to requests only on the supervisor0 interface to
+                admit
+
+                traffic from containers only.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Use RESIN_BOARD_REV OS release info as a fallback
+              hash: 070ad7c0deed893ffdbcbe246822e55f5ff90bdc
+              body: >
+                This is needed for older OS versions where `BALENA_BOARD_REV` is
+                not
+
+                available on `/etc/os-release`
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Add BALENA_HOST_OS_BUILD as environment variable
+              hash: ebda244c295cc2acb69b7ea306bd9383f0411760
+              body: >
+                This is added when the `board-rev` feature is enabled. It's a
+                more
+
+                generic name over `BALENA_HOST_OS_BOARD_REV` and will replace it
+
+                eventually
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Add firewall configurations for the override port
+              hash: fa3fd3d15c323e73dd257ed73fd1c0cb7c13528f
+              body: >
+                When the override port is set, the firewall is configured to
+                only allow
+
+                traffic on `supervisor0` interface for that port. In that case a
+                new
+
+                chain `BALENA-SUPERVISOR` is added to `DOCKER-USER`, that chain
+                blocks
+
+                access to the regular listen port from any interface other than
+
+                resin-vpn when in non-local-mode and allows any traffic on
+                local-mode.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+            - subject: Allow overriding apiEndpoint from a database field
+              hash: 67d479e05625d2fbea193498fc58ffc64c091a73
+              body: >
+                This is an experimental change to allow an external service to
+                intercept
+
+                API calls of the supervisor as a potential path for migration
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Felipe Lalanne
+              nested: []
+          version: balena-supervisor-18.0.0
+          title: ""
+          date: 2026-05-27T16:24:12.773Z
+        - commits:
+            - subject: Convert extra_hosts separator from `=` to `:`
+              hash: dc636b5521982596e868c866074d92706b86bb11
+              body: |
+                Engine expects `:` but compose-go from compose-parser
+                outputs `=`.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Relates-to: https://github.com/balena-io-modules/balena-compose-parser/pull/28
+                relates-to: https://github.com/balena-io-modules/balena-compose-parser/pull/28
+              author: Christina Ying Wang
+              nested: []
+          version: balena-supervisor-17.8.5
+          title: ""
+          date: 2026-05-26T20:41:50.015Z
+        - commits:
+            - subject: Remove debugging-supervisor docs in favor of moving directly to docs
+              hash: d506754539c953eb004e11542848963b43f70af1
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Matthew Yarmolinsky
+              nested: []
+          version: balena-supervisor-17.8.4
+          title: ""
+          date: 2026-05-21T20:35:06.680Z
+        - commits:
+            - subject: Remove update-locking docs in favor of moving them directly to the docs
+              hash: 705df2c966d90a946acb915391e57a25894a83d8
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Matthew Yarmolinsky
+              nested: []
+          version: balena-supervisor-17.8.3
+          title: ""
+          date: 2026-05-20T20:14:30.054Z
+  version: 7.5.11
+  title: ""
+  date: 2026-07-12T14:34:50.121Z
+- commits:
     - subject: "kernel-image-initramfs: multi-kernel support"
       hash: b867868f36008b78f4c80491659c51a9394ddca4
       body: |
