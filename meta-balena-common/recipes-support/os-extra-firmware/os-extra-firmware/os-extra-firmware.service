@@ -9,7 +9,7 @@ Conflicts=umount.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=@BASE_BINDIR@/sh @BINDIR@/os-extra-firmware
+ExecStart=@BINDIR@/os-extra-firmware
 
 [Install]
 WantedBy=multi-user.target
