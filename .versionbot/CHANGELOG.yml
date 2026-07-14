@@ -1,4 +1,19 @@
 - commits:
+    - subject: "mobynit: update to v1.0.1"
+      hash: d65e6a18847b96ff1258c8942bf7ee15a2e3fb31
+      body: |
+        This version add kernel ABI extension filtering.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.6.0
+  title: ""
+  date: 2026-07-14T15:48:07.936Z
+- commits:
     - subject: Update balena-supervisor to v18
       hash: acc41cd3fea8bcd7ba189da9074d9b622adcd7a8
       body: |
