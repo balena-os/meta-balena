@@ -24,12 +24,13 @@ shift
  _api_key="$DEVICE_API_KEY"
  _api_endpoint="$API_ENDPOINT"
 
+# We short circuit the 'root' user to always be used as a local account
+[ "$_username" = "root" ] && exit 0
+
 if [ -z "$_api_endpoint" ] || [ -z "$_api_key"  ] || [ -z "$_username" ]; then
 	exit 1
 fi
 
-# We short circuit the 'root' user to always be used as a local account
-[ "$_username" = "root" ] && exit 0
 
 # Get the user public ssh key from the API
 curl -H "Authorization: Bearer ${_api_key}" "$_api_endpoint/auth/v1/public-keys/$_username"
