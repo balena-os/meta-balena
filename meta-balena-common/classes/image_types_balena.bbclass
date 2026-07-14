@@ -72,12 +72,14 @@ python() {
         d.setVar('BALENA_RAW_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.balenaos-img')
         d.setVar('BALENA_RAW_BMAP', '${IMGDEPLOYDIR}/${IMAGE_NAME}.bmap')
         d.setVar('BALENA_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.docker')
+        d.setVar('BALENA_BOOT_DOCKER_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}-boot.docker')
         d.setVar('BALENA_HOSTAPP_IMG', '${IMGDEPLOYDIR}/${IMAGE_NAME}.${BALENA_ROOT_FSTYPE}')
     else:
         d.setVar('BALENA_ROOT_FS', '${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.${BALENA_ROOT_FSTYPE}')
         d.setVar('BALENA_RAW_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.balenaos-img')
         d.setVar('BALENA_RAW_BMAP', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.bmap')
         d.setVar('BALENA_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.docker')
+        d.setVar('BALENA_BOOT_DOCKER_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}-boot.docker')
         d.setVar('BALENA_HOSTAPP_IMG', '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.${BALENA_ROOT_FSTYPE}')
 
     d.setVar('BALENA_IMAGE_BOOTLOADER_DEPLOY_TASK', ' '.join(bootloader + ':do_populate_sysroot' for bootloader in d.getVar("BALENA_IMAGE_BOOTLOADER", True).split()))
@@ -386,11 +388,23 @@ do_rootfs[vardeps] += "BALENA_BOOT_PARTITION_FILES"
 
 # XXX(petrosagg): This should be eventually implemented using a docker-native daemon
 IMAGE_CMD:docker () {
-    DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=${BALENA_API_VERSION} docker import -)
+    DOCKER_IMAGE=$(${IMAGE_CMD_TAR} --exclude=./boot -cv -C ${IMAGE_ROOTFS} . | DOCKER_API_VERSION=${BALENA_API_VERSION} docker import -)
     DOCKER_API_VERSION=${BALENA_API_VERSION} docker save ${DOCKER_IMAGE} > ${BALENA_DOCKER_IMG}
 }
 
-IMAGE_TYPEDEP:hostapp-ext4 = "docker"
+IMAGE_CMD:boot-docker () {
+    if [ ! -d "${IMAGE_ROOTFS}/boot" ] || [ -z "$(ls -A "${IMAGE_ROOTFS}/boot" 2>/dev/null)" ]; then
+        bbfatal "Boot image /boot is empty"
+    fi
+    BOOT_STAGE="${WORKDIR}/boot-image-root"
+    rm -rf "${BOOT_STAGE}"
+    mkdir -p "${BOOT_STAGE}/boot"
+    cp -a "${IMAGE_ROOTFS}/boot/." "${BOOT_STAGE}/boot/"
+    DOCKER_IMAGE=$(${IMAGE_CMD_TAR} -cv -C "${BOOT_STAGE}" . | DOCKER_API_VERSION=${BALENA_API_VERSION} docker import -)
+    DOCKER_API_VERSION=${BALENA_API_VERSION} docker save ${DOCKER_IMAGE} > ${BALENA_BOOT_DOCKER_IMG}
+}
+
+IMAGE_TYPEDEP:hostapp-ext4 = "docker boot-docker"
 
 do_image_hostapp_ext4[depends] = " \
     mkfs-hostapp-native:do_populate_sysroot \
@@ -398,7 +412,7 @@ do_image_hostapp_ext4[depends] = " \
 
 IMAGE_CMD:hostapp-ext4 () {
     truncate -s "$(expr ${ROOTFS_SIZE} \* 1024)" "${BALENA_HOSTAPP_IMG}"
-    mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
+    mkfs.hostapp -t "${TMPDIR}" -s "${STAGING_DIR_NATIVE}" -i ${BALENA_DOCKER_IMG} -b ${BALENA_BOOT_DOCKER_IMG} -o ${BALENA_HOSTAPP_IMG}
 }
 
 IMAGE_TYPEDEP:balenaos-img.sig = "balenaos-img"

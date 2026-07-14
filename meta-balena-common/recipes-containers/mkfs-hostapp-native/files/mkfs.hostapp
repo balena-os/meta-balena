@@ -12,8 +12,9 @@ sysroot="/"
 tmpdir=""
 fstype="ext4"
 
-while getopts 'i:o:s:t:f:' flag; do
+while getopts 'b:i:o:s:t:f:' flag; do
 	case "${flag}" in
+        b) boot_input=$(realpath "${OPTARG}") ;;
         i) input=$(realpath "${OPTARG}") ;;
         o) output=$(realpath "${OPTARG}") ;;
         s) sysroot=$(realpath "${OPTARG}") ;;
@@ -33,6 +34,11 @@ if ! [ -f "$input" ]; then
     exit 1
 fi
 
+if ! [ -f "$boot_input" ]; then
+    echo "File does not exist: $boot_input"
+    exit 1
+fi
+
 if ! [ -f "$output" ]; then
     echo "File does not exist: $output"
     exit 1
@@ -45,4 +51,10 @@ cleanup_docker() {
 $DOCKER load -i "$sysroot/usr/share/mkfs-hostapp-image.tar"
 trap cleanup_docker EXIT
 
-$DOCKER run --privileged --rm -v "$input:/input:ro" -v "$tmpdir:$tmpdir:ro" -v "$output:/output" -e "PATH=$PATH:$HOST_PATH" @IMAGE@ create.${fstype}
+$DOCKER run --privileged --rm \
+    -v "$input:/input:ro" \
+    -v "$boot_input:/input-boot:ro" \
+    -v "$tmpdir:$tmpdir:ro" \
+    -v "$output:/output" \
+    -e "PATH=$PATH:$HOST_PATH" \
+    @IMAGE@ create.${fstype}
