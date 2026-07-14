@@ -12,10 +12,8 @@ B = "${S}/build"
 
 inherit deploy
 require docker-disk.inc
+require balena-data-partition.inc
 require recipes-containers/balena-supervisor/balena-supervisor.inc
-
-PARTITION_SIZE ?= "192"
-FS_BLOCK_SIZE ?= "4k"
 
 PV = "${HOSTOS_VERSION}"
 
@@ -29,10 +27,6 @@ do_compile () {
 	if [ -z "${SUPERVISOR_FLEET}" ] || [ -z "${SUPERVISOR_VERSION}" ]; then
 		bbfatal "docker-disk: SUPERVISOR_FLEET and/or SUPERVISOR_VERSION not set."
 	fi
-	if [ -z "${PARTITION_SIZE}" ]; then
-		bbfatal "docker-disk: PARTITION_SIZE needs to have a value (megabytes)."
-	fi
-
 	# At this point we really need internet connectivity for building the
 	# docker image
 	if [ "x${@connected(d)}" != "xyes" ]; then
@@ -65,8 +59,7 @@ do_compile () {
 		-e HOSTAPP_PLATFORM="${HOSTAPP_PLATFORM}" \
 		-e BALENA_API_ENV="${BALENA_API_ENV}" \
 		-e BALENA_API_TOKEN="${_token}" \
-		-e PARTITION_SIZE="${PARTITION_SIZE}" \
-		-e FS_BLOCK_SIZE="${FS_BLOCK_SIZE}" \
+		-e BALENA_DATA_STAGING="${BALENA_DATA_STAGING}" \
 		-v /sys/fs/cgroup:/sys/fs/cgroup:ro -v ${B}:/build \
 		--name ${_container_name} ${_image_name}
 	$DOCKER rmi -f ${_image_name}
@@ -82,7 +75,7 @@ do_install () {
 FILES:${PN} += "/etc/hostapp-extensions.conf"
 
 do_deploy () {
-	install -m 644 ${B}/resin-data.img ${DEPLOYDIR}/resin-data.img
+	install -m 644 ${B}/${BALENA_DATA_STAGING} ${DEPLOYDIR}/${BALENA_DATA_STAGING}
 }
 addtask deploy before do_package after do_install
 
