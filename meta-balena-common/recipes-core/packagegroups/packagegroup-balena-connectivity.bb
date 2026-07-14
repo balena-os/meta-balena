@@ -31,6 +31,7 @@ CONNECTIVITY_PACKAGES = " \
     balena-proxy-config \
     usb-modeswitch \
     iw \
+    fluentbit \
     "
 
 RDEPENDS:${PN} = " \
