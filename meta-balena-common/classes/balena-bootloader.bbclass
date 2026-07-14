@@ -673,3 +673,23 @@ SIGNING_ARTIFACTS = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
 addtask sign_efi before do_deploy after do_bundle_initramfs
 
 DESTDIR = "${DEPLOYDIR}/${KERNEL_PACKAGE_NAME}"
+
+KMETA = "kernel-meta"
+
+BALENA_DEFCONFIG_NAME = "${KBUILD_DEFCONFIG}"
+
+do_deploy:append () {
+    BOOTENV_FILE="${DEPLOYDIR}/${KERNEL_PACKAGE_NAME}/bootenv"
+    grub-editenv "${BOOTENV_FILE}" create
+    grub-editenv "${BOOTENV_FILE}" set "resin_root_part=A"
+    grub-editenv "${BOOTENV_FILE}" set "bootcount=0"
+    grub-editenv "${BOOTENV_FILE}" set "upgrade_available=0"
+}
+
+do_deploy[depends] += " grub-native:do_populate_sysroot"
+
+INITRAMFS_IMAGE = "balena-image-bootloader-initramfs"
+
+KERNEL_PACKAGE_NAME = "balena-bootloader"
+
+PROVIDES = "virtual/balena-bootloader"
