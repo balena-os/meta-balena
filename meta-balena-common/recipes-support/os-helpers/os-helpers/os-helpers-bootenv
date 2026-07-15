@@ -48,8 +48,6 @@ bootenv_commit_override() {
     _f="$1"
     _slot="$2"
     grub-editenv "${_f}" set \
-        bootcount=0 \
-        upgrade_available=0 \
         "kernel_override_abi_committed_${_slot}=$(bootenv_get "${_f}" "kernel_override_abi")"
 }
 
