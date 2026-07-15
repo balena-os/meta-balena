@@ -1,0 +1,86 @@
+# Copyright 2026 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+#
+# Detection helpers for balena hostapp extensions.
+#
+# extension_detect_kernel_override <rootfs_path>
+#
+#   Tests whether <rootfs_path> is a kernel-override extension. The
+#   authoritative claim is Module.symvers (under */lib/modules/<release>/)
+#
+#   On return, the function sets:
+#     EXTENSION_KERNEL_SYMVERS - path to Module.symvers if found, else empty
+#     EXTENSION_KERNEL_IMG     - path to the kernel image if found, else empty
+#
+#   Exit codes:
+#     0 - kernel-override extension (modules ABI claim + kernel image present)
+#     1 - not a kernel-override extension (no modules ABI claim)
+#     2 - misbuild (modules ABI claim present but no kernel image under /boot)
+#
+
+extension_detect_kernel_override() {
+    _rootfs="$1"
+
+    EXTENSION_KERNEL_SYMVERS=$(find "${_rootfs}/usr/lib/modules" "${_rootfs}/lib/modules" \
+        -mindepth 2 -maxdepth 2 -name Module.symvers -type f 2>/dev/null | head -n1)
+
+    # No modules ABI so not a kernel extension, whatever /boot holds.
+    if [ -z "${EXTENSION_KERNEL_SYMVERS}" ]; then
+        EXTENSION_KERNEL_IMG=""
+        return 1
+    fi
+
+    if [ -e "${_rootfs}/boot/@@KERNEL_IMAGETYPE@@" ]; then
+        EXTENSION_KERNEL_IMG="${_rootfs}/boot/@@KERNEL_IMAGETYPE@@"
+    else
+        EXTENSION_KERNEL_IMG=""
+        return 2
+    fi
+    return 0
+}
+
+#
+# extension_kernel_override_prelude <rootfs_path>
+#
+#   Wraps extension_detect_kernel_override with the standard hook
+#   dispatch: log+return on "not applicable", fail on misbuild,
+#   compute the ABI id on success.
+#
+#   Returns 0  - kernel-override extension; caller proceeds. Sets:
+#                EXTENSION_KERNEL_SYMVERS, EXTENSION_KERNEL_IMG,
+#                EXTENSION_KERNEL_ABI_ID (64-char sha256 of Module.symvers).
+#   Returns 1  - not a kernel-override extension. Caller should exit 0.
+#   Does not return - misbuild; the helper calls fail (exits 1).
+#
+#   Requires os-helpers-logging to be sourced (info, fail).
+#
+
+extension_kernel_override_prelude() {
+    _rc=0
+    extension_detect_kernel_override "$1" || _rc=$?
+    case "${_rc}" in
+    0)
+        EXTENSION_KERNEL_ABI_ID=$(sha256sum "${EXTENSION_KERNEL_SYMVERS}" | awk '{print $1}')
+        return 0
+        ;;
+    1)
+        info "not a kernel-override extension; nothing to do"
+        return 1
+        ;;
+    *)
+        fail "Module.symvers present but no kernel image under /boot"
+        ;;
+    esac
+}
