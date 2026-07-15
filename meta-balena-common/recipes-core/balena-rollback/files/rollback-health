@@ -17,6 +17,7 @@
 set -o errexit
 
 . /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-logging
 . /usr/bin/rollback-parse-bootloader
 
 if ! rollback-check-version; then
@@ -31,7 +32,7 @@ REBOOT_TIMEOUT=900
 DURING_UPDATE=${DURING_UPDATE:-0}
 
 run_hooks_from_inactive () {
-	echo "Rollback: Running hooks from previous rootfs"
+	info "Running hooks from previous rootfs"
 	old_rootfs=$(/mnt/sysroot/active/current/boot/init -sysroot /mnt/sysroot/inactive)
 	mount -t proc proc "${old_rootfs}/proc/"
 	mount -o bind /dev "${old_rootfs}/dev"
@@ -78,26 +79,27 @@ EOF
 }
 
 
-echo "Rollback: Health sanity check"
+info "Health sanity check"
 
 if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$current_part_name" ]; then
 	if [ $upgrade_available -eq 1 ]; then
-		echo "Rollback: HUP detected. Running healthchecks after $TIMEOUT seconds"
+		info "HUP detected. Running healthchecks after $TIMEOUT seconds"
 		sleep $TIMEOUT
-		echo "Rollback: Running healthchecks to see if new system is stable"
+		info "Running healthchecks to see if new system is stable"
 		counter=0
 		while ! rollback-tests ; do
-			echo "Trying healthcheck again $counter of $COUNT attempts"
+			info "Trying healthcheck again $counter of $COUNT attempts"
 			sleep $TIMEOUT
 			counter=$((counter + 1))
 			if [ $counter -ge $COUNT ]; then
-				echo "Rollback: Looks like we failed some health check. Rolling back"
+				warn "Looks like we failed some health check. Rolling back"
+
 				if run_hooks_from_inactive; then
 					touch /mnt/state/rollback-health-triggered
-					echo "Rollback: Failed heathchecks. Rebooting to previous rootfs"
+					warn "Failed healthchecks. Rebooting to previous rootfs"
 				else
 					touch /mnt/state/rollback-health-failed
-					echo "Rollback: Failed to run previous hooks. Rebooting to recover system"
+					error "Failed to run previous hooks. Rebooting to recover system"
 				fi
 				rollback-stop || true
 				sync
@@ -105,19 +107,19 @@ if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$curr
 				reboot
 			fi
 		done
-	    echo "Rollback: new OS seems stable. Preventing further rollbacks"
+	    info "new OS seems stable. Preventing further rollbacks"
 	    rollback-stop || true
-	    echo "Rollback: Running commit hooks"
+	    info "Running commit hooks"
 	    hostapp-update-hooks-v2 --commit || true
 	else
-		echo "Rollback: Nothing to do. Looks like we are in ROLLBACK_HEALTHY state. Why is script running?"
+		warn "Nothing to do. Looks like we are in ROLLBACK_HEALTHY state. Why is script running?"
 		rollback-stop || true
 	fi
 else
-	echo "Rollback: Looks like we are running in altboot mode. rollback-altboot.services should reboot the system in a while."
-	echo "Rollback: Sleeping for $REBOOT_TIMEOUT seconds"
+	info "Looks like we are running in altboot mode. rollback-altboot.services should reboot the system in a while."
+	info "Sleeping for $REBOOT_TIMEOUT seconds"
 	sleep $REBOOT_TIMEOUT
-	echo "Rollback: Looks like something bad happened to rollback-altboot.service. Lets force a reboot"
+	error "Looks like something bad happened to rollback-altboot.service. Lets force a reboot"
 	rollback-stop || true
 	sync
 	systemctl --force reboot
