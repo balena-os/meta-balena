@@ -1,4 +1,109 @@
 - commits:
+    - subject: "image-types: tag hostapp during import so it includes RepoTags"
+      hash: 55b55d38e59335b9a7324fa189160e09bc877315
+      body: |
+        This avoids confusing the hostapp and extension images at deploy time.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: add extensions support"
+      hash: 3e8161a20591a2a681fd360c523885ada0b5015b
+      body: |
+        Hooks call into the balena-extension-manager application.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "packagegroup-resin: add extension OCI runtime"
+      hash: e73b4e6d659914800142c6a8004963ddabd1a4ac
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena: register extensions runtime"
+      hash: 954ae66e9384feb445a4d4ab16b510b693c37bfc
+      body: |
+        Register the extensions OCI runtime for both engines.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-extension-runtime: add recipe"
+      hash: 30bb5f62f284a1bf1c1b74b677c0afe30d52e11f
+      body: >
+        This is the OCI runtime that manages hostapp extensions. Includes a
+
+        systemd service that handles the removal of dead extensions in the
+        engine.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add bootenv helper"
+      hash: f642f33c183c29630c7a2ee31322e6220259a30b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers: add extensions helper"
+      hash: 971c03123c20165ee5e5e992edb296da17f9c97b
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docker-disk: remove built-in extension support"
+      hash: 7311166b72e1937c45d992e51ccacd351346bbf7
+      body: |
+        With hostapp extensions being managed in the same way as standard app
+        containers, the preloading of hostapp extensions should also be done in
+        the same way as the preloading of app containers using the CLI.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-extensions-update: remove recipe."
+      hash: 2fb6231aacd0b058e52d561b3ef8e0c12467d45d
+      body: |
+        This functionality is now replaced by an OCI runtime.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.7.0
+  title: ""
+  date: 2026-07-15T08:35:49.543Z
+- commits:
     - subject: "mobynit: update to v1.0.1"
       hash: d65e6a18847b96ff1258c8942bf7ee15a2e3fb31
       body: |
