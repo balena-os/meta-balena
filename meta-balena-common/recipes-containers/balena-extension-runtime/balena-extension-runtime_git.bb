@@ -6,10 +6,11 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 inherit go systemd
 
 GO_IMPORT = "github.com/balena-os/balena-extension-runtime"
-SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=master;protocol=https \
+SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=alexgg/imagehash;protocol=https \
     file://hostapp-extensions-cleanup.service \
     "
-SRCREV = "7c9c339005630b747bb0271ea53e46db7027415e"
+# Track the branch tip while the image-hash kernel identity work lands.
+SRCREV = "${AUTOREV}"
 PV = "1.1.0+git${SRCPV}"
 
 S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
