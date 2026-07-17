@@ -9,9 +9,9 @@ inherit go
 RDEPENDS:${PN} = "util-linux"
 
 GO_IMPORT = "github.com/balena-os/mobynit"
-SRC_URI = "git://${GO_IMPORT};nobranch=1;protocol=https"
-# v1.0.1
-SRCREV="3d9efeb581f6b83d013076d64bac39492ec7e5ee"
+SRC_URI = "git://${GO_IMPORT};branch=alexgg/imagehash;protocol=https"
+# Track the branch tip while the image-hash kernel identity work lands.
+SRCREV = "${AUTOREV}"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
 
