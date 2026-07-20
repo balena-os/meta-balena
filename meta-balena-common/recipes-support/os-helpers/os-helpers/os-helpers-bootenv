@@ -86,7 +86,7 @@ bootenv_locate() {
         echo "${_mp}/bootenv"
         return 0
     fi
-    _found=$(find -L "${_mp}" -maxdepth 2 \
+    _found=$(find -L "${_mp}" -maxdepth 3 \
         \( -name 'bootenv' -o -name 'grubenv' \) 2>/dev/null | head -n1)
     [ -n "${_found}" ] || return 1
     echo "${_found}"
