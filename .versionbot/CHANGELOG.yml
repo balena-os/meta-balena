@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tests: os: led: check LED_FILE exists on device, and stop counting
+        sdterr"
+      hash: 9bc353dc5121c6df9785a4201910bcf3a8f7f949
+      body: >
+        If the LED_FILE didn't exist on the device, the checking of the file
+        returned an error message, which was being evaluated as a toggling file.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 7.7.1
+  title: ""
+  date: 2026-07-21T18:47:26.730Z
+- commits:
     - subject: "image-types: tag hostapp during import so it includes RepoTags"
       hash: 55b55d38e59335b9a7324fa189160e09bc877315
       body: |

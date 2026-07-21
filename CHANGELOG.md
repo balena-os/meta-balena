@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.7.1
+## (2026-07-21)
+
+* tests: os: led: check LED_FILE exists on device, and stop counting sdterr [Ryan Cooke]
+
 # v7.7.0
 ## (2026-07-15)
 
