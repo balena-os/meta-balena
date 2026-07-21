@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# kernel-override-hooks: activate hook
+#
+# Verifies the install symlink resolves and is non-empty, then resets
+# bootcount=0 and writes kernel_override_abi.
+#
+
+set -eu
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-extensions
+
+BOOT_BY_ABI_DIR="/mnt/data/boot-by-abi"
+
+extension_kernel_override_prelude "${EXTENSION_ROOTFS}" || exit 0
+
+KERNEL_IMG_NAME=$(basename "${EXTENSION_KERNEL_IMG}")
+
+TARGET="${BOOT_BY_ABI_DIR}/${EXTENSION_KERNEL_ABI_ID}"
+if ! { [ -L "${TARGET}" ] && [ -e "${TARGET}/${KERNEL_IMG_NAME}" ]; }; then
+    fail "boot-by-abi/${EXTENSION_KERNEL_ABI_ID} missing or ${KERNEL_IMG_NAME} not present; aborting activation"
+fi
+
+BOOTENV_FILE=$(bootenv_locate) || fail "cannot locate bootenv"
+
+bootenv_set "${BOOTENV_FILE}" "bootcount" "0"
+# Must be last
+bootenv_set "${BOOTENV_FILE}" "kernel_override_abi" "${EXTENSION_KERNEL_ABI_ID}"
+sync
+info "activated kernel override; ABI=${EXTENSION_KERNEL_ABI_ID}"
