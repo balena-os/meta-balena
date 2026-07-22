@@ -13,7 +13,11 @@ SRC_URI = "git://${GO_IMPORT};nobranch=1;protocol=https"
 # v1.0.1
 SRCREV="3d9efeb581f6b83d013076d64bac39492ec7e5ee"
 
-GOPROXY ??= "https://proxy.golang.org,direct"
+# Use a resilient GOPROXY chain so the build does not fail when proxy.golang.org
+# TLS-stalls or is otherwise unreachable from the build host. goproxy.io is a
+# well-known mirror; "direct" lets the Go toolchain fall back to fetching the
+# module straight from its VCS origin.
+GOPROXY ??= "https://proxy.golang.org,https://goproxy.io,direct"
 
 do_compile[network] = "1"
 do_compile() {
@@ -23,7 +27,9 @@ do_compile() {
 
     export GOCACHE="${B}/.cache"
     export GOPROXY="${GOPROXY}"
-    oe_runmake
+    # Retry once on transient network failures (TLS stalls against module
+    # proxies have been observed from some build hosts).
+    oe_runmake || oe_runmake
 }
 
 do_install() {
