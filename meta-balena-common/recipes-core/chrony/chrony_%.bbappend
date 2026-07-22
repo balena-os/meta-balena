@@ -1,7 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI:append = " \
-    file://balena_chrony.conf \
     file://chronyd.conf.systemd \
     file://chrony-helper \
     file://chrony-healthcheck \
@@ -14,8 +13,6 @@ FILES:${PN} += "\
 RDEPENDS:${PN} = "bash healthdog"
 
 do_install:append() {
-    install -m 0644 ${UNPACKDIR}/balena_chrony.conf ${D}/${sysconfdir}/chrony.conf
-
     # Install systemd drop-in for chronyd.service
     install -d ${D}${sysconfdir}/systemd/system/chronyd.service.d
     install -m 0644 ${UNPACKDIR}/chronyd.conf.systemd ${D}${sysconfdir}/systemd/system/chronyd.service.d/chronyd.conf
