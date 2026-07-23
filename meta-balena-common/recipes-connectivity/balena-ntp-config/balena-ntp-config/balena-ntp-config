@@ -8,7 +8,8 @@ set -e
 . /usr/sbin/balena-config-vars
 
 SERVER_DIR=/run/chrony
-SERVER_FILE=${SERVER_DIR}/added_config.sources
+SERVER_FILE=${SERVER_DIR}/balena-ntp.sources
+DEFAULT_NTP_SERVERS="0.resinio.pool.ntp.org 1.resinio.pool.ntp.org 2.resinio.pool.ntp.org 3.resinio.pool.ntp.org"
 
 if [ ! -f "$CONFIG_PATH" ]; then
 	echo "balena-ntp-config: $CONFIG_PATH does not exist."
@@ -22,15 +23,26 @@ if [ ! -d "$SERVER_DIR" ]; then
 fi
 
 # Always remove the old server file before we refresh the list.
-if [ -f "$SERVER_FILE" ]; then
-	rm -f $SERVER_FILE
-fi
+rm -f "$SERVER_FILE"
 
-if [ ! -z "$NTP_SERVERS" ]; then
-	echo "Adding NTP sources (config.json)"
-	for server in ${NTP_SERVERS}; do
-		echo "pool $server iburst minpoll 14 maxpoll 14 maxsources 1" >> $SERVER_FILE
+# Trim surrounding whitespace so the any variant of "null" and spaces match
+NTP_SERVERS=$(printf '%s' "$NTP_SERVERS" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+add_servers() {
+	local servers=$1
+	for server in $servers; do
+		echo "pool $server iburst minpoll 14 maxpoll 14 maxsources 1" >> "$SERVER_FILE"
 	done
+}
+
+if [ "$NTP_SERVERS" = "null" ]; then
+	echo "balena-ntp-config: Default NTP sources disabled via config.json"
+elif [ -n "$NTP_SERVERS" ]; then
+	echo "Adding NTP sources (config.json)"
+	add_servers "$NTP_SERVERS"
+else
+	echo "balena-ntp-config: Using default NTP sources"
+	add_servers "$DEFAULT_NTP_SERVERS"
 fi
 
 # Always update the sources as they may have been added or removed.
