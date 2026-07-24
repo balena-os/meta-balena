@@ -1,4 +1,155 @@
 - commits:
+    - subject: Update tests/leviathan digest to dacce76
+      hash: c147729f2110ac4c7cdec23d11e086b18edc9f57
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.41
+              hash: e5c16f9c9356eb6dbe83a75e619445f4944c0841
+              body: |
+                Update balena-os/leviathan-worker from 2.10.40 to 2.10.41
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.120
+          title: ""
+          date: 2026-07-24T01:30:01.349Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.40
+              hash: f97103115bf88ac4c56fa901d44f79f62d8fecbf
+              body: |
+                Update balena-os/leviathan-worker from 2.10.35 to 2.10.40
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.119
+          title: ""
+          date: 2026-07-23T23:11:17.847Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v25.1.10
+              hash: 98875d087a325e946954d7d7333041d27950e004
+              body: |
+                Update balena-io/balena-cli from 25.1.6 to 25.1.10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.118
+          title: ""
+          date: 2026-07-23T20:24:06.164Z
+        - commits:
+            - subject: "core/lib/common/worker.js: improve reliability of segmented image
+                upload"
+              hash: 4f74158ead6a155486fe3b1bc1a6db18e7b8ad16
+              body: >
+                Requests to the worker go over the balenaCloud proxy tunnel,
+                which can stall a
+
+                socket silently instead of erroring it out, and neither the
+                chunk handshake
+
+                nor the chunk uploads had any timeout to catch that. Adds an
+                abort-based
+
+                timeout to every request, retries the handshake itself instead
+                of only
+
+                individual chunks, fails fast on non-retryable 4xx responses
+                instead of
+
+                wasting minutes retrying them, and guards against a degenerate
+                chunk size
+
+                turning into an endless loop of empty uploads.
+
+
+                Chunks are now read via fs.createReadStream per attempt instead
+                of buffering
+
+                a whole chunk-sized region in memory. Content-Length is set
+                explicitly, since
+
+                fetch can't measure a stream's length up front the way it can
+                for a Buffer,
+
+                and the worker requires it. Each chunk attempt gets a flat
+                5-minute timeout
+
+                rather than a per-progress idle timeout - fetch has no way to
+                observe real
+
+                network write progress for a streamed body, only how fast the
+                chunk can be
+
+                read off local disk, which finishes long before a slow upload
+                actually
+
+                completes. A flat cap avoids that mismatch entirely by not
+                trying to
+
+                interpret progress at all.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: guille-vega <guillermo.vega@balena.io>
+                signed-off-by: guille-vega <guillermo.vega@balena.io>
+              author: guille-vega
+              nested: []
+          version: leviathan-2.36.117
+          title: ""
+          date: 2026-07-23T18:49:48.174Z
+        - commits:
+            - subject: Update alpine Docker tag to v3.18.12
+              hash: 74674b09da2cc584e568525c18f60f53a0fce6c9
+              body: |
+                Update alpine from 3.18.2 to 3.18.12
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.116
+          title: ""
+          date: 2026-07-16T18:07:12.467Z
+        - commits:
+            - subject: Update core/contracts digest to a4ab96e
+              hash: 1d08e06becceab517b3bf59785506374f89680a6
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.115
+          title: ""
+          date: 2026-07-16T15:30:43.032Z
+        - commits:
+            - subject: Update Pin dependencies
+              hash: 5537646dc477be9cfbc625732ee3505dbb09b5f6
+              body: |
+                Update alpine
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.114
+          title: ""
+          date: 2026-07-14T03:57:00.771Z
+  version: 7.7.2
+  title: ""
+  date: 2026-07-24T13:43:45.606Z
+- commits:
     - subject: "tests: os: led: check LED_FILE exists on device, and stop counting
         sdterr"
       hash: 9bc353dc5121c6df9785a4201910bcf3a8f7f949

@@ -1,6 +1,51 @@
 Change log
 -----------
 
+# v7.7.2
+## (2026-07-24)
+
+
+<details>
+<summary> Update tests/leviathan digest to dacce76 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.120
+> ### (2026-07-24)
+> 
+> * Update balena-os/leviathan-worker to v2.10.41 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.119
+> ### (2026-07-23)
+> 
+> * Update balena-os/leviathan-worker to v2.10.40 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.118
+> ### (2026-07-23)
+> 
+> * Update balena-io/balena-cli to v25.1.10 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.117
+> ### (2026-07-23)
+> 
+> * core/lib/common/worker.js: improve reliability of segmented image upload [guille-vega]
+> 
+> ## leviathan-2.36.116
+> ### (2026-07-16)
+> 
+> * Update alpine Docker tag to v3.18.12 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.115
+> ### (2026-07-16)
+> 
+> * Update core/contracts digest to a4ab96e [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.114
+> ### (2026-07-14)
+> 
+> * Update Pin dependencies [balena-renovate[bot]]
+> 
+
+</details>
+
 # v7.7.1
 ## (2026-07-21)
 
