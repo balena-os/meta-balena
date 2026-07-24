@@ -4,7 +4,17 @@ services:
 
   hostapp:
     image: __BUILD_OUTPUT__
-    x-build: {}
+    x-build:
+      assets:
+        - "images/__MACHINE__/VERSION"
+        - "images/__MACHINE__/VERSION_HOSTOS"
+        - "images/__MACHINE__/image*.json"
+        - "images/__MACHINE__/compressed*/part-*.deflate"
+        - "images/__MACHINE__/*.manifest"
+        - "images/__MACHINE__/kernel_modules_headers.tar.gz"
+        - "images/__MACHINE__/rpi-eeprom/secure-boot-lock/"
+        - "cyclonedx-export/**/*.json"
+        - "licenses/**"
     labels:
       io.balena.image.store: 'root'
       io.balena.image.class: 'hostapp'
