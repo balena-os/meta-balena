@@ -10,8 +10,8 @@ RDEPENDS:${PN} = "util-linux"
 
 GO_IMPORT = "github.com/balena-os/mobynit"
 SRC_URI = "git://${GO_IMPORT};nobranch=1;protocol=https"
-# v1.0.1
-SRCREV="3d9efeb581f6b83d013076d64bac39492ec7e5ee"
+# v1.1.0
+SRCREV="d6df4547c409f9ead738c48fab7fe1d96b406c1f"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
 
