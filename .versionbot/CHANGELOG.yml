@@ -1,4 +1,19 @@
 - commits:
+    - subject: "mobynit: update to v1.1.0"
+      hash: b7f6b20d99d0bdd7ed489cb839324884acc920a2
+      body: |
+        Update from v1.0.1 to v1.1.0
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.8.0
+  title: ""
+  date: 2026-07-29T07:22:20.789Z
+- commits:
     - subject: Update tests/leviathan digest to dacce76
       hash: c147729f2110ac4c7cdec23d11e086b18edc9f57
       body: Update tests/leviathan
