@@ -63,6 +63,25 @@ resindataexpander_run() {
             fi
             info "resindataexpander: Expand data partition... "
             parted -s "/dev/$datadev" -- resizepart "${part_number}" 100%
+
+            # Make sure the partition size is aligned with the physical sector size.
+            # parted aligns to logical sector size, which on some drives is smaller than physical.
+            # This is a compatibility feature - drives with 4KB sector size accept 512B writes
+            # for backwards compatibility.
+            # We have seen at least one SSD that advertises 4KB sector size, while its total size
+            # is *not* a multiple of 4KB. In this case we want to ignore the last incomplete sector.
+            # It doesn't play well with LUKS which expects to be aligned with physical sector borders.
+            _phys_sector_size=$(lsblk -nbldo phy-sec "/dev/${datapartdev}")
+            _current_size=$(lsblk -nbldo size "/dev/${datapartdev}")
+            _aligned_size=$(( (_current_size / _phys_sector_size) * _phys_sector_size ))
+            if [ "${_current_size}" != "${_aligned_size}" ]; then
+                _start=$(lsblk -nldo start "/dev/${datapartdev}")
+                # lsblk says that 'start' is in 512-byte sectors and -b doesn't affect it
+                # even though it feels wrong, hardcoding 512 here
+                _end=$(( (_start * 512) + _aligned_size - 1 ))
+                yes | parted ---pretend-input-tty "/dev/$datadev" -- resizepart "${part_number}" "${_end}B"
+            fi
+
             info "resindataexpander: Finished expanding data partition."
             partprobe
             sync
