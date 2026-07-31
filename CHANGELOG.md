@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.8.1
+## (2026-07-31)
+
+* initrdscripts: check alignment of data partition in resindataexpander [Michal Toman]
+
 # v7.8.0
 ## (2026-07-29)
 
