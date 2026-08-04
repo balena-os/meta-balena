@@ -2,8 +2,10 @@
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
 
-KERNEL_IMAGE="${ROOTFS_DIR}/boot/@@KERNEL_IMAGETYPE@@"
+STOCK_KERNEL="${ROOTFS_DIR}/boot/@@KERNEL_IMAGETYPE@@"
 
 kexec_enabled() {
     # The script is enabled if and only if we are in balena bootloader.
@@ -13,23 +15,41 @@ kexec_enabled() {
     # call succeeds or not. Running any further initrd scripts
     # is undesirable and considered undefined behavior.
     # shellcheck disable=SC2154
-    if [ "$bootparam_balena_stage2" = "true" ]
-    then
+    if [ "$bootparam_balena_stage2" = "true" ]; then
         return 0
     fi
-
     return 1
 }
 
+# select_kernel decides which kernel to boot and publishes the decision through
+# two globals:
+#   SELECTED_KERNEL     - path of the kernel image to load
+#   SELECTED_KERNEL_ABI - its ABI ID, set only for an override kernel (the stock
+#                         kernel ships no derivable ABI, so it stays empty)
+select_kernel() {
+    SELECTED_KERNEL="${STOCK_KERNEL}"
+    SELECTED_KERNEL_ABI=""
+    ACTIVE_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
+    if [ -n "${ACTIVE_ABI}" ]; then
+        OVERRIDE_KERNEL="${ROOTFS_DIR}/mnt/data/boot-by-abi/${ACTIVE_ABI}/@@KERNEL_IMAGETYPE@@"
+        if [ -f "${OVERRIDE_KERNEL}" ]; then
+            info "kexec: using override kernel for ABI ${ACTIVE_ABI}"
+            SELECTED_KERNEL="${OVERRIDE_KERNEL}"
+            SELECTED_KERNEL_ABI="${ACTIVE_ABI}"
+            return 0
+        fi
+        warn "kexec: override kernel for ${ACTIVE_ABI} not found; falling back to stock"
+    fi
+}
+
 kexec_run() {
-    if [ -z "${ROOTFS_DIR}" ]
-    then
+    if [ -z "${ROOTFS_DIR}" ]; then
         fail "ROOTFS_DIR undefined, can not kexec"
     fi
 
-    if [ ! -f "${KERNEL_IMAGE}" ]
-    then
-        fail "${KERNEL_IMAGE} not found, can not kexec"
+    select_kernel
+    if [ ! -f "${SELECTED_KERNEL}" ]; then
+        fail "${SELECTED_KERNEL} not found, can not kexec"
     fi
 
     ROOT_UUID=$(findmnt "${ROOTFS_DIR}" -n -o UUID)
@@ -39,9 +59,28 @@ kexec_run() {
     # * root=XXX - will be replaced by the UUID
     # * maxcpus=0 - enable SMP after reboot if the 2nd stage bootloader has it disabled
     # * nr_cpus=XXX - same as above
+    # * balena_kernel_abi - re-derived below; never inherit a stale value
     # shellcheck disable=SC2002
-    BOOT_PARAMS="$(cat /proc/cmdline | sed -e "s,balena_stage2,," | sed -e "s,root=[^\ ]*,," | sed -e "s,maxcpus=0,," | sed -e "s,nr_cpus=[^\ ]*,,")"
-    kexec -s -l "${KERNEL_IMAGE}" --append="${BOOT_PARAMS} root=UUID=${ROOT_UUID} ${KEXEC_EXTRA_ARGS}"
+    BOOT_PARAMS="$(cat /proc/cmdline | sed -e "s,balena_stage2,," | sed -e "s,root=[^\ ]*,," | sed -e "s,maxcpus=0,," | sed -e "s,nr_cpus=[^\ ]*,," | sed -e "s,balena_kernel_abi=[^\ ]*,,")"
+    APPEND="${BOOT_PARAMS} root=UUID=${ROOT_UUID} ${KEXEC_EXTRA_ARGS}"
+
+    SELECTED_APPEND="${APPEND}"
+    if [ -n "${SELECTED_KERNEL_ABI}" ]; then
+        SELECTED_APPEND="${APPEND} balena_kernel_abi=${SELECTED_KERNEL_ABI}"
+    fi
+
+    if ! kexec -s -l "${SELECTED_KERNEL}" --append="${SELECTED_APPEND}"; then
+        if [ "${SELECTED_KERNEL}" != "${STOCK_KERNEL}" ] && [ -f "${STOCK_KERNEL}" ]; then
+            warn "kexec: failed to load ${SELECTED_KERNEL}; falling back to stock kernel"
+            kexec -s -l "${STOCK_KERNEL}" --append="${APPEND}"
+            rc=$?
+            if [ "${rc}" -ne 0 ]; then
+                fail "kexec stock load failed: ${rc}"
+            fi
+        else
+            fail "kexec load failed and no fallback available"
+        fi
+    fi
 
     # BOOT_MOUNT is undefined in flasher
     if [ -n "${BOOT_MOUNT}" ]; then
@@ -57,6 +96,11 @@ kexec_run() {
     STATE_MOUNT="${ROOTFS_DIR}/mnt/state"
     if grep -q "${STATE_MOUNT}" < /proc/mounts; then
         umount "${STATE_MOUNT}"
+    fi
+
+    DATA_MOUNT="${ROOTFS_DIR}/mnt/data"
+    if grep -q "${DATA_MOUNT}" < /proc/mounts; then
+        umount "${DATA_MOUNT}"
     fi
 
     umount "${ROOTFS_DIR}"

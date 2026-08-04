@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
+. /usr/libexec/os-helpers-fs
+
+mountdata_enabled() {
+    # shellcheck disable=SC2154
+    [ "$bootparam_balena_stage2" = "true" ] && [ -n "${ROOTFS_DIR}" ]
+}
+
+mountdata_run() {
+    ACTIVE_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
+    [ -n "${ACTIVE_ABI}" ] || return 0
+
+    data_partition_path="$(get_state_path_from_label "resin-data")"
+    if ! wait4file "$data_partition_path" "300"; then
+        warn "mount-data: timeout waiting for resin-data; override kernels unavailable"
+        return 0
+    fi
+
+    mkdir -p "${ROOTFS_DIR}/mnt/data"
+    if ! mount -o ro,noatime "$data_partition_path" "${ROOTFS_DIR}/mnt/data"; then
+        warn "mount-data: failed to mount resin-data at ${ROOTFS_DIR}/mnt/data; override kernels unavailable"
+        return 0
+    fi
+    info "mount-data: mounted resin-data at ${ROOTFS_DIR}/mnt/data (ro)"
+}

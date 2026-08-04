@@ -60,7 +60,7 @@ extension_detect_kernel_override() {
 #
 #   Returns 0  - kernel-override extension; caller proceeds. Sets:
 #                EXTENSION_KERNEL_SYMVERS, EXTENSION_KERNEL_IMG,
-#                EXTENSION_KERNEL_ABI_ID (64-char sha256 of Module.symvers).
+#                EXTENSION_KERNEL_ABI_ID (64-char sha256 of the kernel image).
 #   Returns 1  - not a kernel-override extension. Caller should exit 0.
 #   Does not return - misbuild; the helper calls fail (exits 1).
 #
@@ -72,7 +72,7 @@ extension_kernel_override_prelude() {
     extension_detect_kernel_override "$1" || _rc=$?
     case "${_rc}" in
     0)
-        EXTENSION_KERNEL_ABI_ID=$(sha256sum "${EXTENSION_KERNEL_SYMVERS}" | awk '{print $1}')
+        EXTENSION_KERNEL_ABI_ID=$(sha256sum "${EXTENSION_KERNEL_IMG}" | awk '{print $1}')
         return 0
         ;;
     1)

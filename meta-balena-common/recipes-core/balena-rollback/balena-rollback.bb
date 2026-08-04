@@ -32,6 +32,8 @@ SRC_URI = " \
 
 inherit allarch systemd
 
+RDEPENDS:${PN} = "os-helpers-bootenv os-helpers-logging"
+
 SYSTEMD_SERVICE:${PN} = " \
 	rollback-altboot.service \
 	rollback-health.service \
