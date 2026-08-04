@@ -1,4 +1,105 @@
 - commits:
+    - subject: "docs: update hostapp extensions kernel abi compatibility section"
+      hash: 222689c99aa6bc912611682a520607923eebda69
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-hostapp-extension: add class"
+      hash: 508f6b00d912475edce53a917e3434c8e9ef2088
+      body: |
+        This new class encapsulates extension support.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-override-hooks: add recipe"
+      hash: 40280e13956ac1a7755d33d8f3756c8fb79a7084
+      body: |
+        This installs hooks used by kernel override extensions.
+
+        The hooks are pulled into the extension by the kernel override extension
+        class.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-extensions: use kernel image hash as kernel-abi-id"
+      hash: 4214030c2db178c768f5cd7174465ceba0a1dc0e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-bootenv: leave hup variables to bootloaders hooks"
+      hash: c309cf11268219d8b61d450b1579987d84248cbc
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "rollback-health: use standard os logging"
+      hash: 2988555c0e4f24e78c47ecf7d78e5f6acf5f392d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts(abroot): kernel selection"
+      hash: 6c03ddc4ea5ce92a90536daa96b1b53d3d4af2af
+      body: |
+        Add support to boot an alternative kernel via an abi identifier passed
+        in the kernel command line.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-image-bootloader-initramfs: add mount data stage"
+      hash: 617166cb92b8e555d5a68975882fa24781f8f3b2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscript: add stage2 data partition mount"
+      hash: 28be9397bdc059d6c721ce5c176da23f56979ffb
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.9.0
+  title: ""
+  date: 2026-08-04T16:49:55.511Z
+- commits:
     - subject: "initrdscripts: check alignment of data partition in resindataexpander"
       hash: 42450da183032bdc557b8f551bade040345c5e76
       body: |
