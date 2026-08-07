@@ -18,13 +18,11 @@ SRC_URI = " \
     file://deactivate \
     "
 
-S = "${WORKDIR}"
-
 do_install() {
     install -d ${D}/hooks
-    install -m 0755 ${WORKDIR}/create     ${D}/hooks/create
-    install -m 0755 ${WORKDIR}/start      ${D}/hooks/start
-    install -m 0755 ${WORKDIR}/deactivate ${D}/hooks/deactivate
+    install -m 0755 ${UNPACKDIR}/create     ${D}/hooks/create
+    install -m 0755 ${UNPACKDIR}/start      ${D}/hooks/start
+    install -m 0755 ${UNPACKDIR}/deactivate ${D}/hooks/deactivate
 }
 
 FILES:${PN} = "/hooks /hooks/*"

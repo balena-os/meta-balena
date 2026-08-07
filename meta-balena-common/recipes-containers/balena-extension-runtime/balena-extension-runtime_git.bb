@@ -12,8 +12,6 @@ SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=master;pro
 SRCREV = "7c9c339005630b747bb0271ea53e46db7027415e"
 PV = "1.1.0+git${SRCPV}"
 
-S = "${WORKDIR}/${BPN}/src/${GO_IMPORT}"
-
 GOPROXY ??= "https://proxy.golang.org,direct"
 
 EXTRA_OEMAKE += "VERSION=${PV}"
@@ -35,7 +33,7 @@ do_install() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/hostapp-extensions-cleanup.service \
+        install -c -m 0644 ${UNPACKDIR}/hostapp-extensions-cleanup.service \
             ${D}${systemd_unitdir}/system
     fi
 }
