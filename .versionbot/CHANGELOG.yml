@@ -1,4 +1,18 @@
 - commits:
+    - subject: "recipes-containers/balena-extension-runtime: Enable Wrynose builds"
+      hash: d38072b13557d64193319620b78fb4be55a19da2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.9.1
+  title: ""
+  date: 2026-08-07T06:18:34.160Z
+- commits:
     - subject: "docs: update hostapp extensions kernel abi compatibility section"
       hash: 222689c99aa6bc912611682a520607923eebda69
       body: ""

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.9.1
+## (2026-08-07)
+
+* recipes-containers/balena-extension-runtime: Enable Wrynose builds [Alexandru Costache]
+
 # v7.9.0
 ## (2026-08-04)
 
