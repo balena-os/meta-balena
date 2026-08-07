@@ -1,4 +1,21 @@
 - commits:
+    - subject: "extra-udev-rules: Disable power management on mlan* wireless network
+        interfaces"
+      hash: ad892c3e437a49a800d57e665f31a834c0dad0b8
+      body: >
+        The moal driver used in various hardware exposes the wireless network
+        interfaces as mlan*
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 7.9.2
+  title: ""
+  date: 2026-08-07T15:12:33.847Z
+- commits:
     - subject: "recipes-containers/balena-extension-runtime: Enable Wrynose builds"
       hash: d38072b13557d64193319620b78fb4be55a19da2
       body: ""

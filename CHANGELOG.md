@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.9.2
+## (2026-08-07)
+
+* extra-udev-rules: Disable power management on mlan* wireless network interfaces [Florin Sarbu]
+
 # v7.9.1
 ## (2026-08-07)
 
