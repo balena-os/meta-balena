@@ -9,8 +9,8 @@ GO_IMPORT = "github.com/balena-os/balena-extension-runtime"
 SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=master;protocol=https \
     file://hostapp-extensions-cleanup.service \
     "
-SRCREV = "7c9c339005630b747bb0271ea53e46db7027415e"
-PV = "1.1.0+git${SRCPV}"
+SRCREV = "b9f37ff2ca2bdc60760f824fe1b8d9cec514eff0"
+PV = "1.2.1+git${SRCPV}"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
 
@@ -29,7 +29,7 @@ do_compile() {
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/balena-extension-runtime ${D}${bindir}
-    install -m 0755 ${S}/balena-extension-manager ${D}${bindir}
+    ln -sf balena-extension-runtime ${D}${bindir}/balena-extension-manager
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
