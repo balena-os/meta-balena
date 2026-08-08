@@ -1,4 +1,31 @@
 - commits:
+    - subject: "balena-extension-runtime: do not duplicate binary"
+      hash: ad640a5705664e0b2e97d90d74c2947239324f5f
+      body: |
+        The extension runtime and manager share the binary so we can symlink it
+        instead.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-extension-runtime: update to v1.2.1"
+      hash: 23113b376b7adc6566791098ba357aa6bec9a843
+      body: |
+        Update from v1.1.0 to v1.2.1
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 7.9.3
+  title: ""
+  date: 2026-08-08T12:40:26.836Z
+- commits:
     - subject: "extra-udev-rules: Disable power management on mlan* wireless network
         interfaces"
       hash: ad892c3e437a49a800d57e665f31a834c0dad0b8

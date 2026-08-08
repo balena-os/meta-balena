@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v7.9.3
+## (2026-08-08)
+
+* balena-extension-runtime: do not duplicate binary [Alex Gonzalez]
+* balena-extension-runtime: update to v1.2.1 [Alex Gonzalez]
+
 # v7.9.2
 ## (2026-08-07)
 
