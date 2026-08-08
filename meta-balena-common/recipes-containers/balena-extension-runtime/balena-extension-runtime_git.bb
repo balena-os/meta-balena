@@ -32,7 +32,10 @@ do_compile() {
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/balena-extension-runtime ${D}${bindir}
-    install -m 0755 ${S}/balena-extension-manager ${D}${bindir}
+    # Same binary, dispatched on argv[0] - upstream's Makefile links the two
+    # names rather than building twice. Installing a second copy would waste
+    # 4.6MiB of hostapp space.
+    ln -sf balena-extension-runtime ${D}${bindir}/balena-extension-manager
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system
