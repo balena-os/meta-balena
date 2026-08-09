@@ -18,6 +18,8 @@ set -eu
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-extensions
 
+: "${EXTENSION_ROOTFS:?EXTENSION_ROOTFS not set}"
+
 BOOT_BY_ABI_DIR="/mnt/data/boot-by-abi"
 
 extension_kernel_override_prelude "${EXTENSION_ROOTFS}" || exit 0

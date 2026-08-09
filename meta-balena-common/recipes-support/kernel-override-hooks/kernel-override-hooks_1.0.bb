@@ -6,11 +6,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 inherit allarch
 
-RDEPENDS:${PN} = " \
-    os-helpers-bootenv \
-    os-helpers-extensions \
-    os-helpers-logging \
-    "
+# Deliberately no RDEPENDS on os-helpers.
 
 SRC_URI = " \
     file://create \
