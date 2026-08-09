@@ -8,6 +8,8 @@ Hostapp extension containers are meant to extend or modify the root filesystem i
 
 When deciding whether to use a hostapp extension for your content, first consider whether there is any reason why it could not be added to a standard application container.
 
+This document describes the runtime contract: the labels an extension image carries and what the OS does with them. For how the extensions that ship with balenaOS are built, including step by step guides for both kinds, see [Building hostapp extensions](host-extensions-development.md).
+
 ## How it works
 
 Mobynit runs as PID 1 and discovers container overlay filesystems by reading overlay2 metadata directly, without relying on Docker packages. During boot, it:
@@ -24,15 +26,19 @@ The rootfs is mounted as overlayfs lowerdirs and is intrinsically read-only.
 
 The last stage of a hostapp extension container is shown next:
 
-    FROM scratch
+```dockerfile
+FROM scratch
 
-    LABEL io.balena.image.class=overlay
+LABEL io.balena.image.class=overlay
 
-    COPY --from=builder /hostext /
+COPY --from=builder /hostext /
+```
 
 The example Dockerfile above starts with an empty container, then adds the `io.balena.image.class=overlay` label so that BalenaOS can identify it and overlay it at boot, and finally the desired content is copied from a space holder directory to the root of this container.
 
-By default, extensions are mounted to the right of the hostapp in the overlayfs lowerdir stack, meaning they can only contribute new files — they cannot replace existing hostapp content.
+By default, extensions are mounted to the right of the hostapp in the overlayfs lowerdir stack, meaning they can only contribute new files: they cannot replace existing hostapp content.
+
+The labels are the whole contract; how the image is produced is not constrained. Extensions that ship as part of a balenaOS release are built from Yocto image recipes instead of a Dockerfile, and the classes described in [Building hostapp extensions](host-extensions-development.md) emit the same labels at import time.
 
 ## Mount ordering
 
@@ -40,16 +46,20 @@ Extensions can define a mount order using the `io.balena.image.override=N` label
 
 Shadowing is opt-in through the presence of the label, not its value. Omit the label entirely for an extend-only extension that only contributes new files; there is no numeric value that means "extend only".
 
-    FROM scratch
+```dockerfile
+FROM scratch
 
-    LABEL io.balena.image.class=overlay
-    LABEL io.balena.image.override=10
+LABEL io.balena.image.class=overlay
+LABEL io.balena.image.override=10
 
-    COPY --from=builder /hostext /
+COPY --from=builder /hostext /
+```
 
 In overlayfs terminology, `lowerdir=A:B:C` means A has the highest lookup priority. The resulting lowerdir is: `lowerdir=<extensions with override sorted by N>:<hostapp>:<extensions without override>`.
 
 Care should be taken not to shadow root filesystem content which is essential for BalenaOS to function.
+
+The extensions built in-tree pick their priorities from the same scale: the kernel extension sits at 100 and the tracing extension at 200, so the kernel extension shadows the tracing one, and both leave room on either side for overlays added later.
 
 ## Number of layered extensions
 
@@ -64,15 +74,17 @@ Extensions that ship kernel modules or BPF-sensitive content should declare the 
 * `io.balena.image.kernel-version=M.m.p`: coarse userspace-visible kernel version (e.g. `6.12.61`). Checked against the running kernel's stripped `uname -r`. Missing label is fail-open (extension is mounted).
 * `io.balena.image.kernel-abi-id=<sha256>`: precise kernel build fingerprint. For kernel extensions the build sets it to the sha256 of the extension's kernel image.
 
-<!-- -->
+```dockerfile
+FROM scratch
 
-    FROM scratch
+LABEL io.balena.image.class=overlay
+LABEL io.balena.image.kernel-version=6.12.61
+LABEL io.balena.image.kernel-abi-id=<sha256 of the kernel image>
 
-    LABEL io.balena.image.class=overlay
-    LABEL io.balena.image.kernel-version=6.12.61
-    LABEL io.balena.image.kernel-abi-id=<sha256 of the kernel image>
+COPY --from=builder /lib/modules /lib/modules
+```
 
-    COPY --from=builder /lib/modules /lib/modules
+Recipes built with `balena-hostapp-extension.bbclass` do not hand-write these two labels: the class derives them from the assembled rootfs, as described in [automatic kernel-override detection](host-extensions-development.md#automatic-kernel-override-detection).
 
 A boot-time cleanup service (`balena-extension-manager cleanup`) complements this by removing dead extension containers, including those whose `kernel-version` label no longer matches the running kernel. After a HUP changes the kernel, the now-mismatched containers are pruned on the next boot. See [Managing hostapp extensions](#managing-hostapp-extensions).
 
@@ -87,6 +99,14 @@ A kernel override extension declares:
 
 On activation the OS registers the override kernel under `/mnt/data/boot-by-abi/<kernel-abi-id>` and selects it on the next boot by its build id. If the override kernel is missing or fails to load, the boot falls back to the stock kernel shipped with the OS.
 
+The activation path is driven by the `/hooks/{create,start,deactivate}` scripts that `kernel-override-hooks` installs into every extension rootfs and that `balena-extension-runtime` invokes:
+
+* `create` symlinks `/mnt/data/boot-by-abi/<abi>` to the extension's `/boot` volume and persists the `deactivate` hook next to the kernel.
+* `start` verifies the symlink resolves to a real kernel image, resets `bootcount` and writes `kernel_override_abi` into the boot environment.
+* The initramfs `kexec` script reads `kernel_override_abi`, boots `/mnt/data/boot-by-abi/<abi>/<kernel image>` when it exists and falls back to the stock kernel otherwise.
+
+Each hook starts by testing whether the rootfs it was handed is a kernel override at all, so the same hooks are harmless in a userspace-only extension.
+
 In production a kernel override is delivered as part of a HUP. If the override kernel fails to boot, the device rolls back to the kernel previously committed for that root filesystem slot, the same way a failed HUP rolls back the root filesystem. Applying a kernel override outside a HUP is a development-only path: it takes effect on the running slot but carries no automatic rollback, so a kernel that fails to boot there must be recovered manually.
 
 ## Image retention across HUPs
@@ -95,14 +115,14 @@ Extension images declare which OS versions they are valid for via the `io.balena
 
 * `io.balena.image.os-version=<pattern>[,<pattern>...]`: a comma-separated list of shell-style globs (`filepath.Match` semantics) matched against `/etc/os-release` `VERSION_ID`. Any match retains the image. A missing or empty label is a legacy-safe retain.
 
-<!-- -->
+```dockerfile
+FROM scratch
 
-    FROM scratch
+LABEL io.balena.image.class=overlay
+LABEL io.balena.image.os-version=2.119.*
 
-    LABEL io.balena.image.class=overlay
-    LABEL io.balena.image.os-version=2.119.*
-
-    COPY --from=builder /hostext /
+COPY --from=builder /hostext /
+```
 
 Common choices:
 
@@ -111,6 +131,8 @@ Common choices:
 * Minor-list glob (`2.119.*,2.120.*`): builder opts in to one minor version of forward compatibility.
 
 Because `filepath.Match`'s `*` matches `.`, `2.119.*` also matches `2.119.0-staging`, `2.119.1+rev1`, and similar suffixed versions; this is intentional.
+
+Extensions built in-tree take the exact-version end of that scale: the build stamps the version of the OS being built, so the image is retained only for that OS version. This is the intended behaviour for an extension that ships with, and is rebuilt by, each release.
 
 At HUP commit, an image that fails the predicate is removed; the same HUP has already reconciled containers via the `kernel-version` and `kernel-abi-id` filters above, so no running extension is disrupted. Before the commit, during the rollback window, no image or container retention decisions are altered.
 
