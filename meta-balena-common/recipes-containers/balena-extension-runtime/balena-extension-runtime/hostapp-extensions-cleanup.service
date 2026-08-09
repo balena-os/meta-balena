@@ -1,5 +1,5 @@
 [Unit]
-Description=Clean up dead hostapp extension containers
+Description=Collect withdrawn hostapp extension containers and volumes
 After=balena.service
 Before=balena-supervisor.service
 
