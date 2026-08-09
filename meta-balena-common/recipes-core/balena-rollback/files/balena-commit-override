@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# Re-record the running slot's committed kernel override from the live
+# bootenv value. Invoked by balena-extension-manager after an extension's
+# deactivate hook has cleared kernel_override_abi, so a later rollback
+# restore does not re-arm an override whose extension is gone. Committing
+# an empty live value is the point: bootenv_restore_kernel_override treats
+# an empty committed snapshot as clear-the-override.
+
+set -o errexit
+
+. /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-bootenv
+. /usr/bin/rollback-parse-bootloader
+
+if [ -z "${BOOTLOADER_FILE:-}" ] || [ -z "${current_part_name:-}" ]; then
+    fail "could not resolve bootenv file or running slot"
+fi
+
+bootenv_commit_override "${BOOTLOADER_FILE}" "${current_part_name}"
+info "override committed for slot ${current_part_name}: '$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi")'"

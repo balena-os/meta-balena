@@ -28,6 +28,7 @@ SRC_URI = " \
     file://rollback-tests \
     file://rollback-parse-bootloader \
     file://rollback-board-healthcheck \
+    file://balena-commit-override \
     "
 
 inherit allarch systemd
@@ -51,6 +52,7 @@ do_install() {
     install -m 0775 ${UNPACKDIR}/rollback-tests ${D}${bindir}
     install -m 0775 ${UNPACKDIR}/rollback-parse-bootloader ${D}${bindir}
     install -m 0775 ${UNPACKDIR}/rollback-board-healthcheck ${D}${bindir}
+    install -m 0775 ${UNPACKDIR}/balena-commit-override ${D}${bindir}
     install -c -m 0644 ${UNPACKDIR}/rollback-altboot.service ${D}${systemd_unitdir}/system
     install -c -m 0644 ${UNPACKDIR}/rollback-clear-bootcount.service ${D}${systemd_unitdir}/system
     install -c -m 0644 ${UNPACKDIR}/rollback-health.service ${D}${systemd_unitdir}/system
