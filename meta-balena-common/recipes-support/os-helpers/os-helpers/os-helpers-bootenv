@@ -58,13 +58,51 @@ bootenv_unset() {
     bootenv_edit "$1" unset "$2"
 }
 
+# bootenv_running_override
+#   Prints the kernel override ABI this boot actually loaded, empty for the
+#   stock kernel. The initramfs kexec stamps the token onto the command line,
+#   which is the only account of which kernel is running as opposed to which
+#   one was asked for.
+bootenv_running_override() {
+    sed -n 's/.*balena_kernel_abi=\([^ ]*\).*/\1/p' /proc/cmdline
+}
+
 # bootenv_commit_override <file> <slot>
-#   Record the active kernel override as <slot>'s committed override.
+#   Record the kernel this boot is running as <slot>'s committed override.
 bootenv_commit_override() {
     _f="$1"
     _slot="$2"
-    grub-editenv "${_f}" set \
-        "kernel_override_abi_committed_${_slot}=$(bootenv_get "${_f}" "kernel_override_abi")"
+    _running=$(bootenv_running_override)
+    bootenv_set "${_f}" "kernel_override_abi_committed_${_slot}" "${_running}"
+}
+
+# bootenv_withdraw_committed_override <file> <slot> <abi>
+#   Forget <abi> as <slot>'s committed override, if that is what the snapshot
+#   names. Leaves it alone otherwise: withdrawing one extension says nothing
+#   about a different override the slot has proven healthy.
+bootenv_withdraw_committed_override() {
+    _f="$1"
+    _slot="$2"
+    _abi="$3"
+    [ -n "${_abi}" ] || return 0
+    if [ "$(bootenv_get "${_f}" "kernel_override_abi_committed_${_slot}")" = "${_abi}" ]; then
+        bootenv_set "${_f}" "kernel_override_abi_committed_${_slot}" ""
+    fi
+}
+
+# bootenv_withdraw_committed_override_all <file> <abi>
+#   Forget <abi> as the committed override in every slot that names it.
+#   Slots that committed a different override are left alone by the per-slot guard.
+bootenv_withdraw_committed_override_all() {
+    _f="$1"
+    _abi="$2"
+    [ -n "${_abi}" ] || return 0
+    # A and B are the whole slot namespace: rollback-parse-bootloader derives
+    # the slot by reducing the rootfs label to a bare A or B.
+    for _slot in A B; do
+        bootenv_withdraw_committed_override "${_f}" "${_slot}" "${_abi}"
+    done
+    return 0
 }
 
 # bootenv_restore_kernel_override <file> <slot>
