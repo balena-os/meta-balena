@@ -39,6 +39,22 @@ HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT ?= "1"
 # Unset by default: extend-only extension
 HOSTAPP_EXTENSION_LABEL_OVERRIDE        ?= ""
 
+# Every extension is a rootfs tarball imported as an image: no init manager, no
+# locales, never an initramfs. do_create_docker_image below reads
+# ${IMAGE_LINK_NAME}.tar.gz, so the fstype is a requirement of this class
+# rather than a preference.
+IMAGE_LINGUAS = ""
+VIRTUAL-RUNTIME_init_manager = ""
+INITRAMFS_IMAGE = ""
+IMAGE_FSTYPES = "tar.gz"
+
+# An overlay contributes its own content only; state directories have to come
+# from the hostapp underneath it.
+remove_unnecessary_files() {
+    rm -rf ${IMAGE_ROOTFS}/etc ${IMAGE_ROOTFS}/run ${IMAGE_ROOTFS}/var
+}
+IMAGE_PREPROCESS_COMMAND += "remove_unnecessary_files;"
+
 # Always-on: the hooks self-detect kernel content at runtime and
 # silently no-op for non-kernel extensions.
 IMAGE_INSTALL:append = " kernel-override-hooks"
