@@ -143,7 +143,7 @@ Host OS update scripts (`safe_reboot` in `hostapp-update`) check for an exclusiv
 
 This is independent from the application update lock mechanism managed by the Supervisor. The Supervisor uses a lockfile (file existence) to prevent application updates, while the host OS uses `flock()` to prevent reboots during OS updates.
 
-During critical operations, both mechanisms should be used together for full protection. For details on the application update lock and how to combine both, see the [Supervisor update locking documentation](https://github.com/balena-os/balena-supervisor/blob/master/docs/update-locking.md).
+During critical operations, both mechanisms should be used together for full protection. For details on the application update lock and how to combine both, see the online [update locking documentation](https://docs.balena.io/learn/deploy/release-strategy/update-locking).
 
 #### Creating the flock
 
