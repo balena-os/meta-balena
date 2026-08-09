@@ -142,6 +142,10 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 # let's pin linux-firmware to the version we imported from Poky scarthgap release
 PREFERRED_VERSION_linux-firmware = "20240909"
 
+# meta-oe restricts bpftool to x86_64; balena-ebpf-extension installs it on
+# aarch64 too
+COMPATIBLE_HOST:pn-bpftool = "(x86_64|aarch64).*-linux"
+
 # Go version from walnascar, meets balena-engine v25 requirement
 GOVERSION = "1.24.6"
 PREFERRED_PROVIDER_go-native = "go-binary-native"
