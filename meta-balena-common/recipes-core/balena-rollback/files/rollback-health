@@ -124,7 +124,7 @@ if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$curr
 		done
 	    info "new OS seems stable. Preventing further rollbacks"
 	    INTENT_ABI=$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi")
-	    RUNNING_ABI=$(sed -n 's/.*balena_kernel_abi=\([^ ]*\).*/\1/p' /proc/cmdline)
+	    RUNNING_ABI=$(bootenv_running_override)
 	    if [ -n "${INTENT_ABI}" ] && [ "${INTENT_ABI}" = "${RUNNING_ABI}" ]; then
 	        bootenv_commit_override "${BOOTLOADER_FILE}" "${current_part_name}" || true
 	    elif [ -n "${INTENT_ABI}" ]; then
