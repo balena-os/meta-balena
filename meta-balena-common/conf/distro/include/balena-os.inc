@@ -114,6 +114,11 @@ KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
 IMAGE_NAME_SUFFIX = ""
 
+# The extension kernel usually shares the base kernel's upstream version, so
+# its consumers pick it by deploy directory, never by version. The last path
+# component must match KERNEL_PACKAGE_NAME in kernel-extension.bbclass.
+KERNEL_EXTENSION_DEPLOY_DIR = "${DEPLOY_DIR_IMAGE}/kernel-extension"
+
 # resinOS defaults to ipk packages
 PACKAGE_CLASSES = "package_ipk"
 
