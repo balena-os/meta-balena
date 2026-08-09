@@ -1,5 +1,7 @@
 inherit deploy
 
+DESTDIR ?= "${DEPLOYDIR}"
+
 do_sign_gpg () {
     if [ "x${SIGN_API}" = "x" ]; then
         bbnote "Signing API not defined"
@@ -32,7 +34,7 @@ do_deploy:append() {
     for SIGNING_ARTIFACT in ${SIGNING_ARTIFACTS}; do
         if [ -f "${SIGNING_ARTIFACT}.sig" ]; then
             # Deploy the detached signature if available, the original file has already been deployed
-            install -m 0644 "${SIGNING_ARTIFACT}.sig" "${DEPLOYDIR}/$(basename ${SIGNING_ARTIFACT}).sig"
+            install -m 0644 "${SIGNING_ARTIFACT}.sig" "${DESTDIR}/$(basename ${SIGNING_ARTIFACT}).sig"
         fi
     done
 }
