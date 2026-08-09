@@ -9,6 +9,9 @@
 
 set -eu
 
+# This hook runs as the copy create persisted into the /boot volume, and the
+# manager invokes it with EXTENSION_ROOTFS pointing at that volume rather than
+# at an extension rootfs.
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
 # shellcheck disable=SC1091
