@@ -15,8 +15,81 @@
 'use strict';
 
 const URL_TEST = 'ipv4.google.com';
+const request = require('request-promise');
+const SUPERVISOR_PORT = 48484;
 const { join } = require('path');
 const fs = require('fs');
+const { delay } = require('bluebird');
+
+async function getProxyContainerID (context){
+	return context.worker.executeCommandInHostOS(
+		['balena', 'ps', '-qf', 'name=proxy'],
+		context.link
+	);
+};
+
+async function getRedsocksUid(context){
+	return context.worker.executeCommandInHostOS(
+		`id -u redsocks`,
+		context.link
+	);
+};
+
+async function setupProxyContainer(test, context, ip){
+	return getProxyContainerID(context).then((containerId) => {
+		// Ensure we only push and run the proxy container once
+		if (!containerId) {
+			test.comment('Running proxy in container');
+			return getRedsocksUid(context).then((redsocksUid) => {
+				const composeFile = join(__dirname, './docker-compose.yml');
+				try {
+					let composeContents = fs.readFileSync(composeFile, 'utf8');
+					let updatedCompose = composeContents.replace(/REDSOCKS_UID/g, redsocksUid.toString());
+					fs.writeFileSync(composeFile, updatedCompose, 'utf8');
+					test.comment("Updated docker-compose.yml with redsocks uid " + redsocksUid);
+				} catch (err) {
+					test.comment(`Failed to update docker-compose.yml - ` + err);
+				}
+
+				return context.worker.pushContainerToDUT(
+					ip, __dirname, 'proxy'
+				).then((state) => {
+					test.comment(state);
+				});
+			});
+		} else {
+			test.comment('continer id exists');
+		}
+	});
+}
+
+async function checkProxyFunctional(test, context, proxy){
+	return context.worker.executeCommandInHostOS(
+		`curl -I https://${URL_TEST}`,
+		context.link,
+	).then(() => {
+		return getProxyContainerID(context);
+	}).then((containerId) => {
+		test.comment('Getting proxy container logs...');
+		return context.worker.executeCommandInHostOS(
+			['balena', 'logs', containerId, '|', 'tail', '-n1'],
+			context.link,
+		);
+	}).then((proxyLog) => {
+		const pattern = {
+			'socks5': new RegExp(/\[socks5\] 127\.0\.0\.1:[0-9]* <->/),
+			'http-connect': new RegExp(/\[http\] 127\.0\.0\.1:[0-9]* <->/),
+		}[proxy];
+
+		test.comment(`Looking for ${proxy} connection logs...`);
+		test.match(
+			proxyLog,
+			pattern,
+			`${URL_TEST} responded over ${proxy} proxy`
+		);
+	})
+}
+
 module.exports = {
 	title: 'Connectivity tests',
 	tests: [
@@ -72,47 +145,10 @@ module.exports = {
 				return {
 					title: `${proxy.charAt(0).toUpperCase()}${proxy.slice(1)} test`,
 					run: async function(test) {
-						let getProxyContainerID = async() => {
-							return this.worker.executeCommandInHostOS(
-								['balena', 'ps', '-qf', 'name=proxy'],
-								this.link
-							);
-						};
-						let getRedsocksUid = async() => {
-							return this.worker.executeCommandInHostOS(
-								`id -u redsocks`,
-								this.link
-							);
-						};
-
 						return Promise.resolve(
 							this.worker.ip(this.link)
 						).then((ip) => {
-							return getProxyContainerID().then((containerId) => {
-								// Ensure we only push and run the proxy container once
-								if (!containerId) {
-									test.comment('Running proxy in container');
-									return getRedsocksUid().then((redsocksUid) => {
-										const composeFile = join(__dirname, './docker-compose.yml');
-										try {
-											let composeContents = fs.readFileSync(composeFile, 'utf8');
-											let updatedCompose = composeContents.replace(/REDSOCKS_UID/g, redsocksUid.toString());
-											fs.writeFileSync(composeFile, updatedCompose, 'utf8');
-											test.comment("Updated docker-compose.yml with redsocks uid " + redsocksUid);
-										} catch (err) {
-											test.comment(`Failed to update docker-compose.yml - ` + err);
-										}
-
-										return this.worker.pushContainerToDUT(
-											ip, __dirname, 'proxy'
-										).then((state) => {
-											test.comment(state);
-										});
-									});
-								} else {
-									test.comment('continer id exists');
-								}
-							});
+							return setupProxyContainer(test, this, ip);
 						}).then(() => {
 							return this.worker.executeCommandInHostOS(
 								'mkdir -p /mnt/boot/system-proxy',
@@ -158,30 +194,7 @@ module.exports = {
 								'Redsocks proxy service should be active',
 							);
 						}).then(() => {
-							return this.worker.executeCommandInHostOS(
-								`curl -I https://${URL_TEST}`,
-								this.link,
-							);
-						}).then(() => {
-							return getProxyContainerID();
-						}).then((containerId) => {
-							test.comment('Getting proxy container logs...');
-							return this.worker.executeCommandInHostOS(
-								['balena', 'logs', containerId, '|', 'tail', '-n1'],
-								this.link,
-							);
-						}).then((proxyLog) => {
-							const pattern = {
-								'socks5': new RegExp(/\[socks5\] 127\.0\.0\.1:[0-9]* <->/),
-								'http-connect': new RegExp(/\[http\] 127\.0\.0\.1:[0-9]* <->/),
-							}[proxy];
-
-							test.comment(`Looking for ${proxy} connection logs...`);
-							test.match(
-								proxyLog,
-								pattern,
-								`${URL_TEST} responded over ${proxy} proxy`
-							);
+							return checkProxyFunctional(test, this, proxy);
 						}).then(() => {
 							test.comment(`Removing redsocks.conf...`);
 							return this.worker.executeCommandInHostOS(
@@ -195,6 +208,80 @@ module.exports = {
 								this.link,
 							);
 						});
+					},
+				};
+			}),
+		},
+		{
+			// This tests that the supervisor host-config endpoint can successfully set a proxy configuration
+			title: 'Supervisor configured proxy tests',
+			tests: ['socks5', 'http-connect'].map(proxy => {
+				return {
+					title: `${proxy.charAt(0).toUpperCase()}${proxy.slice(1)} test`,
+					run: async function(test) {
+						return Promise.resolve(
+							this.worker.ip(this.link)
+						).then((ip) => {
+							return setupProxyContainer(test, this, ip);
+						}).then(() => {
+							return this.worker.ip(this.link)
+						}).then((ip) => {
+							test.comment(`Creating redsocks.conf for ${proxy} via supervisor API...`);
+							const supervisorProxyConf = {
+								network: {
+									proxy: {
+										type: proxy,
+										ip: '127.0.0.1',
+										port: '8123',
+										noProxy: [ "152.10.30.4", "253.1.1.0/16" ] // Include noProxy just to check that including it doesn't break the config
+									},
+								}
+							}
+							return request({
+								method: 'PATCH',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								json: true,
+								body: supervisorProxyConf,
+								uri: `http://${ip}:${SUPERVISOR_PORT}/v1/device/host-config`,
+							});
+						}).then(() => {
+								return this.worker.executeCommandInHostOS(
+									'systemctl is-active redsocks.service',
+									this.link,
+								)
+						}).then((redsocksStatus) => {
+							test.is(
+								redsocksStatus,
+								'active',
+								'Redsocks proxy service should be active',
+							);
+						}).then(() => {
+							return checkProxyFunctional(test, this, proxy);
+						}).then(() => {
+							return this.worker.ip(this.link)
+						}).then((ip) => {
+							test.comment(`Removing ${proxy} config via supervisor API...`);
+							const supervisorProxyConf = {
+								network: {
+									proxy: {},
+								}
+							}
+							return request({
+								method: 'PATCH',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								json: true,
+								body: supervisorProxyConf,
+								uri: `http://${ip}:${SUPERVISOR_PORT}/v1/device/host-config`,
+							});
+						}).then(() => {
+							// this delay is here as otherwise we may get an error from starting and stoping the proxy service too quickly in succession
+							return delay(1000*10)
+						})
+
 					},
 				};
 			}),
