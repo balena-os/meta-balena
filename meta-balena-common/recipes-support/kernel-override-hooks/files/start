@@ -2,8 +2,12 @@
 #
 # kernel-override-hooks: activate hook
 #
-# Verifies the install symlink resolves and is non-empty, then resets
-# bootcount=0 and writes kernel_override_abi.
+# Verifies the install symlink resolves and is non-empty, records the state the
+# boot-time validator will need, then writes kernel_override_abi.
+#
+# Arming an override starts a validation window: the live value now differs from
+# what this slot has committed, and the next boot either ratifies it or undoes
+# it.
 #
 
 set -eu
@@ -18,8 +22,20 @@ set -eu
 : "${EXTENSION_ROOTFS:?EXTENSION_ROOTFS not set}"
 
 BOOT_BY_ABI_DIR="/mnt/data/boot-by-abi"
+OVERRIDE_REJECTED="/mnt/state/override-rejected"
+VPN_PRESTATE="/mnt/state/extension-health-variables"
 
 extension_kernel_override_prelude "${EXTENSION_ROOTFS}" || exit 0
+
+grep -q " /mnt/state " /proc/mounts ||
+    fail "/mnt/state is not mounted; refusing to arm ${EXTENSION_KERNEL_ABI_ID}"
+
+# A kernel the boot-time validator has already rejected must not go straight
+# back.
+if [ -r "${OVERRIDE_REJECTED}" ] &&
+    [ "$(cat "${OVERRIDE_REJECTED}")" = "${EXTENSION_KERNEL_ABI_ID}" ]; then
+    fail "kernel override ${EXTENSION_KERNEL_ABI_ID} was rejected by health validation; not re-arming"
+fi
 
 KERNEL_IMG_NAME=$(basename "${EXTENSION_KERNEL_IMG}")
 
@@ -30,7 +46,14 @@ fi
 
 BOOTENV_FILE=$(bootenv_locate) || fail "cannot locate bootenv"
 
-bootenv_set "${BOOTENV_FILE}" "bootcount" "0"
+# Record whether the VPN was reachable before this change.
+if [ -e /var/run/openvpn/vpn_status/active ]; then
+    echo "BALENAOS_ROLLBACK_VPNONLINE=1" > "${VPN_PRESTATE}"
+else
+    echo "BALENAOS_ROLLBACK_VPNONLINE=0" > "${VPN_PRESTATE}"
+fi
+sync -f /mnt/state
+
 # Must be last
 bootenv_set "${BOOTENV_FILE}" "kernel_override_abi" "${EXTENSION_KERNEL_ABI_ID}"
 sync

@@ -18,6 +18,7 @@ set -eu
 . /usr/libexec/os-helpers-bootenv
 
 BOOT_BY_ABI_DIR="/mnt/data/boot-by-abi"
+OVERRIDE_REJECTED="/mnt/state/override-rejected"
 
 ABI="${EXTENSION_IMAGE_KERNEL_ABI_ID:-}"
 if [ -z "${ABI}" ]; then
@@ -39,4 +40,21 @@ if [ -L "${TARGET}" ]; then
     rm -f "${TARGET}"
     sync -f "${BOOT_BY_ABI_DIR}"
     info "removed boot-by-abi/${ABI} symlink"
+fi
+
+# Withdrawing the extension withdraws the question, so a rejection recorded
+# against this ABI goes with it. Without this an operator could never retry
+# the same build after fixing whatever it broke on the device.
+if [ "${EXTENSION_REJECTED:-0}" != "1" ]; then
+    if [ -r "${OVERRIDE_REJECTED}" ] && [ "$(cat "${OVERRIDE_REJECTED}")" = "${ABI}" ]; then
+        rm -f "${OVERRIDE_REJECTED}"
+        sync -f /mnt/state || true
+        info "cleared the health-validation rejection recorded for ${ABI}"
+    fi
+    if [ -n "${BOOTENV_FILE:-}" ] &&
+        [ "$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi_rejected")" = "${ABI}" ]; then
+        bootenv_unset "${BOOTENV_FILE}" "kernel_override_abi_rejected"
+        sync
+        info "cleared the unconsumed rejection relay for ${ABI}"
+    fi
 fi
