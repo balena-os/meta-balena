@@ -1,4 +1,27 @@
 - commits:
+    - subject: "hostapp: Add deploy assets to hostapp composition"
+      hash: 5b522aebe5d66c0da950d6fd3543c0d1c34333b4
+      body: |
+        These assets must exist relative to the build/tmp/deploy path
+        and will be deployed as resources on the release.
+
+        For the hostapp only, some of these resources get transformations
+        before being uploaded:
+        - cyclonedx-export/ is renamed to cyclonedx/
+        - licenses/ is tarred
+        - secure-boot-lock/ is tarred
+        - images/__MACHINE__/ subdirs are flattened
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.9.4
+  title: ""
+  date: 2026-08-11T19:07:41.208Z
+- commits:
     - subject: "balena-extension-runtime: do not duplicate binary"
       hash: ad640a5705664e0b2e97d90d74c2947239324f5f
       body: |

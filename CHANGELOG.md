@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.9.4
+## (2026-08-11)
+
+* hostapp: Add deploy assets to hostapp composition [Kyle Harding]
+
 # v7.9.3
 ## (2026-08-08)
 
