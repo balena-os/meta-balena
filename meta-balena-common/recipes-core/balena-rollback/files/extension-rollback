@@ -1,0 +1,148 @@
+#!/bin/sh
+#
+# Copyright 2026 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Validate a kernel override armed outside a host OS update.
+#
+
+set -o errexit
+
+. /usr/sbin/balena-config-vars
+. /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-bootenv
+. /usr/bin/rollback-parse-bootloader
+
+SETTLE=${SETTLE:-60}
+RETRY=${RETRY:-20}
+COUNT=${COUNT:-12}
+
+DEACTIVATE_TIMEOUT=${DEACTIVATE_TIMEOUT:-120}
+
+OVERRIDE_REJECTED=/mnt/state/override-rejected
+BOOT_BY_ABI_DIR=/mnt/data/boot-by-abi
+
+# The pre-state the start hook captured when it armed.
+VPN_PRESTATE=/mnt/state/extension-health-variables
+export ROLLBACK_HEALTH_VARIABLES="${VPN_PRESTATE}"
+
+healthchecks_pass () {
+	_counter=0
+	while ! rollback-tests ; do
+		_counter=$((_counter + 1))
+		# Give up on the failed attempt rather than after sleeping through an
+		# interval that no further attempt follows.
+		if [ "${_counter}" -ge "${COUNT}" ]; then
+			return 1
+		fi
+		info "Retrying healthcheck ${_counter} of ${COUNT} in ${RETRY} seconds"
+		sleep "${RETRY}"
+	done
+	return 0
+}
+
+# Clear the state this validation owns, once it has reached a verdict.
+clear_pending_state () {
+	rm -f "${VPN_PRESTATE}"
+	sync -f "${BALENA_NONENC_BOOT_MOUNTPOINT}" || true
+	sync -f /mnt/state || true
+}
+
+# Record that this boot proved an override unusable, then undo it.
+#
+reject_override () {
+	_abi="$1"
+	_reason="$2"
+	warn "kernel override ${_abi} rejected: ${_reason}"
+
+	if echo "${_abi}" > "${OVERRIDE_REJECTED}.new" &&
+		sync -f /mnt/state &&
+		mv "${OVERRIDE_REJECTED}.new" "${OVERRIDE_REJECTED}"; then
+		sync -f /mnt/state || true
+	else
+		warn "failed to record the rejection; the activation hook may re-arm ${_abi}"
+		rm -f "${OVERRIDE_REJECTED}.new"
+	fi
+
+	_disarmed=0
+	if timeout "${DEACTIVATE_TIMEOUT}" \
+		balena-extension-manager deactivate --rejected-kernel-abi-id "${_abi}"; then
+		_disarmed=1
+	else
+		_rc=$?
+		if [ "${_rc}" -eq 124 ]; then
+			warn "balena-extension-manager did not return within ${DEACTIVATE_TIMEOUT}s; clearing the override directly"
+		else
+			warn "balena-extension-manager could not deactivate ${_abi} (exit ${_rc}); clearing the override directly"
+		fi
+	fi
+
+	if [ "${_disarmed}" -eq 0 ]; then
+		bootenv_unset "${BOOTLOADER_FILE}" "kernel_override_abi" || true
+		bootenv_commit_override "${BOOTLOADER_FILE}" "${current_part_name}" || true
+	fi
+
+	clear_pending_state
+}
+
+# While the update flag is set the rootfs axis owns the boot.
+if [ "${upgrade_available}" -eq 1 ]; then
+	info "host OS update in progress; leaving the override to the update path"
+	exit 0
+fi
+
+LIVE_ABI=$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi")
+COMMITTED_ABI=$(bootenv_get "${BOOTLOADER_FILE}" "kernel_override_abi_committed_${current_part_name}")
+
+# An ordinary boot ends here.
+if [ "${LIVE_ABI}" = "${COMMITTED_ABI}" ]; then
+	exit 0
+fi
+
+# An empty live value is the stock kernel. Recording it also retires a
+# snapshot left behind by a release that no longer ships an override.
+if [ -z "${LIVE_ABI}" ]; then
+	info "no override armed; recording that for slot ${current_part_name}"
+	bootenv_commit_override "${BOOTLOADER_FILE}" "${current_part_name}" || true
+	sync -f "${BALENA_NONENC_BOOT_MOUNTPOINT}" || true
+	exit 0
+fi
+
+RUNNING_ABI=$(sed -n 's/.*balena_kernel_abi=\([^ ]*\).*/\1/p' /proc/cmdline)
+
+if [ "${LIVE_ABI}" != "${RUNNING_ABI}" ]; then
+	# The arm did not take effect, so nothing new has been tested and neither
+	# committing nor undoing it is right.
+	if [ ! -e "${BOOT_BY_ABI_DIR}/${LIVE_ABI}" ]; then
+		# The override never took effect, so the kernel now
+		# running is already the one this device keeps.
+		reject_override "${LIVE_ABI}" "no kernel published under ${BOOT_BY_ABI_DIR}"
+		exit 0
+	fi
+	info "override ${LIVE_ABI} did not boot (running '${RUNNING_ABI:-stock}'); leaving it pending"
+	exit 0
+fi
+
+info "kernel override ${LIVE_ABI} is on trial; running healthchecks after ${SETTLE} seconds"
+sleep "${SETTLE}"
+if healthchecks_pass; then
+	info "override ${LIVE_ABI} proved healthy; committing it for slot ${current_part_name}"
+	bootenv_commit_override "${BOOTLOADER_FILE}" "${current_part_name}" || true
+	clear_pending_state
+else
+	reject_override "${LIVE_ABI}" "failed the healthchecks"
+	sync
+	sleep 10
+	reboot
+fi
