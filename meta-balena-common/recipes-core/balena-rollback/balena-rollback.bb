@@ -28,16 +28,18 @@ SRC_URI = " \
     file://rollback-tests \
     file://rollback-parse-bootloader \
     file://rollback-board-healthcheck \
+    file://extension-rollback.service \
     "
 
 inherit allarch systemd
 
-RDEPENDS:${PN} = "os-helpers-bootenv os-helpers-logging"
+RDEPENDS:${PN} = "balena-extension-runtime os-helpers-logging"
 
 SYSTEMD_SERVICE:${PN} = " \
 	rollback-altboot.service \
 	rollback-health.service \
 	rollback-clear-bootcount.service \
+	extension-rollback.service \
 	"
 
 do_install() {
@@ -54,4 +56,5 @@ do_install() {
     install -c -m 0644 ${UNPACKDIR}/rollback-altboot.service ${D}${systemd_unitdir}/system
     install -c -m 0644 ${UNPACKDIR}/rollback-clear-bootcount.service ${D}${systemd_unitdir}/system
     install -c -m 0644 ${UNPACKDIR}/rollback-health.service ${D}${systemd_unitdir}/system
+    install -c -m 0644 ${UNPACKDIR}/extension-rollback.service ${D}${systemd_unitdir}/system
 }
