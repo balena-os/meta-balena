@@ -100,7 +100,7 @@ def balena_rootfs_size(d):
     balena_rootfs_size = int(((1460 * 1024) - boot_part_size - state_part_size) / 2)
     return int(disk_aligned(d, balena_rootfs_size))
 
-BALENA_BOOT_FS_LABEL ?= "resin-boot"
+BALENA_BOOT_FS_LABEL ?= "${BALENA_ENC_BOOT_LABEL}"
 BALENA_ROOTA_FS_LABEL ?= "resin-rootA"
 BALENA_ROOTB_FS_LABEL ?= "resin-rootB"
 BALENA_STATE_FS_LABEL ?= "resin-state"
