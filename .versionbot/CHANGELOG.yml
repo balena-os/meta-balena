@@ -1,4 +1,22 @@
 - commits:
+    - subject: "workflows: Pin yocto-scripts submodule to master"
+      hash: 259a2085fd44d313007071cedbf4876ac6672746
+      body: |
+        Release v1.42.0 has a dependency on the yocto-scripts submodule
+        being updated in the device repo to match.
+
+        Fixes "prepare-image.py: No such file or directory"
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 7.9.5
+  title: ""
+  date: 2026-08-16T16:28:57.591Z
+- commits:
     - subject: "hostapp: Add deploy assets to hostapp composition"
       hash: 5b522aebe5d66c0da950d6fd3543c0d1c34333b4
       body: |

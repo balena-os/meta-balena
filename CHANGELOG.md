@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.9.5
+## (2026-08-16)
+
+* workflows: Pin yocto-scripts submodule to master [Kyle Harding]
+
 # v7.9.4
 ## (2026-08-11)
 
