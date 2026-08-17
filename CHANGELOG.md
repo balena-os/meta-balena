@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v8.0.0
+## (2026-08-17)
+
+* image_types_balena: force 4K block size for resin-state ext4 [guille-vega]
+* Increase default boot, root and state partition sizes [guille-vega]
+
 # v7.9.6
 ## (2026-08-17)
 
