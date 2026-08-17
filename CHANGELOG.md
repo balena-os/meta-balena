@@ -1,6 +1,36 @@
 Change log
 -----------
 
+# v7.9.6
+## (2026-08-17)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4ae6a0e [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.124
+> ### (2026-08-15)
+> 
+> * Update debian:bullseye-slim Docker digest to f313b4b [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.123
+> ### (2026-08-15)
+> 
+> * Update core/contracts digest to 410a252 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.122
+> ### (2026-08-15)
+> 
+> * Update alpine Docker tag to v3.24.1 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.121
+> ### (2026-08-14)
+> 
+> * Core: worker: fix error with custom DT [Ryan Cooke]
+> 
+
+</details>
+
 # v7.9.5
 ## (2026-08-16)
 
