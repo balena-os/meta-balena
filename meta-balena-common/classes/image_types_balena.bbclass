@@ -92,12 +92,12 @@ def disk_aligned(d, rootfs_size):
     return rootfs_size
 
 # The rootfs size is calculated by substracting from the maximum BalenaOS image
-# 700 MiB size, the size  of all other partitions except the data partition,
+# 1460 MiB size, the size  of all other partitions except the data partition,
 # dividing by 2, and substracting filesystem metadata and reserved allocations
 def balena_rootfs_size(d):
     boot_part_size = int(d.getVar("BALENA_BOOT_SIZE"))
     state_part_size = int(d.getVar("BALENA_STATE_SIZE"))
-    balena_rootfs_size = int(((700 * 1024) - boot_part_size - state_part_size) / 2)
+    balena_rootfs_size = int(((1460 * 1024) - boot_part_size - state_part_size) / 2)
     return int(disk_aligned(d, balena_rootfs_size))
 
 BALENA_BOOT_FS_LABEL ?= "resin-boot"
@@ -110,9 +110,9 @@ BALENA_DATA_FS_LABEL ?= "resin-data"
 BALENA_BOOT_FAT32 ?= "0"
 
 # Sizes in KiB
-BALENA_BOOT_SIZE ?= "40960"
+BALENA_BOOT_SIZE ?= "102400"
 BALENA_ROOTB_SIZE ?= ""
-BALENA_STATE_SIZE ?= "20480"
+BALENA_STATE_SIZE ?= "81920"
 BALENA_IMAGE_ALIGNMENT ?= "4096"
 IMAGE_ROOTFS_ALIGNMENT = "${BALENA_IMAGE_ALIGNMENT}"
 DEVICE_SPECIFIC_SPACE ?= "${BALENA_IMAGE_ALIGNMENT}"
@@ -321,7 +321,7 @@ IMAGE_CMD:balenaos-img () {
         BALENA_STATE_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_STATE_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
         rm -rf ${BALENA_STATE_FS}
         truncate -s "$(expr ${BALENA_STATE_BLOCKS} \* 1024 )" "${BALENA_STATE_FS}"
-        mkfs.ext4 -F -L "${BALENA_STATE_FS_LABEL}" ${BALENA_STATE_FS}
+        mkfs.ext4 -b 4096 -F -L "${BALENA_STATE_FS_LABEL}" ${BALENA_STATE_FS}
     fi
 
     # Label what is not labeled
