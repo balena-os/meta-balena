@@ -321,7 +321,7 @@ IMAGE_CMD:balenaos-img () {
         BALENA_STATE_BLOCKS=$(LC_ALL=C parted -s ${BALENA_RAW_IMG} unit b print | grep -E "^(| )${BALENA_STATE_PN} " | awk '{ print substr($4, 1, length($4 -1)) / 512 /2 }')
         rm -rf ${BALENA_STATE_FS}
         truncate -s "$(expr ${BALENA_STATE_BLOCKS} \* 1024 )" "${BALENA_STATE_FS}"
-        mkfs.ext4 -F -L "${BALENA_STATE_FS_LABEL}" ${BALENA_STATE_FS}
+        mkfs.ext4 -b 4096 -F -L "${BALENA_STATE_FS_LABEL}" ${BALENA_STATE_FS}
     fi
 
     # Label what is not labeled
