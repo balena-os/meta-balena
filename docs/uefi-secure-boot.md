@@ -156,7 +156,7 @@ Each OS build ships update files for `db` and `dbx` in the `/resin-boot` directo
 3. Device reboots, new OS boots up.
 4. `rollback-health` checks whether the new OS is healthy.
 5. If the update failed, rollback triggers and the old OS is booted up. Both OS's have valid signatures in `db` and both are still bootable so that the update can be retried.
-6. If the update went through fine, `rollback-health` will look for `dbx.auth` in the inactive partition and append it to the `dbx` variable. Theoretically the old OS is no longer bootable, however this is only the case if the GRUB binary has actually changed, otherwise its hash in `db` will stay the same and both the old and the new OS's stay bootable.
+6. If the update went through fine, `rollback-health` will look for `dbx.auth` in the inactive partition and append it to the `dbx` variable. The old OS is no longer bootable.
 
 ### BIOS/UEFI updates
 
