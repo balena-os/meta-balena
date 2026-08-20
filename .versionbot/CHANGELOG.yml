@@ -1,4 +1,19 @@
 - commits:
+    - subject: "balena: use AtomicWriteFile to save volume options"
+      hash: 130aa0d717e5a2eaf970718a819fb44d86d53a2d
+      body: |
+        Backport moby/moby#48034 to balenaEngine v25
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 8.0.1
+  title: ""
+  date: 2026-08-20T16:35:41.933Z
+- commits:
     - subject: "image_types_balena: force 4K block size for resin-state ext4"
       hash: f7006438a12450fe579aa2a53b1c926ee1a78409
       body: |

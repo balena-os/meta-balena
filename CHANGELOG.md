@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.1
+## (2026-08-20)
+
+* balena: use AtomicWriteFile to save volume options [Kyle Harding]
+
 # v8.0.0
 ## (2026-08-17)
 
