@@ -1,0 +1,7 @@
+[Unit]
+Description=Reconcile the redsocks redirect with redsocks health
+After=balena-proxy-config.service
+
+[Service]
+Type=oneshot
+ExecStart=@BASE_BINDIR@/sh @BINDIR@/balena-proxy-config reconcile

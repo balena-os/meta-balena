@@ -1,0 +1,10 @@
+[Unit]
+Description=Periodically reconcile the redsocks redirect
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=30s
+AccuracySec=5s
+
+[Install]
+WantedBy=multi-user.target
