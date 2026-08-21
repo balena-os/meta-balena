@@ -14,6 +14,9 @@
 #   HOSTAPP_EXTENSION_LABELS  - extra `--change "LABEL ..."` lines
 #   HOSTAPP_EXTENSION_CHANGES - extra `--change "..."` lines (VOLUME, ENV, ...)
 #
+# The paths stripped from the assembled rootfs are configurable via:
+#   HOSTAPP_EXTENSION_REMOVE_PATHS - rootfs-relative paths (default: etc run var)
+#
 # The values of the conventional labels can be overridden per-recipe:
 #   HOSTAPP_EXTENSION_LABEL_STORE            - io.balena.image.store          (default: data)
 #   HOSTAPP_EXTENSION_LABEL_CLASS            - io.balena.image.class          (default: overlay)
@@ -38,6 +41,36 @@ HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT ?= "1"
 
 # Unset by default: extend-only extension
 HOSTAPP_EXTENSION_LABEL_OVERRIDE        ?= ""
+
+# Every extension is a rootfs tarball imported as an image: no init manager, no
+# locales, never an initramfs. do_create_docker_image below reads
+# ${IMAGE_LINK_NAME}.tar.gz, so the fstype is a requirement of this class
+# rather than a preference.
+IMAGE_LINGUAS = ""
+VIRTUAL-RUNTIME_init_manager = ""
+INITRAMFS_IMAGE = ""
+IMAGE_FSTYPES = "tar.gz"
+
+# An overlay contributes its own content only; state directories have to come
+# from the hostapp underneath it. An extension that has to ship content under
+# one of these drops it from the list and takes on the shadowing semantics.
+HOSTAPP_EXTENSION_REMOVE_PATHS ?= "etc run var"
+
+# rm -rf unlinks a symlink without following it, so the same form covers both
+# the state directories and the /bin and /sbin compatibility symlinks.
+remove_unnecessary_files() {
+    for p in ${HOSTAPP_EXTENSION_REMOVE_PATHS}; do
+        # The value is reachable from local.conf and a machine conf, so an entry
+        # that escapes the rootfs would rm -rf the build tree.
+        case "$p" in
+            /|.|..|*..*) bbfatal "invalid HOSTAPP_EXTENSION_REMOVE_PATHS entry: '$p'" ;;
+        esac
+        rm -rf "${IMAGE_ROOTFS}/$p"
+    done
+}
+# Ordered before install_kernel_override_symvers below, which writes under
+# /usr/lib/modules/<ver>/ and would be undone by a removal running after it.
+IMAGE_PREPROCESS_COMMAND += "remove_unnecessary_files;"
 
 # Always-on: the hooks self-detect kernel content at runtime and
 # silently no-op for non-kernel extensions.

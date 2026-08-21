@@ -62,9 +62,9 @@ extension_detect_kernel_override() {
 #                EXTENSION_KERNEL_SYMVERS, EXTENSION_KERNEL_IMG,
 #                EXTENSION_KERNEL_ABI_ID (64-char sha256 of the kernel image).
 #   Returns 1  - not a kernel-override extension. Caller should exit 0.
-#   Does not return - misbuild; the helper calls fail (exits 1).
-#
-#   Requires os-helpers-logging to be sourced (info, fail).
+#   Does not return - misbuild, or the computed id disagrees with the
+#                extension's io.balena.image.kernel-abi-id label; the helper
+#                calls fail (exits 1).
 #
 
 extension_kernel_override_prelude() {
@@ -73,6 +73,11 @@ extension_kernel_override_prelude() {
     case "${_rc}" in
     0)
         EXTENSION_KERNEL_ABI_ID=$(sha256sum "${EXTENSION_KERNEL_IMG}" | awk '{print $1}')
+        # An abi-id that disagrees with the label the build computed from that same
+        # image would boot a kernel with no matching modules.
+        if [ "${EXTENSION_IMAGE_KERNEL_ABI_ID:-}" != "${EXTENSION_KERNEL_ABI_ID}" ]; then
+            fail "computed kernel ABI id ${EXTENSION_KERNEL_ABI_ID} does not match io.balena.image.kernel-abi-id label '${EXTENSION_IMAGE_KERNEL_ABI_ID:-}'; refusing to activate"
+        fi
         return 0
         ;;
     1)
