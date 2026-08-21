@@ -1,4 +1,21 @@
 - commits:
+    - subject: "distro:balena-os.inc: Remove gobject-introspection-data from
+        DISTRO_FEATURES"
+      hash: 049d1a5bf38786fa1d2d50ac563234d4aa742645
+      body: |
+        We do not use GObject Introspection typelib files in the hostOS so let's
+        remove them in order to help shrink the rootfs.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 8.0.2
+  title: ""
+  date: 2026-08-21T20:43:55.785Z
+- commits:
     - subject: "balena: use AtomicWriteFile to save volume options"
       hash: 130aa0d717e5a2eaf970718a819fb44d86d53a2d
       body: |

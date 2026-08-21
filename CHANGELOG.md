@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.2
+## (2026-08-21)
+
+* distro:balena-os.inc: Remove gobject-introspection-data from DISTRO_FEATURES [Florin Sarbu]
+
 # v8.0.1
 ## (2026-08-20)
 
