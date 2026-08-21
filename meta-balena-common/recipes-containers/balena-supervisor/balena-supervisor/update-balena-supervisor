@@ -116,6 +116,37 @@ os_helpers_fetch_target_state() {
             return 0
         fi
     fi
+
+    # A supervisor release that is still a draft is never published as a supervisor_release row, so the
+    # query above finds nothing even though the device is pinned to it and the target state does carry
+    # the release and its `core` image. Resolving `core` from the target state is what lets a device
+    # pinned to a draft actually run it; without it the device silently keeps whatever supervisor the
+    # image preloaded, and the pin only ever moves the app-scoped services.
+    if _state=$(api_get_request "${_api_env}/device/v3/${_device_uuid}/state" "${_token}"); then
+        _core=$(echo "${_state}" | jq -r '
+            .[] | .apps | to_entries[]
+            | select(.value.class == "app" and (.value.is_host | not))
+            | .value.releases | to_entries[]
+            | select(.value.services.core != null)
+            | "\(.value.id) \(.value.services.core.image)"' 2>/dev/null | head -1)
+        if [ -n "${_core}" ]; then
+            _release_id="${_core%% *}"
+            _image_name="${_core#* }"
+            # The target state carries the release id but not its version, so ask for the version
+            # separately and fall back to the id rather than failing: the image is what has to be right.
+            _version=""
+            if _release=$(api_get_request "${_api_env}/v6/release(id=${_release_id})?\$select=raw_version" "${_token}"); then
+                _version=$(echo "${_release}" | jq -r '.d[0].raw_version // empty' 2>/dev/null)
+            fi
+            [ -n "${_version}" ] || _version="${_release_id}"
+            case "${_version}" in
+                v*) ;;
+                *) _version="v${_version}" ;;
+            esac
+            echo "${_version} ${_image_name}"
+            return 0
+        fi
+    fi
     return 1
 }
 
