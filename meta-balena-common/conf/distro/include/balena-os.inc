@@ -81,6 +81,9 @@ DISTRO_FEATURES:append = " disable-user-ns"
 # balenaOS does not use PAM but some vendor BSP might add it
 DISTRO_FEATURES:remove = "pam"
 
+# we do not use GObject Introspection in the hostOS
+DISTRO_FEATURES:remove = "gobject-introspection-data"
+
 # Providers
 PREFERRED_PROVIDER_docker ?= "docker"
 PREFERRED_PROVIDER_jpeg ?= "jpeg"
