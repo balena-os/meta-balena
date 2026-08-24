@@ -1,4 +1,23 @@
 - commits:
+    - subject: "balena-bootloader.bbclass: Move common bits from devices to class"
+      hash: f0b0c9843b896451123a6e41e7d8e5421608b20b
+      body: |
+        After adding the balena bootloader to a handful of devices, some stuff
+        keeps getting copy/pasted into the bootloader recipes.
+
+        This patch moves the common bits to balena-bootloader.bbclass to avoid
+        duplication and make it easier to use.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 8.0.3
+  title: ""
+  date: 2026-08-24T19:29:40.404Z
+- commits:
     - subject: "distro:balena-os.inc: Remove gobject-introspection-data from
         DISTRO_FEATURES"
       hash: 049d1a5bf38786fa1d2d50ac563234d4aa742645

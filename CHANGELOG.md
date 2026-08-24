@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.3
+## (2026-08-24)
+
+* balena-bootloader.bbclass: Move common bits from devices to class [Michal Toman]
+
 # v8.0.2
 ## (2026-08-21)
 
