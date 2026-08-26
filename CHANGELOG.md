@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.4
+## (2026-08-26)
+
+* hostapp.yml: Set network_mode none on the hostapp service [Christina Ying Wang]
+
 # v8.0.3
 ## (2026-08-24)
 

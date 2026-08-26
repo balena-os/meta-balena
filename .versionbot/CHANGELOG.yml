@@ -1,4 +1,21 @@
 - commits:
+    - subject: "hostapp.yml: Set network_mode none on the hostapp service"
+      hash: 81c16302ee5f63da19081bc04ab04066d58d5532
+      body: |
+        Without it, compose-go adds a default network to the published
+        composition and the supervisor creates a real bridge whose subnet can
+        collide with the device's LAN.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Christina Ying Wang <christina@balena.io>
+        signed-off-by: Christina Ying Wang <christina@balena.io>
+      author: Christina Ying Wang
+      nested: []
+  version: 8.0.4
+  title: ""
+  date: 2026-08-26T21:32:57.241Z
+- commits:
     - subject: "balena-bootloader.bbclass: Move common bits from devices to class"
       hash: f0b0c9843b896451123a6e41e7d8e5421608b20b
       body: |
