@@ -145,7 +145,12 @@ fi
 
 if [ "$commit_hooks" = "1" ] ; then
 	for hook in $list_of_forward_commit_hooks; do
-		run_hook "$hook"
+		# Commit hooks run after the point of no return and are independent
+		# cleanup, so one that fails must not cancel the ones sorting after
+		# it.
+		if ! run_hook "$hook" ; then
+			warn "commit hook $hook failed; continuing with the rest"
+		fi
 	done
 fi
 
