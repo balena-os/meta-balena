@@ -132,7 +132,8 @@ if [ "$resin_root_part" = "$current_part_idx" ] || [ "$resin_root_part" = "$curr
 	    fi
 	    rollback-stop || true
 	    info "Running commit hooks"
-	    hostapp-update-hooks-v2 --commit || true
+	    hostapp-update-hooks-v2 --commit || \
+	        warn "commit hooks failed; stale-OS extension images stay on the data partition"
 	else
 		warn "Nothing to do. Looks like we are in ROLLBACK_HEALTHY state. Why is script running?"
 		rollback-stop || true
