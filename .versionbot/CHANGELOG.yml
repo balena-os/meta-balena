@@ -1,4 +1,17 @@
 - commits:
+    - subject: Update flowzonify to v0.4.2
+      hash: 96c841e02785a6c15ee37fb672b316542315ad27
+      body: |
+        Update flowzonify from 0.0.0 to 0.4.2
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested: []
+  version: 8.0.5
+  title: ""
+  date: 2026-08-31T19:52:43.673Z
+- commits:
     - subject: "hostapp.yml: Set network_mode none on the hostapp service"
       hash: 81c16302ee5f63da19081bc04ab04066d58d5532
       body: |
