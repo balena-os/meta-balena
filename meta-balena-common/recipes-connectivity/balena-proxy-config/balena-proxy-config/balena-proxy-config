@@ -8,6 +8,21 @@ set -e
 IPTABLES_WAIT_SECS="10"
 IPTABLES="iptables -w $IPTABLES_WAIT_SECS"
 
+REDSOCKS_ADDR="10.114.103.1"
+REDSOCKS_PORT="12345"
+REDSOCKS_DNS_PORT="5313"
+
+# The same REDSOCKS_ADDR and REDSOCKS_PORT as above, written the way
+# /proc/net/tcp renders a local address.
+REDSOCKS_LISTEN_HEX=$(IFS=.; set -- ${REDSOCKS_ADDR}; \
+	printf '%02X%02X%02X%02X:%04X' "$4" "$3" "$2" "$1" "${REDSOCKS_PORT}")
+
+DNS_INTERFACE_NAME="resin-redsocks"
+LOCKFILE="/run/lock/balena-proxy-config"
+PROC_NET_TCP="/proc/net/tcp"
+ATTACH_TIMEOUT_SECS="10"
+LOCK_TIMEOUT_SECS="30"
+
 . /usr/sbin/balena-config-vars
 . /usr/libexec/os-helpers-logging
 
@@ -38,8 +53,6 @@ removeRulesFromChain() {
 
 if [ ! -f "$CONFIG_PATH" ]; then
 	fail "$CONFIG_PATH does not exist."
-else
-	info "Found config.json in $CONFIG_PATH ."
 fi
 
 if [ ! -d "$BALENA_BOOT_MOUNTPOINT" ]; then
@@ -48,73 +61,316 @@ fi
 
 REDSOCKSCONF=${BALENA_BOOT_MOUNTPOINT}/system-proxy/redsocks.conf
 NOPROXYFILE=${BALENA_BOOT_MOUNTPOINT}/system-proxy/no_proxy
+FAILUREFILE=${BALENA_BOOT_MOUNTPOINT}/system-proxy/on_proxy_failure
 
 # README!
 # The entire following configuration depends on the redsocks configuration.
 # Currently the values used here are forced with a patch on redsocks. If these
 # change, you need to refresh the redsocks patch as well.
 
-# Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
-$IPTABLES -t nat -D OUTPUT -p udp -m owner ! --uid-owner redsocks -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
-$IPTABLES -t nat -D PREROUTING -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313 || true
-removeRulesFromChain OUTPUT REDSOCKS
-removeRulesFromChain PREROUTING REDSOCKS
-$IPTABLES -t nat -F REDSOCKS || true
-$IPTABLES -t nat -X REDSOCKS || true
-
-if [ ! -f "$REDSOCKSCONF" ]; then
-	info "No proxy configuration found, skipping."
-	exit 0
+# On proxy failure allow direct connections.
+# Recoverability wins over keeping egress proxied.
+# To forbid unproxied egress the proxy can be configured with reject.
+FAILURE_ACTION="direct"
+if [ "$(cat "${FAILUREFILE}" 2>/dev/null)" = "reject" ]; then
+	FAILURE_ACTION="reject"
 fi
 
-# Setup a bridge interface for redsocks
-DNS_INTERFACE_NAME="resin-redsocks"
-DNS_INTERFACE_IP="10.114.103.1"
-if [ ! -d "/sys/class/net/${DNS_INTERFACE_NAME}" ]; then
-	ip link add name ${DNS_INTERFACE_NAME} type bridge
+# Disengaging the redirect means sending TCP straight past the REDSOCKS chain.
+BYPASS_RULE="-p tcp -j RETURN"
+
+# When the dnsu2t module is enabled in redsocks, UDP DNS is redirected into it
+# to force DNS over TCP. These move with the TCP redirect, never independently.
+DNS_OUTPUT_RULE="-p udp -m owner ! --uid-owner redsocks --dport 53 -j DNAT --to-destination ${REDSOCKS_ADDR}:${REDSOCKS_DNS_PORT}"
+DNS_PREROUTING_RULE="-p udp --dport 53 -j DNAT --to-destination ${REDSOCKS_ADDR}:${REDSOCKS_DNS_PORT}"
+
+# iptables has no idempotent add or delete, so every change is a -C guarded -A/-D.
+add_rule() {
+	_chain="$1"
+	shift
+	if ! $IPTABLES -t nat -C "${_chain}" "$@" > /dev/null 2>&1; then
+		$IPTABLES -t nat -A "${_chain}" "$@"
+	fi
+}
+
+# Loops because an external actor can leave duplicates that a single -D would
+# not clear, and reconcile promises to restore the invariant from any state.
+del_rule() {
+	_chain="$1"
+	shift
+	while $IPTABLES -t nat -C "${_chain}" "$@" > /dev/null 2>&1; do
+		$IPTABLES -t nat -D "${_chain}" "$@"
+	done
+}
+
+# Proves the socket is bound, which is all that can be observed from outside the
+# process: the kernel completes the handshake from the listen backlog whether or
+# not redsocks ever calls accept(). Matches REDSOCKS_LISTEN_HEX in state 0A,
+# TCP_LISTEN. Read from /proc rather than through ss, which is not installed.
+serving() {
+	awk -v a="${REDSOCKS_LISTEN_HEX}" '$2 == a && $4 == "0A" { f = 1 } END { exit !f }' \
+		"${PROC_NET_TCP}"
+}
+
+dns_redirect_enabled() {
+	grep ^dnsu2t "${REDSOCKSCONF}" > /dev/null 2>&1
+}
+
+chain_exists() {
+	$IPTABLES -t nat -S REDSOCKS > /dev/null 2>&1
+}
+
+jumps_installed() {
+	$IPTABLES -t nat -C OUTPUT -m owner ! --uid-owner redsocks -p tcp -j REDSOCKS \
+		> /dev/null 2>&1
+}
+
+installed() {
+	chain_exists && jumps_installed
+}
+
+# The subnet exemptions all carry -d, so they never collide with the bypass.
+bypassed() {
+	$IPTABLES -t nat -C REDSOCKS ${BYPASS_RULE} > /dev/null 2>&1
+}
+
+engage() {
+	if bypassed; then
+		$IPTABLES -t nat -D REDSOCKS ${BYPASS_RULE}
+		info "Redirecting traffic through redsocks."
+	fi
+	if dns_redirect_enabled; then
+		add_rule OUTPUT ${DNS_OUTPUT_RULE}
+		add_rule PREROUTING ${DNS_PREROUTING_RULE}
+	fi
+}
+
+disengage() {
+	if ! bypassed; then
+		$IPTABLES -t nat -I REDSOCKS 1 ${BYPASS_RULE}
+		warn "redsocks is not serving, sending traffic directly."
+	fi
+	del_rule OUTPUT ${DNS_OUTPUT_RULE}
+	del_rule PREROUTING ${DNS_PREROUTING_RULE}
+}
+
+# TCP and DNS engage and disengage together
+apply_redirect() {
+	if serving || [ "${FAILURE_ACTION}" = "reject" ]; then
+		engage
+	else
+		disengage
+	fi
+}
+
+ensure_bridge() {
+	# Setup a bridge interface for redsocks
+	if [ ! -d "/sys/class/net/${DNS_INTERFACE_NAME}" ]; then
+		ip link add name ${DNS_INTERFACE_NAME} type bridge
+	fi
+	if [ "$(cat /sys/class/net/${DNS_INTERFACE_NAME}/operstate)" = "down" ]; then
+		ip link set ${DNS_INTERFACE_NAME} up
+	fi
+	if [ "$(ip addr show ${DNS_INTERFACE_NAME} | grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | grep -o "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*")" != "${REDSOCKS_ADDR}" ]; then
+		ip address add ${REDSOCKS_ADDR}/24 dev ${DNS_INTERFACE_NAME}
+	fi
+
+	# Redsocks needs a redsocks user to work properly with our setup
+	id -u redsocks > /dev/null 2>&1 || fail "redsocks user doesn't exist"
+}
+
+build_chain() {
+	# Set up iptables chain for redsocks
+	$IPTABLES -t nat -N REDSOCKS
+
+	# Use every line in the no_proxy file as an IP/subnet to not redirect through redsocks
+	if [ -f "$NOPROXYFILE" ]; then
+		info "Noproxy configuration found in $NOPROXYFILE ..."
+		while IFS= read -r line || [ -n "${line}" ]; do
+			echo "Setting no proxy for $line ..."
+			$IPTABLES -t nat -A REDSOCKS -d "$line" -j RETURN
+		done < "$NOPROXYFILE"
+	fi
+
+	# Setup a new user chain for redsocks
+	$IPTABLES -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 100.64.0.0/10 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 169.254.0.0/16 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
+	$IPTABLES -t nat -A REDSOCKS -p tcp -j DNAT --to ${REDSOCKS_ADDR}:${REDSOCKS_PORT}
+}
+
+install_jumps() {
+	# Redirect TCP connections to redsocks
+	$IPTABLES -t nat -A OUTPUT -m owner --uid-owner redsocks -p tcp --dport 53 -j REDSOCKS
+	$IPTABLES -t nat -A OUTPUT -m owner ! --uid-owner redsocks -p tcp -j REDSOCKS
+	$IPTABLES -t nat -A PREROUTING -p tcp -j REDSOCKS
+}
+
+teardown() {
+	# Always clear the REDSOCKS chain if it exists (in case we're restarting with a changed configuration)
+	del_rule OUTPUT ${DNS_OUTPUT_RULE}
+	del_rule PREROUTING ${DNS_PREROUTING_RULE}
+	removeRulesFromChain OUTPUT REDSOCKS
+	removeRulesFromChain PREROUTING REDSOCKS
+	$IPTABLES -t nat -F REDSOCKS || true
+	$IPTABLES -t nat -X REDSOCKS || true
+}
+
+setup() {
+	teardown
+
+	if [ ! -f "$REDSOCKSCONF" ]; then
+		info "No proxy configuration found, skipping."
+		return 0
+	fi
+
+	ensure_bridge
+	build_chain
+
+	# Settle the redirect before the jumps go in, so no code path can leave the
+	# device redirecting into a redsocks that is not there. Also covers a restart
+	# of this service on its own while redsocks is already up, which is what the
+	# supervisor does on a proxy configuration change.
+	apply_redirect
+	install_jumps
+}
+
+attach() {
+	if [ ! -f "$REDSOCKSCONF" ]; then
+		fail "No proxy configuration found."
+	fi
+	if ! chain_exists; then
+		fail "REDSOCKS chain does not exist."
+	fi
+
+	# ExecStartPost fires when redsocks is spawned, not when it binds
+	_waited=0
+	while ! serving; do
+		if [ "${_waited}" -ge "${ATTACH_TIMEOUT_SECS}" ]; then
+			fail "redsocks is not listening on ${REDSOCKS_ADDR}:${REDSOCKS_PORT}."
+		fi
+		sleep 1
+		_waited=$((_waited + 1))
+	done
+
+	engage
+}
+
+detach() {
+	if ! chain_exists; then
+		info "REDSOCKS chain does not exist, nothing to detach."
+		return 0
+	fi
+
+	apply_redirect
+}
+
+# Restores the invariant below from any state the device can be found in. Every
+# operation it calls is idempotent, so a pass that finds nothing wrong is silent.
+reconcile() {
+	if [ ! -f "$REDSOCKSCONF" ]; then
+		if chain_exists || jumps_installed; then
+			warn "Proxy configuration is gone but the redirect is still installed. Tearing it down."
+			teardown
+		fi
+		return 0
+	fi
+
+	# A missing chain or missing jumps is repaired by rebuilding, which also
+	# engages the redirect when redsocks is already up.
+	if ! installed; then
+		warn "Proxy is configured but the redirect is not installed. Rebuilding."
+		setup
+		return 0
+	fi
+
+	apply_redirect
+}
+
+# While a proxy is configured the redirect is installed and engaged if and only
+# if redsocks is listening.
+violation() {
+	if [ ! -f "$REDSOCKSCONF" ]; then
+		if chain_exists || jumps_installed; then
+			echo "proxy configuration is absent but the redirect is still installed"
+		fi
+		return 0
+	fi
+
+	if ! installed; then
+		echo "proxy is configured but the redirect is not installed"
+	elif serving && bypassed; then
+		echo "redsocks is serving but traffic is not redirected through it"
+	elif ! serving && ! bypassed && [ "${FAILURE_ACTION}" = "direct" ]; then
+		echo "traffic is redirected into a redsocks that is not serving"
+	fi
+}
+
+status() {
+	_violation=$(violation)
+
+	if [ "${1:-}" != "--quiet" ]; then
+		_config="absent"
+		if [ -f "$REDSOCKSCONF" ]; then
+			_config="present"
+		fi
+		_serving="no"
+		if serving; then
+			_serving="yes"
+		fi
+		_redirect="absent"
+		if chain_exists; then
+			_redirect="engaged"
+			if bypassed; then
+				_redirect="disengaged"
+			fi
+		fi
+		_jumps="no"
+		if jumps_installed; then
+			_jumps="yes"
+		fi
+
+		echo "config=${_config} serving=${_serving} redirect=${_redirect} jumps=${_jumps} on_failure=${FAILURE_ACTION}"
+		if [ -n "${_violation}" ]; then
+			echo "violation: ${_violation}"
+		fi
+	fi
+
+	[ -z "${_violation}" ]
+}
+
+# Serialise against a supervisor driven restart and against the reconcile timer.
+exec 9>"${LOCKFILE}"
+if ! flock -w "${LOCK_TIMEOUT_SECS}" 9; then
+	fail "Timed out waiting for ${LOCKFILE}."
 fi
-if [ "$(cat /sys/class/net/${DNS_INTERFACE_NAME}/operstate)" = "down" ]; then
-	ip link set ${DNS_INTERFACE_NAME} up
-fi
-if [ "$(ip addr show ${DNS_INTERFACE_NAME} | grep -o "inet [0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | grep -o "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*")" != "${DNS_INTERFACE_IP}" ]; then
-	ip address add ${DNS_INTERFACE_IP}/24 dev ${DNS_INTERFACE_NAME}
-fi
 
-# Redsocks needs a redsocks user to work properly with our setup
-id -u redsocks > /dev/null 2>&1 || (echo "ERROR: redsocks user doesn't exist" && exit 1)
-
-# Set up iptables chain for redsocks
-$IPTABLES -t nat -N REDSOCKS
-
-# Use every line in the no_proxy file as an IP/subnet to not redirect through redsocks
-if [ -f "$NOPROXYFILE" ]; then
-	info "Noproxy configuration found in $NOPROXYFILE ..."
-	while IFS= read -r line || [ -n "${line}" ]; do
-		echo "Setting no proxy for $line ..."
-		$IPTABLES -t nat -A REDSOCKS -d "$line" -j RETURN
-	done < "$NOPROXYFILE"
-fi
-
-# Setup a new user chain for redsocks
-$IPTABLES -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 100.64.0.0/10 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 169.254.0.0/16 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
-$IPTABLES -t nat -A REDSOCKS -p tcp -j DNAT --to 10.114.103.1:12345
-
-if grep ^dnsu2t /mnt/boot/system-proxy/redsocks.conf > /dev/null 2>&1; then
-	# If dnsu2t module is enabled in redsocks, redirect any DNS UDP packets to
-	# REDSOCKS to force DNS over TCP
-	$IPTABLES -t nat -A OUTPUT -p udp -m owner ! --uid-owner redsocks -j DNAT --dport 53 --to-destination 10.114.103.1:5313
-	$IPTABLES -t nat -A PREROUTING -p udp -j DNAT --dport 53 --to-destination 10.114.103.1:5313
-fi
-
-# Redirect TCP connections to redsocks
-$IPTABLES -t nat -A OUTPUT -m owner --uid-owner redsocks -p tcp --dport 53 -j REDSOCKS
-$IPTABLES -t nat -A OUTPUT -m owner ! --uid-owner redsocks -p tcp -j REDSOCKS
-$IPTABLES -t nat -A PREROUTING -p tcp -j REDSOCKS
+case "${1:-setup}" in
+	setup)
+		setup
+		;;
+	attach)
+		attach
+		;;
+	detach)
+		detach
+		;;
+	reconcile)
+		reconcile
+		;;
+	teardown)
+		teardown
+		;;
+	status)
+		status "${2:-}"
+		;;
+	*)
+		fail "Unknown command: $1"
+		;;
+esac

@@ -3,11 +3,17 @@ Description=redsocks transparent proxy redirector
 Requires=resin-boot.service balena-proxy-config.service
 After=resin-boot.service balena-proxy-config.service dnsmasq.service
 ConditionPathExists=/mnt/boot/system-proxy/redsocks.conf
+# Retry for as long as a proxy stays configured. Giving up would leave the
+# device on the configured failure action with nothing driving it back.
+StartLimitIntervalSec=0
 
 [Service]
 User=redsocks
 ExecStart=@BINDIR@/redsocks -c /mnt/boot/system-proxy/redsocks.conf
-Restart=on-failure
+ExecStartPost=+@BASE_BINDIR@/sh @BINDIR@/balena-proxy-config attach
+ExecStopPost=+@BASE_BINDIR@/sh @BINDIR@/balena-proxy-config detach
+# always, not on-failure: a clean exit is not a reason to leave the proxy down
+Restart=always
 RestartSec=10s
 LimitNOFILE=16384
 

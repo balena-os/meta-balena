@@ -7,13 +7,15 @@ SRC_URI = " \
     file://redsocks.service \
     file://balena-proxy-config \
     file://balena-proxy-config.service \
+    file://balena-proxy-watchdog.service \
+    file://balena-proxy-watchdog.timer \
     "
 
 inherit allarch systemd useradd
 
 PACKAGES = "${PN}"
 
-SYSTEMD_SERVICE:${PN} = "balena-proxy-config.service redsocks.service"
+SYSTEMD_SERVICE:${PN} = "balena-proxy-config.service redsocks.service balena-proxy-watchdog.service balena-proxy-watchdog.timer"
 RDEPENDS:${PN} = "redsocks iptables"
 
 USERADD_PACKAGES = "${PN}"
@@ -27,6 +29,8 @@ do_install() {
         install -d ${D}${systemd_unitdir}/system
         install -c -m 0644 ${UNPACKDIR}/balena-proxy-config.service ${D}${systemd_unitdir}/system
         install -c -m 0644 ${UNPACKDIR}/redsocks.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/balena-proxy-watchdog.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/balena-proxy-watchdog.timer ${D}${systemd_unitdir}/system
         sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
             -e 's,@BINDIR@,${bindir},g' \
             ${D}${systemd_unitdir}/system/*.service
