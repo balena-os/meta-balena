@@ -1,4 +1,107 @@
 - commits:
+    - subject: Update tests/leviathan digest to a0fb22f
+      hash: 81a642b86aafc8e52508170b59522dda3241da5b
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update actions/checkout action to v7
+              hash: 7c0b1f2bd84b4b3d08b28c566ed1156234d7d56a
+              body: |
+                Update actions/checkout from 6.1.0 to 7.0.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.131
+          title: ""
+          date: 2026-09-01T17:13:24.591Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v25.2.6
+              hash: eec3527a72122438afc5a3c33e19f540ba4cf3fa
+              body: |
+                Update balena-io/balena-cli from 25.1.10 to 25.2.6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.130
+          title: ""
+          date: 2026-09-01T15:00:10.320Z
+        - commits:
+            - subject: Update debian:bullseye-slim Docker digest to e5b6442
+              hash: b66da6609226bd658c82a52dd6874de712e0b503
+              body: |
+                Update debian
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.129
+          title: ""
+          date: 2026-09-01T13:01:41.531Z
+        - commits:
+            - subject: Update flowzonify to v0.4.2
+              hash: 9758f79bf7a641855e31e223f3cd1652a923a7ca
+              body: |
+                Update flowzonify from 0.0.0 to 0.4.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.128
+          title: ""
+          date: 2026-09-01T12:07:02.931Z
+        - commits:
+            - subject: Update core/contracts digest to 93b3001
+              hash: 7dbf89eccf51f79c8877a6c42a9f836d9c7ea510
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.127
+          title: ""
+          date: 2026-08-31T22:46:41.702Z
+        - commits:
+            - subject: Update GitHub Actions
+              hash: 038a052c3f755ff2427e28668cc97c70b3c5891d
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.126
+          title: ""
+          date: 2026-08-31T20:48:24.022Z
+        - commits:
+            - subject: Update docker/dockerfile:1 Docker digest to ecfaec9
+              hash: fc64fb88bbb075153064a80145255e1df46817c2
+              body: |
+                Update docker/dockerfile
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.125
+          title: ""
+          date: 2026-08-31T18:47:38.756Z
+  version: 8.0.6
+  title: ""
+  date: 2026-09-02T13:32:16.473Z
+- commits:
     - subject: Update flowzonify to v0.4.2
       hash: 96c841e02785a6c15ee37fb672b316542315ad27
       body: |
