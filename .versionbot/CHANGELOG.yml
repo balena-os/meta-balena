@@ -1,4 +1,18 @@
 - commits:
+    - subject: "docs: Fix obsolete link to application update locking documentation"
+      hash: 7331c93c62095217cbe9924a655e04215235f853
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ken Bannister <kb2ma@runbox.com>
+        signed-off-by: Ken Bannister <kb2ma@runbox.com>
+      author: Ken Bannister
+      nested: []
+  version: 8.0.8
+  title: ""
+  date: 2026-09-03T22:55:02.129Z
+- commits:
     - subject: "initrdscripts: more robustness looking for active root"
       hash: 35dc9967e1e23d36e422e07ba17c0cafdcdf6faf
       body: |

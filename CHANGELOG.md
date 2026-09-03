@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.8
+## (2026-09-03)
+
+* docs: Fix obsolete link to application update locking documentation [Ken Bannister]
+
 # v8.0.7
 ## (2026-09-03)
 
