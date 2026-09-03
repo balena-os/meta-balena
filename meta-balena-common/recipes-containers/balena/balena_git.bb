@@ -30,6 +30,7 @@ SRC_URI = "\
 	file://balena-host.service \
 	file://balena-host.socket \
 	file://balena-healthcheck \
+	file://balena-runtimes-gen \
 	file://var-lib-docker.mount \
 	file://balena-tmpfiles.conf \
 	file://0001-dynbinary-use-go-cross-compiler.patch;patchdir=src/import \
@@ -72,6 +73,7 @@ INSANE_SKIP:${PN} += "already-stripped"
 
 FILES:${PN} += " \
 	${systemd_unitdir}/system/* \
+	/usr/lib/balena/runtimes.d \
 	${ROOT_HOME} \
 	${localstatedir} \
 	"
@@ -141,6 +143,11 @@ do_install() {
 
 	mkdir -p ${D}/usr/lib/balena
 	install -m 0755 ${UNPACKDIR}/balena-healthcheck ${D}/usr/lib/balena/balena-healthcheck
+	install -m 0755 ${UNPACKDIR}/balena-runtimes-gen ${D}/usr/lib/balena/balena-runtimes-gen
+
+	# Shipped empty. A hostapp extension contributes an OCI runtime by adding a
+	# drop-in here, which overlayfs merges into this directory at boot.
+	install -d ${D}/usr/lib/balena/runtimes.d
 
 	install -d ${D}/${ROOT_HOME}/.docker
 	ln -sf .docker ${D}/${ROOT_HOME}/.balena

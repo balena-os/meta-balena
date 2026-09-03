@@ -1,0 +1,123 @@
+#!/bin/sh
+#
+# Emits balenad's --add-runtime flags for the OCI runtimes that hostapp
+# extensions contribute, as $BALENAD_EXTRA_RUNTIMES in an environment file.
+#
+# Each drop-in in RUNTIMES_DIR holds "name=/absolute/path" lines. An extension
+# registers its runtime by shipping one such file.
+#
+# The drop-in is a directory rather than a single configuration file because
+# overlayfs merges directories and shadows files. With one file, the topmost
+# extension in mobynit's lowerdir stack would hide every other extension's
+# registration. A systemd Environment= assignment has the same problem: a
+# drop-in overrides the variable, it does not append to it.
+#
+# This script runs as ExecStartPre and its output is read by EnvironmentFile.
+# systemd reads an environment file shortly before each process starts, so a
+# file generated in the ExecStartPre state is visible to ExecStart. See
+# systemd.exec(5), EnvironmentFile=.
+
+set -o errexit
+
+# shellcheck source=/dev/null  # only present in the target rootfs
+. /usr/libexec/os-helpers-logging
+
+# Overridable so the script can be exercised outside a device.
+RUNTIMES_DIR="${RUNTIMES_DIR:-/usr/lib/balena/runtimes.d}"
+OUTPUT="${OUTPUT:-/run/balena-runtimes.env}"
+
+# balenad registers these two itself: runc is the default runtime and
+# balena.service registers extension= for balena-extension-runtime. Letting an
+# extension re-register either one would break the machinery that installs
+# extensions in the first place.
+RESERVED_RUNTIMES="runc extension"
+
+FLAGS=""
+CLAIMED="${RESERVED_RUNTIMES}"
+
+# Written even when no extension contributes a runtime. balenad expands
+# $BALENAD_EXTRA_RUNTIMES unconditionally, and a file surviving from an earlier
+# boot would re-register a runtime whose extension has since been removed.
+emit_and_exit()
+{
+    printf 'BALENAD_EXTRA_RUNTIMES=%s\n' "${FLAGS# }" >"${OUTPUT}"
+    exit 0
+}
+
+# Returns 0 when $1 is already registered, so the caller can skip a duplicate.
+is_claimed()
+{
+    for claimed in ${CLAIMED}; do
+        [ "${claimed}" = "$1" ] && return 0
+    done
+    return 1
+}
+
+# Validates one "name=path" line and appends its flag pair to FLAGS.
+#
+# A malformed entry is skipped with a warning rather than failing the script.
+# The engine has to start even when an extension ships a broken drop-in: a
+# device whose engine will not start cannot be recovered over the network,
+# whereas an unregistered runtime only fails the containers that ask for it.
+add_runtime()
+{
+    _dropin="$1"
+    _line="$2"
+
+    _name="${_line%%=*}"
+    _path="${_line#*=}"
+
+    if [ "${_name}" = "${_line}" ] || [ -z "${_name}" ] || [ -z "${_path}" ]; then
+        warn "${_dropin}: not a name=path line, skipping: ${_line}"
+        return 0
+    fi
+
+    if ! printf '%s' "${_name}" | grep -qE '^[A-Za-z0-9_-]+$'; then
+        warn "${_dropin}: invalid runtime name, skipping: ${_name}"
+        return 0
+    fi
+
+    case "${_path}" in
+        /*) ;;
+        *)
+            warn "${_dropin}: runtime path is not absolute, skipping: ${_path}"
+            return 0
+            ;;
+    esac
+
+    # The extension providing the binary is layered into the rootfs before
+    # init, so an absent binary here means the drop-in outlived its extension.
+    if [ ! -x "${_path}" ]; then
+        warn "${_dropin}: ${_path} is not executable, skipping runtime ${_name}"
+        return 0
+    fi
+
+    if is_claimed "${_name}"; then
+        warn "${_dropin}: runtime ${_name} is already registered, skipping"
+        return 0
+    fi
+
+    CLAIMED="${CLAIMED} ${_name}"
+    FLAGS="${FLAGS} --add-runtime ${_name}=${_path}"
+    info "registered OCI runtime ${_name} at ${_path}"
+}
+
+# The hostapp ships the directory empty and extensions fill it, so a missing
+# directory is a device with no runtime extension rather than an error.
+[ -d "${RUNTIMES_DIR}" ] || emit_and_exit
+
+# shellcheck disable=SC2094  # add_runtime only reads; the sole writer is emit_and_exit
+for dropin in "${RUNTIMES_DIR}"/*.conf; do
+    # The glob stays literal when the directory holds no .conf file.
+    [ -f "${dropin}" ] || continue
+
+    # The || clause processes a final line that has no trailing newline.
+    while IFS= read -r line || [ -n "${line}" ]; do
+        case "${line}" in
+            ''|\#*) continue ;;
+        esac
+        add_runtime "${dropin}" "${line}"
+    done <"${dropin}"
+done
+
+emit_and_exit
