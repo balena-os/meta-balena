@@ -1,4 +1,24 @@
 - commits:
+    - subject: "initrdscripts: more robustness looking for active root"
+      hash: 35dc9967e1e23d36e422e07ba17c0cafdcdf6faf
+      body: |
+        This patch addresses two problems that we have discovered during
+        automated QEMU tests:
+        1. regenerating UUIDs sometimes makes the by-state symlinks disappear
+        2. get_state_path_from_label sometimes picks wrong on encrypted devices
+
+        Both fixes have details explained in the comments.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 8.0.7
+  title: ""
+  date: 2026-09-03T14:14:28.030Z
+- commits:
     - subject: Update tests/leviathan digest to a0fb22f
       hash: 81a642b86aafc8e52508170b59522dda3241da5b
       body: Update tests/leviathan

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.7
+## (2026-09-03)
+
+* initrdscripts: more robustness looking for active root [Michal Toman]
+
 # v8.0.6
 ## (2026-09-02)
 
