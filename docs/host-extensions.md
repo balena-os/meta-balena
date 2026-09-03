@@ -118,6 +118,23 @@ At HUP commit, an image that fails the predicate is removed; the same HUP has al
 
 * `io.balena.update.requires-reboot=1`: marks the extension as needing a host reboot after install/update. The supervisor sets a reboot breadcrumb when creating a container with this label; the host reboots on the next reconcile tick and mobynit layers the extension on the subsequent boot. This is the same label the supervisor already honors on regular services (via the `io.balena.update.*` namespace of update-time directives).
 
+## Contributing a container runtime
+
+A hostapp extension can register an additional OCI runtime with balenaEngine, which a user composition then selects with the `runtime:` directive.
+
+The engine reads its runtimes from `/usr/lib/balena/runtimes.d/`. Each drop-in in that directory holds one or more `name=/absolute/path` lines:
+
+    # /usr/lib/balena/runtimes.d/runsc.conf
+    runsc=/usr/bin/runsc
+
+`balena-runtimes-gen` runs before balenad starts and turns every drop-in into an `--add-runtime` flag. Because mobynit layers extensions before it execs `/sbin/init`, a drop-in shipped by an extension is already in place when the engine starts.
+
+The registration is a directory of drop-ins rather than a single configuration file because overlayfs merges directories and shadows files. With one file, the topmost extension in the lowerdir stack would hide every other extension's registration, and a `systemd` `Environment=` assignment has the same problem: a drop-in overrides the variable rather than appending to it.
+
+A runtime extension must declare `io.balena.update.requires-reboot=1`. balenaEngine reads its runtime list only at start, so a new runtime cannot take effect on the boot that installs the extension.
+
+The names `runc` and `extension` are reserved for the engine's own runtimes. A drop-in that is malformed, claims a reserved or already-claimed name, or points at a missing binary is skipped with a log. The engine still starts, because a device whose engine does not start cannot be recovered remotely, while an unregistered runtime only fails the containers that ask for it.
+
 ## Managing hostapp extensions
 
 Extensions are meant to be managed by the supervisor or as part of a hostOS update. Manually installing, removing or updating hostapp extensions is neither advised nor supported.
