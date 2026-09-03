@@ -62,6 +62,23 @@ fsuuidsinit_run() {
         fi
         if regenerate_uuid "${dev}" "${fstype}"; then
             if [ -f "/run/initramfs/bootparam_root.mux" ]; then
+                # Sometimes changing the UUID makes the by-state
+                # symlinks disappear. Because resin_update_state_probe
+                # compares all partitions against the active root,
+                # it fails when it's triggered while the active root
+                # partition is also being processed by udev. It's
+                # a race condition that we only hit on very fast
+                # devices/CPUs and a subsequent udev trigger/settle
+                # usually resolves it.
+                # It is not a proper fix though. If you came here
+                # while debugging weird boot failures, don't add
+                # another hack, address the race condition and remove
+                # the trigger/settle below.
+                if ! wait4file "${dev}" 30; then
+                    info "by-state symlink for ${dev} vanished, re-triggering udev"
+                    udevadm trigger
+                    udevadm settle
+                fi
                 bootparam_root="UUID=$(get_dev_uuid "${dev}")"
                 echo "${bootparam_root}" > /run/initramfs/bootparam_root
                 rm -f "/run/initramfs/bootparam_root.mux"
