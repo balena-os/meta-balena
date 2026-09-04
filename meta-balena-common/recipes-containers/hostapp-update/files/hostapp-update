@@ -23,6 +23,50 @@ ERROR() {
 	fi
 }
 
+resolve_boot_dir_from_image() {
+	hostapp_image="$1"
+	overlay_root="${SYSROOT}/balena/overlay2"
+	layerdb_root="${SYSROOT}/balena/image/overlay2/layerdb/sha256"
+
+	# We expect Hostapp images to be single-layer
+	# get the unique layer_id from the image
+	layer_id=$(balena inspect -f '{{index .RootFS.Layers 0}}' "$hostapp_image")
+	if [ -z "$layer_id" ]; then
+		ERROR "overlay2: image ${hostapp_image} has no RootFS layers"
+		exit 1
+	fi
+
+	# use cache-id to resolve boot dir
+	cache_id_path="${layerdb_root}/${layer_id#sha256:}/cache-id"
+	boot_dir="${overlay_root}/$(cat "$cache_id_path")/diff/boot"
+	if [ ! -d "$boot_dir" ]; then
+		ERROR "overlay2: failed to resolve boot dir for image ${hostapp_image}"
+		exit 1
+	fi
+
+	echo "$boot_dir"
+}
+
+link_boot_from_overlay_layers() {
+	dest_boot="${SYSROOT}/hostapps/.new/boot"
+
+	rm -rf "${SYSROOT}/hostapps/.new"
+	mkdir -p "$dest_boot"
+
+	boot_dir=$(resolve_boot_dir_from_image "$HOSTAPP_IMAGE")
+	for src in $(find "$boot_dir" -type f); do
+		# rel takes ${SYSROOT}/balena/overlay2/.../diff/boot/bzImage and makes it boot/bzImage
+		rel="${src#${boot_dir}/}"
+		dst="${dest_boot}/${rel}"
+		if [ -e "$dst" ]; then
+			continue
+		fi
+		mkdir -p "$(dirname "$dst")"
+		ln "$src" "$dst"
+		INFO "Hardlinked boot file: $src -> $dst"
+	done
+}
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
@@ -124,13 +168,9 @@ elif [ "$remote_image" != "" ]; then
 	_out="$(balena pull "$HOSTAPP_IMAGE" 2>&1)"
 	INFO "${_out}"
 fi
-CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
-BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
+CONTAINER_ID=$(balena create --runtime="bare" "$HOSTAPP_IMAGE" /bin/sh)
 
-# Create boot entry
-rm -rf "$SYSROOT/hostapps/.new"
-mkdir -p "$SYSROOT/hostapps/.new"
-ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/boot"
+link_boot_from_overlay_layers
 sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
