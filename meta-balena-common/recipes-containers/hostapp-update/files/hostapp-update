@@ -23,6 +23,14 @@ ERROR() {
 	fi
 }
 
+WARN() {
+	if command -v warn > /dev/null; then
+		warn "$@"
+	else
+		echo "$@"
+	fi
+}
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
@@ -37,19 +45,235 @@ run_current_hooks_and_recover () {
 	exit 1
 }
 
+# Test if a version is greater than another
+version_gt() {
+	test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"
+}
+
+#######################################
+# Helper function to run a transient unit to update the supervisor.
+# Returns
+#  0: Success
+#  1: Failure
+#######################################
+_run_supervisor_update() {
+	local supervisor_update
+	local ret=0
+
+	supervisor_update="systemd-run --wait --unit run-update-supervisor update-balena-supervisor -n"
+	if ! eval "${supervisor_update}"; then
+		WARN "Supervisor couldn't be updated" && ret=1
+	fi
+	journalctl -a -u run-update-supervisor --no-pager || true
+	return "${ret}"
+}
+
+
+#######################################
+# Fetch the current and scheduled supervisor versions from the API
+# Returns:
+#  0: Success
+#  1: Failure
+#
+# Outputs:
+#  On success, a string separated string of current and scheduled supervisor versions.
+#######################################
+_fetch_supervisor_version() {
+	local resp
+	local supervisor_version
+	local scheduled_supervisor_version
+
+	resp=$(${CURL} --header "Authorization: Bearer ${APIKEY}" "${API_ENDPOINT}/v6/device(uuid='${UUID}')?\$select=supervisor_version&\$expand=should_be_managed_by__supervisor_release(\$top=1;\$select=supervisor_version)")
+	if supervisor_version=$(echo "${resp}" | jq -e -r '.d[0].supervisor_version' | tr -d 'v'); then
+		if [ -z "${supervisor_version}" ]; then
+			ERROR "Could not get current supervisor version from the API, got ${resp}"
+			return 1
+		fi
+		scheduled_supervisor_version=$(echo "${resp}" | jq -e -r '.d[0].should_be_managed_by__supervisor_release[0].supervisor_version' | tr -d 'v')
+		if [ -n "${scheduled_supervisor_version}" ] && [ "${scheduled_supervisor_version}" != "null" ]; then
+			if version_gt "${scheduled_supervisor_version}" "${supervisor_version}"; then
+				# The supervisor is scheduled to update
+				echo "${supervisor_version} ${scheduled_supervisor_version}"
+				return 0
+			fi
+		fi
+		echo "${supervisor_version} ${supervisor_version}"
+	else
+		ERROR "Could not fetch current supervisor version from the API, got ${resp}"
+		return 1
+	fi
+}
+
+#######################################
+# Helper function to patch the supervisor version in the target state.
+# Globals:
+#  API_ENDPOINT
+#  APIKEY
+#  UUID
+#  SLUG
+#
+# Arguments:
+#  version: supervisor version to update the target state to
+# Returns
+#  0: Success
+#  1: Failure
+#######################################
+_patch_supervisor_version() {
+	local version=$1
+	local current_version
+	local _status_code
+	local _errfile
+	local _outfile
+	local UPDATER_SUPERVISOR_TAG
+	local UPDATER_SUPERVISOR_ID
+
+	[ -z "${version}" ] && INFO "Supervisor version is required" && return 1
+	UPDATER_SUPERVISOR_TAG="v${version}"
+
+	# Get the supervisor id
+	resp=$(${CURL} --header "Authorization: Bearer ${APIKEY}" "${API_ENDPOINT}/v5/supervisor_release?\$select=id,image_name&\$filter=((device_type%20eq%20'$SLUG')%20and%20(supervisor_version%20eq%20'${UPDATER_SUPERVISOR_TAG}'))")
+	if UPDATER_SUPERVISOR_ID=$(echo "${resp}" | jq -e -r '.d[0].id'); then
+		INFO "Extracted supervisor vars: ID: $UPDATER_SUPERVISOR_ID"
+		INFO "Setting supervisor version in the API..."
+
+		_errfile=$(mktemp)
+		_outfile=$(mktemp)
+		if _status_code=$(${CURL} --request PATCH -w "%{http_code}" --show-error -o "${_outfile}" --header "Authorization: Bearer ${APIKEY}" --header 'Content-Type: application/json' "${API_ENDPOINT}/v6/device(uuid='${UUID}')" --data-binary "{\"should_be_managed_by__supervisor_release\": \"${UPDATER_SUPERVISOR_ID}\"}" 2> "${_errfile}"); then
+			rm -f "${_errfile}"
+			case "${_status_code}" in
+				2*) INFO "Successfully set supervision version in target state";rm -f "${_outfile}";return 0;;
+				4*) WARN "[${_status_code}]: Bad request: $(cat "${_outfile}")"; rm -f "${_outfile}"; if current_version=$(_fetch_supervisor_version | cut -d " " -f1); then if version_gt "${current_version}" "${version}"; then return 0; else return 1; fi; else return 1; fi;;
+				*) WARN "[${_status_code}]: Request failed: $(cat "${_outfile}")";rm -f "${_outfile}";return 1;;
+			esac
+		else
+			WARN "$(cat "${_errfile}")"
+			rm -f "${_errfile}"
+			return 1
+		fi
+		else
+			WARN "Failed fetching supervisor id from API: ${resp}"
+			return 1
+		fi
+}
+
+######################################
+# Upgrade the supervisor on the device.
+# Extract the supervisor version with which the target hostOS is shipped,
+# and if it's newer than the supervisor running on the device, then fetch the
+# information that is required for supervisor update, and do the update with
+# the tools shipped with the hostOS.
+# Globals:
+#   API_ENDPOINT
+#   APIKEY
+#   UUID
+#   SLUG
+#   target_supervisor_version
+# Arguments:
+#   image: the docker image to extract the config from
+# Returns:
+#   None
+#######################################
+upgrade_supervisor() {
+	local image=$1
+	INFO "Supervisor update start..."
+
+	if [ -z "$target_supervisor_version" ]; then
+		INFO "No explicit supervisor version was provided, update to default version in target balenaOS..."
+		local DEFAULT_SUPERVISOR_VERSION
+#		versioncheck_cmd=("run" "--rm" "${image}" "bash" "-c" "cat /etc/*-supervisor/supervisor.conf | sed -rn 's/SUPERVISOR_(TAG|VERSION)=v(.*)/\\2/p'")
+		DEFAULT_SUPERVISOR_VERSION=$(DOCKER_HOST="unix:///var/run/balena-host.sock" balena run --rm ${image} bash cat /etc/*-supervisor/supervisor.conf | sed -rn 's/SUPERVISOR_(TAG|VERSION)=v(.*)/\\2/p')
+		if [ -z "$DEFAULT_SUPERVISOR_VERSION" ]; then
+			ERROR "Could not get the default supervisor version for this balenaOS release, bailing out."
+		else
+			INFO "Extracted default version is v$DEFAULT_SUPERVISOR_VERSION..."
+			target_supervisor_version="$DEFAULT_SUPERVISOR_VERSION"
+		fi
+	fi
+
+	if supervisor_target_state_versions=$(_fetch_supervisor_version); then
+		echo ${supervisor_target_state_versions} | read -r CURRENT_SUPERVISOR_VERSION SCHEDULED_SUPERVISOR_VERSION
+		INFO "Supervisor state: Target ${target_supervisor_version}, current ${CURRENT_SUPERVISOR_VERSION}, scheduled ${SCHEDULED_SUPERVISOR_VERSION}"
+
+		# If scheduled higher than current and target, update to scheduled
+		# If scheduled not higher than current:
+		#  If target higher than current, patch and update to target
+		#  If target not higher than current, do nothing
+
+		if ! version_gt "${SCHEDULED_SUPERVISOR_VERSION}" "${CURRENT_SUPERVISOR_VERSION}"; then
+			# Supervisor target state current version is higher or equal than the scheduled version.
+			if version_gt "$target_supervisor_version" "$CURRENT_SUPERVISOR_VERSION" ; then
+				# Supervisor target version is higher than current target state version
+				INFO "Patching supervisor target state from v${CURRENT_SUPERVISOR_VERSION} to v${target_supervisor_version}"
+				if ! _patch_supervisor_version "$target_supervisor_version"; then
+				ERROR "Failed to patch supervisor version in target state, bailing out."
+				fi
+			else
+				INFO "Supervisor update: no update needed."
+				return 0
+			fi
+		else
+			# Supervisor target state scheduled version is higher than the current version
+			if version_gt "$SCHEDULED_SUPERVISOR_VERSION" "$target_supervisor_version" ; then
+				target_supervisor_version="$SCHEDULED_SUPERVISOR_VERSION"
+			fi
+		fi
+		INFO "Updating supervisor target state from v${CURRENT_SUPERVISOR_VERSION} to v${target_supervisor_version}"
+		if ! _run_supervisor_update; then
+			WARN "Failed to update supervisor version - leave to next boot."
+		fi
+	else
+		ERROR "Failed to fetch current supervisor version from the API."
+	fi
+}
+
+#######################################
+# Finish up the update process
+# Clean up the update package (if needed)
+# Globals:
+#   NOREBOOT
+# Arguments:
+#   update_package: the docker image to use for the update
+# Returns:
+#   None
+#######################################
+finish_up() {
+	update_package=$1
+	# Clean up after the update if needed
+	if [ -n "${update_package}" ] && balena inspect "${update_package}" > /dev/null 2>&1 ; then
+		INFO "Cleaning up update package: ${update_package}"
+		balena rmi -f "${update_package}" || true
+	else
+		INFO "No update package cleanup done"
+	fi
+
+	sync
+
+	if [ "$reboot" = 1 ]; then
+		if [ -x "/usr/libexec/safe_reboot" ]; then
+			/usr/libexec/safe_reboot
+		else
+			reboot
+		fi
+	fi
+
+	exit 0
+}
+
 local_image=""
 remote_image=""
 reboot=0
 hooks=1
 hooks_rollback=1
+update_supervisor=1
 
-while getopts 'f:i:rnx' flag; do
+while getopts 'f:i:rnxs' flag; do
 	case "${flag}" in
 	f) local_image=$(realpath "${OPTARG}") ;;
 	i) remote_image="${OPTARG}" ;;
 	r) reboot=1 ;;
 	n) hooks=0 ;;
 	x) hooks_rollback=0 ;;
+	s) update_supervisor=0 ;;
 	*) error "Unexpected option ${flag}" ;;
 	esac
 done
@@ -186,10 +410,30 @@ sync -f "$SYSROOT"
 
 INFO "Finished running hostapp update"
 
-if [ "$reboot" = 1 ]; then
-	if [ -x "/usr/libexec/safe_reboot" ]; then
-		/usr/libexec/safe_reboot
+if [ "$update_supervisor" = 1 ]; then
+	INFO "Loading info from config.json"
+	if [ -f /mnt/boot/config.json ]; then
+		CONFIGJSON=/mnt/boot/config.json
 	else
-		reboot
+		INFO "Don't know where config.json is." && exit 1
 	fi
+	# If the user api key exists we use it instead of the deviceApiKey as it means we haven't done the key exchange yet
+	APIKEY=$(jq -r '.apiKey // .deviceApiKey' $CONFIGJSON)
+	UUID=$(jq -r '.uuid' $CONFIGJSON)
+	API_ENDPOINT=$(jq -r '.apiEndpoint' $CONFIGJSON)
+
+	[ -z "${APIKEY}" ] && INFO "Error parsing config.json" && exit 1
+	[ -z "${UUID}" ] && INFO "Error parsing config.json" && exit 1
+	[ -z "${API_ENDPOINT}" ] && INFO "Error parsing config.json" && exit 1
+
+	CURL="curl --silent --retry 10 --fail --location --compressed"
+
+	SLUG=$(${CURL} -H "Authorization: Bearer ${APIKEY}" \
+	"${API_ENDPOINT}/v6/device?\$select=is_of__device_type&\$expand=is_of__device_type(\$select=slug)&\$filter=uuid%20eq%20%27${UUID}%27" 2>/dev/null \
+	| jq -r '.d[0].is_of__device_type[0].slug'
+	)
+
+	upgrade_supervisor "${HOSTAPP_IMAGE}"
 fi
+
+finish_up "${HOSTAPP_IMAGE}"
