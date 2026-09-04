@@ -17,6 +17,11 @@
 # POSIX /bin/sh compatible; safe to source from busybox sh (initrd) and
 # the host OS.
 #
+# The file lives on the FAT boot partition, where an interrupted write
+# can corrupt the environment block and leave the device unbootable.
+# Every mutation therefore goes through bootenv_edit, which stages the
+# change off-partition and publishes it with fatrw.
+#
 
 # bootenv_get <file> <key>
 #   Prints the value of <key> on stdout if present; prints nothing if
@@ -32,14 +37,59 @@ bootenv_get() {
     grub-editenv "${_file}" list 2>/dev/null | sed -n "s/^${_key}=//p"
 }
 
+# bootenv_publish <source> <target>
+#   Replaces <target> with the contents of <source>.
+bootenv_publish() {
+    if command -v /usr/bin/fatrw >/dev/null 2>&1; then
+        /usr/bin/fatrw copy "$1" "$2"
+    else
+        cp "$1" "$2" && sync
+    fi
+}
+
+# bootenv_stage <file> <scratch>
+#   Seeds <scratch> with the current environment block of <file>, or with
+#   a fresh block when <file> does not exist.
+bootenv_stage() {
+    if [ -f "$1" ]; then
+        cp "$1" "$2"
+    else
+        grub-editenv "$2" create
+    fi
+}
+
+# bootenv_edit <file> <grub-editenv arguments...>
+#   Applies a grub-editenv operation to <file> without editing it in
+#   place. Staging the change on a scratch copy and
+#   publishing the result keeps <file> at either the old or the new
+#   block.
+#   Returns non-zero and leaves <file> untouched on failure.
+bootenv_edit() {
+    _file="$1"
+    shift
+    [ -n "${_file}" ] || return 1
+    command -v grub-editenv >/dev/null 2>&1 || return 1
+
+    # An explicit template keeps this working under busybox mktemp, which
+    # unlike coreutils refuses to run without one.
+    _tmp=$(mktemp "${TMPDIR:-/tmp}/bootenv.XXXXXX") || return 1
+    _rc=1
+    if bootenv_stage "${_file}" "${_tmp}" && grub-editenv "${_tmp}" "$@"; then
+        bootenv_publish "${_tmp}" "${_file}"
+        _rc=$?
+    fi
+    rm -f "${_tmp}"
+    return "${_rc}"
+}
+
 # bootenv_set <file> <key> <value>
 bootenv_set() {
-    grub-editenv "$1" set "$2=$3"
+    bootenv_edit "$1" set "$2=$3"
 }
 
 # bootenv_unset <file> <key>
 bootenv_unset() {
-    grub-editenv "$1" unset "$2"
+    bootenv_edit "$1" unset "$2"
 }
 
 # bootenv_commit_override <file> <slot>
@@ -47,8 +97,8 @@ bootenv_unset() {
 bootenv_commit_override() {
     _f="$1"
     _slot="$2"
-    grub-editenv "${_f}" set \
-        "kernel_override_abi_committed_${_slot}=$(bootenv_get "${_f}" "kernel_override_abi")"
+    bootenv_set "${_f}" "kernel_override_abi_committed_${_slot}" \
+        "$(bootenv_get "${_f}" "kernel_override_abi")"
 }
 
 # bootenv_restore_kernel_override <file> <slot>
