@@ -1,0 +1,3 @@
+FROM balenalib/%%BALENA_ARCH%%-alpine
+
+CMD ["bash"]
