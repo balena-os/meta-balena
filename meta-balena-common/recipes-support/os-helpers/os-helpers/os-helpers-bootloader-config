@@ -10,6 +10,8 @@ fi
 
 # Provides fatmv
 . /usr/sbin/balena-config-vars
+# Provides bootenv_set/bootenv_unset
+. /usr/libexec/os-helpers-bootenv
 
 set -e
 
@@ -120,9 +122,13 @@ bootloader_config_modify() {
             local file_updated=0
             local bootloader_config_file="${BALENA_BOOT_MOUNTPOINT}/${bootloader_file}"
             local is_grub_extraenv=0
+            local is_bootenv=0
 
             if [ -f "$bootloader_config_file" ]; then
                 bootloader_config_file_base_name=$(basename "${bootloader_config_file}")
+                if [ "${bootloader_config_file_base_name}" = "bootenv" ]; then
+                    is_bootenv=1
+                fi
                 if [ "${bootloader_config_file_base_name}" = "grub_extraenv" ]; then
                     if ! command -v grub-editenv >/dev/null 2>&1
                         then
@@ -166,12 +172,22 @@ bootloader_config_modify() {
                     if [ ! -z "$value" ] && [ "$current_value" = "$value" ]; then
                         info "Variable ${key} already set to ${value} in ${bootloader_config_file}. Skipping modification."
                         file_updated=0
+                    elif [ "$is_bootenv" -eq 1 ]; then
+                        # bootenv is shared with the extension runtime, which
+                        # flocks the block itself. Replacing the file would
+                        # swap the inode out from under that lock.
+                        if [ ! -z "$value" ]; then
+                            bootenv_set "$bootloader_config_file" "${key}" "${value}"
+                        else
+                            bootenv_unset "$bootloader_config_file" "${key}"
+                        fi
+                        file_updated=1
                     else
                         tmpfile=$(mktemp)
 
                         if [ ! -z "$value" ]; then
                             # env varible present but differs from target value
-                            if [ "$is_grub_extraenv" -eq 1 ] || [ "${bootloader_config_file_base_name}" = "bootenv" ]; then
+                            if [ "$is_grub_extraenv" -eq 1 ]; then
                                 cat "$bootloader_config_file" > "$tmpfile"
                                 grub-editenv "$tmpfile" set "${key}=${value}"
                             else
@@ -179,7 +195,7 @@ bootloader_config_modify() {
                             fi
                         else
                             # env variable present and it should be deleted
-                            if [ "$is_grub_extraenv" -eq 1 ] || [ "${bootloader_config_file_base_name}" = "bootenv" ]; then
+                            if [ "$is_grub_extraenv" -eq 1 ]; then
                                 cat "$bootloader_config_file" > "$tmpfile"
                                 grub-editenv "$tmpfile" unset "${escaped_key}"
                             else
@@ -190,18 +206,24 @@ bootloader_config_modify() {
                     fi
                 elif [ ! -z "$value" ]; then
                     # env variable does not exist, will be added
-                    tmpfile=$(mktemp)
-                    cat "$bootloader_config_file" > "$tmpfile"
-                    if [ "$is_grub_extraenv" -eq 1 ] || [ "${bootloader_config_file_base_name}" = "bootenv" ]; then
-                        grub-editenv "$tmpfile" set "${key}=${value}"
+                    if [ "$is_bootenv" -eq 1 ]; then
+                        bootenv_set "$bootloader_config_file" "${key}" "${value}"
                     else
-                        echo "${key}=${value}" >> "$tmpfile"
+                        tmpfile=$(mktemp)
+                        cat "$bootloader_config_file" > "$tmpfile"
+                        if [ "$is_grub_extraenv" -eq 1 ]; then
+                            grub-editenv "$tmpfile" set "${key}=${value}"
+                        else
+                            echo "${key}=${value}" >> "$tmpfile"
+                        fi
                     fi
                     file_updated=1
                 fi # env variable doesn't exist and no value was provided, nothing to do
 
                 if [ "$file_updated" -eq 1 ]; then
-                    "${MV}" "$tmpfile" "$bootloader_config_file"
+                    if [ "$is_bootenv" -eq 0 ]; then
+                        "${MV}" "$tmpfile" "$bootloader_config_file"
+                    fi
 
                     if grep -q "^${key}\s*=" "$bootloader_config_file"; then
                         info "${key}=${value} has been set in ${bootloader_config_file}"

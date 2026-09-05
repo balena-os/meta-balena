@@ -7,6 +7,11 @@
 
 STOCK_KERNEL="${ROOTFS_DIR}/boot/@@KERNEL_IMAGETYPE@@"
 
+# Boots an unproven override gets before stage 2 stops offering it. The same
+# number abroot applies to the rootfs axis, and the trial limit compiled into
+# balena-extension-manager has to agree with it.
+TRIAL_LIMIT=3
+
 kexec_enabled() {
     # The script is enabled if and only if we are in balena bootloader.
     # Any additional pre-conditions should be handled by runtime checks
@@ -21,25 +26,126 @@ kexec_enabled() {
     return 1
 }
 
+# override_is_claimed reports whether a deployed extension still supplies the
+# kernel armed in the bootenv:
+#   0 - a live extension container claims this ABI
+#   1 - nothing claims it
+#   2 - cannot tell; the caller must not read this as "nothing claims it"
+override_is_claimed() {
+    _abi="$1"
+    _mobynit="${ROOTFS_DIR}/sbin/init"
+    _dataroot="${ROOTFS_DIR}/mnt/data/docker"
+
+    [ -x "${_mobynit}" ] || return 2
+    [ -d "${_dataroot}/containers" ] || return 2
+
+    # A mobynit predating the flag rejects it and exits non-zero without
+    # mounting, which lands here as "cannot tell".
+    if ! _claimed=$("${_mobynit}" -claimed-abis "${_dataroot}" 2>/dev/null); then
+        return 2
+    fi
+    printf '%s\n' "${_claimed}" | grep -qxF "${_abi}"
+}
+
+# resolve_override <abi>
+#   Publish <abi>'s kernel through SELECTED_KERNEL / SELECTED_KERNEL_ABI when it
+#   is both published under boot-by-abi and claimed by a deployed extension.
+#   Returns 1 when it is not, leaving both globals as the caller set them.
+resolve_override() {
+    _abi="$1"
+    [ -n "${_abi}" ] || return 1
+
+    # The link names the kernel image, so it resolving is the same question
+    # as the kernel being there. -f follows it and is false when it dangles.
+    _kernel="${ROOTFS_DIR}/mnt/data/boot-by-abi/${_abi}"
+    if [ ! -f "${_kernel}" ]; then
+        warn "kexec: override kernel for ${_abi} not found; falling back to stock"
+        return 1
+    fi
+
+    override_is_claimed "${_abi}"
+    case "$?" in
+    0)
+        info "kexec: using override kernel for ABI ${_abi}."
+        ;;
+    1)
+        # The extension that supplied this kernel is gone. Its modules went with
+        # it, so booting it would leave the device with a kernel it has no
+        # drivers for. A pending purge answers the same way: mobynit is not
+        # going to mount the extension on this boot either.
+        warn "kexec: no deployed extension for ABI ${_abi}; falling back to stock"
+        return 1
+        ;;
+    *)
+        # An unanswerable question is not an answer of "unclaimed".
+        # Boot what the bootloader would have booted.
+        warn "kexec: cannot determine the deployed extension of ABI ${_abi}; booting the override"
+        ;;
+    esac
+
+    SELECTED_KERNEL="${_kernel}"
+    SELECTED_KERNEL_ABI="${_abi}"
+    return 0
+}
+
 # select_kernel decides which kernel to boot and publishes the decision through
-# two globals:
+# three globals:
 #   SELECTED_KERNEL     - path of the kernel image to load
 #   SELECTED_KERNEL_ABI - its ABI ID, set only for an override kernel (the stock
 #                         kernel ships no derivable ABI, so it stays empty)
+#   TRIAL_OPEN          - set when this boot spends an attempt from an unproven
+#                         override's budget, which is what earns it panic=30
 select_kernel() {
     SELECTED_KERNEL="${STOCK_KERNEL}"
     SELECTED_KERNEL_ABI=""
-    ACTIVE_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
-    if [ -n "${ACTIVE_ABI}" ]; then
-        OVERRIDE_KERNEL="${ROOTFS_DIR}/mnt/data/boot-by-abi/${ACTIVE_ABI}/@@KERNEL_IMAGETYPE@@"
-        if [ -f "${OVERRIDE_KERNEL}" ]; then
-            info "kexec: using override kernel for ABI ${ACTIVE_ABI}"
-            SELECTED_KERNEL="${OVERRIDE_KERNEL}"
-            SELECTED_KERNEL_ABI="${ACTIVE_ABI}"
-            return 0
-        fi
-        warn "kexec: override kernel for ${ACTIVE_ABI} not found; falling back to stock"
+    TRIAL_OPEN=""
+
+    ARMED_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
+    [ -n "${ARMED_ABI}" ] || return 0
+
+    # Counted only once the ABI is one this boot would actually load, so an
+    # unpublished or unclaimed arm falls to stock without spending an attempt.
+    resolve_override "${ARMED_ABI}" || return 0
+
+    # While a host OS update is in flight the rootfs axis owns the boot: it has
+    # its own bootcount and abroot already rejects the override on three failed
+    # boots. UPGRADE_AVAILABLE comes from 74-abroot, which the framework sourced
+    # into this shell.
+    case "${UPGRADE_AVAILABLE:-0}" in
+    1) return 0 ;;
+    esac
+
+    # abroot does not run in the flasher, so there is no slot whose committed
+    # value the arm can be compared against, and nothing to count.
+    [ -n "${ROOT_PART:-}" ] || return 0
+
+    COMMITTED_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi_committed_${ROOT_PART}")
+    [ "${ARMED_ABI}" != "${COMMITTED_ABI}" ] || return 0
+
+    # bootenv_get prints nothing for an unset key, so anything that is not a
+    # number starts the budget over rather than reaching the arithmetic.
+    TRIAL_COUNT=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_trial")
+    case "${TRIAL_COUNT}" in
+    '' | *[!0-9]*) TRIAL_COUNT=0 ;;
+    esac
+
+    if [ "${TRIAL_COUNT}" -lt "${TRIAL_LIMIT}" ]; then
+        bootenv_set "${BOOTENV_FILE}" "kernel_override_trial" "$((TRIAL_COUNT + 1))"
+        TRIAL_OPEN=1
+        return 0
     fi
+
+    # Spent. Decline the armed kernel and boot what this slot has proven,
+    # writing nothing: userspace reads the pair (armed ABI, spent count) as the
+    # verdict, and a boot that dies before it gets there changes nothing.
+    warn "kexec: override ${ARMED_ABI} had ${TRIAL_COUNT} boots without a verdict; booting slot ${ROOT_PART} committed override (${COMMITTED_ABI:-none})"
+    SELECTED_KERNEL="${STOCK_KERNEL}"
+    SELECTED_KERNEL_ABI=""
+    if [ -n "${COMMITTED_ABI}" ]; then
+        # A proven override is never on trial, so this cannot re-enter counting.
+        resolve_override "${COMMITTED_ABI}" || true
+    fi
+    return 0
 }
 
 kexec_run() {
@@ -67,6 +173,14 @@ kexec_run() {
     SELECTED_APPEND="${APPEND}"
     if [ -n "${SELECTED_KERNEL_ABI}" ]; then
         SELECTED_APPEND="${APPEND} balena_kernel_abi=${SELECTED_KERNEL_ABI}"
+    fi
+    if [ -n "${TRIAL_OPEN}" ]; then
+        # A kernel that panics before userspace would otherwise hang, and an
+        # attempt that never ends is an attempt that is never spent. The
+        # hardware watchdog is armed by systemd, far too late to help here.
+        # Given twice, the kernel takes the last value, so this overrides any
+        # panic= the device type sets and is gone again on a proven boot.
+        SELECTED_APPEND="${SELECTED_APPEND} panic=30"
     fi
 
     if ! kexec -s -l "${SELECTED_KERNEL}" --append="${SELECTED_APPEND}"; then

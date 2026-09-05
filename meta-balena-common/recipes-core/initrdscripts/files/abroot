@@ -58,7 +58,7 @@ abroot_run() {
         if [ -n "${ACTIVE_ABI}" ]; then
             PREV_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi_committed_${ROOT_PART}")
             warn "abroot: ${BOOT_COUNT} failed boots with kernel_override_abi=${ACTIVE_ABI}; restoring slot ${ROOT_PART} committed override (${PREV_ABI:-none})"
-            bootenv_restore_kernel_override "${BOOTENV_FILE}" "${ROOT_PART}"
+            bootenv_reject_kernel_override "${BOOTENV_FILE}" "${ROOT_PART}"
         fi
     fi
 

@@ -1,0 +1,35 @@
+# Copyright 2026 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+[Unit]
+Description=Balena validates a kernel override armed by an extension
+DefaultDependencies=no
+Requires=resin-boot.service resin-state.service resin-data.service mnt-sysroot-active.service
+Wants=openvpn.service balena.service
+# Pulls in the engine and the VPN but is deliberately not ordered after them.
+#
+# Ordered after both rollback units because each settles state this reads.
+#
+# Unconditional by design, unlike rollback-health: an override can be armed
+# outside a host OS update, so there is no breadcrumb to gate on. The window is
+# derived from the bootenv, which an ordinary boot reads once.
+After=resin-boot.service resin-state.service resin-data.service mnt-sysroot-active.service systemd-udev-settle.service rollback-altboot.service rollback-health.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/balena-extension-manager validate --settle 60 --retry 60 --attempts 15
+
+[Install]
+WantedBy=multi-user.target

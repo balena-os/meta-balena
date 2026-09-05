@@ -32,23 +32,30 @@ bootenv_get() {
     grub-editenv "${_file}" list 2>/dev/null | sed -n "s/^${_key}=//p"
 }
 
+# bootenv_edit <file> <grub-editenv arguments...>
+#   The block is a read-modify-write of a fixed 1024 bytes, so two writers
+#   that overlap lose one key. Every writer in the running OS serialises on
+#   an flock on the file itself, the extension runtime included. The
+#   initramfs writers run before any of them exist and take none.
+#
+#   flock opens the block with O_CREAT, so on a file that is not there yet it
+#   leaves an empty one and grub-editenv reads it instead of creating it.
+#   Lay the block down first; grub-editenv used to do it as a side effect.
+bootenv_edit() {
+    _file="$1"
+    shift
+    [ -s "${_file}" ] || grub-editenv "${_file}" create
+    flock "${_file}" grub-editenv "${_file}" "$@"
+}
+
 # bootenv_set <file> <key> <value>
 bootenv_set() {
-    grub-editenv "$1" set "$2=$3"
+    bootenv_edit "$1" set "$2=$3"
 }
 
 # bootenv_unset <file> <key>
 bootenv_unset() {
-    grub-editenv "$1" unset "$2"
-}
-
-# bootenv_commit_override <file> <slot>
-#   Record the active kernel override as <slot>'s committed override.
-bootenv_commit_override() {
-    _f="$1"
-    _slot="$2"
-    grub-editenv "${_f}" set \
-        "kernel_override_abi_committed_${_slot}=$(bootenv_get "${_f}" "kernel_override_abi")"
+    bootenv_edit "$1" unset "$2"
 }
 
 # bootenv_restore_kernel_override <file> <slot>
@@ -64,6 +71,20 @@ bootenv_restore_kernel_override() {
     else
         bootenv_unset "${_f}" "kernel_override_abi"
     fi
+}
+
+# bootenv_reject_kernel_override <file> <slot> [booted_abi]
+bootenv_reject_kernel_override() {
+    _f="$1"
+    _slot="$2"
+    _active=$(bootenv_get "${_f}" "kernel_override_abi")
+    _committed=$(bootenv_get "${_f}" "kernel_override_abi_committed_${_slot}")
+    _booted="${3-${_active}}"
+    if [ -n "${_active}" ] && [ "${_active}" != "${_committed}" ] &&
+        [ "${_active}" = "${_booted}" ]; then
+        bootenv_set "${_f}" "kernel_override_abi_rejected" "${_active}"
+    fi
+    bootenv_restore_kernel_override "${_f}" "${_slot}"
 }
 
 # bootenv_locate [mountpoint]
