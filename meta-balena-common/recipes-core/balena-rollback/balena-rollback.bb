@@ -33,7 +33,7 @@ SRC_URI = " \
 
 inherit allarch systemd
 
-RDEPENDS:${PN} = "balena-extension-runtime os-helpers-bootenv os-helpers-logging"
+RDEPENDS:${PN} = "balena-extension-runtime os-helpers-bootenv os-helpers-logging util-linux-findmnt"
 
 SYSTEMD_SERVICE:${PN} = " \
 	rollback-altboot.service \
