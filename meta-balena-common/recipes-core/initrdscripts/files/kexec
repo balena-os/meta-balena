@@ -53,7 +53,8 @@ resolve_override() {
     _abi="$1"
     [ -n "${_abi}" ] || return 1
 
-    _kernel="${ROOTFS_DIR}/mnt/data/boot-by-abi/${_abi}/@@KERNEL_IMAGETYPE@@"
+    # -f follows the link, so a dangling one is false.
+    _kernel="${ROOTFS_DIR}/mnt/data/boot-by-abi/${_abi}"
     if [ ! -f "${_kernel}" ]; then
         warn "kexec: override kernel for ${_abi} not found; falling back to stock"
         return 1
@@ -82,7 +83,7 @@ resolve_override() {
 }
 
 # select_kernel decides which kernel to boot and publishes the decision through
-# three globals:
+# these globals:
 #   SELECTED_KERNEL     - path of the kernel image to load
 #   SELECTED_KERNEL_ABI - its ABI ID, set only for an override kernel (the stock
 #                         kernel ships no derivable ABI, so it stays empty)
