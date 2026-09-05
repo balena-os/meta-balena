@@ -14,7 +14,7 @@ PV = "1.2.1+git${SRCPV}"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
 
-EXTRA_OEMAKE += "VERSION=${PV}"
+EXTRA_OEMAKE += "VERSION=${PV} BOOT_MOUNT=${BALENA_NONENC_BOOT_MOUNT}"
 
 do_compile[network] = "1"
 do_compile() {
