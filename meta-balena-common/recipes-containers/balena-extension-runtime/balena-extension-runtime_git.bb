@@ -40,8 +40,6 @@ do_install() {
 
 SYSTEMD_SERVICE:${PN} = "hostapp-extensions-cleanup.service"
 
-RDEPENDS:${PN} += "os-helpers-extensions"
-
 FILES:${PN} += " \
     ${systemd_unitdir}/system/hostapp-extensions-cleanup.service \
 "
