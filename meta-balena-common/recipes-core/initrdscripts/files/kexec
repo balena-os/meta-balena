@@ -53,7 +53,8 @@ resolve_override() {
     _abi="$1"
     [ -n "${_abi}" ] || return 1
 
-    _kernel="${ROOTFS_DIR}/mnt/data/boot-by-abi/${_abi}/@@KERNEL_IMAGETYPE@@"
+    # -f follows the link, so a dangling one is false.
+    _kernel="${ROOTFS_DIR}/mnt/data/boot-by-abi/${_abi}"
     if [ ! -f "${_kernel}" ]; then
         warn "kexec: override kernel for ${_abi} not found; falling back to stock"
         return 1
