@@ -134,6 +134,9 @@ do_install() {
 	install -m 0644 ${UNPACKDIR}/balena.service ${D}/${systemd_unitdir}/system
 
 	sed -i -e "s,@ROOT_HOME@,${root_bindmount_name},g" ${D}/${systemd_unitdir}/system/balena.service
+	# Empty unless the boot partition is split: unsigned builds mount the
+	# non-encrypted boot as resin-boot itself.
+	sed -i -e "s,@NONENC_BOOT_SERVICE@,${@oe.utils.conditional('SIGN_API','','','${BALENA_NONENC_BOOT_LABEL}.service',d)},g" ${D}/${systemd_unitdir}/system/balena.service
 	install -m 0644 ${UNPACKDIR}/balena-host.service ${D}/${systemd_unitdir}/system
 	install -m 0644 ${UNPACKDIR}/balena-host.socket ${D}/${systemd_unitdir}/system
 
