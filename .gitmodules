@@ -1,9 +1,12 @@
 [submodule "tests/leviathan"]
 	path = tests/leviathan
 	url = https://github.com/balena-os/leviathan.git
+	branch = master
 [submodule "tests/suites/os/tests/secureboot/kernel-module-build"]
 	path = tests/suites/os/tests/secureboot/kernel-module-build
 	url = https://github.com/balena-os/kernel-module-build
+	branch = master
 [submodule "tests/suites/os/tests/extra-firmware/kernel-module-build"]
 	path = tests/suites/os/tests/extra-firmware/kernel-module-build
 	url = https://github.com/balena-os/kernel-module-build
+	branch = master
