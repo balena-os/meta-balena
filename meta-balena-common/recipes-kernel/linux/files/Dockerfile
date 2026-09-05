@@ -1,4 +1,4 @@
-FROM balenalib/intel-nuc-debian:bullseye-20230328
+FROM debian:bullseye-20260824
 
 # Install dependencies
 RUN apt-get update && apt-get install -y curl wget build-essential libelf-dev bc flex libssl-dev bison gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu python3-minimal
