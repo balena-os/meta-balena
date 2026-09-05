@@ -32,14 +32,29 @@ bootenv_get() {
     grub-editenv "${_file}" list 2>/dev/null | sed -n "s/^${_key}=//p"
 }
 
+# bootenv_edit <file> <grub-editenv arguments...>
+#   The block is a fixed 1024-byte read-modify-write, so two overlapping
+#   writers lose a key. Every writer in the running OS serialises on an flock
+#   of the file, the extension runtime included; the initramfs writers run
+#   before any of them exist and take none.
+#
+#   flock opens with O_CREAT and would leave an empty block that grub-editenv
+#   reads instead of creating, so lay the block down first.
+bootenv_edit() {
+    _file="$1"
+    shift
+    [ -s "${_file}" ] || grub-editenv "${_file}" create
+    flock "${_file}" grub-editenv "${_file}" "$@"
+}
+
 # bootenv_set <file> <key> <value>
 bootenv_set() {
-    grub-editenv "$1" set "$2=$3"
+    bootenv_edit "$1" set "$2=$3"
 }
 
 # bootenv_unset <file> <key>
 bootenv_unset() {
-    grub-editenv "$1" unset "$2"
+    bootenv_edit "$1" unset "$2"
 }
 
 # bootenv_commit_override <file> <slot>
