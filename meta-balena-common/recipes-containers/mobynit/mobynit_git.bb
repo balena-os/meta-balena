@@ -9,9 +9,8 @@ inherit go
 RDEPENDS:${PN} = "util-linux"
 
 GO_IMPORT = "github.com/balena-os/mobynit"
-SRC_URI = "git://${GO_IMPORT};nobranch=1;protocol=https"
-# v1.1.0
-SRCREV="d6df4547c409f9ead738c48fab7fe1d96b406c1f"
+SRC_URI = "git://${GO_IMPORT};branch=alexgg/claims;protocol=https"
+SRCREV="cf713bce9eea3cb638a747da2be9a4e0b7622d7f"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
 
