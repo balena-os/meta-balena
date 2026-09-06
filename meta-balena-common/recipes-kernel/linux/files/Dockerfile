@@ -1,5 +1,17 @@
 FROM debian:bullseye-20260824
 
+# bullseye LTS ended 2026-08-31, so packages are leaving the live mirrors while
+# the index still advertises them. Pin apt to the snapshot archive matching this
+# image tag, which keeps the index and the pool consistent. See meta-balena#3938.
+# Snapshot Release files are historical, so their Valid-Until has already passed.
+ARG debian_snapshot=20260824T000000Z
+RUN printf '%s\n' \
+	"deb http://snapshot.debian.org/archive/debian/${debian_snapshot} bullseye main" \
+	"deb http://snapshot.debian.org/archive/debian-security/${debian_snapshot} bullseye-security main" \
+	"deb http://snapshot.debian.org/archive/debian/${debian_snapshot} bullseye-updates main" \
+	> /etc/apt/sources.list \
+	&& printf 'Acquire::Check-Valid-Until "false";\n' > /etc/apt/apt.conf.d/99no-check-valid-until
+
 # Install dependencies
 RUN apt-get update && apt-get install -y curl wget build-essential libelf-dev bc flex libssl-dev bison gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu python3-minimal
 
