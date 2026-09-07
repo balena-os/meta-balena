@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v8.0.9
+## (2026-09-07)
+
+* kernel-headers-test: Pin apt to the snapshot archive [Kyle Harding]
+* kernel-headers-test: Replace deprecated balenalib base with debian:bullseye [Kyle Harding]
+* .gitmodules: Declare a branch for every submodule [Kyle Harding]
+
 # v8.0.8
 ## (2026-09-03)
 
