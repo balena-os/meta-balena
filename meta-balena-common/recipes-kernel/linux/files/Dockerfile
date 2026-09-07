@@ -1,4 +1,23 @@
-FROM balenalib/intel-nuc-debian:bullseye-20230328
+FROM debian:bullseye-20260824
+
+# bullseye LTS ended 2026-08-31 and packages are being deleted from the live
+# mirrors while the index still advertises them, so apt 404s mid-build.
+# archive.debian.org is no use here: it is frozen at point release 11.11, whose
+# libc6-dev/libssl-dev pin exact runtime versions older than the ones this image
+# already has installed, so they cannot be co-installed.
+# The snapshot archive matching this image tag is consistent by construction,
+# because the image was built from it. The base image ships both sets of lines
+# in /etc/apt/sources.list, so flipping which are commented takes the timestamp
+# from the image and stays correct when the base tag is bumped. The grep fails
+# the build if a future base image stops shipping snapshot lines.
+# Snapshot Release files are historical, so their Valid-Until has passed.
+# See meta-balena#3938.
+RUN sed -i -E \
+	-e 's|^deb +http://deb\.debian\.org|# &|' \
+	-e 's|^# *(deb +http://snapshot\.debian\.org)|\1|' \
+	/etc/apt/sources.list \
+	&& grep -q '^deb http://snapshot\.debian\.org' /etc/apt/sources.list \
+	&& printf 'Acquire::Check-Valid-Until "false";\nAcquire::Retries "3";\n' > /etc/apt/apt.conf.d/99snapshot
 
 # Install dependencies
 RUN apt-get update && apt-get install -y curl wget build-essential libelf-dev bc flex libssl-dev bison gcc-arm-linux-gnueabi gcc-aarch64-linux-gnu python3-minimal
