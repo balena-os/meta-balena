@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update tests/leviathan digest to 466e576
+      hash: 202b6b05fa009aec7c61883c419d94f7d72aa8bd
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update Node.js
+              hash: 17b2e1ed1544c90d8d63d97c8ff0edef7474a9c7
+              body: |
+                Update node from 22.14.0 to 22.23.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.132
+          title: ""
+          date: 2026-09-02T20:19:30.667Z
+  version: 8.0.10
+  title: ""
+  date: 2026-09-11T10:47:29.394Z
+- commits:
     - subject: "kernel-headers-test: Pin apt to the snapshot archive"
       hash: 80a936f7feda864aad0b949f3b5be12909cd492a
       body: >
