@@ -10,9 +10,17 @@
 #   inherit balena-hostapp-extension
 #   IMAGE_INSTALL = "<your extension packages>"
 #
+# Use :append instead whenever something else already contributes to the
+# payload, which is the case for every class inheriting this one. A plain
+# assignment in a recipe parses after its inherit line and silently drops what
+# the class installed.
+#
 # Inheriting recipes can append more docker-import directives via:
 #   HOSTAPP_EXTENSION_LABELS  - extra `--change "LABEL ..."` lines
-#   HOSTAPP_EXTENSION_CHANGES - extra `--change "..."` lines (VOLUME, ENV, ...)
+#   HOSTAPP_EXTENSION_CHANGES - extra `--change "..."` lines (ENV, WORKDIR, ...)
+#
+# The paths stripped from the assembled rootfs are configurable via:
+#   HOSTAPP_EXTENSION_REMOVE_PATHS - rootfs-relative paths (default: etc run var)
 #
 # The values of the conventional labels can be overridden per-recipe:
 #   HOSTAPP_EXTENSION_LABEL_STORE            - io.balena.image.store          (default: data)
@@ -38,6 +46,31 @@ HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT ?= "1"
 
 # Unset by default: extend-only extension
 HOSTAPP_EXTENSION_LABEL_OVERRIDE        ?= ""
+
+# Every extension is a rootfs tarball imported as an image
+IMAGE_LINGUAS = ""
+VIRTUAL-RUNTIME_init_manager = ""
+INITRAMFS_IMAGE = ""
+IMAGE_FSTYPES = "tar.gz"
+
+# An overlay contributes its own content only
+HOSTAPP_EXTENSION_REMOVE_PATHS ?= "etc run var"
+
+# rm -rf unlinks a symlink without following it, so the same form covers both
+# the state directories and the /bin and /sbin compatibility symlinks.
+remove_unnecessary_files() {
+    for p in ${HOSTAPP_EXTENSION_REMOVE_PATHS}; do
+        # The value is reachable from local.conf and a machine conf, so an entry
+        # that escapes the rootfs would rm -rf the build tree.
+        case "$p" in
+            /|.|..|../*|*/..|*/../*) bbfatal "invalid HOSTAPP_EXTENSION_REMOVE_PATHS entry: '$p'" ;;
+        esac
+        rm -rf "${IMAGE_ROOTFS}/$p"
+    done
+}
+# Ordered before install_kernel_override_symvers below, which writes under
+# /usr/lib/modules/<ver>/ and would be undone by a removal running after it.
+IMAGE_PREPROCESS_COMMAND += "remove_unnecessary_files;"
 
 # Always-on: the hooks self-detect kernel content at runtime and
 # silently no-op for non-kernel extensions.
@@ -88,6 +121,7 @@ do_create_docker_image() {
             --change "LABEL io.balena.image.class=${HOSTAPP_EXTENSION_LABEL_CLASS}" \
             --change "LABEL io.balena.update.requires-reboot=${HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT}" \
             --change "LABEL io.balena.image.os-version=${HOSTOS_VERSION}" \
+            --change 'CMD ["none"]' \
             "$@"
 
         # Only emit the override label when a priority is set.
@@ -124,8 +158,7 @@ do_create_docker_image() {
 
         _docker_import_extension \
             --change "LABEL io.balena.image.kernel-version=${KERNEL_VER}" \
-            --change "LABEL io.balena.image.kernel-abi-id=${KERNEL_ABI_ID}" \
-            --change "VOLUME /boot"
+            --change "LABEL io.balena.image.kernel-abi-id=${KERNEL_ABI_ID}"
     elif [ -z "${HAS_SYMVERS}" ] && [ "${HAS_KERNEL_IMG}" = "0" ]; then
         # Not a kernel-override extension, common labels only.
         _docker_import_extension

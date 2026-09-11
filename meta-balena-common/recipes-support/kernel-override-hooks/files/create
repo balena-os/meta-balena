@@ -22,7 +22,7 @@ BOOT_BY_ABI_DIR="/mnt/data/boot-by-abi"
 
 extension_kernel_override_prelude "${EXTENSION_ROOTFS}" || exit 0
 
-VOLUME_DATA="${EXTENSION_VOLUME_BOOT:?EXTENSION_VOLUME_BOOT not set; image is missing VOLUME /boot}"
+VOLUME_DATA="${EXTENSION_VOLUME_BOOT:?kernel override volume not found}"
 
 mkdir -p "${BOOT_BY_ABI_DIR}"
 
