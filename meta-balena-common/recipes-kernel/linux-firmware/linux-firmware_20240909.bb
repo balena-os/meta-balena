@@ -440,7 +440,7 @@ FILES:${PN}-ar9170 = " \
   ${nonarch_base_libdir}/firmware/ar9170*.fw* \
 "
 FILES:${PN}-ath3k = " \
-  ${nonarch_base_libdir}/firmware/ath3k*fw \
+  ${nonarch_base_libdir}/firmware/ath3k*fw* \
 "
 FILES:${PN}-ath6k = " \
   ${nonarch_base_libdir}/firmware/ath6k \

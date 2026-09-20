@@ -491,3 +491,5 @@ python __anonymous() {
 
     d.setVar('ROOTFS_POSTPROCESS_COMMAND', cleaned_command)
 }
+
+inherit balena-firmware-exclusion
