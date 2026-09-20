@@ -50,7 +50,6 @@ runSupervisor() {
         --net=host \
         --cidenv=SUPERVISOR_CONTAINER_ID \
         --mount type=bind,source=/var/run/balena-engine.sock,target=/var/run/balena-engine.sock \
-        --mount type=bind,source=/resin-data/balena-supervisor,target=/data \
         --mount type=bind,source=/var/log/supervisor-log,target=/var/log \
         --mount type=bind,source=/,target=/mnt/root \
         -e DOCKER_SOCKET=/var/run/balena-engine.sock \
