@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to bac9173
+      hash: fea14a2f8ca70d46bf1f50a5b12d343357a4f36d
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "core/contracts: Update to v2.0.150"
+              hash: 18fd631e06246b8194fc5af204094aea3d9a6c19
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.36.133
+          title: ""
+          date: 2026-09-22T06:46:24.856Z
+  version: 8.0.11
+  title: ""
+  date: 2026-09-22T15:05:20.715Z
+- commits:
     - subject: Update tests/leviathan digest to 466e576
       hash: 202b6b05fa009aec7c61883c419d94f7d72aa8bd
       body: Update tests/leviathan
