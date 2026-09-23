@@ -1,4 +1,18 @@
 - commits:
+    - subject: "kernel-balena.bbclass: Add aufs patches for 6.18 kernels"
+      hash: 3988f3f5073d2db5ffa9e84c2767061655836e84
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 8.0.12
+  title: ""
+  date: 2026-09-23T15:36:16.716Z
+- commits:
     - subject: Update tests/leviathan digest to bac9173
       hash: fea14a2f8ca70d46bf1f50a5b12d343357a4f36d
       body: Update tests/leviathan

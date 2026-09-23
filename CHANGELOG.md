@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.12
+## (2026-09-23)
+
+* kernel-balena.bbclass: Add aufs patches for 6.18 kernels [Florin Sarbu]
+
 # v8.0.11
 ## (2026-09-22)
 
