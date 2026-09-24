@@ -4,12 +4,21 @@ name: "Creates ESR branch and tag"
 # of the last minor version
 
 on:
+  # ESR-RC-note
+  # With RC releases, need to run every month. However, we only create the
+  # final RC release every 6th month.
+  # Claude claims workflows only need to run on a 60 day interval to avoid
+  # being disabled, so maybe we no longer need the weekly run.
+  #
   # Run at 00:06 the first day every 3rd month (quarterly)
   # Run weekly too to keep the workflow enabled
   schedule:
     - cron: "6 0 1 */3 *"
     - cron: "6 0 * * 1"
 
+  # ESR-RC-note
+  # Extend description to mention an RC release.
+  #
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
@@ -97,6 +106,13 @@ jobs:
           fi
           exit 1
 
+      # ESR-RC-note
+      # If ESR version provided, must validate format like "2026.10-rc1"
+      # If ESR version not provided, must calculate version string. Assume RC
+      # releases are created in order like -rc1, -rc2, ... -rc5, where the final
+      # ESR is either "20xx.4" or "20xx.10" For example in May 2027, we should
+      # create "2027.10-rc1". So we must use the month for the eventual release.
+      #
       - name: "Assert ESR version"
         id: assert-esr-version
         env:
@@ -122,6 +138,17 @@ jobs:
       - name: "Calculate versions"
         id: calculate-versions
         run: |
+          # ESR-RC-note
+          # Calculates the rolling version to use for the ESR branch.
+          # Uses most recent for previous minor. For example if current is
+          # 8.0.12, previous minor if 7.9.6. Then determines ESR branch as "7.9.x".
+          # Note: If the branch already exists, uses the *current* minor for the
+          # branch. For example, that's 8.0 in the example above.
+          #
+          # This behavior will change with RC releases. We will choose the latest
+          # patch version in master for the initial branch from master, like 
+          # end ESR-RC-note
+          #
           # The ESR branch starts at the HEAD of the latest minor version
           git fetch --tags origin
           current_os_version=$(git describe --abbrev=0 "$(git rev-list --tags --max-count=1)")
@@ -213,6 +240,12 @@ jobs:
           esr_label="${OS_ESR_BRANCH:0:-2}"
           echo "parent_sha=${parent_sha}" >> "$GITHUB_OUTPUT"
           echo "esr_label=${esr_label}" >> "$GITHUB_OUTPUT"
+
+
+      # ESR-RC-note
+      # The steps below create the meta-balena branch, like "7.9.x".
+      # They also create the device-repo branch, like "2026.10.x", and the commit
+      # with message "Declare ESR 2026.10.0", and tag on that commit, like "v2026.10.0"
 
       # https://octokit.github.io/rest.js/v21/#git-create-ref
       # https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#create-a-reference
