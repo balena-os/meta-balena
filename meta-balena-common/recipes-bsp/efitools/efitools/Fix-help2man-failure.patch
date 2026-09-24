@@ -5,6 +5,7 @@ Subject: [PATCH] Fix help2man failure
 
 Add --no-discard-stderr to work around the error.
 
+Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Make.rules | 2 +-

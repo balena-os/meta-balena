@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 PR = "r1"
 
 SRC_URI = "file://resin-init-board"
-S = "${WORKDIR}"
 
 inherit allarch
 
@@ -14,5 +13,5 @@ RDEPENDS:${PN} = "bash"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/resin-init-board ${D}${bindir}
+    install -m 0755 ${UNPACKDIR}/resin-init-board ${D}${bindir}
 }

@@ -1,6 +1,558 @@
 Change log
 -----------
 
+# v8.0.12
+## (2026-09-23)
+
+* kernel-balena.bbclass: Add aufs patches for 6.18 kernels [Florin Sarbu]
+
+# v8.0.11
+## (2026-09-22)
+
+
+<details>
+<summary> Update tests/leviathan digest to bac9173 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.133
+> ### (2026-09-22)
+> 
+> * core/contracts: Update to v2.0.150 [Alexandru Costache]
+> 
+
+</details>
+
+# v8.0.10
+## (2026-09-11)
+
+
+<details>
+<summary> Update tests/leviathan digest to 466e576 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.132
+> ### (2026-09-02)
+> 
+> * Update Node.js [balena-renovate[bot]]
+> 
+
+</details>
+
+# v8.0.9
+## (2026-09-07)
+
+* kernel-headers-test: Pin apt to the snapshot archive [Kyle Harding]
+* kernel-headers-test: Replace deprecated balenalib base with debian:bullseye [Kyle Harding]
+* .gitmodules: Declare a branch for every submodule [Kyle Harding]
+
+# v8.0.8
+## (2026-09-03)
+
+* docs: Fix obsolete link to application update locking documentation [Ken Bannister]
+
+# v8.0.7
+## (2026-09-03)
+
+* initrdscripts: more robustness looking for active root [Michal Toman]
+
+# v8.0.6
+## (2026-09-02)
+
+
+<details>
+<summary> Update tests/leviathan digest to a0fb22f [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.131
+> ### (2026-09-01)
+> 
+> * Update actions/checkout action to v7 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.130
+> ### (2026-09-01)
+> 
+> * Update balena-io/balena-cli to v25.2.6 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.129
+> ### (2026-09-01)
+> 
+> * Update debian:bullseye-slim Docker digest to e5b6442 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.128
+> ### (2026-09-01)
+> 
+> * Update flowzonify to v0.4.2 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.127
+> ### (2026-09-01)
+> 
+> * Update core/contracts digest to 93b3001 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.126
+> ### (2026-09-01)
+> 
+> * Update GitHub Actions [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.125
+> ### (2026-09-01)
+> 
+> * Update docker/dockerfile:1 Docker digest to ecfaec9 [balena-renovate[bot]]
+> 
+
+</details>
+
+# v8.0.5
+## (2026-08-31)
+
+* Update flowzonify to v0.4.2 [balena-renovate[bot]]
+
+# v8.0.4
+## (2026-08-26)
+
+* hostapp.yml: Set network_mode none on the hostapp service [Christina Ying Wang]
+
+# v8.0.3
+## (2026-08-24)
+
+* balena-bootloader.bbclass: Move common bits from devices to class [Michal Toman]
+
+# v8.0.2
+## (2026-08-21)
+
+* distro:balena-os.inc: Remove gobject-introspection-data from DISTRO_FEATURES [Florin Sarbu]
+
+# v8.0.1
+## (2026-08-20)
+
+* balena: use AtomicWriteFile to save volume options [Kyle Harding]
+
+# v8.0.0
+## (2026-08-17)
+
+* image_types_balena: force 4K block size for resin-state ext4 [guille-vega]
+* Increase default boot, root and state partition sizes [guille-vega]
+
+# v7.9.6
+## (2026-08-17)
+
+
+<details>
+<summary> Update tests/leviathan digest to 4ae6a0e [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.124
+> ### (2026-08-15)
+> 
+> * Update debian:bullseye-slim Docker digest to f313b4b [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.123
+> ### (2026-08-15)
+> 
+> * Update core/contracts digest to 410a252 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.122
+> ### (2026-08-15)
+> 
+> * Update alpine Docker tag to v3.24.1 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.121
+> ### (2026-08-14)
+> 
+> * Core: worker: fix error with custom DT [Ryan Cooke]
+> 
+
+</details>
+
+# v7.9.5
+## (2026-08-16)
+
+* workflows: Pin yocto-scripts submodule to master [Kyle Harding]
+
+# v7.9.4
+## (2026-08-11)
+
+* hostapp: Add deploy assets to hostapp composition [Kyle Harding]
+
+# v7.9.3
+## (2026-08-08)
+
+* balena-extension-runtime: do not duplicate binary [Alex Gonzalez]
+* balena-extension-runtime: update to v1.2.1 [Alex Gonzalez]
+
+# v7.9.2
+## (2026-08-07)
+
+* extra-udev-rules: Disable power management on mlan* wireless network interfaces [Florin Sarbu]
+
+# v7.9.1
+## (2026-08-07)
+
+* recipes-containers/balena-extension-runtime: Enable Wrynose builds [Alexandru Costache]
+
+# v7.9.0
+## (2026-08-04)
+
+* docs: update hostapp extensions kernel abi compatibility section [Alex Gonzalez]
+* balena-hostapp-extension: add class [Alex Gonzalez]
+* kernel-override-hooks: add recipe [Alex Gonzalez]
+* os-helpers-extensions: use kernel image hash as kernel-abi-id [Alex Gonzalez]
+* os-helpers-bootenv: leave hup variables to bootloaders hooks [Alex Gonzalez]
+* rollback-health: use standard os logging [Alex Gonzalez]
+* initrdscripts(abroot): kernel selection [Alex Gonzalez]
+* balena-image-bootloader-initramfs: add mount data stage [Alex Gonzalez]
+* initrdscript: add stage2 data partition mount [Alex Gonzalez]
+
+# v7.8.1
+## (2026-07-31)
+
+* initrdscripts: check alignment of data partition in resindataexpander [Michal Toman]
+
+# v7.8.0
+## (2026-07-29)
+
+* mobynit: update to v1.1.0 [Alex Gonzalez]
+
+# v7.7.2
+## (2026-07-24)
+
+
+<details>
+<summary> Update tests/leviathan digest to dacce76 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.120
+> ### (2026-07-24)
+> 
+> * Update balena-os/leviathan-worker to v2.10.41 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.119
+> ### (2026-07-23)
+> 
+> * Update balena-os/leviathan-worker to v2.10.40 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.118
+> ### (2026-07-23)
+> 
+> * Update balena-io/balena-cli to v25.1.10 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.117
+> ### (2026-07-23)
+> 
+> * core/lib/common/worker.js: improve reliability of segmented image upload [guille-vega]
+> 
+> ## leviathan-2.36.116
+> ### (2026-07-16)
+> 
+> * Update alpine Docker tag to v3.18.12 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.115
+> ### (2026-07-16)
+> 
+> * Update core/contracts digest to a4ab96e [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.114
+> ### (2026-07-14)
+> 
+> * Update Pin dependencies [balena-renovate[bot]]
+> 
+
+</details>
+
+# v7.7.1
+## (2026-07-21)
+
+* tests: os: led: check LED_FILE exists on device, and stop counting sdterr [Ryan Cooke]
+
+# v7.7.0
+## (2026-07-15)
+
+* image-types: tag hostapp during import so it includes RepoTags [Alex Gonzalez]
+* hostapp-update-hooks: add extensions support [Alex Gonzalez]
+* packagegroup-resin: add extension OCI runtime [Alex Gonzalez]
+* balena: register extensions runtime [Alex Gonzalez]
+* balena-extension-runtime: add recipe [Alex Gonzalez]
+* os-helpers: add bootenv helper [Alex Gonzalez]
+* os-helpers: add extensions helper [Alex Gonzalez]
+* docker-disk: remove built-in extension support [Alex Gonzalez]
+* hostapp-extensions-update: remove recipe. [Alex Gonzalez]
+
+# v7.6.0
+## (2026-07-14)
+
+* mobynit: update to v1.0.1 [Alex Gonzalez]
+
+# v7.5.11
+## (2026-07-12)
+
+
+<details>
+<summary> Update balena-supervisor to v18 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-18.2.2
+> ### (2026-07-06)
+> 
+> * Clean up supervisor images in the database [Felipe Lalanne]
+> 
+> ## balena-supervisor-18.2.1
+> ### (2026-07-02)
+> 
+> * Clarify documentation on device tags API [Jonathan Berger]
+> 
+> ## balena-supervisor-18.2.0
+> ### (2026-06-22)
+> 
+> * Rename the supervisor service to core on the commposition [Felipe Lalanne]
+> * Report the supervisor main service to backend [Felipe Lalanne]
+> 
+> ## balena-supervisor-18.1.2
+> ### (2026-06-22)
+> 
+> * Docs: clarify behavior for `PATCH /v2/device/tags` [Pagan Gazzard]
+> 
+> ## balena-supervisor-18.1.1
+> ### (2026-06-05)
+> 
+> * Pass correct value for restart policy 'no' [Felipe Lalanne]
+> 
+> ## balena-supervisor-18.1.0
+> ### (2026-06-03)
+> 
+> * Remove any overrides created by helios and restore service [Felipe Lalanne]
+> * Revert "Add `helios` service to composition" [Felipe Lalanne]
+> 
+> ## balena-supervisor-18.0.0
+> ### (2026-05-27)
+> 
+> * Add `helios` service to composition [Felipe Lalanne]
+> * Restrict supervisor API listen address when overriding port [Felipe Lalanne]
+> * Use RESIN_BOARD_REV OS release info as a fallback [Felipe Lalanne]
+> * Add BALENA_HOST_OS_BUILD as environment variable [Felipe Lalanne]
+> * Add firewall configurations for the override port [Felipe Lalanne]
+> * Allow overriding apiEndpoint from a database field [Felipe Lalanne]
+> 
+> ## balena-supervisor-17.8.5
+> ### (2026-05-26)
+> 
+> * Convert extra_hosts separator from `=` to `:` [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.8.4
+> ### (2026-05-21)
+> 
+> * Remove debugging-supervisor docs in favor of moving directly to docs [Matthew Yarmolinsky]
+> 
+> ## balena-supervisor-17.8.3
+> ### (2026-05-20)
+> 
+> * Remove update-locking docs in favor of moving them directly to the docs [Matthew Yarmolinsky]
+> 
+
+</details>
+
+# v7.5.10
+## (2026-07-09)
+
+* kernel-image-initramfs: multi-kernel support [Alex Gonzalez]
+* kernel-balena-noimage: remove upstream rrecommends [Alex Gonzalez]
+* kernel-balena-override: add config fragment support [Alex Gonzalez]
+* kernel-balena: add multi kernel support [Alex Gonzalez]
+
+# v7.5.9
+## (2026-07-08)
+
+* renovate: Append major/minor/patch updates with change-type footer [Kyle Harding]
+
+# v7.5.8
+## (2026-07-07)
+
+
+<details>
+<summary> Update tests/leviathan digest to a8266fb [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.113
+> ### (2026-07-06)
+> 
+> * Update balena-os/leviathan-worker to v2.10.35 [Florin Sarbu]
+> * core/lib/common/worker.js: Switch to segmented OS image upload to worker [Florin Sarbu]
+> 
+
+</details>
+
+# v7.5.7
+## (2026-06-24)
+
+* classes/image-balena: Cleanup issue file in Wrynose [Alexandru Costache]
+
+# v7.5.6
+## (2026-06-23)
+
+* tests: Add uptime regression test to the os suite [Kyle Harding]
+* coreutils: Restore /proc/uptime read so uptime works on scarthgap [Kyle Harding]
+
+# v7.5.5
+## (2026-06-22)
+
+* meta-balena-esr: Use GitHub REST API for verified commits [Kyle Harding]
+
+# v7.5.4
+## (2026-06-21)
+
+* balena: bump balena-engine to restore 1777 default for bare tmpfs mounts [Kyle Harding]
+
+# v7.5.3
+## (2026-06-19)
+
+* networkmanager_%.bbappend: Don't remove /usr/lib/NetworkManager/conf.d from the rootfs [Florin Sarbu]
+
+# v7.5.2
+## (2026-06-17)
+
+* recipes-core/systemd: Fix building with Wrynose [Alexandru]
+
+# v7.5.1
+## (2026-06-15)
+
+* tests: Define imx8mmebcrs16a1 as flasherConfig type [Florin Sarbu]
+
+# v7.5.0
+## (2026-06-12)
+
+* conf/layer.conf: Specify Wrynose compatibility [Alexandru Costache]
+
+# v7.4.1
+## (2026-06-11)
+
+
+<details>
+<summary> Update tests/leviathan digest to a310841 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.112
+> ### (2026-06-10)
+> 
+> * core/lib: Make Protected Management Frames (PMF) support optional / disabled when creating the wifi connection profile [Florin Sarbu]
+> 
+
+</details>
+
+# v7.4.0
+## (2026-06-09)
+
+* systemd: add configuration to ignore lid switch events [Dr Bill Mcilhargey]
+
+# v7.3.0
+## (2026-06-09)
+
+* tests: pieeprom test raspberrypi4 and CM4 [Yann CARDAILLAC]
+
+# v7.2.1
+## (2026-06-05)
+
+* hostapp.yml: Add root hostapp composition for all boards [Kyle Harding]
+
+# v7.2.0
+## (2026-05-29)
+
+* balena: Remove aufs as a supported storage driver [Kyle Harding]
+* balena: Remove aufs-to-overlay2 storage migration drop-in [Kyle Harding]
+* go: Upgrade to 1.24.6 from upstream walnascar recipes [Kyle Harding]
+* balena: Update balena engine to v25.0.14 [Kyle Harding]
+
+# v7.1.1
+## (2026-05-28)
+
+* Remove some docs in favor of moving them directly to the product docs [Matthew Yarmolinsky]
+
+# v7.1.0
+## (2026-05-27)
+
+* remove all bins from nss to save some place [Yann CARDAILLAC]
+
+# v7.0.7
+## (2026-05-26)
+
+
+<details>
+<summary> Update tests/leviathan digest to 053da9e [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.111
+> ### (2026-05-21)
+> 
+> * Update balena-io/balena-cli to v25 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.110
+> ### (2026-05-20)
+> 
+> * e2e: probe supervisor /ping instead of /v1/healthy [Kyle Harding]
+> 
+> ## leviathan-2.36.109
+> ### (2026-04-27)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.108
+> ### (2026-04-22)
+> 
+> * Update core/contracts digest to 7c3bf64 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.107
+> ### (2026-04-20)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+
+</details>
+
+# v7.0.6
+## (2026-05-25)
+
+* wpa_supplicant: enable OWE networks [Michal Toman]
+
+# v7.0.5
+## (2026-05-21)
+
+* image-balena: include size of boot directory in HUP check [Alex Gonzalez]
+
+# v7.0.4
+## (2026-05-20)
+
+
+<details>
+<summary> Update balena-supervisor to v17.8.2 [balena-renovate[bot]] </summary>
+
+> ## balena-supervisor-17.8.2
+> ### (2026-05-19)
+> 
+> * Pin back to Node 22 / Alpine 3.22 [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.8.1
+> ### (2026-05-13)
+> 
+> * Update systeminformation to v5.31.6 [SECURITY] [balena-renovate[bot]]
+> 
+> ## balena-supervisor-17.8.0
+> ### (2026-05-01)
+> 
+> * Add a `PATCH /v2/device/tags` endpoint to tell the supervisor device tags to report [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.7.5
+> ### (Invalid date)
+> 
+> * Trim whitespaces around dtparam input values [Christina Ying Wang]
+> * Fix dtparam parsing for comma-separated values [Christina Ying Wang]
+> 
+> ## balena-supervisor-17.7.4
+> ### (2026-04-29)
+> 
+> * Fix the network connectivity check [Felipe Lalanne]
+> 
+> ## balena-supervisor-17.7.3
+> ### (2026-04-20)
+> 
+> * Fix error propagation is fsUtils.touch [Pagan Gazzard]
+> * Convert code to async/await [Pagan Gazzard]
+> 
+> ## balena-supervisor-17.7.2
+> ### (2026-04-14)
+> 
+> * Firewall: avoid `exports.` to improve type-checking [Pagan Gazzard]
+> 
+
+</details>
+
 # v7.0.3
 ## (2026-05-13)
 

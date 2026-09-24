@@ -885,6 +885,7 @@ def aufs_kernel_select(kernelversion):
         ('6.6.63','4b3aaa6e3dfad2e26deef81a6abbec02939e1080'),
         ('6.6.84','31c39fd578065095faa6789c84a54a6a84f4dfc7'),
         ('6.12','a74fc3a112d90acddafa65a254177d4e523d1f0c'),
+        ('6.18','f8b3fda5b60c2163a24d0b35ffc040b83ef92db4'),
     ])
 
 
@@ -1195,6 +1196,11 @@ do_deploy:prepend () {
 
 # copy to deploy dir latest .config and Module.symvers (after kernel modules have been built)
 do_deploy:append () {
-    install -m 0644 ${D}/boot/Module.symvers-* ${DEPLOYDIR}/Module.symvers
-    install -m 0644 ${D}/boot/config-* ${DEPLOYDIR}/.config
+    deployDir="${DEPLOYDIR}"
+    if [ -n "${KERNEL_DEPLOYSUBDIR}" ]; then
+        deployDir="${DEPLOYDIR}/${KERNEL_DEPLOYSUBDIR}"
+        mkdir -p "$deployDir"
+    fi
+    install -m 0644 ${D}/boot/Module.symvers-* "$deployDir/Module.symvers"
+    install -m 0644 ${D}/boot/config-* "$deployDir/.config"
 }

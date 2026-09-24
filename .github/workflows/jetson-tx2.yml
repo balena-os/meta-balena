@@ -36,5 +36,6 @@ jobs:
       machine: jetson-tx2
       device-repo: balena-os/balena-jetson
       device-repo-ref: master
+      yocto-scripts-ref: master
       # Pin to the current commit
       meta-balena-ref: ${{ github.event.pull_request.head.sha }}

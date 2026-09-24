@@ -21,6 +21,6 @@ do_build[noexec] = "1"
 
 do_install() {
         install -d ${D}${systemd_unitdir}/system/
-        install -m 0644 ${WORKDIR}/recover-sshd-socket.service ${D}${systemd_unitdir}/system/
-        install -m 0644 ${WORKDIR}/recover-sshd-socket.timer ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/recover-sshd-socket.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/recover-sshd-socket.timer ${D}${systemd_unitdir}/system/
 }

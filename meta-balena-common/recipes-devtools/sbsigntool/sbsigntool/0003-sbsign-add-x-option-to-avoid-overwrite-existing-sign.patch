@@ -4,6 +4,7 @@ Date: Wed, 10 Mar 2021 15:53:21 +0200
 Subject: [PATCH 3/3] sbsign: add -x option to avoid overwrite existing
  signature
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 ---

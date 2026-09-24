@@ -3,8 +3,6 @@ From: Lans Zhang <jia.zhang@windriver.com>
 Date: Thu, 28 Apr 2016 11:21:33 +0800
 Subject: [PATCH] Don't build PreLoader.efi
 
-Upstream-Status: Pending
-
 The upstream has an obvious build failure:
 | PreLoader.c:45:2: error: too few arguments to function 'security_policy_install'
 |   status = security_policy_install();
@@ -17,6 +15,7 @@ The upstream has an obvious build failure:
 We are waiting for the upstream fix and remove this workaround in next
 refresh.
 
+Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Makefile | 2 +-

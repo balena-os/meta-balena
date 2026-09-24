@@ -33,8 +33,8 @@ do_compile() {
     rm -rf ${B}/work
     mkdir -p ${B}/work
     cp ${DEPLOY_DIR_IMAGE}/kernel_modules_headers.tar.gz ${B}/work
-    cp "${WORKDIR}"/Dockerfile ${B}/work/
-    cp -r "${WORKDIR}"/example_module ${B}/work/
+    cp "${UNPACKDIR}"/Dockerfile ${B}/work/
+    cp -r "${UNPACKDIR}"/example_module ${B}/work/
 
     IMAGETAG="${PN}:$(date +%s)"
     DOCKER_API_VERSION=${BALENA_API_VERSION} docker build --tag ${IMAGETAG} --build-arg kernel_arch=${ARCH} --build-arg cross_compile_prefix=${DEBIAN_TUPLE} ${B}/work

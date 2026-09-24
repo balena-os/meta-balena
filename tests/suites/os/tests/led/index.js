@@ -52,10 +52,21 @@ module.exports = {
 			);
 		}, false);
 
+		// Ensure LED_FILE is set and the file actually exists
+		const checkFile = await this.context
+			.get()
+			.worker.executeCommandInHostOS(
+				`source /etc/balena-supervisor/supervisor.conf ; [ -n "$LED_FILE" ] && [ -f "$LED_FILE" ] ; echo $?`,
+				this.link,
+			);
+
+		test.is(checkFile, '0', 'LED file defined in supervisor.conf should exist on device');
+
+
 		await this.context
 			.get()
 			.worker.executeCommandInHostOS(
-				`source /etc/balena-supervisor/supervisor.conf ; systemd-run --unit=${serviceName} bash -c "while true ; do cat $LED_FILE ; done"`,
+				`source /etc/balena-supervisor/supervisor.conf ; systemd-run --unit=${serviceName} bash -c "while true ; do cat $LED_FILE 2>/dev/null ; done"`,
 				this.link,
 			);
 

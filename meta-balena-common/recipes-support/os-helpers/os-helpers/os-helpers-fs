@@ -148,7 +148,7 @@ get_state_path_from_label() {
 # Arguments:
 #   1 - Target block device
 get_dev_fstype() {
-	lsblk -nlo fstype "${1}"
+	lsblk -nldo fstype "${1}"
 }
 
 # Mount/unmount device to update mount time

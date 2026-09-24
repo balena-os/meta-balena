@@ -3,10 +3,10 @@ From: Lans Zhang <jia.zhang@windriver.com>
 Date: Wed, 23 Mar 2016 19:05:29 +0800
 Subject: [PATCH] Allow to override tools for target build
 
-Upstream-Status: Pending
 
 These tools should use the ones from native build.
 
+Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Make.rules | 22 +++++++++++++---------

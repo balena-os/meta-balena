@@ -3,7 +3,7 @@ From: Andrei Gherzan <andrei@balena.io>
 Date: Fri, 10 May 2019 17:25:57 +0100
 Subject: [PATCH 1/1] libnss_ato.c: Enable use for root user
 
-Upstream-status: Inappropriate [configuration]
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Andrei Gherzan <andrei@balena.io>
 Signed-off-by: Joseph Kogut <joseph@balena.io>
 ---

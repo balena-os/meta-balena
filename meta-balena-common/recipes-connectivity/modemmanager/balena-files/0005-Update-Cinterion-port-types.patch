@@ -3,6 +3,7 @@ From: Kirill Zabelin <zabelinkirillv@gmail.com>
 Date: Wed, 19 Feb 2025 15:16:03 +0000
 Subject: [PATCH] Update Cinterion port types
 
+Upstream-Status: Inappropriate [configuration]
 ---
  .../77-mm-cinterion-port-types.rules          | 24 +++++++++++++++++++
  1 file changed, 24 insertions(+)

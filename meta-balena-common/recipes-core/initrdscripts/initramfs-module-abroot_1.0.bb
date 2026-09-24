@@ -6,6 +6,7 @@ RDEPENDS:${PN} = " \
     initramfs-framework-base \
     grub-editenv \
     util-linux-lsblk \
+    os-helpers-bootenv \
     os-helpers-logging \
     initramfs-module-mountboot \
 "
@@ -15,11 +16,9 @@ inherit allarch
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI = "file://abroot"
 
-S = "${WORKDIR}"
-
 do_install() {
     install -d ${D}/init.d
-    install -m 0755 ${WORKDIR}/abroot ${D}/init.d/74-abroot
+    install -m 0755 ${UNPACKDIR}/abroot ${D}/init.d/74-abroot
 }
 
 FILES:${PN} = "/init.d/74-abroot"

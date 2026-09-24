@@ -14,8 +14,7 @@ Content-Transfer-Encoding: 8bit
 | ../Make.rules:113: recipe for target 'console.efi.o' failed
 |
 
-Upstream-Status: Pending
-
+Upstream-Status: Inappropriate [OE specific]
 Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
 ---
  lib/console.c | 2 +-

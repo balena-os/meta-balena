@@ -6,6 +6,8 @@ Subject: [PATCH] Reuse xxdi.pl
 The missing File::Slurp required by xxdi.pl is added. To avoid introducing
 an extra xxd package, remove the support of using xxd.
 
+
+Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  Make.rules | 3 +--

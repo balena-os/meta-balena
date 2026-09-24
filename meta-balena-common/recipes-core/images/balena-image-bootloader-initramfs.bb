@@ -13,6 +13,7 @@ PACKAGE_INSTALL = " \
     initramfs-module-extrafw \
     initramfs-module-fsck \
     initramfs-module-kexec \
+    initramfs-module-mount-data \
     initramfs-module-udev \
     initramfs-framework-base \
     udev \

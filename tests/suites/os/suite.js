@@ -45,6 +45,7 @@ const externalAnt = (deviceType) => {
 const flasherConfig = (deviceType) => {
 	return (
 		[
+			'imx8mmebcrs16a1',
 			'imx8mm-var-dart-plt'
 		].includes(deviceType)
 	);
@@ -447,11 +448,13 @@ module.exports = {
 		'./tests/secureboot',
 		'./tests/device-specific-tests/beaglebone-black',
 		'./tests/device-specific-tests/243390-rpi3',
+		'./tests/raspberrypi4-eeprom',
 		'./tests/power-and-cooling',
 		'./tests/overlap_test/',
 		'./tests/fingerprint',
 		'./tests/fsck',
 		'./tests/os-release',
+		'./tests/uptime',
 		'./tests/iptables',
 		'./tests/migrate',
 		'./tests/issue',

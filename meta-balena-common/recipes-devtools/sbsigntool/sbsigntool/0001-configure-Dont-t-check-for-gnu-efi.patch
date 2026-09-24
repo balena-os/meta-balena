@@ -8,6 +8,7 @@ the configure fail.
 We explictly include the paths in our .bb recipe, so let's get rid of
 the check
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
 ---
  configure.ac | 15 +++++++--------

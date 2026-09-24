@@ -6,6 +6,7 @@ Subject: [PATCH] Add auth. header to /os/v1/config requests
 * this allows the API to identify devices requesting configuration and
   apply routing logic (e.g. switch from TCP to UDP OpenVPN configuration)
 
+Upstream-Status: Inappropriate [configuration]
 change-type: minor
 ---
  src/args.rs        |  2 +-

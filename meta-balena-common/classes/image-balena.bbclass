@@ -439,6 +439,17 @@ def available_space(img, d):
      available_space = free_blk_count - reserved_blks - reserved_gdt_blks - journal_blks - (inode_count * inode_size / blk_size)
      return int(available_space * blk_size / 1024)
 
+# Calculate directory size in KiB
+def get_dir_size_kb(path):
+    total = 0
+    if os.path.isdir(path):
+        for dirpath, dirnames, filenames in os.walk(path):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                if os.path.isfile(fp):
+                    total += os.path.getsize(fp)
+    return total / 1024
+
 # Check that the generated docker image can be updated to the rootfs partition
 python do_image_size_check() {
     imgfile = d.getVar("BALENA_DOCKER_IMG")
@@ -447,9 +458,21 @@ python do_image_size_check() {
     rfs_size = int(get_rootfs_size(d))
     image_size_aligned = int(disk_aligned(d, os.stat(imgfile).st_size / 1024))
     available = int(disk_aligned(d, available_space(ext4file, d)))
-    if image_size_aligned > available:
-        bb.fatal("The disk aligned root filesystem size %s exceeds the available space %s" % (image_size_aligned,available))
-    bb.debug(1, 'requested %d, available %d' % (image_size_aligned, available) )
+
+    # Calculate /boot directory size - copied to volume during HUP
+    boot_dir = os.path.join(d.getVar("IMAGE_ROOTFS"), "boot")
+    boot_size_kb = get_dir_size_kb(boot_dir)
+    boot_size_aligned = int(disk_aligned(d, boot_size_kb))
+
+    # Total space required = docker image + boot volume
+    total_required = image_size_aligned + boot_size_aligned
+
+    if total_required > available:
+        bb.fatal("HUP size check failed: docker image (%d KiB) + /boot volume (%d KiB) = %d KiB exceeds available space %d KiB"
+                 % (image_size_aligned, boot_size_aligned, total_required, available))
+
+    bb.debug(1, 'HUP size check: docker image %d KiB, /boot volume %d KiB, total %d KiB, available %d KiB'
+             % (image_size_aligned, boot_size_aligned, total_required, available))
 }
 
 # Equivalent to:
@@ -457,6 +480,14 @@ python do_image_size_check() {
 # But working on all Yocto versions
 python __anonymous() {
     import re
-    rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND')
-    d.setVar('ROOTFS_POSTPROCESS_COMMAND', re.sub(r'zap_empty_root_password ?;?', '', rootfs_postprocess_command))
+    rootfs_postprocess_command = d.getVar('ROOTFS_POSTPROCESS_COMMAND') or ''
+
+    cleaned_command = re.sub(r'zap_empty_root_password ?;?', '', rootfs_postprocess_command)
+    # Wrynose introduces an root empty password note in /etc/issue at build time,
+    # if passwordless root login is allowed. This breaks the /etc/issue file test
+    # and also, is meaningful only if developmentMode is 'true'. We thus remove it
+    # to keep the issue file clean.
+    cleaned_command = re.sub(r'add_empty_root_password_note ?;?', '', cleaned_command)
+
+    d.setVar('ROOTFS_POSTPROCESS_COMMAND', cleaned_command)
 }

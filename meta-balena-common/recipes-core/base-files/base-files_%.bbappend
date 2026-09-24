@@ -23,5 +23,5 @@ do_install_basefilesissue:append () {
 }
 
 do_install:append:libc-glibc () {
-	install -m 0644 ${WORKDIR}/mdns.allow ${D}${sysconfdir}/mdns.allow
+	install -m 0644 ${UNPACKDIR}/mdns.allow ${D}${sysconfdir}/mdns.allow
 }

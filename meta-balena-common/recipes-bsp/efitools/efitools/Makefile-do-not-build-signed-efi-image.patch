@@ -3,6 +3,7 @@ From: Yunguo Wei <yunguo.wei@windriver.com>
 Date: Tue, 17 Jan 2017 17:24:51 +0800
 Subject: [PATCH] Makefile: do not build signed efi image
 
+Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Yunguo Wei <yunguo.wei@windriver.com>
 ---
  Makefile | 5 ++---

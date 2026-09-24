@@ -16,6 +16,7 @@ drivers or applications are not readable from userspace.
 The implementation itself is simple and does the job. At the same time
 it is not very nice - it adds ambiguity to argument semantics.
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Michal Toman <michalt@balena.io>
 ---
  hash-to-efi-sig-list.c | 30 ++++++++++++++++++++++++++++++

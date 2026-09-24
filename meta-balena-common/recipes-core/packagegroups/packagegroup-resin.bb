@@ -3,7 +3,7 @@ LICENSE = "Apache-2.0"
 
 PR = "r1"
 
-PACKAGE_ARCH="${TUNE_PKGARCH}"
+PACKAGE_ARCH  = "${TUNE_PKGARCH}"
 
 inherit packagegroup
 
@@ -18,9 +18,8 @@ include packagegroup-resin.inc
 RDEPENDS:${PN} += " \
     dosfstools \
     mobynit \
-    docker-disk \
     hostapp-update \
-    hostapp-extensions-update \
+    balena-extension-runtime \
     hostapp-update-hooks \
     resin-filesystem-expand \
     balena-persistent-logs \
@@ -32,7 +31,6 @@ RDEPENDS:${PN} += " \
     timeinit \
     systemd-zram-swap \
     os-extra-firmware \
-    ${@bb.utils.contains('BALENA_STORAGE', 'aufs', 'aufs-util-auplink', '', d)} \
     ${BALENA_SUPERVISOR} \
     disk-watchdog \
     "

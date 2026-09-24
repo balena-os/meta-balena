@@ -15,6 +15,7 @@ inlining with the assembly code actually generated.
 Therefore, "static inline" is used for both purposes. If -O0 is specified,
 GCC will generate the assembly code as long as the function is referred.
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 ---
  include/variableformat.h | 2 +-

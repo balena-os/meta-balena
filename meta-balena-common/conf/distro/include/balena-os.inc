@@ -5,11 +5,11 @@ include conf/distro/include/balena-os-rust-version.inc
 
 DISTRO = "balena-os"
 DISTRO_NAME = "balenaOS"
-DISTRO_VERSION = "7.0.3"
+DISTRO_VERSION = "8.0.12"
 HOSTOS_VERSION = "${DISTRO_VERSION}"
 
 # Allowed kernel cmdline arguments, used by balena-bootloader and the bootloader configuration scripts
-ALLOWED_BOOTARGS_LIST=" \
+ALLOWED_BOOTARGS_LIST = " \
     firmware_class.path=/var/lib/docker/volumes/extra-firmware/_data \
 "
 
@@ -63,8 +63,11 @@ MAINTAINER = "Balena <hello@balena.io>"
 
 # Strip down unneeded features
 POKY_DEFAULT_DISTRO_FEATURES:remove = "ptest"
+DISTRO_FEATURES:remove = "ptest"
+EXTRA_IMAGE_FEATURES:remove = "ptest-pkgs"
+PTEST_ENABLED = "0"
+
 POKY_DEFAULT_DISTRO_FEATURES:remove = "wayland"
-DISTRO_FEATURES_DEFAULT:remove = "x11"
 
 # OS development image
 OS_DEVELOPMENT ?= "0"
@@ -77,6 +80,9 @@ DISTRO_FEATURES:append = " disable-user-ns"
 
 # balenaOS does not use PAM but some vendor BSP might add it
 DISTRO_FEATURES:remove = "pam"
+
+# we do not use GObject Introspection in the hostOS
+DISTRO_FEATURES:remove = "gobject-introspection-data"
 
 # Providers
 PREFERRED_PROVIDER_docker ?= "docker"
@@ -111,7 +117,6 @@ IMAGE_NAME_SUFFIX = ""
 # resinOS defaults to ipk packages
 PACKAGE_CLASSES = "package_ipk"
 
-# Default the docker storage driver to aufs
 BALENA_STORAGE = "overlay2"
 python () {
     docker_storage = d.getVar('DOCKER_STORAGE', True)
@@ -137,8 +142,8 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 # let's pin linux-firmware to the version we imported from Poky scarthgap release
 PREFERRED_VERSION_linux-firmware = "20240909"
 
-# Scarthgap go version, meets balena-engine go version requirement
-GOVERSION = "1.22.12"
+# Go version from walnascar, meets balena-engine v25 requirement
+GOVERSION = "1.24.6"
 PREFERRED_PROVIDER_go-native = "go-binary-native"
 
 # Firmware compression support

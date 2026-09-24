@@ -1,0 +1,12 @@
+[Unit]
+Description=Clean up dead hostapp extension containers
+After=balena.service
+Before=balena-supervisor.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/balena-extension-manager cleanup
+
+[Install]
+WantedBy=multi-user.target

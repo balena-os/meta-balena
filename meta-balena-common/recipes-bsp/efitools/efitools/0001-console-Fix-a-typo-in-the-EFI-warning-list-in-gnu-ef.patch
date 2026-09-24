@@ -17,6 +17,8 @@ This is a backport from devel for:
 Signed-off-by: Joseph Kogut <joseph@balena.io>
 Signed-off-by: Peter Jones <pjones at redhat.com>
 Upstream: d230d02f990f02293736dca78b108f86c86d1bd0
+
+Upstream-Status: Backport [from commit d230d02f990f02293736dca78b108f86c86d1bd0]
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni at bootlin.com>
 ---
  include/console.h | 6 ++++++

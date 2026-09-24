@@ -3,6 +3,7 @@ From: Lans Zhang <jia.zhang@windriver.com>
 Date: Wed, 16 Aug 2017 22:59:12 +0800
 Subject: [PATCH] Dynamically load openssl.cnf for openssl-1.0.x/1.1.x/3.0
 
+Upstream-Status: Inappropriate [embedded specific]
 Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
 Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
 ---

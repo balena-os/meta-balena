@@ -11,7 +11,7 @@ SRC_URI += " \
            file://cfg \
           "
 
-S = "${WORKDIR}/grub-${PV}"
+S = "${UNPACKDIR}/grub-${PV}"
 
 # Determine the target arch for the grub modules
 python __anonymous () {

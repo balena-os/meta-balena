@@ -56,7 +56,7 @@ The same applies for the [balenaOS board support](https://github.com/balena-os?u
 
 ## Support for Additional Boards
 
-BalenaOS is intended to work with any kind of board that fulfills some basic hardware requirements (see our Supported Boards list for [currently supported devices](https://www.balena.io/docs/reference/hardware/devices/)). If you have any other board that you’d like to see on that list, please check our [board support contribution guide](https://github.com/balena-os/meta-balena/blob/master/contributing-device-support.md) for more details. You’ll need to be familiar with [Yocto](http://www.yoctoproject.org/), and the board you are adding.
+BalenaOS is intended to work with any kind of board that fulfills some basic hardware requirements (see our Supported Boards list for [currently supported devices](https://www.balena.io/docs/reference/hardware/devices/)). If you have any other board that you’d like to see on that list, please check our [board support contribution guide](https://docs.balena.io/reference/os/customer-board-support) for more details. You’ll need to be familiar with [Yocto](http://www.yoctoproject.org/), and the board you are adding.
 
 
 ## Documentation

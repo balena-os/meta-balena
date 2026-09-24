@@ -44,6 +44,11 @@
       "matchUpdateTypes": ["minor", "patch"],
       "matchCurrentVersion": "!/^v?0/",
       "automerge": true
+    },
+    {
+      "description": "Append major/minor/patch updates with change-type footer",
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: patch"
     }
   ]
 }

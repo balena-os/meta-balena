@@ -8,7 +8,7 @@ QMI and the default 45s timeout, nor will it work
 with a 65s one. The value we found to work consistently
 with this modem connected over pcie is 95s.
 
-Upstream-status: Inappropriate [configuration]
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
  src/mm-port-qmi.c | 2 +-

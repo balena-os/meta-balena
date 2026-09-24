@@ -6,16 +6,19 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 PACKAGES = "${PN}"
 FILES:${PN} = "/boot"
 
+KERNEL_INITRAMFS_PROVIDER ?= "virtual/kernel"
+KERNEL_INITRAMFS_DEPLOY_DIR ?= "${DEPLOY_DIR_IMAGE}"
+
 do_install() {
     mkdir -p ${D}/boot
     for type in ${KERNEL_IMAGETYPE}; do
-        install -m 0644 ${DEPLOY_DIR_IMAGE}/${type}-initramfs-${MACHINE}.bin ${D}/boot/${type}
-        if [ -f "${DEPLOY_DIR_IMAGE}/${type}.initramfs.sig" ]; then
-            install -m 0644 ${DEPLOY_DIR_IMAGE}/${type}.initramfs ${D}/boot/${type}
-            install -m 0644 "${DEPLOY_DIR_IMAGE}/${type}.initramfs.sig" "${D}/boot/${type}.sig"
+        install -m 0644 ${KERNEL_INITRAMFS_DEPLOY_DIR}/${type}-initramfs-${MACHINE}.bin ${D}/boot/${type}
+        if [ -f "${KERNEL_INITRAMFS_DEPLOY_DIR}/${type}.initramfs.sig" ]; then
+            install -m 0644 ${KERNEL_INITRAMFS_DEPLOY_DIR}/${type}.initramfs ${D}/boot/${type}
+            install -m 0644 "${KERNEL_INITRAMFS_DEPLOY_DIR}/${type}.initramfs.sig" "${D}/boot/${type}.sig"
         fi
     done
 }
-do_install[depends] += "virtual/kernel:do_deploy"
+do_install[depends] += "${KERNEL_INITRAMFS_PROVIDER}:do_deploy"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

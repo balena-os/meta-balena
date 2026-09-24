@@ -44,11 +44,22 @@ rootfs_run() {
 
             if [ "`echo ${bootparam_root} | cut -c1-6`" = "LABEL=" ]; then
                 root_label=`echo $bootparam_root | cut -c7-`
-                bootparam_root="$(get_state_path_from_label "$root_label")"
-                if [ "${bootparam_flasher}" = "true" ] && [ ! -L "${bootparam_root}" ]; then
-                    bootparam_root="/dev/disk/by-label/$root_label"
+                # get_state_path_from_label is making a best-effort
+                # guess and sometimes it picks wrong (e.g. if udev is
+                # still processing devices). Make sure it picked
+                # a device with ext4 filesystem before ultimately
+                # deciding to use it for bootparam_root.
+                _root="$(get_state_path_from_label "$root_label")"
+                _fstype="$(get_dev_fstype "${_root}")"
+                if echo "${_fstype}" | grep -q ext4; then
+                    bootparam_root="${_root}"
+                    if [ "${bootparam_flasher}" = "true" ] && [ ! -L "${bootparam_root}" ]; then
+                        bootparam_root="/dev/disk/by-label/$root_label"
+                    fi
+                    info "Using bootparam_root $bootparam_root for $root_label"
+                else
+                    warn "'${_root}' is '${_fstype}', can't use it for bootparam_root"
                 fi
-                info "Using bootparam_root $bootparam_root for $root_label"
             fi
 
             if [ -e "$bootparam_root" ]; then

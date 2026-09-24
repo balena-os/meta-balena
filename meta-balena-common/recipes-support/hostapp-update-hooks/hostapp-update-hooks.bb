@@ -3,7 +3,6 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 SRC_URI = "file://hostapp-update-hooks"
-S = "${WORKDIR}"
 
 inherit allarch
 
@@ -16,6 +15,7 @@ HOSTAPP_HOOKS = " \
     76-supervisor-db/76-forward_supervisor-db \
     76-supervisor-db/76-fwd_commit_supervisor-db \
     80-rollback \
+    85-os-blocks-extensions/85-fwd_commit_os-blocks-extensions \
     "
 
 SECUREBOOT_HOOKS = " \
@@ -28,13 +28,13 @@ SECUREBOOT_HOOK_DIRS = " \
     "
 HOSTAPP_HOOKS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' ${SECUREBOOT_HOOKS}', '', d)}"
 
-HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db"
+HOSTAPP_HOOKS_DIRS = "75-supervisor-db 76-supervisor-db 85-os-blocks-extensions"
 HOSTAPP_HOOKS_DIRS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'efi', ' ${SECUREBOOT_HOOK_DIRS}', '', d)}"
 
 GRUB_INSTALL_DIR = "${@bb.utils.contains('MACHINE_FEATURES','efi','/EFI/BOOT','/grub',d)}"
 
 BALENA_BOOT_FINGERPRINT = "${BALENA_FINGERPRINT_FILENAME}.${BALENA_FINGERPRINT_EXT}"
-BALENA_BOOTFILES_BLACKLIST="\
+BALENA_BOOTFILES_BLACKLIST = "\
 	/config.json \
 	/config.txt \
 	/splash/balena-logo.png \
@@ -62,6 +62,7 @@ FILES:${PN} += " \
 
 RDEPENDS:${PN} = " \
     balena \
+    balena-extension-runtime \
     dropbear \
     openssh-keygen \
     util-linux \
@@ -76,10 +77,10 @@ do_install() {
 		mkdir -p ${D}${sysconfdir}/hostapp-update-hooks.d/$hdir
 	done
 	for h in ${HOSTAPP_HOOKS}; do
-		install -m 0755 $h ${D}${sysconfdir}/hostapp-update-hooks.d/"$h"
+		install -m 0755 ${UNPACKDIR}/$h ${D}${sysconfdir}/hostapp-update-hooks.d/"$h"
 	done
 	mkdir -p ${D}${bindir}
-	install -m 0755 hostapp-update-hooks ${D}${bindir}/hostapp-update-hooks-v2
+	install -m 0755 ${UNPACKDIR}/hostapp-update-hooks ${D}${bindir}/hostapp-update-hooks-v2
 	ln -s -r ${D}${bindir}/hostapp-update-hooks-v2 ${D}${bindir}/hostapp-update-hooks
 
 	sed -i -e 's:@BALENA_BOOT_FINGERPRINT@:${BALENA_BOOT_FINGERPRINT}:g;' \

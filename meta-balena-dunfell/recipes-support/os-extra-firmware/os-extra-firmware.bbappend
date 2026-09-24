@@ -1,3 +1,5 @@
+S = "${WORKDIR}"
+
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI += "file://os-extra-firmware-override.conf"

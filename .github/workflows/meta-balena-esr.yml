@@ -18,14 +18,6 @@ on:
         type: string
         description: ESR version override, for example 2022.10. By default it uses current year and month.
 
-env:
-  # get the user id of the GitHub App
-  # gh api /users/balenaos-esr%5Bbot%5D
-  GIT_AUTHOR_NAME: balenaos-esr[bot]
-  GIT_AUTHOR_EMAIL: 146746583+balenaos-esr[bot]@users.noreply.github.com
-  GIT_COMMITTER_NAME: balenaos-esr[bot]
-  GIT_COMMITTER_EMAIL: 146746583+balenaos-esr[bot]@users.noreply.github.com
-
 jobs:
   fetch:
     runs-on: ubuntu-latest
@@ -39,22 +31,60 @@ jobs:
         if: github.event_name == 'schedule' && github.event.schedule != '6 0 1 */3 *'
         run: exit 1
 
+      - name: Decode the GitHub App Private Key
+        id: decode
+        shell: bash
+        working-directory: ${{ runner.temp }}
+        # Skip decode if -----BEGIN is detected in the body of the private key, which indicates that the key is not base64 encoded.
+        # This allows users to use either raw or base64 encoded keys without needing to specify which format they are using.
+        # Raw secrets are automatically masked by GitHub; the base64-decoded derivative is not, so we mask it explicitly.
+        env:
+          SECRET_VALUE: ${{ secrets.ESR_BOT_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$SECRET_VALUE" ]]; then
+            echo "::error::ESR_BOT_PRIVATE_KEY secret is not set"
+            exit 1
+          fi
+          if [[ "$SECRET_VALUE" == *"-----BEGIN"* ]]; then
+            echo "Detected unencoded private key, skipping base64 decode"
+            private_key="$SECRET_VALUE"
+          else
+            if ! private_key=$(echo "$SECRET_VALUE" | base64 -d); then
+              echo "::error::Failed to base64 decode ESR_BOT_PRIVATE_KEY. Verify the secret is valid base64."
+              exit 1
+            fi
+            while IFS= read -r line; do
+              [[ -n "$line" ]] && echo "::add-mask::$line"
+            done <<< "$private_key"
+          fi
+          if [[ "$private_key" != *"-----BEGIN"* ]]; then
+            echo "::error::Decoded private key does not look like a PEM key (missing -----BEGIN header). Check secret encoding."
+            exit 1
+          fi
+          # Random delimiter prevents injection via crafted secret values
+          delimiter="pk_$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')"
+          {
+            echo "private-key<<${delimiter}"
+            echo "$private_key"
+            echo "${delimiter}"
+          } >> "$GITHUB_OUTPUT"
+
+      # https://github.com/actions/create-github-app-token
       - name: Generate GitHub App installation token
-        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
-        id: gh_app_token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app_token
         with:
-          app_id: ${{ vars.ESR_BOT_APP_ID || '400859' }}
-          installation_retrieval_mode: organization
-          installation_retrieval_payload: ${{ github.event.repository.owner.login }}
-          private_key: ${{ secrets.ESR_BOT_PRIVATE_KEY }}
-          repositories: >
-            ["${{ github.event.repository.name }}"]
+          client-id: ${{ vars.ESR_BOT_APP_ID || '400859' }}
+          private-key: ${{ steps.decode.outputs.private-key }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           # The default GITHUB_TOKEN does not have workflow scope
           # This is needed to push a new branch with workflow files
-          token: ${{ steps.gh_app_token.outputs.token }}
+          token: ${{ steps.app_token.outputs.token }}
           persist-credentials: true
 
       - name: "Only run for meta-balena repository"
@@ -69,18 +99,20 @@ jobs:
 
       - name: "Assert ESR version"
         id: assert-esr-version
+        env:
+          ESR_VERSION_INPUT: ${{ inputs.esr-version }}
         run: |
-          if [ "${{ inputs.esr-version }}" != "" ]; then
-            if ! [[ "${{ inputs.esr-version }}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
-              echo "Invalid ESR version ${{ inputs.esr-version }}"
+          if [ "${ESR_VERSION_INPUT}" != "" ]; then
+            if ! [[ "${ESR_VERSION_INPUT}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
+              echo "Invalid ESR version ${ESR_VERSION_INPUT}"
               exit 1
             fi
-            esr_version=${{ inputs.esr-version }}
+            esr_version="${ESR_VERSION_INPUT}"
           else
            # shellcheck disable=SC2001
-            esr_version="$(date '+%Y').$(echo "$(date '+%m')" | sed "s/^0*//")"
+            esr_version="$(date '+%Y').$(date '+%m' | sed "s/^0*//")"
             if ! [[ "${esr_version}" =~ ^[1-3][0-9]{3}\.[0-1]?[0-9]$ ]]; then
-              echo "No scheduled ESR release for ${esr-version}."
+              echo "No scheduled ESR release for ${esr_version}."
               exit 1
             fi
           fi
@@ -136,20 +168,24 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml semver
 
-      - name: "Create ESR branch"
-        id: meta-balena-esr-branch
+      - name: "Prepare ESR branch contents"
+        id: prepare-esr-branch
+        env:
+          OS_VERSION: ${{ steps.calculate-versions.outputs.os_version }}
+          OS_ESR_BRANCH: ${{ steps.calculate-versions.outputs.os_esr_branch }}
+          ESR_VERSION: ${{ steps.assert-esr-version.outputs.esr_version }}
         run: |
-          os_version=${{ steps.calculate-versions.outputs.os_version }}
-          os_esr_branch=${{ steps.calculate-versions.outputs.os_esr_branch }}
-          esr_version=${{ steps.assert-esr-version.outputs.esr_version }}
-          git checkout -b "${os_esr_branch}" refs/tags/v"${os_version}"
+          # Check out the base tag locally so we can edit repo.yml on disk.
+          # The actual branch/commit/tag are created via the GitHub REST API
+          # (below) so that they are authored by the App and show as verified.
+          git checkout -b "${OS_ESR_BRANCH}" "refs/tags/v${OS_VERSION}"
           # Modify repo.yml
           python3 <<-EOF
           import sys
           import yaml
           import semver
           filePath = './repo.yml'
-          parsed_os_version = semver.VersionInfo.parse('${os_version}')
+          parsed_os_version = semver.VersionInfo.parse('${OS_VERSION}')
           version = str(parsed_os_version.major) + '.' + str(parsed_os_version.minor)
           with open(filePath, 'r') as original:
               ydata = yaml.safe_load(original)
@@ -157,16 +193,172 @@ jobs:
                   # Nothing to do
                   print("ESR branch already configured")
                   sys.exit(1)
-              ydata['esr'] = {'version': version, 'bsp-branch-pattern': '${esr_version}.x'}
+              ydata['esr'] = {'version': version, 'bsp-branch-pattern': '${ESR_VERSION}.x'}
           with open(filePath, 'w') as modified:
               yaml.dump(ydata, modified)
           EOF
-          git add repo.yml
-          git commit -F- <<-EOF
-          Declare ESR ${os_esr_branch:0:-2}
+          # Point every device test workflow at the device-repo ESR branch
+          # that will be created for this ESR (e.g. 2026.4.x), so that tests on
+          # the committed meta-balena ESR branch target the corresponding
+          # device-repo branches (which should eventually exist).
+          esr_branch="${ESR_VERSION}.x"
+          for workflow in .github/workflows/*.yml; do
+            if grep -q "device-repo-ref:" "${workflow}"; then
+              sed -i -E "s|^([[:space:]]*device-repo-ref:)[[:space:]].*|\1 ${esr_branch}|" "${workflow}"
+            fi
+          done
+          # The new commit's parent is the base tag's commit
+          parent_sha=$(git rev-parse "refs/tags/v${OS_VERSION}^{commit}")
+          # Strip the trailing ".x" to get the ESR label (e.g. 2.108.x -> 2.108)
+          esr_label="${OS_ESR_BRANCH:0:-2}"
+          echo "parent_sha=${parent_sha}" >> "$GITHUB_OUTPUT"
+          echo "esr_label=${esr_label}" >> "$GITHUB_OUTPUT"
 
-          Change-type: none
-          EOF
-          git push origin refs/heads/${os_esr_branch}
-          git tag -a -m "" ${os_esr_branch} ${os_esr_branch}
-          git push origin refs/tags/${os_esr_branch}
+      # https://octokit.github.io/rest.js/v21/#git-create-ref
+      # https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#create-a-reference
+      - name: "Create ESR branch"
+        env:
+          REF: refs/heads/${{ steps.calculate-versions.outputs.os_esr_branch }}
+          SHA: ${{ steps.prepare-esr-branch.outputs.parent_sha }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            await github.rest.git.createRef({
+              ...context.repo,
+              ref: process.env.REF,
+              sha: process.env.SHA
+            });
+            core.info(`Created ${process.env.REF} at ${process.env.SHA}`);
+
+      # https://github.com/orgs/community/discussions/50055
+      # https://octokit.github.io/rest.js/v21/#git-create-blob
+      # https://octokit.github.io/rest.js/v21/#git-create-tree
+      - name: "Create blobs and tree"
+        id: create_tree
+        env:
+          PARENT_COMMIT_SHA: ${{ steps.prepare-esr-branch.outputs.parent_sha }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            const { execSync } = require('child_process');
+            const fs = require('fs').promises;
+
+            const parentSha = process.env.PARENT_COMMIT_SHA;
+            const baseTreeSha = execSync(`git show -s --format=%T "${parentSha}"`).toString().trim();
+
+            // Every file modified on the working tree vs the base tag: repo.yml
+            // plus each device workflow whose device-repo-ref we just pinned.
+            // base_tree carries all unchanged entries (including this repo's own
+            // submodules) forward untouched.
+            const files = execSync('git diff --name-only HEAD')
+              .toString()
+              .split('\n')
+              .map((line) => line.trim())
+              .filter(Boolean);
+
+            if (files.length === 0) {
+              core.setFailed('No file changes detected to commit');
+              return;
+            }
+            core.info(`Committing ${files.length} changed file(s):\n${files.join('\n')}`);
+
+            const treeEntries = await Promise.all(files.map(async (file) => {
+              const content = await fs.readFile(file, { encoding: 'utf8' });
+              const { data: blob } = await github.rest.git.createBlob({
+                ...context.repo,
+                content: Buffer.from(content).toString('base64'),
+                encoding: 'base64'
+              });
+              return { path: file, mode: '100644', type: 'blob', sha: blob.sha };
+            }));
+
+            const { data: tree } = await github.rest.git.createTree({
+              ...context.repo,
+              tree: treeEntries,
+              base_tree: baseTreeSha
+            });
+
+            core.info(`Created tree ${tree.sha}`);
+            core.setOutput('sha', tree.sha);
+
+      # https://octokit.github.io/rest.js/v21/#git-create-commit
+      # https://docs.github.com/en/rest/git/commits#create-a-commit
+      - name: "Create commit"
+        id: create_commit
+        env:
+          TREE_SHA: ${{ steps.create_tree.outputs.sha }}
+          PARENT_COMMIT_SHA: ${{ steps.prepare-esr-branch.outputs.parent_sha }}
+          MESSAGE: |-
+            Declare ESR ${{ steps.prepare-esr-branch.outputs.esr_label }}
+
+            Change-type: none
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            const { data: commit } = await github.rest.git.createCommit({
+              ...context.repo,
+              message: process.env.MESSAGE,
+              tree: process.env.TREE_SHA,
+              parents: [process.env.PARENT_COMMIT_SHA]
+            });
+            core.info(`Created commit ${commit.sha}`);
+            core.setOutput('sha', commit.sha);
+
+      # https://octokit.github.io/rest.js/v21/#git-update-ref
+      - name: "Update branch ref"
+        env:
+          REF: heads/${{ steps.calculate-versions.outputs.os_esr_branch }}
+          SHA: ${{ steps.create_commit.outputs.sha }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            await github.rest.git.updateRef({
+              ...context.repo,
+              ref: process.env.REF,
+              sha: process.env.SHA
+            });
+            core.info(`Updated ${process.env.REF} to ${process.env.SHA}`);
+
+      # https://octokit.github.io/rest.js/v21/#git-create-tag
+      # https://docs.github.com/en/rest/git/tags#create-a-tag-object
+      - name: "Create tag object"
+        id: create_tag
+        env:
+          TAG: ${{ steps.calculate-versions.outputs.os_esr_branch }}
+          MESSAGE: Declare ESR ${{ steps.prepare-esr-branch.outputs.esr_label }}
+          SHA: ${{ steps.create_commit.outputs.sha }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          result-encoding: json
+          script: |
+            const { data: tag } = await github.rest.git.createTag({
+              ...context.repo,
+              tag: process.env.TAG,
+              message: process.env.MESSAGE,
+              object: process.env.SHA,
+              type: 'commit'
+            });
+            core.setOutput('sha', tag.sha);
+            return tag;
+
+      # https://octokit.github.io/rest.js/v21/#git-create-ref
+      # https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#create-a-reference
+      - name: "Create git reference to the tag object"
+        env:
+          REF: refs/tags/${{ steps.calculate-versions.outputs.os_esr_branch }}
+          SHA: ${{ steps.create_tag.outputs.sha }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
+          script: |
+            await github.rest.git.createRef({
+              ...context.repo,
+              ref: process.env.REF,
+              sha: process.env.SHA
+            });
+            core.info(`Created ${process.env.REF} at ${process.env.SHA}`);

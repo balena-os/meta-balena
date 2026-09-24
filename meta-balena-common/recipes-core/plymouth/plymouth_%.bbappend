@@ -43,7 +43,7 @@ do_install:append() {
                 plymouth-switch-root.service \
                 systemd-ask-password-plymouth.path; do
         install -d -m 0755 ${D}${libdir}/systemd/system/${unit}.d
-        install -m 0644 ${WORKDIR}/plymouth-disable-containerized.conf \
+        install -m 0644 ${UNPACKDIR}/plymouth-disable-containerized.conf \
             ${D}${libdir}/systemd/system/${unit}.d
     done
 
@@ -53,12 +53,12 @@ do_install:append() {
                 plymouth-poweroff.service \
                 plymouth-reboot.service; do
         install -d -m 0755 ${D}${libdir}/systemd/system/${unit}.d
-        install -m 0644 ${WORKDIR}/plymouth-stop-balena-os.conf \
+        install -m 0644 ${UNPACKDIR}/plymouth-stop-balena-os.conf \
             ${D}${libdir}/systemd/system/${unit}.d
     done
 
     install -d -m 0755 ${D}${libdir}/systemd/system/plymouth-start.service.d
-    install -m 0644 ${WORKDIR}/plymouth-start-balena-os.conf \
+    install -m 0644 ${UNPACKDIR}/plymouth-start-balena-os.conf \
         ${D}${libdir}/systemd/system/plymouth-start.service.d
 }
 
@@ -68,7 +68,7 @@ FILES:${PN} += " \
     "
 
 do_deploy() {
-    install ${WORKDIR}/balena-logo.png ${DEPLOYDIR}/balena-logo.png
+    install ${UNPACKDIR}/balena-logo.png ${DEPLOYDIR}/balena-logo.png
 }
 
 # by setting a logo we avoid installing the default one

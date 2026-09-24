@@ -6,6 +6,7 @@ SYSTEMD_UNIT_NAMES ?= "${BPN}"
 DEPENDS += "jq-native"
 RDEPENDS:${PN}:append:class-target = " balena-units-conf"
 
+
 python __anonymous () {
     systemd_unitdir=d.getVar("systemd_unitdir")
     systemd_unit_names=d.getVar("SYSTEMD_UNIT_NAMES")
@@ -18,7 +19,7 @@ python __anonymous () {
 
 do_configure:prepend() {
     for SYSTEMD_UNIT_NAME in ${SYSTEMD_UNIT_NAMES}; do
-        cat > ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.path << EOF
+        cat > ${UNPACKDIR}/${SYSTEMD_UNIT_NAME}-conf.path << EOF
 [Unit]
 Description=${SYSTEMD_UNIT_NAME} path watch
 
@@ -29,7 +30,7 @@ PathChanged=${BALENA_CONF_UNIT_STORE}/${SYSTEMD_UNIT_NAME}.json
 WantedBy=basic.target
 EOF
 
-        cat > ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.service << EOF
+        cat > ${UNPACKDIR}/${SYSTEMD_UNIT_NAME}-conf.service << EOF
 [Unit]
 Description=${SYSTEMD_UNIT_NAME}.json watcher service
 
@@ -41,7 +42,7 @@ EOF
     done
 
     for SYSTEMD_UNIT_NAME in ${SYSTEMD_UNIT_NAMES}; do
-        cat > "${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.conf" << EOF
+        cat > "${UNPACKDIR}/${SYSTEMD_UNIT_NAME}-conf.conf" << EOF
 [Unit]
 After=resin-boot.service
 [Service]
@@ -58,9 +59,9 @@ FILES:${PN} += " \
 do_install:append() {
     install -d ${D}${systemd_unitdir}/system
     for SYSTEMD_UNIT_NAME in ${SYSTEMD_UNIT_NAMES}; do
-        install -c -m 0644 ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.path ${D}${systemd_unitdir}/system
-        install -c -m 0644 ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/${SYSTEMD_UNIT_NAME}-conf.path ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${UNPACKDIR}/${SYSTEMD_UNIT_NAME}-conf.service ${D}${systemd_unitdir}/system
         install -d ${D}${sysconfdir}/systemd/system/${SYSTEMD_UNIT_NAME}.service.d
-        install -c -m 0644 ${WORKDIR}/${SYSTEMD_UNIT_NAME}-conf.conf ${D}${sysconfdir}/systemd/system/${SYSTEMD_UNIT_NAME}.service.d/${SYSTEMD_UNIT_NAME}-conf.conf
+        install -c -m 0644 ${UNPACKDIR}/${SYSTEMD_UNIT_NAME}-conf.conf ${D}${sysconfdir}/systemd/system/${SYSTEMD_UNIT_NAME}.service.d/${SYSTEMD_UNIT_NAME}-conf.conf
     done
 }

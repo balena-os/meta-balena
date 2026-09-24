@@ -2,14 +2,9 @@
 
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
 . /usr/sbin/balena-config-defaults
-
-get_bootenv() {
-    BOOTENV_FILE="$1"
-    KEY="$2"
-
-    grub-editenv "${BOOTENV_FILE}" list | grep "^${KEY}=" | sed -e "s,^${KEY}=\(.*\)$,\1,"
-}
 
 abroot_enabled() {
     # Only run this inside the balena bootloader
@@ -41,13 +36,14 @@ abroot_enabled() {
 }
 
 abroot_run() {
-    ROOT_PART=$(get_bootenv "${BOOTENV_FILE}" "resin_root_part")
-    BOOT_COUNT=$(get_bootenv "${BOOTENV_FILE}" "bootcount")
-    UPGRADE_AVAILABLE=$(get_bootenv "${BOOTENV_FILE}" "upgrade_available")
+    ROOT_PART=$(bootenv_get "${BOOTENV_FILE}" "resin_root_part")
+    BOOT_COUNT=$(bootenv_get "${BOOTENV_FILE}" "bootcount")
+    UPGRADE_AVAILABLE=$(bootenv_get "${BOOTENV_FILE}" "upgrade_available")
+    ACTIVE_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
 
     if [ "${UPGRADE_AVAILABLE}" -eq 1 ]; then
         BOOT_COUNT=$(( BOOT_COUNT + 1 ))
-        grub-editenv "${BOOTENV_FILE}" set "bootcount=${BOOT_COUNT}"
+        bootenv_set "${BOOTENV_FILE}" "bootcount" "${BOOT_COUNT}"
     fi
 
     # Rollback if this is the 3rd boot attempt
@@ -58,6 +54,11 @@ abroot_run() {
             ROOT_PART="B"
         else
             ROOT_PART="A"
+        fi
+        if [ -n "${ACTIVE_ABI}" ]; then
+            PREV_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi_committed_${ROOT_PART}")
+            warn "abroot: ${BOOT_COUNT} failed boots with kernel_override_abi=${ACTIVE_ABI}; restoring slot ${ROOT_PART} committed override (${PREV_ABI:-none})"
+            bootenv_restore_kernel_override "${BOOTENV_FILE}" "${ROOT_PART}"
         fi
     fi
 

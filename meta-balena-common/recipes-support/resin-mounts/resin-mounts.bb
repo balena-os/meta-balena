@@ -57,7 +57,7 @@ do_install:prepend () {
 	install -d ${D}/mnt/sysroot/inactive
 
 	install -d ${D}${bindir}
-	install -m 755 ${WORKDIR}/resin-partition-mounter ${D}${bindir}
+	install -m 755 ${UNPACKDIR}/resin-partition-mounter ${D}${bindir}
 
 	install -d ${D}${systemd_unitdir}/system
 	if [ "x${SIGN_API}" != "x" ]; then
@@ -75,5 +75,5 @@ do_install:prepend () {
 			install -m 0644 $service ${D}${systemd_unitdir}/system/
 		fi
 	done
-	install -m 0644 ${WORKDIR}/etc-fake-hwclock.mount ${D}${systemd_unitdir}/system/etc-fake\\x2dhwclock.mount
+	install -m 0644 ${UNPACKDIR}/etc-fake-hwclock.mount ${D}${systemd_unitdir}/system/etc-fake\\x2dhwclock.mount
 }

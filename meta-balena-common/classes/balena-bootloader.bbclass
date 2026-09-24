@@ -673,3 +673,33 @@ SIGNING_ARTIFACTS = "${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}.initramfs"
 addtask sign_efi before do_deploy after do_bundle_initramfs
 
 DESTDIR = "${DEPLOYDIR}/${KERNEL_PACKAGE_NAME}"
+
+KMETA = "kernel-meta"
+
+BALENA_DEFCONFIG_NAME = "${KBUILD_DEFCONFIG}"
+
+do_install:append() {
+    # Module support is needed as a dependency for kexec image authentication
+    # specifically CONFIG_SYSTEM_DATA_VERIFICATION
+    # But we remove modules here and everything else from /usr
+    rm -rf ${D}/usr
+}
+
+do_deploy:append () {
+    BOOTENV_FILE="${DEPLOYDIR}/${KERNEL_PACKAGE_NAME}/bootenv"
+    grub-editenv "${BOOTENV_FILE}" create
+    grub-editenv "${BOOTENV_FILE}" set "resin_root_part=A"
+    grub-editenv "${BOOTENV_FILE}" set "bootcount=0"
+    grub-editenv "${BOOTENV_FILE}" set "upgrade_available=0"
+}
+
+do_deploy[depends] += " grub-native:do_populate_sysroot"
+
+INITRAMFS_IMAGE = "balena-image-bootloader-initramfs"
+
+KERNEL_PACKAGE_NAME = "balena-bootloader"
+
+PROVIDES = "virtual/balena-bootloader"
+
+# remove this task to prevent the creation of the metadata that triggers rootfs.py to run depmod for the linux-balena-bootloader
+deltask do_packagedata

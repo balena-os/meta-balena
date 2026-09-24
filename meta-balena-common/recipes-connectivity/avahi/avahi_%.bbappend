@@ -16,7 +16,7 @@ do_install:append() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${sysconfdir}/systemd/system/avahi-daemon.service.d
-        install -c -m 0644 ${WORKDIR}/avahi-daemon.conf ${D}${sysconfdir}/systemd/system/avahi-daemon.service.d
+        install -c -m 0644 ${UNPACKDIR}/avahi-daemon.conf ${D}${sysconfdir}/systemd/system/avahi-daemon.service.d
     fi
 
     # Bring back the dbus introspection files poky removes

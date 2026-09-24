@@ -7,7 +7,7 @@ Make sure this patch matches the balena-proxy-config script which sets up the
 iptables rules.
 
 Signed-off-by: Andrei Gherzan <andrei@resin.io>
-Upstream-Status: Inappropiate [Configuration]
+Upstream-Status: Inappropriate [configuration]
 ---
  base.c     |  6 ++++++
  dnsu2t.c   | 20 +++++++++++++++++---
