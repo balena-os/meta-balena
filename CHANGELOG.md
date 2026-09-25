@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.13
+## (2026-09-25)
+
+* renovate: Use minor change-type for supervisor major updates [Kyle Harding]
+
 # v8.0.12
 ## (2026-09-23)
 

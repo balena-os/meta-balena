@@ -1,4 +1,20 @@
 - commits:
+    - subject: "renovate: Use minor change-type for supervisor major updates"
+      hash: 9e95295bd25cc296dfb33775e777ab84984db01f
+      body: |
+        The supervisor is an OS interface, so a breaking supervisor release
+        should bump the OS minor version rather than patch.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 8.0.13
+  title: ""
+  date: 2026-09-25T14:34:45.602Z
+- commits:
     - subject: "kernel-balena.bbclass: Add aufs patches for 6.18 kernels"
       hash: 3988f3f5073d2db5ffa9e84c2767061655836e84
       body: ""
