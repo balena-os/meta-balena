@@ -49,6 +49,12 @@
       "description": "Append major/minor/patch updates with change-type footer",
       "matchUpdateTypes": ["major", "minor", "patch"],
       "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: patch"
+    },
+    {
+      "description": "Supervisor is an OS interface, so a supervisor major update is an OS minor change",
+      "matchDepNames": ["balena-supervisor"],
+      "matchUpdateTypes": ["major"],
+      "commitBody": "Update {{depName}} from {{currentVersion}} to {{newVersion}}\n\nChange-type: minor"
     }
   ]
 }
