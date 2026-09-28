@@ -139,6 +139,14 @@ updatePCRPolicy() {
                       -f "${PCR_VAL_BIN_EFIBIN}" \
                       -L "${POLICY_EFIBIN}"
 
+    PCR_DEBUG_DIR="$(pcr_debug_dump "${EFI_MOUNT_DIR}" hup "${PCRS}" \
+        "${CURRENT_POLICY_PATH}" "${EFI_BINARIES}" \
+        pcr-efibin "${PCR_VAL_BIN_EFIBIN}" "${POLICY_EFIBIN}" \
+        pcr "${PCR_VAL_BIN}" "${POLICY_PCR}")" || true
+    pcr_debug_note "${PCR_DEBUG_DIR}" \
+        "unlock_pcrs: ${UNLOCK_PCRS_SUCCESS}" \
+        "during_update: ${DURING_UPDATE}" || true
+
     case "$(firmware_measures_efibins)" in
         measured)
             info "Using PCR7 digest with EFI binary measurements"
@@ -164,6 +172,7 @@ updatePCRPolicy() {
     esac
 
     tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_PATH}" "${DISK_ENC_DIR}"
+    pcr_debug_dump_sealed "${PCR_DEBUG_DIR}" "${POLICY_PATH}" || true
     cp -rf "${POLICY_PATH}" "${EFI_MOUNT_DIR}"
     rm -rf "${CURRENT_POLICY_PATH}"
 
