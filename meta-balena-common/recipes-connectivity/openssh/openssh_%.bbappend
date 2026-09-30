@@ -45,13 +45,7 @@ do_install:append () {
 
     install -D -m 0755 ${UNPACKDIR}/cloud-public-sshkeys ${D}${libexecdir}/${BPN}/cloud-public-sshkeys
 
-    # Development version allows PasswordAuthentication
-    cp ${D}${sysconfdir}/ssh/sshd_config_readonly ${D}${sysconfdir}/ssh/sshd_config_development
-    # Development version allows empty passwords
-    sed -i 's/^[#[:space:]]*PermitEmptyPasswords.*/PermitEmptyPasswords yes/' ${D}${sysconfdir}/ssh/sshd_config_development
-    # Development version allows root logins
-    sed -i 's/^[#[:space:]]*PermitRootLogin.*/PermitRootLogin yes/' ${D}${sysconfdir}/ssh/sshd_config_development
-    # Disable PasswordAuthentication for production builds.
+    # Disable PasswordAuthentication
     sed -i 's/^[#[:space:]]*PasswordAuthentication yes*/PasswordAuthentication no/' ${D}${sysconfdir}/ssh/sshd_config_readonly
 }
 
