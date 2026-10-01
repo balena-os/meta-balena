@@ -47,9 +47,12 @@ Device specific signing classes are kept in device repositories.
 A balenaOS secured device uses both secure boot and disk encryption - these
 two functionalities are not provided separately.
 
-As such, a secured device always uses a flasher image that performs the
-installation, including the splitting of the boot partition and the encryption
-of the partitions.
+As such, a secured device always uses a flasher image that runs from memory and
+performs the installation, including the splitting of the boot partition and
+the encryption of the partitions.
+
+As the installer runs from memory, network interfaces are not brough up
+and provisioning information cannot be relayed to the cloud.
 
 The `resin-init-flasher` scripts contains the following abstractions to
 support provisioning of different device types:
