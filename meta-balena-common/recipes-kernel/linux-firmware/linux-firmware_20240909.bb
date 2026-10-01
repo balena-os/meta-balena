@@ -328,12 +328,9 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              \
              ${PN}-iwlwifi-license ${PN}-iwlwifi \
              ${PN}-iwlwifi-135-6 \
-             ${PN}-iwlwifi-3160-7 ${PN}-iwlwifi-3160-8 ${PN}-iwlwifi-3160-9 \
-             ${PN}-iwlwifi-3160-10 ${PN}-iwlwifi-3160-12 ${PN}-iwlwifi-3160-13 \
-             ${PN}-iwlwifi-3160-16 ${PN}-iwlwifi-3160-17 \
-             ${PN}-iwlwifi-6000-4 ${PN}-iwlwifi-6000g2a-5 ${PN}-iwlwifi-6000g2a-6 \
-             ${PN}-iwlwifi-6000g2b-5 ${PN}-iwlwifi-6000g2b-6 \
-             ${PN}-iwlwifi-6050-4 ${PN}-iwlwifi-6050-5 \
+             ${PN}-iwlwifi-6000-4 ${PN}-iwlwifi-6000g2a-6 \
+             ${PN}-iwlwifi-6000g2b-6 \
+             ${PN}-iwlwifi-6050-5 \
              ${PN}-iwlwifi-7260 \
              ${PN}-iwlwifi-7265 \
              ${PN}-iwlwifi-7265d ${PN}-iwlwifi-8000c ${PN}-iwlwifi-8265 \
@@ -440,7 +437,7 @@ FILES:${PN}-ar9170 = " \
   ${nonarch_base_libdir}/firmware/ar9170*.fw* \
 "
 FILES:${PN}-ath3k = " \
-  ${nonarch_base_libdir}/firmware/ath3k*fw \
+  ${nonarch_base_libdir}/firmware/ath3k*fw* \
 "
 FILES:${PN}-ath6k = " \
   ${nonarch_base_libdir}/firmware/ath6k \
@@ -722,7 +719,7 @@ ALLOW_EMPTY:${PN}-nxp9098-pcie = "1"
 ALLOW_EMPTY:${PN}-nxp9098-sdio = "1"
 FILES:${PN}-nxpiw416-sdio = "${nonarch_base_libdir}/firmware/nxp/*iw416*"
 FILES:${PN}-nxpiw612-sdio = "${nonarch_base_libdir}/firmware/nxp/uartspi_n61x_v1.bin.se*"
-FILES:${PN}-nxp-license = "${nonarch_base_libdir}/firmware/LICENSE.nxp*"
+FILES:${PN}-nxp-license = "${nonarch_base_libdir}/firmware/LICENSE.nxp ${nonarch_base_libdir}/firmware/LICENSE.nxp.*"
 
 RDEPENDS:${PN}-nxp8987-sdio += "${PN}-nxp-license"
 RDEPENDS:${PN}-nxp8997-common += "${PN}-nxp-license"
@@ -810,8 +807,8 @@ RDEPENDS:${PN}-qla2xxx += "${PN}-qla2xxx-license"
 LICENSE:${PN}-rs9113 = "WHENCE"
 LICENSE:${PN}-rs9116 = "WHENCE"
 
-FILES:${PN}-rs9113 = " ${nonarch_base_libdir}/firmware/rsi/rs9113*.rps "
-FILES:${PN}-rs9116 = " ${nonarch_base_libdir}/firmware/rsi/rs9116*.rps "
+FILES:${PN}-rs9113 = " ${nonarch_base_libdir}/firmware/rsi/rs9113*.rps* "
+FILES:${PN}-rs9116 = " ${nonarch_base_libdir}/firmware/rsi/rs9116*.rps* "
 
 RDEPENDS:${PN}-rs9113 += "${PN}-whence-license"
 RDEPENDS:${PN}-rs9116 += "${PN}-whence-license"
@@ -909,7 +906,8 @@ FILES:${PN}-wlcommon = " \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl1271-nvs.bin* \
 "
 FILES:${PN}-wl12xx = " \
-  ${nonarch_base_libdir}/firmware/ti-connectivity/wl12* \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl127* \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl128* \
 "
 FILES:${PN}-wl18xx = " \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl18* \
@@ -953,7 +951,7 @@ LICENSE:${PN}-xc5000 = "Firmware-xc5000"
 LICENSE:${PN}-xc5000-license = "Firmware-xc5000"
 
 FILES:${PN}-xc5000 = "${nonarch_base_libdir}/firmware/dvb-fe-xc5000-1.6.114.fw*"
-FILES:${PN}-xc5000-license = "${nonarch_base_libdir}/firmware/LICENCE.xc5000*"
+FILES:${PN}-xc5000-license = "${nonarch_base_libdir}/firmware/LICENCE.xc5000 ${nonarch_base_libdir}/firmware/LICENCE.xc5000.*"
 
 RDEPENDS:${PN}-xc5000 += "${PN}-xc5000-license"
 
@@ -1174,20 +1172,9 @@ RDEPENDS:${PN}-imx-sdma-imx7d += "${PN}-imx-sdma-license"
 # For iwlwifi
 LICENSE:${PN}-iwlwifi           = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-135-6     = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-7    = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-8    = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-9    = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-10   = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-12   = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-13   = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-16   = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-3160-17   = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-6000-4    = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-6000g2a-5 = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-6000g2a-6 = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-6000g2b-5 = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-6000g2b-6 = "Firmware-iwlwifi_firmware"
-LICENSE:${PN}-iwlwifi-6050-4    = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-6050-5    = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-7260      = "Firmware-iwlwifi_firmware"
 LICENSE:${PN}-iwlwifi-7265      = "Firmware-iwlwifi_firmware"
@@ -1202,20 +1189,9 @@ LICENSE:${PN}-iwlwifi-license   = "Firmware-iwlwifi_firmware"
 
 FILES:${PN}-iwlwifi-license = "${nonarch_base_libdir}/firmware/LICENCE.iwlwifi_firmware*"
 FILES:${PN}-iwlwifi-135-6 = "${nonarch_base_libdir}/firmware/iwlwifi-135-6.ucode*"
-FILES:${PN}-iwlwifi-3160-7 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-7.ucode*"
-FILES:${PN}-iwlwifi-3160-8 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-8.ucode*"
-FILES:${PN}-iwlwifi-3160-9 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-9.ucode*"
-FILES:${PN}-iwlwifi-3160-10 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-10.ucode*"
-FILES:${PN}-iwlwifi-3160-12 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-12.ucode*"
-FILES:${PN}-iwlwifi-3160-13 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-13.ucode*"
-FILES:${PN}-iwlwifi-3160-16 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-16.ucode*"
-FILES:${PN}-iwlwifi-3160-17 = "${nonarch_base_libdir}/firmware/iwlwifi-3160-17.ucode*"
 FILES:${PN}-iwlwifi-6000-4 = "${nonarch_base_libdir}/firmware/iwlwifi-6000-4.ucode*"
-FILES:${PN}-iwlwifi-6000g2a-5 = "${nonarch_base_libdir}/firmware/iwlwifi-6000g2a-5.ucode*"
 FILES:${PN}-iwlwifi-6000g2a-6 = "${nonarch_base_libdir}/firmware/iwlwifi-6000g2a-6.ucode*"
-FILES:${PN}-iwlwifi-6000g2b-5 = "${nonarch_base_libdir}/firmware/iwlwifi-6000g2b-5.ucode*"
 FILES:${PN}-iwlwifi-6000g2b-6 = "${nonarch_base_libdir}/firmware/iwlwifi-6000g2b-6.ucode*"
-FILES:${PN}-iwlwifi-6050-4 = "${nonarch_base_libdir}/firmware/iwlwifi-6050-4.ucode*"
 FILES:${PN}-iwlwifi-6050-5 = "${nonarch_base_libdir}/firmware/iwlwifi-6050-5.ucode*"
 FILES:${PN}-iwlwifi-7260   = "${nonarch_base_libdir}/firmware/iwlwifi-7260-*.ucode*"
 FILES:${PN}-iwlwifi-7265   = "${nonarch_base_libdir}/firmware/iwlwifi-7265-*.ucode*"
@@ -1230,20 +1206,9 @@ FILES:${PN}-iwlwifi-misc   = " \
 "
 
 RDEPENDS:${PN}-iwlwifi-135-6     = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-7    = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-8    = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-9    = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-10   = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-12   = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-13   = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-16   = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-3160-17   = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000-4    = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-6000g2a-5 = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000g2a-6 = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-6000g2b-5 = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000g2b-6 = "${PN}-iwlwifi-license"
-RDEPENDS:${PN}-iwlwifi-6050-4    = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6050-5    = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-7260      = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-7265      = "${PN}-iwlwifi-license"
@@ -1322,7 +1287,7 @@ RDEPENDS:${PN}-ice-enhanced        = "${PN}-ice-enhanced-license"
 
 LICENSE:${PN}-ice       = "Firmware-ice"
 LICENSE:${PN}-ice-license = "Firmware-ice"
-FILES:${PN}-ice-license = "${nonarch_base_libdir}/firmware/LICENSE.ice*"
+FILES:${PN}-ice-license = "${nonarch_base_libdir}/firmware/LICENSE.ice ${nonarch_base_libdir}/firmware/LICENSE.ice.*"
 FILES:${PN}-ice         = " \
   ${nonarch_base_libdir}/firmware/intel/ice/ddp/* \
   ${nonarch_base_libdir}/firmware/intel/ice/ddp-lag/* \
@@ -1391,7 +1356,7 @@ LICENSE:${PN}-qcom-sm8250-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-sm8250-compute = "Firmware-qcom"
 LICENSE:${PN}-qcom-sm8250-thundercomm-rb5-sensors = "Firmware-qcom"
 
-FILES:${PN}-qcom-license   = "${nonarch_base_libdir}/firmware/LICENSE.qcom* ${nonarch_base_libdir}/firmware/qcom/NOTICE.txt*"
+FILES:${PN}-qcom-license   = "${nonarch_base_libdir}/firmware/LICENSE.qcom.* ${nonarch_base_libdir}/firmware/LICENSE.qcom ${nonarch_base_libdir}/firmware/qcom/NOTICE.txt*"
 FILES:${PN}-qcom-yamato-license = "${nonarch_base_libdir}/firmware/LICENSE.qcom_yamato*"
 FILES:${PN}-qcom-venus-1.8 = "${nonarch_base_libdir}/firmware/qcom/venus-1.8/*"
 FILES:${PN}-qcom-venus-4.2 = "${nonarch_base_libdir}/firmware/qcom/venus-4.2/*"
@@ -1552,7 +1517,6 @@ LICENSE:${PN} = "\
     & Firmware-ti-connectivity \
     & Firmware-ti-keystone \
     & Firmware-ueagle-atm4-firmware \
-    & Firmware-wl1251 \
     & Firmware-xc4000 \
     & Firmware-xc5000 \
     & Firmware-xc5000c \
