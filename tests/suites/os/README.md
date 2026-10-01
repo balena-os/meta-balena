@@ -33,7 +33,7 @@ These tests do not aim to duplicate the coverage in those test suites, but rathe
 - `config-json`: checks that the OS correctly reacts to and makes the appropriate actions based on changes to the OS `config.json`
 - `boot-splash`: checks that the balenaOS boot-splash screen appears on boot. Implicitly tests HDMI/display output of DUT
 - `connectivity`: checks that wifi and ethernet interfaces work, as well as the balenaOS proxy features
-- `engine-socket`: checks that the balena engine socket is exposed on development-mode images, and isn't on production-mode images
+- `engine-socket`: checks that the balena engine socket is not exposed on the network, and that it is reachable through an SSH stream local forward in development mode
 - `engine-healthcheck`: Tests if the Engine recovers after being killed by Systemd's watchdog, and tests engine performance regressions
 - `under-voltage`: checks the DUT isn't undervolted
 - `udev`: checks udev and state links

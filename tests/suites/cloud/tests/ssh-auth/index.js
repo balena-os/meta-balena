@@ -21,6 +21,24 @@ const { join, dirname } = require("path");
 const { homedir } = require("os");
 const fse = require("fs-extra");
 
+async function assertLocalSshAuthFails(test, message) {
+	// disable retry, as we want to evaluate the failure
+	const retryOptions = { max_tries: 0 };
+	await this.worker.executeCommandInHostOS(
+		'true',
+		this.link,
+		retryOptions,
+	).then(() => {
+		throw new Error("SSH authentication passed when it should have failed");
+	}).catch((err) => {
+		return test.match(
+			err.message,
+			/All configured authentication methods failed|Connection lost before handshake|Timed out while waiting for handshake/,
+			message
+		);
+	});
+}
+
 module.exports = {
 	title: 'SSH authentication test',
 	tests: [
@@ -45,21 +63,8 @@ module.exports = {
 						this.worker.addSSHKey(this.context.get().sshKeyPath);
 					})
 				}).then(async () => {
-					// disable retry, as we want to evaluate the failure
-					const retryOptions = { max_tries: 0 };
-					await this.worker.executeCommandInHostOS(
-						'true',
-						this.link,
-						retryOptions,
-					).then(() => {
-						throw new Error("SSH authentication passed when it should have failed");
-					}).catch((err) => {
-						return test.match(
-							err.message,
-							/All configured authentication methods failed|Connection lost before handshake|Timed out while waiting for handshake/,
-							"Local SSH authentication without custom keys is not allowed in production mode"
-						);
-					});
+					return assertLocalSshAuthFails.call(this, test,
+						"Local SSH authentication without custom keys is not allowed in production mode");
 				}).then(async () => {
             return this.writeConfigJsonProp(test, 'os.sshKeys', [this.context.get().sshKey.pubKey.trim()], this.balena.uuid);
 				}).then(async () => {
@@ -128,19 +133,9 @@ module.exports = {
 						),
 						'Should wait for os-sshkeys.service to be active'
 					)
-				}).then( async () => {
-					let result;
-					await this.utils.waitUntil(
-						async () => {
-							result = await this.worker.executeCommandInHostOS('echo -n pass',
-								this.link);
-							return result
-						}, false, 10, 5 * 1000);
-					return test.equals(
-						result,
-						"pass",
-						"Local SSH authentication without custom keys is allowed in development mode"
-					)
+				}).then(async () => {
+					return assertLocalSshAuthFails.call(this, test,
+						"Local SSH authentication without custom keys is not allowed in development mode");
 				}).then(() => {
           return this.writeConfigJsonProp(test, 'os.sshKeys', [customKey.pubKey.trim()], this.balena.uuid);
 				}).then(() => {
