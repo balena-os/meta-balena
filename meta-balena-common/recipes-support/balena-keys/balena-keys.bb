@@ -81,7 +81,6 @@ do_get_public_keys[depends] += " \
     jq-native:do_populate_sysroot \
     ca-certificates-native:do_populate_sysroot \
     coreutils-native:do_populate_sysroot \
-    gnupg-native:do_populate_sysroot \
     "
 
 do_deploy() {
@@ -101,7 +100,6 @@ deltask do_install
 
 do_get_public_keys[vardeps] += " \
     SIGN_API \
-    SIGN_GRUB_KEY_ID \
     SIGN_KMOD_KEY_ID \
     SIGN_KMOD_KEY_APPEND \
     SIGN_EFI_PK_KEY_ID \
