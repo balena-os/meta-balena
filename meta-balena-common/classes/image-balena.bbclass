@@ -459,20 +459,19 @@ python do_image_size_check() {
     image_size_aligned = int(disk_aligned(d, os.stat(imgfile).st_size / 1024))
     available = int(disk_aligned(d, available_space(ext4file, d)))
 
-    # Calculate /boot directory size - copied to volume during HUP
-    boot_dir = os.path.join(d.getVar("IMAGE_ROOTFS"), "boot")
-    boot_size_kb = get_dir_size_kb(boot_dir)
-    boot_size_aligned = int(disk_aligned(d, boot_size_kb))
+    # mobynit init only is stored on the inactive root slot during HUP
+    boot_init = os.path.join(d.getVar("IMAGE_ROOTFS"), "boot", "init")
+    boot_init_size_kb = int(disk_aligned(d, os.path.getsize(boot_init) / 1024 if os.path.isfile(boot_init) else 0))
 
-    # Total space required = docker image + boot volume
-    total_required = image_size_aligned + boot_size_aligned
+    # Total space required = docker image + mobynit init on root slot
+    total_required = image_size_aligned + boot_init_size_kb
 
     if total_required > available:
-        bb.fatal("HUP size check failed: docker image (%d KiB) + /boot volume (%d KiB) = %d KiB exceeds available space %d KiB"
-                 % (image_size_aligned, boot_size_aligned, total_required, available))
+        bb.fatal("HUP size check failed: docker image (%d KiB) + mobynit init (%d KiB) = %d KiB exceeds available space %d KiB"
+                 % (image_size_aligned, boot_init_size_kb, total_required, available))
 
-    bb.debug(1, 'HUP size check: docker image %d KiB, /boot volume %d KiB, total %d KiB, available %d KiB'
-             % (image_size_aligned, boot_size_aligned, total_required, available))
+    bb.debug(1, 'HUP size check: docker image %d KiB, mobynit init %d KiB, total %d KiB, available %d KiB'
+             % (image_size_aligned, boot_init_size_kb, total_required, available))
 }
 
 # Equivalent to:

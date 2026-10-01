@@ -1,5 +1,7 @@
 inherit image_types
 
+require ${@os.path.join(d.getVar('BALENA_COREBASE'), 'recipes-containers/docker-disk/balena-data-partition.inc')}
+
 #
 # Create a raw image that can by written onto a storage device using dd/etcher.
 #
@@ -124,6 +126,7 @@ BALENA_BOOT_FINGERPRINT_PATH ?= "${WORKDIR}/${BALENA_FINGERPRINT_FILENAME}.${BAL
 BALENA_IMAGE_BOOTLOADER ?= "virtual/bootloader"
 BALENA_RAW_IMG_COMPRESSION ?= ""
 BALENA_DATA_FS ?= "${DEPLOY_DIR_IMAGE}/${BALENA_DATA_FS_LABEL}.img"
+BALENA_DATA_STAGING_TAR ?= "${DEPLOY_DIR_IMAGE}/${BALENA_DATA_STAGING}"
 BALENA_BOOT_FS = "${WORKDIR}/${BALENA_BOOT_FS_LABEL}.img"
 BALENA_ROOTB_FS = "${WORKDIR}/${BALENA_ROOTB_FS_LABEL}.img"
 BALENA_STATE_FS ?= "${WORKDIR}/${BALENA_STATE_FS_LABEL}.img"
@@ -180,7 +183,7 @@ IMAGE_CMD:balenaos-img () {
 
     # resin-data
     if [ -n "${BALENA_DATA_FS}" ]; then
-        BALENA_DATA_SIZE=`du -bks ${BALENA_DATA_FS} | awk '{print $1}'`
+        BALENA_DATA_SIZE=$(expr ${BALENA_DATA_PARTITION_SIZE_MB} \* 1024)
         BALENA_DATA_SIZE_ALIGNED=$(expr ${BALENA_DATA_SIZE} \+ ${BALENA_IMAGE_ALIGNMENT} \- 1)
         BALENA_DATA_SIZE_ALIGNED=$(expr ${BALENA_DATA_SIZE_ALIGNED} \- ${BALENA_DATA_SIZE_ALIGNED} \% ${BALENA_IMAGE_ALIGNMENT})
     else
@@ -331,8 +334,25 @@ IMAGE_CMD:balenaos-img () {
         bbfatal "Rootfs labeling for type '${BALENA_ROOT_FSTYPE}' has not been implemented!"
     fi
 
+    # Build resin-data.img: docker-disk is saved as a tar, we will add boot-A dir into it with all boot files.
     if [ -n "${BALENA_DATA_FS}" ]; then
-        e2label ${BALENA_DATA_FS} ${BALENA_DATA_FS_LABEL}
+        if [ ! -f "${BALENA_DATA_STAGING_TAR}" ]; then
+            bbfatal "resin-data: ${BALENA_DATA_STAGING_TAR} missing"
+        fi
+        if [ ! -d "${IMAGE_ROOTFS}/boot" ] || [ -z "$(ls -A "${IMAGE_ROOTFS}/boot" 2>/dev/null)" ]; then
+            bbfatal "resin-data: ${IMAGE_ROOTFS}/boot is empty"
+        fi
+        _balena_data_root=$(mktemp -d)
+        tar -xf "${BALENA_DATA_STAGING_TAR}" -C "${_balena_data_root}"
+        mkdir -p "${_balena_data_root}/boot-A"
+        cp -a "${IMAGE_ROOTFS}/boot/." "${_balena_data_root}/boot-A/"
+        rm -f "${BALENA_DATA_FS}"
+        dd if=/dev/zero of="${BALENA_DATA_FS}" bs=1M count=0 seek="${BALENA_DATA_PARTITION_SIZE_MB}"
+        mkfs.ext4 -E lazy_itable_init=0,lazy_journal_init=0 -T default -b ${BALENA_DATA_FS_BLOCK_SIZE} -i 8192 -d "${_balena_data_root}" -F "${BALENA_DATA_FS}" || \
+            bbfatal "resin-data: mkfs.ext4 failed (try increasing BALENA_DATA_PARTITION_SIZE_MB)"
+        e2label "${BALENA_DATA_FS}" "${BALENA_DATA_FS_LABEL}"
+        rm -rf "${_balena_data_root}"
+        bbnote "Built ${BALENA_DATA_FS} from ${BALENA_DATA_STAGING_TAR} and boot-A"
     fi
 
     #
