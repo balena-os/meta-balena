@@ -8,6 +8,9 @@ RDEPENDS:${PN}-bootenv = "util-linux-findmnt ${PN}-fs"
 RDEPENDS:${PN}-fs = "e2fsprogs-tune2fs mtools parted bash util-linux-fdisk zstd"
 RDEPENDS:${PN}-fs:append = "${@bb.utils.contains('MACHINE_FEATURES','raid',' mdadm','',d)}"
 RDEPENDS:${PN}-tpm2:class-target = "libtss2-tcti-device tpm2-tools tcgtool"
+# PCR prediction diagnostics: development images with secure boot only
+RDEPENDS:${PN}-tpm2:class-target:append = "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', oe.utils.conditional('SIGN_API', '', '', ' ${PN}-tpm2-debug', d), '', d)}"
+RDEPENDS:${PN}-tpm2-debug:class-target = "${PN}-efi balena-config-vars-config"
 RDEPENDS:${PN}-config = "bash"
 RDEPENDS:${PN}-reboot = "bash jq"
 RDEPENDS:${PN}-api = "curl"
@@ -22,6 +25,7 @@ SRC_URI = " \
     file://os-helpers-logging \
     file://os-helpers-time \
     file://os-helpers-tpm2 \
+    file://os-helpers-tpm2-debug \
     file://os-helpers-config \
     file://os-helpers-bootloader-config \
     file://os-helpers-api \
@@ -39,6 +43,7 @@ PACKAGES = " \
         ${PN}-logging \
         ${PN}-time \
         ${PN}-tpm2 \
+        ${PN}-tpm2-debug \
         ${PN}-config \
         ${PN}-api \
         ${PN}-reboot \
@@ -55,6 +60,7 @@ do_install() {
         ${UNPACKDIR}/os-helpers-logging \
         ${UNPACKDIR}/os-helpers-time \
         ${UNPACKDIR}/os-helpers-tpm2 \
+        ${UNPACKDIR}/os-helpers-tpm2-debug \
         ${UNPACKDIR}/os-helpers-config \
         ${UNPACKDIR}/os-helpers-bootloader-config \
         ${UNPACKDIR}/os-helpers-api \
@@ -77,6 +83,7 @@ FILES:${PN}-fs = "${libexecdir}/os-helpers-fs"
 FILES:${PN}-logging = "${libexecdir}/os-helpers-logging"
 FILES:${PN}-time = "${libexecdir}/os-helpers-time"
 FILES:${PN}-tpm2 = "${libexecdir}/os-helpers-tpm2"
+FILES:${PN}-tpm2-debug = "${libexecdir}/os-helpers-tpm2-debug"
 FILES:${PN}-config = "${libexecdir}/os-helpers-config ${libexecdir}/os-helpers-bootloader-config"
 FILES:${PN}-api = "${libexecdir}/os-helpers-api"
 FILES:${PN}-reboot = "${libexecdir}/safe_reboot"

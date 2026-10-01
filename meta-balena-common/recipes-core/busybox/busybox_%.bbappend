@@ -3,6 +3,8 @@ SRC_URI:append = " \
     file://defconfig \
     file://balenaos.cfg \
     "
+# sha256sum for the PCR prediction diagnostics in the initramfs
+SRC_URI:append = "${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', oe.utils.conditional('SIGN_API', '', '', ' file://pcr-debug.cfg', d), '', d)}"
 
 RDEPENDS:${PN}:append = " openssl"
 
