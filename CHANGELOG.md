@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.14
+## (2026-10-01)
+
+* os-extra-firmware.service: use bash instead of sh [guille-vega]
+
 # v8.0.13
 ## (2026-09-25)
 

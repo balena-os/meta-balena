@@ -1,4 +1,22 @@
 - commits:
+    - subject: "os-extra-firmware.service: use bash instead of sh"
+      hash: b863800280e307f9c123713d3a35e91417e99568
+      body: >
+        Specify bash instead of sh to avoid running bash in shell compatibility
+        mode, as
+
+        some helper functions contain unsupported bashisms.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: guille-vega <guillermo.vega@balena.io>
+        signed-off-by: guille-vega <guillermo.vega@balena.io>
+      author: guille-vega
+      nested: []
+  version: 8.0.14
+  title: ""
+  date: 2026-10-01T10:53:34.643Z
+- commits:
     - subject: "renovate: Use minor change-type for supervisor major updates"
       hash: 9e95295bd25cc296dfb33775e777ab84984db01f
       body: |
