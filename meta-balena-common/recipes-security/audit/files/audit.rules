@@ -1,0 +1,27 @@
+## Installed as /etc/audit/audit.rules, loaded at boot by the stock
+## auditd.service: ExecStartPost=/sbin/auditctl -R /etc/audit/audit.rules
+##
+## Arch-agnostic by design: no -F arch= syscall rules. Syscall numbering and name
+## availability differ per arch (aarch64 has no chown, 32-bit arm does), and
+## auditctl -R stops at the first line it cannot parse, so one arch-wrong line
+## takes every later rule down with it.
+##
+## No `-e 2`: the ruleset stays mutable so a container with cap_add AUDIT_CONTROL
+## and pid: host can layer rules at runtime over NETLINK_AUDIT.
+##
+## Comments must be on their own line — auditctl only honours '#' at column 0;
+## a trailing comment parses as arguments.
+##
+## refs: https://man7.org/linux/man-pages/man8/auditctl.8.html
+##       https://man7.org/linux/man-pages/man7/audit.rules.7.html
+
+-D
+-b 8192
+-f 1
+
+## NetworkManager connection profiles: Wi-Fi credentials and connectivity config,
+## on the boot partition on every balenaOS device type. A watch on a directory
+## covers its subtree, so this catches any profile added, edited or removed.
+## The path resolves only once /mnt/boot is mounted; a watch on a nonexistent
+## path errors and stops the rest of the load.
+-w /mnt/boot/system-connections -p wa -k system_connections
