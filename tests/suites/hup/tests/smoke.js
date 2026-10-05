@@ -143,14 +143,17 @@ async function runSmokeTest(that, test) {
 		'Should not have rollback-health-failed in the state partition',
 	);
 
+	const newPartition = await that.worker.executeCommandInHostOS(
+		`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+		that.link,
+	);
 	test.not(
-		await that.worker.executeCommandInHostOS(
-			`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
-			that.link,
-		),
+		newPartition,
 		activePartition,
 		`Should not have rolled back to the original root partition`,
 	);
+	// The extension tests run only on the build under test
+	that.suite.context.set({ dutOnTarget: newPartition !== activePartition });
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
