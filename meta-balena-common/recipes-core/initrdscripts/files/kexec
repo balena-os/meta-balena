@@ -170,7 +170,7 @@ kexec_run() {
     # * nr_cpus=XXX - same as above
     # * balena_kernel_abi - re-derived below; never inherit a stale value
     # shellcheck disable=SC2002
-    BOOT_PARAMS="$(cat /proc/cmdline | sed -e "s,balena_stage2,," | sed -e "s,root=[^\ ]*,," | sed -e "s,maxcpus=0,," | sed -e "s,nr_cpus=[^\ ]*,," | sed -e "s,balena_kernel_abi=[^\ ]*,,")"
+    BOOT_PARAMS="$(cat /proc/cmdline | sed -e "s,balena_stage2,," | sed -e "s,root=[^\ ]*,," | sed -e "s,maxcpus=0,," | sed -e "s,nr_cpus=[^\ ]*,," | sed -e "s,balena_kernel_abi=[^\ ]*,,g")"
     APPEND="${BOOT_PARAMS} root=UUID=${ROOT_UUID} ${KEXEC_EXTRA_ARGS}"
 
     SELECTED_APPEND="${APPEND}"
