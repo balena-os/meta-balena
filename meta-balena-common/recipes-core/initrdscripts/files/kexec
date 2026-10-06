@@ -52,6 +52,10 @@ override_is_claimed() {
 resolve_override() {
     _abi="$1"
     [ -n "${_abi}" ] || return 1
+    if ! bootenv_is_kernel_abi "${_abi}"; then
+        warn "kexec: malformed kernel override ABI in bootenv; falling back to stock"
+        return 1
+    fi
 
     # -f follows the link, so a dangling one is false.
     _kernel="${ROOTFS_DIR}/mnt/data/boot-by-abi/${_abi}"
