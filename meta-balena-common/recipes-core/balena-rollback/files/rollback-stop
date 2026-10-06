@@ -18,6 +18,8 @@ set -o errexit
 
 . /usr/sbin/balena-config-vars
 . /usr/bin/rollback-parse-bootloader
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
 
 echo "Rollback: Stopping further rollbacks"
 echo "Rollback: Setting upgrade_available to 0 and removing breadcrumbs"
@@ -29,7 +31,7 @@ rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/bootcount.env" || true
 for ENV_FILE_NAME in bootenv grubenv; do
 	ENV_FILE=$(find -L "${BALENA_NONENC_BOOT_MOUNTPOINT}" -name "${ENV_FILE_NAME}")
 	if [ -f "${ENV_FILE}" ]; then
-		"${CAT}" "${ENV_FILE}" | sed "s#bootcount=.*#bootcount=0 #g" | "${WR}" "${ENV_FILE}" || true
+		bootenv_set "${ENV_FILE}" bootcount 0 || true
 	fi
 done
 sync -f /mnt/state

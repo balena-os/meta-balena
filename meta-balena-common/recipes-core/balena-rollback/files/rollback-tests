@@ -20,9 +20,13 @@ set -o errexit
 
 echo "Rollback: Running tests"
 
+# Records whether the VPN was up before the change now on trial.
+: "${ROLLBACK_HEALTH_VARIABLES:=/mnt/state/rollback-health-variables}"
+
 # VPN health check
-if [ -f /mnt/state/rollback-health-variables ]; then
-	. /mnt/state/rollback-health-variables
+if [ -f "${ROLLBACK_HEALTH_VARIABLES}" ]; then
+	# shellcheck disable=SC1090
+	. "${ROLLBACK_HEALTH_VARIABLES}"
 	if [ -f /run/openvpn/vpn_status/active ]; then
 		echo "Rollback: VPN is back online in new OS."
 	elif [ $BALENAOS_ROLLBACK_VPNONLINE == 1 ]; then
