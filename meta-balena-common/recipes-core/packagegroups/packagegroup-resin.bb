@@ -33,4 +33,5 @@ RDEPENDS:${PN} += " \
     os-extra-firmware \
     ${BALENA_SUPERVISOR} \
     disk-watchdog \
+    balena-reset-reason \
     "
