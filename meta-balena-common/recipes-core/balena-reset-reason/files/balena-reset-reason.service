@@ -1,0 +1,29 @@
+# Copyright 2026 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+[Unit]
+Description=Report why the previous boot ended
+# The journal has to be up, because that is where the report goes.
+# Records come from systemd-pstore through the state partition.
+# The previous boot is readable once persistent logs are bound.
+After=systemd-journald.service systemd-pstore.service bind-var-lib-systemd.service balena-persistent-logs.service
+Before=multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/balena-reset-reason
+
+[Install]
+WantedBy=multi-user.target
