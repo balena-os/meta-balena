@@ -524,6 +524,14 @@ BALENA_CONFIGS[panic] = " \
     CONFIG_PANIC_TIMEOUT=1 \
 "
 
+# ramoops backend; a device layer opts in
+BALENA_CONFIGS[pstore_ram] = " \
+    CONFIG_PSTORE=y \
+    CONFIG_PSTORE_COMPRESS=y \
+    CONFIG_PSTORE_RAM=y \
+    CONFIG_PSTORE_CONSOLE=y \
+    "
+
 # configs needed for our usage of redsocks
 BALENA_CONFIGS[redsocks] = " \
     CONFIG_NETFILTER_ADVANCED=y \
