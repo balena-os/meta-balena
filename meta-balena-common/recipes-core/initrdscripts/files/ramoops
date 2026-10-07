@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+
+# The OS kernel binds ramoops from these parameters. Neither kernel binds
+# the node itself, so the zones survive the stage-1 boot.
+
+RAMOOPS_RM="/proc/device-tree/reserved-memory"
+
+# DT cells are big-endian; byte output avoids a swap.
+# Busybox od lacks -t without CONFIG_DESKTOP.
+ramoops_dt_hex() {
+    hexdump -v -e '1/1 "%02x"' "$1" 2>/dev/null
+}
+
+ramoops_enabled() {
+    # shellcheck disable=SC2154
+    [ "$bootparam_balena_stage2" = "true" ] || return 1
+    for RAMOOPS_NODE in "${RAMOOPS_RM}"/ramoops*; do
+        [ -d "${RAMOOPS_NODE}" ] || continue
+        # A dtoverlay=ramoops binds the node; avoid a second binding
+        [ ! -e "${RAMOOPS_NODE}/compatible" ]
+        return
+    done
+    return 1
+}
+
+ramoops_run() {
+    # Devicetree spec defaults when the parent omits the cells
+    _ac=$(ramoops_dt_hex "${RAMOOPS_RM}/#address-cells")
+    _ac=$(( 0x${_ac:-2} ))
+    _sc=$(ramoops_dt_hex "${RAMOOPS_RM}/#size-cells")
+    _sc=$(( 0x${_sc:-1} ))
+
+    _reg=$(ramoops_dt_hex "${RAMOOPS_NODE}/reg")
+    if [ "${#_reg}" -ne $(( (_ac + _sc) * 8 )) ]; then
+        warn "ramoops: reg does not match the parent cells; pstore disabled"
+        return 0
+    fi
+    _addr=$(printf '%s' "${_reg}" | cut -c1-$(( _ac * 8 )))
+    _size=$(printf '%s' "${_reg}" | cut -c$(( _ac * 8 + 1 ))-)
+
+    # Absent is 0, which matches the static binding layout
+    _record=$(ramoops_dt_hex "${RAMOOPS_NODE}/record-size")
+    _console=$(ramoops_dt_hex "${RAMOOPS_NODE}/console-size")
+
+    # ftrace and pmsg module defaults are 4096, not 0
+    export KEXEC_EXTRA_ARGS="${KEXEC_EXTRA_ARGS} ramoops.mem_address=0x${_addr} ramoops.mem_size=0x${_size} ramoops.record_size=0x${_record:-0} ramoops.console_size=0x${_console:-0} ramoops.ftrace_size=0 ramoops.pmsg_size=0"
+}
