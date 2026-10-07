@@ -37,7 +37,16 @@ abroot_enabled() {
 
 abroot_run() {
     ROOT_PART=$(bootenv_get "${BOOTENV_FILE}" "resin_root_part")
+    # Reaches a grep pattern and bootenv key names.
+    case "${ROOT_PART}" in
+    A | B) ;;
+    *) fail "abroot: invalid resin_root_part in bootenv" ;;
+    esac
     BOOT_COUNT=$(bootenv_get "${BOOTENV_FILE}" "bootcount")
+    # ash arithmetic evaluates a value, assignments included.
+    case "${BOOT_COUNT}" in
+    '' | *[!0-9]*) BOOT_COUNT=0 ;;
+    esac
     UPGRADE_AVAILABLE=$(bootenv_get "${BOOTENV_FILE}" "upgrade_available")
     ACTIVE_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
 

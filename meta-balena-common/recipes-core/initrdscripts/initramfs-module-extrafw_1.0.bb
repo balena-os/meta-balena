@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 RDEPENDS:${PN} = " \
     initramfs-framework-base \
     grub-editenv \
+    os-helpers-bootenv \
     os-helpers-logging \
     initramfs-module-mountboot \
 "
@@ -16,6 +17,8 @@ SRC_URI = "file://extrafw"
 do_install() {
     install -d ${D}/init.d
     install -m 0755 ${UNPACKDIR}/extrafw ${D}/init.d/81-extrafw
+    # ALLOWED_BOOTARGS_LIST is provided by conf/distro/include/balena-os.inc
+    sed -i "s|@@ALLOWED_BOOTARGS@@|${@' '.join(d.getVar('ALLOWED_BOOTARGS_LIST').split())}|g" ${D}/init.d/81-extrafw
 }
 
 FILES:${PN} = "/init.d/81-extrafw"
