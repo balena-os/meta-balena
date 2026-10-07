@@ -20,6 +20,7 @@ PACKAGE_INSTALL = " \
 "
 
 PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-resindataexpander',d)}"
+PACKAGE_INSTALL:append = "${@oe.utils.conditional('OS_DEVELOPMENT','1',' initramfs-module-ramoops','',d)}"
 
 BAD_RECOMMENDATIONS += "busybox-syslog"
 
