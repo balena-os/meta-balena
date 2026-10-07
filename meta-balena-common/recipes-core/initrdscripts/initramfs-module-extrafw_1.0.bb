@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 RDEPENDS:${PN} = " \
     initramfs-framework-base \
     grub-editenv \
+    os-helpers-bootenv \
     os-helpers-logging \
     initramfs-module-mountboot \
 "
