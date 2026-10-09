@@ -248,6 +248,8 @@ const initDUT = async (that, test, target) => {
 		`Device ${that.link} should be reachable over local SSH connection`
 	)
 	test.comment(`DUT flashed`);
+	// The flash wipes the cached crc-gate builds on the DUT
+	that.suite.context.set({ crcGate: null, dutOnTarget: false });
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
@@ -390,6 +392,7 @@ module.exports = {
 			this.suite.options.debug.unstable.push('Rollback tests')
 			this.suite.options.debug.unstable.push('Smoke tests')
 			this.suite.options.debug.unstable.push('Hostapp extension tests')
+			this.suite.options.debug.unstable.push('Hostapp extension tests from a previous release')
 			return
 		}
 
@@ -482,5 +485,7 @@ module.exports = {
 		'./tests/rollbacks',
 		'./tests/smoke',
 		'./tests/extensions',
+		// Last: it re-flashes the DUT to the previous release
+		'./tests/extensions-previous-release',
 	],
 };
