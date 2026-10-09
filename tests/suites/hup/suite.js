@@ -480,5 +480,7 @@ module.exports = {
 		'./tests/rollbacks',
 		'./tests/smoke',
 		'./tests/extensions',
+		// Last: it re-flashes the DUT to the previous release
+		'./tests/extensions-previous-release',
 	],
 };
