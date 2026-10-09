@@ -366,6 +366,25 @@ const osVersionId = async (that) => {
 	);
 };
 
+// The supervisor suffixes the name, so match by prefix
+const heliosVersion = async (that) => {
+	const labelled = await that.worker.executeCommandInHostOS(
+		"balena-engine inspect $(balena-engine ps -q --filter name=^core-next | head -1) --format '{{index .Config.Labels " +
+			'"org.opencontainers.image.version"}}\' 2>/dev/null || true',
+		that.link,
+	);
+	if (labelled !== '' && labelled !== '<no value>') {
+		return labelled;
+	}
+
+	const reported = await that.worker.executeCommandInHostOS(
+		'balena-engine exec $(balena-engine ps -q --filter name=^core-next | head -1) helios --version 2>/dev/null || true',
+		that.link,
+	);
+	const match = reported.match(/([0-9]+\.[0-9]+\.[0-9]+[^\s]*)/);
+	return match == null ? '' : match[1];
+};
+
 const runtimeRegistered = async (that) => {
 	const out = await that.worker.executeCommandInHostOS(
 		"balena-engine info --format '{{json .Runtimes}}' || true",
@@ -484,6 +503,7 @@ module.exports = {
 	removeImage,
 	run,
 	runningSlot,
+	heliosVersion,
 	runtimeRegistered,
 	sendArtifacts,
 	unitExists,
