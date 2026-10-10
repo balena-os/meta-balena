@@ -49,9 +49,9 @@ do_compile () {
 		# Service specific changes
 		if [ "$bindmount" = "/var/lib/systemd" ]; then
 			# Systemd services need to write to /var/lib/systemd so make sure
-			# that is mounted.
-			sed -i -e "/^Before=/s/\$/ systemd-random-seed.service systemd-rfkill.service/" \
-			-e "/^WantedBy=/s/\$/ systemd-random-seed.service systemd-rfkill.service/" \
+			# that is mounted. systemd-pstore archives into it.
+			sed -i -e "/^Before=/s/\$/ systemd-random-seed.service systemd-rfkill.service systemd-pstore.service/" \
+			-e "/^WantedBy=/s/\$/ systemd-random-seed.service systemd-rfkill.service systemd-pstore.service/" \
 			"$servicefile"
 		elif [ "$bindmount" = "/var/log/journal" ]; then
 			# This bind mount is only invoked manually in persistent logs

@@ -2,81 +2,67 @@
 #
 # Generic image-build infrastructure for balena hostapp extensions.
 #
-# Kernel-override behavior is automatic and based on a single signal:
-# the assembled image rootfs containing BOTH Module.symvers (under
-# /lib/modules/<ver>/) AND a kernel image (under /boot/).
+# Kernel-override behavior is automatic, on a single signal: the assembled
+# rootfs carrying both Module.symvers (under /lib/modules/<ver>/) and a kernel
+# image (under /boot/).
 #
 # Usage:
 #   inherit balena-hostapp-extension
 #   IMAGE_INSTALL = "<your extension packages>"
 #
-# Inheriting recipes can append more docker-import directives via:
-#   HOSTAPP_EXTENSION_LABELS  - extra `--change "LABEL ..."` lines
-#   HOSTAPP_EXTENSION_CHANGES - extra `--change "..."` lines (VOLUME, ENV, ...)
+# Use :append whenever something else already contributes to the payload, the
+# case for every class inheriting this one: a recipe's plain assignment parses
+# after its inherit line and silently drops what the class installed.
 #
-# The values of the conventional labels can be overridden per-recipe:
-#   HOSTAPP_EXTENSION_LABEL_STORE            - io.balena.image.store          (default: data)
-#   HOSTAPP_EXTENSION_LABEL_CLASS            - io.balena.image.class          (default: overlay)
-#   HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT  - io.balena.update.requires-reboot (default: 1)
+# Variables an inheriting recipe can set:
+#   HOSTAPP_EXTENSION_LABELS                - extra `--change "LABEL ..."` lines
+#   HOSTAPP_EXTENSION_CHANGES               - extra `--change "..."` lines (ENV, WORKDIR, ...)
+#   HOSTAPP_EXTENSION_REMOVE_PATHS          - rootfs paths to strip (default: etc run var)
+#   HOSTAPP_EXTENSION_LABEL_STORE           - io.balena.image.store (default: data)
+#   HOSTAPP_EXTENSION_LABEL_CLASS           - io.balena.image.class (default: overlay)
+#   HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT - io.balena.update.requires-reboot (default: 1)
+#   HOSTAPP_EXTENSION_LABEL_OVERRIDE        - io.balena.image.override (default: unset)
 #
-# HOSTAPP_EXTENSION_LABEL_OVERRIDE is unset by default, which makes the
-# extension extend-only. Set it to a numeric priority to opt into shadowing.
-# Lower values win, so 0 is the highest-precedence override.
-#   HOSTAPP_EXTENSION_LABEL_OVERRIDE         - io.balena.image.override       (default: unset)
+# An unset HOSTAPP_EXTENSION_LABEL_OVERRIDE makes the extension extend-only.
+# Set it to a numeric priority to opt into shadowing; lower values win, so 0
+# is the highest precedence.
 
 inherit image
 
 HOSTAPP_EXTENSION_LABELS ?= ""
 HOSTAPP_EXTENSION_CHANGES ?= ""
 
-# Conventional labels carried by every hostapp extension. Defaults reflect
-# the kernel-override case; non-kernel extensions can override any of these
-# (e.g. HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT = "0" for a hot-applied one).
+# Defaults reflect the kernel-override case; a hot-applied extension sets
+# HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT = "0".
 HOSTAPP_EXTENSION_LABEL_STORE           ?= "data"
 HOSTAPP_EXTENSION_LABEL_CLASS           ?= "overlay"
 HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT ?= "1"
 
-# Unset by default: extend-only extension
 HOSTAPP_EXTENSION_LABEL_OVERRIDE        ?= ""
 
-# Always-on: the hooks self-detect kernel content at runtime and
-# silently no-op for non-kernel extensions.
-IMAGE_INSTALL:append = " kernel-override-hooks"
+# Every extension is a rootfs tarball imported as an image
+IMAGE_LINGUAS = ""
+VIRTUAL-RUNTIME_init_manager = ""
+INITRAMFS_IMAGE = ""
+IMAGE_FSTYPES = "tar.gz"
 
-IMAGE_PREPROCESS_COMMAND:append = " install_kernel_override_symvers;"
+# An overlay contributes its own content only
+HOSTAPP_EXTENSION_REMOVE_PATHS ?= "etc run var"
 
-# Install the kernel's Module.symvers under /usr/lib/modules/<ver>/ in the
-# rootfs if the rootfs already contains a kernel image.
-install_kernel_override_symvers() {
-    [ -e "${IMAGE_ROOTFS}/boot/${KERNEL_IMAGETYPE}" ] || return 0
-
-    KVER_DIR=$(find "${IMAGE_ROOTFS}/usr/lib/modules" "${IMAGE_ROOTFS}/lib/modules" \
-        -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort -u | head -n1)
-    [ -n "${KVER_DIR}" ] || \
-        bbfatal "kernel image at /boot/${KERNEL_IMAGETYPE} but no /lib/modules/<ver>/ in rootfs"
-    KERNEL_VER_FULL=$(basename "${KVER_DIR}")
-
-    # If Module.symvers is already there (a -dev package laid it down), nothing to do.
-    [ ! -f "${KVER_DIR}/Module.symvers" ] || return 0
-
-    # Strip LOCALVERSION suffix (e.g. 6.12.62-v8-16k → 6.12.62) for matching the
-    # .config header.
-    KVER_NUM="${KERNEL_VER_FULL%%-*}"
-    SYMVERS=""
-    for cfg in "${DEPLOY_DIR_IMAGE}/.config" "${DEPLOY_DIR_IMAGE}"/*/.config; do
-        [ -f "$cfg" ] || continue
-        if head -3 "$cfg" | grep -qE "Linux/[A-Za-z0-9_]+ ${KVER_NUM} Kernel Configuration"; then
-            candidate="$(dirname "$cfg")/Module.symvers"
-            [ -f "${candidate}" ] || continue
-            SYMVERS="${candidate}"
-            break
-        fi
+# rm -rf unlinks a symlink without following it, so one form covers both the
+# state directories and the /bin and /sbin compatibility symlinks.
+remove_unnecessary_files() {
+    for p in ${HOSTAPP_EXTENSION_REMOVE_PATHS}; do
+        # Reachable from local.conf, so an entry escaping the rootfs would
+        # rm -rf the build tree.
+        case "$p" in
+            /|.|..|../*|*/..|*/../*) bbfatal "invalid HOSTAPP_EXTENSION_REMOVE_PATHS entry: '$p'" ;;
+        esac
+        rm -rf "${IMAGE_ROOTFS}/$p"
     done
-    [ -n "${SYMVERS}" ] || \
-        bbfatal "no Module.symvers in ${DEPLOY_DIR_IMAGE} matches kernel ${KERNEL_VER_FULL}"
-
-    install -m 0644 "${SYMVERS}" "${KVER_DIR}/Module.symvers"
 }
+# "+=" keeps this ahead of any ":append" step writing into the rootfs.
+IMAGE_PREPROCESS_COMMAND += "remove_unnecessary_files;"
 
 do_create_docker_image() {
     TARBALL="${DEPLOY_DIR_IMAGE}/${IMAGE_LINK_NAME}.tar.gz"
@@ -88,6 +74,7 @@ do_create_docker_image() {
             --change "LABEL io.balena.image.class=${HOSTAPP_EXTENSION_LABEL_CLASS}" \
             --change "LABEL io.balena.update.requires-reboot=${HOSTAPP_EXTENSION_LABEL_REQUIRES_REBOOT}" \
             --change "LABEL io.balena.image.os-version=${HOSTOS_VERSION}" \
+            --change 'CMD ["none"]' \
             "$@"
 
         # Only emit the override label when a priority is set.
@@ -124,8 +111,7 @@ do_create_docker_image() {
 
         _docker_import_extension \
             --change "LABEL io.balena.image.kernel-version=${KERNEL_VER}" \
-            --change "LABEL io.balena.image.kernel-abi-id=${KERNEL_ABI_ID}" \
-            --change "VOLUME /boot"
+            --change "LABEL io.balena.image.kernel-abi-id=${KERNEL_ABI_ID}"
     elif [ -z "${HAS_SYMVERS}" ] && [ "${HAS_KERNEL_IMG}" = "0" ]; then
         # Not a kernel-override extension, common labels only.
         _docker_import_extension

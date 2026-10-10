@@ -8,6 +8,8 @@ set -o errexit
 
 . /usr/sbin/balena-config-vars
 . /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
 
 DURING_UPDATE=${DURING_UPDATE:-0}
 
@@ -29,7 +31,7 @@ BOOTENV_FILE="${BALENA_NONENC_BOOT_MOUNTPOINT}/bootenv"
 rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/resinOS_uEnv.txt"
 rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/grubenv"
 
-grub-editenv "${BOOTENV_FILE}" set "resin_root_part=${NEW_ROOT}"
-grub-editenv "${BOOTENV_FILE}" set "upgrade_available=${DURING_UPDATE}"
+bootenv_set "${BOOTENV_FILE}" "resin_root_part" "${NEW_ROOT}"
+bootenv_set "${BOOTENV_FILE}" "upgrade_available" "${DURING_UPDATE}"
 
 info "Will use root ${NEW_ROOT} during next boot"

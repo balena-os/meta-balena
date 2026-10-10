@@ -27,7 +27,9 @@ module.exports = [
     },
     workers: process.env.WORKER_TYPE === 'qemu' ? ['http://worker'] : {
       balenaApplication: process.env.BALENACLOUD_APP_NAME.split(','),
-      apiKey: process.env.BALENACLOUD_API_KEY,
+      // The rig fleet can live on another environment than the DUT. Both default to the DUT's.
+      apiKey: process.env.BALENACLOUD_WORKER_API_KEY || process.env.BALENACLOUD_API_KEY,
+      apiUrl: process.env.BALENACLOUD_WORKER_API_URL || process.env.BALENACLOUD_API_URL,
     },
   }
 ]
