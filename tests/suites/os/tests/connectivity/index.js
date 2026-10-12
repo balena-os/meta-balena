@@ -43,14 +43,17 @@ module.exports = {
 					},
 					run: async function(test) {
 						let connection = adaptor === 'wireless' ? 'balena-wifi' : 'Wired';
-						return this.worker.executeCommandInHostOS(
-							`nmcli d  | grep ' ${connection} ' | grep connected | awk '{print $1}'`,
-							this.link,
-						).then((iface) => {
-							if (iface === '') {
-								throw new Error(`No ${connection} connection found.`);
-							}
-
+						let iface = '';
+						// The DUT can join the testbot access point late
+						return this.utils.waitUntil(async () => {
+							iface = await this.worker.executeCommandInHostOS(
+								`nmcli d  | grep ' ${connection} ' | grep connected | awk '{print $1}'`,
+								this.link,
+							);
+							return iface !== '';
+						}, false, 6, 10000).catch(() => {
+							throw new Error(`No ${connection} connection found.`);
+						}).then(() => {
 							test.comment(`Attempting to connect to ${URL_TEST} over interface ${iface}`)
 							return this.worker.executeCommandInHostOS(
 								`curl -I -sS -o /dev/null -w "%{http_code}" --keepalive-time 5 --connect-timeout 5 --interface ${iface} ${URL_TEST}`,
