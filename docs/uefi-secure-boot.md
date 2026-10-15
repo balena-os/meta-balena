@@ -174,6 +174,57 @@ It is important to understand that due to the nature of the feature, not all deb
 * Since the encryption keys will only be released by the TPM on the device itself in the expected configuration, it is neither possible to remove the storage media and mount/inspect it on a different device nor boot off a temporary boot media on the same device.
 * Some features of the kernel are not available due to it being in lockdown mode. See `man 7 kernel_lockdown` for details.
 
+### PCR state diagnostics
+
+Images built with `OS_DEVELOPMENT = "1"` and secure boot write the predicted PCR7 to the unencrypted `balena-efi` boot partition under `pcr-debug/`.
+
+Each dump is one directory, tagged by what produced it:
+
+| Tag | Written by |
+| --- | ---------- |
+| `hup` | `0-signed-update`, before it discards one of the two digests |
+| `commit` | `95-secureboot/2-fwd_commit_update-policy`, when it reseals |
+| `boot` | the initramfs, after the passphrase unseals |
+| `unseal-fail` | the initramfs, when the passphrase does not unseal |
+| `shell` | `pcr_debug_report`, run by hand |
+
+The last three of each tag are kept.
+
+A dump is written only when the state changes. A directory holds:
+
+| File | Content |
+| ---- | ------- |
+| `environment.txt` | date, OS version (empty in the initramfs), kernel release and build, `firmware_measures_efibins` branch, DMA protection state, the EFI binaries measured, and the caller notes under a `noted:` timestamp |
+| `pcr-values.*.txt`, `pcr-values.*.bin` | the predicted PCR0, 2, 3 and 7 digests, one pair per variant |
+| `policy.*.hex`, `policy.*.bin` | the policy digest each variant produces |
+| `policies-on-disk/` | the policy directory as it stood when the dump was taken, raw and hex |
+| `sealed-policies/` | the policy directory the update installed, on `hup` and `commit` only |
+| `nvreadpublic.before.txt`, `nvreadpublic.after.txt` | the NV index policy before the dump, and after the resealing on `hup` and `commit` |
+| `pcrread.txt` | the live PCR0 to 7 |
+| `eventlog.bin`, `eventlog.yaml`, `pcr7-eventtypes.txt` | the firmware TPM event log as read, its `tpm2_eventlog` parse, and the PCR7 event types |
+| `efi-binaries.sha256` | the checksums of the EFI binaries in the prediction |
+| `efivars/` | `SecureBoot`, `SetupMode`, `PK`, `KEK`, `db` and `dbx` as read, `absent.txt` for any missing, `db.esl` and `db.predicted.hex` for the `db` value the prediction assumes. The initramfs has no `db.esl`, so there `db.predicted.hex` is the live `db`, and `environment.txt` says so |
+| `fingerprint` | what state this dump records, compared against on later boots. It is written last, so an interrupted dump is never matched |
+
+The `hup`, `boot`, `unseal-fail` and `shell` dumps hold two variants, `pcr`
+and `pcr-efibin`. The `commit` dump holds one, `commit`, because the commit
+hook seals a single digest.
+
+`pcr_debug_report` runs the same capture on demand, from a host shell:
+
+```
+. /usr/libexec/os-helpers-tpm2 && pcr_debug_report
+```
+
+It prints the live PCRs beside the prediction for the running OS. Both come
+from the same boot, so a PCR7 mismatch shows the prediction is wrong on this
+firmware. Pass a directory to also write the bundle, and a second argument to
+tag it:
+
+```
+pcr_debug_report /mnt/data shell
+```
+
 ## FAQ
 
 * **Why do you need to enroll custom keys instead of using a trusted shim like other linux distributions?** Because `balenaOS` is not a general-purpose operating system. Devices running `balenaOS` are usually single-purpose and it is not desirable to boot anything else but `balenaOS` for them.

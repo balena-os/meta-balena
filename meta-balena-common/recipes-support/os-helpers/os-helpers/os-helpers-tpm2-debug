@@ -1,0 +1,505 @@
+# Copyright 2026 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# vi: ft=sh
+#
+# Diagnostics for the PCR prediction that seals the LUKS passphrase.
+#
+# Callers run under "set -o errexit". Invoke every function in an "|| true"
+# list. A diagnostic must never fail an update.
+#
+
+# user_mode_enabled: not every caller sources os-helpers-efi itself
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-efi
+
+PCR_DEBUG_SUBDIR="pcr-debug"
+PCR_DEBUG_KEEP=3
+
+# Create a dump directory under $1 and print its path. Prunes older dumps.
+pcr_debug_new_dir() {
+    _base="${1}/${PCR_DEBUG_SUBDIR}"
+    _stage="${2}"
+    _dir="${_base}/$(date -u +%Y%m%dT%H%M%SZ)-${_stage}"
+
+    mkdir -p "${_dir}" || return 1
+    _pcr_debug_prune "${_base}" "${_stage}" "${_dir}"
+
+    printf '%s' "${_dir}"
+}
+
+# Drop the oldest dumps of one stage. Pruning per stage stops a frequent
+# stage, such as boot, from evicting an update record. Keep $3 always: a
+# clock that went backwards can sort it first.
+_pcr_debug_prune() {
+    _base="${1}"
+    _stage="${2}"
+    _current="${3}"
+    _kept=0
+
+    # names sort chronologically, so reversed puts the newest first
+    # shellcheck disable=SC2012
+    for _old in $(ls -1 "${_base}" | sort -r); do
+        case "${_old}" in
+            *"-${_stage}") ;;
+            *) continue ;;
+        esac
+
+        _kept=$((_kept + 1))
+        [ "${_kept}" -gt "${PCR_DEBUG_KEEP}" ] || continue
+        [ "${_base}/${_old}" = "${_current}" ] && continue
+        rm -rf "${_base:?}/${_old:?}"
+    done
+}
+
+# Capture the firmware side: what the next boot will measure against.
+pcr_debug_capture_env() {
+    _dir="${1}"
+
+    {
+        echo "date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        # the initramfs has no os-release, the kernel build identifies it
+        echo "os_version: $(sed -n 's/^VERSION=//p' /etc/os-release 2>/dev/null | tr -d '"')"
+        echo "kernel: $(uname -rv)"
+        echo "firmware_measures_efibins: $(firmware_measures_efibins)"
+    } > "${_dir}/environment.txt"
+
+    if [ -f "${TPM_EVENTLOG_PATH}" ]; then
+        # securityfs reports size 0, so cp truncates
+        cat "${TPM_EVENTLOG_PATH}" > "${_dir}/eventlog.bin"
+        tpm2_eventlog "${_dir}/eventlog.bin" > "${_dir}/eventlog.yaml" 2>&1 || true
+        parse_pcr7_eventtypes < "${_dir}/eventlog.yaml" \
+            > "${_dir}/pcr7-eventtypes.txt" || true
+        if pcr7_has_dma_disabled_event; then
+            echo "dma_protection_disabled: yes" >> "${_dir}/environment.txt"
+        else
+            echo "dma_protection_disabled: no" >> "${_dir}/environment.txt"
+        fi
+    else
+        echo "eventlog: absent" >> "${_dir}/environment.txt"
+    fi
+
+    tpm2_pcrread sha256:0,1,2,3,4,5,6,7 > "${_dir}/pcrread.txt" 2>&1 || true
+    tpm2_nvreadpublic "${PASSPHRASE_NVINDEX}" \
+        > "${_dir}/nvreadpublic.before.txt" 2>&1 || true
+
+    mkdir -p "${_dir}/efivars"
+    for _var in "SecureBoot-${EFI_GLOBAL_VARIABLE_GUID}" \
+               "SetupMode-${EFI_GLOBAL_VARIABLE_GUID}" \
+               "PK-${EFI_GLOBAL_VARIABLE_GUID}" \
+               "KEK-${EFI_GLOBAL_VARIABLE_GUID}" \
+               "db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+               "dbx-${EFI_IMAGE_SECURITY_DATABASE_GUID}"; do
+        _src="/sys/firmware/efi/efivars/${_var}"
+        if [ -e "${_src}" ]; then
+            # drop the 4 attribute bytes, matching compute_pcr7
+            dd if="${_src}" of="${_dir}/efivars/${_var}" \
+               bs=1 skip=4 status=none || true
+        else
+            # an absent variable is measured as zero length, record it
+            echo "${_var}" >> "${_dir}/efivars/absent.txt"
+        fi
+    done
+
+    # the db the prediction assumes, against the live one
+    predicted_db > "${_dir}/efivars/db.predicted.hex" || true
+    if [ -f "${DB_ESL_PATH}" ]; then
+        cp "${DB_ESL_PATH}" "${_dir}/efivars/db.esl" || true
+        echo "db_esl: ${DB_ESL_PATH}" >> "${_dir}/environment.txt"
+    else
+        # the initramfs: this boot measured the live db, nothing is appended
+        echo "db_esl: absent, db.predicted.hex is the live db" \
+            >> "${_dir}/environment.txt"
+    fi
+}
+
+# Record one predicted digest set and the policy digest it produces.
+#
+# The update keeps one variant and discards the other. The discarded one
+# matters most when the kept one turns out to be wrong.
+pcr_debug_capture_prediction() {
+    _dir="${1}"
+    _label="${2}"
+    _pcrs="${3}"
+    _pcr_val_bin="${4}"
+    _policy_file="${5}"
+
+    cp "${_pcr_val_bin}" "${_dir}/pcr-values.${_label}.bin" || true
+    print_pcr_val_bin "${_pcrs}" "${_pcr_val_bin}" \
+        > "${_dir}/pcr-values.${_label}.txt" || true
+
+    if [ -f "${_policy_file}" ]; then
+        cp "${_policy_file}" "${_dir}/policy.${_label}.bin" || true
+        { _hexencode < "${_policy_file}"; echo; } \
+            > "${_dir}/policy.${_label}.hex" || true
+    fi
+}
+
+# Copy a policy directory, in hex as well as raw.
+#
+# The update deletes the directory it booted with. Without a copy, no digest
+# remains to calibrate a later event log replay.
+pcr_debug_capture_policies() {
+    _dir="${1}"
+    _name="${2}"
+    _src="${3}"
+
+    [ -d "${_src}" ] || return 0
+    # drop policies from an earlier run
+    rm -rf "${_dir:?}/${_name:?}"
+    mkdir -p "${_dir}/${_name}"
+    for _file in "${_src}"/*; do
+        [ -f "${_file}" ] || continue
+        cp "${_file}" "${_dir}/${_name}/" || true
+        { _hexencode < "${_file}"; echo; } \
+            > "${_dir}/${_name}/$(basename "${_file}").hex" || true
+    done
+}
+
+# Write both PCR7 variants and their policy digests into $3, as vals,
+# vals.efibin, pol and pol.efibin.
+pcr_debug_compute() {
+    _cmp_pcrs="${1}"
+    _cmp_bins="${2}"
+    _cmp_dir="${3}"
+
+    generate_pcr_digests "${_cmp_pcrs}" "${_cmp_dir}/vals" "use_pcr2"
+    generate_pcr_digests "${_cmp_pcrs}" "${_cmp_dir}/vals.efibin" "use_pcr2" \
+        "${_cmp_bins}"
+    tpm2_createpolicy --policy-pcr -l "sha256:${_cmp_pcrs}" \
+        -f "${_cmp_dir}/vals" -L "${_cmp_dir}/pol" >/dev/null
+    tpm2_createpolicy --policy-pcr -l "sha256:${_cmp_pcrs}" \
+        -f "${_cmp_dir}/vals.efibin" -L "${_cmp_dir}/pol.efibin" >/dev/null
+}
+
+# Dump one reseal. Prints the dump directory, for pcr_debug_note and
+# pcr_debug_dump_sealed.
+#
+# Arguments after the fifth are triples: label, PCR value file, policy file,
+# one per digest variant. A caller that seals already has those. The
+# initramfs only unseals, so it passes none and this computes both variants.
+#
+# An empty $5 finds the EFI binaries under $1, which are the copies the
+# firmware measured into PCR7 on this boot.
+pcr_debug_dump() {
+    _mount="${1}"
+    _stage="${2}"
+    _pcrs="${3}"
+    _policies="${4}"
+    _binaries="${5}"
+    shift 5
+
+    # outside user mode the PCR digests gate nothing, so write nothing
+    user_mode_enabled || return 0
+
+    if [ -z "${_binaries}" ]; then
+        _grub="$(find "${_mount}" -name bootx64.efi -print -quit)"
+        _kernel="$(find "${_mount}" -name bzImage -print -quit)"
+        _binaries="${_grub}${_grub:+ }${_kernel}"
+    fi
+
+    # write only on change, to spare the FAT partition
+    if pcr_debug_unchanged "${_mount}" "${_stage}" "${_policies}" "${_binaries}"; then
+        _pcr_debug_latest "${_mount}/${PCR_DEBUG_SUBDIR}" "${_stage}"
+        return 0
+    fi
+
+    # the initramfs passes no predictions, so compute both
+    _computed=""
+    if [ $# -lt 3 ]; then
+        _computed="$(mktemp -d)"
+        pcr_debug_compute "${_pcrs}" "${_binaries}" "${_computed}"
+        set -- pcr-efibin "${_computed}/vals.efibin" "${_computed}/pol.efibin" \
+               pcr "${_computed}/vals" "${_computed}/pol"
+    fi
+
+    _dumpdir="$(pcr_debug_new_dir "${_mount}" "${_stage}")"
+    [ -n "${_dumpdir}" ] || return 0
+
+    pcr_debug_capture_env "${_dumpdir}"
+    pcr_debug_capture_policies "${_dumpdir}" "policies-on-disk" "${_policies}"
+
+    while [ $# -ge 3 ]; do
+        pcr_debug_capture_prediction "${_dumpdir}" "${1}" "${_pcrs}" "${2}" "${3}"
+        shift 3
+    done
+
+    if [ -n "${_binaries}" ]; then
+        echo "efi_binaries: ${_binaries}" >> "${_dumpdir}/environment.txt"
+        # shellcheck disable=SC2086
+        sha256sum ${_binaries} > "${_dumpdir}/efi-binaries.sha256" \
+            2>/dev/null </dev/null || true
+    fi
+
+    [ -n "${_computed}" ] && rm -rf "${_computed}"
+
+    # written last, so an interrupted dump is never matched later
+    _pcr_debug_fingerprint "${_policies}" "${_binaries}" > "${_dumpdir}/fingerprint"
+
+    printf '%s' "${_dumpdir}"
+}
+
+# Identify the state a dump would capture, using cheap reads only.
+#
+# Covers every input to the policy over PCRs 0,2,3,7: the three read live
+# and the one computed. An unchanged fingerprint means an unchanged policy,
+# so the caller can skip the work.
+#
+# Excludes the event log, which some firmwares vary between boots. A PCR7
+# that has not moved is evidence enough.
+_pcr_debug_fingerprint() {
+    _fp_policies="${1}"
+    _fp_binaries="${2}"
+
+    # Every command needs "|| true". An absent file is normal here, and
+    # under "set -o errexit" a failure would abort the subshell and hash a
+    # truncated stream. The same state must hash alike from every caller.
+    {
+        tpm2_pcrread sha256:0,2,3,7 2>/dev/null || true
+        tpm2_nvreadpublic "${PASSPHRASE_NVINDEX}" 2>/dev/null || true
+        firmware_measures_efibins || true
+        cat /etc/os-release 2>/dev/null || true
+        for _fp_var in "SecureBoot" "PK" "KEK"; do
+            cat "/sys/firmware/efi/efivars/${_fp_var}-${EFI_GLOBAL_VARIABLE_GUID}" \
+                2>/dev/null || true
+        done
+        for _fp_var in "db" "dbx"; do
+            cat "/sys/firmware/efi/efivars/${_fp_var}-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+                2>/dev/null || true
+        done
+        cat "${_fp_policies}"/* 2>/dev/null || true
+        # shellcheck disable=SC2086
+        sha256sum ${_fp_binaries} 2>/dev/null </dev/null || true
+    } | _sha256
+}
+
+# Return zero when the newest dump of this stage already records this state.
+# Writes nothing: a missing newer dump is itself the record.
+pcr_debug_unchanged() {
+    _unchanged_last="$(_pcr_debug_latest "${1}/${PCR_DEBUG_SUBDIR}" "${2}")"
+    [ -n "${_unchanged_last}" ] || return 1
+
+    [ "$(_pcr_debug_fingerprint "${3}" "${4}")" \
+        = "$(cat "${_unchanged_last}/fingerprint" 2>/dev/null)" ]
+}
+
+# Print the newest dump of one stage, or nothing.
+_pcr_debug_latest() {
+    # shellcheck disable=SC2012
+    for _latest in $(ls -1 "${1}" 2>/dev/null | sort -r); do
+        case "${_latest}" in
+            *"-${2}")
+                printf '%s' "${1}/${_latest}"
+                return 0
+                ;;
+        esac
+    done
+}
+
+# Append caller specific "key: value" lines to a dump.
+pcr_debug_note() {
+    [ -d "${1}" ] || return 0
+    _notedir="${1}"
+    shift
+
+    # a revisited dump gets a second batch below this line
+    {
+        echo "noted: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        for _line in "$@"; do
+            echo "${_line}"
+        done
+    } >> "${_notedir}/environment.txt"
+}
+
+# Record what the resealing landed, in a dump pcr_debug_dump created.
+pcr_debug_dump_sealed() {
+    [ -d "${1}" ] || return 0
+
+    pcr_debug_capture_policies "${1}" "sealed-policies" "${2}"
+    tpm2_nvreadpublic "${PASSPHRASE_NVINDEX}" \
+        > "${1}/nvreadpublic.after.txt" 2>&1
+}
+
+_pcr_debug_annotate() {
+    if [ -n "$1" ] && [ "$1" = "$2" ]; then
+        printf '  <- matches %s' "$3"
+    fi
+    printf '\n'
+}
+
+_pcr_debug_live_pcr() {
+    tpm2_pcrread --quiet "sha256:$1" -o /proc/self/fd/1 | _hexencode
+}
+
+# Digest $2 of a PCR value file, counting from zero
+_pcr_debug_predicted_pcr() {
+    dd if="$1" bs=1 count=32 skip=$((32 * $2)) status=none | _hexencode
+}
+
+# Print the live PCR state beside the prediction for the running OS. Both
+# come from the same boot, so a PCR7 mismatch shows the prediction is wrong
+# on this firmware. $1 also writes the bundle under $1/pcr-debug, tagged $2.
+#
+# Run it from a host shell:
+#   . /usr/libexec/os-helpers-tpm2 && pcr_debug_report
+pcr_debug_report() {
+    _out="${1}"
+    _tag="${2:-shell}"
+    _seal_pcrs="0,2,3,7"
+    _pcr7_index=3
+    # sourced here, not at load: balena-config-defaults pulls os-helpers-sb,
+    # which sources this file back
+    if [ -z "${BALENA_NONENC_BOOT_MOUNTPOINT}" ] \
+        && [ -f /usr/sbin/balena-config-defaults ]; then
+        # shellcheck disable=SC1091
+        . /usr/sbin/balena-config-defaults
+    fi
+    _efi="${BALENA_NONENC_BOOT_MOUNTPOINT}"
+    _efivars="/sys/firmware/efi/efivars"
+    _efivars_mounted=0
+
+    if ! user_mode_enabled; then
+        echo "secure boot is not in user mode, the PCR state gates nothing" >&2
+        return 1
+    fi
+
+    if [ ! -d "${_efi}" ]; then
+        echo "boot partition not mounted at ${_efi:-<unset>}" >&2
+        return 1
+    fi
+
+    if ! mount | grep -q "type efivarfs"; then
+        mount -t efivarfs efivarfs "${_efivars}" || return 1
+        _efivars_mounted=1
+    fi
+
+    # the firmware measured these copies into PCR7
+    _grub="$(find "${_efi}" -name bootx64.efi -print -quit)"
+    _kernel="$(find "${_efi}" -name bzImage -print -quit)"
+    _bins="${_grub} ${_kernel}"
+
+    _work="$(mktemp -d)"
+    pcr_debug_compute "${_seal_pcrs}" "${_bins}" "${_work}"
+
+    _live_db="$(dd if="${_efivars}/db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+        bs=1 skip=4 status=none | xxd -p -c "${SIGNATURE_LENGTH}")"
+    if [ "${_live_db}" = "$(predicted_db)" ]; then
+        _db_state="matches the live variable"
+    else
+        _db_state="differs from the live variable, an append is predicted"
+    fi
+
+    # the unseal ORs every file here, so reproduce that
+    _policy_dir="$(find "${_efi}" -maxdepth 1 -type d -name "policies.*" -print -quit)"
+    _expected_auth=""
+    _combined=""
+    _session=""
+    if [ -n "${_policy_dir}" ]; then
+        _installed="$(find "${_policy_dir}" -type f | sort | xargs)"
+        if [ "$(echo "${_installed}" | wc -w)" -gt 1 ]; then
+            _combined="$(mktemp)"
+            _session="$(mktemp)"
+            tpm2_startauthsession --session "${_session}" >/dev/null
+            tpm2_policyor --session "${_session}" --policy "${_combined}" \
+                "sha256:$(echo "${_installed}" | sed 's/ /,/g')" >/dev/null
+            tpm2_flushcontext "${_session}" >/dev/null
+            _expected_auth="$(_hexencode < "${_combined}")"
+        elif [ -n "${_installed}" ]; then
+            _expected_auth="$(_hexencode < "${_installed}")"
+        fi
+    fi
+
+    _nv_auth="$(tpm2_nvreadpublic "${PASSPHRASE_NVINDEX}" 2>/dev/null \
+        | awk -F': *' '/authorization policy/ { print tolower($2) }')"
+
+    _pcr7_live="$(_pcr_debug_live_pcr 7)"
+    _pcr7_pred="$(_pcr_debug_predicted_pcr "${_work}/vals" ${_pcr7_index})"
+    _pcr7_pred_efibin="$(_pcr_debug_predicted_pcr "${_work}/vals.efibin" ${_pcr7_index})"
+    _pol_pcr_hex="$(_hexencode < "${_work}/pol")"
+    _pol_efibin_hex="$(_hexencode < "${_work}/pol.efibin")"
+
+    echo "environment"
+    echo "  firmware_measures_efibins : $(firmware_measures_efibins)"
+    if [ -f "${TPM_EVENTLOG_PATH}" ]; then
+        echo "  EV_EFI_VARIABLE_AUTHORITY : $(tpm2_eventlog "${TPM_EVENTLOG_PATH}" \
+            | parse_pcr7_eventtypes | grep -c EV_EFI_VARIABLE_AUTHORITY || true)"
+        if pcr7_has_dma_disabled_event; then
+            echo "  DMA protection disabled   : yes"
+        else
+            echo "  DMA protection disabled   : no"
+        fi
+    else
+        echo "  TPM event log             : absent"
+    fi
+    echo "  predicted db              : ${_db_state}"
+    echo "  EFI binaries              : ${_bins}"
+    echo
+
+    echo "live PCRs, sha256"
+    for _pcr in $(echo "${_seal_pcrs}" | sed 's/,/ /g'); do
+        printf '  %s : %s\n' "${_pcr}" "$(_pcr_debug_live_pcr "${_pcr}")"
+    done
+    echo
+
+    echo "predicted PCR7"
+    printf '  without EFI binary measurements : %s' "${_pcr7_pred}"
+    _pcr_debug_annotate "${_pcr7_pred}" "${_pcr7_live}" "live PCR7"
+    printf '  with EFI binary measurements    : %s' "${_pcr7_pred_efibin}"
+    _pcr_debug_annotate "${_pcr7_pred_efibin}" "${_pcr7_live}" "live PCR7"
+    echo
+
+    echo "computed policy digests"
+    printf '  policy.pcr        : %s\n' "${_pol_pcr_hex}"
+    printf '  policy.pcr-efibin : %s\n' "${_pol_efibin_hex}"
+    echo
+
+    echo "installed policies, ${_policy_dir:-none}"
+    if [ -n "${_policy_dir}" ]; then
+        for _file in "${_policy_dir}"/*; do
+            [ -f "${_file}" ] || continue
+            _hex="$(_hexencode < "${_file}")"
+            printf '  %-18s: %s' "$(basename "${_file}")" "${_hex}"
+            if [ "${_hex}" = "${_pol_efibin_hex}" ]; then
+                printf '  <- matches computed policy.pcr-efibin\n'
+            elif [ "${_hex}" = "${_pol_pcr_hex}" ]; then
+                printf '  <- matches computed policy.pcr\n'
+            else
+                echo
+            fi
+        done
+        printf '  %-18s: %s\n' "combined" "${_expected_auth}"
+    fi
+    echo
+
+    echo "NV index ${PASSPHRASE_NVINDEX}"
+    printf '  authorization policy : %s' "${_nv_auth:-absent}"
+    _pcr_debug_annotate "${_nv_auth}" "${_expected_auth}" "the combined installed policy"
+
+    if [ -n "${_out}" ]; then
+        _bundle="$(pcr_debug_dump "${_out}" "${_tag}" "${_seal_pcrs}" \
+            "${_policy_dir}" "${_bins}" \
+            pcr-efibin "${_work}/vals.efibin" "${_work}/pol.efibin" \
+            pcr "${_work}/vals" "${_work}/pol")"
+        sync
+        echo
+        echo "bundle written to ${_bundle}"
+    fi
+
+    rm -rf "${_work}"
+    rm -f "${_combined}" "${_session}"
+
+    if [ "${_efivars_mounted}" = 1 ]; then
+        umount "${_efivars}"
+    fi
+}

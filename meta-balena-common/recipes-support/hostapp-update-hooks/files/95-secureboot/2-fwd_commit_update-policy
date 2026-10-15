@@ -62,10 +62,8 @@ POLICY_PATH="$(mktemp -t -d policies.XXXXX)"
 POLICY="$(mktemp -p "${POLICY_PATH}")"
 PCRS="0,2,3,7"
 PCR_VAL_BIN="$(mktemp -t)"
-EFI_BINARIES=" \
-	$(find "${EFI_MOUNT_DIR}" -name bootx64.efi -print -quit) \
-	$(find /boot -name bzImage -print -quit)
-	"
+EFI_BINARIES="$(find "${EFI_MOUNT_DIR}" -name bootx64.efi -print -quit)"
+EFI_BINARIES="${EFI_BINARIES} $(find /boot -name bzImage -print -quit)"
 
 if [ "$(firmware_measures_efibins)" = "measured" ]; then
 	generate_pcr_digests \
@@ -95,8 +93,14 @@ if [ -n "${update_reason}" ]; then
 		-l "sha256:${PCRS}" \
 		-f "${PCR_VAL_BIN}" \
 		-L "${POLICY}"
-	
+
+	dump_dir="$(pcr_debug_dump "${EFI_MOUNT_DIR}" commit "${PCRS}" \
+		"${CURRENT_POLICY_PATH}" "${EFI_BINARIES}" \
+		commit "${PCR_VAL_BIN}" "${POLICY}")" || true
+	pcr_debug_note "${dump_dir}" "update_reason: ${update_reason}" || true
+
 	tpm_nvram_store_passphrase "${PASSPHRASE_FILE}" "${POLICY_PATH}"
+	pcr_debug_dump_sealed "${dump_dir}" "${POLICY_PATH}" || true
 
 	# shellcheck disable=SC2012
 	if [ "$(ls -1 "${POLICY_PATH}" | wc -l)" -gt 1 ]; then

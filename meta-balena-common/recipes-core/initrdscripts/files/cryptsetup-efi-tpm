@@ -64,6 +64,22 @@ cryptsetup_enabled() {
     return 0
 }
 
+# Record the PCR state to the EFI partition, on the boot that succeeds and on
+# the boot that fails.
+dump_pcr_state() {
+    _umount_securityfs=0
+    if [ ! -f "${TPM_EVENTLOG_PATH}" ] \
+       && mount -t securityfs securityfs /sys/kernel/security 2>/dev/null; then
+        _umount_securityfs=1
+    fi
+
+    pcr_debug_dump "${EFI_MOUNT_DIR}" "${1}" "0,2,3,7" "${POLICY_PATH}" ""
+
+    if [ "${_umount_securityfs}" = 1 ]; then
+        umount /sys/kernel/security 2>/dev/null
+    fi
+}
+
 cryptsetup_run() {
     # Die if anything fails here
     set -e
@@ -101,6 +117,7 @@ cryptsetup_run() {
     if tpm_nvram_retrieve_passphrase "session:${SESSION_CTX}" "${PASSPHRASE_FILE}"; then
         info "Successfully retrieved passphrase from TPM NVRAM"
     else
+        dump_pcr_state unseal-fail || true
         umount "$EFI_MOUNT_DIR"
         fail "Failed to unlock LUKS passphrase using the TPM"
     fi
@@ -142,6 +159,8 @@ cryptsetup_run() {
     # We want to make sure that the newly unlocked partitions are the ones
     # we are going to actually use, there is nothing missing and nothing extra.
     luks_parts_postmount_assert
+
+    dump_pcr_state boot || true
 
     rm -f "$PASSPHRASE_FILE"
     umount "$EFI_MOUNT_DIR"

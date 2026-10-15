@@ -23,6 +23,12 @@ EFI_GLOBAL_VARIABLE_GUID="8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
 TPM_EVENTLOG_PATH="/sys/kernel/security/tpm0/binary_bios_measurements"
 
+# sizeof(EFI_SIGNATURE_LIST) + SHA256_DIGEST_SIZE + EFI_GUID_SIZE
+SIGNATURE_LENGTH=76
+
+# The signatures updateUEFIKeys appends to db. Absent in the initramfs.
+DB_ESL_PATH="/resin-boot/balena-keys/db.esl"
+
 # A static nvram index is chosen to ensure the index can't be modified without
 # also changing the hash of the kernel, which is verified by the firmware as
 # part of secure boot.
@@ -294,6 +300,20 @@ tpm_nvram_store_passphrase() {
 	tpm2_flushcontext "${session_ctx}"
 }
 
+# The db value the prediction assumes the firmware will hold once
+# updateUEFIKeys has appended db.esl.
+predicted_db() {
+    { dd if=/sys/firmware/efi/efivars/"db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
+         status=none \
+         bs=1 \
+         skip=4 \
+         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
+      dd if="${DB_ESL_PATH}" \
+         status=none \
+         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
+    } | awk '!seen[$0]++'
+}
+
 generate_pcr_digests() {
     pcrs="${1}"
     output="${2}"
@@ -315,19 +335,7 @@ generate_pcr_digests() {
             ;;
             7)
                 secureboot_override="01"
-                # the signatures from the updated database are appended to the
-                # existing variable, removing duplicates
-                SIGNATURE_LENGTH=76 # sizeof(EFI_SIGNATURE_LIST) + SHA256_DIGEST_SIZE + EFI_GUID_SIZE
-                db_override="$( \
-                    { dd if=/sys/firmware/efi/efivars/"db-${EFI_IMAGE_SECURITY_DATABASE_GUID}" \
-                         status=none \
-                         bs=1 \
-                         skip=4 \
-                         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
-                      dd if=/resin-boot/balena-keys/db.esl \
-                         status=none \
-                         2>/dev/null | xxd -p -c ${SIGNATURE_LENGTH} ; \
-                    } | awk '!seen[$0]++' )"
+                db_override="$(predicted_db)"
                 #shellcheck disable=SC2154
                 digest="$(compute_pcr7 "${secureboot_override}" \
                                        "${pk_override}" \
@@ -393,3 +401,15 @@ pcr7_has_dma_disabled_event() {
         | grep "PCRIndex: 7" -A 10 \
         | grep -qi "DMA Protection Disabled"
 }
+
+# Diagnostics for the PCR prediction. os-helpers-tpm2-debug replaces them
+# below when present. Hooks can then call them without testing for a
+# development image.
+pcr_debug_dump() { :; }
+pcr_debug_note() { :; }
+pcr_debug_dump_sealed() { :; }
+
+if [ -f /usr/libexec/os-helpers-tpm2-debug ]; then
+    # shellcheck disable=SC1091
+    . /usr/libexec/os-helpers-tpm2-debug
+fi
