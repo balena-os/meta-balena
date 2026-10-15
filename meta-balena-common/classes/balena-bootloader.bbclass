@@ -76,6 +76,7 @@ BALENA_CONFIGS ?= " \
     blkdev \
     media \
     nls \
+    no_sdma \
     misc \
     ${@oe.utils.conditional('SIGN_API','','',' crypto',d)} \
     shrink_size \
@@ -231,6 +232,15 @@ BALENA_CONFIGS[net] = " \
     CONFIG_6PACK=n \
     CONFIG_BPQETHER=n \
     CONFIG_RFKILL=n \
+    "
+
+# On some IMX devices the SDMA engine
+# is left in an inconsistent state
+# after kexec. We thus disable it
+# in the balena bootloader and defer its'
+# loading to the kernel
+BALENA_CONFIGS[no_sdma] = " \
+    CONFIG_IMX_SDMA=n \
     "
 
 # We need USB for keybaords and USB sticks but not much else
