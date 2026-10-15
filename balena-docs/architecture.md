@@ -36,7 +36,7 @@ BalenaOS uses [NetworkManager](https://wiki.gnome.org/Projects/NetworkManager) a
 
 ### Avahi
 
-In order to improve the [development experience](https://www.balena.io/docs/learn/develop/local-mode/) of balenaOS, there is an [Avahi](https://wiki.archlinux.org/index.php/Avahi) daemon that starts advertising the device as `balena.local` or `<hostname>.local` on boot if the image is a development image.
+In order to improve the [development experience](https://www.balena.io/docs/learn/develop/local-mode/) of balenaOS, there is an [Avahi](https://wiki.archlinux.org/index.php/Avahi) daemon that starts advertising the device as `balena.local` or `<hostname>.local` on boot.
 
 ### Dnsmasq
 
@@ -86,14 +86,12 @@ A diagram of our read-only rootfs can be seen below:
 
 Each version of balenaOS is available in development and production variants, both built from the same source, but with slightly differing feature sets. The development images enable a number of useful features while developing, namely:
 
-* Passwordless [SSH access](https://www.balena.io/docs/learn/manage/ssh-access/) into balenaOS on port 22222 as the root user.
-* Docker socket exposed on port `2375`, which allows `balena push` / `build` / `deploy`, that enables remote Docker builds on the target device (see [Deploy to your Fleet](https://www.balena.io/docs/learn/deploy/deployment/)).
 * Getty console attached to tty1 and serial.
 * Capable of entering [local mode](https://www.balena.io/docs/learn/develop/local-mode/) for rapid development of application containers locally.
 
 __Note:__ Raspberry Pi devices don’t have Getty attached to serial.
 
-Production images disable passwordless root access, and an SSH key must be [added](https://www.balena.io/docs/reference/OS/configuration/#sshkeys) to `config.json` to access a production image.
+Both variants require an SSH key to access the device on port 22222. [Add](https://www.balena.io/docs/reference/OS/configuration/#sshkeys) a key to `config.json`, or use a key registered with a balenaCloud user. `balena push` reaches the engine by forwarding `/var/run/balena-engine.sock` through SSH.
 
 In both development and production versions of balenaOS, logs are written to an 8 MB journald RAM buffer in order to avoid wear on the flash storage used by most of the supported boards.
 

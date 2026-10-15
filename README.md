@@ -279,9 +279,16 @@ To enable development mode at runtime:
 "developmentMode": true
 ```
 
-By default development mode enables unauthenticated SSH logins unless custom SSH keys are present, in which case SSH key access is enforced.
+Development mode provides serial console passwordless login and enables local mode development.
 
-Also, development mode provides serial console passwordless login as well as an exposed balena engine socket to use in local mode development.
+SSH access always requires a key, either from [sshKeys](#sshkeys) or from a balenaCloud user. Without a key, no one can log in over the network.
+
+The balena engine socket is not exposed on the network. Local mode tools reach it through SSH, by forwarding `/var/run/balena-engine.sock`:
+
+```sh
+ssh -p 22222 -L /tmp/balena-engine.sock:/var/run/balena-engine.sock root@<device-ip>
+DOCKER_HOST=unix:///tmp/balena-engine.sock docker info
+```
 
 ### os
 

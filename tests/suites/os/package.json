@@ -12,6 +12,7 @@
 		"request": "^2.88.0",
 		"request-promise": "^4.2.4",
 		"semver": "^7.3.8",
+		"ssh2": "^1.17.0",
 		"tar-stream": "^2.1.0"
 	}
 }
