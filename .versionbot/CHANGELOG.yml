@@ -1,4 +1,21 @@
 - commits:
+    - subject: "classes/balena-bootloader: Don't include SDMA driver"
+      hash: 79bd493aa399cbdeb99c8000b1f8466ec6f4bf0a
+      body: |
+        ... because this causes uart transfers to fail on
+        the iot-gate-imx8plus devices after kexec. We thus
+        leave loading of this module to the kernel.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 8.0.15
+  title: ""
+  date: 2026-10-15T09:08:13.459Z
+- commits:
     - subject: "os-extra-firmware.service: use bash instead of sh"
       hash: b863800280e307f9c123713d3a35e91417e99568
       body: >

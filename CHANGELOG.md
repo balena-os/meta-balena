@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.15
+## (2026-10-15)
+
+* classes/balena-bootloader: Don't include SDMA driver [Alexandru Costache]
+
 # v8.0.14
 ## (2026-10-01)
 
