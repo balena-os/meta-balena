@@ -17,7 +17,6 @@
 set -o errexit
 
 . /usr/sbin/balena-config-vars
-. /usr/bin/rollback-parse-bootloader
 # shellcheck disable=SC1091
 . /usr/libexec/os-helpers-bootenv
 
