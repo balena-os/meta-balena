@@ -1,0 +1,8 @@
+# Undo systemd 252 device tree alias names (end0)
+[Match]
+Property=ID_NET_NAME_ONBOARD=end*
+
+[Link]
+NamePolicy=keep kernel database slot path
+AlternativeNamesPolicy=database slot path
+MACAddressPolicy=persistent
