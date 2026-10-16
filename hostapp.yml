@@ -14,10 +14,11 @@ services:
         - "images/__MACHINE__/VERSION_HOSTOS"
         - "images/__MACHINE__/image*.json"
         - "images/__MACHINE__/compressed*/part-*.deflate"
-        - "images/__MACHINE__/*.manifest"
+        - "images/__MACHINE__/balena-image-__MACHINE__.manifest"
+        - "images/__MACHINE__/balena-image-flasher-__MACHINE__.manifest"
         - "images/__MACHINE__/kernel_modules_headers.tar.gz"
         - "images/__MACHINE__/rpi-eeprom/secure-boot-lock/"
-        - "cyclonedx-export/**/*.json"
+        - "cyclonedx-export/balena-image*/*.json"
         - "licenses/**"
     labels:
       io.balena.image.store: 'root'
