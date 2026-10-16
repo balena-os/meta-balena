@@ -1,4 +1,326 @@
 - commits:
+    - subject: "rollback-health: stop ordering after balena.service"
+      hash: be10fd3bf78176fee3c38ba45a790cd721411b61
+      body: |
+        Ordering after balena.service meant that if the engine is stuck the
+        rollbacks won't run.
+
+        Removing the ordering fixes this with the caveat that the rollback
+        starts counting from boot.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kexec: strip every inherited balena_kernel_abi token"
+      hash: 0665c8010eb4aadc5f8d9a01de92dab61c2bbc3c
+      body: >
+        The sed had no g flag, so only the first balena_kernel_abi token was
+
+        removed from the inherited command line. Stage 2 appends a fresh value
+
+        only when it selects an override, so on a stock boot a leftover token
+
+        reached the next kernel.
+
+
+        Fix even if nobody can exploit this today as the stage 1 command line is
+        signed,
+
+        and the LUKS grub template loads only bootcount, resin_root_part and
+
+        upgrade_available from the unauthenticated block.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "initrdscripts: reject a malformed kernel override ABI"
+      hash: 9bbcfacaacd50c1e4ae02e23fe5d1964f3b90a7c
+      body: |
+        Accept only a 64-digit sha256 as a kernel override and fall back to the
+        stock kernel for anything else.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: balena-extension-runtime to v2.0.1
+      hash: 34d6f7dc881cfb9e1d6416c46a6975159ad7d7be
+      body: |
+        Update from v1.2.1 to v2.0.1
+      footer:
+        Change-type: major
+        change-type: major
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: Update mobynit to v1.2.0
+      hash: e7aceecd3e0ca4cb9ffb654cbfdba970b40f9e84
+      body: |
+        Update from v1.1.0 to v 1.2.0
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docs: add host extensions development"
+      hash: 2fca3fb2f24d141168737959c85147f53488833c
+      body: |
+        Add a developer guide to creating extensions using the in-tree examples
+        and the raspberrypi device repo as reference.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-override-hooks: move activation into the extension runtime"
+      hash: facea21eb70aaf859f4554f0fd147680879b2817
+      body: |
+        The runtime arms the override and judges it, so the create, start and
+        deactivate hooks, and the bootenv and extension helpers they shared,
+        have no callers left.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kexec: do not boot an override no extension claims"
+      hash: 6711055b1206cb00f12343b090df89070e3ffb71
+      body: |
+        Refuse an override whose deployed extension is missing. A pending purge
+        answers the same way: the data partition is about to be wiped, so
+        mobynit reports no claims and this boot does not run a kernel whose
+        module tree it is not going to mount.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-rollback: validate a kernel override armed by an extension"
+      hash: 42fafe76ab87597577eff7da53375ed155ef4569
+      body: |
+        An override can be armed with no host OS update in progress, so nothing
+        runs the healthchecks that would catch it bricking the device.
+        extension-rollback.service runs balena-extension-manager validate on
+        every boot: it stands aside while a HUP is in flight, then settles, runs
+        the healthchecks and either commits the ABI for the running slot or
+        rejects it.
+
+        Inside a HUP the verdict stays rollback-health's, delegated to the same
+        binary through hup commit and hup reject. Neither call can stop the
+        update, so a failure only warns.
+
+        The unit also sets TimeoutStartSec=20min. The value sits above the bound
+        that the retry options already set, so systemd cannot cut short a
+        legitimate schedule. Without the timeout a hang stays silent, with no
+        verdict and no failure.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-rollback: record the ABI a rollback rejected"
+      hash: 18aaf438218358eb8669e2d6c3cf396a6b25bdef
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-bootenv: withdraw a committed override from every slot"
+      hash: f54ae0c2c992d55f05f6d6e886ba36cd212b1a0f
+      body: >
+        The committed override snapshot is what a rollback restores, so it must
+
+        stop naming an ABI whose extension is gone; otherwise a later restore
+
+        re-arms an override that can no longer be resolved.
+
+
+        bootenv_withdraw_committed_override forgets one slot's snapshot, and
+        only
+
+        when that snapshot names the ABI being withdrawn: a different override
+
+        the slot has already proven healthy is left alone.
+
+        bootenv_withdraw_committed_override_all applies it to every slot,
+        because
+
+        the extension deployment those snapshots point at is shared by both.
+
+
+        bootenv_commit_override now records the kernel this boot is running,
+        read
+
+        from the kernel command line, rather than the live bootenv value. The
+        two
+
+        disagree between arming an override and rebooting into it, and only the
+
+        running kernel is the one the slot has validated.
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena: order the engine after the boot partition mounts"
+      hash: 3ced96bcedfd5686a90025a14706560171299fab
+      body: >
+        Activating a kernel override writes the boot environment, and the
+
+        extension runtime fails the start when the boot partition is not
+        mounted.
+
+
+        The non-encrypted boot unit is installed under BALENA_NONENC_BOOT_LABEL
+
+        and only on signed builds, so its name comes from a substitution. It
+
+        expands to nothing elsewhere, where resin-boot is that mount.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-rollback: write the boot environment through os-helpers"
+      hash: 3436427018a6db73d8691fb5c5b7ed9b41803136
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: write the bootenv through os-helpers"
+      hash: 36239616699b686642f58699528ca64f0b1b0911
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-bootloader-config: write the bootenv in place"
+      hash: d6778514ecfffeb5c76683523e64578b43cf009e
+      body: |
+        Replacing the file swaps the inode out from under the lock a concurrent
+        writer holds on the block, so that writer's update lands in a file
+        nothing will read again. Edit the block in place for the bootenv, and
+        depend on os-helpers-bootenv for the helpers that do it.
+
+        The other bootloader files keep the copy-and-move path: nothing else
+        shares them with a writer outside this script.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "os-helpers-bootenv: serialise the block writers on a lock"
+      hash: 702bb19e8b9f68741c7c0c33138bbb7edd8e3e1e
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "hostapp-update-hooks: do not let one commit hook cancel the rest"
+      hash: 3a07bd93aa1676ccb6c8e0aab0fb0dab9ae6b209
+      body: |
+        The forward-commit loop ran under set -e semantics through run_hook, so
+        the first hook to fail ended the loop and every hook sorting after it
+        never ran.
+
+        Commit hooks run after the point of no return and are independent
+        cleanup: there is nothing to abort and nothing to roll back, so a
+        failure is worth a warning and nothing more.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-tracing-extension: add tracing extension"
+      hash: a2b46caa83fcaa6534050ac31fe3ec9c9fef2311
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-ebpf-extension: add recipe for ebpf hostapp extension"
+      hash: f8b99c255fbf0703736f12937ed801eaa2042ae2
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "classes: add shared hostapp extensions support"
+      hash: f587ed950b010cdf8a41bc1a0934997f2f3a9103
+      body: >
+        kernel.bbclass derives KERNEL_DEPLOYSUBDIR from KERNEL_PACKAGE_NAME, so
+        an
+
+        extension kernel deploys its images into a subdirectory. The signing
+        classes
+
+        install to the top of the deploy directory. The base kernel already
+        wrote the
+
+        same basenames there.
+
+
+        sign-gpg now installs to DESTDIR, as sign-efi already does. DESTDIR
+        defaults
+
+        to DEPLOYDIR and kernel-extension points it at its own subdirectory.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 9.0.0
+  title: ""
+  date: 2026-10-16T13:29:08.576Z
+- commits:
     - subject: "classes/balena-bootloader: Don't include SDMA driver"
       hash: 79bd493aa399cbdeb99c8000b1f8466ec6f4bf0a
       body: |

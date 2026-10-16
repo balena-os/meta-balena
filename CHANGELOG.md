@@ -1,6 +1,30 @@
 Change log
 -----------
 
+# v9.0.0
+## (2026-10-16)
+
+* rollback-health: stop ordering after balena.service [Alex Gonzalez]
+* kexec: strip every inherited balena_kernel_abi token [Alex Gonzalez]
+* initrdscripts: reject a malformed kernel override ABI [Alex Gonzalez]
+* balena-extension-runtime to v2.0.1 [Alex Gonzalez]
+* Update mobynit to v1.2.0 [Alex Gonzalez]
+* docs: add host extensions development [Alex Gonzalez]
+* kernel-override-hooks: move activation into the extension runtime [Alex Gonzalez]
+* kexec: do not boot an override no extension claims [Alex Gonzalez]
+* balena-rollback: validate a kernel override armed by an extension [Alex Gonzalez]
+* balena-rollback: record the ABI a rollback rejected [Alex Gonzalez]
+* os-helpers-bootenv: withdraw a committed override from every slot [Alex Gonzalez]
+* balena: order the engine after the boot partition mounts [Alex Gonzalez]
+* balena-rollback: write the boot environment through os-helpers [Alex Gonzalez]
+* hostapp-update-hooks: write the bootenv through os-helpers [Alex Gonzalez]
+* os-helpers-bootloader-config: write the bootenv in place [Alex Gonzalez]
+* os-helpers-bootenv: serialise the block writers on a lock [Alex Gonzalez]
+* hostapp-update-hooks: do not let one commit hook cancel the rest [Alex Gonzalez]
+* balena-tracing-extension: add tracing extension [Alex Gonzalez]
+* balena-ebpf-extension: add recipe for ebpf hostapp extension [Alex Gonzalez]
+* classes: add shared hostapp extensions support [Alex Gonzalez]
+
 # v8.0.15
 ## (2026-10-15)
 
