@@ -14,7 +14,7 @@ mountdata_enabled() {
 
 mountdata_run() {
     ACTIVE_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
-    [ -n "${ACTIVE_ABI}" ] || return 0
+    bootenv_is_kernel_abi "${ACTIVE_ABI}" || return 0
 
     data_partition_path="$(get_state_path_from_label "resin-data")"
     if ! wait4file "$data_partition_path" "300"; then

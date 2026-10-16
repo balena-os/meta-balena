@@ -18,6 +18,8 @@ set -o errexit
 
 . /usr/sbin/balena-config-vars
 . /usr/bin/rollback-parse-bootloader
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
 
 echo "Rollback: Stopping further rollbacks"
 echo "Rollback: Setting upgrade_available to 0 and removing breadcrumbs"
@@ -29,14 +31,16 @@ rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/bootcount.env" || true
 for ENV_FILE_NAME in bootenv grubenv; do
 	ENV_FILE=$(find -L "${BALENA_NONENC_BOOT_MOUNTPOINT}" -name "${ENV_FILE_NAME}")
 	if [ -f "${ENV_FILE}" ]; then
-		"${CAT}" "${ENV_FILE}" | sed "s#bootcount=.*#bootcount=0 #g" | "${WR}" "${ENV_FILE}" || true
+		# One write, not two rewrites of the block
+		bootenv_edit "${ENV_FILE}" set bootcount=0 upgrade_available=0 || true
 	fi
 done
 sync -f /mnt/state
 sync -f "${BALENA_NONENC_BOOT_MOUNTPOINT}"
 
 echo "Rollback: Following bootloader file ${BOOTLOADER_FILE} found"
-if [ -f "${BOOTLOADER_FILE}" ]; then
+# Plain text. The loop above wrote the grub-env blocks.
+if [ "${BOOTLOADER_FILE##*/}" = "resinOS_uEnv.txt" ] && [ -f "${BOOTLOADER_FILE}" ]; then
 	"${CAT}" "${BOOTLOADER_FILE}" | sed "s#upgrade_available=.*#upgrade_available=0#g" | "${WR}" "${BOOTLOADER_FILE}"
 fi
 

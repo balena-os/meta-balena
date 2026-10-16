@@ -9,12 +9,12 @@ GO_IMPORT = "github.com/balena-os/balena-extension-runtime"
 SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=master;protocol=https \
     file://hostapp-extensions-cleanup.service \
     "
-SRCREV = "b9f37ff2ca2bdc60760f824fe1b8d9cec514eff0"
-PV = "1.2.1+git${SRCPV}"
+SRCREV = "610a300f5212ef406b026219a67dded0529a5ac0"
+PV = "2.0.1+git${SRCPV}"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
 
-EXTRA_OEMAKE += "VERSION=${PV}"
+EXTRA_OEMAKE += "VERSION=${PV} BOOT_MOUNT=${BALENA_NONENC_BOOT_MOUNT}"
 
 do_compile[network] = "1"
 do_compile() {
@@ -39,8 +39,6 @@ do_install() {
 }
 
 SYSTEMD_SERVICE:${PN} = "hostapp-extensions-cleanup.service"
-
-RDEPENDS:${PN} += "os-helpers-extensions"
 
 FILES:${PN} += " \
     ${systemd_unitdir}/system/hostapp-extensions-cleanup.service \

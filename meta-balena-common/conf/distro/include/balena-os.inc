@@ -114,6 +114,11 @@ KERNEL_INITRAMFS = "-initramfs"
 INITRAMFS_TASK = ""
 IMAGE_NAME_SUFFIX = ""
 
+# The extension kernel usually shares the base kernel's upstream version, so
+# its consumers pick it by deploy directory, never by version. The last path
+# component must match KERNEL_PACKAGE_NAME in kernel-extension.bbclass.
+KERNEL_EXTENSION_DEPLOY_DIR = "${DEPLOY_DIR_IMAGE}/kernel-extension"
+
 # resinOS defaults to ipk packages
 PACKAGE_CLASSES = "package_ipk"
 
@@ -141,6 +146,9 @@ PREFERRED_VERSION_upx-native:arm = "3.94"
 
 # let's pin linux-firmware to the version we imported from Poky scarthgap release
 PREFERRED_VERSION_linux-firmware = "20240909"
+
+# meta-oe restricts bpftool to x86_64; the ebpf extension needs aarch64 too.
+COMPATIBLE_HOST:pn-bpftool = "(x86_64|aarch64).*-linux"
 
 # Go version from walnascar, meets balena-engine v25 requirement
 GOVERSION = "1.24.6"

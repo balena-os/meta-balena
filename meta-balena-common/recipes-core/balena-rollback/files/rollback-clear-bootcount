@@ -18,13 +18,15 @@ set -o errexit
 
 . /usr/sbin/balena-config-vars
 . /usr/bin/rollback-parse-bootloader
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-bootenv
 
 if [ -f "/mnt/state/rollback-altboot-breadcrumb" ]; then
 	echo "Rollback: Clearing bootcount"
 	# Clear grub bootcount
 	grub_env=$(find -L "${BALENA_NONENC_BOOT_MOUNTPOINT}" -name grubenv)
 	if [ -f "${grub_env}" ]; then
-		"${CAT}" "${grub_env}" | sed "s#bootcount=.*#bootcount=0 #g" | "${WR}" "${grub_env}" || true
+		bootenv_set "${grub_env}" bootcount 0 || true
 	else
 		# Clear u-boot bootcount
 		rm -f "${BALENA_NONENC_BOOT_MOUNTPOINT}/bootcount.env" || true
