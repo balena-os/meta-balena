@@ -1,0 +1,9 @@
+# Flowzone runs the sut service and takes its exit code as the result.
+# Locally: docker compose -f docker-compose.test.yml run --build --rm sut
+services:
+  sut:
+    build:
+      context: .
+      dockerfile: tests/unit/Dockerfile
+    volumes:
+      - .:/src:ro
