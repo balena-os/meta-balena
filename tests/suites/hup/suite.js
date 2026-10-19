@@ -193,6 +193,7 @@ const doHUP = async (that, test, mode, target) => {
 	await that.archiver.add(that.id, hupLogPath);
 
 	test.comment(`Finished HUP`);
+	return hupLog;
 };
 
 const initDUT = async (that, test, target) => {
