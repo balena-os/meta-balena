@@ -15,6 +15,7 @@ SRC_URI = " \
 	file://0002-Add-dnsu2t-module-to-convert-DNS-UDP-to-DNS-TCP.patch \
 	file://0003-Add-OS-dependent-default-configuration-values.patch \
 	file://0004-dnsu2t.c-Fix-dns-relay-when-there-is-no-TFO-cookie-c.patch \
+	file://0005-Print-timeval-members-with-64-bit-safe-formats.patch \
 	file://README.ignore \
 	file://redsocks.conf.ignore \
 "
