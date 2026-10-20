@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.0.1
+## (2026-10-20)
+
+* redsocks: Fix segfault on startup with 64-bit time_t [guille-vega]
+
 # v9.0.0
 ## (2026-10-16)
 

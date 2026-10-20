@@ -1,4 +1,25 @@
 - commits:
+    - subject: "redsocks: Fix segfault on startup with 64-bit time_t"
+      hash: db149444a60ab040986264f1eee707ebb41298d7
+      body: |
+        Since Yocto 4.3, 32-bit ARM is built with 64-bit time_t, so the
+        "%lu"/"%ld" conversions used for struct timeval members shift the
+        remaining arguments and crash on the first log message. Print tv_sec as
+        (unsigned) long long with %llu/%lld and tv_usec as (unsigned) long,
+        which is correct for both 32 and 64-bit time_t.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Changelog-entry: "redsocks: Fix segfault on startup with 64-bit time_t"
+        changelog-entry: "redsocks: Fix segfault on startup with 64-bit time_t"
+        Signed-off-by: guille-vega <guillermo.vega@balena.io>
+        signed-off-by: guille-vega <guillermo.vega@balena.io>
+      author: guille-vega
+      nested: []
+  version: 9.0.1
+  title: ""
+  date: 2026-10-20T13:02:30.714Z
+- commits:
     - subject: "rollback-health: stop ordering after balena.service"
       hash: be10fd3bf78176fee3c38ba45a790cd721411b61
       body: |
