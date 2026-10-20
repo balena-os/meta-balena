@@ -1,0 +1,93 @@
+From: guille-vega <guillermo.vega@balena.io>
+Subject: [PATCH] Print struct timeval members with 64-bit safe format specifiers
+
+On 32-bit targets built with 64-bit time_t (-D_TIME_BITS=64) tv_sec is
+64 bits wide, so passing it to a "%lu" or "%ld" conversion consumes the
+wrong number of argument slots on ARM EABI and the following "%s"
+arguments are read from garbage. The first log message then crashes
+redsocks.
+
+Print tv_sec as (unsigned) long long with "%llu"/"%lld" and tv_usec as
+(unsigned) long, which is correct whatever the width of time_t is.
+
+Upstream-Status: Pending
+Signed-off-by: guille-vega <guillermo.vega@balena.io>
+---
+diff --git a/log.c b/log.c
+index cada8db..457717a 100644
+--- a/log.c
++++ b/log.c
+@@ -53,9 +53,9 @@ static void fprint_timestamp(
+ 	 *      then to die and stop service */
+ 	const char* sprio = getprioname(priority);
+ 	if (appendix)
+-		fprintf(fd, "%lu.%6.6lu %s %s:%u %s(...) %s: %s\n", tv.tv_sec, tv.tv_usec, sprio, file, line, func, message, appendix);
++		fprintf(fd, "%llu.%6.6lu %s %s:%u %s(...) %s: %s\n", (unsigned long long)tv.tv_sec, (unsigned long)tv.tv_usec, sprio, file, line, func, message, appendix);
+ 	else
+-		fprintf(fd, "%lu.%6.6lu %s %s:%u %s(...) %s\n", tv.tv_sec, tv.tv_usec, sprio, file, line, func, message);
++		fprintf(fd, "%llu.%6.6lu %s %s:%u %s(...) %s\n", (unsigned long long)tv.tv_sec, (unsigned long)tv.tv_usec, sprio, file, line, func, message);
+ }
+ 
+ static void stderr_msg(const char *file, int line, const char *func, int priority, const char *message, const char *appendix)
+diff --git a/redsocks.c b/redsocks.c
+index 38c8f14..02800e2 100644
+--- a/redsocks.c
++++ b/redsocks.c
+@@ -694,10 +694,10 @@ void redsocks_drop_client(redsocks_client *client)
+ 		struct timeval now, idle;
+ 		redsocks_gettimeofday(&now); // FIXME: use CLOCK_MONOTONIC
+ 		timersub(&now, &client->last_event, &idle);
+-		redsocks_log_error(client, LOG_INFO, "dropping client (%s), relay (%s), idle %ld.%06lds",
++		redsocks_log_error(client, LOG_INFO, "dropping client (%s), relay (%s), idle %lld.%06lds",
+ 			redsocks_event_str( (~client->client_evshut) & (EV_READ|EV_WRITE) ),
+ 			redsocks_event_str( (~client->relay_evshut) & (EV_READ|EV_WRITE) ),
+-			idle.tv_sec, idle.tv_usec);
++			(long long)idle.tv_sec, (long)idle.tv_usec);
+ 	}
+ 
+ 	if (client->instance->relay_ss->fini)
+@@ -1053,7 +1053,7 @@ static void conn_pressure()
+ 		tvdelay = next;
+ 	}
+ 
+-	log_error(LOG_WARNING, "accept: backing off for %ld.%06lds", tvdelay.tv_sec, tvdelay.tv_usec);
++	log_error(LOG_WARNING, "accept: backing off for %lld.%06lds", (long long)tvdelay.tv_sec, (long)tvdelay.tv_usec);
+ 
+ 	if (event_add(&accept_backoff_ev, &tvdelay) != 0)
+ 		log_errno(LOG_ERR, "event_add");
+@@ -1304,7 +1304,7 @@ static uint32_t redsocks_debug_dump_instance(redsocks_instance *instance, struct
+ 		timersub(now, &client->last_event, &idle);
+ 
+ 		if (!instance->config.use_splice) {
+-			redsocks_log_error(client, LOG_NOTICE, "client: %i (%s)%s%s, relay: %i (%s)%s%s, age: %ld.%06ld sec, idle: %ld.%06ld sec.",
++			redsocks_log_error(client, LOG_NOTICE, "client: %i (%s)%s%s, relay: %i (%s)%s%s, age: %lld.%06ld sec, idle: %lld.%06ld sec.",
+ 				client->client ? bufferevent_getfd(client->client) : -1,
+ 				client->client ? redsocks_event_str(client->client->enabled) : "NULL",
+ 				s_client_evshut[0] ? " " : "",
+@@ -1313,12 +1313,12 @@ static uint32_t redsocks_debug_dump_instance(redsocks_instance *instance, struct
+ 				client->relay ? redsocks_event_str(client->relay->enabled) : "NULL",
+ 				s_relay_evshut[0] ? " " : "",
+ 				s_relay_evshut,
+-				age.tv_sec, age.tv_usec,
+-				idle.tv_sec, idle.tv_usec);
++				(long long)age.tv_sec, (long)age.tv_usec,
++				(long long)idle.tv_sec, (long)idle.tv_usec);
+ 		} else {
+ 			redsocks_pump *pump = red_pump(client);
+ 
+-			redsocks_log_error(client, LOG_NOTICE, "client: buf %i (%s) splice %i (%s/%s) pipe[%d, %d]=%zu%s%s, relay: buf %i (%s) splice %i (%s/%s) pipe[%d, %d]=%zu%s%s, age: %ld.%06ld sec, idle: %ld.%06ld sec.",
++			redsocks_log_error(client, LOG_NOTICE, "client: buf %i (%s) splice %i (%s/%s) pipe[%d, %d]=%zu%s%s, relay: buf %i (%s) splice %i (%s/%s) pipe[%d, %d]=%zu%s%s, age: %lld.%06ld sec, idle: %lld.%06ld sec.",
+ 				client->client ? bufferevent_getfd(client->client) : -1,
+ 				client->client ? redsocks_event_str(client->client->enabled) : "NULL",
+ 				event_get_fd(&pump->client_read),
+@@ -1341,8 +1341,8 @@ static uint32_t redsocks_debug_dump_instance(redsocks_instance *instance, struct
+ 				s_relay_evshut[0] ? " " : "",
+ 				s_relay_evshut,
+ 
+-				age.tv_sec, age.tv_usec,
+-				idle.tv_sec, idle.tv_usec);
++				(long long)age.tv_sec, (long)age.tv_usec,
++				(long long)idle.tv_sec, (long)idle.tv_usec);
+ 		}
+ 	}
+ 	log_error(LOG_NOTICE, "End of client list. %d clients.", conn);
