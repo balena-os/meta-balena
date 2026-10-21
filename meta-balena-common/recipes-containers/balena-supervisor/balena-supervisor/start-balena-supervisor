@@ -25,6 +25,21 @@ if [ -f "${BALENA_ROOT_CA_FILE}" ]; then
     NODE_EXTRA_CA_CERTS="/mnt/root/${BALENA_ROOT_CA_FILE}"
 fi
 
+# Make the supervisor trust the hostOS CA bundle instead of the bundle in its
+# image, so a hostOS update also updates the supervisor trust store. The
+# supervisor node uses the OpenSSL default store, which reads these variables.
+# Never set them empty: an empty SSL_CERT_FILE leaves OpenSSL with no roots.
+HOST_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+if [ -s "${HOST_CA_BUNDLE}" ]; then
+    SSL_CERT_FILE="/mnt/root${HOST_CA_BUNDLE}"
+    # Hide the image CA directory, which can hold roots the hostOS distrusts
+    SSL_CERT_DIR="/nonexistent"
+else
+    echo "${HOST_CA_BUNDLE} is missing or empty, the supervisor uses the CA bundle in its image" >&2
+    SSL_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+    SSL_CERT_DIR="/etc/ssl/certs"
+fi
+
 hasValueChanged() {
     KEY="$1"
     NEW_VALUE="$2"
@@ -48,6 +63,8 @@ configIsUnchanged() {
     hasValueChanged "LED_FILE"              "${LED_FILE}" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "LISTEN_PORT"           "$LISTEN_PORT" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "NODE_EXTRA_CA_CERTS"   "$NODE_EXTRA_CA_CERTS" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
+    hasValueChanged "SSL_CERT_FILE"         "$SSL_CERT_FILE" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
+    hasValueChanged "SSL_CERT_DIR"          "$SSL_CERT_DIR" "$SUPERVISOR_CONTAINER_ENV_JSON" || \
     hasValueChanged "SUPERVISOR_IMAGE"      "${SUPERVISOR_IMAGE}" "$SUPERVISOR_CONTAINER_ENV_JSON"; then
         echo "Container config has changed!"
         return 1
@@ -80,6 +97,8 @@ runSupervisor() {
         -e "LED_FILE=${LED_FILE}" \
         -e "LISTEN_PORT=$LISTEN_PORT" \
         -e "NODE_EXTRA_CA_CERTS=${NODE_EXTRA_CA_CERTS}" \
+        -e "SSL_CERT_FILE=${SSL_CERT_FILE}" \
+        -e "SSL_CERT_DIR=${SSL_CERT_DIR}" \
         -e "SUPERVISOR_IMAGE=${SUPERVISOR_IMAGE}" \
         "${SUPERVISOR_IMAGE}"
 }

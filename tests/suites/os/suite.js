@@ -463,6 +463,7 @@ module.exports = {
 		'./tests/led',
 		'./tests/modem',
 		'./tests/config-json',
+		'./tests/ca-certificates',
 		'./tests/boot-splash',
 		'./tests/connectivity',
 		'./tests/engine-socket',
