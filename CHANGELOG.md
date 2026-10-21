@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v7.4.2
+## (2026-10-21)
+
+* start-balena-supervisor: Trust the hostOS CA bundle [Shaun Mulligan]
+* kernel-headers-test: Pin apt to the snapshot archive [Kyle Harding]
+* kernel-headers-test: Replace deprecated balenalib base with debian:bullseye [Kyle Harding]
+* extract-balena-ca: Rebuild the CA bundle when its inputs change [Kyle Harding]
+* ca-certificates: Distrust roots chaining to compromised eMudhra CAs [Kyle Harding]
+
 # v7.4.1
 ## (2026-06-11)
 
