@@ -1,4 +1,148 @@
 - commits:
+    - subject: "start-balena-supervisor: Trust the hostOS CA bundle"
+      hash: 9d00a0532064b19929fe04863866b79d650bb0c3
+      body: >
+        The supervisor trusts the CA bundle in its image. A hostOS update that
+
+        distrusts roots, like the eMudhra fix (CVE-2026-111943), leaves the
+
+        supervisor trusting them until a new supervisor image ships.
+
+
+        The supervisor node is built with --openssl-use-def-ca-store, so it
+        reads
+
+        SSL_CERT_FILE and SSL_CERT_DIR. Point SSL_CERT_FILE at the hostOS bundle
+
+        through the existing /mnt/root mount, and hide the image CA directory.
+
+        Fall back to the image defaults when the hostOS bundle is missing,
+        because
+
+        an empty SSL_CERT_FILE leaves the supervisor with no roots.
+
+
+        Add both variables to configIsUnchanged, so a hostOS update recreates an
+
+        existing supervisor container.
+      footer:
+        See: https://emudhra.we-have-a-problem.com
+        see: https://emudhra.we-have-a-problem.com
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Shaun Mulligan
+      nested: []
+    - subject: "kernel-headers-test: Pin apt to the snapshot archive"
+      hash: 7efe76a08f20d39034fd092055cd1367b0b586f5
+      body: >
+        Debian 11 bullseye LTS ended 2026-08-31. Packages are being removed from
+        the
+
+        live mirrors while bullseye-security still advertises them, so apt 404s
+        on
+
+        libc-dev-bin, libssl-dev and linux-libc-dev. bullseye-security has not
+        landed
+
+        on archive.debian.org yet, so there is no live mirror serving a
+        consistent set.
+
+
+        Point apt at the snapshot archive for 20260824T000000Z, the instant this
+        image
+
+        tag was built from. Index and pool then come from the same snapshot and
+        cannot
+
+        disagree. Snapshot Release files are historical so their Valid-Until has
+        passed,
+
+        which needs Acquire::Check-Valid-Until "false".
+
+
+        The base image already ships these lines commented out in
+
+        /etc/apt/sources.list, so this only chooses them.
+      footer:
+        Change-type: patch
+        change-type: patch
+        See: https://github.com/balena-os/meta-balena/issues/3938
+        see: https://github.com/balena-os/meta-balena/issues/3938
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "kernel-headers-test: Replace deprecated balenalib base with
+        debian:bullseye"
+      hash: 69e29d6bb848b3a9ed30a4bd8f9a2c03cba4a613
+      body: >
+        The balenalib base images were deprecated some time ago, and this one
+        also
+
+        pinned a dated tag from 2023 that no longer receives updates. Use the
+
+        upstream debian image instead, pinned to bullseye-20260824. The recipe
+
+        installs everything it needs with apt, so nothing from the balenalib
+        layer
+
+        was being used.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "extract-balena-ca: Rebuild the CA bundle when its inputs change"
+      hash: a11a4519f76768893e2890c5605259a330023387
+      body: |
+        When /usr/share/ca-certificates/balena is not empty, /etc/ssl/certs is
+        bind mounted from the state partition. The bundle was only rebuilt when
+        the custom CA in config.json changed, so a hostOS update never
+        refreshed the system roots in it. Removing the CA from config.json
+        skipped the rebuild entirely.
+
+        Hash the system roots, ca-certificates.conf and the custom CA, and
+        rebuild when the hash differs from the one stored next to the bundle.
+        A failed rebuild logs an error but doesn't fail the unit, since
+        balena-supervisor requires it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+    - subject: "ca-certificates: Distrust roots chaining to compromised eMudhra CAs"
+      hash: fbb0605ab2d8d4a4957b31a4c24434da41f6a6f9
+      body: |
+        The private keys of eight eMudhra intermediates are compromised
+        (CVE-2026-111943). They are revoked, but nothing in balenaOS checks
+        revocation, so any client using the system bundle still accepts them.
+
+        The intermediates chain to emSign ECC Root CA - G3 via a cross-sign,
+        and to Comodo AAA Services root via a Sectigo cross-sign. Both roots
+        are trusted in ca-certificates 20211016 (kirkstone). Only the emSign
+        root is still trusted in 20260816 (scarthgap and later).
+
+        Delete both roots after do_compile so no bundle includes them. That
+        covers native too, which the signing classes use to reach SIGN_API.
+      footer:
+        See: https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/0R3XLJL6FuE
+        see: https://groups.google.com/a/mozilla.org/g/dev-security-policy/c/0R3XLJL6FuE
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 6.11.16
+  title: ""
+  date: 2026-10-21T18:48:56.166Z
+- commits:
     - subject: "workflows: remove ESR branch triggers for DT's with no ESR release"
       hash: b7eb32015ee9ab93a2bfc0ed550c73f8d7bb09ea
       body: >
