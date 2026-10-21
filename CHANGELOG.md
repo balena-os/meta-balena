@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v9.0.2
+## (2026-10-21)
+
+* extract-balena-ca: Rebuild the CA bundle when its inputs change [Kyle Harding]
+* ca-certificates: Distrust roots chaining to compromised eMudhra CAs [Kyle Harding]
+
 # v9.0.1
 ## (2026-10-20)
 
