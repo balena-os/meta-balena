@@ -2,47 +2,64 @@
 
 CONFIG_JSON="/mnt/boot/config.json"
 JSON_CA_KEY=".balenaRootCA"
-BALENA_CA_FILE="/usr/share/ca-certificates/balena/balenaRootCA.crt"
+CA_DIR="/usr/share/ca-certificates"
+BALENA_CA_DIR="${CA_DIR}/balena"
+BALENA_CA_FILE="${BALENA_CA_DIR}/balenaRootCA.crt"
 CRTDIR_BIND_SERVICE="bind-etc-ssl-certs.service"
+# Hash of the inputs that built the bundle in the state partition
+BUNDLE_STAMP="/etc/ssl/certs/.balena-bundle-inputs"
 
 . /usr/libexec/os-helpers-logging
 
 RAW_DEST_FILE=$(mktemp)
-if ! jq -e -r "${JSON_CA_KEY}" < "${CONFIG_JSON}" > "${RAW_DEST_FILE}" 2> /dev/null
-then
-  info "The config.json file does not contain custom CA"
-  rm -f "${RAW_DEST_FILE}"
-  exit 0
-fi
-
-info "Found custom CA in config.json"
-
 DEST_FILE=$(mktemp)
-if ! base64 -d "${RAW_DEST_FILE}" > "${DEST_FILE}" 2> /dev/null
+trap 'rm -f "${RAW_DEST_FILE}" "${DEST_FILE}"' EXIT
+
+if jq -e -r "${JSON_CA_KEY}" < "${CONFIG_JSON}" > "${RAW_DEST_FILE}" 2> /dev/null
 then
-  rm -f "${RAW_DEST_FILE}" "${DEST_FILE}"
-  fail "Unable to base64-decode the custom CA from config.json"
+  info "Found custom CA in config.json"
+  if ! base64 -d "${RAW_DEST_FILE}" > "${DEST_FILE}" 2> /dev/null
+  then
+    fail "Unable to base64-decode the custom CA from config.json"
+  fi
+  if diff "${DEST_FILE}" "${BALENA_CA_FILE}" > /dev/null 2>&1
+  then
+    info "The custom CA from config.json is already installed"
+  else
+    info "Adding the custom CA from config.json"
+    cp -a "${DEST_FILE}" "${BALENA_CA_FILE}"
+  fi
+else
+  info "The config.json file does not contain custom CA"
 fi
 
-if diff "${DEST_FILE}" "${BALENA_CA_FILE}" > /dev/null 2>&1
+# An empty balena CA directory means /etc/ssl/certs is the rootfs bundle
+if [ -z "$(ls -A "${BALENA_CA_DIR}")" ]
 then
-  info "The custom CA from config.json is already installed"
-  rm -f "${RAW_DEST_FILE}" "${DEST_FILE}"
   exit 0
 fi
 
-info "Adding the custom CA from config.json"
-
-# Copy new CA to its place
-cp -a "${DEST_FILE}" "${BALENA_CA_FILE}"
-
-# Rebuild the CA bundle - for this we need to make /etc/ssl/certs writable
+# A non-empty balena CA directory means /etc/ssl/certs persists on the state
+# partition. A hostOS update does not refresh it, so rebuild it when the
+# system roots or the custom CA change. The rebuild needs /etc/ssl/certs writable.
 if ! systemctl -q is-active "${CRTDIR_BIND_SERVICE}"
 then
   systemctl start "${CRTDIR_BIND_SERVICE}"
 fi
 
-update-ca-certificates
-sync
+inputs=$(find "${CA_DIR}" /etc/ca-certificates.conf -type f | sort | while read -r f; do cat "${f}"; done | sha256sum)
+if [ "${inputs}" = "$(cat "${BUNDLE_STAMP}" 2> /dev/null)" ]
+then
+  info "The CA bundle is up to date"
+  exit 0
+fi
 
-rm -f "${RAW_DEST_FILE}" "${DEST_FILE}"
+info "Rebuilding the CA bundle"
+if ! update-ca-certificates
+then
+  # Exit 0, because balena-supervisor requires this unit to succeed
+  error "Unable to rebuild the CA bundle"
+  exit 0
+fi
+echo "${inputs}" > "${BUNDLE_STAMP}"
+sync
