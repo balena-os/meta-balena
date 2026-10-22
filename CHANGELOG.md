@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.0.3
+## (2026-10-22)
+
+* start-balena-supervisor: Trust the hostOS CA bundle [Shaun Mulligan]
+
 # v9.0.2
 ## (2026-10-21)
 
