@@ -1,4 +1,353 @@
 - commits:
+    - subject: Update tests/leviathan digest to bac9173
+      hash: 571f56fcc8fb4b93c2249f71a0f59b9637630fc8
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "core/contracts: Update to v2.0.150"
+              hash: 18fd631e06246b8194fc5af204094aea3d9a6c19
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.36.133
+          title: ""
+          date: 2026-09-22T06:46:24.856Z
+        - commits:
+            - subject: Update Node.js
+              hash: 17b2e1ed1544c90d8d63d97c8ff0edef7474a9c7
+              body: |
+                Update node from 22.14.0 to 22.23.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.132
+          title: ""
+          date: 2026-09-02T20:19:30.667Z
+        - commits:
+            - subject: Update actions/checkout action to v7
+              hash: 7c0b1f2bd84b4b3d08b28c566ed1156234d7d56a
+              body: |
+                Update actions/checkout from 6.1.0 to 7.0.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.131
+          title: ""
+          date: 2026-09-01T17:13:24.591Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v25.2.6
+              hash: eec3527a72122438afc5a3c33e19f540ba4cf3fa
+              body: |
+                Update balena-io/balena-cli from 25.1.10 to 25.2.6
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.130
+          title: ""
+          date: 2026-09-01T15:00:10.320Z
+        - commits:
+            - subject: Update debian:bullseye-slim Docker digest to e5b6442
+              hash: b66da6609226bd658c82a52dd6874de712e0b503
+              body: |
+                Update debian
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.129
+          title: ""
+          date: 2026-09-01T13:01:41.531Z
+        - commits:
+            - subject: Update flowzonify to v0.4.2
+              hash: 9758f79bf7a641855e31e223f3cd1652a923a7ca
+              body: |
+                Update flowzonify from 0.0.0 to 0.4.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.128
+          title: ""
+          date: 2026-09-01T12:07:02.931Z
+        - commits:
+            - subject: Update core/contracts digest to 93b3001
+              hash: 7dbf89eccf51f79c8877a6c42a9f836d9c7ea510
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.127
+          title: ""
+          date: 2026-08-31T22:46:41.702Z
+        - commits:
+            - subject: Update GitHub Actions
+              hash: 038a052c3f755ff2427e28668cc97c70b3c5891d
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.126
+          title: ""
+          date: 2026-08-31T20:48:24.022Z
+        - commits:
+            - subject: Update docker/dockerfile:1 Docker digest to ecfaec9
+              hash: fc64fb88bbb075153064a80145255e1df46817c2
+              body: |
+                Update docker/dockerfile
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.125
+          title: ""
+          date: 2026-08-31T18:47:38.756Z
+        - commits:
+            - subject: Update debian:bullseye-slim Docker digest to f313b4b
+              hash: 6f3ff3ca4c85254bb08941b74b1e91953f4a9f7e
+              body: |
+                Update debian
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.124
+          title: ""
+          date: 2026-08-15T03:01:13.603Z
+        - commits:
+            - subject: Update core/contracts digest to 410a252
+              hash: 8a21458fb5fd4dafdb707807dbf8c280e639abe9
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.123
+          title: ""
+          date: 2026-08-15T01:41:19.777Z
+        - commits:
+            - subject: Update alpine Docker tag to v3.24.1
+              hash: 4f2b145b0cfeede1cc8711015794b6c9cccd390a
+              body: |
+                Update alpine from 3.18.12 to 3.24.1
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.122
+          title: ""
+          date: 2026-08-15T00:05:18.689Z
+        - commits:
+            - subject: "Core: worker: fix error with custom DT"
+              hash: 0c91241eb7be4a12fec38d5922d0b872977b143c
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: Ryan Cooke
+              nested: []
+          version: leviathan-2.36.121
+          title: ""
+          date: 2026-08-14T22:12:01.578Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.41
+              hash: e5c16f9c9356eb6dbe83a75e619445f4944c0841
+              body: |
+                Update balena-os/leviathan-worker from 2.10.40 to 2.10.41
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.120
+          title: ""
+          date: 2026-07-24T01:30:01.349Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.40
+              hash: f97103115bf88ac4c56fa901d44f79f62d8fecbf
+              body: |
+                Update balena-os/leviathan-worker from 2.10.35 to 2.10.40
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.119
+          title: ""
+          date: 2026-07-23T23:11:17.847Z
+        - commits:
+            - subject: Update balena-io/balena-cli to v25.1.10
+              hash: 98875d087a325e946954d7d7333041d27950e004
+              body: |
+                Update balena-io/balena-cli from 25.1.6 to 25.1.10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.118
+          title: ""
+          date: 2026-07-23T20:24:06.164Z
+        - commits:
+            - subject: "core/lib/common/worker.js: improve reliability of segmented image
+                upload"
+              hash: 4f74158ead6a155486fe3b1bc1a6db18e7b8ad16
+              body: >
+                Requests to the worker go over the balenaCloud proxy tunnel,
+                which can stall a
+
+                socket silently instead of erroring it out, and neither the
+                chunk handshake
+
+                nor the chunk uploads had any timeout to catch that. Adds an
+                abort-based
+
+                timeout to every request, retries the handshake itself instead
+                of only
+
+                individual chunks, fails fast on non-retryable 4xx responses
+                instead of
+
+                wasting minutes retrying them, and guards against a degenerate
+                chunk size
+
+                turning into an endless loop of empty uploads.
+
+
+                Chunks are now read via fs.createReadStream per attempt instead
+                of buffering
+
+                a whole chunk-sized region in memory. Content-Length is set
+                explicitly, since
+
+                fetch can't measure a stream's length up front the way it can
+                for a Buffer,
+
+                and the worker requires it. Each chunk attempt gets a flat
+                5-minute timeout
+
+                rather than a per-progress idle timeout - fetch has no way to
+                observe real
+
+                network write progress for a streamed body, only how fast the
+                chunk can be
+
+                read off local disk, which finishes long before a slow upload
+                actually
+
+                completes. A flat cap avoids that mismatch entirely by not
+                trying to
+
+                interpret progress at all.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: guille-vega <guillermo.vega@balena.io>
+                signed-off-by: guille-vega <guillermo.vega@balena.io>
+              author: guille-vega
+              nested: []
+          version: leviathan-2.36.117
+          title: ""
+          date: 2026-07-23T18:49:48.174Z
+        - commits:
+            - subject: Update alpine Docker tag to v3.18.12
+              hash: 74674b09da2cc584e568525c18f60f53a0fce6c9
+              body: |
+                Update alpine from 3.18.2 to 3.18.12
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.116
+          title: ""
+          date: 2026-07-16T18:07:12.467Z
+        - commits:
+            - subject: Update core/contracts digest to a4ab96e
+              hash: 1d08e06becceab517b3bf59785506374f89680a6
+              body: |
+                Update core/contracts
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.115
+          title: ""
+          date: 2026-07-16T15:30:43.032Z
+        - commits:
+            - subject: Update Pin dependencies
+              hash: 5537646dc477be9cfbc625732ee3505dbb09b5f6
+              body: |
+                Update alpine
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested: []
+          version: leviathan-2.36.114
+          title: ""
+          date: 2026-07-14T03:57:00.771Z
+        - commits:
+            - subject: Update balena-os/leviathan-worker to v2.10.35
+              hash: 22f6b08c504f610ff41cebb1250f072d38a8ae10
+              body: |
+                Update balena-os/leviathan-worker from 2.10.30 to 2.10.35
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+            - subject: "core/lib/common/worker.js: Switch to segmented OS image upload to
+                worker"
+              hash: 2664ab80d20f592752f32801bd655bc0be9eff40
+              body: |
+                This will circumvent the Cloudlink timeouts.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: leviathan-2.36.113
+          title: ""
+          date: 2026-07-06T09:49:57.428Z
+  version: 7.4.3
+  title: ""
+  date: 2026-10-26T11:51:13.646Z
+- commits:
     - subject: "start-balena-supervisor: Trust the hostOS CA bundle"
       hash: 9a3b0279a58e4034b94f831dd171e68a1dac1ca5
       body: >

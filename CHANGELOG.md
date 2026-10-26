@@ -1,6 +1,122 @@
 Change log
 -----------
 
+# v7.4.3
+## (2026-10-26)
+
+
+<details>
+<summary> Update tests/leviathan digest to bac9173 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.133
+> ### (2026-09-22)
+> 
+> * core/contracts: Update to v2.0.150 [Alexandru Costache]
+> 
+> ## leviathan-2.36.132
+> ### (2026-09-02)
+> 
+> * Update Node.js [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.131
+> ### (2026-09-01)
+> 
+> * Update actions/checkout action to v7 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.130
+> ### (2026-09-01)
+> 
+> * Update balena-io/balena-cli to v25.2.6 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.129
+> ### (2026-09-01)
+> 
+> * Update debian:bullseye-slim Docker digest to e5b6442 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.128
+> ### (2026-09-01)
+> 
+> * Update flowzonify to v0.4.2 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.127
+> ### (2026-09-01)
+> 
+> * Update core/contracts digest to 93b3001 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.126
+> ### (2026-09-01)
+> 
+> * Update GitHub Actions [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.125
+> ### (2026-09-01)
+> 
+> * Update docker/dockerfile:1 Docker digest to ecfaec9 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.124
+> ### (2026-08-15)
+> 
+> * Update debian:bullseye-slim Docker digest to f313b4b [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.123
+> ### (2026-08-15)
+> 
+> * Update core/contracts digest to 410a252 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.122
+> ### (2026-08-15)
+> 
+> * Update alpine Docker tag to v3.24.1 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.121
+> ### (2026-08-14)
+> 
+> * Core: worker: fix error with custom DT [Ryan Cooke]
+> 
+> ## leviathan-2.36.120
+> ### (2026-07-24)
+> 
+> * Update balena-os/leviathan-worker to v2.10.41 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.119
+> ### (2026-07-23)
+> 
+> * Update balena-os/leviathan-worker to v2.10.40 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.118
+> ### (2026-07-23)
+> 
+> * Update balena-io/balena-cli to v25.1.10 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.117
+> ### (2026-07-23)
+> 
+> * core/lib/common/worker.js: improve reliability of segmented image upload [guille-vega]
+> 
+> ## leviathan-2.36.116
+> ### (2026-07-16)
+> 
+> * Update alpine Docker tag to v3.18.12 [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.115
+> ### (2026-07-16)
+> 
+> * Update core/contracts digest to a4ab96e [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.114
+> ### (2026-07-14)
+> 
+> * Update Pin dependencies [balena-renovate[bot]]
+> 
+> ## leviathan-2.36.113
+> ### (2026-07-06)
+> 
+> * Update balena-os/leviathan-worker to v2.10.35 [Florin Sarbu]
+> * core/lib/common/worker.js: Switch to segmented OS image upload to worker [Florin Sarbu]
+> 
+
+</details>
+
 # v7.4.2
 ## (2026-10-21)
 
