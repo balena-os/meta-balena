@@ -12,8 +12,7 @@ services:
     privileged: true
     volumes:
       - module_output:/output
-    entrypoint: ["/bin/sh", "-c", "cp $MOD_PATH/*.ko /output/ && ls -la /output/ && echo 'Module copied to output volume'"]
+    entrypoint: ["/bin/sh", "-c", "cp $$MOD_PATH/*.ko /output/ && ls -la /output/ && echo 'Module copied to output volume'"]
 
 volumes:
   module_output:
-
