@@ -34,6 +34,7 @@ do_install:prepend() {
 }
 
 # The LSM list varies by device type, so this layer cannot force bpf into it.
+# A device opts in with KERNEL_LSM_APPEND. This task asserts the result.
 python do_kernel_ebpf_verify_lsm() {
     import os
 
@@ -42,16 +43,16 @@ python do_kernel_ebpf_verify_lsm() {
     if lsm is None:
         bb.fatal("kernel-ebpf: CONFIG_LSM is absent from %s, so the kernel "
                  "has no LSM list and BPF LSM programs cannot attach. Enable "
-                 "CONFIG_SECURITY and add \"bpf\" to this device's CONFIG_LSM."
+                 "CONFIG_SECURITY and set KERNEL_LSM_APPEND = \"bpf\"."
                  % config)
 
     entries = [entry.strip() for entry in lsm.strip('"').split(",")]
     if "bpf" not in entries:
         bb.fatal("kernel-ebpf: CONFIG_LSM=%s does not list \"bpf\", so BPF LSM "
-                 "programs cannot attach to this kernel. Add \"bpf\" to this "
-                 "device's list; do not set CONFIG_LSM from balena-ebpf.cfg, which "
+                 "programs cannot attach to this kernel. Set KERNEL_LSM_APPEND = "
+                 "\"bpf\"; do not set CONFIG_LSM from balena-ebpf.cfg, which "
                  "would replace the list and drop: %s"
                  % (lsm, ", ".join(entries)))
 }
-addtask kernel_ebpf_verify_lsm after do_kernel_balena_merge_fragments before do_compile
+addtask kernel_ebpf_verify_lsm after do_kernel_balena_extend_lsm before do_compile
 do_kernel_ebpf_verify_lsm[dirs] += "${B}"
