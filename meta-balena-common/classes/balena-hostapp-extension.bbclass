@@ -25,7 +25,8 @@
 #
 # An unset HOSTAPP_EXTENSION_LABEL_OVERRIDE makes the extension extend-only.
 # Set it to a numeric priority to opt into shadowing; lower values win, so 0
-# is the highest precedence.
+# is the highest precedence. An extension that carries a kernel must set it,
+# or do_create_docker_image fails the build.
 
 inherit image
 
@@ -98,6 +99,9 @@ do_create_docker_image() {
     echo "${LISTING}" | grep -qFx "./boot/${KERNEL_IMAGETYPE}" && HAS_KERNEL_IMG=1
 
     if [ -n "${HAS_SYMVERS}" ] && [ "${HAS_KERNEL_IMG}" = "1" ]; then
+        # A normal claimer leaves the modules tree merged.
+        [ -n "${HOSTAPP_EXTENSION_LABEL_OVERRIDE}" ] || bbfatal "kernel-override extension without an override label: set HOSTAPP_EXTENSION_LABEL_OVERRIDE"
+
         KERNEL_VER_FULL=$(echo "${HAS_SYMVERS}" \
             | sed -E 's|^\./(usr/)?lib/modules/([^/]+)/Module\.symvers$|\2|')
         KERNEL_VER="${KERNEL_VER_FULL%%-*}"
