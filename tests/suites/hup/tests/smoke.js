@@ -81,7 +81,7 @@ async function runSmokeTest(that, test) {
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
-			`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
+			`sed -i -e "s/^COUNT=.*/COUNT=3/" -e "s/^TIMEOUT=.*/TIMEOUT=10/" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
 			that.link,
 		),
 		'0',	// does not confirm that sed replaced the values, only that the command did not fail
