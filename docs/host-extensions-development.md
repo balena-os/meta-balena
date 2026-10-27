@@ -64,7 +64,7 @@ A kernel override extension needs a second kernel: same device, different config
 
 Inherit it below the device recipe's `require` chain. `kernel.bbclass` adds `virtual/kernel` to `PROVIDES` unconditionally, so only a plain assignment evaluated afterwards drops it.
 
-`kernel-balena-override.bbclass` merges kernel config fragments after `do_kernel_resin_checkconfig` and before `do_compile`, so an extension fragment wins over the `BALENA_CONFIGS` processing the base kernel shares. Fragments are listed in `KERNEL_BALENA_OVERRIDE_FRAGMENTS` and resolved on `FILESPATH`, never `SRC_URI`, which merges too early. A verification task then asserts every positively-set symbol survived the merge, and re-asserts the secure boot posture when signing is enabled.
+`kernel-balena-override.bbclass` merges kernel config fragments after `do_kernel_resin_checkconfig` and before `do_compile`, so an extension fragment wins over the `BALENA_CONFIGS` processing the base kernel shares. Fragments are listed in `KERNEL_BALENA_OVERRIDE_FRAGMENTS` and resolved on `FILESPATH`, never `SRC_URI`, which merges too early. A verification task then asserts every positively-set symbol survived the merge, and re-asserts the secure boot posture when signing is enabled. `KERNEL_LSM_APPEND` then appends its entries to `CONFIG_LSM`, because a fragment can only replace that list, never extend it.
 
 Contribute fragments with `:append`. A plain assignment silently drops another class's fragment, and the class comment explains why the loss is invisible.
 
