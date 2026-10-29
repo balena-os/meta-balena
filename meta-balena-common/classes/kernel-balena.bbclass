@@ -697,12 +697,17 @@ BALENA_CONFIGS[mdraid] = " \
     CONFIG_MD_AUTODETECT=y \
 "
 
-# Enable dmcrypt/LUKS
+# Enable dmcrypt, LUKS and cryptsetup deps
 BALENA_CONFIGS:append = "${@oe.utils.conditional('SIGN_API','','',' dmcrypt',d)}"
 BALENA_CONFIGS_DEPS[dmcrypt] = " \
     CONFIG_BLK_DEV_DM=y \
 "
 BALENA_CONFIGS[dmcrypt] = " \
+    CONFIG_CRYPTO_AES=y \
+    CONFIG_CRYPTO_LIB_AES=y \
+    CONFIG_CRYPTO_CBC=y \
+    CONFIG_CRYPTO_MD5=y \
+    CONFIG_CRYPTO_SHA256=y \
     CONFIG_CRYPTO_XTS=y \
     CONFIG_DM_CRYPT=y \
 "
