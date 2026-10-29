@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.0.4
+## (2026-10-29)
+
+* balena-os.inc: Derive the board VERSION path from COREBASE [Alex Gonzalez]
+
 # v9.0.3
 ## (2026-10-22)
 
