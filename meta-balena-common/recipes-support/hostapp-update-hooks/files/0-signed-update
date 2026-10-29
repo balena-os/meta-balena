@@ -13,6 +13,8 @@ set -o errexit
 [ -f /usr/libexec/os-helpers-tpm2 ] && . /usr/libexec/os-helpers-tpm2
 
 DURING_UPDATE="${DURING_UPDATE:-0}"
+# rollback-health sets ROLLBACK=1 when it runs the old hooks
+ROLLBACK="${ROLLBACK:-0}"
 UMOUNT_EFIVARS=0
 SECUREBOOT_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot"
 SETUPMODE_VAR="8be4df61-93ca-11d2-aa0d-00e098032b8c-SetupMode"
@@ -39,27 +41,6 @@ umountEfiVars() {
         umount "${EFIVARS_MOUNTDIR}"
         UMOUNT_EFIVARS=0
     fi
-}
-
-isRollbackHealth() {
-    # We're running in a container or a chroot, systemctl is-active won't work
-    # We have to use the underlying d-bus call to check if the rollback-health
-    # service is active
-    STATUS=$(dbus-send \
-        --system \
-        --print-reply \
-        --dest=org.freedesktop.systemd1 \
-        /org/freedesktop/systemd1/unit/rollback_2dhealth_2eservice \
-        org.freedesktop.DBus.Properties.Get \
-        string:"org.freedesktop.systemd1.Unit" \
-        string:"ActiveState" \
-    | awk -F'"' '/string/ {print $2}')
-
-    if [ "${STATUS}" = "active" ]; then
-        return 0
-    fi
-
-    return 1
 }
 
 updatePCRPolicy() {
@@ -191,6 +172,7 @@ updatePCRPolicy() {
 }
 
 updateUEFIKeys() {
+    info "Appending db.auth to the UEFI db"
     # This only updates db at this moment
     # PK and KEK need to be implemented
     DB_SYSFS_FILE="db-d719b2cb-3d3a-4596-a3bc-dad00e67656f"
@@ -241,7 +223,11 @@ if [ -f "/resin-boot/EFI/BOOT/grub-luks.cfg.sig" ]; then
     updatePCRPolicy
 
     # Do not update UEFI keys during rollbacks
-    if [ "${DURING_UPDATE}" = 1 ] && ! isRollbackHealth; then
+    if [ "${DURING_UPDATE}" != 1 ]; then
+        info "Not updating UEFI keys outside an update"
+    elif [ "${ROLLBACK}" = 1 ]; then
+        info "Not updating UEFI keys during a rollback"
+    else
         updateUEFIKeys
     fi
 
