@@ -22,22 +22,25 @@ def format_bootargs_array(d):
     return bash_array_str
 
 python () {
-    ''' Set HOSTOS_VERSION from board VERSION if available '''
+    ''' Set HOSTOS_VERSION from the board VERSION file '''
 
-    # Find board VERSION location based on poky meta layer
-    bblayers = d.getVar('BBLAYERS', True).split()
-    poky = [layer for layer in bblayers if layer.endswith('poky/meta')]
-    if not poky:
-        return
-    board_version_path = os.path.join(poky[0], '../../../', 'VERSION')
+    # COREBASE is the core metadata directory, poky or openembedded-core
+    corebase = d.getVar('COREBASE', True)
+    if not corebase:
+        bb.fatal("COREBASE is not set, cannot locate the board VERSION file")
+    board_version_path = os.path.normpath(os.path.join(corebase, '../../', 'VERSION'))
 
     # Set HOSTOS_VERSION
     try:
         with open(board_version_path, 'r') as v:
             board_version = v.read().strip()
-        d.setVar('HOSTOS_VERSION', board_version)
-    except:
-        return
+    except IOError:
+        bb.fatal("Board VERSION not found at %s" % board_version_path)
+
+    if not board_version:
+        bb.fatal("Board VERSION at %s is empty" % board_version_path)
+
+    d.setVar('HOSTOS_VERSION', board_version)
 }
 
 def set_default_kernel_cmdline(d):
