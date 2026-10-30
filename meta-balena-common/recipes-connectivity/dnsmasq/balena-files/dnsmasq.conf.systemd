@@ -6,4 +6,5 @@ After=balena-net-config.service
 Type=simple
 OOMScoreAdjust=-1000
 ExecStart=
+# -7 loads balena.conf: do not drop it
 ExecStart=/usr/bin/dnsmasq -x /run/dnsmasq.pid -a "127.0.0.2,10.114.102.1" -7 /etc/dnsmasq.d/ -r /etc/resolv.dnsmasq -z --servers-file=/run/dnsmasq.servers -k --log-facility=-

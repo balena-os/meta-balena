@@ -169,6 +169,46 @@ module.exports = {
 		};
 
 		/**
+		 * Read the journal of the current invocation of a service
+		 * @param {string} serviceName systemd service to read the journal of
+		 * @param {string} target the address of the device to query
+		 *
+		 * @category helper
+		 */
+		systemd.journal = async (serviceName, target) => {
+			return worker.executeCommandInHostOS(
+				[
+					'journalctl',
+					`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value ${serviceName})"`,
+				].join(' '),
+				target,
+			);
+		};
+
+		/**
+		 * Wait until the journal of the current invocation of a service contains a pattern
+		 * @param {string} serviceName systemd service to read the journal of
+		 * @param {string} pattern literal text to look for
+		 * @param {string} target the address of the device to query
+		 *
+		 * @category helper
+		 */
+		systemd.waitForJournal = async (serviceName, pattern, target) => {
+			return utils.waitUntil(
+				async () => {
+					return systemd
+						.journal(serviceName, target)
+						.then((logs) => {
+							return Promise.resolve(logs.includes(pattern));
+						});
+				},
+				false,
+				20,
+				500,
+			);
+		};
+
+		/**
 		 * Write or remove a property from config.json in the boot partition
 		 * @param {string} test Current test instance to append results
 		 * @param {string} key Object key to update, dot separated
@@ -466,6 +506,7 @@ module.exports = {
 		'./tests/led',
 		'./tests/modem',
 		'./tests/config-json',
+		'./tests/dnsmasq',
 		'./tests/ca-certificates',
 		'./tests/boot-splash',
 		'./tests/connectivity',

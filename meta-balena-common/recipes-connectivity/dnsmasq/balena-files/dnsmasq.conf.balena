@@ -1,0 +1,4 @@
+# Containers reach this over io.balena.features.dbus
+enable-dbus
+domain-needed
+bogus-priv
