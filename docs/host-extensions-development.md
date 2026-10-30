@@ -64,7 +64,7 @@ A kernel override extension needs a second kernel: same device, different config
 
 Inherit it below the device recipe's `require` chain. `kernel.bbclass` adds `virtual/kernel` to `PROVIDES` unconditionally, so only a plain assignment evaluated afterwards drops it.
 
-`kernel-balena-override.bbclass` merges kernel config fragments after `do_kernel_resin_checkconfig` and before `do_compile`, so an extension fragment wins over the `BALENA_CONFIGS` processing the base kernel shares. Fragments are listed in `KERNEL_BALENA_OVERRIDE_FRAGMENTS` and resolved on `FILESPATH`, never `SRC_URI`, which merges too early. A verification task then asserts every positively-set symbol survived the merge, and re-asserts the secure boot posture when signing is enabled.
+`kernel-balena-override.bbclass` merges kernel config fragments after `do_kernel_resin_checkconfig` and before `do_compile`, so an extension fragment wins over the `BALENA_CONFIGS` processing the base kernel shares. Fragments are listed in `KERNEL_BALENA_OVERRIDE_FRAGMENTS` and resolved on `FILESPATH`, never `SRC_URI`, which merges too early. A verification task then asserts every positively-set symbol survived the merge, and re-asserts the secure boot posture when signing is enabled. `KERNEL_LSM_APPEND` then appends its entries to `CONFIG_LSM`, because a fragment can only replace that list, never extend it.
 
 Contribute fragments with `:append`. A plain assignment silently drops another class's fragment, and the class comment explains why the loss is invisible.
 
@@ -86,6 +86,46 @@ Anything in between is a build failure rather than a silently degraded image: on
 `Module.symvers` is normally in no runtime package, so the class copies it in from the matching kernel build in the deploy directory.
 
 The extension kernel is a separate recipe with its own source revision, so the two kernels can differ: out-of-tree modules destined for a kernel override extension have to be built against the extension's `Module.symvers`, not the hostapp kernel's.
+
+## Preparing a device type's kernel recipes
+
+The extension kernel is a second recipe with its own `PN`.
+
+Shared configuration goes into includes that both recipes require:
+
+| File | Use |
+| --- | --- |
+| `linux-<bsp>_<ver>.inc` | the source pin and `SRC_URI`, so both kernels build one revision |
+| `linux-<bsp>-balena.inc` | balena kernel configuration for every kernel version |
+| `linux-<bsp>-balena_<ver>.inc` | balena kernel configuration and patches for one kernel version |
+
+Whatever stays in the bbappends reaches the hostapp kernel only.
+
+The extension recipe is then:
+
+```
+require recipes-kernel/linux/linux-<bsp>_<ver>.inc
+require recipes-kernel/linux/linux-<bsp>-extension.inc
+require linux-<bsp>-balena_<ver>.inc
+inherit kernel-ebpf
+```
+
+with the device-agnostic part in `linux-<bsp>-extension.inc`:
+
+```
+require linux-<bsp>.inc
+inherit kernel-extension kernel-balena-override
+require recipes-kernel/linux/linux-<bsp>-balena.inc
+```
+
+Things to know:
+
+* `inherit kernel-extension` goes after the requires. See [kernel override build support](#kernel-override-build-support).
+* `FILESPATH` follows the new `PN`. Add `FILESEXTRAPATHS:prepend := "${THISDIR}/linux-<bsp>:${THISDIR}/${MACHINE}:"` to recover the base recipe's patch and machine directories.
+* `PREFERRED_VERSION_linux-<bsp>` does not match the new `PN`. Add `PREFERRED_VERSION_linux-<bsp>-extension` to `conf/layer.conf`.
+* Shared configuration belongs in `SRC_URI` fragments or `BALENA_CONFIGS`, never in `KERNEL_BALENA_OVERRIDE_FRAGMENTS`. That merge runs after `BALENA_CONFIGS` and only on the extension, so the two kernels would resolve a conflict differently.
+
+When comparing the base and extension kernels, only the symbols the extension asks for should differ.
 
 ## Wiring an extension into a device type build
 
