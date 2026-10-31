@@ -5,7 +5,8 @@
 # rather than in the rootfs. It carries no opinion about why the extension
 # exists; inherit a capability class alongside it, kernel-ebpf for example.
 #
-# Inherit it below the device recipe's require chain.
+# Inherit it below the device recipe's require chain. It must parse after
+# kernel.bbclass, or the postinst override below has no effect.
 
 # Brand this as the extension kernel, not a second virtual/kernel provider.
 # kernel.bbclass adds virtual/kernel to PROVIDES unconditionally, so only a
@@ -14,6 +15,11 @@ KERNEL_PACKAGE_NAME = "kernel-extension"
 PROVIDES = "virtual/kernel-extension"
 
 DESTDIR = "${DEPLOYDIR}/${KERNEL_PACKAGE_NAME}"
+
+# kirkstone's depmodwrapper reads the base kernel pkgdata. Later releases
+# read the right one but would index a second time without -e. The image
+# class runs depmod once.
+pkg_postinst:${KERNEL_PACKAGE_NAME}-base = ""
 
 # Bundle the initramfs in one pass; stock do_bundle_initramfs compiles the
 # whole kernel a second time. Safe for an extension kernel and only for one:

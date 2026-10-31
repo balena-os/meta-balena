@@ -17,30 +17,45 @@ IMAGE_INSTALL:append = " ${@'kernel-extension-devicetree' if d.getVar('KERNEL_DE
 # both directions for overlays that shadow or are shadowed by this one.
 HOSTAPP_EXTENSION_LABEL_OVERRIDE = "100"
 
-# Fixed upstream in openembedded-core efa88e1c227d ("rootfs.py: Run
-# depmod(wrapper) against each compiled kernel"); revisit once the poky
-# submodule moves off kirkstone.
+# rootfs.py indexes against the base kernel on kirkstone and against every
+# kernel in the shared pkgdata after it. Only the extension kernel belongs here.
 USE_DEPMOD = "0"
 
 # No userspace here, so /bin and /sbin would only shadow the hostapp's.
 HOSTAPP_EXTENSION_REMOVE_PATHS:append = " bin sbin"
 
-do_rootfs[depends] += "virtual/kernel-extension:do_deploy"
+do_image[depends] += " \
+    kmod-native:do_populate_sysroot \
+    virtual/kernel-extension:do_deploy \
+    virtual/kernel-extension:do_packagedata \
+"
+
+KERNEL_EXTENSION_DEPMOD_DIR = "${PKGDATA_DIR}/kernel-extension-depmod"
 
 # :append so it runs after remove_unnecessary_files.
-IMAGE_PREPROCESS_COMMAND:append = " install_kernel_extension_symvers;"
+IMAGE_PREPROCESS_COMMAND:append = " finish_kernel_extension_modules;"
 
-# Module.symvers is in no runtime package, but the ABI detection needs it.
-install_kernel_extension_symvers() {
-    KVER_DIR=$(find "${IMAGE_ROOTFS}/usr/lib/modules" "${IMAGE_ROOTFS}/lib/modules" \
-        -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort -u | head -n1)
-    [ -n "${KVER_DIR}" ] || \
-        bbfatal "no /lib/modules/<ver>/ in rootfs for the extension kernel"
+finish_kernel_extension_modules() {
+    ABIFILE="${KERNEL_EXTENSION_DEPMOD_DIR}/kernel-extension-abiversion"
+    [ -r "${ABIFILE}" ] || bbfatal "extension kernel release not found at ${ABIFILE}"
+    KVER=$(cat "${ABIFILE}")
+    SYSMAP="${KERNEL_EXTENSION_DEPMOD_DIR}/System.map-${KVER}"
+    [ -r "${SYSMAP}" ] || bbfatal "extension kernel System.map not found at ${SYSMAP}"
+    KVER_DIR="${IMAGE_ROOTFS}${nonarch_base_libdir}/modules/${KVER}"
+    [ -d "${KVER_DIR}" ] || bbfatal "no ${nonarch_base_libdir}/modules/${KVER} in rootfs for the extension kernel"
 
-    # A -dev package already laid it down.
-    [ ! -f "${KVER_DIR}/Module.symvers" ] || return 0
+    # Module.symvers is in no runtime package, but the ABI detection needs it.
+    # A -dev package may already have laid it down.
+    if [ ! -f "${KVER_DIR}/Module.symvers" ]; then
+        SYMVERS="${KERNEL_EXTENSION_DEPLOY_DIR}/Module.symvers"
+        [ -f "${SYMVERS}" ] || bbfatal "extension kernel Module.symvers not found at ${SYMVERS}"
+        install -m 0644 "${SYMVERS}" "${KVER_DIR}/Module.symvers"
+    fi
 
-    SYMVERS="${KERNEL_EXTENSION_DEPLOY_DIR}/Module.symvers"
-    [ -f "${SYMVERS}" ] || bbfatal "extension kernel Module.symvers not found at ${SYMVERS}"
-    install -m 0644 "${SYMVERS}" "${KVER_DIR}/Module.symvers"
+    # Keep the build host depmod.d out of the index.
+    CONF="${WORKDIR}/depmod-extension.d"
+    mkdir -p "${CONF}"
+
+    bbnote "depmod against ${SYSMAP}"
+    depmod -e -C "${CONF}" -b "${IMAGE_ROOTFS}" -F "${SYSMAP}" "${KVER}"
 }
