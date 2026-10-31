@@ -59,15 +59,15 @@ const getModulePath = async (worker, link) => {
 };
 
 /**
- * Load module, check dmesg, unload. Returns dmesg output.
+ * Load module, check dmesg, unload. Returns insmod exit code and dmesg.
  */
 const loadModuleAndGetDmesg = async (worker, link, modulePath) => {
     await worker.executeCommandInHostOS('dmesg -C', link);
     await worker.executeCommandInHostOS('rmmod hello 2>/dev/null || true', link);
-    await worker.executeCommandInHostOS(`insmod ${modulePath}`, link);
+    const code = await worker.executeCommandInHostOS(`insmod ${modulePath} ; echo $?`, link);
     const dmesg = await worker.executeCommandInHostOS('dmesg | grep "hello:" || true', link);
     await worker.executeCommandInHostOS('rmmod hello 2>/dev/null', link);
-    return dmesg.trim();
+    return { code: code.trim(), dmesg: dmesg.trim() };
 };
 
 /**
@@ -195,7 +195,8 @@ const testFirmwareNotFound = async (worker, link, test) => {
     test.comment(`Module path: ${modulePath}`);
     test.is(modulePath !== '', true, 'Module path should not be empty');
 
-    const dmesg = await loadModuleAndGetDmesg(worker, link, modulePath);
+    const { code, dmesg } = await loadModuleAndGetDmesg(worker, link, modulePath);
+    test.is(code, '0', 'The test module should load');
     test.comment(`dmesg: ${dmesg}`);
     test.is(dmesg.includes('NOT FOUND'), true, 'Firmware should NOT be found');
 };
@@ -210,7 +211,8 @@ const testFirmwareFound = async (worker, link, test) => {
     test.comment(`Module path: ${modulePath}`);
     test.is(modulePath !== '', true, 'Module path should not be empty');
 
-    const dmesg = await loadModuleAndGetDmesg(worker, link, modulePath);
+    const { code, dmesg } = await loadModuleAndGetDmesg(worker, link, modulePath);
+    test.is(code, '0', 'The test module should load');
     test.comment(`dmesg: ${dmesg}`);
     test.is(dmesg.includes('SUCCESS'), true, 'Firmware should be found');
     test.is(dmesg.includes('VERIFIED'), true, 'Firmware content should be verified');
