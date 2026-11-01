@@ -70,6 +70,8 @@ Contribute fragments with `:append`. A plain assignment silently drops another c
 
 `kernel-extension-image.bbclass` is the image side. It inherits `balena-hostapp-extension`, installs the extension kernel's modules, its initramfs-bundled image and any device trees, sets the override priority to 100, and removes the `/bin` and `/sbin` symlinks that would otherwise shadow the hostapp's. It sets `USE_DEPMOD = "0"` and runs depmod itself in `do_image`, against the extension kernel's own `System.map`. `kernel-extension.bbclass` empties the stock `-base` postinst, because that postinst calls `depmodwrapper`, which always reads the base kernel's `System.map`.
 
+`kernel-extension-image.bbclass` also builds the extension kernel headers into `${KERNEL_EXTENSION_DEPLOY_DIR}/kernel_modules_headers.tar.gz`.
+
 ## Automatic kernel-override detection
 
 Nothing in a recipe declares "this is a kernel override". The class decides from the assembled rootfs, which must contain both:
