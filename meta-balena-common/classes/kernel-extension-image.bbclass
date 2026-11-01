@@ -24,6 +24,8 @@ USE_DEPMOD = "0"
 # No userspace here, so /bin and /sbin would only shadow the hostapp's.
 HOSTAPP_EXTENSION_REMOVE_PATHS:append = " bin sbin"
 
+DEPENDS += "${@bb.utils.contains('BALENA_DISABLE_KERNEL_HEADERS', '1', '', 'kernel-headers-test-extension', d)}"
+
 do_image[depends] += " \
     kmod-native:do_populate_sysroot \
     virtual/kernel-extension:do_deploy \
