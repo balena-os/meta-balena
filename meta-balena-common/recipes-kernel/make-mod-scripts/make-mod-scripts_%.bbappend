@@ -1,0 +1,1 @@
+BBCLASSEXTEND:append = " extension-scripts"
