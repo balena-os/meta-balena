@@ -122,6 +122,10 @@ IMAGE_NAME_SUFFIX = ""
 # component must match KERNEL_PACKAGE_NAME in kernel-extension.bbclass.
 KERNEL_EXTENSION_DEPLOY_DIR = "${DEPLOY_DIR_IMAGE}/kernel-extension"
 
+# Extension kernel pair of the bitbake.conf staging paths.
+STAGING_KERNEL_EXTENSION_DIR = "${TMPDIR}/work-shared/${MACHINE}/kernel-extension/kernel-source"
+STAGING_KERNEL_EXTENSION_BUILDDIR = "${TMPDIR}/work-shared/${MACHINE}/kernel-extension/kernel-build-artifacts"
+
 # resinOS defaults to ipk packages
 PACKAGE_CLASSES = "package_ipk"
 

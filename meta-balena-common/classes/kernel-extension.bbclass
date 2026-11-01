@@ -16,6 +16,12 @@ PROVIDES = "virtual/kernel-extension"
 
 DESTDIR = "${DEPLOYDIR}/${KERNEL_PACKAGE_NAME}"
 
+# Runs after kernel.bbclass, which moves both into WORKDIR.
+python () {
+    d.setVar('STAGING_KERNEL_DIR', '${STAGING_KERNEL_EXTENSION_DIR}')
+    d.setVar('STAGING_KERNEL_BUILDDIR', '${STAGING_KERNEL_EXTENSION_BUILDDIR}')
+}
+
 # kirkstone's depmodwrapper reads the base kernel pkgdata. Later releases
 # read the right one but would index a second time without -e. The image
 # class runs depmod once.
