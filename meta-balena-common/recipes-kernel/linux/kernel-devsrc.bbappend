@@ -2,8 +2,11 @@ do_install:append() {
    tar -czf ${WORKDIR}/kernel_modules_headers.tar.gz -C "$kerneldir/../" .
 }
 
+KERNEL_HEADERS_DEPLOY_DIR ?= "${DEPLOYDIR}"
+
 do_deploy() {
-    cp ${WORKDIR}/kernel_modules_headers.tar.gz ${DEPLOYDIR}/
+    install -D -m 0644 ${WORKDIR}/kernel_modules_headers.tar.gz \
+        ${KERNEL_HEADERS_DEPLOY_DIR}/kernel_modules_headers.tar.gz
 }
 inherit deploy
 addtask do_deploy before do_package after do_install
@@ -15,3 +18,5 @@ INSANE_SKIP:${PN} = "arch debug-files"
 
 # Keep compatibility with device repositories that use the older headers
 PROVIDES = "kernel-modules-headers"
+
+BBCLASSEXTEND = "extension-headers"
