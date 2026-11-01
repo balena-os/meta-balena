@@ -7,6 +7,7 @@
 'use strict';
 
 const ext = require('../lib/extensions');
+const seed = require('../lib/seed');
 
 // balena-extension-manager log lines, read as observations only
 const STALE_PASS = 'removing stale extensions';
@@ -162,13 +163,19 @@ module.exports = {
 		await this.hup.initDUT(this, test, this.link);
 
 		gate.seedVersion = await ext.osVersionId(this);
+
+		// Helios cannot help a seed without the extension runtime
+		const runtime = await ext.runtimeRegistered(this);
+		if (runtime) {
+			await seed.deliverHelios(this, test);
+		}
+
 		gate.heliosVersion = await ext.heliosVersion(this);
-		gate.seedCapable =
-			(await ext.runtimeRegistered(this)) &&
-			atLeast(gate.heliosVersion, MIN_HELIOS);
+		gate.seedCapable = runtime && atLeast(gate.heliosVersion, MIN_HELIOS);
 
 		test.comment(
 			`SEED is ${gate.seedVersion}, TGT is ${gate.tgtVersion}; ` +
+				`SEED extension runtime: ${runtime ? 'yes' : 'no'}; ` +
 				`SEED helios: ${gate.heliosVersion || 'none'}; ` +
 				`SEED extension-capable: ${gate.seedCapable ? 'yes' : 'no'}`,
 		);
