@@ -6,39 +6,36 @@
 
 'use strict';
 
+const { existsSync, readFileSync } = require('fs');
+const { join } = require('path');
+
 const ext = require('./extensions');
 
 const CONFIG_JSON = '/mnt/boot/config.json';
 const FLEET_CONFIG = '/tmp/seed-fleet.json';
 
+// Staged like the cloud suite's hostapp.json
+const STAGED_CONFIG = join(__dirname, '..', 'hostapp.json');
+
 // 20 min at 5 s per try, the same bound as the cloud suite
 const HELIOS_TRIES = 240;
 const HELIOS_INTERVAL = 5000;
 
-// A draft needs the update-balena-supervisor fix the seed lacks
-const latestSupervisorRelease = async (that) => {
-	const slug = `balena_os/${that.suite.deviceType.data.arch}-supervisor`;
-	const [release] = await that.sdk.balena.pine.get({
-		resource: 'release',
-		options: {
-			$select: 'id',
-			$filter: {
-				is_final: true,
-				is_invalidated: false,
-				status: 'success',
-				belongs_to__application: {
-					$any: { $alias: 'a', $expr: { a: { slug: slug } } },
-				},
-			},
-			$orderby: { created_at: 'desc' },
-			$top: 1,
-		},
-	});
+// Only a draft supervisor carries helios with overlay support
+const stagedSupervisorRelease = () => {
+	const staged = existsSync(STAGED_CONFIG)
+		? JSON.parse(readFileSync(STAGED_CONFIG, 'utf8'))
+		: {};
+	const id =
+		parseInt(staged.supervisorReleaseId, 10) ||
+		parseInt(process.env.SUPERVISOR_RELEASE_ID, 10);
 
-	if (release == null) {
-		throw new Error(`No final supervisor release in ${slug}`);
+	if (!id) {
+		throw new Error(
+			`No supervisor release in ${STAGED_CONFIG} or SUPERVISOR_RELEASE_ID`,
+		);
 	}
-	return release.id;
+	return id;
 };
 
 const joinFleet = async (that, test) => {
@@ -86,20 +83,71 @@ const joinFleet = async (that, test) => {
 	);
 };
 
+const deviceSupervisor = async (that) => {
+	const [device] = await that.sdk.balena.pine.get({
+		resource: 'device',
+		options: {
+			$select: ['supervisor_version', 'should_be_managed_by__release'],
+			$filter: { uuid: that.suite.options.balenaOS.config.uuid },
+		},
+	});
+	return {
+		version: device.supervisor_version,
+		pin: device.should_be_managed_by__release?.__id ?? null,
+	};
+};
+
 // The supervisor delivers core-next, so a local mode device has none
 const deliverHelios = async (that, test) => {
 	await joinFleet(that, test);
 
+	// The API repins to the first reported supervisor version
+	await test.resolves(
+		that.utils.waitUntil(
+			async () => {
+				return (await deviceSupervisor(that)).version != null;
+			},
+			false,
+			HELIOS_TRIES,
+			HELIOS_INTERVAL,
+		),
+		'Should report the seed supervisor version',
+	);
+
+	const releaseId = stagedSupervisorRelease();
 	await that.sdk.balena.pine.patch({
 		resource: 'device',
 		options: {
 			$filter: { uuid: that.suite.options.balenaOS.config.uuid },
 		},
-		body: { should_be_managed_by__release: await latestSupervisorRelease(that) },
+		body: { should_be_managed_by__release: releaseId },
 	});
 
 	// The timer would otherwise delay the update by hours
-	await ext.host(that, 'systemctl start --no-block update-balena-supervisor');
+	await ext.host(that, 'systemctl start update-balena-supervisor');
+	await test.resolves(
+		that.utils.waitUntil(
+			async () => {
+				return (
+					(await ext.host(
+						that,
+						'systemctl is-active update-balena-supervisor || true',
+					)) !== 'active'
+				);
+			},
+			false,
+			HELIOS_TRIES,
+			HELIOS_INTERVAL,
+		),
+		'Should finish the supervisor update',
+	);
+	test.is(
+		(await deviceSupervisor(that)).pin,
+		releaseId,
+		'Should keep the staged supervisor pin',
+	);
+	// os-config can restart the old supervisor during the pull
+	await ext.host(that, 'systemctl restart balena-supervisor');
 
 	await test.resolves(
 		that.utils.waitUntil(

@@ -396,10 +396,14 @@ module.exports = {
 
 		console.log('OS download options:')
 		console.log(this.suite.options.balenaOS.download)
+		// Seed from the test environment, which can hold unreleased builds
 		let path = await this.sdk.fetchOS(
 			this.suite.options.balenaOS.download.version,
 			this.suite.deviceType.slug,
-			this.suite.options.balenaOS.download.imageType
+			this.suite.options.balenaOS.download.imageType,
+			'default',
+			`https://api.${this.suite.options.balena.apiUrl}`,
+			this.suite.options.balena.apiKey
 		);
 
 		const keys = await this.utils.createSSHKey(this.sshKeyPath);
