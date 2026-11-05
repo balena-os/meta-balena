@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update tests/leviathan digest to 2444d08
+      hash: d148c1502131deb876a029745f15c6e42f2997bc
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "core/contracts: Update to v2.0.151"
+              hash: 29495b3b6effeee3eba7eb818ee6aa7c134d8346
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+          version: leviathan-2.36.134
+          title: ""
+          date: 2026-11-05T13:20:08.264Z
+  version: 9.0.5
+  title: ""
+  date: 2026-11-05T20:37:35.534Z
+- commits:
     - subject: "balena-os.inc: Derive the board VERSION path from COREBASE"
       hash: 2a2915b92799a09c9914cde7b267d4e39d4a35ca
       body: >

@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v9.0.5
+## (2026-11-05)
+
+
+<details>
+<summary> Update tests/leviathan digest to 2444d08 [balena-renovate[bot]] </summary>
+
+> ## leviathan-2.36.134
+> ### (2026-11-05)
+> 
+> * core/contracts: Update to v2.0.151 [Alexandru Costache]
+> 
+
+</details>
+
 # v9.0.4
 ## (2026-10-29)
 
