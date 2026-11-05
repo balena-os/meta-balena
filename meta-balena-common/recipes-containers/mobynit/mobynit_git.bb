@@ -11,7 +11,7 @@ RDEPENDS:${PN} = "util-linux"
 GO_IMPORT = "github.com/balena-os/mobynit"
 SRC_URI = "git://${GO_IMPORT};nobranch=1;protocol=https"
 # alexgg/claimed-abis-overlays, needs a tag before merge
-SRCREV="a39ca92fec46f1b24853bdaed4a71f5a7d9fa2ca"
+SRCREV="3ca1659410788b7ef4f6c623b1bc3306dd26ff18"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
 

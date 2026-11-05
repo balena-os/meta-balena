@@ -9,7 +9,7 @@ GO_IMPORT = "github.com/balena-os/balena-extension-runtime"
 SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=alexgg/bootmnt;protocol=https \
     file://hostapp-extensions-cleanup.service \
     "
-SRCREV = "d7ce5b41b2f4f55f345d87f0f5088d13d7488004"
+SRCREV = "4b3db2bec8152c91e796bc3addabb28f6e1763c0"
 PV = "2.0.1+git${SRCPV}"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
