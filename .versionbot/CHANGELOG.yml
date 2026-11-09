@@ -1,4 +1,47 @@
 - commits:
+    - subject: "tests: os: config-json: use the shared journal helper"
+      hash: 1d5b4bc2985617007bb62d5179683467b85e290a
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "dnsmasq: move the settings to a conf.d drop-in"
+      hash: 37dde807ac5e7494c1b38a50acbb05f4b2df038b
+      body: >
+        The v2.92 update stopped installing file://dnsmasq.conf, which carried
+
+        enable-dbus, domain-needed and bogus-priv.
+
+
+        enable-dbus lets any container with io.balena.features.dbus set the
+
+        upstream servers. That is the documented contract of the label.
+
+
+        This commit moves  them into a balena-files directory so they can not be
+        missed
+
+        again.
+
+
+        Devices running without these options forwarded plain names and
+
+        private reverse lookups upstream.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 9.0.6
+  title: ""
+  date: 2026-11-09T12:21:03.299Z
+- commits:
     - subject: Update tests/leviathan digest to 2444d08
       hash: d148c1502131deb876a029745f15c6e42f2997bc
       body: Update tests/leviathan

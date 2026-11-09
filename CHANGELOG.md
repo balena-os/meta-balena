@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v9.0.6
+## (2026-11-09)
+
+* tests: os: config-json: use the shared journal helper [Alex Gonzalez]
+* dnsmasq: move the settings to a conf.d drop-in [Alex Gonzalez]
+
 # v9.0.5
 ## (2026-11-05)
 
