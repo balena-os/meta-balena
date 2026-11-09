@@ -82,18 +82,7 @@ module.exports = {
 				return this.systemd.writeConfigJsonProp(test, 'dnsServers', `${exampleDns} ${exampleDns}`, context.link)
 				.then(() => {
 					return test.resolves(
-						this.utils.waitUntil(async () => {
-							return context.worker.executeCommandInHostOS(
-								[
-									`journalctl`,
-									`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
-									`|`, `grep`, `-q`, `${exampleDns}`, `;`, `echo`, `$?`
-								].join(' '),
-								context.link,
-							).then((exitCode) => {
-								return Promise.resolve(exitCode === '0');
-							});
-						}, false, 20, 500),
+						this.systemd.waitForJournal('dnsmasq.service', exampleDns, context.link),
 						`Active dnsmasq service should include ${exampleDns} in the logs`
 					)
 				}).then(() => {
@@ -111,32 +100,18 @@ module.exports = {
 						'/run/dnsmasq.servers should be empty'
 					);
 				}).then(() => {
-					return context.worker.executeCommandInHostOS(
-						[
-							'journalctl',
-							'_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"',
-							'|', 'grep', '-q', '"bad address"', ';', 'echo', '$?',
-						].join(' '),
-						context.link
-					).then((output) => {
-						return test.is(output, '1', 'Active dnsmasq service should not log "bad address".');
+					return this.systemd.journal('dnsmasq.service', context.link).then((logs) => {
+						return test.is(
+							logs.includes('bad address'),
+							false,
+							'Active dnsmasq service should not log "bad address".',
+						);
 					});
 				}).then(() => {
 					return this.systemd.writeConfigJsonProp(test, 'dnsServers', null, context.link);
 				}).then(() => {
 					return test.resolves(
-						context.utils.waitUntil(async () => {
-							return context.worker.executeCommandInHostOS(
-								[
-									`journalctl`,
-									`_SYSTEMD_INVOCATION_ID="$(systemctl show -p InvocationID --value dnsmasq.service)"`,
-									`|`, `grep`, `-q`, defaultDns, `;`, `echo`, `$?`
-								].join(' '),
-								context.link,
-							).then((exitCode) => {
-								return Promise.resolve(exitCode === '0');
-							});
-						}, false, 20, 500),
+						this.systemd.waitForJournal('dnsmasq.service', defaultDns, context.link),
 						`Active dnsmasq service should include ${defaultDns} in the logs`
 					);
 				});
