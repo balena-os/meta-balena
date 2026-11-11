@@ -19,6 +19,7 @@ SRC_URI:append = " \
     file://getty-service-development-features.conf \
     file://disable-user-ns.conf \
     file://condition-virtualization-not-docker.conf \
+    file://80-ignore-devicetree-alias.link \
     "
 
 PACKAGECONFIG:remove = "nss-resolve"
@@ -115,6 +116,8 @@ do_install:append() {
         install -m 0644 ${UNPACKDIR}/disable-user-ns.conf ${D}/usr/lib/sysctl.d/
     fi
 
+    install -m 0644 ${UNPACKDIR}/80-ignore-devicetree-alias.link ${D}${rootlibexecdir}/systemd/network/
+
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${UNPACKDIR}/dev-zram0.swap ${D}${systemd_unitdir}/system/dev-zram0.swap
 
@@ -162,6 +165,7 @@ FILES:udev += "\
     ${nonarch_libdir}/udev/rules.d/65-resin-update-state.rules \
     ${nonarch_libdir}/udev/resin_update_state_probe \
     ${nonarch_libdir}/udev/zram-swap-init           \
+    ${rootlibexecdir}/systemd/network/80-ignore-devicetree-alias.link \
 "
 
 RDEPENDS:${PN}:append = " os-helpers-fs balena-ntp-config util-linux periodic-vacuum-logs"
