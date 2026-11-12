@@ -6,10 +6,10 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 inherit go systemd
 
 GO_IMPORT = "github.com/balena-os/balena-extension-runtime"
-SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=master;protocol=https \
+SRC_URI = "git://github.com/balena-os/balena-extension-runtime;branch=fix-slot-for-luks-devices;protocol=https \
     file://hostapp-extensions-cleanup.service \
     "
-SRCREV = "c034fe84fd2683bbc596faa2bfa168a527d0c1f6"
+SRCREV = "2e63b11cbf115e65a8891f19b516cd7c3431fdf6"
 PV = "2.0.2+git${SRCPV}"
 
 GOPROXY ??= "https://proxy.golang.org,direct"
