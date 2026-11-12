@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v9.0.7
+## (2026-11-12)
+
+* systemd: break unit ordering loop cycle [Alex Gonzalez]
+* test: add systemd unit ordering check [Alex Gonzalez]
+
 # v9.0.6
 ## (2026-11-09)
 
