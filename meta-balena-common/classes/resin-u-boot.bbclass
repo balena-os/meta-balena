@@ -29,14 +29,20 @@ python __anonymous() {
 
 # A static patch won't apply to all u-boot versions, therefore
 # we edit the sources to silent the console in production builds.
-do_configure:append() {
+# This runs once the patches are applied, and not in do_configure, which runs
+# again on the same sources when UBOOT_VARS change. Each edit is skipped if it
+# is already there, in case do_patch runs again on the same sources too.
+balena_uboot_edit_sources() {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'osdev-image', 'false', 'true', d)}; then
         if grep -qP "void puts\(const char \*s\)" ${S}/common/console.c ; then
             line=$(grep -nP "void puts\(const char \*s\)" ${S}/common/console.c | cut -f1 -d:)
             increment=0
             for iter in ${line}; do
-                sed -i "$(expr ${iter} \+ 2 \+ ${increment}) i return;" ${S}/common/console.c
-                increment=`expr $increment + 1`
+                target=$(expr ${iter} \+ 2 \+ ${increment})
+                if [ "$(sed -n "${target}p" ${S}/common/console.c)" != "return;" ]; then
+                    sed -i "${target} i return;" ${S}/common/console.c
+                    increment=`expr $increment + 1`
+                fi
             done
         else
             bbfatal "Failed to patch u-boot for silencing console in production!"
@@ -46,12 +52,15 @@ do_configure:append() {
     # we use the following sed to replace the static patch resin-specific-env-integration-kconfig.patch
     if ${@bb.utils.contains('UBOOT_KCONFIG_SUPPORT', '1', 'true', 'false', d)}; then
         if grep -qP "const u*char default_environment\[] = {" ${S}/include/env_default.h; then
-            sed -i "/^const u*char default_environment\[] = {/a #include <env_resin.h>\n\tBALENA_ENV" ${S}/include/env_default.h
+            if ! grep -qx "#include <env_resin.h>" ${S}/include/env_default.h; then
+                sed -i "/^const u*char default_environment\[] = {/a #include <env_resin.h>\n\tBALENA_ENV" ${S}/include/env_default.h
+            fi
         else
             bbfatal "Failed to patch u-boot for including the balena env"
         fi
     fi
 }
+do_patch[postfuncs] += "balena_uboot_edit_sources"
 
 
 BALENA_BOOT_PART = "1"
@@ -150,8 +159,14 @@ do_generate_resin_uboot_configuration[vardeps] += "${UBOOT_VARS}"
 # inject config options in both places. We include config_resin in
 # config_default to be able to inject config options that aren't
 # changeable via Kconfig and config fragments.
+#
+# This runs again on the same sources after do_configure, so only add the
+# include if it is not there yet.
 do_inject_config_resin () {
-    sed -i '/^#endif.*/i #include <config_resin.h>' ${S}/include/config_defaults.h || true
+    if [ -f ${S}/include/config_defaults.h ] && \
+            ! grep -qx "#include <config_resin.h>" ${S}/include/config_defaults.h; then
+        sed -i '/^#endif.*/i #include <config_resin.h>' ${S}/include/config_defaults.h
+    fi
 }
 
 do_deploy:append() {
