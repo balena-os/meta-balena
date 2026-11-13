@@ -1,6 +1,18 @@
 Change log
 -----------
 
+# v9.1.0
+## (2026-11-13)
+
+* kirkstone: perf: build without libtraceevent [Alex Gonzalez]
+* docs: document the kernel recipe split for extension kernels [Alex Gonzalez]
+* kernel-devsrc: build and test headers for the extension kernel [Alex Gonzalez]
+* kernel-extension: stage the extension kernel in work-shared [Alex Gonzalez]
+* kernel-extension: run depmod against the extension System.map [Alex Gonzalez]
+* kernel-balena-override: append to CONFIG_LSM from a variable [Alex Gonzalez]
+* mobynit: update to v1.3.0 [Alex Gonzalez]
+* balena-extension-runtime: update to v2.0.2 [Alex Gonzalez]
+
 # v9.0.7
 ## (2026-11-12)
 

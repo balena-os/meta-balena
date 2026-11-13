@@ -1,4 +1,130 @@
 - commits:
+    - subject: "kirkstone: perf: build without libtraceevent"
+      hash: 2e29fc7a8320aa18b4dcddc374e15bcbe253dc1f
+      body: >
+        Linux 6.2 removed the bundled copy of libtraceevent from
+
+        tools/lib/traceevent. From 6.2 on, perf links against the library from
+
+        the sysroot. As Kirkstone has no libtraceevent recipe in poky or
+
+        meta-openembedded, perf fails to build against newer kernels on
+
+        kirkstone device types.
+
+
+        perf loses the tracepoint commands that need the library, such as "perf
+        trace"
+
+        and tracepoint parsing in "perf script". The other perf features do not
+
+        change.
+
+
+        The change is in meta-balena-kirkstone only. Later Yocto releases ship
+
+        libtraceevent and keep full perf support.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "docs: document the kernel recipe split for extension kernels"
+      hash: 2386cbeb306d8a6e485d8e8cba0900e37e028a6c
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-devsrc: build and test headers for the extension kernel"
+      hash: 473e6adf3fdd3a3c7a95595afa9b4efa444a8f21
+      body: ""
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-extension: stage the extension kernel in work-shared"
+      hash: ecb6e99b7d376bce4d3644ea3ac55e7e6b62204f
+      body: |
+        kernel-devsrc reads the configured tree through STAGING_KERNEL_DIR
+        and STAGING_KERNEL_BUILDDIR. For a kernel that is not "kernel",
+        kernel.bbclass moves both into WORKDIR, where no other recipe can
+        find them. Give the extension kernel its own work-shared pair.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-extension: run depmod against the extension System.map"
+      hash: dd0b204a95f3d95c8ab7b27083758978ea665d25
+      body: |
+        The stock kernel-extension-base postinst calls depmodwrapper, which
+        reads the base kernel's pkgdata. When the extension shares the base
+        kernel's version string, the index was built against the base
+        System.map. When the versions differ, depmodwrapper drops -F and the
+        index is never validated. USE_DEPMOD does not reach the postinst.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "kernel-balena-override: append to CONFIG_LSM from a variable"
+      hash: 20fad2605a27b37e501b5cd87cc3975b21c43505
+      body: >
+        A kernel config fragment can only replace CONFIG_LSM, never extend it,
+        so
+
+        every device repo that adopts the eBPF extension kernel had to carry the
+
+        same task. Move it here behind KERNEL_LSM_APPEND, which defaults to
+        empty
+
+        and leaves a kernel that does not set it untouched.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "mobynit: update to v1.3.0"
+      hash: 444605516a7b49c1825f923e1635fb46e6f9403d
+      body: |
+        Update from v1.2.0 to v1.3.0
+      footer:
+        Change-type: minor
+        change-type: minor
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "balena-extension-runtime: update to v2.0.2"
+      hash: e39a2c817a74ebf706d303e775e9fdbea4fa3e21
+      body: |
+        Update from v2.0.1 to v2.0.2.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 9.1.0
+  title: ""
+  date: 2026-11-13T18:27:01.068Z
+- commits:
     - subject: "systemd: break unit ordering loop cycle"
       hash: 07d020686a7854155789aa7354e2a97df6c3ce58
       body: >
