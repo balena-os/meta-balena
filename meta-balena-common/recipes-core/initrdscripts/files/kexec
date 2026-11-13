@@ -69,9 +69,9 @@ resolve_override() {
         info "kexec: using override kernel for ABI ${_abi}."
         ;;
     1)
-        # The extension is gone and its modules with it, so this kernel would
-        # boot with no drivers. A pending purge answers the same way.
-        warn "kexec: no deployed extension for ABI ${_abi}; falling back to stock"
+        # Nothing supplies the modules, so this kernel would boot with no
+        # drivers. A pending purge or disabled overlays answer the same way.
+        warn "kexec: nothing claims ABI ${_abi}; falling back to stock"
         return 1
         ;;
     *)
@@ -98,12 +98,6 @@ select_kernel() {
     SELECTED_KERNEL_ABI=""
     UNPROVEN=""
     TRIAL_PENDING=""
-
-    # mobynit's own test: a substring of any token
-    if grep -qE 'emergency|mobynit\.no_overlays' /proc/cmdline; then
-        warn "kexec: extension overlays disabled on the command line; booting stock"
-        return 0
-    fi
 
     ARMED_ABI=$(bootenv_get "${BOOTENV_FILE}" "kernel_override_abi")
     [ -n "${ARMED_ABI}" ] || return 0

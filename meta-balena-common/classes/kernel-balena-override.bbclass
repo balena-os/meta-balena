@@ -119,6 +119,54 @@ python do_kernel_balena_verify_fragments() {
 addtask kernel_balena_verify_fragments after do_kernel_balena_merge_fragments before do_compile
 do_kernel_balena_verify_fragments[dirs] += "${B}"
 
+# Symbols appended to the merged CONFIG_LSM list, in order. In-tree defconfigs
+# pin CONFIG_LSM. A fragment can only replace that list, never extend it.
+# Upstream puts bpf last in its own defaults, so append order matches.
+KERNEL_LSM_APPEND ?= ""
+
+# Ordered after do_kernel_balena_verify_fragments, not beside it. Both tasks
+# touch ${B}/.config. BitBake runs sibling tasks of one recipe in parallel, so
+# an unordered pair races this writer against that reader.
+python do_kernel_balena_extend_lsm() {
+    import os
+    import re
+
+    wanted = (d.getVar("KERNEL_LSM_APPEND") or "").split()
+    if not wanted:
+        return
+
+    config = os.path.join(d.getVar("B"), ".config")
+    current = kernel_balena_parse_config(config).get("CONFIG_LSM")
+    if current is None:
+        bb.fatal("kernel-balena-override: KERNEL_LSM_APPEND is \"%s\" but "
+                 "CONFIG_LSM is absent from %s, so this kernel has no LSM list "
+                 "to extend. Enable CONFIG_SECURITY."
+                 % (" ".join(wanted), config))
+
+    entries = [entry for entry in
+               (candidate.strip() for candidate in current.strip('"').split(",")) if entry]
+    added = [name for name in wanted if name not in entries]
+    if not added:
+        return
+    entries += added
+
+    with open(config) as handle:
+        content = handle.read()
+    content, replaced = re.subn(r"^CONFIG_LSM=.*$", 'CONFIG_LSM="%s"' % ",".join(entries),
+                                content, count=1, flags=re.MULTILINE)
+    # The parser strips leading space; this pattern does not.
+    if not replaced:
+        bb.fatal("kernel-balena-override: no '^CONFIG_LSM=' line to rewrite in "
+                 "%s, so %s would be dropped without an error."
+                 % (config, ", ".join(added)))
+    with open(config, "w") as handle:
+        handle.write(content)
+
+    bb.note("kernel-balena-override: CONFIG_LSM=\"%s\"" % ",".join(entries))
+}
+addtask kernel_balena_extend_lsm after do_kernel_balena_verify_fragments before do_compile
+do_kernel_balena_extend_lsm[dirs] += "${B}"
+
 # Fold fragment content into the task hashes so a change re-runs the merge and
 # the check. The verify logic itself lives in this class, so a change to it
 # already rehashes the task through the normal bbclass code checksum.

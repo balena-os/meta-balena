@@ -29,10 +29,12 @@ def map_DEBIAN_TUPLE(a, d):
 
 DEBIAN_TUPLE ?= "${@map_DEBIAN_TUPLE(d.getVar('ARCH'), d)}"
 
+KERNEL_HEADERS_TARBALL ?= "${DEPLOY_DIR_IMAGE}/kernel_modules_headers.tar.gz"
+
 do_compile() {
     rm -rf ${B}/work
     mkdir -p ${B}/work
-    cp ${DEPLOY_DIR_IMAGE}/kernel_modules_headers.tar.gz ${B}/work
+    cp ${KERNEL_HEADERS_TARBALL} ${B}/work/kernel_modules_headers.tar.gz
     cp "${UNPACKDIR}"/Dockerfile ${B}/work/
     cp -r "${UNPACKDIR}"/example_module ${B}/work/
 
@@ -44,3 +46,5 @@ do_compile() {
 # Explicitly depend on the do_deploy step as we use the deployed artefacts. DEPENDS doesn't cover that
 do_compile[depends] += "kernel-devsrc:do_deploy"
 do_compile[network] = "1"
+
+BBCLASSEXTEND = "extension"
