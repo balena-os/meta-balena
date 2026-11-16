@@ -16,6 +16,7 @@ fi
 set -e
 
 BOOTLOADER_CONFIG_LOCK_FILE="/var/volatile/bootloader_config.lock"
+# Argument names from ALLOWED_BOOTARGS_LIST, substituted at build time.
 ALLOWED_BOOTARGS=@@ALLOWED_BOOTARGS@@
 
 # Intel NUC image contains grub_extraenv for both MBR and EFI boot
@@ -66,11 +67,68 @@ get_valid_key_value_lines() {
     return 0
 }
 
+# Return 0 when $1 is a path under /var/lib/docker/volumes/, at most 512
+# characters, with no "//", and every character is a letter, digit, "/", "_", or "-".
+# The same rules run again at boot, in verify_extrafw in the extrafw initramfs module.
+verify_extra_fw_path() {
+    [ -n "$1" ] || return 1
+    [ "${#1}" -le 512 ] || return 1
+
+    case "$1" in
+        *[!A-Za-z0-9/_-]*) return 1 ;;
+        *//*) return 1 ;;
+        /var/lib/docker/volumes/?*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# $1 - stored boot argument, either <name> or <name>=<value>.
+# The name must be in ALLOWED_BOOTARGS. A value is checked only when one
+# is present, by the function for that name. Nothing in the value is evaluated.
+verify_bootloader_config_value() {
+    [ -n "$1" ] || return 1
+
+    local name="$1"
+    local value=""
+    local has_value=0
+    case "$1" in
+        *=*)
+            name="${1%%=*}"
+            value="${1#*=}"
+            has_value=1
+            ;;
+    esac
+    [ -n "${name}" ] || return 1
+
+    local allowed
+    local known=1
+    for allowed in "${ALLOWED_BOOTARGS[@]}"; do
+        if [ "${allowed}" = "${name}" ]; then
+            known=0
+            break
+        fi
+    done
+    [ "${known}" -eq 0 ] || return 1
+
+    [ "${has_value}" -eq 1 ] || return 0
+
+    case "${name}" in
+        firmware_class.path)
+            verify_extra_fw_path "${value}" || return 1
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+    return 0
+}
+
 # $1 - bootloader environment variable name
 # $2 - bootloader environment variable value.
 #
 # Bootloader environment variable is removed from
 # the environment files if $2 is not provided.
+
 bootloader_config_modify() {
     # Bail out if run on a SB system
     if type is_secured >/dev/null 2>&1; then
@@ -90,7 +148,6 @@ bootloader_config_modify() {
 
     local key="$1"
     local value="$2"
-    local is_allowed=0
     local escaped_key
 
     # Key and value are escaped for usage inside sed
@@ -98,17 +155,9 @@ bootloader_config_modify() {
 
     local escaped_value=""
     if [ -n "$value" ]; then
-        for allowed_arg in "${ALLOWED_BOOTARGS[@]}"; do
-            if [ "$allowed_arg" = "$value" ] ; then
-                is_allowed=1
-            fi
-        done
-
-        if [ $is_allowed -eq 0 ]; then
-            fail "Refusing to set ${key}=${value} - bootarg not in whitelist"
+        if ! verify_bootloader_config_value "$value"; then
+            fail "Refusing to set ${key}=${value}"
         fi
-
-        # Value can be a path, in the case of the extra firmware volume
         escaped_value=$(printf '%s\n' "$value" | sed 's/[\&|\\]/\\&/g')
     fi
 
