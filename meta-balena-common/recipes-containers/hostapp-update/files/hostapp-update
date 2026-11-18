@@ -23,6 +23,77 @@ ERROR() {
 	fi
 }
 
+# Map the inactive root slot to resin-data boot dir (boot-A / boot-B).
+data_boot_slot() {
+	if [ ! -e /dev/disk/by-state/inactive ] || [ ! -e /dev/disk/by-state/resin-rootA ]; then
+		return 1
+	fi
+	inactive_dev=$(readlink -f /dev/disk/by-state/inactive)
+	roota_dev=$(readlink -f /dev/disk/by-state/resin-rootA)
+	if [ "$inactive_dev" = "$roota_dev" ]; then
+		echo "boot-A"
+	else
+		echo "boot-B"
+	fi
+}
+
+# Stage hostapp /boot on resin-data boot-{A|B} for GRUB
+stage_boot_to_data_partition() {
+	container_id="$1"
+	slot=""
+
+	if ! mountpoint -q /mnt/data 2>/dev/null; then
+		INFO "Skipping data-partition boot staging (/mnt/data not mounted)"
+		return 0
+	fi
+
+	if ! slot=$(data_boot_slot); then
+		INFO "Skipping data-partition boot staging (inactive root slot unknown)"
+		return 0
+	fi
+
+	data_boot_dir="/mnt/data/${slot}"
+	data_boot_new="${data_boot_dir}.new"
+
+	rm -rf "$data_boot_new"
+	mkdir -p "$data_boot_new"
+	if ! _out=$(balena cp "${container_id}:/boot/." "${data_boot_new}/" 2>&1); then
+		ERROR "Failed to copy boot files to data partition: ${_out}"
+		exit 1
+	fi
+	if [ -z "$(ls -A "$data_boot_new" 2>/dev/null)" ]; then
+		ERROR "Hostapp /boot is empty"
+		exit 1
+	fi
+	sync -f /mnt/data
+
+	rm -rf "${data_boot_dir}.old" 2>/dev/null || true
+	if [ -d "$data_boot_dir" ]; then
+		mv "$data_boot_dir" "${data_boot_dir}.old"
+	fi
+	mv -T "$data_boot_new" "$data_boot_dir"
+	sync -f /mnt/data
+	rm -rf "${data_boot_dir}.old" 2>/dev/null || true
+
+	INFO "Staged boot payload to ${data_boot_dir}/"
+}
+
+# Root-slot boot dir holds mobynit init only
+install_hostapp_init() {
+	container_id="$1"
+	hostapp_boot="$2"
+
+	mkdir -p "$hostapp_boot"
+	if ! _out=$(balena cp "${container_id}:/boot/init" "${hostapp_boot}/" 2>&1); then
+		ERROR "Failed to copy mobynit init: ${_out}"
+		exit 1
+	fi
+	if [ ! -x "${hostapp_boot}/init" ]; then
+		ERROR "Hostapp /boot/init missing or not executable"
+		exit 1
+	fi
+}
+
 run_current_hooks_and_recover () {
 	if [ "$hooks_rollback" = 1 ]; then
 		# Run the current ones to cleanup the system.
@@ -124,13 +195,13 @@ elif [ "$remote_image" != "" ]; then
 	_out="$(balena pull "$HOSTAPP_IMAGE" 2>&1)"
 	INFO "${_out}"
 fi
-CONTAINER_ID=$(balena create --runtime="bare" --volume=/boot "$HOSTAPP_IMAGE" /bin/sh)
-BOOTSTRAP=$(balena inspect -f "{{range .Mounts}}{{.Destination}} {{.Source}}{{end}}" "$CONTAINER_ID" | awk '$1 == "/boot" { print $2 }' | head -n1)
+CONTAINER_ID=$(balena create --runtime="bare" "$HOSTAPP_IMAGE" /bin/sh)
 
-# Create boot entry
+stage_boot_to_data_partition "$CONTAINER_ID"
+
 rm -rf "$SYSROOT/hostapps/.new"
 mkdir -p "$SYSROOT/hostapps/.new"
-ln -sr "$BOOTSTRAP" "$SYSROOT/hostapps/.new/boot"
+install_hostapp_init "$CONTAINER_ID" "$SYSROOT/hostapps/.new/boot"
 sync -f "$SYSROOT"
 mv -T "$SYSROOT/hostapps/.new" "$SYSROOT/hostapps/$CONTAINER_ID"
 sync -f "$SYSROOT"
