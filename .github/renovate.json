@@ -25,9 +25,10 @@
     "commitBody": "Update {{depName}}\n\nChange-type: patch",
     "automerge": true
   },
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["(^|/)balena-supervisor.inc$"],
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)balena-supervisor.inc$/"],
       "matchStrings": ["SUPERVISOR_VERSION \\?= \"v?(?<currentValue>.*?)\"\\n"],
       "depNameTemplate": "balena-supervisor",
       "packageNameTemplate": "balena-os/balena-supervisor",
