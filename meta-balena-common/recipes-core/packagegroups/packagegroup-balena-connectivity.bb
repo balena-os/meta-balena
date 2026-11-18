@@ -12,6 +12,7 @@ CONNECTIVITY_MODULES = ""
 
 CONNECTIVITY_FIRMWARES ?= " \
     linux-firmware-ath9k \
+    linux-firmware-ath10k \
     linux-firmware-mt7601u \
     linux-firmware-ralink \
     linux-firmware-rtl8192cu \
