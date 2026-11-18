@@ -4,9 +4,19 @@ set -o errexit
 
 . /usr/libexec/os-helpers-logging
 
+# Include unresolved sources (-a) so configured-but-not-yet-resolved
+# pools are not mistaken for an empty source set.
+source_states=$(chronyc -n sources -a | tail -n +3 | awk '{ print $1 }')
+
+# No sources configured (e.g. ntpServers "null" and no DHCP Option 42):
+# treat as healthy so the watchdog does not restart chronyd in a loop.
+if [ -z "${source_states}" ]; then
+	info "No NTP sources configured - skipping sync check"
+	exit 0
+fi
+
 offline="true"
-sources=$(chronyc -n sources | tail -n +3 | awk '{ print $1 }')
-for source in $sources; do
+for source in $source_states; do
 	if [[ $source = *\** ]]; then
 		offline="false"
 	fi
