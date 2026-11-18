@@ -42,4 +42,4 @@ do_mkimage:append() {
     fi
 }
 
-do_mkimage[depends] += "${@oe.utils.conditional('SIGN_API','','',' balena-keys:do_deploy',d)}"
+do_mkimage[depends] += "${@oe.utils.conditional('SIGN_API','','',' balena-keys-gpg:do_deploy',d)}"
