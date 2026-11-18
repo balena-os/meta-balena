@@ -1,4 +1,116 @@
 - commits:
+    - subject: "tests/os: Detach recover-sshd-socket connections from the SSH session"
+      hash: 83dd5d90b1d6d34de430d045d6c36360df551bf0
+      body: |
+        The sleep feeding each connection kept the session's stderr open, so
+        the command returned 10 seconds late. Redirect the whole pipeline.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: guille-vega <guillermo.vega@balena.io>
+        signed-off-by: guille-vega <guillermo.vega@balena.io>
+      author: guille-vega
+      nested: []
+    - subject: "tests/cloud: Restart the os-config timer instead of changing the clock"
+      hash: e4dcb19504440eba39fbd2b9af992e22c502268a
+      body: |
+        Moving the clock made OpenVPN reconnect, so the command's result was
+        lost and the jump was retried. Restarting the timer also draws a new
+        random delay. Also compare with the trigger before the first restart.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: guille-vega <guillermo.vega@balena.io>
+        signed-off-by: guille-vega <guillermo.vega@balena.io>
+      author: guille-vega
+      nested: []
+    - subject: "tests/os: Detach the safe-reboot lock holder from the SSH session"
+      hash: c9df4cd85c630f84466a68ce289d91bae277c284
+      body: |
+        The background lock holder kept the session's output open, so with SSH
+        keepalives the command never returned. The trailing & backgrounds the
+        whole list, so redirect all of it.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: guille-vega <guillermo.vega@balena.io>
+        signed-off-by: guille-vega <guillermo.vega@balena.io>
+      author: guille-vega
+      nested: []
+    - subject: Update tests/leviathan digest to e50cc2b
+      hash: fd8bfeb678798f934dd7978407b61f932c9d7d28
+      body: Update tests/leviathan
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "core: worker: Keep the DUT port forwards alive"
+              hash: c794dfc25e5b78a31d258b206a45e4bdc19ab7c4
+              body: >
+                The SSH port forwards to the supervisor, SSH and engine ports of
+                the DUT
+
+                are opened once and used for the whole suite, but they send no
+
+                keepalives. If anything on the path to the worker closes idle
+
+                connections, a forward is closed while a test waits, for example
+                during
+
+                a reboot or a hostapp update, and nothing opens it again, so
+                every later
+
+                command fails until the test times out.
+
+
+                Send a keepalive every 15 seconds, and give up after 3 missed
+                replies.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: guille-vega <guillermo.vega@balena.io>
+                signed-off-by: guille-vega <guillermo.vega@balena.io>
+              author: guille-vega
+              nested: []
+            - subject: "core: utils: Keep SSH sessions through the proxy alive"
+              hash: 4478147b596bf7690cd895e3a9a52288dd2ce175
+              body: >
+                The balenaCloud SSH proxy now closes sessions that are idle for
+                30
+
+                seconds, since the idle timeout it was configured with is
+                applied (see
+
+                https://github.com/balena-io/sshproxy/pull/352).
+                executeCommandOverSSH()
+
+                sent a keepalive every 50 minutes (10000 * 60 * 5 ms, not the 5
+                minutes
+
+                the comment said), so a command that prints nothing for 30
+                seconds, such
+
+                as a long wait on the DUT, is now disconnected before it
+                finishes.
+
+
+                Send a keepalive every 10 seconds instead.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: guille-vega <guillermo.vega@balena.io>
+                signed-off-by: guille-vega <guillermo.vega@balena.io>
+              author: guille-vega
+              nested: []
+          version: leviathan-2.36.135
+          title: ""
+          date: 2026-11-13T13:41:13.265Z
+  version: 9.1.1
+  title: ""
+  date: 2026-11-18T07:16:21.686Z
+- commits:
     - subject: "kirkstone: perf: build without libtraceevent"
       hash: 2e29fc7a8320aa18b4dcddc374e15bcbe253dc1f
       body: >
