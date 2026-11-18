@@ -20,6 +20,8 @@ if [ "${offline}" = "true" ]; then
 		error "Failed to trigger NTP sync"
 		exit 1
 	fi
+	# Try to sync system time with RTC
+	/bin/systemctl start timesync-rtc.service
 fi
 
 if ! /usr/bin/chronyc waitsync 60 0.1 0.0 1; then
