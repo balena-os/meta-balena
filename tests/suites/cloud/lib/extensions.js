@@ -45,6 +45,10 @@ const stagedConfig = () => {
 			parseInt(staged.releaseId, 10) ||
 			parseInt(process.env.HOSTAPP_RELEASE_ID, 10) ||
 			null,
+		supervisorReleaseId:
+			parseInt(staged.supervisorReleaseId, 10) ||
+			parseInt(process.env.SUPERVISOR_RELEASE_ID, 10) ||
+			null,
 	};
 };
 
@@ -225,6 +229,14 @@ const pinRelease = async (that, releaseId) => {
 	});
 };
 
+const pinSupervisor = async (that, releaseId) => {
+	return that.cloud.balena.pine.patch({
+		resource: 'device',
+		options: { $filter: { uuid: that.balena.uuid } },
+		body: { should_be_managed_by__release: releaseId },
+	});
+};
+
 // The build creates the image_profile rows, not the tests
 const discoverProfiles = async (that, releaseId) => {
 	const rows = await resinApi(that, 'GET', 'image_profile', {
@@ -343,6 +355,7 @@ module.exports = {
 	listActivations,
 	nudgeHelios,
 	pinRelease,
+	pinSupervisor,
 	releaseInfo,
 	stagedConfig,
 	targetState,

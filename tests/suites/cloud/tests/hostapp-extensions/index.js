@@ -11,6 +11,9 @@ const ext = require('../../lib/extensions');
 // The device runs the build that the release pins.
 // HE-PA-01 and HE-PA-02 need an older OS.
 
+// The first helios with hostapp extension support
+const MIN_HELIOS = [0, 28, 0];
+
 const READY = 0;
 const OVERLAYS = 1;
 const OVERRIDE = 2;
@@ -257,6 +260,41 @@ module.exports = {
 			gate.reason = 'The release carries no profile to activate';
 			this.suite.context.set({ extensionsGate: gate });
 			return;
+		}
+
+		const supervisorReleaseId = ext.stagedConfig().supervisorReleaseId;
+		if (supervisorReleaseId !== null) {
+			await ext.pinSupervisor(this, supervisorReleaseId);
+			// The timer applies a pin up to 75 minutes after boot
+			await ext.host(this, 'systemctl start update-balena-supervisor');
+			await test.resolves(
+				this.utils.waitUntil(
+					async () => {
+						return (
+							(await ext.host(
+								this,
+								'systemctl is-active update-balena-supervisor || true',
+							)) !== 'active'
+						);
+					},
+					false,
+					240, // 20 min
+					5000,
+				),
+				'Should finish the supervisor update',
+			);
+			// The old core-next can answer until the new one starts
+			await test.resolves(
+				this.utils.waitUntil(
+					async () => {
+						return ext.atLeast(await ext.heliosVersion(this), MIN_HELIOS);
+					},
+					false,
+					240, // 20 min
+					5000,
+				),
+				'Should run the helios of the pinned supervisor',
+			);
 		}
 
 		// The supervisor starts core-next after it starts itself
