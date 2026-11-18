@@ -25,11 +25,11 @@ module.exports = {
 			run: async function(test) {
 				let result = '';
 				await this.worker.executeCommandInHostOS(
-					`touch /tmp/reboot-check && \
+					`{ touch /tmp/reboot-check && \
 					mkdir -p /tmp/balena-supervisor/services/test/ && \
 					touch /tmp/balena-supervisor/services/test/updates.lock && \
 					exec {FD}</tmp/balena-supervisor/services/test/updates.lock && \
-					(flock -n $FD && sleep infinity) &`,
+					(flock -n $FD && sleep infinity); } > /dev/null 2>&1 &`,
 					this.link,
 				)
 				await this.worker.executeCommandInHostOS(
@@ -101,11 +101,11 @@ module.exports = {
 				let targetState
 				let result = '';
 				await this.worker.executeCommandInHostOS(
-					`touch /tmp/reboot-check && \
+					`{ touch /tmp/reboot-check && \
 					mkdir -p /tmp/balena-supervisor/services/test/ && \
 					touch /tmp/balena-supervisor/services/test/updates.lock && \
 					exec {FD}</tmp/balena-supervisor/services/test/updates.lock && \
-					(flock -n $FD && sleep infinity) &`,
+					(flock -n $FD && sleep infinity); } > /dev/null 2>&1 &`,
 					this.link,
 				)
 				await this.worker.executeCommandInHostOS(

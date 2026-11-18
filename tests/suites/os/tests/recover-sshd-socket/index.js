@@ -82,7 +82,7 @@ module.exports = {
 				const result = await this.worker.executeCommandInHostOS(
 					[
 						'for i in $(seq 1 5); do',
-						'  (sleep 10 | nc 127.0.0.1 22222 >/dev/null 2>&1 &)',
+						'  (sleep 10 | nc 127.0.0.1 22222 &) >/dev/null 2>&1',
 						'done',
 						'systemctl show -p Result --value sshd.socket',
 					].join('\n'),
