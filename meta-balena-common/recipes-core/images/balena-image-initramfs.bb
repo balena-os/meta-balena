@@ -56,3 +56,14 @@ IMAGE_ROOTFS_MAXSIZE = "32768"
 
 
 BAD_RECOMMENDATIONS += "busybox-syslog"
+
+# No kernel module may be installed in the initramfs. The extension kernel embeds this
+# archive and does not rebuild it, so a module built for the stock kernel
+# fails its signature check, or its vermagic and modversions check.
+fail_on_kernel_modules() {
+    modules=$(find ${IMAGE_ROOTFS} -type f \( -name '*.ko' -o -name '*.ko.*' \))
+    if [ -n "$modules" ]; then
+        bbfatal "balena-image-initramfs contains kernel modules: ${modules}"
+    fi
+}
+ROOTFS_POSTPROCESS_COMMAND += "fail_on_kernel_modules;"
