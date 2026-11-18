@@ -51,3 +51,28 @@ We have a [rig](https://github.com/balena-io-hardware/autokit-rig-sw) of autokit
 We also plan to make these available for external users.
 
 All autokits are balena devices, and are part of a fleet of tester devices. The leviathan framework handles finding available autokits in this fleet, sending them artifacts to be tested, running the tests, and collecting the logs. 
+
+## Unit tests
+
+The `unit` directory holds [bats](https://github.com/bats-core/bats-core) tests for the shell code in this layer.
+The tests run on the build host. They do not need a device or an image.
+
+```sh
+cd tests/unit
+npm ci
+npm test
+```
+
+Each function under test runs in a fresh shell of the kind its file names on the first line, sh when it names none.
+The suites use the real tools, because a stand-in drifts from the tool it copies.
+`os-helpers-bootenv` needs `grub-editenv`.
+
+CI runs the suites in a container that builds the busybox `sh` the layer ships on device, so the result does not depend on the host shell.
+Run the same container locally:
+
+```sh
+docker compose -f docker-compose.test.yml run --build --rm sut
+```
+
+To add a suite, put `<unit>.bats` in `tests/unit` and its fixtures in `helpers/<unit>.bash`.
+Load `helpers/common` in `setup`. See `helpers/common.bash` for the functions it supplies.

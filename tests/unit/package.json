@@ -1,0 +1,15 @@
+{
+  "name": "meta-balena-unit-tests",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Unit tests for the shell in this layer",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "bats --print-output-on-failure ./*.bats"
+  },
+  "devDependencies": {
+    "bats": "1.13.0",
+    "bats-assert": "2.2.4",
+    "bats-support": "0.3.0"
+  }
+}

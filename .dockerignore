@@ -1,0 +1,3 @@
+# Keep the build context of tests/unit/Dockerfile small.
+.git
+tests/unit/node_modules
