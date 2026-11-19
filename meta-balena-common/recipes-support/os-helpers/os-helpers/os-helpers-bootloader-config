@@ -16,7 +16,6 @@ fi
 set -e
 
 BOOTLOADER_CONFIG_LOCK_FILE="/var/volatile/bootloader_config.lock"
-ALLOWED_BOOTARGS=@@ALLOWED_BOOTARGS@@
 
 # Intel NUC image contains grub_extraenv for both MBR and EFI boot
 bootloader_config_files=("extra_uEnv.txt" "grub/grub_extraenv" "EFI/BOOT/grub_extraenv" "bootenv")
@@ -90,7 +89,6 @@ bootloader_config_modify() {
 
     local key="$1"
     local value="$2"
-    local is_allowed=0
     local escaped_key
 
     # Key and value are escaped for usage inside sed
@@ -98,17 +96,6 @@ bootloader_config_modify() {
 
     local escaped_value=""
     if [ -n "$value" ]; then
-        for allowed_arg in "${ALLOWED_BOOTARGS[@]}"; do
-            if [ "$allowed_arg" = "$value" ] ; then
-                is_allowed=1
-            fi
-        done
-
-        if [ $is_allowed -eq 0 ]; then
-            fail "Refusing to set ${key}=${value} - bootarg not in whitelist"
-        fi
-
-        # Value can be a path, in the case of the extra firmware volume
         escaped_value=$(printf '%s\n' "$value" | sed 's/[\&|\\]/\\&/g')
     fi
 
