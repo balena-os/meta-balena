@@ -321,8 +321,9 @@ wait4udev() {
     DM_DEVICE="$1"
 
     I=0
-    # DM_UDEV_RULES_VSN is the last variable that 10-dm.rules defines for an active device
-    while ! udevadm info "${DM_DEVICE}" | grep -q "DM_UDEV_RULES_VSN=2"; do
+    # DM_UDEV_RULES_VSN is the last variable that 10-dm.rules defines for an active device.
+    # It is 2 in older releases and 3 in the lvm2 rules of Yocto 6.0.
+    while ! udevadm info "${DM_DEVICE}" | grep -qE "DM_UDEV_RULES_VSN=[2-9]"; do
         if [ "${I}" -gt 4 ]; then
             return 1
         fi

@@ -10,8 +10,11 @@ prepare_enabled() {
 }
 
 prepare_run() {
-    # Mount /run here so we can store logs and other data from initramfs
-    if ! mount -t tmpfs -o "nosuid,nodev,strictatime,mode=0755" tmpfs /run; then
+    # Mount /run here so we can store logs and other data from initramfs.
+    # Since Yocto 5.3 the initramfs-framework init mounts it before udev
+    # starts, and mounting over it hides the udev runtime directory.
+    if ! mountpoint -q /run && \
+        ! mount -t tmpfs -o "nosuid,nodev,strictatime,mode=0755" tmpfs /run; then
         warn "Couldn't mount /run so initramfs logs will not be persistent."
     fi
     mkdir -m 0755 /run/initramfs
