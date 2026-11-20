@@ -102,21 +102,35 @@ UBOOT_VARS = "BALENA_UBOOT_DEVICES \
 
 UBOOT_VARS += "${@bb.utils.contains('OS_OVERLAP_CHECK_ENABLED', '1', 'CONFIG_CMD_HASH', '', d)}"
 
+# Sources are unpacked to UNPACKDIR since Yocto 5.1, and to WORKDIR before
+BALENA_CHECK_CRC32_SRC = "${@d.getVar('UNPACKDIR') or d.getVar('WORKDIR')}/balena_check_crc32.c"
+
 do_inject_check_crc32_cmd() {
     if ${@bb.utils.contains('OS_OVERLAP_CHECK_ENABLED', '1', 'true', 'false', d)}; then
 	# upstream commit 09140113108 removes the cmd_tbl_t typedef
         if ! grep -q -r "cmd_tbl_t" ${S}/cmd/ ; then
-            sed -i 's/cmd_tbl_t/struct cmd_tbl/g' ${WORKDIR}/balena_check_crc32.c
+            sed -i 's/cmd_tbl_t/struct cmd_tbl/g' ${BALENA_CHECK_CRC32_SRC}
         fi
         # Older u-boot versions do not have env.h
         if [ ! -f ${S}/include/env.h ]; then
-            sed -i 's/env.h/common.h/g' ${WORKDIR}/balena_check_crc32.c
+            sed -i 's/env.h/common.h/g' ${BALENA_CHECK_CRC32_SRC}
             if ! grep -q env_get "${S}/include/common.h"; then
-                sed -i 's/env_get/getenv/g' "${WORKDIR}/balena_check_crc32.c"
-                sed -i 's/env_set/setenv/g' "${WORKDIR}/balena_check_crc32.c"
+                sed -i 's/env_get/getenv/g' "${BALENA_CHECK_CRC32_SRC}"
+                sed -i 's/env_set/setenv/g' "${BALENA_CHECK_CRC32_SRC}"
             fi
         fi
-        cp ${WORKDIR}/balena_check_crc32.c ${S}/cmd/
+        # Newer u-boot versions removed common.h and force-include config.h,
+        # and string.h is no longer included implicitly. The task can run
+        # again on the same file, so only add string.h once.
+        if [ ! -f ${S}/include/common.h ]; then
+            sed -i -e '/^#include <common.h>$/d' -e '/^#include <config.h>$/d' \
+                ${BALENA_CHECK_CRC32_SRC}
+            if ! grep -qx "#include <string.h>" ${BALENA_CHECK_CRC32_SRC}; then
+                sed -i 's/^#include <command.h>$/#include <command.h>\n#include <string.h>/' \
+                    ${BALENA_CHECK_CRC32_SRC}
+            fi
+        fi
+        cp ${BALENA_CHECK_CRC32_SRC} ${S}/cmd/
         if ! grep -q "balena_check_crc32" ${S}/cmd/Makefile ; then
             cat >> ${S}/cmd/Makefile << EOF
 ifndef CONFIG_SPL_BUILD
