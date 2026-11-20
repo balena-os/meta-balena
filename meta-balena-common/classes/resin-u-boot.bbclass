@@ -102,21 +102,31 @@ UBOOT_VARS = "BALENA_UBOOT_DEVICES \
 
 UBOOT_VARS += "${@bb.utils.contains('OS_OVERLAP_CHECK_ENABLED', '1', 'CONFIG_CMD_HASH', '', d)}"
 
+# Edit a copy in the U-Boot tree, so the task can run again on the same file
+BALENA_CHECK_CRC32_SRC = "${S}/cmd/balena_check_crc32.c"
+
 do_inject_check_crc32_cmd() {
     if ${@bb.utils.contains('OS_OVERLAP_CHECK_ENABLED', '1', 'true', 'false', d)}; then
+        cp ${UNPACKDIR}/balena_check_crc32.c ${BALENA_CHECK_CRC32_SRC}
 	# upstream commit 09140113108 removes the cmd_tbl_t typedef
-        if ! grep -q -r "cmd_tbl_t" ${S}/cmd/ ; then
-            sed -i 's/cmd_tbl_t/struct cmd_tbl/g' ${WORKDIR}/balena_check_crc32.c
+        if ! grep -q -r --exclude=balena_check_crc32.c "cmd_tbl_t" ${S}/cmd/ ; then
+            sed -i 's/cmd_tbl_t/struct cmd_tbl/g' ${BALENA_CHECK_CRC32_SRC}
         fi
         # Older u-boot versions do not have env.h
         if [ ! -f ${S}/include/env.h ]; then
-            sed -i 's/env.h/common.h/g' ${WORKDIR}/balena_check_crc32.c
+            sed -i 's/env.h/common.h/g' ${BALENA_CHECK_CRC32_SRC}
             if ! grep -q env_get "${S}/include/common.h"; then
-                sed -i 's/env_get/getenv/g' "${WORKDIR}/balena_check_crc32.c"
-                sed -i 's/env_set/setenv/g' "${WORKDIR}/balena_check_crc32.c"
+                sed -i 's/env_get/getenv/g' "${BALENA_CHECK_CRC32_SRC}"
+                sed -i 's/env_set/setenv/g' "${BALENA_CHECK_CRC32_SRC}"
             fi
         fi
-        cp ${WORKDIR}/balena_check_crc32.c ${S}/cmd/
+        # Newer u-boot versions removed common.h and force-include config.h,
+        # and string.h is no longer included implicitly
+        if [ ! -f ${S}/include/common.h ]; then
+            sed -i -e '/^#include <common.h>$/d' -e '/^#include <config.h>$/d' \
+                -e 's/^#include <command.h>$/#include <command.h>\n#include <string.h>/' \
+                ${BALENA_CHECK_CRC32_SRC}
+        fi
         if ! grep -q "balena_check_crc32" ${S}/cmd/Makefile ; then
             cat >> ${S}/cmd/Makefile << EOF
 ifndef CONFIG_SPL_BUILD
