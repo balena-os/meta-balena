@@ -16,7 +16,6 @@ services:
         - "images/__MACHINE__/compressed*/part-*.deflate"
         - "images/__MACHINE__/*.manifest"
         - "images/__MACHINE__/kernel_modules_headers.tar.gz"
-        - "images/__MACHINE__/rpi-eeprom/secure-boot-lock/"
         - "cyclonedx-export/**/*.json"
         - "licenses/**"
     labels:
