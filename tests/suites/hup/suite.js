@@ -132,6 +132,16 @@ const enableExternalAntenna  = async (imagePath) => {
 	}
 };
 
+// Commands that break the inactive slot, shared by the rollback tests
+// Anchored: an altboot fallback needs the full REBOOT_TIMEOUT
+const REDUCE_HEALTH_WINDOW =
+	'sed -i -e "s/^COUNT=.*/COUNT=3/" -e "s/^TIMEOUT=.*/TIMEOUT=10/" ' +
+	'$(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?';
+const BREAK_ENGINE =
+	'ln -sf /dev/null ' +
+	'$(find /mnt/sysroot/inactive/ | grep "usr/bin/balena-engine$") ; echo $?';
+const BREAK_INIT = 'rm /mnt/sysroot/inactive/current/boot/init ; echo $?';
+
 // Executes the HUP process on the DUT
 const doHUP = async (that, test, mode, target) => {
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
@@ -238,6 +248,8 @@ const initDUT = async (that, test, target) => {
 		`Device ${that.link} should be reachable over local SSH connection`
 	)
 	test.comment(`DUT flashed`);
+	// The flash wipes the cached crc-gate builds on the DUT
+	that.suite.context.set({ crcGate: null });
 
 	// Retrieving journalctl logs
 	that.teardown.register(async () => {
@@ -356,6 +368,9 @@ module.exports = {
 				checkUnderVoltage: checkUnderVoltage,
 				doHUP: doHUP,
 				initDUT: initDUT,
+				REDUCE_HEALTH_WINDOW: REDUCE_HEALTH_WINDOW,
+				BREAK_ENGINE: BREAK_ENGINE,
+				BREAK_INIT: BREAK_INIT,
 			},
 		});
 
@@ -467,5 +482,8 @@ module.exports = {
 	tests: [
 		'./tests/rollbacks',
 		'./tests/smoke',
+		'./tests/extensions',
+		// Last: it re-flashes the DUT to the previous release
+		'./tests/extensions-previous-release',
 	],
 };
