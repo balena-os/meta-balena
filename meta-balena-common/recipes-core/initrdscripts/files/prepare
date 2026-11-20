@@ -10,10 +10,17 @@ prepare_enabled() {
 }
 
 prepare_run() {
-    # Mount /run here so we can store logs and other data from initramfs
-    if ! mount -t tmpfs -o "nosuid,nodev,strictatime,mode=0755" tmpfs /run; then
-        warn "Couldn't mount /run so initramfs logs will not be persistent."
-    fi
+    # Mount /run here so we can store logs and other data from initramfs.
+    # Since Yocto 5.3 the initramfs-framework init mounts it, without options,
+    # before udev starts. Mounting over it hides the udev runtime directory, so
+    # remount it instead: finish moves it to the root filesystem. tmpfs ignores
+    # mode on remount, so set it with chmod.
+    RUN_OPTS="nosuid,nodev,strictatime"
+    if mountpoint -q /run; then
+        mount -o "remount,${RUN_OPTS}" /run && chmod 0755 /run
+    else
+        mount -t tmpfs -o "${RUN_OPTS},mode=0755" tmpfs /run
+    fi || warn "Couldn't mount /run so initramfs logs will not be persistent."
     mkdir -m 0755 /run/initramfs
 
     # shellcheck disable=SC2154
