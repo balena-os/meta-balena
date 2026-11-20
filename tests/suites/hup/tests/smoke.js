@@ -26,14 +26,16 @@ module.exports = {
 			// which is fine for our purposes.)
 			title: 'HUP from this release',
 			run: async function (test) {
-				await runSmokeTest(this, test);
+				await runSmokeTest(this, test, { rollbackHealthActive: true });
 			},
 		},
 	],
 };
 
 
-async function runSmokeTest(that, test) {
+async function runSmokeTest(that, test, { rollbackHealthActive = false } = {}) {
+	const secureboot = that.os.configJson.installer.secureboot;
+
 	const activePartition = await that.worker.executeCommandInHostOS(
 		`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
 		that.link,
@@ -72,12 +74,39 @@ async function runSmokeTest(that, test) {
 		"Should create files in the hello-world volume"
 	);
 
-	await that.hup.doHUP(
+	// A HUP with rollback-health active once skipped the db append
+	if (secureboot && rollbackHealthActive) {
+		test.is(
+			await that.worker.executeCommandInHostOS(
+				`touch /mnt/state/rollback-health-breadcrumb && systemctl start rollback-health ; echo $?`,
+				that.link,
+			),
+			'0',
+			'Should start rollback-health',
+		);
+		test.is(
+			await that.worker.executeCommandInHostOS(
+				`systemctl show -p ActiveState --value rollback-health`,
+				that.link,
+			),
+			'active',
+			'rollback-health should be active before the HUP',
+		);
+	}
+
+	const hupLog = await that.hup.doHUP(
 		that,
 		test,
 		'local',
 		that.link,
 	);
+
+	if (secureboot) {
+		test.ok(
+			hupLog.includes('Appending db.auth to the UEFI db'),
+			'Should append db.auth to the UEFI db',
+		);
+	}
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
