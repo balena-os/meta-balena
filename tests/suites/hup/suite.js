@@ -133,6 +133,7 @@ const enableExternalAntenna  = async (imagePath) => {
 };
 
 // Executes the HUP process on the DUT
+// hostapp-update logs to stderr; redirect to keep the log
 const doHUP = async (that, test, mode, target) => {
 	const balenaHostTmpPath = "/mnt/sysroot/inactive/balena/tmp";
 	const hupLoadTmp = "/mnt/data/resin-data/tmp";
@@ -175,13 +176,13 @@ const doHUP = async (that, test, mode, target) => {
 			);
 
 			test.comment(`Running: hostapp-update -f ${that.hostappPath}`);
-			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -f ${that.hostappPath}`, target);
+			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -f ${that.hostappPath} 2>&1`, target);
 
 			break;
 
 		case 'image':
 			test.comment(`Running: hostapp-update -i ${that.hupOs.image.path}`);
-			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -i ${that.hupOs.image.path}`, target);
+			hupLog = await that.worker.executeCommandInHostOS(`hostapp-update -i ${that.hupOs.image.path} 2>&1`, target);
 			break;
 
 		default:
