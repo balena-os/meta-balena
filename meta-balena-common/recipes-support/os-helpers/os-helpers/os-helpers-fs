@@ -185,7 +185,13 @@ regenerate_uuid() {
             fi
             ;;
         ext*)
-            if ! e2fsck -fp "$dev"; then
+            # e2fsck -p status is a bit sum. 1 means errors were corrected,
+            # 2 means they were corrected and a reboot is advised, 3 is both.
+            # A journal replay or clearing orphan_present exits 1. 4 and above
+            # mean the filesystem was left unrepaired or e2fsck itself failed.
+            e2fsck_status=0
+            e2fsck -fp "$dev" || e2fsck_status=$?
+            if [ "$e2fsck_status" -gt 3 ]; then
                 return 1
             fi
             new_uuid=$(sed 's/^[^-]*/ba1eadef/' < /proc/sys/kernel/random/uuid)
