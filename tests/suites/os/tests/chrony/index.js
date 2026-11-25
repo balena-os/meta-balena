@@ -95,18 +95,14 @@ module.exports = {
 				test.comment('checking system clock synchronized...');
 				await this.utils.waitUntil(async () => {
 					result = await this.worker.executeCommandInHostOS(
-						'timedatectl | grep System',
+						"chronyc tracking | grep 'Leap status'",
 						this.link,
 					);
-					return result === 'System clock synchronized: yes';
+					return result.includes('Normal');
 				}, false, 2 * 60, 1000);
-				result = await this.worker.executeCommandInHostOS(
-					'timedatectl | grep System',
-					this.link,
-				);
 				test.is(
-					result,
-					'System clock synchronized: yes',
+					result.includes('Normal'),
+					true,
 					'System clock should be synchronized',
 				);
 			},
