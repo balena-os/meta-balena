@@ -130,18 +130,6 @@ verify_bootloader_config_value() {
 # the environment files if $2 is not provided.
 
 bootloader_config_modify() {
-    # Bail out if run on a SB system
-    if type is_secured >/dev/null 2>&1; then
-        # is_secured is used on an already provisioned system
-        # to check if it has secure boot enabled.
-        # Bootloader configuration is not performed
-        # during flashing.
-        if is_secured ; then
-            warn "Bootloader configuration not available on secure boot systems"
-            exit 0
-        fi
-    fi
-
     if [ "$#" -lt 1 ]; then
         fail "Bootloader environment variable not provided"
     fi
@@ -169,7 +157,7 @@ bootloader_config_modify() {
         flock -x 200
         for bootloader_file in "${bootloader_config_files[@]}"; do
             local file_updated=0
-            local bootloader_config_file="${BALENA_BOOT_MOUNTPOINT}/${bootloader_file}"
+            local bootloader_config_file="${BALENA_NONENC_BOOT_MOUNTPOINT}/${bootloader_file}"
             local is_grub_extraenv=0
             local is_bootenv=0
 
