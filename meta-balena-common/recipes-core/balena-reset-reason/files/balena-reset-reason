@@ -1,0 +1,121 @@
+#!/bin/sh
+#
+# Copyright 2026 Balena Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Reports why the previous boot ended.
+
+set -eu
+
+# shellcheck disable=SC1091
+. /usr/libexec/os-helpers-logging
+# shellcheck disable=SC1091
+[ -f /usr/libexec/os-helpers-reset-reason ] && . /usr/libexec/os-helpers-reset-reason
+
+PSTORE_ARCHIVE="/var/lib/systemd/pstore"
+
+# include/uapi/linux/watchdog.h
+WDIOF_OVERHEAT=0x0001
+WDIOF_EXTERN1=0x0004
+WDIOF_EXTERN2=0x0008
+WDIOF_POWERUNDER=0x0010
+WDIOF_CARDRESET=0x0020
+WDIOF_POWEROVER=0x0040
+
+PREV_BOOT="unknown"
+
+# Silent without a persistent journal, because there is no previous boot to
+# read and saying so on every boot would be noise.
+report_shutdown_record() {
+	_prev=$(journalctl -b -1 -n 200 --no-pager 2>/dev/null) || return 0
+	[ -n "${_prev}" ] || return 0
+
+	if printf '%s\n' "${_prev}" |
+		grep -qE "Shutting down|Reached target.*[Ss]hutdown"; then
+		PREV_BOOT="clean"
+		info "previous boot ended cleanly"
+	else
+		PREV_BOOT="unclean"
+		warn "previous boot ended without a shutdown record"
+	fi
+}
+
+decode_bootstatus() {
+	_v="$1"
+	_names=""
+	[ $(( _v & WDIOF_CARDRESET )) -eq 0 ] || _names="${_names} card-reset"
+	[ $(( _v & WDIOF_POWERUNDER )) -eq 0 ] || _names="${_names} power-fault"
+	[ $(( _v & WDIOF_POWEROVER )) -eq 0 ] || _names="${_names} over-voltage"
+	[ $(( _v & WDIOF_OVERHEAT )) -eq 0 ] || _names="${_names} overheat"
+	[ $(( _v & WDIOF_EXTERN1 )) -eq 0 ] || _names="${_names} extern1"
+	[ $(( _v & WDIOF_EXTERN2 )) -eq 0 ] || _names="${_names} extern2"
+	printf '%s' "${_names# }"
+}
+
+# Many drivers never populate bootstatus, so a zero is not evidence of a clean
+# reset. Report the raw value either way.
+report_bootstatus() {
+	for _f in /sys/class/watchdog/watchdog*/bootstatus; do
+		[ -r "${_f}" ] || continue
+		_dev=$(basename "$(dirname "${_f}")")
+		_raw=$(cat "${_f}" 2>/dev/null) || continue
+		_flags=$(decode_bootstatus "${_raw}")
+		if [ -n "${_flags}" ]; then
+			warn "${_dev} bootstatus=${_raw} (${_flags})"
+		else
+			info "${_dev} bootstatus=${_raw} (no flags set or unreported)"
+		fi
+	done
+}
+
+# One process per record; warn forks per line
+log_record() {
+	sed "s|^|${2}: |" "$1" |
+		systemd-cat --identifier="${ME}" --priority=warning 2>/dev/null || true
+}
+
+# Files are deleted once logged, so none is stale
+report_pstore() {
+	[ -d "${PSTORE_ARCHIVE}" ] || return 0
+	find "${PSTORE_ARCHIVE}" -type f | sort | while IFS= read -r _f; do
+		_name=$(basename "${_f}")
+		# systemd-pstore merges the dmesg-* records into it
+		if [ "${_name}" != "dmesg.txt" ]; then
+			warn "pstore ${_name}: $(wc -c < "${_f}") bytes"
+			case "${_name}" in
+			*.enc.z)
+				# Undecompressed record, binary
+				;;
+			console-*)
+				# Console zone survives warm reboots; log only after hard ends
+				[ "${PREV_BOOT}" = "clean" ] || log_record "${_f}" "${_name}"
+				;;
+			*)
+				log_record "${_f}" "${_name}"
+				;;
+			esac
+		fi
+		rm -f "${_f}"
+	done
+	# Busybox find lacks -empty and -delete; rmdir skips full dirs
+	find "${PSTORE_ARCHIVE}" -mindepth 1 -depth -type d -exec rmdir {} + 2>/dev/null || true
+}
+
+report_shutdown_record
+report_bootstatus
+report_pstore
+
+if type reset_reason_report >/dev/null 2>&1; then
+	reset_reason_report
+fi

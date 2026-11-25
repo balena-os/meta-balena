@@ -522,6 +522,7 @@ module.exports = {
 		'./tests/internet-sharing',
 		'./tests/safe-reboot',
 		'./tests/disk-watchdog',
+		'./tests/pstore',
 		'./tests/extra-firmware',
 		'./tests/recover-sshd-socket',
 		'./tests/systemd-ordering',
