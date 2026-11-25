@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.1.2
+## (2026-11-25)
+
+* tests: chrony: Check sync status via chronyc instead of timedatectl [Florin Sarbu]
+
 # v9.1.1
 ## (2026-11-18)
 

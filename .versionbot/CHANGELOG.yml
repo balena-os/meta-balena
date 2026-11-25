@@ -1,4 +1,25 @@
 - commits:
+    - subject: "tests: chrony: Check sync status via chronyc instead of timedatectl"
+      hash: d54bedfff5b30f1769c6c8c6c1f683d4bec785b4
+      body: |
+        The timedatectl binary queries the hardware RTC and aborts with
+        "Failed to read RTC: Invalid argument" on boards with an uninitialized
+        or faulty RTC crystal (e.g. MCP7941x with a stopped oscillator), even
+        when chronyd has already synchronized the system clock.
+
+        Query "chronyc tracking" directly for a "Normal" leap status and remove
+        the redundant second command invocation after waitUntil.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 9.1.2
+  title: ""
+  date: 2026-11-25T20:19:10.842Z
+- commits:
     - subject: "tests/os: Detach recover-sshd-socket connections from the SSH session"
       hash: 83dd5d90b1d6d34de430d045d6c36360df551bf0
       body: |
