@@ -30,40 +30,35 @@ extrafw_enabled() {
     return 0
 }
 
+# Return 0 when $1 is a proper kernel argument firmware_class.path=<path>
+# usually firmware_class.path=/var/lib/docker/volumes/extra-firmware/_data
+verify_extrafw() {
+    [ -n "$1" ] || return 1
+
+    _path="${1#firmware_class.path=}"
+    [ "${_path}" != "$1" ] || return 1
+
+    # Starts with "/" and every character is a letter, digit, "/", "_", or "-".
+    case "${_path}" in
+        /) return 1 ;;
+        *[!A-Za-z0-9/_-]*) return 1 ;;
+        /*) ;;
+        *) return 1 ;;
+    esac
+
+    return 0
+}
+
 extrafw_run() {
-    EXTRA_FW_PATH=$(get_bootenv "${BOOTENV_FILE}" "extra_os_firmware_class_path")
+    EXTRA_FW_RAW=$(get_bootenv "${BOOTENV_FILE}" "extra_os_firmware_class_path")
 
-    # Nothing to do if undefined
-    if [ -z "${EXTRA_FW_PATH}" ]; then
+    if ! verify_extrafw "${EXTRA_FW_RAW}"; then
+        if [ -n "${EXTRA_FW_RAW}" ]; then
+            # Do not fail the boot. Drop the setting and continue.
+            warn "Extra firmware path is invalid: '${EXTRA_FW_RAW}'"
+        fi
         return 0
     fi
 
-    # For compatibility with other bootloaders, balenaOS sets the value
-    # as a full kernel parameter. Here we only care about the actual
-    # path, so let's cut the prefix.
-    EXTRA_FW_PATH="${EXTRA_FW_PATH#firmware_class.path=}"
-
-    # Make sure the path doesn't contain spaces, quotes, equality signs
-    # or backslashes. Technically these may be a part of a file
-    # or directory name, but we don't do (or need) that and having
-    # these could be abused to inject extra kernel arguments.
-    if echo "${EXTRA_FW_PATH}" | grep -q "[ '\"=\\]"; then
-        # We should probably die here, but that would make the device
-        # unbootable. Instead we just log a warning, throw away
-        # the extra FW configuration and continue booting without it.
-        warn "Extra firmware path is invalid: '${EXTRA_FW_PATH}'"
-        return 0
-    fi
-
-    # Make sure the path is absolute
-    # This just checks that the path starts with a forward slash
-    if ! echo "${EXTRA_FW_PATH}" | grep -q "^/"; then
-        # Same as above, we should die here, but we choose to log
-        # a warning and go on.
-        warn "Extra firmware path must be absolute: '${EXTRA_FW_PATH}'"
-        return 0
-    fi
-
-    # Everything seems OK, add the firmware path to kernel command line
-    export KEXEC_EXTRA_ARGS="${KEXEC_EXTRA_ARGS} firmware_class.path=${EXTRA_FW_PATH}"
+    export KEXEC_EXTRA_ARGS="${KEXEC_EXTRA_ARGS} ${EXTRA_FW_RAW}"
 }
