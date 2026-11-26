@@ -81,7 +81,7 @@ async function runSmokeTest(that, test) {
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
-			`sed -i -e "s/COUNT=.*/COUNT=3/g" -e "s/TIMEOUT=.*/TIMEOUT=10/g" $(find /mnt/sysroot/inactive/ | grep "bin/rollback-health") ; echo $?`,
+			that.hup.REDUCE_HEALTH_WINDOW,
 			that.link,
 		),
 		'0',	// does not confirm that sed replaced the values, only that the command did not fail
@@ -143,14 +143,17 @@ async function runSmokeTest(that, test) {
 		'Should not have rollback-health-failed in the state partition',
 	);
 
+	const newPartition = await that.worker.executeCommandInHostOS(
+		`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
+		that.link,
+	);
 	test.not(
-		await that.worker.executeCommandInHostOS(
-			`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
-			that.link,
-		),
+		newPartition,
 		activePartition,
 		`Should not have rolled back to the original root partition`,
 	);
+	// The extension tests run only on the build under test
+	that.suite.context.set({ dutOnTarget: newPartition !== activePartition });
 
 	test.is(
 		await that.worker.executeCommandInHostOS(
