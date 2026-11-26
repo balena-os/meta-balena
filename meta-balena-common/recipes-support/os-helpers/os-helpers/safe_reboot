@@ -37,12 +37,13 @@ _check_locks_and_reboot() {
 }
 
 _check_override_locks() {
-  # Check the target state config dump given by the supervisor for
-  # SUPERVISOR_OVERRIDE_LOCK or .RESIN_OVERRIDE_LOCK
   if [ -f "/tmp/balena-supervisor/target-state-config" ]; then
-    override_locks=$(jq -r '.SUPERVISOR_OVERRIDE_LOCK // .RESIN_OVERRIDE_LOCK' "/tmp/balena-supervisor/target-state-config")
+    override_locks=$(jq -r '.BALENA_SUPERVISOR_OVERRIDE_LOCK // .RESIN_SUPERVISOR_OVERRIDE_LOCK // .SUPERVISOR_OVERRIDE_LOCK // .RESIN_OVERRIDE_LOCK' "/tmp/balena-supervisor/target-state-config")
 
-    test "$override_locks" = true
+    case "$override_locks" in
+      true|1|on) return 0 ;;
+      *) return 1 ;;
+    esac
   else
     info "No target state config dump found, cannot check for override lock."
     return 1
