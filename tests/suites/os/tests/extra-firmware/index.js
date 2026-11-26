@@ -15,15 +15,13 @@
 
 'use strict';
 
-const fse = require('fs-extra');
 const path = require('path');
 
 const VOLUME_NAME = 'extra-firmware';
 const FIRMWARE_FILENAME = 'test_extra_firmware.bin';
-const BUILD_CONTAINER_NAME = 'build';
 const FIRMWARE_CONTAINER_NAME = 'extra-linux-firmware';
-const MODULE_OUTPUT_VOLUME = 'module_output';
 const SYSFS_PATH = '/sys/module/firmware_class/parameters/path';
+const TRIGGER_PATH = '/sys/devices/virtual/misc/test_firmware/trigger_request';
 const CONFIG_PATH = '/mnt/boot/config.json';
 const CONFIG_BACKUP_PATH = '/mnt/state/config.json.extra-firmware-test-backup';
 
@@ -48,26 +46,17 @@ const restoreConfig = async (worker, link, test) => {
 };
 
 /**
- * Get the module path from the output volume
+ * Ask the test_firmware module to load FIRMWARE_FILENAME.
+ * if the firmware is found, the content is of the fw is written to /dev/test_firmware
+ * otherwise, /dev/test_firmware is empty
  */
-const getModulePath = async (worker, link) => {
-    const modulePath = await worker.executeCommandInHostOS(
-        `ls /var/lib/docker/volumes/*${MODULE_OUTPUT_VOLUME}*/_data/*.ko 2>/dev/null | head -1`,
+const requestFirmware = async (worker, link) => {
+    await worker.executeCommandInHostOS('modprobe test_firmware', link);
+    const content = await worker.executeCommandInHostOS(
+        `sh -c 'echo -n ${FIRMWARE_FILENAME} > ${TRIGGER_PATH}; cat /dev/test_firmware'`,
         link,
     );
-    return modulePath.trim();
-};
-
-/**
- * Load module, check dmesg, unload. Returns dmesg output.
- */
-const loadModuleAndGetDmesg = async (worker, link, modulePath) => {
-    await worker.executeCommandInHostOS('dmesg -C', link);
-    await worker.executeCommandInHostOS('rmmod hello 2>/dev/null || true', link);
-    await worker.executeCommandInHostOS(`insmod ${modulePath}`, link);
-    const dmesg = await worker.executeCommandInHostOS('dmesg | grep "hello:" || true', link);
-    await worker.executeCommandInHostOS('rmmod hello 2>/dev/null', link);
-    return dmesg.trim();
+    return content.trim();
 };
 
 /**
@@ -113,29 +102,6 @@ const isSecureBootEnabled = () => {
 // ============================================================================
 // Test step functions
 // ============================================================================
-
-const buildTestModule = async (worker, link, test, suite) => {
-    test.comment('Building test kernel module...');
-
-    // Copy our hello.c and Makefile to kernel-module-build/module/src/ at runtime
-    const srcDir = path.join(__dirname, 'src');
-    const destDir = path.join(__dirname, 'kernel-module-build', 'module', 'src');
-
-    test.comment('Copying firmware test module sources...');
-    await fse.copy(path.join(srcDir, 'hello.c'), path.join(destDir, 'hello.c'));
-    await fse.copy(path.join(srcDir, 'Makefile'), path.join(destDir, 'Makefile'));
-
-    // Check if kernel headers archive exists and copy it
-    const kernelHeadersPath = suite.context.get().os.kernelHeaders;
-    const headersExists = await fse.pathExists(kernelHeadersPath);
-
-    test.is(headersExists, true, 'Kernel headers archive should be provided in workspace/config.js');
-
-    await fse.copy(kernelHeadersPath, path.join(__dirname, 'kernel-module-build', 'module', path.basename(kernelHeadersPath)));
-
-    test.comment('Pushing build container to device...');
-    await worker.pushContainerToDUT(link, __dirname, BUILD_CONTAINER_NAME);
-};
 
 const verifyFirmware = async (worker, link, test) => {
     test.comment('Verifying firmware file...');
@@ -189,31 +155,20 @@ const verifyFirmwareContainerState = async (worker, link, test) => {
  * Test that firmware loading fails without extra-firmware container
  */
 const testFirmwareNotFound = async (worker, link, test) => {
-    test.comment('Loading module without firmware container (expect NOT FOUND)...');
+    test.comment('Requesting firmware before the extra-firmware container (expect failure)...');
 
-    const modulePath = await getModulePath(worker, link);
-    test.comment(`Module path: ${modulePath}`);
-    test.is(modulePath !== '', true, 'Module path should not be empty');
-
-    const dmesg = await loadModuleAndGetDmesg(worker, link, modulePath);
-    test.comment(`dmesg: ${dmesg}`);
-    test.is(dmesg.includes('NOT FOUND'), true, 'Firmware should NOT be found');
+    const content = await requestFirmware(worker, link);
+    test.is(content, '', 'Firmware should NOT be found');
 };
 
 /**
  * Test that firmware loading succeeds with configuration
  */
 const testFirmwareFound = async (worker, link, test) => {
-    test.comment('Loading module with firmware (expect SUCCESS)...');
+    test.comment('Requesting firmware from the extra path (expect success)...');
 
-    const modulePath = await getModulePath(worker, link);
-    test.comment(`Module path: ${modulePath}`);
-    test.is(modulePath !== '', true, 'Module path should not be empty');
-
-    const dmesg = await loadModuleAndGetDmesg(worker, link, modulePath);
-    test.comment(`dmesg: ${dmesg}`);
-    test.is(dmesg.includes('SUCCESS'), true, 'Firmware should be found');
-    test.is(dmesg.includes('VERIFIED'), true, 'Firmware content should be verified');
+    const content = await requestFirmware(worker, link);
+    test.is(content, 'balena', 'Firmware content should be verified');
 };
 
 /**
@@ -255,20 +210,11 @@ const cleanup = async (worker, link, test) => {
     // Restore config.json
     await restoreConfig(worker, link, test);
 
-    // Remove module from device
-    await worker.executeCommandInHostOS('rmmod hello 2>/dev/null || true', link);
+    await worker.executeCommandInHostOS('rmmod test_firmware 2>/dev/null || true', link);
 
     // Remove containers and volumes
     await worker.executeCommandInHostOS(
-        `balena rm -f $(balena ps -aqf name=${BUILD_CONTAINER_NAME}) 2>/dev/null || true`,
-        link,
-    );
-    await worker.executeCommandInHostOS(
         `balena rm -f $(balena ps -aqf name=${FIRMWARE_CONTAINER_NAME}) 2>/dev/null || true`,
-        link,
-    );
-    await worker.executeCommandInHostOS(
-        `balena volume rm ${MODULE_OUTPUT_VOLUME} 2>/dev/null || true`,
         link,
     );
     await worker.executeCommandInHostOS(
@@ -295,34 +241,25 @@ module.exports = {
         const worker = this.context.get().worker;
         const link = this.link;
 
-        // Skip test if secureboot is enabled
-        if (isSecureBootEnabled()) {
-            test.comment('Skipping extra-firmware test on secureboot-enabled device');
-            return;
-        }
-
         try {
             // Backup config.json
             await backupConfig(worker, link, test);
 
-            // Step 1: Build test module
-            await buildTestModule(worker, link, test, this.suite);
-
-            // Step 2: Test that firmware is NOT found before deploying firmware container
+            // Step 1: The file is not on the extra path yet, so the request fails.
             await testFirmwareNotFound(worker, link, test);
 
-            // Step 3: Deploy firmware container
+            // Step 2: Deploy firmware container
             test.comment('Pushing firmware container to device...');
             const firmwareContainerPath = path.join(__dirname, 'firmware-container');
             await worker.pushContainerToDUT(link, firmwareContainerPath, FIRMWARE_CONTAINER_NAME);
 
-            // Step 4: Verify firmware container state (volume, config.json, service)
+            // Step 3: Verify firmware container state (volume, config.json, service)
             await verifyFirmwareContainerState(worker, link, test);
 
-            // Step 5: Verify the firmware file
+            // Step 4: Verify the firmware file
             await verifyFirmware(worker, link, test);
 
-            // Step 6: Load module - expect firmware FOUND and VERIFIED
+            // Step 5: Request the firmware through test_firmware
             await testFirmwareFound(worker, link, test);
 
             if (this.suite.deviceType.slug == 'srd3-xavier') {
@@ -330,16 +267,21 @@ module.exports = {
                 return;
             }
 
-            // Step 7: Reboot
+            if (this.suite.deviceType.slug == 'generic-amd64' && isSecureBootEnabled()) {
+                test.comment('Skipping extra-firmware post-reboot test on generic-amd64 with secure boot');
+                return;
+            }
+
+            // Step 6: Reboot
             await worker.rebootDut(link);
 
-            // Step 8: Verify kernel cmdline has firmware_class.path
+            // Step 7: Verify kernel cmdline has firmware_class.path
             await verifyKernelCmdline(worker, link, test);
 
-            // Step 9: Verify sysfs path is still set
+            // Step 8: Verify sysfs path is still set
             await verifySysfsPath(worker, link, test);
 
-            // Step 10: Load module again - should still work after reboot
+            // Step 9: Request the firmware again after reboot
             await testFirmwareFound(worker, link, test);
         } finally {
             await cleanup(worker, link, test);
