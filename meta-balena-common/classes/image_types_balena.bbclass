@@ -403,6 +403,10 @@ IMAGE_CMD:hostapp-ext4 () {
 }
 
 IMAGE_TYPEDEP:balenaos-img.sig = "balenaos-img"
+# Since Yocto 6.0 parsing fails unless every suffix of an IMAGE_FSTYPES entry
+# has a CONVERSION_CMD. sig is not in CONVERSIONTYPES, so this never runs:
+# IMAGE_CMD:balenaos-img.sig below creates the image.
+CONVERSION_CMD:sig = "true"
 
 IMAGE_CMD:balenaos-img.sig () {
     if [ "x${SIGN_API}" = "x" ]; then
