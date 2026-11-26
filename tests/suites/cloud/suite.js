@@ -515,5 +515,7 @@ module.exports = {
     "./tests/multicontainer",
     "./tests/ssh-auth",
     "./tests/os-config",
+    // Last: it pins the device to a draft and toggles profiles
+    "./tests/hostapp-extensions",
   ],
 };
