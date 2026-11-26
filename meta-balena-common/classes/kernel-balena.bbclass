@@ -158,6 +158,7 @@ BALENA_CONFIGS ?= " \
     dmabuf \
     cve_2026_31431 \
     cve_2026_43284 \
+    test-firmware \
 "
 
 # CVE-2026-31431: unconditionally disable CONFIG_CRYPTO_USER_API_AEAD
@@ -168,8 +169,12 @@ BALENA_CONFIGS[cve_2026_43284] = " \
     CONFIG_INET_ESP=n \
     CONFIG_INET6_ESP=n \
     CONFIG_AF_RXRPC=n \
-    "
+"
 
+# The extra-firmware OS test uses it to call request_firmware().
+BALENA_CONFIGS[test-firmware] = " \
+    CONFIG_TEST_FIRMWARE=m \
+"
 
 #
 # Balena specific kernel configuration
