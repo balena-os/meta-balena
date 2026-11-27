@@ -164,6 +164,50 @@ module.exports = {
         );
       },
       /**
+       * Wait until the supervisor container has been up for at least `minUptimeSec`.
+       *
+       * Shortly after first boot the supervisor can be restarted (e.g. helios takeover).
+       * On that restart its bootstrap can re-pin the device to the preloaded release,
+       * silently overriding any unpin / newly pushed release done by a test meanwhile.
+       * Tests that change the target release should wait for this first.
+       *
+       * Uptime is computed from the DUT's own clock, so runner/DUT clock skew is irrelevant.
+       *
+       * @param {string} target The address of the target device
+       * @param {number} minUptimeSec Minimum supervisor uptime to consider it settled
+       *
+       * @category helper
+       */
+      waitForSupervisorStable: async function (target, minUptimeSec = 120) {
+        let lastObserved = 'no data';
+        try {
+          await utils.waitUntil(async () => {
+            const now = parseInt(
+              await this.worker.executeCommandInHostOS(`date -u +%s`, target),
+              10,
+            );
+            const startedAt = (
+              await this.worker.executeCommandInHostOS(
+                `balena inspect -f '{{.State.StartedAt}}' balena_supervisor || balena inspect -f '{{.State.StartedAt}}' resin_supervisor`,
+                target,
+              )
+            ).trim();
+            const started = Date.parse(startedAt) / 1000;
+            if (Number.isNaN(now) || Number.isNaN(started)) {
+              lastObserved = `unparseable (now=${now}, startedAt=${startedAt})`;
+              return false;
+            }
+            const uptime = now - started;
+            lastObserved = `uptime ${Math.round(uptime)}s (started ${startedAt})`;
+            return uptime >= minUptimeSec;
+          }, false, 120, 5000);
+        } catch (e) {
+          throw new Error(
+            `Supervisor did not become stable (>= ${minUptimeSec}s uptime). Last observed: ${lastObserved}`,
+          );
+        }
+      },
+      /**
 		 * Write or remove a property from config.json in the boot partition
 		 * @param {string} test Current test instance to append results
 		 * @param {string} key Object key to update, dot separated
@@ -500,6 +544,18 @@ module.exports = {
     await test.resolves(
 			this.waitForServiceState('balena', 'active', this.link),
 			'balena Engine should be running and healthy'
+		)
+
+		// we want to waitUntil here as the supervisor may take some time to come online.
+		await test.resolves(
+			this.utils.waitUntil(async () => {
+				let healthy = await this.worker.executeCommandInHostOS(
+				`curl --max-time 10 "localhost:48484/v1/healthy"`,
+				this.link
+				)
+				return (healthy === 'OK')
+			}, true, 120, 250),
+			'Supervisor should be running and healthy'
 		)
 
     // Retrieving journalctl logs: register teardown after device is reachable

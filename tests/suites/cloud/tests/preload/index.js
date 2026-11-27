@@ -45,6 +45,12 @@ module.exports = {
     }
 
     // Cleanup at the end of the preload test regardless - ensuring that there is a known state before the next test, regardless of whether this test ran or not
+    // The supervisor may restart shortly after boot (helios takeover) and re-pin the device to the
+    // preloaded release when it bootstraps again. Let it settle first, so that the unpin below sticks
+    // and later tests start from a known state.
+    this.log("Waiting for supervisor to settle before unpinning");
+    await this.waitForSupervisorStable(this.link);
+
     this.log("Unpinning device from release");
     await this.cloud.balena.models.device.trackApplicationRelease(
       this.balena.uuid
