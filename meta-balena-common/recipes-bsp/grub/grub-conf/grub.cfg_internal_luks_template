@@ -12,6 +12,19 @@ timeout=@@TIMEOUT@@
 
 load_env --skip-sig bootcount resin_root_part upgrade_available
 
+if [ -f ${prefix}/grub_extraenv ]; then
+    load_env -f ${prefix}/grub_extraenv --skip-sig extra_os_firmware_class_path
+fi
+
+# Same shape as verify_extrafw. Drop anything else.
+if regexp '^firmware_class\.path=/var/lib/docker/volumes/[A-Za-z0-9/_-]+$' "${extra_os_firmware_class_path}"; then
+    if regexp '//' "${extra_os_firmware_class_path}"; then
+        set extra_os_firmware_class_path=
+    fi
+else
+    set extra_os_firmware_class_path=
+fi
+
 if [ ${upgrade_available} = 1 ] ; then
  if [ ${bootcount} = 1 ] ; then
   set bootcount=2
@@ -34,13 +47,13 @@ else
   set balena_root=resin-rootB
  fi
 fi
-linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=${balena_root} @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=${balena_root} @@KERNEL_CMDLINE@@ ${extra_os_firmware_class_path}
 }
 
 menuentry 'manualfallbackA' {
-  linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=resin-rootA @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+  linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=resin-rootA @@KERNEL_CMDLINE@@ ${extra_os_firmware_class_path}
 }
 
 menuentry 'manualfallbackB' {
-  linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=resin-rootB @@KERNEL_CMDLINE@@ ${extra_os_cmdline}
+  linux /@@KERNEL_IMAGETYPE@@ balena_stage2 root=LABEL=resin-rootB @@KERNEL_CMDLINE@@ ${extra_os_firmware_class_path}
 }
