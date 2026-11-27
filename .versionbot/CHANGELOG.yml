@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tests: cloud: wait for supervisor to be stable"
+      hash: c42eda5e186f2b80762f284e66eaa52e1b5c0c91
+      body: >
+        Wait for supervisor to be stable before proceeding during tests to avoid
+        races
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Ryan Cooke <ryan@balena.io>
+        signed-off-by: Ryan Cooke <ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 9.1.3
+  title: ""
+  date: 2026-11-27T17:36:34.718Z
+- commits:
     - subject: "tests: chrony: Check sync status via chronyc instead of timedatectl"
       hash: d54bedfff5b30f1769c6c8c6c1f683d4bec785b4
       body: |

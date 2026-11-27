@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.1.3
+## (2026-11-27)
+
+* tests: cloud: wait for supervisor to be stable [Ryan Cooke]
+
 # v9.1.2
 ## (2026-11-25)
 
