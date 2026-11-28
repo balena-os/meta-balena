@@ -1,4 +1,22 @@
 - commits:
+    - subject: "balena-image-initramfs: Double the size of the initramfs"
+      hash: 073f02e8b569cae6d060bcc1ba59c5ba6e260f9d
+      body: >
+        We now have more than doubled the boot partition size, from 40 MiB to
+        100 MiB,
+
+        so we can follow suite and increase the default initramfs size.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Florin Sarbu <florin@balena.io>
+        signed-off-by: Florin Sarbu <florin@balena.io>
+      author: Florin Sarbu
+      nested: []
+  version: 9.1.4
+  title: ""
+  date: 2026-11-28T04:59:07.226Z
+- commits:
     - subject: "tests: cloud: wait for supervisor to be stable"
       hash: c42eda5e186f2b80762f284e66eaa52e1b5c0c91
       body: >

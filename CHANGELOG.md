@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.1.4
+## (2026-11-28)
+
+* balena-image-initramfs: Double the size of the initramfs [Florin Sarbu]
+
 # v9.1.3
 ## (2026-11-27)
 
