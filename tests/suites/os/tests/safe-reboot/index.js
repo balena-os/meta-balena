@@ -133,7 +133,7 @@ module.exports = {
 					uri: `http://${ip}:${SUPERVISOR_PORT}/v2/local/target-state`,
 				});
 
-				state.state.local.config.SUPERVISOR_OVERRIDE_LOCK = "true"
+				state.state.local.config.SUPERVISOR_OVERRIDE_LOCK = "1"
 
 				result = await this.worker.executeCommandInHostOS(
 					'[[ -f /tmp/reboot-check ]] && echo "pass"',
