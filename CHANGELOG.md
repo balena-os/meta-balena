@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v9.1.5
+## (2026-11-28)
+
+* hostapp-update-hooks: replace rollback identification with variable [Alex Gonzalez]
+* tests: hup: capture hostapp-update stderr in the log [Alex Gonzalez]
+
 # v9.1.4
 ## (2026-11-28)
 

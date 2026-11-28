@@ -1,4 +1,47 @@
 - commits:
+    - subject: "hostapp-update-hooks: replace rollback identification with variable"
+      hash: d41bfb05723f6dd883b61a5d1b0583fbc20b63a8
+      body: >
+        The secure boot hook read the rollback-health ActiveState to detect
+
+        a rollback. The unit reads activating during a rollback and always
+        active
+
+        after a commit.
+
+
+        Such guard lets a rollback queue a dbx update and skips the db append on
+        a
+
+        second HUP in the same boot bricking the device.
+
+
+        rollback-health now sets `ROLLBACK=1` when it runs the old hooks. The
+
+        hook defaults to the forward path and logs the decision.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+    - subject: "tests: hup: capture hostapp-update stderr in the log"
+      hash: 8ae8c4e2de48edc2eae7d710f9c617cac2fea8d6
+      body: |
+        hostapp-update logs to stderr and leviathan returns stdout only, so
+        the archived `hup.log` has always been empty.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 9.1.5
+  title: ""
+  date: 2026-11-28T19:37:58.248Z
+- commits:
     - subject: "balena-image-initramfs: Double the size of the initramfs"
       hash: 073f02e8b569cae6d060bcc1ba59c5ba6e260f9d
       body: >
