@@ -18,6 +18,14 @@ module.exports = {
 			run: async function (test) {
 				const origVersion = await this.worker.getOSVersion(this.link);
 
+				// Older hooks miss rollbacks and write UEFI keys
+				// Only UEFI secure boot updates the db
+				const checkUEFIKeys = this.os.configJson.installer.secureboot &&
+					(await this.worker.executeCommandInHostOS(
+						`test -d /sys/firmware/efi && grep -q ROLLBACK /etc/hostapp-update-hooks.d/0-signed-update ; echo $?`,
+						this.link,
+					)) === '0';
+
 				const activePartition = await this.worker.executeCommandInHostOS(
 					`findmnt --noheadings --canonicalize --output SOURCE /mnt/sysroot/active`,
 					this.link,
@@ -110,6 +118,18 @@ module.exports = {
 					origVersion,
 					`Should have rolled back to the original OS version`,
 				);
+
+				// Boot -1 is the failed release that rolled back
+				if (checkUEFIKeys) {
+					test.is(
+						await this.worker.executeCommandInHostOS(
+							`journalctl -u rollback-health -b -1 | grep -q 'Not updating UEFI keys during a rollback' ; echo $?`,
+							this.link,
+						),
+						'0',
+						'Should not update UEFI keys during the rollback',
+					);
+				}
 			},
 		},
 		{
