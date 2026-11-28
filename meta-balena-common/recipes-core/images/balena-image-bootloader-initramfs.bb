@@ -10,7 +10,6 @@ PACKAGE_INSTALL = " \
     glibc-gconv-ibm850 \
     initramfs-module-abroot \
     initramfs-module-debug \
-    initramfs-module-extrafw \
     initramfs-module-fsck \
     initramfs-module-kexec \
     initramfs-module-mount-data \
@@ -20,6 +19,9 @@ PACKAGE_INSTALL = " \
 "
 
 PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','','',' initramfs-module-cryptsetup initramfs-module-resindataexpander',d)}"
+
+# disable extrafw for secureboot devices, but install it for others
+PACKAGE_INSTALL:append = "${@oe.utils.conditional('SIGN_API','',' initramfs-module-extrafw','',d)}"
 
 BAD_RECOMMENDATIONS += "busybox-syslog"
 
